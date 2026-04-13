@@ -1,8 +1,8 @@
 ---
 name: tracker
-description: "Submission package tracker — build tracker markdown from architecture and regulatory context, render HTML dashboard, update status, assess readiness. Use when: building or extending the tracker, updating deliverable status, regenerating the dashboard, checking submission readiness, or reviewing progress."
-version: 3
-updated: 2026-04-08
+description: "Submission package tracker — build tracker markdown from architecture, regulatory, and composition-manifest context, render HTML dashboard, update status, assess readiness."
+version: 4
+updated: 2026-04-13
 ---
 
 # Submission Package Tracker
@@ -19,13 +19,17 @@ Build and manage the submission package tracker. Usage: `/tracker <action> [argu
 
 ## Context Required for Building the Tracker
 
-The tracker is not built in isolation — it is derived from architecture, regulatory guidance, and strategy documents. Before adding or modifying deliverables, read the **Context & Sources** section at the top of `submission-tracker.md`. It lists every source document and explains what each one informs.
+The tracker is not built in isolation — it is derived from composition manifests, architecture, regulatory guidance, and strategy documents. Before adding or modifying deliverables, read the **Context & Sources** section at the top of `submission-tracker.md`. It lists every source document and explains what each one informs.
 
 **Key sources** (in reading order):
-1. **System SAD** (`docs/project/design-controls/architecture/<device-slug>-system-sad.md`, where `<device-slug>` matches the `project.device_family` value in `project.yml`) — module architecture, SaMD boundaries, classifications → drives Scope and per-module splits
-2. **Regulatory Strategy** (`docs/project/design-controls/plans/regulatory-strategy.md`) — filing sequence, PCCP scope, document reuse → drives Phase assignments
-3. **Submission tracker task** (e.g., `tasks/<person>/NNN-submission-package-tracker.md`) — strategy decisions, filing strategy, parent/child DHF → drives Phase and Part structure
-4. **FDA guidance documents** (`docs/external/fda-guidance/`) — deliverable requirements per guidance → drives what items exist in each Part
+1. **Composition manifest** (`docs/project/submissions/<filing>/composition-manifest.md`) — the authoritative list of which sub-DHF pieces are included in this filing. A filing can span multiple sub-DHFs (the manifest records the cross-references). Read this **first** to know which sub-DHFs the tracker must span.
+2. **Project manifest** (`project.yml` — `sub_dhfs[]`) — list of sub-DHFs in the project. Each entry's `path` points to a folder under `docs/project/dhfs/` containing per-DHF content.
+3. **System SADs** — one per sub-DHF at `docs/project/dhfs/<sub-dhf>/design-controls/architecture/<device-slug>-system-sad.md` (where `<device-slug>` matches the `project.device_family` value from `project.yml`, or the sub-DHF's own slug for multi-component projects) — module architecture, SaMD boundaries, classifications → drives Scope and per-module splits.
+4. **Regulatory Strategy** — per sub-DHF at `docs/project/dhfs/<sub-dhf>/design-controls/plans/regulatory-strategy.md` — filing sequence, PCCP scope, document reuse → drives Phase assignments. For cross-DHF filings, merge insights from every included sub-DHF's regulatory strategy.
+5. **Submission tracker task** (e.g., `tasks/<person>/NNN-submission-package-tracker.md`) — strategy decisions, filing strategy, parent/child DHF → drives Phase and Part structure.
+6. **FDA guidance documents** (`docs/external/fda-guidance/`) — shared; deliverable requirements per guidance → drives what items exist in each Part.
+
+**Composition manifest is the source of truth** (task 007 P4.2): when a filing's composition manifest is updated, the tracker's deliverable list must reflect the new included pieces. `/tracker build` reads the composition manifest at plan time (when producing its output) so reviewers see the full filing impact before any commit.
 
 ## Tracker Structure
 
@@ -92,9 +96,12 @@ First-time setup of the submission tracker for a project. Idempotent — safe to
 
 **Steps**:
 1. **Check prerequisites**:
-   - System SAD exists under `docs/project/design-controls/architecture/` (filename `<device-slug>-system-sad.md`, where `<device-slug>` is the `project.device_family` value from `project.yml`) — warn if missing, it's needed for Scope assignments
-   - Regulatory strategy exists (`docs/project/design-controls/plans/regulatory-strategy.md`) — warn if missing
-   - FDA guidance documents exist in `docs/external/fda-guidance/` — warn if missing
+   - `project.yml` has a non-empty `sub_dhfs[]` list — required, tracker cannot run without it
+   - For each entry in `sub_dhfs[]` that maps to this filing (per the composition manifest, if one exists, or all entries if no manifest exists yet), verify:
+     - System SAD exists at `docs/project/dhfs/<sub-dhf>/design-controls/architecture/<device-slug>-system-sad.md` (where `<device-slug>` is the `project.device_family` value from `project.yml` for single-component projects, or the sub-DHF's own slug for multi-component projects) — warn if missing, needed for Scope assignments
+     - Regulatory strategy exists at `docs/project/dhfs/<sub-dhf>/design-controls/plans/regulatory-strategy.md` — warn if missing
+   - FDA guidance documents exist in `docs/external/fda-guidance/` — shared, warn if missing
+   - Composition manifest exists at `docs/project/submissions/<filing>/composition-manifest.md` — INFO if missing (tracker can run without it for single-sub-DHF projects; required for multi-sub-DHF filings)
 2. **Create tracker markdown** (if `docs/project/submissions/submission-tracker.md` does not exist):
    - Scaffold the file with the standard structure: intro, Context & Sources, Two-Level Deliverable Model, Status Legend, Parts 1-4 headers with empty tables, Summary, Effort Scale, Phase Scale, Changelog
    - Populate the Context & Sources section with paths to the architecture and guidance documents found in step 1
@@ -235,14 +242,17 @@ The generated HTML includes:
 
 ## Best Practices
 
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Tracker markdown exists | `docs/project/submissions/submission-tracker.md` exists | Required |
-| Tracker HTML exists | `docs/project/submissions/submission-tracker.html` exists | Required |
-| Render script exists | `.claude/skills/tracker/scripts/render.py` exists | Required |
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Tracker markdown exists | `docs/project/submissions/submission-tracker.md` exists | Required | shared |
+| Tracker HTML exists | `docs/project/submissions/submission-tracker.html` exists | Required | shared |
+| Render script exists | `.claude/skills/tracker/scripts/render.py` exists | Required | shared |
+| Composition manifest parses | `composition-manifest.md` exists in this filing folder and has the required sections (Filing Identification, Included Pieces, Excluded Pieces, Cross-references, Reviewer Sign-off) | Required | per-submission |
+| Composition manifest pieces resolve | Every "Included piece" referenced in this filing's composition manifest resolves to an existing file under `docs/project/dhfs/<sub-dhf>/...` | Required | per-submission |
 
 ## Changelog
 
+- 4 (2026-04-13): **Unified sub-DHF shape support.** Context & Sources section updated to read paths under `docs/project/dhfs/<sub-dhf>/...` instead of the old flat `docs/project/design-controls/...` layout. Composition manifest added as the first-read source of truth (task 007 P4.2) — a filing's manifest lists which sub-DHF pieces are included and is read at plan time when `build` produces its output. `init` action prerequisites updated to iterate `project.sub_dhfs[]` and check per-DHF system SAD and regulatory strategy instead of a single flat-layout pair. Added two new per-submission best-practices checks: composition manifest parses, included pieces resolve to existing files. Multi-sub-DHF filing support (one filing spanning multiple sub-DHFs) is specified but full implementation (cross-DHF strategy merging, multi-SAD parsing) is a follow-up. See `tasks/ben/007-sub-dhf-migration.md` P4 for full design.
 - 3 (2026-04-08): Added `init` action — first-time setup that scaffolds tracker markdown, adds CLAUDE.md rule, verifies prerequisites. Idempotent.
 - 2 (2026-04-08): Added `build` action for authoring/extending the tracker. Added Context Required section pointing to source documents. Added Tracker Structure section (4 Parts, column definitions, naming conventions, adding new deliverables guide). Skill now covers both building the markdown and rendering the HTML.
 - 1 (2026-04-08): Initial version — render, update, status, assess actions. Formalized from ad-hoc Python generation scripts used during tracker development (task 032).

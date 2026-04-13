@@ -1,8 +1,8 @@
 ---
 name: strategy
-description: "Scan task docs for strategy content tagged by domain and assemble into unified strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market"
-version: 7
-updated: 2026-04-08
+description: "Scan task docs for strategy content tagged by domain and assemble into unified strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market; sub-DHF scope resolution"
+version: 8
+updated: 2026-04-13
 ---
 
 # Strategy Harvester
@@ -28,11 +28,31 @@ Strategy content is marked in task documents with HTML comment tags:
 <!-- STRATEGY CONTENT: domain, topic1, topic2 -->
 ```
 
+Or with an optional **sub-DHF scope key** for per-DHF domains:
+
+```
+<!-- STRATEGY CONTENT: domain, sub-dhf=<leaf-name>, topic1, topic2 -->
+```
+
 **Format rules:**
 - **First value is the domain key** (required) — must be one of the recognized domain keys below
 - **Remaining values are topics** (optional) — free-form, comma-separated, used for section routing in custom templates
+- **Optional `sub-dhf=<leaf-name>` scope key** (for per-DHF domains): routes the block to a specific sub-DHF's strategy folder. `<leaf-name>` is the last path segment of an entry in `project.yml` `sub_dhfs[]`. The `/medtech-docs add-sub-dhf` action enforces leaf-name uniqueness so this resolution is unambiguous. If omitted on a per-DHF domain in a project with multiple sub-DHFs, the scanner flags it as an error and refuses to assemble that block until a scope is added.
 - Tag must appear on a **line by itself** — no surrounding prose on the same line
 - Tag must NOT be inside a fenced code block or inline code backticks
+
+**Sub-DHF scope resolution (v8)**:
+
+1. Read `project.yml` `sub_dhfs[]` into memory once at scan start.
+2. When a tag contains `sub-dhf=<value>`:
+   - Find the entry whose `path` ends in `/<value>` (or equals `<value>` for top-level sub-DHFs).
+   - Zero matches → error: `"sub-dhf=<value> does not match any entry in project.sub_dhfs[]"`.
+   - Exactly one match → use that entry's full `path`; the block's output routes under `dhfs/<path>/design-controls/plans/` (or equivalent per-DHF domain path — see Domain Registry below).
+   - Multiple matches → impossible under the uniqueness rule; treat as internal error.
+3. When a tag is for a per-DHF domain but has **no** `sub-dhf=` key:
+   - If `sub_dhfs[]` has exactly one entry → implicit scope to that entry. Allowed for simplicity in single-sub-DHF projects.
+   - If `sub_dhfs[]` has more than one entry → error: `"per-dhf domain '<domain>' in task <id> has no sub-dhf scope — add sub-dhf=<leaf-name>"`.
+4. When a tag is for a shared domain (`commercial`, `operations`) → any `sub-dhf=` key is a warning (shared domains should not be scoped to a sub-DHF). Ignore the scope key and assemble into the shared location.
 
 **Block boundary:**
 - A tagged block starts at the tag comment line
@@ -93,18 +113,27 @@ The lightest-weight alternative to marking a block as superseded: simply delete 
 
 ## Domain Registry
 
-Each domain has a key, output path, template, and list of formal plans it informs.
+Each domain has a key, **scope type**, output path template, template, and list of formal plans it informs. Scope type determines whether the domain is `shared` (one output per project) or `per-dhf` (one output per sub-DHF).
 
-| Domain Key | Domain Name | Output Path | Template | Plans Informed |
-|-----------|------------|------------|----------|----------------|
-| `regulatory` | Regulatory | `docs/project/design-controls/plans/regulatory-strategy.md` | `regulatory-strategy.md` | 510(k), PCCP, Q-Sub, LMR |
-| `commercial` | Commercial | `docs/project/input-analysis/market-research/commercial-strategy.md` | `default-strategy.md` | Go-to-market plan, business case, market expansion |
-| `architecture` | Architecture | `docs/project/design-controls/architecture/architecture-strategy.md` | `default-strategy.md` | SAD, SRS, cybersecurity plan |
-| `development` | Development | `docs/project/design-controls/plans/development-strategy.md` | `default-strategy.md` | SDP, Config Mgmt Plan |
-| `testing` | Testing & Validation | `docs/project/design-controls/vnv/testing-strategy.md` | `default-strategy.md` | V&V Plan, test protocols, usability plan |
-| `risk` | Risk | `docs/project/design-controls/risk-management/risk-strategy.md` | `default-strategy.md` | Risk Mgmt Plan, FMEA, risk-benefit analysis |
-| `postmarket` | Post-Market | `docs/project/design-controls/plans/postmarket-strategy.md` | `default-strategy.md` | Maintenance Plan, PMS Plan, LMR, PCCP tracking |
-| `operations` | Operations & Tooling | `operations-strategy.md` | `default-strategy.md` | Project management plan, skill roadmap, team onboarding |
+| Domain Key | Domain Name | Scope | Output Path Template | Template | Plans Informed |
+|-----------|------------|-------|---------------------|----------|----------------|
+| `regulatory` | Regulatory | per-dhf | `docs/project/dhfs/<sub-dhf>/design-controls/plans/regulatory-strategy.md` | `regulatory-strategy.md` | 510(k), PCCP, Q-Sub, LMR |
+| `commercial` | Commercial | shared | `docs/project/strategies/commercial-strategy.md` | `default-strategy.md` | Go-to-market plan, business case, market expansion |
+| `architecture` | Architecture | per-dhf | `docs/project/dhfs/<sub-dhf>/design-controls/architecture/architecture-strategy.md` | `default-strategy.md` | SAD, SRS, cybersecurity plan |
+| `development` | Development | per-dhf | `docs/project/dhfs/<sub-dhf>/design-controls/plans/development-strategy.md` | `default-strategy.md` | SDP, Config Mgmt Plan |
+| `testing` | Testing & Validation | per-dhf | `docs/project/dhfs/<sub-dhf>/design-controls/vnv/testing-strategy.md` | `default-strategy.md` | V&V Plan, test protocols, usability plan |
+| `risk` | Risk | per-dhf | `docs/project/dhfs/<sub-dhf>/risk-management/risk-strategy.md` | `default-strategy.md` | Risk Mgmt Plan, FMEA, risk-benefit analysis |
+| `postmarket` | Post-Market | per-dhf | `docs/project/dhfs/<sub-dhf>/postmarket/postmarket-strategy.md` | `default-strategy.md` | Maintenance Plan, PMS Plan, LMR, PCCP tracking |
+| `operations` | Operations & Tooling | shared | `docs/project/strategies/operations-strategy.md` | `default-strategy.md` | Project management plan, skill roadmap, team onboarding |
+
+**Output path resolution**:
+- **`shared` domains**: the path template is the literal path. One output file per project.
+- **`per-dhf` domains**: the `<sub-dhf>` placeholder is substituted with the resolved sub-DHF `path` from the tag's `sub-dhf=<leaf>` scope key (see Sub-DHF scope resolution under Tag Convention above). One output file per sub-DHF the domain has tagged content for. If the scope key is omitted in a project with exactly one sub-DHF, the sole entry is used; if omitted with multiple sub-DHFs, the scanner flags an error.
+
+**Notes from v8 (unified sub-DHF shape)**:
+- `commercial` and `operations` moved from the old per-domain locations (`input-analysis/market-research/` and project-root respectively) to the shared `docs/project/strategies/` folder — they are cross-cutting across the whole project, not tied to any one sub-DHF.
+- `risk` and `postmarket` output paths moved from `docs/project/design-controls/...` to their proper per-DHF homes (`dhfs/<sub-dhf>/risk-management/` and `dhfs/<sub-dhf>/postmarket/` respectively) — risk management and postmarket are sub-DHF-level siblings of design-controls, not children of design-controls.
+- Legacy output files at the old locations (e.g., `docs/project/design-controls/plans/regulatory-strategy.md`) are **not** automatically migrated. During the PDLC_DEMO one-time reorg (task 007 P6), these are moved by `git mv` alongside the rest of the flat layout. For fresh projects, the v8 paths apply from day one.
 
 **Incubating subtopics** — start as topics within a parent domain, promote to standalone domain when they outgrow it:
 - `clinical` → inside `regulatory` until a clinical study is needed
@@ -554,6 +583,7 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 
 ## Changelog
 
+- 8 (2026-04-13): **Unified sub-DHF shape support.** Domain Registry reorganized: each domain has a `Scope` (shared or per-dhf); per-dhf domains use `<sub-dhf>` placeholder in their output path template, resolved at assembly time from the tag's `sub-dhf=<leaf>` scope key. Added sub-DHF scope resolution to the Tag Convention section: tags for per-dhf domains must include `sub-dhf=<leaf-name>` in multi-sub-DHF projects (implicit single-entry resolution in single-sub-DHF projects). Leaf-name uniqueness enforced by `medtech-docs add-sub-dhf` means `sub-dhf=<leaf>` is unambiguous. `commercial` and `operations` moved to shared `docs/project/strategies/`. `risk` and `postmarket` moved to their proper sub-DHF-level homes (`risk-management/`, `postmarket/`) out of `design-controls/`. Scanner and assembler changes are specified but not yet fully implemented — this v8 documents the target behavior; consuming subagents (`agents/scanner.md`, `agents/assembler.md`) still use v7 path semantics and will need follow-up edits. See `tasks/ben/007-sub-dhf-migration.md` P3 for full design.
 - 7 (2026-04-08): Added `resolve` action — address pending review markers without full reassembly. Scans for `STRATEGY REVIEW: pending` markers, prompts lead with same 3 options (keep newer/keep both/skip), writes resolution markers to source tasks. Does not regenerate assembled docs — run `assemble` after resolving. See task 035.
 - 6 (2026-04-08): Two-tier conflict detection — Tier 1 (heading overlap, mechanical >80% word match) plus Tier 2 (semantic overlap, assembler reads content of subsections in the same output section and assesses whether they address the same decision). Multi-subsection warning when superseding a block whose tag covers multiple subsections but only one conflicts. Assembly history now records assembler identity (`git config user.name`). See task 035.
 - 5 (2026-04-08): Strategy evolution support. Temporal ordering (newest-first within sections by last-modified date). Interactive conflict resolution — assembler prompts lead with 3 options (keep newer, keep both, defer) instead of silent `> REVIEW` flags. Review markers in source tasks (`STRATEGY REVIEWED: superseded/coexists`, `STRATEGY REVIEW: pending`) survive across assemblies. Deferred reviews re-prompt on every assembly. Assembly History section (append-only changelog in assembled docs). Scanner reports block status. Validate checks pending reviews. See task 035.
