@@ -1,0 +1,85 @@
+{% extends "_base.html" %}
+{% block title %}{{ agent.title }} — PDLC Console{% endblock %}
+{% block content %}
+<section class="chat" data-agent="{{ agent.name }}" data-is-panel="{{ 'true' if agent.is_panel else 'false' }}">
+  <header class="chat-header">
+    <div class="chat-header-row">
+      <h1>{{ agent.title }}</h1>
+      <button type="button" id="clear-chat" class="link-button">Clear conversation</button>
+    </div>
+    <p class="muted">{{ agent.description }}</p>
+    {% if agent.is_panel and members %}
+    <p class="panel-members">
+      Panel members:
+      {% for m in members %}<span class="badge">{{ m.title }}</span>{% endfor %}
+    </p>
+    {% endif %}
+  </header>
+
+  <details class="agent-details">
+    <summary>View grounding sources and system prompt</summary>
+    <div class="agent-details-body">
+      {% if agent.is_panel %}
+        <section class="detail-section">
+          <h3>Panel framing</h3>
+          <h4>Shared panel sources ({{ panel_detail.sources|length }})</h4>
+          {% if panel_detail.sources %}
+          <ul class="source-list">
+            {% for s in panel_detail.sources %}
+            <li><a href="/documents/view/{{ s }}" target="_blank" rel="noopener">{{ s }}</a></li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="muted small">No shared panel sources.</p>
+          {% endif %}
+          <details class="prompt-details">
+            <summary>Panel system prompt</summary>
+            <pre class="prompt-text">{{ panel_detail.system_prompt }}</pre>
+          </details>
+        </section>
+        {% for m in member_details %}
+        <section class="detail-section">
+          <h3>{{ m.agent.title }}</h3>
+          {% if m.agent.description %}<p class="muted small">{{ m.agent.description }}</p>{% endif %}
+          <h4>Grounded in ({{ m.sources|length }} files — incl. panel shared)</h4>
+          <ul class="source-list">
+            {% for s in m.sources %}
+            <li><a href="/documents/view/{{ s }}" target="_blank" rel="noopener">{{ s }}</a></li>
+            {% endfor %}
+          </ul>
+          <details class="prompt-details">
+            <summary>System prompt</summary>
+            <pre class="prompt-text">{{ m.system_prompt }}</pre>
+          </details>
+        </section>
+        {% endfor %}
+      {% else %}
+        <section class="detail-section">
+          <h4>Grounded in ({{ detail.sources|length }} files)</h4>
+          {% if detail.sources %}
+          <ul class="source-list">
+            {% for s in detail.sources %}
+            <li><a href="/documents/view/{{ s }}" target="_blank" rel="noopener">{{ s }}</a></li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="muted small">No source files matched — check the <code>sources</code> globs in this agent's markdown file.</p>
+          {% endif %}
+          <details class="prompt-details">
+            <summary>System prompt</summary>
+            <pre class="prompt-text">{{ detail.system_prompt }}</pre>
+          </details>
+        </section>
+      {% endif %}
+    </div>
+  </details>
+
+  <div id="transcript" class="transcript"></div>
+  <form id="chat-form" class="chat-form">
+    <textarea id="chat-input" placeholder="Ask {{ agent.title }}..." rows="3" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+</section>
+<script src="/static/markdown.js"></script>
+<script src="/static/chat.js"></script>
+{% endblock %}

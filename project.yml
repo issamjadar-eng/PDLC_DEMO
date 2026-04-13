@@ -1,0 +1,126 @@
+# project.yml — Project manifest
+#
+# Single source of truth for project identity, team roster, and security policy.
+# Skills and agents read this for project-specific context.
+# This file is committed to the repo.
+#
+# Maintained by: medtech-docs init (creation), manual edits (ongoing)
+# Consumed by: security-assert.sh, setup.sh, best-practices, task skill, secops agent
+
+# ─── Project Identity ───
+
+project:
+  name: PDLC_DEMO
+  repo: GlobalLogic-a-Hitachi-Company/PDLC_DEMO
+  type: medtech
+  regulatory_pathway: 510k
+  device_class: II
+  device_family: patient-controlled-analgesia-pump
+  lead_product: PP3500 (PainEase PCA Advanced)
+  portfolio_context:
+    # Full 5-device infusion portfolio retained as predicate/portfolio reference
+    # under docs/project/input-analysis/predicate-analysis/. PP3500 is the DHF anchor.
+    - IP5000  # FlexFlow Pro — general-purpose IV pump (portfolio ref)
+    - PP3000  # PainEase PCA — direct predicate to PP3500
+    - PP3500  # PainEase PCA Advanced — LEAD PRODUCT (DHF anchor)
+    - SP6000  # MicroDose Pro — syringe pump (portfolio ref)
+    - SP6500  # MicroDose Elite — syringe pump (portfolio ref)
+  composition:
+    - samd      # Software as a Medical Device components
+    - simd      # Software in a Medical Device (pump firmware)
+    - hardware  # Custom medical electrical hardware
+  capabilities:
+    ai_ml: true
+    ehr_integration: true     # HL7 FHIR
+    medical_imaging: false
+    surgical_navigation: false
+
+# ─── Team Roster ───
+#
+# Every repo collaborator must have a row here.
+# task_folder is the lowercase name used under tasks/{folder}/
+# GitHub username must be exact (case-sensitive) for API matching.
+
+team:
+  active:
+    - name: Ben Xavier
+      github: benxavier-gl
+      task_folder: ben
+      role: Demo Owner
+      email: ben.xavier@globallogic.com
+      added: 2026-04-12
+  inactive: []
+
+# ─── Skill Registries ───
+#
+# Approved sources for skills, agents, and templates.
+# Skills/agents not traceable to an approved registry trigger secops warnings.
+
+registries:
+  - name: anthropic
+    type: builtin
+    description: Anthropic official skills (docx, pptx, xlsx, pdf)
+    skills:
+      - docx
+      - pptx
+      - xlsx
+      - pdf
+
+  - name: hitachi
+    type: github
+    repo: GlobalLogic-a-Hitachi-Company/hitachi
+    path: skills/manifest.md
+    local_path: ../hitachi    # local working checkout used by /sync-skills (relative to project root)
+    description: Internal shared registry — project skills and best practices
+    skills:
+      - best-practices
+      - docflow
+      - lessons
+      - medtech-docs
+      - skill-creator
+      - strategy
+      - sync-skills
+      - task
+      - tracker
+
+# ─── Security Policy ───
+
+security:
+  approved_email_domains:
+    - globallogic.com
+    - method.com
+
+  check_ttl_days: 7
+  attestation_ttl_days: 30
+
+  required_gitignore_patterns:
+    - ".env"
+    - "*.pem"
+    - "*.key"
+    - "*.p12"
+    - "credentials*"
+    - "**/PHI/**"
+    - "**/patient*data*"
+
+  # Auto-populated from registries.skills lists (union, alphabetized).
+  # When a new skill is added to a registry entry above, also add it here
+  # so the secops audit can verify the installed set matches the approved set.
+  approved_skills:
+    - best-practices
+    - docflow
+    - docx
+    - lessons
+    - medtech-docs
+    - pdf
+    - pptx
+    - secops
+    - skill-creator
+    - strategy
+    - sync-skills
+    - task
+    - tracker
+    - xlsx
+  approved_mcps: []
+  approved_plugins: []
+  approved_agents:
+    - project-secops

@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+{% block content %}
+<section class="landing">
+  <h1>{{ config.project_name }}</h1>
+  <p class="sub">
+    {% if config.device %}{{ config.device }}{% endif %}
+    {% if config.regulatory_pathway %} · {{ config.regulatory_pathway }}{% endif %}
+  </p>
+  <div class="cards">
+    <a class="card" href="/agents">
+      <h3>Agents</h3>
+      <p><strong>{{ agent_count }}</strong> domain agent{{ 's' if agent_count != 1 else '' }}</p>
+      <p class="muted">Chat with individual KOLs or panels, grounded in project documents.</p>
+    </a>
+    <a class="card" href="/documents">
+      <h3>Documents</h3>
+      <p><strong>Browse</strong> the project tree</p>
+      <p class="muted">Navigate DHF artifacts, view files, and auto-summarize with Claude.</p>
+    </a>
+    <div class="card disabled">
+      <h3>Dashboards</h3>
+      <p class="muted">Coming soon.</p>
+    </div>
+    <div class="card disabled">
+      <h3>Workflows</h3>
+      <p class="muted">Coming soon.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+.DS_Store
+.env
+*.pem
+*.key
+*.p12
+credentials*
+**/PHI/**
+**/patient*data*
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/

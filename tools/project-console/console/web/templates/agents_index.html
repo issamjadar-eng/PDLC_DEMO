@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+{% block title %}Agents — PDLC Console{% endblock %}
+{% block content %}
+<section>
+  <h1>Agents</h1>
+  <p class="muted">Domain agents grouped by function. Chat with individuals or convene a panel.</p>
+
+  <div class="group-filter" role="tablist">
+    <button type="button" class="filter-btn is-active" data-group="all">All</button>
+    {% for g in groups %}
+    <button type="button" class="filter-btn" data-group="{{ g.name }}">{{ g.title }}</button>
+    {% endfor %}
+  </div>
+
+  {% for group in groups %}
+  <section class="agent-group" data-group="{{ group.name }}">
+    <header class="agent-group-header">
+      <h2>{{ group.title }}</h2>
+      {% if group.description %}<p class="muted">{{ group.description }}</p>{% endif %}
+    </header>
+
+    {% if group.panels %}
+    <h3 class="agent-subhead">Panels</h3>
+    <ul class="agent-list panels">
+      {% for p in group.panels %}
+      <li class="agent-item panel-item">
+        <a href="/agents/{{ p.name }}" class="agent-link">
+          <div class="agent-meta">
+            <strong>{{ p.title }}</strong>
+            <span class="badge">Panel · {{ p.members|length }} members</span>
+            <p class="muted">{{ p.description }}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if group.solo %}
+    <h3 class="agent-subhead">Individuals</h3>
+    <ul class="agent-list solo">
+      {% for a in group.solo %}
+      <li class="agent-item">
+        <a href="/agents/{{ a.name }}" class="agent-link">
+          <div class="agent-meta">
+            <strong>{{ a.title }}</strong>
+            <p class="muted">{{ a.description }}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+  {% endfor %}
+</section>
+<script>
+(function () {
+  const buttons = document.querySelectorAll(".filter-btn");
+  const sections = document.querySelectorAll(".agent-group");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.group;
+      buttons.forEach((b) => b.classList.toggle("is-active", b === btn));
+      sections.forEach((s) => {
+        s.style.display =
+          target === "all" || s.dataset.group === target ? "" : "none";
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

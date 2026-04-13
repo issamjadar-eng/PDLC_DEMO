@@ -1,0 +1,1 @@
+../skills/secops/hooks/security-assert.sh
