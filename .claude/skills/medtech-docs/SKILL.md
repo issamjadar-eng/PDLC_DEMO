@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
-description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage standards, generate compliance dashboard"
-version: 11
-updated: 2026-04-10
+description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage sub-DHFs, manage standards, generate compliance dashboard"
+version: 12
+updated: 2026-04-13
 ---
 
 # MedTech Docs
@@ -55,6 +55,7 @@ Ask the user the following questions (present all at once, let them answer):
 6. **EHR integration?**: Does any module exchange data with EHR systems (HL7 FHIR)?
 7. **Surgical navigation/guidance?**: Does any module provide real-time spatial guidance during procedures?
 8. **Existing docs?**: Does the project already have a docs/ folder or any documentation structure?
+9. **Primary sub-DHF name**: Short name for the primary component whose design controls anchor this project (e.g., `pca-device`, `ecg-monitor`, `insulin-pump`). **No default — required.** This becomes the first entry in `project.sub_dhfs[]` and the first `docs/project/dhfs/<name>/` folder. Additional sub-DHFs can be added later via `/medtech-docs add-sub-dhf`. Every project has at least one sub-DHF from day one; single-component and multi-component projects use the same shape (single-component is just N=1).
 
 **Step 2 — Create `project.yml`**
 
@@ -79,6 +80,32 @@ project:
   regulatory_pathway: {{510k|denovo|pma|tbd}}
   device_class: {{I|II|III|tbd}}
   device_family: {{DEVICE_FAMILY}}
+
+# ─── Sub-DHFs ───
+#
+# Every project has at least one sub-DHF from day one. A sub-DHF is a
+# component with its own design controls, risk-management, clinical, and
+# postmarket folders. Single-component projects just have one entry here.
+# Add more sub-DHFs over time with `/medtech-docs add-sub-dhf <name>`.
+#
+# Fields:
+#   path       — required; slug used as folder name under docs/project/dhfs/
+#   regulatory — required; concept | in-development | cleared | mixed
+#                (mixed = platform sub-DHF whose children carry the regulatory weight)
+#   filing     — optional; which submission folder this sub-DHF rolls up into
+#                (null means "not yet scoped into a filing")
+#   parent     — optional; path of the parent sub-DHF if this is a nested child
+#                (null means "top-level")
+#
+# Leaf-name uniqueness is enforced by `add-sub-dhf` — no two sub-DHFs can
+# share the same last path segment, even at different depths. This is what
+# lets `/strategy` tag authors write `sub-dhf=<leaf>` without ambiguity.
+
+sub_dhfs:
+  - path: {{PRIMARY_SUB_DHF}}
+    regulatory: in-development
+    filing: null
+    parent: null
 
 # ─── Team Roster ───
 #
@@ -159,6 +186,7 @@ Substitute the `{{...}}` placeholders using the user's answers:
 - `{{regulatory_pathway}}` — from question 2 (lowercase: `510k`, `denovo`, `pma`, or `tbd`)
 - `{{device_class}}` — infer from pathway if possible (510(k) → II, PMA → III, De Novo → I or II), or ask
 - `{{DEVICE_FAMILY}}` — ask the user for the device family slug (lowercase, no spaces — used in filenames like `<device-family>-system-sad.md`). Examples: `hiplink`, `synergy`, `vip`
+- `{{PRIMARY_SUB_DHF}}` — from question 9. Lowercase slug, hyphenated (e.g., `pca-device`, `ecg-monitor`). This is the folder name that appears under `docs/project/dhfs/`, so it must be filesystem-safe. Validate: `^[a-z][a-z0-9-]*[a-z0-9]$`. If the user's answer contains uppercase or underscores, prompt to confirm a normalized form.
 - `{{company-domain.com}}` — ask the user for their corporate email domain
 - `{{APPROVED_SKILLS}}` — **do not ask the user**. Auto-generate by collecting all skill names from the `registries:` section's `skills:` lists, sorted alphabetically, one `- name` per line. This ensures every skill listed in a registry is pre-approved at init time.
 
@@ -182,6 +210,7 @@ After creating (or confirming) `project.yml`, check if `CLAUDE.md` contains a se
 | Section | Purpose |
 |---------|---------|
 | `project:` | Project name, repo, type, regulatory pathway, device class, device family slug |
+| `sub_dhfs:` | Ordered list of sub-DHFs in the project. Every project has at least one from day one. Each entry has `path`, `regulatory`, `filing`, and optional `parent` fields. Maintained by `/medtech-docs add-sub-dhf`. Leaf-name uniqueness is enforced so `sub-dhf=<leaf>` tag resolution is unambiguous. |
 | `team:` | Active and inactive team members — name, GitHub username, task folder, role, email. Every repo collaborator must have a row here. |
 | `registries:` | Approved sources for skills and templates. Skills are either `builtin` (shipped with Claude Code) or fetched from a `github` registry. Each `github` registry has a `local_path` (default `../hitachi`) for local clone-based sync. |
 | `security:` | Approved email domains, gitignore patterns, and allowlists for skills, MCPs, plugins, and agents |
@@ -199,69 +228,91 @@ Create the following hierarchy. Skip folders/files that already exist.
 
 #### Folder tree
 
+The scaffold always uses the **unified sub-DHF shape** — every project has at least one sub-DHF, even single-component projects. The primary sub-DHF name comes from Step 1 question 9. Growth to multi-component is handled by `add-sub-dhf`, not by restructuring.
+
 ```
 docs/
 ├── README.md
-├── external/
+├── external/                            (shared — upstream truth)
 │   ├── README.md
 │   ├── fda-guidance/README.md
 │   ├── standards/README.md
 │   ├── industry-frameworks/README.md
 │   └── clinical-literature/README.md
-├── internal/
+├── internal/                            (shared — corporate SOPs, templates)
 │   ├── README.md
 │   ├── source/
-│   │   └── README.md              ← Original SOP/procedure/template files (PDF, DOCX)
+│   │   └── README.md                    ← Original SOP/procedure/template files (PDF, DOCX)
 │   └── source-md/
-│       └── README.md              ← Markdown conversions of source documents
+│       └── README.md                    ← Markdown conversions of source documents
 └── project/
     ├── README.md
-    ├── input-analysis/
+    ├── input-analysis/                  (shared — customer intelligence across the project)
     │   ├── README.md
     │   ├── predicate-analysis/README.md
     │   ├── competitive-landscape/README.md
     │   ├── kol-feedback/README.md
     │   └── market-research/README.md
-    ├── design-controls/
-    │   ├── README.md
-    │   ├── trace-matrix/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── plans/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── user-needs/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── requirements/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── architecture/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── risk-management/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   ├── vnv/
-    │   │   ├── README.md
-    │   │   └── formal/
-    │   │       └── README.md
-    │   └── tool-validation/
-    │       ├── README.md
-    │       └── formal/
-    │           └── README.md
-    └── submissions/
+    ├── strategies/                      (shared — cross-cutting strategies; commercial, operations)
+    │   └── README.md
+    ├── dhfs/
+    │   └── {{PRIMARY_SUB_DHF}}/         ← per-DHF root; more sub-DHFs added via `add-sub-dhf`
+    │       ├── README.md                ← sub-DHF description; regulatory status; filing rollup
+    │       ├── design-controls/
+    │       │   ├── README.md
+    │       │   ├── trace-matrix/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   ├── plans/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   ├── user-needs/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   ├── requirements/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   ├── architecture/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   ├── vnv/
+    │       │   │   ├── README.md
+    │       │   │   └── formal/
+    │       │   │       └── README.md
+    │       │   └── tool-validation/
+    │       │       ├── README.md
+    │       │       └── formal/
+    │       │           └── README.md
+    │       ├── clinical/                ← evaluation plans, benefit-risk, literature search
+    │       │   ├── README.md
+    │       │   ├── evaluation-plans/README.md
+    │       │   ├── benefit-risk/README.md
+    │       │   └── literature-search/README.md
+    │       ├── postmarket/              ← PMCF plans/studies, CAPA, complaints
+    │       │   ├── README.md
+    │       │   ├── pmcf-plans/README.md
+    │       │   ├── pmcf-studies/README.md
+    │       │   ├── capa/README.md
+    │       │   └── complaints/README.md
+    │       ├── risk-management/         ← ISO 14971 hazard analysis, FMEA, risk-benefit
+    │       │   ├── README.md
+    │       │   └── formal/
+    │       │       └── README.md
+    │       └── cybersecurity/           ← IEC 81001-5-1 assessment, SBOM, threat model
+    │           ├── README.md
+    │           └── formal/
+    │               └── README.md
+    └── submissions/                     (shared — composition manifests reference dhfs/*)
         ├── README.md
         ├── qsub/
         │   ├── README.md
         │   ├── formal/
-        │   │   └── README.md        ← Submission-ready deliverables (DOCX, XLSX)
+        │   │   └── README.md            ← Submission-ready deliverables (DOCX, XLSX)
         │   └── correspondence/README.md
         ├── 510k/
         │   ├── README.md
@@ -274,6 +325,12 @@ docs/
             │   └── README.md
             └── correspondence/README.md
 ```
+
+**Key departures from earlier medtech-docs versions (v11 and earlier):**
+- `design-controls/` is now nested under `dhfs/<primary>/`, not at `docs/project/` root.
+- `risk-management/` is a **sibling** of `design-controls/` inside the sub-DHF, not a child of `design-controls/`. This matches ISO 14971 scoping — risk management covers the whole device, not just design controls.
+- `clinical/`, `postmarket/`, and `cybersecurity/` are new per-DHF folders scaffolded at init time. Early-stage projects will have empty leaves here; that's expected, and best-practices grades empty per-DHF leaves as INFO, not FAIL.
+- `strategies/` is a new shared folder at `docs/project/strategies/` for cross-cutting strategies (commercial, operations) that apply to the whole project regardless of how many sub-DHFs exist.
 
 #### README meta-model
 
@@ -326,11 +383,19 @@ For each README, read the corresponding template from `${CLAUDE_SKILL_DIR}/templ
 | `docs/external/industry-frameworks/README.md` | `readme-industry-frameworks.md` |
 | `docs/external/clinical-literature/README.md` | `readme-clinical-literature.md` |
 | `docs/project/input-analysis/README.md` | `readme-input-analysis.md` |
-| `docs/project/design-controls/README.md` | `readme-design-controls.md` |
-| `docs/project/design-controls/trace-matrix/README.md` | `readme-trace-matrix.md` |
+| `docs/project/strategies/README.md` | `readme-strategies.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/README.md` | `readme-sub-dhf.md` (substitute `{{SUB_DHF_NAME}}`, `{{REGULATORY_STATUS}}=in-development`, `{{FILING}}=TBD`) |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/design-controls/README.md` | `readme-design-controls.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/design-controls/trace-matrix/README.md` | `readme-trace-matrix.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/clinical/README.md` | `readme-clinical.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/postmarket/README.md` | `readme-postmarket.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/risk-management/README.md` | `readme-risk-management.md` |
+| `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/cybersecurity/README.md` | `readme-cybersecurity.md` |
 | `docs/project/submissions/README.md` | `readme-submissions.md` |
 | `docs/internal/source/README.md` | `readme-source.md` |
 | `docs/internal/source-md/README.md` | `readme-source-md.md` |
+
+**Note on per-DHF paths**: every per-DHF folder lives under `docs/project/dhfs/<sub-dhf-name>/`. At `init` time there is exactly one sub-DHF (the primary), so paths above reference `{{PRIMARY_SUB_DHF}}`. When additional sub-DHFs are added via `add-sub-dhf`, the same template set is applied under each new `dhfs/<name>/`.
 
 **Leaf folder READMEs** — use `readme-leaf.md` template, substituting `{{TITLE}}`, `{{PURPOSE}}`, `{{NAMING}}`, and populating `## Expected Content` with the items listed below.
 
@@ -338,20 +403,33 @@ For each README, read the corresponding template from `${CLAUDE_SKILL_DIR}/templ
 
 **Internal folder READMEs**: `internal/source/` and `internal/source-md/` each get a README using the dedicated templates `readme-source.md` and `readme-source-md.md`.
 
+**Path conventions in the table below**:
+- `input-analysis/<leaf>` is shorthand for `docs/project/input-analysis/<leaf>/`
+- `submissions/<leaf>` is shorthand for `docs/project/submissions/<leaf>/`
+- `dhfs/<leaf>` is shorthand for `docs/project/dhfs/{{PRIMARY_SUB_DHF}}/<leaf>/` — i.e., the primary sub-DHF at init time. When `add-sub-dhf` runs, the same template rows are applied under each new sub-DHF.
+
 | Folder | `{{TITLE}}` | `{{PURPOSE}}` | `{{NAMING}}` | Expected Content Items |
 |--------|------------|---------------|--------------|----------------------|
-| `input-analysis/predicate-analysis/` | Predicate Analysis | Predicate device search results, device profiles, comparison tables, and the substantial equivalence argument. Source all data from FDA databases (510(k), De Novo, PMA). | `company-device-name.md` for profiles; `topic-description.md` for analysis | Device profiles (one per candidate), search result summaries, comparison tables, SE argument drafts |
-| `input-analysis/competitive-landscape/` | Competitive Landscape | Competitor analysis — digital surgery portfolios, cleared devices, market positioning. Focus on cleared devices (regulatory data) and marketed features (commercial data). | `company-name.md` for company profiles | Company profiles, product portfolio summaries, market positioning analysis |
-| `input-analysis/kol-feedback/` | KOL Feedback | Key Opinion Leader interviews, clinical advisory input, and surgical workflow insights that inform user needs and product direction. | `YYYY-MM-DD-kol-name-topic.md` | Interview notes, clinical workflow observations, advisory board minutes, surgical technique feedback |
-| `input-analysis/market-research/` | Market Research | Market landscape, unmet needs analysis, and competitive positioning. This informs strategy and user needs, not the submission directly. | `topic-description.md` | Market landscape analysis, unmet needs studies, user surveys, competitive positioning |
-| `design-controls/trace-matrix/` | Trace Matrix | Traceability matrices linking design control artifacts — user needs to requirements, requirements to architecture, requirements to V&V, and risk mitigations across the full design control waterfall. The central cross-referencing hub for the DHF. | `matrix-type.md` at root; matching `.xlsx` in `formal/` | Requirements traceability matrix (RTM), risk traceability matrix, V&V traceability matrix, cross-module traceability |
-| `design-controls/plans/` | Plans | Design and development plans, V&V plans, maintenance plans, and project strategy documents. These govern how the design control process is executed. | `plan-type-name.md` at root; matching `.docx` in `formal/` | Software Development Plan, V&V Plan, Configuration Management Plan, Maintenance Plan, project strategy docs |
-| `design-controls/user-needs/` | User & Stakeholder Needs | Formal user and stakeholder needs — the starting point of the design control waterfall. Derived from input-analysis (KOL feedback, market research, clinical workflow). Includes both user needs (clinical end-users) and stakeholder needs (business, regulatory, technical). | `need-category.md` at root; matching `.docx` in `formal/` | User need statements, stakeholder need statements, needs traceability to input-analysis sources |
-| `design-controls/requirements/` | Requirements | Design input requirements, software requirements specifications (SRS), label requirements. Formal requirements derived from user needs — each must be verifiable. | `component-srs.md` at root; matching `.docx` in `formal/` | Software Requirements Specifications (per module), label requirements, interface requirements |
-| `design-controls/architecture/` | Architecture | Software architecture documents (SAD), system design, interface specifications. Describes the design that satisfies requirements. | `component-sad.md` at root; matching `.docx` in `formal/` | Software Architecture Documents (per module), system design, interface specifications |
-| `design-controls/risk-management/` | Risk Management | Risk analysis per ISO 14971, hazard analysis, FMEA, risk-benefit analysis. Covers all modules and inter-module interactions. | `risk-type.md` at root; matching `.docx` in `formal/` | Risk Management Plan, hazard analysis, FMEA, risk-benefit analysis, risk traceability matrix |
-| `design-controls/vnv/` | Verification & Validation | V&V protocols, test plans, test results, traceability matrices, usability evaluation reports. Evidence that the design meets requirements and user needs. | `test-type-component.md` at root; matching `.docx` in `formal/` | System test plans/reports, integration test plans/reports, usability evaluation reports, traceability matrices |
-| `design-controls/tool-validation/` | Tool Validation | Validation records for software tools used in development and quality processes per IEC 62304 and FDA guidance. Covers compilers, test frameworks, static analysis tools, build systems, SOUP management tools, and any automated tools whose output affects device quality. | `tool-name-validation.md` at root; matching `.docx` in `formal/` | Tool validation plans, tool validation reports, tool risk assessments, tool inventory/registry, revalidation records |
+| `input-analysis/predicate-analysis/` | Predicate Analysis | Predicate device search results, device profiles, comparison tables, and the substantial equivalence argument. Source all data from FDA databases (510(k), De Novo, PMA). Applies across the project portfolio — shared across sub-DHFs. | `company-device-name.md` for profiles; `topic-description.md` for analysis | Device profiles (one per candidate), search result summaries, comparison tables, SE argument drafts |
+| `input-analysis/competitive-landscape/` | Competitive Landscape | Competitor analysis — cleared devices, market positioning. Shared across sub-DHFs. | `company-name.md` for company profiles | Company profiles, product portfolio summaries, market positioning analysis |
+| `input-analysis/kol-feedback/` | KOL Feedback | Key Opinion Leader interviews, clinical advisory input. Shared across sub-DHFs. | `YYYY-MM-DD-kol-name-topic.md` | Interview notes, clinical workflow observations, advisory board minutes |
+| `input-analysis/market-research/` | Market Research | Market landscape, unmet needs analysis, competitive positioning. Shared across sub-DHFs. | `topic-description.md` | Market landscape analysis, unmet needs studies, user surveys |
+| `dhfs/design-controls/trace-matrix/` | Trace Matrix | Traceability matrices linking design control artifacts — user needs to requirements, requirements to architecture, requirements to V&V, and risk mitigations. Scoped to this sub-DHF. | `matrix-type.md` at root; matching `.xlsx` in `formal/` | RTM, risk traceability matrix, V&V traceability matrix |
+| `dhfs/design-controls/plans/` | Plans | Design and development plans, V&V plans, maintenance plans, and component-level strategy documents. Scoped to this sub-DHF. | `plan-type-name.md` at root; matching `.docx` in `formal/` | Software Development Plan, V&V Plan, Configuration Management Plan, Maintenance Plan |
+| `dhfs/design-controls/user-needs/` | User & Stakeholder Needs | Formal user and stakeholder needs for this sub-DHF. Derived from shared `input-analysis/` and scoped down to this component. | `need-category.md` at root; matching `.docx` in `formal/` | User need statements, stakeholder need statements, needs traceability |
+| `dhfs/design-controls/requirements/` | Requirements | Design input requirements, SRS, label requirements for this sub-DHF. Each must be verifiable. | `component-srs.md` at root; matching `.docx` in `formal/` | SRS (per module), label requirements, interface requirements |
+| `dhfs/design-controls/architecture/` | Architecture | Software architecture documents (SAD), system design, interface specifications for this sub-DHF. | `component-sad.md` at root; matching `.docx` in `formal/` | SAD (per module), system design, interface specifications |
+| `dhfs/design-controls/vnv/` | Verification & Validation | V&V protocols, test plans, test results, usability evaluation reports for this sub-DHF. | `test-type-component.md` at root; matching `.docx` in `formal/` | System test plans/reports, integration tests, usability evaluation reports |
+| `dhfs/design-controls/tool-validation/` | Tool Validation | Validation records for software tools used in development per IEC 62304. Scoped to this sub-DHF's build/test toolchain. | `tool-name-validation.md` at root; matching `.docx` in `formal/` | Tool validation plans, reports, risk assessments, tool inventory |
+| `dhfs/clinical/evaluation-plans/` | Clinical Evaluation Plans | Clinical evaluation plans per MDCG 2020-6 / FDA guidance for this sub-DHF. | `CEP-NNNN.md` at root; matching `.docx` in `formal/` | Clinical evaluation plans, clinical development plans |
+| `dhfs/clinical/benefit-risk/` | Benefit-Risk Analysis | Benefit-risk analyses tying clinical evidence to the device's intended use and risk profile. | `BRA-NNNN.md` at root | Benefit-risk analysis documents |
+| `dhfs/clinical/literature-search/` | Literature Search | Systematic literature search results, inclusion/exclusion rationale, and evidence tables. | `LSS-NNNN.md` at root | Literature search strategies, evidence tables, PRISMA diagrams |
+| `dhfs/postmarket/pmcf-plans/` | PMCF Plans | Post-Market Clinical Follow-up plans for this sub-DHF. | `PMCF-NNNN.md` at root | PMCF study plans, objectives, endpoints |
+| `dhfs/postmarket/pmcf-studies/` | PMCF Studies | PMCF study execution records and results for this sub-DHF. | `STUDY-NNNN.md` at root | Study protocols, interim reports, final reports |
+| `dhfs/postmarket/capa/` | CAPA | Corrective and Preventive Action records tied to this sub-DHF's post-market experience. | `CAPA-YYYY-NNN.md` at root | CAPA records, root-cause analyses, effectiveness checks |
+| `dhfs/postmarket/complaints/` | Complaints | Complaint ledger and adjudicated records for this sub-DHF. | `complaints-ledger.md` + dated records | Complaint ledger, individual complaint files, trending analyses |
+| `dhfs/risk-management/` | Risk Management | ISO 14971 hazard analysis, FMEA, risk-benefit analysis for this sub-DHF. Sibling of `design-controls/`, not a child, because risk management is device-level (not design-controls-process-level). | `risk-type.md` at root; matching `.docx` in `formal/` | Risk Management Plan, hazard analysis, FMEA, risk-benefit analysis, risk traceability matrix |
+| `dhfs/cybersecurity/` | Cybersecurity | IEC 81001-5-1 assessment, threat model, SBOM, vulnerability management for this sub-DHF. Cross-linked to the filing's 510(k) submission when applicable. | `assessment.md`, `threat-model.md`, `sbom.*` at root; matching `.docx` in `formal/` | Cybersecurity assessment, threat model, SBOM, vulnerability disclosures, SDL evidence |
 | `submissions/qsub/` | Q-Sub (Pre-Submission) | Pre-Submission package for FDA engagement. Components: cover letter, device description, proposed intended use, predicate comparison, PCCP summary, specific questions. | `component-name.md` at root; matching `.docx` in `formal/` | Cover letter, device description, proposed intended use, predicate comparison, PCCP summary, FDA questions |
 | `submissions/510k/` | 510(k) Submission | 510(k) submission materials. Components: predicate comparison, software documentation, performance data, risk analysis, labeling, SBOM, DICOM conformance statement. | `component-name.md` at root; matching `.docx` in `formal/` | Predicate comparison, software documentation, performance data, risk analysis, labeling, SBOM, DICOM conformance statement |
 | `submissions/pccp/` | PCCP | Predetermined Change Control Plan. Components: device and modifications description, change types per module, modification protocols, performance criteria, validation methodology, reporting requirements. | `component-name.md` at root; matching `.docx` in `formal/` | Device/modifications description, change types, modification protocols, performance criteria, validation methodology, reporting requirements |
@@ -408,6 +486,77 @@ Show the user:
 - Standards and frameworks determined (required vs. excluded)
 - Skills installed and setup actions run
 - Next steps: populate FDA guidance, begin design controls, run `/medtech-docs dashboard` to see status
+
+### `add-sub-dhf <name> [--parent <path>] [--regulatory <status>] [--filing <filing>]`
+
+Add a new sub-DHF to an existing project. Scaffolds the per-DHF folder layout, adds a new entry to `project.sub_dhfs[]`, and creates the sub-DHF README.
+
+**Arguments**:
+- `<name>` — short slug for the new sub-DHF (e.g., `connectivity-adapter`, `cloud-suite`, `drug-library-manager`). Must match `^[a-z][a-z0-9-]*[a-z0-9]$`. Used as the folder name under `dhfs/`.
+- `--parent <path>` — optional. Path of the parent sub-DHF (relative to `docs/project/dhfs/`), for nesting a child under a platform sub-DHF. Examples: `cloud-suite`, `cloud-suite/dhfs/fleet-management`. Default: top-level (no parent).
+- `--regulatory <status>` — optional. One of `concept | in-development | cleared | mixed`. Default: `in-development`. Use `mixed` only for platform sub-DHFs whose children carry the regulatory weight (the platform itself doesn't ship separately).
+- `--filing <filing>` — optional. Name of the submission folder this sub-DHF rolls up into (e.g., `510k-pp3500`). Default: `null` (not yet scoped into a filing).
+
+**Step 1 — Validate the name**:
+1. Check that `<name>` matches the slug regex. If not, reject with the error `"invalid sub-DHF name '<name>' — must match ^[a-z][a-z0-9-]*[a-z0-9]$"`.
+2. **Leaf-name uniqueness check**: read `project.yml` `sub_dhfs[]` and scan every entry's `path` field. If any existing entry's last path segment equals `<name>`, reject with: `"name '<name>' is already used by '<full-path>'; pick a unique name."` This is the enforcement that lets `/strategy` tag authors write `sub-dhf=<leaf>` without ambiguity (per P3 Q1 decision in task 007).
+
+**Step 2 — Resolve the target path**:
+- If `--parent` is omitted: target is `docs/project/dhfs/<name>/`. The new entry's `path` field is just `<name>`.
+- If `--parent` is given: target is `docs/project/dhfs/<parent>/dhfs/<name>/`. The new entry's `path` is `<parent>/dhfs/<name>`. Verify the parent exists on disk first; if not, reject with: `"parent sub-DHF '<parent>' not found under docs/project/dhfs/"`.
+
+**Step 3 — Scaffold the per-DHF folder layout** at the target path, identical to what `init` creates for the primary sub-DHF:
+```
+dhfs/<name>/
+├── README.md                ← readme-sub-dhf.md (substitute {{SUB_DHF_NAME}}, {{REGULATORY_STATUS}}, {{FILING}})
+├── design-controls/         ← full tree: trace-matrix, plans, user-needs, requirements, architecture, vnv, tool-validation
+├── clinical/                ← evaluation-plans, benefit-risk, literature-search
+├── postmarket/              ← pmcf-plans, pmcf-studies, capa, complaints
+├── risk-management/         ← + formal/
+└── cybersecurity/           ← + formal/
+```
+
+Use the same templates the `init` action uses — `readme-design-controls.md`, `readme-trace-matrix.md`, `readme-clinical.md`, `readme-postmarket.md`, `readme-risk-management.md`, `readme-cybersecurity.md`, plus `readme-leaf.md` for each leaf folder with substitutions from the leaf-folder table in `init` Step 3.
+
+Skip any folder or README that already exists. This makes `add-sub-dhf` idempotent under re-run — if the user ran it previously and is now adding the `--filing` flag, re-running should update the sub-DHF entry in `project.yml` without disturbing existing content.
+
+**Step 4 — Update `project.yml`**:
+Parse `project.yml`, find the `sub_dhfs:` list, and append a new entry:
+
+```yaml
+sub_dhfs:
+  - path: <name-or-nested-path>
+    regulatory: <status>   # default in-development
+    filing: <filing>       # default null
+    parent: <parent>       # default null
+```
+
+Preserve existing entries and all surrounding YAML structure (comments, spacing, other fields). Write `project.yml` atomically — build the new content in memory and write in one operation.
+
+**Step 5 — Report**:
+Show the user:
+- The new sub-DHF's target path under `docs/project/dhfs/`.
+- Which folders and READMEs were created vs. already existed.
+- The updated `project.yml` `sub_dhfs[]` entry.
+- Next-step suggestions: author the sub-DHF README purpose paragraph, add user needs under `design-controls/user-needs/`, update the composition manifest of any filing that should reference this sub-DHF.
+
+**Depth and recursion**:
+`add-sub-dhf` supports arbitrary `--parent` depth via the path form (e.g., `--parent cloud-suite/dhfs/drug-library-manager`). The interactive `init` flow caps nesting at 2 levels to keep the init prompt simple; `add-sub-dhf` has no such cap. For a project that genuinely needs 3+ levels of sub-DHF nesting, run `init` with 2 levels and then `add-sub-dhf` for the deeper children.
+
+**Examples**:
+```
+# Add a top-level sub-DHF
+/medtech-docs add-sub-dhf connectivity-adapter --regulatory in-development
+
+# Add a platform sub-DHF (no filing of its own, children will file)
+/medtech-docs add-sub-dhf cloud-suite --regulatory mixed
+
+# Add a child of the platform
+/medtech-docs add-sub-dhf drug-library-manager --parent cloud-suite --regulatory in-development --filing 510k-pp3500
+
+# Add a grandchild (nested path)
+/medtech-docs add-sub-dhf rule-engine --parent cloud-suite/dhfs/drug-library-manager
+```
 
 ### `add-standard <name>`
 
@@ -500,24 +649,42 @@ Tell the user the dashboard has been generated and provide the file path. Sugges
 
 <!-- Read by /best-practices skill to audit project setup -->
 
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Project manifest exists | `project.yml` exists in project root with `project:`, `team:`, `registries:`, and `security:` sections | Required |
-| Docs folder exists | `docs/` directory exists with `README.md` | Required |
-| Three-tier structure | `docs/external/`, `docs/internal/`, `docs/project/` all exist | Required |
-| Design controls folder complete | All 8 design control subfolders exist: trace-matrix, plans, user-needs, requirements, architecture, risk-management, vnv, tool-validation | Required |
-| Standards have verification checks | Every `.md` file in `docs/external/standards/` (excluding README) contains a `## Verification Checks` section | Required |
-| Frameworks have evaluation decisions | `docs/external/industry-frameworks/README.md` contains both an active frameworks table and an "Evaluated — Not Required" table | Required |
-| Dashboard exists | `docs/dashboard.html` exists | Recommended |
-| Dashboard is current | `docs/dashboard.html` was modified within the last 7 days | Recommended |
-| No empty design control folders | Every subfolder under `docs/project/design-controls/` contains at least one `.md` file besides README | Recommended |
-| Submissions match pathway | If CLAUDE.md mentions "510(k)", `docs/project/submissions/510k/` exists; if "De Novo", `docs/project/submissions/de-novo/` exists; etc. | Recommended |
-| Standards README has exclusion rationale | Every standard/framework in the "Evaluated — Not Required" table has a non-empty rationale | Required |
-| READMEs have changelogs | Every `README.md` under `docs/` contains a `## Changelog` section with a table (Date, Author, Summary). In AI-driven workflows, a session may make many edits collapsed into one commit — the changelog captures the rationale that git alone doesn't. | Required |
-| READMEs have conventions | Every `README.md` under `docs/` contains a `## Conventions` section documenting naming rules, formatting, and linking guidance for that folder. | Required |
-| READMEs follow section order | In every `README.md` under `docs/`, sections appear in meta-model order: Title → Subfolders/Structure → Information Flow/Relationships → Expected Content → Domain-specific → Conventions → For Claude → Changelog. Specifically: `## Conventions` must appear before `## Changelog`, and `## Expected Content` (if present) must appear before `## Conventions`. | Required |
-| Leaf READMEs have expected content | Every `README.md` in a leaf folder (no subdirectories) under `docs/` contains a `## Expected Content` or `## Expected Documents` section listing what document types belong in that folder. Exceptions: folders that use domain-specific sections instead (e.g., standards/ uses `## Distilled Standards`, frameworks/ uses `## Active Frameworks`). | Recommended |
-| README changelogs are current | When a `README.md` under `docs/` is modified, its `## Changelog` table has an entry matching the current date or the date of the most recent modification. Stale changelogs (last entry significantly older than git last-modified date) should be flagged. | Recommended |
+**Scope column** — added in v12 to support the unified sub-DHF shape. Values:
+- `shared` — check runs once at project root.
+- `per-dhf` — check runs once per entry in `project.sub_dhfs[]`, with the sub-DHF root as the implicit working directory. Path references in "How to Verify" below that start with `dhfs/<path>/` are interpreted relative to that sub-DHF's root; paths without a `dhfs/` prefix are project-relative.
+- `per-submission` — check runs once per `submissions/<filing>/` folder.
+- `cross-cutting` — check runs once at project root but reads across multiple sub-DHFs (enumerates `project.sub_dhfs[]` and correlates).
+
+Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
+
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Project manifest exists | `project.yml` exists in project root with `project:`, `sub_dhfs:`, `team:`, `registries:`, and `security:` sections | Required | shared |
+| Project has at least one sub-DHF | `project.yml` `sub_dhfs[]` list is non-empty, and every entry's `path` resolves to an existing folder under `docs/project/dhfs/` | Required | cross-cutting |
+| Sub-DHF leaf names are unique | For every entry in `project.yml` `sub_dhfs[]`, the last segment of `path` is unique across the list (case-sensitive). | Required | cross-cutting |
+| Docs folder exists | `docs/` directory exists with `README.md` | Required | shared |
+| Three-tier structure | `docs/external/`, `docs/internal/`, `docs/project/` all exist | Required | shared |
+| Strategies folder exists | `docs/project/strategies/` directory exists with `README.md` | Required | shared |
+| Sub-DHF README exists | `dhfs/<path>/README.md` exists and contains a purpose paragraph | Required | per-dhf |
+| Design controls folder complete | All 7 design control subfolders exist under this sub-DHF: `design-controls/{trace-matrix, plans, user-needs, requirements, architecture, vnv, tool-validation}` | Required | per-dhf |
+| Risk management folder exists | `risk-management/` folder exists at the sub-DHF root (sibling of `design-controls/`, not a child) with a `formal/` subfolder | Required | per-dhf |
+| Clinical folder complete | `clinical/{evaluation-plans, benefit-risk, literature-search}` all exist under this sub-DHF. Empty leaves are acceptable for early-stage sub-DHFs and reported as INFO. | Recommended | per-dhf |
+| Postmarket folder complete | `postmarket/{pmcf-plans, pmcf-studies, capa, complaints}` all exist under this sub-DHF. Empty leaves acceptable and reported as INFO. | Recommended | per-dhf |
+| Cybersecurity folder exists | `cybersecurity/` folder exists at sub-DHF root with a `formal/` subfolder. Empty folder acceptable and reported as INFO. | Recommended | per-dhf |
+| Platform sub-DHFs have children | For every sub-DHF with `regulatory: mixed`, at least one other `sub_dhfs[]` entry has `parent` pointing to it. Prevents `mixed` from being used to silence the unreferenced-sub-DHF check on leaf components. | Required | cross-cutting |
+| Composition manifests referenced | If `sub_dhfs[]` is non-empty AND `submissions/*/composition-manifest.md` glob returns zero matches, emit project-level WARN: "No composition manifests authored — per-submission checks will not run until at least one exists." | Recommended | cross-cutting |
+| Standards have verification checks | Every `.md` file in `docs/external/standards/` (excluding README) contains a `## Verification Checks` section | Required | shared |
+| Frameworks have evaluation decisions | `docs/external/industry-frameworks/README.md` contains both an active frameworks table and an "Evaluated — Not Required" table | Required | shared |
+| Dashboard exists | `docs/dashboard.html` exists | Recommended | shared |
+| Dashboard is current | `docs/dashboard.html` was modified within the last 7 days | Recommended | shared |
+| No empty design control folders | Every subfolder under `design-controls/` contains at least one `.md` file besides README | Recommended | per-dhf |
+| Submissions match pathway | If CLAUDE.md mentions "510(k)", `docs/project/submissions/510k/` exists; if "De Novo", `docs/project/submissions/de-novo/` exists; etc. | Recommended | shared |
+| Standards README has exclusion rationale | Every standard/framework in the "Evaluated — Not Required" table has a non-empty rationale | Required | shared |
+| READMEs have changelogs | Every `README.md` under `docs/` contains a `## Changelog` section with a table (Date, Author, Summary). In AI-driven workflows, a session may make many edits collapsed into one commit — the changelog captures the rationale that git alone doesn't. | Required | shared |
+| READMEs have conventions | Every `README.md` under `docs/` contains a `## Conventions` section documenting naming rules, formatting, and linking guidance for that folder. | Required | shared |
+| READMEs follow section order | In every `README.md` under `docs/`, sections appear in meta-model order: Title → Subfolders/Structure → Information Flow/Relationships → Expected Content → Domain-specific → Conventions → For Claude → Changelog. Specifically: `## Conventions` must appear before `## Changelog`, and `## Expected Content` (if present) must appear before `## Conventions`. | Required | shared |
+| Leaf READMEs have expected content | Every `README.md` in a leaf folder (no subdirectories) under `docs/` contains a `## Expected Content` or `## Expected Documents` section listing what document types belong in that folder. Exceptions: folders that use domain-specific sections instead (e.g., standards/ uses `## Distilled Standards`, frameworks/ uses `## Active Frameworks`). | Recommended | shared |
+| README changelogs are current | When a `README.md` under `docs/` is modified, its `## Changelog` table has an entry matching the current date or the date of the most recent modification. Stale changelogs (last entry significantly older than git last-modified date) should be flagged. | Recommended | shared |
 
 ## Notes
 
@@ -530,6 +697,7 @@ Tell the user the dashboard has been generated and provide the file path. Sugges
 
 ## Changelog
 
+- 12 (2026-04-13): **Unified sub-DHF shape — every project has at least one sub-DHF from day one.** Rewrote the init folder tree to scaffold `docs/project/dhfs/<primary>/{design-controls, clinical, postmarket, risk-management, cybersecurity}/` instead of the old flat `docs/project/design-controls/...` layout. Single-component and multi-component projects use the same shape; growth is a plain `add-sub-dhf` call, not a migration. Added Step 1 question 9 (primary sub-DHF name, no default). Added `sub_dhfs:` section to the `project.yml` template with leaf-name uniqueness enforcement rule. Added new `add-sub-dhf` action supporting arbitrary `--parent` nesting and `regulatory` / `filing` flags. `risk-management/` is now a sibling of `design-controls/` at the sub-DHF level (it used to be a child of `design-controls/` in v11). Added `clinical/`, `postmarket/`, `cybersecurity/`, and shared `strategies/` to the scaffold. Added Scope column to the Best Practices table classifying every check as `shared`, `per-dhf`, `per-submission`, or `cross-cutting`. Added new per-DHF checks (sub-DHF README exists, risk-management folder exists, platform sub-DHFs have children) and cross-cutting checks (sub_dhfs non-empty, leaf names unique, composition manifests referenced). No migration action — the one-time PDLC_DEMO reorg from the v11 flat shape into `dhfs/pca-device/` is a task 007 P6 execution step, not a skill feature, because there are no other existing projects on the old shape. New templates required but not yet shipped with this version (follow-up): `readme-sub-dhf.md`, `readme-clinical.md`, `readme-postmarket.md`, `readme-risk-management.md`, `readme-cybersecurity.md`, `readme-strategies.md`. See task 007 for design rationale.
 - 11 (2026-04-10): Added `tool-validation/` under design-controls (8th subfolder). Tool validation records for software tools used in development per IEC 62304 and FDA guidance — plans, reports, risk assessments, tool inventory. Added to folder tree, leaf table, dashboard scan. Updated best-practices check (7→8 subfolders). Added Step 2b to `init` — after creating `project.yml`, check if CLAUDE.md has a project manifest section and insert one if missing.
 - 10 (2026-04-09): Added `project.yml` scaffolding to `init` as new Step 2. Asks user for project name, repo, email domain; pre-populates project identity, team roster template, skill registries, and security policy. Steps renumbered (old 2→3, 3→4, 4→5, 5→6). Added best-practices check for project manifest existence. Replaces `team.md` as the team roster source.
 - 9 (2026-04-05): Added trace-matrix/ under design-controls (traceability matrices for DHF cross-referencing). Added default README.md to every folder created by init: internal/source/, internal/source-md/, and all formal/ subfolders. New templates: readme-trace-matrix.md, readme-source.md, readme-source-md.md, readme-formal.md. Updated best practices check (6→7 design control subfolders).
