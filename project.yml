@@ -35,6 +35,30 @@ project:
     medical_imaging: false
     surgical_navigation: false
 
+# ─── Sub-DHFs ───
+#
+# Every project has at least one sub-DHF. A sub-DHF is a component with its own
+# design controls, risk-management, clinical, postmarket, and cybersecurity
+# folders. This section is the single source of truth for the project's sub-DHF
+# topology. Consumed by /medtech-docs, /strategy, /tracker, /best-practices.
+#
+# Added 2026-04-13 as part of task 007 P6 (unified sub-DHF shape reorg).
+# PDLC_DEMO starts with one sub-DHF (pca-device, the PP3500 DHF anchor); other
+# components (connectivity-adapter, cloud-suite + 7 child apps) will be added
+# via /medtech-docs add-sub-dhf as they are scoped.
+#
+# Fields:
+#   path       — required; folder name under docs/project/dhfs/ (or nested path)
+#   regulatory — concept | in-development | cleared | mixed
+#   filing     — submission folder this sub-DHF rolls up into (null if not scoped)
+#   parent     — parent sub-DHF path (null for top-level)
+
+sub_dhfs:
+  - path: pca-device
+    regulatory: in-development
+    filing: 510k
+    parent: null
+
 # ─── Team Roster ───
 #
 # Every repo collaborator must have a row here.
