@@ -17,8 +17,11 @@ if command -v jq &>/dev/null && [ -n "$INPUT" ]; then
 fi
 [ -z "$SESSION_ID" ] && SESSION_ID="${CLAUDE_SESSION_ID:-}"
 
-if [ -n "$SESSION_ID" ] && [ -f "$STATE_DIR/active-tasks-${SESSION_ID}.txt" ]; then
+if [ -n "$SESSION_ID" ]; then
     rm -f "$STATE_DIR/active-tasks-${SESSION_ID}.txt"
+    # Clear capture-armed and capture-exit-pending markers for this session
+    rm -f "$STATE_DIR"/capture-armed-"${SESSION_ID}"-*.txt 2>/dev/null
+    rm -f "$STATE_DIR"/capture-exit-pending-"${SESSION_ID}"-*.txt 2>/dev/null
 fi
 
 exit 0

@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 10
-updated: 2026-04-08
+version: 13
+updated: 2026-04-13
 ---
 
 # Task Management
@@ -65,25 +65,37 @@ Wire up the task gate hook and activation script for this project. Self-containe
 4. If `.claude/hooks/register-hook.sh` does not exist, install it from `${CLAUDE_SKILL_DIR}/hooks/register-hook.sh` and make it executable. This is shared infrastructure — any skill can use it to register hooks safely.
 5. Create symlink `.claude/hooks/check-active-task.sh` → `../skills/task/hooks/check-active-task.sh` (skip if already exists)
 6. Create symlink `.claude/hooks/session-env.sh` → `../skills/task/hooks/session-env.sh` (skip if already exists). This hook makes `CLAUDE_SESSION_ID` available to all Bash tool calls — the task gate relies on it.
-7. Create symlink `.claude/hooks/session-cleanup.sh` → `../skills/task/hooks/session-cleanup.sh` (skip if already exists). This hook purges the task-gate state file on SessionEnd.
-8. Install `task-activate.sh` into `.claude/hooks/` — copy from `${CLAUDE_SKILL_DIR}/hooks/task-activate.sh` and make executable. (Skip if already exists and content matches.)
-9. Register the task gate hook using the shared helper:
-   ```bash
-   .claude/hooks/register-hook.sh PreToolUse "Edit|Write|NotebookEdit" command \
-     '"$CLAUDE_PROJECT_DIR"/.claude/hooks/check-active-task.sh'
-   ```
-10. Register the session-env hook (no matcher — fires for all SessionStart events):
+7. Create symlink `.claude/hooks/session-cleanup.sh` → `../skills/task/hooks/session-cleanup.sh` (skip if already exists). This hook purges the task-gate state file and the capture-armed/exit-pending markers on SessionEnd.
+8. Create symlink `.claude/hooks/capture-signals.sh` → `../skills/task/hooks/capture-signals.sh` (skip if already exists). This hook detects strategic-intent entry/exit signals in user prompts and arms the Strategy/Lessons capture check (v12+).
+9. Create symlink `.claude/hooks/capture-check.sh` → `../skills/task/hooks/capture-check.sh` (skip if already exists). This hook is the hard backstop that blocks `Stop` events when an armed task still lacks capture (v12+).
+10. Install `task-activate.sh` into `.claude/hooks/` — copy from `${CLAUDE_SKILL_DIR}/hooks/task-activate.sh` and make executable. (Skip if already exists and content matches.)
+11. Register the task gate hook using the shared helper:
+    ```bash
+    .claude/hooks/register-hook.sh PreToolUse "Edit|Write|NotebookEdit" command \
+      '"$CLAUDE_PROJECT_DIR"/.claude/hooks/check-active-task.sh'
+    ```
+12. Register the session-env hook (no matcher — fires for all SessionStart events):
     ```bash
     .claude/hooks/register-hook.sh SessionStart "" command \
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/session-env.sh'
     ```
-11. Register the session-cleanup hook:
+13. Register the session-cleanup hook:
     ```bash
     .claude/hooks/register-hook.sh SessionEnd "" command \
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/session-cleanup.sh'
     ```
+14. Register the capture-signals hook (UserPromptSubmit — arms strategic intent and injects soft nudges):
+    ```bash
+    .claude/hooks/register-hook.sh UserPromptSubmit "" command \
+      '"$CLAUDE_PROJECT_DIR"/.claude/hooks/capture-signals.sh'
+    ```
+15. Register the capture-check hook (Stop — hard backstop for uncaptured armed tasks):
+    ```bash
+    .claude/hooks/register-hook.sh Stop "" command \
+      '"$CLAUDE_PROJECT_DIR"/.claude/hooks/capture-check.sh'
+    ```
     The helper safely appends to `settings.json` without overwriting other skills' hooks. It checks for duplicates (idempotent).
-12. Report what was done
+16. Report what was done
 
 ### `find <description>`
 Search for active tasks that relate to a topic or description. This is the entry point for the task-first workflow.
@@ -140,8 +152,17 @@ Optional sections — add when the task needs them:
 - **References**: Links to guidance docs, related tasks, external sources (`| Ref | Description | Location |`)
 - **Analysis**: Findings, reasoning, design decisions, conclusions
 - **Outcome**: Final result or decision when task is complete
-- **Strategy**: Strategy decisions captured during this task, tagged for harvesting by `/strategy` skill. Use the format: `<!-- STRATEGY CONTENT: domain, topic1, topic2 -->` where domain is one of: regulatory, commercial, architecture, development, testing, risk, postmarket.
-- **Lessons Learned**: Insights and principles captured during this task, tagged for harvesting by `/lessons` skill. Use the format: `<!-- LESSONS LEARNED: category1, category2 -->`
+
+**Strategy and Lessons Learned are not "optional when convenient" — they are soft-required whenever the task generates that kind of content.** Harvesting skills (`/strategy`, `/lessons`) can only surface what was written, so missing capture = permanently lost context.
+
+- **Strategy**: Add a Strategy section whenever the task involves any of: choosing between alternatives, defining or redrawing scope/boundaries, regulatory pathway decisions, predicate selection, architecture trade-offs, module boundary calls, or risk posture decisions. Use the format: `<!-- STRATEGY CONTENT: domain, topic1, topic2 -->` where domain is one of: regulatory, commercial, architecture, development, testing, risk, postmarket. Harvested by `/strategy` skill.
+- **Lessons Learned**: Add a Lessons Learned section whenever the task surfaces a non-obvious insight, a corrected assumption, a reusable pattern, or a "why" that won't be derivable from the final code/doc alone. Use the format: `<!-- LESSONS LEARNED: category1, category2 -->`. Harvested by `/lessons` skill.
+
+**Capture discipline for Claude:**
+1. Watch for the triggers above during the session, not just at the end.
+2. Before marking a task Complete (or ending a session that touched a task), check whether those triggers fired. If yes, draft a Strategy or Lessons block and offer it to the user for approval — do not silently commit strategic content.
+3. If the session genuinely had no qualifying content, add a changelog line: `- YYYY-MM-DD: No strategy/lessons content this session` so the absence is intentional, not forgotten.
+4. This is still a judgment call — a bug fix or routine reorg is not strategy. A conversation about *why* we chose one approach over another is. When in doubt, draft it and let the user decide.
 
 When creating, populate:
    - Set **ID** to the new NNN
@@ -242,6 +263,10 @@ bash .claude/hooks/task-activate.sh list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 ## Changelog
 
+- 13 (2026-04-13): Extended `setup` action to symlink and register the two capture-backstop hooks introduced in v12: `capture-signals.sh` (UserPromptSubmit — detects strategic-intent entry/exit signals, arms and soft-nudges) and `capture-check.sh` (Stop — hard backstop blocking `Stop` events when armed tasks lack capture). Previously downstream users pulling v12 got the hook files but had no automated path to register them, leaving the capture backstop silently inactive. Now `/task setup` wires everything up in one idempotent command. First skill to adopt the new post-update annotation convention added in sync-skills v3 — the block below is what `/sync-skills pull` will surface to downstream users.
+  **Post-update:** Run `/task setup` to symlink and register the new UserPromptSubmit and Stop hooks. Without this, the capture backstop is installed but inactive — your task sessions won't arm on strategic intent signals and won't be blocked from ending with uncaptured Strategy/Lessons content. The setup action is idempotent, so running it on a project that already has the earlier hooks registered is safe.
+- 12 (2026-04-13): Reframed Strategy and Lessons Learned sections from "optional" to soft-required with explicit trigger lists and capture discipline for Claude. Root cause: the prior "add when the task needs them" framing caused Claude to skip capture even when sessions were clearly architectural/strategic, leaving `/strategy` and `/lessons` skills nothing to harvest. New template spells out triggers (choosing between alternatives, scope calls, trade-offs, non-obvious insights), requires end-of-session review, and requires an explicit "no content this session" changelog note when nothing qualifies. Added `capture-signals.sh` (UserPromptSubmit) and `capture-check.sh` (Stop) hooks implementing the armed-state-machine backstop. Paired with feedback memory `feedback_capture_strategy_lessons.md`.
+  **Post-update:** Run `/task setup` to symlink and register the new UserPromptSubmit and Stop hooks. (Retroactively annotated in v13 — v12 shipped before the post-update annotation convention existed, so users who pulled v12 between its release and v13 had no signal that registration was required.)
 - 11 (2026-04-12): Task skill now owns `session-env.sh` and `session-cleanup.sh` (moved from `.claude/hooks/` into `hooks/` in the skill). `setup` action extended to symlink both into `.claude/hooks/` and register SessionStart (session-env) + SessionEnd (session-cleanup) hooks via `register-hook.sh`. Rationale: session-env exports the ID the task gate depends on, and session-cleanup removes the task-gate state file — both are task-skill concerns, not security. This means `/medtech-docs init` Step 5 auto-wires them when it discovers `/task setup`. See task 049.
 - 10 (2026-04-08): Robust session ID. SessionStart hook (`session-env.sh`) reads `session_id` from hook JSON and exports as `CLAUDE_SESSION_ID` via `CLAUDE_ENV_FILE`. Hook JSON session_id is consistent across parent and subagent sessions. `check-active-task.sh` prefers env var, falls back to hook JSON for subagents where env var isn't inherited. `uuidgen` fallback if JSON has no session_id.
 - 9 (2026-04-08): Added optional Strategy and Lessons Learned sections to task document template. Strategy sections use `<!-- STRATEGY CONTENT: domain, topics -->` tags harvested by `/strategy` skill. Lessons sections use `<!-- LESSONS LEARNED: categories -->` tags for future `/lessons` skill. See task 035.
