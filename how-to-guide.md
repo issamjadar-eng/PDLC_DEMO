@@ -22,6 +22,8 @@ Phase 5 — Create the first task   (001 project-init — captures the setup its
 Phase 6 — Architecture & component strategy task
           → derive deployable components
           → decide DHF topology (top-level vs parent→child)
+Phase 6.5 — Import applicable references (standards + FDA guidances)
+            gated on: architecture + regulatory strategy docs populated
 Phase 7 — Scaffold DHFs           (/medtech-docs add-dhf per component)
 Phase 8 — Populate standards, frameworks, and sample inputs
 Phase 9 — Ongoing registry sync with /sync-skills
@@ -110,6 +112,20 @@ dhfs/
 PDLC_DEMO's current topology is the worked example.
 
 > **Future capability**: this phase is prose-only today. A dedicated skill (e.g., `/medtech-docs plan-topology` or a standalone `architecture` skill) that walks the user through system sketch → component list → DHF topology as a reproducible flow is a likely follow-up once the prose version has been exercised on a second project.
+
+## Phase 6.5 — Import applicable references
+
+**Gate**: do not run this phase until the **architecture** and **regulatory** strategy docs are populated (at minimum). Those docs are what identify *which* standards, FDA guidances, and industry frameworks actually apply to this program — importing references before they exist leads to a pile of untargeted boilerplate in `docs/external/`.
+
+Once the gate is met, use the `medtech-docs` skill to import each reference called out by the strategy docs:
+
+- **Standards** named in the regulatory strategy (e.g., IEC 62304, ISO 14971, IEC 62366-1): `/medtech-docs add-standard <standard>`
+- **FDA guidances** called out in the regulatory strategy (premarket, cybersecurity, SaMD, PCCP, etc.): `/medtech-docs import-guidance <title>`
+- **Industry frameworks** named in the architecture strategy (e.g., NIST, OWASP ASVS, HL7/FHIR profiles): import via the same skill
+
+Each import should land under `docs/external/` as a distilled markdown summary with `[VERIFY]` flags on anything that wasn't mechanically extractable. Do not fabricate clause text. Run `/medtech-docs dashboard` afterwards to confirm the imports registered.
+
+> **Why this is a dedicated phase, not part of Phase 3**: `init` installs a *default* standards shortlist based on the 8 project-context answers. The strategy-driven import in this phase is narrower and higher-fidelity — it only pulls what the architecture and regulatory decisions actually require.
 
 ## Phase 7 — Scaffold DHFs
 

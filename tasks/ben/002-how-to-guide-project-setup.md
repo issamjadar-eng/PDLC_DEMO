@@ -44,6 +44,7 @@ _Produce a concise, reproducible how-to guide that walks a new user through stan
 - [ ] **Scope expansion (2026-04-13):** guide now covers more than mechanical setup. Fill in:
   - Phase 4 — personalize `CLAUDE.md` post-init (device identity, goals, scope statement, demo-vs-real disclaimer) before any task work
   - Phase 6 — an "architecture & component strategy" task the user opens *after* 001 but *before* DHF scaffolding: sketch the system as-deployed, enumerate deployable components, decide DHF topology (top-level vs parent→child), capture decisions as tagged strategy blocks
+  - Phase 6.5 — **import applicable references once minimum strategy docs exist.** Gate: architecture and regulatory strategy docs must be populated (at minimum) before this phase runs, because those docs are what identify *which* standards and guidances apply. Then instruct the user to use the `medtech-docs` skill to import references: standards (e.g., `/medtech-docs add-standard IEC 62304`) and FDA guidances (e.g., `/medtech-docs import-guidance <title>`) called out in the regulatory strategy, plus any industry frameworks named in the architecture strategy. Verify each import lands under `docs/external/` with a distilled markdown summary and `[VERIFY]` flags where applicable.
   - Phase 7 — run `/medtech-docs add-dhf` per component derived in Phase 6; verify with dashboard + `/best-practices`
 - [ ] Resolve open questions captured in `how-to-guide.md` (doc location, whether Phase 6 becomes its own skill, whether init can prompt for Phase 4 content directly)
 
@@ -67,5 +68,6 @@ Root skeleton lives at `how-to-guide.md` (repo root) as of 2026-04-13. All furth
 - 2026-04-12: Task created.
 - 2026-04-12: Added explicit step for creating the first task post-init to capture the setup work, and called out the init-before-task ordering constraint (init installs the task hooks).
 - 2026-04-14: Terminology sweep — "sub-DHF" → "DHF" (with top-level vs parent→child) and `add-sub-dhf` → `add-dhf` throughout guide and this task.
+- 2026-04-14: Added Phase 6.5 — gate reference import on minimum strategy docs (architecture + regulatory) existing, then instruct user to use `medtech-docs` skill to import applicable standards and FDA guidances called out by those strategy docs.
 - 2026-04-13: Scope expanded beyond mechanical setup. Root `how-to-guide.md` skeleton created with 10 phases; added Phase 4 (CLAUDE.md personalization), Phase 6 (architecture/component strategy → drives DHF topology), Phase 7 (add-dhf per component). Open questions captured in the guide.
 - 2026-04-12: Added step 9 covering the `/sync-skills` skill — `check`, `pull`, `push` (PR-only default), `push --merge` (opt-in auto-merge), and `sync`. Updated Goals and References accordingly. Retired the separate "registry updates later" bullet (absorbed into step 9).
