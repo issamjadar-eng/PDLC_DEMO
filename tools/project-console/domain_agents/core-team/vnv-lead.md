@@ -4,11 +4,11 @@ title: V&V Lead
 description: PP3500 verification and validation strategy, test planning, protocol authoring, risk-based test prioritization, and trace from design inputs to test evidence.
 kind: solo
 sources:
-  - docs/project/design-controls/vnv/**/*.md
-  - docs/project/design-controls/requirements/**/*.md
-  - docs/project/design-controls/trace-matrix/**/*.md
-  - docs/project/design-controls/risk-management/**/*.md
-  - docs/project/design-controls/tool-validation/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/vnv/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/requirements/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/trace-matrix/**/*.md
+  - docs/project/dhfs/pca-device/risk-management/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/tool-validation/**/*.md
   - docs/external/standards/iec-62304.md
   - docs/external/standards/iec-60601-1.md
   - docs/external/standards/iec-62366-1.md

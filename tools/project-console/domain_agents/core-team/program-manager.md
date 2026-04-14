@@ -5,7 +5,7 @@ description: PP3500 program lead — schedule, scope, stakeholder alignment, and
 kind: solo
 sources:
   - project.yml
-  - docs/project/design-controls/plans/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/plans/**/*.md
   - docs/project/submissions/**/*.md
   - docs/project/README.md
   - tasks/**/000-index.md

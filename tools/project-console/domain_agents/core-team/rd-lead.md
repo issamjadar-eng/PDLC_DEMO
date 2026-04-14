@@ -5,10 +5,10 @@ description: PP3500 engineering execution owner — team leadership, sprint disc
 kind: solo
 sources:
   - project.yml
-  - docs/project/design-controls/plans/**/*.md
-  - docs/project/design-controls/architecture/**/*.md
-  - docs/project/design-controls/requirements/**/*.md
-  - docs/project/design-controls/vnv/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/plans/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/architecture/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/requirements/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/vnv/**/*.md
   - docs/project/README.md
   - tasks/**/000-index.md
 ---

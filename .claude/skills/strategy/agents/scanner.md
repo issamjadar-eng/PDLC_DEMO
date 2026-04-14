@@ -82,13 +82,13 @@ Also check: for each domain found, does the assembled strategy document exist? C
 
 | Domain | Output Path |
 |--------|------------|
-| `regulatory` | `docs/project/design-controls/plans/regulatory-strategy.md` |
-| `commercial` | `docs/project/input-analysis/market-research/commercial-strategy.md` |
-| `architecture` | `docs/project/design-controls/architecture/architecture-strategy.md` |
-| `development` | `docs/project/design-controls/plans/development-strategy.md` |
-| `testing` | `docs/project/design-controls/vnv/testing-strategy.md` |
-| `risk` | `docs/project/design-controls/risk-management/risk-strategy.md` |
-| `postmarket` | `docs/project/design-controls/plans/postmarket-strategy.md` |
+| `regulatory` | `docs/project/dhfs/pca-device/design-controls/plans/regulatory-strategy.md` |
+| `commercial` | `docs/project/strategies/commercial-strategy.md` |
+| `architecture` | `docs/project/dhfs/pca-device/design-controls/architecture/architecture-strategy.md` |
+| `development` | `docs/project/dhfs/pca-device/design-controls/plans/development-strategy.md` |
+| `testing` | `docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md` |
+| `risk` | `docs/project/dhfs/pca-device/risk-management/risk-strategy.md` |
+| `postmarket` | `docs/project/dhfs/pca-device/design-controls/plans/postmarket-strategy.md` |
 | `operations` | `operations-strategy.md` |
 
 If the file exists, read the `<!-- Assembled: YYYY-MM-DD -->` line and report the assembly date. If it doesn't exist, note "not yet assembled".

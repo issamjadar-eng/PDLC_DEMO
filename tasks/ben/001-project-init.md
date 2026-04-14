@@ -109,26 +109,26 @@ Net: ~25–30 of the 81 FDA PDFs are in scope.
 - **Review point**: confirm device-family naming convention before rebranding sample IDs
 
 **Phase 4 — Project: design controls (user needs + requirements)**
-- `design-inputs/UN-PP3500-*.md` (5 files) → `docs/project/design-controls/user-needs/`
-- `design-inputs/DI-PP3500-*.md` (13 files, grouped FUNC/PERF/SAFE/USAB/INTE) → `docs/project/design-controls/requirements/` organized by category
-- Build a stub trace matrix tying UN → DI in `docs/project/design-controls/trace-matrix/`
+- `design-inputs/UN-PP3500-*.md` (5 files) → `docs/project/dhfs/pca-device/design-controls/user-needs/`
+- `design-inputs/DI-PP3500-*.md` (13 files, grouped FUNC/PERF/SAFE/USAB/INTE) → `docs/project/dhfs/pca-device/design-controls/requirements/` organized by category
+- Build a stub trace matrix tying UN → DI in `docs/project/dhfs/pca-device/design-controls/trace-matrix/`
 - Rebrand `PP3500` → demo device family name (deferred until Phase 3 review point lands)
 - **Review point**: confirm requirement category structure (FUNC/PERF/SAFE/USAB/INTE) before bulk import
 
 **Phase 5 — Project: V&V engineering studies**
-- `engingineering-studies/VER-PP3500-*.md` (3 files — SW-002, SW-006, BT-005) → `docs/project/design-controls/vnv/`
+- `engingineering-studies/VER-PP3500-*.md` (3 files — SW-002, SW-006, BT-005) → `docs/project/dhfs/pca-device/design-controls/vnv/`
 - `engingineering-studies/VER-SY2000-*.md` (7 files) → `docs/internal/source-md/reference-patterns/sy2000-eng-studies/` as **reference-only** patterns (not part of PP3500 DHF)
 - Group PP3500 VER records by study type (SW verification, bench testing) and link each to its DI in the trace matrix
 - **Review point**: PP3500 V&V coverage is thin (only 3 studies). Flag the gap — the demo may later need synthesized additions (biocompat, electrical safety, EMC) modeled after SY2000 patterns
 
 **Phase 6 — Project: clinical evaluation + risk**
-- `clinical-evaluation-plans/CEP-*.md` (5) + `clinical-litature-search-strategies/LSS-*.md` (5) → `docs/project/design-controls/plans/clinical-evaluation/` (new subfolder)
-- `clinical-benifit-risk-analysis/BRA-*.md` (5) + LSS duplicates → `docs/project/design-controls/risk-management/benefit-risk/`
+- `clinical-evaluation-plans/CEP-*.md` (5) + `clinical-litature-search-strategies/LSS-*.md` (5) → `docs/project/dhfs/pca-device/design-controls/plans/clinical-evaluation/` (new subfolder)
+- `clinical-benifit-risk-analysis/BRA-*.md` (5) + LSS duplicates → `docs/project/dhfs/pca-device/risk-management/benefit-risk/`
 - Cross-link BRA to ISO 14971 risk management file
 - **Review point**: are CEP/BRA/LSS document IDs internally consistent across folders? (LSS appears in two places — dedupe)
 
 **Phase 7 — Project: post-market**
-- Create `docs/project/postmarket/` (new top-level under project — not in current scaffold)
+- Create `docs/project/dhfs/pca-device/postmarket/` (new top-level under project — not in current scaffold)
 - `clinical-post-market-clinical-follow-up-plans/PMCF-*.md` → `postmarket/pmcf-plans/`
 - `clinical-post-market-clinical-follow-up-studies/STUDY-*.md` → `postmarket/pmcf-studies/`
 - Update `docs/README.md` and project tree to register the new branch
@@ -160,7 +160,7 @@ Phases 1, 2 run independently. Phases 3–9 should run sequentially because each
 - 2026-04-12: **Phase 4 reorganized into 9 functional groups** — G1 Therapy Delivery, G2 Drug Library & Med Safety, G3 Alarms & Annunciation, G4 Hazard Controls & Essential Performance, G5 UI & Usability, G6 Power/Portability/Physical, G7 Connectivity & Interop, G8 Cybersecurity & Data Integrity, G9 Regulatory/Labeling/Lifecycle. `user-needs.md` and `design-inputs.md` both bumped to Rev B with H3 group sections and a Group column prepended to the tables. Content preserved verbatim; no text changes. UN distribution: G1 3, G2 3, G3 2, G4 2, G5 2, G6 4, G7 2, G8 1, G9 3 = 22. DI distribution: G1 4, G2 3, G3 4, G4 4, G5 4, G6 5, G7 2, G8 2, G9 6 = 34.
 - 2026-04-12: **Trace matrix created** — `un-to-di-trace-matrix.md` (DHF-PP3500-TM-001 Rev A), bidirectional (UN→DI forward, DI→UN reverse), organized by the same 9 groups. 46 UN↔DI trace links total. Coverage: 22/22 UNs (100%), 34/34 DIs (100%), zero orphans. Avg 2.09 DIs per UN; avg 1.35 UNs per DI. Three folder READMEs (user-needs, requirements, trace-matrix) updated with current-contents tables and Phase 4 changelog rows.
 - 2026-04-12: **Fixed arithmetic bug** in `design-inputs.md` Traceability Summary by-Category table: INTE row was `2|2|2|2|8` (incorrect) — actual counts `1|2|3|2|8`. Totals corrected from `14|13|4|3` to `13|13|5|3` (total 34 unchanged). Found by the reorganization subagent while building the by-group table.
-- 2026-04-12: **Scaffold refactor — two new top-level branches**: `docs/project/clinical/` (evaluation-plans, benefit-risk, literature-search) and `docs/project/postmarket/` (pmcf-plans, pmcf-studies, capa, complaints). Option A adopted over burying clinical under design-controls; aligns with MedTech discipline boundaries and MDR/FDA lifecycle split. BRA placed under `clinical/benefit-risk/` (clinical benefit-risk determinations) with cross-link from `design-controls/risk-management/` (ISO 14971 hazard analysis).
+- 2026-04-12: **Scaffold refactor — two new top-level branches**: `docs/project/dhfs/pca-device/clinical/` (evaluation-plans, benefit-risk, literature-search) and `docs/project/dhfs/pca-device/postmarket/` (pmcf-plans, pmcf-studies, capa, complaints). Option A adopted over burying clinical under design-controls; aligns with MedTech discipline boundaries and MDR/FDA lifecycle split. BRA placed under `clinical/benefit-risk/` (clinical benefit-risk determinations) with cross-link from `design-controls/risk-management/` (ISO 14971 hazard analysis).
 - 2026-04-12: **Clinical + postmarket ingestion complete (replaces deferred Phases 6+7)** — 25 clinical MDs imported (5 CEP, 5 BRA, 5 LSS, 5 PMCF plans, 5 PMCF studies), each with YAML frontmatter schema (`doc_id`, `doc_type`, `device_ids`, `patient_populations`, `care_settings`, `therapy_context`, `evidence_grade`, `primary_endpoints`, `related_user_needs`, `related_design_inputs`, `status`, `last_updated`) and demo banner. `related_user_needs`/`related_design_inputs` left empty for the customer-insights agent to populate. All files tagged with `DEV-PP3500` since source docs use generic IDs.
 - 2026-04-12: **Synthesized 2 postmarket records** to complete the customer feedback loop: `postmarket/capa/CAPA-2023-001.md` (decimal-point legibility CAPA, opened 2023-01-10, closed 2023-05-15, effectiveness verified — ties to DI-013 / UN-007 / FSN-2023-001 / software v1.2.4 and v1.3.0) and `postmarket/complaints/complaints-ledger.md` (27 complaints 2022–2025: 12 decimal-point pre-CAPA all linked to CAPA-2023-001 and 15 assorted post-fix; zero decimal-point complaints after May 2023 demonstrating CAPA effectiveness).
 - 2026-04-12: **10 new READMEs authored** (clinical/ + 3 subfolders, postmarket/ + 4 subfolders, docs/project/README.md updated with the two new branches). Cross-links added to `design-controls/risk-management/README.md` → `clinical/benefit-risk/` and `predicate-analysis/portfolio/DEV-PP3500_regulatory_info.md` → `postmarket/capa/` + `postmarket/complaints/`.

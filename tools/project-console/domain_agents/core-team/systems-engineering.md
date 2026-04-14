@@ -4,11 +4,11 @@ title: Systems Engineering
 description: PP3500 system architecture, requirements flow-down, interfaces across SaMD, firmware, and ME hardware, and traceability.
 kind: solo
 sources:
-  - docs/project/design-controls/architecture/**/*.md
-  - docs/project/design-controls/requirements/**/*.md
-  - docs/project/design-controls/user-needs/**/*.md
-  - docs/project/design-controls/trace-matrix/**/*.md
-  - docs/project/design-controls/vnv/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/architecture/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/requirements/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/user-needs/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/trace-matrix/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/vnv/**/*.md
   - docs/external/standards/iec-62304.md
   - docs/external/standards/iec-60601-1.md
   - docs/external/standards/iec-82304-1.md

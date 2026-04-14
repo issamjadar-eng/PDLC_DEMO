@@ -35,13 +35,13 @@ _Establish the foundational architecture and regulatory strategy for the PP3500 
 Anchor product: **PainEase PCA Advanced (DEV-PP3500)**, Class II PCA infusion pump, 510(k) K210345 (cleared 2021-11-01), predicate K190567 (PP3000). Manufacturer: GlobalLogic.
 
 Upstream material already in place (ready to ground strategy decisions):
-- `../../docs/project/design-controls/user-needs/user-needs.md` — 22 UNs in 9 functional groups
-- `../../docs/project/design-controls/requirements/design-inputs.md` — 34 DIs in 9 functional groups (Rev B)
-- `../../docs/project/design-controls/trace-matrix/un-to-di-trace-matrix.md` — bidirectional UN↔DI matrix
+- `../../docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md` — 22 UNs in 9 functional groups
+- `../../docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md` — 34 DIs in 9 functional groups (Rev B)
+- `../../docs/project/dhfs/pca-device/design-controls/trace-matrix/un-to-di-trace-matrix.md` — bidirectional UN↔DI matrix
 - `../../docs/project/input-analysis/predicate-analysis/portfolio/DEV-PP3500_regulatory_info.md` — regulatory identifiers, product codes, UDI
 - `../../docs/project/input-analysis/predicate-analysis/portfolio/DEV-PP3000_regulatory_info.md` — direct predicate
-- `../../docs/project/postmarket/capa/CAPA-2023-001.md` — known post-market remediation arc (decimal-point)
-- `../../docs/project/clinical/` and `../../docs/project/postmarket/` — 25 clinical + PMCF docs as context
+- `../../docs/project/dhfs/pca-device/postmarket/capa/CAPA-2023-001.md` — known post-market remediation arc (decimal-point)
+- `../../docs/project/dhfs/pca-device/clinical/` and `../../docs/project/dhfs/pca-device/postmarket/` — 25 clinical + PMCF docs as context
 
 ## Architecture Strategy
 
@@ -85,7 +85,7 @@ Remaining step-1 questions (resolve one at a time, in order):
   7. Customer / Administrative Portals
   8. _Future_: AI/ML SaMDs (predictive alarms, dose optimization) — out of baseline, PCCP candidate
 - (b.2) **Sub-DHF / modular architecture concept — NEW (2026-04-12):** Each top-level component gets its own sub-DHF (or "module") with its own design controls, risk file, V&V, and cybersecurity assessment. A **filing** is not 1:1 with a sub-DHF — filings **compose** selectively from the relevant sub-DHFs. Example: the PP3500 510(k) filing includes the PCA device sub-DHF in full PLUS the cybersecurity assessments from the Connectivity Adapter and Cloud Suite sub-DHFs (because the PCA's cyber posture depends on what touches it). This is the modular DHF pattern.
-  - Implication for the folder scaffold: `docs/project/design-controls/` becomes the PCA device sub-DHF specifically; we need new sibling branches for Adapter and Cloud Suite sub-DHFs (and possibly sub-sub-modules for each Cloud Suite app).
+  - Implication for the folder scaffold: `docs/project/dhfs/pca-device/design-controls/` becomes the PCA device sub-DHF specifically; we need new sibling branches for Adapter and Cloud Suite sub-DHFs (and possibly sub-sub-modules for each Cloud Suite app).
   - Implication for the filing strategy: each 510(k) / MDDS / SaMD submission package gets a "composition manifest" listing which sub-DHF pieces are included and why.
   - Implication for strategy harvesting: the `/strategy` skill's output paths currently point into `design-controls/` which is now the PCA-specific path. Other sub-DHFs will need their own strategy instances.
 - (c) **What's inside the Connectivity Adapter?** — same: list its functions, then classify each.
@@ -280,9 +280,9 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 | Ref | Description | Location |
 |-----|-------------|----------|
 | Strategy skill | Harvester that assembles tagged blocks into formal docs | `.claude/skills/strategy/` |
-| Architecture brief | Awaiting-content stub at output path | `docs/project/design-controls/architecture/architecture-strategy.md` |
-| Regulatory brief | Awaiting-content stub at output path | `docs/project/design-controls/plans/regulatory-strategy.md` |
-| Design inputs | Source of truth for module / requirement grounding | `docs/project/design-controls/requirements/design-inputs.md` |
+| Architecture brief | Awaiting-content stub at output path | `docs/project/dhfs/pca-device/design-controls/architecture/architecture-strategy.md` |
+| Regulatory brief | Awaiting-content stub at output path | `docs/project/dhfs/pca-device/design-controls/plans/regulatory-strategy.md` |
+| Design inputs | Source of truth for module / requirement grounding | `docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md` |
 | PP3500 regulatory info | 510(k), predicate, product code, UDI | `docs/project/input-analysis/predicate-analysis/portfolio/DEV-PP3500_regulatory_info.md` |
 
 ## Changelog

@@ -25,16 +25,16 @@ _Build a domain-specific agent that reads the project's customer-facing corpora 
 Task 001 (Project Init) established the customer-insight corpora this agent will consume. All three branches are in place and formatted:
 
 - **`docs/project/input-analysis/`** — 8 KOL profiles, 4 market/competitive PDFs + summary MDs, 5 portfolio device records, 3 concept evaluations
-- **`docs/project/clinical/`** — 5 Clinical Evaluation Plans (CEP), 5 Benefit-Risk Analyses (BRA), 5 Literature Search Strategies (LSS)
-- **`docs/project/postmarket/`** — 5 PMCF plans, 5 PMCF studies, CAPA-2023-001 (synthesized), complaints ledger (synthesized)
+- **`docs/project/dhfs/pca-device/clinical/`** — 5 Clinical Evaluation Plans (CEP), 5 Benefit-Risk Analyses (BRA), 5 Literature Search Strategies (LSS)
+- **`docs/project/dhfs/pca-device/postmarket/`** — 5 PMCF plans, 5 PMCF studies, CAPA-2023-001 (synthesized), complaints ledger (synthesized)
 
 All 25 imported clinical MDs and the 2 synthesized postmarket docs carry a common YAML frontmatter schema: `doc_id`, `doc_type`, `device_ids`, `patient_populations`, `care_settings`, `therapy_context`, `evidence_grade`, `primary_endpoints`, `related_user_needs`, `related_design_inputs`, `status`, `last_updated`. The last two fields are intentionally empty for this task to populate.
 
 The downstream docs the agent must be able to trace **to** are:
 
-- `docs/project/design-controls/user-needs/user-needs.md` — 22 UNs in 9 functional groups (Rev B)
-- `docs/project/design-controls/requirements/design-inputs.md` — 34 DIs in 9 functional groups (Rev B)
-- `docs/project/design-controls/trace-matrix/un-to-di-trace-matrix.md` — existing UN↔DI matrix
+- `docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md` — 22 UNs in 9 functional groups (Rev B)
+- `docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md` — 34 DIs in 9 functional groups (Rev B)
+- `docs/project/dhfs/pca-device/design-controls/trace-matrix/un-to-di-trace-matrix.md` — existing UN↔DI matrix
 
 The CAPA-2023-001 feedback loop is already wired end-to-end (UN-007 → DI-013 → CAPA → complaints ledger) and makes a good first integration test for the agent.
 
@@ -69,7 +69,7 @@ The CAPA-2023-001 feedback loop is already wired end-to-end (UN-007 → DI-013 �
 | Task 001 | Project init — established the source corpora | `001-project-init.md` |
 | Customer-insight corpora | Input-analysis + clinical + postmarket branches | `docs/project/{input-analysis,clinical,postmarket}/` |
 | Frontmatter schema | Established in task 001 clinical/postmarket ingestion | See any CEP/BRA/LSS/PMCF/STUDY file header |
-| UN / DI / Trace source of truth | PP3500 design controls | `docs/project/design-controls/{user-needs,requirements,trace-matrix}/` |
+| UN / DI / Trace source of truth | PP3500 design controls | `docs/project/dhfs/pca-device/design-controls/{user-needs,requirements,trace-matrix}/` |
 | CAPA feedback loop | End-to-end wiring test case for the agent | `UN-007` → `DI-013` → `CAPA-2023-001.md` → `complaints-ledger.md` |
 | Skill-creator skill | Used to author the agent file | `.claude/skills/skill-creator/` |
 | Project manifest | Where `approved_agents` is maintained | `project.yml` |

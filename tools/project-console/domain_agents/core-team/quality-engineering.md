@@ -4,11 +4,11 @@ title: Quality Engineering
 description: PP3500 QMS ownership, DHF integrity, design review rigor, ISO 13485 alignment, and CAPA discipline.
 kind: solo
 sources:
-  - docs/project/design-controls/plans/**/*.md
-  - docs/project/design-controls/trace-matrix/**/*.md
-  - docs/project/design-controls/risk-management/**/*.md
-  - docs/project/design-controls/vnv/**/*.md
-  - docs/project/design-controls/tool-validation/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/plans/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/trace-matrix/**/*.md
+  - docs/project/dhfs/pca-device/risk-management/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/vnv/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/tool-validation/**/*.md
   - docs/internal/**/*.md
   - docs/external/standards/iso-14971.md
 ---

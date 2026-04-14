@@ -4,8 +4,8 @@ title: Risk Management
 description: PP3500 ISO 14971 hazard analysis, FMEA, risk-benefit framing, residual risk acceptability, and post-market risk feedback.
 kind: solo
 sources:
-  - docs/project/design-controls/risk-management/**/*.md
-  - docs/project/design-controls/user-needs/**/*.md
+  - docs/project/dhfs/pca-device/risk-management/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/user-needs/**/*.md
   - docs/project/input-analysis/kol-feedback/**/*.md
   - docs/external/standards/iso-14971.md
   - docs/external/standards/iec-62366-1.md

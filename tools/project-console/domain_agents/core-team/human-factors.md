@@ -4,9 +4,9 @@ title: Human Factors Engineering
 description: PP3500 IEC 62366 use-error analysis, task analysis, formative and summative usability evaluation.
 kind: solo
 sources:
-  - docs/project/design-controls/user-needs/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/user-needs/**/*.md
   - docs/project/input-analysis/kol-feedback/**/*.md
-  - docs/project/design-controls/risk-management/**/*.md
+  - docs/project/dhfs/pca-device/risk-management/**/*.md
   - docs/external/standards/iec-62366-1.md
 ---
 

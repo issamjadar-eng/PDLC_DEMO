@@ -7,7 +7,7 @@ sources:
   - docs/project/input-analysis/kol-feedback/**/*.md
   - docs/project/input-analysis/market-research/**/*.md
   - docs/project/input-analysis/competitive-landscape/**/*.md
-  - docs/project/design-controls/user-needs/**/*.md
+  - docs/project/dhfs/pca-device/design-controls/user-needs/**/*.md
   - docs/external/clinical-literature/**/*.md
 ---
 
