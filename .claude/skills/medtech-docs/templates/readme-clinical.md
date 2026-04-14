@@ -1,6 +1,6 @@
 # Clinical
 
-Clinical evidence for this sub-DHF — evaluation plans, benefit-risk analyses, and literature search results that establish and maintain the clinical basis for the device's intended use. Per MDCG 2020-6 / 2020-13 for EU and FDA guidance on clinical evaluation and benefit-risk determinations.
+Clinical evidence for this DHF — evaluation plans, benefit-risk analyses, and literature search results that establish and maintain the clinical basis for the device's intended use. Per MDCG 2020-6 / 2020-13 for EU and FDA guidance on clinical evaluation and benefit-risk determinations.
 
 ## Subfolders
 
@@ -38,4 +38,4 @@ clinical/evaluation-plans/    →  postmarket/pmcf-plans/       (CEP identifies 
 
 | Date | Author | Summary |
 |------|--------|---------|
-| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-sub-dhf |
+| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-dhf |

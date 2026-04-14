@@ -2,7 +2,7 @@
 
 **ID**: 003
 **Created**: 2026-04-12
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -65,4 +65,5 @@ The original v1 todos are largely done — the scaffold, OAuth-only auth, chat r
 - 2026-04-12: Task created. Architecture decisions captured in conversation: Python + FastAPI + uv, Pro/Max OAuth only (no API key fallback), live source pulls per turn, dashboards and personas auto-discovered, no build step, no CDN.
 - 2026-04-13: Refreshed status — the original v1 todos (architecture doc, scaffold, chat/documents routers, OAuth preflight, populated agent corpus) are complete. Remaining work is the dashboards + workflows sections, dashboard-scoped chat sidecar, an end-to-end OAuth smoke test, and a README refresh.
 - 2026-04-13: Reviewed the agents section. Added five corrections (LLM moderator, source token budget, native message history, `is_system` cleanup, browser-local chat history persistence with thread list per agent/panel).
+- 2026-04-13: **Task closed out.** V1 scope (architecture doc, FastAPI+uv scaffold, OAuth-only auth, chat router with SSE streaming, multi-agent panels with round-robin + LLM moderator, documents browser, populated core-team + KOL agent corpus, source token budget with warnings, native structured message history, browser-local chat thread persistence) shipped. Remaining work (dashboards section, workflows section, dashboard-scoped chat sidecar, wiring new routers into `app.py`, end-to-end OAuth smoke test, README refresh to four-section IA) migrated to task 008.
 - 2026-04-13: Implemented all five agents-section corrections. New files: `domain_agents/kol/kol-panel-pp3500-llm.md`. Modified: `chat/sources.py`, `chat/panels.py`, `chat/sdk_client.py`, `chat/router.py`, `web/templates/chat.html`, `web/static/chat.js`, `web/static/console.css`. Imports verified clean via `uv run python -c`.

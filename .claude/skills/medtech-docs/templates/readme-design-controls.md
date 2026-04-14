@@ -1,13 +1,13 @@
 # Design Controls
 
-Design History File core for this sub-DHF — the formal design control documents per ISO 13485 and 21 CFR 820.30. This is the regulated document set that traces from user needs through verification and validation for **this component**. Risk management lives as a sibling of this folder at the sub-DHF root (`../risk-management/`), not as a child here — risk management is device-level and extends beyond the design-controls process.
+Design History File core for this DHF — the formal design control documents per ISO 13485 and 21 CFR 820.30. This is the regulated document set that traces from user needs through verification and validation for **this component**. Risk management lives as a sibling of this folder at the DHF root (`../risk-management/`), not as a child here — risk management is device-level and extends beyond the design-controls process.
 
 ## Subfolders
 
 | Folder | Purpose |
 |--------|---------|
 | `trace-matrix/` | Traceability matrices — the cross-referencing hub linking user needs, requirements, architecture, V&V, and risk controls |
-| `plans/` | Design and development plans, V&V plans, component-level strategy documents (regulatory, development, testing, architecture, risk, postmarket) |
+| `plans/` | Formal design and development plans for this DHF (SDP, Config Mgmt Plan, V&V Plan, 510(k) submission, PCCP protocol). Upstream strategy **briefs** live in `docs/project/strategies/` — shared across the whole project. |
 | `user-needs/` | User and stakeholder needs — formal design inputs derived from shared `input-analysis/` |
 | `requirements/` | Design input requirements, software requirements (SRS), label requirements |
 | `architecture/` | Software architecture documents (SAD), system design, interface specifications |
@@ -26,7 +26,7 @@ tool-validation/  → Validation evidence for the tools used to produce the abov
 trace-matrix/     → Cross-references linking all of the above together, and out to ../risk-management/
 ```
 
-Risk analysis itself (hazards, FMEA, risk-benefit) lives in `../risk-management/` — this sub-DHF's risk management folder at the sub-DHF root, not inside design-controls/.
+Risk analysis itself (hazards, FMEA, risk-benefit) lives in `../risk-management/` — this DHF's risk management folder at the DHF root, not inside design-controls/.
 
 ## Document Workflow
 

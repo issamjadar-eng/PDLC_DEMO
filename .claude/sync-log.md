@@ -4,6 +4,47 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-13 — push --merge (task 009: shared strategy docs + sub-DHF → DHF rename)
+
+- Files: 19 (18 edited, 1 new via rename, 1 deleted via rename)
+  - medtech-docs v14 SKILL.md + 6 readme templates + new `readme-dhf.md` (rename of `readme-sub-dhf.md`)
+  - strategy v10 SKILL.md + scanner.md + assembler.md + default-strategy.md + regulatory-strategy.md
+  - tracker v5 SKILL.md
+  - best-practices v9 SKILL.md (rename pass)
+  - task v14 SKILL.md (rename pass)
+  - docflow v2 SKILL.md + README.md (rename pass)
+  - Deleted: `readme-sub-dhf.md` (replaced by `readme-dhf.md`)
+- Branch: `sync/pdlc-demo-shared-strategy-2026-04-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/10
+- Commit: "Shared strategy docs + sub-DHF → DHF rename"
+- Status: merged (--merge requested)
+- Merge commit: `54cc8edd76b311cbd331cc3b6a8991ccbd7d340a`
+- Hitachi HEAD after sync: `54cc8ed`
+- Follow-ups: run `/best-practices audit` on PDLC_DEMO to verify compliance with the updated v9/v10/v14 skills
+
+---
+
+## 2026-04-13 — push --merge (task 007: topology-aware skills)
+
+- Files: 18
+  - `agents/project-secops.md`
+  - `skills/medtech-docs/SKILL.md` + 7 templates (readme-sub-dhf, readme-clinical, readme-postmarket, readme-risk-management, readme-cybersecurity, readme-strategies, readme-design-controls)
+  - `skills/best-practices/SKILL.md`
+  - `skills/strategy/SKILL.md` + `agents/scanner.md` + `agents/assembler.md`
+  - `skills/tracker/SKILL.md`
+  - `skills/task/SKILL.md`
+  - `skills/docflow/SKILL.md` + `README.md`
+  - `skills/secops/templates/permissions.json`
+- Branch: `sync/pdlc-demo-topology-2026-04-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/9
+- Commit: "Topology-aware skills: unified sub-DHF shape"
+- Status: merged (--merge requested)
+- Merge commit: `58e601debb2e90f691a03f0dafb96653b97373a4`
+- Hitachi HEAD after sync: `58e601d`
+- Follow-ups: none — closes task 007
+
+---
+
 ## 2026-04-12 — pull (task v11 + new secops skill)
 
 - Hitachi HEAD after sync: `03f5849`

@@ -16,7 +16,7 @@ cybersecurity/
     └── README.md                ← controlled cybersecurity deliverables for DHF/filing
 ```
 
-_This folder is newly scaffolded as part of task 007 P6 (unified sub-DHF shape reorg). Contents are to be authored — no existing cybersecurity artifacts were carried over from PDLC_DEMO's pre-reorg flat layout because the old layout had no cybersecurity folder._
+_This folder is newly scaffolded as part of task 007 P6 (unified DHF shape reorg). Contents are to be authored — no existing cybersecurity artifacts were carried over from PDLC_DEMO's pre-reorg flat layout because the old layout had no cybersecurity folder._
 
 ## Relationship to other folders
 

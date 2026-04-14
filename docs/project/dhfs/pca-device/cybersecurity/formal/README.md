@@ -1,6 +1,6 @@
 # Cybersecurity — Formal Deliverables
 
-Controlled cybersecurity deliverables for the PP3500 pca-device sub-DHF. Working markdown lives at `../` (the parent `cybersecurity/` folder); this folder holds the formal DOCX, PDF, and machine-readable artifacts that make it into the filing or the DHF record.
+Controlled cybersecurity deliverables for the PP3500 pca-device DHF. Working markdown lives at `../` (the parent `cybersecurity/` folder); this folder holds the formal DOCX, PDF, and machine-readable artifacts that make it into the filing or the DHF record.
 
 ## Expected Content
 
@@ -10,7 +10,7 @@ Controlled cybersecurity deliverables for the PP3500 pca-device sub-DHF. Working
 - `vulnerability-management-plan.docx` — formal VM plan
 - `penetration-test-report.pdf` — if applicable, third-party pen test report
 
-_This folder is newly scaffolded as part of task 007 P6 (unified sub-DHF shape reorg). Contents are to be authored when the working markdown at `../` reaches formal-review quality._
+_This folder is newly scaffolded as part of task 007 P6 (unified DHF shape reorg). Contents are to be authored when the working markdown at `../` reaches formal-review quality._
 
 ## Conventions
 

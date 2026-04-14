@@ -35,26 +35,26 @@ project:
     medical_imaging: false
     surgical_navigation: false
 
-# ─── Sub-DHFs ───
+# ─── DHFs ───
 #
-# Every project has at least one sub-DHF. A sub-DHF is a component with its own
+# Every project has at least one DHF. A DHF is a component with its own
 # design controls, risk-management, clinical, postmarket, and cybersecurity
-# folders. This section is the single source of truth for the project's sub-DHF
+# folders. This section is the single source of truth for the project's DHF
 # topology. Consumed by /medtech-docs, /strategy, /tracker, /best-practices.
 #
-# Added 2026-04-13 as part of task 007 P6 (unified sub-DHF shape reorg).
-# PDLC_DEMO starts with one sub-DHF (pca-device, the PP3500 DHF anchor); other
+# Added 2026-04-13 as part of task 007 P6 (unified DHF shape reorg).
+# PDLC_DEMO starts with one DHF (pca-device, the PP3500 DHF anchor); other
 # components (connectivity-adapter, cloud-suite + 7 child apps) will be added
-# via /medtech-docs add-sub-dhf as they are scoped.
+# via /medtech-docs add-dhf as they are scoped.
 #
 # Fields:
 #   path       — required; folder name under docs/project/dhfs/ (or nested path)
 #   regulatory — concept | in-development | cleared | mixed
-#   filing     — submission folder this sub-DHF rolls up into (null if not scoped)
-#   parent     — parent sub-DHF path (null for top-level)
+#   filing     — submission folder this DHF rolls up into (null if not scoped)
+#   parent     — parent DHF path (null for top-level)
 
-sub_dhfs:
-  # Top-level sub-DHFs
+dhfs:
+  # Top-level DHFs
   - path: pca-device
     regulatory: in-development
     filing: 510k
@@ -64,13 +64,13 @@ sub_dhfs:
     filing: 510k
     parent: null
 
-  # Platform sub-DHF (children carry the regulatory weight)
+  # Platform DHF (children carry the regulatory weight)
   - path: cloud-suite
     regulatory: mixed
     filing: null
     parent: null
 
-  # cloud-suite child sub-DHFs (all nested under cloud-suite/dhfs/)
+  # cloud-suite child DHFs (all nested under cloud-suite/dhfs/)
   - path: cloud-suite/dhfs/drug-library-manager
     regulatory: in-development
     filing: 510k

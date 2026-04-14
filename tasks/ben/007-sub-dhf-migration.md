@@ -2,7 +2,7 @@
 
 **ID**: 007
 **Created**: 2026-04-13
-**Status**: In Progress (substantively complete — one follow-up: upstream `/sync-skills push`)
+**Status**: Complete (2026-04-13 — upstream PR #9 merged to hitachi main @ `58e601d`)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -272,7 +272,7 @@ _Rewritten 2026-04-13 after the Architectural Pivot to the unified shape. Histor
 - [x] Default chrome-devtools MCP in `project.yml` template (`approved_mcps:`) + pre-approve `mcp__chrome-devtools` in secops permissions allowlist. Full pre-approval chain: new projects get it at init time in both the secops audit trust list and the runtime permission allowlist. Only manual step is the one-time `claude mcp add chrome-devtools ...` install.
 - [x] Task skill sync v10 → v13 from upstream: pulled SKILL.md + session-cleanup.sh updates, added new capture-signals.sh and capture-check.sh hooks, symlinked into `.claude/hooks/`, registered UserPromptSubmit + Stop hook events. Task v14 local bump adds Scope column.
 - [x] Lessons learned captured (see Lessons Learned section at bottom of this doc — scaffold skills must be topology-aware from day one, design deliverables live in task docs, one-off migrations hide skill gaps).
-- [ ] Upstream PR to the hitachi skill registry via `/sync-skills push` — 10 locally-modified files ready to contribute: medtech-docs v13, best-practices v9, strategy v9 + agents/scanner.md + agents/assembler.md, tracker v4, task v14, docflow v2, secops permissions.json + 6 new readme templates (readme-sub-dhf, readme-clinical, readme-postmarket, readme-risk-management, readme-cybersecurity, readme-strategies). **Only remaining task 007 work.**
+- [x] Upstream PR to the hitachi skill registry via `/sync-skills push --merge` — 18 files contributed in one PR (final count: readme-design-controls also updated for sub-DHF siblings, docflow README alongside SKILL.md). PR #9 opened and squash-merged 2026-04-13; hitachi main at `58e601d`. Local hitachi checkout fast-forwarded. `/sync-skills check` returns zero drift.
 
 ## Evolution path — single-dhf → multi-sub-dhf
 

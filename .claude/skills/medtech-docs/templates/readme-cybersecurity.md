@@ -1,6 +1,6 @@
 # Cybersecurity
 
-Cybersecurity posture for this sub-DHF — IEC 81001-5-1 security assessment, threat model, Software Bill of Materials (SBOM), vulnerability management, and Secure Development Lifecycle (SDL) evidence. Feeds into the 510(k) cybersecurity documentation required by the FDA 2023 cybersecurity guidance.
+Cybersecurity posture for this DHF — IEC 81001-5-1 security assessment, threat model, Software Bill of Materials (SBOM), vulnerability management, and Secure Development Lifecycle (SDL) evidence. Feeds into the 510(k) cybersecurity documentation required by the FDA 2023 cybersecurity guidance.
 
 ## Structure
 
@@ -47,4 +47,4 @@ submissions/510k/formal/           ←  cybersecurity/                       (51
 
 | Date | Author | Summary |
 |------|--------|---------|
-| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-sub-dhf |
+| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-dhf |

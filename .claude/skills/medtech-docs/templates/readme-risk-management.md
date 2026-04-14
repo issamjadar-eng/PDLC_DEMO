@@ -1,13 +1,13 @@
 # Risk Management
 
-ISO 14971 risk management for this sub-DHF — risk management plan, hazard analysis, FMEA, and risk-benefit analysis. A **sibling** of `design-controls/`, not a child, because risk management is device-level and extends beyond the design-controls process (it covers production, postmarket, and end-of-life considerations too).
+ISO 14971 risk management for this DHF — risk management plan, hazard analysis, FMEA, and risk-benefit analysis. A **sibling** of `design-controls/`, not a child, because risk management is device-level and extends beyond the design-controls process (it covers production, postmarket, and end-of-life considerations too).
 
 ## Structure
 
 ```
 risk-management/
 ├── README.md (this file)
-├── risk-management-plan.md     ← the governing plan for this sub-DHF's risk work
+├── risk-management-plan.md     ← the governing plan for this DHF's risk work
 ├── hazard-analysis.md          ← hazard identification and risk estimation
 ├── fmea.md                     ← failure modes and effects analysis
 ├── risk-benefit.md             ← summary risk-benefit determination
@@ -16,6 +16,8 @@ risk-management/
 ```
 
 Working markdown files live at the folder root. Controlled deliverables (DOCX for signature, XLSX for risk registers) go in `formal/`. Each working markdown file should correspond to a formal deliverable; when the formal version is generated, note the pairing in the markdown changelog.
+
+The upstream **risk strategy brief** (approach to ISO 14971, platform-level hazard chains, cross-component risk controls) lives at `docs/project/strategies/risk-strategy.md` — shared across the whole project, with per-component callouts. The files in this folder are the formal outputs that the strategy informs.
 
 ## Relationship to other folders
 
@@ -46,4 +48,4 @@ postmarket/capa/                   →  risk-management/hazard-analysis/   (post
 
 | Date | Author | Summary |
 |------|--------|---------|
-| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-sub-dhf |
+| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-dhf |

@@ -7,15 +7,17 @@
 > This document is auto-assembled from `<!-- STRATEGY CONTENT: regulatory, ... -->` tags in task documents.
 > Do not edit directly — update the source task and run `/strategy assemble regulatory`.
 > Unresolved items are marked with [VERIFY].
+>
+> **Structure**: Each level-2 section below is one **strategic topic**. Per-component nuance is carried as level-3 **callout subsections** (`### PCA Device`, `### Connectivity Adapter`, `### Cloud Suite`, etc.) nested under each topic. Callouts are optional — topics that apply uniformly across all DHFs don't need them. Authors: write source subsections in task docs using the same shape.
 
 ## Plans Informed
 
-| Formal Plan | How This Strategy Informs It |
-|------------|------------------------------|
-| 510(k) Submission | Filing pathway, predicate selection, submission structure, module scope |
-| PCCP | Change categories, modification protocols, which modules are covered |
-| Q-Sub (Pre-Submission) | Questions for FDA, predicted responses, classification validation |
-| Lifecycle Management Report (LMR) | Post-clearance change tracking cadence, reporting structure |
+| Formal Plan | DHF | How This Strategy Informs It |
+|------------|---------|------------------------------|
+| 510(k) Submission | pca-device (lead) + per composition manifest | Filing pathway, predicate selection, submission structure, module scope |
+| PCCP | as scoped per DHF | Change categories, modification protocols, which modules are covered |
+| Q-Sub (Pre-Submission) | cross-DHF | Questions for FDA, predicted responses, classification validation |
+| Lifecycle Management Report (LMR) | per DHF | Post-clearance change tracking cadence, reporting structure |
 
 ## 1. Device & Submission Overview
 

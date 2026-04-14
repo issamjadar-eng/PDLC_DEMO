@@ -1,6 +1,6 @@
 # Complaints
 
-_Stub folder — created by task 007 P6 bulk add-sub-dhf. Content to be authored when work on this sub-DHF begins._
+_Stub folder — created by task 007 P6 bulk add-dhf. Content to be authored when work on this DHF begins._
 
 ## Changelog
 

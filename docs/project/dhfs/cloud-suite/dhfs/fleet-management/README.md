@@ -1,10 +1,10 @@
 # fleet-management
 
-Sub-DHF root for **fleet-management** — stub created via task 007 P6 `add-sub-dhf`. Content to be authored as the component's regulatory scope is defined.
+DHF root for **fleet-management** — stub created via task 007 P6 `add-dhf`. Content to be authored as the component's regulatory scope is defined.
 
 **Regulatory status**: `in-development`
 **Filing rollup**: `510k`
-**Parent sub-DHF**: `cloud-suite`
+**Parent DHF**: `cloud-suite`
 
 ## Structure
 
@@ -19,9 +19,11 @@ Sub-DHF root for **fleet-management** — stub created via task 007 P6 `add-sub-
 
 ## Notes
 
-This sub-DHF represents a single regulated component. Design controls, risk management, and cybersecurity are scoped to this component; shared project content (input-analysis, external standards, internal SOPs) lives at `docs/project/`.
+This DHF represents a single regulated component. Design controls, risk management, and cybersecurity are scoped to this component; shared project content (input-analysis, external standards, internal SOPs) lives at `docs/project/`.
 
-Use `sub-dhf=fleet-management` as the scope tag when capturing strategy content destined for this sub-DHF (per `/strategy` skill tag convention).
+**Shared strategy briefs** for all eight domains live at `docs/project/strategies/<domain>-strategy.md` — fleet-management specifics belong as `### Fleet Management` callouts inside those briefs, not as separate per-DHF strategy files.
+
+When tagging strategy content from this DHF, use `<!-- STRATEGY CONTENT: <domain>, topics -->`. All strategy domains are `shared` (v10+); the deprecated `dhf=fleet-management` scope key is unnecessary.
 
 _Demo sample data — not for clinical use._
 
@@ -29,4 +31,5 @@ _Demo sample data — not for clinical use._
 
 | Date | Author | Summary |
 |------|--------|---------|
-| 2026-04-13 | BX | Initial stub — created during task 007 P6 bulk add-sub-dhf pass. |
+| 2026-04-13 | BX | Initial stub — created during task 007 P6 bulk add-dhf pass. |
+| 2026-04-13 | BX | task 009: pointed at shared `strategies/` location and refreshed strategy-tag convention. |

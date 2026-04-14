@@ -1,6 +1,8 @@
 # Postmarket
 
-Post-market surveillance for this sub-DHF — PMCF plans and studies, CAPA records, and complaint ledger. Covers the post-clearance obligations under 21 CFR 820.198 (complaints) and 21 CFR 820.100 (CAPA), and MDCG 2020-7 / 2020-8 for EU post-market clinical follow-up.
+Post-market surveillance for this DHF — PMCF plans and studies, CAPA records, and complaint ledger. Covers the post-clearance obligations under 21 CFR 820.198 (complaints) and 21 CFR 820.100 (CAPA), and MDCG 2020-7 / 2020-8 for EU post-market clinical follow-up.
+
+The upstream **post-market strategy brief** (PMS approach, maintenance cadence, LMR schedule, PCCP change tracking, cross-component surveillance architecture) lives at `docs/project/strategies/postmarket-strategy.md` — shared across the whole project, with per-component callouts. The files in this folder are the formal outputs that the strategy informs.
 
 ## Subfolders
 
@@ -40,4 +42,4 @@ postmarket/pmcf-studies/      →  clinical/benefit-risk/       (PMCF results fe
 
 | Date | Author | Summary |
 |------|--------|---------|
-| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-sub-dhf |
+| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init or add-dhf |

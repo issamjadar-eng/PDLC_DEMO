@@ -2,7 +2,7 @@
 
 **ID**: 006
 **Created**: 2026-04-12
-**Status**: Blocked (on task 007 — sub-DHF scaffold migration)
+**Status**: Not Started (unblocked 2026-04-13 by tasks 007 + 009; authors into `docs/project/strategies/` shared docs with topic-first + per-component callout shape)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -11,7 +11,7 @@
 
 ## Goals
 
-_Establish the foundational architecture and regulatory strategy for the PP3500 (PainEase PCA Advanced) DHF. Capture decisions as tagged strategy blocks that the `/strategy` skill will harvest into formal strategy documents under `design-controls/architecture/` and `design-controls/plans/`._
+_Establish the foundational architecture and regulatory strategy for the PP3500 (PainEase PCA Advanced) DHF. Capture decisions as tagged strategy blocks that the `/strategy` skill will harvest into the shared strategy docs at `docs/project/strategies/architecture-strategy.md` and `docs/project/strategies/regulatory-strategy.md` (all strategy domains are shared as of strategy skill v10 / task 009). Use the topic-first structure with per-component callouts (`### PCA Device`, `### Connectivity Adapter`, `### Cloud Suite`) — strategy describes how the DHFs relate to each other, not each one in isolation._
 
 - Define module boundaries and SaMD / SiMD / HW split, grounded in the 9 functional groups (G1–G9) already established in the user-needs / design-inputs docs
 - Capture key architectural decisions: platform, cybersecurity approach, data flow, interoperability, update mechanism, alarm priority scheme
@@ -84,10 +84,10 @@ Remaining step-1 questions (resolve one at a time, in order):
   6. Regulatory Data Pipelines (PMS, complaints, MDRs)
   7. Customer / Administrative Portals
   8. _Future_: AI/ML SaMDs (predictive alarms, dose optimization) — out of baseline, PCCP candidate
-- (b.2) **Sub-DHF / modular architecture concept — NEW (2026-04-12):** Each top-level component gets its own sub-DHF (or "module") with its own design controls, risk file, V&V, and cybersecurity assessment. A **filing** is not 1:1 with a sub-DHF — filings **compose** selectively from the relevant sub-DHFs. Example: the PP3500 510(k) filing includes the PCA device sub-DHF in full PLUS the cybersecurity assessments from the Connectivity Adapter and Cloud Suite sub-DHFs (because the PCA's cyber posture depends on what touches it). This is the modular DHF pattern.
-  - Implication for the folder scaffold: `docs/project/dhfs/pca-device/design-controls/` becomes the PCA device sub-DHF specifically; we need new sibling branches for Adapter and Cloud Suite sub-DHFs (and possibly sub-sub-modules for each Cloud Suite app).
-  - Implication for the filing strategy: each 510(k) / MDDS / SaMD submission package gets a "composition manifest" listing which sub-DHF pieces are included and why.
-  - Implication for strategy harvesting: the `/strategy` skill's output paths currently point into `design-controls/` which is now the PCA-specific path. Other sub-DHFs will need their own strategy instances.
+- (b.2) **DHF / modular architecture concept — NEW (2026-04-12):** Each top-level component gets its own DHF (or "module") with its own design controls, risk file, V&V, and cybersecurity assessment. A **filing** is not 1:1 with a DHF — filings **compose** selectively from the relevant DHFs. Example: the PP3500 510(k) filing includes the PCA device DHF in full PLUS the cybersecurity assessments from the Connectivity Adapter and Cloud Suite DHFs (because the PCA's cyber posture depends on what touches it). This is the modular DHF pattern.
+  - Implication for the folder scaffold: `docs/project/dhfs/pca-device/design-controls/` becomes the PCA device DHF specifically; we need new sibling branches for Adapter and Cloud Suite DHFs (and possibly sub-sub-modules for each Cloud Suite app).
+  - Implication for the filing strategy: each 510(k) / MDDS / SaMD submission package gets a "composition manifest" listing which DHF pieces are included and why.
+  - Implication for strategy harvesting: the `/strategy` skill's output paths currently point into `design-controls/` which is now the PCA-specific path. Other DHFs will need their own strategy instances.
 - (c) **What's inside the Connectivity Adapter?** — same: list its functions, then classify each.
 - (d) Trust and network boundaries: what flows over device↔adapter, adapter↔hospital-IT, adapter↔cloud? Where does PHI live?
 - (e) Whether patient/clinician companion apps are in scope as a 5th top-level component.
@@ -118,7 +118,7 @@ _Everything below is premature thinking from an earlier turn. Do NOT turn into s
 
 ## Regulatory Strategy
 
-<!-- STRATEGY CONTENT: regulatory, submission, classification, sub-dhf, filing-composition -->
+<!-- STRATEGY CONTENT: regulatory, submission, classification, dhf, filing-composition -->
 
 ### Filing Scope: PCA Device Alone
 
@@ -126,7 +126,7 @@ _Everything below is premature thinking from an earlier turn. Do NOT turn into s
 
 **Why**: The real K210345 clearance was obtained for the PCA device. The adapter and cloud suite are adjacent products whose regulatory classification depends on their specific functions (MDDS vs SaMD vs non-device software). Folding them into the PP3500 filing would couple unrelated regulatory paths and create unnecessary review burden.
 
-**How to apply**: Any future strategy, plan, or filing scoped to PP3500 references only the PCA device sub-DHF. Cross-cutting evidence (cybersecurity, interoperability) is pulled in via filing composition rather than by expanding the PP3500 DHF boundary.
+**How to apply**: Any future strategy, plan, or filing scoped to PP3500 references only the PCA device DHF. Cross-cutting evidence (cybersecurity, interoperability) is pulled in via filing composition rather than by expanding the PP3500 DHF boundary.
 
 ### Classification Taxonomy for Adjacent Components
 
@@ -143,25 +143,25 @@ _Everything below is premature thinking from an earlier turn. Do NOT turn into s
 
 **How to apply**: For each component in the Adapter and each app in the Cloud Suite, produce a classification record (class + rationale + applicable rule) **before** deciding its filing path. The classification feeds the composition manifest.
 
-### Sub-DHF Filing Composition Pattern
+### DHF Filing Composition Pattern
 
-**Decision**: Each top-level component (PCA device, Connectivity Adapter, Cloud Suite, and each individual Cloud Suite app) has its **own sub-DHF** with its own design controls, risk file, V&V, and cybersecurity assessment. **Filings are not 1:1 with sub-DHFs** — a filing composes from the relevant sub-DHF pieces via a **composition manifest**.
+**Decision**: Each top-level component (PCA device, Connectivity Adapter, Cloud Suite, and each individual Cloud Suite app) has its **own DHF** with its own design controls, risk file, V&V, and cybersecurity assessment. **Filings are not 1:1 with DHFs** — a filing composes from the relevant DHF pieces via a **composition manifest**.
 
-Example: the PP3500 510(k) submission package includes the PCA device sub-DHF in full, **plus** the cybersecurity assessments from the Connectivity Adapter and Cloud Suite sub-DHFs (because the PCA's cybersecurity posture depends on everything that touches it), **plus** any interoperability evidence that affects the PCA. It does not pull in functional design controls from Adapter or Cloud.
+Example: the PP3500 510(k) submission package includes the PCA device DHF in full, **plus** the cybersecurity assessments from the Connectivity Adapter and Cloud Suite DHFs (because the PCA's cybersecurity posture depends on everything that touches it), **plus** any interoperability evidence that affects the PCA. It does not pull in functional design controls from Adapter or Cloud.
 
 **Why**: Modular DHFs let components evolve at different cadences, carry their own regulatory classifications, and be reused across multiple filings (e.g., a PCCP update to the PCA draws from a different slice than the original 510(k)). The composition manifest makes the reuse explicit and auditable.
 
 **How to apply**:
-- New top-level folder shape: `docs/project/sub-dhfs/<component>/` for each sub-DHF.
-- Each sub-DHF carries its own `design-controls/`, `risk-management/`, `clinical/` (if applicable), and `cybersecurity/` files.
-- Each submission gets a `docs/project/submissions/<filing>/composition-manifest.md` listing which sub-DHF pieces it pulls in and why.
-- Strategy documents (`architecture-strategy.md`, `regulatory-strategy.md`, etc.) may need per-sub-DHF instances; the `/strategy` skill's current single-output-path registry will need a revisit once sub-DHFs are created.
+- New top-level folder shape: `docs/project/dhfs/<component>/` for each DHF.
+- Each DHF carries its own `design-controls/`, `risk-management/`, `clinical/` (if applicable), and `cybersecurity/` files.
+- Each submission gets a `docs/project/submissions/<filing>/composition-manifest.md` listing which DHF pieces it pulls in and why.
+- Strategy documents (`architecture-strategy.md`, `regulatory-strategy.md`, etc.) may need per-DHF instances; the `/strategy` skill's current single-output-path registry will need a revisit once DHFs are created.
 
-### Sub-DHF Folder Structure — Options Analysis
+### DHF Folder Structure — Options Analysis
 
-**Context**: The current scaffold was generated by `/medtech-docs init` which assumes a single-DHF project: everything for one product lives under `docs/project/{input-analysis, design-controls, clinical, postmarket, submissions}/`. That doesn't account for the modular sub-DHF pattern we just adopted. Our PP3500 DHF content already sits in those top-level folders. We need to decide how to evolve the scaffold.
+**Context**: The current scaffold was generated by `/medtech-docs init` which assumes a single-DHF project: everything for one product lives under `docs/project/{input-analysis, design-controls, clinical, postmarket, submissions}/`. That doesn't account for the modular DHF pattern we just adopted. Our PP3500 DHF content already sits in those top-level folders. We need to decide how to evolve the scaffold.
 
-**Framing principle**: The project is ultimately about **filing**. We will file one thing at a time (e.g., PP3500 alone), but the evidence behind each filing is composed from multiple sub-DHFs. The folder structure must make this composition explicit.
+**Framing principle**: The project is ultimately about **filing**. We will file one thing at a time (e.g., PP3500 alone), but the evidence behind each filing is composed from multiple DHFs. The folder structure must make this composition explicit.
 
 **Option A — Full migration to `dhfs/` tree (cleanest, most work)**
 
@@ -177,7 +177,7 @@ docs/project/
 │   ├── connectivity-adapter/
 │   │   └── (same structure, empty for now)
 │   └── cloud-suite/
-│       ├── drug-library-manager/       ← each a sub-sub-DHF
+│       ├── drug-library-manager/       ← each a sub-DHF
 │       ├── fleet-management/
 │       └── (7 total)
 ├── input-analysis/                     ← stays shared (KOL, market, predicates)
@@ -189,20 +189,20 @@ docs/project/
     └── future-filings/
 ```
 
-Pros: symmetric — PP3500 is a sub-DHF like everything else; composition model is obvious; each sub-DHF self-contained. Matches the filing-composition strategy cleanly.
+Pros: symmetric — PP3500 is a DHF like everything else; composition model is obvious; each DHF self-contained. Matches the filing-composition strategy cleanly.
 
 Cons: migration — existing PP3500 content (22 UNs, 34 DIs, trace matrix, 25 clinical MDs, 2 synthesized postmarket files, all READMEs with cross-links) has to move into `dhfs/pca-device/`. Every relative path across those docs needs revisiting.
 
 Effort: ~1–2 hours of careful file moves + cross-link updates, ideally delegated.
 
-**Option B — Leave PP3500 in place, add `sub-dhfs/` siblings for the new components (asymmetric)**
+**Option B — Leave PP3500 in place, add `dhfs/` siblings for the new components (asymmetric)**
 
 ```
 docs/project/
 ├── design-controls/          ← PP3500 content stays put (primary)
 ├── clinical/                 ← PP3500
 ├── postmarket/               ← PP3500
-├── sub-dhfs/                 ← NEW — only for non-PP3500
+├── dhfs/                 ← NEW — only for non-PP3500
 │   ├── connectivity-adapter/
 │   └── cloud-suite/
 └── submissions/
@@ -210,7 +210,7 @@ docs/project/
 
 Pros: zero migration. Fast.
 
-Cons: inconsistent — PP3500 is "primary in place" while everything else is "in a sub-folder." Mental model breaks. Future sub-DHFs always feel second-class. The strategy skill's hardcoded output paths still work for PP3500 only. Tech debt compounds.
+Cons: inconsistent — PP3500 is "primary in place" while everything else is "in a sub-folder." Mental model breaks. Future DHFs always feel second-class. The strategy skill's hardcoded output paths still work for PP3500 only. Tech debt compounds.
 
 **Option C — Overlay: create `dhfs/` but leave PP3500 content where it is, with a symlink or pointer (hybrid)**
 
@@ -229,14 +229,14 @@ Pros: no physical file moves; the `dhfs/` entry for PP3500 is a pointer to its r
 
 Cons: confusing — two valid paths to the same content; symlinks don't work everywhere; future readers won't know which is canonical. Tech debt from day one.
 
-**Recommendation — Option A.** It's the only one that holds up long-term. Migration cost is contained (one delegated pass) and we do it now while the content is fresh and no real commits depend on the paths. B and C both accumulate debt that will bite when the second and third sub-DHFs come online.
+**Recommendation — Option A.** It's the only one that holds up long-term. Migration cost is contained (one delegated pass) and we do it now while the content is fresh and no real commits depend on the paths. B and C both accumulate debt that will bite when the second and third DHFs come online.
 
 ### Medtech-docs skill gap (follow-up, not in this task)
 
-The `medtech-docs` skill was built for single-DHF projects. To support multi-sub-DHF projects properly it needs:
+The `medtech-docs` skill was built for single-DHF projects. To support multi-DHF projects properly it needs:
 
-- An `init` option that scaffolds the `dhfs/` container plus a per-sub-DHF template
-- A `new-sub-dhf <name>` action to scaffold one sub-DHF at a time
+- An `init` option that scaffolds the `dhfs/` container plus a per-DHF template
+- A `new-dhf <name>` action to scaffold one DHF at a time
 - A convention for what's shared (external/internal/input-analysis) vs per-DHF (design-controls/clinical/risk/postmarket/cybersecurity)
 - Cross-link awareness — trace matrices and cross-DHF references need consistent path anchors
 - Composition manifest scaffolding in the `submissions/` tree
@@ -263,7 +263,7 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 
 **Lesson**: When working through non-trivial decisions, strategy content and lessons learned must be captured in the active task document with the proper tags (`<!-- STRATEGY CONTENT: domain, topics -->` and `<!-- LESSONS LEARNED: category -->`) **at the moment the decision or lesson emerges**, not as a deferred cleanup pass and never only after the user asks.
 
-**How it surfaced**: The user asked "did you capture them as strategies in our task doc?" while we were mid-discussion on architecture. The architectural working notes were under the strategy block (so scan would find them), but they were in discussion form, not decision form. Worse, several *regulatory* decisions — filing scope, classification taxonomy, sub-DHF filing composition — were sitting in the architecture block instead of the regulatory block. The user then escalated: "I don't want to have to ask if you captured lessons learned or strategy." The proactive-capture behavior has to be a reflex, not a prompt-driven action.
+**How it surfaced**: The user asked "did you capture them as strategies in our task doc?" while we were mid-discussion on architecture. The architectural working notes were under the strategy block (so scan would find them), but they were in discussion form, not decision form. Worse, several *regulatory* decisions — filing scope, classification taxonomy, DHF filing composition — were sitting in the architecture block instead of the regulatory block. The user then escalated: "I don't want to have to ask if you captured lessons learned or strategy." The proactive-capture behavior has to be a reflex, not a prompt-driven action.
 
 **Applied fix**:
 
@@ -280,8 +280,8 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 | Ref | Description | Location |
 |-----|-------------|----------|
 | Strategy skill | Harvester that assembles tagged blocks into formal docs | `.claude/skills/strategy/` |
-| Architecture brief | Awaiting-content stub at output path | `docs/project/dhfs/pca-device/design-controls/architecture/architecture-strategy.md` |
-| Regulatory brief | Awaiting-content stub at output path | `docs/project/dhfs/pca-device/design-controls/plans/regulatory-strategy.md` |
+| Architecture brief | Awaiting-content stub at output path | `docs/project/strategies/architecture-strategy.md` |
+| Regulatory brief | Awaiting-content stub at output path | `docs/project/strategies/regulatory-strategy.md` |
 | Design inputs | Source of truth for module / requirement grounding | `docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md` |
 | PP3500 regulatory info | 510(k), predicate, product code, UDI | `docs/project/input-analysis/predicate-analysis/portfolio/DEV-PP3500_regulatory_info.md` |
 
@@ -289,4 +289,4 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 
 - 2026-04-12: Task created. Strategy briefs initialized via `/strategy init`. Task skeleton includes both tagged blocks (architecture, regulatory); content pending user discussion.
 - 2026-04-12: User feedback — start architecture at the system level, not module/detailed level. Detailed thinking moved to a "Deferred" section under Architecture Strategy. New "System context" section opened as Step 1 of the architecture discussion, listing 5 candidate top-level components (PCA device, local server, on-prem adapter, cloud platform, hospital IT) and the open questions that need to be resolved before drilling into any one component. Regulatory strategy discussion is paused until system architecture is agreed, so the reg scope can match the system scope.
-- 2026-04-13: **Blocked on task 007.** Decision to go with Option A (full migration to `dhfs/` tree) means the folder shape this task writes into doesn't exist yet. Task 007 created to perform the migration; this task will resume once 007 is complete, at which point the strategy content authoring will target `docs/project/dhfs/pca-device/design-controls/architecture/` and `.../plans/` instead of the current top-level paths. The pending regulatory and architecture decisions captured here (sub-DHF shape, remaining step-1 questions) remain valid across the migration.
+- 2026-04-13: **Blocked on task 007.** Decision to go with Option A (full migration to `dhfs/` tree) means the folder shape this task writes into doesn't exist yet. Task 007 created to perform the migration; this task will resume once 007 is complete, at which point the strategy content authoring will target `docs/project/dhfs/pca-device/design-controls/architecture/` and `.../plans/` instead of the current top-level paths. The pending regulatory and architecture decisions captured here (DHF shape, remaining step-1 questions) remain valid across the migration.

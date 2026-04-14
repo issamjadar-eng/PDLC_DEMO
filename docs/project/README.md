@@ -7,17 +7,17 @@ What we're building — the deliverables and analysis that make up the regulator
 | Folder | Purpose |
 |--------|---------|
 | `input-analysis/` | Upstream investigation and justification — predicate analysis, KOL feedback, market research |
-| `design-controls/` | Design History File core — plans, user/stakeholder needs, requirements, architecture, risk management, V&V |
+| `strategies/` | Shared cross-component strategy briefs — one file per domain (regulatory, architecture, development, testing, risk, postmarket, commercial, operations) |
+| `dhfs/` | Per-DHF Design History Files — each DHF carries its own `design-controls/`, `risk-management/`, `cybersecurity/`, `clinical/`, `postmarket/` |
 | `submissions/` | Packages assembled for regulatory body — Q-Sub, 510(k)/De Novo/PMA, PCCP |
-| `clinical/` | Clinical evidence portfolio — clinical evaluation plans, benefit-risk analyses, literature search strategies |
-| `postmarket/` | Ongoing customer feedback loop — PMCF plans and studies, CAPAs, complaints ledger |
 
 ## Information Flow
 
 ```
-input-analysis/     → Drives and justifies design inputs
-design-controls/    → Formal design control waterfall (user needs → requirements → architecture → V&V)
-submissions/        → Assembled from design controls; references input-analysis for justification
+input-analysis/        → Drives and justifies design inputs (shared across DHFs)
+strategies/            → Cross-component decisions; upstream of per-DHF formal outputs
+dhfs/<dhf>/            → Formal design control waterfall per DHF (user needs → requirements → architecture → V&V → risk → postmarket)
+submissions/           → Assembled from per-DHF design controls; references input-analysis and strategies for justification
 ```
 
 ## Conventions
@@ -39,3 +39,4 @@ submissions/        → Assembled from design controls; references input-analysi
 |------|--------|---------|
 | YYYY-MM-DD | XX | Initial version — created by /medtech-docs init |
 | 2026-04-12 | clinical/postmarket ingestion | Added `clinical/` and `postmarket/` branches to the project structure. |
+| 2026-04-13 | BX | task 009: structure now reflects unified `dhfs/<dhf>/` shape (clinical/postmarket/risk live per-DHF) plus shared `strategies/` location. |

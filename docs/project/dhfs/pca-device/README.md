@@ -1,10 +1,10 @@
 # pca-device
 
-Sub-DHF root for **pca-device** — the Design History File record for the PainEase PCA Advanced (PP3500) patient-controlled analgesia pump. This is the DHF anchor for PDLC_DEMO's lead product and the first sub-DHF in the project's `sub_dhfs[]` list.
+DHF root for **pca-device** — the Design History File record for the PainEase PCA Advanced (PP3500) patient-controlled analgesia pump. This is the DHF anchor for PDLC_DEMO's lead product and the first DHF in the project's `dhfs[]` list.
 
 **Regulatory status**: `in-development` — on track for 510(k) filing, predicate PP3000 (K190567), target clearance under K210345.
 
-**Filing rollup**: `510k` — rolls up into `docs/project/submissions/510k/`. Composition manifest (when authored) will list which artifacts from this sub-DHF are included in the PP3500 510(k) submission.
+**Filing rollup**: `510k` — rolls up into `docs/project/submissions/510k/`. Composition manifest (when authored) will list which artifacts from this DHF are included in the PP3500 510(k) submission.
 
 ## Structure
 
@@ -16,7 +16,7 @@ Sub-DHF root for **pca-device** — the Design History File record for the PainE
 | `risk-management/` | ISO 14971 hazard analysis, FMEA, risk-benefit. Sibling of `design-controls/`, not a child |
 | `cybersecurity/` | IEC 81001-5-1 assessment, threat model, SBOM, vulnerability management |
 
-PDLC_DEMO's broader 5-device infusion portfolio (IP5000, PP3000, PP3500, SP6000, SP6500) is retained as **portfolio and predicate context** under the shared `docs/project/input-analysis/predicate-analysis/`, not as separate sub-DHFs. Only PP3500 has its own design controls in this project. When other components (connectivity-adapter, cloud-suite, etc.) need their own DHFs, they will be added via `/medtech-docs add-sub-dhf`.
+PDLC_DEMO's broader 5-device infusion portfolio (IP5000, PP3000, PP3500, SP6000, SP6500) is retained as **portfolio and predicate context** under the shared `docs/project/input-analysis/predicate-analysis/`, not as separate DHFs. Companion DHFs in this project (`connectivity-adapter`, `cloud-suite` and its child platform DHFs) live as siblings under `docs/project/dhfs/`; they share strategies, input analysis, and submissions plumbing with `pca-device`.
 
 ## Relationship to shared project content
 
@@ -26,8 +26,7 @@ PDLC_DEMO's broader 5-device infusion portfolio (IP5000, PP3000, PP3500, SP6000,
 | `docs/project/input-analysis/kol-feedback/` | KOL input informing user needs |
 | `docs/project/input-analysis/market-research/` | Market landscape, unmet needs |
 | `docs/project/input-analysis/competitive-landscape/` | Competitive positioning |
-| `docs/project/strategies/commercial-strategy.md` | Project-wide commercial posture (cross-component) |
-| `docs/project/strategies/operations-strategy.md` | Project-wide operations and QMS posture |
+| `docs/project/strategies/` | All eight shared strategy briefs (regulatory, architecture, development, testing, risk, postmarket, commercial, operations) — upstream of every per-DHF formal output. PCA-specific nuance lives as `### PCA Device` callouts inside each brief. |
 | `docs/external/standards/` | IEC 62304, ISO 14971, IEC 62366-1, IEC 81001-5-1, etc. |
 | `docs/external/fda-guidance/` | 510(k) SE, cybersecurity, PCCP, SW changes, SW functions guidances |
 | `docs/internal/source/` | Corporate SOPs governing how DHF work is executed |
@@ -35,9 +34,9 @@ PDLC_DEMO's broader 5-device infusion portfolio (IP5000, PP3000, PP3500, SP6000,
 
 ## Conventions
 
-- **One sub-DHF = one component = one regulatory story.** Keep per-DHF content narrowly scoped to PP3500. Portfolio-level content (market research, portfolio predicate analysis, cross-component strategy) belongs at `docs/project/` root under `input-analysis/` or `strategies/`, not here.
+- **One DHF = one component = one regulatory story.** Keep per-DHF content narrowly scoped to PP3500. Portfolio-level content (market research, portfolio predicate analysis, cross-component strategy) belongs at `docs/project/` root under `input-analysis/` or `strategies/`, not here.
 - **Cross-references** to the broader portfolio live in `design-controls/user-needs/` (traceability back to portfolio-level user needs) and `docs/project/input-analysis/predicate-analysis/` (comparison against PP3000 predicate).
-- Use `sub-dhf=pca-device` as the scope tag when capturing strategy content destined for this sub-DHF (per `/strategy` skill tag convention).
+- When capturing strategy content from PCA work, tag with `<!-- STRATEGY CONTENT: <domain>, topics -->` and write a `### PCA Device` callout under the relevant topic. All strategy domains are `shared` (v10+); the deprecated `dhf=pca-device` scope key is unnecessary.
 
 ## For Claude
 
@@ -50,3 +49,4 @@ PDLC_DEMO's broader 5-device infusion portfolio (IP5000, PP3000, PP3500, SP6000,
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-04-13 | BX | Initial version — created during task 007 P6 reorg from PDLC_DEMO's original flat layout into `dhfs/pca-device/`. |
+| 2026-04-13 | BX | task 009: pointed at full shared `strategies/` set, dropped stale "future DHFs" note, refreshed strategy-tag convention to v10 shared form. |
