@@ -101,10 +101,13 @@ h3 { font-size: 1.125rem; }
   color: var(--gl-black);
   text-decoration: none;
 }
-.gl-logo {
+.gl-logo,
+.brand-logo {
   display: block;
   height: 28px;
   width: auto;
+  max-width: 160px;
+  object-fit: contain;
 }
 .gl-logo-sm { height: 20px; }
 .brand-sep {

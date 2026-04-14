@@ -59,7 +59,7 @@ Scrape a company website and materialize a project-local theme pack at `tools/pr
 
 1. Use WebFetch to pull the given URL.
 2. Extract best-effort signals:
-   - **Logo** — look for `<img>` inside `<header>`/topnav; also check `<link rel="icon">`
+   - **Logo** — see the Logo Selection Heuristics block below. This matters most: a bad logo pick is the most visible failure mode of the scrape.
    - **Primary color** — parse inline styles, CSS custom properties, and any linked stylesheet for brand colors
    - **Header/body contrast** — determine light vs dark header from visible styles
    - **Font family** — check `@font-face` declarations and Google Fonts links
@@ -70,6 +70,25 @@ Scrape a company website and materialize a project-local theme pack at `tools/pr
 6. Do **not** auto-select the new theme — report what was extracted, flag what needs verification, and tell the user how to activate it (edit `tools/project-console/console.yaml` `theme: <slug>`).
 
 Default slug (when `--name` is omitted) is derived from the hostname (e.g., `www.arthrex.com` → `arthrex`).
+
+#### Logo Selection Heuristics
+
+The console topnav constrains logos to `height: 28px; max-width: 160px; object-fit: contain` — the image is resized to fit without stretching. That means a tall square logo shrinks to ~28px wide (often unreadable) while a horizontal wordmark scales cleanly. **Prefer horizontal wordmarks.**
+
+When scraping, look in this priority order and stop at the first viable hit:
+
+1. **`<header>` or topnav `<img>`** — whatever the live site renders in its own top bar. This is almost always the authoritative brand logo at a header-friendly aspect ratio.
+2. **`<link rel="icon">` or SVG favicon** — fall back if no header `<img>` found. Square, but usually high-resolution.
+3. **`/brand/`, `/press/`, `/media-kit/` paths** — many companies publish logo assets at these URLs. Try `og:logo` / `og:image` meta tags first.
+4. **Open Graph `og:image`** — often a hero image, not a logo. Only accept if nothing else is available and annotate it `[VERIFY] og:image fallback — may not be a logo`.
+
+**Format priority:** SVG > PNG with transparency > PNG > JPG. SVGs scale losslessly and play nicely with both light and dark topnavs.
+
+**Light/dark variants:** if the scraped site's header is dark (like arthrex.com), also look for a white-on-transparent logo variant (common filenames: `logo-white.svg`, `Logo_White_RGB.png`, `logo-reversed.svg`). Save as `logo.png` (primary, matches the active topnav) and `logo-dark.png` (optional secondary).
+
+**Aspect ratio sanity check:** after download, examine the image dimensions. If width/height > 2 it's a clean horizontal wordmark and works great at the header size. If width/height < 1.2 it's roughly square — still works via `object-fit: contain` but will render small in the topnav; prefer a horizontal alternative if one exists. Don't try to "fix" a square logo with CSS — that's what stretches it. Just pick a better source.
+
+**Write a `logo.meta.json`** alongside the downloaded logo recording the source URL, dimensions, format, and which heuristic tier picked it. This lets the user see why the skill chose what it did and swap to a better asset if they know of one.
 
 ### `run`
 Start the console locally.
