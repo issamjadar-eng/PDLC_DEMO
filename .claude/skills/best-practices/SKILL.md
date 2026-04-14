@@ -1,7 +1,7 @@
 ---
 name: best-practices
-description: "Audit project setup against best practices from a shared registry and local skills — checks CLAUDE.md, folder structure, standards, tasks, sub-DHF layout"
-version: 8
+description: "Audit project setup against best practices from a shared registry and local skills — checks CLAUDE.md, folder structure, standards, tasks, sub-DHF layout with parallel subagent fan-out"
+version: 9
 updated: 2026-04-13
 ---
 
@@ -61,33 +61,158 @@ When parsing each SKILL.md `## Best Practices` table, detect whether the header 
 
 Read `project.yml` once at the start of the audit and extract the `sub_dhfs[]` list. Each entry has `path`, `regulatory`, `filing`, and optional `parent` fields. If `project.yml` is missing or `sub_dhfs:` is missing, treat the list as empty — `per-dhf` checks will iterate zero items and emit an INFO line explaining why. Cross-cutting checks can still run and will report the missing manifest.
 
-**Subagent dispatch for per-dhf and per-submission checks (specified by task 007 P5.5a, execution deferred):**
+**Subagent dispatch for per-dhf and per-submission checks (v9 implementation of task 007 P5.5a):**
 
-Task 007 P5.5a specifies that in a multi-sub-dhf project, `per-dhf` and `per-submission` checks should fan out to LLM subagent workers — one per sub-DHF for per-dhf, one per composition manifest for per-submission — so that reasoning-based checks work uniformly with scripted checks. **This skill version (v8) does NOT yet implement subagent dispatch.** The current implementation runs all checks in the parent context, iterating `sub_dhfs[]` and `submissions/*/` serially. For projects with one sub-DHF (N=1), this is indistinguishable from the subagent-dispatch behavior. For multi-sub-DHF projects, the serial path will still execute all checks correctly but will not parallelize and cannot support reasoning-based checks that require an LLM to evaluate natural-language criteria.
+In a multi-sub-dhf project, `per-dhf` and `per-submission` checks **fan out to LLM subagent workers via the Agent tool** — one subagent per sub-DHF for per-dhf, one per composition manifest for per-submission. Each subagent runs its assigned checks and returns a structured JSON findings list that the dispatcher merges into the final report.
 
-Subagent dispatch implementation is a follow-up task — see `tasks/ben/007-sub-dhf-migration.md` P5.5a for the full contract, prompt template, error isolation rules, and pool separation between per-sub-DHF and per-submission work.
+**Why subagents and not subprocess/in-process**: `/best-practices` is a dispatcher that discovers checks from other skills' `## Best Practices` sections. Each owning skill writes its own "How to Verify" column, and that column can be a scripted test (bash one-liner, `test -f`, grep) or a reasoning-based criterion ("every user need traces to at least one measurable acceptance criterion"). The dispatcher has no control over the mix. Subprocess fan-out would only handle scripted checks; LLM subagents handle both kinds uniformly — running shell commands for scripted checks and reasoning through judgment for the others.
+
+**Pool separation**: per-sub-DHF subagents and per-submission subagents are **disjoint pools**. A composition manifest typically belongs to a single submission but its artifacts span multiple sub-DHFs; scoping per-submission work to one subagent per manifest keeps cross-DHF reference checks in one context without duplicating work across multiple per-sub-DHF subagents.
+
+**N=1 short-circuit optimization**: When `project.sub_dhfs[]` has exactly one entry, the dispatcher runs `per-dhf` checks in its own context rather than spawning a subagent. This is a pure performance optimization — semantically identical to spawning one subagent — and saves token cost for simple projects.
 
 **Per-check execution logic:**
 
-For each check from both sources (registry + local skills):
+**Step A — Read project.yml once** and extract `sub_dhfs[]`. Compute `N = len(sub_dhfs[])`.
 
-1. **Determine Scope** (default `shared` if the column is absent or empty).
-2. **Dispatch by Scope**:
-   - `shared` → run once at project root. Record result with no label.
-   - `per-dhf`:
-     - Iterate `project.sub_dhfs[]`. For each entry E, set the implicit working directory to `docs/project/dhfs/<E.path>` and run the check's "How to verify" logic against that root.
-     - Record each result with label `sub-dhf=<last-segment-of-E.path>`.
-     - If `sub_dhfs[]` is empty, skip with an INFO line: `[INFO] <check> — skipped, no sub-DHFs defined`.
-   - `per-submission` → iterate `docs/project/submissions/*/` via Glob. For each filing folder F, set the implicit working directory to F and run the check. Record each result with label `filing=<name>`.
-   - `cross-cutting` → run once at project root; the check itself enumerates `project.sub_dhfs[]`. Record with no label.
-3. **Verify the condition** described in "How to Verify" — use Glob, Read, Grep as needed. When a `per-dhf` check's How-to-Verify references a path without a leading `/`, resolve it relative to the sub-DHF root (not the project root).
-4. **For the "Skills are self-contained" check**: Read each `.claude/skills/*/SKILL.md` file and scan for patterns that reference external files as dependencies — e.g., "using the template at `<path>`", "read from `<path>`", or file path references that the skill requires to exist in order to function. A skill may *reference* project files it reads/writes as part of its operation (e.g., a task skill reading `tasks/`), but must not depend on an external file to provide its own templates, structures, or definitions. All scaffolding content the skill generates must be defined inline in `SKILL.md` or in supporting files within the skill's own directory (referenced via `${CLAUDE_SKILL_DIR}`).
-5. **For the "Skills are versioned" check**: Read each `.claude/skills/*/SKILL.md` file and verify it has YAML frontmatter with a `version:` field, and a `## Changelog` section. **Exempt externally-sourced skills** — if a skill's SKILL.md has no YAML frontmatter at all (no `---` delimiter in the first 5 lines), it is an external/utility skill and should be reported as INFO (not FAIL): `[INFO] <skill> — external skill, versioning not required`.
-6. **Classify the result**: PASS, FAIL, WARN, or INFO
-   - FAIL for "Required" severity checks that don't pass
-   - WARN for "Recommended" severity checks that don't pass
-   - PASS for checks that pass
-   - INFO for checks that are intentionally skipped (e.g., per-dhf in a project with empty `sub_dhfs[]`, or `mixed` regulatory sub-DHFs skipping certain checks)
+**Step B — Partition checks by Scope** after parsing every SKILL.md `## Best Practices` table:
+- `SHARED_CHECKS` — run in the dispatcher's own context
+- `PER_DHF_CHECKS` — dispatched to per-sub-DHF subagent pool (or run in-process if N≤1)
+- `PER_SUBMISSION_CHECKS` — dispatched to per-submission subagent pool
+- `CROSS_CUTTING_CHECKS` — run in the dispatcher's own context (they enumerate `sub_dhfs[]` themselves)
+
+**Step C — Run shared and cross-cutting checks in the parent context.**
+1. For each check in `SHARED_CHECKS + CROSS_CUTTING_CHECKS`: verify the condition via Glob/Read/Grep, classify PASS/FAIL/WARN/INFO, record result with no label.
+2. Handle the two special checks ("Skills are self-contained" and "Skills are versioned") as described after the dispatch section.
+
+**Step D — Fan out per-dhf checks.**
+
+**D.1 — If `N == 0`:** Skip all `per-dhf` checks with an INFO line per check: `[INFO] <check> — skipped, no sub-DHFs defined`. Continue to Step E.
+
+**D.2 — If `N == 1`:** Short-circuit optimization. Run every `per-dhf` check in the dispatcher's own context against the single `sub_dhfs[0]` root. Record each result with label `sub-dhf=<last-segment-of-path>`. Continue to Step E.
+
+**D.3 — If `N > 1`:** Fan out to subagents. **Spawn one Agent tool call per sub-DHF in a single message** (parallelism is achieved by the Agent tool when multiple Agent calls are issued in one message). For each entry `E` in `sub_dhfs[]`, skip if `--sub-dhf=<name>` was passed and `E`'s leaf name doesn't match. For each remaining entry, invoke:
+
+```
+Agent(
+  description="Audit sub-DHF <leaf-name>",
+  subagent_type="general-purpose",
+  prompt=<per-dhf subagent prompt template below, with substitutions>
+)
+```
+
+**Subagent prompt template (per-dhf):**
+
+```
+You are a best-practices audit worker for sub-DHF `<LEAF_NAME>` at path `docs/project/dhfs/<FULL_PATH>`.
+
+Your job: run the following checks against this sub-DHF and return a structured JSON findings list. You are a read-only worker — do not modify any files.
+
+Checks to run:
+1. <CHECK_ID_1> (from <OWNING_SKILL_1>): <CHECK_NAME_1>
+   Severity: <Required|Recommended>
+   How to verify: <VERBATIM "How to Verify" COLUMN FROM THE OWNING SKILL'S SKILL.md>
+2. <CHECK_ID_2> (from <OWNING_SKILL_2>): ...
+...
+
+Working directory resolution: paths in "How to Verify" without a leading `/` are relative to `docs/project/dhfs/<FULL_PATH>/`. Paths starting with `docs/`, `.claude/`, `tasks/`, or any absolute path are project-root-relative.
+
+For each check:
+- If the "How to verify" is a shell command or file-existence test, run it via Bash (read-only commands only: `test -f`, `test -d`, `ls`, `grep`, `cat`, `python3 -c`) or via Glob/Read/Grep. Interpret exit code or match as PASS/FAIL.
+- If the "How to verify" is a natural-language criterion (e.g., "every user need traces to a measurable acceptance criterion"), read the relevant files and reason through it. Err toward FAIL when uncertain — audit results must be conservative.
+- Severity governs the failure classification: Required → FAIL on failure, Recommended → WARN on failure.
+- Do NOT modify any files. You may only read.
+- Do NOT invoke any tool outside Read, Glob, Grep, and Bash (read-only commands).
+
+Return a single JSON block, nothing else, with this exact schema:
+
+```json
+{
+  "sub_dhf": "<LEAF_NAME>",
+  "sub_dhf_path": "<FULL_PATH>",
+  "findings": [
+    {
+      "check_id": "<unique identifier>",
+      "skill": "<owning skill name>",
+      "check_name": "<human-readable check name>",
+      "status": "PASS" | "FAIL" | "WARN" | "INFO",
+      "severity": "Required" | "Recommended",
+      "message": "<short explanation; empty string if PASS>"
+    }
+  ]
+}
+```
+
+If you cannot complete the audit (filesystem error, malformed check definition, check requires write access), return:
+
+```json
+{
+  "sub_dhf": "<LEAF_NAME>",
+  "sub_dhf_path": "<FULL_PATH>",
+  "findings": [],
+  "dispatch_error": "<short explanation of what went wrong>"
+}
+```
+
+Do not emit any text outside the JSON block.
+```
+
+**Step E — Fan out per-submission checks.** Iterate `docs/project/submissions/*/` via Glob. Skip entries without a composition manifest if any `per-submission` check requires one (check-specific judgment). Spawn one Agent tool call per composition manifest in a single message, with the parallel template:
+
+**Subagent prompt template (per-submission):**
+
+```
+You are a best-practices audit worker for submission `<FILING_NAME>` with composition manifest at `docs/project/submissions/<FILING_NAME>/composition-manifest.md`.
+
+Your job: run the following per-submission checks against this filing and return a structured JSON findings list. You are a read-only worker — do not modify any files.
+
+Checks to run:
+1. <CHECK_ID_1> (from <OWNING_SKILL_1>): <CHECK_NAME_1>
+   Severity: <Required|Recommended>
+   How to verify: <VERBATIM "How to Verify" FROM THE OWNING SKILL'S SKILL.md>
+2. ...
+
+Working directory resolution: paths in "How to Verify" without a leading `/` are relative to `docs/project/submissions/<FILING_NAME>/`. Paths starting with `docs/`, `.claude/`, `tasks/`, or any absolute path are project-root-relative. When a check references `dhfs/<sub-dhf>/...` that path is under `docs/project/dhfs/<sub-dhf>/` — the composition manifest's "Included pieces" section lists which sub-DHFs this filing spans, so cross-DHF reads are expected.
+
+For each check:
+- Same PASS/FAIL/WARN/INFO rules as the per-dhf template above.
+- Composition-manifest-parsing checks should parse the manifest markdown for the five required sections (Filing Identification, Included Pieces, Excluded Pieces, Cross-references, Reviewer Sign-off) and verify each "Included piece" resolves to an existing file.
+
+Return a single JSON block, nothing else, with this exact schema:
+
+```json
+{
+  "submission": "<FILING_NAME>",
+  "submission_path": "docs/project/submissions/<FILING_NAME>",
+  "findings": [
+    { "check_id": "...", "skill": "...", "check_name": "...", "status": "...", "severity": "...", "message": "..." }
+  ]
+}
+```
+
+On dispatch error, return the same shape with an empty `findings` array and a `dispatch_error` field.
+```
+
+**Step F — Collect subagent results and handle errors.**
+1. For each Agent call from Steps D.3 and E, parse the returned JSON block. Use `python3 -c` to extract the JSON payload from the agent's text response if needed.
+2. If a subagent returned `dispatch_error`: emit a synthetic `[FAIL] dispatch error — <subagent_id>` finding with the error message. Continue merging other subagents' results — one bad subagent does not kill the audit.
+3. If a subagent returned malformed JSON (parse failure): emit `[FAIL] malformed JSON from subagent — <subagent_id>` and continue.
+4. If a subagent timed out or never completed: emit `[FAIL] subagent did not return — <subagent_id>` and continue.
+5. Merge all per-sub-DHF findings into `RESULTS["per-dhf"][leaf_name]` and all per-submission findings into `RESULTS["per-submission"][filing_name]`.
+
+**Step G — Handle the two special shared checks** (deferred from Step C because they scan all skills' SKILL.md files rather than project data):
+- **"Skills are self-contained"**: Read each `.claude/skills/*/SKILL.md` file and scan for patterns that reference external files as dependencies — e.g., "using the template at `<path>`", "read from `<path>`", or file path references that the skill requires to exist in order to function. A skill may *reference* project files it reads/writes as part of its operation (e.g., a task skill reading `tasks/`), but must not depend on an external file to provide its own templates, structures, or definitions. All scaffolding content the skill generates must be defined inline in `SKILL.md` or in supporting files within the skill's own directory (referenced via `${CLAUDE_SKILL_DIR}`).
+- **"Skills are versioned"**: Read each `.claude/skills/*/SKILL.md` file and verify it has YAML frontmatter with a `version:` field, and a `## Changelog` section. **Exempt externally-sourced skills** — if a skill's SKILL.md has no YAML frontmatter at all (no `---` delimiter in the first 5 lines), it is an external/utility skill and should be reported as INFO (not FAIL): `[INFO] <skill> — external skill, versioning not required`.
+
+**Step H — Classify and aggregate**. For each recorded result: PASS / FAIL / WARN / INFO.
+- FAIL for "Required" severity checks that don't pass
+- WARN for "Recommended" severity checks that don't pass
+- PASS for checks that pass
+- INFO for checks that are intentionally skipped (per-dhf in a project with empty `sub_dhfs[]`, `mixed` regulatory sub-DHFs skipping certain checks, external skills exempt from versioning, etc.)
+
+**Cost envelope**: A PDLC_DEMO-sized project has 10 sub-DHFs and a handful of filings. A single audit run spawns ~10–15 subagents (one per sub-DHF + one per composition manifest). Each subagent reads a bounded slice of the tree and executes a known list of checks. Rough envelope: each subagent ~5–15k input tokens, ~1–3k output tokens; per-audit ~100–200k total tokens. This is a deliberate action, not a hot path — operators run it before commits or PR, not on every save. Knobs to control cost: `--sub-dhf=<name>` narrows the per-dhf pool; per-submission pool is naturally bounded by manifest count.
+
+**Backward compatibility**: In single-sub-dhf mode (N=1) or zero-sub-dhf mode (N=0), no subagents are spawned. The serial path is byte-identical to v8 behavior. This preserves deterministic audit output for simple projects.
 
 **Step 4 — Report**
 
@@ -253,6 +378,8 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 
 ## Changelog
 
+- 9 (2026-04-13): **Subagent dispatch implementation.** Rewrote the Per-check execution logic section to implement task 007 P5.5a — when `project.sub_dhfs[]` has N>1 entries, `per-dhf` checks fan out to per-sub-DHF subagents via the Agent tool (one Agent call per sub-DHF in a single message for parallelism); `per-submission` checks fan out to per-composition-manifest subagents. Each subagent reads its assigned slice, runs the owning skill's "How to verify" checks, and returns a structured JSON findings list. Added verbatim subagent prompt templates for both pools (per-dhf and per-submission), JSON response schema, dispatch-error handling (malformed JSON, timeout, crash → synthetic FAIL, continue), N=1 short-circuit optimization (no subagent spawn when the sub-DHF list has one entry), and cost envelope. Single-sub-dhf mode is byte-identical to v8 so deterministic output is preserved. Backward compatible with v8 in all other respects.
+  **Post-update:** No user action needed. v9 only activates subagent fan-out when `project.yml` `sub_dhfs[]` has more than one entry — projects with one sub-DHF continue to use the v8 serial path exactly as before. The Agent tool is used via Claude Code's built-in parallelism (multiple Agent calls in one message run concurrently); no hook registration or configuration is required.
 - 8 (2026-04-13): **Unified sub-DHF shape support.** Added `Scope` column parsing (values: `shared`, `per-dhf`, `per-submission`, `cross-cutting`; default `shared` when absent). Added per-dhf iteration that runs a check once per `project.sub_dhfs[]` entry with the sub-DHF root as the implicit working directory. Added per-submission iteration over `submissions/*/` via Glob. Added cross-cutting checks that enumerate `project.sub_dhfs[]` directly: Project has at least one sub-DHF, Sub-DHF leaf names unique, Platform sub-DHFs have children, Unreferenced sub-DHFs flagged, Composition manifests exist. Added multi-sub-dhf grouped report format (Shared / Per-sub-DHF / Per-Submission / Cross-Cutting sections). Subagent dispatch model (task 007 P5.5a) is **specified but not yet implemented** — v8 runs all checks in the parent context, iterating serially. Full subagent fan-out is a follow-up task. See `tasks/ben/007-sub-dhf-migration.md` for the full design rationale and P5.5a contract.
 - 7 (2026-04-10): Added 3 security infrastructure checks — security hook installed, secops agent exists, project manifest has security policy. Part of task 024 completion.
 - 6 (2026-04-09): Registry repo/path now read from `project.yml` `registries:` section (first `type: github` entry) instead of hardcoded. Falls back to `GlobalLogic-a-Hitachi-Company/hitachi` if no project.yml. Team roster checks updated from `team.md` to `project.yml`.

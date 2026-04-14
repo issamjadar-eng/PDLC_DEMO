@@ -1,7 +1,7 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market; sub-DHF scope resolution"
-version: 8
+version: 9
 updated: 2026-04-13
 ---
 
@@ -583,6 +583,7 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 
 ## Changelog
 
+- 9 (2026-04-13): **Subagent prompts updated for v8 sub-DHF scope semantics.** Rewrote `agents/scanner.md` and `agents/assembler.md` to implement the sub-DHF scope resolution spec introduced in v8. Scanner now reads `project.yml` `sub_dhfs[]` at start, builds a leaf-name lookup, parses `sub-dhf=<leaf>` scope keys in tags, resolves them against the lookup, and flags per-dhf tags missing required scope keys in multi-sub-DHF projects. Output path table now uses the `<sub-dhf>` placeholder so one scan surfaces assembly status for every (domain, sub-dhf) pair. Assembler accepts new `{{SUB_DHF_SCOPE}}` and `{{SUB_DHF_PATH}}` inputs, filters scanned blocks by matching sub-DHF scope, implicit-scopes single-sub-DHF projects, and reports skipped-by-scope subsections in its output. v8 specified the tag convention and Domain Registry schema; v9 makes the agents actually implement it.
 - 8 (2026-04-13): **Unified sub-DHF shape support.** Domain Registry reorganized: each domain has a `Scope` (shared or per-dhf); per-dhf domains use `<sub-dhf>` placeholder in their output path template, resolved at assembly time from the tag's `sub-dhf=<leaf>` scope key. Added sub-DHF scope resolution to the Tag Convention section: tags for per-dhf domains must include `sub-dhf=<leaf-name>` in multi-sub-DHF projects (implicit single-entry resolution in single-sub-DHF projects). Leaf-name uniqueness enforced by `medtech-docs add-sub-dhf` means `sub-dhf=<leaf>` is unambiguous. `commercial` and `operations` moved to shared `docs/project/strategies/`. `risk` and `postmarket` moved to their proper sub-DHF-level homes (`risk-management/`, `postmarket/`) out of `design-controls/`. Scanner and assembler changes are specified but not yet fully implemented — this v8 documents the target behavior; consuming subagents (`agents/scanner.md`, `agents/assembler.md`) still use v7 path semantics and will need follow-up edits. See `tasks/ben/007-sub-dhf-migration.md` P3 for full design.
 - 7 (2026-04-08): Added `resolve` action — address pending review markers without full reassembly. Scans for `STRATEGY REVIEW: pending` markers, prompts lead with same 3 options (keep newer/keep both/skip), writes resolution markers to source tasks. Does not regenerate assembled docs — run `assemble` after resolving. See task 035.
 - 6 (2026-04-08): Two-tier conflict detection — Tier 1 (heading overlap, mechanical >80% word match) plus Tier 2 (semantic overlap, assembler reads content of subsections in the same output section and assesses whether they address the same decision). Multi-subsection warning when superseding a block whose tag covers multiple subsections but only one conflicts. Assembly history now records assembler identity (`git config user.name`). See task 035.

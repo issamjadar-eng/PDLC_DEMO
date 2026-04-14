@@ -4,13 +4,16 @@ Self-contained agent prompt for the `/strategy assemble` action. Launched as a g
 
 ## Task
 
-Assemble tagged strategy content from task documents into a strategy document for a specific domain.
+Assemble tagged strategy content from task documents into a strategy document for a specific domain. For per-DHF domains, one assembler invocation targets one sub-DHF at a time — the caller (`/strategy assemble`) resolves the output path using the Domain Registry's `<sub-dhf>` placeholder and passes both the path and the sub-DHF scope to this agent.
 
 ## Input
 
 **Domain to assemble**: {{DOMAIN_KEY}}
 **Domain name**: {{DOMAIN_NAME}}
-**Output path**: {{OUTPUT_PATH}}
+**Domain scope type**: {{DOMAIN_SCOPE}} (either "shared" or "per-dhf")
+**Sub-DHF scope**: {{SUB_DHF_SCOPE}} (only for per-dhf domains — the leaf name, e.g., `pca-device` or `drug-library-manager`; empty/null for shared domains)
+**Sub-DHF full path**: {{SUB_DHF_PATH}} (only for per-dhf domains — the resolved full path from `project.sub_dhfs[]`, e.g., `pca-device` or `cloud-suite/dhfs/drug-library-manager`)
+**Output path**: {{OUTPUT_PATH}} (already resolved by the caller — contains the `<sub-dhf>` substitution for per-dhf domains)
 **Template type**: {{TEMPLATE_TYPE}} (either "custom" or "default")
 **Active task ID for session**: {{TASK_ID}}
 **Session ID**: {{SESSION_ID}}
@@ -28,7 +31,7 @@ Assemble tagged strategy content from task documents into a strategy document fo
 
 2. Read the target folder's `README.md` before writing (project convention).
 
-## Tag Convention
+## Tag Convention (v8)
 
 Strategy content is tagged in task documents:
 
@@ -36,10 +39,37 @@ Strategy content is tagged in task documents:
 <!-- STRATEGY CONTENT: domain, topic1, topic2 -->
 ```
 
+Or with an optional **sub-DHF scope key** for per-DHF domains:
+
+```
+<!-- STRATEGY CONTENT: domain, sub-dhf=<leaf-name>, topic1, topic2 -->
+```
+
 - First value = domain key. Only process blocks where domain = `{{DOMAIN_KEY}}`.
+- **Sub-DHF scope filter**: if `{{DOMAIN_SCOPE}}` is `per-dhf`, additionally filter blocks by their `sub-dhf=<value>` key — only process blocks where the resolved sub-DHF equals `{{SUB_DHF_SCOPE}}`. See "Sub-DHF scope resolution" below for exact matching rules.
 - Tag must be on a line by itself (not in code blocks or backticks).
 - Block boundary: tag line → next `## ` heading or EOF.
 - Section heading: the `## ` heading immediately above the tag.
+
+## Sub-DHF scope resolution
+
+Applies only when `{{DOMAIN_SCOPE}} == per-dhf`. Reads `project.yml` at start and builds a leaf-name lookup from `sub_dhfs[]`.
+
+For each candidate block whose domain matches `{{DOMAIN_KEY}}`:
+
+1. Check the tag's comma-separated values for a `sub-dhf=<value>` component.
+2. **If present**:
+   - Resolve `<value>` against the leaf-name lookup.
+   - Zero matches → **skip the block** and record the error: `"task <id>: sub-dhf=<value> does not resolve to any sub_dhfs[] entry"` (report at end).
+   - Exactly one match → if the resolved leaf equals `{{SUB_DHF_SCOPE}}`, **include the block**; otherwise skip silently (block belongs to a different sub-DHF's assembly).
+3. **If absent**:
+   - `N == 1` (project has a single sub-DHF) → implicit scope; include the block if `sub_dhfs[0]` equals `{{SUB_DHF_SCOPE}}`. Record a note: `"task <id>: implicit sub-dhf scope (single-sub-DHF project)"`.
+   - `N > 1` → **skip the block** and record the error: `"task <id>: per-dhf domain '<domain>' missing required sub-dhf= scope key in multi-sub-DHF project"`. This is a scanner-time error that should have been caught earlier; repeat it here as a safety net.
+   - `N == 0` → **skip the block** and record the error: `"task <id>: per-dhf domain '<domain>' but project has no sub_dhfs[] defined"`.
+
+For `shared` domains (`{{DOMAIN_SCOPE}} == shared`):
+- Do not apply sub-DHF filtering. Include all matching domain blocks regardless of their `sub-dhf=` key.
+- If any matching block has a `sub-dhf=` key, record a warning: `"task <id>: shared domain '<domain>' tag has sub-dhf=<value> key — ignored"`.
 
 ## Review Markers
 
@@ -53,14 +83,16 @@ Review markers appear on the line immediately after the `<!-- STRATEGY CONTENT -
 
 ## Scanning Phase
 
-1. Glob for `tasks/*/[0-9][0-9][0-9]-*.md`
-2. For each file, find `<!-- STRATEGY CONTENT` lines on their own line
-3. Parse the domain (first value). Keep only blocks where domain = `{{DOMAIN_KEY}}`
-4. Check the line immediately after each tag for review markers:
+1. **Read `project.yml`** once and build the leaf-name lookup from `sub_dhfs[]` (for per-dhf scope resolution).
+2. Glob for `tasks/*/[0-9][0-9][0-9]-*.md`
+3. For each file, find `<!-- STRATEGY CONTENT` lines on their own line
+4. Parse the domain (first value). Keep only blocks where domain = `{{DOMAIN_KEY}}`.
+5. **Apply sub-DHF scope filtering** per the "Sub-DHF scope resolution" section above. For per-dhf domains, only keep blocks that resolve to `{{SUB_DHF_SCOPE}}`. For shared domains, keep all blocks but flag any with a `sub-dhf=` key as warnings.
+6. Check the line immediately after each tag for review markers:
    - `<!-- STRATEGY REVIEWED: superseded by task NNN -->` → **skip this block entirely**
    - `<!-- STRATEGY REVIEWED: coexists with task NNN -->` → include, record the pairing
    - `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` → include, flag for re-prompting
-5. For each non-superseded matching block, extract:
+7. For each non-superseded matching block, extract:
    - Task ID, task title, created date, section heading
    - Topics (remaining tag values after domain)
    - Full block content (from tag line to next `## ` or EOF, excluding the tag line and any review marker lines)
@@ -209,7 +241,10 @@ Populate `## Plans Informed` from this lookup:
 
 Report back to the caller:
 - Document written (path, word count)
+- **Sub-DHF scope**: `{{SUB_DHF_SCOPE}}` (for per-dhf domains) or `shared` (for shared domains)
 - Subsections assembled (count, by source task)
+- Subsections **skipped due to sub-DHF scope mismatch** (count, with source task IDs — these belong to a different sub-DHF's assembly)
+- Scope-resolution errors (tags missing required `sub-dhf=` key, or with an unresolvable value — list task IDs)
 - Conflicts flagged (count, details)
 - `[VERIFY]` markers found (count, details)
 - Subsections that landed in Uncategorized (if any — means mapping needs updating)
