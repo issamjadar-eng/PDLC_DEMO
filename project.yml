@@ -54,10 +54,51 @@ project:
 #   parent     — parent sub-DHF path (null for top-level)
 
 sub_dhfs:
+  # Top-level sub-DHFs
   - path: pca-device
     regulatory: in-development
     filing: 510k
     parent: null
+  - path: connectivity-adapter
+    regulatory: in-development
+    filing: 510k
+    parent: null
+
+  # Platform sub-DHF (children carry the regulatory weight)
+  - path: cloud-suite
+    regulatory: mixed
+    filing: null
+    parent: null
+
+  # cloud-suite child sub-DHFs (all nested under cloud-suite/dhfs/)
+  - path: cloud-suite/dhfs/drug-library-manager
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/fleet-management
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/compliance-reports
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/analytics-dashboard
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/inventory-tracker
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/alerts-engine
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
+  - path: cloud-suite/dhfs/clinical-interface
+    regulatory: in-development
+    filing: 510k
+    parent: cloud-suite
 
 # ─── Team Roster ───
 #
