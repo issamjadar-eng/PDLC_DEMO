@@ -1,0 +1,23 @@
+# Generic light theme — skill default.
+# Overridden at runtime by a project-local theme pack if `console.yaml`
+# `theme:` points to one under `tools/project-console/themes/`.
+
+name: Light
+brand_name: Project Console
+
+primary: "#2563eb"
+primary_dark: "#1e40af"
+primary_tint: "#dbeafe"
+accent: "#0891b2"
+
+topnav_bg: "#ffffff"
+topnav_text: "#0f172a"
+body_bg: "#f7f7f9"
+text: "#1f2937"
+text_muted: "#6b7280"
+border: "#e5e7eb"
+
+font_body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+font_heading: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+
+tagline: "A project-console for regulated medical device programs."

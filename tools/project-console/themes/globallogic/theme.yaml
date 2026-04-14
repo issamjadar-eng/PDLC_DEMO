@@ -1,0 +1,25 @@
+# GlobalLogic theme pack for PDLC_DEMO.
+# Materialized from the original PDLC console CSS + _base.html footer.
+# Source: https://www.globallogic.com (manual transcription, not scraped)
+
+name: GlobalLogic
+brand_name: GlobalLogic
+
+primary: "#7a00df"
+primary_dark: "#5c00a8"
+primary_tint: "#f3e8ff"
+accent: "#0693e3"
+
+topnav_bg: "#ffffff"
+topnav_text: "#000000"
+body_bg: "#f7f7f9"
+text: "#484f6b"
+text_muted: "#6b7280"
+border: "#e3e3e8"
+
+font_body: "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+font_heading: "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+
+tagline: "A GlobalLogic demo of agentic PDLC workflows in MedTech."
+
+source_url: "https://www.globallogic.com"

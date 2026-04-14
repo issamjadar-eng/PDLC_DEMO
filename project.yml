@@ -178,6 +178,7 @@ security:
     - medtech-docs
     - pdf
     - pptx
+    - project-console
     - secops
     - skill-creator
     - strategy

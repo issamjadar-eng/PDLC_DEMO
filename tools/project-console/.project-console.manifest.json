@@ -1,0 +1,16 @@
+{
+  "skill": "project-console",
+  "skill_version": "1.0.0",
+  "installed_at": "2026-04-14T00:00:00Z",
+  "last_synced_at": "2026-04-14T00:00:00Z",
+  "file_classes": {
+    "console.yaml": "project-owned",
+    "pyproject.toml": "project-owned",
+    "run.sh": "skill-owned",
+    "README.md": "skill-owned",
+    "ARCHITECTURE.md": "project-owned",
+    "agents/": "project-owned",
+    "themes/": "project-owned",
+    ".env": "project-owned"
+  }
+}

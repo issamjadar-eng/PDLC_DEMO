@@ -1,0 +1,25 @@
+# tools/project-console/console.yaml
+# Project-local configuration. Safe to edit.
+
+theme: globallogic
+
+dashboards:
+  patterns:
+    - docs/**/*-tracker.html
+    - docs/**/*-dashboard.html
+    - docs/**/dashboard.html
+    - docs/**/*-tree.html
+  overrides:
+    submission-tracker:
+      title: "Submission Package Tracker"
+      description: "510(k) submission package readiness across base submission, PCCP, and supporting engineering artifacts."
+      group: "Submissions"
+      order: 1
+
+server:
+  host: 127.0.0.1
+  port: 8765
+  log_level: info
+
+auth:
+  callback_url: null

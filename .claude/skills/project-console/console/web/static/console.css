@@ -10,17 +10,36 @@
 }
 
 :root {
-  --gl-purple: #7a00df;
-  --gl-purple-dark: #5c00a8;
-  --gl-purple-tint: #f3e8ff;
-  --gl-cyan: #0693e3;
+  /* Brand tokens — theme packs override via --brand-* variables injected
+     in <style id="theme-overrides">. Fallback values keep the console
+     legible with no theme installed. */
+  --brand-primary: #2563eb;
+  --brand-primary-dark: #1e40af;
+  --brand-primary-tint: #dbeafe;
+  --brand-accent: #0891b2;
+  --topnav-bg: #ffffff;
+  --topnav-text: #0f172a;
+  --body-bg: #f7f7f9;
+  --body-text: #1f2937;
+  --body-text-muted: #6b7280;
+  --border: #e5e7eb;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font-body);
+
+  /* Legacy --gl-* names kept as aliases so existing rules keep working
+     without a full rewrite. Theme packs don't touch these. */
+  --gl-purple: var(--brand-primary);
+  --gl-purple-dark: var(--brand-primary-dark);
+  --gl-purple-tint: var(--brand-primary-tint);
+  --gl-cyan: var(--brand-accent);
   --gl-green: #00d084;
-  --gl-black: #000000;
-  --gl-slate: #484f6b;
-  --gl-slate-soft: #6b7280;
+  --gl-black: var(--topnav-text);
+  --gl-slate: var(--body-text);
+  --gl-slate-soft: var(--body-text-muted);
   --gl-gray-light: #eeeeee;
-  --gl-gray-lighter: #f7f7f9;
-  --gl-border: #e3e3e8;
+  --gl-gray-lighter: var(--body-bg);
+  --gl-border: var(--border);
   --gl-white: #ffffff;
   --gl-error: #b00020;
 
@@ -29,9 +48,6 @@
   --radius-lg: 12px;
   --shadow-soft: 0 1px 2px rgba(16, 18, 34, 0.04),
                  0 4px 16px rgba(16, 18, 34, 0.05);
-
-  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI",
-               "Helvetica Neue", Arial, sans-serif;
 
   --topnav-h: 72px;
 }

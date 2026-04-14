@@ -20,7 +20,7 @@ templates = Jinja2Templates(
 
 
 def _load() -> tuple[dict[str, DomainAgent], list[Group]]:
-    return load_all(get_config().domain_agents_dir)
+    return load_all(get_config().agents_dir)
 
 
 def _agent_count(groups: list[Group]) -> int:
