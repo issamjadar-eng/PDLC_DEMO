@@ -32,6 +32,8 @@
 
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI",
                "Helvetica Neue", Arial, sans-serif;
+
+  --topnav-h: 72px;
 }
 
 * { box-sizing: border-box; }
@@ -267,10 +269,13 @@ main {
 
 /* Chat + docs pages break out of the 1040px main cap and use the full viewport. */
 body.chat-page main,
-body.docs-page main {
+body.docs-page main,
+body.dashboard-page main {
   max-width: none;
   padding: 1rem 1.25rem;
 }
+body.dashboard-page main { padding: 0; }
+body.dashboard-page .site-footer { display: none; }
 /* Chat page still hides the footer — the chat form sits at the bottom of the
    viewport and there's no useful room for a footer below it. Docs page keeps
    the footer so users can see it below the explorer. */
@@ -1243,4 +1248,41 @@ body.docs-page.resizing * {
     align-items: flex-start;
     padding: 1.5rem 1.25rem;
   }
+}
+
+/* ---------- Dashboards ---------- */
+.dashboard-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - var(--topnav-h, 64px));
+}
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: .6rem 1.25rem;
+  border-bottom: 1px solid var(--gl-border);
+  background: var(--gl-white);
+  flex-wrap: wrap;
+}
+.dashboard-header h1 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+.dashboard-header .muted {
+  font-size: .8rem;
+  margin: 0;
+}
+.dashboard-actions {
+  display: flex;
+  gap: .5rem;
+}
+.dashboard-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  border: 0;
+  background: #0f172a;
+  display: block;
 }

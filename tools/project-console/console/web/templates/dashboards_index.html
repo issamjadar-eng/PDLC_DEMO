@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% block title %}Dashboards · PDLC Console{% endblock %}
+{% block content %}
+<section class="landing">
+  <h1>Dashboards</h1>
+  <p class="sub">Live views into project readiness, compiled from DHF artifacts.</p>
+  <div class="cards">
+    {% for d in dashboards %}
+    <a class="card" href="/dashboards/{{ d.slug }}">
+      <h3>{{ d.title }}</h3>
+      <p class="muted">{{ d.description }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

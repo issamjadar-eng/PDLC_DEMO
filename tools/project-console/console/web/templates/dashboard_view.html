@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% block title %}{{ dashboard.title }} · PDLC Console{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+{% block content %}
+<section class="dashboard-wrap">
+  <div class="dashboard-header">
+    <div>
+      <h1>{{ dashboard.title }}</h1>
+      <p class="muted">{{ dashboard.description }}</p>
+    </div>
+    <div class="dashboard-actions">
+      <a class="btn-small" href="{{ dashboard.source_url }}">View source</a>
+      <a class="btn-small" href="{{ dashboard.embed_url }}" target="_blank" rel="noopener">Open full&nbsp;screen</a>
+    </div>
+  </div>
+  <iframe class="dashboard-frame" src="{{ dashboard.embed_url }}" title="{{ dashboard.title }}"></iframe>
+</section>
+{% endblock %}
