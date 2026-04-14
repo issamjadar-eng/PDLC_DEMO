@@ -136,7 +136,8 @@
       "Read(//tmp/**)",
       "WebFetch(*)",
       "WebSearch",
-      "Write(**)"
+      "Write(**)",
+      "mcp__chrome-devtools"
     ]
   }
 }

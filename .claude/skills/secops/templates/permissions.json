@@ -69,6 +69,7 @@
     "Read(//tmp/**)",
     "Read(//private/tmp/**)",
     "Edit(**)",
-    "Write(**)"
+    "Write(**)",
+    "mcp__chrome-devtools"
   ]
 }
