@@ -1,7 +1,7 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage sub-DHFs, manage standards, generate compliance dashboard"
-version: 12
+version: 13
 updated: 2026-04-13
 ---
 
@@ -181,7 +181,14 @@ security:
 
   approved_skills:       # Auto-populated from registries.skills lists above
     {{APPROVED_SKILLS}}
-  approved_mcps: []      # Populated as MCP servers are connected
+  approved_mcps:
+    # chrome-devtools — Google's Chrome DevTools MCP server. Lets Claude
+    # drive a real Chrome instance for visual validation: navigate, take
+    # screenshots, inspect computed styles, evaluate JS in the page. Useful
+    # for any frontend work (dashboards, web UI) where layout/visual
+    # correctness can't be verified from source alone.
+    # Install: `claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest`
+    - chrome-devtools
   approved_plugins: []   # Populated as plugins are added
   approved_agents: []    # Populated as agents are created
 ```
@@ -703,6 +710,7 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 
 ## Changelog
 
+- 13 (2026-04-13): Added `chrome-devtools` to the `project.yml` template's default `approved_mcps:` list in `init` action Step 2. New projects scaffolded by `/medtech-docs init` now get the Chrome DevTools MCP server pre-approved by the secops posture — no separate approval step required when the team first uses it for frontend visual validation. Comment block in the template explains what it does and the `claude mcp add` install command. No functional change to existing projects; only the init-time template is updated. **LOCAL divergence pending upstream push** (hitachi still ships v12).
 - 12 (2026-04-13): **Unified sub-DHF shape — every project has at least one sub-DHF from day one.** Rewrote the init folder tree to scaffold `docs/project/dhfs/<primary>/{design-controls, clinical, postmarket, risk-management, cybersecurity}/` instead of the old flat `docs/project/design-controls/...` layout. Single-component and multi-component projects use the same shape; growth is a plain `add-sub-dhf` call, not a migration. Added Step 1 question 9 (primary sub-DHF name, no default). Added `sub_dhfs:` section to the `project.yml` template with leaf-name uniqueness enforcement rule. Added new `add-sub-dhf` action supporting arbitrary `--parent` nesting and `regulatory` / `filing` flags. `risk-management/` is now a sibling of `design-controls/` at the sub-DHF level (it used to be a child of `design-controls/` in v11). Added `clinical/`, `postmarket/`, `cybersecurity/`, and shared `strategies/` to the scaffold. Added Scope column to the Best Practices table classifying every check as `shared`, `per-dhf`, `per-submission`, or `cross-cutting`. Added new per-DHF checks (sub-DHF README exists, risk-management folder exists, platform sub-DHFs have children) and cross-cutting checks (sub_dhfs non-empty, leaf names unique, composition manifests referenced). No migration action — the one-time PDLC_DEMO reorg from the v11 flat shape into `dhfs/pca-device/` is a task 007 P6 execution step, not a skill feature, because there are no other existing projects on the old shape. New templates required but not yet shipped with this version (follow-up): `readme-sub-dhf.md`, `readme-clinical.md`, `readme-postmarket.md`, `readme-risk-management.md`, `readme-cybersecurity.md`, `readme-strategies.md`. See task 007 for design rationale.
 - 11 (2026-04-10): Added `tool-validation/` under design-controls (8th subfolder). Tool validation records for software tools used in development per IEC 62304 and FDA guidance — plans, reports, risk assessments, tool inventory. Added to folder tree, leaf table, dashboard scan. Updated best-practices check (7→8 subfolders). Added Step 2b to `init` — after creating `project.yml`, check if CLAUDE.md has a project manifest section and insert one if missing.
 - 10 (2026-04-09): Added `project.yml` scaffolding to `init` as new Step 2. Asks user for project name, repo, email domain; pre-populates project identity, team roster template, skill registries, and security policy. Steps renumbered (old 2→3, 3→4, 4→5, 5→6). Added best-practices check for project manifest existence. Replaces `team.md` as the team roster source.
