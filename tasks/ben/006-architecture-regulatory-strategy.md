@@ -177,7 +177,7 @@ docs/project/
 │   ├── connectivity-adapter/
 │   │   └── (same structure, empty for now)
 │   └── cloud-suite/
-│       ├── drug-library-manager/       ← each a sub-DHF
+│       ├── drug-library-manager/       ← each a child DHF
 │       ├── fleet-management/
 │       └── (7 total)
 ├── input-analysis/                     ← stays shared (KOL, market, predicates)
