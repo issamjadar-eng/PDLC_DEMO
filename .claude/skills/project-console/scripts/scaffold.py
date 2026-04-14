@@ -289,7 +289,7 @@ def sync_scaffold(project_root: Path, skill_root: Path) -> None:
     current_version = read_skill_version(skill_root)
     prev_version = manifest.get("skill_version", "unknown")
 
-    # Files we replace in sync
+    # Files we replace in sync (skill-owned templates)
     skill_owned = [
         ("run.sh", RUN_SH_TEMPLATE, 0o755),
     ]
@@ -301,6 +301,18 @@ def sync_scaffold(project_root: Path, skill_root: Path) -> None:
             dst.chmod(mode)
             updated.append(rel)
 
+    # Copy over any NEW agent templates that the project doesn't have yet.
+    # Existing files are left alone — the project owns its roster after init.
+    src_agents = skill_root / "agents" / "templates"
+    agents_dst = tool_root / "agents" / "core-team"
+    new_agents: list[str] = []
+    if src_agents.is_dir() and agents_dst.is_dir():
+        for src in src_agents.glob("*.md"):
+            dst = agents_dst / src.name
+            if not dst.exists():
+                shutil.copy2(src, dst)
+                new_agents.append(src.name)
+
     manifest["skill_version"] = current_version
     manifest["last_synced_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
@@ -310,8 +322,15 @@ def sync_scaffold(project_root: Path, skill_root: Path) -> None:
         print("Updated files:")
         for u in updated:
             print(f"  - {u}")
-    else:
-        print("No skill-owned file changes.")
+    if new_agents:
+        print("Added agent templates (new since last sync):")
+        for name in new_agents:
+            print(f"  - agents/core-team/{name}")
+    if not updated and not new_agents:
+        print("No changes.")
+    print()
+    print("If the console is running, restart it to pick up skill code changes.")
+    print("(uvicorn --reload watches tools/project-console/, not the skill package.)")
 
 
 # ---------------- status ----------------

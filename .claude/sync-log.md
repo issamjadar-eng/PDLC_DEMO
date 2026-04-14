@@ -4,6 +4,25 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-14 — push --merge (project-console 1.0.2 — default panels + assistant-framing rename)
+
+- Files: 17 (13 rewritten persona templates + 2 new panels + SKILL.md + scaffold.py + VERSION)
+  - `skills/project-console/agents/templates/` — all 12 persona files + `_group.md` rewritten with assistant framing. Titles suffixed "Assistant" (solo) or "Advisory Panel" (panels). System prompts rewritten from "You are the X lead" to "You are an AI assistant supporting the X team... You help the human X leads by...". STAY IN CHARACTER clauses rewritten to "never claim to BE the lead or commit the program to anything."
+  - `skills/project-console/agents/templates/core-team-panel.md` — new, 5 members (PM + RA + Clinical + QE + R&D)
+  - `skills/project-console/agents/templates/design-review-panel.md` — new, 6 members (Systems + R&D + V&V + HFE + Risk + QE), with instructions for projects to add cybersecurity if relevant
+  - `skills/project-console/scripts/scaffold.py` — extended `sync` action to copy new agent templates into existing installs (previously `sync` only rewrote `run.sh`)
+  - `skills/project-console/SKILL.md` — 1.0.2 changelog entry, corrects 1.0.1 uvicorn reload claim
+  - `skills/project-console/VERSION` — 1.0.2
+- Branch: `sync/pdlc-demo-project-console-1.0.2-default-panels-2026-04-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/17
+- Commit: "project-console 1.0.2: default Core Team + Design Review panels"
+- Status: merged (--merge requested)
+- Merge commit: `fca1db9`
+- Hitachi HEAD after sync: `fca1db9`
+- Context: User feedback during PDLC testing flagged that the original "You are the X lead" framing risked implying the AI was replacing the real team. The 1.0.2 rename makes the support-not-substitute relationship unambiguous at every response. Same version also ships the default panels requested earlier in the session.
+
+---
+
 ## 2026-04-14 — push --merge (project-console 1.0.1 — macOS/Windows junk filter)
 
 - Files: 3

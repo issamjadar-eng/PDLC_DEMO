@@ -163,6 +163,22 @@ The `console/` package is imported by the project's `run.sh` via `PYTHONPATH` in
 
 ## Changelog
 
+- 1.0.2 (2026-04-14): Two changes — default panels + assistant-framing rename.
+
+  **Default panels.** Adds two default panels to the template library so newly-initialized projects get working cross-functional voices out of the box.
+  - **Core Team Advisory Panel** (`agents/templates/core-team-panel.md`) — 5 members: program-manager, regulatory-affairs, clinical-affairs, quality-engineering, rd-lead. Covers program-level decisions across execution, regulatory, clinical, quality, and engineering-feasibility lenses.
+  - **Design Review Advisory Panel** (`agents/templates/design-review-panel.md`) — 6 members: systems-engineering, rd-lead, vnv-lead, human-factors, risk-management, quality-engineering. Technical review body for architecture decisions, use-safety trade-offs, test-readiness, and DHF gate reviews. Projects with cybersecurity-critical devices are instructed to append `cybersecurity` as a seventh member.
+
+  **Assistant-framing rename.** Every persona and panel in the template library is renamed and its system prompt rewritten so the nomenclature unambiguously positions these as AI **assistants supporting** the real human team, not replacements for them. Examples:
+  - Title: "Regulatory Affairs" → "Regulatory Affairs Assistant"
+  - System prompt opener: "You are the Regulatory Affairs lead for this device program" → "You are an AI assistant supporting the Regulatory Affairs team for this device program. You help the human RA leads by..."
+  - STAY IN CHARACTER clause rewritten to "never claim to BE the lead or commit the program to anything"
+  - Panels retitled: "Core Team Panel" → "Core Team Advisory Panel", "Design Review Panel" → "Design Review Advisory Panel"
+  - Group description updated: "These assistants help the real human team think — they do not replace them."
+
+  Also extends `scripts/scaffold.py` `sync` action to copy newly-added agent templates into existing installs (previously `sync` only rewrote `run.sh`). Running `/project-console sync` after pulling this version will materialize the new panel templates while leaving existing project-owned files alone.
+
+  **Post-update:** Run `/project-console sync` to materialize the new panel templates into `tools/project-console/agents/core-team/`. Note that sync does **not** overwrite existing agent files — if you want the assistant-framing rewrite applied to your project's existing personas, you need to either (a) delete your local copies and re-run `init`, or (b) hand-edit to apply the new framing. Then **restart the console** (Ctrl+C the running `run.sh` and relaunch) so the agent loader picks up the new panels and any rewrites — uvicorn `--reload` does not watch the skill package.
 - 1.0.1 (2026-04-14): Bugfix — documents tree walker now hides macOS `Icon\r` custom-folder-icon files, Windows `Thumbs.db` / `desktop.ini`, and AppleDouble resource forks (`._*`) in addition to dotfiles. Discovered in Arthrex PCCP where `Icon\r` files at several directory roots were cluttering the explorer. New `_is_hidden()` helper in `console/documents/tree.py` centralizes the junk-file filter so all three walker call sites (`list_children`, `_dir_has_any_children`, `_children`) share the same rules.
-  **Post-update:** No user action needed. Next launch of `tools/project-console/run.sh` picks up the new filter automatically (uvicorn `--reload` notices the skill file change).
+  **Post-update:** **Restart the console if it's running.** Uvicorn's `--reload` watches the project's `tools/project-console/` directory (the launcher's CWD), **not** the skill package under `.claude/skills/project-console/console/`. Skill updates require a restart — Ctrl+C the running process and re-run `tools/project-console/run.sh`. (Earlier versions of this changelog entry incorrectly said `--reload` handled it automatically.)
 - 1 (2026-04-14): Initial version. Extracted from PDLC_DEMO's hand-built `tools/project-console/`. Generic template library (10 personas), two skill theme packs (light/dark), glob-scan dashboard discovery, manifest-based install tracking, sys.path launcher pattern. Company-agnostic: no brand assets or project names inside the skill package. Ships with `init`, `sync`, `theme`, `run`, `status` actions. Includes a skill-root `.gitignore` to keep `__pycache__/` and `*.pyc` out of the registry; `scaffold.py init` writes the same patterns into every `tools/project-console/.gitignore`. Three Best Practices checks enforce the gitignore coverage and skill cleanliness.
