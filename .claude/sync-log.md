@@ -4,6 +4,30 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-13 — push --merge (sync-skills v3: mandatory project impact analysis on pull)
+
+- Files: 1
+  - `skills/sync-skills/SKILL.md` — adds mandatory Step 5b Project Impact Analysis to the `pull` action; new v3 changelog entry with post-update annotation
+- Branch: `sync/pdlc-demo-sync-skills-pull-impact-analysis-2026-04-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/12
+- Commit: "sync-skills v3: mandatory project impact analysis on pull"
+- Status: merged (--merge requested)
+- Merge commit: `b19debe`
+- Hitachi HEAD after sync: `b19debe`
+
+---
+
+## 2026-04-13 — pull
+
+- Hitachi HEAD after sync: `a908aa2`
+- Pulled: 1 file
+  - `skills/secops/SKILL.md` — adds `version: 1` / `updated: 2026-04-12` YAML frontmatter so `/best-practices` "Skills are versioned" check passes (upstream PR #11, commit `a908aa2`)
+- Analysis: trivial, additive, no behavior change. No setup re-run needed. No project action required beyond the pull itself. Next `/best-practices audit` will flip secops "versioned" check FAIL → PASS.
+- project.yml: no changes
+- Follow-ups: none
+
+---
+
 ## 2026-04-13 — push --merge (task 009: shared strategy docs + sub-DHF → DHF rename)
 
 - Files: 19 (18 edited, 1 new via rename, 1 deleted via rename)

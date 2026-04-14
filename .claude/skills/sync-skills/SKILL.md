@@ -80,6 +80,35 @@ Apply upstream changes to the local project. Interactive — per-file approval f
 - If a newly-synced skill has a `### \`setup\`` action that wasn't present before → offer to invoke `/skill-name setup`
 - If deleted skills/agents were in the allowlist → offer to remove them from `project.yml`
 
+**Step 5b — MANDATORY: Analyze pulled changes for project-update impact.** For every pulled file, Claude must read the updated content (in particular the `## Changelog` section of each SKILL.md and any `**Post-update:**` annotations) and determine whether the local project needs to be updated to align with the new skill. This is not optional — it runs on every successful pull, even for a single file. Analyze:
+
+  1. **Changelog entries** — for each new version entry, extract the stated behavior/contract change and any `**Post-update:**` block. The post-update annotation (sync-skills v3+ / task v13+ convention) is the authoritative source for "what downstream must do after pulling this version."
+  2. **Setup action changes** — if a skill's `### \`setup\`` action gained new steps (new hooks to register, new symlinks, new allowlist entries), the user must re-run `/skill-name setup`. Offer to run it.
+  3. **Template changes** — if a pulled file lives under `templates/` or is referenced by a skill's init/scaffold action, check whether existing project files derived from that template need to be regenerated or patched. Flag specific files by path.
+  4. **Best Practices table changes** — if a pulled SKILL.md's `## Best Practices` table gained new `Required` or `Recommended` checks, run (or offer to run) `/best-practices` to surface any new FAILs, and explicitly list which checks are new.
+  5. **Frontmatter / schema changes** — new `version:` fields, renamed YAML fields, new required keys in `project.yml`, or registry-config shape changes all require a local update. Apply the update or tell the user exactly what to change.
+  6. **Terminology renames** — if the upstream changed a user-facing term (e.g., `sub-DHF` → `DHF`, renamed action names, renamed template files), grep the project for the old term and report every hit that may need updating.
+  7. **Hook changes** — if `hooks/` files were added or changed in a skill that installs session hooks, re-running `/skill setup` is usually required even when the changelog doesn't say so explicitly. Flag it.
+
+Present findings as a **Project Impact Report** with this shape:
+
+```
+Pulled N file(s). Analyzing project impact...
+
+[skills/<name>/SKILL.md — v<old> → v<new>]
+  Changelog summary: <one-line per version jump>
+  Post-update required: <yes/no + verbatim post-update text if present>
+  Project impact: <none | list concrete local changes needed>
+  Action: <no action | run `/foo setup` | edit <path> | run `/best-practices` | ...>
+
+[<next file>]
+  ...
+
+Summary: <N files pulled, M require action, K actions auto-offered>
+```
+
+If any action is offered, wait for user approval before executing. If the analysis concludes "no action needed," say so explicitly — silence is not acceptable. This analysis is part of what `pull` *means* in this project; skipping it defeats the purpose of syncing.
+
 **Step 6 — Record the sync** in `.claude/sync-log.md`:
 ```markdown
 ## 2026-04-12 — pull
@@ -175,5 +204,7 @@ Convenience wrapper: runs `pull` first (apply upstream changes), then shows any 
 
 ## Changelog
 
+- 3 (2026-04-13): `pull` now performs mandatory Project Impact Analysis (new Step 5b) after every successful file pull. For each pulled file, Claude reads the updated changelog and any `**Post-update:**` annotations, then produces a Project Impact Report covering setup re-runs, template regeneration, best-practices table diffs, frontmatter/schema changes, terminology renames, and hook changes. Applies to single-file pulls too — silence is not acceptable. Rationale: previously, a pull could land a new-behavior skill version without Claude surfacing what the project needed to do to align. Now alignment analysis is part of what pull *means*.
+  **Post-update:** No user action. The new Step 5b executes automatically on the next `/sync-skills pull` or `/sync-skills sync`.
 - 2 (2026-04-12): Added opt-in `--merge` flag to `push`. When passed, the skill calls `gh pr merge --squash --delete-branch` after the PR is created, then `git pull --ff-only` in the local hitachi checkout so it stays in sync. Default remains PR-only — never merge without explicit request.
 - 1 (2026-04-12): Initial version. Four actions: `check`, `pull`, `push <files>`, `sync`. Script primitives: `check`, `pull-file`, `push-prep`, `push-stage`, `push-finalize`, `hitachi-path`, `hitachi-head`. Reads `registries[name=hitachi].local_path` from `project.yml` with `../hitachi` fallback. Excludes `sync-skills` from diffs. Push flow always opens a PR.

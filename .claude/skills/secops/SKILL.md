@@ -1,6 +1,8 @@
 ---
 name: secops
 description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, and `attest` actions.
+version: 1
+updated: 2026-04-12
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
