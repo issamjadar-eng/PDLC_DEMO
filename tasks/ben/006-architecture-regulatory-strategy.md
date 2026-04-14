@@ -243,6 +243,63 @@ The `medtech-docs` skill was built for single-DHF projects. To support multi-DHF
 
 This should be a new task (candidate task 008 or similar, after 007 task-close validator) — **not** something we do inside task 006. Recording here so the gap isn't forgotten.
 
+### Component Classification & Filing Posture (2026-04-14)
+
+<!-- STRATEGY CONTENT: regulatory, classification, pccp, filing-composition -->
+
+**Decision**: The baseline regulatory architecture for the PP3500 program is:
+
+| Component | Class / Type | Filing posture |
+|---|---|---|
+| **PCA Device (PP3500)** | Class II medical device | Own 510(k) **with PCCP**. PCCP scopes the post-clearance change envelope (drug library updates, firmware updates, predictive-alarm SaMD additions). |
+| **Connectivity Adapter (on-prem)** | **MDDS** (non-device per post-2015 FDA reclassification) | Not separately filed. Identified in the PP3500 510(k) as adjacent infrastructure; QMS + cybersecurity evidence still produced. |
+| **Cloud Suite — Drug Library Manager** | **Class II SaMD** (accessory to PCA; directly affects dose enforcement) | Own 510(k) (or bundled into PP3500 filing as accessory — TBD in submission planning). |
+| **Cloud Suite — all other apps** (Fleet Mgmt, Telemetry, Surveillance, Update Distribution, Reg Data Pipelines, Customer Portals) | **Non-medical-device software** | Not filed. QMS, cybersecurity, and privacy still apply. |
+| **Future AI/ML SaMDs** (predictive alarms, dose optimization) | Class II SaMD candidates | Out of baseline; introduced via PCCP or future filings. |
+
+**Why**: This locks the regulatory architecture in one decision instead of dragging it through component-by-component classification debate. The PCA gets a PCCP because the post-market change pressure (drug library cadence, firmware, future ML) is the whole point of going modular. The Adapter as MDDS keeps it out of the device review path while preserving the cybersecurity story. Drug Library Manager has to be a regulated SaMD because it directly mutates the safety table the pump enforces — calling it anything else would be regulatory malpractice. Everything else in the cloud is non-device by function.
+
+**How to apply**:
+- The PP3500 510(k) submission package **identifies** the Adapter and Cloud Suite as named adjacent components (block diagram + classification rationale), and pulls in their cybersecurity assessments via composition manifest. It does not pull in their functional design controls.
+- The PCCP scope must be drafted as part of the PP3500 filing (separate sub-task); covers drug library updates, firmware update mechanism, and the predictive-alarm SaMD pathway.
+- Drug Library Manager gets its own DHF under `dhfs/cloud-suite/drug-library-manager/` and its own filing decision (accessory bundle vs standalone 510(k)) — flag for submission planning.
+- Non-medical Cloud Suite apps still live under `dhfs/cloud-suite/<app>/` for QMS/cyber traceability but carry a "non-device" classification record instead of design controls.
+- Connectivity Adapter DHF (`dhfs/connectivity-adapter/`) carries MDDS classification record + cybersecurity assessment; no 510(k) artifacts.
+
+**Supersedes**: The earlier "classify each component case-by-case" framing in the Filing Scope and Classification Taxonomy sections above. Those sections still describe the *taxonomy*; this section is the *applied result* for the baseline.
+
+### Filing Strategy — Critical-Requirement Carve-out (2026-04-14)
+
+<!-- STRATEGY CONTENT: regulatory, pccp, requirements, scope, commercial -->
+
+**Decision**: The PP3500 510(k) + PCCP filing is scoped to the **critical** subset of requirements. Every user need and design input is tagged with one or more of four criticality categories:
+
+| Tag | Meaning | Examples (illustrative) |
+|---|---|---|
+| **CtS — Critical to Safety** | Failure can cause patient harm | Occlusion detection, air-in-line, dose limits, alarm priorities |
+| **CtF — Critical to Function** | Failure breaks the core therapy | Pump motor control, bolus delivery, drug library enforcement |
+| **CtC — Critical to Compliance** | Required by standard / regulation regardless of harm | IEC 60601 leakage, IEC 62304 SDLC, cybersecurity 524B, labeling |
+| **CtP — Critical to Performance** | Failure degrades clinical performance below claimed spec | Flow accuracy, latency, alarm response time |
+
+Requirements carrying **any** Ct* tag are **in scope for the 510(k) + PCCP**. Requirements carrying **none** of them are deferred — they continue development on the commercial track and ship post-clearance (PCCP-permitted updates, post-market changes, or next filing).
+
+**Why**: Two pressures pull in opposite directions: regulatory wants the smallest, cleanest filing possible (faster review, narrower change-control surface, smaller PCCP envelope); commercial wants the full feature set at launch. The criticality carve-out resolves both — file the minimum necessary to be safe, functional, compliant, and performant; continue developing nice-to-haves in parallel and release them under the PCCP or as post-clearance updates. This also keeps the V&V burden on the filing tractable: only Ct* requirements need full design-controls rigor for the submission.
+
+**How to apply**:
+- Every UN and DI in the PCA device DHF gets one or more Ct* tags (or none, marking it commercial-only). Tagging happens in the existing user-needs.md / design-inputs.md docs.
+- The trace matrix grows a "Filing Scope" column derived from the tags: `In 510(k)`, `In PCCP envelope`, or `Commercial-only`.
+- The **PCCP envelope** is defined as: change types that touch Ct* requirements but stay within pre-specified bounds (drug library updates, firmware patches against a fixed risk profile, predictive-alarm SaMDs that meet the change-protocol acceptance criteria).
+- V&V planning splits into two tracks: filing-scope V&V (Ct*-tagged requirements, full design-controls evidence) vs commercial V&V (everything else, internal QMS evidence only).
+- Commercial-only features may still depend on Ct* infrastructure — tag accordingly and pull the dependency into the filing.
+- Submission package composition manifest references the trace matrix's Filing Scope column as the authoritative inclusion list.
+
+**Implications for downstream task work**:
+- Tagging pass on the existing 22 UNs and 34 DIs is a follow-up task (candidate: a new 011 or fold into 006 closeout).
+- The Drug Library Manager SaMD inherits the same tagging discipline — its own requirements get Ct* tagged for its own filing.
+- Connectivity Adapter, being MDDS, is out of the Ct* tagging scope (no design-controls filing); its requirements live under QMS/cyber posture instead.
+
+**Supersedes / refines**: The "PCCP scope" pending decision below — PCCP scope is now defined structurally (Ct*-tagged change envelope) rather than as a free-form list.
+
 ### Pending Regulatory Decisions
 
 These have been discussed but not yet resolved and are not yet in the strategy content above:
@@ -288,5 +345,7 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 ## Changelog
 
 - 2026-04-12: Task created. Strategy briefs initialized via `/strategy init`. Task skeleton includes both tagged blocks (architecture, regulatory); content pending user discussion.
+- 2026-04-14: Locked filing strategy as **critical-requirement carve-out**: every UN/DI tagged CtS/CtF/CtC/CtP; tagged subset = 510(k)+PCCP scope; untagged = commercial-only post-clearance development. Defines PCCP envelope structurally. Captured as new Filing Strategy decision block.
+- 2026-04-14: Locked baseline regulatory architecture: PCA = 510(k) **with PCCP**; Adapter = MDDS (non-device); Cloud Suite Drug Library Manager = Class II SaMD; rest of Cloud Suite = non-medical software. Captured as new Component Classification & Filing Posture decision block. Supersedes the case-by-case framing.
 - 2026-04-12: User feedback — start architecture at the system level, not module/detailed level. Detailed thinking moved to a "Deferred" section under Architecture Strategy. New "System context" section opened as Step 1 of the architecture discussion, listing 5 candidate top-level components (PCA device, local server, on-prem adapter, cloud platform, hospital IT) and the open questions that need to be resolved before drilling into any one component. Regulatory strategy discussion is paused until system architecture is agreed, so the reg scope can match the system scope.
 - 2026-04-13: **Blocked on task 007.** Decision to go with Option A (full migration to `dhfs/` tree) means the folder shape this task writes into doesn't exist yet. Task 007 created to perform the migration; this task will resume once 007 is complete, at which point the strategy content authoring will target `docs/project/dhfs/pca-device/design-controls/architecture/` and `.../plans/` instead of the current top-level paths. The pending regulatory and architecture decisions captured here (DHF shape, remaining step-1 questions) remain valid across the migration.
