@@ -554,23 +554,24 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 
 <!-- Read by /best-practices skill to audit project setup -->
 
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Strategy skill installed | `.claude/skills/strategy/SKILL.md` exists | Required |
-| Strategy briefs initialized | Every domain in the registry has a file at its output path (either a brief or assembled document). Run `/strategy init` to create missing briefs. | Required |
-| Strategy content exists | At least one task file contains `<!-- STRATEGY CONTENT` on a line by itself | Required |
-| All tags have domain key | Every `<!-- STRATEGY CONTENT` tag has a recognized domain key as its first value | Recommended |
-| Active domains have documents | For each domain with tagged content, the output strategy document exists at the registered output path | Required |
-| Regulatory strategy assembled | `docs/project/design-controls/plans/regulatory-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` (has been assembled from real content) | Required |
-| Commercial strategy populated | `docs/project/input-analysis/market-research/commercial-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Architecture strategy populated | `docs/project/design-controls/architecture/architecture-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Development strategy populated | `docs/project/design-controls/plans/development-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Testing strategy populated | `docs/project/design-controls/vnv/testing-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Risk strategy populated | `docs/project/design-controls/risk-management/risk-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Post-market strategy populated | `docs/project/design-controls/plans/postmarket-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Operations strategy populated | `operations-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended |
-| Strategy docs are current | Assembly date in each assembled strategy document is within 7 days of the most recent source task modification date | Recommended |
-| No pending reviews | No assembled strategy documents contain `> **Pending review**` callouts (all conflicts resolved or deferred reviews addressed) | Recommended |
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Strategy skill installed | `.claude/skills/strategy/SKILL.md` exists | Required | shared |
+| Strategy briefs initialized | Every domain in the registry has a file at its output path (either a brief or assembled document). For per-dhf domains, there must be one file per sub-DHF. Run `/strategy init` to create missing briefs. | Required | shared |
+| Strategy content exists | At least one task file contains `<!-- STRATEGY CONTENT` on a line by itself | Required | shared |
+| All tags have domain key | Every `<!-- STRATEGY CONTENT` tag has a recognized domain key as its first value | Recommended | shared |
+| Per-dhf tags have sub-dhf scope | In projects with more than one sub-DHF, every `<!-- STRATEGY CONTENT` tag whose domain is per-dhf (`regulatory`, `architecture`, `development`, `testing`, `risk`, `postmarket`) contains a `sub-dhf=<leaf-name>` key. Per-dhf tags in single-sub-DHF projects may omit the scope (implicit). | Required | cross-cutting |
+| sub-dhf keys resolve | Every `sub-dhf=<value>` in a tag resolves to exactly one entry in `project.yml` `sub_dhfs[]` by leaf name match. | Required | cross-cutting |
+| Regulatory strategy assembled | `design-controls/plans/regulatory-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` (has been assembled from real content) | Required | per-dhf |
+| Architecture strategy populated | `design-controls/architecture/architecture-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | per-dhf |
+| Development strategy populated | `design-controls/plans/development-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | per-dhf |
+| Testing strategy populated | `design-controls/vnv/testing-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | per-dhf |
+| Risk strategy populated | `risk-management/risk-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | per-dhf |
+| Post-market strategy populated | `postmarket/postmarket-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | per-dhf |
+| Commercial strategy populated | `docs/project/strategies/commercial-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
+| Operations strategy populated | `docs/project/strategies/operations-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
+| Strategy docs are current | Assembly date in each assembled strategy document is within 7 days of the most recent source task modification date | Recommended | shared |
+| No pending reviews | No assembled strategy documents contain `> **Pending review**` callouts (all conflicts resolved or deferred reviews addressed) | Recommended | shared |
 
 ## Notes
 

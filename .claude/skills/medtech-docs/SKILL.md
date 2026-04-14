@@ -24,13 +24,19 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/`:
 | `readme-industry-frameworks.md` | `init` | `docs/external/industry-frameworks/README.md` |
 | `readme-clinical-literature.md` | `init` | `docs/external/clinical-literature/README.md` |
 | `readme-input-analysis.md` | `init` | `docs/project/input-analysis/README.md` |
-| `readme-design-controls.md` | `init` | `docs/project/design-controls/README.md` |
+| `readme-strategies.md` | `init` | `docs/project/strategies/README.md` (shared cross-cutting strategies — commercial, operations) |
 | `readme-submissions.md` | `init` | `docs/project/submissions/README.md` |
-| `readme-leaf.md` | `init` | Template for leaf folder READMEs (substitute `{{TITLE}}`, `{{PURPOSE}}`, `{{NAMING}}`) |
+| `readme-sub-dhf.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/README.md` — per sub-DHF root README (substitute `{{SUB_DHF_NAME}}`, `{{REGULATORY_STATUS}}`, `{{FILING}}`) |
+| `readme-design-controls.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/design-controls/README.md` |
+| `readme-trace-matrix.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/design-controls/trace-matrix/README.md` |
+| `readme-clinical.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/clinical/README.md` |
+| `readme-postmarket.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/postmarket/README.md` |
+| `readme-risk-management.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/risk-management/README.md` |
+| `readme-cybersecurity.md` | `init`, `add-sub-dhf` | `docs/project/dhfs/<name>/cybersecurity/README.md` |
+| `readme-leaf.md` | `init`, `add-sub-dhf` | Template for leaf folder READMEs (substitute `{{TITLE}}`, `{{PURPOSE}}`, `{{NAMING}}`) |
 | `readme-source.md` | `init` | `docs/internal/source/README.md` |
 | `readme-source-md.md` | `init` | `docs/internal/source-md/README.md` |
-| `readme-formal.md` | `init` | Template for `formal/` subfolder READMEs (substitute `{{PARENT}}`) |
-| `readme-trace-matrix.md` | `init` | `docs/project/design-controls/trace-matrix/README.md` |
+| `readme-formal.md` | `init`, `add-sub-dhf` | Template for `formal/` subfolder READMEs (substitute `{{PARENT}}`) |
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
