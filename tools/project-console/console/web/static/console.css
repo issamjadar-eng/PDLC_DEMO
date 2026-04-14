@@ -265,6 +265,326 @@ main {
 
 /* ============ Chat ============ */
 
+/* Chat + docs pages break out of the 1040px main cap and use the full viewport. */
+body.chat-page main,
+body.docs-page main {
+  max-width: none;
+  padding: 1rem 1.25rem;
+}
+/* Chat page still hides the footer — the chat form sits at the bottom of the
+   viewport and there's no useful room for a footer below it. Docs page keeps
+   the footer so users can see it below the explorer. */
+body.chat-page .site-footer { display: none; }
+
+/* ============ Documents explorer ============ */
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: var(--docs-tree-w, 340px) 6px minmax(0, 1fr);
+  gap: .5rem;
+  /* Generous working height, but let the page flow naturally so the site
+     footer renders below the explorer instead of overlapping it. */
+  min-height: calc(100vh - 200px);
+}
+.docs-resizer {
+  cursor: col-resize;
+  background: transparent;
+  border-left: 1px solid var(--gl-border);
+  border-right: 1px solid var(--gl-border);
+  transition: background .15s, border-color .15s;
+}
+.docs-resizer:hover,
+.docs-resizer.dragging {
+  background: var(--gl-purple-tint);
+  border-color: var(--gl-purple);
+}
+body.docs-page.resizing,
+body.docs-page.resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+.docs-tree-pane {
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--radius-lg);
+  padding: .75rem;
+  overflow-y: auto;
+  box-shadow: var(--shadow-soft);
+  min-height: 0;
+}
+.docs-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .25rem .5rem .5rem;
+  border-bottom: 1px solid var(--gl-border);
+  margin-bottom: .5rem;
+}
+.docs-tree-header h2 { font-size: 1rem; margin: 0; color: var(--gl-slate); }
+
+.docs-tree { font-size: .88rem; }
+.tree-list { list-style: none; margin: 0; padding: 0; }
+.tree-list .tree-list { margin-left: .75rem; border-left: 1px dashed var(--gl-border); }
+.tree-node { margin: 1px 0; }
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .2rem .4rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
+.tree-row:hover { background: var(--gl-gray-lighter); }
+.tree-row.selected {
+  background: var(--gl-purple-tint);
+  color: var(--gl-purple-dark);
+  font-weight: 600;
+}
+.tree-toggle {
+  width: .9rem;
+  color: var(--gl-slate-soft);
+  text-align: center;
+  font-size: .75rem;
+}
+.tree-toggle-empty { visibility: hidden; }
+.tree-icon { width: 1.1rem; text-align: center; }
+.tree-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tree-meta {
+  color: var(--gl-slate-soft);
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.docs-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.docs-meta-pane {
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-soft);
+  flex: 0 0 auto;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+.docs-meta-head { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .75rem; }
+.docs-meta-head h2 { margin: 0; font-size: 1.15rem; color: var(--gl-black); }
+.docs-meta-head .link-button { align-self: flex-start; margin-top: .25rem; }
+.docs-meta-actions {
+  display: flex;
+  gap: .75rem;
+  margin-top: .5rem;
+  flex-wrap: wrap;
+}
+.docs-chips { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .35rem; }
+.docs-chip {
+  background: var(--gl-gray-lighter);
+  border: 1px solid var(--gl-border);
+  color: var(--gl-slate);
+  padding: .1rem .55rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.docs-frontmatter {
+  border-top: 1px solid var(--gl-border);
+  padding-top: .5rem;
+  margin-top: .5rem;
+}
+.docs-frontmatter summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--gl-slate);
+  font-size: .85rem;
+}
+.docs-frontmatter pre {
+  background: var(--gl-gray-lighter);
+  border-radius: var(--radius-sm);
+  padding: .5rem .75rem;
+  margin-top: .4rem;
+  overflow-x: auto;
+  max-height: 180px;
+}
+.docs-summary {
+  border-top: 1px solid var(--gl-border);
+  padding-top: .75rem;
+  margin-top: .75rem;
+}
+.docs-summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .4rem;
+}
+.docs-summary-body { font-size: .9rem; }
+.btn-small {
+  background: var(--gl-purple);
+  color: var(--gl-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: .3rem .75rem;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.btn-small:hover:not(:disabled) { background: var(--gl-purple-dark); }
+.btn-small:disabled { background: var(--gl-slate-soft); cursor: not-allowed; }
+
+.docs-content-pane {
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+  flex: 1 1 auto;
+  min-height: 60vh;
+  overflow-y: auto;
+}
+.docs-content { min-width: 0; }
+.docs-placeholder { padding: 1rem; text-align: center; }
+.docs-placeholder.error { color: var(--gl-error); }
+.docs-rendered { max-width: 80ch; }
+.docs-text {
+  background: var(--gl-gray-lighter);
+  padding: .75rem;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.docs-text.lang-yaml { white-space: pre; color: #1f2344; }
+.lang-yaml .yml-comment { color: #8a94b4; font-style: italic; }
+.lang-yaml .yml-key     { color: var(--gl-purple-dark); font-weight: 600; }
+.lang-yaml .yml-string  { color: #0b6a3c; }
+.lang-yaml .yml-number  { color: #9c3e00; }
+.lang-yaml .yml-bool    { color: #b00057; font-weight: 600; }
+.lang-yaml .yml-punct   { color: #6b7280; }
+.lang-yaml .yml-anchor  { color: var(--gl-cyan); font-weight: 600; }
+.docs-iframe {
+  display: block;
+  width: 100%;
+  /* Concrete viewport-relative height — no dependence on the height: 100%
+     ancestor chain, which was collapsing under the grid/flex boundary. */
+  height: 80vh;
+  min-height: 500px;
+  border: 1px solid var(--gl-border);
+  border-radius: var(--radius-sm);
+  background: var(--gl-white);
+}
+.docs-pdf { height: 85vh; min-height: 600px; }
+/* When the content pane is hosting a PDF, shed its padding so the iframe
+   reaches edge-to-edge. */
+.docs-content-pane:has(.docs-pdf) { padding: 0; }
+.docs-content-pane:has(.docs-pdf) .docs-pdf {
+  border: none;
+  border-radius: var(--radius-lg);
+}
+.docs-image { max-width: 100%; max-height: 80vh; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  height: calc(100vh - 96px);
+}
+
+.thread-sidebar {
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  overflow-y: auto;
+  box-shadow: var(--shadow-soft);
+  min-height: 0;
+}
+.docs-tree-pane {
+  /* overrides the blanket rule above if any — sticky so the tree stays
+     visible while the right side scrolls through long content. */
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 140px);
+}
+
+.thread-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+.thread-sidebar-header h2 {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--gl-slate);
+}
+
+.thread-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.thread-item {
+  padding: .5rem .6rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.thread-item:hover {
+  background: var(--gl-gray-lighter);
+}
+.thread-item.active {
+  background: var(--gl-purple-tint);
+  border-color: var(--gl-purple);
+}
+.thread-title {
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--gl-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.thread-meta {
+  margin-top: .15rem;
+  font-size: .75rem;
+}
+.thread-empty {
+  padding: .5rem;
+}
+
+.chat-header-actions {
+  display: flex;
+  gap: .75rem;
+}
+
+.msg-warning {
+  max-width: 100%;
+  background: #fff8e1;
+  border: 1px solid #f0c34a;
+  color: #6b4f00;
+  padding: .5rem .75rem;
+  border-radius: var(--radius-md);
+  font-size: .85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 .chat {
   display: flex;
   flex-direction: column;
@@ -273,6 +593,10 @@ main {
   border: 1px solid var(--gl-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem 1.75rem;
+  min-width: 0;
+}
+.chat-layout > .chat {
+  height: auto;
 }
 .chat-header {
   padding-bottom: 1rem;
@@ -903,6 +1227,8 @@ main {
   .cards { grid-template-columns: 1fr; }
   .landing h1 { font-size: 2rem; }
   .chat { padding: 1rem; height: calc(100vh - 140px); }
+  .chat-layout { grid-template-columns: 1fr; }
+  .thread-sidebar { height: auto; max-height: 220px; }
   .msg { max-width: 95%; }
   .brand-name { display: none; }
   .brand-sep { display: none; }

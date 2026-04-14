@@ -1,11 +1,23 @@
 {% extends "_base.html" %}
 {% block title %}{{ agent.title }} — PDLC Console{% endblock %}
+{% block body_class %}chat-page{% endblock %}
 {% block content %}
+<div class="chat-layout">
+<aside class="thread-sidebar" id="thread-sidebar">
+  <div class="thread-sidebar-header">
+    <h2>Threads</h2>
+    <button type="button" id="new-thread" class="link-button">+ New</button>
+  </div>
+  <ul id="thread-list" class="thread-list"></ul>
+</aside>
 <section class="chat" data-agent="{{ agent.name }}" data-is-panel="{{ 'true' if agent.is_panel else 'false' }}">
   <header class="chat-header">
     <div class="chat-header-row">
       <h1>{{ agent.title }}</h1>
-      <button type="button" id="clear-chat" class="link-button">Clear conversation</button>
+      <div class="chat-header-actions">
+        <button type="button" id="rename-thread" class="link-button">Rename</button>
+        <button type="button" id="delete-thread" class="link-button">Delete thread</button>
+      </div>
     </div>
     <p class="muted">{{ agent.description }}</p>
     {% if agent.is_panel and members %}
@@ -80,6 +92,7 @@
     <button type="submit">Send</button>
   </form>
 </section>
+</div>
 <script src="/static/markdown.js"></script>
 <script src="/static/chat.js"></script>
 {% endblock %}

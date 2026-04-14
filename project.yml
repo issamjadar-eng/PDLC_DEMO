@@ -185,7 +185,14 @@ security:
     - task
     - tracker
     - xlsx
-  approved_mcps: []
+  approved_mcps:
+    # chrome-devtools — Google's Chrome DevTools MCP server. Lets Claude
+    # drive a real Chrome instance for visual validation: navigate, take
+    # screenshots, inspect computed styles, evaluate JS in the page. Used
+    # during project-console frontend work (task 003) to verify layouts
+    # that can't be checked from source alone.
+    # Install: `claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest`
+    - chrome-devtools
   approved_plugins: []
   approved_agents:
     - project-secops

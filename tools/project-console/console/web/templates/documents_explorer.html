@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+{% block title %}Documents — PDLC Console{% endblock %}
+{% block body_class %}docs-page{% endblock %}
+{% block content %}
+<div class="docs-layout">
+  <aside class="docs-tree-pane">
+    <div class="docs-tree-header">
+      <h2>Project tree</h2>
+      <button type="button" id="docs-collapse-all" class="link-button">Collapse all</button>
+    </div>
+    <div id="docs-tree" class="docs-tree" aria-label="Project tree">
+      <p class="muted small">Loading…</p>
+    </div>
+  </aside>
+  <div id="docs-resizer" class="docs-resizer" role="separator" aria-orientation="vertical" title="Drag to resize"></div>
+
+  <section class="docs-right">
+    <header class="docs-meta-pane" id="docs-meta">
+      <div class="docs-placeholder muted">Select a file from the tree to begin.</div>
+    </header>
+    <div class="docs-content-pane">
+      <div id="docs-content" class="docs-content">
+        <div class="docs-placeholder muted">File content will appear here.</div>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="/static/markdown.js"></script>
+<script src="/static/explorer.js"></script>
+{% endblock %}

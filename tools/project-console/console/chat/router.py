@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from console.chat.domain_agents import DomainAgent, Group, load_all
 from console.chat.panels import stream_panel
 from console.chat.sdk_client import stream_response
-from console.chat.sources import resolve, resolve_files
+from console.chat.sources import resolve_files, resolve_with_meta
 from console.config import get_config
 
 router = APIRouter()
@@ -98,12 +98,17 @@ class StreamBody(BaseModel):
 def _format_prompt(history: list[dict], latest: str) -> str:
     if not history:
         return latest
-    parts = []
+    parts = ["<conversation>"]
     for m in history:
-        role = "User" if m.get("role") == "user" else "Assistant"
-        parts.append(f"{role}: {m.get('content', '')}")
-    parts.append(f"User: {latest}")
-    return "\n\n".join(parts)
+        role = "user" if m.get("role") == "user" else "assistant"
+        content = (m.get("content") or "").strip()
+        if not content:
+            continue
+        parts.append(f'  <turn role="{role}">{content}</turn>')
+    parts.append("</conversation>")
+    parts.append("")
+    parts.append(f"Latest user message:\n{latest}")
+    return "\n".join(parts)
 
 
 def _sse(event: dict) -> str:
@@ -131,12 +136,14 @@ async def agent_stream(name: str, body: StreamBody):
                 ):
                     yield _sse(evt)
             else:
-                sources_text = resolve(cfg.repo_root, agent.sources)
+                resolved = resolve_with_meta(cfg.repo_root, agent.sources)
                 system = (
                     agent.system_prompt
                     + "\n\n===== GROUNDING SOURCES =====\n"
-                    + sources_text
+                    + resolved.text
                 )
+                for w in resolved.warnings:
+                    yield _sse({"type": "warning", "message": w})
                 yield _sse(
                     {"type": "speaker", "name": agent.name, "title": agent.title}
                 )

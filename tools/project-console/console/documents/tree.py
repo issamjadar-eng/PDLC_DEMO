@@ -88,6 +88,104 @@ def list_dir(repo_root: Path, virtual: str) -> list[Entry]:
     return entries
 
 
+def _dir_has_any_children(abs_path: Path) -> bool:
+    try:
+        for child in abs_path.iterdir():
+            if not child.name.startswith("."):
+                return True
+    except OSError:
+        pass
+    return False
+
+
+def _entry_dict(name: str, virtual_path: str, abs_path: Path) -> dict:
+    is_dir = abs_path.is_dir()
+    return {
+        "name": name,
+        "path": virtual_path,
+        "is_dir": is_dir,
+        "size": abs_path.stat().st_size if not is_dir else None,
+        "excerpt": _excerpt(abs_path) if not is_dir else "",
+        "has_children": _dir_has_any_children(abs_path) if is_dir else False,
+    }
+
+
+def list_tree(repo_root: Path, max_depth: int = 3) -> list[dict]:
+    """Return the top of the virtual tree nested to ``max_depth`` levels.
+
+    Each node is a plain dict with ``name``, ``path``, ``is_dir``, ``size``,
+    ``excerpt``, ``has_children``, and (for dirs within depth) ``children``.
+    Dirs at exactly ``max_depth`` are returned without ``children`` but with
+    ``has_children`` set so the UI knows to lazy-load on expand.
+    """
+    nodes: list[dict] = []
+    # Virtual roots: docs/, tasks/, project.yml
+    for name in ROOT_NAMES:
+        p = repo_root / name
+        if p.is_dir():
+            node = _entry_dict(name, name, p)
+            node["children"] = _children(repo_root, p, name, depth=1, max_depth=max_depth)
+            nodes.append(node)
+    for f in TOP_FILES:
+        p = repo_root / f
+        if p.is_file():
+            nodes.append(_entry_dict(f, f, p))
+    return nodes
+
+
+def _children(
+    repo_root: Path,
+    abs_dir: Path,
+    virtual: str,
+    depth: int,
+    max_depth: int,
+) -> list[dict]:
+    out: list[dict] = []
+    try:
+        children = sorted(
+            abs_dir.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower())
+        )
+    except OSError:
+        return out
+    for child in children:
+        if child.name.startswith("."):
+            continue
+        child_virtual = f"{virtual}/{child.name}"
+        node = _entry_dict(child.name, child_virtual, child)
+        if child.is_dir() and depth < max_depth:
+            node["children"] = _children(
+                repo_root, child, child_virtual, depth + 1, max_depth
+            )
+        out.append(node)
+    return out
+
+
+README_CANDIDATES = ("README.md", "readme.md", "Readme.md", "README.markdown", "readme.markdown")
+
+
+def find_folder_readme(abs_dir: Path) -> Path | None:
+    """Return the first README-like file inside ``abs_dir``, case-insensitive."""
+    if not abs_dir.is_dir():
+        return None
+    try:
+        by_lower = {p.name.lower(): p for p in abs_dir.iterdir() if p.is_file()}
+    except OSError:
+        return None
+    for name in README_CANDIDATES:
+        hit = by_lower.get(name.lower())
+        if hit is not None:
+            return hit
+    return None
+
+
+def list_children(repo_root: Path, virtual: str) -> list[dict]:
+    """Flat list of one directory's immediate children (for lazy-load)."""
+    abs_path = resolve_virtual_path(repo_root, virtual)
+    if abs_path is None or not abs_path.is_dir():
+        return []
+    return _children(repo_root, abs_path, virtual, depth=1, max_depth=1)
+
+
 def breadcrumbs(virtual: str) -> list[tuple[str, str]]:
     crumbs = [("Documents", "")]
     virtual = virtual.strip("/")
