@@ -6,6 +6,31 @@ import yaml
 ROOT_NAMES = ["docs", "tasks"]
 TOP_FILES = ["project.yml"]
 
+# OS / editor junk files to hide from the documents tree. These are separate
+# from the dotfile filter (dotfiles are hidden by `name.startswith(".")` —
+# this set catches cruft that doesn't start with a dot).
+_JUNK_NAMES = {
+    "Icon\r",      # macOS legacy custom folder icon (HFS+)
+    "Icon",        # macOS custom folder icon, defensive — some tools strip the CR
+    "Thumbs.db",   # Windows thumbnail cache
+    "desktop.ini", # Windows folder metadata
+    "$RECYCLE.BIN",
+    "System Volume Information",
+    "__MACOSX",    # macOS archive resource fork dump
+}
+
+
+def _is_hidden(name: str) -> bool:
+    """Return True if a filesystem entry should be hidden from the documents tree."""
+    if name.startswith("."):
+        return True
+    if name in _JUNK_NAMES:
+        return True
+    # AppleDouble resource forks from zipped-then-extracted macOS archives
+    if name.startswith("._"):
+        return True
+    return False
+
 
 @dataclass(frozen=True)
 class Entry:
@@ -74,7 +99,7 @@ def list_dir(repo_root: Path, virtual: str) -> list[Entry]:
 
     entries = []
     for child in sorted(abs_path.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower())):
-        if child.name.startswith("."):
+        if _is_hidden(child.name):
             continue
         entries.append(
             Entry(
@@ -91,7 +116,7 @@ def list_dir(repo_root: Path, virtual: str) -> list[Entry]:
 def _dir_has_any_children(abs_path: Path) -> bool:
     try:
         for child in abs_path.iterdir():
-            if not child.name.startswith("."):
+            if not _is_hidden(child.name):
                 return True
     except OSError:
         pass
@@ -148,7 +173,7 @@ def _children(
     except OSError:
         return out
     for child in children:
-        if child.name.startswith("."):
+        if _is_hidden(child.name):
             continue
         child_virtual = f"{virtual}/{child.name}"
         node = _entry_dict(child.name, child_virtual, child)

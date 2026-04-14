@@ -4,6 +4,22 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-14 — push --merge (project-console 1.0.1 — macOS/Windows junk filter)
+
+- Files: 3
+  - `skills/project-console/console/documents/tree.py` — new `_is_hidden()` helper centralizing the junk-file filter (dotfiles + `Icon\r` + `Icon` + `Thumbs.db` + `desktop.ini` + `._*` + `__MACOSX`); applied at all three walker sites (`list_children`, `_dir_has_any_children`, `_children`)
+  - `skills/project-console/VERSION` — bumped to 1.0.1
+  - `skills/project-console/SKILL.md` — 1.0.1 changelog entry with post-update annotation
+- Branch: `sync/pdlc-demo-project-console-1.0.1-icon-filter-2026-04-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/16
+- Commit: "project-console 1.0.1: hide macOS Icon files + Windows junk from docs tree"
+- Status: merged (--merge requested)
+- Merge commit: `78da92c`
+- Hitachi HEAD after sync: `78da92c`
+- Context: Bug reported from Arthrex PCCP immediately after pulling v1 — `Icon\r` files at several directory roots were cluttering the documents explorer. Fix landed same day. Project-side action: none (uvicorn `--reload` picks up the updated `tree.py` on next launch).
+
+---
+
 ## 2026-04-14 — push --merge (project-console v1 — new reusable FastAPI console skill)
 
 - Files: 54 (first release)
