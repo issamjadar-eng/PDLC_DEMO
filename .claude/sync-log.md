@@ -4,6 +4,27 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-14 — push --merge (project-console v1 — new reusable FastAPI console skill)
+
+- Files: 54 (first release)
+  - `skills/project-console/SKILL.md` — v1.0.0 initial. Actions: init, sync, theme <url>, run, status. Company-agnostic; ships light/dark theme packs + scrape-and-materialize `theme` action + 10 medtech persona templates + glob-scan dashboard discovery. Config in `tools/project-console/console.yaml` (project.yml never touched). PYTHONPATH launcher pattern so sync-skills pull is immediately effective. Three file ownership classes, narrow committed manifest.
+  - `skills/project-console/README.md` — human-facing design & architecture doc
+  - `skills/project-console/VERSION` — 1.0.0
+  - `skills/project-console/.gitignore` — blocks `__pycache__/`, `*.pyc`
+  - `skills/project-console/console/` — 18 files: FastAPI app (app.py, config.py, themes.py, auth.py, chat/, documents/, dashboards/ with discovery.py, web/templates/, web/static/)
+  - `skills/project-console/themes/{light,dark}/` — 4 files: theme.yaml + footer.html.j2 each
+  - `skills/project-console/agents/templates/` — 11 files: _group.md + 10 personas (regulatory, clinical, quality, systems, risk, HFE, R&D, V&V, cybersecurity, post-market)
+  - `skills/project-console/scripts/scaffold.py` — init/sync/status implementation
+- Branch: `sync/pdlc-demo-add-project-console-2026-04-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/15
+- Commit: "Add project-console skill — scaffold + theme + dashboards"
+- Status: merged (--merge requested)
+- Merge commit: `a8e817a`
+- Hitachi HEAD after sync: `a8e817a`
+- Project context: Built in task 015. PDLC_DEMO's hand-built `tools/project-console/` extracted, genericized, and migrated onto the skill-driven version in the same task. Config contract dry-validated against Arthrex PCCP `project.yml` before push (all required fields present; sister-project compat bar satisfied).
+
+---
+
 ## 2026-04-14 — push --merge (medtech-docs v16: rubric-vs-exclusion conflict surfacing)
 
 - Files: 4

@@ -157,7 +157,10 @@ The `console/` package is imported by the project's `run.sh` via `PYTHONPATH` in
 | Theme selected | `tools/project-console/console.yaml` has `theme:` key | Recommended | shared |
 | Approved skill listed | `project.yml` `security.approved_skills` includes `project-console` | Required | shared |
 | Launcher executable | `tools/project-console/run.sh` is executable | Recommended | shared |
+| No pycache in skill | `find .claude/skills/project-console -name __pycache__ -o -name '*.pyc'` returns nothing | Required | shared |
+| Tool gitignore blocks pycache | `tools/project-console/.gitignore` contains `__pycache__/` and `*.pyc` | Required | shared |
+| Skill gitignore blocks pycache | `.claude/skills/project-console/.gitignore` contains `__pycache__/` and `*.pyc` | Required | shared |
 
 ## Changelog
 
-- 1 (2026-04-14): Initial version. Extracted from PDLC_DEMO's hand-built `tools/project-console/`. Generic template library (10 personas), two skill theme packs (light/dark), glob-scan dashboard discovery, manifest-based install tracking, sys.path launcher pattern. Company-agnostic: no brand assets or project names inside the skill package. Ships with `init`, `sync`, `theme`, `run`, `status` actions.
+- 1 (2026-04-14): Initial version. Extracted from PDLC_DEMO's hand-built `tools/project-console/`. Generic template library (10 personas), two skill theme packs (light/dark), glob-scan dashboard discovery, manifest-based install tracking, sys.path launcher pattern. Company-agnostic: no brand assets or project names inside the skill package. Ships with `init`, `sync`, `theme`, `run`, `status` actions. Includes a skill-root `.gitignore` to keep `__pycache__/` and `*.pyc` out of the registry; `scaffold.py init` writes the same patterns into every `tools/project-console/.gitignore`. Three Best Practices checks enforce the gitignore coverage and skill cleanliness.
