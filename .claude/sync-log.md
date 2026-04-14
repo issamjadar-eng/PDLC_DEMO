@@ -4,6 +4,41 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-14 — push --merge (medtech-docs v16: rubric-vs-exclusion conflict surfacing)
+
+- Files: 4
+  - `skills/medtech-docs/SKILL.md` — bumped 15 → 16; new Step 2.5 in `update-external-references` action that detects rubric-vs-existing-exclusion conflicts and surfaces them with IMPORT / KEEP EXCLUDED / DEFER resolution; new v16 changelog entry
+  - `skills/medtech-docs/templates/readme-fda-guidance.md` — added Scope Qualifier column to Evaluated — Not Applicable table
+  - `skills/medtech-docs/templates/readme-standards.md` — added Scope Qualifier column to Evaluated — Not Required table
+  - `skills/medtech-docs/templates/readme-industry-frameworks.md` — added Scope Qualifier column to Evaluated — Not Required table
+- Branch: `sync/pdlc-demo-medtech-docs-v16-2026-04-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/14
+- Commit: "medtech-docs v16: surface rubric-vs-existing-exclusion conflicts"
+- Status: merged (--merge requested)
+- Merge commit: `2d88ce6`
+- Hitachi HEAD after sync: `2d88ce6`
+- Source task: PDLC_DEMO `tasks/ben/012-medtech-docs-update-external-references.md` (closes the rubric-override follow-up captured under v15)
+
+---
+
+## 2026-04-14 — push --merge (medtech-docs v15: update-external-references action)
+
+- Files: 4
+  - `skills/medtech-docs/SKILL.md` — bumped 14 → 15; new `update-external-references` action; updated frontmatter description
+  - `skills/medtech-docs/templates/readme-fda-guidance.md` — full rewrite from "applicability reports" model to "distilled copies + linked originals" model (model B)
+  - `skills/medtech-docs/templates/readme-standards.md` — added Original Source column to Distilled Standards table
+  - `skills/medtech-docs/templates/readme-industry-frameworks.md` — added Spec URL column to Active Frameworks table
+- Branch: `sync/pdlc-demo-medtech-docs-v15-2026-04-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/13
+- Commit: "medtech-docs v15: add update-external-references action"
+- Status: merged (--merge requested)
+- Merge commit: `d30a7f3`
+- Hitachi HEAD after sync: `d30a7f3`
+- Source task: PDLC_DEMO `tasks/ben/012-medtech-docs-update-external-references.md`
+- Known follow-up not in this PR: rubric-vs-existing-exclusion conflict surfacing (IHE Profiles case). Tracked on task 012.
+
+---
+
 ## 2026-04-13 — push --merge (sync-skills v3: mandatory project impact analysis on pull)
 
 - Files: 1

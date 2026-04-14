@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
-description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, generate compliance dashboard"
-version: 14
-updated: 2026-04-13
+description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
+version: 16
+updated: 2026-04-14
 ---
 
 # MedTech Docs
@@ -597,6 +597,145 @@ Record an evaluation decision for a standard or framework without creating a ful
 
 This ensures every standard/framework we consider has a documented decision trail.
 
+### `update-external-references`
+
+Aliases / triggers: "import fda docs", "import fda guidance", "pull reference guidances", "update external references", "refresh external references", "sync external references".
+
+Read project context, decide which bundled distilled reference files apply, and copy the applicable ones into `docs/external/{fda-guidance,standards,industry-frameworks}/`. Idempotent — safe to re-run as the project evolves. Never overwrites existing project files.
+
+**Step 1 — Read project context** (signals only; do not fabricate facts):
+1. `project.yml` — `project.regulatory_pathway`, `project.device_class`, `project.device_family`, `dhfs[]`.
+2. `CLAUDE.md` (project root) — narrative description of device, modules, capabilities, regulatory posture.
+3. `docs/project/strategies/*.md` (all strategy briefs — regulatory, architecture, development, testing, risk, postmarket, commercial, operations) — read in full when present.
+4. For each entry in `project.yml` `dhfs[]`, also read any `dhfs/<path>/README.md` and any per-DHF strategy doc if one exists.
+
+If `docs/project/strategies/` is missing or empty, fall back to `project.yml` + `CLAUDE.md` only and warn the user that selection will be coarser.
+
+**Step 2 — Apply the rubric**
+
+For each bundled distilled file in `${CLAUDE_SKILL_DIR}/references/{fda-guidance,standards,industry-frameworks}/`, decide applicability against the signals from Step 1. The rubric below is the default — if the strategy docs explicitly require or exclude something, the strategy docs win.
+
+**FDA Guidance** (`references/fda-guidance/*-distilled.md`):
+
+| Distilled file | Triggers when |
+|---|---|
+| `qsub-distilled.md` | always (any active FDA engagement) |
+| `510k-se-distilled.md` | `regulatory_pathway == 510k` |
+| `sw-functions-distilled.md` | any software content (SaMD, SiMD, or device with software) |
+| `sw-changes-distilled.md` | 510(k) pathway AND existing predicate / cleared device with software changes |
+| `cybersecurity-distilled.md` | any device containing software |
+| `mfd-distilled.md` | device has multiple functions and at least one is non-device (per MFD guidance criteria) |
+| `cds-distilled.md` | any clinical decision support functionality |
+| `pccp-general-distilled.md` | strategy docs mention a PCCP, OR `regulatory_pathway == 510k` and project is planning iterative changes |
+| `pccp-aiml-distilled.md` | PCCP applicable AND AI/ML capability present |
+| `ai-dsf-lifecycle-distilled.md` | any AI/ML capability |
+
+**Standards** (`references/standards/*.md`):
+
+| Distilled file | Triggers when |
+|---|---|
+| `iso-14971.md` | always (all medical devices) |
+| `iec-62366-1.md` | always (all medical devices — usability engineering) |
+| `iec-62304.md` | any device containing software |
+| `iec-82304-1.md` | SaMD (general health software product) |
+| `iec-81001-5-1.md` | software + connectivity / network interface |
+
+**Industry Frameworks** (`references/industry-frameworks/*.md`):
+
+| Distilled file | Triggers when |
+|---|---|
+| `ntia-sbom.md` | any device containing software |
+| `nist-csf.md` | any connected device or device handling PHI |
+| `owasp.md` | SaMD with web/network surface |
+| `gmlp.md` | any AI/ML capability |
+| `dicom.md` | medical imaging (import, processing, or display) |
+| `hl7-fhir.md` | EHR / health data exchange |
+| `ihe-profiles.md` | EHR / health data exchange or imaging interop |
+| `astm-f2554.md` | surgical navigation / spatial guidance |
+
+**Step 2.5 — Detect rubric-vs-existing-exclusion conflicts** (added v16)
+
+Before copying any files, read each subfolder README's "Evaluated — Not Required" / "Evaluated — Not Applicable" table (if present) and collect every entry into an exclusions set keyed by filename or framework name. For each rubric-applicable file, check whether its name appears in the exclusions set.
+
+**On conflict, do NOT silently auto-import and do NOT silently skip.** Surface the conflict to the user with a block like this, one per conflicting file:
+
+```
+CONFLICT: ihe-profiles.md (industry-frameworks)
+  Rubric says:        applicable
+  Trigger:            EHR / health data exchange or imaging interop
+                      (driven by capabilities.ehr_integration: true)
+  Existing exclusion: "No imaging workflow integrations in scope"
+                      (industry-frameworks/README.md → Evaluated — Not Required)
+  Scope qualifier:    <copied from the Scope Qualifier column if present, else "(none)">
+
+  Resolve by choosing one:
+    (a) IMPORT — rubric is right; the existing exclusion is incomplete or stale.
+                 Move the row from "Evaluated — Not Required" to Active and copy the file.
+    (b) KEEP EXCLUDED — exclusion is correct; refine its rationale (and Scope Qualifier
+                        if present) so a future rubric run won't re-flag the same way.
+    (c) DEFER — leave both states untouched; print a TODO and continue.
+```
+
+Wait for the user to resolve every conflict before proceeding to Step 3. Apply the resolution:
+- **(a) IMPORT** → treat the file as applicable for Step 3, and in Step 4 move the README row from the exclusion table to the active table.
+- **(b) KEEP EXCLUDED** → drop the file from the applicable set, do NOT copy it, and prompt the user for a refined rationale + Scope Qualifier text to update the exclusion row in Step 4.
+- **(c) DEFER** → drop the file from the applicable set, leave both tables untouched, append a `TODO: resolve conflict — <filename>` line to the Step 5 report so it is visible in every subsequent run.
+
+The principle: when the action's heuristic disagrees with a captured human decision, **the action's job is to surface the disagreement, not to pick a side.** Both the rubric and the captured decision can be wrong — only the user has the context to decide. Silencing the conflict in either direction loses signal. (See PDLC_DEMO `tasks/ben/012` for the originating IHE Profiles case.)
+
+**Step 3 — Copy applicable files**
+
+For each applicable distilled file:
+1. Compute the destination — `docs/external/<subfolder>/<basename>` where `<basename>` strips the `-distilled` suffix from FDA filenames (e.g., `qsub-distilled.md` → `docs/external/fda-guidance/qsub.md`). Standards and frameworks keep their filename as-is.
+2. **If the destination file already exists, skip it (do not overwrite).** Record as `unchanged`.
+3. **If the destination does not exist**, copy the distilled file verbatim and record as `created`. Do not edit the file content.
+
+Track three sets across the run: `created`, `unchanged`, `newly-not-applicable` (project files that exist on disk but the rubric no longer marks applicable — leave the file in place).
+
+**Step 4 — Update each subfolder README**
+
+For each of the three subfolder READMEs, rewrite the relevant table (and only that table — leave the rest of the README intact) to reflect current applicability. Use these source-link conventions:
+
+- **fda-guidance** — table column "Original Source" links to `.claude/skills/medtech-docs/references/fda-guidance/source/<topic>.pdf` and `source-md/<topic>.md` (both bundled in the skill).
+- **standards** — table column "Original Source" links to the official publisher URL using this map:
+  - IEC standards → `https://webstore.iec.ch/`
+  - ISO standards → `https://www.iso.org/standard/`
+  - ASTM standards → `https://www.astm.org/`
+- **industry-frameworks** — table column "Spec URL" using this map:
+  - DICOM → `https://www.dicomstandard.org/`
+  - HL7 FHIR → `https://hl7.org/fhir/`
+  - IHE → `https://www.ihe.net/resources/profiles/`
+  - NIST CSF → `https://www.nist.gov/cyberframework`
+  - NTIA SBOM → `https://www.ntia.gov/SBOM`
+  - OWASP → `https://owasp.org/`
+  - GMLP → `https://www.fda.gov/medical-devices/software-medical-device-samd/good-machine-learning-practice-medical-device-development-guiding-principles`
+  - ASTM F2554 → `https://www.astm.org/f2554-22.html`
+
+For files in the `newly-not-applicable` set, mark their row in the README table with a status note (`[~] retained — no longer applicable per current strategy`) but do not remove the row.
+
+Add a `## Changelog` row to each touched README with today's date and a one-line summary of what changed (e.g., "added 7 distilled files via update-external-references").
+
+**Step 5 — Report**
+
+Print a concise summary, grouped by subfolder, e.g.:
+
+```
+fda-guidance:        7 created, 0 unchanged, 0 newly-N/A
+standards:           4 created, 1 unchanged (iec-60601-1.md — not in skill library), 0 newly-N/A
+industry-frameworks: 5 created, 0 unchanged, 0 newly-N/A
+```
+
+Then:
+- Tell the user which signals drove each "newly applicable" decision (one line each).
+- Tell the user which bundled files were skipped and why (one line each), so they can override the rubric if the heuristic missed something.
+- Suggest next steps: review the copied files, mark `[VERIFY]` items, run `/medtech-docs dashboard`.
+
+**Notes**:
+- The action never edits the bundled distilled files in `${CLAUDE_SKILL_DIR}/references/` — those are read-only library content.
+- The action never deletes anything from `docs/external/`.
+- Project files not present in the skill library (e.g., a manually authored `iec-60601-1.md`) are left untouched and reported as `unchanged (not in skill library)`.
+- Re-running after editing a strategy doc is the supported way to bring in newly-applicable references; the action is designed to be invoked many times across a project's life.
+
 ### `dashboard`
 
 Generate or update `docs/dashboard.html` — a self-contained HTML dashboard showing documentation status across all sections.
@@ -710,6 +849,8 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 
 ## Changelog
 
+- 16 (2026-04-14): **`update-external-references` learns to surface rubric-vs-existing-exclusion conflicts instead of picking a side.** Added new Step 2.5 between rubric application and file copy: before importing, the action now reads each subfolder README's "Evaluated — Not Required" / "Evaluated — Not Applicable" table and detects collisions with the rubric's applicable set. On conflict the action prints a CONFLICT block per file with the rubric trigger, the existing exclusion rationale, and the optional Scope Qualifier, and waits for the user to choose IMPORT (rubric wins, move row to Active), KEEP EXCLUDED (refine rationale + Scope Qualifier), or DEFER (leave both untouched, log a TODO). Companion template change: all three subfolder READMEs gained a Scope Qualifier column on their exclusion tables, so exclusion rationales can be auditable per slice — preventing the failure mode where "no imaging integration" excludes IHE wholesale and silences future ITI/Pharmacy applicability. Origin: PDLC_DEMO `tasks/ben/012` IHE Profiles case — the v15 rubric flagged IHE on EHR-integration but the existing exclusion only considered the imaging slice; my initial revert was wrong, the user's correction surfaced that neither auto-import nor auto-skip is right. **Post-update:** Existing project READMEs continue to work — the Scope Qualifier column is additive and the conflict-detection step degrades gracefully when no exclusion table is present. Optional follow-up: backfill the Scope Qualifier column on existing exclusion rows so the next run has more context. Pushed upstream via hitachi PR #14 (squash-merge `2d88ce6`).
+- 15 (2026-04-14): **New action `update-external-references` — context-driven import of bundled FDA guidance, standards, and industry-framework distilled files into `docs/external/`.** Reads `project.yml` + `CLAUDE.md` + `docs/project/strategies/*.md` + per-DHF READMEs as the only signal sources, applies a per-file rubric (10 FDA guidances, 5 standards, 8 frameworks), and copies the applicable distilled `.md` files from `${CLAUDE_SKILL_DIR}/references/` into the matching `docs/external/<subfolder>/`. Idempotent: never overwrites an existing project file, never deletes, and on rerun marks newly-not-applicable rows in the README tables instead of removing them. Updates the table in each touched subfolder README to add an "Original Source" / "Spec URL" column pointing back to the bundled `source/`+`source-md/` (FDA) or to the publisher URL (standards, frameworks). Reachable via aliases: "import fda docs", "pull reference guidances", "refresh external references", etc. Companion template updates: `readme-fda-guidance.md` rewritten from the old "applicability reports" model to the unified "distilled copies hosted here, originals linked" model; `readme-standards.md` and `readme-industry-frameworks.md` gained an "Original Source" / "Spec URL" column on their active tables. No best-practices check changes (existing `Standards have verification checks` and `Frameworks have evaluation decisions` rules still apply). Pushed upstream via hitachi PR #13 (squash-merge `d30a7f3`).
 - 14 (2026-04-13): **Strategies folder consolidated to all-shared + "sub-DHF" → "DHF" terminology rename.** Renamed `project.yml` field `sub_dhfs` → `dhfs` (now matches the folder name). Renamed `/medtech-docs add-sub-dhf` action → `add-dhf`. Renamed template file `readme-sub-dhf.md` → `readme-dhf.md`. Everywhere "sub-DHF" was used to mean "a DHF scoped inside a project" the term is now just "DHF" — top-level and nested entries are conceptually one thing. When the relational meaning is needed, use "nested DHF" or "child DHF". Best Practices Scope column value `per-dhf` is unchanged. `readme-strategies.md` rewritten to index all 8 strategy briefs (regulatory, architecture, development, testing, risk, postmarket, commercial, operations) — aligned with strategy skill v10. `readme-design-controls.md`, `readme-risk-management.md`, `readme-postmarket.md` updated to point readers at the shared strategy briefs under `docs/project/strategies/` rather than scaffolding per-DHF strategy stubs. Plans-folder description clarified: `dhfs/<dhf>/design-controls/plans/` holds **formal** outputs (SDP, V&V Plan, 510(k) submission, PCCP protocol, etc.); upstream strategy briefs live shared. Folder-tree diagram annotation updated to reflect the all-shared strategies folder. Not a scaffold change — no new folders, no new per-DHF scaffolding. See `tasks/ben/009-shared-strategy-docs.md`.
 - 13 (2026-04-13): Added `chrome-devtools` to the `project.yml` template's default `approved_mcps:` list in `init` action Step 2. New projects scaffolded by `/medtech-docs init` now get the Chrome DevTools MCP server pre-approved by the secops posture — no separate approval step required when the team first uses it for frontend visual validation. Comment block in the template explains what it does and the `claude mcp add` install command. No functional change to existing projects; only the init-time template is updated. **LOCAL divergence pending upstream push** (hitachi still ships v12).
 - 12 (2026-04-13): **Unified DHF shape — every project has at least one DHF from day one.** Rewrote the init folder tree to scaffold `docs/project/dhfs/<primary>/{design-controls, clinical, postmarket, risk-management, cybersecurity}/` instead of the old flat `docs/project/design-controls/...` layout. Single-component and multi-component projects use the same shape; growth is a plain `add-dhf` call, not a migration. Added Step 1 question 9 (primary DHF name, no default). Added `dhfs:` section to the `project.yml` template with leaf-name uniqueness enforcement rule. Added new `add-dhf` action supporting arbitrary `--parent` nesting and `regulatory` / `filing` flags. `risk-management/` is now a sibling of `design-controls/` at the DHF level (it used to be a child of `design-controls/` in v11). Added `clinical/`, `postmarket/`, `cybersecurity/`, and shared `strategies/` to the scaffold. Added Scope column to the Best Practices table classifying every check as `shared`, `per-dhf`, `per-submission`, or `cross-cutting`. Added new per-DHF checks (DHF README exists, risk-management folder exists, platform DHFs have children) and cross-cutting checks (dhfs non-empty, leaf names unique, composition manifests referenced). No migration action — the one-time PDLC_DEMO reorg from the v11 flat shape into `dhfs/pca-device/` is a task 007 P6 execution step, not a skill feature, because there are no other existing projects on the old shape. New templates required but not yet shipped with this version (follow-up): `readme-dhf.md`, `readme-clinical.md`, `readme-postmarket.md`, `readme-risk-management.md`, `readme-cybersecurity.md`, `readme-strategies.md`. See task 007 for design rationale.

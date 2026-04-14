@@ -1,40 +1,37 @@
-# FDA Guidance -- Project Compliance Files
+# FDA Guidance
 
-Project-specific applicability reports for each FDA guidance document relevant to this project. Each file contains module impact analysis, deliverables mapping, PCCP considerations, and a machine-readable verification report.
+Distilled FDA guidance documents that apply to this project. Each file is a copy of the bundled distilled guidance from the `medtech-docs` skill library, imported here so it travels with the project repository and can be edited / annotated in place.
 
-Full guidance text and distilled requirements are maintained in the skill reference library at `.claude/skills/medtech-docs/references/fda-guidance/` (structure: `source/` for PDFs, `source-md/` for markdown conversions, `*-distilled.md` at root for distilled requirements).
+Files are imported via `/medtech-docs update-external-references`. Re-run that action whenever project scope or strategy changes — it adds newly-applicable guidances without overwriting anything you have already edited here.
 
-## Guidance Documents
+## Active Guidances
 
-| # | Guidance | Status | Project File | Full Text Reference |
-|---|---------|--------|-------------|-------------------|
+| Topic | File | Title | Original Source (skill library) | Status |
+|-------|------|-------|---------------------------------|--------|
 
-## How These Guidances Map to Our Work
+- **Original Source** column links to the bundled originals in the skill library:
+  - PDF: `.claude/skills/medtech-docs/references/fda-guidance/source/<topic>.pdf`
+  - Markdown conversion: `.claude/skills/medtech-docs/references/fda-guidance/source-md/<topic>.md`
+  - Distilled (the file copied here): `.claude/skills/medtech-docs/references/fda-guidance/<topic>-distilled.md`
 
-_Populate this section with a text diagram showing which guidance documents feed into which project activities (Q-Sub prep, device classification, PCCP development, 510(k) submission, etc.)._
+## Evaluated — Not Applicable
 
-## File Format
+Guidances evaluated by `update-external-references` and not currently applicable, with the rubric signal that drove the decision. If a guidance moves from "applicable" to "not applicable" on a re-run, its row is moved here but the file on disk is retained.
 
-Each project compliance file follows a standard structure:
+| Topic | File | Scope Qualifier | Rationale |
+|-------|------|-----------------|-----------|
 
-1. **Header** -- Guidance title, reference links to skill library, applicability status, review date
-2. **Applicability** -- Why the guidance applies, key implications for our device
-3. **Module Impact** -- How guidance affects each device module
-4. **Key Deliverables -- Repo Mapping** -- Table mapping deliverables to repo locations with existence status
-5. **PCCP Considerations** -- How guidance interacts with PCCP strategy
-6. **Verification Report** -- Machine-readable checklist with status markers (`[x]` passed, `[ ]` pending, `[!]` failed, `[~]` not applicable)
-7. **Changelog** -- Date, author, summary of changes
+- **Scope Qualifier** column should name the *specific slice* of the guidance that was evaluated as not applicable (e.g., "imaging-functions only", "cleared-device branch only"). This prevents the failure mode where a rationale framed too broadly silences future applicability when project capabilities change. If the entire guidance is genuinely out of scope, write "(whole guidance)".
 
 ## Conventions
 
-- One file per guidance document, named by short topic: `topic.md` (e.g., `pccp-aiml.md`, `qsub.md`)
-- Status markers in verification reports: `[x]` passed, `[ ]` pending, `[!]` failed, `[~]` not applicable
-- `[VERIFY]` markers indicate areas where information needs confirmation against source documents
-- Reference links point to skill library at `.claude/skills/medtech-docs/references/fda-guidance/source-md/`
-- Note knowledge cutoff -- flag if guidance may have been updated
+- **One file per guidance**, named by short topic (e.g., `qsub.md`, `pccp-aiml.md`). Filename matches the bundled distilled file with the `-distilled` suffix removed.
+- Files are imported verbatim from the skill library by `update-external-references`. Edits made here are never overwritten on re-run — the action only creates files that don't yet exist.
+- Use `[VERIFY]` markers for any project-specific assertions added on top of the distilled content.
+- Note knowledge cutoff — flag if guidance may have been updated since the bundled version.
 
 ## Changelog
 
 | Date | Author | Summary |
 |------|--------|---------|
-| YYYY-MM-DD | XX | Initial version -- created by /medtech-docs init |
+| YYYY-MM-DD | XX | Initial version — created by /medtech-docs init |

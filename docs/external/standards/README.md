@@ -8,14 +8,16 @@ For non-standard frameworks (NIST CSF, OWASP, GMLP, etc.), see `docs/external/in
 
 Standards with per-file requirement breakdowns in this folder:
 
-| Standard | File | Title | Category | Applicable Modules |
-|----------|------|-------|----------|--------------------|
-| IEC 62304 | [iec-62304.md](./iec-62304.md) | Medical device software — Software life cycle processes | Software lifecycle | All software modules (SaMD + SiMD pump firmware) |
-| ISO 14971 | [iso-14971.md](./iso-14971.md) | Application of risk management to medical devices | Risk management | Whole device (hardware + software) |
-| IEC 62366-1 | [iec-62366-1.md](./iec-62366-1.md) | Application of usability engineering to medical devices | Usability engineering | User-facing SaMD + device UI hardware |
-| IEC 82304-1 | [iec-82304-1.md](./iec-82304-1.md) | Health software — Product safety requirements | Health software product safety | SaMD components |
-| IEC 81001-5-1 | [iec-81001-5-1.md](./iec-81001-5-1.md) | Health software and health IT systems safety, effectiveness and security — Security — Activities in the product life cycle | Health software security | All connected software (EHR/FHIR interface, SaMD, firmware updates) |
-| IEC 60601-1 | [iec-60601-1.md](./iec-60601-1.md) | Medical electrical equipment — Part 1: General requirements for basic safety and essential performance | Medical electrical equipment | Custom medical electrical hardware (power supply, motor drive, fluid delivery assembly, user-facing electrical interfaces) |
+| Standard | File | Title | Category | Applicable Modules | Original Source |
+|----------|------|-------|----------|--------------------|-----------------|
+| IEC 62304 | [iec-62304.md](./iec-62304.md) | Medical device software — Software life cycle processes | Software lifecycle | All software modules (SaMD + SiMD pump firmware) | [webstore.iec.ch](https://webstore.iec.ch/publication/22794) |
+| ISO 14971 | [iso-14971.md](./iso-14971.md) | Application of risk management to medical devices | Risk management | Whole device (hardware + software) | [iso.org](https://www.iso.org/standard/72704.html) |
+| IEC 62366-1 | [iec-62366-1.md](./iec-62366-1.md) | Application of usability engineering to medical devices | Usability engineering | User-facing SaMD + device UI hardware | [webstore.iec.ch](https://webstore.iec.ch/publication/61937) |
+| IEC 82304-1 | [iec-82304-1.md](./iec-82304-1.md) | Health software — Product safety requirements | Health software product safety | SaMD components | [webstore.iec.ch](https://webstore.iec.ch/publication/29316) |
+| IEC 81001-5-1 | [iec-81001-5-1.md](./iec-81001-5-1.md) | Health software and health IT systems safety, effectiveness and security — Security — Activities in the product life cycle | Health software security | All connected software (EHR/FHIR interface, SaMD, firmware updates) | [webstore.iec.ch](https://webstore.iec.ch/publication/76914) |
+| IEC 60601-1 | [iec-60601-1.md](./iec-60601-1.md) | Medical electrical equipment — Part 1: General requirements for basic safety and essential performance | Medical electrical equipment | Custom medical electrical hardware (power supply, motor drive, fluid delivery assembly, user-facing electrical interfaces) | [webstore.iec.ch](https://webstore.iec.ch/publication/2603) |
+
+- **Original Source** column links to the publisher (IEC standards are copyrighted and not redistributable; only the distilled markdown ships in the skill library). `iec-60601-1.md` is manually authored — not in the skill library — and is preserved as-is by `update-external-references`.
 
 ## Deferred Standards (QMS-Level)
 
@@ -68,3 +70,4 @@ Standards evaluated and determined not applicable, with rationale:
 |------|--------|---------|
 | YYYY-MM-DD | XX | Initial version — created by /medtech-docs init |
 | 2026-04-12 | medtech-docs init | Initial population: added 6 active standards (IEC 62304, ISO 14971, IEC 62366-1, IEC 82304-1, IEC 81001-5-1, IEC 60601-1) and 4 evaluated-not-required entries (ISO 13485, 21 CFR 820/QMSR, AAMI TIR57, ISO/IEC 23894). IEC 60601-1 created as a stub with [VERIFY] markers; remaining standards copied from distilled references. |
+| 2026-04-14 | BX | Added "Original Source" column to the Distilled Standards table per medtech-docs v15. All 5 skill-library standards already present from initial population — `update-external-references` reported 0 created / 5 unchanged / 1 unchanged-not-in-skill-library (iec-60601-1). See `tasks/ben/012-medtech-docs-update-external-references.md`. |

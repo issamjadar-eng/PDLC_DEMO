@@ -8,8 +8,10 @@ For non-standard frameworks (NIST CSF, OWASP, GMLP, etc.), see `docs/external/in
 
 Standards with per-file requirement breakdowns in this folder:
 
-| Standard | File | Title | Category |
-|----------|------|-------|----------|
+| Standard | File | Title | Category | Original Source |
+|----------|------|-------|----------|-----------------|
+
+- **Original Source** column links to the publisher (e.g., `https://webstore.iec.ch/`, `https://www.iso.org/standard/`, `https://www.astm.org/`). Standards documents themselves are copyrighted and not bundled with the skill — only the distilled markdown is.
 
 ## Deferred Standards (QMS-Level)
 
@@ -36,8 +38,10 @@ _Populate with a table showing which standards apply to which device modules, an
 
 Standards evaluated and determined not applicable, with rationale:
 
-| Standard | Title | Rationale for Exclusion |
-|----------|-------|------------------------|
+| Standard | Title | Scope Qualifier | Rationale for Exclusion |
+|----------|-------|-----------------|------------------------|
+
+- **Scope Qualifier** column should name the *specific slice* of the standard that was evaluated as not applicable (e.g., "Part 2 collateral standards only", "wireless coexistence clause only"). Prevents broad rationales from silencing future applicability when project capabilities change. If the entire standard is genuinely out of scope, write "(whole standard)".
 
 ## Conventions
 
