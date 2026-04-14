@@ -1,7 +1,7 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 13
+version: 14
 updated: 2026-04-13
 ---
 
@@ -249,20 +249,22 @@ bash .claude/hooks/task-activate.sh list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 <!-- Read by /best-practices skill to audit project setup -->
 
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Task folder exists | `tasks/` directory exists | Required |
-| Task README exists | `tasks/README.md` exists | Required |
-| At least one person subfolder | At least one subfolder under `tasks/` containing `000-index.md` | Required |
-| Task structure defined in skill | `create` action in task skill contains the task document structure | Required |
-| CLAUDE.md enforces task-first | `CLAUDE.md` contains "Task-First Workflow" section | Required |
-| Task skill installed | `.claude/skills/task/SKILL.md` exists | Required |
-| Index is current | Every task file's Status matches its position (Active vs Completed) in its `000-index.md` | Recommended |
-| Index has summaries | Every row in `000-index.md` has a non-empty Summary column | Required |
-| No orphan tasks | Every task file in a person's folder has a corresponding row in their `000-index.md` | Recommended |
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Task folder exists | `tasks/` directory exists | Required | shared |
+| Task README exists | `tasks/README.md` exists | Required | shared |
+| At least one person subfolder | At least one subfolder under `tasks/` containing `000-index.md` | Required | shared |
+| Task structure defined in skill | `create` action in task skill contains the task document structure | Required | shared |
+| CLAUDE.md enforces task-first | `CLAUDE.md` contains "Task-First Workflow" section | Required | shared |
+| Task skill installed | `.claude/skills/task/SKILL.md` exists | Required | shared |
+| Index is current | Every task file's Status matches its position (Active vs Completed) in its `000-index.md` | Recommended | shared |
+| Index has summaries | Every row in `000-index.md` has a non-empty Summary column | Required | shared |
+| No orphan tasks | Every task file in a person's folder has a corresponding row in their `000-index.md` | Recommended | shared |
 
 ## Changelog
 
+- 14 (2026-04-13): Added `Scope` column to the Best Practices table so `/best-practices` v8+ (which introduced Scope-column parsing under the unified sub-DHF shape) can classify every task-skill check as `shared`, `per-dhf`, `per-submission`, or `cross-cutting`. Every task-skill check is classified as `shared` — task management is project-level (the `tasks/` folder lives at project root, not inside any sub-DHF). See `tasks/ben/007-sub-dhf-migration.md` P5.7 for the Scope column spec. **This is a LOCAL divergence from upstream pending a future `/sync-skills push`**; upstream (hitachi) still ships v13 without the Scope column. When the Scope-column feature is contributed back to hitachi, all skills' check tables will get the column in one coordinated update.
+  **Post-update:** No user action needed. The Scope column is additive — `/best-practices` v8 defaults to `shared` when the column is absent, so v13 behavior is preserved as a fallback.
 - 13 (2026-04-13): Extended `setup` action to symlink and register the two capture-backstop hooks introduced in v12: `capture-signals.sh` (UserPromptSubmit — detects strategic-intent entry/exit signals, arms and soft-nudges) and `capture-check.sh` (Stop — hard backstop blocking `Stop` events when armed tasks lack capture). Previously downstream users pulling v12 got the hook files but had no automated path to register them, leaving the capture backstop silently inactive. Now `/task setup` wires everything up in one idempotent command. First skill to adopt the new post-update annotation convention added in sync-skills v3 — the block below is what `/sync-skills pull` will surface to downstream users.
   **Post-update:** Run `/task setup` to symlink and register the new UserPromptSubmit and Stop hooks. Without this, the capture backstop is installed but inactive — your task sessions won't arm on strategic intent signals and won't be blocked from ending with uncaptured Strategy/Lessons content. The setup action is idempotent, so running it on a project that already has the earlier hooks registered is safe.
 - 12 (2026-04-13): Reframed Strategy and Lessons Learned sections from "optional" to soft-required with explicit trigger lists and capture discipline for Claude. Root cause: the prior "add when the task needs them" framing caused Claude to skip capture even when sessions were clearly architectural/strategic, leaving `/strategy` and `/lessons` skills nothing to harvest. New template spells out triggers (choosing between alternatives, scope calls, trade-offs, non-obvious insights), requires end-of-session review, and requires an explicit "no content this session" changelog note when nothing qualifies. Added `capture-signals.sh` (UserPromptSubmit) and `capture-check.sh` (Stop) hooks implementing the armed-state-machine backstop. Paired with feedback memory `feedback_capture_strategy_lessons.md`.

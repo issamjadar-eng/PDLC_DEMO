@@ -1,8 +1,8 @@
 ---
 name: docflow
 description: "Document conversion and round-trip management — convert between markdown and formal formats (DOCX, PDF, XLSX) with image fidelity, metadata tracking, and cross-reference resolution"
-version: 1
-updated: 2026-04-03
+version: 2
+updated: 2026-04-13
 ---
 
 # Docflow
@@ -457,15 +457,15 @@ All conversions use a staging area (`source-md/.staging/{doc-id}/`). Output move
 
 <!-- Read by /best-practices skill to audit project setup -->
 
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Docflow skill installed | `.claude/skills/docflow/SKILL.md` exists | Required |
-| Source-md directory exists | `docs/internal/source-md/` exists | Required |
-| Images directory exists | `docs/internal/source-md/images/` exists | Required |
-| Staging gitignored | `.gitignore` contains `source-md/.staging/` | Required |
-| Toolchain available | `pandoc`, `pdftotext`, `pdfimages` are on PATH | Required |
-| No orphaned staging | `docs/internal/source-md/.staging/` is empty | Recommended |
-| INDEX.md exists | `docs/internal/source/INDEX.md` exists (needed for cross-ref resolution) | Required |
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Docflow skill installed | `.claude/skills/docflow/SKILL.md` exists | Required | shared |
+| Source-md directory exists | `docs/internal/source-md/` exists | Required | shared |
+| Images directory exists | `docs/internal/source-md/images/` exists | Required | shared |
+| Staging gitignored | `.gitignore` contains `source-md/.staging/` | Required | shared |
+| Toolchain available | `pandoc`, `pdftotext`, `pdfimages` are on PATH | Required | shared |
+| No orphaned staging | `docs/internal/source-md/.staging/` is empty | Recommended | shared |
+| INDEX.md exists | `docs/internal/source/INDEX.md` exists (needed for cross-ref resolution) | Required | shared |
 
 ## Notes
 
@@ -477,4 +477,5 @@ All conversions use a staging area (`source-md/.staging/{doc-id}/`). Output move
 
 ## Changelog
 
+- 2 (2026-04-13): Added `Scope` column to the Best Practices table for `/best-practices` v8+ compatibility. Every docflow check is classified as `shared` — docflow operates on `docs/internal/source/` and `docs/internal/source-md/`, both at project root and shared across all sub-DHFs. Also updated the README example path from `docs/project/design-controls/architecture/sad.md` to `docs/project/dhfs/<sub-dhf>/design-controls/architecture/sad.md` to reflect the unified sub-DHF shape (the actual docflow functionality is unchanged — the path in the example is illustrative, not enforced). See `tasks/ben/007-sub-dhf-migration.md` P5.7. **LOCAL divergence from upstream pending a future `/sync-skills push`**; upstream (hitachi) still ships v1 without the Scope column.
 - 1 (2026-04-03): Initial version — convert, refresh, batch, validate, status, help, guide actions. Phase 1 (WF-4 source conversion) fully specified. Phase 2 (WF-1/2/3 import/export) stubbed.
