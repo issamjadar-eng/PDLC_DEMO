@@ -1,0 +1,1045 @@
+{% extends "_base.html" %}
+{% block title %}Trace Matrix · {{ dhf }} · {{ config.project_name }}{% endblock %}
+{% block body_class %}tm-body{% endblock %}
+{% block content %}
+<section class="trace-matrix-view">
+  <header class="tm-header">
+    <div class="tm-header-left">
+      <a href="/trace-matrix" class="tm-back">← All DHFs</a>
+      <h1>Trace Matrix — {{ dhf }}</h1>
+      <span class="muted small">skill v{{ sidecar.version }} · {{ sidecar.generated_at }}</span>
+    </div>
+    <div class="tm-header-right">
+      <button type="button" class="btn-secondary" id="tm-assistant-open">🧠 SE Assistant</button>
+      {% if has_skill %}
+      <form method="post" action="/trace-matrix/{{ dhf }}/build" style="display:inline">
+        <button type="submit" class="btn-primary">Rebuild</button>
+      </form>
+      {% endif %}
+    </div>
+  </header>
+
+  {# Systems Engineering Assistant drawer — right-side slide-out, resizable #}
+  <aside id="tm-assistant" class="tm-assistant" aria-hidden="true" data-dhf="{{ dhf }}">
+    <div class="tm-assistant-resize" id="tm-assistant-resize" aria-label="Resize assistant"></div>
+    <header class="tm-assistant-header">
+      <div class="tm-assistant-title">
+        <strong>Systems Engineering Assistant</strong>
+        <span class="muted small">{{ dhf }}</span>
+      </div>
+      <button type="button" class="tm-assistant-close" id="tm-assistant-close" aria-label="Close">✕</button>
+    </header>
+
+    <div class="tm-assistant-toolbar">
+      <select id="tm-thread-select" class="tm-thread-select" aria-label="Select conversation"></select>
+      <button type="button" class="btn-chip" id="tm-thread-new" title="New conversation">+ New</button>
+      <button type="button" class="btn-chip" id="tm-thread-clear" title="Clear all conversations for this DHF">Clear history</button>
+    </div>
+
+    <div class="tm-messages" id="tm-messages">
+      <div class="tm-message-empty muted small">
+        Ask me about requirements traceability, coverage gaps, criticality, or what's missing. Example: <em>"Which safety-critical DIs have no verification?"</em>
+      </div>
+    </div>
+
+    <form class="tm-input-row" id="tm-input-form">
+      <textarea id="tm-input" placeholder="Ask about the trace matrix…" rows="2"></textarea>
+      <button type="submit" class="btn-primary" id="tm-send">Send</button>
+    </form>
+  </aside>
+  <div id="tm-assistant-backdrop" class="tm-assistant-backdrop" hidden></div>
+
+  {# Tabs — one per layer. Counts + flags live in the tab label itself. #}
+  <div class="tm-tabs" role="tablist">
+    {% for layer in sidecar.layers %}
+    {% set s = sidecar.stats.get(layer.key, {}) %}
+    {% set count = s.count or 0 %}
+    {% set orphan = s.orphan or 0 %}
+    {% set is_default = loop.first or (count > 0 and loop.index0 == 1) %}
+    <button class="tm-tab{% if loop.index0 == 1 %} is-active{% endif %}"
+            data-tab="{{ layer.key }}"
+            role="tab">
+      {{ layer.title }}
+      <span class="tm-tab-count">{{ count }}</span>
+      {% if orphan %}<span class="tm-tab-flag tm-tab-flag-orphan">{{ orphan }} orphan</span>{% endif %}
+      {% if layer.missing_reason %}<span class="tm-tab-flag tm-tab-flag-warn">{{ layer.missing_reason }}</span>{% endif %}
+      {% if layer.key == "architecture" and not layer.edges_known %}<span class="tm-tab-flag tm-tab-flag-warn">edges unknown</span>{% endif %}
+    </button>
+    {% endfor %}
+  </div>
+
+  {# Filter bar — single row, scoped to whichever tab is active. #}
+  <div class="tm-filters">
+    <span class="tm-filter-label">Criticality</span>
+    <button class="tm-chip is-active" data-filter="criticality" data-value="all">All</button>
+    <button class="tm-chip" data-filter="criticality" data-value="CtS">CtS</button>
+    <button class="tm-chip" data-filter="criticality" data-value="CtF">CtF</button>
+    <button class="tm-chip" data-filter="criticality" data-value="CtC">CtC</button>
+    <button class="tm-chip" data-filter="criticality" data-value="CtP">CtP</button>
+    <button class="tm-chip" data-filter="criticality" data-value="Supporting">Supp</button>
+    <button class="tm-chip" data-filter="criticality" data-value="untagged">Untagged</button>
+    <span class="tm-filter-sep"></span>
+    <button class="tm-chip is-active" data-filter="gap" data-value="all">All rows</button>
+    <button class="tm-chip" data-filter="gap" data-value="orphan">Orphans only</button>
+    <span class="tm-filter-sep"></span>
+    <button id="tm-expand-all" class="tm-chip">Expand all</button>
+    <button id="tm-collapse-all" class="tm-chip">Collapse all</button>
+  </div>
+
+  {# Layer panels — one per layer, only the active one is visible. #}
+  {% for layer in sidecar.layers %}
+  {% set s = sidecar.stats.get(layer.key, {}) %}
+  <section class="tm-panel{% if loop.index0 == 1 %} is-active{% endif %}"
+           data-panel="{{ layer.key }}"
+           role="tabpanel">
+
+    {% if layer.missing_reason %}
+    <p class="tm-banner tm-banner-warn">⚠️ Layer source missing — <code>{{ layer.missing_reason }}</code>. No items to display.</p>
+    {% elif layer.key == "architecture" and not layer.edges_known %}
+    <p class="tm-banner tm-banner-warn">⚠️ Module ↔ DI mapping table not present in architecture source; modules display without forward edges.</p>
+    {% endif %}
+
+    {% if layer["items"] %}
+    <table class="tm-table">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th class="col-req">Requirement</th>
+          <th class="col-crit">Crit</th>
+          <th class="col-group">Group</th>
+          <th class="col-fwd">→ Forward</th>
+          <th class="col-rev">← Reverse</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set orphan_ids = sidecar.gaps.orphans.get(layer.key, []) %}
+        {% for item in layer["items"] %}
+        {% set is_orphan = item.id in orphan_ids %}
+        <tr class="tm-row {% if is_orphan %}tm-row-orphan{% endif %}"
+            data-criticality="{{ item.criticality or 'untagged' }}"
+            data-orphan="{{ '1' if is_orphan else '0' }}"
+            data-expanded="0">
+
+          {# ID column — caret + identifier + orphan pill. Clicking the row
+             toggles metadata in every expandable column at once. #}
+          <td class="col-id">
+            <span class="tm-caret" aria-hidden="true">▸</span>
+            <code>{{ item.id }}</code>
+            {% if is_orphan %}<span class="tm-orphan-pill">orphan</span>{% endif %}
+          </td>
+
+          {# Requirement column — full text with a hidden detail panel #}
+          <td class="col-req">
+            <div class="tm-req-text">{{ item.full_text or item.summary }}</div>
+            <div class="tm-detail" hidden>
+              {% if item.category %}<p class="tm-detail-aux"><strong>Category:</strong> {{ item.category }}</p>{% endif %}
+              {% if item.stakeholder %}<p class="tm-detail-aux"><strong>Stakeholder:</strong> {{ item.stakeholder }}</p>{% endif %}
+              {% if item.priority %}<p class="tm-detail-aux"><strong>Priority:</strong> {{ item.priority }}</p>{% endif %}
+              {% if item.source_ref %}<p class="tm-detail-aux"><strong>Source:</strong> {{ item.source_ref }}</p>{% endif %}
+              {% if item.acceptance_criteria %}<p class="tm-detail-aux"><strong>Acceptance:</strong> {{ item.acceptance_criteria }}</p>{% endif %}
+              {% if item.verification_method %}<p class="tm-detail-aux"><strong>Verification:</strong> {{ item.verification_method }}</p>{% endif %}
+              {% if item.iec_class %}<p class="tm-detail-aux"><strong>IEC 62304 Class:</strong> {{ item.iec_class }}</p>{% endif %}
+              {% if item.module_name %}<p class="tm-detail-aux"><strong>Module:</strong> {{ item.module_name }}</p>{% endif %}
+              {% if item.source_url %}<p class="tm-detail-aux"><a href="{{ item.source_url }}" class="tm-source-link">↗ View in source document</a></p>{% endif %}
+            </div>
+          </td>
+
+          {# Criticality pill #}
+          <td class="col-crit">
+            {% if item.criticality %}
+              <span class="tm-crit tm-crit-{{ item.criticality }}">{{ item.criticality }}</span>
+            {% else %}<span class="muted">—</span>{% endif %}
+          </td>
+
+          {# Group #}
+          <td class="col-group">
+            {% if item.group %}<span class="muted small">{{ item.group }}</span>{% else %}<span class="muted">—</span>{% endif %}
+          </td>
+
+          {# Forward column — chip list + hidden labeled detail #}
+          <td class="col-fwd">
+            {% if item.traces_forward %}
+              <div class="tm-chip-list">
+                {% for t in item.traces_forward %}<code class="tm-id">{{ t.id }}</code>{% if not loop.last %} {% endif %}{% endfor %}
+              </div>
+              <ul class="tm-trace-list" hidden>
+                {% for t in item.traces_forward %}
+                <li><code>{{ t.id }}</code> — {{ t.summary }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}<span class="muted">—</span>{% endif %}
+          </td>
+
+          {# Reverse column — chip list + hidden labeled detail #}
+          <td class="col-rev">
+            {% if item.traces_reverse %}
+              <div class="tm-chip-list">
+                {% for t in item.traces_reverse %}<code class="tm-id">{{ t.id }}</code>{% if not loop.last %} {% endif %}{% endfor %}
+              </div>
+              <ul class="tm-trace-list" hidden>
+                {% for t in item.traces_reverse %}
+                <li><code>{{ t.id }}</code> — {{ t.summary }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}<span class="muted">—</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </section>
+  {% endfor %}
+
+  {% if sidecar.gaps.broken_refs %}
+  <section class="tm-broken">
+    <h2>Broken References ({{ sidecar.gaps.broken_refs|length }})</h2>
+    <ul>
+      {% for br in sidecar.gaps.broken_refs %}
+      <li><code>{{ br.from }}</code> → <code>{{ br.to }}</code> <span class="muted">({{ br.reason }})</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</section>
+
+<style>
+/* Full-width shell — the table is the content, let it breathe. */
+body.tm-body main { max-width: none !important; padding: 0 !important; }
+.trace-matrix-view { padding: 0.75rem 1rem 3rem; max-width: none; }
+
+/* Compact single-line header */
+.tm-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border, #e1e4e8);
+  margin-bottom: 0.75rem;
+}
+.tm-header-left { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.tm-back { font-size: 0.8rem; color: var(--muted, #657079); text-decoration: none; }
+.tm-back:hover { text-decoration: underline; }
+.tm-header h1 { font-size: 1.15rem; margin: 0; font-weight: 600; }
+.tm-header-right { margin: 0; }
+
+/* Tabs — classic folder-tab look: each tab is a bordered card that
+   "docks" to the panel below when active. Inactive tabs have a filled
+   grey background and a visible gap between them so they read as
+   distinct clickable elements. */
+.tm-tabs {
+  display: flex; gap: 0.35rem; flex-wrap: wrap;
+  border-bottom: 2px solid var(--brand, #2a5db0);
+  padding: 0 0.25rem;
+  margin-bottom: 0; /* flush with panel */
+}
+.tm-tab {
+  background: var(--surface-2, #f0f2f5);
+  border: 1px solid var(--border, #d0d4d8);
+  border-bottom: none;
+  border-top-left-radius: 6px; border-top-right-radius: 6px;
+  margin-bottom: -2px; /* overlap the container's bottom border */
+  padding: 0.5rem 0.95rem 0.55rem;
+  font-size: 0.85rem; color: var(--muted, #657079);
+  cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem;
+  font-weight: 500; position: relative;
+  transition: background-color 0.12s, color 0.12s;
+}
+.tm-tab:hover {
+  background: var(--surface-3, #e6e9ee);
+  color: #1f2937;
+}
+.tm-tab.is-active {
+  background: white;
+  color: var(--brand, #2a5db0);
+  border-color: var(--brand, #2a5db0);
+  border-bottom: 2px solid white;
+  font-weight: 600;
+  z-index: 2;
+}
+.tm-tab.is-active::after {
+  /* subtle glow bar along the top of the active tab */
+  content: ""; position: absolute; top: -1px; left: -1px; right: -1px; height: 3px;
+  background: var(--brand, #2a5db0);
+  border-top-left-radius: 6px; border-top-right-radius: 6px;
+}
+.tm-tab-count {
+  display: inline-block; background: rgba(0,0,0,0.08); color: inherit;
+  padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600;
+  min-width: 1.2rem; text-align: center;
+}
+.tm-tab.is-active .tm-tab-count { background: var(--brand, #2a5db0); color: white; }
+.tm-tab-flag {
+  font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 3px; text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.tm-tab-flag-orphan { background: #d97706; color: white; }
+.tm-tab-flag-warn { background: #fef3c7; color: #92400e; }
+
+/* Compact single-line filter bar */
+.tm-filters {
+  display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;
+  padding: 0.4rem 0.6rem; background: var(--surface-2, #f6f7f9);
+  border-radius: 4px; margin-bottom: 0.6rem;
+}
+.tm-filter-label {
+  font-size: 0.7rem; color: var(--muted, #657079);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-right: 0.25rem;
+}
+.tm-filter-sep { display: inline-block; width: 1px; height: 14px; background: var(--border, #d0d4d8); margin: 0 0.3rem; }
+.tm-chip {
+  font-size: 0.72rem; padding: 0.18rem 0.55rem;
+  border: 1px solid var(--border, #cfd3d8); background: white;
+  border-radius: 999px; cursor: pointer; line-height: 1.3;
+}
+.tm-chip:hover { background: var(--surface-3, #eef0f3); }
+.tm-chip.is-active { background: var(--brand, #2a5db0); color: white; border-color: var(--brand, #2a5db0); }
+
+/* Panels — only active one is shown. Framed to match the active tab
+   so the tab visually "docks" into the panel. */
+.tm-panel { display: none; }
+.tm-panel.is-active {
+  display: block;
+  background: white;
+  border: 1px solid var(--brand, #2a5db0);
+  border-top: none;
+  border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;
+  padding: 0.75rem 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Banner */
+.tm-banner { padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.85rem; margin: 0.5rem 0; }
+.tm-banner-warn { background: #fff7e6; border: 1px solid #ffd591; }
+
+/* Full-width table */
+.tm-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: auto; }
+.tm-table th {
+  text-align: left; padding: 0.45rem 0.5rem; border-bottom: 2px solid var(--border, #d0d4d8);
+  background: var(--surface-2, #f6f7f9); position: sticky; top: 0; z-index: 1;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted, #657079);
+}
+.tm-table td { padding: 0.5rem; border-bottom: 1px solid var(--border-light, #ececec); vertical-align: top; }
+
+.col-id    { width: 11%; min-width: 120px; }
+.col-req   { width: auto; }
+.col-crit  { width: 5%;  white-space: nowrap; }
+.col-group { width: 5%;  white-space: nowrap; }
+.col-fwd   { width: 16%; }
+.col-rev   { width: 16%; }
+
+.col-req { line-height: 1.4; }
+
+.tm-row { cursor: pointer; }
+.tm-row:hover td { background: #f7f9fc; }
+.tm-row[data-expanded="1"] td { background: #f0f5fc; }
+.tm-row[data-expanded="1"]:hover td { background: #e9f0fa; }
+.tm-row-orphan td { background: #fff7f0; }
+.tm-row-orphan:hover td { background: #fdedd9; }
+.tm-row-orphan[data-expanded="1"] td { background: #ffe8cc; }
+.tm-row-orphan td.col-id { border-left: 3px solid #d97706; }
+
+/* Caret in the ID column — marks every row as togglable */
+.tm-caret {
+  display: inline-block; width: 0.9rem; color: var(--muted, #8b94a0);
+  font-size: 0.7rem; transition: transform 0.12s ease;
+  user-select: none;
+}
+.tm-row[data-expanded="1"] .tm-caret { transform: rotate(90deg); color: var(--brand, #2a5db0); }
+.col-id { white-space: nowrap; }
+
+/* Chips / pills */
+.tm-orphan-pill {
+  display: inline-block; padding: 0.05rem 0.4rem; font-size: 0.65rem;
+  background: #d97706; color: white; border-radius: 999px; vertical-align: middle; margin-left: 0.25rem;
+}
+.tm-id { font-size: 0.72rem; padding: 0.05rem 0.3rem; background: #eef2ff; border-radius: 3px; }
+.tm-crit {
+  display: inline-block; padding: 0.1rem 0.4rem; font-size: 0.68rem;
+  font-weight: 600; border-radius: 3px;
+}
+.tm-crit-CtS { background: #fee2e2; color: #991b1b; }
+.tm-crit-CtF { background: #fef3c7; color: #92400e; }
+.tm-crit-CtC { background: #dbeafe; color: #1e40af; }
+.tm-crit-CtP { background: #e0e7ff; color: #3730a3; }
+.tm-crit-Supporting { background: #f3f4f6; color: #374151; }
+
+/* Row expansion: JS-driven, row-level. Clicking any cell toggles the row
+   and every expandable column opens together. Row state is
+   data-expanded="0" | "1"; children respect it via the [hidden] attribute
+   (which JS flips on toggle). */
+.tm-req-text { line-height: 1.4; }
+.tm-chip-list { line-height: 1.5; }
+.tm-detail {
+  margin-top: 0.5rem; padding: 0.45rem 0.6rem;
+  background: #fafbfc; border-left: 2px solid var(--brand, #2a5db0);
+  border-radius: 0 3px 3px 0;
+}
+.tm-detail-aux { margin: 0.2rem 0; font-size: 0.78rem; color: #444; line-height: 1.4; }
+.tm-trace-list {
+  margin: 0.4rem 0 0; padding: 0.35rem 0 0.1rem 0.6rem; font-size: 0.78rem;
+  list-style: none; border-top: 1px dashed var(--border-light, #ececec);
+}
+.tm-trace-list li { margin: 0.2rem 0; padding-left: 0.5rem; border-left: 1px solid var(--border-light, #ececec); }
+.tm-source-link { color: var(--brand, #2a5db0); text-decoration: none; }
+.tm-source-link:hover { text-decoration: underline; }
+
+.btn-primary {
+  background: var(--brand, #2a5db0); color: white; border: none;
+  padding: 0.35rem 0.85rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.tm-broken { margin-top: 2rem; padding: 1rem; background: #fff7e6; border: 1px solid #ffd591; border-radius: 4px; }
+.tm-broken h2 { margin-top: 0; font-size: 0.95rem; }
+
+/* Header right group */
+.tm-header-right { display: flex; gap: 0.4rem; align-items: center; }
+.btn-secondary {
+  background: white; color: var(--brand, #2a5db0);
+  border: 1px solid var(--brand, #2a5db0);
+  padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+}
+.btn-secondary:hover { background: #f0f5fc; }
+
+/* --------------------------------------------------------------------- */
+/* Systems Engineering Assistant drawer                                  */
+/* --------------------------------------------------------------------- */
+.tm-assistant {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 40vw; min-width: 360px; max-width: 85vw;
+  background: white;
+  border-left: 1px solid var(--border, #d0d4d8);
+  box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+  transform: translateX(100%); transition: transform 0.22s ease;
+  display: flex; flex-direction: column;
+  z-index: 100;
+}
+.tm-assistant.is-open { transform: translateX(0); }
+.tm-assistant.is-resizing { transition: none; user-select: none; }
+
+/* Drag handle on the left edge — thin strip, cursor changes on hover */
+.tm-assistant-resize {
+  position: absolute; top: 0; bottom: 0; left: -3px; width: 6px;
+  cursor: ew-resize; z-index: 2;
+}
+.tm-assistant-resize::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 2px; width: 2px;
+  background: transparent; transition: background-color 0.15s;
+}
+.tm-assistant-resize:hover::before,
+.tm-assistant.is-resizing .tm-assistant-resize::before {
+  background: var(--brand, #2a5db0);
+}
+.tm-assistant-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.1);
+  z-index: 99; opacity: 0; transition: opacity 0.2s;
+  pointer-events: none;
+}
+.tm-assistant-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.tm-assistant-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.75rem 1rem; border-bottom: 1px solid var(--border, #e1e4e8);
+}
+.tm-assistant-title { display: flex; flex-direction: column; gap: 0.15rem; }
+.tm-assistant-title strong { font-size: 0.95rem; }
+.tm-assistant-close {
+  background: transparent; border: none; font-size: 1.1rem;
+  color: var(--muted, #657079); cursor: pointer; padding: 0.25rem 0.45rem; border-radius: 3px;
+}
+.tm-assistant-close:hover { background: var(--surface-2, #f0f2f5); color: #111; }
+
+.tm-assistant-toolbar {
+  display: flex; gap: 0.4rem; align-items: center;
+  padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-light, #ececec);
+  background: var(--surface-2, #fafbfc);
+}
+.tm-thread-select {
+  flex: 1; font-size: 0.8rem; padding: 0.3rem 0.45rem;
+  border: 1px solid var(--border, #d0d4d8); border-radius: 3px;
+  background: white; color: #111;
+}
+.btn-chip {
+  background: white; border: 1px solid var(--border, #d0d4d8);
+  padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.72rem;
+  cursor: pointer; color: #333; white-space: nowrap;
+}
+.btn-chip:hover { background: var(--surface-3, #eef0f3); }
+
+.tm-messages {
+  flex: 1; overflow-y: auto; padding: 0.75rem 1rem 1rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
+}
+.tm-message-empty { padding: 0.75rem 0; text-align: center; }
+.tm-msg {
+  padding: 0.55rem 0.75rem; border-radius: 6px; font-size: 0.85rem;
+  line-height: 1.45; word-wrap: break-word;
+}
+.tm-msg-user { background: #e8f0fb; color: #0f2e5c; align-self: flex-end; max-width: 85%; white-space: pre-wrap; }
+.tm-msg-assistant { background: #f6f7f9; color: #111; align-self: flex-start; max-width: 95%; }
+
+/* Markdown rendering inside assistant bubbles */
+.tm-msg-assistant > *:first-child { margin-top: 0; }
+.tm-msg-assistant > *:last-child { margin-bottom: 0; }
+.tm-msg-assistant p { margin: 0.35rem 0; }
+.tm-msg-assistant h1,
+.tm-msg-assistant h2,
+.tm-msg-assistant h3,
+.tm-msg-assistant h4 {
+  margin: 0.55rem 0 0.25rem;
+  line-height: 1.25; font-weight: 600;
+}
+.tm-msg-assistant h1 { font-size: 1.02rem; }
+.tm-msg-assistant h2 { font-size: 0.94rem; }
+.tm-msg-assistant h3 { font-size: 0.88rem; }
+.tm-msg-assistant h4 { font-size: 0.85rem; color: #333; }
+.tm-msg-assistant ul,
+.tm-msg-assistant ol { margin: 0.3rem 0 0.3rem 1.1rem; padding: 0; }
+.tm-msg-assistant li { margin: 0.15rem 0; }
+.tm-msg-assistant code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.78rem; background: #eef0f3; padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+}
+.tm-msg-assistant pre {
+  background: #f0f2f5; border: 1px solid var(--border-light, #e1e4e8);
+  border-radius: 4px; padding: 0.5rem 0.6rem; margin: 0.4rem 0;
+  overflow-x: auto; font-size: 0.76rem;
+}
+.tm-msg-assistant pre code { background: transparent; padding: 0; font-size: inherit; }
+.tm-msg-assistant a { color: var(--brand, #2a5db0); text-decoration: none; }
+.tm-msg-assistant a:hover { text-decoration: underline; }
+.tm-msg-assistant strong { font-weight: 600; }
+.tm-msg-assistant em { font-style: italic; }
+.tm-md-table {
+  border-collapse: collapse; margin: 0.4rem 0; font-size: 0.76rem;
+  width: 100%;
+}
+.tm-md-table th,
+.tm-md-table td {
+  border: 1px solid var(--border-light, #dfe3e7);
+  padding: 0.3rem 0.45rem; text-align: left; vertical-align: top;
+}
+.tm-md-table th { background: var(--surface-2, #f0f2f5); font-weight: 600; }
+.tm-msg-assistant.is-streaming::after {
+  content: "▋"; color: var(--brand, #2a5db0); animation: tm-blink 1s steps(1) infinite;
+  margin-left: 0.15rem;
+}
+@keyframes tm-blink { 50% { opacity: 0; } }
+.tm-msg-error { background: #fdecea; color: #7a1f1a; align-self: stretch; }
+
+.tm-input-row {
+  display: flex; gap: 0.5rem; align-items: flex-end;
+  padding: 0.6rem 1rem 0.9rem; border-top: 1px solid var(--border-light, #ececec);
+  background: white;
+}
+.tm-input-row textarea {
+  flex: 1; font-family: inherit; font-size: 0.85rem; padding: 0.5rem;
+  border: 1px solid var(--border, #cfd3d8); border-radius: 4px; resize: vertical;
+  min-height: 2.4rem;
+}
+.tm-input-row textarea:focus { outline: 2px solid var(--brand, #2a5db0); outline-offset: -1px; }
+.tm-input-row button[disabled] { opacity: 0.5; cursor: wait; }
+</style>
+
+<script>
+(function() {
+  const filters = { criticality: 'all', gap: 'all' };
+
+  function setRowExpanded(row, open) {
+    row.dataset.expanded = open ? '1' : '0';
+    row.querySelectorAll('.tm-detail, .tm-trace-list').forEach(el => {
+      el.hidden = !open;
+    });
+  }
+
+  function toggleRow(row) {
+    setRowExpanded(row, row.dataset.expanded !== '1');
+  }
+
+  function applyFilters() {
+    document.querySelectorAll('.tm-panel').forEach(panel => {
+      if (!panel.classList.contains('is-active')) return;
+      panel.querySelectorAll('tr.tm-row').forEach(row => {
+        const crit = row.dataset.criticality;
+        const isOrphan = row.dataset.orphan === '1';
+        const critOk = filters.criticality === 'all'
+          || (filters.criticality === 'untagged' && crit === 'untagged')
+          || crit === filters.criticality;
+        const gapOk = filters.gap === 'all' || (filters.gap === 'orphan' && isOrphan);
+        row.style.display = (critOk && gapOk) ? '' : 'none';
+      });
+    });
+  }
+
+  function switchTab(key) {
+    document.querySelectorAll('.tm-tab').forEach(btn => {
+      btn.classList.toggle('is-active', btn.dataset.tab === key);
+    });
+    document.querySelectorAll('.tm-panel').forEach(panel => {
+      panel.classList.toggle('is-active', panel.dataset.panel === key);
+    });
+    applyFilters();
+  }
+
+  // Row-level click toggle — clicking any cell in a row expands/collapses
+  // every expandable column in that row. Clicks on links (e.g. "View in
+  // source document") bubble through without toggling.
+  document.querySelectorAll('tr.tm-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      toggleRow(row);
+    });
+  });
+
+  document.querySelectorAll('.tm-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  document.querySelectorAll('.tm-chip[data-filter]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const f = btn.dataset.filter;
+      const v = btn.dataset.value;
+      filters[f] = v;
+      document.querySelectorAll(`.tm-chip[data-filter="${f}"]`).forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      applyFilters();
+    });
+  });
+
+  document.getElementById('tm-expand-all')?.addEventListener('click', () => {
+    const activePanel = document.querySelector('.tm-panel.is-active');
+    if (!activePanel) return;
+    activePanel.querySelectorAll('tr.tm-row').forEach(row => setRowExpanded(row, true));
+  });
+  document.getElementById('tm-collapse-all')?.addEventListener('click', () => {
+    const activePanel = document.querySelector('.tm-panel.is-active');
+    if (!activePanel) return;
+    activePanel.querySelectorAll('tr.tm-row').forEach(row => setRowExpanded(row, false));
+  });
+})();
+</script>
+
+<script>
+/* ===================================================================== */
+/* Systems Engineering Assistant drawer                                   */
+/* ===================================================================== */
+(function() {
+  const drawer = document.getElementById('tm-assistant');
+  if (!drawer) return;
+  const dhf = drawer.dataset.dhf;
+  const storageKey = `tm-chats-${dhf}`;
+  const activeKey  = `tm-chats-${dhf}-active`;
+
+  // ---- Minimal markdown renderer (assistant bubbles only) --------------
+  // Supports: headers, bold, italic, inline + fenced code, ordered and
+  // unordered lists, links, and pipe tables. Everything else falls
+  // through as plain text (wrapped in <p>).
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function splitRow(row) {
+    return row.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+  }
+  function renderMarkdown(src) {
+    let t = escapeHtml(src || '');
+
+    // Protect fenced code blocks first (preserve their contents verbatim).
+    const codeBlocks = [];
+    t = t.replace(/```([\s\S]*?)```/g, (_, code) => {
+      codeBlocks.push(code.replace(/^\n/, '').replace(/\n$/, ''));
+      return `\u0000CB${codeBlocks.length - 1}\u0000`;
+    });
+    // Protect inline code.
+    const inlineCode = [];
+    t = t.replace(/`([^`\n]+)`/g, (_, code) => {
+      inlineCode.push(code);
+      return `\u0000IC${inlineCode.length - 1}\u0000`;
+    });
+
+    // Inline spans — bold, italic, links. Safe before block parsing.
+    t = t.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/(^|[\s(])\*([^*\n]+?)\*(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
+    t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+    // Block parsing — walk lines, group into blocks.
+    const lines = t.split('\n');
+    const out = [];
+    const isTableDivider = s => /^\s*\|?\s*:?[-]{2,}[-:\s|]*$/.test(s);
+    const isUnordered = s => /^\s*[-*]\s+/.test(s);
+    const isOrdered   = s => /^\s*\d+\.\s+/.test(s);
+    const isHeader    = s => /^#{1,6}\s+/.test(s);
+
+    let i = 0;
+    while (i < lines.length) {
+      const line = lines[i];
+
+      // Header
+      const h = /^(#{1,6})\s+(.+)$/.exec(line);
+      if (h) {
+        const lvl = Math.min(4, h[1].length); // collapse h5/h6 into h4
+        out.push(`<h${lvl}>${h[2]}</h${lvl}>`);
+        i++; continue;
+      }
+
+      // Table (pipe row followed by divider)
+      if (line.trimStart().startsWith('|') && i + 1 < lines.length && isTableDivider(lines[i + 1])) {
+        const headers = splitRow(line);
+        i += 2;
+        const rows = [];
+        while (i < lines.length && lines[i].trimStart().startsWith('|')) {
+          rows.push(splitRow(lines[i]));
+          i++;
+        }
+        const th = headers.map(c => `<th>${c}</th>`).join('');
+        const tb = rows.map(r => '<tr>' + r.map(c => `<td>${c}</td>`).join('') + '</tr>').join('');
+        out.push(`<table class="tm-md-table"><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`);
+        continue;
+      }
+
+      // Unordered list
+      if (isUnordered(line)) {
+        const items = [];
+        while (i < lines.length && isUnordered(lines[i])) {
+          items.push(lines[i].replace(/^\s*[-*]\s+/, ''));
+          i++;
+        }
+        out.push('<ul>' + items.map(x => `<li>${x}</li>`).join('') + '</ul>');
+        continue;
+      }
+
+      // Ordered list
+      if (isOrdered(line)) {
+        const items = [];
+        while (i < lines.length && isOrdered(lines[i])) {
+          items.push(lines[i].replace(/^\s*\d+\.\s+/, ''));
+          i++;
+        }
+        out.push('<ol>' + items.map(x => `<li>${x}</li>`).join('') + '</ol>');
+        continue;
+      }
+
+      // Blank line
+      if (line.trim() === '') { i++; continue; }
+
+      // Paragraph — collect consecutive lines until blank or block start
+      const pLines = [];
+      while (
+        i < lines.length &&
+        lines[i].trim() !== '' &&
+        !isHeader(lines[i]) &&
+        !isUnordered(lines[i]) &&
+        !isOrdered(lines[i]) &&
+        !(lines[i].trimStart().startsWith('|') && i + 1 < lines.length && isTableDivider(lines[i + 1]))
+      ) {
+        pLines.push(lines[i]);
+        i++;
+      }
+      if (pLines.length) out.push('<p>' + pLines.join('<br>') + '</p>');
+    }
+
+    let html = out.join('\n');
+
+    // Restore protected spans.
+    html = html.replace(/\u0000CB(\d+)\u0000/g, (_, j) => `<pre><code>${codeBlocks[+j]}</code></pre>`);
+    html = html.replace(/\u0000IC(\d+)\u0000/g, (_, j) => `<code>${inlineCode[+j]}</code>`);
+    return html;
+  }
+
+  const backdrop    = document.getElementById('tm-assistant-backdrop');
+  const openBtn     = document.getElementById('tm-assistant-open');
+  const closeBtn    = document.getElementById('tm-assistant-close');
+  const resizeEl    = document.getElementById('tm-assistant-resize');
+  const threadSel   = document.getElementById('tm-thread-select');
+  const newBtn      = document.getElementById('tm-thread-new');
+  const clearBtn    = document.getElementById('tm-thread-clear');
+  const messagesEl  = document.getElementById('tm-messages');
+  const form        = document.getElementById('tm-input-form');
+  const input       = document.getElementById('tm-input');
+  const sendBtn     = document.getElementById('tm-send');
+
+  // ---- thread persistence -------------------------------------------------
+
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function saveAll(threads) {
+    localStorage.setItem(storageKey, JSON.stringify(threads));
+  }
+  function getActiveId() { return localStorage.getItem(activeKey); }
+  function setActiveId(id) { localStorage.setItem(activeKey, id); }
+
+  function newThread() {
+    const id = 't-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    return { id, title: 'New conversation', messages: [], updatedAt: Date.now() };
+  }
+
+  function ensureThreads() {
+    let all = loadAll();
+    if (all.length === 0) {
+      const t = newThread();
+      all = [t];
+      saveAll(all);
+      setActiveId(t.id);
+    }
+    if (!getActiveId() || !all.find(t => t.id === getActiveId())) {
+      setActiveId(all[0].id);
+    }
+    return all;
+  }
+
+  function currentThread() {
+    const all = loadAll();
+    return all.find(t => t.id === getActiveId()) || null;
+  }
+
+  function updateThread(mutator) {
+    const all = loadAll();
+    const idx = all.findIndex(t => t.id === getActiveId());
+    if (idx < 0) return;
+    mutator(all[idx]);
+    all[idx].updatedAt = Date.now();
+    saveAll(all);
+  }
+
+  // ---- rendering ----------------------------------------------------------
+
+  function renderThreadDropdown() {
+    const all = loadAll().slice().sort((a, b) => b.updatedAt - a.updatedAt);
+    const activeId = getActiveId();
+    threadSel.innerHTML = '';
+    all.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      const when = new Date(t.updatedAt).toLocaleString();
+      opt.textContent = `${t.title || 'Untitled'} — ${when}`;
+      if (t.id === activeId) opt.selected = true;
+      threadSel.appendChild(opt);
+    });
+  }
+
+  function renderMessages() {
+    const t = currentThread();
+    messagesEl.innerHTML = '';
+    if (!t || t.messages.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'tm-message-empty muted small';
+      empty.innerHTML = 'Ask me about requirements traceability, coverage gaps, criticality, or what\'s missing. Example: <em>"Which safety-critical DIs have no verification?"</em>';
+      messagesEl.appendChild(empty);
+      return;
+    }
+    t.messages.forEach(m => appendMessageEl(m.role, m.content));
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function setMessageContent(el, role, content) {
+    if (role === 'assistant') {
+      el.innerHTML = renderMarkdown(content);
+    } else {
+      el.textContent = content;
+    }
+  }
+
+  function appendMessageEl(role, content, { streaming = false } = {}) {
+    const el = document.createElement('div');
+    el.className = `tm-msg tm-msg-${role}${streaming ? ' is-streaming' : ''}`;
+    setMessageContent(el, role, content);
+    messagesEl.appendChild(el);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return el;
+  }
+
+  // ---- streaming send -----------------------------------------------------
+
+  async function send(userText) {
+    if (!userText.trim()) return;
+
+    // Capture history BEFORE adding the new user turn — the server appends
+    // it as the "latest" message.
+    const t = currentThread();
+    const history = (t?.messages || []).map(m => ({ role: m.role, content: m.content }));
+
+    // Append user message to thread + UI.
+    updateThread(th => {
+      th.messages.push({ role: 'user', content: userText });
+      if (th.messages.length === 1 || th.title === 'New conversation') {
+        th.title = userText.slice(0, 48).replace(/\s+/g, ' ').trim() || 'Untitled';
+      }
+    });
+    renderThreadDropdown();
+    appendMessageEl('user', userText);
+
+    // Create the assistant placeholder so the cursor blinks immediately.
+    const assistantEl = appendMessageEl('assistant', '', { streaming: true });
+
+    sendBtn.disabled = true;
+
+    try {
+      const resp = await fetch(`/trace-matrix/${dhf}/chat/stream`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ history, message: userText }),
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+      let full = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+
+        // Parse SSE frames — events separated by blank line, data fields
+        // begin with "data: ".
+        let idx;
+        while ((idx = buf.indexOf('\n\n')) >= 0) {
+          const frame = buf.slice(0, idx);
+          buf = buf.slice(idx + 2);
+          frame.split('\n').forEach(line => {
+            if (!line.startsWith('data: ')) return;
+            const payload = line.slice(6).trim();
+            if (!payload) return;
+            try {
+              const evt = JSON.parse(payload);
+              if (evt.type === 'token') {
+                full += evt.text;
+                setMessageContent(assistantEl, 'assistant', full);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+              } else if (evt.type === 'error') {
+                assistantEl.classList.remove('is-streaming');
+                assistantEl.classList.add('tm-msg-error');
+                assistantEl.textContent = 'Error: ' + evt.message;
+              } else if (evt.type === 'done') {
+                assistantEl.classList.remove('is-streaming');
+              }
+            } catch (e) { /* skip malformed frame */ }
+          });
+        }
+      }
+
+      assistantEl.classList.remove('is-streaming');
+
+      // Persist the completed assistant turn.
+      updateThread(th => {
+        th.messages.push({ role: 'assistant', content: full });
+      });
+    } catch (e) {
+      assistantEl.classList.remove('is-streaming');
+      assistantEl.classList.add('tm-msg-error');
+      assistantEl.textContent = 'Error: ' + e.message;
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  // ---- wiring -------------------------------------------------------------
+
+  function openDrawer() {
+    ensureThreads();
+    renderThreadDropdown();
+    renderMessages();
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop.hidden = false;
+    requestAnimationFrame(() => backdrop.classList.add('is-open'));
+    setTimeout(() => input.focus(), 220);
+  }
+  function closeDrawer() {
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('is-open');
+    setTimeout(() => { backdrop.hidden = true; }, 200);
+  }
+
+  openBtn.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+  });
+
+  // ---- Resize handle ------------------------------------------------------
+  // Drag the left edge to widen/narrow the drawer. Width persists in
+  // localStorage so it's remembered across reloads and DHFs.
+  const widthKey = 'tm-assistant-width';
+  const savedWidth = parseInt(localStorage.getItem(widthKey) || '0', 10);
+  if (savedWidth >= 360) drawer.style.width = savedWidth + 'px';
+
+  let dragging = false;
+  let startX = 0;
+  let startWidth = 0;
+
+  resizeEl.addEventListener('mousedown', (e) => {
+    dragging = true;
+    startX = e.clientX;
+    startWidth = drawer.getBoundingClientRect().width;
+    drawer.classList.add('is-resizing');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    // Drawer is anchored right, so moving the mouse LEFT should WIDEN it.
+    const delta = startX - e.clientX;
+    const minW = 360;
+    const maxW = Math.floor(window.innerWidth * 0.85);
+    const next = Math.max(minW, Math.min(maxW, startWidth + delta));
+    drawer.style.width = next + 'px';
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    drawer.classList.remove('is-resizing');
+    const w = Math.round(drawer.getBoundingClientRect().width);
+    localStorage.setItem(widthKey, String(w));
+  });
+
+  threadSel.addEventListener('change', () => {
+    setActiveId(threadSel.value);
+    renderMessages();
+  });
+
+  newBtn.addEventListener('click', () => {
+    const all = loadAll();
+    const t = newThread();
+    all.push(t);
+    saveAll(all);
+    setActiveId(t.id);
+    renderThreadDropdown();
+    renderMessages();
+    input.focus();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    if (!confirm(`Clear all ${loadAll().length} conversation(s) for ${dhf}?`)) return;
+    localStorage.removeItem(storageKey);
+    localStorage.removeItem(activeKey);
+    ensureThreads();
+    renderThreadDropdown();
+    renderMessages();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const txt = input.value;
+    input.value = '';
+    send(txt);
+  });
+
+  // Enter to send, Shift-Enter for newline.
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+})();
+</script>
+{% endblock %}

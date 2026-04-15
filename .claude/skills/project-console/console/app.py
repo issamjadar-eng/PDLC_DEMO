@@ -12,6 +12,7 @@ from console.chat.router import router as chat_router
 from console.config import get_config
 from console.dashboards.router import router as dashboards_router
 from console.documents.router import router as documents_router
+from console.trace_matrix.router import router as trace_matrix_router
 
 
 @asynccontextmanager
@@ -49,6 +50,7 @@ async def theme_context(request: Request, call_next):
 app.include_router(chat_router)
 app.include_router(documents_router)
 app.include_router(dashboards_router)
+app.include_router(trace_matrix_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

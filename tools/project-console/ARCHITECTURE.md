@@ -55,13 +55,14 @@ This is the central rule that makes the whole tool free to run.
 
 ## 4. Information architecture
 
-The console has **four top-level sections**, plus a landing page:
+The console has **five top-level sections**, plus a landing page:
 
 | Section | What it is | LLM? |
 |---|---|---|
 | **Agents** | Chat with domain agents — either solo or as panels (teams of domain agents). | Yes, streaming. |
 | **Documents** | Browse the project document tree (`docs/`, `tasks/`, pinned files). View files in a format-aware renderer; Claude auto-summarizes text-like files on view. | Rendering: no. Auto-summary: yes, streaming. |
 | **Dashboards** | Deterministic HTML views over project data, optionally with a chat sidecar that understands the dashboard's data. | Rendering: no. Sidecar: yes. |
+| **Trace Matrix** | Per-DHF layered view of the bidirectional design-controls trace (UN ↔ DI ↔ Architecture ↔ V&V + Risk overlay), rendered from a JSON sidecar authored by the `trace-matrix` skill. Tabbed layer switcher; per-row expand for metadata, forward, reverse; criticality / orphan filters; inline Rebuild button; **Systems Engineering Assistant** drawer scoped to the current DHF's sidecar. | Rendering: no (pure read of sidecar JSON). SE Assistant: yes, streaming. |
 | **Workflows** | Parameterized jobs with inputs (file upload, text, select) → streaming progress → result view. | Yes, streaming. |
 
 The landing page (`/`) shows project identity (name, device, regulatory pathway — pulled from `project.yml`) and cards for each installed section. The shell template `_base.html` carries a top nav linking to each section.
@@ -69,22 +70,37 @@ The landing page (`/`) shows project identity (name, device, regulatory pathway 
 ### Routes
 
 ```
-/                                       landing page
-/dashboards                              index of dashboards
-/dashboards/{name}                       render one dashboard (HTML)
-/dashboards/{name}/chat/stream           SSE sidecar (only if CHAT_ENABLED)
-/agents                                  index of domain agents (solo + panels, badged)
-/agents/{name}                           chat UI
-/agents/{name}/stream                    SSE chat endpoint
-/documents                               document tree root (docs/, tasks/, pinned files)
-/documents/browse/{virtual_path}         directory listing at a virtual path
-/documents/view/{virtual_path}           format-aware file view
-/documents/raw/{virtual_path}            raw file bytes (downloads, PDF embeds, images)
-/documents/summary/{virtual_path}        SSE — Claude-generated summary of a text file
-/workflows                               index of workflows
-/workflows/{name}                        input form
-/workflows/{name}/runs/{run_id}          result view; SSE stream while running
+/                                              landing page
+/dashboards                                     index of dashboards
+/dashboards/{name}                              render one dashboard (HTML)
+/dashboards/{name}/chat/stream                  SSE sidecar (only if CHAT_ENABLED)
+/agents                                         index of domain agents (solo + panels, badged)
+/agents/{name}                                  chat UI
+/agents/{name}/stream                           SSE chat endpoint
+/documents                                      document tree root (docs/, tasks/, pinned files)
+/documents/browse/{virtual_path}                directory listing at a virtual path
+/documents/view/{virtual_path}                  format-aware file view
+/documents/raw/{virtual_path}                   raw file bytes (downloads, PDF embeds, images)
+/documents/summary/{virtual_path}               SSE — Claude-generated summary of a text file
+/trace-matrix                                   index (one card per DHF, has_sidecar / needs_build)
+/trace-matrix/{dhf}                             layered tabbed view with filters + SE Assistant drawer
+/trace-matrix/{dhf}/raw                         raw JSON sidecar (debug)
+/trace-matrix/build              [POST]         shell to trace-matrix skill; rebuild all DHFs
+/trace-matrix/{dhf}/build        [POST]         rebuild one DHF
+/trace-matrix/{dhf}/chat/stream  [POST, SSE]    SE Assistant — injects compact sidecar text into system prompt
+/workflows                                      index of workflows
+/workflows/{name}                               input form
+/workflows/{name}/runs/{run_id}                 result view; SSE stream while running
 ```
+
+### Trace Matrix section — loose coupling rules
+
+The Trace Matrix section has **zero import-time dependency** on the `trace-matrix` skill. It reads `trace-matrix.json` sidecars from conventional DHF locations and renders them. The skill is the single writer; the console is pure read.
+
+- **Section discovery** is presence-based: scan each DHF in `project.yml` for `design-controls/trace-matrix/trace-matrix.json`. The section nav entry is always present, but the index page shows empty cards with per-DHF "Build this DHF" buttons for DHFs whose sidecar is missing.
+- **Rebuild buttons** shell out to `.claude/skills/trace-matrix/scripts/build.py` via subprocess. If the skill is not installed, the buttons are hidden.
+- **Source-doc links** in the per-DHF view read the `layer.source_files` field from the sidecar — *never* a hardcoded file map. The contract between skill and console is the JSON shape.
+- **SE Assistant drawer** is a right-side slide-out with resizable width (default 40vw, persists to `localStorage["tm-assistant-width"]`) and multi-thread chat history stored entirely client-side under `localStorage["tm-chats-<dhf>"]`. The POST endpoint is stateless — the browser sends history with every request. A minimal inline markdown renderer handles headers, bold, italic, inline/block code, lists, pipe tables, and links in assistant responses.
 
 ---
 
@@ -124,6 +140,10 @@ tools/project-console/
 │   │   ├── tree.py              # dir walk, path resolver, breadcrumbs, excerpts
 │   │   ├── renderer.py          # format dispatch: md → html, pdf, text, image, …
 │   │   └── summary.py           # Claude-backed summary streaming
+│   ├── trace_matrix/
+│   │   ├── __init__.py
+│   │   ├── router.py            # /trace-matrix/* routes + SE Assistant SSE
+│   │   └── loader.py            # scans project.yml DHFs for sidecar JSON files
 │   ├── workflows/
 │   │   ├── __init__.py
 │   │   ├── registry.py          # auto-discovers workflow modules
@@ -137,12 +157,16 @@ tools/project-console/
 │       │   ├── console.css
 │       │   └── chat.js          # shared SSE client (agents + dashboard sidecars)
 │       └── templates/
-│           ├── _base.html       # shell: nav + layout
-│           ├── index.html       # landing with three section cards
+│           ├── _base.html                  # shell: nav + layout
+│           ├── index.html                  # landing with section cards
 │           ├── dashboards_index.html
-│           ├── dashboard.html   # dashboard view with optional chat panel
+│           ├── dashboard.html              # dashboard view with optional chat panel
 │           ├── agents_index.html
-│           ├── chat.html        # full-page chat UI (solo or panel)
+│           ├── chat.html                   # full-page chat UI (solo or panel)
+│           ├── trace_matrix_index.html     # /trace-matrix index
+│           ├── trace_matrix_view.html      # /trace-matrix/{dhf} — tabbed layers,
+│           │                               # row-level expand, SE Assistant drawer,
+│           │                               # inline markdown renderer
 │           ├── workflows_index.html
 │           ├── workflow_form.html
 │           └── workflow_run.html
@@ -402,3 +426,5 @@ Things we are deliberately **not** doing yet, but may revisit:
 | 2026-04-12 | Initial architecture. | Establishes `tools/project-console/` as the local web UI for dashboards + Claude Pro/Max-backed chat. |
 | 2026-04-12 | Expanded to three sections (Dashboards, Agents, Workflows) with a shell nav and landing page; added dashboard chat sidecars (opt-in `CHAT_ENABLED` + `chat_context()`); added panel domain agents (round-robin orchestration); renamed `personas/` → `domain_agents/` with `DomainAgent` type; added workflow model with file uploads, streaming runs, and `data/runs/{run_id}/` artifacts. Set 50 KB cap on dashboard chat context and 10 MB cap on workflow uploads. v1 is markdown-only for uploads; PDF/DOCX deferred to `docflow`. | Captures the full scope agreed in the architecture conversation. |
 | 2026-04-12 | Added Documents section as fourth top-level section (Agents · Documents · Dashboards · Workflows). File tree browser over `docs/`, `tasks/`, and pinned `project.yml`; `src/` and `.claude/` explicitly excluded. Format-aware rendering (markdown, HTML, text, PDF, images) with Download fallback for unsupported types. Auto-summary on view for text files via SSE, 80 KB input cap. Path traversal containment rule added. | Gives demo audiences a first-class way to explore the project tree and get instant Claude summaries of DHF artifacts. |
+| 2026-04-15 | **Added Trace Matrix as a fifth top-level section** (task 016). Loose coupling with the `trace-matrix` skill: console only reads `trace-matrix.json` sidecars from DHF folders, never imports from the skill. Rebuild buttons shell out to the skill via subprocess. Per-DHF view uses a tabbed layer switcher (UN / DI / Architecture / V&V / Risk), full-viewport table, row-level expand (metadata in requirement column, forward+reverse trace lists in their own columns), criticality + orphan filters, and an expand/collapse-all toolbar. Source-doc links read the sidecar's `source_files` field — no hardcoded paths in the console. | Makes the bidirectional design-controls trace the centerpiece of the console demo, with "show missing as missing" gap surfacing (orphan highlighting, empty-layer banners). |
+| 2026-04-15 | **Added Systems Engineering Assistant drawer** to the Trace Matrix per-DHF view (task 016). Right-side slide-out, resizable (default 40vw, 360–85vw range, width persisted to localStorage). Multi-thread chat history stored entirely client-side under `localStorage["tm-chats-<dhf>"]`; server endpoint is stateless. `POST /trace-matrix/{dhf}/chat/stream` injects a compact single-line-per-item rendition of the sidecar into the system prompt and streams via the existing `chat/sdk_client.stream_response()` path. Thread dropdown, new-conversation, and clear-history controls. Inline vanilla-JS markdown renderer (headers, bold, italic, inline+fenced code, lists, pipe tables, links; HTML-escaped first) — no library, ~90 lines. Assistant bubbles get the rendered HTML live as tokens stream; user bubbles stay plain text. | Makes the trace matrix queryable in natural language during design reviews without leaving the view. Persistent local-only history matches the "no server-side state, no auth" posture. |

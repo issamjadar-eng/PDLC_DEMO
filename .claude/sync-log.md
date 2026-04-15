@@ -4,6 +4,36 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-15 — push --merge (task 017 change-control skill scaffold)
+
+- Files: 20 (`skills/change-control/` — full scaffold)
+- Branch: `sync/pdlc-demo-change-control-2026-04-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/19
+- Commit subject: "Add change-control skill scaffold (design-captured, stubs)"
+- Status: merged (`--merge` requested)
+- Merge commit: `0588d71`
+- Hitachi HEAD after sync: `0588d71`
+- Notes: Design-captured scaffold only. Strategy C hybrid freeze-point model (draft → frozen → released), PreToolUse hook consent prompt, 6 extensibility seams + 8 open questions documented in SKILL.md. No live connectors yet.
+
+---
+
+## 2026-04-15 — push --merge (task 016 trace-matrix skill + project-console Trace Matrix section)
+
+- Files: 23
+  - 16 new files under `skills/trace-matrix/` — full v2 skill package (adapter_api.py, build.py, analyze.py, emit.py, graph.py, 5 default parsers, markdown_table.py, SKILL.md, .gitignore)
+  - 5 new files under `skills/project-console/console/trace_matrix/` + `web/templates/` — loader, router, two Jinja templates, package init
+  - 2 modified files in `skills/project-console/` — `console/app.py` (router include) + `console/web/templates/_base.html` (nav link). Both diffs purely additive; no upstream advances to merge.
+- Branch: `sync/pdlc-demo-trace-matrix-2026-04-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/18
+- Commit subject: "Add trace-matrix skill + project-console Trace Matrix section"
+- Status: merged (`--merge` requested)
+- Merge commit: `fed4644`
+- Hitachi HEAD after sync: `fed4644` (→ advanced to `0588d71` by the subsequent change-control push)
+- Notes: Adapter-generation model — skill ships sensible defaults plus a `rational_check` at init time; when defaults fail on a source doc, `/trace-matrix init` generates a per-project adapter file into `tools/project-console/trace-matrix/adapters/`. Build is always deterministic. Sidecar bumped to v1.1 with `source_files` + per-layer `warnings`. Console section is loose-coupled: reads JSON sidecars only, never imports from the skill. Includes the Systems Engineering Assistant drawer (resizable, localStorage-persisted threads, inline vanilla-JS markdown renderer with table support).
+- Pre-push hygiene: scrubbed `__pycache__` from `skills/project-console/console/`. `sync.sh check` walks the filesystem directly and doesn't honor `.gitignore`, so build artifacts would otherwise have been staged into the hitachi PR. Filed as a follow-up for `sync-skills` v4.
+
+---
+
 ## 2026-04-14 — push --merge (project-console 1.0.2 — default panels + assistant-framing rename)
 
 - Files: 17 (13 rewritten persona templates + 2 new panels + SKILL.md + scaffold.py + VERSION)
