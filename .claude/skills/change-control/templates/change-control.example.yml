@@ -1,0 +1,77 @@
+# change-control.yml — project config for the change-control skill
+#
+# Copy this file to the project root and edit the values to match the
+# Atlassian + PLM environment for this project. Created automatically by
+# `change-control:init` if not already present.
+#
+# STATUS: example only — the skill is in scaffold mode and does not read
+# this file yet. Schema may evolve before v1 ships.
+
+# ---------------------------------------------------------------------------
+# Deployment flavor — Atlassian Cloud or Data Center
+# ---------------------------------------------------------------------------
+deployment:
+  flavor: cloud         # cloud (v1 supported) | data_center (v2 planned)
+
+# ---------------------------------------------------------------------------
+# Confluence — base instance + target space for published pages
+# ---------------------------------------------------------------------------
+confluence:
+  base_url: https://example.atlassian.net
+  space_key: PP3500
+  parent_page_id: null  # optional — root for published pages
+  publisher: mark       # mark (kovetskiy/mark) — only supported v1
+
+# ---------------------------------------------------------------------------
+# Review plugin — Confluence add-on providing Part 11 e-signatures
+# ---------------------------------------------------------------------------
+review_plugin:
+  type: comala          # comala (v1 supported) | softcomply (v2 planned)
+  workflow_name: "Medical Device DHF"  # the Comala workflow to apply
+
+# ---------------------------------------------------------------------------
+# Jira — ECR project + issue type
+# ---------------------------------------------------------------------------
+jira:
+  base_url: https://example.atlassian.net
+  project_key: PP3500
+  ecr_issue_type: "Task"  # or a custom "ECR" issue type if the client has one
+  required: at_freeze     # always | at_freeze | conditional | never
+  # `at_freeze` means the ECR is required at freeze time, but only for doc
+  # classes whose policy below has requires_jira_ecr: true. See task 017
+  # open question #3 for the full discussion.
+
+# ---------------------------------------------------------------------------
+# Windchill — Phase 3 vault (stub in v1)
+# ---------------------------------------------------------------------------
+windchill:
+  base_url: https://windchill.example.com
+  transport: rest       # rest (planned) | soap | file_drop
+  enabled: false        # disable until Phase 3 implementation lands
+
+# ---------------------------------------------------------------------------
+# Doc-class policy — which doc kinds need control, and how
+# ---------------------------------------------------------------------------
+doc_classes:
+  design-input:
+    requires_part11_signature: true
+    requires_jira_ecr: true
+    target_space: PP3500
+  vv-protocol:
+    requires_part11_signature: true
+    requires_jira_ecr: true
+    target_space: PP3500
+  risk-file:
+    requires_part11_signature: true
+    requires_jira_ecr: true
+    target_space: PP3500
+  working-analysis:
+    requires_part11_signature: false
+    requires_jira_ecr: false   # never frozen — drafts only
+
+# ---------------------------------------------------------------------------
+# Credential storage — how the skill reads service account secrets
+# ---------------------------------------------------------------------------
+credentials:
+  source: keyring       # keyring (default) | env
+  service_name: change-control-bot
