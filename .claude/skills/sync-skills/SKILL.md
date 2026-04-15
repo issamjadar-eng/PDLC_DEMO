@@ -1,8 +1,8 @@
 ---
 name: sync-skills
 description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge)."
-version: 2
-updated: 2026-04-12
+version: 4
+updated: 2026-04-15
 ---
 
 # Sync Skills

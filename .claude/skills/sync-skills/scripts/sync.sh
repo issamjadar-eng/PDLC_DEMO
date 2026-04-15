@@ -9,6 +9,12 @@
 #   push-finalize <commit-msg>     git add + commit in hitachi, push the current branch.
 #   hitachi-path                   Print the resolved hitachi path (from project.yml local_path, else ../hitachi).
 #   hitachi-head                   Print the current hitachi HEAD commit hash (short).
+#   skill-version <skill-path>     Print the `version:` value from a SKILL.md's frontmatter.
+#   post-update-actions <skill-path> <from-version> <to-version>
+#                                  Read the SKILL.md changelog, find version entries in (from, to],
+#                                  and print any `**Post-update:**` blocks they contain. Used by
+#                                  `pull` to surface required user actions after applying updates.
+#                                  Paths are relative to the local `.claude/` base (e.g., `skills/task`).
 #
 # All paths passed in are relative to the registry root: `skills/foo/bar.md` or `agents/foo.md`.
 # The script refuses to touch anything outside `skills/` and `agents/`.
@@ -68,6 +74,114 @@ _hitachi_clean() {
 cmd_hitachi_path() { echo "$HITACHI"; }
 cmd_hitachi_head() { git -C "$HITACHI" rev-parse --short HEAD; }
 
+# Print the `version:` value from a SKILL.md frontmatter block.
+# Usage: skill-version <skill-path>   where <skill-path> is `skills/<name>`
+# If the file is missing or the frontmatter has no `version:` line, prints 0.
+cmd_skill_version() {
+  local rel="$1"
+  _assert_safe_path "$rel/SKILL.md"
+  local file="$LOCAL_BASE/$rel/SKILL.md"
+  if [[ ! -f "$file" ]]; then
+    echo "0"
+    return 0
+  fi
+  awk '
+    /^---[[:space:]]*$/ { fm++; next }
+    fm == 1 && /^version:/ {
+      sub(/^version:[[:space:]]*/, "")
+      sub(/[[:space:]]*#.*$/, "")
+      print
+      exit
+    }
+    fm >= 2 { exit }
+  ' "$file" | tr -d '[:space:]' || echo "0"
+}
+
+# Extract post-update action blocks from a skill's changelog for versions in (from, to].
+# A post-update block starts at a line beginning with (optionally indented) `**Post-update:**`
+# and continues until the next top-level changelog entry (`- N (YYYY-MM-DD):`) or end of file.
+# Output format (one block per matched version):
+#   ### v<version>
+#   <block content, verbatim>
+#   <blank line>
+# Exits 0 even when nothing matches (so pull can call it unconditionally).
+cmd_post_update_actions() {
+  local rel="$1"
+  local from="${2:-0}"
+  local to="${3:-999}"
+  _assert_safe_path "$rel/SKILL.md"
+  local file="$LOCAL_BASE/$rel/SKILL.md"
+  [[ -f "$file" ]] || return 0
+
+  awk -v from="$from" -v to="$to" '
+    # Enter the ## Changelog section; leave on next top-level heading.
+    /^## Changelog[[:space:]]*$/ { in_cl = 1; next }
+    in_cl && /^## / { in_cl = 0 }
+    !in_cl { next }
+
+    # New version entry: "- 12 (2026-04-13): ..." or "- 12 (2026-04-13) ..."
+    /^- [0-9]+ / {
+      # Flush previous entry if it was in range and had a post-update block.
+      _flush()
+      # Parse the new version number (strip leading "- ", take first word).
+      line = $0
+      sub(/^- /, "", line)
+      split(line, parts, " ")
+      cur_ver = parts[1] + 0
+      if (cur_ver > from + 0 && cur_ver <= to + 0) {
+        collecting = 1
+        in_post = 0
+        buffer = ""
+      } else {
+        collecting = 0
+        in_post = 0
+        buffer = ""
+      }
+      next
+    }
+
+    collecting {
+      # Post-update block marker must be at the start of a continuation line
+      # (after optional indentation). This prevents accidental matches when
+      # an author mentions the marker literal inside prose. Authors who need
+      # to *talk about* the marker should use "post-update annotation" or
+      # other phrasing in descriptive text.
+      if (!in_post && $0 ~ /^[[:space:]]*\*\*Post-update:\*\*/) {
+        in_post = 1
+        # Strip leading indentation for cleaner output.
+        line2 = $0
+        sub(/^[[:space:]]+/, "", line2)
+        buffer = line2
+        next
+      }
+      if (in_post) {
+        # Blank line ends the post-update block — anything after it is
+        # prose that belongs to the next entry or is a separator before
+        # the next version.
+        if ($0 ~ /^[[:space:]]*$/) {
+          in_post = 0
+          next
+        }
+        # Still inside the block — accumulate the continuation line with
+        # indent stripped.
+        line2 = $0
+        sub(/^[[:space:]]+/, "", line2)
+        buffer = buffer "\n" line2
+      }
+    }
+
+    END { _flush() }
+
+    function _flush() {
+      if (collecting && in_post && buffer != "") {
+        print "### v" cur_ver
+        print buffer
+        print ""
+      }
+    }
+  ' "$file"
+}
+
 cmd_check() {
   # Fetch without mutating working tree; if behind, still don't pull — the
   # caller decides whether to advance (via `pull-file` on individual files, or
@@ -111,11 +225,25 @@ _walk_registry_tree() {
   local upstream_files
   upstream_files="$(git -C "$HITACHI" ls-tree -r --name-only "$upstream_ref" -- skills agents 2>/dev/null || true)"
 
-  # List local files under .claude/skills and .claude/agents
+  # List local files under .claude/skills and .claude/agents.
+  #
+  # Use `git ls-files -co --exclude-standard` so .gitignore is honored:
+  #   -c  tracked files
+  #   -o  other (untracked) files — so newly-authored skill files still
+  #       appear before they're committed
+  #   --exclude-standard  applies .gitignore, .git/info/exclude, and the
+  #       skill's own .gitignore (so __pycache__, *.pyc, .DS_Store, etc.
+  #       never leak into the diff or a push stage)
+  #
+  # This keeps the local walk symmetric with the upstream walk (both use
+  # git), and without honoring gitignore a plain `find` would otherwise
+  # drag build artifacts into push-stage copies.
   local local_files
   local_files="$(
-    { cd "$LOCAL_BASE" 2>/dev/null || exit 0
-      find skills agents -type f 2>/dev/null | LC_ALL=C sort
+    { cd "$PROJECT_DIR" 2>/dev/null || exit 0
+      git ls-files -co --exclude-standard -- .claude/skills .claude/agents 2>/dev/null \
+        | sed 's|^\.claude/||' \
+        | LC_ALL=C sort
     }
   )"
 
@@ -218,7 +346,18 @@ cmd_push_finalize() {
     echo "ERROR: push-finalize requires a commit message" >&2
     exit 2
   fi
-  git -C "$HITACHI" add -A skills agents
+  # Only include top-level dirs that actually exist in the registry. If the
+  # registry has moved agents under skills/ (as happened in hitachi PR #5),
+  # passing a missing `agents` pathspec to `git add` crashes with
+  # "fatal: pathspec 'agents' did not match any files".
+  local add_targets=()
+  [[ -d "$HITACHI/skills" ]] && add_targets+=("skills")
+  [[ -d "$HITACHI/agents" ]] && add_targets+=("agents")
+  if [[ ${#add_targets[@]} -eq 0 ]]; then
+    echo "ERROR: neither skills/ nor agents/ exists in hitachi checkout" >&2
+    exit 7
+  fi
+  git -C "$HITACHI" add -A "${add_targets[@]}"
   if [[ -z "$(git -C "$HITACHI" diff --staged --name-only)" ]]; then
     echo "nothing to commit — aborting push"
     exit 5
@@ -237,13 +376,15 @@ cmd_push_finalize() {
 # ─── Dispatch ──────────────────────────────────────────────────────────────
 
 case "${1:-}" in
-  check)          shift; cmd_check "$@" ;;
-  pull-file)      shift; cmd_pull_file "$@" ;;
-  push-prep)      shift; cmd_push_prep "$@" ;;
-  push-stage)     shift; cmd_push_stage "$@" ;;
-  push-finalize)  shift; cmd_push_finalize "$@" ;;
-  hitachi-path)   shift; cmd_hitachi_path ;;
-  hitachi-head)   shift; cmd_hitachi_head ;;
+  check)                shift; cmd_check "$@" ;;
+  pull-file)            shift; cmd_pull_file "$@" ;;
+  push-prep)            shift; cmd_push_prep "$@" ;;
+  push-stage)           shift; cmd_push_stage "$@" ;;
+  push-finalize)        shift; cmd_push_finalize "$@" ;;
+  hitachi-path)         shift; cmd_hitachi_path ;;
+  hitachi-head)         shift; cmd_hitachi_head ;;
+  skill-version)        shift; cmd_skill_version "$@" ;;
+  post-update-actions)  shift; cmd_post_update_actions "$@" ;;
   *)
     cat <<'USAGE' >&2
 Usage: sync.sh <command> [args]
@@ -256,6 +397,10 @@ Commands:
   push-finalize <commit-msg>     Commit staged changes in hitachi, push branch.
   hitachi-path                   Print resolved hitachi path.
   hitachi-head                   Print short HEAD hash of hitachi working checkout.
+  skill-version <skill-path>     Print version number from a local SKILL.md frontmatter.
+  post-update-actions <skill-path> <from> <to>
+                                 Print **Post-update:** blocks from a skill's changelog
+                                 for version entries in the range (from, to].
 
 Paths are relative to the registry root: `skills/<name>/...` or `agents/<name>`.
 The script refuses anything outside those roots.

@@ -1,6 +1,6 @@
 ---
 name: project-console
-description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
+description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
 ---
 
 # Project Console
@@ -91,10 +91,21 @@ When scraping, look in this priority order and stop at the first viable hit:
 **Write a `logo.meta.json`** alongside the downloaded logo recording the source URL, dimensions, format, and which heuristic tier picked it. This lets the user see why the skill chose what it did and swap to a better asset if they know of one.
 
 ### `run`
-Start the console locally.
+Start the console locally. **Fails fast** if another console is already listening on the configured port — for an idempotent start that automatically stops any existing instance, use `start` instead.
 
 1. Verify `tools/project-console/.project-console.manifest.json` exists (meaning it's been initialized).
 2. Run `tools/project-console/run.sh`. This runs `uv sync` on first launch, then starts uvicorn on `http://127.0.0.1:8765`.
+
+### `start`
+Idempotent launcher — **start or restart** in one command. If a console is already running on the configured port, `start` stops it first (TERM, then KILL if needed) and then launches fresh. This is the recommended way to reload after skill code changes, since `uvicorn --reload` does **not** watch the skill package.
+
+1. Verify `tools/project-console/.project-console.manifest.json` exists.
+2. Run `tools/project-console/start.sh`. The script:
+   - Reads `server.port` from `console.yaml` (falls back to `8765` if absent)
+   - Checks `lsof -ti tcp:$PORT` for any existing listener
+   - If found, sends SIGTERM to the PID(s); waits briefly; escalates to SIGKILL for any straggler
+   - Then `exec`s `run.sh` so the process table stays clean
+3. Exits with whatever `run.sh` exits with — typical foreground `uvicorn --reload`.
 
 ### `status`
 Report the install state: skill version, installed version, drift summary, theme in use, and count of agents/dashboards discovered.
@@ -163,6 +174,7 @@ The `console/` package is imported by the project's `run.sh` via `PYTHONPATH` in
 
 ## Changelog
 
+- 1.1.0 (2026-04-15): **New `start` action — idempotent launcher.** Adds `start.sh` to the scaffold alongside `run.sh`. `start` detects any process already listening on the configured port (`server.port` from `console.yaml`, fallback `8765`), stops it (SIGTERM, then SIGKILL on stragglers), and execs `run.sh`. Use this after pulling skill updates (`uvicorn --reload` does not watch the skill package), after a crashed session left a stale listener, or any time you want "start or restart" as a single command. `run` stays as the fail-fast launcher. Also adds `start.sh` to `PROJECT_OWNED` set and to the `sync` action's tracked file list so the scaffold upgrade path installs it into existing projects. **Post-update**: run `/project-console sync` to install `start.sh` into any existing `tools/project-console/` directory.
 - 1.0.2 (2026-04-14): Two changes — default panels + assistant-framing rename.
 
   **Default panels.** Adds two default panels to the template library so newly-initialized projects get working cross-functional voices out of the box.

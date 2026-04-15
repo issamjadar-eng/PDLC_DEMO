@@ -30,7 +30,7 @@ SCAFFOLD_DIRS = [
 
 # class map for the scaffolded files. Anything under console/ or the static
 # scaffold is skill-owned; everything in project-owned dirs is user territory.
-PROJECT_OWNED = {"agents/", "themes/", "console.yaml", ".env", "pyproject.toml", "run.sh"}
+PROJECT_OWNED = {"agents/", "themes/", "console.yaml", ".env", "pyproject.toml", "run.sh", "start.sh"}
 
 
 def sha256_file(path: Path) -> str:
@@ -131,6 +131,10 @@ RUN_SH_TEMPLATE = """\
 # project-console launcher. The FastAPI app code lives in the skill at
 # $CLAUDE_PROJECT_DIR/.claude/skills/project-console/console/; this script
 # injects that directory onto sys.path and runs uvicorn.
+#
+# Fails fast with EADDRINUSE if another console is already running on the
+# port. For an idempotent launch (stop any existing console first, then
+# start fresh), use `start.sh` instead.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -148,6 +152,48 @@ fi
 uv sync
 export PYTHONPATH="$SKILL_CONSOLE/..:${PYTHONPATH:-}"
 exec uv run uvicorn console.app:app --reload --host 127.0.0.1 --port 8765
+"""
+
+START_SH_TEMPLATE = """\
+#!/usr/bin/env bash
+# project-console start — idempotent launcher. Kills any process already
+# listening on the configured port, then execs run.sh. Use this whenever
+# skill code has changed (uvicorn --reload does NOT watch the skill
+# package) or when an earlier session left a stale console running.
+set -euo pipefail
+cd "$(dirname "$0")"
+
+# Resolve port: prefer console.yaml's server.port, fall back to 8765.
+PORT=8765
+if [ -f console.yaml ]; then
+  discovered=$(awk '
+    /^server:/ { s=1; next }
+    /^[^[:space:]]/ && s { s=0 }
+    s && /port:/ { gsub(/[^0-9]/, "", $2); if ($2 != "") { print $2; exit } }
+  ' console.yaml 2>/dev/null || true)
+  if [ -n "$discovered" ]; then
+    PORT="$discovered"
+  fi
+fi
+
+# Kill any existing listener on the port
+existing=$(lsof -ti "tcp:$PORT" 2>/dev/null || true)
+if [ -n "$existing" ]; then
+  pids=$(echo "$existing" | tr '\\n' ' ')
+  echo "project-console: stopping existing console on port $PORT (pid(s): $pids)"
+  # Best effort: TERM first, wait, then KILL stragglers
+  echo "$existing" | xargs -r kill 2>/dev/null || true
+  sleep 1
+  still=$(lsof -ti "tcp:$PORT" 2>/dev/null || true)
+  if [ -n "$still" ]; then
+    echo "project-console: force-killing stragglers on port $PORT"
+    echo "$still" | xargs -r kill -9 2>/dev/null || true
+    sleep 1
+  fi
+fi
+
+echo "project-console: starting on port $PORT..."
+exec bash ./run.sh
 """
 
 README_TEMPLATE = """\
@@ -239,6 +285,8 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool) -> None:
     (tool_root / "pyproject.toml").write_text(PYPROJECT_TEMPLATE)
     (tool_root / "run.sh").write_text(RUN_SH_TEMPLATE)
     (tool_root / "run.sh").chmod(0o755)
+    (tool_root / "start.sh").write_text(START_SH_TEMPLATE)
+    (tool_root / "start.sh").chmod(0o755)
     (tool_root / "README.md").write_text(README_TEMPLATE)
     (tool_root / ".gitignore").write_text(GITIGNORE_TEMPLATE)
     (tool_root / ".env.example").write_text(
@@ -292,6 +340,7 @@ def sync_scaffold(project_root: Path, skill_root: Path) -> None:
     # Files we replace in sync (skill-owned templates)
     skill_owned = [
         ("run.sh", RUN_SH_TEMPLATE, 0o755),
+        ("start.sh", START_SH_TEMPLATE, 0o755),
     ]
     updated = []
     for rel, content, mode in skill_owned:
