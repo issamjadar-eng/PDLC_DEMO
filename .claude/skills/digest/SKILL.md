@@ -1,7 +1,7 @@
 ---
 name: digest
 description: "Project activity digest — automatic morning briefing at SessionStart (12h throttled per user) and on-demand append to the project CHANGELOG.md. TRIGGER when the user says: 'update the project changelog', 'build the changelog', 'add to CHANGELOG.md', 'what changed today', 'morning briefing', 'daily digest', 'project changelog', 'summarize recent commits', 'recap the project activity', 'what did people do since yesterday'."
-version: 3
+version: 4
 updated: 2026-04-20
 ---
 
@@ -147,6 +147,8 @@ The significance rules live in `scripts/build_changelog.py` as a constant at the
 
 ## Changelog
 
+- 4 (2026-04-20): **Readable CHANGELOG format.** Each entry now leads with a bold plain-English headline + optional body sentence, with the task ref / SHA / author / date relegated to a muted italic trace footer. Two generation modes: **mechanical** (default) extracts the first paragraph of each commit body (stripping trailers like `Co-Authored-By:`) and cleans the subject — zero token cost. **LLM** (`--llm` flag, auto-enabled on `--retrospective`) batches all commits into a single `claude -p --model haiku --output-format json` call for polished rewrites; results cached at `.claude/state/digest-llm-cache.json` keyed by SHA so incremental runs don't re-summarize. Critical: `claude -p` runs with `cwd=/tmp` and `CLAUDE_*` env stripped so project hooks + CLAUDE.md don't pollute the invocation (62k context tokens avoided, hooks don't fire against the sub-invocation). Built under ben/021.
+  **Post-update:** Existing CHANGELOG sections continue to render; `/digest log` going forward uses the new format. Re-run `/digest log --retrospective` to regenerate the baseline in readable form (one-time ~$0.10 LLM cost for ~35 commits via haiku). Cache file is gitignored via `.claude/state/`.
 - 3 (2026-04-20): **Roster-driven state-file key.** `hooks/session-briefing.sh` now calls `.claude/skills/secops/scripts/resolve_user.py --task-folder` to resolve the current user to their `team.active[].task_folder` entry and keys the throttle state file on that (`briefing-last-shown-<task-folder>.txt`). Falls back to raw email slug if no roster match. Pair with secops v3 which aligns `git config` at setup time — git email follows the roster from then on, so briefings and commits share the same identity source. Built under ben/020.
   **Post-update:** Existing projects should delete stale `briefing-last-shown-<email-slug>.txt` state files after migration. On PDLC_DEMO we renamed `briefing-last-shown-xavier-ben-gmail-com.txt` → `briefing-last-shown-ben.txt` to preserve the active throttle window.
 - 2 (2026-04-20): **Rewrite bare `task NNN:` → `task <person>/NNN:`** in both `digest.py` and `build_changelog.py` output. Commit subjects historically use bare task numbers; the project convention (`.claude/skills/lessons/SKILL.md:115`) requires the person prefix in cross-artifact references. The rewrite resolves the person by globbing `tasks/*/NNN-*.md`; unresolvable numbers are left alone. Applies to daily briefings, retrospective CHANGELOG sections, and incremental `/digest log` runs. Caught immediately after v1 shipped when the retrospective CHANGELOG.md used bare refs. Built under ben/019.
