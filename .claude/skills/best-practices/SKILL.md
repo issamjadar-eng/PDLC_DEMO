@@ -1,8 +1,8 @@
 ---
 name: best-practices
 description: "Audit project setup against best practices from a shared registry and local skills — checks CLAUDE.md, folder structure, standards, tasks, DHF layout with parallel subagent fan-out"
-version: 9
-updated: 2026-04-13
+version: 10
+updated: 2026-04-16
 ---
 
 # Best Practices Audit
@@ -360,6 +360,7 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 | Setup guide covers conversation hygiene | `setup.md` contains guidance on Claude conversation privacy and data awareness | Recommended | shared |
 | Setup guide covers integration awareness | `setup.md` contains guidance on MCP/integration data flow and account usage | Recommended | shared |
 | Agent design principles documented | `.claude/skills/shared/agent-design-principles.md` exists | Required | shared |
+| Per-skill agents installed as symlinks | For every `.claude/agents/<name>.md` where the same basename exists under any `.claude/skills/*/agents/<name>.md`, the `.claude/agents/` entry must be a symlink pointing at the skill-owned source (verify via `test -L` and `readlink`). Regular files with no matching skill source are standalone agents and are exempt; regular files that DO have a matching skill source are drift candidates (project forks must be documented in `.claude/sync-log.md` to pass). | Required | shared |
 | Evaluative skills document detection tiers | Every `.claude/skills/*/SKILL.md` that contains agent prompts (has an `agents/` subdirectory) or performs conflict detection / comparison / routing documents both programmatic (Tier 1) and semantic (Tier 2) evaluation approaches, or explicitly states why only one tier applies | Recommended | shared |
 | Security hook installed | `.claude/settings.json` SessionStart hooks array contains a command referencing `security-assert.sh` | Required | shared |
 | Secops agent exists | `.claude/agents/project-secops.md` exists | Required | shared |
@@ -378,6 +379,8 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 
 ## Changelog
 
+- 10 (2026-04-16): Added Required check `Per-skill agents installed as symlinks`. For every `.claude/agents/<name>.md` whose basename matches a file under any `.claude/skills/*/agents/`, the installed copy must be a symlink (`test -L`) pointing at the skill-owned source. Regular files with no matching source remain exempt (standalone registry agents). Regular files with a matching source pass only if the fork is documented in `.claude/sync-log.md` — otherwise they are silent drift. Pairs with `skill-creator` v2 which now mandates agent symlinks in every `setup` action. Rationale: advisors skill `init` was copying agent files, which drifted whenever `/sync-skills pull` updated the skill-owned source.
+  **Post-update:** Projects using the advisors skill must delete copies in `.claude/agents/` and re-run `/advisors init` (or the skill's new symlink-based setup) to regenerate them as symlinks. Running `/best-practices` before the fix will FAIL on the new check.
 - 9 (2026-04-13): **Subagent dispatch implementation.** Rewrote the Per-check execution logic section to implement task 007 P5.5a — when `project.dhfs[]` has N>1 entries, `per-dhf` checks fan out to per-DHF subagents via the Agent tool (one Agent call per DHF in a single message for parallelism); `per-submission` checks fan out to per-composition-manifest subagents. Each subagent reads its assigned slice, runs the owning skill's "How to verify" checks, and returns a structured JSON findings list. Added verbatim subagent prompt templates for both pools (per-dhf and per-submission), JSON response schema, dispatch-error handling (malformed JSON, timeout, crash → synthetic FAIL, continue), N=1 short-circuit optimization (no subagent spawn when the DHF list has one entry), and cost envelope. Single-dhf mode is byte-identical to v8 so deterministic output is preserved. Backward compatible with v8 in all other respects.
   **Post-update:** No user action needed. v9 only activates subagent fan-out when `project.yml` `dhfs[]` has more than one entry — projects with one DHF continue to use the v8 serial path exactly as before. The Agent tool is used via Claude Code's built-in parallelism (multiple Agent calls in one message run concurrently); no hook registration or configuration is required.
 - 8 (2026-04-13): **Unified DHF shape support.** Added `Scope` column parsing (values: `shared`, `per-dhf`, `per-submission`, `cross-cutting`; default `shared` when absent). Added per-dhf iteration that runs a check once per `project.dhfs[]` entry with the DHF root as the implicit working directory. Added per-submission iteration over `submissions/*/` via Glob. Added cross-cutting checks that enumerate `project.dhfs[]` directly: Project has at least one DHF, DHF leaf names unique, Platform DHFs have children, Unreferenced DHFs flagged, Composition manifests exist. Added multi-dhf grouped report format (Shared / Per-DHF / Per-Submission / Cross-Cutting sections). Subagent dispatch model (task 007 P5.5a) is **specified but not yet implemented** — v8 runs all checks in the parent context, iterating serially. Full subagent fan-out is a follow-up task. See `tasks/ben/007-sub-dhf-migration.md` for the full design rationale and P5.5a contract.

@@ -46,7 +46,7 @@
           {% endif %}
           <details class="prompt-details">
             <summary>Panel system prompt</summary>
-            <pre class="prompt-text">{{ panel_detail.system_prompt }}</pre>
+            <div class="prompt-text rendered-md" data-raw-prompt="{{ panel_detail.system_prompt | e }}"></div>
           </details>
         </section>
         {% for m in member_details %}
@@ -61,7 +61,7 @@
           </ul>
           <details class="prompt-details">
             <summary>System prompt</summary>
-            <pre class="prompt-text">{{ m.system_prompt }}</pre>
+            <div class="prompt-text rendered-md" data-raw-prompt="{{ m.system_prompt | e }}"></div>
           </details>
         </section>
         {% endfor %}
@@ -79,7 +79,7 @@
           {% endif %}
           <details class="prompt-details">
             <summary>System prompt</summary>
-            <pre class="prompt-text">{{ detail.system_prompt }}</pre>
+            <div class="prompt-text rendered-md" data-raw-prompt="{{ detail.system_prompt | e }}"></div>
           </details>
         </section>
       {% endif %}
@@ -94,5 +94,14 @@
 </section>
 </div>
 <script src="/static/markdown.js"></script>
+<script>
+document.querySelectorAll('.rendered-md[data-raw-prompt]').forEach(el => {
+  const raw = el.getAttribute('data-raw-prompt');
+  // Decode HTML entities back to text, then render markdown
+  const ta = document.createElement('textarea');
+  ta.innerHTML = raw;
+  el.innerHTML = renderMarkdown(ta.value);
+});
+</script>
 <script src="/static/chat.js"></script>
 {% endblock %}

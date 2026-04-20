@@ -32,13 +32,47 @@
       }
     };
 
+    let inTable = false;
+    let tableHead = false;
+
+    const closeTable = () => {
+      if (inTable) {
+        out.push("</tbody></table>");
+        inTable = false;
+        tableHead = false;
+      }
+    };
+
+    const isTableRow = (l) => l.trim().startsWith("|") && l.trim().endsWith("|");
+    const isSeparator = (l) => /^\|[\s:|-]+\|$/.test(l.trim());
+    const parseRow = (l, tag) => {
+      const cells = l.trim().replace(/^\||\|$/g, "").split("|");
+      return "<tr>" + cells.map(c => `<${tag}>${inlineMd(c.trim())}</${tag}>`).join("") + "</tr>";
+    };
+
     for (const raw of lines) {
       const line = escapeHtml(raw);
       const bullet = /^\s*[-*]\s+(.*)$/.exec(line);
       const heading = /^(#{1,6})\s+(.*)$/.exec(line);
 
-      if (bullet) {
+      if (isTableRow(line)) {
         flushPara();
+        closeList();
+        if (isSeparator(line)) {
+          tableHead = true;
+          continue;
+        }
+        if (!inTable) {
+          out.push('<table class="md-table"><thead>');
+          out.push(parseRow(line, "th"));
+          out.push("</thead><tbody>");
+          inTable = true;
+          continue;
+        }
+        out.push(parseRow(line, "td"));
+      } else if (bullet) {
+        flushPara();
+        closeTable();
         if (!inList) {
           out.push("<ul>");
           inList = true;
@@ -47,18 +81,22 @@
       } else if (heading) {
         flushPara();
         closeList();
+        closeTable();
         const level = Math.min(heading[1].length + 2, 6);
         out.push(`<h${level}>${inlineMd(heading[2])}</h${level}>`);
       } else if (line.trim() === "") {
         flushPara();
         closeList();
+        closeTable();
       } else {
         closeList();
+        closeTable();
         para.push(line);
       }
     }
     flushPara();
     closeList();
+    closeTable();
     return out.join("\n");
   }
 

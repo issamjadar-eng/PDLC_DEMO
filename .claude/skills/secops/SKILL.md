@@ -1,8 +1,8 @@
 ---
 name: secops
 description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, and `attest` actions.
-version: 1
-updated: 2026-04-12
+version: 2
+updated: 2026-04-16
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -144,4 +144,6 @@ Alphabetical directory iteration (`secops` after `task`) naturally satisfies thi
 
 ## Changelog
 
+- 2 (2026-04-16): **Cross-platform regex fix in `security-assert.sh`.** 25+ uses of `\s` in `grep` and `sed` patterns silently no-op on macOS — BSD regex engines don't interpret `\s` as a whitespace class, so every yaml-parsing helper (`yaml_val`, `yaml_list`, `yaml_team_github`, `yaml_task_folder_for`) returned empty strings, and the hook early-exited at line 176 (`[[ -z "$TASK_FOLDER" ]] && exit 0`). Net effect: **secops was a dead letter on macOS** — no team validation, no active-task gating, no SECOPS.md freshness check. Only Linux/WSL developers actually had security posture enforced. Fix: mass replacement of `\s` with the POSIX class `[[:space:]]` (works identically on both BSD and GNU regex). No behavior change on Linux. Discovered during task 067 cross-platform audit.
+  **Post-update:** no user action needed. Hook is installed via symlink — v2 takes effect on next `SessionStart`.
 - 1 (2026-04-12): Initial version. Packages `security-assert.sh`, `project-secops` agent, and canonical permissions allow list. `setup` action symlinks hooks, copies agent into `.claude/agents/`, registers SessionStart hook via `register-hook.sh`, and unions permissions into `settings.json`. Auto-discovered by `/medtech-docs init` Step 5. Created under task 049.

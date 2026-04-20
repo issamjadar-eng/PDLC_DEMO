@@ -1,0 +1,23 @@
+# Default advisors overlay seeded into project.yml by `/advisors init`.
+#
+# `enabled` curates which advisors are exposed to CC and the console.
+# `overlays.<name>.add` adds project-specific globs on top of the agent's
+# baseline (universal + shape-stable) sources.
+# `overlays.<name>.exclude` filters paths out of the resolved file list.
+#
+# Tier-3 (project-specific) entries start empty. Projects extend after init.
+advisors:
+  enabled:
+    - regulatory-affairs
+    - clinical-affairs
+    - risk-management
+  overlays:
+    regulatory-affairs:
+      add: []
+      exclude: []
+    clinical-affairs:
+      add: []
+      exclude: []
+    risk-management:
+      add: []
+      exclude: []

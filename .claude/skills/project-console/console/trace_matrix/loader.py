@@ -34,27 +34,48 @@ def _project_dhfs(repo_root: Path) -> list[dict]:
     return raw.get("dhfs") or []
 
 
+_DHF_BASE = ("docs", "project", "dhfs")
+
+
+def _resolve_dhf_root(repo_root: Path, entry: dict) -> tuple[str, Path] | None:
+    """Return (leaf_name, absolute_dhf_root) for a project.yml dhfs[] entry.
+
+    Tolerates two conventions that have appeared in the wild:
+      1. `path: <leaf>`               — PDLC_DEMO style (e.g. `path: pca-device`)
+      2. `path: docs/project/dhfs/<leaf>` — Arthrex PCCP style (full path)
+    An explicit `leaf:` field wins if present.
+
+    Returns None if the entry is unusable.
+    """
+    raw_path = (entry.get("path") or "").strip().rstrip("/")
+    leaf = (entry.get("leaf") or "").strip() or (raw_path.split("/")[-1] if raw_path else "")
+    if not leaf:
+        return None
+
+    if not raw_path:
+        dhf_root = repo_root.joinpath(*_DHF_BASE, leaf)
+    else:
+        parts = raw_path.split("/")
+        # If the path already starts with docs/project/dhfs/, use as-is; else prepend.
+        if tuple(parts[: len(_DHF_BASE)]) == _DHF_BASE:
+            dhf_root = repo_root.joinpath(*parts)
+        else:
+            dhf_root = repo_root.joinpath(*_DHF_BASE, *parts)
+    return leaf, dhf_root
+
+
 def list_dhfs(repo_root: Path) -> list[DHFEntry]:
     out: list[DHFEntry] = []
     for entry in _project_dhfs(repo_root):
-        path = entry.get("path")
-        if not path:
+        resolved = _resolve_dhf_root(repo_root, entry)
+        if resolved is None:
             continue
-        name = path.rstrip("/").split("/")[-1]
-        sidecar = (
-            repo_root
-            / "docs"
-            / "project"
-            / "dhfs"
-            / path
-            / "design-controls"
-            / "trace-matrix"
-            / "trace-matrix.json"
-        )
+        leaf, dhf_root = resolved
+        sidecar = dhf_root / "design-controls" / "trace-matrix" / "trace-matrix.json"
         out.append(
             DHFEntry(
-                name=name,
-                path=path,
+                name=leaf,
+                path=str(dhf_root.relative_to(repo_root)) if dhf_root.is_relative_to(repo_root) else str(dhf_root),
                 sidecar_path=sidecar,
                 has_sidecar=sidecar.is_file(),
             )

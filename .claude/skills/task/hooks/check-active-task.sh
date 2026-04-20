@@ -4,12 +4,29 @@
 # Denies Edit/Write/NotebookEdit tool calls when no active task is set.
 # State file: per-session, inside the project at .claude/state/
 #
-# Exempt paths: tasks/*, .claude/*
+# Exempt paths (runtime housekeeping, not design surfaces):
+#   - tasks/*                   — task docs themselves
+#   - .claude/state/*           — per-session state
+#   - .claude/settings*.json    — settings (often auto-managed by register-hook.sh)
+#   - .claude/sync-log.md       — written by /sync-skills
+#   - .claude/MEMORY.md         — memory index (auto-managed)
+#   - .claude/memory/*          — memory files (auto-managed)
+#
+# Everything else (CLAUDE.md, project.yml, .claude/skills/**, .claude/rules/**,
+# .claude/hooks/*, .claude/agents/*, docs/, etc.) requires an active task.
+#
+# Symlink safety: both the input path AND its canonical (symlink-resolved) path
+# are checked. A symlink in an exempt location whose target is a design surface
+# (e.g., .claude/agents/<name>.md → skills/<x>/agents/<name>.md) resolves to a
+# gated path and is correctly denied. Requires `realpath`, `readlink -f`, or
+# python3 on PATH for symlink resolution; falls back to raw path if none.
+#
 # Requires: jq
 #
 # Configured as: PreToolUse hook (matcher: Edit|Write|NotebookEdit)
-# See: tasks/ben/024-security-posture-automation.md for design
-# See: tasks/ben/027-task-gate-overhaul.md for this implementation
+# See: tasks/ben/024-security-posture-automation.md for original design
+# See: tasks/ben/027-task-gate-overhaul.md for session-state implementation
+# See: tasks/ben/066-task-gate-skill-source-scoping.md for this scoping rewrite
 
 INPUT=$(cat)
 
@@ -23,12 +40,48 @@ if [ -z "$SESSION_ID" ]; then
   SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
 fi
 
-# Exempt paths — these can be written without an active task
-case "$TARGET" in
-  */tasks/*|*/.claude/*)
-    exit 0
-    ;;
-esac
+# Canonicalize TARGET so symlinks can't bypass the gate. python3 is tried first
+# because `os.path.realpath` has uniform semantics across macOS and Linux and
+# tolerates missing leaf paths (e.g., Write creating a new file). If python3 is
+# unavailable, fall back to platform-specific tools:
+#   - GNU coreutils: `realpath -m` (macOS BSD realpath doesn't have -m)
+#   - GNU readlink:  `readlink -f` (BSD readlink doesn't have -f)
+#   - BSD realpath:  works when the file exists; for a missing leaf, resolve
+#                    the parent directory and re-append the basename.
+# If none succeed, fall through with the raw path — gate behavior then matches
+# v14 for that one call (permissive on symlinks, correct on regular paths).
+RESOLVED="$TARGET"
+if [ -n "$TARGET" ]; then
+  if command -v python3 >/dev/null 2>&1; then
+    RESOLVED=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$TARGET" 2>/dev/null || echo "$TARGET")
+  elif command -v realpath >/dev/null 2>&1; then
+    RESOLVED=$(realpath -m "$TARGET" 2>/dev/null \
+               || realpath "$TARGET" 2>/dev/null \
+               || printf '%s/%s' "$(realpath "$(dirname "$TARGET")" 2>/dev/null)" "$(basename "$TARGET")" \
+               || echo "$TARGET")
+  elif command -v readlink >/dev/null 2>&1 && readlink -f / >/dev/null 2>&1; then
+    RESOLVED=$(readlink -f "$TARGET" 2>/dev/null || echo "$TARGET")
+  fi
+fi
+
+# Check exempt patterns against both the raw target and the resolved path.
+# Only exempt if BOTH match (so a symlink whose target is gated gets gated).
+is_exempt() {
+  local p="$1"
+  case "$p" in
+    */tasks/*)                        return 0 ;;
+    */.claude/state/*)                return 0 ;;
+    */.claude/settings*.json)         return 0 ;;
+    */.claude/sync-log.md)            return 0 ;;
+    */.claude/MEMORY.md)              return 0 ;;
+    */.claude/memory/*)               return 0 ;;
+  esac
+  return 1
+}
+
+if is_exempt "$TARGET" && is_exempt "$RESOLVED"; then
+  exit 0
+fi
 
 # Auto-purge stale state files older than 7 days
 find "${CLAUDE_PROJECT_DIR}/.claude/state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null

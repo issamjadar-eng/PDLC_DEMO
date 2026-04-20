@@ -3,3 +3,8 @@ __pycache__/
 *.pyo
 .mypy_cache/
 .ruff_cache/
+# macOS Finder junk — custom folder icons and AppleDouble resource forks.
+# Icon\r files inside site-packages crash jsonschema.iterdir() at import.
+Icon?
+._*
+.DS_Store

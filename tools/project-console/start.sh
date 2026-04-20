@@ -25,12 +25,12 @@ if [ -n "$existing" ]; then
   pids=$(echo "$existing" | tr '\n' ' ')
   echo "project-console: stopping existing console on port $PORT (pid(s): $pids)"
   # Best effort: TERM first, wait, then KILL stragglers
-  echo "$existing" | xargs -r kill 2>/dev/null || true
+  echo "$existing" | xargs kill 2>/dev/null || true
   sleep 1
   still=$(lsof -ti "tcp:$PORT" 2>/dev/null || true)
   if [ -n "$still" ]; then
     echo "project-console: force-killing stragglers on port $PORT"
-    echo "$still" | xargs -r kill -9 2>/dev/null || true
+    echo "$still" | xargs kill -9 2>/dev/null || true
     sleep 1
   fi
 fi

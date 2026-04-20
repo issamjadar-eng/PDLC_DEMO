@@ -47,8 +47,15 @@ case "$ACTION" in
       exit 1
     fi
     if [ -f "$STATE_FILE" ]; then
-      # macOS sed requires '' after -i
-      sed -i '' "/^${TASK_ID}$/d" "$STATE_FILE" 2>/dev/null
+      # Portable line removal (BSD sed and GNU sed have incompatible -i syntax).
+      # grep -vxF prints every line that isn't an exact-match of TASK_ID.
+      # If grep returns no lines (task was the last entry), truncate the file.
+      if grep -vxF "$TASK_ID" "$STATE_FILE" > "$STATE_FILE.tmp" 2>/dev/null; then
+        mv "$STATE_FILE.tmp" "$STATE_FILE"
+      else
+        : > "$STATE_FILE"
+        rm -f "$STATE_FILE.tmp"
+      fi
     fi
     echo "Task $TASK_ID deactivated for session $SESSION_ID"
     ;;

@@ -64,7 +64,7 @@ extract_doc() {
 
         # Find the converted DOCX
         local converted
-        converted=$(find "${STAGING_DIR}" -name "*.docx" -maxdepth 1 | head -1)
+        converted=$(find "${STAGING_DIR}" -maxdepth 1 -name "*.docx" | head -1)
 
         if [[ -n "${converted}" ]]; then
             # Extract from converted DOCX

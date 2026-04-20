@@ -1,0 +1,1 @@
+../skills/advisors/agents/core-team-panel.md

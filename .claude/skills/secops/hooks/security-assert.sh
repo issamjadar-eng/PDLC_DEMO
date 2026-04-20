@@ -37,7 +37,7 @@ run_with_timeout() {
 
 # Extract a simple scalar value from project.yml (top-level or nested)
 yaml_val() {
-    grep -m1 "^\s*$1:" "$CONFIG_FILE" 2>/dev/null | sed "s/.*$1:[[:space:]]*//" | xargs
+    grep -m1 "^[[:space:]]*$1:" "$CONFIG_FILE" 2>/dev/null | sed "s/.*$1:[[:space:]]*//" | xargs
 }
 
 # Extract all values from a YAML list section (lines starting with "- ")
@@ -46,19 +46,19 @@ yaml_list() {
     local key="$1"
     local in_section=false
     while IFS= read -r line; do
-        if echo "$line" | grep -q "^\s*${key}:"; then
+        if echo "$line" | grep -q "^[[:space:]]*${key}:"; then
             in_section=true
             continue
         fi
         if $in_section; then
             # End of list: line is a new key (not indented with -)
-            if echo "$line" | grep -q '^\s*[a-z_]*:' && ! echo "$line" | grep -q '^\s*-'; then
+            if echo "$line" | grep -q '^[[:space:]]*[a-z_]*:' && ! echo "$line" | grep -q '^[[:space:]]*-'; then
                 break
             fi
-            if echo "$line" | grep -q '^\s*$\|^\s*#'; then
+            if echo "$line" | grep -q '^[[:space:]]*$\|^[[:space:]]*#'; then
                 continue  # skip blanks and comments
             fi
-            if echo "$line" | grep -q '^\s*-'; then
+            if echo "$line" | grep -q '^[[:space:]]*-'; then
                 echo "$line" | sed 's/^[[:space:]]*-[[:space:]]*//' | sed 's/[[:space:]]*#.*//' | sed 's/^"//' | sed 's/"$//' | tr -d '\r' | xargs
             fi
         fi
@@ -70,7 +70,7 @@ yaml_team_github() {
     local section="$1"  # "active" or "inactive"
     local in_section=false
     while IFS= read -r line; do
-        if echo "$line" | grep -q "^\s*${section}:"; then
+        if echo "$line" | grep -q "^[[:space:]]*${section}:"; then
             in_section=true
             continue
         fi
@@ -79,8 +79,8 @@ yaml_team_github() {
                 in_section=false
                 continue
             fi
-            if echo "$line" | grep -q '^\s*github:'; then
-                echo "$line" | sed 's/.*github:\s*//' | xargs
+            if echo "$line" | grep -q '^[[:space:]]*github:'; then
+                echo "$line" | sed 's/.*github:[[:space:]]*//' | xargs
             fi
         fi
     done < "$CONFIG_FILE"
@@ -92,7 +92,7 @@ yaml_task_folder_for() {
     local found_user=false
     local in_active=false
     while IFS= read -r line; do
-        if echo "$line" | grep -q '^\s*active:'; then
+        if echo "$line" | grep -q '^[[:space:]]*active:'; then
             in_active=true
             continue
         fi
@@ -101,15 +101,15 @@ yaml_task_folder_for() {
             continue
         fi
         if $in_active; then
-            if echo "$line" | grep -q "^\s*github:\s*${target_github}\s*$"; then
+            if echo "$line" | grep -q "^[[:space:]]*github:[[:space:]]*${target_github}[[:space:]]*$"; then
                 found_user=true
             fi
-            if $found_user && echo "$line" | grep -q '^\s*task_folder:'; then
-                echo "$line" | sed 's/.*task_folder:\s*//' | xargs
+            if $found_user && echo "$line" | grep -q '^[[:space:]]*task_folder:'; then
+                echo "$line" | sed 's/.*task_folder:[[:space:]]*//' | xargs
                 return 0
             fi
             # Reset if we hit a new list item without finding task_folder
-            if $found_user && echo "$line" | grep -q '^\s*-\s*name:'; then
+            if $found_user && echo "$line" | grep -q '^[[:space:]]*-[[:space:]]*name:'; then
                 found_user=false
             fi
         fi
@@ -149,21 +149,21 @@ if [[ -z "$TASK_FOLDER" ]]; then
         in_active=false
         found_email=false
         while IFS= read -r line; do
-            if echo "$line" | grep -q '^\s*active:'; then
+            if echo "$line" | grep -q '^[[:space:]]*active:'; then
                 in_active=true; continue
             fi
             if $in_active && echo "$line" | grep -q '^[a-z#]'; then
                 in_active=false; continue
             fi
             if $in_active; then
-                if echo "$line" | grep -q "^\s*email:\s*${local_email}"; then
+                if echo "$line" | grep -q "^[[:space:]]*email:[[:space:]]*${local_email}"; then
                     found_email=true
                 fi
-                if $found_email && echo "$line" | grep -q '^\s*task_folder:'; then
-                    TASK_FOLDER=$(echo "$line" | sed 's/.*task_folder:\s*//' | xargs)
+                if $found_email && echo "$line" | grep -q '^[[:space:]]*task_folder:'; then
+                    TASK_FOLDER=$(echo "$line" | sed 's/.*task_folder:[[:space:]]*//' | xargs)
                     break
                 fi
-                if $found_email && echo "$line" | grep -q '^\s*-\s*name:'; then
+                if $found_email && echo "$line" | grep -q '^[[:space:]]*-[[:space:]]*name:'; then
                     found_email=false
                 fi
             fi
@@ -182,7 +182,7 @@ SECOPS_FILE="$PROJECT_DIR/tasks/$TASK_FOLDER/SECOPS.md"
 # TTL check — fast path
 # ---------------------------------------------------------------------------
 if [[ -f "$SECOPS_FILE" ]]; then
-    last_check_date=$(grep -m1 "^- Date:" "$SECOPS_FILE" 2>/dev/null | sed 's/^- Date:\s*//' | xargs)
+    last_check_date=$(grep -m1 "^- Date:" "$SECOPS_FILE" 2>/dev/null | sed 's/^- Date:[[:space:]]*//' | xargs)
     if [[ -n "$last_check_date" ]]; then
         # Calculate days since last check
         if has_command python3; then
@@ -360,8 +360,8 @@ fi
 # --- Check 13: Active members have task folders ---
 missing_folders=()
 while IFS= read -r line; do
-    if echo "$line" | grep -q '^\s*task_folder:'; then
-        tf=$(echo "$line" | sed 's/.*task_folder:\s*//' | xargs)
+    if echo "$line" | grep -q '^[[:space:]]*task_folder:'; then
+        tf=$(echo "$line" | sed 's/.*task_folder:[[:space:]]*//' | xargs)
         if [[ ! -f "$PROJECT_DIR/tasks/$tf/000-index.md" ]]; then
             missing_folders+=("$tf")
         fi
@@ -563,20 +563,20 @@ fi
 FULL_NAME=""
 in_active=false
 while IFS= read -r line; do
-    if echo "$line" | grep -q '^\s*active:'; then
+    if echo "$line" | grep -q '^[[:space:]]*active:'; then
         in_active=true; continue
     fi
     if $in_active && echo "$line" | grep -q '^[a-z#]'; then
         in_active=false; continue
     fi
-    if $in_active && echo "$line" | grep -q "^\s*task_folder:\s*${TASK_FOLDER}\s*$"; then
+    if $in_active && echo "$line" | grep -q "^[[:space:]]*task_folder:[[:space:]]*${TASK_FOLDER}[[:space:]]*$"; then
         # Found our entry — look backwards for name
         :
     fi
-    if $in_active && echo "$line" | grep -q '^\s*name:'; then
-        FULL_NAME=$(echo "$line" | sed 's/.*name:\s*//' | xargs)
+    if $in_active && echo "$line" | grep -q '^[[:space:]]*name:'; then
+        FULL_NAME=$(echo "$line" | sed 's/.*name:[[:space:]]*//' | xargs)
     fi
-    if $in_active && echo "$line" | grep -q "^\s*task_folder:\s*${TASK_FOLDER}\s*$"; then
+    if $in_active && echo "$line" | grep -q "^[[:space:]]*task_folder:[[:space:]]*${TASK_FOLDER}[[:space:]]*$"; then
         break
     fi
 done < "$CONFIG_FILE"

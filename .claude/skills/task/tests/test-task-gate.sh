@@ -258,17 +258,23 @@ run_hook_test "tasks/* (index) → ALLOW" \
 run_hook_test "tasks/* (SECOPS.md) → ALLOW" \
   "$PROJECT_DIR/tasks/ben/SECOPS.md" "$FAKE_SESSION" "ALLOW"
 
-run_hook_test ".claude/hooks/* → ALLOW" \
-  "$PROJECT_DIR/.claude/hooks/check-active-task.sh" "$FAKE_SESSION" "ALLOW"
-
 run_hook_test ".claude/state/* → ALLOW" \
   "$PROJECT_DIR/.claude/state/active-tasks-foo.txt" "$FAKE_SESSION" "ALLOW"
 
-run_hook_test ".claude/skills/* → ALLOW" \
-  "$PROJECT_DIR/.claude/skills/task/SKILL.md" "$FAKE_SESSION" "ALLOW"
-
 run_hook_test ".claude/settings.json → ALLOW" \
   "$PROJECT_DIR/.claude/settings.json" "$FAKE_SESSION" "ALLOW"
+
+run_hook_test ".claude/settings.local.json → ALLOW" \
+  "$PROJECT_DIR/.claude/settings.local.json" "$FAKE_SESSION" "ALLOW"
+
+run_hook_test ".claude/sync-log.md → ALLOW" \
+  "$PROJECT_DIR/.claude/sync-log.md" "$FAKE_SESSION" "ALLOW"
+
+run_hook_test ".claude/MEMORY.md → ALLOW" \
+  "$PROJECT_DIR/.claude/MEMORY.md" "$FAKE_SESSION" "ALLOW"
+
+run_hook_test ".claude/memory/*.md → ALLOW" \
+  "$PROJECT_DIR/.claude/memory/user_role.md" "$FAKE_SESSION" "ALLOW"
 
 # ═══════════════════════════════════════
 # Section 4: Hook — Non-Exempt Paths
@@ -293,6 +299,64 @@ run_hook_test "setup.sh → DENY" \
 
 run_hook_test "glossary.md → DENY" \
   "$PROJECT_DIR/glossary.md" "$FAKE_SESSION" "DENY"
+
+# Skill-design surfaces — now gated (v15+)
+run_hook_test ".claude/skills/*/SKILL.md → DENY" \
+  "$PROJECT_DIR/.claude/skills/task/SKILL.md" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/skills/*/README.md → DENY" \
+  "$PROJECT_DIR/.claude/skills/task/README.md" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/skills/*/VERSION → DENY" \
+  "$PROJECT_DIR/.claude/skills/advisors/VERSION" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/skills/*/agents/*.md (source) → DENY" \
+  "$PROJECT_DIR/.claude/skills/advisors/agents/regulatory-affairs.md" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/skills/*/hooks/*.sh (source) → DENY" \
+  "$PROJECT_DIR/.claude/skills/task/hooks/check-active-task.sh" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/skills/*/scripts/* → DENY" \
+  "$PROJECT_DIR/.claude/skills/advisors/scripts/render-grounding.py" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/hooks/* regular file → DENY" \
+  "$PROJECT_DIR/.claude/hooks/register-hook.sh" "$FAKE_SESSION" "DENY"
+
+run_hook_test ".claude/rules/* → DENY" \
+  "$PROJECT_DIR/.claude/rules/some-rule.md" "$FAKE_SESSION" "DENY"
+
+# ═══════════════════════════════════════
+# Section 4b: Hook — Symlink Resolution
+# ═══════════════════════════════════════
+echo ""
+echo -e "${BOLD}6b. Hook — Symlink resolution (can't bypass the gate via a symlink)${NC}"
+
+# Create a temp symlink whose name LOOKS exempt (path under tasks/) but whose
+# target is a skill source file. The hook must resolve the link and deny.
+SYMLINK_PATH="$PROJECT_DIR/tasks/ben/_test_symlink_bypass.md"
+SYMLINK_TARGET="$PROJECT_DIR/.claude/skills/task/SKILL.md"
+ln -sf "$SYMLINK_TARGET" "$SYMLINK_PATH" 2>/dev/null
+if [ -L "$SYMLINK_PATH" ]; then
+  run_hook_test "tasks/* symlink → skill SKILL.md → DENY (resolves)" \
+    "$SYMLINK_PATH" "$FAKE_SESSION" "DENY"
+  rm -f "$SYMLINK_PATH"
+else
+  echo "  SKIP  symlink test (couldn't create test symlink)"
+fi
+
+# Inverse: a symlink under .claude/agents/ (exempt if raw-matched, but it
+# resolves to a skill source, which is gated).
+SYMLINK_AGENT="$PROJECT_DIR/.claude/agents/_test_symlink_bypass.md"
+if [ -d "$PROJECT_DIR/.claude/agents" ] && [ -f "$PROJECT_DIR/.claude/skills/task/SKILL.md" ]; then
+  ln -sf "../skills/task/SKILL.md" "$SYMLINK_AGENT" 2>/dev/null
+  if [ -L "$SYMLINK_AGENT" ]; then
+    run_hook_test ".claude/agents/* symlink → skill SKILL.md → DENY (resolves)" \
+      "$SYMLINK_AGENT" "$FAKE_SESSION" "DENY"
+    rm -f "$SYMLINK_AGENT"
+  else
+    echo "  SKIP  .claude/agents symlink test (couldn't create)"
+  fi
+fi
 
 # ═══════════════════════════════════════
 # Section 5: Hook — Multi-Task Tests

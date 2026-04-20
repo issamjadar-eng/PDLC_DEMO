@@ -171,7 +171,9 @@ security:
   # When a new skill is added to a registry entry above, also add it here
   # so the secops audit can verify the installed set matches the approved set.
   approved_skills:
+    - advisors
     - best-practices
+    - change-control
     - docflow
     - docx
     - lessons
@@ -184,6 +186,7 @@ security:
     - strategy
     - sync-skills
     - task
+    - trace-matrix
     - tracker
     - xlsx
   approved_mcps:
@@ -197,3 +200,24 @@ security:
   approved_plugins: []
   approved_agents:
     - project-secops
+
+# Advisors — persona subagents installed by /advisors init.
+# `enabled` curates which advisors are exposed to CC and the console.
+# `overlays.<name>.add` adds project-specific globs on top of the agent's
+# baseline (universal + shape-stable) sources. `overlays.<name>.exclude`
+# filters paths out of the resolved file list. Tier-3 entries start empty.
+advisors:
+  enabled:
+    - regulatory-affairs
+    - clinical-affairs
+    - risk-management
+  overlays:
+    regulatory-affairs:
+      add: []
+      exclude: []
+    clinical-affairs:
+      add: []
+      exclude: []
+    risk-management:
+      add: []
+      exclude: []

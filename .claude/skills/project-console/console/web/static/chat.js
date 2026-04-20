@@ -289,10 +289,16 @@ async function send(message) {
         }
         if (currentBubble) {
           assistantBuffer += evt.text;
-          currentBubble.innerHTML = window.renderMarkdown(assistantBuffer);
+          currentBubble.innerHTML = window.renderMarkdown(assistantBuffer) +
+            '<span class="streaming-cursor">▌</span>';
           transcript.scrollTop = transcript.scrollHeight;
         }
       } else if (evt.type === "speaker_done") {
+        // Remove streaming cursor before flushing
+        if (currentBubble) {
+          const cursor = currentBubble.querySelector(".streaming-cursor");
+          if (cursor) cursor.remove();
+        }
         flushAssistant();
         if (pendingEl) {
           pendingEl.remove();
@@ -306,6 +312,11 @@ async function send(message) {
     }
   }
   clearPending();
+  // Remove any lingering streaming cursor
+  if (currentBubble) {
+    const cursor = currentBubble.querySelector(".streaming-cursor");
+    if (cursor) cursor.remove();
+  }
   flushAssistant();
 }
 

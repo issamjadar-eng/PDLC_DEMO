@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 16
-updated: 2026-04-14
+version: 17
+updated: 2026-04-16
 ---
 
 # MedTech Docs
@@ -89,29 +89,34 @@ project:
 
 # ─── DHFs ───
 #
-# Every project has at least one DHF from day one. A DHF is a
-# component with its own design controls, risk-management, clinical, and
-# postmarket folders. Single-component projects just have one entry here.
+# Flat list of DHFs. Every project has at least one from day one.
+# Single-component projects just have one entry here (role: system, N=1).
+# Multi-component projects have one system DHF + N item DHFs.
 # Add more DHFs over time with `/medtech-docs add-dhf <name>`.
 #
 # Fields:
-#   path       — required; slug used as folder name under docs/project/dhfs/
-#   regulatory — required; concept | in-development | cleared | mixed
-#                (mixed = platform DHF whose children carry the regulatory weight)
-#   filing     — optional; which submission folder this DHF rolls up into
-#                (null means "not yet scoped into a filing")
-#   parent     — optional; path of the parent DHF if this is a nested child
-#                (null means "top-level")
+#   leaf           — required; unique short name (kebab-case)
+#   path           — required; folder path relative to project root
+#   role           — required; "system" (device-level) or "item" (software-item)
+#   composes       — system only; ordered list of item DHF leaf names
+#   classification — item only; regulatory classification metadata
+#     samd         — bool; true if the item is SaMD
+#     class        — FDA device class (I, II, III, exempt, non-device)
+#     iec62304     — IEC 62304 safety class (A, B, C)
+#     ai_enabled   — bool; true if the item implements AI/ML models
+#   regulatory     — required; concept | in-development | cleared | mixed
+#   filing         — optional; which submission folder this DHF rolls up into
+#   description    — optional; human-readable description
 #
-# Leaf-name uniqueness is enforced by `add-dhf` — no two DHFs can
-# share the same last path segment, even at different depths. This is what
-# lets `/strategy` tag authors write `dhf=<leaf>` without ambiguity.
+# The role + composes fields express the IEC 62304 § 5 software system /
+# software item hierarchy. Leaf-name uniqueness is enforced by `add-dhf`.
 
 dhfs:
-  - path: {{PRIMARY_SUB_DHF}}
+  - leaf: {{PRIMARY_DHF}}
+    path: docs/project/dhfs/{{PRIMARY_DHF}}
+    role: system
     regulatory: in-development
     filing: null
-    parent: null
 
 # ─── Team Roster ───
 #
@@ -223,7 +228,7 @@ After creating (or confirming) `project.yml`, check if `CLAUDE.md` contains a se
 | Section | Purpose |
 |---------|---------|
 | `project:` | Project name, repo, type, regulatory pathway, device class, device family slug |
-| `dhfs:` | Ordered list of DHFs in the project. Every project has at least one from day one. Each entry has `path`, `regulatory`, `filing`, and optional `parent` fields. Maintained by `/medtech-docs add-dhf`. Leaf-name uniqueness is enforced so `dhf=<leaf>` tag resolution is unambiguous. |
+| `dhfs:` | Flat list of DHFs in the project. Every project has at least one from day one. Each entry has `leaf`, `path`, `role` (`system` or `item`), `regulatory`, `filing`, and optional `composes` (system only — lists item DHF leaf names) and `classification` (item only — `samd`, `class`, `iec62304`, `ai_enabled`). The `role` + `composes` fields express the IEC 62304 § 5 software system / software item hierarchy. Maintained by `/medtech-docs add-dhf`. Leaf-name uniqueness is enforced so `dhf=<leaf>` tag resolution is unambiguous. |
 | `team:` | Active and inactive team members — name, GitHub username, task folder, role, email. Every repo collaborator must have a row here. |
 | `registries:` | Approved sources for skills and templates. Skills are either `builtin` (shipped with Claude Code) or fetched from a `github` registry. Each `github` registry has a `local_path` (default `../hitachi`) for local clone-based sync. |
 | `security:` | Approved email domains, gitignore patterns, and allowlists for skills, MCPs, plugins, and agents |
@@ -234,6 +239,59 @@ After creating (or confirming) `project.yml`, check if `CLAUDE.md` contains a se
 ```
 
 This ensures that Claude (and human readers) know where to find and edit project configuration — team membership, approved tools, security policy — without having to discover `project.yml` by accident.
+
+**Step 2c — Seed README conventions and rule into CLAUDE.md**
+
+After Step 2b, check if `CLAUDE.md` contains the README convention section and the README Before Write rule. If either is missing, add them.
+
+**Check 1**: Search CLAUDE.md for the string `README Convention`. If found, skip the convention section.
+
+**Insert README Convention section** (place after "Document Conventions", before "For Claude"):
+
+```markdown
+### README Convention
+
+Every directory under `docs/` must contain a `README.md`. READMEs serve three purposes:
+
+1. **Navigation for Claude** — READMEs are the primary way Claude discovers what a folder contains, what naming conventions to follow, and what type of content belongs there. Without a README, Claude has no context for the folder.
+2. **Context for humans** — team members use READMEs to understand folder purpose, expected content, and conventions without reading every file.
+3. **Naming and placement rules** — READMEs define file naming conventions, expected content types, and folder-specific rules that prevent misplaced or misnamed files (a compliance risk in regulated projects).
+
+#### README Meta-Model
+
+Every README follows this section order (not all sections required for every folder, but when present they must appear in this order):
+
+1. **Title** + purpose paragraph
+2. **Subfolders / Structure** (if the folder has subdirectories)
+3. **Information Flow** (if the folder participates in a document pipeline)
+4. **Expected Content** (what files belong here and what they look like)
+5. **Domain-specific sections** (varies by folder type)
+6. **Conventions** (REQUIRED — naming rules, formatting, linking)
+7. **For Claude** (behavioral instructions specific to this folder)
+8. **Changelog** (REQUIRED — dated entries tracking README changes)
+
+#### Templates
+
+The `/medtech-docs` skill is the authoritative source for README templates. It provides templates for every folder type created during `init` and `add-dhf`. When creating a README for a new folder, follow the meta-model above and use the closest existing README in the hierarchy as a reference.
+
+#### When a README Is Missing
+
+If you encounter a folder under `docs/` that lacks a README.md, flag it to the user and create one using the meta-model before proceeding with any writes to that folder. A missing README is a structural gap, not a minor oversight — it means Claude and other team members have no guidance for that folder.
+```
+
+**Check 2**: Search CLAUDE.md for the string `readme-before-write`. If found, skip the rule section.
+
+**Insert README Before Write rule** (place in the "For Claude" section, after "Load Project Skills"):
+
+```markdown
+#### README Before Write (MANDATORY)
+
+**Before writing any file into a folder under `docs/`**, read both the **target folder's `README.md`** and its **parent folder's `README.md`**. Parent READMEs define cross-cutting conventions (document workflow, information flow); leaf READMEs define folder-specific rules (naming, expected content, "For Claude" instructions). **If a folder is missing its README.md, stop and create one before proceeding** — see the README Convention section above. See `.claude/rules/readme-before-write.md` for full details.
+```
+
+**Check 3**: Check if `.claude/rules/readme-before-write.md` exists. If not, create it with the standard rule content (read parent + target README, handle missing READMEs by creating them first).
+
+This ensures every project initialized by `/medtech-docs init` gets the full README convention from day one — not just the scaffolded README files, but the rules telling Claude how to use and create them.
 
 **Step 3 — Create the folder structure and READMEs**
 
@@ -500,15 +558,17 @@ Show the user:
 - Skills installed and setup actions run
 - Next steps: populate FDA guidance, begin design controls, run `/medtech-docs dashboard` to see status
 
-### `add-dhf <name> [--parent <path>] [--regulatory <status>] [--filing <filing>]`
+### `add-dhf <name> [--role <role>] [--composes <leaf,...>] [--classification <yaml>] [--regulatory <status>] [--filing <filing>]`
 
 Add a new DHF to an existing project. Scaffolds the per-DHF folder layout, adds a new entry to `project.dhfs[]`, and creates the DHF README.
 
 **Arguments**:
-- `<name>` — short slug for the new DHF (e.g., `connectivity-adapter`, `cloud-suite`, `drug-library-manager`). Must match `^[a-z][a-z0-9-]*[a-z0-9]$`. Used as the folder name under `dhfs/`.
-- `--parent <path>` — optional. Path of the parent DHF (relative to `docs/project/dhfs/`), for nesting a child under a platform DHF. Examples: `cloud-suite`, `cloud-suite/dhfs/fleet-management`. Default: top-level (no parent).
-- `--regulatory <status>` — optional. One of `concept | in-development | cleared | mixed`. Default: `in-development`. Use `mixed` only for platform DHFs whose children carry the regulatory weight (the platform itself doesn't ship separately).
-- `--filing <filing>` — optional. Name of the submission folder this DHF rolls up into (e.g., `510k-pp3500`). Default: `null` (not yet scoped into a filing).
+- `<name>` — short slug for the new DHF (e.g., `connectivity-adapter`, `hiplink-pre-op`). Must match `^[a-z][a-z0-9-]*[a-z0-9]$`. Used as the folder name under `dhfs/` and as the `leaf` value.
+- `--role <role>` — optional. One of `system | item`. Default: `item`. A `system` DHF holds device-level design records (system DDP, system SAD, integrated device risk file); an `item` DHF holds software-item-level records (item SRS, SDS, V&V, SOUP). Maps to IEC 62304 § 5 software system / software item hierarchy.
+- `--composes <leaf,...>` — optional, **system role only**. Comma-separated list of item DHF leaf names this system DHF composes. Validates that each listed leaf exists in `project.dhfs[]` (or warn if not yet created). Ignored for item role.
+- `--classification <yaml>` — optional, **item role only**. Inline YAML block with regulatory classification: `samd` (bool), `class` (I/II/III/exempt/non-device), `iec62304` (A/B/C), `ai_enabled` (bool). Ignored for system role. If omitted for an item, classification fields are left as `tbd`.
+- `--regulatory <status>` — optional. One of `concept | in-development | cleared | mixed`. Default: `in-development`.
+- `--filing <filing>` — optional. Name of the submission folder this DHF rolls up into (e.g., `510k+pccp`). Default: `null` (not yet scoped into a filing).
 
 **Step 1 — Validate the name**:
 1. Check that `<name>` matches the slug regex. If not, reject with the error `"invalid DHF name '<name>' — must match ^[a-z][a-z0-9-]*[a-z0-9]$"`.
@@ -538,13 +598,30 @@ Parse `project.yml`, find the `dhfs:` list, and append a new entry:
 
 ```yaml
 dhfs:
-  - path: <name-or-nested-path>
+  # For a system DHF:
+  - leaf: <name>
+    path: docs/project/dhfs/<name>
+    role: system
+    composes: [<leaf1>, <leaf2>, ...]  # item DHF leaf names
     regulatory: <status>   # default in-development
     filing: <filing>       # default null
-    parent: <parent>       # default null
+
+  # For an item DHF:
+  - leaf: <name>
+    path: docs/project/dhfs/<name>
+    role: item
+    classification:
+      samd: <bool>
+      class: <I|II|III|exempt|non-device>
+      iec62304: <A|B|C>
+      ai_enabled: <bool>
+    regulatory: <status>   # default in-development
+    filing: <filing>       # default null
 ```
 
 Preserve existing entries and all surrounding YAML structure (comments, spacing, other fields). Write `project.yml` atomically — build the new content in memory and write in one operation.
+
+If the new DHF is an **item** and an existing **system** DHF's `composes` list should include it, prompt the user: *"Should I add '<name>' to the composes list of system DHF '<system-leaf>'?"* If yes, update the system DHF's `composes` list.
 
 **Step 5 — Report**:
 Show the user:
@@ -553,22 +630,21 @@ Show the user:
 - The updated `project.yml` `dhfs[]` entry.
 - Next-step suggestions: author the DHF README purpose paragraph, add user needs under `design-controls/user-needs/`, update the composition manifest of any filing that should reference this DHF.
 
-**Depth and recursion**:
-`add-dhf` supports arbitrary `--parent` depth via the path form (e.g., `--parent cloud-suite/dhfs/drug-library-manager`). The interactive `init` flow caps nesting at 2 levels to keep the init prompt simple; `add-dhf` has no such cap. For a project that genuinely needs 3+ levels of DHF nesting, run `init` with 2 levels and then `add-dhf` for the deeper children.
+**Flat vs. nested**: The flat multi-DHF model (all DHFs at the same folder level, relationships expressed via `role` + `composes` metadata) is the recommended approach. The `--parent` flag is retained for backward compatibility but is deprecated in favor of the flat model. For new projects, use `--role system` for the device-level DHF and `--role item` for software-item DHFs, with `--composes` on the system DHF listing the items. See task 056 in the Arthrex PCCP project for the decision rationale and IEC 62304 § 5 mapping.
 
 **Examples**:
 ```
-# Add a top-level DHF
-/medtech-docs add-dhf connectivity-adapter --regulatory in-development
+# System DHF — device-level design records
+/medtech-docs add-dhf hiplink-suite --role system --composes hiplink-pre-op,hiplink-intra-op,hiplink-mgmt-services --filing 510k+pccp
 
-# Add a platform DHF (no filing of its own, children will file)
-/medtech-docs add-dhf cloud-suite --regulatory mixed
+# Item DHF — SaMD software item (Class II, Class C, AI-enabled)
+/medtech-docs add-dhf hiplink-pre-op --role item --classification "samd: true, class: II, iec62304: C, ai_enabled: true" --filing 510k+pccp
 
-# Add a child of the platform
-/medtech-docs add-dhf drug-library-manager --parent cloud-suite --regulatory in-development --filing 510k-pp3500
+# Item DHF — non-SaMD software item
+/medtech-docs add-dhf hiplink-mgmt-services --role item --classification "samd: false, class: non-device, iec62304: B, ai_enabled: false" --filing 510k+pccp
 
-# Add a grandchild (nested path)
-/medtech-docs add-dhf rule-engine --parent cloud-suite/dhfs/drug-library-manager
+# Simple single-component project (one system DHF, no items)
+/medtech-docs add-dhf my-device --role system --regulatory in-development
 ```
 
 ### `add-standard <name>`
@@ -832,11 +908,13 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 | No empty design control folders | Every subfolder under `design-controls/` contains at least one `.md` file besides README | Recommended | per-dhf |
 | Submissions match pathway | If CLAUDE.md mentions "510(k)", `docs/project/submissions/510k/` exists; if "De Novo", `docs/project/submissions/de-novo/` exists; etc. | Recommended | shared |
 | Standards README has exclusion rationale | Every standard/framework in the "Evaluated — Not Required" table has a non-empty rationale | Required | shared |
+| Every docs folder has README | Every directory under `docs/` (recursively) contains a `README.md` file. Excluded: `.staging/`, `images/`, `formal/`, and hidden directories (starting with `.`). A missing README means Claude and team members have no guidance for that folder — naming conventions, expected content, and placement rules are undefined. | Required | shared |
 | READMEs have changelogs | Every `README.md` under `docs/` contains a `## Changelog` section with a table (Date, Author, Summary). In AI-driven workflows, a session may make many edits collapsed into one commit — the changelog captures the rationale that git alone doesn't. | Required | shared |
 | READMEs have conventions | Every `README.md` under `docs/` contains a `## Conventions` section documenting naming rules, formatting, and linking guidance for that folder. | Required | shared |
 | READMEs follow section order | In every `README.md` under `docs/`, sections appear in meta-model order: Title → Subfolders/Structure → Information Flow/Relationships → Expected Content → Domain-specific → Conventions → For Claude → Changelog. Specifically: `## Conventions` must appear before `## Changelog`, and `## Expected Content` (if present) must appear before `## Conventions`. | Required | shared |
 | Leaf READMEs have expected content | Every `README.md` in a leaf folder (no subdirectories) under `docs/` contains a `## Expected Content` or `## Expected Documents` section listing what document types belong in that folder. Exceptions: folders that use domain-specific sections instead (e.g., standards/ uses `## Distilled Standards`, frameworks/ uses `## Active Frameworks`). | Recommended | shared |
 | README changelogs are current | When a `README.md` under `docs/` is modified, its `## Changelog` table has an entry matching the current date or the date of the most recent modification. Stale changelogs (last entry significantly older than git last-modified date) should be flagged. | Recommended | shared |
+| No task refs in persistent docs | `CLAUDE.md`, `project.yml` descriptions, and DHF `README.md` files do not contain references to task documents (`tasks/*/NNN-*.md`). Persistent project documents must reference durable artifacts (strategy docs, architecture docs, input analysis, submission docs). Convention defined in CLAUDE.md Document Conventions. | Required | shared |
 
 ## Notes
 
@@ -849,7 +927,8 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 
 ## Changelog
 
-- 16 (2026-04-14): **`update-external-references` learns to surface rubric-vs-existing-exclusion conflicts instead of picking a side.** Added new Step 2.5 between rubric application and file copy: before importing, the action now reads each subfolder README's "Evaluated — Not Required" / "Evaluated — Not Applicable" table and detects collisions with the rubric's applicable set. On conflict the action prints a CONFLICT block per file with the rubric trigger, the existing exclusion rationale, and the optional Scope Qualifier, and waits for the user to choose IMPORT (rubric wins, move row to Active), KEEP EXCLUDED (refine rationale + Scope Qualifier), or DEFER (leave both untouched, log a TODO). Companion template change: all three subfolder READMEs gained a Scope Qualifier column on their exclusion tables, so exclusion rationales can be auditable per slice — preventing the failure mode where "no imaging integration" excludes IHE wholesale and silences future ITI/Pharmacy applicability. Origin: PDLC_DEMO `tasks/ben/012` IHE Profiles case — the v15 rubric flagged IHE on EHR-integration but the existing exclusion only considered the imaging slice; my initial revert was wrong, the user's correction surfaced that neither auto-import nor auto-skip is right. **Post-update:** Existing project READMEs continue to work — the Scope Qualifier column is additive and the conflict-detection step degrades gracefully when no exclusion table is present. Optional follow-up: backfill the Scope Qualifier column on existing exclusion rows so the next run has more context. Pushed upstream via hitachi PR #14 (squash-merge `2d88ce6`).
+- 17 (2026-04-16): Added Step 2c to `init` — seeds CLAUDE.md with README Convention section (meta-model, purpose, templates, missing-README handling) and README Before Write rule, plus installs `.claude/rules/readme-before-write.md` rule file. Added best-practice check "Every docs folder has README" (Required, shared) — recursively verifies every directory under `docs/` has a README.md, excluding `.staging/`, `images/`, `formal/`, and hidden directories. Closes the gap where medtech-docs scaffolded READMEs in every folder but never told Claude about the convention in CLAUDE.md, and best-practices audited README content but never checked README existence.
+- 16 (2026-04-14): **`update-external-references` learns to surface rubric-vs-existing-exclusion conflicts instead of picking a side.** Added new Step 2.5 between rubric application and file copy: before importing, the action now reads each subfolder README's "Evaluated — Not Required" / "Evaluated — Not Applicable" table and detects collisions with the rubric's applicable set. On conflict the action prints a CONFLICT block per file with the rubric trigger, the existing exclusion rationale, and the optional Scope Qualifier, and waits for the user to choose IMPORT (rubric wins, move row to Active), KEEP EXCLUDED (refine rationale + Scope Qualifier), or DEFER (leave both untouched, log a TODO). Companion template change: all three subfolder READMEs gained a Scope Qualifier column on their exclusion tables, so exclusion rationales can be auditable per slice — preventing the failure mode where "no imaging integration" excludes IHE wholesale and silences future ITI/Pharmacy applicability. Origin: PDLC_DEMO `tasks/ben/012` IHE Profiles case — the v15 rubric flagged IHE on EHR-integration but the existing exclusion only considered the imaging slice; my initial revert was wrong, the user's correction surfaced that neither auto-import nor auto-skip is right. **Post-update:** Existing project READMEs continue to work — the Scope Qualifier column is additive and the conflict-detection step degrades gracefully when no exclusion table is present. Optional follow-up: backfill the Scope Qualifier column on existing exclusion rows so the next run has more context. **LOCAL — pending upstream push via `/sync-skills`.**
 - 15 (2026-04-14): **New action `update-external-references` — context-driven import of bundled FDA guidance, standards, and industry-framework distilled files into `docs/external/`.** Reads `project.yml` + `CLAUDE.md` + `docs/project/strategies/*.md` + per-DHF READMEs as the only signal sources, applies a per-file rubric (10 FDA guidances, 5 standards, 8 frameworks), and copies the applicable distilled `.md` files from `${CLAUDE_SKILL_DIR}/references/` into the matching `docs/external/<subfolder>/`. Idempotent: never overwrites an existing project file, never deletes, and on rerun marks newly-not-applicable rows in the README tables instead of removing them. Updates the table in each touched subfolder README to add an "Original Source" / "Spec URL" column pointing back to the bundled `source/`+`source-md/` (FDA) or to the publisher URL (standards, frameworks). Reachable via aliases: "import fda docs", "pull reference guidances", "refresh external references", etc. Companion template updates: `readme-fda-guidance.md` rewritten from the old "applicability reports" model to the unified "distilled copies hosted here, originals linked" model; `readme-standards.md` and `readme-industry-frameworks.md` gained an "Original Source" / "Spec URL" column on their active tables. No best-practices check changes (existing `Standards have verification checks` and `Frameworks have evaluation decisions` rules still apply). Pushed upstream via hitachi PR #13 (squash-merge `d30a7f3`).
 - 14 (2026-04-13): **Strategies folder consolidated to all-shared + "sub-DHF" → "DHF" terminology rename.** Renamed `project.yml` field `sub_dhfs` → `dhfs` (now matches the folder name). Renamed `/medtech-docs add-sub-dhf` action → `add-dhf`. Renamed template file `readme-sub-dhf.md` → `readme-dhf.md`. Everywhere "sub-DHF" was used to mean "a DHF scoped inside a project" the term is now just "DHF" — top-level and nested entries are conceptually one thing. When the relational meaning is needed, use "nested DHF" or "child DHF". Best Practices Scope column value `per-dhf` is unchanged. `readme-strategies.md` rewritten to index all 8 strategy briefs (regulatory, architecture, development, testing, risk, postmarket, commercial, operations) — aligned with strategy skill v10. `readme-design-controls.md`, `readme-risk-management.md`, `readme-postmarket.md` updated to point readers at the shared strategy briefs under `docs/project/strategies/` rather than scaffolding per-DHF strategy stubs. Plans-folder description clarified: `dhfs/<dhf>/design-controls/plans/` holds **formal** outputs (SDP, V&V Plan, 510(k) submission, PCCP protocol, etc.); upstream strategy briefs live shared. Folder-tree diagram annotation updated to reflect the all-shared strategies folder. Not a scaffold change — no new folders, no new per-DHF scaffolding. See `tasks/ben/009-shared-strategy-docs.md`.
 - 13 (2026-04-13): Added `chrome-devtools` to the `project.yml` template's default `approved_mcps:` list in `init` action Step 2. New projects scaffolded by `/medtech-docs init` now get the Chrome DevTools MCP server pre-approved by the secops posture — no separate approval step required when the team first uses it for frontend visual validation. Comment block in the template explains what it does and the `claude mcp add` install command. No functional change to existing projects; only the init-time template is updated. **LOCAL divergence pending upstream push** (hitachi still ships v12).

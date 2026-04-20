@@ -39,12 +39,12 @@ Per the regulatory strategy's **Filing Scope: PCA Device Alone** and **Component
 | Piece | Location | Rationale |
 |---|---|---|
 | User Needs (Ct*-tagged subset) | `docs/project/dhfs/pca-device/design-controls/user-needs/` | Source of in-scope requirements |
-| Design Inputs (Ct*-tagged subset) | `docs/project/dhfs/pca-device/design-controls/design-inputs/` | Source of in-scope requirements |
-| System SAD | `docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md` | Module decomposition, classification |
+| Design Inputs (Ct*-tagged subset) | `docs/project/dhfs/pca-device/design-controls/requirements/` | Source of in-scope requirements (medtech-docs convention folds Design Inputs into `requirements/`) |
+| System SAD | `docs/project/dhfs/pca-device/design-controls/architecture/` | Module decomposition, classification |
 | SRS (per module, Ct*-tagged subset) | `docs/project/dhfs/pca-device/design-controls/requirements/` | IEC 62304 |
-| Design Outputs | `docs/project/dhfs/pca-device/design-controls/design-outputs/` | 820.30(d) |
-| V&V Plan + Reports (filing-scope track) | `docs/project/dhfs/pca-device/design-controls/verification-validation/` | 820.30(f)(g) |
-| Trace Matrix (Filing Scope column) | `docs/project/dhfs/pca-device/design-controls/trace-matrix.md` | 820.30 traceability |
+| Design Outputs | `docs/project/dhfs/pca-device/design-controls/architecture/` | 820.30(d) (outputs colocated with architecture in demo scaffold) |
+| V&V Plan + Reports (filing-scope track) | `docs/project/dhfs/pca-device/design-controls/vnv/` | 820.30(f)(g) |
+| Trace Matrix (Filing Scope column) | `docs/project/dhfs/pca-device/design-controls/trace-matrix/` | 820.30 traceability |
 | Risk Management File | `docs/project/dhfs/pca-device/risk-management/` | ISO 14971 |
 | Usability Engineering File | `docs/project/dhfs/pca-device/design-controls/usability/` | IEC 62366-1 |
 | Cybersecurity Plan + Threat Model + SBOM | `docs/project/dhfs/pca-device/cybersecurity/` | FDA Cyber 2023, §524B |
@@ -71,7 +71,7 @@ Per the regulatory strategy's **Filing Scope: PCA Device Alone** and **Component
 | System SAD | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/architecture/drug-library-manager-system-sad.md` | SaMD classification + architecture |
 | User Needs + Design Inputs (Ct*-tagged) | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/` | Accessory-bundle requirements |
 | SRS (Validation Engine, Signing Service) | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/requirements/` | IEC 62304 Class C modules |
-| V&V Plan + Reports | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/verification-validation/` | Class II SaMD evidence |
+| V&V Plan + Reports | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/` | Class II SaMD evidence |
 | Risk Management File | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/risk-management/` | ISO 14971 (clinical-rule failure modes) |
 | Usability Engineering File | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/usability/` | IEC 62366-1 — pharmacist workflow |
 | Cybersecurity Plan + Threat Model + Signing Trust Chain | `docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/` | Signing chain that PCA M3 verifies |

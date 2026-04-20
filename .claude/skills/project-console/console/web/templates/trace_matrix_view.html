@@ -2,7 +2,138 @@
 {% block title %}Trace Matrix · {{ dhf }} · {{ config.project_name }}{% endblock %}
 {% block body_class %}tm-body{% endblock %}
 {% block content %}
+{% if sidecar is none %}
+<section class="trace-matrix-empty" style="max-width:720px;margin:2rem auto;padding:0 1.5rem;">
+  <p><a href="/trace-matrix">← All DHFs</a></p>
+  <h1>Trace Matrix — {{ dhf }}</h1>
+  <p class="muted">No trace matrix has been built for this DHF yet.</p>
+
+  {% if build_error %}
+  <div style="background:#fff3cd;border:1px solid #e0c066;border-radius:6px;padding:0.75rem 1rem;margin:1rem 0;">
+    <p style="margin:0 0 0.5rem"><strong>Last build failed.</strong></p>
+    <pre style="white-space:pre-wrap;margin:0;font-size:0.85em;max-height:320px;overflow:auto;">{{ build_error }}</pre>
+  </div>
+  {% endif %}
+
+  {% if has_skill %}
+  <div class="tm-init-buttons" style="display:flex;gap:0.75rem;align-items:center;margin:1.5rem 0;flex-wrap:wrap;">
+    <button type="button" id="tm-init-btn" class="btn-primary" data-dhf="{{ dhf }}">Initialize with Claude</button>
+    <form method="post" action="/trace-matrix/{{ dhf }}/build" style="margin:0;">
+      <button type="submit" class="btn-secondary">Build this DHF now</button>
+    </form>
+  </div>
+  <p class="muted small">
+    <strong>Initialize with Claude</strong> runs the full <code>/trace-matrix init</code> flow via the Claude Agent SDK — reads <code>project.yml</code>, writes a default <code>trace-matrix.yml</code>, generates per-layer parser adapters for any document that doesn't match the default shape, and builds the first sidecar. Uses LLM tokens.<br>
+    <strong>Build this DHF now</strong> runs the deterministic <code>build.py</code> only — fast, no LLM, but requires <code>trace-matrix.yml</code> to already exist.
+  </p>
+
+  <section id="tm-init-panel" hidden style="margin:1.5rem 0;border:1px solid #dce0e8;border-radius:6px;background:#f7f8fa;">
+    <header style="padding:0.6rem 0.9rem;border-bottom:1px solid #dce0e8;display:flex;justify-content:space-between;align-items:center;">
+      <strong id="tm-init-status">Initializing…</strong>
+      <span class="muted small" id="tm-init-elapsed">0s</span>
+    </header>
+    <pre id="tm-init-log" style="margin:0;padding:0.9rem;max-height:360px;overflow:auto;font-size:0.85em;white-space:pre-wrap;word-break:break-word;"></pre>
+  </section>
+
+  <script>
+  (function () {
+    var btn = document.getElementById('tm-init-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var dhf = btn.dataset.dhf;
+      var panel = document.getElementById('tm-init-panel');
+      var log = document.getElementById('tm-init-log');
+      var statusEl = document.getElementById('tm-init-status');
+      var elapsedEl = document.getElementById('tm-init-elapsed');
+      panel.hidden = false;
+      log.textContent = '';
+      statusEl.textContent = 'Initializing…';
+      btn.disabled = true;
+      btn.textContent = 'Initializing…';
+
+      var started = Date.now();
+      function fmtElapsed() {
+        var total = Math.floor((Date.now() - started) / 1000);
+        var m = Math.floor(total / 60);
+        var s = total % 60;
+        return m + ':' + (s < 10 ? '0' + s : s);
+      }
+      var tick = setInterval(function () {
+        elapsedEl.textContent = fmtElapsed();
+      }, 500);
+      elapsedEl.textContent = fmtElapsed();
+
+      // EventSource doesn't support POST bodies directly, but our endpoint
+      // takes no body — the DHF is in the URL. Use fetch + ReadableStream
+      // instead so we can POST.
+      fetch('/trace-matrix/' + encodeURIComponent(dhf) + '/init/stream', {
+        method: 'POST',
+        headers: { 'Accept': 'text/event-stream' },
+      }).then(function (resp) {
+        if (!resp.ok || !resp.body) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        var reader = resp.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer = '';
+        function pump() {
+          return reader.read().then(function (chunk) {
+            if (chunk.done) return;
+            buffer += decoder.decode(chunk.value, { stream: true });
+            var parts = buffer.split('\n\n');
+            buffer = parts.pop();
+            parts.forEach(function (raw) {
+              var line = raw.trim();
+              if (!line.startsWith('data:')) return;
+              var payload;
+              try { payload = JSON.parse(line.slice(5).trim()); }
+              catch (e) { return; }
+              if (payload.type === 'token') {
+                log.textContent += payload.text;
+                log.scrollTop = log.scrollHeight;
+              } else if (payload.type === 'tool') {
+                log.textContent += '\n[tool] ' + payload.name + (payload.brief ? ': ' + payload.brief : '') + '\n';
+                log.scrollTop = log.scrollHeight;
+              } else if (payload.type === 'result') {
+                if (payload.summary) { log.textContent += '\n\n' + payload.summary + '\n'; log.scrollTop = log.scrollHeight; }
+              } else if (payload.type === 'done') {
+                clearInterval(tick);
+                statusEl.textContent = 'Done — reloading…';
+                setTimeout(function () { window.location.reload(); }, 800);
+              } else if (payload.type === 'error') {
+                clearInterval(tick);
+                statusEl.textContent = 'Error';
+                log.textContent += '\n\n[ERROR] ' + payload.message;
+                btn.disabled = false;
+                btn.textContent = 'Initialize with Claude';
+              }
+            });
+            return pump();
+          });
+        }
+        return pump();
+      }).catch(function (err) {
+        clearInterval(tick);
+        statusEl.textContent = 'Error';
+        log.textContent += '\n[ERROR] ' + err.message;
+        btn.disabled = false;
+        btn.textContent = 'Initialize with Claude';
+      });
+    });
+  })();
+  </script>
+  {% else %}
+  <p>The <code>trace-matrix</code> skill is not installed at <code>.claude/skills/trace-matrix/</code>. Run <code>/sync-skills pull</code> to fetch it from the registry.</p>
+  {% endif %}
+</section>
+{% else %}
 <section class="trace-matrix-view">
+  {% if build_error %}
+  <div style="background:#fff3cd;border:1px solid #e0c066;border-radius:6px;padding:0.75rem 1rem;margin:0 0 1rem 0;">
+    <p style="margin:0 0 0.5rem"><strong>Last build failed — showing previous sidecar.</strong></p>
+    <pre style="white-space:pre-wrap;margin:0;font-size:0.85em;max-height:200px;overflow:auto;">{{ build_error }}</pre>
+  </div>
+  {% endif %}
   <header class="tm-header">
     <div class="tm-header-left">
       <a href="/trace-matrix" class="tm-back">← All DHFs</a>
@@ -202,6 +333,7 @@
   </section>
   {% endif %}
 </section>
+{% endif %}
 
 <style>
 /* Full-width shell — the table is the content, let it breathe. */

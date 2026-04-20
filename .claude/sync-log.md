@@ -4,6 +4,40 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-20 — pull (bulk sync, 53 files)
+
+- Hitachi HEAD after sync: `765d3b6` (2 commits ahead of `origin/main` — unpushed docflow v3→v14 work; `sync.sh pull-file` reads working tree, so we picked up the unpushed content intentionally)
+- Pulled: 53 files
+  - Version bumps: task (14→17), secops (1→2), docflow (2→14), best-practices (9→10), medtech-docs (14→17), skill-creator (1→3), project-console (1.0.2→1.4.1)
+  - New skill bundle: `skills/advisors/` (20 files — 12 persona agents + 2 panels + loader lib + render-grounding script + tests + overlay-defaults)
+  - New shared references: `skills/shared/agent-design-principles.md`, `skills/shared/task-content-scanner.md`
+  - New skill-creator templates: `hook-template.sh`, `readme-skill.md`, `skill-md.md`
+  - `agents/project-secops.md` registry-root blob is now a symlink pointing at `skills/secops/agents/` (cp follows the link, so local content matches the skill source)
+
+- Project Impact Analysis (mandatory per sync-skills v3 Step 5b):
+  - **task v15 narrows task-gate exempt list.** `.claude/skills/**`, `.claude/agents/*`, `.claude/hooks/*`, CLAUDE.md, and `project.yml` now require an active task for Edit/Write. Exempt: `tasks/*`, `.claude/state/*`, `.claude/settings*.json`, `.claude/sync-log.md`, `.claude/MEMORY.md`, `.claude/memory/*`.
+  - **task v16 fixes a silent Linux/WSL bug** where `task-activate.sh remove` was a no-op (GNU sed `-i ''` mismatch). Required a fresh copy of the script into `.claude/hooks/` — ran `/task setup`, which refreshed the copy.
+  - **secops v2** no-op on Linux (was a macOS-only fix).
+  - **best-practices v10 adds Required check** "Per-skill agents installed as symlinks". `/secops setup` (this run) converted `.claude/agents/project-secops.md` from a regular file into a symlink pointing at `../skills/secops/agents/project-secops.md`. Note: secops SKILL.md v2 still prescribes `cp`; there's a latent contradiction with best-practices v10 that should be resolved in a future secops bump.
+  - **medtech-docs v17** adds Required check "Every docs folder has README" and new `update-external-references` action (v15) + rubric-vs-exclusion conflict surfacing (v16). Additive — no regeneration needed, but `/best-practices` may surface new findings for any docs/ folder lacking a README.
+  - **project-console 1.4.1** scaffold template updates — ran `/project-console sync`, which regenerated `tools/project-console/run.sh` and `start.sh`. `run.sh` now reads `server.host`/`server.port` from `console.yaml` and passes `--reload-exclude` for `trace-matrix/**`, `.venv/**`, `__pycache__/*`, `.data/*`; `start.sh` is new (idempotent launcher) and no longer uses GNU-only `xargs -r`.
+  - **skill-creator v2** codifies agent-symlink mandate. No project-owned files derived from its templates yet — no action.
+  - **advisors skill (new)** — not activated. Requires `/advisors init` to install the agent symlinks into `.claude/agents/` and seed an `advisors:` block in `project.yml`. Deferred to user.
+
+- Post-update actions run this session:
+  - `/task setup` — refreshed `.claude/hooks/task-activate.sh` (v16 bugfix), all 5 hooks already registered
+  - `/secops setup` — converted `project-secops.md` to symlink, hook + permissions already wired
+  - `/project-console sync` — updated `run.sh` + `start.sh` to 1.4.1 template
+
+- Post-update follow-ups completed later in the same session (under task 018):
+  - Added `advisors`, `change-control`, `trace-matrix` to `project.yml` `security.approved_skills` (closed 3-skill secops drift)
+  - `/advisors init` — installed 13 persona-advisor symlinks into `.claude/agents/`, seeded `advisors:` block in `project.yml` (enabled: regulatory-affairs, clinical-affairs, risk-management), regenerated grounding blocks
+  - `/project-console start` — skipped, console not running
+  - `/best-practices` audit — ran against full multi-DHF (10 DHFs), identified 16 Required FAILs (mostly pre-existing debt exposed by new v17 Required-severity checks)
+  - Hygiene pass closed all 16 Required FAILs: CLAUDE.md Project Overview / For Claude / Task-First / Lessons sections, new `setup.md` (security posture), new `tasks/README.md` + `tasks/lessons-ledger.md`, 5 standards files got Verification Checks stubs, 6 missing docs folder READMEs created, 261 stub DHF READMEs got `## Conventions` via scripted pass, `.claude/skills/project-console/console/**` pycache cleaned (local-only, never tracked), 510(k) composition manifest updated to use actual folder names + 5 stub design-control folders created so every referenced piece resolves. Remaining debt is all WARN severity (Recommended). (agents-as-symlinks, docs-folder-has-README)
+
+---
+
 ## 2026-04-15 — push --merge (task 017 change-control skill scaffold)
 
 - Files: 20 (`skills/change-control/` — full scaffold)

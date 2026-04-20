@@ -86,7 +86,7 @@ dashboards:
     - docs/**/*-dashboard.html
     - docs/**/dashboard.html
     - docs/**/*-tree.html
-  overrides: {}
+  overrides: {{}}
     # submission-tracker:
     #   title: "Submission Package Tracker"
     #   group: "Submissions"
@@ -94,7 +94,7 @@ dashboards:
 
 server:
   host: 127.0.0.1
-  port: 8765
+  port: {port}
   log_level: info
 
 auth:
@@ -126,15 +126,13 @@ packages = []
 bypass-selection = true
 """
 
-RUN_SH_TEMPLATE = """\
-#!/usr/bin/env bash
+RUN_SH_TEMPLATE = r"""#!/usr/bin/env bash
 # project-console launcher. The FastAPI app code lives in the skill at
 # $CLAUDE_PROJECT_DIR/.claude/skills/project-console/console/; this script
 # injects that directory onto sys.path and runs uvicorn.
 #
-# Fails fast with EADDRINUSE if another console is already running on the
-# port. For an idempotent launch (stop any existing console first, then
-# start fresh), use `start.sh` instead.
+# Port is read from console.yaml `server.port` (falls back to 8765). Use
+# `start.sh` for an idempotent launch that stops any existing listener first.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -149,9 +147,55 @@ if [ ! -d "$SKILL_CONSOLE" ]; then
     exit 1
 fi
 
+# Resolve port from console.yaml (falls back to 8765). Keep this block in sync
+# with the matching one in start.sh.
+PORT=8765
+if [ -f console.yaml ]; then
+  discovered=$(awk '
+    /^server:/ { s=1; next }
+    /^[^[:space:]]/ && s { s=0 }
+    s && /port:/ { gsub(/[^0-9]/, "", $2); if ($2 != "") { print $2; exit } }
+  ' console.yaml 2>/dev/null || true)
+  if [ -n "$discovered" ]; then
+    PORT="$discovered"
+  fi
+fi
+
+HOST=127.0.0.1
+if [ -f console.yaml ]; then
+  discovered_host=$(awk '
+    /^server:/ { s=1; next }
+    /^[^[:space:]]/ && s { s=0 }
+    s && /host:/ { sub(/^[[:space:]]*host:[[:space:]]*/, ""); sub(/[[:space:]]*#.*$/, ""); gsub(/["'\'']/, ""); print; exit }
+  ' console.yaml 2>/dev/null || true)
+  if [ -n "$discovered_host" ]; then
+    HOST="$discovered_host"
+  fi
+fi
+
 uv sync
+
+# Strip macOS Finder junk (Icon\r, AppleDouble ._*) that can crash
+# jsonschema.iterdir() when they show up inside site-packages. Cheap no-op
+# on non-macOS machines or clean venvs.
+if [ -d .venv ]; then
+  find .venv \( -name $'Icon\r' -o -name '._*' \) -print -delete 2>/dev/null | head -20 >/dev/null || true
+fi
+
 export PYTHONPATH="$SKILL_CONSOLE/..:${PYTHONPATH:-}"
-exec uv run uvicorn console.app:app --reload --host 127.0.0.1 --port 8765
+echo "project-console: launching on http://$HOST:$PORT ..."
+# uvicorn --reload watches cwd (tools/project-console/) recursively. Exclude
+# trace-matrix/ because the `Initialize with Claude` flow writes adapters
+# there at runtime and we don't want the file write to kill the in-flight
+# SSE stream. Also exclude common venv/cache dirs.
+exec uv run uvicorn console.app:app --reload \
+  --reload-exclude 'trace-matrix/*' \
+  --reload-exclude 'trace-matrix/**/*' \
+  --reload-exclude '.venv/*' \
+  --reload-exclude '.venv/**/*' \
+  --reload-exclude '__pycache__/*' \
+  --reload-exclude '.data/*' \
+  --host "$HOST" --port "$PORT"
 """
 
 START_SH_TEMPLATE = """\
@@ -182,12 +226,12 @@ if [ -n "$existing" ]; then
   pids=$(echo "$existing" | tr '\\n' ' ')
   echo "project-console: stopping existing console on port $PORT (pid(s): $pids)"
   # Best effort: TERM first, wait, then KILL stragglers
-  echo "$existing" | xargs -r kill 2>/dev/null || true
+  echo "$existing" | xargs kill 2>/dev/null || true
   sleep 1
   still=$(lsof -ti "tcp:$PORT" 2>/dev/null || true)
   if [ -n "$still" ]; then
     echo "project-console: force-killing stragglers on port $PORT"
-    echo "$still" | xargs -r kill -9 2>/dev/null || true
+    echo "$still" | xargs kill -9 2>/dev/null || true
     sleep 1
   fi
 fi
@@ -255,7 +299,10 @@ uv.lock
 """
 
 
-def init_scaffold(project_root: Path, skill_root: Path, force: bool) -> None:
+DEFAULT_PORT = 8765
+
+
+def init_scaffold(project_root: Path, skill_root: Path, force: bool, port: int = DEFAULT_PORT) -> None:
     tool_root = project_root / "tools" / "project-console"
     if tool_root.exists() and not force:
         # If a manifest exists, suggest sync instead.
@@ -281,7 +328,7 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool) -> None:
     (tool_root / "themes").mkdir(exist_ok=True)
 
     # Config files
-    (tool_root / "console.yaml").write_text(CONSOLE_YAML_DEFAULT)
+    (tool_root / "console.yaml").write_text(CONSOLE_YAML_DEFAULT.format(port=port))
     (tool_root / "pyproject.toml").write_text(PYPROJECT_TEMPLATE)
     (tool_root / "run.sh").write_text(RUN_SH_TEMPLATE)
     (tool_root / "run.sh").chmod(0o755)
@@ -317,6 +364,7 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool) -> None:
     )
 
     print(f"Scaffolded {tool_root}")
+    print(f"Configured port: {port} (edit tools/project-console/console.yaml server.port to change)")
     print("Next steps:")
     print("  1. cd tools/project-console && uv sync")
     print("  2. cp .env.example .env  # fill in credentials")
@@ -406,6 +454,9 @@ def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("action", choices=["init", "sync", "status"])
     p.add_argument("--force", action="store_true")
+    p.add_argument("--port", type=int, default=DEFAULT_PORT,
+                   help=f"Port for the console server (default: {DEFAULT_PORT}). "
+                        "Claude should ask the user to confirm before running init.")
     p.add_argument("--project-root", default=None)
     p.add_argument("--skill-root", default=None)
     args = p.parse_args()
@@ -418,7 +469,7 @@ def main() -> int:
         return 1
 
     if args.action == "init":
-        init_scaffold(project_root, skill_root, args.force)
+        init_scaffold(project_root, skill_root, args.force, args.port)
     elif args.action == "sync":
         sync_scaffold(project_root, skill_root)
     elif args.action == "status":
