@@ -28,13 +28,19 @@ if ! command -v git >/dev/null 2>&1 || ! command -v python3 >/dev/null 2>&1; the
   exit 0
 fi
 
-# Resolve user email
-EMAIL="$(git config user.email 2>/dev/null || true)"
-if [[ -z "$EMAIL" ]]; then
-  EMAIL="unknown-user"
+# Resolve user identity via project.yml roster (secops-owned helper).
+# Falls back to the raw git email slug if the helper is missing or no roster
+# match is found. SLUG is the state-file key — stable per team member, not
+# per git-config-of-the-day.
+RESOLVER="$PROJECT_DIR/.claude/skills/secops/scripts/resolve_user.py"
+if [[ -x "$RESOLVER" || -f "$RESOLVER" ]]; then
+  SLUG="$(python3 "$RESOLVER" --task-folder 2>/dev/null || true)"
 fi
-# Slugify: replace @ and . with -
-SLUG="$(echo -n "$EMAIL" | tr '@.' '--' | tr -c 'A-Za-z0-9-' '-' | sed 's/^-*//; s/-*$//')"
+if [[ -z "$SLUG" ]]; then
+  EMAIL="$(git config user.email 2>/dev/null || true)"
+  [[ -z "$EMAIL" ]] && EMAIL="unknown-user"
+  SLUG="$(echo -n "$EMAIL" | tr '@.' '--' | tr -c 'A-Za-z0-9-' '-' | sed 's/^-*//; s/-*$//')"
+fi
 
 STATE_DIR="$PROJECT_DIR/.claude/state"
 STATE_FILE="$STATE_DIR/briefing-last-shown-$SLUG.txt"

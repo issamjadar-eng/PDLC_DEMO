@@ -1,7 +1,7 @@
 ---
 name: digest
 description: "Project activity digest — automatic morning briefing at SessionStart (12h throttled per user) and on-demand append to the project CHANGELOG.md. TRIGGER when the user says: 'update the project changelog', 'build the changelog', 'add to CHANGELOG.md', 'what changed today', 'morning briefing', 'daily digest', 'project changelog', 'summarize recent commits', 'recap the project activity', 'what did people do since yesterday'."
-version: 2
+version: 3
 updated: 2026-04-20
 ---
 
@@ -112,9 +112,11 @@ Show this usage guide.
 
 ## User identity and throttling
 
-Digest uses `git config user.email` as the primary identity key. The daily throttle file is `.claude/state/briefing-last-shown-<slug>.txt` where `<slug>` is the email with `@` and `.` replaced by `-` (e.g., `ben-xavier-globallogic-com`). One file per user, independent of `session_id` — this matches the 12h-per-user intent and survives session restarts.
+Digest keys its throttle on `task_folder` resolved via `project.yml` (e.g. `.claude/state/briefing-last-shown-ben.txt`), not raw git email slug. The resolution lives in the secops skill's `resolve_user.py` helper — the same helper that `/secops setup` uses to align repo-local `git config` to the roster.
 
-If `git config user.email` is empty or matches no `team.active[]` entry in `project.yml`, the hook still runs using the raw email slug (unknown users get briefings too). It does NOT error — an unconfigured or guest identity is a normal case for fresh clones.
+Why `task_folder` and not git email: a user's `git config user.email` may be their personal address (default from `--global`) while the roster has their work address. The throttle window should be "once per human per 12h", not "once per email-configuration per 12h". Using the stable `task_folder` means the throttle survives git-identity changes.
+
+Fallback: if `project.yml` is missing, the roster has no matching entry, or `resolve_user.py` fails for any reason, the hook falls back to the email-slug key (`briefing-last-shown-<email-slug>.txt`). Guest clones and mis-configured boxes still get briefings — just keyed on raw git email.
 
 ## Significance filter — editable
 
@@ -145,6 +147,8 @@ The significance rules live in `scripts/build_changelog.py` as a constant at the
 
 ## Changelog
 
+- 3 (2026-04-20): **Roster-driven state-file key.** `hooks/session-briefing.sh` now calls `.claude/skills/secops/scripts/resolve_user.py --task-folder` to resolve the current user to their `team.active[].task_folder` entry and keys the throttle state file on that (`briefing-last-shown-<task-folder>.txt`). Falls back to raw email slug if no roster match. Pair with secops v3 which aligns `git config` at setup time — git email follows the roster from then on, so briefings and commits share the same identity source. Built under ben/020.
+  **Post-update:** Existing projects should delete stale `briefing-last-shown-<email-slug>.txt` state files after migration. On PDLC_DEMO we renamed `briefing-last-shown-xavier-ben-gmail-com.txt` → `briefing-last-shown-ben.txt` to preserve the active throttle window.
 - 2 (2026-04-20): **Rewrite bare `task NNN:` → `task <person>/NNN:`** in both `digest.py` and `build_changelog.py` output. Commit subjects historically use bare task numbers; the project convention (`.claude/skills/lessons/SKILL.md:115`) requires the person prefix in cross-artifact references. The rewrite resolves the person by globbing `tasks/*/NNN-*.md`; unresolvable numbers are left alone. Applies to daily briefings, retrospective CHANGELOG sections, and incremental `/digest log` runs. Caught immediately after v1 shipped when the retrospective CHANGELOG.md used bare refs. Built under ben/019.
   **Post-update:** CHANGELOG.md entries written before this version may contain bare refs. Regenerate the retrospective (or hand-edit) to align existing sections to the new format.
 - 1 (2026-04-20): Initial version. Two user-facing actions (`daily`, `log`) plus `setup`. SessionStart hook with 12h throttle per user email. Path-based significance filter. Retrospective-capable on first `/digest log` run; dated `## YYYY-MM-DD HH:MM` headers as the since-cursor on subsequent runs. Medtech-docs template for `CHANGELOG.md` seed is LOCAL ONLY — upstream push to hitachi medtech-docs deferred to a follow-up task. Built under PDLC_DEMO ben/019.
