@@ -1,0 +1,76 @@
+# PDLC_DEMO — Project Changelog
+
+Reverse-chronological record of significant project activity. Populated by the `/digest log` action of the `digest` skill. New sections land at the top of this file after every run; the `## YYYY-MM-DD HH:MM UTC — <title>` header on the most recent section is the since-cursor for the next build.
+
+**What lands here:**
+- Tasks completed (by ID)
+- Skill additions, removals, and version bumps
+- Project-structure changes (CLAUDE.md, project.yml, new DHFs, composition manifests)
+- Strategy / standards / submissions documentation changes
+
+**What does NOT land here** (by design — intentional noise filtering):
+- Commits without a `task NNN:` subject ref that don't touch a trigger path
+- `chore:` / `fmt:` / `lint:` / `typo:` style commits (unless they hit a trigger path)
+- Individual README stub edits
+
+To capture the full audit trail, use `git log` or `/digest daily`. This file is a curated overview — the 30-second version of "what happened."
+
+**To rebuild:** `/digest log` — Claude will propose a new section, you approve/edit/decline before it's written.
+
+---
+
+<!-- /digest log inserts new sections above this line on each run. -->
+
+## 2026-04-20 18:32 UTC — Project retrospective
+
+_Retrospective pass covering project history to date._
+
+**32 significant commit(s)** across 4 theme(s).
+
+### Skills
+
+- task 018: sync-skills pull (53 files) + close 16 Required FAILs (`620e15e` — benxavier, 2026-04-20)
+- chore: sync-skills v4 gitignore fix + project-console v1.1.0 start action (`309683c` — benxavier-gl, 2026-04-15)
+- task 016: trace-matrix skill + project-console Trace Matrix section (`487879d` — benxavier-gl, 2026-04-15)
+- task 017: change-control skill scaffold + design (`28dfbba` — benxavier-gl, 2026-04-15)
+- task 015: project-console skill v1 + PDLC migration (`7a2215d` — benxavier-gl, 2026-04-14)
+- task 012: medtech-docs update-external-references action + FDA/framework imports (`3bf76f4` — benxavier-gl, 2026-04-14)
+- sync-skills v3 + secops versioning frontmatter (`d3168b2` — benxavier-gl, 2026-04-13)
+- task 009: shared strategy docs + sub-DHF → DHF rename (`bfb215c` — benxavier-gl, 2026-04-13)
+- medtech-docs v13: default chrome-devtools in approved_mcps template (`41451ab` — benxavier-gl, 2026-04-13)
+- best-practices v9 + strategy v9: subagent dispatch + v8 agent semantics (`5184ca4` — benxavier-gl, 2026-04-13)
+- task v14, docflow v2: add Scope column to Best Practices tables (`6493e1f` — benxavier-gl, 2026-04-13)
+- task: sync v10 → v13 with capture-discipline hooks (`ced3c27` — benxavier-gl, 2026-04-13)
+- skills: topology-aware best-practices v8, strategy v8, tracker v4 (`adf6f4b` — benxavier-gl, 2026-04-13)
+- medtech-docs: unified sub-DHF shape (v12) (`1100846` — benxavier-gl, 2026-04-13)
+- Initial commit — PDLC_DEMO scaffold with task 007 design (`8493c3c` — benxavier-gl, 2026-04-13)
+
+### Tasks Completed
+
+- task 018: close — sync-skills pull + Required FAILs cleanup complete (`18426c4` — benxavier, 2026-04-20)
+
+### Tasks
+
+- task 015: project-console 1.0.2 — panels + assistant framing (hitachi#17) (`6329d00` — benxavier-gl, 2026-04-14)
+- task 015: project-console 1.0.1 — hide macOS Icon + Windows junk (hitachi#16) (`9d90464` — benxavier-gl, 2026-04-14)
+- task 015: project-console v1 pushed upstream (hitachi#15) (`cbb0203` — benxavier-gl, 2026-04-14)
+- task 008: wire submission tracker into project console dashboards (`089341e` — benxavier-gl, 2026-04-14)
+- task 006: lock baseline regulatory architecture + critical-requirement carve-out (`51f3946` — benxavier-gl, 2026-04-14)
+- task 002: add Phase 6.5 — strategy-gated reference import (`7b67c7b` — benxavier-gl, 2026-04-14)
+- task 014: capture tracker skill genericization backlog (`ea71e48` — benxavier-gl, 2026-04-14)
+- task 013: tracker build — populate PP3500 submission tracker (`90d7332` — benxavier-gl, 2026-04-14)
+- task 013: tracker prerequisites — system SADs + PP3500 composition manifest (`e4c6d0e` — benxavier-gl, 2026-04-14)
+- task 002: draft how-to-guide.md skeleton + DHF terminology sweep (`2cc5716` — benxavier-gl, 2026-04-14)
+- task 010: capture post-009 audit findings as compliance plumbing backlog (`45e0296` — benxavier-gl, 2026-04-13)
+- task 007: update doc + index with session results (`c84429a` — benxavier-gl, 2026-04-13)
+- task 003: project-console agents + documents explorer overhaul (`3b9bdd0` — benxavier-gl, 2026-04-13)
+- docs: scaffold 9 new sub-DHFs (task 007 bulk add-sub-dhf) (`6e587ec` — benxavier-gl, 2026-04-13)
+
+### Project Structure
+
+- docs: P6 stage B — git mv flat layout into dhfs/pca-device/ (`2f54100` — benxavier-gl, 2026-04-13)
+- docs: P6 stage A — additive sub-DHF scaffold for pca-device (`d5e3bbb` — benxavier-gl, 2026-04-13)
+
+## 2026-04-20 00:00 UTC — Project changelog initialized
+
+CHANGELOG.md seeded from the `medtech-docs` `changelog-project.md` template. The `2026-04-20 18:32 UTC` retrospective above is the first real section, generated by `/digest log --retrospective`.

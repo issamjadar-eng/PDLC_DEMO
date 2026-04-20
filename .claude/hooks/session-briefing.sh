@@ -1,0 +1,1 @@
+../skills/digest/hooks/session-briefing.sh
