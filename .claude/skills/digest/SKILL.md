@@ -1,7 +1,7 @@
 ---
 name: digest
 description: "Project activity digest — automatic morning briefing at SessionStart (12h throttled per user) and on-demand append to the project CHANGELOG.md. TRIGGER when the user says: 'update the project changelog', 'build the changelog', 'add to CHANGELOG.md', 'what changed today', 'morning briefing', 'daily digest', 'project changelog', 'summarize recent commits', 'recap the project activity', 'what did people do since yesterday'."
-version: 1
+version: 2
 updated: 2026-04-20
 ---
 
@@ -127,6 +127,7 @@ The significance rules live in `scripts/build_changelog.py` as a constant at the
 - The hook emits to stdout; Claude Code renders SessionStart hook stdout as system context visible to the user at the top of the session.
 - Commits authored by the current user ARE included in the daily briefing (per explicit design decision — self-recall of yesterday's work is valuable). The CHANGELOG builder treats all authors equally.
 - The CHANGELOG is reverse-chronological (newest first). `/digest log` inserts new sections at the top.
+- **Task reference rewrite.** Both `digest.py` and `build_changelog.py` rewrite bare `task NNN` refs in commit subjects into `task <person>/NNN` form per the project convention (`.claude/skills/lessons/SKILL.md:115`). The person is resolved by globbing `tasks/*/NNN-*.md`. Commits referencing numbers that don't resolve to a task file are left alone (avoids silently dropping dangling refs). Historical commit subjects are not rewritten in git — only the rendered output of these scripts.
 
 ## Best Practices
 
@@ -144,4 +145,6 @@ The significance rules live in `scripts/build_changelog.py` as a constant at the
 
 ## Changelog
 
-- 1 (2026-04-20): Initial version. Two user-facing actions (`daily`, `log`) plus `setup`. SessionStart hook with 12h throttle per user email. Path-based significance filter. Retrospective-capable on first `/digest log` run; dated `## YYYY-MM-DD HH:MM` headers as the since-cursor on subsequent runs. Medtech-docs template for `CHANGELOG.md` seed is LOCAL ONLY — upstream push to hitachi medtech-docs deferred to a follow-up task. Built under PDLC_DEMO task 019.
+- 2 (2026-04-20): **Rewrite bare `task NNN:` → `task <person>/NNN:`** in both `digest.py` and `build_changelog.py` output. Commit subjects historically use bare task numbers; the project convention (`.claude/skills/lessons/SKILL.md:115`) requires the person prefix in cross-artifact references. The rewrite resolves the person by globbing `tasks/*/NNN-*.md`; unresolvable numbers are left alone. Applies to daily briefings, retrospective CHANGELOG sections, and incremental `/digest log` runs. Caught immediately after v1 shipped when the retrospective CHANGELOG.md used bare refs. Built under ben/019.
+  **Post-update:** CHANGELOG.md entries written before this version may contain bare refs. Regenerate the retrospective (or hand-edit) to align existing sections to the new format.
+- 1 (2026-04-20): Initial version. Two user-facing actions (`daily`, `log`) plus `setup`. SessionStart hook with 12h throttle per user email. Path-based significance filter. Retrospective-capable on first `/digest log` run; dated `## YYYY-MM-DD HH:MM` headers as the since-cursor on subsequent runs. Medtech-docs template for `CHANGELOG.md` seed is LOCAL ONLY — upstream push to hitachi medtech-docs deferred to a follow-up task. Built under PDLC_DEMO ben/019.

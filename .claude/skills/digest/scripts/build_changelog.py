@@ -39,6 +39,12 @@ from pathlib import Path
 
 TASK_REF_RE = re.compile(r"\btask\s+0*\d+\b", re.IGNORECASE)
 
+# For rewriting bare `task NNN:` refs in commit subjects into `task <person>/NNN:`
+# per the project convention (.claude/skills/lessons/SKILL.md:115 —
+# "Task reference format: <task_folder>/<NNN>, used anywhere a task is
+# referenced across team members"). Built lazily on first use.
+BARE_TASK_RE = re.compile(r"\btask\s+(0*\d+)\b", re.IGNORECASE)
+
 TRIGGER_PATHS = [
     "CLAUDE.md",
     "project.yml",
@@ -97,6 +103,56 @@ def matches_any(path: str, patterns: list[str]) -> bool:
         if fnmatch.fnmatch(path, pat):
             return True
     return False
+
+
+_TASK_FOLDER_CACHE: dict[str, str] | None = None
+
+
+def _build_task_folder_cache() -> dict[str, str]:
+    """Map `<NNN>` (zero-padded 3-digit) to its owning `<person>` folder.
+
+    Walks `tasks/*/NNN-*.md`. If a number exists under multiple folders (shouldn't
+    happen per convention, but tolerate it), pick the first alphabetically.
+    """
+    cache: dict[str, str] = {}
+    from pathlib import Path as _P
+    for p in sorted(_P("tasks").glob("*/[0-9][0-9][0-9]-*.md")):
+        num = p.name[:3]
+        person = p.parent.name
+        cache.setdefault(num, person)
+    return cache
+
+
+def _get_task_folder(num_str: str) -> str | None:
+    """Look up the person folder for a task number (string, e.g. '018' or '18').
+
+    Zero-pads to 3 digits before lookup. Returns None if no task file with that
+    number exists under any `tasks/<person>/`.
+    """
+    global _TASK_FOLDER_CACHE
+    if _TASK_FOLDER_CACHE is None:
+        _TASK_FOLDER_CACHE = _build_task_folder_cache()
+    padded = num_str.zfill(3)
+    return _TASK_FOLDER_CACHE.get(padded)
+
+
+def rewrite_task_refs(text: str) -> str:
+    """Rewrite bare `task NNN` → `task <person>/NNN` per project convention.
+
+    Leaves the text alone if the task number can't be resolved to a folder (so
+    we don't silently drop references to deleted or unindexed tasks).
+    """
+    def _sub(m: re.Match[str]) -> str:
+        raw = m.group(0)           # e.g. "task 018"
+        num = m.group(1)           # e.g. "018"
+        person = _get_task_folder(num)
+        if person is None:
+            return raw
+        # Preserve the caller's word "task" and capitalization; just inject the prefix.
+        prefix = raw[: m.start(1) - m.start()]  # "task " (with original whitespace)
+        padded = num.zfill(3)
+        return f"{prefix}{person}/{padded}"
+    return BARE_TASK_RE.sub(_sub, text)
 
 
 def is_version_bumped_skillmd(commit: Commit) -> list[str]:
@@ -245,14 +301,16 @@ def emit_section(
             continue
         lines.append(f"### {theme}")
         lines.append("")
-        # Deduplicate by subject for readability
+        # Deduplicate by subject for readability. Rewrite bare task refs to
+        # `<person>/NNN` per project convention (lessons/SKILL.md:115).
         seen_subjects: set[str] = set()
         for c in entries:
             key = c.subject
             if key in seen_subjects:
                 continue
             seen_subjects.add(key)
-            lines.append(f"- {c.subject} (`{c.short_sha}` — {c.author_name}, {c.date[:10]})")
+            subject = rewrite_task_refs(c.subject)
+            lines.append(f"- {subject} (`{c.short_sha}` — {c.author_name}, {c.date[:10]})")
         lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"

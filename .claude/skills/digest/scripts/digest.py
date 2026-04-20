@@ -27,6 +27,41 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+# For rewriting bare `task NNN:` refs to `task <person>/NNN:` per project
+# convention (.claude/skills/lessons/SKILL.md:115).
+BARE_TASK_RE = re.compile(r"\btask\s+(0*\d+)\b", re.IGNORECASE)
+_TASK_FOLDER_CACHE: dict[str, str] | None = None
+
+
+def _build_task_folder_cache() -> dict[str, str]:
+    cache: dict[str, str] = {}
+    for p in sorted(Path("tasks").glob("*/[0-9][0-9][0-9]-*.md")):
+        num = p.name[:3]
+        person = p.parent.name
+        cache.setdefault(num, person)
+    return cache
+
+
+def rewrite_task_refs(text: str) -> str:
+    """Rewrite bare `task NNN` → `task <person>/NNN` per project convention.
+
+    Leaves refs alone if the number can't be resolved (e.g. a deleted task).
+    """
+    global _TASK_FOLDER_CACHE
+    if _TASK_FOLDER_CACHE is None:
+        _TASK_FOLDER_CACHE = _build_task_folder_cache()
+    cache = _TASK_FOLDER_CACHE
+
+    def _sub(m: re.Match[str]) -> str:
+        raw = m.group(0)
+        num = m.group(1).zfill(3)
+        person = cache.get(num)
+        if person is None:
+            return raw
+        prefix = raw[: m.start(1) - m.start()]
+        return f"{prefix}{person}/{num}"
+    return BARE_TASK_RE.sub(_sub, text)
+
 # Path patterns for the "Pay attention" filter. Groups are rendered in this
 # order. Each pattern uses fnmatch semantics against git-reported paths.
 PAY_ATTENTION_GROUPS: list[tuple[str, list[str]]] = [
@@ -155,7 +190,7 @@ def classify_pay_attention(commits: list[Commit]) -> dict[str, list[tuple[str, C
 
 
 def format_commit_line(c: Commit) -> str:
-    return f"`{c.short_sha}` {c.subject}"
+    return f"`{c.short_sha}` {rewrite_task_refs(c.subject)}"
 
 
 def emit_briefing(
@@ -210,7 +245,7 @@ def emit_briefing(
                 deduped.append((f, c))
             lines.append(f"**{group_name}** ({len(deduped)} change(s))")
             for f, c in deduped[:8]:
-                lines.append(f"  - `{f}` (`{c.short_sha}` {c.subject})")
+                lines.append(f"  - `{f}` (`{c.short_sha}` {rewrite_task_refs(c.subject)})")
             if len(deduped) > 8:
                 lines.append(f"  - _(+{len(deduped) - 8} more)_")
             lines.append("")

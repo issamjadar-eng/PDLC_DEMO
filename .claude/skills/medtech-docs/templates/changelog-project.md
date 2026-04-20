@@ -15,6 +15,8 @@ Reverse-chronological record of significant project activity. Populated by the `
 
 To capture the full audit trail, use `git log` or `/digest daily`. This file is a curated overview — the 30-second version of "what happened."
 
+**Task reference format:** `<person>/<NNN>` (e.g., `ben/018`) per the project convention in `.claude/skills/lessons/SKILL.md:115`. `/digest log` rewrites bare `task NNN:` from commit subjects into the prefixed form before writing.
+
 **To rebuild:** `/digest log` — Claude will propose a new section, you approve/edit/decline before it's written.
 
 ---

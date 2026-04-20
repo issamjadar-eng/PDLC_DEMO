@@ -64,3 +64,12 @@ How to apply: When a skill uses "the most recent dated header" as a since-cursor
 
 - 2026-04-20: Task created to cover the digest skill build
 - 2026-04-20: Skill v1 complete. Both actions verified on PDLC_DEMO. CHANGELOG.md seeded and populated with retrospective. Bootstrap-header since-cursor bug caught + fixed mid-build. Moved to Complete.
+- 2026-04-20: Reopened for v2 hotfix. User caught that the retrospective CHANGELOG.md used bare `task NNN:` refs instead of the project convention `task <person>/NNN:` (documented in `.claude/skills/lessons/SKILL.md:115`). Added `rewrite_task_refs()` to both `digest.py` and `build_changelog.py` — resolves person by globbing `tasks/*/NNN-*.md`, leaves unresolvable numbers alone. Regenerated the retrospective in CHANGELOG.md with correct refs. Bumped digest to v2, VERSION to 1.1.0. Saved `~/.claude/projects/-home-benxavier-project-PDLC-DEMO/memory/feedback_task_reference_format.md` so future sessions apply the convention without being told.
+
+<!-- LESSONS LEARNED: conventions, task-references, script-output-formatting -->
+
+**Lesson — Project conventions documented in one skill must be honored by every tool that emits cross-artifact text.**
+
+Why: The task-reference format rule `<person>/<NNN>` is canonical in `lessons/SKILL.md:115` but was not surfaced in CLAUDE.md or a global memory. When building the digest skill, I copied commit subjects verbatim into CHANGELOG.md — which used bare `task NNN:` because that's how the commits were authored. The commits themselves violate the convention too (including `task ben/018` commits I made earlier in this session), but historical commit subjects can't be rewritten. The fix has to live in every tool that *reads* commit subjects and re-emits them. Caught by the user, not by me.
+
+How to apply: When building a new skill that emits text referencing tasks (commit messages, changelog entries, reports, digests), audit the output against every documented project convention at design time, not only at bug-report time. The lessons skill is the canonical registry of these conventions; search it before writing output formatters. Also: save durable conventions as feedback memories so they surface at session start in subsequent sessions — documentation in a skill file isn't enough if the skill isn't loaded that session.
