@@ -2,7 +2,7 @@
 
 **ID**: 001
 **Created**: 2026-04-12
-**Status**: In Progress
+**Status**: Completed
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -32,11 +32,11 @@ _Stand up the PDLC_DEMO project as a working demonstration of agentic MedTech pr
 - [x] Populate applicable frameworks (NIST CSF, OWASP, NTIA SBOM, GMLP, HL7 FHIR)
 - [x] Record exclusion rationale for DICOM, IHE, ASTM F2554, ISO 13485, 21 CFR 820, AAMI TIR57, ISO/IEC 23894
 - [x] Install `register-hook.sh` + run `task` skill `setup` action (hook registered in settings.json)
-- [ ] Decide on functional modules (pump-control, safety-monitor, dose-calculator, alarms, UI, connectivity, AI/ML assist, FHIR gateway — TBD)
-- [ ] Map `../pdlc_sample_docs/docs/` categories into `docs/` scaffold (planning step, then selective copy + adaptation)
-- [ ] Create `src/` placeholder structure for demo code
-- [ ] Generate initial `docs/dashboard.html` via `/medtech-docs dashboard`
-- [ ] First commit + push to origin/main
+- [x] Decide on functional modules — landed as the 9 functional groups G1–G9 in `design-inputs.md` Rev B (therapy delivery, drug library, alarms, hazard controls, UI, power/portability, connectivity, cybersecurity, regulatory)
+- [x] Map `../pdlc_sample_docs/docs/` categories into `docs/` scaffold — Phases 3–7 executed (input analysis, design controls, V&V, clinical, postmarket). Phase 1 (FDA guidance) was superseded wholesale by task 012's `update-external-references` action.
+- [x] First commit + push to origin/main — origin set, branch tracks `main`
+- [~] ~~Create `src/` placeholder structure for demo code~~ — **Deprecated.** Architecture expressed via design-control SADs (`docs/project/dhfs/*/design-controls/architecture/`) rather than a code placeholder; the demo never needed illustrative `src/`.
+- [~] ~~Generate initial `docs/dashboard.html` via `/medtech-docs dashboard`~~ — **Deprecated.** Dashboard concept replaced by `tools/project-console/` (task 003/008/015) and per-DHF `/trace-matrix` view (task 016). No static `docs/dashboard.html` is needed.
 
 ## References
 
@@ -166,3 +166,4 @@ Phases 1, 2 run independently. Phases 3–9 should run sequentially because each
 - 2026-04-12: **10 new READMEs authored** (clinical/ + 3 subfolders, postmarket/ + 4 subfolders, docs/project/README.md updated with the two new branches). Cross-links added to `design-controls/risk-management/README.md` → `clinical/benefit-risk/` and `predicate-analysis/portfolio/DEV-PP3500_regulatory_info.md` → `postmarket/capa/` + `postmarket/complaints/`.
 - 2026-04-12: **Known follow-ups flagged**: (1) the 25 imported clinical MDs all reference generic `DEV-1001..1005` in body text — a future rebrand pass may normalize to PP3500-specific content; (2) complaints ledger mentions software v1.4.0/v1.4.1 which extend beyond the device_master_catalog's v1.3 — minor forward-looking inconsistency, acceptable for demo; (3) the `related_user_needs`/`related_design_inputs` frontmatter fields await population by the customer-insights agent.
 - 2026-04-12: **Customer-insights domain agent split out to task 005.** The clinical + postmarket ingestion in this task prepared the source corpora and frontmatter schema; the agent design, spec, build, and population of `related_user_needs`/`related_design_inputs` + authoring of `insights-index.md` are scoped separately under `005-customer-insights-agent.md`.
+- 2026-04-20: **Task closed.** Three of five remaining todos landed organically through downstream work (functional modules → 9 groups in Rev B design-inputs; sample-doc mapping → Phases 3–7 + task 012 absorbing Phase 1; first commit → origin live). Two remaining items deprecated: `src/` placeholder (architecture is expressed in SADs, not illustrative code) and `/medtech-docs dashboard` (replaced by project-console + /trace-matrix).

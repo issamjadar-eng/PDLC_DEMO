@@ -2,7 +2,7 @@
 
 **ID**: 012
 **Created**: 2026-04-14
-**Status**: In Progress
+**Status**: Completed
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -32,9 +32,9 @@ Add a new context-driven action to the `medtech-docs` skill that imports the bun
 - [x] Update `docs/external/industry-frameworks/README.md` with Spec URL column populated
 - [x] Re-imported `ihe-profiles.md` and moved IHE row from "Evaluated — Not Required" to Active — the prior exclusion only considered the imaging angle and missed the ITI profiles applicable to EHR integration
 - [x] Update the action so when the rubric flags a file that exists in an existing "Evaluated — Not Required" table, it surfaces the conflict to the user (rather than auto-importing or auto-skipping) — landed as **medtech-docs v16** (PR #14, merge `2d88ce6`); also added the Scope Qualifier column to all three subfolder readme templates so future exclusions are auditable per slice
-- [ ] Run `/medtech-docs dashboard` to confirm new files are picked up
-- [ ] `/sync-skills push` v15 upstream to hitachi
-- [ ] Mark task Complete
+- [~] ~~Run `/medtech-docs dashboard` to confirm new files are picked up~~ — **Deprecated.** Static `/medtech-docs dashboard` was replaced by `tools/project-console/` (task 015) and per-DHF `/trace-matrix` (task 016); no separate dashboard run needed.
+- [x] `/sync-skills push` v15 upstream to hitachi — v15 merged as hitachi PR #13 (`d30a7f3`); v16 follow-up (conflict-surfacing + scope qualifier) merged as PR #14 (`2d88ce6`)
+- [x] Mark task Complete
 
 ## Strategy
 
@@ -146,3 +146,4 @@ The CLAUDE.md "one task, one file" rule applies even when the work is inside `.c
   - **SKILL.md Step 2.5**: new step between rubric application and file copy that reads each subfolder README's exclusion table and detects collisions with the rubric's applicable set. On conflict, prints a CONFLICT block per file (rubric trigger + existing exclusion rationale + scope qualifier) and waits for the user to resolve as IMPORT (rubric wins, move row to Active), KEEP EXCLUDED (refine rationale + scope qualifier), or DEFER (leave both untouched, log a TODO). Backwards-compatible — degrades gracefully when no exclusion table is present.
   - **All three subfolder readme templates**: gained a "Scope Qualifier" column on their exclusion tables. Prevents the failure mode where a too-broad rationale silences future applicability for an umbrella spec family.
   - Pushed as hitachi PR #14 (squash-merge `2d88ce6`).
+- 2026-04-20: **Task closed.** Both v15 and v16 merged upstream; action ran cleanly against PDLC_DEMO with 11 imports (10 FDA + IHE). Dashboard-run todo deprecated — the static `/medtech-docs dashboard` artifact is obsolete (replaced by project-console + /trace-matrix).

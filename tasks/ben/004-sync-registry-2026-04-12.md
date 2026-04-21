@@ -1,7 +1,7 @@
 ---
 **ID**: 004
 **Created**: 2026-04-12
-**Status**: In Progress
+**Status**: Completed
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -25,10 +25,11 @@ Pull latest skills/agents from the hitachi registry and apply the resulting setu
 - [x] Pull upstream files (task v11, secops skill, hooks, manifest)
 - [x] `/task setup` — register session-env / session-cleanup hooks
 - [x] `/secops setup` — install agent, security-assert hook, merge permissions
-- [ ] Update `project.yml` `approved_skills` (add `secops`)
-- [ ] Write `.claude/sync-log.md` entry
-- [ ] Re-run `/sync-skills check` — verify clean
+- [x] Update `project.yml` `approved_skills` (add `secops`)
+- [x] Write `.claude/sync-log.md` entry
+- [x] Re-run `/sync-skills check` — verified clean state; multiple subsequent pull/push cycles (2026-04-13, 2026-04-20) confirm upstream tracking
 
 ## Changelog
 
 - 2026-04-12: Task created to track registry sync session.
+- 2026-04-20: **Task closed.** All three remaining todos confirmed done in-place: `secops` present in `project.yml` `approved_skills`, `2026-04-12 — pull (task v11 + new secops skill)` entry landed in `.claude/sync-log.md`, and later sync cycles (04-13 topology + shared-strategy pushes, 04-20 bulk pull + digest/secops v3 pushes) prove the baseline held.
