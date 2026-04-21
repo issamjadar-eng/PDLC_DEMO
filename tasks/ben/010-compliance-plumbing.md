@@ -2,7 +2,7 @@
 
 **ID**: 010
 **Created**: 2026-04-13
-**Status**: Not Started
+**Status**: In Progress
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -62,45 +62,45 @@ _Close the pre-existing compliance gaps surfaced by the `/best-practices audit` 
 ## Todos
 
 **Cheap fixes (knock out first):**
-- [ ] `mkdir -p docs/internal/source-md/images`
-- [ ] Create `docs/internal/source/INDEX.md` (minimal stub)
-- [ ] Add `source-md/.staging/` line to `.gitignore`
-- [ ] Create `glossary.md` at project root (stub with a few core terms: DHF, SaMD, PCA, PP3500, predicate)
+- [x] `mkdir -p docs/internal/source-md/images` (2026-04-20: created with `.gitkeep`)
+- [x] Create `docs/internal/source/INDEX.md` (minimal stub) (2026-04-20: indexed the one source file under `kol-methodology/`)
+- [x] Add `source-md/.staging/` line to `.gitignore` (absorbed by task 018 — `.gitignore:17`)
+- [x] Create `glossary.md` at project root (2026-04-20: 14 terms — DHF, SaMD, SiMD, PCA, PP3500, predicate, UN, DI, V&V, CAPA, PCCP, KOL, FDA, K-number)
 
 **CLAUDE.md touchups:**
-- [ ] Add `## Project Overview` section to CLAUDE.md
-- [ ] Add `### For Claude` section (subsection of existing structure, probably after "Working Conventions")
-- [ ] Add "Task-First Workflow" subsection under `### For Claude`
-- [ ] Add reference to `tasks/lessons-ledger.md` so the lessons skill is discoverable at session start
+- [x] Add `## Project Overview` section to CLAUDE.md (absorbed by task 018)
+- [x] Add `### For Claude` section (subsection of existing structure, probably after "Working Conventions") (absorbed by task 018)
+- [x] Add "Task-First Workflow" subsection under `### For Claude` (absorbed by task 018)
+- [x] Add reference to `tasks/lessons-ledger.md` so the lessons skill is discoverable at session start (absorbed by task 018)
 
 **setup.md authoring:**
-- [ ] Check if medtech-docs has a `setup-md.md` template; if so, use it as a starting point
-- [ ] Write `setup.md` covering: training opt-out, GitHub 2FA, conversation hygiene, MCP/integration awareness
-- [ ] Link from CLAUDE.md
+- [x] Check if medtech-docs has a `setup-md.md` template; if so, use it as a starting point (absorbed by task 018 via secops setup)
+- [x] Write `setup.md` covering: training opt-out, GitHub 2FA, conversation hygiene, MCP/integration awareness (absorbed by task 018)
+- [x] Link from CLAUDE.md (absorbed by task 018)
 
 **Lessons skill:**
-- [ ] Copy `.claude/skills/lessons/templates/lessons-ledger.md` to `tasks/lessons-ledger.md`, remove `awaiting-content` marker
-- [ ] Create `tasks/README.md` with `## Lesson Records` format example (per lessons skill convention)
+- [x] Copy `.claude/skills/lessons/templates/lessons-ledger.md` to `tasks/lessons-ledger.md`, remove `awaiting-content` marker (absorbed by task 018)
+- [x] Create `tasks/README.md` with `## Lesson Records` format example (per lessons skill convention) (absorbed by task 018)
 
 **Skill versioning:**
-- [ ] Investigate `secops/SKILL.md` missing `version:` — check hitachi registry first; pull or push fix as appropriate
-- [ ] Investigate `skill-creator/SKILL.md` — if externally sourced (no YAML frontmatter), leave alone and note as INFO-exempt
-- [ ] If either is a local regression, fix in place and push to hitachi
+- [x] Investigate `secops/SKILL.md` missing `version:` — check hitachi registry first; pull or push fix as appropriate (absorbed by task 018 — now `version: 3`)
+- [x] Investigate `skill-creator/SKILL.md` — if externally sourced (no YAML frontmatter), leave alone and note as INFO-exempt (absorbed by task 018 — now `version: 2`)
+- [x] If either is a local regression, fix in place and push to hitachi (absorbed by task 018)
 
 **Shared references:**
-- [ ] Check hitachi `skills/shared/` for `agent-design-principles.md`; if it exists, pull it via `/sync-skills`
-- [ ] If it doesn't exist upstream, author a minimal version and push
+- [x] Check hitachi `skills/shared/` for `agent-design-principles.md`; if it exists, pull it via `/sync-skills` (pulled via task 018 sync)
+- [x] If it doesn't exist upstream, author a minimal version and push (n/a — existed upstream)
 
-**Tracker bootstrap:**
-- [ ] Run `/tracker init` to scaffold `submission-tracker.md`
-- [ ] Run `/tracker build` to populate Parts 1–4 from FDA guidance
-- [ ] Run `/tracker render` to generate HTML
+**Tracker bootstrap:** _(deferred — `submission-tracker.md` would inherit the surgical Intra-Op/Pre-Op vocabulary currently baked into the tracker skill. Running `/tracker build` before task 014 (genericize tracker) lands would contaminate the demo's output and force a re-render. Keeping these open and dependent on 014.)_
+- [ ] Run `/tracker init` to scaffold `submission-tracker.md` _(blocked on 014)_
+- [ ] Run `/tracker build` to populate Parts 1–4 from FDA guidance _(blocked on 014)_
+- [ ] Run `/tracker render` to generate HTML _(blocked on 014)_
 
 **Composition manifest (bridge the warnings):**
-- [ ] Create `docs/project/submissions/510k/composition-manifest.md` as a stub listing pca-device as the included DHF (minimal 5-section structure: Filing Identification, Included Pieces, Excluded Pieces, Cross-references, Reviewer Sign-off). Fleshes out as task 006 strategy content lands.
+- [x] Create `docs/project/submissions/510k/composition-manifest.md` as a stub listing pca-device as the included DHF (minimal 5-section structure: Filing Identification, Included Pieces, Excluded Pieces, Cross-references, Reviewer Sign-off). Fleshes out as task 006 strategy content lands. (absorbed by task 018 audit-close pass — manifest reconciled to real folder names)
 
 **Verify:**
-- [ ] Re-run `/best-practices audit`; confirm the FAILs listed above are resolved and the remaining items are task-006 territory
+- [ ] Re-run `/best-practices audit`; confirm the FAILs listed above are resolved and the remaining items are task-006 territory _(deferred with tracker items so the audit can confirm the full bundle in one pass)_
 - [ ] Commit and push to `origin/main`
 
 ## Notes
@@ -112,3 +112,4 @@ _Close the pre-existing compliance gaps surfaced by the `/best-practices audit` 
 ## Changelog
 
 - 2026-04-13: Task created from `/best-practices audit` findings right after task 009 landed. Grouped by audit category with one todo per finding. Audit had 19 FAILs, 22 WARNs, 6 INFOs — this task targets the project-plumbing FAILs and the two most valuable WARNs (composition manifest stub, secops/skill-creator versioning). Strategy content and DHF design-control content explicitly out of scope.
+- 2026-04-20: Reconciled with task 018's hygiene pass. Task 018 closed 14 of 19 todos inline. Knocked out the three remaining cheap-fix stubs in one pass: (1) `docs/internal/source-md/images/` created with `.gitkeep`; (2) `docs/internal/source/INDEX.md` authored — one row for the `kol-methodology/` PDF; (3) `glossary.md` at project root authored — 14 core terms (DHF, SaMD, SiMD, PCA, PP3500, predicate, UN, DI, V&V, CAPA, PCCP, KOL, FDA, K-number), follows the standard `## Conventions` + `## Changelog` shape. Tracker bootstrap (`init`/`build`/`render`) explicitly deferred as blocked on task 014 — running `build` before the skill is genericized would inherit surgical Intra-Op/Pre-Op vocabulary and force a re-render. Audit re-run + commit bundled with the deferred tracker items so the audit sees the full set resolved at once.

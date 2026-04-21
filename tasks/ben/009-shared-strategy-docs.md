@@ -2,7 +2,7 @@
 
 **ID**: 009
 **Created**: 2026-04-13
-**Status**: In Progress
+**Status**: Completed
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -120,25 +120,25 @@ Component callouts are optional per topic — some topics apply uniformly and do
 
 ## Todos
 
-- [ ] Update `strategy/SKILL.md` Domain Registry to all-shared
-- [ ] Update `strategy/agents/scanner.md` to drop per-dhf routing
-- [ ] Update `strategy/agents/assembler.md` to drop dhf substitution
-- [ ] Restructure `strategy/templates/default-strategy.md` with topic-first + callouts
-- [ ] Restructure `strategy/templates/regulatory-strategy.md` same shape
-- [ ] Update `strategy/SKILL.md` Best Practices table (Scope flips)
-- [ ] Update `tracker/SKILL.md` Context & Sources + init prereq
-- [ ] Update `medtech-docs/templates/readme-strategies.md`
-- [ ] Update `medtech-docs/templates/readme-{design-controls,risk-management,postmarket}.md`
-- [ ] Update `medtech-docs/SKILL.md` init + add-dhf actions
-- [ ] Execute PDLC_DEMO `git mv` of 4 existing strategy files
-- [ ] Create `testing-strategy.md` + `risk-strategy.md` stubs
-- [ ] Sweep cross-links in dhfs/pca-device/ READMEs
-- [ ] Update task 006 goals + unblock it
-- [ ] Update task 000 index (mark 007 complete, add 009)
-- [ ] Bump version numbers + changelogs on all touched skills
-- [ ] Run `/sync-skills check` to verify drift
-- [ ] Review with user
-- [ ] `/sync-skills push --merge` to contribute back to hitachi
+- [x] Update `strategy/SKILL.md` Domain Registry to all-shared
+- [x] Update `strategy/agents/scanner.md` to drop per-dhf routing
+- [x] Update `strategy/agents/assembler.md` to drop dhf substitution
+- [x] Restructure `strategy/templates/default-strategy.md` with topic-first + callouts
+- [x] Restructure `strategy/templates/regulatory-strategy.md` same shape
+- [x] Update `strategy/SKILL.md` Best Practices table (Scope flips)
+- [x] Update `tracker/SKILL.md` Context & Sources + init prereq
+- [x] Update `medtech-docs/templates/readme-strategies.md`
+- [x] Update `medtech-docs/templates/readme-{design-controls,risk-management,postmarket}.md`
+- [x] Update `medtech-docs/SKILL.md` init + add-dhf actions
+- [x] Execute PDLC_DEMO `git mv` of 4 existing strategy files
+- [x] Create `testing-strategy.md` + `risk-strategy.md` stubs
+- [x] Sweep cross-links in dhfs/pca-device/ READMEs
+- [x] Update task 006 goals + unblock it
+- [x] Update task 000 index (mark 007 complete, add 009)
+- [x] Bump version numbers + changelogs on all touched skills
+- [x] Run `/sync-skills check` to verify drift
+- [x] Review with user
+- [x] `/sync-skills push --merge` to contribute back to hitachi
 
 ## Changelog
 
@@ -147,3 +147,4 @@ Component callouts are optional per topic — some topics apply uniformly and do
 - 2026-04-13: **Terminology rename — "sub-DHF" → "DHF".** User flagged that "sub-DHF" implied a parent-child relationship but in practice the top-level entries (pca-device, connectivity-adapter, cloud-suite) are just DHFs; the "sub" was misleading. Mechanical rename across 288 live files: `sub-DHF` → `DHF`, `sub-dhf` → `dhf`, `sub_dhfs` → `dhfs`, `add-sub-dhf` → `add-dhf`. Project.yml field renamed. Template file `readme-sub-dhf.md` → `readme-dhf.md`. Historical files preserved (task 007, sync-log). Nested DHFs are now just "nested DHFs" / "child DHFs" when the relational meaning is needed — still one concept.
 - 2026-04-13: Upstream push complete — PR #10 merged to hitachi `54cc8ed` (19 files). `/best-practices audit` run against PDLC_DEMO — PR-#10-specific checks all clean (dhfs key recognized, strategy scope all shared, no per-dhf fan-out, renamed template rendered across all 10 DHFs). Pre-existing gaps remain (setup.md, glossary.md, tasks/README.md, lessons-ledger, shared/agent-design-principles.md, strategy content, composition manifests) — to be handled as plumbing pass before resuming task 006.
 - 2026-04-13: README review pass across 14 project READMEs + 10 DHF root READMEs. Updated 14 (stale per-DHF strategy references replaced with shared `strategies/` pointers; v10 tag convention refreshed; structure tables corrected). Created missing `docs/project/dhfs/README.md` as an index pointing at `project.yml` `dhfs[]` as source of truth. Open follow-ups: 9 stub DHF READMEs are thin/template and need device-scope content as each DHF's regulatory scope is defined (tracked as DHF-by-DHF backlog, not blocking).
+- 2026-04-20: Closed out. All 18 todos checkboxes were stale — prior 2026-04-13 changelog entries already declared the work done (skill edits complete, `git mv` done, stubs created, PR #10 merged `54cc8ed`, tracker v5 + strategy v10 version bumps applied, task 006 unblocked, 007 in Completed table). Spot-checked today: `docs/project/strategies/` contains all 8 shared docs; `.claude/skills/strategy/SKILL.md:98` declares "All domains are shared (v10)"; `.claude/skills/tracker/SKILL.md:28+102` read the shared path; `.claude/sync-log.md:214` records the merge.
