@@ -1,15 +1,21 @@
 #!/bin/bash
 # task-activate.sh — Manage per-session active task state
 #
-# State files: .claude/state/active-tasks-{session_id}.txt
+# State files: .state/active-tasks-{session_id}.txt (project root, relocated from
+# .claude/state/ in task ben/083 to escape Claude Code's built-in .claude/**
+# sensitive-file guard)
 # Called by: task skill (on create/find/complete), Claude (on hook denial recovery)
 # Read by: .claude/hooks/check-active-task.sh (PreToolUse gate)
 
-# State files live in .claude/state/ (gitignored), script lives in .claude/hooks/ (tracked)
+# State files live in .state/ at project root (gitignored); script lives in
+# .claude/hooks/ (tracked).
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-# Resolve state dir: if we're in hooks/, go to sibling state/; if already in state/, stay
-if [ "$(basename "$SCRIPT_DIR")" = "hooks" ]; then
-  STATE_DIR="$(dirname "$SCRIPT_DIR")/state"
+# Prefer CLAUDE_PROJECT_DIR when set (hook context); else resolve relative to
+# the script location: from .claude/hooks/ go up two levels to project root.
+if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+  STATE_DIR="${CLAUDE_PROJECT_DIR}/.state"
+elif [ "$(basename "$SCRIPT_DIR")" = "hooks" ]; then
+  STATE_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")/.state"
 else
   STATE_DIR="$SCRIPT_DIR"
 fi

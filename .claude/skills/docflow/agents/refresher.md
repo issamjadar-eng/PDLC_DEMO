@@ -17,6 +17,25 @@ You are updating an existing source-md file from a revised version of its source
 
 ## Instructions
 
+### Phase 0.0: Bypass marker protocol (MANDATORY)
+
+The `/docflow` skill installs a PreToolUse Bash hook that denies direct pandoc / pdftotext / pdfimages / unzip / libreoffice / soffice calls against office documents. Your legitimate work is exempted by a state-file marker.
+
+**Before any pandoc/pdftotext/unzip/libreoffice/soffice call** (typically in Phase 3 — Fresh Conversion):
+
+```bash
+mkdir -p "$CLAUDE_PROJECT_DIR/.state"
+touch "$CLAUDE_PROJECT_DIR/.state/docflow-active"
+```
+
+**At the end of the run (success OR failure)**:
+
+```bash
+rm -f "$CLAUDE_PROJECT_DIR/.state/docflow-active"
+```
+
+See `converter.md` Phase 0.0 for full semantics. Same rule applies here.
+
 ### Phase 1: Stage
 
 Create the staging directory at `{{STAGING_DIR}}`.

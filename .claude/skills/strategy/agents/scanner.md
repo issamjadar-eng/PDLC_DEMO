@@ -12,6 +12,14 @@ The caller may provide an optional domain filter. If provided, only report block
 
 **Domain filter**: {{DOMAIN_FILTER}}
 
+## Domain Catalog
+
+**Read the canonical domain catalog from `project.yml:strategy_domains[]` at startup.** Each entry has `key`, `name`, `scope`, `output_path`, `template`, `scope_description`, `plans_informed[]`.
+
+Build a set of recognized domain keys from `key` values. Build a lookup `key → output_path` for assembly-status reporting.
+
+**Fallback (graceful degradation)**: if `project.yml:strategy_domains[]` is missing, emit an INFO notice (`"project.yml has no strategy_domains[] block — falling back to hard-coded defaults; consider running /strategy domains reseed"`) and use this default set: `regulatory`, `commercial`, `architecture`, `development`, `testing`, `risk`, `postmarket`, `operations`.
+
 ## Tag Convention (v10)
 
 Strategy content is tagged in task documents with HTML comment blocks:
@@ -21,7 +29,7 @@ Strategy content is tagged in task documents with HTML comment blocks:
 ```
 
 **Format rules:**
-- **First value** = domain key (one of: `regulatory`, `commercial`, `architecture`, `development`, `testing`, `risk`, `postmarket`, `operations`)
+- **First value** = domain key (must match one of the keys from the Domain Catalog above)
 - **Remaining values** = topics (free-form, comma-separated)
 - Tag must appear on a **line by itself** (not inside prose, code blocks, or backticks)
 
@@ -60,7 +68,7 @@ The line immediately after a `<!-- STRATEGY CONTENT -->` tag may contain a revie
    - **Subsection count**: Number of `### ` headings between the tag and the next `## ` or EOF
    - **Last modified**: Most recent date in the task's `## Changelog` section
 4. **Flag issues**:
-   - Tags where first value is not a recognized domain key → warn with suggestion
+   - Tags where first value is not in the Domain Catalog keys → warn with suggestion, listing the known keys from the catalog
    - Tags with no values at all → warn about empty tag
    - Tags carrying a legacy `dhf=<value>` key → INFO (safe to remove)
 5. If domain filter was provided, keep only matching blocks
@@ -84,18 +92,7 @@ If any issues were flagged, list them after the table under a `### Issues` headi
 
 ## Assembly status reporting
 
-For each domain found in the scan, check whether the assembled strategy document exists at its shared output path:
-
-| Domain | Output Path |
-|--------|-------------|
-| `regulatory` | `docs/project/strategies/regulatory-strategy.md` |
-| `architecture` | `docs/project/strategies/architecture-strategy.md` |
-| `development` | `docs/project/strategies/development-strategy.md` |
-| `testing` | `docs/project/strategies/testing-strategy.md` |
-| `risk` | `docs/project/strategies/risk-strategy.md` |
-| `postmarket` | `docs/project/strategies/postmarket-strategy.md` |
-| `commercial` | `docs/project/strategies/commercial-strategy.md` |
-| `operations` | `docs/project/strategies/operations-strategy.md` |
+For each domain found in the scan, look up its `output_path` from the Domain Catalog (loaded at startup from `project.yml:strategy_domains[]`). Check whether the assembled strategy document exists at that path.
 
 One output file per domain, regardless of how many DHFs the project has. Per-component nuance is carried by callout subsections inside each shared doc (see `templates/default-strategy.md` and `templates/regulatory-strategy.md`).
 

@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 17
-updated: 2026-04-16
+version: 21
+updated: 2026-04-20
 ---
 
 # MedTech Docs
@@ -38,6 +38,8 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/`:
 | `readme-source-md.md` | `init` | `docs/internal/source-md/README.md` |
 | `readme-formal.md` | `init`, `add-dhf` | Template for `formal/` subfolder READMEs (substitute `{{PARENT}}`) |
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
+| `rule-sentinel-blocks.md` | `init` (Step 2c Check 4) | Source for `.claude/rules/sentinel-blocks.md` — AUTO:STRUCTURE sentinel convention spec. Copied verbatim into adopting projects. |
+| `claude-md-task-discipline.md` | `init` (Step 2c Check 5) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -291,7 +293,15 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 
 **Check 3**: Check if `.claude/rules/readme-before-write.md` exists. If not, create it with the standard rule content (read parent + target README, handle missing READMEs by creating them first).
 
-This ensures every project initialized by `/medtech-docs init` gets the full README convention from day one — not just the scaffolded README files, but the rules telling Claude how to use and create them.
+**Check 4**: Check if `.claude/rules/sentinel-blocks.md` exists. If not, copy verbatim from `${CLAUDE_SKILL_DIR}/templates/rule-sentinel-blocks.md` to `.claude/rules/sentinel-blocks.md`. This seeds the `<!-- AUTO:STRUCTURE -->` sentinel convention that the medtech-docs renderer + `/best-practices fix` action depend on. No CLAUDE.md insertion is needed — sentinels are invoked by skills (`/medtech-docs init`, `/medtech-docs add-dhf`, `/best-practices fix`), not by direct human action, so the rule file alone is sufficient as a convention reference for Claude.
+
+**Check 5**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
+
+**Insert task discipline section** (place inside the existing "For Claude" section, after the "Task-First Workflow" subsection if present; otherwise append to "For Claude"):
+
+Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-task-discipline.md` and insert it. The template is the single source of truth for the task-discipline language — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block defines the "update active task doc as you go" hard rule, which is the recovery contract for dropped/compacted/interrupted sessions.
+
+This ensures every project initialized by `/medtech-docs init` gets the full README convention AND the task-discipline rule from day one — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
 
 **Step 3 — Create the folder structure and READMEs**
 
@@ -508,6 +518,16 @@ For each README, read the corresponding template from `${CLAUDE_SKILL_DIR}/templ
 | `submissions/510k/correspondence/` | 510(k) Correspondence | FDA interactions related to the 510(k) submission. Includes acknowledgments, Additional Information requests, response letters, and clearance correspondence. Date-prefixed naming. AI requests have strict response deadlines — note the deadline in the file. | `YYYY-MM-DD-type-topic.md` (e.g., `2026-06-15-fda-ai-request.md`) | Submission acknowledgments, Additional Information requests, responses to FDA, clearance letter, outgoing correspondence |
 | `submissions/pccp/correspondence/` | PCCP Correspondence | FDA interactions specific to the PCCP. The PCCP is filed with the 510(k) but may generate separate correspondence if FDA has PCCP-specific questions. File in the most specific location — PCCP-specific here, general 510(k) in the 510k folder. | `YYYY-MM-DD-type-topic.md` (e.g., `2026-07-01-fda-pccp-feedback.md`) | FDA PCCP feedback, responses to PCCP questions, outgoing PCCP correspondence |
 
+**Render sentinel blocks after each README write**
+
+After writing every README.md from a template (tier, special, or leaf), invoke the sentinel renderer against the written file to populate any `<!-- AUTO:STRUCTURE ... -->` blocks with current filesystem state:
+
+```
+python3 .claude/skills/medtech-docs/scripts/render-sentinels.py <path-to-readme>
+```
+
+The renderer is idempotent — if the template has no sentinels (most leaf and `formal/` READMEs), it is a no-op that leaves the file unchanged. For READMEs whose templates do contain `## Structure` / `## Subfolders` sentinels (readme-dhf, readme-project, readme-external, readme-internal, readme-docs, readme-input-analysis, readme-clinical, readme-postmarket, readme-design-controls, readme-submissions), the render pass rebuilds the subfolder table from the actual directory contents so the scaffolded README reflects reality from day one. See `.claude/rules/sentinel-blocks.md` for the convention.
+
 **Step 4 — Determine applicable standards and frameworks**
 
 Based on the user's answers, auto-populate the standards and frameworks READMEs:
@@ -593,6 +613,8 @@ Use the same templates the `init` action uses — `readme-design-controls.md`, `
 
 Skip any folder or README that already exists. This makes `add-dhf` idempotent under re-run — if the user ran it previously and is now adding the `--filing` flag, re-running should update the DHF entry in `project.yml` without disturbing existing content.
 
+**Render sentinels after scaffolding.** After writing each README from a template (DHF root, design-controls, trace-matrix, clinical, postmarket, risk-management, cybersecurity, and each leaf), invoke `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py <path-to-readme>` to populate `<!-- AUTO:STRUCTURE ... -->` blocks with the actual filesystem state of the new DHF. This mirrors the render pass from `init` Step 3 and ensures the new DHF's structure tables match reality from the first write. The renderer is a no-op for templates without sentinels. See `.claude/rules/sentinel-blocks.md` for the convention.
+
 **Step 4 — Update `project.yml`**:
 Parse `project.yml`, find the `dhfs:` list, and append a new entry:
 
@@ -622,6 +644,14 @@ dhfs:
 Preserve existing entries and all surrounding YAML structure (comments, spacing, other fields). Write `project.yml` atomically — build the new content in memory and write in one operation.
 
 If the new DHF is an **item** and an existing **system** DHF's `composes` list should include it, prompt the user: *"Should I add '<name>' to the composes list of system DHF '<system-leaf>'?"* If yes, update the system DHF's `composes` list.
+
+**Re-render parent-README sentinels.** After `project.yml` is updated and the new DHF folder exists on disk, re-render any parent READMEs whose sentinel blocks should now include the new DHF row. At minimum:
+
+```
+python3 .claude/skills/medtech-docs/scripts/render-sentinels.py docs/project/dhfs/README.md
+```
+
+If `docs/project/dhfs/README.md` has an `<!-- AUTO:STRUCTURE kind=subfolder-table source=fs -->` block, the renderer will regenerate its subfolder table so the new DHF row appears, preserving the `Purpose` column for rows that already exist. Skip silently if the parent README has no sentinels — the render call is a no-op. See `.claude/rules/sentinel-blocks.md`.
 
 **Step 5 — Report**:
 Show the user:
@@ -915,6 +945,8 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 | Leaf READMEs have expected content | Every `README.md` in a leaf folder (no subdirectories) under `docs/` contains a `## Expected Content` or `## Expected Documents` section listing what document types belong in that folder. Exceptions: folders that use domain-specific sections instead (e.g., standards/ uses `## Distilled Standards`, frameworks/ uses `## Active Frameworks`). | Recommended | shared |
 | README changelogs are current | When a `README.md` under `docs/` is modified, its `## Changelog` table has an entry matching the current date or the date of the most recent modification. Stale changelogs (last entry significantly older than git last-modified date) should be flagged. | Recommended | shared |
 | No task refs in persistent docs | `CLAUDE.md`, `project.yml` descriptions, and DHF `README.md` files do not contain references to task documents (`tasks/*/NNN-*.md`). Persistent project documents must reference durable artifacts (strategy docs, architecture docs, input analysis, submission docs). Convention defined in CLAUDE.md Document Conventions. | Required | shared |
+| CLAUDE.md has task discipline section | `CLAUDE.md` contains the string `Update as you go (HARD RULE` (the marker for the task-discipline block seeded by `/medtech-docs init` Step 2c Check 5). If missing, the active task doc has no recovery contract — sessions that drop or compact mid-batch lose their work narrative. Re-run `/medtech-docs init` to seed, or copy from `templates/claude-md-task-discipline.md`. | Required | shared |
+| medtech-docs templates match init folder tree | Self-consistency check on this skill. Parse the `init` action's Step 3 "Folder tree" diagram (fenced code block) to extract the set of folders that receive a `README.md`. Parse the "README content sources" tables (Tier READMEs, Special READMEs, and the leaf-folder table) to extract the set of target paths and their mapped template files. Assert: (1) every folder in the tree that gets a README appears as a target in at least one content-sources table; (2) every target path in the content-sources tables corresponds to a folder in the tree; (3) every template file referenced (e.g., `readme-dhf.md`, `readme-leaf.md`) exists at `.claude/skills/medtech-docs/templates/<filename>`; (4) no orphan templates in `templates/` that aren't referenced by SKILL.md. Drift here means new-project scaffolds will either skip folders or reference missing templates — a bug at the source. | Required | shared |
 
 ## Notes
 
@@ -927,6 +959,14 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 
 ## Changelog
 
+- 21 (2026-04-20): **`init` now seeds task-discipline section into CLAUDE.md.** Added Check 5 to Step 2c that checks CLAUDE.md for the string `Update as you go (HARD RULE` and inserts the task-discipline block from `templates/claude-md-task-discipline.md` if missing. Inserted into the existing "For Claude" section after "Task-First Workflow". Closes the gap where new projects scaffolded by `/medtech-docs init` got the README/sentinel rules but no rule requiring Claude to update the active task doc as work progresses — leading to recovery failures when sessions dropped or compacted mid-batch on long workflows. Single-source-of-truth: the template file is the canonical text; downstream projects re-seed by re-running `/medtech-docs init` rather than edit the inserted block. Pairs with feedback memory `feedback_task_doc_update_as_you_go.md` and the existing `Stop` capture-check hook (which is end-of-session — this rule is the during-session contract).
+  **Post-update:** Run `/medtech-docs init` on existing projects to seed the new section into CLAUDE.md (idempotent — Check 5 detects existing sections and skips). Or hand-copy from `templates/claude-md-task-discipline.md` into the "For Claude" section of CLAUDE.md after "Task-First Workflow".
+- 20 (2026-04-20): **`init` now seeds `.claude/rules/sentinel-blocks.md`.** Added Check 4 to Step 2c that checks for the sentinel-blocks convention file and copies it verbatim from `${CLAUDE_SKILL_DIR}/templates/rule-sentinel-blocks.md` into the adopting project if missing. Follows the existing `readme-before-write.md` seeding pattern (Check 3) — no CLAUDE.md insertion needed because sentinels are invoked by skills rather than humans. Closes the follow-up noted in v19's hitachi PR — downstream projects pulling v19 got the renderer and wrapped templates but had no convention doc; v20 ships the doc as a first-class template. New template: `templates/rule-sentinel-blocks.md` (102 lines, verbatim copy of the hand-authored project-local rule).
+  **Post-update:** No user action needed for existing projects that already have `.claude/rules/sentinel-blocks.md`; Check 4 detects the existing file and skips. Projects that lack the rule file will receive it on the next `/medtech-docs init` run (init is safe to re-run — it only creates missing files).
+- 19 (2026-04-20): **Sentinel block rendering for auto-updated structural content.** New `scripts/render-sentinels.py` regenerates `<!-- AUTO:STRUCTURE -->` blocks inside README templates from filesystem or `project.yml`. Templates with `## Structure` tables (readme-dhf, readme-project, readme-external, readme-internal, readme-docs, readme-input-analysis, readme-clinical, readme-postmarket, readme-design-controls, readme-submissions) now wrap their tables in sentinels. `init` and `add-dhf` actions invoke the renderer after each README write so fresh scaffolds reflect actual folder state; `add-dhf` also re-renders `docs/project/dhfs/README.md` so the parent table updates when a new DHF lands. Convention spec: `.claude/rules/sentinel-blocks.md`. Pairs with best-practices v11 drift checks. Part of task 072 Phase 2.
+  **Post-update:** No user action needed for existing projects — sentinels are opt-in per file. Running `/medtech-docs init` or `/medtech-docs add-dhf` on a fresh project uses the new templates. To retrofit an existing project, wrap its Structure tables in sentinels manually and run the render script; best-practices v11 drift detection flags candidates.
+- 18 (2026-04-20): **Self-consistency check — templates match init folder tree.** Added new Required `shared` best-practice check `medtech-docs templates match init folder tree`. Parses the `init` action's Step 3 "Folder tree" fenced code block to extract folders that receive a README, cross-references the "README content sources" tables for target→template mapping, and verifies: (1) every folder in the tree that gets a README is a target in at least one content-sources table; (2) every target path in the content-sources tables exists in the tree; (3) every template file referenced exists at `.claude/skills/medtech-docs/templates/`; (4) no orphan templates unreferenced by SKILL.md. Drift here means new-project scaffolds skip folders or reference missing templates — a latent bug at the source. Pairs with the 4 new project-level README/CLAUDE.md drift checks in best-practices v11. Part of task 072 Phase 1.
+  **Post-update:** No user action needed. New check runs automatically on next `/best-practices audit`. First run on this project will likely flag known scaffold gaps (e.g., `hiplink-suite/` missing clinical/evaluation-plans leaves) — those will be resolved in task 072 Phase 4 backfill.
 - 17 (2026-04-16): Added Step 2c to `init` — seeds CLAUDE.md with README Convention section (meta-model, purpose, templates, missing-README handling) and README Before Write rule, plus installs `.claude/rules/readme-before-write.md` rule file. Added best-practice check "Every docs folder has README" (Required, shared) — recursively verifies every directory under `docs/` has a README.md, excluding `.staging/`, `images/`, `formal/`, and hidden directories. Closes the gap where medtech-docs scaffolded READMEs in every folder but never told Claude about the convention in CLAUDE.md, and best-practices audited README content but never checked README existence.
 - 16 (2026-04-14): **`update-external-references` learns to surface rubric-vs-existing-exclusion conflicts instead of picking a side.** Added new Step 2.5 between rubric application and file copy: before importing, the action now reads each subfolder README's "Evaluated — Not Required" / "Evaluated — Not Applicable" table and detects collisions with the rubric's applicable set. On conflict the action prints a CONFLICT block per file with the rubric trigger, the existing exclusion rationale, and the optional Scope Qualifier, and waits for the user to choose IMPORT (rubric wins, move row to Active), KEEP EXCLUDED (refine rationale + Scope Qualifier), or DEFER (leave both untouched, log a TODO). Companion template change: all three subfolder READMEs gained a Scope Qualifier column on their exclusion tables, so exclusion rationales can be auditable per slice — preventing the failure mode where "no imaging integration" excludes IHE wholesale and silences future ITI/Pharmacy applicability. Origin: PDLC_DEMO `tasks/ben/012` IHE Profiles case — the v15 rubric flagged IHE on EHR-integration but the existing exclusion only considered the imaging slice; my initial revert was wrong, the user's correction surfaced that neither auto-import nor auto-skip is right. **Post-update:** Existing project READMEs continue to work — the Scope Qualifier column is additive and the conflict-detection step degrades gracefully when no exclusion table is present. Optional follow-up: backfill the Scope Qualifier column on existing exclusion rows so the next run has more context. **LOCAL — pending upstream push via `/sync-skills`.**
 - 15 (2026-04-14): **New action `update-external-references` — context-driven import of bundled FDA guidance, standards, and industry-framework distilled files into `docs/external/`.** Reads `project.yml` + `CLAUDE.md` + `docs/project/strategies/*.md` + per-DHF READMEs as the only signal sources, applies a per-file rubric (10 FDA guidances, 5 standards, 8 frameworks), and copies the applicable distilled `.md` files from `${CLAUDE_SKILL_DIR}/references/` into the matching `docs/external/<subfolder>/`. Idempotent: never overwrites an existing project file, never deletes, and on rerun marks newly-not-applicable rows in the README tables instead of removing them. Updates the table in each touched subfolder README to add an "Original Source" / "Spec URL" column pointing back to the bundled `source/`+`source-md/` (FDA) or to the publisher URL (standards, frameworks). Reachable via aliases: "import fda docs", "pull reference guidances", "refresh external references", etc. Companion template updates: `readme-fda-guidance.md` rewritten from the old "applicability reports" model to the unified "distilled copies hosted here, originals linked" model; `readme-standards.md` and `readme-industry-frameworks.md` gained an "Original Source" / "Spec URL" column on their active tables. No best-practices check changes (existing `Standards have verification checks` and `Frameworks have evaluation decisions` rules still apply). Pushed upstream via hitachi PR #13 (squash-merge `d30a7f3`).

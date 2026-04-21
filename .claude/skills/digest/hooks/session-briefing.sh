@@ -4,7 +4,8 @@
 # Emits a daily briefing to stdout (rendered as SessionStart system context by
 # Claude Code) at most once per 12 hours per user. User identity is resolved
 # via `git config user.email`; throttle state lives at
-# `.claude/state/briefing-last-shown-<email-slug>.txt`.
+# `.state/briefing-last-shown-<email-slug>.txt` (relocated from .claude/state/
+# in ben/083 to escape .claude/** sensitive-file guard).
 #
 # Silent unless ≥12h since last briefing for this user. No errors on
 # unconfigured user email (falls back to 'unknown-user' slug).
@@ -42,7 +43,7 @@ if [[ -z "$SLUG" ]]; then
   SLUG="$(echo -n "$EMAIL" | tr '@.' '--' | tr -c 'A-Za-z0-9-' '-' | sed 's/^-*//; s/-*$//')"
 fi
 
-STATE_DIR="$PROJECT_DIR/.claude/state"
+STATE_DIR="$PROJECT_DIR/.state"
 STATE_FILE="$STATE_DIR/briefing-last-shown-$SLUG.txt"
 mkdir -p "$STATE_DIR"
 

@@ -25,7 +25,7 @@ Parse the user's argument string `$ARGUMENTS` to determine which action to perfo
 
 Wire up hooks and agents for this skill. Idempotent — safe to re-run.
 
-1. Create `.claude/hooks/`, `.claude/agents/`, and `.claude/state/` directories if they don't exist.
+1. Create `.claude/hooks/`, `.claude/agents/`, and `.state/` (at project root) directories if they don't exist.
 2. For each hook script in `hooks/`, create symlink `.claude/hooks/{{HOOK_NAME}}.sh` → `../skills/{{SKILL_NAME}}/hooks/{{HOOK_NAME}}.sh` (skip if already correct; replace if target moved).
 3. For each agent file in `agents/`, create symlink `.claude/agents/{{AGENT_NAME}}.md` → `../skills/{{SKILL_NAME}}/agents/{{AGENT_NAME}}.md` (skip if already correct; leave forks — regular files — alone).
 4. Register each hook:

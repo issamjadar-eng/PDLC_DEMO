@@ -12,6 +12,7 @@ __pycache__/
 .venv/
 dist/
 build/
+.state/
 .claude/state/
 .claude/scheduled_tasks.lock
 docs/internal/source-md/.staging/

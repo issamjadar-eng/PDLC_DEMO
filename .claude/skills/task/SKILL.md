@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 17
-updated: 2026-04-16
+version: 18
+updated: 2026-04-20
 ---
 
 # Task Management
@@ -45,9 +45,9 @@ When any action encounters a missing dependency, it should report:
 | File | Purpose |
 |------|---------|
 | `hooks/check-active-task.sh` | PreToolUse hook — denies Edit/Write/NotebookEdit when no active task is set. Symlinked from `.claude/hooks/`. |
-| `hooks/task-activate.sh` | Activation script source — installed to `.claude/state/` by `setup` action. Manages per-session state files. |
+| `hooks/task-activate.sh` | Activation script source — installed to `.claude/hooks/` by `setup` action (writes per-session state files into `.state/` at project root). |
 | `hooks/session-env.sh` | SessionStart hook — reads `session_id` from hook JSON and exports `CLAUDE_SESSION_ID` via `CLAUDE_ENV_FILE`, making the ID available to all Bash tool calls. Required by `check-active-task.sh`. Symlinked from `.claude/hooks/` by `setup`. |
-| `hooks/session-cleanup.sh` | SessionEnd hook — removes `.claude/state/active-tasks-{session_id}.txt` when a session ends, so completed sessions don't leave orphan state files. Symlinked from `.claude/hooks/` by `setup`. |
+| `hooks/session-cleanup.sh` | SessionEnd hook — removes `.state/active-tasks-{session_id}.txt` when a session ends, so completed sessions don't leave orphan state files. Symlinked from `.claude/hooks/` by `setup`. |
 | `hooks/register-hook.sh` | Shared hook registration helper — installed to `.claude/hooks/` by `setup` action if not already present |
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
@@ -61,7 +61,7 @@ Wire up the task gate hook and activation script for this project. Self-containe
 
 1. Verify `jq` is available (required by hooks). If missing, warn: "Install jq via `brew install jq`" and stop.
 2. Create `.claude/hooks/` directory if it doesn't exist
-3. Create `.claude/state/` directory if it doesn't exist
+3. Create `.state/` directory at project root if it doesn't exist (runtime state, gitignored; relocated from `.claude/state/` in task ben/083 to escape Claude Code's `.claude/**` sensitive-file guard)
 4. If `.claude/hooks/register-hook.sh` does not exist, install it from `${CLAUDE_SKILL_DIR}/hooks/register-hook.sh` and make it executable. This is shared infrastructure — any skill can use it to register hooks safely.
 5. Create symlink `.claude/hooks/check-active-task.sh` → `../skills/task/hooks/check-active-task.sh` (skip if already exists)
 6. Create symlink `.claude/hooks/session-env.sh` → `../skills/task/hooks/session-env.sh` (skip if already exists). This hook makes `CLAUDE_SESSION_ID` available to all Bash tool calls — the task gate relies on it.
@@ -203,7 +203,7 @@ Display a task's contents. Read and show the file `tasks/<person>/NNN-*.md`.
 
 A `PreToolUse` hook enforces that file modifications (Edit/Write/NotebookEdit) require an active task. The task skill manages the per-session state file that unlocks this gate.
 
-**State file path:** `.claude/state/active-tasks-{session_id}.txt` (project-local, gitignored)
+**State file path:** `.state/active-tasks-{session_id}.txt` (project root, gitignored; relocated from `.claude/state/` in ben/083 to escape `.claude/**` sensitive-file guard)
 
 One task ID per line. Per-session files ensure each terminal/session has independent gate state.
 
@@ -263,6 +263,8 @@ bash .claude/hooks/task-activate.sh list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 ## Changelog
 
+- 18 (2026-04-20): **Relocate runtime state from `.claude/state/` to `.state/` at project root** (task ben/083). Claude Code's built-in sensitive-file guard prompts on every Bash-initiated edit/write/remove against files under `.claude/**` regardless of `permissions.allow` rules in `settings.json`. The only durable escape is moving state OUT of `.claude/`. Updated: `check-active-task.sh` (STATE_FILE path + exempt pattern `*/.state/*`), `task-activate.sh` (STATE_DIR resolution with `CLAUDE_PROJECT_DIR` preference + `../../.state` fallback for `.claude/hooks/` callers), `session-cleanup.sh`, `capture-check.sh`, `capture-signals.sh`, `SKILL.md`, `README.md`, `test-task-gate.sh`. Historical changelog entries (v5, v15, v16) intentionally preserved.
+  **Post-update:** Run `/task setup` to refresh the installed `.claude/hooks/task-activate.sh` copy (setup step 10 uses copy, not symlink). Existing `.claude/state/` contents are ephemeral per-session state — either `mv .claude/state/* .state/` to preserve in-flight sessions OR delete `.claude/state/` entirely (state is re-created on next session start). The `Edit/Write(.claude/state/**)` allow rules in `settings.json` are now dead weight and should be removed.
 - 17 (2026-04-16): **Cross-platform symlink resolution in `check-active-task.sh`.** v15 used `realpath -m` first, which is a GNU-only flag — BSD `realpath` on macOS (default since macOS 12.3) has no `-m`, and furthermore fails outright on non-existent paths. So on macOS, resolution would silently fall through to the raw path, and the v15 symlink-bypass tests would FAIL there (a symlink under `tasks/` whose target is a skill source would still match the exempt pattern as-is, bypassing the gate). v17 reorders: python3 is tried first (uniform `os.path.realpath` semantics across macOS + Linux, tolerates missing leaf paths); GNU `realpath -m` / BSD `realpath` + parent-dir trick / GNU `readlink -f` are fallbacks. python3 ships by default on macOS 12.3+ and every mainstream Linux distro, so the primary branch covers the real deployment base. All 63 tests pass on Linux; symlink-bypass tests will now also pass on macOS.
   **Post-update:** no user action needed. Hook is installed via symlink — v17 logic activates on next tool call after pulling.
 - 16 (2026-04-16): **Fix `task-activate.sh remove` on Linux / WSL (GNU sed).** The `remove` action used `sed -i ''` which is BSD/macOS-only syntax — on GNU sed, the empty-string argument is interpreted as the input filename, causing the command to fail silently (swallowed by `2>/dev/null`). The script printed "Task X deactivated" successfully but the line was never actually removed from the state file. That meant any `remove` on Linux/WSL was a no-op, and the task gate continued to allow edits after supposedly-completed tasks — a silent integrity hole in the state machine. Fix swaps `sed -i ''` for a portable `grep -vxF | mv` pipeline, with a fallback that truncates the file when the removed task was the last entry. All 63 tests in `test-task-gate.sh` now pass (was 58/63 under v15 with the 5 pre-existing failures all traceable to this one sed bug).

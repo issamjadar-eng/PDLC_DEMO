@@ -8,8 +8,9 @@
 # acts as the hard backstop if this soft nudge is ignored.
 #
 # State files (per session, per task):
-#   .claude/state/capture-armed-{session_id}-{task_id}.txt       — exists after entry signal
-#   .claude/state/capture-exit-pending-{session_id}-{task_id}.txt — exists after exit signal
+#   .state/capture-armed-{session_id}-{task_id}.txt       — exists after entry signal
+#   .state/capture-exit-pending-{session_id}-{task_id}.txt — exists after exit signal
+# (relocated from .claude/state/ in ben/083 to escape .claude/** sensitive-file guard)
 #
 # Pass-through conditions (no arming/triggering):
 #   - No active task
@@ -27,7 +28,7 @@ fi
 [ -z "$SESSION_ID" ] && exit 0
 
 # Active tasks for this session
-STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/state"
+STATE_DIR="${CLAUDE_PROJECT_DIR}/.state"
 ACTIVE_FILE="${STATE_DIR}/active-tasks-${SESSION_ID}.txt"
 [ -f "$ACTIVE_FILE" ] || exit 0
 [ -s "$ACTIVE_FILE" ] || exit 0

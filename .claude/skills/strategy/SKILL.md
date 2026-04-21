@@ -1,8 +1,8 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified shared strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market, operations; topic-first with per-component callouts"
-version: 10
-updated: 2026-04-13
+version: 11
+updated: 2026-04-20
 ---
 
 # Strategy Harvester
@@ -97,16 +97,20 @@ The lightest-weight alternative to marking a block as superseded: simply delete 
 
 Each domain has a key, output path, template, and list of formal plans it informs. **All domains are `shared`** (v10) — one output file per domain, project-wide. Strategy is a cross-component story: per-component nuance lives as callout subsections inside the shared doc, not as separate per-DHF files.
 
+**Source of truth**: this table is rendered from `project.yml:strategy_domains[]` via a sentinel block (see `.claude/rules/sentinel-blocks.md`). Edit `project.yml`, then run `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py .claude/skills/strategy/SKILL.md` (or invoke via `/medtech-docs` / `/best-practices fix`).
+
+<!-- AUTO:STRUCTURE kind=strategy-domains source=project.yml:strategy_domains variant=registry -->
 | Domain Key | Domain Name | Scope | Output Path | Template | Plans Informed |
 |-----------|------------|-------|-------------|----------|----------------|
 | `regulatory` | Regulatory | shared | `docs/project/strategies/regulatory-strategy.md` | `regulatory-strategy.md` | 510(k), PCCP, Q-Sub, LMR |
-| `commercial` | Commercial | shared | `docs/project/strategies/commercial-strategy.md` | `default-strategy.md` | Go-to-market plan, business case, market expansion |
+| `commercial` | Commercial | shared | `docs/project/strategies/commercial-strategy.md` | `default-strategy.md` | Go-to-market plan, Business case, Market expansion |
 | `architecture` | Architecture | shared | `docs/project/strategies/architecture-strategy.md` | `default-strategy.md` | SAD (per DHF), SRS, cybersecurity plan |
 | `development` | Development | shared | `docs/project/strategies/development-strategy.md` | `default-strategy.md` | SDP, Config Mgmt Plan |
 | `testing` | Testing & Validation | shared | `docs/project/strategies/testing-strategy.md` | `default-strategy.md` | V&V Plan, test protocols, usability plan |
 | `risk` | Risk | shared | `docs/project/strategies/risk-strategy.md` | `default-strategy.md` | Risk Mgmt Plan (per DHF), FMEA, risk-benefit analysis |
 | `postmarket` | Post-Market | shared | `docs/project/strategies/postmarket-strategy.md` | `default-strategy.md` | Maintenance Plan, PMS Plan (per DHF), LMR, PCCP tracking |
-| `operations` | Operations & Tooling | shared | `docs/project/strategies/operations-strategy.md` | `default-strategy.md` | Project management plan, skill roadmap, team onboarding |
+| `operations` | Operations & Tooling | shared | `docs/project/strategies/operations-strategy.md` | `default-strategy.md` | CI/CD & release pipeline, SBOM/SOUP supply chain, cloud infrastructure, QMS operational posture, PM plan, tooling & agentic-infra roadmap, team onboarding |
+<!-- /AUTO:STRUCTURE -->
 
 **Output path resolution**: The path column is literal. One output file per domain, regardless of how many DHFs the project has. Cross-component nuance is carried by **per-component callout subsections** inside each shared doc (see `templates/default-strategy.md`).
 
@@ -174,8 +178,9 @@ Generate placeholder strategy briefs for all domains that don't yet have a strat
    d. Write the brief to the domain's output path.
 2. Report which briefs were created and which were skipped.
 
-**Domain brief content:**
+**Domain brief content** (rendered from `project.yml:strategy_domains[]` — edit the manifest, not this table):
 
+<!-- AUTO:STRUCTURE kind=strategy-domains source=project.yml:strategy_domains variant=init-briefs -->
 | Domain | What Belongs Here | Plans Table Rows |
 |--------|------------------|-----------------|
 | `regulatory` | Filing pathway and classification decisions; Multi-jurisdiction strategy (US, EU, Canada); Predicate device selection rationale; PCCP scope decisions; Q-Sub questions and FDA feedback | 510(k) Submission \| Filing pathway, submission structure; PCCP \| Change categories, module scope; Q-Sub \| Questions for FDA; LMR \| Post-clearance tracking |
@@ -185,7 +190,8 @@ Generate placeholder strategy briefs for all domains that don't yet have a strat
 | `testing` | Test strategy (bench vs. clinical); Acceptance criteria philosophy; AI/ML validation approach; Usability testing strategy (formative vs. summative); Test infrastructure and dataset management; Regression testing approach | V&V Plan \| Test strategy, protocols; Test protocols \| Acceptance criteria; Usability plan \| Formative/summative approach |
 | `risk` | Risk-benefit framing and acceptable risk thresholds; FMEA methodology decisions; Risk-driven architecture decisions; Cross-module risk interactions; Post-market risk monitoring approach | Risk Mgmt Plan \| Risk methodology, thresholds; FMEA \| Hazard analysis approach; Risk-benefit analysis \| Framing for submission |
 | `postmarket` | Post-market surveillance strategy; Complaint handling approach; Field safety and corrective action; Maintenance cadence and update strategy; LMR structure and reporting cadence; PCCP change tracking process | Maintenance Plan \| Update cadence, process; PMS Plan \| Surveillance approach; LMR \| Change tracking; PCCP tracking \| Modification reporting |
-| `operations` | Agentic infrastructure and AI tooling decisions; Skill and automation roadmap; Team workflow and collaboration patterns; Process automation strategy; Project management approach; Onboarding and knowledge management | Project management plan \| Ways of working; Skill roadmap \| Tooling priorities; Team onboarding \| Knowledge transfer |
+| `operations` | Build, release, and CI/CD pipeline decisions; Supply chain and SOUP/SBOM management; Cloud infrastructure and hosting posture; QMS operational readiness; Project management approach; Tooling and agentic infrastructure decisions; Skill and automation roadmap; Team workflow, onboarding, and knowledge management | CI/CD & release plan \| Build, release, signing; SBOM/SOUP register \| Supply chain posture; Cloud ops runbook \| Hosting, facility equivalent; QMS operational plan \| Design-controls readiness; PM plan \| Ways of working; Tooling roadmap \| Agentic infra, automation; Team onboarding \| Knowledge transfer |
+<!-- /AUTO:STRUCTURE -->
 
 **Note:** The `assemble` action checks for `<!-- Status: awaiting-content -->` in the target file. If present, it replaces the entire file with the assembled document. If not present (already assembled), it regenerates normally.
 
@@ -410,7 +416,7 @@ Summary: 4/5 passed | 0 failed | 1 warning
 
 List all domains with their current status.
 
-1. Read the domain registry table from this SKILL.md.
+1. Read `project.yml:strategy_domains[]` to get the canonical catalog (fallback: the Domain Registry table above, which is rendered from the same source).
 2. Run `scan` to determine which domains have tagged content.
 3. Check which domains have assembled documents at their output paths.
 4. Report:
@@ -437,6 +443,62 @@ Plans informed by each domain:
   risk → Risk Mgmt Plan, FMEA, risk-benefit analysis
   postmarket → Maintenance Plan, PMS Plan, LMR, PCCP tracking
 ```
+
+### `domains add <key> [flags]`
+
+Append a new strategy domain to `project.yml:strategy_domains[]` and re-render every downstream sentinel so the new domain appears in the Domain Registry, init-briefs, Expected Content, and `readme-strategies.md` template tables.
+
+**Flags:**
+- `--name=<display>` — display name (required; e.g. `"Clinical"`)
+- `--output=<path>` — absolute output path; default `docs/project/strategies/<key>-strategy.md`
+- `--template=<filename>` — template basename in `templates/`; default `default-strategy.md`
+- `--scope=<description>` — one-line Expected Content / Purpose description (required)
+- `--plans=<csv>` — comma-separated plans informed (e.g. `"Clinical Evaluation Report,PMCF plan"`)
+
+**Steps:**
+
+1. Read `project.yml`. If `strategy_domains[]` is missing, abort with: `"project.yml has no strategy_domains[] block — run /medtech-docs init or seed manually before adding domains"`.
+2. Validate: `<key>` must be `[a-z][a-z0-9-]*` and must NOT already exist in `strategy_domains[]`. If duplicate, abort with guidance to use `domains edit` instead.
+3. Append a new entry to `strategy_domains[]` using the provided flags. Fill `scope: shared` (all domains are shared in v10+). Include empty `what_belongs_here: []` and `plans_table: []` lists so `/strategy init` can later populate them (the lead is expected to edit those in `project.yml` once the domain stabilizes).
+4. Write `project.yml` back.
+5. Re-render all 4 downstream sentinel targets:
+   ```
+   python3 .claude/skills/medtech-docs/scripts/render-sentinels.py \
+     project.yml \
+     .claude/skills/strategy/SKILL.md \
+     docs/project/strategies/README.md \
+     .claude/skills/medtech-docs/templates/readme-strategies.md
+   ```
+   (`project.yml` itself has no sentinels; it's listed for explicitness only. The script no-ops on files without sentinels.)
+6. Report: new domain key, output path, which files were updated, and next steps (`/strategy init` to create a placeholder brief at the output path; populate `what_belongs_here[]` + `plans_table[]` in `project.yml` once the domain scope is understood).
+
+### `domains edit <key> [flags]`
+
+Patch fields of an existing domain in `project.yml:strategy_domains[]` and re-render downstream sentinels.
+
+**Flags:** any of `--name`, `--output`, `--template`, `--scope`, `--plans` (semantics same as `domains add`).
+
+**Steps:**
+
+1. Read `project.yml`. Locate the entry where `key == <key>`. Abort if not found.
+2. Patch only the fields for which flags were supplied. Leave all other fields (`what_belongs_here`, `plans_table`, `scope`) untouched.
+3. **If `--output` is changing**, warn the lead: the old assembled document (if any) at the old path will become orphaned. Prompt to confirm before proceeding; if confirmed, `git mv` the old file to the new path (or leave it and let the lead decide).
+4. Write `project.yml` back.
+5. Re-render the 4 downstream sentinel targets (same command as `domains add`).
+6. Report: which fields changed, old vs new values, which files were updated.
+
+### `domains remove <key>`
+
+Remove a domain from `project.yml:strategy_domains[]` and re-render downstream sentinels. The assembled strategy document at the domain's `output_path` is NOT auto-deleted — removal is a rename from "catalog" to "archive"; the file stays on disk.
+
+**Steps:**
+
+1. Read `project.yml`. Locate the entry where `key == <key>`. Abort if not found.
+2. **Guard**: if `<output_path>` file exists, warn: `"An assembled <key>-strategy.md still exists at <path>. Removing this domain from project.yml will orphan it — it won't be regenerated, but existing content will remain on disk. Proceed? (y/n)"`.
+3. **Guard**: grep `tasks/*/[0-9][0-9][0-9]-*.md` for `<!-- STRATEGY CONTENT: <key>` tags. If any exist, warn: `"N task(s) still tag content with domain '<key>'. These tags will become 'unrecognized domain' warnings on next /strategy scan. Proceed? (y/n)"`. List the task IDs.
+4. On confirmation, remove the entry from `strategy_domains[]`. Write `project.yml` back.
+5. Re-render the 4 downstream sentinel targets.
+6. Report: which domain was removed, any orphaned files, any orphaned tags in tasks, and the re-rendered files.
 
 ### `resolve [domain]`
 
@@ -550,6 +612,8 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 | Operations strategy populated | `docs/project/strategies/operations-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
 | Strategy docs are current | Assembly date in each assembled strategy document is within 7 days of the most recent source task modification date | Recommended | shared |
 | No pending reviews | No assembled strategy documents contain `> **Pending review**` callouts (all conflicts resolved or deferred reviews addressed) | Recommended | shared |
+| Domain catalog consistent with `project.yml` | Run `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py --dry-run <file>` on each of these 3 files: `.claude/skills/strategy/SKILL.md`, `docs/project/strategies/README.md`, `.claude/skills/medtech-docs/templates/readme-strategies.md`. The renderer prints the proposed new content to stdout **only when the file would change**; if everything is in sync, stdout is empty. Pass if all 3 dry-runs produce empty stdout. Fail if any produces non-empty output — the fix is to drop `--dry-run` and re-run the renderer on the flagged files. | Required | shared |
+| `project.yml` has strategy_domains | `project.yml` contains a top-level `strategy_domains:` block with at least one entry. Required so downstream sentinels have something to render. Fix: run `/strategy domains add <key>` or reseed via `/medtech-docs init`. | Required | shared |
 
 ## Notes
 
@@ -562,6 +626,7 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 
 ## Changelog
 
+- 11 (2026-04-20): **Domain Registry + init-briefs tables now rendered from `project.yml:strategy_domains[]` via sentinel blocks.** Eliminates the cross-skill domain-catalog drift class surfaced in task 073 (where `operations` was defined four different ways across strategy SKILL.md, strategies/README.md, readme-strategies template, and a stray root placeholder). The canonical source of truth moves to `project.yml`; downstream docs render via `<!-- AUTO:STRUCTURE kind=strategy-domains ... -->` blocks (see `.claude/rules/sentinel-blocks.md`, three variants: `expected-content`, `registry`, `init-briefs`). Renderer extended in `.claude/skills/medtech-docs/scripts/render-sentinels.py`. **Still TODO in task 076 follow-ups**: `/strategy domains add|edit|remove` reshape actions; scanner.md + assembler.md reading domains directly from `project.yml`; `/medtech-docs init` seeding `strategy_domains:`; `/best-practices` check that fails when downstream sentinels drift from `project.yml`. For now, action logic still reads the rendered table in SKILL.md — correctness is maintained as long as the sentinel is re-rendered after `project.yml` edits.
 - 10 (2026-04-13): **All strategy domains flipped to `shared` scope + "sub-DHF" → "DHF" terminology rename.** The "sub-DHF" term was a misnomer — top-level entries like `pca-device` are just DHFs, and nested entries like `cloud-suite/dhfs/drug-library-manager` are DHFs too. Renamed throughout the skill + agents + templates + tag grammar. `sub_dhfs` field in project.yml → `dhfs`. The deprecated scope key is now `dhf=<leaf>` (was `sub-dhf=<leaf>`). Description string updated. Best Practices Scope column value `per-dhf` unchanged (still correct; it means "one check per DHF entry"). The six per-dhf domains (`regulatory`, `architecture`, `development`, `testing`, `risk`, `postmarket`) now produce one shared output file under `docs/project/strategies/`, same as `commercial` and `operations`. Per-component nuance is expressed via callout subsections inside each shared doc (topic-first structure with `### PCA Device` / `### Connectivity Adapter` / etc. callouts nested under each topic). `dhf=<leaf>` scope key deprecated — tolerated but ignored. DHF scope resolution section removed from Tag Convention. Best Practices table: all strategy-doc checks now `shared`; the two cross-cutting "Per-dhf tags have dhf scope" and "dhf keys resolve" checks removed. Formal design-control outputs (SDP, SAD, V&V Plan, Risk Mgmt Plan, PMS Plan, cybersecurity plan) still live per-DHF under `dhfs/<dhf>/...` — only the upstream strategy briefs moved up. See `tasks/ben/009-shared-strategy-docs.md`.
 - 9 (2026-04-13): **Subagent prompts updated for v8 DHF scope semantics.** Rewrote `agents/scanner.md` and `agents/assembler.md` to implement the DHF scope resolution spec introduced in v8. Scanner now reads `project.yml` `dhfs[]` at start, builds a leaf-name lookup, parses `dhf=<leaf>` scope keys in tags, resolves them against the lookup, and flags per-dhf tags missing required scope keys in multi-DHF projects. Output path table now uses the `<dhf>` placeholder so one scan surfaces assembly status for every (domain, dhf) pair. Assembler accepts new `{{SUB_DHF_SCOPE}}` and `{{SUB_DHF_PATH}}` inputs, filters scanned blocks by matching DHF scope, implicit-scopes single-DHF projects, and reports skipped-by-scope subsections in its output. v8 specified the tag convention and Domain Registry schema; v9 makes the agents actually implement it.
 - 8 (2026-04-13): **Unified DHF shape support.** Domain Registry reorganized: each domain has a `Scope` (shared or per-dhf); per-dhf domains use `<dhf>` placeholder in their output path template, resolved at assembly time from the tag's `dhf=<leaf>` scope key. Added DHF scope resolution to the Tag Convention section: tags for per-dhf domains must include `dhf=<leaf-name>` in multi-DHF projects (implicit single-entry resolution in single-DHF projects). Leaf-name uniqueness enforced by `medtech-docs add-dhf` means `dhf=<leaf>` is unambiguous. `commercial` and `operations` moved to shared `docs/project/strategies/`. `risk` and `postmarket` moved to their proper DHF-level homes (`risk-management/`, `postmarket/`) out of `design-controls/`. Scanner and assembler changes are specified but not yet fully implemented — this v8 documents the target behavior; consuming subagents (`agents/scanner.md`, `agents/assembler.md`) still use v7 path semantics and will need follow-up edits. See `tasks/ben/007-sub-dhf-migration.md` P3 for full design.

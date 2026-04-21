@@ -53,12 +53,12 @@ This means the task skill works standalone in any project — you just need `tas
   check-active-task.sh -> ../skills/task/hooks/check-active-task.sh  (symlink)
   task-activate.sh                  # Installed by /task setup (manages state files)
   register-hook.sh                  # Shared hook registration helper
-.claude/state/                      # Gitignored — per-session state files
+.state/                      # Gitignored — per-session state files
   active-tasks-{session_id}.txt     # One per session, one task ID per line
 .claude/settings.json               # Hook wiring (PreToolUse matcher)
 ```
 
-The hook source lives inside the skill package so it ships as a unit. The symlink at `.claude/hooks/` allows `settings.json` to reference it at a stable path. The activation script is copied (not symlinked) to `.claude/hooks/` by `/task setup`. State files live in `.claude/state/` (gitignored).
+The hook source lives inside the skill package so it ships as a unit. The symlink at `.claude/hooks/` allows `settings.json` to reference it at a stable path. The activation script is copied (not symlinked) to `.claude/hooks/` by `/task setup`. State files live in `.state/` (gitignored).
 
 ## Installation
 
@@ -73,7 +73,7 @@ Two paths:
 1. **`/medtech-docs init`** — scaffolds the full project, installs skills from the registry, then **runs each skill's `setup` action** if it has one. The task skill's `setup` action wires the hook automatically. This is a generic pattern — any skill can have a `setup` action.
 
 2. **`/task setup`** — standalone setup, run manually after installing the task skill:
-   - Creates `.claude/hooks/` and `.claude/state/` directories
+   - Creates `.claude/hooks/` and `.state/` directories
    - Creates symlink `.claude/hooks/check-active-task.sh` → `../skills/task/hooks/check-active-task.sh`
    - Installs `task-activate.sh` into `.claude/hooks/`
    - Merges `PreToolUse` hook config into `.claude/settings.json`
@@ -116,14 +116,14 @@ Claude attempts Edit/Write/NotebookEdit
   → Checks target path against exempt list
   → If exempt (tasks/*, .claude/*) → ALLOW
   → Checks project-local state file:
-      .claude/state/active-tasks-{session_id}.txt
+      .state/active-tasks-{session_id}.txt
   → If state file exists and non-empty → ALLOW
   → Otherwise → DENY with session ID + exact recovery command
 ```
 
 ### State File
 
-**Location**: `.claude/state/active-tasks-{session_id}.txt` (project-local, gitignored)
+**Location**: `.state/active-tasks-{session_id}.txt` (project-local, gitignored)
 
 One task ID per line. Example:
 ```
@@ -133,9 +133,9 @@ One task ID per line. Example:
 
 **Why project-local?**
 - **Inside the sandbox** — no permission prompts when Claude writes state files
-- **Gitignored** (`.claude/state/` is in `.gitignore`) — cannot be committed
+- **Gitignored** (`.state/` is in `.gitignore`) — cannot be committed
 - **Per-session** (session ID in filename) — concurrent terminals don't conflict
-- **Deterministic path** — `$CLAUDE_PROJECT_DIR/.claude/state/` — no directory traversal needed
+- **Deterministic path** — `$CLAUDE_PROJECT_DIR/.state/` — no directory traversal needed
 
 **Why not `~/.claude/projects/` (v1)?** The v1 design stored state outside the project sandbox. This caused sandbox permission prompts on every write, unreliable path discovery (Claude Code's internal directory layout is opaque), and session ID resolution failures. See task 027 for the full root cause analysis.
 
@@ -154,7 +154,7 @@ bash .claude/hooks/task-activate.sh list <session_id>
 bash .claude/hooks/task-activate.sh clear <session_id>
 ```
 
-The script lives in `.claude/hooks/` (tracked in git) but writes state files to `.claude/state/` (gitignored). It resolves the state directory as its sibling: `../state/` relative to its own location.
+The script lives in `.claude/hooks/` (tracked in git) but writes state files to `.state/` (gitignored). It resolves the state directory as its sibling: `../state/` relative to its own location.
 
 ### Lifecycle
 
@@ -166,15 +166,15 @@ Edit/Write         →  hook checks state file → ALLOW
   (if file now empty → gate closes)
 next Edit/Write    →  DENY → message includes session ID + exact command
 
-Session crashes    →  orphan file stays in .claude/state/, new session has new ID → harmless
+Session crashes    →  orphan file stays in .state/, new session has new ID → harmless
 ```
 
 ### Multi-Session Safety
 
 Each terminal/session gets its own state file (keyed by session ID):
 ```
-.claude/state/active-tasks-abc123.txt  → "024"
-.claude/state/active-tasks-def456.txt  → "018"
+.state/active-tasks-abc123.txt  → "024"
+.state/active-tasks-def456.txt  → "018"
 ```
 
 Terminal 1 completing task 024 has zero effect on Terminal 2's state.
@@ -213,7 +213,7 @@ Claude can recover in one bash command after the first denied edit. No directory
 bash .claude/skills/task/tests/test-task-gate.sh
 ```
 
-The test suite is self-contained — it creates its own session state files in `.claude/state/`, runs all scenarios, and cleans up after itself.
+The test suite is self-contained — it creates its own session state files in `.state/`, runs all scenarios, and cleans up after itself.
 
 **Requirements:** `jq`, the hook at `.claude/hooks/check-active-task.sh`, the activation script at `.claude/hooks/task-activate.sh`
 
@@ -229,9 +229,9 @@ The test suite is self-contained — it creates its own session state files in `
 |---|---------|-------|----------|
 | 1 | Activation — Basic Ops | 10 | add, remove, list, clear, idempotent duplicate, file verification |
 | 2 | Activation — Edge Cases | 4 | missing args, unknown action, help, nonexistent session |
-| 3 | Activation — File Location | 2 | state in `.claude/state/`, not leaked to `.claude/hooks/` |
+| 3 | Activation — File Location | 2 | state in `.state/`, not leaked to `.claude/hooks/` |
 | 4 | Hook — Core Gate | 2 | allow with task, deny without |
-| 5 | Hook — Exempt Paths | 7 | tasks/\*, .claude/hooks/\*, .claude/state/\*, .claude/skills/\*, .claude/settings.json |
+| 5 | Hook — Exempt Paths | 7 | tasks/\*, .claude/hooks/\*, .state/\*, .claude/skills/\*, .claude/settings.json |
 | 6 | Hook — Non-Exempt | 6 | CLAUDE.md, .gitignore, project.yml, docs/, setup.sh, glossary.md |
 | 7 | Hook — Multi-Task | 3 | two tasks, remove one, remove all |
 | 8 | Hook — Denial Message | 3 | session ID present, activation command present, /task create hint |
@@ -250,7 +250,7 @@ This enforcement mechanism was designed in task 024 (Security Posture Automation
 - **Why `PreToolUse` not `SessionStart`?** — SessionStart fires before the user says what they want. PreToolUse fires only when files are about to change.
 - **Why `PreToolUse` not `UserPromptSubmit`?** — UserPromptSubmit fires on every prompt (even questions) and can't block, only advise.
 - **Why per-session files not a single shared file?** — A new session must start with a closed gate. A shared file could have stale task IDs from a crashed session, silently pre-authorizing the new session. Per-session files ensure every session starts clean.
-- **Why project-local (`.claude/state/`) not `~/.claude/projects/` (v1)?** — The v1 location was outside the project sandbox, requiring permission prompts on every write. Path discovery was unreliable (Claude Code's internal directory layout is opaque). Session ID resolution failed (`${CLAUDE_SESSION_ID}` didn't resolve, `dirname $TRANSCRIPT` was inconsistent). See task 027 for the full root cause analysis.
+- **Why project-local (`.state/`) not `~/.claude/projects/` (v1)?** — The v1 location was outside the project sandbox, requiring permission prompts on every write. Path discovery was unreliable (Claude Code's internal directory layout is opaque). Session ID resolution failed (`${CLAUDE_SESSION_ID}` didn't resolve, `dirname $TRANSCRIPT` was inconsistent). See task 027 for the full root cause analysis.
 - **Why `.claude/*` exempt instead of just `.claude/hooks/*`?** — The gate protects project content, not tooling. State files, skills, and settings all need to be writable without an active task. Broadening the exemption eliminates the possibility of the gate blocking its own recovery mechanism.
 - **Why an activation script instead of inline bash?** — v1 had Claude hand-craft bash commands to find directories and write state files. This was fragile (different path resolution strategies, env var failures). A single script with a deterministic path is reliable and testable.
 - **Why `printenv` for session ID?** — v1–v6 used `${CLAUDE_SESSION_ID}` template substitution, which resolves correctly for the main session but fails for subagents (they read SKILL.md via Read tool and see raw shell variable syntax, triggering expansion prompts). `printenv CLAUDE_SESSION_ID` works universally — no `$` prefix means no expansion detection. The hook denial message still includes the session ID (from stdin JSON) as a recovery fallback.

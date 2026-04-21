@@ -1,0 +1,1 @@
+../skills/docflow/hooks/block-direct-conversion.sh

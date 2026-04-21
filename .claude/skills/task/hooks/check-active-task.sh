@@ -2,11 +2,13 @@
 # check-active-task.sh — Task discipline enforcement hook
 #
 # Denies Edit/Write/NotebookEdit tool calls when no active task is set.
-# State file: per-session, inside the project at .claude/state/
+# State file: per-session, inside the project at .state/ (project root, outside
+# .claude/ to escape Claude Code's built-in .claude/** sensitive-file guard;
+# relocated from .claude/state/ in task ben/083).
 #
 # Exempt paths (runtime housekeeping, not design surfaces):
 #   - tasks/*                   — task docs themselves
-#   - .claude/state/*           — per-session state
+#   - .state/*                  — per-session state (relocated in ben/083)
 #   - .claude/settings*.json    — settings (often auto-managed by register-hook.sh)
 #   - .claude/sync-log.md       — written by /sync-skills
 #   - .claude/MEMORY.md         — memory index (auto-managed)
@@ -70,7 +72,7 @@ is_exempt() {
   local p="$1"
   case "$p" in
     */tasks/*)                        return 0 ;;
-    */.claude/state/*)                return 0 ;;
+    */.state/*)                       return 0 ;;
     */.claude/settings*.json)         return 0 ;;
     */.claude/sync-log.md)            return 0 ;;
     */.claude/MEMORY.md)              return 0 ;;
@@ -84,10 +86,10 @@ if is_exempt "$TARGET" && is_exempt "$RESOLVED"; then
 fi
 
 # Auto-purge stale state files older than 7 days
-find "${CLAUDE_PROJECT_DIR}/.claude/state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null
+find "${CLAUDE_PROJECT_DIR}/.state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null
 
-# Check per-session state file in project-local .claude/state/
-STATE_FILE="${CLAUDE_PROJECT_DIR}/.claude/state/active-tasks-${SESSION_ID}.txt"
+# Check per-session state file in project-local .state/
+STATE_FILE="${CLAUDE_PROJECT_DIR}/.state/active-tasks-${SESSION_ID}.txt"
 if [ -f "$STATE_FILE" ] && [ -s "$STATE_FILE" ]; then
   exit 0
 fi

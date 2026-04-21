@@ -1,14 +1,16 @@
 #!/bin/bash
 # session-cleanup.sh — SessionEnd hook that removes the session's state file
 #
-# Deletes .claude/state/active-tasks-{session_id}.txt so completed sessions
-# don't leave orphan state files. This is best-effort cleanup — the auto-purge
-# in task-activate.sh already cleans up files older than 7 days as a fallback.
+# Deletes .state/active-tasks-{session_id}.txt so completed sessions don't
+# leave orphan state files. This is best-effort cleanup — the auto-purge in
+# task-activate.sh already cleans up files older than 7 days as a fallback.
+# State dir is .state/ at project root (relocated from .claude/state/ in
+# ben/083 to escape the .claude/** sensitive-file guard).
 
 INPUT=$(cat)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-STATE_DIR="$SCRIPT_DIR/../state"
+STATE_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/../.." && pwd)}/.state"
 
 # Get session ID from hook JSON or env var
 SESSION_ID=""
@@ -23,5 +25,11 @@ if [ -n "$SESSION_ID" ]; then
     rm -f "$STATE_DIR"/capture-armed-"${SESSION_ID}"-*.txt 2>/dev/null
     rm -f "$STATE_DIR"/capture-exit-pending-"${SESSION_ID}"-*.txt 2>/dev/null
 fi
+
+# Always clear the docflow-active marker as a belt-and-suspenders fallback for
+# /docflow agents that touched it but failed to remove it on their exit path.
+# Safe to remove unconditionally — it's a global (non-per-session) marker, and
+# a fresh session with no /docflow running shouldn't carry it forward.
+rm -f "$STATE_DIR/docflow-active" 2>/dev/null
 
 exit 0

@@ -62,7 +62,7 @@ The README.md serves as the skill's index layer (per README Navigation Rule) and
 | `.claude/hooks/register-hook.sh` | setup actions | Shared hook registration helper |
 | `.claude/hooks/` directory | setup actions | Symlink target for skill hooks |
 | `.claude/agents/` directory | setup actions | Symlink target for skill agents (Claude Code subagent discovery) |
-| `.claude/state/` directory | hook scripts | Runtime state files |
+| `.state/` directory (project root) | hook scripts | Runtime state files (relocated from `.claude/state/` in ben/083 to escape `.claude/**` sensitive-file guard) |
 
 ## Changelog
 

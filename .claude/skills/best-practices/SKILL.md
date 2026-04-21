@@ -1,8 +1,8 @@
 ---
 name: best-practices
 description: "Audit project setup against best practices from a shared registry and local skills — checks CLAUDE.md, folder structure, standards, tasks, DHF layout with parallel subagent fan-out"
-version: 10
-updated: 2026-04-16
+version: 12
+updated: 2026-04-20
 ---
 
 # Best Practices Audit
@@ -274,6 +274,143 @@ After the report, suggest specific fixes for any FAIL or WARN items.
 ### `check <practice-name>`
 Run a single named check and report its result. Useful for verifying a fix.
 
+### `fix [--dry-run]`
+
+Auto-remediate **mechanical drift** found by the `audit` action, subject to a strict safety model. Creates a task document to capture what was changed, activates it, applies Tier A fixes, flags Tier B and Tier C for human review, and leaves everything **uncommitted** so you can review the diff before committing.
+
+**Safety model — three tiers:**
+
+| Tier | What qualifies | Action |
+|------|----------------|--------|
+| **A — Auto-apply** | Content inside `<!-- AUTO:STRUCTURE ... -->` sentinel blocks in README files. The renderer owns this content by construction (see `.claude/rules/sentinel-blocks.md`). | Invoke `.claude/skills/medtech-docs/scripts/render-sentinels.py <file>` once per affected README. No additional prompting. |
+| **B — Flag only (never auto-write)** | CLAUDE.md Project Structure tree, CLAUDE.md DHF table, CLAUDE.md team references. These regions carry human intent (annotations, custom schemas, narrative context) that mechanical rewriting would clobber. | Task doc captures a **proposed fix** (specific additions/removals with exact text) as a human checklist. User applies manually after review. |
+| **C — Flag only** | Narrative drift — information-flow diagrams, convention prose, relationship sections, anything outside the structural-table slot. | Task doc lists the finding. Human-owned content — `fix` never touches it. |
+
+**Default behavior** is to apply Tier A and capture Tier B/C in the task doc. Pass `--dry-run` to preview without writing anything — nothing is applied, no task doc created, no files modified.
+
+**Flow:**
+
+**Step 1 — Run the audit.** Reuse the `audit` action to collect all findings. Filter to drift-detection findings from best-practices v11+ and medtech-docs v18+:
+- `README Structure table matches folders`
+- `CLAUDE.md Project Structure tree matches filesystem`
+- `CLAUDE.md DHF table matches project.yml`
+- `CLAUDE.md team references match project.yml`
+- `medtech-docs templates match init folder tree`
+
+If no drift-detection findings are FAIL/WARN, exit with "no drift to fix" and stop — do not create a task doc.
+
+**Step 2 — Classify each finding by tier.**
+- If the finding's target file is under `docs/**/README.md` AND the README contains `<!-- AUTO:STRUCTURE ... -->` at or near the drifted region → **Tier A**.
+- If the finding's target file is `CLAUDE.md` in project root → **Tier B**.
+- If the finding is for `medtech-docs templates match init folder tree` → **Tier B** (skill-author fix, not project-content fix).
+- Otherwise → **Tier C** (narrative / other).
+
+**Step 3 — Determine task owner.**
+1. Read `git config user.email`.
+2. Match against `project.yml` `team.active[].email` — use that member's `task_folder`.
+3. If no match, prompt the user for which person's folder to use. Do not silently default.
+
+**Step 4 — `--dry-run` branch (no writes):**
+Print a preview to stdout, grouped by tier. For Tier A findings list the files that would be rendered. For Tier B findings print the proposed change as a diff-like block. Exit 0. Do not create or modify any files.
+
+**Step 5 — Default branch (apply Tier A, flag B/C):**
+
+5a. **Determine next task ID** for the chosen person (scan `tasks/<person>/` for highest NNN, increment, zero-pad).
+
+5b. **Write task doc** at `tasks/<person>/NNN-fix-readme-drift-YYYY-MM-DD.md`:
+```markdown
+# NNN — Fix README/CLAUDE.md Drift (auto-detected)
+
+**ID**: NNN
+**Created**: YYYY-MM-DD
+**Status**: In Progress
+**Created By**: best-practices fix (auto)
+**Owner**: <resolved person name>
+**Priority**: Medium
+
+---
+
+## Goals
+
+Auto-remediate mechanical README drift detected by `/best-practices audit`. Tier A fixes are applied automatically inside `<!-- AUTO:STRUCTURE -->` sentinels. Tier B and Tier C findings require human review and are captured below as a manual checklist.
+
+## Tier A — Auto-applied (sentinel blocks)
+
+<!-- Populated by fix action with one row per auto-applied render -->
+| File | Finding | Renderer result |
+|------|---------|-----------------|
+| ... | ... | updated / no-change |
+
+## Tier B — Proposed fixes (requires human apply)
+
+<!-- CLAUDE.md: never auto-written. Proposed changes below. Apply manually. -->
+
+### Proposal N: <short summary>
+**File**: `CLAUDE.md`
+**Finding**: <check name>
+**Current content (excerpt)**:
+    ... verbatim lines from current file ...
+**Proposed content**:
+    ... verbatim proposed replacement ...
+**Rationale**: <why this change>
+**To apply**: <specific hand-edit instructions>
+
+- [ ] Review proposal N
+- [ ] Apply (manually, after review)
+
+## Tier C — Flagged (narrative drift, not auto-fixable)
+
+- [ ] <file>: <narrative finding> — human review required
+
+## Todos
+
+- [x] Tier A auto-applied
+- [ ] Review Tier B proposals above
+- [ ] Apply Tier B manually where accepted
+- [ ] Review Tier C findings
+- [ ] Commit the fix (after diff review)
+
+## Changelog
+
+- YYYY-MM-DD: Task auto-created by /best-practices fix. <N> Tier A auto-applied, <M> Tier B proposed, <K> Tier C flagged.
+```
+
+5c. **Append the task to `tasks/<person>/000-index.md`** Active table.
+
+5d. **Activate the task** via `bash .claude/hooks/task-activate.sh add $(printenv CLAUDE_SESSION_ID) NNN` so subsequent file writes pass the task gate.
+
+5e. **Apply Tier A fixes.** For each Tier A finding, deduplicate by target file, then invoke:
+```
+python3 .claude/skills/medtech-docs/scripts/render-sentinels.py <target-file>
+```
+Record the result (updated / no-change / error) in the task doc's Tier A table.
+
+5f. **Populate Tier B proposals in the task doc.** For each Tier B finding, compute the specific proposed change:
+- **CLAUDE.md DHF table**: compare `project.yml` `dhfs[]` leaves to the table's first column. For each leaf in `dhfs[]` but not in the table → propose a row addition (schema: Architecture Name = `<leaf>` or TODO, Marketed Name = TODO, Classification = derived from `classification` object, IEC 62304 = `Class <c>`). For each table row with no matching `dhfs[]` leaf → flag as possibly stale (do NOT propose removal; list as "review needed").
+- **CLAUDE.md Project Structure tree**: compare top-level tree entries (e.g., `├── docs/`) to actual top-level directories. For new dirs → propose adding an entry at the right place in the tree. For removed dirs → flag as possibly stale (do not propose removal).
+- **CLAUDE.md team references**: list CLAUDE.md name-drops that are not in `project.yml` `team.active[]` (may be stale or may be intentional historical reference — flag only).
+
+For each proposal, write: current content excerpt, proposed content, rationale, and exact hand-edit instructions. Never generate `Edit` or `Write` tool calls that touch CLAUDE.md.
+
+5g. **Populate Tier C findings** as a simple checklist of what to review.
+
+5h. **Write final changelog row** on the task doc summarizing counts.
+
+**Step 6 — Report.** Print:
+- Task doc path
+- Counts: N Tier A applied, M Tier B proposals, K Tier C flagged
+- Git status summary (`git status --short`)
+- Explicit note: "Changes are **uncommitted**. Review `git diff` and the task doc, then commit when ready. CLAUDE.md was **not modified** — Tier B proposals are in the task doc for your review."
+
+**Constraints (hard rules):**
+
+1. **`fix` never writes to `CLAUDE.md`**, ever. Not even wrapping sections in sentinels. That is an explicit future action (`fix --wrap-claude-md` if we add it later, which would still require per-region confirmation).
+2. **`fix` never writes outside `<!-- AUTO:STRUCTURE -->` sentinels** in any file. If the renderer would need to create a sentinel to fix something, report it as Tier B instead — never inject sentinels into existing files.
+3. **`fix` never commits.** Git commits are a human action.
+4. **`fix` never deletes files.**
+5. **`fix` never removes content** — only additions and in-sentinel regenerations. Stale rows are flagged, not removed.
+6. **If audit cannot run** (registry unreachable, project.yml malformed, etc.), `fix` aborts with a clear error and creates no task doc.
+
 ### `sync`
 Fetch the latest skills from the registry and compare against locally installed skills.
 
@@ -370,6 +507,10 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 | Platform DHFs have children | For every DHF with `regulatory: mixed`, at least one other `dhfs[]` entry has `parent` pointing to it. Prevents `mixed` from being used to silence the unreferenced-DHF check on a leaf component. | Required | cross-cutting |
 | Unreferenced DHFs flagged | For every `dhfs[]` entry with `regulatory` ∈ {`in-development`, `cleared`}, check whether it is listed in at least one composition manifest under `submissions/*/composition-manifest.md`. Skip entries with `regulatory: concept` or `regulatory: mixed`. Report unreferenced entries as WARN. | Recommended | cross-cutting |
 | Composition manifests exist | If `project.dhfs[]` is non-empty AND `submissions/*/composition-manifest.md` glob returns zero matches, emit project-level WARN: "No composition manifests authored — per-submission checks will not run until at least one exists." | Recommended | cross-cutting |
+| README Structure table matches folders | For every `docs/**/README.md` (excluding `formal/` and hidden dirs), if the README contains a `## Structure` or `## Subfolders` section with a markdown table, extract the first column values (folder names, stripped of trailing `/`, backticks, and link syntax). Compare to actual child subdirectories of the README's folder (excluding `formal/`, hidden dirs, and `README.md` itself). Flag: (a) table rows whose folder does not exist on disk; (b) on-disk subfolders not present in the table. Content-freshness check — passes only if the set of table entries equals the set of actual subfolders. Eligible for sentinel-based auto-fix (see `/best-practices fix`). | Recommended | shared |
+| CLAUDE.md Project Structure tree matches filesystem | Project root `CLAUDE.md` contains a `## Project Structure` section with a fenced code block showing the directory tree. Parse top-level entries (lines matching `├── <name>` or `└── <name>` at the outermost indentation level inside the tree block, excluding trailing comments after `#`). Compare to actual top-level directories in the project root (excluding hidden dirs, `node_modules`, `.venv`, `__pycache__`, `assets`, `tools`). Flag: (a) tree entries that don't exist on disk; (b) on-disk dirs that should appear in the tree but don't. Eligible for sentinel-based auto-fix. | Recommended | shared |
+| CLAUDE.md DHF table matches project.yml | Project root `CLAUDE.md` contains a DHF / module table (markdown table listing architecture-name or leaf values in its first column). For each row, the first-column leaf value should correspond to a `leaf` field in `project.yml` `dhfs[]`. Classification columns (samd, class, iec62304, ai_enabled) must match the corresponding `classification` object in `dhfs[]` for that leaf. Flag: (a) table rows with no matching `dhfs[]` entry; (b) `dhfs[]` entries not represented in the CLAUDE.md table; (c) classification mismatches. Eligible for sentinel-based auto-fix. | Required | shared |
+| CLAUDE.md team references match project.yml | If project root `CLAUDE.md` lists or references team members by name, every person named must have a matching entry in `project.yml` `team.active[]`. Flag: names in CLAUDE.md not in active roster (may be stale after departures). Inactive members named in historical context are acceptable if they appear in `team.inactive[]`. | Recommended | shared |
 
 ## Notes
 - The registry repo defaults to `GlobalLogic-a-Hitachi-Company/hitachi` but is read from `project.yml` `registries:` section (first `type: github` entry)
@@ -379,6 +520,10 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 
 ## Changelog
 
+- 12 (2026-04-20): **New `fix` action with strict three-tier safety model.** Auto-remediates mechanical drift found by `audit` — but with hard safety boundaries around CLAUDE.md and any content carrying human intent. Tier A (auto-apply) is restricted to content inside `<!-- AUTO:STRUCTURE -->` sentinels, which the renderer owns by construction. Tier B (CLAUDE.md Project Structure tree, DHF table, team references; plus medtech-docs skill templates) and Tier C (narrative drift) are **flagged only** — the action generates a task document with a proposed-fix checklist the user applies manually. Hard rules: `fix` never writes to CLAUDE.md, never writes outside sentinel blocks, never commits, never deletes files, never removes content from tables (stale rows are flagged not removed). `--dry-run` previews to stdout without creating a task doc. Default behavior: create task doc under the git user's `task_folder`, activate it via task-gate so Tier A writes pass, apply Tier A renders, populate Tier B proposals in the task doc with exact current/proposed content excerpts, append Tier C flags. Leaves everything uncommitted so the user reviews `git diff` before committing. Pairs with best-practices v11 drift checks (Phase 1), medtech-docs v19 sentinel renderer (Phase 2). Completes task 072 Phase 3 mechanism.
+  **Post-update:** No user action needed. Run `/best-practices audit` to surface drift, then `/best-practices fix` (or `fix --dry-run` first) to remediate Tier A mechanically and receive Tier B/C as a review checklist. CLAUDE.md is never modified by `fix` — human review required for all CLAUDE.md drift, by design.
+- 11 (2026-04-20): **Drift-detection checks for persistent structural docs.** Added 4 new `shared` checks to catch the drift class where persistent docs (READMEs, CLAUDE.md) assert structural facts that fall out of sync with the actual filesystem + `project.yml`: (1) **README Structure table matches folders** (Recommended) — for every `docs/**/README.md`, parse `## Structure` / `## Subfolders` tables and compare to actual child subdirectories; (2) **CLAUDE.md Project Structure tree matches filesystem** (Recommended) — parse the fenced tree block in CLAUDE.md's Project Structure section, compare top-level entries to root-level directories; (3) **CLAUDE.md DHF table matches project.yml** (Required) — match the DHF / Module Naming table in CLAUDE.md against `project.yml` `dhfs[]` leaves + classification; (4) **CLAUDE.md team references match project.yml** (Recommended) — flag CLAUDE.md name-drops that aren't in `team.active[]`. All four are eligible for sentinel-based auto-fix via the upcoming `/best-practices fix` action (Phase 2/3 of task 072). No changes to Scope handling, subagent dispatch, or report format — additions only. Required triggers a FAIL on the DHF-table check; rest WARN.
+  **Post-update:** No user action needed. New checks run automatically on next `/best-practices audit` invocation. Expect new failures on projects that have drifted since their last scaffold — the upcoming `fix` action will auto-remediate mechanical drift inside sentinel blocks once Phase 2 lands.
 - 10 (2026-04-16): Added Required check `Per-skill agents installed as symlinks`. For every `.claude/agents/<name>.md` whose basename matches a file under any `.claude/skills/*/agents/`, the installed copy must be a symlink (`test -L`) pointing at the skill-owned source. Regular files with no matching source remain exempt (standalone registry agents). Regular files with a matching source pass only if the fork is documented in `.claude/sync-log.md` — otherwise they are silent drift. Pairs with `skill-creator` v2 which now mandates agent symlinks in every `setup` action. Rationale: advisors skill `init` was copying agent files, which drifted whenever `/sync-skills pull` updated the skill-owned source.
   **Post-update:** Projects using the advisors skill must delete copies in `.claude/agents/` and re-run `/advisors init` (or the skill's new symlink-based setup) to regenerate them as symlinks. Running `/best-practices` before the fix will FAIL on the new check.
 - 9 (2026-04-13): **Subagent dispatch implementation.** Rewrote the Per-check execution logic section to implement task 007 P5.5a — when `project.dhfs[]` has N>1 entries, `per-dhf` checks fan out to per-DHF subagents via the Agent tool (one Agent call per DHF in a single message for parallelism); `per-submission` checks fan out to per-composition-manifest subagents. Each subagent reads its assigned slice, runs the owning skill's "How to verify" checks, and returns a structured JSON findings list. Added verbatim subagent prompt templates for both pools (per-dhf and per-submission), JSON response schema, dispatch-error handling (malformed JSON, timeout, crash → synthetic FAIL, continue), N=1 short-circuit optimization (no subagent spawn when the DHF list has one entry), and cost envelope. Single-dhf mode is byte-identical to v8 so deterministic output is preserved. Backward compatible with v8 in all other respects.

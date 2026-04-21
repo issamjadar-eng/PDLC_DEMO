@@ -28,6 +28,13 @@ Assemble tagged strategy content from task documents into the shared strategy do
 
 2. Read the target folder's `README.md` before writing (project convention).
 
+3. **Load the Domain Catalog from `project.yml:strategy_domains[]`**. Find the entry where `key == {{DOMAIN_KEY}}` and pull:
+   - `plans_informed[]` — list of formal plans the domain informs (used to populate `## Plans Informed` in the assembled document)
+   - `name` — display name for headings
+   - `scope_description` — one-line description used in front matter
+
+   **Fallback**: if `project.yml:strategy_domains[]` is missing, use the hardcoded defaults shown in the "Default Plans Informed" table below. Emit a warning: `"project.yml has no strategy_domains[] — using hard-coded defaults; consider running /strategy domains reseed"`.
+
 ## Tag Convention (v10)
 
 Strategy content is tagged in task documents:
@@ -108,7 +115,11 @@ Read the template from `.claude/skills/strategy/templates/default-strategy.md`.
 
 Place all subsections under `## Strategy Decisions`, **newest-first** by last-modified date. Preserve source `### ` headings as-is.
 
-Populate `## Plans Informed` from this lookup:
+Populate `## Plans Informed` from the `plans_informed[]` loaded in pre-flight step 3 (sourced from `project.yml:strategy_domains[]`, with the fallback table below if the manifest is missing).
+
+### Default Plans Informed (fallback only)
+
+Used only when `project.yml:strategy_domains[]` is missing at pre-flight step 3. For normal operation the agent pulls `plans_informed[]` straight from the manifest entry matching `{{DOMAIN_KEY}}`.
 
 | Domain | Plans |
 |--------|-------|
@@ -119,7 +130,7 @@ Populate `## Plans Informed` from this lookup:
 | `testing` | V&V Plan, test protocols, usability plan |
 | `risk` | Risk Mgmt Plan, FMEA, risk-benefit analysis |
 | `postmarket` | Maintenance Plan, PMS Plan, LMR, PCCP tracking |
-| `operations` | Project management plan, skill roadmap, team onboarding |
+| `operations` | CI/CD & release pipeline, SBOM/SOUP supply chain, cloud infrastructure, QMS operational posture, PM plan, tooling & agentic-infra roadmap, team onboarding |
 
 ## Common Assembly Steps (both templates)
 

@@ -45,7 +45,7 @@ CLEANUP_SUBJECT_PREFIXES = (
 )
 
 # Where the LLM cache lives. Keyed on commit SHA.
-LLM_CACHE_PATH = Path(".claude/state/digest-llm-cache.json")
+LLM_CACHE_PATH = Path(".state/digest-llm-cache.json")
 
 
 # Significance rule: a commit is significant if (subject matches TASK_REF_RE)

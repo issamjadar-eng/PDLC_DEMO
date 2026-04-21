@@ -4,6 +4,32 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-20 — pull (bulk sync to pick up `.claude/state/` → `.state/` relocation + docflow tripwire)
+
+- Hitachi HEAD after sync: `7c6e388`
+- Pulled: 35 files
+  - `agents/project-secops.md` (symlink unchanged — skill-side content identical; false-positive drift from sync.sh comparing across registries' symlinks)
+  - `skills/best-practices/SKILL.md` (10 → 12 — new task-auto-create flow for `/best-practices fix`)
+  - `skills/digest/{README,SKILL,hooks/session-briefing.sh,scripts/build_changelog.py}` (v4 → v5 — state relocation)
+  - `skills/docflow/{README,SKILL,agents/converter,agents/refresher,templates/frontmatter-project,agents/adopter,agents/reviewer,hooks/block-direct-conversion.sh,references/classification-taxonomy.md}` (14 → 27 — new PreToolUse tripwire, T1 composite-table rules, shlex tokenization, state relocation)
+  - `skills/lessons/SKILL.md` (1 → 2 — doc-only path update)
+  - `skills/medtech-docs/{SKILL,templates/readme-strategies,scripts/render-sentinels.py,templates/claude-md-task-discipline,templates/rule-sentinel-blocks}` (17 → 21 — sentinel-block rendering infrastructure)
+  - `skills/skill-creator/{README,SKILL,templates/skill-md}` (2 → 3)
+  - `skills/strategy/{SKILL,agents/assembler,agents/scanner}` (10 → 11 — Domain Registry now rendered from `project.yml:strategy_domains[]`)
+  - `skills/task/{README,SKILL,hooks/capture-check,hooks/capture-signals,hooks/check-active-task,hooks/session-cleanup,hooks/task-activate,tests/test-task-gate.sh}` (17 → 18 — state relocation, belt-and-suspenders `.state/docflow-active` cleanup)
+- Post-update actions performed:
+  - Created `.state/` at project root; migrated 3 files from `.claude/state/`: `active-tasks-3c4ade18-b44a-42ca-8fba-83930610b3bc.txt`, `briefing-last-shown-ben.txt`, `digest-llm-cache.json`. Session's active-task tracking survives the migration (verified via `task-activate.sh list`).
+  - `.gitignore`: added `.state/` above the existing `.claude/state/` line (kept both).
+  - Refreshed `.claude/hooks/task-activate.sh` (copy, not symlink) from v18 source — now reads state from `.state/`.
+  - Installed docflow tripwire: `.claude/hooks/block-direct-conversion.sh` symlinked to skill source; registered `PreToolUse "Bash"` in `.claude/settings.json` via `register-hook.sh`. Smoke-tested: `pandoc --version` allowed (exit 0), `pandoc foo.docx -o foo.md` denied (exit 2) with the `/docflow` routing message.
+  - 3 `/skill setup` re-runs subsumed by the manual steps above — all hooks already correctly symlinked to skill sources, so no full setup invocation was needed (v18/v5/v27 behavior activates on next tool call).
+- project.yml: no changes — all affected skills already in `approved_skills`.
+- Follow-ups:
+  - 13 `LOCAL_ONLY` agents under `agents/` remain — these are project-console materialized personas (clinical-affairs, cybersecurity, core-team-panel, etc.); project-owned, not pushed upstream.
+  - `strategy` v11 sentinel-block rendering is documented but not wired — `/strategy domains add|edit|remove` + `project.yml:strategy_domains[]` seeding + `/best-practices` drift check are all listed as upstream follow-ups in the v11 changelog.
+
+---
+
 ## 2026-04-20 — push --merge (ben/020 secops v3 identity alignment)
 
 - Files: `skills/secops/SKILL.md`, `skills/secops/scripts/resolve_user.py`

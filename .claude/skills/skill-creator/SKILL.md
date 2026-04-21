@@ -1,8 +1,8 @@
 ---
 name: skill-creator
 description: "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when users mention skill conventions, skill structure, or ask about how skills should be organized."
-version: 2
-updated: 2026-04-16
+version: 3
+updated: 2026-04-20
 ---
 
 # Skill Creator
@@ -142,7 +142,7 @@ Skills are self-contained — all hooks, agents, templates, and scripts live ins
 
 **Setup action pattern** — every skill that ships hooks or agents must have a `setup` action that:
 
-1. Creates `.claude/hooks/`, `.claude/agents/`, and `.claude/state/` directories as needed.
+1. Creates `.claude/hooks/`, `.claude/agents/`, and `.state/` (at project root) directories as needed.
 2. For each hook script in the skill's `hooks/`, creates a symlink:
    `.claude/hooks/my-hook.sh` → `../skills/my-skill/hooks/my-hook.sh`
 3. For each agent file in the skill's `agents/`, creates a symlink:
@@ -431,6 +431,8 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 
 ## Changelog
 
+- 3 (2026-04-20): **Update `setup` action template to create `.state/` at project root instead of `.claude/state/`** (task ben/083). New skills scaffolded from `templates/skill-md.md` now install their setup step 1 targeting `.state/` — matches the task/docflow/digest/lessons post-v18/v27/v5/v2 convention. `README.md` dependency table entry updated to point at `.state/` with a pointer to ben/083 for rationale.
+  **Post-update:** No action required on existing skills. Future skills generated via `/skill-creator` now default to the correct state-dir location.
 - 2 (2026-04-16): **Extended symlink pattern to `.claude/agents/`.** Previously the self-contained principle covered hooks and agents equally in prose, but only `.claude/hooks/` had an explicit symlink convention. Setup action template, Best Practices table, and skill templates now mandate that skills shipping agents install them via symlinks from `.claude/agents/<name>.md` → `skills/<name>/agents/<name>.md`. Added "Agents use symlinks" Required check to the Best Practices table. Added agent-ownership rule (skill's `agents/` is source of truth; forks allowed but documented) and registry-level `agents/` rule (only cross-skill agents like `project-secops.md`; per-skill agent files live under `skills/<name>/agents/`, not at registry root). Rationale: advisors skill `init` action was copying agent files into `.claude/agents/` — copies drift when `/sync-skills pull` updates the skill-owned source. Symlinks eliminate drift by construction.
   **Post-update:** Skills that ship agents must update their `setup` (or `init`) action to create symlinks instead of copies. Existing project installations: delete `.claude/agents/<name>.md` copies and re-run the skill's setup/init action to recreate as symlinks. `/best-practices` will now flag copies as Required FAILs until converted.
 - 1 (2026-04-16): Initial version — adapted from Anthropic's skill-creator with project conventions. Added: required YAML frontmatter (version, updated), self-contained skill structure, symlink pattern for hooks, required sections (Supporting Files, Best Practices, Changelog), README.md as design doc, skill templates. Kept: full evaluation pipeline (grader, comparator, analyzer agents), description optimization loop, benchmark aggregation, eval viewer

@@ -21,7 +21,7 @@ Initial v1 runs at SessionStart on every session for every user, possibly multip
 12h supports a mid-day check-in for someone who works off hours. The window is cheap to change — just edit the constant in `hooks/session-briefing.sh`.
 
 **Why per-user (email-keyed) state instead of per-session?**
-A 12h throttle tied to sessions would reset too often (every new terminal = new briefing). Tying it to email means each teammate sees the briefing once per window regardless of how they open sessions. The state file is `.claude/state/briefing-last-shown-<email-slug>.txt` — per-project, gitignored (per the existing `.claude/state/` convention).
+A 12h throttle tied to sessions would reset too often (every new terminal = new briefing). Tying it to email means each teammate sees the briefing once per window regardless of how they open sessions. The state file is `.state/briefing-last-shown-<email-slug>.txt` — per-project, gitignored (relocated from `.claude/state/` in ben/083 to escape Claude Code's `.claude/**` sensitive-file guard).
 
 **Why include the current user's own commits in the briefing?**
 Self-recall of yesterday's work is useful, and filtering them out adds surprise ("why did my commits disappear?"). The explicit design call (from task 019) is to show everyone, including you.
@@ -50,7 +50,7 @@ Standard convention, well-understood by humans and tools. The reverse-chronologi
 .claude/skills/medtech-docs/templates/
 └── changelog-project.md         # seed template used by /digest setup
 
-.claude/state/                   # gitignored
+.state/                          # gitignored (project root)
 └── briefing-last-shown-<slug>.txt
 ```
 

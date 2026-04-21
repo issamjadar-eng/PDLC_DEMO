@@ -1,8 +1,8 @@
 ---
 name: docflow
-description: "Document conversion and round-trip management — convert between markdown and formal formats (DOCX, PDF, XLSX) with image fidelity, metadata tracking, and cross-reference resolution"
-version: 14
-updated: 2026-04-16
+description: "Document conversion and round-trip management between markdown and formal formats (DOCX, DOC, PDF, XLSX). Use this skill whenever a user asks to convert, adopt, import, export, refresh, round-trip, or 'test docflow on' any .docx / .doc / .pdf / .xlsx / .pptx file — whether under docs/internal/source/ (QMS SOPs, forms, policies, work instructions), under docs/project/dhfs/**/formal/ (DHF working drafts), or elsewhere in the repo. Also use when a user asks to extract images, resolve cross-references, or handle external review comments against any of those formats. Owns the conversion pipeline — image extraction, frontmatter, cross-ref resolution, quality gates, round-trip metadata — so direct pandoc / unzip / soffice / pdftotext calls are blocked by a PreToolUse Bash hook installed by the skill's `setup` action; `/docflow <action>` is the supported entry point."
+version: 27
+updated: 2026-04-20
 ---
 
 # Docflow
@@ -17,15 +17,68 @@ This skill includes supporting files in `${CLAUDE_SKILL_DIR}/`:
 |------|---------|---------|
 | `agents/converter.md` | `convert`, `batch` | Agent prompt: source → source-md conversion |
 | `agents/refresher.md` | `refresh` | Agent prompt: updated source → merge into existing markdown |
+| `agents/adopter.md` | `adopt` | Agent prompt: DHF formal → working MD with project frontmatter, template/SOP inference, suffix versioning |
+| `agents/reviewer.md` | `review` | Agent prompt: validate an adopted working MD against its source; detect Mermaid faithfulness violations, frontmatter gaps, ref/image issues; report or fix |
+| `references/classification-taxonomy.md` | `adopt` (Phase 5e), `review` (Phase 4 requirements audit) | Canonical industry-informed classification tags for requirement docs — 9 tags anchored in ISO 25010, ISO 14971, IEC 62366, IEC 81001-5-1, 21 CFR Part 11, MDR GSPR, HIPAA/GDPR. NOT project-editable. |
 | `agents/importer.md` | `import` | Agent prompt: formal DOCX/PDF → project markdown (Phase 2) |
 | `agents/exporter.md` | `export` | Agent prompt: project markdown → formal DOCX/PDF (Phase 2) |
 | `templates/frontmatter-source.md` | `convert`, `refresh` | YAML frontmatter template for source-md files |
-| `templates/frontmatter-project.md` | `import`, `export` | YAML frontmatter template for project docs (Phase 2) |
-| `scripts/extract_images.sh` | `convert`, `refresh`, `import` | Image extraction helper |
+| `templates/frontmatter-project.md` | `adopt`, `import`, `export` | YAML frontmatter template for project-doc working MD (adopt schema — active; export/import remain Phase 2) |
+| `scripts/extract_images.sh` | `convert`, `refresh`, `adopt`, `import` | Image extraction helper |
+| `hooks/block-direct-conversion.sh` | `setup` | PreToolUse Bash hook — blocks direct pandoc/unzip/soffice/pdftotext/pdfimages/pdftoppm/qpdf/pdftk calls against `.docx\|.doc\|.xlsx\|.xls\|.pptx\|.ppt\|.pdf` unless `.state/docflow-active` is set (state folder is at project root, relocated from `.claude/state/` in ben/083). Installed by `setup` as a symlink into `.claude/hooks/`. |
 
 ## Actions
 
 Parse the user's argument string `$ARGUMENTS` to determine which action to perform.
+
+### Natural-language routing
+
+Before literal action-keyword parsing, detect natural phrasings in `$ARGUMENTS` and rewrite to the canonical form. Applies only when `$ARGUMENTS` does not start with a known action keyword (`help`, `guide`, `convert`, `refresh`, `batch`, `adopt`, `export`, `import`, `reconcile`, `validate`, `sync-known-refs`, `status`).
+
+| User phrasing (regex, case-insensitive) | Rewrite to |
+|---|---|
+| `\badopt\b\|pull.*(into\|as) working\|convert.*formal.*(to\|into) (working )?(md\|markdown)\|make.*working (copy\|md).*of` | `adopt ` + rest |
+| `dry.?run.*adopt\|plan.*adopt\|preview.*adopt` | `adopt --plan ` + rest |
+| `re.?adopt\|refresh (the )?working` | `adopt --refresh ` + rest |
+| `\breview\b.*(adopted\|working md\|mermaid)\|verify.*(adopted\|working md)\|audit.*(adopted\|working md)\|check.*(mermaid\|fidelity)` | `review ` + rest |
+| `review.*--?fix\|fix.*review.*issues\|apply.*review.*correction` | `review --fix ` + rest |
+
+Unmatched natural-language input with no action keyword → show the full help overview.
+
+### `setup`
+
+Wire up the PreToolUse Bash tripwire hook that blocks direct document-conversion tool calls. Idempotent — safe to re-run. Also accepted as `init` for discoverability.
+
+This action follows the skill-creator convention (symlink into `.claude/hooks/`, register via shared `register-hook.sh`) so that `/medtech-docs init` Step 5 auto-discovers and runs it.
+
+1. Verify `jq` is available (required by the hook). If missing, warn: `"Install jq via brew install jq (or apt install jq)"` and stop.
+2. Verify `.claude/hooks/register-hook.sh` exists. If missing: warn `"Run /task setup first — it installs the hook registration helper"` and stop. (Same dependency pattern as `/secops setup`.)
+3. Create `.claude/hooks/` and `.state/` (at project root) directories if they do not already exist. (`.state/` relocated from `.claude/state/` in ben/083 to escape Claude Code's `.claude/**` sensitive-file guard.)
+4. Create symlink `.claude/hooks/block-direct-conversion.sh` → `../skills/docflow/hooks/block-direct-conversion.sh` (skip if already a symlink pointing to the same target). Ensure the source hook file is executable.
+5. Register the hook via the shared helper:
+   ```bash
+   .claude/hooks/register-hook.sh PreToolUse "Bash" command \
+     '"$CLAUDE_PROJECT_DIR"/.claude/hooks/block-direct-conversion.sh'
+   ```
+   `register-hook.sh` is idempotent — safe to re-run; it detects duplicates by exact command match.
+6. Report what was done: symlink path, hook-registration result (added vs already-present), and the one-line bypass instruction (`touch .state/docflow-active` / `rm .state/docflow-active`).
+7. **Do NOT add `.state/docflow-active` to `.gitignore`** — `.state/` should already be gitignored at a directory level (see `/task setup`). Confirm by reading `.gitignore` and warn if `.state/` (or parent) is not present.
+
+**Bypass mechanics.** The hook honors `.state/docflow-active` as an on/off marker. `/docflow` actions that legitimately need to invoke pandoc/unzip/soffice/pdftotext (currently `convert`, `refresh`, `batch`, `adopt` and their spawned agents) should:
+
+```bash
+touch .state/docflow-active
+# ... run pandoc / unzip / etc. ...
+rm -f .state/docflow-active
+```
+
+Use a `trap` so the marker is removed even on failure:
+```bash
+trap 'rm -f "$PROJECT_DIR/.state/docflow-active"' EXIT
+touch "$PROJECT_DIR/.state/docflow-active"
+```
+
+The marker is a file, not a lock — concurrent `/docflow` runs are rare in practice, and the simple file-flag covers the single-user CLI case this skill is designed for.
 
 ### `help [action]`
 
@@ -46,6 +99,8 @@ WHEN TO USE DOCFLOW:
   "I need to convert a QMS source document to markdown"    → /docflow convert <doc-id>
   "QMS updated an SOP, I need to refresh the markdown"     → /docflow refresh <doc-id>
   "I need to convert a batch of source documents"          → /docflow batch <category>
+  "I need to make a DHF formal doc editable in markdown"   → /docflow adopt <target>
+  "I need to adopt a whole DHF's formal content"           → /docflow adopt <dhf>
   "I wrote markdown and need a Word doc"                   → /docflow export <file>
   "I have a Word doc and need to edit it in markdown"      → /docflow import <file>
   "Someone reviewed my Word doc and sent it back"          → /docflow import <file> --comments
@@ -57,6 +112,16 @@ ACTIONS:
   convert <doc-id>          Source doc → markdown (QMS reference docs)
   refresh <doc-id>          Update markdown from new source version
   batch <category>          Bulk convert by priority category (P1-P7)
+  adopt <target> [flags]    DHF formal doc → round-trippable working MD
+                            (suffix versioning + template/SOP inference +
+                            filing composition). Target: file | <dhf> | <dhf> --area <a>
+  review <target> [--fix]   Validate an adopted working MD against its
+                            source document. Detects Mermaid faithfulness
+                            violations (containment, layout, edge-routing,
+                            invented labels), frontmatter gaps, ref/image
+                            issues. Report-only by default; --fix applies
+                            non-ambiguous corrections and flags the rest
+                            with `%% REVIEW:` comments.
   export <file> [flags]     Markdown → formal DOCX or PDF (Phase 2)
   import <file> [flags]     Formal DOCX/PDF → markdown (Phase 2)
   reconcile <file>          Resolve external review comments (Phase 2)
@@ -154,6 +219,68 @@ HOW IT WORKS:
 PRODUCES:
   Updated source-md file with conversion_history in frontmatter.
   Report: sections changed, images added/removed, conflicts flagged.
+```
+
+#### `help adopt`
+```
+/docflow adopt <target> [flags]
+
+WHAT: Adopt a formal DHF document (or a whole DHF's formal content) into
+      round-trippable working markdown — the working MD becomes the authoring
+      source of truth that will round-trip back to formal on release.
+WHEN: You've migrated formal content into a DHF and want to start authoring
+      against a workable markdown copy instead of editing binaries.
+
+WHEN NOT TO USE:
+  - To convert read-only QMS reference docs → use /docflow convert
+  - To refresh a working MD because the formal changed out-of-band →
+    use /docflow adopt --refresh <file>
+  - To produce a formal DOCX/PDF from working MD → use /docflow export
+    (Phase 2, not yet built)
+
+HOW IT WORKS:
+  1. Resolves target (single file, DHF name, or <dhf> --area <sub-area>)
+  2. Preflight: DHF in project.yml; no unsuffixed+suffixed collisions;
+     Forms + SOPs index available for inference
+  3. For each formal file:
+     a. Detect source_version from filename suffix (default v1)
+     b. git mv formal to <stem>-v{source_version}.{ext} if unsuffixed
+     c. Run converter pipeline into staging
+     d. Auto-infer template_of + authored_per (confidence-scored)
+     e. Auto-populate dhf/dhf_role/dhf_area/source_formal/target_formal/
+        version_lineage/filings
+     f. Validate against frontmatter-project.md schema
+     g. Move working MD to <stem>-v{working_version}.md alongside formal/
+     h. Re-render parent-README sentinel blocks
+  4. Report summary + list of low-confidence inferences for manual review
+
+NATURAL-LANGUAGE PHRASINGS (skill entry routes these to adopt):
+  "adopt this formal doc"                    "pull this into working MD"
+  "convert the DHF formal docs to working"   "make a working copy of ..."
+
+TARGET FORMS:
+  /docflow adopt <file>                 Single formal doc
+  /docflow adopt <dhf>                  All formal/ content in a DHF
+  /docflow adopt <dhf> --area <area>    Scope to one sub-area
+
+FLAGS:
+  --plan              Dry run — inventory + planned actions, no writes
+  --refresh <file>    Re-adopt a file whose formal changed out-of-band.
+                      Previous working MD gets status: obsolete; new
+                      working MD created at the next version.
+  --force             Skip "working MD already exists" warning
+  --no-rename         Skip formal rename (advanced — breaks version lineage
+                      consistency, for manual recovery only)
+
+PRODUCES:
+  <dhf-area>/<stem>-v{N+1}.md                  (working MD)
+  <dhf-area>/formal/<stem>-v{N}.{ext}          (renamed formal, via git mv)
+  <dhf-area>/images/                           (extracted images, if any)
+
+EXAMPLES:
+  /docflow adopt hiplink-mgmt-services --plan
+  /docflow adopt hiplink-pre-op --area design-controls/user-needs
+  /docflow adopt docs/project/dhfs/hiplink-pre-op/design-controls/user-needs/formal/AFAI-HipLink\ Planning-170426-111505.pdf
 ```
 
 #### `help batch`
@@ -309,8 +436,9 @@ What are you trying to do?
   5. Update a markdown file because the source document was revised
   6. Check the quality of a converted document
   7. See overall conversion progress
+  8. Adopt a DHF formal doc into round-trippable working MD
 
-Enter a number (1-7):
+Enter a number (1-8):
 ```
 
 Based on response:
@@ -321,6 +449,7 @@ Based on response:
 - **5** → Recommend `/docflow refresh <doc-id>`.
 - **6** → Recommend `/docflow validate <doc-id|file>`.
 - **7** → Recommend `/docflow status`.
+- **8** → Recommend `/docflow adopt <target>`. Ask if they want to adopt a single file, a whole DHF, or a scoped area; recommend `--plan` first to dry-run.
 
 ### `convert <doc-id>`
 
@@ -396,9 +525,161 @@ Convert multiple documents in a priority category.
 
 5. **Produce batch report**: Show per-document results (pass/fail/warning), total counts, any quality gate triggers.
 
-### `validate <doc-id|file>`
+### `adopt <target> [flags]`
 
-Check a converted file against quality criteria.
+Adopt DHF formal document(s) into round-trippable working markdown. Unlike `convert` (one-way reference conversion of QMS source docs), adopted MD becomes the **authoring source of truth** — the file the team edits. `/docflow export` (Phase 2) round-trips it back to formal.
+
+**Flags recognized**: `--plan`, `--refresh <file>`, `--force`, `--no-rename`, `--area <path>`
+
+0. **Preflight**:
+   - Target must either resolve to a single file under `docs/project/dhfs/<dhf>/**/formal/`, OR be a DHF leaf name matching `project.yml` `dhfs[]`.
+   - Verify `docs/internal/source-md/Forms/` and `docs/internal/source-md/SOPs/` exist (required for template + SOP inference). If missing or empty, warn but do not block — inference will return null candidates.
+   - **Collision check**: for each formal file, if both `<stem>.ext` AND `<stem>-v{N}.ext` exist in the same folder → error, instruct user to manually resolve before re-running. Auto-resolution here silently loses content; we require explicit intent.
+   - If `--plan`, compute the action list and report without writing.
+
+1. **Resolve target**:
+   - **Single file** (absolute or relative path to a formal file) → one adoption job. Infer the DHF by walking up the path until a `project.yml` `dhfs[].path` match is found. Infer DHF_AREA from path segments between the DHF root and `formal/`.
+   - **DHF name** (e.g. `hiplink-mgmt-services`) → enumerate every file under `docs/project/dhfs/<dhf>/**/formal/` matching `{pdf,docx,doc,xlsx,pptx}`. Exclude patterns: `c-arm-simulator-main/**` (source code), `HLCAS-TC-*` + `*.dcm` + pure-evidence screenshots (runtime evidence, not documentation).
+   - **DHF + `--area <path>`** → scope to `docs/project/dhfs/<dhf>/<area>/formal/`.
+
+2. **Per-file adoption** (for each resolved file):
+
+   **2a. Spawn adopter agent** — the agent does all extraction, rename, conversion, and validation:
+   - Spawn an Agent with `agents/adopter.md`, parameterized with: SOURCE_PATH (as-dropped), FORMAT, DHF, DHF_ROLE, DHF_AREA, DHF_AREA_DIR, STAGING_DIR, DOC_VERSION_OVERRIDE (if user passed `--doc-version`), FORMS_INDEX_PATH, SOPS_INDEX_PATH, WIS_INDEX_PATH, MANIFEST_PATHS, PROJECT_REFS_PATH.
+   - The agent's Phase 0 extracts title + doc_version from the source document's content, detects adoption state (FRESH / IDEMPOTENT / OVERRIDE-MERGE / DOWNGRADE / TITLE-DRIFT), and derives output paths from the extracted title.
+   - Up to 5 concurrent agents when processing a DHF-wide target. Serialize if `--plan` is set (no concurrency needed for dry run).
+
+   **2b. Flag handling** (passed through to the agent):
+   - `--force` → agent proceeds past IDEMPOTENT detection and re-adopts (overwrites working MD).
+   - `--doc-version v<N>` → DOC_VERSION_OVERRIDE is set; agent skips version-extraction hierarchy and uses the flag value.
+   - `--override` → agent enters override-merge mode when OVERRIDE-MERGE is detected (3-way merge; currently design-captured only — returns manual-instruction failure).
+   - `--confirm-rename` → agent proceeds past TITLE-DRIFT detection and renames the working MD + formal to match the new extracted title.
+   - `--plan` → skill runs agent in dry-run mode; agent extracts title+version, detects state, but does NOT rename, convert, or write. Reports what would happen.
+
+   **2c. Validate + commit** (inside the agent):
+   - The agent's Phase 7 self-validation runs. If Required checks fail, the agent leaves staging intact with `VALIDATION_FAILED.txt` and returns failure.
+   - The agent's Phase 8 performs the transactional commit (git mv formal → title-based name, move images, move working MD, re-render parent README sentinels).
+
+   **2d. Skill-side result handling**:
+   - On agent success, working MD has landed at `<DHF_AREA_DIR>/<TITLE>.md` and formal at `formal/<TITLE>.<ext>`. Parent README sentinels re-rendered.
+   - On agent failure: staging retained with diagnostic file. Collect into batch summary.
+
+3. **Quality gate enforcement** (DHF-wide targets):
+   - Track consecutive Required failures. If ≥ 3, stop and report — likely systemic issue (bad preflight, corrupted template index, etc.).
+   - After 10+ files, if failure rate ≥ 30%, stop.
+   - Warnings accumulate for the summary.
+
+4. **Report**:
+
+   ```
+   Adopt: <target>
+
+     Files adopted:       N
+     Files skipped:       K (already adopted, or collision)
+     Files failed:        F
+
+     Low-confidence template_of:  [file — top-hint candidate(s)]
+     Low-confidence authored_per: [file — SOP candidates]
+     Missing template_of:         [file — no candidates]
+
+     Formal renames (git mv):     [old → <Title>.<ext>, ...]
+     Working MDs written:         [<Title>.md, ...]
+     Parent READMEs re-rendered:  [path, ...]
+
+     Override-merge detected:     [file — old→new doc_version] (Phase 2 — not yet implemented)
+     Version extraction failed:   [file — VERSION_NOT_FOUND.txt in staging]
+   ```
+
+   Exit non-zero if any file failed, matching `batch` semantics.
+
+5. **Post-run suggestions** (always):
+   - If any low-confidence inference surfaced: "Review the adopted files and resolve `template_of`/`authored_per` manually where flagged."
+   - If any file was renamed (dropped-in file with non-title name): "Inspect the git mv diff and commit the rename together with the adopted MD."
+   - If version extraction failed on any file: "Re-run with `--doc-version vNN <file>` to provide the version explicitly, or annotate the source with a revision marker."
+   - If `filings: []` for adopted files: "These docs are not referenced in any composition manifest — run `/docflow validate --orphans` to enumerate."
+
+### `review <target> [flags]`
+
+Validate an adopted working MD against its source document. Complements `adopt` — where `adopt` produces the MD, `review` verifies it stayed faithful. Useful after any adopt run, after a spec update that might surface new regressions in existing adopted docs, or before committing a working MD for the first time.
+
+**Flags**:
+- `--fix` — apply non-ambiguous corrections directly to the MD; flag ambiguous cases with `%% REVIEW:` comments. Default is report-only.
+- `--mermaid-only` — scope to Mermaid blocks (skip frontmatter, refs, content fidelity audits)
+- `--scope <full|mermaid-only>` — same as `--mermaid-only` but explicit
+
+**Target forms**:
+- `/docflow review <file>` — single working MD
+- `/docflow review <dhf>` — every adopted working MD in a DHF (walks `docs/project/dhfs/<dhf>/**/*.md` that carry `dhf:` frontmatter)
+- `/docflow review <dhf> --area <path>` — scope to a sub-area
+
+0. **Preflight**:
+   - Resolve target to one or more working MDs.
+   - Verify each target is an adopted doc (has frontmatter with `dhf:` and `source_formal:`). Skip anything that isn't.
+   - Verify `source_formal` path resolves to an existing formal file.
+
+1. **Spawn reviewer agent** per file (`agents/reviewer.md`), parameterized with:
+   - WORKING_MD_PATH
+   - FORMAL_PATH (resolved from frontmatter `source_formal`)
+   - DHF_AREA_DIR (parent folder of the MD)
+   - MODE (`report` default, `fix` if `--fix` flag)
+   - SCOPE (`full` default, `mermaid-only` if flag present)
+   - CONVERTER_SPEC_PATH (`.claude/skills/docflow/agents/converter.md`)
+
+2. **The agent performs** (see `agents/reviewer.md`): inventory → source pairing → per-Mermaid audit (opens each image, classifies per F11a, enumerates source structure, diffs against emitted Mermaid, records discrepancies per category) → non-Mermaid audits (frontmatter, refs, content fidelity, image integrity) → correct-or-flag → report.
+
+3. **Report back** per file:
+
+   ```
+   Review: <Title>.md
+
+     Mermaid blocks reviewed: N
+       ✓ Figure 1 (K/K edges verified)
+       ⚠ Figure 3 — 2 discrepancies:
+           - [FIX] Events moved inside VPC subgraph
+           - [FIX] Removed invented label "API layer (outside VPC)"
+
+     Non-Mermaid audits (if --scope full):
+       ✓ Frontmatter complete
+       ⚠ Cross-refs: 1 unresolved without note (flagged)
+
+     Corrections applied: K (--fix mode)
+     Flagged for human review: F (%% REVIEW: comments in MD)
+
+     Overall: PASS | <N issues requiring attention>
+   ```
+
+4. **DHF-wide runs**: collect per-file reports; produce an aggregate summary.
+
+5. **When `--fix` applied changes**: recommend the user `git diff <file>` to inspect corrections before committing. Reviewer changes are auto-staged for review but not auto-committed.
+
+**Ambiguity handling** — the reviewer emits `%% REVIEW: <category> — <description>` comments inline in the MD for cases where auto-correction is too risky:
+- Classification ambiguity (is it a flow or a logical diagram?)
+- Illegible source labels
+- Containment boundary that's visually at the pixel edge
+- Multiple-target decision branches where target is uncertain
+- Structural rewrites that go beyond single-line edits
+
+These are grep-friendly (`grep "%% REVIEW:"`) and dissolve when a human resolves them. A separate Best Practices check flags working MDs with outstanding `%% REVIEW:` comments.
+
+**When to run `review`**:
+- After every `/docflow adopt` — the "verify" step of the two-pass workflow
+- When the F11 spec or frontmatter schema updates — re-review existing adoptions for new regressions
+- Before `/tracker` aggregation — ensures the dashboard reflects verified state
+- On a cadence (e.g., `/docflow review hiplink-mgmt-services` weekly) for drift detection
+
+### `adopt` → `review` two-pass workflow
+
+The recommended workflow is:
+
+```
+/docflow adopt <file>           # Best-effort conversion
+/docflow review <file>          # Report discrepancies (report-only default)
+/docflow review <file> --fix    # Apply non-ambiguous corrections
+git diff                        # Inspect corrections
+# Resolve any %% REVIEW: comments manually
+```
+
+Rationale: separation of concerns. Adopter focuses on extraction + inference + initial Mermaid. Reviewer focuses on validation against source. Simpler prompts for each agent; catches bug classes not yet enumerated in F11.
 
 If argument is `--toolchain`, check CLI tool and Python dep availability:
 - CLI: `which pandoc`, `which pdftotext`, `which pdfimages`, `which libreoffice`, `which unzip`
@@ -670,6 +951,49 @@ source/                              source-md/
 
 The `convert` action resolves the correct subfolder from the doc-id prefix and passes it as `OUTPUT_DIR` to the converter agent.
 
+### Adopted Working-MD Placement (`/docflow adopt`)
+
+Working MD produced by `/docflow adopt` sits **alongside** the formal file it was adopted from, inside the DHF folder tree (not in `docs/internal/source-md/`).
+
+```
+docs/project/dhfs/<dhf>/<dhf-area>/
+├── <Title>.md                           # working MD (adopted; draft lifecycle)
+├── formal/
+│   └── <Title>.<ext>                    # current formal (title-based filename, no version suffix)
+├── images/
+│   └── <title-kebab>_<descriptor>.png
+└── README.md                            # its ## Structure sentinel is re-rendered
+```
+
+**Filename convention**:
+- Filenames carry NO version suffix and NO `- Draft` marker. Working = `<Title>.md`. Current formal = `formal/<Title>.<ext>`.
+- **Exactly one current formal per title**. Prior versions live in git history (`git log --follow -- formal/<Title>.<ext>`). The filesystem reflects current state only.
+- Title is extracted from the document's CONTENT (cover page → PDF metadata → body H1 → cleaned filename), not from the source filename pattern. See `templates/frontmatter-project.md` "Title extraction hierarchy".
+- Lifecycle signal: folder location (`formal/` vs working area) + frontmatter `lifecycle: draft` field. No filename marker needed.
+
+**Version lives in metadata, not filenames**:
+- `doc_version` in frontmatter (e.g. `"v30"`) — extracted from the source document's revision history / cover page / metadata at adopt time.
+- `version_lineage[]` — audit trail of format transitions. Never truncated.
+- Git history — byte-level record of prior formals.
+
+**Image path prefix**: `images/` (sibling folder, not `../images/`).
+
+**Content exclusions**: adopt skips non-document files — source code trees (`c-arm-simulator-main/**`), DICOM runtime evidence, pure-evidence screenshots.
+
+### When a New Formal Drops (override-merge)
+
+When someone drops a newer version of a formal already under adoption (e.g. a v31 export of a doc currently adopted at v30), `/docflow adopt --override` performs a **3-way merge** between:
+
+- the prior formal (still on disk before override, re-converted to MD as "base")
+- the current working MD with author edits ("draft")
+- the new formal dropped by the user ("new")
+
+The merge is **section-aware** (H2/H3 boundaries). Sections changed by only one side are auto-applied. Sections changed by both sides emit CONFLICT markers for the author to resolve manually.
+
+Filenames don't change across a version override — `<Title>.<ext>` is stable. Old formal content is preserved in git history (`git show HEAD~1:formal/<Title>.<ext>`).
+
+**Implementation status**: the merge workflow is **design-captured but not yet implemented** in `agents/adopter.md`. Today, an override-merge detection returns a manual-instruction failure. Full implementation lands when a real upgrade scenario needs to be exercised.
+
 ### Source-MD Filename Convention
 
 Source-md filenames **must match** the source filename exactly, with only the extension changed:
@@ -720,6 +1044,15 @@ All conversions use a staging area (`source-md/.staging/{doc-id}/`). Output move
 | Known References have Domain + Scope | Every row in `qms-reference-graph.md` populates Domain and HipLink Scope (no `review` / no blank). Run `/docflow sync-known-refs`; manually override rows that the auto-classifier can't disambiguate. | Recommended | shared |
 | READMEs reference current project-layer paths | Every README under `docs/internal/` references project-layer artifacts (INDEX.md, qms-reference-graph.md, future deliverable-registry.md / obligations-index.md / template-schemas/) at their current path. No dead links, no stale references to moved content. Run `/docflow validate --readmes`. | Required | shared |
 | Structural changes sweep READMEs in the same commit | When a docflow action splits, moves, or renames a project-layer artifact, every README that references the old location must be updated in the same commit as the change. Verified indirectly via the dead-link check above — if `validate --readmes` passes after a structural change, the sweep was done. | Required | shared |
+| Adopted files use title-based filenames (no version suffix) | Every file under `docs/project/dhfs/<dhf>/**/formal/` AND every adopted `.md` in its sibling folder matches `<Title>.<ext>` pattern. No `-v\d+` suffix in filenames — versioning lives in frontmatter + git history. | Required | shared |
+| Adopted working MDs have resolvable source_formal + target_formal | Every `.md` under `docs/project/dhfs/<dhf>/` with `dhf:` in frontmatter has `source_formal` resolving to an existing file and `target_formal` parent folder existing. | Required | shared |
+| Adopted working MDs have doc_version populated | Every adopted working MD has a non-null `doc_version` matching `^v\d+$` (normalized form). Null values indicate Phase 0 extraction failure that was silently accepted. | Required | shared |
+| Adopted working MDs have template_of populated or flagged | Every adopted working MD has either a non-null `template_of.doc_id` with `confidence`, OR a `notes:` entry explicitly marking the inference as incomplete. No silent nulls. | Recommended | shared |
+| Exactly one current formal per title | For each `<Title>.md` in a DHF area, exactly one `formal/<Title>.<ext>` exists (not zero, not multiple). Multiple indicates version-suffix leftovers from old convention; zero indicates an orphan working MD. | Required | shared |
+| Adopted working MDs have been reviewed | Every adopted working MD has been through `/docflow review` at least once (or carries `%% REVIEW:` comments that have been resolved). For docs with Mermaid blocks, review is the two-pass complement to adopt; skipping it means discrepancies between Mermaid and source may ship unchecked. | Recommended | shared |
+| No outstanding `%% REVIEW:` comments | Adopted working MDs do not contain unresolved `%% REVIEW: <category>` comments. These are placeholders the reviewer emitted for human resolution; unresolved ones indicate the working MD is not yet ready for review-gate sign-off. Grep: `grep -rn '%% REVIEW:' docs/project/dhfs/`. | Recommended | shared |
+| PreToolUse Bash tripwire installed | `.claude/hooks/block-direct-conversion.sh` exists as a symlink to `.claude/skills/docflow/hooks/block-direct-conversion.sh` AND `.claude/settings.json` registers it under `hooks.PreToolUse[].matcher == "Bash"`. Without this hook, direct pandoc/unzip/soffice calls against office documents silently bypass `/docflow`. Run `/docflow setup` to install. | Required | shared |
+| Tripwire hook is symlink, not copy | `.claude/hooks/block-direct-conversion.sh` is a symlink (not a copy). Same rationale as other skill-owned hooks — `/sync-skills pull` updates the source, and copies drift. Run `/docflow setup` to fix if drifted. | Required | shared |
 
 ## Notes
 
@@ -731,6 +1064,34 @@ All conversions use a staging area (`source-md/.staging/{doc-id}/`). Output move
 
 ## Changelog
 
+- 27 (2026-04-20): **Relocate bypass marker + setup state dir from `.claude/state/docflow-active` to `.state/docflow-active`** (task ben/083). Claude Code's built-in sensitive-file guard prompts on every Bash-initiated touch/rm against `.claude/**` regardless of `settings.json` allow rules. Moving the marker OUT of `.claude/` is the only durable escape. Updated: `hooks/block-direct-conversion.sh` BYPASS_MARKER path + help-text override instructions; `SKILL.md` setup action step 3 (create `.state/` instead of `.claude/state/`) + step 7 gitignore check + bypass mechanics section; all 4 agent prompts (`converter.md`, `adopter.md`, `refresher.md`, `reviewer.md`) Phase 0.0 `touch`/`rm` commands now target `$CLAUDE_PROJECT_DIR/.state/docflow-active`. Historical changelog entries (v24 bypass-marker intro, v23 tripwire intro) preserved.
+  **Post-update:** The hook is installed via symlink — v27 activates on next tool call after pulling. No setup re-run required. If a project has an in-flight `/docflow` run with the old marker at `.claude/state/docflow-active`, migrate it via `mv .claude/state/docflow-active .state/docflow-active` (or just `rm .claude/state/docflow-active` — the SessionEnd cleanup will remove it anyway). The `session-cleanup.sh` belt-and-suspenders cleanup already targets `.state/docflow-active` as of task-skill v18.
+- 26 (2026-04-20): **Hook regex tightening — shell-aware tokenization via python3 shlex, eliminating prose-in-quoted-arg false positives.** The v23 tripwire matched conversion verbs + office-doc extensions anywhere in the command string, so `gh pr create --body "prose mentioning pandoc ... .docx"`, `git commit -m "docflow changes for foo.docx"`, and `grep pandoc file.docx` all tripped the hook on their first invocation. v24's Bash-level sed splitter was worse — it split on `|` even inside quoted strings, breaking `VERBS='pandoc|soffice|…'` string literals into separate "statements" and then firing on each verb as if it were a command. v26 rewrites `hooks/block-direct-conversion.sh` to call out to `python3 -c` with `shlex` for proper shell tokenization: operators like `;|&&|\|\|` only split chunks when they appear OUTSIDE quoted strings. Verbs and file extensions that appear INSIDE a quoted argument to some OTHER command (gh pr bodies, commit messages, grep patterns, echo literals) are no longer matched because they never become the first token of their own chunk. Test suite expanded to 18 cases covering 7 intended denies + 11 previously-tripping allows; all pass. Known-and-documented bypass surfaces (`bash -c "pandoc foo.docx"`, `find ... -exec pandoc {}`) remain ALLOW — matching user intent that the hook catches casual drift, not a determined bypass.
+  **Post-update:** if a project already has `.claude/hooks/block-direct-conversion.sh` symlinked from v23/v24, nothing to do — the symlink points at the skill source and picks up v26 on next tool call. If a project had disabled the hook because of false-positives (by removing the registration or emptying the script), run `/docflow setup` to re-register, and the v26 logic is immediately active.
+- 25 (2026-04-20): **T1 composite-table faithfulness rule + mandatory LibreOffice probe + reviewer T1-CHECK and PAGE-PROBE audits.** Surfaced by the HipLink RMP adopt review: the 8×8 composite risk matrix (legend in top-left corner via `gridSpan=3` + matrix body) was split into two separate MD tables AND the legend cells were backfilled with invented ISO-14971-flavored prose ("Risk is acceptable as-is; no further risk control action required") that appears nowhere in the source DOCX. Separately, the agent skipped pagination markers entirely, claiming LibreOffice was unavailable — without running `command -v soffice`, which would have returned `/usr/bin/soffice` (the project's `setup.sh` installs LibreOffice on Linux / WSL / macOS by default). Two root-cause fixes: (1) **`converter.md` Phase 3 — new rule T1** requires probing `gridSpan` + `vMerge` before emitting any non-trivial source table, preserving composites as a single HTML table with `colspan`/`rowspan` mirroring the source, and FORBIDS inventing cell text — every `<td>` text must be a verbatim substring of a source `<w:t>` value. Rationale quotes the RMP incident specifically. (2) **`converter.md` Phase 4.9** rewrites the LibreOffice toolchain detection as MANDATORY: the agent MUST run the `command -v` probe explicitly and report one of three exact labels (`pagination: F15 (rendered)` / `pagination: F14 (author-intended)` / `pagination: skipped (<reason with probe verbatim>)`) in Phase 7 notes — a bare "skipped" with no rationale is a Phase 7 failure. (3) **`reviewer.md` Phase 4** gains two audits: `T1-CHECK` (walks every emitted `<table>` against the source `<w:tbl>`, flags `T1-INVENTED-TEXT` with high-confidence autofix + `T1-COMPOSITE-SPLIT` as `%% REVIEW:`-flagged) and `PAGE-PROBE` (if MD has no page markers, probes LibreOffice in the reviewer's shell and flags `PAGE-PROBE-SKIPPED` as Required when LibreOffice is installed + source DOCX has ≥3 rendered pages). Applied to the HipLink RMP adopted MD: replaced the two separate tables with a single composite `<table>` using `colspan=3` (Acceptable/Conditional/Unacceptable legend spanning cols 1–3 of rows 1–3) + `rowspan=5` (vertical "Probability of Occurrence of Harm" axis label), stripped the invented tier-description prose, cited POL-000100241 / SOP-000100242 for operational definitions in surrounding caption instead. Inserted 4 page markers (pages 1/4/5/6 → next) via F15 (soffice --headless --convert-to pdf + pdftotext `\f` split, 7 rendered pages); pages 2→3 and 3→4 fall inside Section 5 device-description tables and are documented with an HTML-comment skip note per Phase 4.9 "don't fragment tables" rule.
+  **Post-update:** (a) existing adopted working MDs are NOT auto-audited — run `/docflow review <file>` (or `/docflow review <dhf>`) to surface T1 violations in previously-adopted docs. Every doc adopted pre-v25 that contained a colored/composite table or a DOCX ≥ 3 rendered pages is a candidate. (b) Adopter behavior change on next `/docflow adopt` run: agent will probe LibreOffice explicitly and emit composite tables as single `<table>` with `colspan`/`rowspan` — no code migration needed, just re-adopt where the MD is known-wrong. (c) `SPEC-ROLL-FORWARD` path (adopter Phase 0.4) handles the v24 → v25 bump as a "rewrite tables + pagination only" pass when `doc_version` is unchanged.
+- 24 (2026-04-20): **Bypass marker protocol wired into all four agents.** Follow-up to v23's tripwire — without this, `/docflow`'s own agents would self-block on their first pandoc/pdftotext/unzip/libreoffice call. v24 adds a mandatory **Phase 0.0 — Bypass marker protocol** section at the top of each agent prompt: `touch "$CLAUDE_PROJECT_DIR/.state/docflow-active"` before any gated conversion call (first action of the run for converter/refresher/adopter; before Phase 1 source-loading for reviewer, skipped entirely in lite-mode), `rm -f` the marker as the final action — success OR failure. `agents/adopter.md` additionally documents the IDEMPOTENT short-circuit path (no touch needed if no conversion runs) and the batch-run optimization (leave marker in place across multiple adopts in one `/docflow adopt <dhf>` sweep; remove once when batch completes). `agents/reviewer.md` notes lite-mode skips the protocol entirely (no Bash-gated reads). `scripts/extract_images.sh` is unaffected — the hook only gates Bash calls Claude issues directly, not subprocess calls inside scripts. Belt-and-suspenders: `.claude/skills/task/hooks/session-cleanup.sh` now unconditionally `rm -f`'s `.state/docflow-active` on SessionEnd so crashed agents don't leave the marker behind across sessions.
+  **Post-update:** If you pulled v23 and ran `/docflow setup`, pull v24 and take no further action — the marker protocol activates on the next `/docflow convert|refresh|adopt|review` run, and the session-cleanup hook is already installed via symlink. If you have v22-or-earlier adopted working MDs already, no re-adopt is needed; the marker protocol is a runtime safety wrap, not a content change.
+- 23 (2026-04-20): **Entry enforcement — PreToolUse Bash tripwire + broadened description + `setup` action.** Surfaced via live bypass: asked to convert the HipLink Risk Management Plan DOCX, Claude went straight to raw `pandoc` + `unzip` + XML introspection instead of routing through `/docflow adopt`, silently losing the colored risk matrix semantics the skill would have preserved. Root cause was two-fold: (a) the `description:` frontmatter read as a reference blurb, not a trigger — phrasings like "convert this docx to md" / "test docflow on this file" / "adopt the risk management plan" didn't match; (b) even when the harness missed, there was nothing stopping direct pandoc/unzip calls. v23 adds: (1) **Broadened `description:`** — action verbs (convert, adopt, import, export, refresh, round-trip, "test docflow on"), explicit file extensions (.docx/.doc/.pdf/.xlsx/.pptx), explicit locations (docs/internal/source/, docs/project/dhfs/**/formal/), and an explicit statement that `/docflow` owns the pipeline. Makes the skill fire on natural conversion phrasing. (2) **New `hooks/block-direct-conversion.sh`** PreToolUse Bash hook — reads hook JSON, detects command-start invocation of `pandoc|libreoffice|soffice|pdftotext|pdfimages|pdftoppm|unzip|qpdf|pdftk` against a `.(docx?|xlsx?|pptx?|pdf)` target, denies with exit 2 + a message pointing to the correct `/docflow` action. Honors `.state/docflow-active` marker for legitimate bypass; allows inert calls (`--help`, `--version`, `--list-*`). (3) **New `setup` action** (also accepted as `init` for discoverability) — follows the skill-creator symlink convention: `.claude/hooks/block-direct-conversion.sh` → `../skills/docflow/hooks/block-direct-conversion.sh`; registers `PreToolUse "Bash"` via the shared `register-hook.sh`; auto-discovered by `/medtech-docs init` Step 5 alongside `/task setup` and `/secops setup`. (4) **Two new Best Practices checks** — tripwire installed (Required) + tripwire is a symlink, not copy (Required). Tested: 10 hook scenarios (deny pandoc-on-docx, deny unzip-on-docx, deny pdftotext-on-pdf, deny libreoffice-convert-docx; allow pandoc-on-md, allow pandoc --version, allow soffice --version, allow non-Bash tools, allow unrelated `ls *.docx`, honor bypass marker) — all pass.
+  **Post-update:** Run `/docflow setup` to install the hook. Before this runs, direct pandoc/unzip/etc. calls against DOCX/PDF/XLSX continue to succeed silently, bypassing `/docflow`'s pipeline. After install, use `/docflow <action>` — or, for rare sanctioned bypass, `touch .state/docflow-active && ... && rm .state/docflow-active`. Existing `/docflow` action implementations that shell out to pandoc/unzip (convert, refresh, batch, adopt) need to wrap their calls in the touch/rm marker (or set it once at agent entry and clear on exit); tracked as follow-up on task 079.
+- 22 (2026-04-21): **R1 detail table moves from markdown to inline HTML for explicit column widths + native nested tables.** v21.1 fixed clause-level readability inside detail-table cells, but two structural problems remained: (a) markdown-table column widths are content-driven and ungovernable — a multi-paragraph Criticality cell with rationale italic + CtX tags balloons the third column to ~50% of width, squeezing Value (the primary content) into a narrow ribbon; (b) markdown does not allow a nested `<table>` inside a `|...|` cell, so sub-tables (AFAI-3518 AC1 Patient/Correction Details, AFAI-3537 AC8 button-state matrix, AFAI-3536 AC2 Global Control panel) had to render as `·`-separated bullet rows that lose the column shape. v22 converts the **detail table only** (attributes table stays markdown — its 6 columns are short and uniform) to inline HTML `<table>` with: (i) `<colgroup>` setting `Field` 10% / `Value` 60% / `Criticality` 30% — Value gets the most width as the primary content; (ii) full multi-line markdown allowed inside each `<td>` (GFM blank-line-after-`<td>` enables markdown processing); (iii) **nested HTML `<table>` inside Value cells** for sub-table content — Patient Details, button-state matrices, Global Control panels render as actual tables with header rows and column borders, not collapsed bullet runs. Adopter Phase 5e step 7 emits the HTML shape; reviewer Phase 4 audits that the detail-table is `<table>`-form (markdown form → flag as v21.x leftover, auto-fix is a one-time conversion). Spec updates: converter R1a/R1b/R1e (rewritten for HTML emit + nested-table examples); adopter Phase 5e step 7; reviewer Phase 4 R1 detail-table check. SRS re-rendered: 7/7 detail tables now HTML; 3 cells with multi-column source data (AFAI-3518 AC1, AFAI-3537 AC8, AFAI-3536 AC2) now carry true nested `<table>` blocks instead of bullet rows.
+  **Post-update:** existing v21.x adopted MDs render in the old narrow-Value layout; re-adopt under v22 swaps to HTML detail tables with proper widths. SPEC-ROLL-FORWARD path (adopter Phase 0.4) now covers the v21.x → v22 jump as a "rewrite tables only" pass — body content unchanged.
+- 21.1 (2026-04-20): **R1e v21.1 — user-story keyword bolding + per-bullet newlines + sub-table rendering inside AND clauses.** First v21 SRS render (commit 70c5a7b) was structurally correct but visually unreadable: GIVEN / WHEN / THEN / AND ran together as plain prose; multi-bullet color-keys (Blue 0–1mm • Light Blue 1–2mm • ...) collapsed to a single line; sub-tables inside AND clauses (button-state matrix in AFAI-3537 AC8, color-key in AFAI-4083 AC1) were inline-flattened into illegible runs. v21.1 fixes the **emit shape** (no semantic change): (a) **bold keywords** — wrap `AS A`, `GIVEN THAT`, `GIVEN`, `I WANT`, `SO THAT`, `WHEN`, `THEN`, `AND`, `BUT`, `IF`, `ELSE` in `**...**` so they read as section markers within the cell; (b) **newline per clause** — every keyword opens its own `<br>`-separated line; (c) **bullets get their own lines** — `<br>• <text><br>• <text>` instead of inline `• a • b • c`; (d) **sub-table block inside AND** — for multi-column nested data (button-state matrix etc.), render as bullet block with bolded primary identifier + `·`-separated columns, one row per bullet, all on their own lines. R1e converter spec rewritten with worked example; adopter Phase 5e step 7 references R1e for emit-time formatting. SRS re-rendered under v21.1 for AC1 of AFAI-4083 and AC8 of AFAI-3537 (the worst v21.0 readability cases) — body lines grow modestly but visual readability improves dramatically.
+  **Post-update:** existing v21.0 adopted MDs are still v21-shape-correct. The next adopt run for any req doc emits the v21.1 line layout. Existing v21.0 docs can be brought current via `docflow review --fix` (the new `R1-CELL-ILLEGIBLE-RUN` flag: bullets `• a • b • c` inline without `<br>` separators is auto-fixed by inserting `<br>` before each `•` past the first), OR by hand on a per-doc basis.
+- 21 (2026-04-20): **R1 v3 shape — column reorder (Value before Criticality), `none` backticked, plus first round of performance optimizations (A/C/F).** Fresh-context resume after the v20 SRS re-adopt surfaced three issues in one round of user feedback. Fixes: (a) **Detail-table column reorder** — `Field | Criticality | Value` → `Field | Value | Criticality`. Value (the user-story / GIVEN-WHEN-THEN) is the primary content readers want to scan; Criticality is an annotation on the right edge. Reads more naturally left-to-right; keeps the visually heavy inline-code CtX cluster from competing with the actual requirement text. Affects converter R1a, adopter Phase 5e step 7 emit, reviewer Phase 4 audit. (b) **`none` backticking** — under v20 `none (inferred)` was plain text while `` `CtS` (inferred) `` and other CtX tags were inline-code. Visual mismatch — `none` drew the eye as unstructured prose. v21 wraps as `` `none` (inferred) `` so it sits in the same grey channel as CtX tags. (c) **Reviewer spec-drift catchup** — reviewer Phase 4 still referenced the v19 7-column attributes table; updated to v21 (6-col attributes + 3-col detail with v21 column order). New `R1-SHAPE-WRONG` flag covers the v20 column-order leftover; new `none-UNBACKTICKED` flag covers the v20 plain-text `none` leftover; both are auto-fix high confidence. (d) **Performance optimizations A + C + F** — the v20 SRS re-adopt agent ran 787s / 90 tool calls / 225k tokens for a 7-story doc and self-reported "IDEMPOTENT — no content changes required." Scaling to ~186 docs in Phase 1g of task 075 was untenable. v21 ships three orthogonal wins: **A — IDEMPOTENT short-circuit** (adopter Phase 0.4): new `docflow_version` field in `frontmatter-project.md`. If existing MD has `doc_version` AND `docflow_version` matching the current run, adopter skips Phases 1–6 entirely and exits with one-line "unchanged" report. New SPEC-ROLL-FORWARD path covers the case where doc_version is unchanged but docflow_version bumped — runs trimmed Phase 5e only (rewrite per-requirement tables under new shape; no body re-extract). **C — Single source-extract pass** (adopter Phase 2 addendum): extract source ONCE into `{{STAGING_DIR}}/source.txt`, every downstream phase reads cache. Prior versions re-shelled `pdftotext` per-requirement during Phase 5e. **F — Review lite-mode** (`SCOPE=frontmatter-only`): reviewer Phase 0 short-circuits to frontmatter + cross-ref + requirements-doc audits only; skips per-Mermaid block audit, image audit, source-pairing — body didn't change in IDEMPOTENT runs, so per-block audits contribute zero value. Expected payoff: re-runs ~80% faster (A+F stacked), fresh adopts ~30% faster (C). Phase 1g (~186 docs) bulk adoption was the trigger; iteration loops on individual specs benefit too.
+  **Post-update:** Existing v20 adopted MDs are NOT short-circuit-eligible until they carry a `docflow_version` field. Either (a) re-adopt under v21 (gets A/C/F + new shape together), or (b) hand-add `docflow_version: "v20"` to frontmatter and accept that the next v21+ adopt will SPEC-ROLL-FORWARD (rewrite tables under v21 rules, preserve human-edited values without body re-extract). Reviewer in lite-mode can confirm `docflow_version` presence + spec match without touching the body.
+- 20 (2026-04-20): **R1 v2 shape refinement — Criticality moves to detail-table per-AC rows; softer labels; inline rationale for inferred values.** SRS v19 review surfaced that different ACs within the same requirement can have different CtX tags (a heat-map display AC may be CtF+CtS while its legend-display AC is CtF only). Collapsing to a single req-level Criticality loses that fidelity. v20 restructures: (a) **attributes table drops Criticality** (7 → 6 cols: `Key | Traces To | Epic | Classification | Target | Status`); (b) **detail table adds Criticality column** (2 → 3 cols: `Field | Criticality | Value`) — each AC carries its own CtX assessment per use-flow; Description row holds the req-level summary as union of AC CtX tags; (c) **label simplification** — `null` replaces `*(none — manual trace)*` for unresolved Traces To; `none (inferred)` replaces empty/blank for CtX couldn't-determine; `(inferred)` (lowercase plain parens, no italics) replaces `*(inferred)*`; (d) **inline rationale for inferred cells** — Criticality tags get a `<br>_rationale in italics._` line explaining the reasoning; auditable; human removes rationale on confirmation; (e) per-AC inference scans AC-specific GIVEN/WHEN/THEN text; `CtF` still never auto-inferred; (f) frontmatter `requirements.criticality:` counts req-level (Description row) only to avoid double-counting; (g) reviewer Phase 4 gains per-AC Criticality audit + missing-rationale check on inferred cells. Per-AC granularity enables finer trace to risk file / V&V and more realistic dashboards.
+  **Post-update:** adopted SRS needs re-adopt under v20 to gain per-AC Criticality column. Human-confirmed tags (no `(inferred)` suffix) stabilize as always.
+- 19 (2026-04-20): **R1 Criticality as Critical-to-X (CtX) tags + link-preservation rule.** SRS reformat exposed two gaps: (a) the prior R1 Criticality column used a single-axis 4-level scale (`critical/high/medium/low`) that didn't express *why* a requirement was critical; (b) the flattening pass dropped inline markdown links `[text](url)` from source content — faithfulness violation. v19 addresses both: (1) **Criticality = CtX multi-valued tags** anchored in project `glossary.md` "Criticality Tags": `CtF` (Critical to Function), `CtS` (Critical to Safety), `CtC` (Critical to Compliance), `CtP` (Critical to Performance). Each tag asserts which dimension of the device's intended use / indication for use the requirement is required to fulfill. Multi-valued; a req can be `CtF, CtS` (safety-critical core function). Empty CtX = nice-to-have (acceptable but flagged for periodic review). Attributes table expands to 7 columns (`Key | Traces To | Epic | Classification | Criticality | Target | Status`); (2) **Conservative CtX inference at adopt** — `safety` class → `CtS` suggestion; `regulatory` → `CtC`; `performance` → `CtP`. `CtF` is NEVER auto-inferred (functional classification doesn't automatically mean critical to intended use); humans assess against IFU; (3) **Link preservation** explicit rule in R1e — inline markdown links `[text](url)` survive flattening verbatim, never dropped silently. Jira/Confluence URLs on keys, DI cross-refs, external references all preserved. If a link can't be preserved in place due to structural mismatch, flag `%% REVIEW: link-preservation` rather than drop; (4) glossary.md updated with "Criticality Tags" section defining CtF/CtS/CtC/CtP + relationship to Classification + IFU framing; (5) frontmatter `requirements.criticality:` distribution (CtF/CtS/CtC/CtP/none counts); (6) reviewer Phase 4 audits for empty Criticality, Classification-Criticality mismatches (safety w/o CtS, regulatory w/o CtC, performance w/o CtP), and link-preservation via grep. CtX is a canonical set (not project-editable) — like Classification, cross-project dashboards depend on comparable queries.
+  **Post-update:** re-adopt any previously-adopted requirement docs to pick up link preservation; review-fix to add CtX tags. Existing human-edited Classification values stabilize as always (no overwrite). The SRS in task 075 was reformatted before v19 landed — it needs a re-adopt to regain lost links + populate Criticality.
+- 18 (2026-04-20): **R1 requirements-table convention + industry-informed classification taxonomy.** SRS adoption surfaced that requirement docs have uniform structure per-requirement (unlike free-form SADs or SOPs) and benefit from a distinct markup convention with structured metadata fields for dashboard queries. v18 adds: (a) **R1 two-table per-requirement shape** in `converter.md` Phase 3 — heading + 6-column attributes table (`Key | Traces To | Epic | Classification | Target | Status`) + Field/Value detail table (Description + per-AC rows). Notes as free-form prose below. Nested inner tables flatten inline with `•` bullets / `·` separators; (b) **Epic Link is the source of Category** — no synthetic keyword inference. Traces To extracted from `DI-\d+` / `UN-\d+` prefix, Epic value verbatim from source. Faithfulness-over-synthesis (same principle as F11b for Mermaid); (c) **Canonical industry-informed classification taxonomy** at `references/classification-taxonomy.md` — 9 multi-valued tags anchored in ISO/IEC 25010, ISO 14971, IEC 62366, IEC 81001-5-1, 21 CFR Part 11, MDR GSPR, HIPAA/GDPR. NOT project-editable for cross-project submission-dashboard comparability. Classification inferred from Description + AC regex patterns (definitional match → `confidence: high`); `functional` is baseline; tags multi-valued; `*(inferred)*` suffix until human override; (d) `adopter.md` Phase 5e — requirements-metadata inference; runs only when `doc_type: requirement`; populates all six attributes-table fields; respects user-override stability; (e) `frontmatter-project.md` gains `requirements:` aggregate block — count, epics map, classification distribution, target_releases, traces_to resolved/unresolved, status distribution. Feeds dashboard queries without per-requirement parsing; (f) `reviewer.md` Phase 4 gains requirements-doc audit — checks R1 shape, canonical classification tags, populated Epic, resolvable Traces To, under-classification flags; (g) first live R1 reformat on HipLink Planning SRS: 634 → 309 lines (51% compaction), 7 requirements restructured with verbatim content preservation, 4 nested color-key / button-state tables flattened inline, `%% REVIEW:` comments preserved at equivalent positions, frontmatter aggregate populated. `requirement_categories` in `project.yml` deferred — add only when Jira Epic-name drift surfaces as dashboard problem.
+  **Post-update:** existing adopted SRS / FRS / NFRS / URS working MDs should be re-reformatted via targeted edit (content-preserving, not full re-adopt). Classification defaults to `functional`-only on reformat; human review fills in additional tags per source content. Canonical 9-tag list is registry-level — propose additions via `/sync-skills push` if a project surfaces a gap.
+- 17 (2026-04-20): **Two-pass workflow — new `review` action + F11 extensions for layout / containment / edge-routing / label fidelity (Mermaid faithfulness rules).** SAD shakedown (round 2 of task 075 Phase 1c) surfaced that Mermaid supplement generation has failure modes the F11 spec couldn't enumerate prospectively: invented region labels on unlabeled source groupings (e.g. "API layer (outside VPC)"), containment errors (Events cluster placed outside VPC when source shows it inside), wrong layout direction (UI Layer rendered at bottom when source has it at top), and mis-routed edges (self-loops where source shows forward flow). Four iterations of "add another F11 rule + re-adopt" kept finding new error classes — diminishing returns. v17 shifts from rule enumeration to **two-pass workflow**: (a) new `/docflow review <target>` action runs after adopt; spawns `agents/reviewer.md` to validate the working MD against the source image + document, detect discrepancies across Mermaid faithfulness / frontmatter / refs / content / image integrity categories; `--fix` applies non-ambiguous corrections and flags ambiguous cases with `%% REVIEW:` comments; (b) F11 rules extended one more round — F11d containment fidelity (enumerate source regions before declaring subgraphs; nested depth matches source), F11h layout fidelity (direction from source flow; invisible `~~~` hints for edge-sparse diagrams; caption documents arrangement), F11i edge-routing fidelity (enumerate-before-emit protocol for flow diagrams: list every `(source, label, target)` triple against source image before writing Mermaid edges; Phase 7 walks them back); (c) region-label fidelity covered by F11b extension — unlabeled source regions emit `subgraph X[" "]`, never invented descriptive labels; (d) two new Best Practices checks — "Adopted working MDs have been reviewed" (Recommended) + "No outstanding `%% REVIEW:` comments" (Recommended); (e) natural-language routing for review phrasings ("verify this adopted doc", "check mermaid fidelity", "audit working md"). Rationale: image→Mermaid transcription has an irreducible error floor with image-only input (Mermaid < UML expressivity, raster ambiguity, dagre layout limits). Rather than chase every new error class with a new F11 sub-rule, the reviewer agent uses open-ended intelligence against the source as ground truth — catches classes we haven't named.
+  **Post-update:** re-running `/docflow review --fix` on already-adopted working MDs applies the new F11 rules retroactively. Adopter prompt unchanged from v16; reviewer is the delta. For submission-critical diagrams, treat the source image as canonical and the Mermaid as a best-effort supplement even after review.
+- 16 (2026-04-20): **Filename convention flip: drop version suffixes, adopt title-based filenames; add override-merge design.** Task 075 shakedown surfaced that the v15 convention (`-v1`/`-v2` synthetic counter in filenames) was a parallel invention — the source docs already carry their own version in Confluence page revision numbers (e.g. "v.30" in SDP Appendix E). v16 drops synthetic counters entirely: (a) working MD is `<Title>.md` and formal is `formal/<Title>.<ext>` — NO version suffix, NO `- Draft` marker, versions live in metadata + git history; (b) Title is extracted from document CONTENT at adopt time (cover page → PDF metadata → body H1 → cleaned filename, priority order); (c) `doc_version` is extracted from the document's revision history / cover / metadata (Appendix-E-style markers prioritized) and stored in frontmatter as normalized `v<N>` (no dot, e.g. `v30`); (d) Phase 0 added to adopter for title+version extraction — runs BEFORE any content conversion, fails the whole adopt if version can't be extracted (no silent defaults in regulated docs); (e) frontmatter schema updated — `doc_version` + `release_version` replace `source_version`/`working_version` integer counter; `version_lineage[]` entries keyed by `doc_version` string + `lifecycle` instead of integer `v`; `lifecycle: draft` field added; (f) override-merge design captured for when a newer formal version drops — 3-way section-aware merge between prior formal (base), current working (draft), new formal (new) with HTML-comment CONFLICT markers; implementation stubbed, triggers manual-instruction failure today; (g) Best Practices updated — v15 "files carry version suffix" check inverts to "no version suffix in filenames"; new checks for `doc_version` populated, exactly-one-formal-per-title; (h) WI inference in `authored_per` (carried from v15 fix) remains — Arthrex uses WIs as primary process-governance artifacts alongside SOPs.
+  **Post-update:** any v15-era adoptions (with `-v1`/`-v2` suffixes) are legacy — they need cleanup before treating them as canonical. Task 075 includes a rollback of its one shakedown adoption before re-running under v16 convention.
+- 15 (2026-04-20): **New `adopt` action for DHF formal doc → round-trippable working MD (Phase 1b of task 075).** Task 071 migrated ~215 formal DHF docs from `hiplink-suite/` into 3 item DHFs, but the content was still in binary formats — unsearchable, undiffable, unciteable. `/docflow convert` (v14) was designed for read-only QMS reference docs and didn't carry the authoring metadata DHF docs need (template instantiation, SOP process binding, filing composition, round-trip target). v15 adds a distinct action: (a) `/docflow adopt <target>` — accepts single file, whole DHF, or `<dhf> --area <path>`; renames formal to `<stem>-v{N}.{ext}` via `git mv` (linear counter, global across format transitions — formal v14 → working v15 → formal v16 → working v17); outputs working MD to `<stem>-v{N+1}.md` alongside `formal/`; (b) new `agents/adopter.md` baselined on `converter.md` with adopt-specific phases — 5a template inference (title-exact / explicit-ref / heading-structure ≥70% / title-fuzzy — confidence-scored with `template_hints` for uncertain cases), 5b SOP inference (body-scan `SOP-\d+` classified by context), 5c filing composition (inverse index from `composition-manifest.md` → `filings[]`), 5d `version_lineage` seeding; (c) `templates/frontmatter-project.md` promoted from Phase-2 stub to active adopt schema — carries identity + lifecycle + suffix versioning + `source_formal`/`target_formal` round-trip pointers + `template_of`/`template_hints`/`authored_per`/`authored_per_hints` with confidence tiers + `filings` + full `version_lineage` audit trail; (d) flags: `--plan` (dry run), `--refresh` (re-adopt with old-working marked `status: obsolete`, never destroyed), `--force`, `--no-rename`; (e) natural-language routing — phrases like "adopt this doc" / "pull into working MD" / "convert formal to markdown" route to adopt without the keyword; (f) collision detection (both unsuffixed + suffixed present → error, manual resolution required — never auto-resolve); (g) parent-README sentinel blocks re-rendered on every adopt so DHF-area READMEs stay current; (h) three new Best Practices checks — "Adopted formal files carry version suffix" (Required), "Adopted working MDs have resolvable source_formal + target_formal" (Required), "Adopted working MDs have template_of populated or flagged" (Recommended).
+  **Post-update:** `/docflow adopt` is ready for sample-run validation. First-time adopters should run `/docflow adopt <dhf> --plan` to inventory before committing writes. Export (MD → formal) remains Phase 2 — a follow-up task (spawned from task 075) will build `export` + `import` + `reconcile` to complete the round-trip. Until then, adopted working MDs are authoring-ready but round-trip depends on manual pandoc passes or the forthcoming Phase 2 work.
 - 14 (2026-04-16): **README-currency as a first-class concern + `validate --readmes` action.** v13 split `source/INDEX.md` into two files but the eight READMEs that referenced INDEX weren't updated in the same pass — required a follow-up sweep after the user flagged it. That's the exact drift mode the project was set up to prevent (stale READMEs silently route Claude to wrong files). v14 promotes README-currency from an implicit norm to an enforced convention: (a) new `/docflow validate --readmes` sub-action walks READMEs under `docs/internal/`, diffs link targets against actual files, flags dead links + stale references + missing pointers; (b) every structural change action (splits, moves, renames, new project-layer artifacts) has a documented obligation to sweep affected READMEs before considering the change complete; (c) two new Best Practices checks (Required): "READMEs reference current project-layer paths" and "Structural changes sweep READMEs in the same commit"; (d) one new Recommended check: "Known References have Domain + Scope". The rule generalizes beyond INDEX.md — when `deliverable-registry.md`, `obligations-index.md`, or `template-schemas/` land (per task 069), the same sweep expectation applies.
   **Post-update:** run `/docflow validate --readmes` in any adopting project — fix dead links and missing pointers it surfaces. Expect to see the same pattern each time a grounding-layer artifact is introduced.
 - 13 (2026-04-16): **Split Known References into its own file — `docs/internal/qms-reference-graph.md`.** The Known References table is project-wide grounding data that spans source/ + source-md/ + future deliverable-registry + obligations/, not a source-folder catalog. Keeping it inside `source/INDEX.md` muddied the file's purpose (source catalog vs. reference graph) and made `source/INDEX.md` grow unbounded as P2-P7 conversions accumulate more unresolved refs. v13 moves the Known References section, its Domain+Scope taxonomy docs, and the format note to `docs/internal/qms-reference-graph.md`. `source/INDEX.md` keeps the functional catalog (123 rows in source/) + Source Folder Summary, and ends with a pointer to the new file. `/docflow validate --index` algorithm updated to read both files; `sync-known-refs` writes to the new file. The split positions `docs/internal/` as the project grounding layer — peers will be `deliverable-registry.md` (task 069 Phase 2), `obligations/{topic}.md` (task 069 Phase 3), `template-schemas/FORM-*.yml` (task 069 Phase 2).

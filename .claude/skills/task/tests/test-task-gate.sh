@@ -4,7 +4,7 @@
 # Tests the PreToolUse hook (check-active-task.sh) and the state management
 # script (task-activate.sh) that together enforce task discipline.
 #
-# State files: .claude/state/active-tasks-{session_id}.txt (project-local)
+# State files: .state/active-tasks-{session_id}.txt (project-local)
 # Hook: .claude/hooks/check-active-task.sh
 # Script: .claude/hooks/task-activate.sh
 #
@@ -17,7 +17,7 @@ SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_DIR="$(cd "$SKILL_DIR/../../.." && pwd)"
 HOOK="$PROJECT_DIR/.claude/hooks/check-active-task.sh"
 ACTIVATE="$PROJECT_DIR/.claude/hooks/task-activate.sh"
-STATE_DIR="$PROJECT_DIR/.claude/state"
+STATE_DIR="$PROJECT_DIR/.state"  # relocated from .claude/state/ in ben/083
 
 # Pre-flight checks
 for f in "$HOOK" "$ACTIVATE"; do
@@ -211,10 +211,10 @@ bash "$ACTIVATE" add "$TEST_SESSION" 099 >/dev/null
 TOTAL=$((TOTAL + 1))
 if [ -f "$STATE_DIR/active-tasks-${TEST_SESSION}.txt" ]; then
   PASSED=$((PASSED + 1))
-  echo -e "  ${GREEN}PASS${NC}  state file created in .claude/state/"
+  echo -e "  ${GREEN}PASS${NC}  state file created in .state/"
 else
   FAILED=$((FAILED + 1))
-  echo -e "  ${RED}FAIL${NC}  state file NOT in .claude/state/"
+  echo -e "  ${RED}FAIL${NC}  state file NOT in .state/"
 fi
 
 TOTAL=$((TOTAL + 1))
@@ -258,8 +258,8 @@ run_hook_test "tasks/* (index) → ALLOW" \
 run_hook_test "tasks/* (SECOPS.md) → ALLOW" \
   "$PROJECT_DIR/tasks/ben/SECOPS.md" "$FAKE_SESSION" "ALLOW"
 
-run_hook_test ".claude/state/* → ALLOW" \
-  "$PROJECT_DIR/.claude/state/active-tasks-foo.txt" "$FAKE_SESSION" "ALLOW"
+run_hook_test ".state/* → ALLOW" \
+  "$PROJECT_DIR/.state/active-tasks-foo.txt" "$FAKE_SESSION" "ALLOW"
 
 run_hook_test ".claude/settings.json → ALLOW" \
   "$PROJECT_DIR/.claude/settings.json" "$FAKE_SESSION" "ALLOW"

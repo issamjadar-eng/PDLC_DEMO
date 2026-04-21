@@ -1,8 +1,8 @@
 ---
 name: lessons
 description: "Capture, stage, and promote lessons learned from task work — harvest tagged insights into a team ledger, track applications and overrides as evidence, promote mature lessons to their permanent home (skill, CLAUDE.md, agent, rule, glossary, README, standard)"
-version: 1
-updated: 2026-04-12
+version: 2
+updated: 2026-04-20
 ---
 
 # Lessons Harvester & Curator
@@ -18,7 +18,7 @@ This skill is the **capture + curation + promotion** end of the lessons pipeline
 | Ledger (team-shared) | `tasks/lessons-ledger.md` |
 | Template | `${CLAUDE_SKILL_DIR}/templates/lessons-ledger.md` |
 | Shared scanner | `${CLAUDE_SKILL_DIR}/../shared/task-content-scanner.md` |
-| Task gate state | `.claude/state/active-tasks-{session_id}.txt` |
+| Task gate state | `.state/active-tasks-{session_id}.txt` |
 
 ## Dependencies
 
@@ -27,7 +27,7 @@ This skill is the **capture + curation + promotion** end of the lessons pipeline
 | `tasks/` directory | All actions | Source tasks to scan |
 | `project.yml` | `scan`, `assemble` | Resolves `task_folder` for each team member (used in lesson IDs) |
 | `.claude/skills/shared/task-content-scanner.md` | `scan`, `assemble` | Shared scanning algorithm |
-| `.claude/state/active-tasks-{session_id}.txt` | `record` | Task gate state file identifies the active task to attach records to |
+| `.state/active-tasks-{session_id}.txt` | `record` | Task gate state file identifies the active task to attach records to |
 
 If any are missing, the skill reports what's needed and how to create it (typically via `/medtech-docs init` or `/task setup`).
 
@@ -285,7 +285,7 @@ Log an application or override event in the currently active task.
 1. Verify `<lesson-id>` matches the format `L-<task_folder>-<NNN>-<seq>`.
 2. Verify `<outcome>` is one of: `applied`, `exception`, `challenged`, `false-positive`.
 3. Get the current session ID: `printenv CLAUDE_SESSION_ID`.
-4. Read `.claude/state/active-tasks-{session_id}.txt` to find the active task ID.
+4. Read `.state/active-tasks-{session_id}.txt` to find the active task ID.
 5. If no active task, error: "No active task — /lessons record must be called while a task is active. Run `/task find` first."
 6. If more than one active task, prompt the user to pick which task this record belongs to.
 7. Resolve the active task file: glob `tasks/<task_folder>/<NNN>-*.md` (the task gate state file contains the NNN; task_folder is inferred from the person who activated it, or the user is prompted).
@@ -505,4 +505,6 @@ Actions that must NOT be delegated:
 
 ## Changelog
 
+- 2 (2026-04-20): **Update task-gate state file path references from `.claude/state/active-tasks-{session_id}.txt` to `.state/active-tasks-{session_id}.txt`** (task ben/083). Doc-only change — `/lessons record` uses the task-skill's state file by path; relocating the path source in step 4 of the `record` action keeps the instructions accurate. No code change to the `record` flow itself.
+  **Post-update:** No action required. The path references are documentation; `/lessons record` reads `printenv CLAUDE_SESSION_ID` and joins against the path at runtime, which will follow task-skill v18's new location automatically.
 - 1 (2026-04-12): Initial version — 9 actions (init, scan, assemble, record, diff, validate, list, show, promote). Ledger with Staged/Promoted/Archived sections. Two-pass assembly (lessons + records). Lesson IDs in `L-<task_folder>-<NNN>-<seq>` form. Record format in source task docs as source of truth. Four outcome types (applied, exception, challenged, false-positive) distinguishing "lesson held" from "lesson may be wrong." Interactive promote with evidence review. Seven promotion destinations (skill, claude-md, agent, rule, glossary, standard, readme). Best-effort Claude detection at decision time. Close-out reflection prompt via `/task update Complete`. See task 036.

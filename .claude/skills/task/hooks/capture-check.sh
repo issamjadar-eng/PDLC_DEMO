@@ -19,8 +19,9 @@
 # is needed for v1.
 #
 # State files read (written by capture-signals.sh):
-#   .claude/state/capture-armed-{session_id}-{task_id}.txt
-#   .claude/state/capture-exit-pending-{session_id}-{task_id}.txt
+#   .state/capture-armed-{session_id}-{task_id}.txt
+#   .state/capture-exit-pending-{session_id}-{task_id}.txt
+# (relocated from .claude/state/ in ben/083 to escape .claude/** sensitive-file guard)
 #
 # See: tasks/ben/050-task-capture-strategy-lessons.md for full design
 
@@ -34,7 +35,7 @@ fi
 [ -z "$SESSION_ID" ] && exit 0
 
 # Active tasks
-STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/state"
+STATE_DIR="${CLAUDE_PROJECT_DIR}/.state"
 ACTIVE_FILE="${STATE_DIR}/active-tasks-${SESSION_ID}.txt"
 [ -f "$ACTIVE_FILE" ] || exit 0
 [ -s "$ACTIVE_FILE" ] || exit 0

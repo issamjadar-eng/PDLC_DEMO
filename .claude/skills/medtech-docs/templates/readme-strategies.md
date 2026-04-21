@@ -4,16 +4,18 @@
 
 ## Expected Content
 
+<!-- AUTO:STRUCTURE kind=strategy-domains source=project.yml:strategy_domains variant=expected-content -->
 | File | Purpose |
 |------|---------|
 | `regulatory-strategy.md` | Filing pathway, predicate lineage, PCCP scope, jurisdictional roadmap, Q-Sub questions — cross-filing story across all DHFs |
+| `commercial-strategy.md` | Pricing, reimbursement, channel, launch sequencing, customer targeting |
 | `architecture-strategy.md` | Platform boundaries, SaMD/SiMD/HW split, interoperability, cybersecurity approach, shared platform choices |
 | `development-strategy.md` | SDLC, configuration management, tool chain, branching model, review gates — one process, all components |
 | `testing-strategy.md` | V&V approach, integration test architecture, usability engineering, shared test infrastructure |
 | `risk-strategy.md` | Risk management approach per ISO 14971, platform-level hazard chains, cross-component risk controls |
 | `postmarket-strategy.md` | Post-market surveillance, maintenance plan, LMR cadence, PCCP change tracking — one PMS program |
-| `commercial-strategy.md` | Pricing, reimbursement, channel, launch sequencing, customer targeting |
-| `operations-strategy.md` | Manufacturing, supply chain, QMS posture, facility readiness |
+| `operations-strategy.md` | Build/release pipeline, SBOM/SOUP supply chain, cloud infrastructure, QMS operational posture, project management, tooling & agentic infrastructure, team workflow & onboarding |
+<!-- /AUTO:STRUCTURE -->
 
 ## Topic-first structure with per-component callouts
 
