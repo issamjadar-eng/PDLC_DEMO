@@ -4,6 +4,34 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-20 — push --merge (ben/020 secops v3 identity alignment)
+
+- Files: `skills/secops/SKILL.md`, `skills/secops/scripts/resolve_user.py`
+- Branch: `sync/pdlc-demo-secops-v3-2026-04-20`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/45
+- Commit subject: "secops v3: roster-driven git identity alignment"
+- Status: merged (`--merge` requested)
+- Merge commit: `077d4b4`
+- Hitachi HEAD after sync: `077d4b4`
+- Notes: Adds `scripts/resolve_user.py` — YAML-roster parser with four-heuristic identity match (email / single-member / name-fuzzy / `$USER`) and `--align-git` to write repo-local git config. Paired with the digest skill (PR #44), which consumes the same helper via `--task-folder` for its SessionStart throttle state key. No upstream regressions; `/secops setup` gains step 6 (align-git) idempotently.
+
+---
+
+## 2026-04-20 — push --merge (ben/019 + ben/021 digest skill + medtech-docs template)
+
+- Files: 7
+  - 6 under `skills/digest/` — SKILL.md, README.md, VERSION, hooks/session-briefing.sh, scripts/digest.py, scripts/build_changelog.py
+  - 1 under `skills/medtech-docs/templates/` — `changelog-project.md` (CHANGELOG.md seed)
+- Branch: `sync/pdlc-demo-digest-skill-2026-04-20`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/44
+- Commit subject: "Add digest skill + changelog-project template"
+- Status: merged (`--merge` requested)
+- Merge commit: `5f5bb9c`
+- Hitachi HEAD after sync: `077d4b4` (after the paired PR #45 also merged)
+- Notes: New `/digest` skill with two actions (`daily` SessionStart briefing + `log` CHANGELOG.md appender). Readable format: bold headline + optional body line + muted italic trace footer. Hybrid source — mechanical commit-body extraction by default, batched `claude -p` call on `--llm` (auto-on for `--retrospective`) for polished rewrites. Critical: sub-invocation runs with `cwd=/tmp` + stripped `CLAUDE_*` env to isolate from project context/hooks. Per-SHA LLM cache at `.claude/state/digest-llm-cache.json`. Medtech-docs template seeded automatically by `/digest setup`. Built and dogfooded on PDLC_DEMO.
+
+---
+
 ## 2026-04-20 — pull (bulk sync, 53 files)
 
 - Hitachi HEAD after sync: `765d3b6` (2 commits ahead of `origin/main` — unpushed docflow v3→v14 work; `sync.sh pull-file` reads working tree, so we picked up the unpushed content intentionally)
