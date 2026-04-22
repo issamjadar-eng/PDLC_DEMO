@@ -7,11 +7,14 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Template
 
 from console import themes
+from console.assistant.router import router as assistant_router
 from console.auth import preflight
 from console.chat.router import router as chat_router
 from console.config import get_config
 from console.dashboards.router import router as dashboards_router
 from console.documents.router import router as documents_router
+from console.overview.router import discover as discover_overview
+from console.overview.router import router as overview_router
 from console.trace_matrix.router import router as trace_matrix_router
 
 
@@ -44,13 +47,17 @@ async def theme_context(request: Request, call_next):
     request.state.theme_css = theme.css_variables()
     request.state.theme_footer = _render_theme_footer(theme)
     request.state.config = cfg
+    # Overview nav visibility — cheap filesystem check per request (stat only).
+    request.state.overview_nav = discover_overview(cfg.repo_root)["has_any"]
     return await call_next(request)
 
 
 app.include_router(chat_router)
 app.include_router(documents_router)
 app.include_router(dashboards_router)
+app.include_router(overview_router)
 app.include_router(trace_matrix_router)
+app.include_router(assistant_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

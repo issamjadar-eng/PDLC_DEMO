@@ -22,6 +22,34 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
   - `/task setup` to refresh `.claude/hooks/task-activate.sh` copy against v20 source
   - `/docflow setup` to confirm bypass marker lives at `.state/docflow-active` (already the case)
   - 22 `LOCAL_ONLY` files remain — task 024 (Unified Assistant Drawer) partials + advisor agents not yet pushed. Separate push decision.
+- **Outcome note (added 2026-04-22 in the follow-on push session):** The project-console files in this pull were momentarily reverted to v1.4.1 in `origin/main`. A parallel session's `/sync-skills push` (the follow-on entry below) re-landed v1.5.0 on both hitachi and PDLC_DEMO, carrying the Overview section + unified Assistant drawer. Net effect across both entries: hitachi 1.4.1 → 1.5.0; PDLC_DEMO picks up the other pulled skill updates (docflow/task/medtech-docs/digest) AND keeps 1.5.0 project-console.
+
+---
+
+## 2026-04-22 — push (project-console 1.5.0 — Overview + unified Assistant drawer)
+
+- Files: 17
+  - `skills/project-console/VERSION` (1.4.1 → 1.5.0)
+  - `skills/project-console/SKILL.md` (1.5.0 changelog entry)
+  - `skills/project-console/console/overview/{__init__,router}.py` (new module)
+  - `skills/project-console/console/assistant/{__init__,router}.py` (new module)
+  - `skills/project-console/console/app.py` (wires overview_router + assistant_router + middleware overview_nav flag)
+  - `skills/project-console/console/trace_matrix/router.py` (swapped custom drawer endpoint for generic)
+  - `skills/project-console/console/web/static/assistant.js` (new — generic drawer JS)
+  - `skills/project-console/console/web/static/docs-assistant-glue.js` (new — Documents-page wiring)
+  - `skills/project-console/console/web/static/console.css` (new `.overview-*` + `.pc-assistant-*` rules)
+  - `skills/project-console/console/web/templates/_assistant_drawer.html` (new)
+  - `skills/project-console/console/web/templates/_base.html` (conditional Overview nav)
+  - `skills/project-console/console/web/templates/documents_explorer.html` (mounts generic drawer)
+  - `skills/project-console/console/web/templates/index.html` (conditional Overview tile)
+  - `skills/project-console/console/web/templates/overview.html` (new)
+  - `skills/project-console/console/web/templates/trace_matrix_view.html` (swapped to generic drawer)
+- Branch: `sync/pdlc-demo-console-overview-assistant-drawer-2026-04-22`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/62
+- Status: merged (--merge requested)
+- Merge commit: `dd65333`
+- Hitachi HEAD after sync: `dd65333`
+- Follow-ups: sister project (Arthrex PCCP) can `/sync-skills pull` to receive 1.5.0 and the Overview section will light up if `project-overview.{pdf,pptx,md}` exists at repo root.
 
 ---
 

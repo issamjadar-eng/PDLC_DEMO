@@ -7,6 +7,13 @@
     {% if config.regulatory_pathway %} · {{ config.regulatory_pathway }}{% endif %}
   </p>
   <div class="cards">
+    {% if request.state.overview_nav %}
+    <a class="card" href="/overview">
+      <h3>Overview</h3>
+      <p><strong>Guided tour</strong> of the program</p>
+      <p class="muted">Device, regulatory strategy, project shape, and the agentic approach.</p>
+    </a>
+    {% endif %}
     <a class="card" href="/agents">
       <h3>Agents</h3>
       <p><strong>{{ agent_count }}</strong> domain agent{{ 's' if agent_count != 1 else '' }}</p>
