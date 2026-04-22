@@ -79,14 +79,66 @@ else
   OUTPUT="$(python3 "$SCRIPT" 2>/dev/null || true)"
 fi
 
-# If the output is just the "No new commits" pattern, skip emission
+# Sync check — runs ONLY when we're actually building a brief (throttle has
+# elapsed), not on every session. Best-effort: bounded by a 5s timeout, all
+# output muted, every failure mode (no upstream, no network, auth prompt,
+# detached HEAD, etc.) silently skips. We never block session start on git.
+SYNC_NOTICE=""
+if command -v timeout >/dev/null 2>&1; then
+  # Fetch quietly, capped at 5s so a hung remote or auth prompt can't stall us.
+  timeout 5 git fetch --quiet 2>/dev/null || true
+  # Count commits the upstream has that we don't. If no upstream, rev-list
+  # errors out silently and BEHIND stays empty.
+  BEHIND="$(git rev-list --count HEAD..@{u} 2>/dev/null || true)"
+  UPSTREAM="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
+  BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  if [[ -n "$BEHIND" && "$BEHIND" =~ ^[0-9]+$ && "$BEHIND" -gt 0 ]]; then
+    if [[ "$BEHIND" == "1" ]]; then
+      CHANGE_WORD="change"
+      COMMIT_WORD="commit"
+    else
+      CHANGE_WORD="changes"
+      COMMIT_WORD="commits"
+    fi
+    SYNC_NOTICE=$(cat <<EOF
+
+## Heads up — your project folder is out of date
+
+Your teammates have shared **$BEHIND new $CHANGE_WORD** on the \`$BRANCH\` branch that you don't have yet on your computer.
+Pulling them in now means you'll be working from the same version everyone else is on.
+
+<!-- CLAUDE INSTRUCTION — sync-check
+The local branch is $BEHIND $COMMIT_WORD behind $UPSTREAM. On your very next turn, before doing any other work:
+  1. Use AskUserQuestion to ask the user, in friendly business-user language, whether they'd like to pull the latest updates from the project repo now. Offer "Yes, pull now", "Not right now", and "Show me what changed first" as options.
+  2. If they pick "Show me what changed first", run: git log --oneline --no-decorate HEAD..$UPSTREAM — then re-ask.
+  3. If they say yes, run: git pull --ff-only  — and report the result in plain language (e.g., "Pulled N updates — you're all caught up.").
+  4. If the pull isn't a fast-forward, do NOT force it. Explain plainly that their local changes and the team's changes have diverged, and ask how they'd like to proceed.
+  5. If they decline, just acknowledge and continue with whatever they originally asked for.
+-->
+EOF
+)
+  fi
+fi
+
+# If the output is just the "No new commits" pattern, skip emission (but still
+# surface the sync notice if one was generated — sync state is independent of
+# whether there were commits to summarize).
 if echo "$OUTPUT" | grep -q "^No new commits" ; then
-  : # still update the throttle so we don't re-compute until 12h pass
+  if [[ -n "$SYNC_NOTICE" ]]; then
+    echo "---"
+    echo ""
+    echo "$SYNC_NOTICE"
+    echo "---"
+  fi
+  # still update the throttle so we don't re-compute until 12h pass
 else
   # Emit a separator so the briefing stands out in the session log
   echo "---"
   echo ""
   echo "$OUTPUT"
+  if [[ -n "$SYNC_NOTICE" ]]; then
+    echo "$SYNC_NOTICE"
+  fi
   echo "---"
 fi
 

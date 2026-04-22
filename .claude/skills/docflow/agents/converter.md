@@ -177,6 +177,28 @@ Mark all fillable elements:
 - Multi-line text: blockquote with `[Enter text...]`
 - Auto-calculated: `[CALCULATED: description]`
 
+#### Hyperlinks (all doc-types) — cross-body preservation rule
+
+**Hyperlinks from any source format are preserved verbatim as markdown `[text](url)` and must survive every downstream restructuring phase.** A restructuring step that drops a link wrapper is a faithfulness regression — the reader loses the ability to navigate to the cited source.
+
+This applies to **every** doc-type, not just requirements docs:
+
+- Confluence cross-references in product overviews, architecture docs, and SOPs
+- Jira/AFAI URLs on requirement keys, tickets, epic links
+- Design Input cross-references (`[DI-0003](<url>)`)
+- External references (standards documents, FDA guidance, vendor manuals, RFCs)
+- Confluence same-page anchors (`#SoftwareRiskAssessment(SRA)-SecurityAnalysis`) — preserved as-is for round-trip back to Confluence
+- mailto: addresses
+- Any `[...](...)` construct present in the upstream cache after Phase 2 extraction
+
+Per-format extraction is owned by the adopter, not the converter — adopter Phase 2 invokes `splice_hyperlinks.py` against the cache (PDF `/Annot /Link` via pymupdf, DOCX `w:hyperlink` + `w:anchor` via python-docx + rels mapping, XLSX `cell.hyperlink.target`/`location` via openpyxl, PPTX `a:hlinkClick` external URI via python-pptx), splices `[anchor](url)` into the cache file, and then every downstream phase (template inference, content rendering, R1 restructuring, image classification, page-marker insertion, requirements-aggregate generation) reads the already-spliced cache. **Converter / adopter restructuring rules MUST treat `[...](...)` spans as atomic — do not split them across cell boundaries, do not strip them when flattening tables to inline lists, do not regenerate cell content from un-spliced source text.**
+
+**URL-encoding for round-trip safety**: literal `)` characters inside URLs (common in Confluence anchors like `#Heading(SRA)`) are emitted as `%29` so the closing paren of the markdown link is unambiguous. `%29` decodes back to `)` per RFC 3986 on round-trip into Confluence.
+
+**If a link cannot be preserved in place** due to structural mismatch (anchor text spans a logical-cell boundary in the source, or anchor disappears during summary-fidelity rendering), flag the surrounding block with `%% REVIEW: LINK-DROPPED — <description with anchor text and URL>` rather than silently dropping the URL. Phase 7 enforces a quantitative floor (see adopter.md Phase 7 link-count validation).
+
+**Provenance fields**: adopter Phase 6 writes `has_hyperlinks: true|false` and `hyperlink_count: N` to frontmatter so dashboards can surface hyperlink-rich vs link-poor docs and reviewers can spot regressions across re-adopts.
+
 #### Requirements-doc convention (R1) — two-table per-requirement shape
 
 **Applies when `doc_type: requirement`** (SRS, FRS, NFRS, URS). Other doc types skip this section.
@@ -429,16 +451,7 @@ _Depth analysis of Cam/Pincer impingements informs surgical-planning decisions; 
 
 Compare v21.1's `<br>•`-separated bullet rows: column shape is now visible (Color / Range header + 6 data rows), Value column gets 60% width via `<colgroup>`, Criticality is a 30% sidebar. No more illegible bullet runs for tabular content.
 
-**Inline markdown links are preserved verbatim during flattening.** `[text](url)` structures render cleanly inside table cells and must survive the flattening process. This applies to:
-
-- Jira/Confluence URLs on requirement keys: `[AFAI-3555](https://arthrex.atlassian.net/browse/AFAI-3555)`
-- Design Input cross-references: `[DI-0003](<url>)`
-- External references (standards documents, FDA guidance, specifications, etc.)
-- Any `[...](...)` construct present in the adopted source MD
-
-Flattening strips **structural** elements (tables collapse to inline lists) but never **content** elements (text, links, emphasis, code spans). A flattening pass that drops inline links is a faithfulness violation — the reader loses the ability to navigate to the cited source. If a link cannot be preserved in place due to structural mismatch (e.g., a link that spanned a table-cell boundary in the source), flag the requirement with `%% REVIEW: link-preservation — <description>` rather than silently dropping the link.
-
-When converting from source PDF: PDF annotation links are extracted by pdfplumber / PyMuPDF / Claude `Read` and emitted as markdown `[text](url)` during Phase 2 (content extraction). The adopter must preserve these through Phase 5e restructuring into the R1 shape.
+**Hyperlink preservation through R1 flattening** — the cross-body rule (see "Hyperlinks (all doc-types)" above) applies inside R1 detail-table cells: every `[text](url)` span emitted by Phase 2 splice survives Phase 5e restructuring as an atomic unit. A flattening pass that drops inline links inside an AC cell is a faithfulness violation — flag with `%% REVIEW: LINK-DROPPED — <anchor + URL>` rather than dropping silently. Common cell content where this matters: requirement keys (`[AFAI-3555](url)`), Design Input cross-refs (`[DI-0003](url)`), Confluence-page links inside Description / AC bodies, standards / FDA-guidance external refs.
 
 ##### R1f — Document-wide sections outside per-requirement scope
 
@@ -541,9 +554,11 @@ Alt text must be detailed enough that a reader who cannot view the image still u
 
 For **content images that have graph structure** (flowcharts, decision trees, architectural diagrams, topologies), emit a Mermaid block immediately after the image, then the caption + authoritative-source line AFTER the Mermaid. The reader sees image → diagram → caption in reading order.
 
-**Layout**:
+**Layout (v28+ with F11-CLASSIFY marker)**:
 
 ````markdown
+<!-- F11-CLASSIFY: descriptor="security-safety-risk-process" type="a" mermaid-emit="required" -->
+
 ![Alt text describing the diagram's nodes, edges, and decision branches (30-100 words)...](../images/doc-id_descriptor.png)
 
 ```mermaid
@@ -555,6 +570,41 @@ flowchart LR
 
 *Figure N. Title (source p.X).* Authoritative source: [doc-id_descriptor.png](../images/doc-id_descriptor.png). The Mermaid diagram above is a readability supplement derived from the image — the image is the canonical record.
 ````
+
+**F11-CLASSIFY marker is REQUIRED in v28+** (task ben/087). Every content image must carry a marker HTML comment on the line above its `![...](...)` reference. The marker makes the agent's classification decision observable and the Phase 7 Mermaid-presence check mechanical instead of heuristic. Skipping the marker is a Phase 7 Required failure.
+
+**Marker schema**:
+
+| Attribute | Required? | Allowed values | Notes |
+|-----------|-----------|----------------|-------|
+| `descriptor` | yes | kebab-case stem matching the image filename's descriptor portion | Must match `images/<doc-id>_<descriptor>.<ext>` |
+| `type` | yes | `a`, `b`, `c`, `d`, `e`, `review` | See F11a table below. `review` = classification ambiguous; human must resolve |
+| `mermaid-emit` | yes | `required`, `skip` | `required` for types a/b/c; `skip` for d/e/review |
+| `skip-reason` | conditional | `matrix`, `ui-capture`, `photograph`, `decorative`, `ambiguous-needs-review` | REQUIRED when `mermaid-emit="skip"`. Short machine-friendly tag |
+
+**Emit rules**:
+- `type=a|b|c` → `mermaid-emit="required"` → MUST be followed by an adjacent `\`\`\`mermaid` block within 5 lines of the image ref (before the caption).
+- `type=d|e` → `mermaid-emit="skip"` with `skip-reason` → NO mermaid block; caption may immediately follow image.
+- `type=review` → `mermaid-emit="skip"` with `skip-reason="ambiguous-needs-review"` → emit a `%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — <one-line why>` comment adjacent to the marker; no mermaid emitted until a human resolves.
+
+**Examples**:
+
+```markdown
+<!-- F11-CLASSIFY: descriptor="auth-flow" type="a" mermaid-emit="required" -->
+```
+
+```markdown
+<!-- F11-CLASSIFY: descriptor="overall-risk-severity-matrix" type="d" mermaid-emit="skip" skip-reason="matrix" -->
+```
+
+```markdown
+<!-- F11-CLASSIFY: descriptor="login-screenshot" type="e" mermaid-emit="skip" skip-reason="ui-capture" -->
+```
+
+```markdown
+<!-- F11-CLASSIFY: descriptor="mystery-diagram" type="review" mermaid-emit="skip" skip-reason="ambiguous-needs-review" -->
+%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — source image shows boxes without clear arrow direction; could be (a) flow or (b) logical. Human to set type. %%
+```
 
 ##### F11a — Diagram type classification (MANDATORY before deciding Mermaid)
 
@@ -932,7 +982,10 @@ For each `![alt](path)` in the markdown body:
 | **Every extracted content image in `{{STAGING_DIR}}/images/` is referenced at least once** in the markdown body | grep for each filename in the markdown | Yes |
 | **Duplicate refs to the same image are permitted** (F2) | Do NOT flag multiple `![...](../images/X.png)` pointing to the same file as an error — common pattern in bilingual/repeated content | Validation rule adjustment, not a check |
 | **Every content image referenced has been orientation-checked** (F1, PDF only) | Confirm you ran `Read` on each PNG and text is right-side-up; if any image was flipped, note which in the output summary | Yes (PDF) |
-| **Every flow-diagram content image has an adjacent Mermaid supplement** (F11) | For each `![...](..)` that you classified as a flow diagram (boxes + arrows), a ```mermaid block must appear within the next ~5 lines after the image, with the caption appearing AFTER the Mermaid block. OK to skip for matrices, screenshots, photographs. **Emit the Mermaid at EVERY occurrence including translated sections** (bilingual docs) — never skip duplicates | Warning only |
+| **Every content image has an F11-CLASSIFY marker** (F11, v28+) | For every `![...](..)` reference to a content image (non-decorative), the line immediately above must carry a `<!-- F11-CLASSIFY: descriptor="..." type="(a\|b\|c\|d\|e\|review)" mermaid-emit="(required\|skip)" skip-reason="..." -->` comment. Marker schema must match F11 section 4.7. Missing markers fail hard — the classification decision must be observable, not inferred | **Required** |
+| **Every F11-CLASSIFY with `mermaid-emit="required"` has an adjacent Mermaid block** (F11, v28+) | For every marker with `type` ∈ {a, b, c} AND `mermaid-emit="required"`, a ```mermaid fence MUST appear within 5 lines after the image reference, with the caption appearing AFTER the Mermaid block. Promoted from Warning to Required in v28 after task ben/087 surfaced ~90% per-doc miss rate under the prior Warning-only gate | **Required** |
+| **Every F11-CLASSIFY with `mermaid-emit="skip"` has a valid `skip-reason`** (F11, v28+) | `skip-reason` ∈ {matrix, ui-capture, photograph, decorative, ambiguous-needs-review}. Empty or missing `skip-reason` on a skip marker is a hard fail. `type="review"` markers MUST also carry an adjacent `%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — ... %%` comment explaining what made the classification ambiguous | **Required** |
+| **Mermaid supplement emitted at EVERY image occurrence including translated sections** (F11) | Bilingual docs show the same image at each language section — the Mermaid supplement is emitted inline at every occurrence, never cross-referenced "see English section above". The image file is one-to-many but the Mermaid is one-to-one with each image reference | **Required** |
 | **Every flow-diagram caption appears BELOW its Mermaid block** (not above) | Regex: after each ```mermaid ... ``` block on a flow diagram, the next non-blank line must contain `*Figure N.` or equivalent. If the caption appears above the Mermaid, reorder | Warning only |
 | **No `## Image Manifest` section in the body** (4.8) | The manifest was dropped — inventory lives in the optional `images:` frontmatter array and in the inline captions. If a manifest section exists, remove it | Warning only |
 

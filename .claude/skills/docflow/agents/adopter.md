@@ -163,6 +163,26 @@ Extract the source document's full text **ONCE** and cache it for every downstre
 - PDF: `{{STAGING_DIR}}/source.txt` — `pdftotext -layout "{{SOURCE_PATH}}" -` redirected to the cache file. If that fails, use `pdftotext` with no layout; if that fails, fall back to Claude `Read` of the PDF (full-document pass) and write the read-out to the cache file as plain text.
 - DOCX: `{{STAGING_DIR}}/source.txt` — via pandoc (`pandoc --from=docx --to=plain`) or `docx2txt`.
 - XLSX: `{{STAGING_DIR}}/source.csv` — via `ssconvert` or `xlsx2csv`.
+- PPTX: `{{STAGING_DIR}}/source.txt` — via pandoc (`pandoc --from=pptx --to=plain`) or per-slide python-pptx text-frame walk. Decks usually render cache one-paragraph-per-line; preserve run text verbatim so the splice pass can match anchor runs.
+
+**Hyperlink splice (v23+)** — immediately after the cache file is written, invoke the link-preservation pass:
+
+```bash
+python3 "${CLAUDE_PROJECT_DIR}/.claude/skills/docflow/scripts/splice_hyperlinks.py" \
+  "{{SOURCE_PATH}}" "{{STAGING_DIR}}/source.txt" <format>
+```
+
+Where `<format>` is one of `pdf | docx | xlsx | pptx`. The script reads link annotations from the source (PDF `/Annot /Link`, DOCX `w:hyperlink`, XLSX `cell.hyperlink`, PPTX `a:hlinkClick` external URIs) and rewrites the cache so anchor-text spans carry `[anchor](url)` inline. Every link is preserved verbatim — external URIs and internal anchors (e.g. Confluence same-page `#Heading(SRA)`) both round-trip — because the downstream export path may push the markdown back to Confluence where same-page anchors re-bind.
+
+**PPTX scope limitation (v23.0)**: only external URIs (`a:hlinkClick` with address) are captured. Intra-deck slide jumps (`a:hlinkClick action="ppaction://hlinksldjump"`) are NOT extracted — python-pptx's `_Hyperlink` does not expose them, and resolving slide IDs requires raw XML walking. Decks rarely use intra-deck jumps as traceability edges (Confluence/Figma/Jira links dominate), but if a deck relies on them, flag `LINK-PPTX-INTERNAL-JUMP` in Phase 7 and treat as an edge case.
+
+The script emits a one-line summary to stdout. The `kinds=[...]` labels vary per format:
+- PDF: `found=N unique=M spliced=K kinds=[URI=N, GOTO=N, NAMED=N]` (unique reflects per-page dedup of redundant annotations)
+- DOCX: `found=N spliced=K kinds=[external=N, internal=N, broken=N]`
+- XLSX: `found=N spliced=K kinds=[external=N, internal=N]`
+- PPTX: `found=N spliced=K kinds=[external=N]`
+
+Record this line in the staging log for Phase 7 validation. See task ben/086 and `splice_hyperlinks.py` docstring for algorithm details (longest-anchor-first with protected-regions; cross-format `(anchor, url) -> requested_count` aggregation for correct multiplicity and tight idempotency; URL-encoding of `)` to `%29` for safe round-trip of URLs containing literal parens).
 
 **All subsequent phases read the cache** rather than re-invoking `pdftotext` / Claude Read on the source:
 - Phase 3 (structuring): reads cache.
@@ -389,6 +409,8 @@ Read `.claude/skills/docflow/templates/frontmatter-project.md` — populate **ev
 - `source_formal`: `formal/<TITLE_STEM>.<FORMAT>` (relpath from working MD's folder)
 - `target_formal`: same as `source_formal` by default (export overwrites)
 - `conversion_date`, `conversion_method`, `conversion_fidelity`, `pages`/`sheets`/`slides`, `has_images`, `image_count`, `has_tables`, `has_form_fields`: per converter Phase 6 rules
+- `has_hyperlinks` (v29+): `true` iff the Phase 2 splice summary line reported any spliced links (`spliced > 0`). Stored as boolean.
+- `hyperlink_count` (v29+): final count of `[text](url)` spans in the rendered working MD body — `grep -oE '\[[^]]+\]\([^)]+\)' OUTPUT_PATH | wc -l` after Phase 8 commit. This is the post-restructuring count, not the Phase 2 splice count, so it reflects what survived the pipeline (which is what matters for downstream dashboards).
 - `template_of` + `template_hints`: from Phase 5a
 - `authored_per` + `authored_per_hints`: from Phase 5b
 - `filings`: from Phase 5c
@@ -413,6 +435,8 @@ Run converter-Phase-7 checks (structural, image, page-marker, content), **plus**
 | `template_of` inferred or flagged in notes | Either `template_of.doc_id` set with `confidence`, OR `notes:` matches `template.*not.*inferred\|manual review` | Warning |
 | `dhf` + `dhf_area` match output path | Parse OUTPUT_PATH; verify frontmatter matches | Yes |
 | No collision with existing working MD | `test ! -f OUTPUT_PATH` before committing (skill pre-checked; re-verify) | Yes |
+| **Link-count floor (v29+)** | Compare body link count `B = grep -oE '\[[^]]+\]\([^)]+\)' OUTPUT_PATH \| wc -l` against the Phase 2 splice summary's `spliced=K` value. If `B >= K * 0.9` → pass. If `0.5 * K <= B < 0.9 * K` → **Warning** (some links lost during restructuring; reviewer should investigate which). If `B < 0.5 * K` → **Required failure** (catastrophic link loss; abort with `LINK-COUNT-FAILED.txt` in staging). When `K = 0` (source had no hyperlinks), check passes vacuously. | Yes / Warning / Required (graduated) |
+| **`has_hyperlinks` + `hyperlink_count` consistency (v29+)** | If `hyperlink_count > 0` then `has_hyperlinks: true`; if `hyperlink_count == 0` then `has_hyperlinks: false`. Mismatch → Required failure. | Yes |
 
 ### Phase 8: Commit — Transactional + Parent README Re-render
 
@@ -466,6 +490,45 @@ Step 9: Clean up staging
 
 On any Phase 7 Required failure → leave staging, write `VALIDATION_FAILED.txt`, return FAILURE.
 On any Phase 8 step failure → leave staging, write `COMMIT_FAILED.txt` documenting which step failed and filesystem state.
+
+### Phase 9: Auto-chained review (v28+) — F11 Mermaid supplement audit
+
+**Rationale**: single-pass Mermaid emission in Phase 4.7 has an empirical ~90% miss rate per-doc, surfaced in task ben/087 after the retroactive sweep of task 086 Batch 1+2 re-adopts. F11 is a long rule inherited by reference, flagged Warning-only in Phase 7, and self-reported without observability. The reviewer agent — with a narrower scope and a single job — catches gaps the adopter misses. Making the review pass automatic (not opt-in) closes the gap at adopt-time rather than relying on a separate human-initiated review step that frequently never runs.
+
+**After Phase 8 commits successfully**, chain the reviewer automatically:
+
+```
+Step 1: Skip if the adopt set --no-review, OR if the final MD has zero content images
+  • parse frontmatter: if image_count == 0 AND has_images == false, skip Phase 9
+  • if agent invoked with --no-review flag, skip Phase 9 (caller is running review externally)
+
+Step 2: Spawn the reviewer agent, scoped to --mermaid-only --fix
+  • Target: {{DHF_AREA_DIR}}/{{TITLE_STEM}}.md
+  • Read agents/reviewer.md for the full spec
+  • MODE=fix SCOPE=mermaid-only
+  • The reviewer enumerates every content image, classifies per F11a, constructs a Mermaid
+    supplement for types (a)(b)(c) where one is missing, flags ambiguous classifications
+    with `%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — ...`. Skips type (d) matrices and
+    (e) screenshots.
+
+Step 3: Collect reviewer report
+  • Append a one-line summary to the working MD's frontmatter conversion_history:
+    { date: ..., event: "auto-review", scope: "mermaid-only", mermaid_added: N, flagged: K }
+  • If reviewer flagged issues with %% REVIEW: comments, surface them in the adopt final
+    report — these are gaps the human needs to resolve manually.
+
+Step 4: Non-blocking on reviewer failure
+  • If the reviewer agent returns an error, log it but do not abort the adopt — the
+    working MD is already committed and the adopt is successful. Emit a
+    `REVIEW_PHASE_FAILED` entry in the report.
+```
+
+**Skip conditions** (Phase 9 no-op):
+- Adopter invoked with `--no-review` flag (caller will run review separately)
+- Final MD has `image_count: 0` and `has_images: false` (nothing for F11 to audit)
+- `SCOPE=frontmatter-only` or any other lite-mode is in force
+
+**Not a replacement for `/docflow review <file>`** — full review (non-mermaid scope) still requires an explicit invocation. Phase 9 specifically closes the Mermaid-emission reliability gap.
 
 ## Override-merge mode (STUB — full impl pending real upgrade scenario)
 

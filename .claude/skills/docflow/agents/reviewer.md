@@ -168,7 +168,7 @@ For each paired `(block, image)`:
 - `safety` in Classification without any `CtS` in the row's Criticality → flag (safety-classified reqs should show CtS on at least one AC)
 - `regulatory` in Classification without any `CtC` → flag
 - `performance` in Classification without any `CtP` → flag (unless `Notes:` explains the perf metric is not an IFU claim)
-- **Link preservation check**: grep every requirement detail-table cell for the pattern `\[[^\]]+\]\([^)]+\)`. Presence confirms links were preserved through R1 flattening. Absence combined with source-PDF annotation link evidence → flag as `LINK-DROPPED` for re-adoption.
+- **Link preservation check (R1-scoped subset of the cross-body audit below)**: see "Hyperlink preservation audit" later in this Phase 4 section. The body-wide check supersedes the R1-only check that previously lived here.
 - `Classification` cell: every tag is from the canonical 9 (`.claude/skills/docflow/references/classification-taxonomy.md`). Unknown tags → flag as taxonomy-drift.
 - `Epic: null` or empty → flag (source Epic Link missing, human should review)
 - `Traces To: null` → **not a flag in v21** (expected soft marker). `Traces To: none — manual trace` → flag (legacy v18 shape, auto-fix: replace with `null`).
@@ -184,6 +184,25 @@ Discrepancy categories for this audit: `R1-SHAPE-WRONG`, `CLASSIFICATION-DRIFT`,
 - Every `![](images/...)` path resolves to an existing file
 - Every image file in `images/` is referenced at least once in the MD
 - No orphan images (files without references) and no dead references (references without files)
+
+**Hyperlink preservation audit (v29+, applies to all scopes including `mermaid-only` since hyperlink loss is a content-fidelity regression independent of Mermaid)**:
+
+Cross-body audit of `[text](url)` spans against the source's link inventory. Re-extracts source links via the same per-format machinery as the adopter's Phase 2 splice (pymupdf for PDF, python-docx for DOCX, openpyxl for XLSX, python-pptx for PPTX). For each source `(anchor, url)` pair:
+
+- **`LINK-DROPPED`** (Required): source has the anchor as a hyperlink but the MD carries the anchor phrase as bare prose (not inside any `[...](...)` span). Auto-fix in `--fix` mode is medium confidence — try to splice `[anchor](url)` at the first unprotected occurrence of the anchor, but the post-restructured MD has table flattening / heading normalization that may move the anchor away from where the source had it. If the auto-fix can't find an unprotected match, flag `%% REVIEW: LINK-DROPPED — anchor "<text>" → <url> not present in MD %%` and let the human reposition.
+- **`LINK-URL-MISMATCH`** (Required): MD carries `[anchor](url_md)` but source's link for the same anchor points to `url_src` where `url_src != url_md` (after URL-decode normalization to handle `%29` round-trip). Either the adopter spliced the wrong URL (bug) or a human edited the link after adopt (legitimate; `--fix` should NOT auto-revert human edits). Auto-fix is **never applied** — always flag with `%% REVIEW: LINK-URL-MISMATCH — anchor "<text>": MD has <url_md>, source has <url_src> %%` and let the human decide.
+- **`LINK-COUNT-DROP`** (Warning): if `frontmatter.hyperlink_count` < 0.9 × `(source link count)`, flag once at top of report. Catches the case where many individual `LINK-DROPPED` flags would be too noisy — a single roll-up tells the reviewer "this doc lost ≥10% of its links during restructuring; spot-check it before promoting."
+- **`LINK-PPTX-INTERNAL-JUMP`** (Recommended): for PPTX sources, walk the raw `slide{N}.xml` for `a:hlinkClick action="ppaction://hlinksldjump"`. If any are present, flag once at top of report — these are intra-deck slide jumps that v23.0 splice does NOT extract (python-pptx limitation). Human decides whether the deck actually relies on these as traceability edges or whether they're decorative nav.
+
+The audit is skipped when `frontmatter.has_hyperlinks: false` AND source-relink-extraction returns 0 — vacuously passes (no source links to drop, no MD links to mismatch). Discrepancy categories appended to the existing list: `LINK-DROPPED`, `LINK-URL-MISMATCH`, `LINK-COUNT-DROP`, `LINK-PPTX-INTERNAL-JUMP`.
+
+**F11-CLASSIFY marker audit (v28+, applies to all scopes including `mermaid-only`)**:
+- Every content image `![...](...)` must have a preceding `<!-- F11-CLASSIFY: ... -->` marker comment on the line(s) above. Missing → flag `F11-CLASSIFY-MISSING` (Required). Auto-fix in `--fix` mode: classify the image per F11a by opening the PNG and inspecting, then insert a marker with the determined type + mermaid-emit + skip-reason. If classification is genuinely ambiguous, insert a `type="review"` marker AND add a `%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — <reason> %%` comment beside it.
+- Marker schema must match the converter.md F11 section 4.7 definition: attributes `descriptor`, `type`, `mermaid-emit`, optional `skip-reason`. Malformed → flag `F11-CLASSIFY-MALFORMED` with the specific schema violation. Auto-fix: rewrite the marker to conform.
+- `type ∈ {a, b, c}` AND `mermaid-emit="required"` → MUST have a ```mermaid fence within 5 lines after the image ref. Missing → flag `MERMAID-MISSING-FOR-FLOW-DIAGRAM` (Required). Auto-fix: construct the Mermaid block per F11b-F11i rules (faithfulness, containment, layout, edge-routing).
+- `type ∈ {d, e}` → MUST NOT have a ```mermaid fence adjacent to the image. Presence → flag `MERMAID-EMITTED-FOR-SKIP-TYPE` (Required). Auto-fix: remove the erroneously-emitted Mermaid block (it's a faithfulness hazard — matrices and screenshots should not have Mermaid).
+- `type="review"` → MUST have a `%% REVIEW: MERMAID-CLASSIFY-AMBIGUOUS — ...` comment adjacent. Missing → flag `REVIEW-COMMENT-MISSING-ON-AMBIGUOUS` (Recommended).
+- `descriptor` attribute must match the image filename descriptor portion (`images/<doc-id>_<descriptor>.<ext>`). Mismatch → flag `F11-CLASSIFY-DESCRIPTOR-MISMATCH` (Recommended — may indicate image rename without marker update).
 
 ### Phase 5: Correct or flag
 

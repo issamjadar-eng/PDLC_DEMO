@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 18
-updated: 2026-04-20
+version: 20
+updated: 2026-04-21
 ---
 
 # Task Management
@@ -126,6 +126,21 @@ Create a new task for a team member.
 **Priority**: Low | Medium | High | Critical
 
 ---
+
+## PERMANENT RULES (do not remove)
+
+This task document is the **session-recovery point** for this work. If the current session drops, is compacted, or ends, the next session must be able to load **this file alone** and continue where we left off. That is only possible if the doc is kept current in-flight.
+
+1. **Update at every meaningful checkpoint (HARD RULE).** After each meaningful unit of work — a converted/adopted doc, a committed change, a launched batch, a completed phase, a decision, a discovered blocker, a design pivot — update this task doc:
+   - tick the relevant Todo checkbox
+   - add a dated Changelog line naming the concrete artifact (commit SHA, file path, decision, blocker)
+   - update any progress counts/tables in Goals
+2. **Phase-end batching is OK; drift-batching is not.** Planned phases (e.g., "finish Phase 2, then log the whole phase at once") are a legitimate checkpoint — writing once per phase is fine if the phase is bounded and the write happens **at the phase boundary, before the next phase starts**. What's not OK: accumulating updates in your head across arbitrary work, waiting for "end of the session," "after the push," or the user to ask. By then a crash or context-trim has lost the state. Rule of thumb: if you can't name the specific upcoming checkpoint where you'll write the update, write it now.
+3. **A commit is not a substitute.** Git history records code; this doc records the project narrative — what was done, why, what's left, what surprised us.
+4. **Resume-ready before any session boundary.** Before recommending a fresh session, marking Complete, or ending work, the doc must already contain: (a) what was completed this session with concrete artifacts, (b) status of any in-flight work and temp artifacts, (c) priority-ordered next steps with file paths, (d) open questions blocking progress, (e) the exact `/task` activation command to resume.
+5. **Capture strategy + lessons as they happen.** If the session produces option comparisons, scope/boundary decisions, architectural pivots, non-obvious insights, or corrected assumptions, write them into the appropriate section **in-flight** — not just in chat. Harvesting skills can only surface what was written.
+
+Success test for this doc: a fresh Claude session, given only this file, can re-enter the work without asking the user "what were we doing?"
 
 ## Goals
 
@@ -263,6 +278,10 @@ bash .claude/hooks/task-activate.sh list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 ## Changelog
 
+- 20 (2026-04-21): **Refine PERMANENT RULES block: allow phase-end batching.** v19's rule 2 said "do not batch" absolutely, but phase-end batching is a legitimate workflow (finish Phase 2, then log the whole phase in one update). Rewrote rule 1 title from "Update-as-you-go" to "Update at every meaningful checkpoint" (phases are checkpoints too). Rewrote rule 2 from a flat prohibition to a distinction: **phase-end batching is OK when the phase is bounded and the write happens at the phase boundary before the next phase starts**; **drift-batching is not** (accumulating updates in your head across arbitrary work, waiting for "end of session" or the user to ask). Added rule-of-thumb: if you can't name the specific upcoming checkpoint where you'll write the update, write it now.
+  **Post-update:** No action needed for existing task docs — affects `create` template only. Task docs created from v19 that quote the old rule 2 verbatim can be hand-patched but don't have to be; the intent was always to catch drift, not to forbid phase-based workflows.
+- 19 (2026-04-21): **Seed a `## PERMANENT RULES (do not remove)` block into every newly-created task doc** (task ben/078). The `create` action's embedded template now opens with a five-point hard-rule block framing the task doc as the session-recovery point: update-as-you-go, do-not-batch, commit-is-not-a-substitute, resume-ready-before-session-boundary, capture-strategy+lessons-in-flight. Purpose: make the rule self-reinforcing even when Claude loads the task doc in a fresh session with no prior context (or an unrelated CLAUDE.md). Complements task 078's runtime hook — the hook catches drift; the in-doc rule is always visible to anyone activating the task. Honors the user's global CLAUDE.md line "Follow the PERMANENT RULES defined in each task document" which previously had no corresponding template slot.
+  **Post-update:** No action needed for existing task docs — the rule is additive to new tasks only. If you want existing active tasks to carry the block too, hand-insert the PERMANENT RULES section between the header and Goals; the wording is stable in `create` template so copy-paste is safe. No hook re-registration required.
 - 18 (2026-04-20): **Relocate runtime state from `.claude/state/` to `.state/` at project root** (task ben/083). Claude Code's built-in sensitive-file guard prompts on every Bash-initiated edit/write/remove against files under `.claude/**` regardless of `permissions.allow` rules in `settings.json`. The only durable escape is moving state OUT of `.claude/`. Updated: `check-active-task.sh` (STATE_FILE path + exempt pattern `*/.state/*`), `task-activate.sh` (STATE_DIR resolution with `CLAUDE_PROJECT_DIR` preference + `../../.state` fallback for `.claude/hooks/` callers), `session-cleanup.sh`, `capture-check.sh`, `capture-signals.sh`, `SKILL.md`, `README.md`, `test-task-gate.sh`. Historical changelog entries (v5, v15, v16) intentionally preserved.
   **Post-update:** Run `/task setup` to refresh the installed `.claude/hooks/task-activate.sh` copy (setup step 10 uses copy, not symlink). Existing `.claude/state/` contents are ephemeral per-session state — either `mv .claude/state/* .state/` to preserve in-flight sessions OR delete `.claude/state/` entirely (state is re-created on next session start). The `Edit/Write(.claude/state/**)` allow rules in `settings.json` are now dead weight and should be removed.
 - 17 (2026-04-16): **Cross-platform symlink resolution in `check-active-task.sh`.** v15 used `realpath -m` first, which is a GNU-only flag — BSD `realpath` on macOS (default since macOS 12.3) has no `-m`, and furthermore fails outright on non-existent paths. So on macOS, resolution would silently fall through to the raw path, and the v15 symlink-bypass tests would FAIL there (a symlink under `tasks/` whose target is a skill source would still match the exempt pattern as-is, bypassing the gate). v17 reorders: python3 is tried first (uniform `os.path.realpath` semantics across macOS + Linux, tolerates missing leaf paths); GNU `realpath -m` / BSD `realpath` + parent-dir trick / GNU `readlink -f` are fallbacks. python3 ships by default on macOS 12.3+ and every mainstream Linux distro, so the primary branch covers the real deployment base. All 63 tests pass on Linux; symlink-bypass tests will now also pass on macOS.

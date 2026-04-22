@@ -80,6 +80,8 @@ has_images: false
 image_count: 0
 has_tables: false
 has_form_fields: false
+has_hyperlinks: false                    # v29+: any link annotation in source
+hyperlink_count: 0                       # v29+: total `[text](url)` spans in working MD
 
 # --- Template binding (QMS form/template this doc instantiates) ---
 # Auto-inferred at adopt time by matching title + heading structure against

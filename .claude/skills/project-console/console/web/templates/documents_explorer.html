@@ -25,31 +25,6 @@
     </div>
   </section>
 </div>
-
-{# Floating "Ask about this doc" action button — enabled once a file is
-   selected. Opens the generic Assistant drawer via window.pcAssistantOpen(). #}
-<button type="button"
-        id="docs-assistant-fab"
-        class="docs-assistant-fab"
-        title="Ask about the selected document"
-        disabled>💬 Ask about this doc</button>
-
-{% set assistant = {
-  "scope": "docs",
-  "endpoint": "/assistant/chat/stream",
-  "default_agent": "systems-engineering",
-  "allowed_agents": [],
-  "grounding_label": "SELECTED DOCUMENT",
-  "grounding_source": "handler",
-  "title": "Document Assistant",
-  "subtitle": "",
-  "placeholder": "Ask about the selected document…",
-  "empty_hint": "Select a file from the tree, then ask a question. The agent sees the document body and your conversation history.",
-  "open_button_id": "docs-assistant-fab"
-} %}
-{% include "_assistant_drawer.html" %}
-
 <script src="/static/markdown.js"></script>
 <script src="/static/explorer.js"></script>
-<script src="/static/docs-assistant-glue.js"></script>
 {% endblock %}

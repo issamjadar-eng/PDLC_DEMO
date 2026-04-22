@@ -566,7 +566,8 @@ For each excluded standard/framework, add a row to the "Evaluated — Not Requir
    a. Read the SKILL.md and check if it defines a `### \`setup\`` action
    b. If yes → invoke `/skill-name setup` (e.g., `/task setup`)
    c. If no → skip silently
-4. Report which skills had setup actions and what they did
+4. If `dhf-manifest` skill is installed (`.claude/skills/dhf-manifest/SKILL.md` exists), invoke `/dhf-manifest init`. This scaffolds `docs/project/dhf-manifest/` with the 4-tier directory tree, the 16 Tier 2 QMS topic stubs, and verifies the `scope:` block in `project.yml`. The dhf-manifest init action is idempotent — safe to run on a project that already has the structure.
+5. Report which skills had setup actions and what they did
 
 This allows skills to self-wire their hooks, config, and dependencies during project creation.
 
@@ -959,6 +960,8 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 
 ## Changelog
 
+- 22 (2026-04-21): **`init` now invokes `/dhf-manifest init` when the skill is installed.** Added Step 5 sub-step 4 — after running `setup` actions for all skills, if `dhf-manifest` skill is present, invoke `/dhf-manifest init` to scaffold `docs/project/dhf-manifest/` (4-tier directory tree, 16 Tier 2 QMS topic stubs, `scope:` block in `project.yml`). The call is idempotent. This closes the gap where a project could have the dhf-manifest skill installed but need a manual init run to create the manifest infrastructure. Composing skills: `/medtech-docs init` → `/dhf-manifest init`.
+  **Post-update:** No user action needed for existing projects that already ran `/dhf-manifest init`; the action detects existing files and skips.
 - 21 (2026-04-20): **`init` now seeds task-discipline section into CLAUDE.md.** Added Check 5 to Step 2c that checks CLAUDE.md for the string `Update as you go (HARD RULE` and inserts the task-discipline block from `templates/claude-md-task-discipline.md` if missing. Inserted into the existing "For Claude" section after "Task-First Workflow". Closes the gap where new projects scaffolded by `/medtech-docs init` got the README/sentinel rules but no rule requiring Claude to update the active task doc as work progresses — leading to recovery failures when sessions dropped or compacted mid-batch on long workflows. Single-source-of-truth: the template file is the canonical text; downstream projects re-seed by re-running `/medtech-docs init` rather than edit the inserted block. Pairs with feedback memory `feedback_task_doc_update_as_you_go.md` and the existing `Stop` capture-check hook (which is end-of-session — this rule is the during-session contract).
   **Post-update:** Run `/medtech-docs init` on existing projects to seed the new section into CLAUDE.md (idempotent — Check 5 detects existing sections and skips). Or hand-copy from `templates/claude-md-task-discipline.md` into the "For Claude" section of CLAUDE.md after "Task-First Workflow".
 - 20 (2026-04-20): **`init` now seeds `.claude/rules/sentinel-blocks.md`.** Added Check 4 to Step 2c that checks for the sentinel-blocks convention file and copies it verbatim from `${CLAUDE_SKILL_DIR}/templates/rule-sentinel-blocks.md` into the adopting project if missing. Follows the existing `readme-before-write.md` seeding pattern (Check 3) — no CLAUDE.md insertion needed because sentinels are invoked by skills rather than humans. Closes the follow-up noted in v19's hitachi PR — downstream projects pulling v19 got the renderer and wrapped templates but had no convention doc; v20 ships the doc as a first-class template. New template: `templates/rule-sentinel-blocks.md` (102 lines, verbatim copy of the hand-authored project-local rule).

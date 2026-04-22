@@ -2,17 +2,31 @@
 # =============================================================================
 # block-direct-conversion.sh — PreToolUse Bash tripwire for /docflow
 #
-# Denies direct calls to document-conversion tools (pandoc, libreoffice/soffice,
-# pdftotext, pdfimages, pdftoppm, unzip, qpdf, pdftk) when they target office
-# documents (.docx/.doc/.xlsx/.xls/.pptx/.pdf). All DOCX/PDF/XLSX <-> markdown
-# conversion must go through the /docflow skill — its agents set an active-state
-# marker that bypasses this hook while they run.
+# Denies LLM-initiated Bash calls to document-conversion tools (pandoc,
+# libreoffice/soffice, pdftotext, pdfinfo, pdfimages, pdftoppm, unzip, qpdf,
+# pdftk) when they target office documents (.docx/.doc/.xlsx/.xls/.pptx/.pdf).
+# All DOCX/PDF/XLSX <-> markdown conversion should go through the /docflow skill
+# (which under v30 routes to scripts/adopt_v30.py — a classifier + deterministic
+# extractors + parallel focused agents; falls through to the v29 adopter agent
+# for non-architecture doc types). Those scripts run gated tools via subprocess
+# — NOT through the Bash tool — so the hook never fires on them.
+#
+# User override: this hook denies by default but is explicitly overrideable —
+# `touch .state/docflow-active` unlocks the session so the user can run a gated
+# verb directly (quick probes, one-off conversions, cases /docflow can't
+# handle). Remove the marker when done. The denial message surfaced to the LLM
+# documents this path.
 #
 # v3 (task 082) — Shell-aware tokenization via python3 shlex, so prose inside
 # quoted arguments to OTHER commands no longer trips the verb/extension match.
 # Root cause of v2 false-positive: sed-based statement splitting ignored quote
 # boundaries, so `gh pr create --body "... pandoc | unzip | ... .docx ..."`
 # was (wrongly) split as if the pipes were real shell pipes.
+#
+# v4 (task 089 session 3) — Added `pdfinfo` to VERBS (v30 extract_pdf.py and
+# extract_title_version.py both shell pdfinfo; direct LLM use is still gated
+# for parity). Updated denial message to explicitly acknowledge user override
+# as a legitimate path, not a "last resort".
 #
 # Matching algorithm (see task ben/082):
 #   1. If tool != Bash, allow.
@@ -69,7 +83,16 @@ if [ -f "$BYPASS_MARKER" ]; then
     exit 0
 fi
 
-DECISION="$(python3 - "$CMD" <<'PY'
+# macOS bash 3.2 parser bug workaround (task ben/092):
+# `DECISION="$(python3 - "$CMD" <<'PY' ... PY )"` breaks on bash 3.2 when the
+# heredoc body contains apostrophes (docstrings with "don't", etc.) — the
+# command-substitution tokenizer doesn't treat the quoted heredoc body as inert
+# and reports a bogus unmatched-quote error, which also corrupts parsing of the
+# later `<<'EOF'` error-message heredoc. Fixed in bash 4.0, but macOS still
+# ships 3.2.57 as /bin/bash. Pattern below (read into var, then pipe) avoids
+# the $(... <<HEREDOC ...) combo and works on bash 3.2 + 4+ + 5+.
+PYCODE=""
+IFS= read -r -d '' PYCODE <<'PY' || true
 import re
 import shlex
 import sys
@@ -77,7 +100,7 @@ import sys
 cmd = sys.argv[1]
 VERBS = {
     "pandoc", "soffice", "libreoffice", "pdftotext",
-    "pdfimages", "pdftoppm", "unzip", "qpdf", "pdftk",
+    "pdfinfo", "pdfimages", "pdftoppm", "unzip", "qpdf", "pdftk",
 }
 EXT_RE = re.compile(r"\.(docx|doc|xlsx|xls|pptx|ppt|pdf)(?:$|[/\)])", re.IGNORECASE)
 
@@ -139,27 +162,39 @@ for chunk in chunks:
 
 print("allow")
 PY
-)"
+
+DECISION="$(printf '%s' "$PYCODE" | python3 - "$CMD")"
 
 if [ "$DECISION" = "deny" ]; then
     cat >&2 <<'EOF'
-[docflow] Direct document conversion is disabled — route through /docflow.
+[docflow] This document-conversion verb routes through /docflow by default.
 
-  • /docflow adopt <target>      DHF formal DOCX → round-trippable working MD
-  • /docflow convert <doc-id>    Internal QMS source → source-md
-  • /docflow import <file>       External DOCX/PDF → project MD (Phase 2)
-  • /docflow refresh <doc-id>    Update an already-converted source-md
+  Default path (owns image extraction, frontmatter, cross-refs, round-trip):
+    • /docflow adopt <target>      DHF formal (PDF/DOCX/XLSX) → working MD
+                                   (v30 architecture-doc path: adopt_v30.py
+                                    orchestrator + classifier + parallel agents;
+                                    other doc types fall through to the v29
+                                    adopter agent)
+    • /docflow convert <doc-id>    Internal QMS source → source-md
+    • /docflow import <file>       External DOCX/PDF → project MD
+    • /docflow refresh <doc-id>    Update an already-converted source-md
 
-Why: /docflow owns image extraction, frontmatter, cross-reference resolution,
-     quality gates, and round-trip metadata. Direct pandoc/unzip/soffice calls
-     silently drop colors, images, structure, and round-trip fidelity.
+  Direct calls to pandoc/pdftotext/pdfimages/soffice silently drop colors,
+  images, structure, and round-trip fidelity — that's why they're gated.
 
-If /docflow truly cannot handle the case (e.g., a colored risk matrix that
-needs manual structural preservation), report the gap — do not bypass silently.
+Override — user-initiated ad-hoc use is legitimate and explicitly supported:
 
-Explicit override (use sparingly):
-  touch .state/docflow-active   # unlock this session
-  rm    .state/docflow-active   # re-lock when finished
+  Some situations don't need the /docflow pipeline (one-off text inspection,
+  quick metadata probe, a tool /docflow genuinely can't handle). In those
+  cases, unlock and proceed:
+
+    touch .state/docflow-active   # unlock (persists until removed)
+    <your command>
+    rm    .state/docflow-active   # re-lock when finished
+
+  The /docflow scripts themselves self-manage this marker — users only set it
+  for ad-hoc manual work. If you find yourself repeatedly overriding for the
+  SAME workflow, report it as a /docflow gap so the pipeline can handle it.
 EOF
     exit 2
 fi

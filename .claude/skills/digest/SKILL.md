@@ -1,8 +1,8 @@
 ---
 name: digest
 description: "Project activity digest — automatic morning briefing at SessionStart (12h throttled per user) and on-demand append to the project CHANGELOG.md. TRIGGER when the user says: 'update the project changelog', 'build the changelog', 'add to CHANGELOG.md', 'what changed today', 'morning briefing', 'daily digest', 'project changelog', 'summarize recent commits', 'recap the project activity', 'what did people do since yesterday'."
-version: 5
-updated: 2026-04-20
+version: 6
+updated: 2026-04-21
 ---
 
 # Digest
@@ -32,7 +32,7 @@ Usage: `/digest <action> [arguments]`
 |---|---|
 | `scripts/digest.py` | Daily-briefing aggregator. Reads commits since a cutoff timestamp, groups by author, filters "Pay attention" paths, emits markdown to stdout. Invoked by the SessionStart hook and the `daily` action. |
 | `scripts/build_changelog.py` | `CHANGELOG.md` builder. Finds last `## YYYY-MM-DD HH:MM` header as since-cursor (or scans full history on first run), filters commits to significant, groups by theme, emits a proposed new section. Invoked by the `log` action. |
-| `hooks/session-briefing.sh` | SessionStart hook. Resolves `git config user.email`; checks per-user throttle file at `.state/briefing-last-shown-<slug>.txt`; runs `digest.py --since <last-shown>` and emits markdown to stdout (rendered as SessionStart system context) if ≥12h since last, else silent. |
+| `hooks/session-briefing.sh` | SessionStart hook. Resolves `git config user.email`; checks per-user throttle file at `.state/briefing-last-shown-<slug>.txt`; runs `digest.py --since <last-shown>` and emits markdown to stdout (rendered as SessionStart system context) if ≥12h since last, else silent. When a brief is being built, also runs a bounded `git fetch` + `rev-list HEAD..@{u}` and appends a friendly business-user-facing sync notice with an embedded Claude-instruction block if the local branch is behind. |
 | `README.md` | Design documentation — rationale, architecture, future directions. Not loaded by Claude. |
 
 CHANGELOG seed template (owned by the `medtech-docs` skill per project convention):
@@ -68,7 +68,8 @@ Arguments:
 Steps:
 1. Resolve user identity: `git config user.email` → slugify → state file path.
 2. If `--since` not provided: read the state file for the last-shown timestamp. If missing, default to 24h ago.
-3. Run `scripts/digest.py --since <ts>`. The script:
+3. **Sync check (hook only).** Because the hook has already decided a brief is due (throttle elapsed), it also runs a best-effort check against the git upstream: `timeout 5 git fetch --quiet` followed by `git rev-list --count HEAD..@{u}`. If the local branch is behind, it appends a **friendly, business-user-facing notice** to the briefing — plain language like "Your teammates have shared N new changes …", not jargon — along with an embedded `<!-- CLAUDE INSTRUCTION — sync-check … -->` block that tells Claude to prompt the user via `AskUserQuestion` on the next turn and run `git pull --ff-only` on yes. The check is silent (no notice emitted) when: there is no upstream configured, the fetch times out or fails, the working copy is a detached HEAD, `timeout` is unavailable, or the branch is already up to date. It NEVER runs when the throttle is still active — off-hour reopens stay quiet. It never runs on `/digest daily` invocations that go through the manual `daily` action (it's a hook-layer concern, not a digest-content concern). See `hooks/session-briefing.sh` for the implementation.
+4. Run `scripts/digest.py --since <ts>`. The script:
    - Lists commits with `git log --since=<ts> --pretty='<SHA>|<author_email>|<author_name>|<ISO date>|<subject>'`
    - Groups by author (including the current user's own commits — per explicit design decision, self-recall is valuable)
    - Runs `git log --since=<ts> --name-only` to build per-commit file lists
@@ -77,8 +78,8 @@ Steps:
      - **Skill updates**: any `.claude/skills/*/SKILL.md` (detect version frontmatter change via `git show <sha>:<path>` comparison), any newly-added `.claude/skills/*/` directory, new lines in `.claude/sync-log.md`
      - **Project-level**: new entries under `docs/project/strategies/**`, `docs/project/submissions/**`, new DHF folders under `docs/project/dhfs/*/`, new `docs/external/standards/*.md`
    - Emits a markdown block: header with window, "Commits" section grouped by author, "Pay attention" section listing matched files with their commit context. Cap at ~60 lines — truncate overflow with a `(+N more)` note.
-4. Unless `--dry-run`, update the throttle state file with the current timestamp.
-5. The SessionStart hook additionally prepends a short separator line to the output so it renders distinctly in the session log.
+5. Unless `--dry-run`, update the throttle state file with the current timestamp.
+6. The SessionStart hook additionally prepends a short separator line to the output so it renders distinctly in the session log, and (if the sync check in step 3 produced a notice) appends that notice after the commit summary.
 
 ### `log [--since <ISO-datetime>] [--title <short-title>] [--dry-run]`
 
@@ -147,6 +148,8 @@ The significance rules live in `scripts/build_changelog.py` as a constant at the
 
 ## Changelog
 
+- 6 (2026-04-21): **Sync-check on brief builds** (task ben/085). When the SessionStart hook decides a fresh briefing is due (throttle elapsed), it now also runs a best-effort `timeout 5 git fetch --quiet` + `git rev-list --count HEAD..@{u}`. If the local branch is behind, the briefing grows a friendly, business-user-facing "Heads up — your project folder is out of date" notice naming the branch and the number of changes, plus an embedded `<!-- CLAUDE INSTRUCTION — sync-check -->` block that tells Claude to prompt the user via `AskUserQuestion` on the next turn and run `git pull --ff-only` on yes. Silent on: no upstream, fetch timeout/failure, detached HEAD, missing `timeout` binary, already up-to-date. Does NOT fire on throttled/silent sessions (only when a brief is actually being built) and does NOT fire for manual `/digest daily` — it's a hook-layer concern.
+  **Post-update:** No setup re-run needed — hook is installed via symlink, new logic activates on the next brief that fires. Users whose `git config user.email` isn't in `project.yml` still get the sync notice; it keys off branch state, not roster identity.
 - 5 (2026-04-20): **Relocate runtime state from `.claude/state/` to `.state/`** (task ben/083). Same `.claude/**` sensitive-file-guard escape as task-skill v18. Updated: `hooks/session-briefing.sh` STATE_DIR, `scripts/build_changelog.py` LLM_CACHE_PATH, `SKILL.md` narrative (session-briefing supporting-file row, `daily --since` default, throttle-key example), `README.md` design rationale + file tree.
   **Post-update:** Hook is symlinked — v5 activates on next session. If a project has a warm throttle cache at `.claude/state/briefing-last-shown-<slug>.txt`, `mv` it to `.state/` to preserve the window; otherwise first briefing after the migration will re-fire (harmless). The LLM cache at `.claude/state/digest-llm-cache.json` can be migrated the same way or left to rebuild from scratch on the next `/digest log` with `--llm`.
 - 4 (2026-04-20): **Readable CHANGELOG format.** Each entry now leads with a bold plain-English headline + optional body sentence, with the task ref / SHA / author / date relegated to a muted italic trace footer. Two generation modes: **mechanical** (default) extracts the first paragraph of each commit body (stripping trailers like `Co-Authored-By:`) and cleans the subject — zero token cost. **LLM** (`--llm` flag, auto-enabled on `--retrospective`) batches all commits into a single `claude -p --model haiku --output-format json` call for polished rewrites; results cached at `.claude/state/digest-llm-cache.json` keyed by SHA so incremental runs don't re-summarize. Critical: `claude -p` runs with `cwd=/tmp` and `CLAUDE_*` env stripped so project hooks + CLAUDE.md don't pollute the invocation (62k context tokens avoided, hooks don't fire against the sub-invocation). Built under ben/021.

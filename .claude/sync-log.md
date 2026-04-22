@@ -4,6 +4,27 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-22 — pull (docflow hook bash 3.2 fix + accumulated skill updates)
+
+- Hitachi HEAD after sync: `219d46d`
+- Pulled: 20 files
+  - `agents/project-secops.md` (symlink-follow-through; sync-skills still flags as UPSTREAM_NEWER — known bug: `check` compares upstream symlink-target text vs local resolved-content sha)
+  - `skills/digest/{SKILL.md, hooks/session-briefing.sh}` (→ v6 — sync-check on brief builds)
+  - `skills/docflow/SKILL.md` + agents (adopter, converter, reviewer), `hooks/block-direct-conversion.sh`, `references/classification-taxonomy.md`, `templates/frontmatter-project.md`, `scripts/splice_hyperlinks.py` (new) — v27 → v29 (hyperlink preservation + link-count validation, F11-CLASSIFY markers Required, **bash 3.2 parser bug workaround in block-direct-conversion.sh — task ben/092**)
+  - `skills/medtech-docs/SKILL.md` (→ v22 — `init` invokes `/dhf-manifest init` when installed)
+  - `skills/project-console/console/{app.py, trace_matrix/router.py, web/static/console.css, web/templates/_base.html, documents_explorer.html, index.html, trace_matrix_view.html}` (→ v1.4.1)
+  - `skills/task/SKILL.md` (v18 → v20 — PERMANENT RULES template + phase-end batching clarification)
+- Trigger: after fast-forward pulling 19 commits on PDLC_DEMO `main`, the newly-installed `.claude/hooks/block-direct-conversion.sh` (symlink to the docflow skill hook) had a heredoc-inside-command-substitution pattern that macOS bash 3.2 can't parse — blocked every Bash tool call. Bypassed temporarily via `.state/docflow-active`; removed after the upstream fix landed.
+- Caveat: on first pass, `pull-file` copied from the stale hitachi working-tree checkout (`e027eba`) and reported 13 files as "deleted-locally (upstream removed)" when upstream-head actually had them — fast-forwarded the hitachi working copy to `origin/main` (`219d46d`) and re-pulled. Root cause: `check` fetches `origin/main` but `pull-file` reads from the working tree. Logged as a sync-skills bug to file separately.
+- project.yml: no changes — all affected skills already in `approved_skills`.
+- Follow-ups (offered):
+  - `/project-console sync` to regenerate `tools/project-console/start.sh`+`run.sh` against v1.4.1 (new templates, `--reload-exclude` patterns, BSD `xargs` fix)
+  - `/task setup` to refresh `.claude/hooks/task-activate.sh` copy against v20 source
+  - `/docflow setup` to confirm bypass marker lives at `.state/docflow-active` (already the case)
+  - 22 `LOCAL_ONLY` files remain — task 024 (Unified Assistant Drawer) partials + advisor agents not yet pushed. Separate push decision.
+
+---
+
 ## 2026-04-20 — pull (bulk sync to pick up `.claude/state/` → `.state/` relocation + docflow tripwire)
 
 - Hitachi HEAD after sync: `7c6e388`
