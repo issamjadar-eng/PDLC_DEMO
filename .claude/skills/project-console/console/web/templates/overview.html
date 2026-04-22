@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+{% block title %}Overview · {{ config.project_name }}{% endblock %}
+{% block body_class %}overview-body{% endblock %}
+
+{% block content %}
+<section class="overview-hero">
+  <div class="overview-hero-text">
+    <h1>Project Overview</h1>
+    <p class="overview-sub">
+      Guided tour of the program — what we're building, how we're filing it, how the project
+      is structured, and how day-to-day work runs through Claude Code and this console.
+    </p>
+  </div>
+  <div class="overview-actions">
+    {% if found.pptx %}
+      <a class="btn-primary" href="/overview/download.pptx" download>
+        Download .pptx
+      </a>
+    {% endif %}
+    {% if found.md %}
+      <a class="btn-secondary" href="/documents#path=project-overview.md">
+        Open markdown
+      </a>
+    {% endif %}
+    {% if found.pdf %}
+      <a class="btn-secondary" href="/overview/raw.pdf" target="_blank" rel="noopener">
+        Open PDF in new tab
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% if found.has_viewer %}
+<div class="overview-viewer">
+  <iframe
+    src="/overview/raw.pdf#view=FitH"
+    title="Project Overview — PDF"
+    loading="lazy">
+  </iframe>
+</div>
+{% else %}
+<div class="overview-noviewer">
+  <p>
+    A rendered PDF is not available. To enable the inline viewer, build
+    <code>project-overview.pdf</code> from the pptx (for example, via
+    <code>soffice --headless --convert-to pdf project-overview.pptx</code>) and
+    refresh this page.
+  </p>
+  {% if found.pptx %}
+    <p><a class="btn-primary" href="/overview/download.pptx" download>Download the .pptx instead</a></p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

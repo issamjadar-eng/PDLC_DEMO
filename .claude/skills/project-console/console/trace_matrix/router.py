@@ -25,7 +25,13 @@ from pathlib import Path
 from typing import AsyncIterator
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import (
+    HTMLResponse,
+    JSONResponse,
+    PlainTextResponse,
+    RedirectResponse,
+    StreamingResponse,
+)
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -127,6 +133,18 @@ async def trace_matrix_raw(dhf: str):
     if sidecar is None:
         raise HTTPException(404, f"No sidecar for DHF '{dhf}'.")
     return JSONResponse(sidecar)
+
+
+@router.get("/trace-matrix/{dhf}/grounding", response_class=PlainTextResponse)
+async def trace_matrix_grounding(dhf: str):
+    """Compact single-line-per-item rendition of the sidecar for the
+    generic Assistant drawer. Used when the drawer is mounted on the
+    trace-matrix view with ``grounding_source: "url:/trace-matrix/{dhf}/grounding"``."""
+    cfg = get_config()
+    sidecar = load_sidecar(cfg.repo_root, dhf)
+    if sidecar is None:
+        raise HTTPException(404, f"No sidecar for DHF '{dhf}'. Build it first.")
+    return PlainTextResponse(_compact_context(sidecar))
 
 
 def _run_build(repo_root: Path, dhf: str | None) -> tuple[int, str]:

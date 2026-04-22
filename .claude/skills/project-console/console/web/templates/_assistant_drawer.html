@@ -1,0 +1,84 @@
+{# Generic Assistant drawer — include this partial on any page that wants a
+   chat sidecar. The page supplies the parameters via the `assistant` dict:
+
+     assistant = {
+       "scope": "tm:PP3500"              # localStorage thread key suffix
+       "endpoint": "/assistant/chat/stream",
+       "default_agent": "systems-engineering",
+       "allowed_agents": ["systems-engineering", "regulatory-affairs", ...],
+                                         # subset of /assistant/api/agents; empty = all
+       "grounding_label": "TRACE MATRIX CONTEXT",
+                                         # section header injected into system prompt
+       "grounding_source": "static:{{...}}" | "element:#selector"
+                                         # how the drawer gets grounding text (see below)
+       "title": "Systems Engineering Assistant",
+       "subtitle": "PP3500",             # optional small line under title
+       "placeholder": "Ask about the trace matrix…",
+       "empty_hint": "Ask me about…",
+       "open_button_id": "pc-assistant-open",
+                                         # id of the external button that opens the drawer
+     }
+
+   Grounding source modes (drawer handles the fetch):
+     - "static:<inline text>"   — the page rendered grounding text inline
+     - "url:<relative URL>"     — drawer GETs this URL, uses response body
+                                  (text/plain or JSON {text: "..."})
+     - "element:<selector>"     — drawer reads .textContent of that element
+                                  at send time (live — picks up page state)
+     - "handler"                — drawer calls window.pcAssistantGetGrounding()
+                                  (returns string or Promise<string>)
+     - ""  / missing            — no grounding, agent runs on its own system prompt
+#}
+<aside id="pc-assistant"
+       class="pc-assistant"
+       aria-hidden="true"
+       data-scope="{{ assistant.scope }}"
+       data-endpoint="{{ assistant.endpoint | default('/assistant/chat/stream') }}"
+       data-default-agent="{{ assistant.default_agent | default('') }}"
+       data-allowed-agents="{{ assistant.allowed_agents | default([]) | join(',') }}"
+       data-grounding-label="{{ assistant.grounding_label | default('') }}"
+       data-grounding-source="{{ assistant.grounding_source | default('') }}">
+  <div class="pc-assistant-resize" id="pc-assistant-resize" aria-label="Resize assistant"></div>
+  <header class="pc-assistant-header">
+    <div class="pc-assistant-title">
+      <strong>{{ assistant.title | default('Assistant') }}</strong>
+      {% if assistant.subtitle %}<span class="muted small" id="pc-assistant-subtitle">{{ assistant.subtitle }}</span>{% endif %}
+    </div>
+    <button type="button" class="pc-assistant-close" id="pc-assistant-close" aria-label="Close">✕</button>
+  </header>
+
+  <div class="pc-assistant-toolbar">
+    <label class="pc-assistant-agent-label" for="pc-assistant-agent">Agent</label>
+    <select id="pc-assistant-agent" class="pc-assistant-agent" aria-label="Select assistant">
+      <option value="">Loading…</option>
+    </select>
+  </div>
+
+  <div class="pc-assistant-toolbar">
+    <select id="pc-thread-select" class="pc-thread-select" aria-label="Select conversation"></select>
+    <button type="button" class="btn-chip" id="pc-thread-new" title="New conversation">+ New</button>
+    <button type="button" class="btn-chip" id="pc-thread-clear" title="Clear all conversations for this scope">Clear history</button>
+  </div>
+
+  <div class="pc-messages" id="pc-messages">
+    <div class="pc-message-empty muted small">
+      {{ assistant.empty_hint | default('Ask a question to get started.') | safe }}
+    </div>
+  </div>
+
+  <form class="pc-input-row" id="pc-input-form">
+    <textarea id="pc-input" placeholder="{{ assistant.placeholder | default('Ask a question…') }}" rows="2"></textarea>
+    <button type="submit" class="btn-primary" id="pc-send">Send</button>
+  </form>
+</aside>
+<div id="pc-assistant-backdrop" class="pc-assistant-backdrop" hidden></div>
+
+{# Inline config so assistant.js can read it without a data attribute roundtrip #}
+<script id="pc-assistant-config" type="application/json">
+{
+  "openButtonId": "{{ assistant.open_button_id | default('pc-assistant-open') }}",
+  "emptyHint": {{ (assistant.empty_hint | default('Ask a question to get started.')) | tojson }},
+  "staticGrounding": {{ (assistant.static_grounding | default('')) | tojson }}
+}
+</script>
+<script src="/static/assistant.js"></script>
