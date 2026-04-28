@@ -1,8 +1,8 @@
 ---
 name: skill-creator
 description: "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when users mention skill conventions, skill structure, or ask about how skills should be organized."
-version: 3
-updated: 2026-04-20
+version: 5
+updated: 2026-04-27
 ---
 
 # Skill Creator
@@ -99,20 +99,32 @@ Every SKILL.md must include these sections (use the template as a starting point
 |---------|---------|----------|
 | `## Supporting Files` | Table listing all bundled files and their purpose | Yes |
 | `## Actions` | Action definitions with step-by-step instructions | Yes (if skill has actions) |
-| `## Best Practices` | Table of health checks with severity and scope | Yes |
-| `## Changelog` | Reverse-chronological, per version, with date | Yes |
 
-**Optional but recommended sections:**
+**Optional but recommended SKILL.md sections:**
 
 | Section | Purpose | When to include |
 |---------|---------|-----------------|
 | `## Subagent Delegation` | Table: scenario → agent type → prompt file | When skill uses agents |
 | `## Dependencies` | Table: file → required by → purpose | When skill reads/writes outside itself |
+| `## Notes` | Operational caveats, fallback behavior | When non-obvious |
+
+### Required README.md Sections
+
+These sections belong in **README.md** (not SKILL.md). SKILL.md is loaded into Claude's context every time the skill triggers — Changelog history and health-check tables don't help Claude execute the skill. README.md is never auto-loaded, so keeping this metadata there costs nothing at runtime.
+
+| Section | Purpose | Required |
+|---------|---------|----------|
+| `## Best Practices` | Table of health checks consumed by `/best-practices` audit | Yes |
+| `## Changelog` | Reverse-chronological version history | Yes |
 
 ### Best Practices Table Format
 
+Goes in **README.md**:
+
 ```markdown
 ## Best Practices
+
+<!-- Consumed by /best-practices audit -->
 
 | Check | How to Verify | Severity | Scope |
 |-------|--------------|----------|-------|
@@ -126,35 +138,40 @@ Severity: `Required` or `Recommended`. Scope: `shared` (project-wide) or `local`
 
 ### Changelog Format
 
+Goes in **README.md**:
+
 ```markdown
 ## Changelog
 
-- 3 (2026-04-16): Description of what changed in version 3
-- 2 (2026-04-15): Description of what changed in version 2
+- 3 (2026-04-16): Description of what changed in version 3 of the skill
+- 2 (2026-04-15): Description of what changed in version 2 of the skill
 - 1 (2026-04-14): Initial version — what the skill does, adapted from what
 ```
 
-### Anonymization (Required)
+**Skill-scoped only.** Each entry describes what changed in the skill itself — new actions, schema changes, behavior changes, bug fixes. The skill changelog is not a journal of project work that used the skill. Specifically:
 
-Skills are shared infrastructure — they ship in the registry and run in any project. Skill content (prose, comments, agent prompts, examples, changelog entries, "Context" notes in reference docs, kebab-case slugs in command examples) **must not name real organizations, products, customers, or projects.** A skill that says "for HipLink, the SDP must address..." or "Arthrex's QMS uses Work Instructions" is non-portable to any other project — and breaks the contract that the registry is reusable.
+- ❌ No project-specific names (companies, devices, codenames).
+- ❌ No project task references (e.g. `ben/118`, `ros/045`).
+- ❌ No project-level outcomes ("backfilled 52 references in regulatory-strategy.md").
+- ✅ Yes skill capability changes ("added `--dry-run` flag to `push` action").
+- ✅ Yes skill schema/contract changes ("`version:` field is now required in frontmatter").
+- ✅ Yes skill bug fixes ("fixed BSD-vs-GNU `find -maxdepth` ordering").
 
-**Use this canonical glossary** when authoring or revising any skill content:
+If a skill change was driven by a project's needs, describe the skill change neutrally. Project context lives in commit history and the task doc, not in the skill's changelog.
 
-| Real term | Replacement |
-|---|---|
-| Real organization name (e.g. `Arthrex`, `GlobalLogic`) | `MedTech Company` |
-| Real project name or project slug (e.g. `HipLink`, `Arthrex PCCP`, `PDLC_DEMO`, `arthrex-pccp`) | `MedTech Project` |
-| Real module names tied to a specific product (e.g. `HipLink Pre-Op` / `Intra-Op` / `Management Services`) | `MFD A` / `MFD B` / `MFD C` |
-| Real device model number (e.g. `PP3500`) used in identifier contexts (Jira keys, Confluence space keys) | `PROJECT` |
-| Real device model number used in path examples (e.g. `submissions/510k-pp3500/`) | `submissions/510k-<device>/` |
-| Real device names in prose (e.g. `PainEase PCA Advanced`) | "the example infusion pump" / "the example device" |
-| Real customer hostname (e.g. `arthrex.com`) | `example.com` |
-| `GlobalLogic-a-Hitachi-Company/hitachi` registry URL in code/config defaults | **preserve as literal** — load-bearing |
-| FDA / ISO / IEC / AAMI / IMDRF / GMLP / MDCG / NIST / OWASP | **preserve as literal** — public regulatory bodies |
+### Project-Agnostic Authoring (HARD RULE)
 
-Disambiguation rule: when `Arthrex` appears as a path slug or repo URL (e.g., `arthrex-pccp`), treat it as a project reference → `MedTech Project`. When it appears as a possessive describing process ownership (`Arthrex's QMS`, `Arthrex SOPs`), treat it as an organization reference → `MedTech Company`'s QMS / `MedTech Company` SOPs.
+Skills under `.claude/skills/` and bundled agents under `.claude/skills/*/agents/` must be **project-agnostic** — usable by any medtech project from the registry. They contain no project-specific names: no company names, no device codenames, no project task IDs, no team members, no Jira project keys.
 
-The `/best-practices` skill enforces this with a Required check that greps the regression vocabulary and FAILs on any hit (with documented exceptions for the registry URL, this glossary doc itself, and post-update changelog notes that describe what was renamed). When you're writing a new skill or extending an existing one, run that check before pushing — the canonical command is in PDLC_DEMO `tasks/ben/032`.
+Allowed placeholders in examples: `MedTech Project`, `MedTech Company`, `<device>`, `PROJECT-1234`. These signal "fill in your own value here."
+
+Project-specific values belong in:
+- `project.yml` (read at runtime by the skill)
+- `docs/` (the project's authored documents)
+- `tasks/` (the project's task docs)
+- `CLAUDE.md` (the project's own rules)
+
+**Never** in `.claude/skills/**` or `.claude/agents/**`. If a skill needs a per-project value, it reads it from `project.yml` — it does not hard-code anything. A skill that hard-codes one project's names becomes a fork; the registry's project-agnostic abstraction is what lets it serve every project.
 
 ### Self-Contained Skills & Symlink Pattern
 
@@ -191,8 +208,12 @@ Per the README Navigation Rule, every skill gets a README.md that:
 - Explains design decisions and architecture
 - Documents lineage (what it was adapted from, if applicable)
 - Lists dependencies
+- Contains `## Best Practices` table (consumed by `/best-practices` audit)
+- Contains `## Changelog` section (version history)
 - Is NOT loaded by Claude during normal skill operation
 - Exists for human understanding and as the skill's index layer
+
+The Best Practices table and Changelog live here — not in SKILL.md — because SKILL.md is loaded into context on every skill trigger. These are metadata for auditors and maintainers, not instructions Claude needs to execute the skill.
 
 Use the template at `${CLAUDE_SKILL_DIR}/templates/readme-skill.md`.
 
@@ -429,32 +450,9 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 | Blind A/B comparison | general-purpose | `agents/comparator.md` |
 | Analyze why winner won / benchmark patterns | general-purpose | `agents/analyzer.md` |
 
-## Best Practices
-
-| Check | How to Verify | Severity | Scope |
-|-------|--------------|----------|-------|
-| New skill has SKILL.md | File exists with valid frontmatter | Required | shared |
-| New skill has README.md | Design doc exists at skill root | Required | shared |
-| Frontmatter complete | name, description, version, updated present | Required | shared |
-| Best Practices table present | SKILL.md contains `## Best Practices` with table | Required | shared |
-| Changelog present | SKILL.md contains `## Changelog` with entries | Required | shared |
-| Supporting Files table | Lists all bundled files | Required | shared |
-| Hooks use symlinks | `.claude/hooks/` contains symlinks into `skills/*/hooks/`, not copies | Required | shared |
-| Agents use symlinks | `.claude/agents/` contains symlinks into `skills/*/agents/`, not copies (forks excepted — documented in sync-log) | Required | shared |
-| Setup action idempotent | Re-running setup doesn't duplicate hooks, agent symlinks, or hook registrations | Required | shared |
-| SKILL.md under 500 lines | Progressive disclosure respected | Recommended | shared |
-| Evals exist | `evals/evals.json` with test cases | Recommended | local |
-
 ## Notes
 
 - Assembled documents and generated artifacts should be clearly marked as such
 - When improving an existing skill, always bump the `version` and add a `Changelog` entry
 - The README Navigation Rule applies: every folder created by a skill must have a README.md
 
-## Changelog
-
-- 3 (2026-04-20): **Update `setup` action template to create `.state/` at project root instead of `.claude/state/`** (task ben/083). New skills scaffolded from `templates/skill-md.md` now install their setup step 1 targeting `.state/` — matches the task/docflow/digest/lessons post-v18/v27/v5/v2 convention. `README.md` dependency table entry updated to point at `.state/` with a pointer to ben/083 for rationale.
-  **Post-update:** No action required on existing skills. Future skills generated via `/skill-creator` now default to the correct state-dir location.
-- 2 (2026-04-16): **Extended symlink pattern to `.claude/agents/`.** Previously the self-contained principle covered hooks and agents equally in prose, but only `.claude/hooks/` had an explicit symlink convention. Setup action template, Best Practices table, and skill templates now mandate that skills shipping agents install them via symlinks from `.claude/agents/<name>.md` → `skills/<name>/agents/<name>.md`. Added "Agents use symlinks" Required check to the Best Practices table. Added agent-ownership rule (skill's `agents/` is source of truth; forks allowed but documented) and registry-level `agents/` rule (only cross-skill agents like `project-secops.md`; per-skill agent files live under `skills/<name>/agents/`, not at registry root). Rationale: advisors skill `init` action was copying agent files into `.claude/agents/` — copies drift when `/sync-skills pull` updates the skill-owned source. Symlinks eliminate drift by construction.
-  **Post-update:** Skills that ship agents must update their `setup` (or `init`) action to create symlinks instead of copies. Existing project installations: delete `.claude/agents/<name>.md` copies and re-run the skill's setup/init action to recreate as symlinks. `/best-practices` will now flag copies as Required FAILs until converted.
-- 1 (2026-04-16): Initial version — adapted from Anthropic's skill-creator with project conventions. Added: required YAML frontmatter (version, updated), self-contained skill structure, symlink pattern for hooks, required sections (Supporting Files, Best Practices, Changelog), README.md as design doc, skill templates. Kept: full evaluation pipeline (grader, comparator, analyzer agents), description optimization loop, benchmark aggregation, eval viewer

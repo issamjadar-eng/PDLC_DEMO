@@ -1,7 +1,7 @@
 ---
 name: web-control
 description: Cross-platform browser automation as shared infrastructure — owns Chrome lifecycle (install / launch / status / stop) and DevTools-Protocol connection helpers (Python lib) for consumer skills. Use when other skills need to drive a Chromium-family browser under the user's corporate Google identity (e.g., Workspace operations where API access is denied by org policy). Provides `setup`, `launch`, `status`, `stop` actions plus a `connect` Python library API. NOT a workflow skill — owns no web-app-specific logic.
-version: 0.1.0
+version: 0.2.0
 updated: 2026-04-27
 status: ready
 ---

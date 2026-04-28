@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 23
-updated: 2026-04-23
+version: 24
+updated: 2026-04-27
 ---
 
 # Task Management
@@ -110,10 +110,17 @@ Search for active tasks that relate to a topic or description. This is the entry
 1. Read every `000-index.md` across all team member folders under `tasks/`
 2. Collect all **Active** tasks (not Complete)
 3. Match against `<description>` using the **Task** name and **Summary** column in the index — do NOT open individual task files. The index is designed to contain enough context for matching.
-4. Present results to the user:
-   - **If matches found**: List the matching task(s) with ID, name, owner, and summary. Ask: _"Should I work under one of these, or create a new task?"_
-   - **If no matches found**: Say so and ask: _"No active task covers this. Want me to create one?"_
-5. Wait for user response before proceeding.
+4. **Default to creating a new task. Reuse only on a high-confidence existing match.** Score candidates against `<description>` and the current session context (what the user has been discussing; what was last active this session). Then branch by exactly **two** outcomes — never three:
+
+   - **High confidence — one clear winner exists.** Announce and activate in one line: _"Activating task NNN (Task Gate Overhaul) — say so if you meant something else."_ Then proceed. Confidence is high when **any** of these holds:
+     - Exactly one active task has a name or Summary that substantively matches the description (not just a stopword overlap).
+     - The session has already been anchored on one specific task (recent messages, prior activation this session, or a task file the user just pointed at).
+     - Only one plausible match exists across the whole active set for the topic at hand.
+   - **Anything else → create a new task.** This includes: no matches, weak matches, multiple plausible matches, "kinda fits two things." Don't stop to ask "use existing or create new?" — just create + announce in one line: _"Creating task NNN — short-name for this. Say so if an existing task should own it."_ Then run `/task create <person> <short-name>` and activate. The one-line announcement is the escape hatch; the user can redirect in one reply.
+
+5. For both branches: update the per-session state file (see "Task Gate State File" below) before returning control. No mid-flow confirmation prompt in either branch.
+
+**Why this two-branch rubric.** The gate exists to anchor work to *some* task, not to force a deliberation about *which* task. When an existing task is a clear home, reuse it; when it isn't, the cheapest path is to create rather than to interrogate the user across 2–3 messages. The one-line announcement in both branches gives the user a single-reply escape hatch ("no, use 029" / "fold into 082 instead"). Treating ambiguity as a reason to create rather than a reason to ask removes the most common stall in the prior rubric. Cost of an occasional misfit task: one user reply to redirect or one merge later. Cost of asking on every fresh topic: a recurring 2–3 message stall.
 
 ### `create <person> <short-name>`
 Create a new task for a team member.
@@ -201,12 +208,21 @@ bash .claude/hooks/task-activate.sh remove a1b2c3d4-e5f6-7890-abcd-ef1234567890 
 bash .claude/hooks/task-activate.sh list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
-**If the hook denies an edit**, the denial message includes the session ID and the exact command to run. Follow it.
+**If the hook denies an edit**, the denial message includes the session ID and the exact command template. Don't parrot the denial message back to the user — **decide which task to activate** using the same confidence rubric as the `find` action, then run the command.
 
 **Recovery from hook denial:**
-1. The denial message says: `TASK GATE: No active task for session <UUID>. Run: bash .claude/hooks/task-activate.sh add <UUID> <TASK_ID>`
-2. Run that exact command
-3. Retry the edit
+
+**Important — session ID source.** Always use the `<UUID>` printed in the denial message itself (the hook reports the actually-active session). `printenv CLAUDE_SESSION_ID` can return a stale value across compactions or session restarts. If the printenv UUID and the denial-message UUID disagree, **trust the denial message** and re-activate against that ID.
+
+1. Note the session `<UUID>` from the denial message.
+2. **Pick a task to activate** using the same two-branch rubric as `find` (default: create new; reuse only on high confidence):
+   - **High confidence — reuse and activate.** If the current session is clearly anchored on one task (recent messages about it, the user referenced a specific task file, there's exactly one active task whose name/Summary matches what's being edited), announce it in one line and activate. Example: _"This edit to `.claude/skills/task/SKILL.md` is part of task 119 (Default-to-Action Rubric) — activating and retrying. Say so if you meant a different task."_
+   - **Anything else — create + activate, don't ask.** No clear match, weak match, or two/three plausible matches: create a new task with a concrete name and announce in one line. Example: _"Creating task 120 — hook-debug-harness for this and activating. Say so if an existing task should own it."_ Then `/task create <person> <short-name>`, activate, and retry. Don't open-ended-ask "use existing or create new?" — the one-line announcement is the escape hatch.
+3. Run the activation command with the literal UUID from the denial message:
+   ```bash
+   bash .claude/hooks/task-activate.sh add <UUID-from-denial> <TASK_ID>
+   ```
+4. Retry the edit.
 
 ## Notes
 - Person names in commands are lowercase first names (e.g., `ben`, `sarah`)

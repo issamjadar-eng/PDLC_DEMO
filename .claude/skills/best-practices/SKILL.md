@@ -1,8 +1,8 @@
 ---
 name: best-practices
 description: "Audit project setup against best practices from a shared registry and local skills — checks CLAUDE.md, folder structure, standards, tasks, DHF layout with parallel subagent fan-out"
-version: 12
-updated: 2026-04-20
+version: 15
+updated: 2026-04-27
 ---
 
 # Best Practices Audit
@@ -33,7 +33,7 @@ Parse the manifest for practice definitions (see Registry Format below).
 
 **Step 2 — Scan local skills**
 
-Read all `.claude/skills/*/SKILL.md` files in the project. For each file that contains a `## Best Practices` section, parse the table of checks.
+Read all `.claude/skills/*/README.md` files in the project. For each file that contains a `## Best Practices` section, parse the table of checks. (Best Practices tables live in README.md — not SKILL.md — because SKILL.md is loaded into context on every skill trigger while README.md is never auto-loaded.)
 
 **Step 3 — Run checks**
 
@@ -53,7 +53,7 @@ Every check table in every SKILL.md may include a `Scope` column. Values:
 
 If the `Scope` column is absent from a check table row, default to **`shared`**. This preserves backward compatibility with skills that haven't added the column yet (per task 007 ambiguity #1 sign-off).
 
-When parsing each SKILL.md `## Best Practices` table, detect whether the header row contains a `Scope` column:
+When parsing each README.md \`## Best Practices\` table, detect whether the header row contains a `Scope` column:
 - If yes: read the Scope value from each data row.
 - If no: treat every check as `shared`.
 
@@ -202,7 +202,7 @@ On dispatch error, return the same shape with an empty `findings` array and a `d
 
 **Step G — Handle the two special shared checks** (deferred from Step C because they scan all skills' SKILL.md files rather than project data):
 - **"Skills are self-contained"**: Read each `.claude/skills/*/SKILL.md` file and scan for patterns that reference external files as dependencies — e.g., "using the template at `<path>`", "read from `<path>`", or file path references that the skill requires to exist in order to function. A skill may *reference* project files it reads/writes as part of its operation (e.g., a task skill reading `tasks/`), but must not depend on an external file to provide its own templates, structures, or definitions. All scaffolding content the skill generates must be defined inline in `SKILL.md` or in supporting files within the skill's own directory (referenced via `${CLAUDE_SKILL_DIR}`).
-- **"Skills are versioned"**: Read each `.claude/skills/*/SKILL.md` file and verify it has YAML frontmatter with a `version:` field, and a `## Changelog` section. **Exempt externally-sourced skills** — if a skill's SKILL.md has no YAML frontmatter at all (no `---` delimiter in the first 5 lines), it is an external/utility skill and should be reported as INFO (not FAIL): `[INFO] <skill> — external skill, versioning not required`.
+- **"Skills are versioned"**: Read each `.claude/skills/*/SKILL.md` file and verify it has YAML frontmatter with a `version:` field. Then read the corresponding `.claude/skills/*/README.md` and verify it has a `## Changelog` section. **Exempt externally-sourced skills** — if a skill's SKILL.md has no YAML frontmatter at all (no `---` delimiter in the first 5 lines), it is an external/utility skill and should be reported as INFO (not FAIL): `[INFO] <skill> — external skill, versioning not required`.
 
 **Step H — Classify and aggregate**. For each recorded result: PASS / FAIL / WARN / INFO.
 - FAIL for "Required" severity checks that don't pass
@@ -210,7 +210,7 @@ On dispatch error, return the same shape with an empty `findings` array and a `d
 - PASS for checks that pass
 - INFO for checks that are intentionally skipped (per-dhf in a project with empty `dhfs[]`, `mixed` regulatory DHFs skipping certain checks, external skills exempt from versioning, etc.)
 
-**Cost envelope**: A MedTech Project-sized project has 10 DHFs and a handful of filings. A single audit run spawns ~10–15 subagents (one per DHF + one per composition manifest). Each subagent reads a bounded slice of the tree and executes a known list of checks. Rough envelope: each subagent ~5–15k input tokens, ~1–3k output tokens; per-audit ~100–200k total tokens. This is a deliberate action, not a hot path — operators run it before commits or PR, not on every save. Knobs to control cost: `--dhf=<name>` narrows the per-dhf pool; per-submission pool is naturally bounded by manifest count.
+**Cost envelope**: A PDLC_DEMO-sized project has 10 DHFs and a handful of filings. A single audit run spawns ~10–15 subagents (one per DHF + one per composition manifest). Each subagent reads a bounded slice of the tree and executes a known list of checks. Rough envelope: each subagent ~5–15k input tokens, ~1–3k output tokens; per-audit ~100–200k total tokens. This is a deliberate action, not a hot path — operators run it before commits or PR, not on every save. Knobs to control cost: `--dhf=<name>` narrows the per-dhf pool; per-submission pool is naturally bounded by manifest count.
 
 **Backward compatibility**: In single-dhf mode (N=1) or zero-dhf mode (N=0), no subagents are spawned. The serial path is byte-identical to v8 behavior. This preserves deterministic audit output for simple projects.
 
@@ -257,7 +257,7 @@ Project Audit: <project name> (multi-dhf, <N> DHFs)
     ...
 
 ## Per-Submission Checks
-  ### submissions/510k-<device>/
+  ### submissions/510k-pp3500/
     [PASS] Composition manifest exists
     ...
 
@@ -477,41 +477,13 @@ Every skill is a directory containing `SKILL.md` with:
 1. **YAML frontmatter** with `name:`, `description:`, `version:` (integer) and `updated:` (date)
 2. **Title and usage** — `# Skill Name` followed by description
 3. **Actions** — what the skill does when invoked
-4. **Best Practices** (optional) — checks the `/best-practices` audit should run for this skill
+
+And a `README.md` with:
+
+4. **Best Practices** (optional) — checks the `/best-practices` audit should run for this skill (table format; scanned by audit Step 2)
 5. **Changelog** — reverse-chronological list of changes per version
 
 Skills may include supporting files (templates, scripts, examples) alongside `SKILL.md` in the same directory.
-
-## Best Practices
-
-<!-- Read by the audit action to check project-level privacy and security -->
-
-| Check | How to Verify | Severity | Scope |
-|-------|--------------|----------|-------|
-| Team roster exists | `project.yml` exists in project root with `team:` section containing `active:` and `inactive:` lists | Required | shared |
-| Team roster has active members | `project.yml` `team.active` list contains at least one entry with a `github:` field | Required | shared |
-| .gitignore blocks secrets | `.gitignore` contains patterns for `.env`, `*.pem`, `*.key`, `credentials.json` | Required | shared |
-| .gitignore blocks PHI | `.gitignore` contains patterns for patient/clinical data (e.g., `**/phi/`, `*.hl7`) | Required | shared |
-| Setup guide covers training opt-out | `setup.md` contains instructions to disable Claude training on user data | Required | shared |
-| Setup guide covers GitHub 2FA | `setup.md` contains instructions to enable GitHub two-factor authentication | Required | shared |
-| Setup guide covers conversation hygiene | `setup.md` contains guidance on Claude conversation privacy and data awareness | Recommended | shared |
-| Setup guide covers integration awareness | `setup.md` contains guidance on MCP/integration data flow and account usage | Recommended | shared |
-| Agent design principles documented | `.claude/skills/shared/agent-design-principles.md` exists | Required | shared |
-| Per-skill agents installed as symlinks | For every `.claude/agents/<name>.md` where the same basename exists under any `.claude/skills/*/agents/<name>.md`, the `.claude/agents/` entry must be a symlink pointing at the skill-owned source (verify via `test -L` and `readlink`). Regular files with no matching skill source are standalone agents and are exempt; regular files that DO have a matching skill source are drift candidates (project forks must be documented in `.claude/sync-log.md` to pass). | Required | shared |
-| Evaluative skills document detection tiers | Every `.claude/skills/*/SKILL.md` that contains agent prompts (has an `agents/` subdirectory) or performs conflict detection / comparison / routing documents both programmatic (Tier 1) and semantic (Tier 2) evaluation approaches, or explicitly states why only one tier applies | Recommended | shared |
-| Security hook installed | `.claude/settings.json` SessionStart hooks array contains a command referencing `security-assert.sh` | Required | shared |
-| Secops agent exists | `.claude/agents/project-secops.md` exists | Required | shared |
-| Project manifest has security policy | `project.yml` contains a `security:` section with `approved_email_domains` and `approved_skills` lists | Required | shared |
-| Skill content is anonymized | Skills must be reusable across projects, so prose, comments, and examples must not name real organizations, products, or projects. Run a case-insensitive grep across `.claude/skills/**` and `.claude/agents/**` for the regression vocabulary `arthrex|globallogic|hiplink|painease|pdlc[_-]?demo|pp3500|pp3000|ip5000|sp6000|sp6500`. Allowed exceptions: (a) the literal `GlobalLogic-a-Hitachi-Company/hitachi` registry URL in code/config (load-bearing); (b) `.claude/skills/skill-creator/SKILL.md` Anonymization section (by design enumerates the vocabulary as the canonical glossary for new skill authors); (c) post-update changelog notes that describe what was renamed (e.g., `dhf-manifest/README.md` v6 entry naming the prior `hiplink-*` filenames so existing projects know what migrated). Any other hit is a regression — anonymize using the glossary: organizations → `MedTech Company`; project names → `MedTech Project`; module aliases Pre-Op/Intra-Op/Mgmt Services → `MFD A`/`MFD B`/`MFD C`; concrete devices → "the example infusion pump" / `PROJECT` (identifier-style); hostnames → `example.com`. See PDLC_DEMO `tasks/ben/032` for the full glossary and rationale. | Required | shared |
-| Project has at least one DHF | `project.yml` contains a `dhfs:` list with at least one entry, and every entry's `path` field resolves to an existing folder under `docs/project/dhfs/` | Required | cross-cutting |
-| DHF leaf names are unique | For every entry in `project.yml` `dhfs[]`, the last segment of `path` is unique across the list (case-sensitive). Enforced at add-dhf time; re-verified here to catch manual edits. | Required | cross-cutting |
-| Platform DHFs have children | For every DHF with `regulatory: mixed`, at least one other `dhfs[]` entry has `parent` pointing to it. Prevents `mixed` from being used to silence the unreferenced-DHF check on a leaf component. | Required | cross-cutting |
-| Unreferenced DHFs flagged | For every `dhfs[]` entry with `regulatory` ∈ {`in-development`, `cleared`}, check whether it is listed in at least one composition manifest under `submissions/*/composition-manifest.md`. Skip entries with `regulatory: concept` or `regulatory: mixed`. Report unreferenced entries as WARN. | Recommended | cross-cutting |
-| Composition manifests exist | If `project.dhfs[]` is non-empty AND `submissions/*/composition-manifest.md` glob returns zero matches, emit project-level WARN: "No composition manifests authored — per-submission checks will not run until at least one exists." | Recommended | cross-cutting |
-| README Structure table matches folders | For every `docs/**/README.md` (excluding `formal/` and hidden dirs), if the README contains a `## Structure` or `## Subfolders` section with a markdown table, extract the first column values (folder names, stripped of trailing `/`, backticks, and link syntax). Compare to actual child subdirectories of the README's folder (excluding `formal/`, hidden dirs, and `README.md` itself). Flag: (a) table rows whose folder does not exist on disk; (b) on-disk subfolders not present in the table. Content-freshness check — passes only if the set of table entries equals the set of actual subfolders. Eligible for sentinel-based auto-fix (see `/best-practices fix`). | Recommended | shared |
-| CLAUDE.md Project Structure tree matches filesystem | Project root `CLAUDE.md` contains a `## Project Structure` section with a fenced code block showing the directory tree. Parse top-level entries (lines matching `├── <name>` or `└── <name>` at the outermost indentation level inside the tree block, excluding trailing comments after `#`). Compare to actual top-level directories in the project root (excluding hidden dirs, `node_modules`, `.venv`, `__pycache__`, `assets`, `tools`). Flag: (a) tree entries that don't exist on disk; (b) on-disk dirs that should appear in the tree but don't. Eligible for sentinel-based auto-fix. | Recommended | shared |
-| CLAUDE.md DHF table matches project.yml | Project root `CLAUDE.md` contains a DHF / module table (markdown table listing architecture-name or leaf values in its first column). For each row, the first-column leaf value should correspond to a `leaf` field in `project.yml` `dhfs[]`. Classification columns (samd, class, iec62304, ai_enabled) must match the corresponding `classification` object in `dhfs[]` for that leaf. Flag: (a) table rows with no matching `dhfs[]` entry; (b) `dhfs[]` entries not represented in the CLAUDE.md table; (c) classification mismatches. Eligible for sentinel-based auto-fix. | Required | shared |
-| CLAUDE.md team references match project.yml | If project root `CLAUDE.md` lists or references team members by name, every person named must have a matching entry in `project.yml` `team.active[]`. Flag: names in CLAUDE.md not in active roster (may be stale after departures). Inactive members named in historical context are acceptable if they appear in `team.inactive[]`. | Recommended | shared |
 
 ## Notes
 - The registry repo defaults to `GlobalLogic-a-Hitachi-Company/hitachi` but is read from `project.yml` `registries:` section (first `type: github` entry)
@@ -519,21 +491,3 @@ Skills may include supporting files (templates, scripts, examples) alongside `SK
 - If the registry is unreachable, the audit still runs using local skill best practices only
 - The audit is read-only — it never modifies project files, only reports findings
 
-## Changelog
-
-- 12 (2026-04-20): **New `fix` action with strict three-tier safety model.** Auto-remediates mechanical drift found by `audit` — but with hard safety boundaries around CLAUDE.md and any content carrying human intent. Tier A (auto-apply) is restricted to content inside `<!-- AUTO:STRUCTURE -->` sentinels, which the renderer owns by construction. Tier B (CLAUDE.md Project Structure tree, DHF table, team references; plus medtech-docs skill templates) and Tier C (narrative drift) are **flagged only** — the action generates a task document with a proposed-fix checklist the user applies manually. Hard rules: `fix` never writes to CLAUDE.md, never writes outside sentinel blocks, never commits, never deletes files, never removes content from tables (stale rows are flagged not removed). `--dry-run` previews to stdout without creating a task doc. Default behavior: create task doc under the git user's `task_folder`, activate it via task-gate so Tier A writes pass, apply Tier A renders, populate Tier B proposals in the task doc with exact current/proposed content excerpts, append Tier C flags. Leaves everything uncommitted so the user reviews `git diff` before committing. Pairs with best-practices v11 drift checks (Phase 1), medtech-docs v19 sentinel renderer (Phase 2). Completes task 072 Phase 3 mechanism.
-  **Post-update:** No user action needed. Run `/best-practices audit` to surface drift, then `/best-practices fix` (or `fix --dry-run` first) to remediate Tier A mechanically and receive Tier B/C as a review checklist. CLAUDE.md is never modified by `fix` — human review required for all CLAUDE.md drift, by design.
-- 11 (2026-04-20): **Drift-detection checks for persistent structural docs.** Added 4 new `shared` checks to catch the drift class where persistent docs (READMEs, CLAUDE.md) assert structural facts that fall out of sync with the actual filesystem + `project.yml`: (1) **README Structure table matches folders** (Recommended) — for every `docs/**/README.md`, parse `## Structure` / `## Subfolders` tables and compare to actual child subdirectories; (2) **CLAUDE.md Project Structure tree matches filesystem** (Recommended) — parse the fenced tree block in CLAUDE.md's Project Structure section, compare top-level entries to root-level directories; (3) **CLAUDE.md DHF table matches project.yml** (Required) — match the DHF / Module Naming table in CLAUDE.md against `project.yml` `dhfs[]` leaves + classification; (4) **CLAUDE.md team references match project.yml** (Recommended) — flag CLAUDE.md name-drops that aren't in `team.active[]`. All four are eligible for sentinel-based auto-fix via the upcoming `/best-practices fix` action (Phase 2/3 of task 072). No changes to Scope handling, subagent dispatch, or report format — additions only. Required triggers a FAIL on the DHF-table check; rest WARN.
-  **Post-update:** No user action needed. New checks run automatically on next `/best-practices audit` invocation. Expect new failures on projects that have drifted since their last scaffold — the upcoming `fix` action will auto-remediate mechanical drift inside sentinel blocks once Phase 2 lands.
-- 10 (2026-04-16): Added Required check `Per-skill agents installed as symlinks`. For every `.claude/agents/<name>.md` whose basename matches a file under any `.claude/skills/*/agents/`, the installed copy must be a symlink (`test -L`) pointing at the skill-owned source. Regular files with no matching source remain exempt (standalone registry agents). Regular files with a matching source pass only if the fork is documented in `.claude/sync-log.md` — otherwise they are silent drift. Pairs with `skill-creator` v2 which now mandates agent symlinks in every `setup` action. Rationale: advisors skill `init` was copying agent files, which drifted whenever `/sync-skills pull` updated the skill-owned source.
-  **Post-update:** Projects using the advisors skill must delete copies in `.claude/agents/` and re-run `/advisors init` (or the skill's new symlink-based setup) to regenerate them as symlinks. Running `/best-practices` before the fix will FAIL on the new check.
-- 9 (2026-04-13): **Subagent dispatch implementation.** Rewrote the Per-check execution logic section to implement task 007 P5.5a — when `project.dhfs[]` has N>1 entries, `per-dhf` checks fan out to per-DHF subagents via the Agent tool (one Agent call per DHF in a single message for parallelism); `per-submission` checks fan out to per-composition-manifest subagents. Each subagent reads its assigned slice, runs the owning skill's "How to verify" checks, and returns a structured JSON findings list. Added verbatim subagent prompt templates for both pools (per-dhf and per-submission), JSON response schema, dispatch-error handling (malformed JSON, timeout, crash → synthetic FAIL, continue), N=1 short-circuit optimization (no subagent spawn when the DHF list has one entry), and cost envelope. Single-dhf mode is byte-identical to v8 so deterministic output is preserved. Backward compatible with v8 in all other respects.
-  **Post-update:** No user action needed. v9 only activates subagent fan-out when `project.yml` `dhfs[]` has more than one entry — projects with one DHF continue to use the v8 serial path exactly as before. The Agent tool is used via Claude Code's built-in parallelism (multiple Agent calls in one message run concurrently); no hook registration or configuration is required.
-- 8 (2026-04-13): **Unified DHF shape support.** Added `Scope` column parsing (values: `shared`, `per-dhf`, `per-submission`, `cross-cutting`; default `shared` when absent). Added per-dhf iteration that runs a check once per `project.dhfs[]` entry with the DHF root as the implicit working directory. Added per-submission iteration over `submissions/*/` via Glob. Added cross-cutting checks that enumerate `project.dhfs[]` directly: Project has at least one DHF, DHF leaf names unique, Platform DHFs have children, Unreferenced DHFs flagged, Composition manifests exist. Added multi-dhf grouped report format (Shared / Per-DHF / Per-Submission / Cross-Cutting sections). Subagent dispatch model (task 007 P5.5a) is **specified but not yet implemented** — v8 runs all checks in the parent context, iterating serially. Full subagent fan-out is a follow-up task. See `tasks/ben/007-sub-dhf-migration.md` for the full design rationale and P5.5a contract.
-- 7 (2026-04-10): Added 3 security infrastructure checks — security hook installed, secops agent exists, project manifest has security policy. Part of task 024 completion.
-- 6 (2026-04-09): Registry repo/path now read from `project.yml` `registries:` section (first `type: github` entry) instead of hardcoded. Falls back to `GlobalLogic-a-Hitachi-Company/hitachi` if no project.yml. Team roster checks updated from `team.md` to `project.yml`.
-- 5 (2026-04-08): Exempt externally-sourced skills (no YAML frontmatter) from versioning check — reported as INFO instead of FAIL.
-- 4 (2026-04-02): Added privacy and security best-practice checks — team roster, .gitignore hardening, training opt-out, 2FA, conversation hygiene, integration awareness.
-- 3 (2026-03-30): Migrated from .claude/commands/ to .claude/skills/ directory structure. Updated all references from commands to skills. Updated registry format to directory-per-skill. Updated scan logic to read .claude/skills/*/SKILL.md.
-- 2 (2026-03-30): Added self-containment and versioning checks. Updated sync action to compare versions via frontmatter. Added terminology section to registry. Added skill file format specification.
-- 1 (2026-03-23): Initial version — audit, check, and sync actions against shared registry.

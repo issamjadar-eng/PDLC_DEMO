@@ -258,6 +258,16 @@ This enforcement mechanism was designed in task 024 (Security Posture Automation
 
 See `tasks/ben/024-security-posture-automation.md` and `tasks/ben/027-task-gate-overhaul.md` for the full design discussions.
 
+## Version History
+
+| Version | Date | Change |
+|---------|------|--------|
+| v24 | 2026-04-27 | **Default-to-action two-branch rubric.** `find` action no longer asks before activating: high-confidence match → reuse + announce in one line; anything else → create + announce in one line. The one-line announcement is the user's escape hatch. Hook denial recovery uses the same rubric and adds a "trust the denial-message UUID over `printenv`" rule for compaction/restart cases. Project-wide effect: removes the most common 2–3 message stall that was blocking team members on every fresh topic. Ported from spec-gaming task v27. (See task ben/119.) |
+| v23 | 2026-04-23 | Capture redesign — retired flow-killing hooks, strategy-doc-centric conflict flow. (Task ben/100.) |
+| earlier | — | See git log for prior version history. |
+
+**Post-update:** No setup re-run required. The change is documentation/behavioral only — no new hooks, no new files. Existing sessions pick up the new rubric on next SKILL.md read.
+
 ## Best Practices
 
 <!-- Read by /best-practices skill to audit project setup -->

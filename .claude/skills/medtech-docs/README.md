@@ -95,3 +95,48 @@ Major version milestones:
 - v5: README meta-model with strict section ordering
 - v7: Formal/ subfolder pattern for controlled documents
 - v8: Synced templates with actual docs/ state, added project infrastructure creation
+
+## Best Practices
+
+<!-- Read by /best-practices skill to audit project setup -->
+
+**Scope column** — added in v12 to support the unified DHF shape. Values:
+- `shared` — check runs once at project root.
+- `per-dhf` — check runs once per entry in `project.dhfs[]`, with the DHF root as the implicit working directory. Path references in "How to Verify" below that start with `dhfs/<path>/` are interpreted relative to that DHF's root; paths without a `dhfs/` prefix are project-relative.
+- `per-submission` — check runs once per `submissions/<filing>/` folder.
+- `cross-cutting` — check runs once at project root but reads across multiple DHFs (enumerates `project.dhfs[]` and correlates).
+
+Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
+
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Project manifest exists | `project.yml` exists in project root with `project:`, `dhfs:`, `team:`, `registries:`, and `security:` sections | Required | shared |
+| Project has at least one DHF | `project.yml` `dhfs[]` list is non-empty, and every entry's `path` resolves to an existing folder under `docs/project/dhfs/` | Required | cross-cutting |
+| DHF leaf names are unique | For every entry in `project.yml` `dhfs[]`, the last segment of `path` is unique across the list (case-sensitive). | Required | cross-cutting |
+| Docs folder exists | `docs/` directory exists with `README.md` | Required | shared |
+| Three-tier structure | `docs/external/`, `docs/internal/`, `docs/project/` all exist | Required | shared |
+| Strategies folder exists | `docs/project/strategies/` directory exists with `README.md` | Required | shared |
+| DHF README exists | `dhfs/<path>/README.md` exists and contains a purpose paragraph | Required | per-dhf |
+| Design controls folder complete | All 7 design control subfolders exist under this DHF: `design-controls/{trace-matrix, plans, user-needs, requirements, architecture, vnv, tool-validation}` | Required | per-dhf |
+| Risk management folder exists | `risk-management/` folder exists at the DHF root (sibling of `design-controls/`, not a child) with a `formal/` subfolder | Required | per-dhf |
+| Clinical folder complete | `clinical/{evaluation-plans, benefit-risk, literature-search}` all exist under this DHF. Empty leaves are acceptable for early-stage DHFs and reported as INFO. | Recommended | per-dhf |
+| Postmarket folder complete | `postmarket/{pmcf-plans, pmcf-studies, capa, complaints}` all exist under this DHF. Empty leaves acceptable and reported as INFO. | Recommended | per-dhf |
+| Cybersecurity folder exists | `cybersecurity/` folder exists at DHF root with a `formal/` subfolder. Empty folder acceptable and reported as INFO. | Recommended | per-dhf |
+| Platform DHFs have children | For every DHF with `regulatory: mixed`, at least one other `dhfs[]` entry has `parent` pointing to it. Prevents `mixed` from being used to silence the unreferenced-DHF check on leaf components. | Required | cross-cutting |
+| Composition manifests referenced | If `dhfs[]` is non-empty AND `submissions/*/composition-manifest.md` glob returns zero matches, emit project-level WARN: "No composition manifests authored — per-submission checks will not run until at least one exists." | Recommended | cross-cutting |
+| Standards have verification checks | Every `.md` file in `docs/external/standards/` (excluding README) contains a `## Verification Checks` section | Required | shared |
+| Frameworks have evaluation decisions | `docs/external/industry-frameworks/README.md` contains both an active frameworks table and an "Evaluated — Not Required" table | Required | shared |
+| Dashboard exists | `docs/dashboard.html` exists | Recommended | shared |
+| Dashboard is current | `docs/dashboard.html` was modified within the last 7 days | Recommended | shared |
+| No empty design control folders | Every subfolder under `design-controls/` contains at least one `.md` file besides README | Recommended | per-dhf |
+| Submissions match pathway | If CLAUDE.md mentions "510(k)", `docs/project/submissions/510k/` exists; if "De Novo", `docs/project/submissions/de-novo/` exists; etc. | Recommended | shared |
+| Standards README has exclusion rationale | Every standard/framework in the "Evaluated — Not Required" table has a non-empty rationale | Required | shared |
+| Every docs folder has README | Every directory under `docs/` (recursively) contains a `README.md` file. Excluded: `.staging/`, `images/`, `formal/`, and hidden directories (starting with `.`). A missing README means Claude and team members have no guidance for that folder — naming conventions, expected content, and placement rules are undefined. | Required | shared |
+| READMEs have changelogs | Every `README.md` under `docs/` contains a `## Changelog` section with a table (Date, Author, Summary). In AI-driven workflows, a session may make many edits collapsed into one commit — the changelog captures the rationale that git alone doesn't. | Required | shared |
+| READMEs have conventions | Every `README.md` under `docs/` contains a `## Conventions` section documenting naming rules, formatting, and linking guidance for that folder. | Required | shared |
+| READMEs follow section order | In every `README.md` under `docs/`, sections appear in meta-model order: Title → Subfolders/Structure → Information Flow/Relationships → Expected Content → Domain-specific → Conventions → For Claude → Changelog. Specifically: `## Conventions` must appear before `## Changelog`, and `## Expected Content` (if present) must appear before `## Conventions`. | Required | shared |
+| Leaf READMEs have expected content | Every `README.md` in a leaf folder (no subdirectories) under `docs/` contains a `## Expected Content` or `## Expected Documents` section listing what document types belong in that folder. Exceptions: folders that use domain-specific sections instead (e.g., standards/ uses `## Distilled Standards`, frameworks/ uses `## Active Frameworks`). | Recommended | shared |
+| README changelogs are current | When a `README.md` under `docs/` is modified, its `## Changelog` table has an entry matching the current date or the date of the most recent modification. Stale changelogs (last entry significantly older than git last-modified date) should be flagged. | Recommended | shared |
+| No task refs in persistent docs | `CLAUDE.md`, `project.yml` descriptions, and DHF `README.md` files do not contain references to task documents (`tasks/*/NNN-*.md`). Persistent project documents must reference durable artifacts (strategy docs, architecture docs, input analysis, submission docs). Convention defined in CLAUDE.md Document Conventions. | Required | shared |
+| CLAUDE.md has task discipline section | `CLAUDE.md` contains the string `Update as you go (HARD RULE` (the marker for the task-discipline block seeded by `/medtech-docs init` Step 2c Check 5). If missing, the active task doc has no recovery contract — sessions that drop or compact mid-batch lose their work narrative. Re-run `/medtech-docs init` to seed, or copy from `templates/claude-md-task-discipline.md`. | Required | shared |
+| medtech-docs templates match init folder tree | Self-consistency check on this skill. Parse the `init` action's Step 3 "Folder tree" diagram (fenced code block) to extract the set of folders that receive a `README.md`. Parse the "README content sources" tables (Tier READMEs, Special READMEs, and the leaf-folder table) to extract the set of target paths and their mapped template files. Assert: (1) every folder in the tree that gets a README appears as a target in at least one content-sources table; (2) every target path in the content-sources tables corresponds to a folder in the tree; (3) every template file referenced (e.g., `readme-dhf.md`, `readme-leaf.md`) exists at `.claude/skills/medtech-docs/templates/<filename>`; (4) no orphan templates in `templates/` that aren't referenced by SKILL.md. Drift here means new-project scaffolds will either skip folders or reference missing templates — a bug at the source. | Required | shared |

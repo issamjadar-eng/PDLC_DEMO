@@ -2,7 +2,7 @@
 
 **ID**: 029
 **Created**: 2026-04-22
-**Status**: Not Started
+**Status**: In Progress
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -75,3 +75,4 @@ The prior sync-log entry (2026-04-20) already notes this as a "false-positive dr
 ## Changelog
 
 - 2026-04-22: Task created after both bugs surfaced during the 2026-04-22 pull. Bug A caused a silent-delete panic that was only caught because the broken docflow hook already had my attention; without that, I'd have committed the deletes. Bug B has existed at least since 2026-04-20 (papered over in that pull's log entry) — treating it as benign was a mistake because it trains users to ignore `check` output.
+- 2026-04-28: **Bug B fixed upstream.** Resurfaced during the 2026-04-28 broad pull when `agents/project-secops.md` showed `UPSTREAM_NEWER` immediately after a successful pull (resolved file was byte-identical to upstream). Patched `skills/sync-skills/scripts/sync.sh` `cmd_check()` content-compare loop: detect local symlinks with `[[ -L ... ]]` and hash the link target text via `printf '%s' "$(readlink ...)" | $hasher` (no trailing newline) so it matches how git stores the symlink blob upstream. Factored hasher selection (`sha1sum` vs `shasum -a 1`) into a single variable. Bumped sync-skills README changelog to v6 (SKILL.md frontmatter was already labeled v6 with no matching entry — this fills the gap). PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/96. Bug A still pending.

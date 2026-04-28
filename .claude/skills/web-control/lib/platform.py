@@ -39,7 +39,9 @@ def REQUIRED_CHROME_FLAGS(port: int | None = None, profile: Path | None = None) 
     pdir = profile if profile is not None else profile_dir()
     return [
         f"--remote-debugging-port={p}",
-        f"--remote-allow-origins=http://localhost:{p}",
+        # Both origins required: Chrome 145+ treats localhost and 127.0.0.1
+        # as distinct origins for the WebSocket origin check.
+        f"--remote-allow-origins=http://localhost:{p},http://127.0.0.1:{p}",
         f"--user-data-dir={pdir}",
         "--window-size=800,700",
         "--window-position=100,100",

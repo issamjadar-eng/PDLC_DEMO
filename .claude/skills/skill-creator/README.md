@@ -46,9 +46,9 @@ Registry-level `agents/` (at the hitachi repo root) is reserved for cross-skill 
 
 Integer versions (not semver) because skills iterate rapidly and the distinction between major/minor/patch isn't useful at this granularity. The changelog provides the detail.
 
-### Best Practices as Required Section
+### Best Practices as README Section
 
-Every skill must declare health checks. This enables future `/best-practices audit` tooling to verify project health across all skills without reading every SKILL.md in full.
+Every skill must declare health checks in its README.md. The `/best-practices` auditor scans `README.md` files (not SKILL.md) for `## Best Practices` tables. This means health-check metadata never loads into Claude's context during skill execution — README.md is never auto-loaded.
 
 ### README as Design Doc
 
@@ -64,7 +64,34 @@ The README.md serves as the skill's index layer (per README Navigation Rule) and
 | `.claude/agents/` directory | setup actions | Symlink target for skill agents (Claude Code subagent discovery) |
 | `.state/` directory (project root) | hook scripts | Runtime state files (relocated from `.claude/state/` in ben/083 to escape `.claude/**` sensitive-file guard) |
 
+## Best Practices
+
+<!-- Consumed by /best-practices audit -->
+
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| New skill has SKILL.md | File exists with valid frontmatter | Required | shared |
+| New skill has README.md | Design doc exists at skill root | Required | shared |
+| Frontmatter complete | name, description, version, updated present | Required | shared |
+| Best Practices table in README.md | README.md contains `## Best Practices` with table | Required | shared |
+| Changelog in README.md | README.md contains `## Changelog` with entries | Required | shared |
+| Supporting Files table | SKILL.md lists all bundled files | Required | shared |
+| Hooks use symlinks | `.claude/hooks/` contains symlinks into `skills/*/hooks/`, not copies | Required | shared |
+| Agents use symlinks | `.claude/agents/` contains symlinks into `skills/*/agents/`, not copies (forks excepted — documented in sync-log) | Required | shared |
+| Setup action idempotent | Re-running setup doesn't duplicate hooks, agent symlinks, or hook registrations | Required | shared |
+| SKILL.md under 500 lines | Progressive disclosure respected | Recommended | shared |
+| Evals exist | `evals/evals.json` with test cases | Recommended | local |
+
 ## Changelog
 
+<!--
+Skill-scoped only. Each entry describes what changed in skill-creator itself.
+No project-specific names, no project task references — those go in the
+project's tasks/ and commit history.
+-->
+
+- 5 (2026-04-27): Made the project-agnostic-authoring rule and the skill-scoped-changelog rule explicit in skill-creator. New § "Project-Agnostic Authoring (HARD RULE)" in SKILL.md prohibits project-specific names in `.claude/skills/**` and `.claude/agents/**`; says project values belong in `project.yml`/`docs/`/`tasks/`/`CLAUDE.md`. The `### Changelog Format` section in SKILL.md gained explicit ❌/✅ examples for what belongs in a skill changelog (skill capability/schema/bugfix changes — yes; project work, project names, project task IDs — no). The `templates/readme-skill.md` `## Changelog` section gained an HTML-comment instruction so new skills are born clean.
+- 4 (2026-04-23): **Move Best Practices and Changelog from SKILL.md to README.md** (task ben/095). SKILL.md is loaded into context on every skill trigger; these sections are metadata for auditors/maintainers, not execution instructions. `/best-practices` audit Step 2 now scans `README.md` (not `SKILL.md`) for `## Best Practices` tables. Updated skill-creator conventions: Best Practices and Changelog are now required in README.md, not SKILL.md. Updated the "Skills are versioned" check in best-practices to look for `## Changelog` in README.md.
+- 3 (2026-04-20): Updated `setup` action template to create `.state/` at project root instead of `.claude/state/`. New skills scaffolded from templates now default to the correct state-dir location.
 - 2 (2026-04-16): Extended symlink pattern to `.claude/agents/`. Setup action template, Best Practices table, and skill template now require agent symlinks the same way hooks have been required. Added fork rule (explicit divergence via regular-file override) and registry-level agent-ownership rule.
 - 1 (2026-04-16): Adapted from Anthropic's skill-creator. Added project conventions (versioning, symlinks, required sections, README design doc). Kept full evaluation pipeline and description optimization.

@@ -108,7 +108,7 @@ async def workflow_view(request: Request, slug: str):
             proposals = b3_strategy_reassembly._parse_proposals(text)
             history = b3_strategy_reassembly._parse_history(text)
             # Server-render markdown via the documents skill renderer.
-            rendered = doc_renderer.render(abs_path, virtual_path=d.virtual_path)
+            rendered = doc_renderer.render(abs_path)
             # Render each history entry body separately so we can show pretty
             # markdown inside collapsible entries.
             import markdown as md_lib

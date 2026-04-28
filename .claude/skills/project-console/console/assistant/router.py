@@ -157,7 +157,7 @@ the source document:
   - Footnotes: at the very end of your response, list every cited
                source on its own line:
 
-                 [1]: docs/project/dhfs/.../<project>-system-sad.md
+                 [1]: docs/project/dhfs/.../hiplink-system-sad.md
                  [2]: docs/project/dhfs/.../architecture/README.md
                  [3]: docs/project/strategies/architecture-strategy.md
 
@@ -165,7 +165,7 @@ When you can identify a specific section you drew from, append a
 GitHub-style heading anchor (lowercase, spaces→dashes, punctuation
 stripped):
 
-                 [4]: docs/.../<project>-system-sad.md#module-boundaries
+                 [4]: docs/.../hiplink-system-sad.md#module-boundaries
 
 Rules:
   - Every `[N]` inline MUST have a matching `[N]:` footnote at the end.

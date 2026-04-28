@@ -93,7 +93,7 @@ mkdir -p "$PROFILE"
 
 FLAGS=(
   "--remote-debugging-port=${PORT}"
-  "--remote-allow-origins=http://localhost:${PORT}"
+  "--remote-allow-origins=http://localhost:${PORT},http://127.0.0.1:${PORT}"
   "--user-data-dir=${PROFILE}"
   "--window-size=800,700"
   "--window-position=100,100"

@@ -29,4 +29,18 @@ For skill usage and instructions, see `SKILL.md`.
 
 ## Changelog
 
+<!--
+Skill-scoped only. Each entry describes what changed IN THE SKILL itself
+(new action, schema change, behavior change, bug fix, version bump).
+
+Do NOT log here:
+  - Project-level work that happens to use the skill — that belongs in tasks/.
+  - Project-specific names (e.g., a particular company, device, or codename).
+  - Project task references (e.g., `ben/118`, `ros/045`).
+
+The skill is project-agnostic; its changelog must be too. If a skill change
+was driven by a project's needs, describe the skill change neutrally — the
+project context lives in commit history and the task doc, not here.
+-->
+
 - 1 ({{DATE}}): Initial version — {{INITIAL_DESCRIPTION}}

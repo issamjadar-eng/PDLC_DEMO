@@ -4,6 +4,30 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-28 — pull (broad upstream sync — change-control internal-review tier, project-console v1.7.6, web-control 0.2.0, best-practices v15)
+
+- Hitachi HEAD after sync: `00e53bb`
+- Pulled: 47 files (3 `__pycache__/*.pyc` upstream-only entries skipped as noise)
+- Highlights:
+  - `change-control` 0.5.0 — new internal-review tier: `review_start/status/update/abort`, `diagnose`, `help` actions + lib (`_runtime`, `gdoc`, `internal_review`, `path_convention`); `freeze.py` updated
+  - `web-control` 0.2.0 — new `actions/diagnose.py`, `actions/purge_stale.py`, `lib/python_runtime.py`; updated `lib/platform.py` and chrome install/launch scripts
+  - `project-console` v1.7.4 → v1.7.6 — configurable grounding roots, two-layer standards citation, browsable skill-library roots, relative-link resolution, content-wrap fixes
+  - `task` SKILL.md / README.md — capture-discipline doc refresh (UserPromptSubmit/Stop hooks retired in v23, state file at `.state/`)
+  - `best-practices` v15 — new Required check `Skill content is project-agnostic` + Recommended `Skill changelogs are skill-scoped`; v14 added 4 personal-scratch checks; v13 moved Best Practices/Changelog to README.md
+  - `medtech-docs` — Best Practices table now uses `Scope` column (shared/per-dhf/per-submission/cross-cutting); added Platform-DHFs-have-children + composition-manifest-referenced checks
+  - `skill-creator` v5 — explicit project-agnostic HARD RULE + skill-scoped changelog format
+  - `agents/project-secops.md` — agent prompt update
+  - New READMEs: `trace-matrix/`, `tracker/`, `xlsx/`
+- project.yml: no changes (all pulled files are updates to already-approved skills/agents)
+- Follow-ups:
+  - Re-run `/web-control setup` for new action symlinks
+  - Re-run `/change-control setup` if using the new internal-review tier
+  - Run `/project-console sync` + restart console + browser hard-refresh (per v1.7.5/v1.7.6 post-update notes)
+  - Verify `tools/project-console/console.yaml` `grounding.extra_roots` includes `.claude/skills/medtech-docs/references` and `.claude/skills/dhf-manifest/data`
+  - Run `/best-practices` when ready to triage new v15/v14 findings (expect new flags around project-agnostic skill content)
+
+---
+
 ## 2026-04-27 — push (dhf-manifest dynamic project name in titles)
 
 - Files: `skills/dhf-manifest/scripts/{_project_slug,dashboard,gap-report}.py`

@@ -39,9 +39,27 @@ rm -f "$TEMP_KEY"
 echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main' \
   | $SUDO tee /etc/apt/sources.list.d/google-chrome.list >/dev/null
 
-# Install
+# Install Chrome + the runtime libs Chrome needs on Ubuntu 24.04+ (the
+# t64-suffixed packages are the time_t-64bit transitional names; on older
+# Ubuntu the unsuffixed names work and apt resolves to whatever is present).
 $SUDO apt-get update -qq
-$SUDO apt-get install -y google-chrome-stable
+
+# Try the t64 names first (Ubuntu 24.04+). If unavailable, fall back to
+# unsuffixed names (Ubuntu 22.04 and earlier, Debian).
+RUNTIME_DEPS_T64="libgtk-3-0t64 libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64"
+RUNTIME_DEPS_BASE="libnss3 libgbm1 libxss1 libdrm2 fonts-liberation libxkbcommon0 libpango-1.0-0"
+
+if $SUDO apt-get install -y --simulate $RUNTIME_DEPS_T64 >/dev/null 2>&1; then
+    $SUDO apt-get install -y $RUNTIME_DEPS_T64 $RUNTIME_DEPS_BASE google-chrome-stable
+else
+    # Pre-24.04 names
+    RUNTIME_DEPS_LEGACY="libgtk-3-0 libasound2 libatk1.0-0 libatk-bridge2.0-0 libcups2"
+    $SUDO apt-get install -y $RUNTIME_DEPS_LEGACY $RUNTIME_DEPS_BASE google-chrome-stable
+fi
+
+# Python deps for web-control's CDP runtime (system-wide via apt — avoids
+# PEP 668 / --break-system-packages issues)
+$SUDO apt-get install -y python3-websocket python3-yaml
 
 google-chrome --version
 echo "web-control: install complete"
