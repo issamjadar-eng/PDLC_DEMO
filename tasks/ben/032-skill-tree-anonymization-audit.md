@@ -2,7 +2,7 @@
 
 **ID**: 032
 **Created**: 2026-04-27
-**Status**: Not Started
+**Status**: In Progress (Phase 4 lint regression-guard outstanding)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -80,11 +80,13 @@ Substitutions applied via `/tmp/anonymize.py` (ordered, longest-pattern-first; r
 
 Skills with no hits and not touched: `task`, `tracker`, `skill-creator`, `lessons`, `pdf`, `xlsx`, `pptx`, `docx`, `update-config`, `keybindings-help`, `simplify`, `fewer-permission-prompts`, `loop`, `schedule`, `claude-api`.
 
-### Phase 3 — Push upstream
+### Phase 3 — Push upstream — COMPLETE 2026-04-27
 
-- [ ] One PR per skill (or one bundled PR if total churn is small) to the hitachi registry. Title pattern: `<skill>: anonymize project/customer references`. Body links back to this task and lists the anonymization mapping used.
-- [ ] After merge, fast-forward local hitachi checkout. Re-run `/sync-skills check` and confirm zero `UPSTREAM_NEWER` rows for the touched skills.
-- [ ] Spot-check arthrex-pccp post-merge: their next `/sync-skills pull` will pick the cleanup up; we don't need to push from there.
+- [x] Single bundled PR (86 files across 14 skills) — title `skill tree: anonymize product/customer references (prose-only)` — https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/87, squash-merged at `56d631bdc86bcb961c48564624686bbd3380cbc0`.
+- [x] Local hitachi checkout fast-forwarded to `56d631b`. Sync-log entry recorded.
+- [x] Reconciled `change-control/SKILL.md` against upstream v0.4 (PRs #84/#85/#86 landed mid-task) before pushing — net diff is exactly the `PP3500` → `PROJECT` example-string change.
+- [x] Dropped duplicate `secops/scripts/resolve_user.py` from push branch (file was a local copy of `shared/scripts/resolve_user.py` and would have introduced unwanted duplication upstream).
+- [ ] Spot-check arthrex-pccp on next `/sync-skills pull`.
 
 ### Phase 4 — Guard rails
 

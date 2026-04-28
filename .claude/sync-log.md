@@ -4,6 +4,22 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-27 — push (skill tree anonymization — prose-only)
+
+- Files: 86 across 14 skills (dhf-manifest 47, docflow 11, project-console 8, change-control 5, strategy 2, advisors 1, best-practices 1, digest 1, medtech-docs 1, secops/shared 1, sync-skills 1, trace-matrix 1, web-control 1) — full list in PDLC_DEMO commits `bd2ddd3` + `3f76013`
+- Branch: `sync/pdlc-demo-skill-anonymization-2026-04-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/87
+- Commit: "skill tree: anonymize product/customer references (prose-only)"
+- Status: merged (--merge requested)
+- Merge commit: `56d631bdc86bcb961c48564624686bbd3380cbc0`
+- Hitachi HEAD after sync: `56d631b`
+- Trigger: user observed `dhf-manifest` skill carries `HipLink`/`Arthrex` references; skills meant to be reusable by any project. Phase 1 survey found 200 lines across 11 skills. Phase 2 prose pass applied locked glossary (Arthrex/GlobalLogic → MedTech Company; HipLink/Arthrex PCCP/PDLC_DEMO → MedTech Project; HipLink Pre-Op/Intra-Op/Mgmt Services → MFD A/B/C; PP3500 → PROJECT identifier-style; etc.). Programmatic strings (output filenames, leaf-name branches) verified safe or raised in PDLC_DEMO ben/033 — not touched. Built artifacts in `dhf-manifest/data/` regenerated via `build-reference.py`.
+- Reconciliation: `change-control/SKILL.md` was fast-evolving upstream (v0.4 landed in #84/#85/#86 mid-task); reset local to upstream HEAD then re-applied anonymization. Net upstream diff is exactly the `PP3500` → `PROJECT` example-string change.
+- Cleanup: removed `skills/secops/scripts/resolve_user.py` from the push branch — was a duplicate of `shared/scripts/resolve_user.py` and shouldn't have been introduced upstream. Force-pushed amended branch before opening PR.
+- Discovered + executed under PDLC_DEMO task ben/032. Follow-up: PDLC_DEMO task ben/033 (structural rename of `hiplink-*` output filenames in dhf-manifest scripts) staged but not yet started.
+
+---
+
 ## 2026-04-27 — push (project-console relative-link rewriter)
 
 - Files: `skills/project-console/console/documents/renderer.py`, `skills/project-console/console/documents/router.py`, `skills/project-console/console/workflows/router.py`
