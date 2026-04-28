@@ -1,11 +1,405 @@
 {
   "generated": "2026-04-27",
   "source_md": "docs/project/dhf-manifest/qms-manifest.md",
-  "source_count": 0,
-  "obligation_count": 0,
-  "qms_obligations": [],
-  "by_source": {},
-  "by_topic": {},
-  "obl_to_qms": {},
-  "qms_to_obl": {}
+  "source_count": 1,
+  "obligation_count": 11,
+  "qms_obligations": [
+    {
+      "id": "QMS-ARCH-001",
+      "title": "Design Control Master",
+      "source": "GL-SOP-DC-001 §6",
+      "source_title": "Design Control (Master)",
+      "topic": "architecture",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Design History File",
+        "Phase-gate evidence"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-001",
+        "OBL-13485-002"
+      ],
+      "verbatim": "\"Define how MedTech Company plans, executes, reviews, and transfers\nproduct designs across the lifecycle — per ISO 13485:2016 §7.3 and\n21 CFR 820.30. Applies to all medical device products, SaMD, SiMD,\nhardware, firmware, accessories, and labeling.\"\n",
+      "extracted_requirements": [
+        "Author and maintain a Design History File (DHF) per device program.",
+        "Operate via phase gates with go/no-go reviews; outcomes Pass / Conditional / Hold.",
+        "Capture design-control evidence at each phase: plan, inputs, outputs, reviews, V&V, transfer."
+      ],
+      "context": "Master SOP — anchors every other Design Controls SOP. The DHF index\nlists every controlled document with rev and effective date. Phase\ngates are the primary control point against drift."
+    },
+    {
+      "id": "QMS-ARCH-002",
+      "title": "Design and Development Plan",
+      "source": "GL-SOP-DC-002 §6.2",
+      "source_title": "Design and Development Planning",
+      "topic": "architecture",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Design and Development Plan"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-002"
+      ],
+      "verbatim": "\"The plan shall describe or reference: (a) Stages of design and\ndevelopment (Concept → Feasibility → Design → V&V → Transfer →\nRelease); (b) Reviews required at each stage — who, what, go/no-go\ncriteria; (c) Verification, validation, and design transfer\nactivities appropriate to each stage.\"\n",
+      "extracted_requirements": [
+        "Author a Design and Development Plan from template GL-TMP-DC-001 at project initiation.",
+        "Approve the DDP before any Design Inputs work begins.",
+        "Update the DDP at each phase gate."
+      ],
+      "context": "First DHF artifact authored. Functional leads (Systems, HW, FW, SW,\nQuality, Regulatory, Clinical, Usability, Risk, Cyber, Ops) each\ncontribute sections and confirm resource commitments."
+    },
+    {
+      "id": "QMS-REQ-001",
+      "title": "Design Input Specification",
+      "source": "GL-SOP-DC-003 §6",
+      "source_title": "Design Inputs",
+      "topic": "requirements",
+      "artifact_type": "spec",
+      "dhf_owner": "system",
+      "applies_to": [
+        "User Needs register",
+        "Design Input Specification"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-003"
+      ],
+      "verbatim": "\"Design Inputs derive from User Needs and the Intended Use. Every\nDesign Input shall be: unambiguous, testable, traceable to a User\nNeed, and approved before downstream design work begins. Conflicts\nbetween inputs are resolved in writing and documented in the DHF.\"\n",
+      "extracted_requirements": [
+        "Author a User Needs register and a Design Input Specification from GL-TMP-DC-002.",
+        "Every Design Input traces to at least one User Need.",
+        "Every Design Input is testable (objective acceptance criterion stated).",
+        "Approve Design Inputs before authoring Design Outputs."
+      ],
+      "context": "Inputs are the contractual surface between users and engineering.\nThe trace matrix (UN ↔ DI) anchored here is the seed for every\ndownstream verification artifact."
+    },
+    {
+      "id": "QMS-DOUT-001",
+      "title": "Design Outputs",
+      "source": "GL-SOP-DC-004 §6",
+      "source_title": "Design Outputs",
+      "topic": "design-outputs",
+      "artifact_type": "spec",
+      "dhf_owner": "both",
+      "applies_to": [
+        "System Architecture Document (SAD)",
+        "Software Design Specification (SDS)",
+        "Hardware Design Specification"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-004"
+      ],
+      "verbatim": "\"Design Outputs are the form in which design is implemented. Each\noutput shall: (a) meet the Design Inputs; (b) provide enough detail\nto enable manufacturing, V&V, and clinical use; (c) reference\nacceptance criteria; (d) identify outputs that are essential for\nproper functioning of the device.\"\n",
+      "extracted_requirements": [
+        "Author a System Architecture Document for each system DHF.",
+        "Author Software / Hardware design specifications for each item DHF.",
+        "Identify and flag essential outputs (those required for proper functioning).",
+        "Approve outputs before V&V begins."
+      ],
+      "context": "Outputs are the implementation contract. The SAD also serves as\ninput to verification planning and to risk-control mapping."
+    },
+    {
+      "id": "QMS-DR-001",
+      "title": "Design Review",
+      "source": "GL-SOP-DC-005 §6",
+      "source_title": "Design Review",
+      "topic": "design-reviews",
+      "artifact_type": "record",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Design Review Record",
+        "Phase-gate minutes"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-005"
+      ],
+      "verbatim": "\"Design reviews shall be held at appropriate stages of the design\nprocess per the DDP. Each review shall include representatives of\nall functions concerned with the stage being reviewed plus an\nindependent reviewer who has no direct responsibility for the stage.\nOutcomes (Pass / Conditional / Hold) and any actions are recorded.\"\n",
+      "extracted_requirements": [
+        "Hold design reviews at each phase gate per the DDP.",
+        "Include an independent reviewer with no direct responsibility for that stage.",
+        "Record outcomes on GL-FORM-DC-001 and capture actions with owners + due dates."
+      ],
+      "context": "Reviews are the primary go/no-go control. Independence requirement\nis the most-cited audit finding — verify the reviewer's role is\ngenuinely independent of the design work being reviewed."
+    },
+    {
+      "id": "QMS-VER-001",
+      "title": "Design Verification",
+      "source": "GL-SOP-DC-006 §6 (Verification)",
+      "source_title": "Design Verification and Validation",
+      "topic": "verification",
+      "artifact_type": "protocol",
+      "dhf_owner": "both",
+      "applies_to": [
+        "Verification Protocol",
+        "Verification Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-006"
+      ],
+      "verbatim": "\"Verification confirms that Design Outputs meet Design Inputs.\nVerification methods include inspection, analysis, demonstration,\nand test. Each Design Input shall be verified by at least one\nmethod; the verification record shall cite the input ID, the method\nused, the acceptance criterion, and the result.\"\n",
+      "extracted_requirements": [
+        "Author a Verification Protocol per GL-TMP-DC-003 covering all Design Inputs.",
+        "Every Design Input has at least one verification method (I/A/D/T).",
+        "Record results with input ID, method, acceptance criterion, and pass/fail."
+      ],
+      "context": "Verification answers 'did we build the device right' against the\ninput contract. The trace matrix (DI ↔ V&V) anchors here.\n"
+    },
+    {
+      "id": "QMS-VAL-001",
+      "title": "Design Validation",
+      "source": "GL-SOP-DC-006 §6 (Validation)",
+      "source_title": "Design Verification and Validation",
+      "topic": "validation",
+      "artifact_type": "protocol",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Validation Protocol",
+        "Validation Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-007"
+      ],
+      "verbatim": "\"Validation confirms that the device meets User Needs and intended\nuse under simulated or actual use conditions. Validation shall be\nperformed on production-equivalent units in the intended use\nenvironment with representative users. Summative usability\nevaluation (per IEC 62366-1) is part of validation for any device\nwith user interfaces.\"\n",
+      "extracted_requirements": [
+        "Author a Validation Protocol per GL-TMP-DC-004 covering all User Needs.",
+        "Use production-equivalent units in the intended use environment.",
+        "Recruit representative users for any human-factors evaluation."
+      ],
+      "context": "Validation answers 'did we build the right device' against User\nNeeds. Distinct from V&V verification — validation must reflect\nactual or simulated use, not bench testing alone."
+    },
+    {
+      "id": "QMS-CC-001",
+      "title": "Design Change Control",
+      "source": "GL-SOP-DC-008 §6",
+      "source_title": "Design Change Control",
+      "topic": "configuration-change",
+      "artifact_type": "record",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Document Change Request",
+        "510(k) Change Determination"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-009",
+        "OBL-510K-002"
+      ],
+      "verbatim": "\"Every change to a released design shall be (a) documented on a\nDocument Change Request, (b) reviewed by impact analysis covering\nregulatory, risk, V&V, labeling, and post-market implications, (c)\nverified, and (d) approved by the change board before\nimplementation. For cleared devices, FDA's 510(k) change-significance\nanalysis (per the 2017 Guidance) shall be applied to determine\nwhether a new 510(k) is required.\"\n",
+      "extracted_requirements": [
+        "File a Document Change Request for every change to a released design.",
+        "Conduct impact analysis covering regulatory, risk, V&V, labeling, and post-market.",
+        "Apply FDA's 2017 510(k) change guidance to cleared devices.",
+        "Approve via change board before implementation."
+      ],
+      "context": "Change control is the boundary between design controls and\nproduction / post-market. The 510(k) change-significance analysis\nis the most consequential output — wrong call = enforcement risk."
+    },
+    {
+      "id": "QMS-RM-001",
+      "title": "Risk Management Master",
+      "source": "GL-SOP-RM-001 §6",
+      "source_title": "Risk Management (Master)",
+      "topic": "risk-management",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Risk Management Plan",
+        "Hazard Analysis",
+        "Design FMEA / Process FMEA",
+        "Risk Management Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-14971-001",
+        "OBL-14971-002"
+      ],
+      "verbatim": "\"Establish the risk-management process for MedTech Company medical\ndevices and medical device software throughout the product\nlifecycle, in accordance with ISO 14971:2019 and guided by\nISO/TR 24971:2020. Maintain a Risk Management File (RMF) per device,\ncovering hazard identification, risk estimation, risk evaluation,\nrisk control, residual-risk evaluation, and benefit-risk analysis.\"\n",
+      "extracted_requirements": [
+        "Author a Risk Management Plan per GL-TMP-RM-001 at project initiation.",
+        "Maintain a Risk Management File: Plan, Hazard Analysis, FMEAs, Report.",
+        "Update the RMF with post-market and use-related risks across the lifecycle.",
+        "Conduct benefit-risk analysis when residual risk exceeds acceptability criteria."
+      ],
+      "context": "RMF is the connective tissue across design, usability, cybersecurity,\nand post-market. Use-related risks (IEC 62366-1) and security risks\n(IEC 81001-5-1) flow into the same RMF, not separate silos."
+    },
+    {
+      "id": "QMS-SW-001",
+      "title": "Medical Device Software Lifecycle",
+      "source": "GL-SOP-SW-001 §6",
+      "source_title": "Medical Device Software Lifecycle",
+      "topic": "software-lifecycle",
+      "artifact_type": "plan",
+      "dhf_owner": "item",
+      "applies_to": [
+        "Software Development Plan",
+        "Software Architecture",
+        "SOUP Register"
+      ],
+      "regulatory_grounding": [
+        "OBL-62304-001",
+        "OBL-62304-002"
+      ],
+      "verbatim": "\"Apply IEC 62304:2006+A1:2015 across the software lifecycle for every\nmedical device software item. The Software Safety Class\n(A / B / C per §4.3) drives the depth of required activities;\nClass C demands integration testing per item, unit testing, and\ndetailed design documentation. SOUP / OTS components shall be\nidentified, risk-assessed, and tracked in the SOUP register.\"\n",
+      "extracted_requirements": [
+        "Author a Software Development Plan per GL-TMP-SW-001 for each software-item DHF.",
+        "Assign a Software Safety Class (A / B / C) per IEC 62304 §4.3 with rationale.",
+        "Maintain a SOUP register listing all third-party components."
+      ],
+      "context": "The Software Safety Class is the load-bearing determination — it\nsets the V&V depth, documentation, and audit-readiness scope.\nClass C requires the most evidence; misclassification underwater\nis a frequent finding."
+    },
+    {
+      "id": "QMS-PM-001",
+      "title": "Post-Market Surveillance",
+      "source": "GL-SOP-PM-001 §6",
+      "source_title": "Post-Market Surveillance",
+      "topic": "post-market",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "PMS Plan",
+        "Periodic Safety Update Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-010"
+      ],
+      "verbatim": "\"Establish a post-market surveillance system for each device — per\nEU MDR Articles 83–86 + Annex III, ISO 13485:2016 §8.2.1, and\nISO/TR 20416. PMS data shall feed the Risk Management File, the\nClinical Evaluation Plan, and the design change-control loop.\nPeriodic Safety Update Reports (PSURs) are produced per the device\nclass cadence.\"\n",
+      "extracted_requirements": [
+        "Author a PMS Plan per GL-TMP-PM-001 for each device program.",
+        "Define data sources: complaints, vigilance, literature, registries, field service.",
+        "Feed PMS findings into RMF and CEP at defined cadences.",
+        "Produce PSUR / PMSR per device class cadence."
+      ],
+      "context": "PMS closes the loop from field back into design controls. The\n'feedback into RMF' clause is the one most likely to surface in\naudit — projects often have PMS data but no documented feedback\npathway into the risk file."
+    }
+  ],
+  "by_source": {
+    "UNKNOWN": [
+      "QMS-ARCH-001",
+      "QMS-ARCH-002",
+      "QMS-REQ-001",
+      "QMS-DOUT-001",
+      "QMS-DR-001",
+      "QMS-VER-001",
+      "QMS-VAL-001",
+      "QMS-CC-001",
+      "QMS-RM-001",
+      "QMS-SW-001",
+      "QMS-PM-001"
+    ]
+  },
+  "by_topic": {
+    "architecture": [
+      "QMS-ARCH-001",
+      "QMS-ARCH-002"
+    ],
+    "configuration-change": [
+      "QMS-CC-001"
+    ],
+    "design-outputs": [
+      "QMS-DOUT-001"
+    ],
+    "design-reviews": [
+      "QMS-DR-001"
+    ],
+    "post-market": [
+      "QMS-PM-001"
+    ],
+    "requirements": [
+      "QMS-REQ-001"
+    ],
+    "risk-management": [
+      "QMS-RM-001"
+    ],
+    "software-lifecycle": [
+      "QMS-SW-001"
+    ],
+    "validation": [
+      "QMS-VAL-001"
+    ],
+    "verification": [
+      "QMS-VER-001"
+    ]
+  },
+  "obl_to_qms": {
+    "OBL-13485-001": [
+      "QMS-ARCH-001"
+    ],
+    "OBL-13485-002": [
+      "QMS-ARCH-001",
+      "QMS-ARCH-002"
+    ],
+    "OBL-13485-003": [
+      "QMS-REQ-001"
+    ],
+    "OBL-13485-004": [
+      "QMS-DOUT-001"
+    ],
+    "OBL-13485-005": [
+      "QMS-DR-001"
+    ],
+    "OBL-13485-006": [
+      "QMS-VER-001"
+    ],
+    "OBL-13485-007": [
+      "QMS-VAL-001"
+    ],
+    "OBL-13485-009": [
+      "QMS-CC-001"
+    ],
+    "OBL-13485-010": [
+      "QMS-PM-001"
+    ],
+    "OBL-14971-001": [
+      "QMS-RM-001"
+    ],
+    "OBL-14971-002": [
+      "QMS-RM-001"
+    ],
+    "OBL-510K-002": [
+      "QMS-CC-001"
+    ],
+    "OBL-62304-001": [
+      "QMS-SW-001"
+    ],
+    "OBL-62304-002": [
+      "QMS-SW-001"
+    ]
+  },
+  "qms_to_obl": {
+    "QMS-ARCH-001": [
+      "OBL-13485-001",
+      "OBL-13485-002"
+    ],
+    "QMS-ARCH-002": [
+      "OBL-13485-002"
+    ],
+    "QMS-REQ-001": [
+      "OBL-13485-003"
+    ],
+    "QMS-DOUT-001": [
+      "OBL-13485-004"
+    ],
+    "QMS-DR-001": [
+      "OBL-13485-005"
+    ],
+    "QMS-VER-001": [
+      "OBL-13485-006"
+    ],
+    "QMS-VAL-001": [
+      "OBL-13485-007"
+    ],
+    "QMS-CC-001": [
+      "OBL-13485-009",
+      "OBL-510K-002"
+    ],
+    "QMS-RM-001": [
+      "OBL-14971-001",
+      "OBL-14971-002"
+    ],
+    "QMS-SW-001": [
+      "OBL-62304-001",
+      "OBL-62304-002"
+    ],
+    "QMS-PM-001": [
+      "OBL-13485-010"
+    ]
+  }
 }

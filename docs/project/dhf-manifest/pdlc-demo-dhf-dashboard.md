@@ -15,7 +15,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 ## Overall
 
 - **Authoring**: `░░░░░░░░░░░░░░░░░░░░` 0/437 bound (0.0%)
-- **QMS coverage**: `░░░░░░░░░░░░░░░░░░░░` 0/437 direct (0.0%) · 0 topic-only · 437 no-grounding
+- **QMS coverage**: `████░░░░░░░░░░░░░░░░` 92/437 direct (21.1%) · 284 topic-only · 61 no-grounding
 
 ---
 
@@ -23,15 +23,15 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | DHF | Obligations | Bound (FOUND) | GAP | QMS direct | QMS topic-only | No grounding |
 |-----|------------|---------------|-----|-----------|---------------|--------------|
-| `pca-device` | 75 | 0 (0.0%) | 75 | 0 (0.0%) | 0 | 75 |
-| `connectivity-adapter` | 49 | 0 (0.0%) | 49 | 0 (0.0%) | 0 | 49 |
-| `drug-library-manager` | 49 | 0 (0.0%) | 49 | 0 (0.0%) | 0 | 49 |
-| `fleet-management` | 41 | 0 (0.0%) | 41 | 0 (0.0%) | 0 | 41 |
-| `compliance-reports` | 41 | 0 (0.0%) | 41 | 0 (0.0%) | 0 | 41 |
-| `analytics-dashboard` | 41 | 0 (0.0%) | 41 | 0 (0.0%) | 0 | 41 |
-| `inventory-tracker` | 41 | 0 (0.0%) | 41 | 0 (0.0%) | 0 | 41 |
-| `alerts-engine` | 50 | 0 (0.0%) | 50 | 0 (0.0%) | 0 | 50 |
-| `clinical-interface` | 50 | 0 (0.0%) | 50 | 0 (0.0%) | 0 | 50 |
+| `pca-device` | 75 | 0 (0.0%) | 75 | 12 (16.0%) | 42 | 21 |
+| `connectivity-adapter` | 49 | 0 (0.0%) | 49 | 10 (20.4%) | 34 | 5 |
+| `drug-library-manager` | 49 | 0 (0.0%) | 49 | 10 (20.4%) | 34 | 5 |
+| `fleet-management` | 41 | 0 (0.0%) | 41 | 10 (24.4%) | 26 | 5 |
+| `compliance-reports` | 41 | 0 (0.0%) | 41 | 10 (24.4%) | 26 | 5 |
+| `analytics-dashboard` | 41 | 0 (0.0%) | 41 | 10 (24.4%) | 26 | 5 |
+| `inventory-tracker` | 41 | 0 (0.0%) | 41 | 10 (24.4%) | 26 | 5 |
+| `alerts-engine` | 50 | 0 (0.0%) | 50 | 10 (20.0%) | 35 | 5 |
+| `clinical-interface` | 50 | 0 (0.0%) | 50 | 10 (20.0%) | 35 | 5 |
 
 ---
 
@@ -39,21 +39,21 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 4 | 0 | 0 | 0 | 4 |
-| Requirements | 4 | 0 | 0 | 0 | 4 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 1 | 0 | 0 | 0 | 1 |
-| Risk Management | 16 | 0 | 0 | 0 | 16 |
-| Verification | 5 | 0 | 0 | 0 | 5 |
-| Validation | 4 | 0 | 0 | 0 | 4 |
-| Software Lifecycle | 8 | 0 | 0 | 0 | 8 |
-| Configuration & Change Control | 3 | 0 | 0 | 0 | 3 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 4 | 0 | 0 | 4 | 0 |
+| Requirements | 4 | 0 | 1 | 3 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 1 | 0 | 1 | 0 | 0 |
+| Risk Management | 16 | 0 | 2 | 14 | 0 |
+| Verification | 5 | 0 | 1 | 4 | 0 |
+| Validation | 4 | 0 | 1 | 3 | 0 |
+| Software Lifecycle | 8 | 0 | 2 | 6 | 0 |
+| Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Labeling & IFU | 1 | 0 | 0 | 0 | 1 |
 | Human Factors | 6 | 0 | 0 | 0 | 6 |
 | Cybersecurity | 5 | 0 | 0 | 0 | 5 |
-| Post-Market | 5 | 0 | 0 | 0 | 5 |
-| Regulatory Submission | 10 | 0 | 0 | 0 | 10 |
+| Post-Market | 5 | 0 | 0 | 5 | 0 |
+| Regulatory Submission | 10 | 0 | 1 | 0 | 9 |
 
 ---
 
@@ -61,16 +61,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 4 | 0 | 0 | 0 | 4 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 8 | 0 | 0 | 0 | 8 |
-| Verification | 6 | 0 | 0 | 0 | 6 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 4 | 0 | 0 | 0 | 4 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 4 | 0 | 0 | 4 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 8 | 0 | 0 | 8 | 0 |
+| Verification | 6 | 0 | 1 | 5 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -79,16 +79,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 4 | 0 | 0 | 0 | 4 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 8 | 0 | 0 | 0 | 8 |
-| Verification | 6 | 0 | 0 | 0 | 6 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 4 | 0 | 0 | 0 | 4 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 4 | 0 | 0 | 4 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 8 | 0 | 0 | 8 | 0 |
+| Verification | 6 | 0 | 1 | 5 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -97,16 +97,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 1 | 0 | 0 | 0 | 1 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 6 | 0 | 0 | 0 | 6 |
-| Verification | 4 | 0 | 0 | 0 | 4 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 3 | 0 | 0 | 0 | 3 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 1 | 0 | 0 | 1 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 6 | 0 | 0 | 6 | 0 |
+| Verification | 4 | 0 | 1 | 3 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -115,16 +115,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 1 | 0 | 0 | 0 | 1 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 6 | 0 | 0 | 0 | 6 |
-| Verification | 4 | 0 | 0 | 0 | 4 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 3 | 0 | 0 | 0 | 3 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 1 | 0 | 0 | 1 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 6 | 0 | 0 | 6 | 0 |
+| Verification | 4 | 0 | 1 | 3 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -133,16 +133,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 1 | 0 | 0 | 0 | 1 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 6 | 0 | 0 | 0 | 6 |
-| Verification | 4 | 0 | 0 | 0 | 4 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 3 | 0 | 0 | 0 | 3 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 1 | 0 | 0 | 1 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 6 | 0 | 0 | 6 | 0 |
+| Verification | 4 | 0 | 1 | 3 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -151,16 +151,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 1 | 0 | 0 | 0 | 1 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 2 | 0 | 0 | 0 | 2 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 6 | 0 | 0 | 0 | 6 |
-| Verification | 4 | 0 | 0 | 0 | 4 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 3 | 0 | 0 | 0 | 3 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 1 | 0 | 0 | 1 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 2 | 0 | 1 | 1 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 6 | 0 | 0 | 6 | 0 |
+| Verification | 4 | 0 | 1 | 3 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -169,16 +169,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 4 | 0 | 0 | 0 | 4 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 3 | 0 | 0 | 0 | 3 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 8 | 0 | 0 | 0 | 8 |
-| Verification | 6 | 0 | 0 | 0 | 6 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 4 | 0 | 0 | 0 | 4 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 4 | 0 | 0 | 4 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 3 | 0 | 1 | 2 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 8 | 0 | 0 | 8 | 0 |
+| Verification | 6 | 0 | 1 | 5 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
@@ -187,16 +187,16 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | Topic | Obligations | Bound | QMS direct | QMS topic-only | No grounding |
 |-------|------------|-------|-----------|---------------|--------------|
-| Architecture | 4 | 0 | 0 | 0 | 4 |
-| Requirements | 6 | 0 | 0 | 0 | 6 |
-| Design Outputs | 3 | 0 | 0 | 0 | 3 |
-| Traceability | 2 | 0 | 0 | 0 | 2 |
-| Risk Management | 8 | 0 | 0 | 0 | 8 |
-| Verification | 6 | 0 | 0 | 0 | 6 |
-| Validation | 2 | 0 | 0 | 0 | 2 |
-| Software Lifecycle | 10 | 0 | 0 | 0 | 10 |
-| Configuration & Change Control | 4 | 0 | 0 | 0 | 4 |
-| Design Reviews | 1 | 0 | 0 | 0 | 1 |
+| Architecture | 4 | 0 | 0 | 4 | 0 |
+| Requirements | 6 | 0 | 1 | 5 | 0 |
+| Design Outputs | 3 | 0 | 1 | 2 | 0 |
+| Traceability | 2 | 0 | 1 | 0 | 1 |
+| Risk Management | 8 | 0 | 0 | 8 | 0 |
+| Verification | 6 | 0 | 1 | 5 | 0 |
+| Validation | 2 | 0 | 0 | 2 | 0 |
+| Software Lifecycle | 10 | 0 | 4 | 6 | 0 |
+| Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
+| Design Reviews | 1 | 0 | 1 | 0 | 0 |
 | Human Factors | 4 | 0 | 0 | 0 | 4 |
 
 ---
