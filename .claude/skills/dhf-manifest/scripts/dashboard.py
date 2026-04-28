@@ -18,13 +18,14 @@ from pathlib import Path
 from datetime import date
 from collections import defaultdict
 
-from _project_slug import project_slug, manifest_filename
+from _project_slug import project_slug, manifest_filename, project_display_name
 
 SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = SKILL_DIR.parent.parent.parent
 
 PROJECT_SLUG = project_slug(PROJECT_ROOT)
+PROJECT_NAME = project_display_name(PROJECT_ROOT)
 MANIFEST_MD_NAME = manifest_filename(PROJECT_SLUG, "manifest.md")
 MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
 BY_SECTION_MD_NAME = manifest_filename(PROJECT_SLUG, "by-section.md")
@@ -110,7 +111,7 @@ def render_dashboard(tier4: dict) -> str:
     pct_direct = round(100 * grand_direct / grand_total, 1) if grand_total else 0
 
     lines = [
-        "# MedTech Project DHF — Dashboard",
+        f"# {PROJECT_NAME} DHF — Dashboard",
         "",
         f"**Generated**: {today}  ",
         f"**Manifest date**: {generated}  ",

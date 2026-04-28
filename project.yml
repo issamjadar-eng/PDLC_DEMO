@@ -53,49 +53,140 @@ project:
 #   filing     — submission folder this DHF rolls up into (null if not scoped)
 #   parent     — parent DHF path (null for top-level)
 
+# ─── DHF Manifest scope vector ───
+#
+# Read by /dhf-manifest build-manifest to project the Reference DHF (Tier 3)
+# through this project's specific scope. Added 2026-04-27 as part of ben/035.
+scope:
+  hardware: true              # PP3500 has SiMD pump firmware + custom medical electrical hardware
+  cloud_hosted: true          # cloud-suite components hosted in shared cloud infra
+  tool_validation: true       # development tool validation in scope
+  multi_function_device: true # pump + cloud-suite + connectivity-adapter under one program
+  ota_updates: true           # OTA updates for cloud-suite + connectivity firmware
+  usability_hf: true          # IEC 62366-1 HFE in scope
+  clinical_evaluation: literature
+  interoperability: true      # HL7 / FHIR / DICOM via connectivity-adapter
+  geography: [us]
+
 dhfs:
-  # Top-level DHFs
-  - path: pca-device
-    regulatory: in-development
-    filing: 510k
-    parent: null
-  - path: connectivity-adapter
+  # ── System DHF — lead device (PP3500 PCA infusion pump) ──
+  - leaf: pca-device
+    path: pca-device
+    role: system
+    composes: []
+    classification:
+      samd: false
+      class: II
+      iec62304: C
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: null
 
-  # Platform DHF (children carry the regulatory weight)
-  - path: cloud-suite
+  # ── Item DHF — connectivity adapter (separate filing) ──
+  - leaf: connectivity-adapter
+    path: connectivity-adapter
+    role: item
+    classification:
+      samd: true
+      class: II
+      iec62304: B
+      ai_enabled: false
+    regulatory: in-development
+    filing: 510k
+    parent: null
+
+  # ── Platform System DHF — cloud-suite (composes 7 children) ──
+  - leaf: cloud-suite
+    path: cloud-suite
+    role: system
+    composes:
+      - drug-library-manager
+      - fleet-management
+      - compliance-reports
+      - analytics-dashboard
+      - inventory-tracker
+      - alerts-engine
+      - clinical-interface
     regulatory: mixed
     filing: null
     parent: null
 
-  # cloud-suite child DHFs (all nested under cloud-suite/dhfs/)
-  - path: cloud-suite/dhfs/drug-library-manager
+  # ── Cloud-suite child item DHFs ──
+  - leaf: drug-library-manager
+    path: cloud-suite/dhfs/drug-library-manager
+    role: item
+    classification:
+      samd: true
+      class: II
+      iec62304: B
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/fleet-management
+  - leaf: fleet-management
+    path: cloud-suite/dhfs/fleet-management
+    role: item
+    classification:
+      samd: false
+      class: non-device
+      iec62304: A
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/compliance-reports
+  - leaf: compliance-reports
+    path: cloud-suite/dhfs/compliance-reports
+    role: item
+    classification:
+      samd: false
+      class: non-device
+      iec62304: A
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/analytics-dashboard
+  - leaf: analytics-dashboard
+    path: cloud-suite/dhfs/analytics-dashboard
+    role: item
+    classification:
+      samd: false
+      class: non-device
+      iec62304: A
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/inventory-tracker
+  - leaf: inventory-tracker
+    path: cloud-suite/dhfs/inventory-tracker
+    role: item
+    classification:
+      samd: false
+      class: non-device
+      iec62304: A
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/alerts-engine
+  - leaf: alerts-engine
+    path: cloud-suite/dhfs/alerts-engine
+    role: item
+    classification:
+      samd: true
+      class: II
+      iec62304: C
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite
-  - path: cloud-suite/dhfs/clinical-interface
+  - leaf: clinical-interface
+    path: cloud-suite/dhfs/clinical-interface
+    role: item
+    classification:
+      samd: true
+      class: II
+      iec62304: C
+      ai_enabled: false
     regulatory: in-development
     filing: 510k
     parent: cloud-suite

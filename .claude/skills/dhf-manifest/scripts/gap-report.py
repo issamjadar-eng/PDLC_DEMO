@@ -25,9 +25,10 @@ SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = SKILL_DIR.parent.parent.parent
 
-from _project_slug import project_slug, manifest_filename
+from _project_slug import project_slug, manifest_filename, project_display_name
 
 PROJECT_SLUG = project_slug(PROJECT_ROOT)
+PROJECT_NAME = project_display_name(PROJECT_ROOT)
 MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
 TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest" / MANIFEST_JSON_NAME
 TIER3_YAML = SKILL_DIR / "data/tier3-reference/reference-dhf.yml"
@@ -95,7 +96,7 @@ def render_gap_report(tier4: dict, tier3_map: dict) -> str:
     pct_complete = round(100 * grand_found / grand_total, 1) if grand_total else 0
 
     lines = [
-        "# MedTech Project DHF — Gap Report",
+        f"# {PROJECT_NAME} DHF — Gap Report",
         "",
         f"**Generated**: {today}  ",
         f"**Manifest date**: {generated}  ",

@@ -86,6 +86,18 @@ def project_slug(project_root: Path | None = None) -> str:
     return "dhf"
 
 
+def project_display_name(project_root: Path | None = None) -> str:
+    """Human-readable project name for output titles. Falls back to "DHF"
+    when project.yml is missing or has no name."""
+    root = project_root or _find_project_root()
+    yml_path = root / "project.yml"
+    if not yml_path.exists():
+        return "DHF"
+    text = yml_path.read_text(encoding="utf-8", errors="replace")
+    name = _read_field(text, ("project", "name"))
+    return name or "DHF"
+
+
 def manifest_filename(slug: str, suffix: str) -> str:
     """Compose an output filename: `<slug>-dhf-<suffix>`.
 
