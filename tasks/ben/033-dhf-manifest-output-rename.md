@@ -2,7 +2,7 @@
 
 **ID**: 033
 **Created**: 2026-04-27
-**Status**: Complete (pending push)
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -47,7 +47,7 @@ The `dhf-manifest` skill writes its outputs as `hiplink-manifest.{md,json}`, `hi
 - [x] Migration note written into `dhf-manifest/README.md` v6 changelog entry — projects rerun `build-manifest` after pull; old `hiplink-*` outputs remain on disk and can be deleted by the project owner; projects relying on the `hiplink-intra-op` "tablet / offline-capable" descriptor must add `subtitle_extra` to the DHF's classification block.
 - [x] Tightened the `best-practices` "Skill content is anonymized" check — dropped the `hiplink-manifest|hiplink-by-section|hiplink-dashboard` filename exception (no longer needed since the rename is in place); added explicit allowed exception for `skill-creator/SKILL.md` glossary section and post-update changelog notes that name what was renamed.
 - [x] Bumped dhf-manifest version 5 → 6, dated 2026-04-27.
-- [ ] Push to hitachi as a single PR titled `dhf-manifest: parameterize manifest output filenames from project.yml project.name`.
+- [x] Pushed to hitachi as PR #90, squash-merged at `a17f9be6e111714aeddf506901a0870990c13c8f`. Local hitachi checkout fast-forwarded.
 - [ ] PDLC_DEMO local: rerun `build-manifest`/`build-qms` after merge to regenerate to the new filenames (currently blocked by a pre-existing project.yml gap — no `dhfs[]` with `role: system` — out of scope for this task).
 - [ ] arthrex-pccp coordination: their next `/sync-skills pull` will pick up the rename; `hiplink-manifest.md` and friends still on disk can be left in place or deleted by the project owner.
 

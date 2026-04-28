@@ -4,6 +4,20 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-27 — push (dhf-manifest output filename parameterization)
+
+- Files: 12 across `skills/dhf-manifest/` (SKILL.md, README.md, 3× actions/, 4× scripts/, new `scripts/_project_slug.py`) + `skills/best-practices/SKILL.md` + `skills/skill-creator/SKILL.md`
+- Branch: `sync/pdlc-demo-dhf-manifest-rename-2026-04-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/90
+- Commit: "dhf-manifest: parameterize output filenames from project.yml project.name"
+- Status: merged (--merge requested)
+- Merge commit: `a17f9be6e111714aeddf506901a0870990c13c8f`
+- Hitachi HEAD after sync: `a17f9be`
+- Trigger: closes the structural follow-up to ben/032's prose-only audit. Output filenames now derive from `project.yml` `project.name` (slugified, with optional `dhf_manifest.output_prefix` override). The hardcoded `hiplink-intra-op` leaf-name branch in `build-manifest.py` is replaced with a project-supplied `dhfs[].classification.subtitle_extra` field. Skill bumped 5 → 6. The `best-practices` anonymization lint dropped the `hiplink-*` exception clause (no longer needed) and added explicit exceptions for the glossary doc + post-update changelog notes.
+- Discovered + executed under PDLC_DEMO ben/033. arthrex-pccp picks up on next `/sync-skills pull`; their existing `hiplink-*` built outputs remain on disk until they delete or rerun.
+
+---
+
 ## 2026-04-27 — push (anonymization regression-guard lint)
 
 - Files: `skills/best-practices/SKILL.md`, `skills/skill-creator/SKILL.md`
