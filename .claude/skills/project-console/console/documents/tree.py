@@ -4,7 +4,23 @@ from pathlib import Path
 import yaml
 
 ROOT_NAMES = ["docs", "tasks"]
-TOP_FILES = ["project.yml"]
+# Top-level files exposed at the root of the tree. The set covers the
+# canonical entry-point docs every medtech-docs project usually has at
+# repo root (CLAUDE, getting-started, glossary, project-overview in any
+# format, setup, CHANGELOG) plus project.yml. Any listed name that
+# doesn't exist on disk is silently skipped.
+TOP_FILES = [
+    "CLAUDE.md",
+    "getting-started.md",
+    "glossary.md",
+    "setup.md",
+    "CHANGELOG.md",
+    "project-overview.md",
+    "project-overview.pdf",
+    "project-overview.pptx",
+    "project.yml",
+    "trace-matrix.yml",
+]
 
 # OS / editor junk files to hide from the documents tree. These are separate
 # from the dotfile filter (dotfiles are hidden by `name.startswith(".")` —
@@ -42,24 +58,82 @@ class Entry:
 
 
 def _roots(repo_root: Path) -> dict[str, Path]:
+    """Single-segment roots shown in the Documents tree sidebar."""
     return {name: repo_root / name for name in ROOT_NAMES if (repo_root / name).is_dir()}
+
+
+def _extended_roots(repo_root: Path) -> dict[str, Path]:
+    """All virtual-path roots the Documents API can resolve, including
+    multi-segment skill-library roots configured via `grounding.extra_roots`.
+
+    Citations emitted by the assistant drawer (e.g.
+    `.claude/skills/medtech-docs/references/standards/iec-62304.md`) resolve
+    via this map with longest-prefix match. Both the Documents sidebar tree
+    and the file-serving API consume this.
+    """
+    roots: dict[str, Path] = {}
+    roots.update(_roots(repo_root))
+    try:
+        from console.config import get_config
+        for rel in get_config().grounding_roots:
+            rel_norm = rel.strip("/")
+            if not rel_norm or rel_norm in roots:
+                continue
+            head = rel_norm.split("/")[0]
+            if head in roots:
+                # Skip any root whose first segment is already a top-level
+                # root (avoid shadowing — `docs/project` is a subfolder of
+                # `docs`, which is already resolvable).
+                continue
+            p = repo_root / rel_norm
+            if p.is_dir():
+                roots[rel_norm] = p
+    except Exception:
+        pass
+    return roots
+
+
+def _extra_root_entries(repo_root: Path) -> list[tuple[str, str, Path]]:
+    """Return (display_name, virtual_path, abs_path) for each multi-segment
+    extra grounding root (those NOT already in ROOT_NAMES). Sidebar tree
+    renders these so users can browse skill-library references directly.
+    Display names strip the leading `.claude/skills/` so the label reads
+    e.g. `medtech-docs/references` instead of the noisy full path.
+    """
+    out: list[tuple[str, str, Path]] = []
+    for virtual, abs_path in _extended_roots(repo_root).items():
+        if virtual in ROOT_NAMES:
+            continue
+        display = virtual
+        prefix = ".claude/skills/"
+        if display.startswith(prefix):
+            display = display[len(prefix):]
+        out.append((display, virtual, abs_path))
+    return out
 
 
 def resolve_virtual_path(repo_root: Path, virtual: str) -> Path | None:
     virtual = virtual.strip("/")
     if not virtual:
         return None
-    parts = virtual.split("/")
-    head = parts[0]
-    if head in TOP_FILES and len(parts) == 1:
-        p = (repo_root / head).resolve()
+    if virtual in TOP_FILES:
+        p = (repo_root / virtual).resolve()
         return p if p.is_file() else None
-    root_map = _roots(repo_root)
-    if head not in root_map:
+    root_map = _extended_roots(repo_root)
+    # Longest-prefix match so multi-segment roots (e.g.
+    # `.claude/skills/medtech-docs/references`) win over any prefix-only
+    # roots that might accidentally collide.
+    matching_root: str | None = None
+    for rv in sorted(root_map, key=len, reverse=True):
+        if virtual == rv or virtual.startswith(rv + "/"):
+            matching_root = rv
+            break
+    if matching_root is None:
         return None
-    root = root_map[head].resolve()
+    root = root_map[matching_root].resolve()
+    sub = virtual[len(matching_root):].lstrip("/")
     try:
-        target = (root / "/".join(parts[1:])).resolve()
+        target = (root / sub).resolve() if sub else root
     except (OSError, ValueError):
         return None
     try:
@@ -91,6 +165,10 @@ def list_dir(repo_root: Path, virtual: str) -> list[Entry]:
                         excerpt=_excerpt(p),
                     )
                 )
+        # Multi-segment grounding roots (skill libraries) get listed last —
+        # their virtual_path is the full relative path so navigation works.
+        for display, vpath, _abs in _extra_root_entries(repo_root):
+            entries.append(Entry(name=display, path=vpath, is_dir=True, size=None))
         return entries
 
     abs_path = resolve_virtual_path(repo_root, virtual)
@@ -155,6 +233,12 @@ def list_tree(repo_root: Path, max_depth: int = 3) -> list[dict]:
         p = repo_root / f
         if p.is_file():
             nodes.append(_entry_dict(f, f, p))
+    # Multi-segment grounding roots — skill-library references — render
+    # after the project docs/tasks. Display name strips `.claude/skills/`.
+    for display, vpath, abs_path in _extra_root_entries(repo_root):
+        node = _entry_dict(display, vpath, abs_path)
+        node["children"] = _children(repo_root, abs_path, vpath, depth=1, max_depth=max_depth)
+        nodes.append(node)
     return nodes
 
 

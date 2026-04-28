@@ -64,7 +64,9 @@ For `STRATEGY CONTENT` tags, check the line immediately after the tag for a revi
 |---------|--------|
 | `<!-- STRATEGY REVIEWED: superseded by task NNN -->` | `superseded (task NNN)` — block excluded from assembly |
 | `<!-- STRATEGY REVIEWED: coexists with task NNN -->` | `coexists (task NNN)` — confirmed complementary |
-| `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` | `pending review (task NNN)` — deferred, re-prompts next assembly |
+| `<!-- STRATEGY PROPOSED: vs task NNN, section "X" -->` | `proposed (task NNN)` — proposal callout in strategy doc, re-prompts next assembly with accept / withdraw / leave |
+| `<!-- STRATEGY WITHDRAWN: vs task NNN -->` | `withdrawn (task NNN)` — block excluded from assembly |
+| `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` (v12 legacy) | `proposed (task NNN)` — treated as equivalent to `STRATEGY PROPOSED`; auto-upgrades on first v13 assembly |
 | (no marker) | `active` — normal block |
 
 ### Step 5 — Report

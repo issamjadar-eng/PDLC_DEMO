@@ -42,6 +42,29 @@
   const newBtn      = document.getElementById('pc-thread-new');
   const clearBtn    = document.getElementById('pc-thread-clear');
   const messagesEl  = document.getElementById('pc-messages');
+
+  // Jump-to-latest pill — shown when the user has scrolled up during a
+  // streaming response (sticky-scroll is disabled at that point so we
+  // don't yank them back). Click returns to the tail and hides the pill;
+  // manually scrolling back to near-bottom also hides it.
+  const jumpToLatestBtn = (function mountJumpToLatest() {
+    if (!messagesEl || !messagesEl.parentElement) return null;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pc-jump-latest';
+    btn.textContent = '↓ Jump to latest';
+    btn.addEventListener('click', () => {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      btn.classList.remove('visible');
+    });
+    messagesEl.parentElement.appendChild(btn);
+    messagesEl.addEventListener('scroll', () => {
+      const nearBottom =
+        messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 60;
+      if (nearBottom) btn.classList.remove('visible');
+    });
+    return btn;
+  })();
   const form        = document.getElementById('pc-input-form');
   const input       = document.getElementById('pc-input');
   const sendBtn     = document.getElementById('pc-send');
@@ -294,9 +317,80 @@
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
+  // -------- citation post-processing (task 099 v1.7.1) ---------------------
+  //
+  // The assistant is instructed (via the discovery rubric) to emit numbered
+  // footnote-style citations: "[1]", "[2]" inline + a final block of
+  // "[N]: docs/path/to/doc.md[#anchor]" definitions. We extract those
+  // definitions from the raw markdown, strip them from the body, then
+  // transform inline "[N]" tokens into clickable <sup> links that open the
+  // Documents viewer at the cited path (optionally scrolling to a heading
+  // anchor). Whatever's left goes into a collapsed Sources <details> block.
+  //
+  // Tolerant by design: if the agent emits a bad anchor or a missing
+  // footnote, we degrade to a plain superscript + best-effort link.
+
+  // Parses trailing footnote definitions like "[1]: docs/path/...md#anchor".
+  // Returns {body, citations: Map<string, {path, anchor}>}.
+  function extractCitations(src) {
+    const citations = new Map();
+    const lines = src.split('\n');
+    // Scan from the end; footnote defs typically live in a trailing block.
+    // Stop at the first non-footnote, non-blank line.
+    const footnoteRe = /^\s*\[(\d+)\]:\s+(\S[^\s#]*?\.md)(#[^\s]+)?\s*$/;
+    let keepUntil = lines.length;
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i];
+      if (line.trim() === '') continue;
+      const m = footnoteRe.exec(line);
+      if (m) {
+        const num = m[1];
+        const path = m[2];
+        const anchor = m[3] || '';
+        citations.set(num, { path, anchor });
+        keepUntil = i;
+        continue;
+      }
+      break;
+    }
+    return {
+      body: lines.slice(0, keepUntil).join('\n').replace(/\s+$/, ''),
+      citations,
+    };
+  }
+
+  // After markdown → HTML render, wrap any "[N]" inline references in a
+  // clickable <sup><a>.
+  function wrapInlineCitations(html, citations) {
+    if (citations.size === 0) return html;
+    return html.replace(/\[(\d+)\](?!\(|:)/g, (m, num) => {
+      const cite = citations.get(num);
+      if (!cite) return m;
+      const href = `/documents#path=${encodeURIComponent(cite.path)}${cite.anchor}`;
+      const title = cite.path + (cite.anchor ? ' · ' + cite.anchor.slice(1) : '');
+      return `<sup class="pc-cite-sup"><a class="pc-cite" href="${href}" target="_blank" rel="noopener" title="${title}">[${num}]</a></sup>`;
+    });
+  }
+
+  // Build the trailing "Sources" <details> block from the citation map.
+  function renderSourcesBlock(citations) {
+    if (citations.size === 0) return '';
+    const rows = Array.from(citations.entries())
+      .sort((a, b) => parseInt(a[0], 10) - parseInt(b[0], 10))
+      .map(([num, { path, anchor }]) => {
+        const href = `/documents#path=${encodeURIComponent(path)}${anchor}`;
+        const label = path + (anchor ? ' · ' + anchor.slice(1) : '');
+        return `<li>[${num}] <a class="pc-cite" href="${href}" target="_blank" rel="noopener">${label}</a></li>`;
+      })
+      .join('');
+    return `<details class="pc-sources"><summary>Sources (${citations.size})</summary><ol class="pc-cite-list">${rows}</ol></details>`;
+  }
+
   function setMessageContent(el, role, content) {
     if (role === 'assistant') {
-      el.innerHTML = renderMarkdown(content);
+      const { body, citations } = extractCitations(content);
+      const html = renderMarkdown(body);
+      el.innerHTML = wrapInlineCitations(html, citations) + renderSourcesBlock(citations);
     } else {
       el.textContent = content;
     }
@@ -308,6 +402,7 @@
     setMessageContent(el, role, content);
     messagesEl.appendChild(el);
     messagesEl.scrollTop = messagesEl.scrollHeight;
+    if (jumpToLatestBtn) jumpToLatestBtn.classList.remove('visible');
     return el;
   }
 
@@ -354,6 +449,24 @@
       const decoder = new TextDecoder();
       let buf = '';
       let full = '';
+      const pendingWarnings = [];
+      let warningsFlushed = false;
+
+      function flushWarnings() {
+        if (warningsFlushed || pendingWarnings.length === 0) return;
+        warningsFlushed = true;
+        const details = document.createElement('details');
+        details.className = 'pc-msg pc-msg-warning-details';
+        const summary = document.createElement('summary');
+        summary.textContent = '⚠ Source budget notice (' + pendingWarnings.length + ')';
+        details.appendChild(summary);
+        pendingWarnings.forEach(msg => {
+          const p = document.createElement('p');
+          p.textContent = msg;
+          details.appendChild(p);
+        });
+        messagesEl.insertBefore(details, assistantEl);
+      }
 
       while (true) {
         const { done, value } = await reader.read();
@@ -370,20 +483,35 @@
             try {
               const evt = JSON.parse(payload);
               if (evt.type === 'token') {
+                flushWarnings();
                 full += evt.text;
+                // Sticky auto-scroll: only auto-follow if the user was
+                // already near the bottom. If they've scrolled up to
+                // re-read earlier text while the answer is still
+                // streaming, respect their position.
+                const nearBottom =
+                  messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 60;
                 setMessageContent(assistantEl, 'assistant', full);
-                messagesEl.scrollTop = messagesEl.scrollHeight;
+                if (nearBottom) {
+                  messagesEl.scrollTop = messagesEl.scrollHeight;
+                } else if (jumpToLatestBtn) {
+                  jumpToLatestBtn.classList.add('visible');
+                }
               } else if (evt.type === 'error') {
                 assistantEl.classList.remove('is-streaming');
                 assistantEl.classList.add('pc-msg-error');
                 assistantEl.textContent = 'Error: ' + evt.message;
               } else if (evt.type === 'warning') {
-                // Surface warnings as an inline notice above the stream.
-                const w = document.createElement('div');
-                w.className = 'pc-msg pc-msg-warning muted small';
-                w.textContent = '⚠ ' + evt.message;
-                messagesEl.insertBefore(w, assistantEl);
+                pendingWarnings.push(evt.message);
+              } else if (evt.type === 'info') {
+                // Grounding preflight info (Phase 2 task 099): Core/Index
+                // sizing. Rendered above the response as a small muted line.
+                const i = document.createElement('div');
+                i.className = 'pc-msg pc-msg-info muted small';
+                i.textContent = 'ℹ ' + evt.message;
+                messagesEl.insertBefore(i, assistantEl);
               } else if (evt.type === 'done') {
+                flushWarnings();
                 assistantEl.classList.remove('is-streaming');
               }
             } catch (e) { /* skip malformed frame */ }

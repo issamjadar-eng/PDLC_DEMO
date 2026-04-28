@@ -1,8 +1,8 @@
 ---
 name: secops
 description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, and `attest` actions.
-version: 3
-updated: 2026-04-20
+version: 6
+updated: 2026-04-23
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -142,22 +142,8 @@ Order matters for dependencies:
 Alphabetical directory iteration (`secops` after `task`) naturally satisfies this ordering. If future skills add ordering requirements, medtech-docs Step 5 may need an explicit dependency mechanism.
 
 ## Best Practices
-
-<!-- Read by /best-practices skill to audit project setup -->
-
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| SecOps skill installed | `.claude/skills/secops/SKILL.md` exists | Required |
-| project-secops agent present | `.claude/agents/project-secops.md` exists | Required |
-| SessionStart security hook registered | `settings.json` `hooks.SessionStart` contains an entry pointing to `security-assert.sh` | Required |
-| Permissions allow list present | `settings.json` has `permissions.allow` with ≥ 20 entries | Recommended |
-| `project.yml` has security block | `project.yml` contains a top-level `security:` key | Required |
-| SECOPS.md up to date | Every active team member has `tasks/{person}/SECOPS.md` with a timestamp younger than 7 days | Recommended |
+See [README.md](README.md) — consumed by `/best-practices` audit.
 
 ## Changelog
+See [README.md](README.md) for version history.
 
-- 3 (2026-04-20): **Roster-driven git identity alignment.** Added `scripts/resolve_user.py` — parses `project.yml` `team.active[]`, matches the current git identity via four heuristics (email / single-member / name-fuzzy / `$USER`-matches-task_folder), and on `--align-git` writes repo-local `git config user.email` + `user.name` to the roster values. Added step 6 to `setup` to run the resolver with `--align-git`. Makes `project.yml` the source of truth for git identity on this clone, regardless of the user's global git config. Shared with the `digest` skill — its SessionStart hook uses the same helper to key its throttle state file on `task_folder` instead of raw email slug. Built under ben/020. LOCAL divergence; upstream push deferred.
-  **Post-update:** Re-run `/secops setup` to align repo-local git config for this clone. The change is idempotent and only touches `--local` config (no impact on other projects).
-- 2 (2026-04-16): **Cross-platform regex fix in `security-assert.sh`.** 25+ uses of `\s` in `grep` and `sed` patterns silently no-op on macOS — BSD regex engines don't interpret `\s` as a whitespace class, so every yaml-parsing helper (`yaml_val`, `yaml_list`, `yaml_team_github`, `yaml_task_folder_for`) returned empty strings, and the hook early-exited at line 176 (`[[ -z "$TASK_FOLDER" ]] && exit 0`). Net effect: **secops was a dead letter on macOS** — no team validation, no active-task gating, no SECOPS.md freshness check. Only Linux/WSL developers actually had security posture enforced. Fix: mass replacement of `\s` with the POSIX class `[[:space:]]` (works identically on both BSD and GNU regex). No behavior change on Linux. Discovered during task 067 cross-platform audit.
-  **Post-update:** no user action needed. Hook is installed via symlink — v2 takes effect on next `SessionStart`.
-- 1 (2026-04-12): Initial version. Packages `security-assert.sh`, `project-secops` agent, and canonical permissions allow list. `setup` action symlinks hooks, copies agent into `.claude/agents/`, registers SessionStart hook via `register-hook.sh`, and unions permissions into `settings.json`. Auto-discovered by `/medtech-docs init` Step 5. Created under task 049.

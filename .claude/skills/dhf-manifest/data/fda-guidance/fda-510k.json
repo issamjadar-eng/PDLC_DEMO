@@ -1,0 +1,141 @@
+{
+  "generated": "2026-04-24",
+  "category": "fda-guidance",
+  "source_file": "fda-510k.md",
+  "obligation_count": 4,
+  "obligations": [
+    {
+      "id": "OBL-510K-001",
+      "title": "Substantial Equivalence Argument",
+      "source": "FDA 510(k) SE Guidance (2014) §III Substantial Equivalence Standard",
+      "section": "Substantial Equivalence Standard — Decision Points 1–5",
+      "scope_flags": [
+        "510k"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — SE Argument",
+        "Predicate Device Analysis"
+      ],
+      "verbatim": "A device is substantially equivalent if it has the same intended use as the predicate device AND either the same technological characteristics, or different technological characteristics that do not raise different questions of safety and effectiveness and the device is shown to be as safe and effective as a legally marketed device.",
+      "extracted_requirements": [
+        "Demonstrate same intended use as the predicate device — intended use is the general purpose/function, encompassing indications for use",
+        {
+          "If same technological characteristics": "document that characteristics match"
+        },
+        {
+          "If different technological characteristics": "demonstrate they do NOT raise different safety/effectiveness questions AND the device is as safe and effective as a legally marketed device"
+        },
+        "Use a comparison table (new device vs. predicate) to document technological characteristics — FDA strongly recommends tabular format",
+        "An NSE determination classifies the device into Class III (requiring PMA or De Novo)"
+      ]
+    },
+    {
+      "id": "OBL-510K-002",
+      "title": "Predicate Device Selection",
+      "source": "FDA 510(k) SE Guidance (2014) §IV Predicate Device Selection",
+      "section": "Predicate Device Selection Principles",
+      "scope_flags": [
+        "510k"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Predicate Device Analysis",
+        "510(k) Submission — Device Description"
+      ],
+      "verbatim": "Only one predicate is required; FDA encourages identifying a single predicate to simplify review. A split predicate (comparing intended use to Device A while comparing technological characteristics to Device B with a different intended use) is prohibited. Multiple predicates are permitted when combining features from predicates with the same intended use.",
+      "extracted_requirements": [
+        "Select a primary predicate with intended use and technological characteristics most similar to HipLink",
+        {
+          "Do NOT use a split predicate": "cannot compare intended use to one device and technological characteristics to another device with a different intended use"
+        },
+        "Multiple predicates permitted if all have the same intended use — combining features from each",
+        {
+          "Predicate must be legally marketed": "cleared via 510(k), pre-May 28, 1976, or reclassified from Class III"
+        },
+        {
+          "For PCCP predicate comparison": "if predicate had an authorized PCCP, compare to the version BEFORE PCCP-implemented changes"
+        },
+        {
+          "Document predicate search rationale": "how the predicate was identified and why it is the most similar legally marketed device"
+        }
+      ]
+    },
+    {
+      "id": "OBL-510K-003",
+      "title": "Performance Data for SE",
+      "source": "FDA 510(k) SE Guidance (2014) §V Performance Data",
+      "section": "Performance Data Hierarchy — Least Burdensome",
+      "scope_flags": [
+        "510k"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Performance Testing",
+        "V&V Plan"
+      ],
+      "verbatim": "FDA follows a stepwise approach: (1) descriptive information about technological characteristics; (2) non-clinical bench performance testing/analytical studies; (3) non-clinical animal and/or biocompatibility studies; (4) clinical performance data. Clinical data may be requested when: new/modified indications need verification; technological differences are significant; non-clinical testing methods are limited or inappropriate.",
+      "extracted_requirements": [
+        {
+          "Apply the least-burdensome principle": "provide the minimum data necessary to demonstrate SE"
+        },
+        "Non-clinical performance testing (algorithm performance on representative datasets) is the primary data type for SaMD 510(k)s",
+        "Clinical data may be requested if AI performance differences are significant enough that non-clinical testing cannot demonstrate equivalence",
+        {
+          "For AI-DSF": "performance testing data typically serves as bench performance testing (step 2)"
+        },
+        "Document the rationale for the chosen performance data type and why it is sufficient"
+      ]
+    },
+    {
+      "id": "OBL-510K-004",
+      "title": "510(k) Summary Content",
+      "source": "FDA 510(k) SE Guidance (2014) §VI 510(k) Summary",
+      "section": "The 510(k) Summary",
+      "scope_flags": [
+        "510k"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — 510(k) Summary",
+        "SE Narrative"
+      ],
+      "verbatim": "Required per 21 CFR 807.92. Must be in sufficient detail to explain the basis for SE determination. FDA encourages 510(k) Summary (rather than 510(k) Statement) for transparency.",
+      "extracted_requirements": [
+        "Include a 510(k) Summary per 21 CFR 807.92 — required, not optional",
+        "Summary must contain sufficient detail to explain the SE determination basis",
+        "Summary must be publicly available — it becomes the public record of the clearance",
+        "FDA prefers the 510(k) Summary over the 510(k) Statement for transparency",
+        {
+          "For PCCP devices": "public summary should include planned PCCP modifications, testing methods, and user communication plan"
+        }
+      ]
+    }
+  ],
+  "by_topic": {
+    "regulatory-submission": [
+      "OBL-510K-001",
+      "OBL-510K-002",
+      "OBL-510K-003",
+      "OBL-510K-004"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-510K-001",
+    "OBL-510K-002",
+    "OBL-510K-003",
+    "OBL-510K-004"
+  ]
+}

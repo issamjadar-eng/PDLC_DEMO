@@ -1,1 +1,0 @@
-../skills/task/hooks/capture-signals.sh

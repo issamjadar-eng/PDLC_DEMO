@@ -1,0 +1,122 @@
+{% extends "_base.html" %}
+{% block title %}{{ workflow.title }} · Workflows · {{ config.project_name }}{% endblock %}
+{% block content %}
+<section class="landing">
+  <p><a href="/workflows">← Workflows</a></p>
+  <h1>
+    <span style="opacity: 0.6; font-family: var(--font-mono, monospace);">{{ workflow.code }}</span>
+    {{ workflow.title }}
+    <span title="{{ workflow.readiness_label }}">{{ workflow.readiness_pill }}</span>
+  </h1>
+  <p class="sub">{{ workflow.one_liner }}</p>
+
+  <div style="padding: 0.75rem 1rem; background: rgba(100,180,255,0.12); border-left: 4px solid #4a8fff; margin: 1rem 0;">
+    ⚠️ <strong>Dry-run prototype.</strong> This page scans candidate markdown files and previews the <code>/docflow export</code> plan. It does <em>not</em> invoke docflow yet — the plan is display-only.
+  </div>
+
+  <h2>Step 1 — Select source markdown files</h2>
+  <p class="muted">{{ candidate_count }} candidate file(s) found under <code>docs/project/dhfs/</code>, <code>docs/project/submissions/</code>, and <code>docs/project/strategies/</code>. Files under any <code>formal/</code> subtree, plus READMEs and indexes, are excluded.</p>
+
+  <form id="b1-form" onsubmit="return b1DryRun(event)">
+    <div style="margin: 0.5rem 0;">
+      <button type="button" onclick="b1ToggleAll(true)">Select all</button>
+      <button type="button" onclick="b1ToggleAll(false)">Clear</button>
+    </div>
+
+    {% for dhf_name, items in by_dhf %}
+    <details open style="margin: 0.75rem 0; border: 1px solid var(--border, #ddd); border-radius: 4px; padding: 0.5rem 0.75rem;">
+      <summary style="cursor: pointer; font-weight: 600;">
+        {{ dhf_name }}
+        <span class="muted" style="font-weight: normal;">({{ items|length }})</span>
+      </summary>
+      <div style="margin-top: 0.5rem; font-family: var(--font-mono, monospace); font-size: 0.9em;">
+        {% for c in items %}
+        <label style="display: block; padding: 0.15rem 0;">
+          <input type="checkbox" name="sel" value="{{ c.virtual_path }}" class="b1-cb">
+          <span>{{ c.virtual_path }}</span>
+          <span class="muted" style="font-size: 0.8em;">&nbsp;({{ (c.size_bytes / 1024) | round(1) }} KB)</span>
+          <br>
+          <span class="muted" style="font-size: 0.8em; margin-left: 1.5rem;">→ <code>{{ c.proposed_docx }}</code></span>
+        </label>
+        {% endfor %}
+      </div>
+    </details>
+    {% endfor %}
+
+    <div style="margin: 1rem 0;">
+      <button type="submit" style="padding: 0.5rem 1rem; font-weight: 600;">Dry-run export plan →</button>
+      <span id="b1-selected-count" class="muted" style="margin-left: 0.75rem;">0 selected</span>
+    </div>
+  </form>
+
+  <h2>Step 2 — Export plan (dry-run output)</h2>
+  <div id="b1-plan-out" style="font-family: var(--font-mono, monospace); font-size: 0.85em; padding: 0.75rem; background: rgba(0,0,0,0.04); border-radius: 4px; min-height: 3rem;">
+    <span class="muted">No plan generated yet. Select files and click <em>Dry-run export plan</em>.</span>
+  </div>
+
+  <h2 style="margin-top: 2rem;">Composition</h2>
+  <ul>
+    {% for step in workflow.composition %}
+    <li><code>{{ step }}</code></li>
+    {% endfor %}
+  </ul>
+
+  <h2>What exists today</h2>
+  <p>{{ workflow.exists_today }}</p>
+
+  <h2>Gaps / placeholders</h2>
+  <p>{{ workflow.gaps }}</p>
+</section>
+
+<script>
+function b1ToggleAll(on) {
+  document.querySelectorAll('.b1-cb').forEach(cb => { cb.checked = on; });
+  b1UpdateCount();
+}
+function b1UpdateCount() {
+  const n = document.querySelectorAll('.b1-cb:checked').length;
+  document.getElementById('b1-selected-count').textContent = n + ' selected';
+}
+document.addEventListener('change', (e) => {
+  if (e.target && e.target.classList && e.target.classList.contains('b1-cb')) {
+    b1UpdateCount();
+  }
+});
+
+async function b1DryRun(ev) {
+  ev.preventDefault();
+  const selected = Array.from(document.querySelectorAll('.b1-cb:checked')).map(cb => cb.value);
+  const out = document.getElementById('b1-plan-out');
+  if (selected.length === 0) {
+    out.innerHTML = '<span class="muted">Select at least one file.</span>';
+    return false;
+  }
+  out.innerHTML = '<span class="muted">Generating plan…</span>';
+  try {
+    const res = await fetch('/workflows/doc-roundtrip-batch/dry-run', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({selected}),
+    });
+    const data = await res.json();
+    let html = '<div style="margin-bottom: 0.5rem;"><strong>DRY RUN</strong> — backend_status=<code>' + data.backend_status + '</code>; ' + data.count + ' command(s) would run:</div>';
+    html += '<ol style="margin: 0 0 0 1.2rem;">';
+    for (const e of data.plan) {
+      html += '<li style="margin: 0.35rem 0;">'
+           + '<div>' + escapeHtml(e.command) + '</div>'
+           + '<div class="muted" style="font-size: 0.85em;">→ ' + escapeHtml(e.proposed_docx) + '</div>'
+           + '</li>';
+    }
+    html += '</ol>';
+    html += '<div class="muted" style="margin-top: 0.5rem; font-style: italic;">' + escapeHtml(data.note) + '</div>';
+    out.innerHTML = html;
+  } catch (err) {
+    out.innerHTML = '<span style="color: #c00;">Error: ' + escapeHtml(String(err)) + '</span>';
+  }
+  return false;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+{% endblock %}

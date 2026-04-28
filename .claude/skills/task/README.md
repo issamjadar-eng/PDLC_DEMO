@@ -257,3 +257,76 @@ This enforcement mechanism was designed in task 024 (Security Posture Automation
 - **Why not gate Bash?** — Can't distinguish `ls` from `echo > file`. CLAUDE.md already mandates Edit/Write for file changes. Accepted gap.
 
 See `tasks/ben/024-security-posture-automation.md` and `tasks/ben/027-task-gate-overhaul.md` for the full design discussions.
+
+## Best Practices
+
+<!-- Read by /best-practices skill to audit project setup -->
+
+| Check | How to Verify | Severity | Scope |
+|-------|--------------|----------|-------|
+| Task folder exists | `tasks/` directory exists | Required | shared |
+| Task README exists | `tasks/README.md` exists | Required | shared |
+| At least one person subfolder | At least one subfolder under `tasks/` containing `000-index.md` | Required | shared |
+| Task structure defined in skill | `create` action in task skill contains the task document structure | Required | shared |
+| CLAUDE.md enforces task-first | `CLAUDE.md` contains "Task-First Workflow" section | Required | shared |
+| Task skill installed | `.claude/skills/task/SKILL.md` exists | Required | shared |
+| Index is current | Every task file's Status matches its position (Active vs Completed) in its `000-index.md` | Recommended | shared |
+| Index has summaries | Every row in `000-index.md` has a non-empty Summary column | Required | shared |
+| No orphan tasks | Every task file in a person's folder has a corresponding row in their `000-index.md` | Recommended | shared |
+
+## Changelog
+
+_Reverse-chronological record of meaningful progress, decisions, and blockers._
+
+- YYYY-MM-DD: Task created
+```
+
+Optional sections — add when the task needs them:
+- **References**: Links to guidance docs, related tasks, external sources (`| Ref | Description | Location |`)
+- **Analysis**: Findings, reasoning, design decisions, conclusions
+- **Outcome**: Final result or decision when task is complete
+
+**Strategy and Lessons Learned are not "optional when convenient" — they are soft-required whenever the task generates that kind of content.** Harvesting skills (`/strategy`, `/lessons`) can only surface what was written, so missing capture = permanently lost context.
+
+- **Strategy**: Add a Strategy section whenever the task involves any of: choosing between alternatives, defining or redrawing scope/boundaries, regulatory pathway decisions, predicate selection, architecture trade-offs, module boundary calls, or risk posture decisions. Use the format: `<!-- STRATEGY CONTENT: domain, topic1, topic2 -->` where domain is one of: regulatory, commercial, architecture, development, testing, risk, postmarket. Harvested by `/strategy` skill.
+- **Lessons Learned**: Add a Lessons Learned section whenever the task surfaces a non-obvious insight, a corrected assumption, a reusable pattern, or a "why" that won't be derivable from the final code/doc alone. Use the format: `<!-- LESSONS LEARNED: category1, category2 -->`. Harvested by `/lessons` skill.
+
+**Capture discipline for Claude:**
+1. Authoring is voluntary — if a session produces a load-bearing decision (forward-looking scope / architecture / regulatory / risk call) or a non-obvious lesson, offer a Strategy or Lessons block to the user for approval and embed it in the task doc. Do not silently commit strategic content.
+2. No per-session nag — the UserPromptSubmit + Stop capture hooks were retired in task skill v23 (see task ben/100). Teams review captured content at monthly cadence via `/strategy assemble` and `/lessons assemble`; the `/best-practices` audit flags when assembly is > 30 days stale.
+3. This is a judgment call — a bug fix or routine reorg is not strategy. A conversation about *why* we chose one approach over another is. When in doubt, draft it and let the user decide.
+
+When creating, populate:
+   - Set **ID** to the new NNN
+   - Set **Created** to today's date
+   - Set **Status** to "Not Started"
+   - Set **Created By** and **Owner** to `<person>` (use their full name — check existing tasks in their folder for the convention)
+   - Set **Priority** to "Medium" (unless the user specifies otherwise)
+   - Initialize the **Changelog** with `- YYYY-MM-DD: Task created`
+4. Add the task to the Active table in `tasks/<person>/000-index.md` — include a **Summary** column with a one-line description of the task's goals/scope (not just the task name). This summary must be descriptive enough for `/task find` to match by topic without opening the task file.
+5. If `tasks/<person>/` doesn't exist yet, create the folder and a new `000-index.md` with empty Active and Completed tables
+6. Show the user the created file path and task ID
+
+### `list [person]`
+List tasks, with optional filtering.
+
+- `list` — Show all active tasks across all team members
+- `list <person>` — Show all tasks (active and completed) for that person
+- `list all` — Show all tasks across all team members (active and completed)
+
+Read each person's `000-index.md` and display the results.
+
+### `update <person> <NNN> <status>`
+Update a task's status.
+
+1. Read the task file `tasks/<person>/NNN-*.md` (glob to find it by number)
+2. Update the **Status** field in the header to the new status
+3. If status is "Complete":
+   - Move the entry from Active to Completed in `tasks/<person>/000-index.md`
+   - Remove the Status column (completed tasks don't need it)
+4. If status changes from "Complete" back to something else, move it back to Active
+5. Add a changelog entry: `- YYYY-MM-DD: Status changed to <status>`
+6. Confirm the change to the user
+
+### `show <person> <NNN>`
+Display a task's contents. Read and show the file `tasks/<person>/NNN-*.md`.

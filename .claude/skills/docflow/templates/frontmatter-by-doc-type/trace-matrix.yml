@@ -1,0 +1,12 @@
+# Frontmatter overlay for doc_type: trace-matrix
+# STATUS: Phase A stub under task ben/089. Populated in Phase E.
+# Aggregate field: trace_targets
+# Populated from: Trace-matrix table parsing
+
+overlay_name: trace-matrix
+version: 0.1-stub
+
+# Overlay fields (Phase E populates the actual schema)
+trace_targets:
+  count: null
+  # ... type-specific fields populated in Phase E

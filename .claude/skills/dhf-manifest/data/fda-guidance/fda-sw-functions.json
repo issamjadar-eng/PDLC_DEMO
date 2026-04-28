@@ -1,0 +1,216 @@
+{
+  "generated": "2026-04-24",
+  "category": "fda-guidance",
+  "source_file": "fda-sw-functions.md",
+  "obligation_count": 6,
+  "obligations": [
+    {
+      "id": "OBL-SWF-001",
+      "title": "Software Documentation Level",
+      "source": "FDA SW Functions Guidance (2023) §IV Documentation Levels",
+      "section": "Enhanced vs. Basic Documentation Level",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Documentation",
+        "Documentation Level Statement"
+      ],
+      "verbatim": "Enhanced documentation required when failure or latent flaw of ANY device software function could present a hazardous situation with a probable risk of death or serious injury to a patient, user, or others, assessed prior to implementing risk control measures. The documentation level reflects the device as a whole — if any software function's failure could cause death/serious injury, enhanced documentation applies to the entire submission.",
+      "extracted_requirements": [
+        "Determine documentation level (Basic or Enhanced) based on risk assessment — assessed BEFORE risk control measures",
+        "If ANY software function failure could cause death or serious injury pre-risk-controls → Enhanced documentation required for the entire submission",
+        {
+          "For HipLink": "Intra-Op failure during surgery (e.g., corrupted guidance data) could cause serious injury → Enhanced documentation applies to the whole submission"
+        },
+        "Provide a written documentation level statement with rationale leveraging risk assessment and intended use",
+        "Class II is NOT automatically Basic — sponsor determines level based on risk assessment"
+      ]
+    },
+    {
+      "id": "OBL-SWF-002",
+      "title": "SW Submission Documentation",
+      "source": "FDA SW Functions Guidance (2023) §V Required Documentation Elements",
+      "section": "Software Description + SRS + Architecture",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "submission-content",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Documentation",
+        "SRS",
+        "Architecture Document"
+      ],
+      "verbatim": "Comprehensive overview: significant features, analyses, inputs, outputs, hardware platforms. Software requirements specification — complete documentation of software requirements, organized format with traceability to other documentation elements. System and software architecture diagram — detailed diagrams of modules, layers, interfaces, data inputs/outputs/flow, user/external product interactions.",
+      "extracted_requirements": [
+        {
+          "Include a Software Description": "overview of significant features, inputs, outputs, hardware platforms"
+        },
+        {
+          "For modified devices": "description of changes from previous submission"
+        },
+        "Include a complete Software Requirements Specification (SRS) — must cover all requirements with traceability",
+        "Highlight safety-critical requirements and requirements modified since prior clearance (if applicable)",
+        {
+          "Include system and software architecture diagrams showing": "modules, layers, interfaces, data flow, external interactions (IT infrastructure, imaging devices, PACS, tablet)"
+        },
+        "Architecture diagrams must show how all modules/functions interact including shared resources"
+      ]
+    },
+    {
+      "id": "OBL-SWF-003",
+      "title": "SW Design Documentation",
+      "source": "FDA SW Functions Guidance (2023) §V Required Documentation Elements",
+      "section": "Software Design Specification (Enhanced)",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "design-outputs",
+      "artifact_type": "submission-content",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Documentation (Enhanced)",
+        "Software Design Document"
+      ],
+      "verbatim": "Enhanced: Include SDS showing technical design details, how design implements SRS, and traceability from SDS to SRS. Basic: Not required in submission (document in Design History File).",
+      "extracted_requirements": [
+        {
+          "For Enhanced documentation (HipLink)": "include Software Design Specification in the submission"
+        },
+        {
+          "SDS must show": "technical design details, how the design implements the SRS requirements, traceability from SDS to SRS"
+        },
+        "SDS traceability links design decisions to requirements — bidirectional trace required",
+        {
+          "For Basic documentation only": "SDS stays in DHF, not submitted"
+        }
+      ]
+    },
+    {
+      "id": "OBL-SWF-004",
+      "title": "SW Lifecycle Documentation",
+      "source": "FDA SW Functions Guidance (2023) §V Required Documentation Elements",
+      "section": "Software Development, CM, and Maintenance (IEC 62304)",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "software-lifecycle",
+      "artifact_type": "submission-content",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Documentation",
+        "IEC 62304 Declaration of Conformity"
+      ],
+      "verbatim": "Option 1: Declaration of Conformity to FDA-recognized IEC 62304 (specific sections for basic vs. enhanced). Option 2 Without IEC 62304 conformity (Enhanced): Complete configuration management and maintenance plan + summary documentation.",
+      "extracted_requirements": [
+        {
+          "Option 1 (preferred)": "Submit a Declaration of Conformity to IEC 62304 — this substitutes for the SW development practices documentation section"
+        },
+        {
+          "For Enhanced": "IEC 62304 conformance for Class C activities is required for the DoC to be accepted"
+        },
+        {
+          "If not using IEC 62304 DoC (Option 2, Enhanced)": "submit complete CM plan + full SW development summary"
+        },
+        "The DoC must reference the specific IEC 62304 edition and list the applicable clauses"
+      ]
+    },
+    {
+      "id": "OBL-SWF-005",
+      "title": "SW Testing Documentation",
+      "source": "FDA SW Functions Guidance (2023) §V Required Documentation Elements",
+      "section": "Software Testing (V&V)",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "verification",
+      "artifact_type": "submission-content",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Testing",
+        "Test Protocols and Reports"
+      ],
+      "verbatim": "Enhanced: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports + full unit and integration level test protocols and reports. Basic: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports only.",
+      "extracted_requirements": [
+        {
+          "For Enhanced documentation (HipLink)": "submit complete test protocols and reports at unit, integration, AND system levels"
+        },
+        {
+          "System-level test protocols and reports": "required for both Basic and Enhanced"
+        },
+        {
+          "Unit and integration test protocols/reports": "full submission required for Enhanced (not just summary)"
+        },
+        "Reference performance testing material across submission sections to reduce duplication",
+        "AI performance testing (algorithm validation studies) is part of the submission testing section"
+      ]
+    },
+    {
+      "id": "OBL-SWF-006",
+      "title": "Unresolved Anomalies List",
+      "source": "FDA SW Functions Guidance (2023) §V Required Documentation Elements",
+      "section": "Software Version History + Unresolved Anomalies",
+      "scope_flags": [
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "software-lifecycle",
+      "artifact_type": "submission-content",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Software Documentation",
+        "Unresolved Anomalies List"
+      ],
+      "verbatim": "History of tested software revisions: date, version number, brief description of changes. Last entry = final released version, including differences from tested version and safety/effectiveness assessment. List of remaining unresolved anomalies in tabular format. For each: description, how discovered, root cause, impact on safety/effectiveness, outcome of evaluation, risk-based rationale for not fixing.",
+      "extracted_requirements": [
+        "Include software version history from first version under design controls to the final released version",
+        "Last entry must document any differences between the tested version and the commercially released version with safety/effectiveness assessment",
+        "Include a complete list of known unresolved anomalies (bugs/defects not fixed at release)",
+        {
+          "For each unresolved anomaly": "describe the defect, discovery method, root cause, safety/effectiveness impact, and risk-based rationale for why it was not fixed"
+        },
+        "No unresolved anomaly with patient safety impact can be left unjustified"
+      ]
+    }
+  ],
+  "by_topic": {
+    "design-outputs": [
+      "OBL-SWF-003"
+    ],
+    "regulatory-submission": [
+      "OBL-SWF-001",
+      "OBL-SWF-002"
+    ],
+    "software-lifecycle": [
+      "OBL-SWF-004",
+      "OBL-SWF-006"
+    ],
+    "verification": [
+      "OBL-SWF-005"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-SWF-001",
+    "OBL-SWF-002",
+    "OBL-SWF-003",
+    "OBL-SWF-004",
+    "OBL-SWF-005",
+    "OBL-SWF-006"
+  ]
+}

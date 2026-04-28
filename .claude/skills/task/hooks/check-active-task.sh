@@ -42,10 +42,32 @@ if [ -z "$SESSION_ID" ]; then
   SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
 fi
 
-# Canonicalize TARGET so symlinks can't bypass the gate. python3 is tried first
-# because `os.path.realpath` has uniform semantics across macOS and Linux and
-# tolerates missing leaf paths (e.g., Write creating a new file). If python3 is
-# unavailable, fall back to platform-specific tools:
+# Exempt-pattern matcher — used for both raw TARGET and its canonical form.
+# Only exempt if BOTH match (so a symlink whose target is gated gets gated).
+is_exempt() {
+  local p="$1"
+  case "$p" in
+    */tasks/*)                        return 0 ;;
+    */.state/*)                       return 0 ;;
+    */.claude/settings*.json)         return 0 ;;
+    */.claude/sync-log.md)            return 0 ;;
+    */.claude/MEMORY.md)              return 0 ;;
+    */.claude/memory/*)               return 0 ;;
+  esac
+  return 1
+}
+
+# Fast path: if TARGET is exempt AND not a symlink, the canonical form can't
+# possibly land on a gated path — skip symlink resolution entirely. This is the
+# overwhelming common case (editing a real file under tasks/ or .state/).
+if [ -n "$TARGET" ] && is_exempt "$TARGET" && [ ! -L "$TARGET" ]; then
+  exit 0
+fi
+
+# Slow path: canonicalize TARGET so symlinks can't bypass the gate. python3 is
+# tried first because `os.path.realpath` has uniform semantics across macOS and
+# Linux and tolerates missing leaf paths (e.g., Write creating a new file). If
+# python3 is unavailable, fall back to platform-specific tools:
 #   - GNU coreutils: `realpath -m` (macOS BSD realpath doesn't have -m)
 #   - GNU readlink:  `readlink -f` (BSD readlink doesn't have -f)
 #   - BSD realpath:  works when the file exists; for a missing leaf, resolve
@@ -66,27 +88,17 @@ if [ -n "$TARGET" ]; then
   fi
 fi
 
-# Check exempt patterns against both the raw target and the resolved path.
-# Only exempt if BOTH match (so a symlink whose target is gated gets gated).
-is_exempt() {
-  local p="$1"
-  case "$p" in
-    */tasks/*)                        return 0 ;;
-    */.state/*)                       return 0 ;;
-    */.claude/settings*.json)         return 0 ;;
-    */.claude/sync-log.md)            return 0 ;;
-    */.claude/MEMORY.md)              return 0 ;;
-    */.claude/memory/*)               return 0 ;;
-  esac
-  return 1
-}
-
 if is_exempt "$TARGET" && is_exempt "$RESOLVED"; then
   exit 0
 fi
 
-# Auto-purge stale state files older than 7 days
-find "${CLAUDE_PROJECT_DIR}/.state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null
+# Auto-purge stale state files older than 7 days — rate-limited to once per 24h
+# via a sentinel file so we don't issue a find(1) on every Edit/Write call.
+PURGE_SENTINEL="${CLAUDE_PROJECT_DIR}/.state/purge-last.txt"
+if [ ! -f "$PURGE_SENTINEL" ] || [ -n "$(find "$PURGE_SENTINEL" -mtime +1 2>/dev/null)" ]; then
+  find "${CLAUDE_PROJECT_DIR}/.state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null
+  touch "$PURGE_SENTINEL" 2>/dev/null
+fi
 
 # Check per-session state file in project-local .state/
 STATE_FILE="${CLAUDE_PROJECT_DIR}/.state/active-tasks-${SESSION_ID}.txt"

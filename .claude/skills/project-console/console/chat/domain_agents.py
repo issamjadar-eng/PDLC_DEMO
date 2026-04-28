@@ -11,7 +11,8 @@ class DomainAgent:
     description: str
     kind: str
     model: str | None
-    sources: list[str]
+    sources: list[str]          # deprecated — see `core` (Phase 2 of task 099)
+    core: list[str]             # Tier 2 grounding: paths, folders, or globs
     system_prompt: str
     members: list[str] = field(default_factory=list)
     moderator: str = "round-robin"
@@ -55,13 +56,22 @@ def _parse_frontmatter(text: str) -> tuple[dict, str]:
 def load_from_file(path: Path) -> DomainAgent:
     meta, body = _parse_frontmatter(path.read_text(encoding="utf-8"))
     name = meta.get("name") or path.stem
+    sources = list(meta.get("sources", []) or [])
+    core = list(meta.get("core", []) or [])
+    # Backwards compatibility: if an agent still uses the old `sources:`
+    # glob list (pre task 099 Phase 2), treat it as a Tier 2 core list
+    # so the agent keeps working with degraded behavior (cap-truncation
+    # instead of tool-driven discovery) until it's migrated.
+    if sources and not core:
+        core = sources
     return DomainAgent(
         name=name,
         title=meta.get("title", name),
         description=meta.get("description", ""),
         kind=meta.get("kind", "solo"),
         model=meta.get("model"),
-        sources=list(meta.get("sources", []) or []),
+        sources=sources,
+        core=core,
         system_prompt=body.strip(),
         members=list(meta.get("members", []) or []),
         moderator=meta.get("moderator", "round-robin"),

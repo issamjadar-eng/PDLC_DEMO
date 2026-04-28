@@ -362,6 +362,84 @@ function escapeHtml(s) {
     .replace(/>/g, "&gt;");
 }
 
+// ---- Relative-link rewriting -----------------------------------------------
+// Markdown source files use standard relative paths (e.g. `[x](../foo.md)`)
+// so they stay portable — VS Code, GitHub, and git tools all resolve those
+// natively against the source file's location. The browser can't: by default
+// it resolves the href against the current URL (`/documents#path=...`), which
+// is not where the source file lives. This helper rewrites each <a href>
+// inside the rendered markdown body so clicking navigates the viewer to the
+// correctly-resolved virtual path. Mirrors what VS Code's markdown preview
+// does invisibly.
+
+function resolveRelativeVirtualPath(basePath, href) {
+  // Strip hash + query; preserve hash for re-attach after resolution.
+  const hashIdx = href.indexOf("#");
+  const hash = hashIdx >= 0 ? href.slice(hashIdx) : "";
+  let target = hashIdx >= 0 ? href.slice(0, hashIdx) : href;
+  // Empty target (pure anchor) → stay on same doc; the hash scrolls natively
+  if (!target) return { path: basePath, hash };
+
+  // Absolute path (leading /) — treat as repo-rooted virtual path
+  if (target.startsWith("/")) {
+    return { path: target.replace(/^\/+/, ""), hash };
+  }
+
+  // Relative path — resolve against the SOURCE file's directory, not the
+  // browser URL. Split the base virtual path, drop the filename, then walk.
+  const baseParts = basePath.split("/");
+  baseParts.pop(); // drop filename
+  const segments = [...baseParts, ...target.split("/")];
+  const resolved = [];
+  for (const seg of segments) {
+    if (seg === "" || seg === ".") continue;
+    if (seg === "..") {
+      resolved.pop();
+    } else {
+      resolved.push(seg);
+    }
+  }
+  return { path: resolved.join("/"), hash };
+}
+
+function rewriteRelativeLinks(div, basePath) {
+  if (!basePath) return;
+  div.querySelectorAll("a[href]").forEach((a) => {
+    const raw = a.getAttribute("href");
+    if (!raw) return;
+    // Leave external and non-navigable schemes alone
+    if (/^(https?|mailto|tel|javascript|data):/i.test(raw)) return;
+    if (raw.startsWith("//")) return;
+    // Pure anchor (#section) — let the browser scroll within current view
+    if (raw.startsWith("#")) return;
+
+    const { path: targetPath, hash } = resolveRelativeVirtualPath(basePath, raw);
+    if (!targetPath) return;
+
+    // Set a real href so copy-link / open-in-new-tab works out of the box
+    const encoded = targetPath.split("/").map(encodeURIComponent).join("/");
+    a.setAttribute("href", `/documents#path=${encoded}${hash}`);
+    // In-viewer click navigates without a full reload
+    a.addEventListener("click", (ev) => {
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
+      ev.preventDefault();
+      if (typeof revealAndSelect === "function") {
+        revealAndSelect(targetPath).then(() => {
+          if (hash) {
+            // Scroll to heading anchor after the new doc renders
+            setTimeout(() => {
+              const el = document.getElementById(hash.slice(1));
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
+          }
+        });
+      } else {
+        window.location.hash = `path=${encoded}${hash}`;
+      }
+    });
+  });
+}
+
 function highlightYaml(text) {
   if (!text) return "";
   const lines = text.split("\n");
@@ -481,6 +559,7 @@ function renderContent(data) {
     const div = document.createElement("div");
     div.className = "md-content docs-rendered";
     div.innerHTML = data.body_html;
+    rewriteRelativeLinks(div, data.path);
     contentEl.appendChild(div);
   } else if (data.kind === "text") {
     const ext = (data.extension || "").toLowerCase();

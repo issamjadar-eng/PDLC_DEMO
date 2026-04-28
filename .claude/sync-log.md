@@ -383,3 +383,21 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Project-local skill (not in hitachi yet): **sync-skills** — added during PDLC_DEMO task 008
 - `check` output: clean (zero `UPSTREAM_ONLY`, zero `UPSTREAM_NEWER`; one `LOCAL_ONLY` for `sync-skills` itself, excluded from the diff by design)
 - Follow-ups: consider pushing `sync-skills` upstream once exercised in this project
+
+## 2026-04-27 — pull
+
+- Hitachi HEAD after sync: `731b09f`
+- Pulled: 284 files (incl. 1 agent symlink restoration)
+  - **Modified existing skills:** digest, docflow, lessons, project-console, secops, strategy, task, shared, agents/project-secops
+  - **New skills installed:** dhf-manifest, web-control, docx, pdf, pptx, xlsx
+  - **New supporting libraries:** skills/shared/scripts/office/* (soffice, pack, unpack, validate, validators, schemas)
+  - **Major content additions:** docflow doc-type-packs (24 packs), mermaid + table rule packs, new agents (interpret_image, structure_body, structure_requirement_body)
+- Skipped: 3 LOCAL_ONLY (push candidates) — `skills/secops/scripts/resolve_user.py`, `skills/task/hooks/{capture-check,capture-signals}.sh` (the latter two are deprecated by task v23)
+- project.yml: needs `dhf-manifest` and `web-control` added to `security.approved_skills`
+- Follow-ups required:
+  - Run `/task setup` — v23 migration removes orphan `capture-signals.sh` + `capture-check.sh` symlinks and their `settings.json` hook entries
+  - Run `/secops setup` — v3+ git-identity alignment via `resolve_user.py`
+  - Run `/project-console sync` then `/project-console start` — scaffold is at 1.4.1, skill is at 1.7.6 (Overview section, Unified Assistant drawer, tiered grounding, footnote citations, sticky auto-scroll, configurable grounding roots, browsable skill-library roots)
+- Follow-ups optional:
+  - `/dhf-manifest init` to bootstrap the new sibling-of-/trace-matrix manifest skill
+  - `/web-control setup` if/when a consumer skill needs Chrome automation

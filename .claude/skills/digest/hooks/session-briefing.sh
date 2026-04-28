@@ -29,19 +29,17 @@ if ! command -v git >/dev/null 2>&1 || ! command -v python3 >/dev/null 2>&1; the
   exit 0
 fi
 
-# Resolve user identity via project.yml roster (secops-owned helper).
-# Falls back to the raw git email slug if the helper is missing or no roster
-# match is found. SLUG is the state-file key — stable per team member, not
-# per git-config-of-the-day.
-RESOLVER="$PROJECT_DIR/.claude/skills/secops/scripts/resolve_user.py"
-if [[ -x "$RESOLVER" || -f "$RESOLVER" ]]; then
+# Resolve user identity via project.yml roster (shared helper).
+# resolve_user.py --task-folder emits the roster task_folder on match, or
+# a stable email-slug fallback otherwise; either value is fine as a
+# state-file key. If the helper is missing, fall back to 'unknown-user'.
+# Lives in shared/scripts/ since task ben/098 (cross-skill: digest + secops).
+RESOLVER="$PROJECT_DIR/.claude/skills/shared/scripts/resolve_user.py"
+SLUG=""
+if [[ -f "$RESOLVER" ]]; then
   SLUG="$(python3 "$RESOLVER" --task-folder 2>/dev/null || true)"
 fi
-if [[ -z "$SLUG" ]]; then
-  EMAIL="$(git config user.email 2>/dev/null || true)"
-  [[ -z "$EMAIL" ]] && EMAIL="unknown-user"
-  SLUG="$(echo -n "$EMAIL" | tr '@.' '--' | tr -c 'A-Za-z0-9-' '-' | sed 's/^-*//; s/-*$//')"
-fi
+[[ -z "$SLUG" ]] && SLUG="unknown-user"
 
 STATE_DIR="$PROJECT_DIR/.state"
 STATE_FILE="$STATE_DIR/briefing-last-shown-$SLUG.txt"
@@ -80,18 +78,24 @@ else
 fi
 
 # Sync check — runs ONLY when we're actually building a brief (throttle has
-# elapsed), not on every session. Best-effort: bounded by a 5s timeout, all
-# output muted, every failure mode (no upstream, no network, auth prompt,
-# detached HEAD, etc.) silently skips. We never block session start on git.
+# elapsed), not on every session. Non-blocking: we READ git's ref state
+# (populated by the previous session's background fetch) and SPAWN a new
+# background fetch for the next session to consume. This avoids the up-to-5s
+# block that the old foreground `timeout 5 git fetch` imposed at SessionStart.
+#
+# First-run behavior: no prior fetch → @{u} may be stale or missing →
+# rev-list returns empty → no sync notice. One cycle later the background
+# fetch has populated refs and the notice appears correctly.
 SYNC_NOTICE=""
-if command -v timeout >/dev/null 2>&1; then
-  # Fetch quietly, capped at 5s so a hung remote or auth prompt can't stall us.
-  timeout 5 git fetch --quiet 2>/dev/null || true
-  # Count commits the upstream has that we don't. If no upstream, rev-list
-  # errors out silently and BEHIND stays empty.
-  BEHIND="$(git rev-list --count HEAD..@{u} 2>/dev/null || true)"
-  UPSTREAM="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
-  BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+# Spawn a non-blocking background fetch. Subshell + disown detaches it from
+# the hook's process group so the hook can exit cleanly. stdout/stderr are
+# muted so the background job can't leak into the SessionStart system context.
+( git fetch --quiet >/dev/null 2>&1 & ) 2>/dev/null || true
+# Read ref state from the last fetch (may be empty on first run).
+BEHIND="$(git rev-list --count HEAD..@{u} 2>/dev/null || true)"
+UPSTREAM="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
+BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+if [[ -n "$UPSTREAM" ]]; then
   if [[ -n "$BEHIND" && "$BEHIND" =~ ^[0-9]+$ && "$BEHIND" -gt 0 ]]; then
     if [[ "$BEHIND" == "1" ]]; then
       CHANGE_WORD="change"

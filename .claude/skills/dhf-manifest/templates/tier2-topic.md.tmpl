@@ -1,0 +1,41 @@
+# <Topic Name> — QMS Obligations
+
+**Topic**: <one of 16 DHF topics>
+**Sources**: <list of Arthrex SOPs/WIs/POLs/FORMs scanned>
+**Authored by**: <name>
+**Date**: YYYY-MM-DD
+**Status**: draft | reviewed | approved
+
+---
+
+<!-- AUTHORING NOTES
+  - This file is Tier 2: project-owned, Arthrex-specific QMS obligations
+  - Scan docs/internal/source-md/ for obligation-bearing paragraphs on this topic
+  - Use /dhf-manifest distill-qms <topic> to generate a draft; then review + approve
+  - Each record must cite an actual Arthrex source doc (SOP/WI/POL/FORM number)
+  - verbatim: exact text from the source-md file (not paraphrase)
+  - Cross-link to Tier 1 regulatory obligations where QMS operationalizes a regulation
+-->
+
+## <SOP-000XXXXXX — SOP Title §X.X>
+
+```yaml
+id: QMS-<TOPIC>-001
+source: "<SOP-000XXXXXX | WI-000XXXXXX> §<section>"
+source_title: "<Document title>"
+topic: <topic>
+artifact_type: <plan|spec|protocol|report|record|form>
+dhf_owner: <system|item|both>
+applies_to:
+  - "<Deliverable name>"
+regulatory_grounding:
+  - OBL-<SOURCE>-NNN   # Tier 1 obligation this QMS record operationalizes
+verbatim: |
+  "<Exact quoted text from source-md>"
+extracted_requirements:
+  - "<Actionable requirement>"
+```
+
+**Context:** <1–2 sentences on how this Arthrex SOP obligation shapes the deliverable in practice — e.g., required section titles, approval authority, minimum content.>
+
+---

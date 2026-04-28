@@ -1,0 +1,12 @@
+# Frontmatter overlay for doc_type: vnv-doc
+# STATUS: Phase A stub under task ben/089. Populated in Phase E.
+# Aggregate field: tests
+# Populated from: Test-protocol table parsing
+
+overlay_name: vnv-doc
+version: 0.1-stub
+
+# Overlay fields (Phase E populates the actual schema)
+tests:
+  count: null
+  # ... type-specific fields populated in Phase E

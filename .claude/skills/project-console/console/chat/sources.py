@@ -2,6 +2,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+# Fallback cap when callers don't pass `cap_bytes` (e.g. internal tests,
+# legacy call sites). Production chat path receives a model-aware cap
+# from `config.caps_for_model()` via router.py.
 MAX_BYTES = 200_000
 
 

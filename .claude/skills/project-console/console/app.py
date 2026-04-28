@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Template
 
 from console import themes
+from console.assistant.router import invalidate_index as rebuild_assistant_index
 from console.assistant.router import router as assistant_router
 from console.auth import preflight
 from console.chat.router import router as chat_router
@@ -16,11 +17,32 @@ from console.documents.router import router as documents_router
 from console.overview.router import discover as discover_overview
 from console.overview.router import router as overview_router
 from console.trace_matrix.router import router as trace_matrix_router
+from console.workflows.router import router as workflows_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     preflight()
+    # Warm the assistant drawer's README index at startup (Tier 3 grounding).
+    # The build is synchronous and cheap (~10 ms). Warnings for any folder
+    # missing a README are exposed via /assistant/api/index/status.
+    try:
+        idx = rebuild_assistant_index()
+        if idx.missing_readme_folders:
+            print(
+                f"[assistant] index built: {idx.readme_count} READMEs, "
+                f"{idx.total_bytes // 1024} KB; "
+                f"{len(idx.missing_readme_folders)} folder(s) missing README.md:"
+            )
+            for m in idx.missing_readme_folders:
+                print(f"  - {m}")
+        else:
+            print(
+                f"[assistant] index built: {idx.readme_count} READMEs, "
+                f"{idx.total_bytes // 1024} KB; no coverage gaps"
+            )
+    except Exception as e:
+        print(f"[assistant] index build failed at startup: {e}")
     yield
 
 
@@ -58,6 +80,7 @@ app.include_router(dashboards_router)
 app.include_router(overview_router)
 app.include_router(trace_matrix_router)
 app.include_router(assistant_router)
+app.include_router(workflows_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

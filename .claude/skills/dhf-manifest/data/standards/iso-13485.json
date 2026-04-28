@@ -1,0 +1,326 @@
+{
+  "generated": "2026-04-24",
+  "category": "standards",
+  "source_file": "iso-13485.md",
+  "obligation_count": 10,
+  "obligations": [
+    {
+      "id": "OBL-13485-001",
+      "title": "Design & Development Planning",
+      "source": "ISO 13485:2016 §7.3.2",
+      "section": "7.3.2 — Design and Development Planning",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "software-lifecycle",
+      "artifact_type": "plan",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design and Development Plan",
+        "Software Development Plan"
+      ],
+      "verbatim": "How does the organization plan and control the design and development of product? Is there evidence that the organization documents the following? (a) Stages of design and development; (b) Reviews needed at these stages; (c) Appropriate activities at these stages (e.g. verification, validation, transfer); (d) The responsibility and authority for design and development; (e) The methods to ensure that outputs trace back to inputs; (f) Resources needed including necessary personnel competencies needed.",
+      "extracted_requirements": [
+        "Document the stages of design and development with defined entry/exit criteria",
+        "Identify the design reviews required at each stage and the responsible parties",
+        "Define verification, validation, and design transfer activities at each stage",
+        "Assign responsibility and authority for design and development activities",
+        "Define the traceability method — how outputs are traced back to inputs",
+        "Document required resources and personnel competencies"
+      ]
+    },
+    {
+      "id": "OBL-13485-002",
+      "title": "Design Input Documentation",
+      "source": "ISO 13485:2016 §7.3.3",
+      "section": "7.3.3 — Design and Development Inputs",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "requirements",
+      "artifact_type": "specification",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Inputs Record",
+        "Software Requirements Specification",
+        "User Needs Document"
+      ],
+      "verbatim": "Are design inputs identified and documented, including the following? (a) Functional, performance and safety requirements; are usability requirements documented; are these requirements in accordance with the intended use? (b) Applicable regulatory requirements documented? (c) Applicable outputs for risk management processes? (d) Information from similar prior designs, as appropriate? (e) Any other essential requirements? Is there a record of the inputs being reviewed for adequacy and approved? How is it determined that the inputs are complete, not ambiguous, are not in conflict with each other and are able to be verified and validated?",
+      "extracted_requirements": [
+        {
+          "Document design inputs covering": "functional, performance, and safety requirements"
+        },
+        "Include usability requirements (IEC 62366-1) and verify they align with the intended use statement",
+        "Include applicable regulatory requirements (FDA guidance, applicable standards) as design inputs",
+        "Include risk management outputs as design inputs — risk controls become requirements",
+        "Reference information from similar prior designs (predicate device comparison)",
+        "Review and approve design inputs for adequacy, completeness, non-ambiguity, and non-conflict",
+        "Verify that each design input is verifiable or validatable (testable)"
+      ]
+    },
+    {
+      "id": "OBL-13485-003",
+      "title": "Design Output Documentation",
+      "source": "ISO 13485:2016 §7.3.4",
+      "section": "7.3.4 — Design and Development Outputs",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "design-outputs",
+      "artifact_type": "specification",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Outputs Record",
+        "Software Architecture Document",
+        "Software Design Document"
+      ],
+      "verbatim": "Do the outputs (a) meet the input requirements? (b) Provide information for purchasing, production and service provision? (c) Reference or contain product acceptance criteria? (d) Specify the characteristics for safe and proper use of the product? Are records of the outputs maintained in a manner that is suitable for verification against the inputs? What evidence is there that outputs are approved before release?",
+      "extracted_requirements": [
+        "Design outputs must demonstrably meet the design inputs — traceability is required",
+        {
+          "Outputs must provide sufficient information for production/service": "build instructions, deployment specifications, configuration management records"
+        },
+        "Outputs must include or reference product acceptance criteria",
+        "Outputs must specify characteristics for safe and proper use (labeling-relevant outputs)",
+        "Outputs must be documented, verifiable against inputs, and approved before release"
+      ]
+    },
+    {
+      "id": "OBL-13485-004",
+      "title": "Design Reviews",
+      "source": "ISO 13485:2016 §7.3.5",
+      "section": "7.3.5 — Design and Development Review",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "design-reviews",
+      "artifact_type": "review-record",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Review Records",
+        "Phase Gate Records"
+      ],
+      "verbatim": "Is there evidence of planned arrangements for design review stages? Do the arrangements (a) Evaluate the design and development process to meet the identified requirements? (b) Identify and propose necessary actions? Who participates in design reviews? Do they represent the functions concerned with the stage(s) being reviewed? Do specialists participate in the reviews? Are there records of the reviews that include the date(s) and participants? Are actions recorded? Do the records identify the design being reviewed?",
+      "extracted_requirements": [
+        "Conduct design reviews at planned stages per the DDP",
+        {
+          "Each review must": "evaluate design against requirements AND identify and record necessary actions"
+        },
+        "Review participants must represent all relevant functions for that stage (engineering, quality, regulatory, clinical)",
+        {
+          "Record the design review": "date, participants, design version reviewed, findings, action items"
+        },
+        "Track action items to closure — the record must show disposition of all raised findings"
+      ]
+    },
+    {
+      "id": "OBL-13485-005",
+      "title": "Design Verification Planning",
+      "source": "ISO 13485:2016 §7.3.6",
+      "section": "7.3.6 — Design and Development Verification",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "verification",
+      "artifact_type": "test-report",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Verification Plan",
+        "Verification Reports",
+        "V&V Plan"
+      ],
+      "verbatim": "Is there evidence of planned arrangements for design verification? Do the verification plans include: Methods, acceptance criteria, and, if appropriate, statistical justification for sampling? Does the device intended use require it to be interfaced with or connected to other devices? If so, does the verification confirm that the outputs still meet inputs when the device is connected or interfaced? Are there records of the verification results and conclusions? Are any necessary actions being recorded and maintained?",
+      "extracted_requirements": [
+        "Plan design verification at each development stage per the DDP",
+        {
+          "Verification plans must include": "methods, acceptance criteria, and statistical justification for sampling where applicable"
+        },
+        "If the device interfaces with other devices (DICOM, PACS, C-arm), verify outputs meet inputs in the integrated configuration",
+        "Record verification results and conclusions — pass/fail against acceptance criteria",
+        "Record and track any necessary actions arising from verification failures"
+      ]
+    },
+    {
+      "id": "OBL-13485-006",
+      "title": "Design Validation Planning",
+      "source": "ISO 13485:2016 §7.3.7",
+      "section": "7.3.7 — Design and Development Validation",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "validation",
+      "artifact_type": "test-report",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Validation Plan",
+        "Clinical Validation Report",
+        "V&V Plan"
+      ],
+      "verbatim": "Is there evidence of planned arrangements for design validation? Do the validation plans include: Methods, acceptance criteria, and, if appropriate, statistical justification for sampling? Has the validation been conducted on representative product? Are clinical evaluations and/or evaluation of performance performed with the new device as required by regulations? Was validation completed prior to product release for customer use? Are there records of the validation results and conclusions?",
+      "extracted_requirements": [
+        "Plan design validation per the DDP — plan must precede execution",
+        {
+          "Validation plans must include": "methods, acceptance criteria, statistical justification for sampling"
+        },
+        "Validation must be conducted on representative product — production-equivalent hardware and software",
+        "Clinical evaluations or performance evaluations must be conducted as required by regulations (FDA 510(k) performance testing)",
+        "Validation must be completed and approved before product release to customers",
+        "Record validation results, conclusions, and any necessary actions"
+      ]
+    },
+    {
+      "id": "OBL-13485-007",
+      "title": "Design Transfer Procedure",
+      "source": "ISO 13485:2016 §7.3.8",
+      "section": "7.3.8 — Design and Development Transfer",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "configuration-change",
+      "artifact_type": "process-record",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Transfer Record",
+        "Release Package",
+        "Configuration Baseline"
+      ],
+      "verbatim": "Are there documented procedures for design transfer? Are the results and conclusions of the transfer recorded?",
+      "extracted_requirements": [
+        "Define and follow a documented design transfer procedure",
+        "Design transfer for SaMD = establishing the release baseline (software build, configuration, deployment specifications)",
+        "Record the results and conclusions of the design transfer — what was transferred, verified, and approved for release",
+        "Design transfer is a one-time per-version activity — subsequent changes go through the design change process (§7.3.9)"
+      ]
+    },
+    {
+      "id": "OBL-13485-008",
+      "title": "Design Change Control",
+      "source": "ISO 13485:2016 §7.3.9",
+      "section": "7.3.9 — Design and Development Changes",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "configuration-change",
+      "artifact_type": "change-record",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Change Records",
+        "PCCP Change Records",
+        "ECO Records"
+      ],
+      "verbatim": "Are the changes reviewed, verified, validated (as appropriate) and approved prior to implementation? Are the changes evaluated for the effect on inputs or outputs of the risk management process? On the product realization process? On constituent parts and delivered products? Are the results of the review of changes and any necessary actions recorded?",
+      "extracted_requirements": [
+        "Design changes must be reviewed, and as appropriate verified and validated, before implementation",
+        {
+          "Evaluate each change for impact on": "risk management inputs/outputs, product realization process, constituent parts, and delivered/installed products"
+        },
+        "Record the change review, impact assessment, and approval",
+        "PCCP changes are design changes — they must follow this process, with the PCCP change control procedure defining the specific review/verification/validation required per change type"
+      ]
+    },
+    {
+      "id": "OBL-13485-009",
+      "title": "Design History File",
+      "source": "ISO 13485:2016 §7.3.10",
+      "section": "7.3.10 — Design and Development Files",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "traceability",
+      "artifact_type": "dhf-file",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design History File",
+        "DHF README",
+        "DHF Manifest"
+      ],
+      "verbatim": "Does the organization have a file for each type or family of devices? The file shall include or reference: records for design and development changes; records that demonstrate conformity to the design and development requirements.",
+      "extracted_requirements": [
+        "Maintain a Design History File (DHF) for each device type or family",
+        {
+          "The DHF must include or reference": "all design change records; all records demonstrating conformity to design and development requirements"
+        },
+        "The DHF is an index/collection — it includes or references the artifacts, it is not itself all the artifacts",
+        {
+          "For the flat multi-DHF structure": "the system DHF plus three item DHFs together constitute the DHF for the HipLink device family"
+        }
+      ]
+    },
+    {
+      "id": "OBL-13485-010",
+      "title": "SOUP Supplier Qualification",
+      "source": "ISO 13485:2016 §7.4.1",
+      "section": "7.4.1 — Purchasing Process",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "software-lifecycle",
+      "artifact_type": "process-record",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "SOUP List",
+        "Supplier Qualification Records",
+        "Approved Supplier List"
+      ],
+      "verbatim": "This clause is intended to ensure supplier capability meets the organization's requirements. Are suppliers evaluated and selected based on their ability to supply product in accordance with organization's requirements? Are criteria for selection, evaluation and re-evaluation of suppliers documented? Are records of the evaluation results maintained?",
+      "extracted_requirements": [
+        "Evaluate and qualify SOUP/third-party software components as suppliers (for IEC 62304 Class B/C, SOUP evaluation is also an IEC 62304 §8.1.2 obligation)",
+        "Define criteria for SOUP selection, evaluation, and re-evaluation (vendor security posture, maintenance status, license compatibility)",
+        {
+          "Maintain records of SOUP evaluation — include": "component name, version, supplier, evaluation date, qualification basis"
+        },
+        "Re-evaluate SOUP when new versions are adopted or when vulnerability information changes the risk profile"
+      ]
+    }
+  ],
+  "by_topic": {
+    "configuration-change": [
+      "OBL-13485-007",
+      "OBL-13485-008"
+    ],
+    "design-outputs": [
+      "OBL-13485-003"
+    ],
+    "design-reviews": [
+      "OBL-13485-004"
+    ],
+    "requirements": [
+      "OBL-13485-002"
+    ],
+    "software-lifecycle": [
+      "OBL-13485-001",
+      "OBL-13485-010"
+    ],
+    "traceability": [
+      "OBL-13485-009"
+    ],
+    "validation": [
+      "OBL-13485-006"
+    ],
+    "verification": [
+      "OBL-13485-005"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-13485-001",
+    "OBL-13485-002",
+    "OBL-13485-003",
+    "OBL-13485-004",
+    "OBL-13485-005",
+    "OBL-13485-006",
+    "OBL-13485-007",
+    "OBL-13485-008",
+    "OBL-13485-009",
+    "OBL-13485-010"
+  ]
+}

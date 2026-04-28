@@ -1,0 +1,12 @@
+# Frontmatter overlay for doc_type: risk-doc
+# STATUS: Phase A stub under task ben/089. Populated in Phase E.
+# Aggregate field: hazards
+# Populated from: Risk matrix table parsing
+
+overlay_name: risk-doc
+version: 0.1-stub
+
+# Overlay fields (Phase E populates the actual schema)
+hazards:
+  count: null
+  # ... type-specific fields populated in Phase E

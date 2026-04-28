@@ -69,9 +69,8 @@ set -uo pipefail
 
 INPUT="$(cat)"
 
-TOOL_NAME="$(printf '%s' "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)"
-[ "$TOOL_NAME" = "Bash" ] || exit 0
-
+# Hook is registered with matcher: "Bash" in settings.json, so Claude Code
+# only dispatches this hook for Bash tool calls — no TOOL_NAME re-check needed.
 CMD="$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)"
 [ -n "$CMD" ] || exit 0
 

@@ -1,8 +1,8 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified shared strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market, operations; topic-first with per-component callouts"
-version: 11
-updated: 2026-04-20
+version: 16
+updated: 2026-04-25
 ---
 
 # Strategy Harvester
@@ -45,6 +45,99 @@ Strategy content is marked in task documents with HTML comment tags:
 
 **Backward compatibility:** If the first value doesn't match a recognized domain key, the entire tag is treated as topics and routed to an `uncategorized` domain. The `scan` action will flag these for correction.
 
+## Decision Block Format (v15+)
+
+Every decision in an assembled strategy doc is wrapped in sentinel comments that give it a stable ID, a lifecycle state, and a precise boundary the parser can trust. Decision IDs are stable across renames and never reused — they're the addressable element that downstream tooling (project-console, audit, cross-strategy references) operates on.
+
+### Syntax
+
+```markdown
+<!-- DECISION:start id=D-REG-1.1 status=active source=ben/032 created=2026-04-09 last-edited=2026-04-15 supersedes=D-REG-1.0 -->
+### One Submission, One Intended Use, Multiple Indications
+
+HipLink files as **one 510(k) submission**…
+
+**Why:** Three modules, but one product…
+<!-- Source: ben/032, "One Submission, ...", last modified 2026-04-09 -->
+<!-- DECISION:end id=D-REG-1.1 -->
+```
+
+### Metadata fields
+
+| Field | Required | Values |
+|-------|----------|--------|
+| `id` | yes | `D-<DOMAIN>-<SECTION>.<INDEX>` — e.g. `D-REG-1.1`, `D-OPS-2.3`. Stable forever once allocated. |
+| `status` | yes | `active`, `proposed-change`, `superseded`, `withdrawn` |
+| `source` | recommended | `<task_folder>/NNN` of the source task that introduced this decision |
+| `created` | recommended | `YYYY-MM-DD` — first authored |
+| `last-edited` | optional | `YYYY-MM-DD` |
+| `supersedes` | optional | another decision's ID — used by `proposed-change` and `superseded` states |
+| `withdrawn-date` | optional | `YYYY-MM-DD` — when status flipped to `withdrawn` |
+| `withdrawn-by` | optional | actor name |
+
+### Lifecycle states
+
+- **`active`** — current authoritative content. Default for newly-assembled decisions.
+- **`proposed-change`** — incoming proposal alongside an existing `active` decision (carries `supersedes=<id>`). Renders side-by-side in the project-console.
+- **`superseded`** — replaced by another decision; kept in doc for audit, rendered struck-through.
+- **`withdrawn`** — explicitly retired; kept for audit, rendered struck-through with date/actor.
+
+### ID scheme
+
+Format: `D-<DOMAIN_PREFIX>-<SECTION_INDEX>.<DECISION_INDEX>`
+
+Domain prefixes:
+
+| Domain | Prefix |
+|--------|--------|
+| regulatory | `REG` |
+| commercial | `COMM` |
+| architecture | `ARCH` |
+| development | `DEV` |
+| testing | `TEST` |
+| risk | `RISK` |
+| postmarket | `POSTM` |
+| operations | `OPS` |
+
+Section index is the H2's leading number (`## 1. Device & Submission Overview` → `1`); fallback is sequential 1, 2, 3 by H2 order. Decision index is sequential 1, 2, 3 within each H2 by appearance order. New decisions added later get the next-available index — old IDs never reused.
+
+### Backward compatibility
+
+Strategy docs without `DECISION:start/end` sentinels still parse correctly under the legacy "find by H3 heading" path. Run `/strategy migrate <domain>` (or `--all`) to retrofit existing docs — the migrator preserves content verbatim and inserts sentinels with allocated IDs. Reversible.
+
+### Why the strategy doc became system-of-record
+
+In v14 and earlier, task docs were the source of every decision and the strategy doc was a derivative re-rendered by `/strategy assemble`. From v15+, the strategy doc is the canonical record (decisions can be added/edited/removed in the project-console without going through a task doc), with optional back-port to the source task on save. Task-doc-tagged content remains the primary authoring path for distributed team contributions; the assembler still pulls those in.
+
+## Task-Reference Format (REQUIRED)
+
+Every reference to a task — in prose, tables, headings, HTML comment markers, `<!-- Source: ... -->` lines, `> **Proposed change**` callout headers, Assembly-History entries — must use the **`<task_folder>/NNN`** format (e.g. `ben/056`, `maryna/042`). Bare `task NNN` is ambiguous because task numbers are per-team-member and collide across folders (Ben's 032 and Maryna's 032 are different tasks).
+
+**In strategy docs (user-visible prose/tables/headings):** render as a markdown hyperlink so the reference is navigable:
+
+```
+[ben/056](../../../tasks/ben/056-hiplink-suite-parent-sub-dhf-structure.md)
+```
+
+The relative path depth is `../../../tasks/<task_folder>/<full-filename>.md` from a strategy doc (which lives at `docs/project/strategies/`). The assembler resolves the full filename by globbing `tasks/<task_folder>/<NNN>-*.md` at assembly time.
+
+**In HTML comment markers (machine-read):** plain `<task_folder>/NNN`, no hyperlink:
+
+```
+<!-- Source: ben/032, "One Submission, One Intended Use, Multiple Indications", last modified 2026-04-09 -->
+<!-- STRATEGY PROPOSED: vs ben/032, section "X" -->
+<!-- STRATEGY REVIEWED: superseded by ben/056 -->
+<!-- STRATEGY WITHDRAWN: vs ben/032 -->
+```
+
+**In proposal callout headers:**
+
+```
+> **Proposed change** — ben/999 ("Heading", Author, YYYY-MM-DD)
+```
+
+**Unknown / placeholder IDs** (e.g. an injected test reference to a non-existent task): use plain `ben/NNN` (no hyperlink), so broken links don't ship.
+
 ## Review Markers
 
 When the assembler detects overlapping content between tasks, it prompts the lead to resolve the conflict. The resolution is recorded as a review marker comment in the **source task document**, immediately below the `<!-- STRATEGY CONTENT -->` tag. Review markers survive across assemblies because they live in source tasks, not in the generated output.
@@ -53,9 +146,12 @@ When the assembler detects overlapping content between tasks, it prompts the lea
 
 | Marker | Meaning | Effect on Scanner | Effect on Assembler |
 |--------|---------|-------------------|---------------------|
-| `<!-- STRATEGY REVIEWED: superseded by task NNN -->` | This block has been replaced by newer content in task NNN | Scanner **skips** this block entirely | Block excluded from output |
-| `<!-- STRATEGY REVIEWED: coexists with task NNN -->` | Confirmed as complementary to overlapping content in task NNN | Scanner includes, notes the pairing | No conflict prompt for this pair |
-| `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` | Deferred — lead chose not to resolve yet | Scanner includes, flags as pending | **Re-prompts** the lead on next assembly |
+| `<!-- STRATEGY REVIEWED: superseded by <task_folder>/NNN -->` | This block has been replaced by newer content in <task_folder>/NNN | Scanner **skips** this block entirely | Block excluded from output |
+| `<!-- STRATEGY REVIEWED: coexists with <task_folder>/NNN -->` | Confirmed as complementary to overlapping content in <task_folder>/NNN | Scanner includes, notes the pairing | No conflict prompt for this pair |
+| `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN, section "X" -->` | Proposal pending in the strategy doc — content is rendered as a `> **Proposed change**` callout alongside the existing section | Scanner includes, flags as proposal | **Re-prompts** the lead on next assembly with accept / withdraw / leave options |
+| `<!-- STRATEGY WITHDRAWN: vs <task_folder>/NNN -->` | Proposal was rejected during a previous assembly — lead chose not to supersede | Scanner **skips** this block (same effect as superseded — content stays in source task but stops flowing) | Block excluded from output |
+
+**Backward compatibility (v12 → v13):** The older `<!-- STRATEGY REVIEW: pending, conflicts with <task_folder>/NNN -->` marker is treated as equivalent to `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->` during assembly. The first assembly under v13 rewrites the marker and upgrades the callout to the new proposal format.
 
 ### Marker Placement
 
@@ -65,7 +161,7 @@ Markers are placed on the line immediately after the `<!-- STRATEGY CONTENT -->`
 ## Regulatory Strategy
 
 <!-- STRATEGY CONTENT: regulatory, classification, jurisdiction -->
-<!-- STRATEGY REVIEWED: coexists with task 040 -->
+<!-- STRATEGY REVIEWED: coexists with ben/040 -->
 
 ### Multi-Jurisdiction Classification
 ...
@@ -117,7 +213,7 @@ Each domain has a key, output path, template, and list of formal plans it inform
 **Notes from v10 (all-shared)**:
 - Every strategy domain is shared. Strategy is a project-level story that describes how the DHFs relate to each other (filing sequence, platform architecture, one SDLC, integration V&V, platform risk chains, unified PMS program). Splitting it per-DHF fractured that story.
 - Formal design-control outputs (SDP, SAD, V&V Plan, Risk Mgmt Plan, PMS Plan, cybersecurity plan) **still live per-DHF** in `dhfs/<dhf>/design-controls/`, `risk-management/`, `postmarket/`, and `cybersecurity/`. Only the upstream strategy **briefs** that inform those formal outputs have moved up to `docs/project/strategies/`.
-- The v8 per-dhf output paths (`dhfs/<dhf>/design-controls/plans/regulatory-strategy.md`, etc.) are **not** automatically migrated. For PDLC_DEMO, task 009 P1 executes the `git mv`. For fresh projects, the v10 shared paths apply from init time.
+- The v8 per-dhf output paths (`dhfs/<dhf>/design-controls/plans/regulatory-strategy.md`, etc.) are **not** automatically migrated. For PDLC_DEMO, ben/009 P1 executes the `git mv`. For fresh projects, the v10 shared paths apply from init time.
 
 **Incubating subtopics** — start as topics within a parent domain, promote to standalone domain when they outgrow it:
 - `clinical` → inside `regulatory` until a clinical study is needed
@@ -213,8 +309,8 @@ Find all `<!-- STRATEGY CONTENT` tagged blocks across task documents. Optionally
    h. Extract the most recent date from the task's `## Changelog` section.
 5. If `[domain]` argument provided, filter results to that domain only.
 6. **Flag issues:**
-   - Tags where the first value is not a recognized domain key → `"⚠ Unrecognized domain 'xyz' in task NNN. Known domains: regulatory, commercial, architecture, development, testing, risk, postmarket, operations"`
-   - Tags with no values at all → `"⚠ Empty tag in task NNN. Expected: <!-- STRATEGY CONTENT: domain, topics -->"`
+   - Tags where the first value is not a recognized domain key → `"⚠ Unrecognized domain 'xyz' in <task_folder>/NNN. Known domains: regulatory, commercial, architecture, development, testing, risk, postmarket, operations"`
+   - Tags with no values at all → `"⚠ Empty tag in <task_folder>/NNN. Expected: <!-- STRATEGY CONTENT: domain, topics -->"`
 7. Report a summary table:
 
 ```
@@ -223,16 +319,16 @@ Strategy Content Sources
 | Task | Section | Domain | Topics | Subsections | Status | Last Modified |
 |------|---------|--------|--------|-------------|--------|---------------|
 | 033 — Module Architecture | Regulatory Strategy | regulatory | classification, jurisdiction | 5 | active | 2026-04-07 |
-| 032 — Submission Tracker | Regulatory Strategy | regulatory | submission structure, DHF | 6 | pending review (task 040) | 2026-04-08 |
+| 032 — Submission Tracker | Regulatory Strategy | regulatory | submission structure, DHF | 6 | pending review (ben/040) | 2026-04-08 |
 
 2 tasks, 11 subsections across 1 domain
 ```
 
 **Status values:**
 - `active` — no review marker (default)
-- `coexists (task NNN)` — confirmed complementary
-- `pending review (task NNN)` — deferred conflict, will re-prompt on next assembly
-- `superseded (task NNN)` — excluded from assembly
+- `coexists (<task_folder>/NNN)` — confirmed complementary
+- `pending review (<task_folder>/NNN)` — deferred conflict, will re-prompt on next assembly
+- `superseded (<task_folder>/NNN)` — excluded from assembly
 
 8. If the assembled document for any found domain already exists, report its assembly date so the user can see if it's stale.
 
@@ -241,9 +337,10 @@ Strategy Content Sources
 Compile tagged content into strategy document(s). If domain specified, assemble one. If omitted, assemble all domains that have content.
 
 1. Run `scan` internally to find all tagged blocks.
-   - **Skip** blocks with `<!-- STRATEGY REVIEWED: superseded by task NNN -->` markers.
-   - **Include** blocks with `<!-- STRATEGY REVIEWED: coexists with task NNN -->` markers (no conflict prompt for the noted pair).
-   - **Include** blocks with `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` markers (will re-prompt).
+   - **Skip** blocks with `<!-- STRATEGY REVIEWED: superseded by <task_folder>/NNN -->` or `<!-- STRATEGY WITHDRAWN: vs <task_folder>/NNN -->` markers.
+   - **Include** blocks with `<!-- STRATEGY REVIEWED: coexists with <task_folder>/NNN -->` markers (no conflict prompt for the noted pair).
+   - **Include** blocks with `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->` markers (existing proposal — will re-prompt with accept / withdraw / leave).
+   - **Legacy**: `<!-- STRATEGY REVIEW: pending, conflicts with <task_folder>/NNN -->` is treated as equivalent to `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->` and upgraded on the first v13 assembly.
 2. Group blocks by domain.
 3. For each domain to assemble:
    a. Determine the template: check if `${CLAUDE_SKILL_DIR}/templates/{domain}-strategy.md` exists. If yes, use it. If no, use `default-strategy.md`.
@@ -252,12 +349,12 @@ Compile tagged content into strategy document(s). If domain specified, assemble 
    d. **For the default template**: Place all subsections under `## Strategy Decisions`, **newest-first** by last-modified date. Use the source `### ` headings as-is.
    e. For each subsection placed, append a source traceability comment immediately after:
       ```markdown
-      <!-- Source: task 033, "Multi-Jurisdiction Classification", last modified 2026-04-07 -->
+      <!-- Source: ben/033, "Multi-Jurisdiction Classification", last modified 2026-04-07 -->
       ```
    f. **Conflict resolution** — see "Conflict Resolution Flow" below.
    g. Populate the `## Open Items` section with all `[VERIFY]` markers found across the assembled content, with their source task and subsection.
    h. Populate the `## Source Traceability` appendix table.
-   i. **Preserve and append to `## Assembly History`** — see "Assembly History" below.
+   i. **Preserve and append to `## History`** — see "History" below.
    j. Replace template variables: `{{TIMESTAMP}}` with current date, `{{SOURCE_TASKS}}` with comma-separated task IDs, `{{DOMAIN_KEY}}`, `{{DOMAIN_NAME}}`, `{{PLANS_INFORMED}}` from the domain registry.
    k. Write the assembled document to the output path from the domain registry.
 4. Before writing, read the target folder's `README.md` (per project conventions — README Before Write rule).
@@ -282,64 +379,105 @@ Tier 2 only fires for subsections already routed to the same output section (cus
 
 **Resolution flow** (applies to both tiers):
 
-1. **Already resolved**: If the older block has `<!-- STRATEGY REVIEWED: coexists with task NNN -->` matching the newer task, skip — no prompt. Both render normally.
-2. **Previously deferred**: If the older block has `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` matching the newer task, **re-prompt** (same options as below).
+1. **Already resolved**: If the older block has `<!-- STRATEGY REVIEWED: coexists with <task_folder>/NNN -->` matching the newer task, skip — no prompt. Both render normally.
+2. **Proposal pending**: If either block has `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->` pointing at the other, the conflict is already surfaced in the strategy doc as a `> **Proposed change**` callout. **Re-prompt** with the proposal-resolution options (see "Resolving an existing proposal" below) — not the fresh-conflict options.
 3. **New conflict**: No existing marker. **Prompt the lead**:
 
 ```
-Overlap detected:
-  Newer: task 040 "Filing Sequence v2" (modified 2026-04-08)
-  Older: task 033 "Filing Sequence Strategy" (modified 2026-04-01)
+Conflict on Section "Filing Sequence Strategy":
+  Existing in strategy doc: ben/033 (modified 2026-04-01)
+  New from:                 ben/040 (modified 2026-04-23)
   Detection: {heading overlap (100% match) | semantic overlap (same decision in Section N)}
 
-Options:
-  (1) Keep newer only — task 033's block excluded from future assemblies
-  (2) Keep both — they're complementary, not conflicting
-  (3) Defer — mark for review, prompted again next assembly
+How would you like to handle it? You can say it in plain English:
+  • "supersede"  → ben/033's content is replaced; ben/033 marked superseded by ben/040
+  • "propose"    → ben/040's content lands as a > **Proposed change** callout for team review
+  • "coexists"   → both kept, marked as complementary (no future prompts for this pair)
+  • "skip"       → ben/040's block isn't pushed this round; re-prompted next assembly
 ```
+
+**Natural-language interpretation**: The lead replies free-form. Map their response to one of the four canonical actions below. If the response is ambiguous ("keep it", "maybe", "hmm"), re-prompt with the four options spelled out. If the response is unambiguous but unconventionally phrased ("just replace the old one", "make it a proposal for now", "they're complementary", "not this round"), proceed without re-prompting.
 
 **Resolution actions:**
 
-| Option | Marker written to older task | Assembly effect |
-|--------|------------------------------|-----------------|
-| (1) Keep newer | `<!-- STRATEGY REVIEWED: superseded by task 040 -->` replaces the `<!-- STRATEGY CONTENT -->` tag line | Older block excluded from this and all future assemblies |
-| (2) Keep both | `<!-- STRATEGY REVIEWED: coexists with task 040 -->` added below the tag | Both blocks render, no future prompts for this pair |
-| (3) Defer | `<!-- STRATEGY REVIEW: pending, conflicts with task 040 -->` added below the tag | Both blocks render with callout, re-prompted next assembly |
+| Option | Marker written | Assembly effect |
+|--------|---------------|-----------------|
+| **supersede** | `<!-- STRATEGY REVIEWED: superseded by ben/040 -->` replaces the `<!-- STRATEGY CONTENT -->` tag in ben/033 | Older block excluded from this and all future assemblies |
+| **propose** | `<!-- STRATEGY PROPOSED: vs ben/033, section "Filing Sequence Strategy" -->` added below the tag in ben/040 | Existing section 033 renders unchanged; ben/040's content lands **alongside** as a `> **Proposed change**` callout (see format below) |
+| **coexists** | `<!-- STRATEGY REVIEWED: coexists with ben/040 -->` added below the tag in ben/033 | Both blocks render, no future prompts for this pair |
+| **skip** | No marker written | Neither block is affected this round; same conflict re-surfaces next assembly |
 
-For option (1), the content remains in the source task (preserving history) — only the tag is replaced, stopping the content from flowing into the assembled strategy.
+For **supersede**, the content remains in the source task (preserving history) — only the tag is replaced, stopping the content from flowing into the assembled strategy.
 
-**Multi-subsection warning**: When option (1) is chosen and the older block's tag covers multiple subsections, the assembler warns before applying:
+**Multi-subsection warning**: When **supersede** is chosen and the older block's tag covers multiple subsections, the assembler warns before applying:
 ```
-⚠ Task 033's tag covers 3 subsections, but only "Filing Sequence Strategy" conflicts.
+⚠ ben/033's tag covers 3 subsections, but only "Filing Sequence Strategy" conflicts.
 Superseding will also remove: "Module Classification Overview", "Document Reuse Matrix".
-Consider splitting the block first, or choose (2) Keep both / (3) Defer instead.
+Consider splitting the block first, or choose propose / coexists / skip instead.
 Proceed with supersession? (y/n)
 ```
-If the lead confirms, the supersession proceeds. If not, the assembler re-prompts with the 3 options.
+If the lead confirms, the supersession proceeds. If not, the assembler re-prompts with the four options.
 
-For deferred conflicts (option 3), the older block renders with a visible callout in the assembled document:
+**Proposal callout format** — when **propose** is chosen, the assembler renders the proposing task's content in the strategy doc as:
+
 ```markdown
-> **Pending review**: This section overlaps with task 040 ("Filing Sequence v2", 2026-04-08). Run `/strategy assemble` to resolve.
+### Filing Sequence Strategy
+<!-- Source: ben/033, "Filing Sequence Strategy", last modified 2026-04-01 -->
+
+[existing accepted content from ben/033 stays here verbatim]
+
+> **Proposed change** — ben/040 ("Filing Sequence v2", Ben Xavier, 2026-04-23)
+>
+> [the full content of ben/040's block, blockquote-indented]
+>
+> *Resolution: re-run `/strategy assemble` and pick accept / withdraw / leave.*
 ```
 
-#### Assembly History
+The callout is the **team review surface** — team members read the strategy doc, see proposals inline, and decide at the next assembly whether to accept, withdraw, or leave them.
 
-Each assembled strategy document includes an `## Assembly History` section. This section is **append-only** — the assembler preserves existing entries and adds a new one for the current assembly.
+#### Resolving an existing proposal
+
+When the assembler detects a task block with `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->`, it knows a proposal callout already exists in the strategy doc for this pair. Surfaces the proposal to the lead:
+
+```
+Existing proposal in regulatory-strategy.md, Section "Filing Sequence Strategy":
+  Original:    ben/033 (2026-04-01)
+  Proposed by: ben/040 (2026-04-23) — proposed {proposal-date-from-task-040-changelog}
+
+How would you like to resolve?
+  • "accept proposal" → ben/040 becomes the section content; ben/033 marked superseded
+  • "withdraw"        → drop the proposal callout; ben/040's tag marked withdrawn
+  • "leave"           → proposal callout stays; revisit next assembly
+```
+
+Natural-language interpretation applies — "just accept it", "withdraw it", "leave for now" map to the canonical actions.
+
+**Resolution actions for existing proposals:**
+
+| Option | Markers written | Assembly effect |
+|--------|----------------|-----------------|
+| **accept** | ben/033 gets `<!-- STRATEGY REVIEWED: superseded by ben/040 -->` replacing its tag; ben/040's `<!-- STRATEGY PROPOSED -->` marker removed (proposal satisfied) | Section content becomes ben/040's block; callout removed; ben/033 excluded from future assemblies |
+| **withdraw** | ben/040's tag replaced with `<!-- STRATEGY WITHDRAWN: vs ben/033 -->` | Callout removed; ben/033 stays as-is; ben/040's block excluded from future assemblies |
+| **leave** | No marker change | Callout re-renders unchanged; same prompt next assembly |
+
+#### History
+
+Each assembled strategy document includes an `## History` section. This section is **append-only** — the assembler preserves existing entries and adds a new one for the current assembly.
 
 On each assembly:
-1. If the target document already exists, read the existing `## Assembly History` section content.
+1. If the target document already exists, read the existing `## History` section content.
 2. Compare the current assembly's source list to the previous assembly's `<!-- Sources: -->` metadata.
 3. Determine the assembler identity: use the git user name (`git config user.name`) to record who ran the assembly.
 4. Generate a new entry:
 
 ```markdown
 ### YYYY-MM-DD — assembled by {user name}
-- **Added**: Section Name (task NNN), Section Name (task NNN)
-- **Modified**: Section Name (task NNN — description of change)
-- **Superseded**: Section Name (task NNN) → replaced by task NNN
-- **Removed**: Section Name (task NNN) — tag deleted from source
-- **Conflicts resolved**: Section Name — kept newer (task NNN supersedes task NNN)
-- **Conflicts deferred**: Section Name — pending review (task NNN vs task NNN)
+- **Added**: Section Name (<task_folder>/NNN), Section Name (<task_folder>/NNN)
+- **Modified**: Section Name (<task_folder>/NNN — description of change)
+- **Superseded**: Section Name (<task_folder>/NNN) → replaced by <task_folder>/NNN
+- **Removed**: Section Name (<task_folder>/NNN) — tag deleted from source
+- **Conflicts resolved**: Section Name — kept newer (<task_folder>/NNN supersedes <task_folder>/NNN)
+- **Conflicts deferred**: Section Name — pending review (<task_folder>/NNN vs <task_folder>/NNN)
 - N subsections, M [VERIFY] markers
 ```
 
@@ -402,9 +540,9 @@ Validation: regulatory-strategy.md (assembled 2026-04-08)
 
   [PASS] No unresolved conflicts
   [WARN] 3 [VERIFY] markers found:
-    - Section 2: Pre-Op EU classification [VERIFY] (source: task 033)
-    - Section 2: Canada classification [VERIFY] (source: task 033)
-    - Section 2: Device Connectivity Canada [VERIFY] (source: task 033)
+    - Section 2: Pre-Op EU classification [VERIFY] (source: ben/033)
+    - Section 2: Canada classification [VERIFY] (source: ben/033)
+    - Section 2: Device Connectivity Canada [VERIFY] (source: ben/033)
   [PASS] Filing sequence covers all jurisdictions (US, EU, Canada)
   [PASS] Document applicability complete
   [PASS] Sources are current
@@ -502,43 +640,46 @@ Remove a domain from `project.yml:strategy_domains[]` and re-render downstream s
 
 ### `resolve [domain]`
 
-Address pending review markers without running a full assembly. This lets a lead resolve deferred conflicts on their own schedule. **This action is interactive** — it prompts the lead per conflict and must run in the main session (not delegated to a subagent).
+Address pending proposals without running a full assembly. This lets a lead resolve proposal callouts on their own schedule. **This action is interactive** — it prompts the lead per proposal and must run in the main session (not delegated to a subagent).
 
 **Phase 1 — Parallel scan** (can be delegated):
 
-1. If `[domain]` specified, scan that domain only. Otherwise, launch scanner agents **in parallel** — one per domain — to find all blocks with `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` markers. Each scanner also extracts the **full content** of both the pending block and the conflicting block (needed for the lead to make an informed decision without re-reading source tasks).
-2. Merge results from all scanners. Domains with no pending reviews are dropped.
-3. If no pending reviews found across any domain: `"No pending reviews. All conflicts are resolved."`
+1. If `[domain]` specified, scan that domain only. Otherwise, launch scanner agents **in parallel** — one per domain — to find all blocks with `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN -->` markers (or the legacy `<!-- STRATEGY REVIEW: pending, conflicts with <task_folder>/NNN -->`). Each scanner also extracts the **full content** of both the proposing block and the existing strategy-doc section (needed for the lead to make an informed decision without re-reading source tasks).
+2. Merge results from all scanners. Domains with no pending proposals are dropped.
+3. If no pending proposals found across any domain: `"No pending proposals. All conflicts are resolved."`
 
 **Phase 2 — Interactive resolution** (main session only):
 
-4. For each pending review, show the conflict context and prompt:
+4. For each pending proposal, show the conflict context and prompt (same shape as the `assemble` re-prompt for existing proposals):
 
 ```
-Pending review 1 of N:
+Pending proposal 1 of N:
   Domain: regulatory
-  Block: task 033 "Filing Sequence Strategy" (modified 2026-04-01)
-  Conflicts with: task 040 "Filing Sequence v2" (modified 2026-04-08)
-  Deferred since: [date marker was written, if detectable from task changelog]
+  Section: "Filing Sequence Strategy"
+  Existing: ben/033 (modified 2026-04-01)
+  Proposed by: ben/040 "Filing Sequence v2" (modified 2026-04-23)
+  Proposed since: [date marker was written, if detectable from task changelog]
 
-Options:
-  (1) Keep newer only — task 033's block excluded from future assemblies
-  (2) Keep both — they're complementary, not conflicting
-  (3) Skip — leave pending, review again later
+How would you like to resolve?
+  • "accept proposal" → ben/040 becomes the section content; ben/033 marked superseded
+  • "withdraw"        → drop the proposal callout; ben/040's tag marked withdrawn
+  • "leave"           → proposal callout stays; revisit next assembly
 ```
 
 5. For each resolution:
-   - **Option 1 (keep newer)**: Replace the `<!-- STRATEGY CONTENT -->` tag in the older task with `<!-- STRATEGY REVIEWED: superseded by task NNN -->`. Apply the multi-subsection warning if the block covers multiple subsections.
-   - **Option 2 (keep both)**: Replace the `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` marker with `<!-- STRATEGY REVIEWED: coexists with task NNN -->`.
-   - **Option 3 (skip)**: Leave the pending marker as-is. It will re-prompt on next `resolve` or `assemble`.
+   - **accept**: Replace ben/033's `<!-- STRATEGY CONTENT -->` tag with `<!-- STRATEGY REVIEWED: superseded by ben/040 -->`. Remove ben/040's `<!-- STRATEGY PROPOSED -->` marker (proposal satisfied — block becomes authoritative). Apply the multi-subsection warning if ben/033's block covers multiple subsections.
+   - **withdraw**: Replace ben/040's `<!-- STRATEGY CONTENT -->` tag with `<!-- STRATEGY WITHDRAWN: vs ben/033 -->`. ben/033's section in the strategy doc stays unchanged.
+   - **leave**: No marker changes. The proposal callout re-renders unchanged on the next assembly.
+
+Natural-language responses ("just accept it", "withdraw it", "leave for now") map to the canonical actions.
 
 6. After processing all pending reviews, report:
 
 ```
 Resolved 2 of 3 pending reviews:
-  - task 033 "Filing Sequence Strategy" → superseded by task 040
-  - task 028 "Initial Classification" → coexists with task 033
-  - task 025 "Risk Approach" → skipped (still pending)
+  - ben/033 "Filing Sequence Strategy" → superseded by ben/040
+  - ben/028 "Initial Classification" → coexists with ben/033
+  - ben/025 "Risk Approach" → skipped (still pending)
 
 Run '/strategy assemble [domain]' to regenerate with resolved conflicts.
 ```
@@ -593,27 +734,7 @@ Then launch via Agent tool with subagent_type=general-purpose.
 Assembler agents write files, which triggers the PreToolUse task gate hook. The agent prompt includes a pre-flight step to check and activate the task gate using the session ID passed via `{{SESSION_ID}}`. Since subagents share the parent session's environment, the same session ID and active task apply.
 
 ## Best Practices
-
-<!-- Read by /best-practices skill to audit project setup -->
-
-| Check | How to Verify | Severity | Scope |
-|-------|--------------|----------|-------|
-| Strategy skill installed | `.claude/skills/strategy/SKILL.md` exists | Required | shared |
-| Strategy briefs initialized | Every domain in the registry has a file at its output path (either a brief or assembled document). Run `/strategy init` to create missing briefs. | Required | shared |
-| Strategy content exists | At least one task file contains `<!-- STRATEGY CONTENT` on a line by itself | Required | shared |
-| All tags have domain key | Every `<!-- STRATEGY CONTENT` tag has a recognized domain key as its first value | Recommended | shared |
-| Regulatory strategy assembled | `docs/project/strategies/regulatory-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` (has been assembled from real content) | Required | shared |
-| Architecture strategy populated | `docs/project/strategies/architecture-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Development strategy populated | `docs/project/strategies/development-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Testing strategy populated | `docs/project/strategies/testing-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Risk strategy populated | `docs/project/strategies/risk-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Post-market strategy populated | `docs/project/strategies/postmarket-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Commercial strategy populated | `docs/project/strategies/commercial-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Operations strategy populated | `docs/project/strategies/operations-strategy.md` exists and does NOT contain `<!-- Status: awaiting-content -->` | Recommended | shared |
-| Strategy docs are current | Assembly date in each assembled strategy document is within 7 days of the most recent source task modification date | Recommended | shared |
-| No pending reviews | No assembled strategy documents contain `> **Pending review**` callouts (all conflicts resolved or deferred reviews addressed) | Recommended | shared |
-| Domain catalog consistent with `project.yml` | Run `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py --dry-run <file>` on each of these 3 files: `.claude/skills/strategy/SKILL.md`, `docs/project/strategies/README.md`, `.claude/skills/medtech-docs/templates/readme-strategies.md`. The renderer prints the proposed new content to stdout **only when the file would change**; if everything is in sync, stdout is empty. Pass if all 3 dry-runs produce empty stdout. Fail if any produces non-empty output — the fix is to drop `--dry-run` and re-run the renderer on the flagged files. | Required | shared |
-| `project.yml` has strategy_domains | `project.yml` contains a top-level `strategy_domains:` block with at least one entry. Required so downstream sentinels have something to render. Fix: run `/strategy domains add <key>` or reseed via `/medtech-docs init`. | Required | shared |
+See [README.md](README.md) — consumed by `/best-practices` audit.
 
 ## Notes
 
@@ -625,15 +746,5 @@ Assembler agents write files, which triggers the PreToolUse task gate hook. The 
 - The regulatory domain is the only domain with a custom template in v1. Other domains use the default template. Custom templates can be added as domains mature.
 
 ## Changelog
+See [README.md](README.md) for version history.
 
-- 11 (2026-04-20): **Domain Registry + init-briefs tables now rendered from `project.yml:strategy_domains[]` via sentinel blocks.** Eliminates the cross-skill domain-catalog drift class surfaced in task 073 (where `operations` was defined four different ways across strategy SKILL.md, strategies/README.md, readme-strategies template, and a stray root placeholder). The canonical source of truth moves to `project.yml`; downstream docs render via `<!-- AUTO:STRUCTURE kind=strategy-domains ... -->` blocks (see `.claude/rules/sentinel-blocks.md`, three variants: `expected-content`, `registry`, `init-briefs`). Renderer extended in `.claude/skills/medtech-docs/scripts/render-sentinels.py`. **Still TODO in task 076 follow-ups**: `/strategy domains add|edit|remove` reshape actions; scanner.md + assembler.md reading domains directly from `project.yml`; `/medtech-docs init` seeding `strategy_domains:`; `/best-practices` check that fails when downstream sentinels drift from `project.yml`. For now, action logic still reads the rendered table in SKILL.md — correctness is maintained as long as the sentinel is re-rendered after `project.yml` edits.
-- 10 (2026-04-13): **All strategy domains flipped to `shared` scope + "sub-DHF" → "DHF" terminology rename.** The "sub-DHF" term was a misnomer — top-level entries like `pca-device` are just DHFs, and nested entries like `cloud-suite/dhfs/drug-library-manager` are DHFs too. Renamed throughout the skill + agents + templates + tag grammar. `sub_dhfs` field in project.yml → `dhfs`. The deprecated scope key is now `dhf=<leaf>` (was `sub-dhf=<leaf>`). Description string updated. Best Practices Scope column value `per-dhf` unchanged (still correct; it means "one check per DHF entry"). The six per-dhf domains (`regulatory`, `architecture`, `development`, `testing`, `risk`, `postmarket`) now produce one shared output file under `docs/project/strategies/`, same as `commercial` and `operations`. Per-component nuance is expressed via callout subsections inside each shared doc (topic-first structure with `### PCA Device` / `### Connectivity Adapter` / etc. callouts nested under each topic). `dhf=<leaf>` scope key deprecated — tolerated but ignored. DHF scope resolution section removed from Tag Convention. Best Practices table: all strategy-doc checks now `shared`; the two cross-cutting "Per-dhf tags have dhf scope" and "dhf keys resolve" checks removed. Formal design-control outputs (SDP, SAD, V&V Plan, Risk Mgmt Plan, PMS Plan, cybersecurity plan) still live per-DHF under `dhfs/<dhf>/...` — only the upstream strategy briefs moved up. See `tasks/ben/009-shared-strategy-docs.md`.
-- 9 (2026-04-13): **Subagent prompts updated for v8 DHF scope semantics.** Rewrote `agents/scanner.md` and `agents/assembler.md` to implement the DHF scope resolution spec introduced in v8. Scanner now reads `project.yml` `dhfs[]` at start, builds a leaf-name lookup, parses `dhf=<leaf>` scope keys in tags, resolves them against the lookup, and flags per-dhf tags missing required scope keys in multi-DHF projects. Output path table now uses the `<dhf>` placeholder so one scan surfaces assembly status for every (domain, dhf) pair. Assembler accepts new `{{SUB_DHF_SCOPE}}` and `{{SUB_DHF_PATH}}` inputs, filters scanned blocks by matching DHF scope, implicit-scopes single-DHF projects, and reports skipped-by-scope subsections in its output. v8 specified the tag convention and Domain Registry schema; v9 makes the agents actually implement it.
-- 8 (2026-04-13): **Unified DHF shape support.** Domain Registry reorganized: each domain has a `Scope` (shared or per-dhf); per-dhf domains use `<dhf>` placeholder in their output path template, resolved at assembly time from the tag's `dhf=<leaf>` scope key. Added DHF scope resolution to the Tag Convention section: tags for per-dhf domains must include `dhf=<leaf-name>` in multi-DHF projects (implicit single-entry resolution in single-DHF projects). Leaf-name uniqueness enforced by `medtech-docs add-dhf` means `dhf=<leaf>` is unambiguous. `commercial` and `operations` moved to shared `docs/project/strategies/`. `risk` and `postmarket` moved to their proper DHF-level homes (`risk-management/`, `postmarket/`) out of `design-controls/`. Scanner and assembler changes are specified but not yet fully implemented — this v8 documents the target behavior; consuming subagents (`agents/scanner.md`, `agents/assembler.md`) still use v7 path semantics and will need follow-up edits. See `tasks/ben/007-sub-dhf-migration.md` P3 for full design.
-- 7 (2026-04-08): Added `resolve` action — address pending review markers without full reassembly. Scans for `STRATEGY REVIEW: pending` markers, prompts lead with same 3 options (keep newer/keep both/skip), writes resolution markers to source tasks. Does not regenerate assembled docs — run `assemble` after resolving. See task 035.
-- 6 (2026-04-08): Two-tier conflict detection — Tier 1 (heading overlap, mechanical >80% word match) plus Tier 2 (semantic overlap, assembler reads content of subsections in the same output section and assesses whether they address the same decision). Multi-subsection warning when superseding a block whose tag covers multiple subsections but only one conflicts. Assembly history now records assembler identity (`git config user.name`). See task 035.
-- 5 (2026-04-08): Strategy evolution support. Temporal ordering (newest-first within sections by last-modified date). Interactive conflict resolution — assembler prompts lead with 3 options (keep newer, keep both, defer) instead of silent `> REVIEW` flags. Review markers in source tasks (`STRATEGY REVIEWED: superseded/coexists`, `STRATEGY REVIEW: pending`) survive across assemblies. Deferred reviews re-prompt on every assembly. Assembly History section (append-only changelog in assembled docs). Scanner reports block status. Validate checks pending reviews. See task 035.
-- 4 (2026-04-08): Added `init` action — generates placeholder strategy briefs for all domains. Brief template with "What Belongs Here", "Plans This Informs", and "How to Contribute" sections. `assemble` detects `<!-- Status: awaiting-content -->` and replaces briefs with real content. Added per-domain population checks to Best Practices (regulatory Required, others Recommended). See task 035.
-- 3 (2026-04-08): Added `operations` domain (8th domain) for agentic infrastructure, tooling, and ways-of-working strategy. Removed obsolete "Future Skill Concept" from task 033 source and regulatory assembly. See task 035.
-- 2 (2026-04-08): Added subagent delegation. Scanner agent (Explore, read-only) and assembler agent (general-purpose, needs Write) in agents/ directory. Self-contained prompts with template variables for domain routing. Supports parallel assembly of multiple domains. See task 035.
-- 1 (2026-04-08): Initial version — 7 strategy domains (regulatory, commercial, architecture, development, testing, risk, postmarket) + 2 incubating (clinical, cybersecurity). 5 actions (scan, assemble, diff, validate, domains). Shared scanning infrastructure. Custom regulatory template with 9-section topic mapping. Default template for other domains. Strategy → formal plan traceability chain.

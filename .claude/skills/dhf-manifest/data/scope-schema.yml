@@ -1,0 +1,34 @@
+categories:
+- fda-guidance
+- standards
+- industry-frameworks
+dimensions:
+- ai
+- hardware
+- software
+- pccp
+- 510k
+- tool-validation
+- multi-function
+- cybersecurity
+- usability-hf
+- clinical
+- common-baseline
+topics:
+- architecture
+- requirements
+- design-outputs
+- traceability
+- risk-management
+- verification
+- validation
+- software-lifecycle
+- configuration-change
+- design-reviews
+- labeling-ifu
+- human-factors
+- cybersecurity
+- clinical
+- post-market
+- regulatory-submission
+total_obligations: 114

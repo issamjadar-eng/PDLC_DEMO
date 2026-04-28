@@ -58,12 +58,102 @@ class Config:
         return int(self.console.get("server", {}).get("port", 8765))
 
     @property
+    def model_default(self) -> str:
+        """Console-wide default model. Agents resolve to this when model is absent or 'default'."""
+        return (self.console.get("models") or {}).get("default") or DEFAULT_MODEL
+
+    @property
+    def summarizer_model(self) -> str:
+        """Model used for catalog build-time LLM summarization (Phase 2 / task 099)."""
+        return (self.console.get("models") or {}).get("summarizer") or DEFAULT_SUMMARIZER
+
+    def resolve_model(self, model: str | None) -> str:
+        """Resolve an agent's frontmatter `model:` field to the effective model ID.
+
+        Hierarchy: explicit model → sentinel `"default"` / absent → console.yaml
+        `models.default` → DEFAULT_MODEL.
+        """
+        if model and model != "default":
+            return model
+        return self.model_default
+
+    @property
+    def grounding_roots(self) -> tuple[str, ...]:
+        """Filesystem roots (relative to repo_root) that are exposable to the
+        assistant drawer's grounding surface — scanned by the README-index
+        walker and accepted by the `read_files` tool.
+
+        Defaults cover the project's own docs tree. Extended by the console.yaml
+        `grounding.extra_roots` list to expose skill-embedded reference material
+        (e.g. distilled FDA guidance and standards shipped inside the
+        `medtech-docs` skill at `.claude/skills/medtech-docs/references/`).
+        """
+        defaults = ("docs/project", "docs/external", "docs/internal/source-md")
+        extras = tuple(
+            str(x) for x in ((self.console.get("grounding") or {}).get("extra_roots") or [])
+        )
+        # Preserve order + dedupe.
+        seen: set[str] = set()
+        out: list[str] = []
+        for r in defaults + extras:
+            r = r.rstrip("/")
+            if r and r not in seen:
+                seen.add(r)
+                out.append(r)
+        return tuple(out)
+
+    def caps_for_model(self, model: str) -> dict[str, int]:
+        """Return cap values (`source_cap_kb`, `grounding_cap_kb`) for the given model.
+
+        Resolution order (highest wins):
+          1. console.yaml `models.caps.<model>`
+          2. console.yaml `models.caps.default`
+          3. code defaults `_MODEL_CAP_DEFAULTS[<model>]`
+          4. `DEFAULT_CAPS` (Sonnet-tier fallback)
+        """
+        caps_block = (self.console.get("models") or {}).get("caps") or {}
+        user_override = caps_block.get(model) or {}
+        user_default = caps_block.get("default") or {}
+        code_default = _MODEL_CAP_DEFAULTS.get(model, {})
+        merged: dict[str, int] = dict(DEFAULT_CAPS)
+        merged.update(code_default)
+        merged.update(user_default)
+        merged.update(user_override)
+        return merged
+
+    @property
     def dashboards_config(self) -> dict:
         return self.console.get("dashboards", {}) or {}
 
 
+DEFAULT_MODEL = "claude-sonnet-4-6"
+DEFAULT_SUMMARIZER = "claude-haiku-4-5"
+
+# Fallback cap defaults (Sonnet-tier) — apply when no per-model or user
+# override is present. Expressed in KB for readability in console.yaml.
+DEFAULT_CAPS: dict[str, int] = {
+    "source_cap_kb": 500,
+    "grounding_cap_kb": 80,
+}
+
+# Per-model cap defaults baked into the code. console.yaml `models.caps`
+# entries override these. Context windows:
+#   Sonnet 4.6 ≈ 200K tokens ≈ 800 KB plaintext
+#   Opus 4.7   ≈ 1M tokens   ≈ 4 MB plaintext
+#   Haiku 4.5  ≈ 200K tokens ≈ 800 KB plaintext
+# Caps sized to leave headroom for conversation history + response.
+_MODEL_CAP_DEFAULTS: dict[str, dict[str, int]] = {
+    "claude-sonnet-4-6": {"source_cap_kb": 500, "grounding_cap_kb": 80},
+    "claude-opus-4-7":   {"source_cap_kb": 2000, "grounding_cap_kb": 200},
+    "claude-haiku-4-5":  {"source_cap_kb": 300, "grounding_cap_kb": 80},
+}
+
 _DEFAULT_CONSOLE_YAML: dict[str, Any] = {
     "theme": "light",
+    "models": {
+        "default": DEFAULT_MODEL,
+        "summarizer": DEFAULT_SUMMARIZER,
+    },
     "dashboards": {
         "patterns": [
             "docs/**/*-tracker.html",

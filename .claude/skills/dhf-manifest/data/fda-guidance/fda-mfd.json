@@ -1,0 +1,148 @@
+{
+  "generated": "2026-04-24",
+  "category": "fda-guidance",
+  "source_file": "fda-mfd.md",
+  "obligation_count": 4,
+  "obligations": [
+    {
+      "id": "OBL-MFD-001",
+      "title": "MFD Core Policy",
+      "source": "FDA MFD Guidance (2020) §III Core Policy",
+      "section": "Core MFD Policy — Device Functions vs. Other Functions",
+      "scope_flags": [
+        "multi-function",
+        "510k"
+      ],
+      "topic": "regulatory-submission",
+      "artifact_type": "analysis",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "510(k) Submission — Device Description",
+        "MFD Impact Analysis"
+      ],
+      "verbatim": "FDA shall not regulate non-device software functions as devices. However, FDA may assess the impact that non-device functions have on device functions when evaluating safety and effectiveness. Non-device and other functions are reviewed only when they could impact the device function-under-review.",
+      "extracted_requirements": [
+        {
+          "HipLink is a multiple function device product": "Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the \"other function\""
+        },
+        "Management Services non-device functions (PostOp Reports, User Management, Account Management) are NOT reviewed unless they could adversely impact Pre-Op or Intra-Op",
+        {
+          "Document in the 510(k)": "which functions are device functions under review and which are \"other functions\""
+        },
+        {
+          "Conduct a two-step impact assessment": "(A) does the other function have impact on the device function? (B) if yes, could the impact increase risk or degrade performance?"
+        }
+      ]
+    },
+    {
+      "id": "OBL-MFD-002",
+      "title": "MFD Impact Assessment",
+      "source": "FDA MFD Guidance (2020) §IV Impact Assessment",
+      "section": "Two-Step Impact Assessment — Shared Resources",
+      "scope_flags": [
+        "multi-function",
+        "510k"
+      ],
+      "topic": "architecture",
+      "artifact_type": "analysis",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "MFD Impact Analysis",
+        "System Hazard Analysis",
+        "Architecture Document"
+      ],
+      "verbatim": "Consider whether the functions share: computational resources, data dependencies (input data from other function used in critical calculations), code necessary for proper execution, memory or storage, output screen or GUI, programming pointers. Does the other function provide input data for a critical calculation? Does the other function affect processing time when sharing a processor? Does the other function serve as or impact a risk control measure for the device function?",
+      "extracted_requirements": [
+        {
+          "Assess shared resources between Management Services and the SaMD modules": "computational resources, data dependencies, code, memory/storage, GUI"
+        },
+        "Assess whether Management Services functions can provide input data to critical calculations in Pre-Op or Intra-Op",
+        {
+          "If Management Services hosts the Pre-Op web application": "assess whether Management Services failure affects Pre-Op availability"
+        },
+        {
+          "Assess cybersecurity cross-function risks": "assume \"other functions\" may be employed maliciously to adversely impact the device function"
+        },
+        "Document the impact assessment in the hazard analysis (ISO 14971) — cross-function impacts are device hazards"
+      ]
+    },
+    {
+      "id": "OBL-MFD-003",
+      "title": "MFD Premarket Requirements",
+      "source": "FDA MFD Guidance (2020) §V Premarket Submission Requirements",
+      "section": "Architecture Separation Recommendation",
+      "scope_flags": [
+        "multi-function",
+        "510k",
+        "common-baseline"
+      ],
+      "topic": "architecture",
+      "artifact_type": "design-document",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "System Architecture Document",
+        "510(k) Submission — Architecture",
+        "Hazard Analysis"
+      ],
+      "verbatim": "Architectural separation strongly recommended. Logical separation, architectural separation, code and data partitioning should be used to the extent possible. Higher separation leads to easier independent review of safety and effectiveness. When separation is not achievable, interconnections and interdependencies must be explained in the hazard analysis with appropriate risk controls.",
+      "extracted_requirements": [
+        "The system SAD must document the architectural separation between device functions (Pre-Op, Intra-Op) and \"other functions\" (Management Services)",
+        "Demonstrate that Management Services cannot alter the clinical processing or outputs of Pre-Op or Intra-Op",
+        "Where interconnections exist (plan delivery, OTA updates), document them explicitly in the hazard analysis with risk controls",
+        "Submit the architecture/design documents showing how/if \"other functions\" interact with the device function",
+        "Higher architectural separation → simpler FDA review of the device functions in isolation"
+      ]
+    },
+    {
+      "id": "OBL-MFD-004",
+      "title": "MFD Change Impact",
+      "source": "FDA MFD Guidance (2020) §VI Modifications to Other Functions",
+      "section": "Modifications to Other Functions — New Submission Assessment",
+      "scope_flags": [
+        "multi-function",
+        "510k",
+        "pccp"
+      ],
+      "topic": "configuration-change",
+      "artifact_type": "process-record",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Design Change Records",
+        "PCCP Change Records",
+        "Change Impact Analysis"
+      ],
+      "verbatim": "When an other function is modified: assess whether the modification could significantly impact safety or effectiveness of the device function. If adverse impact (or labeled positive impact): reference applicable guidance to determine if a new premarket submission is required. Document the impact assessment per the quality system.",
+      "extracted_requirements": [
+        "Every modification to Management Services must be assessed for adverse impact on Pre-Op and Intra-Op safety/effectiveness",
+        "If a Management Services change could adversely affect either SaMD module, evaluate whether a new 510(k) is required",
+        "Even if Management Services changes are non-device, they must go through a documented impact assessment (QMS design change process)",
+        {
+          "PCCP changes affecting Management Services": "assess cross-function impact before implementing"
+        },
+        "Document all Management Services change impact assessments per the QMS"
+      ]
+    }
+  ],
+  "by_topic": {
+    "architecture": [
+      "OBL-MFD-002",
+      "OBL-MFD-003"
+    ],
+    "configuration-change": [
+      "OBL-MFD-004"
+    ],
+    "regulatory-submission": [
+      "OBL-MFD-001"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-MFD-001",
+    "OBL-MFD-002",
+    "OBL-MFD-003",
+    "OBL-MFD-004"
+  ]
+}

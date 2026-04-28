@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% block title %}{{ workflow.title }} · Workflows · {{ config.project_name }}{% endblock %}
+{% block content %}
+<section class="landing">
+  <p><a href="/workflows">← Workflows</a></p>
+  <h1>
+    <span style="opacity: 0.6; font-family: var(--font-mono, monospace);">{{ workflow.code }}</span>
+    {{ workflow.title }}
+    <span title="{{ workflow.readiness_label }}">{{ workflow.readiness_pill }}</span>
+  </h1>
+  <p class="sub">{{ workflow.one_liner }}</p>
+
+  {% if workflow.backend_status == "placeholder" %}
+  <div style="padding: 0.75rem 1rem; background: rgba(255,193,7,0.12); border-left: 4px solid #ffb000; margin: 1rem 0;">
+    🏗️ <strong>UI-only preview.</strong> Backend is not yet wired. This page describes the intended shape and references the tracking tasks that would light it up.
+  </div>
+  {% elif workflow.backend_status == "partial" %}
+  <div style="padding: 0.75rem 1rem; background: rgba(100,180,255,0.12); border-left: 4px solid #4a8fff; margin: 1rem 0;">
+    ⚠️ <strong>Partial backend.</strong> Some pieces are real today; placeholder zones are labeled inline.
+  </div>
+  {% endif %}
+
+  <h2>Composition</h2>
+  <ul>
+    {% for step in workflow.composition %}
+    <li><code>{{ step }}</code></li>
+    {% endfor %}
+  </ul>
+
+  <h2>What exists today</h2>
+  <p>{{ workflow.exists_today or "—" }}</p>
+
+  <h2>Gaps / placeholders</h2>
+  <p>{{ workflow.gaps or "—" }}</p>
+
+  {% if workflow.tracking_tasks %}
+  <h2>Tracking tasks</h2>
+  <ul>
+    {% for t in workflow.tracking_tasks %}
+    <li>task <code>ben/{{ t }}</code></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endblock %}

@@ -48,9 +48,11 @@ The line immediately after a `<!-- STRATEGY CONTENT -->` tag may contain a revie
 
 | Marker | Status to report |
 |--------|-----------------|
-| `<!-- STRATEGY REVIEWED: superseded by task NNN -->` | `superseded (task NNN)` |
-| `<!-- STRATEGY REVIEWED: coexists with task NNN -->` | `coexists (task NNN)` |
-| `<!-- STRATEGY REVIEW: pending, conflicts with task NNN -->` | `pending review (task NNN)` |
+| `<!-- STRATEGY REVIEWED: superseded by <task_folder>/NNN -->` | `superseded (<task_folder>/NNN)` |
+| `<!-- STRATEGY REVIEWED: coexists with <task_folder>/NNN -->` | `coexists (<task_folder>/NNN)` |
+| `<!-- STRATEGY PROPOSED: vs <task_folder>/NNN, section "X" -->` | `proposed (<task_folder>/NNN)` |
+| `<!-- STRATEGY WITHDRAWN: vs <task_folder>/NNN -->` | `withdrawn (<task_folder>/NNN)` |
+| `<!-- STRATEGY REVIEW: pending, conflicts with <task_folder>/NNN -->` (v12 legacy) | `proposed (<task_folder>/NNN)` — auto-upgrade on first v13 assembly |
 | (no marker) | `active` |
 
 ## Scanning Algorithm

@@ -80,6 +80,27 @@ CONSOLE_YAML_DEFAULT = """\
 
 theme: light
 
+grounding:
+  # Extra filesystem roots exposable to the assistant drawer (INDEX +
+  # `core:` + read_files tool). The defaults (docs/project, docs/external,
+  # docs/internal/source-md) are always included. Uncomment skill paths
+  # below to expose distilled standards + guidance as grounding — useful
+  # for regulatory-focused projects where agents need authoritative text.
+  # extra_roots:
+  #   - .claude/skills/medtech-docs/references
+  #   - .claude/skills/dhf-manifest/data/tier1-regulatory
+
+models:
+  default: claude-sonnet-4-6
+  # summarizer: claude-haiku-4-5   # used by catalog build in /assistant (Phase 2 / task 099)
+  # Per-model source + grounding caps (optional — code defaults apply if absent).
+  # Raise these if you have context-window room and want the assistant to
+  # ingest more grounding per request.
+  # caps:
+  #   claude-sonnet-4-6: {{source_cap_kb: 500, grounding_cap_kb: 80}}
+  #   claude-opus-4-7:   {{source_cap_kb: 2000, grounding_cap_kb: 200}}
+  #   claude-haiku-4-5:  {{source_cap_kb: 300, grounding_cap_kb: 80}}
+
 dashboards:
   patterns:
     - docs/**/*-tracker.html

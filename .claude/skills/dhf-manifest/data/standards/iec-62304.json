@@ -1,0 +1,503 @@
+{
+  "generated": "2026-04-24",
+  "category": "standards",
+  "source_file": "iec-62304.md",
+  "obligation_count": 20,
+  "obligations": [
+    {
+      "id": "OBL-62304-001",
+      "title": "Software Safety Classification",
+      "source": "IEC 62304:2006+AMD1:2015 §4.3",
+      "section": "§4.3 — Software safety classification",
+      "scope_flags": [],
+      "topic": "software-lifecycle",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Safety Classification Record",
+        "Software Development Plan"
+      ],
+      "verbatim": "\"The MANUFACTURER shall assign a software safety class (Class A, B, or C) to\nthe SOFTWARE SYSTEM based on the severity of HAZARDOUS SITUATION that could\nresult if the SOFTWARE SYSTEM should fail to behave as specified.\"\n",
+      "extracted_requirements": [
+        "Assign IEC 62304 safety class (A, B, or C) to each software item before development begins",
+        "Document the classification rationale referencing ISO 14971 severity levels",
+        "Record the classification in the Software Development Plan or a dedicated classification record",
+        "Re-evaluate classification if intended use or hazard analysis changes"
+      ]
+    },
+    {
+      "id": "OBL-62304-002",
+      "title": "Software Development Plan",
+      "source": "IEC 62304:2006+AMD1:2015 §5.1.1",
+      "section": "§5.1 — Software development planning",
+      "scope_flags": [],
+      "topic": "software-lifecycle",
+      "artifact_type": "plan",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Development Plan",
+        "Design and Development Plan"
+      ],
+      "verbatim": "\"The MANUFACTURER shall establish a SOFTWARE DEVELOPMENT PLAN for conducting\nthe activities of the software development process.\"\n",
+      "extracted_requirements": [
+        "Establish a Software Development Plan (SDP) before beginning software development",
+        "SDP may be part of the Design and Development Plan or a separate document",
+        "SDP must be updated to reflect actual development activities throughout the project"
+      ]
+    },
+    {
+      "id": "OBL-62304-003",
+      "title": "SDP Content & Lifecycle",
+      "source": "IEC 62304:2006+AMD1:2015 §5.1.2 + §5.1.3",
+      "section": "§5.1 — Software development planning",
+      "scope_flags": [],
+      "topic": "software-lifecycle",
+      "artifact_type": "plan",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Development Plan"
+      ],
+      "verbatim": "\"The SOFTWARE DEVELOPMENT PLAN shall address: (a) the software development life cycle\nmodel including the activities and tasks to be performed and their sequencing;\n(b) the deliverables of the software development process and the criteria for their\nacceptance; (c) the standards, methods, and tools to be used; (d) traceability\nbetween software requirements and software system test cases.\"\n",
+      "extracted_requirements": [
+        "SDP must define the SDLC model (waterfall, iterative, agile-within-waterfall, etc.)",
+        "SDP must list planned deliverables with acceptance criteria for each",
+        "SDP must identify development standards, methods, and tools (including tool validation status)",
+        "SDP must describe the traceability approach from requirements to test cases",
+        "SDP must address configuration management, problem resolution, and risk management integration"
+      ]
+    },
+    {
+      "id": "OBL-62304-004",
+      "title": "Software Requirements Specification",
+      "source": "IEC 62304:2006+AMD1:2015 §5.2.1",
+      "section": "§5.2 — Software requirements analysis",
+      "scope_flags": [],
+      "topic": "requirements",
+      "artifact_type": "spec",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Requirements Specification"
+      ],
+      "verbatim": "\"The MANUFACTURER shall define and document the SOFTWARE REQUIREMENTS from the\nSYSTEM REQUIREMENTS and the results of RISK MANAGEMENT activities.\"\n",
+      "extracted_requirements": [
+        "Define software requirements traceable to system-level requirements",
+        "Define software requirements traceable to risk management outputs (risk controls implemented in software)",
+        "Document requirements in a Software Requirements Specification (SRS)"
+      ]
+    },
+    {
+      "id": "OBL-62304-005",
+      "title": "SRS Content Requirements",
+      "source": "IEC 62304:2006+AMD1:2015 §5.2.2 + §5.2.3",
+      "section": "§5.2 — Software requirements analysis",
+      "scope_flags": [],
+      "topic": "requirements",
+      "artifact_type": "spec",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Requirements Specification"
+      ],
+      "verbatim": "\"The software requirements shall include: functional and capability requirements;\nsoftware system inputs and outputs; interfaces between the software system and\nother systems; software-operated alarms, warnings, and operator messages;\nsecurity requirements; usability engineering requirements.\"\n",
+      "extracted_requirements": [
+        "SRS must cover: functional/capability requirements, I/O requirements, external interfaces",
+        "SRS must address software-controlled alarms, warnings, and messages",
+        "SRS must include cybersecurity and usability requirements (for Class II SaMD)",
+        "All requirements must be verifiable (have defined acceptance criteria or test method)"
+      ]
+    },
+    {
+      "id": "OBL-62304-006",
+      "title": "SRS Risk Control Trace",
+      "source": "IEC 62304:2006+AMD1:2015 §5.2.6",
+      "section": "§5.2 — Software requirements analysis",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "requirements",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Requirements Specification",
+        "Risk Management File"
+      ],
+      "verbatim": "\"The MANUFACTURER shall re-evaluate the RISK associated with the software\nafter establishing the SOFTWARE REQUIREMENTS and update the RISK MANAGEMENT\nFILE as necessary.\"\n",
+      "extracted_requirements": [
+        "Re-evaluate risk after SRS is established — update risk file if new hazards emerge",
+        "Document this re-evaluation step in the risk management file or SRS changelog"
+      ]
+    },
+    {
+      "id": "OBL-62304-007",
+      "title": "Software Architecture Specification",
+      "source": "IEC 62304:2006+AMD1:2015 §5.3.1",
+      "section": "§5.3 — Software architectural design",
+      "scope_flags": [],
+      "topic": "architecture",
+      "artifact_type": "spec",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Software Architecture Document"
+      ],
+      "verbatim": "\"The MANUFACTURER shall transform the SOFTWARE REQUIREMENTS into a documented\narchitecture that describes the structure of the software and identifies the\nSOFTWARE ITEMS.\"\n",
+      "extracted_requirements": [
+        "Produce a Software Architecture Document (SAD) transforming the SRS into a structural design",
+        "SAD must identify and name all software items (decomposition to the unit level is not required at this stage)",
+        "SAD must describe the interfaces between software items and between the software and hardware/external systems"
+      ]
+    },
+    {
+      "id": "OBL-62304-008",
+      "title": "SOUP Identification",
+      "source": "IEC 62304:2006+AMD1:2015 §5.3.3",
+      "section": "§5.3 — Software architectural design",
+      "scope_flags": [],
+      "topic": "architecture",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "SOUP List",
+        "Software Architecture Document"
+      ],
+      "verbatim": "\"The MANUFACTURER shall identify SOUP items including: (a) the title, manufacturer,\nand unique SOUP designator; (b) the requirements for the SOUP item.\"\n",
+      "extracted_requirements": [
+        "Identify all SOUP (Software of Unknown Provenance) items used in each software item",
+        "For each SOUP item: document title, manufacturer/supplier, version, and required functional/performance requirements",
+        "Maintain a SOUP list as a controlled document — update on each SOUP change"
+      ]
+    },
+    {
+      "id": "OBL-62304-009",
+      "title": "Architecture Verification",
+      "source": "IEC 62304:2006+AMD1:2015 §5.3.4",
+      "section": "§5.3 — Software architectural design",
+      "scope_flags": [],
+      "topic": "architecture",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Software Architecture Document",
+        "Architecture Verification Record"
+      ],
+      "verbatim": "\"The MANUFACTURER shall verify that the software architecture implements all\nsoftware requirements and identify potential causes of hazardous situations.\"\n",
+      "extracted_requirements": [
+        "Conduct and document an architecture verification that confirms all SRS requirements are addressed in the design",
+        "As part of architecture verification, evaluate whether the architecture could cause or fail to mitigate hazardous situations",
+        "Record the verification outcome (pass/fail per requirement) in the SAD or a separate verification record"
+      ]
+    },
+    {
+      "id": "OBL-62304-010",
+      "title": "Detailed Software Design",
+      "source": "IEC 62304:2006+AMD1:2015 §5.4.1",
+      "section": "§5.4 — Software detailed design",
+      "scope_flags": [],
+      "topic": "design-outputs",
+      "artifact_type": "spec",
+      "dhf_owner": "item",
+      "min_iec62304_class": "C",
+      "applies_to": [
+        "Software Design Document",
+        "Software Detailed Design"
+      ],
+      "verbatim": "\"The MANUFACTURER shall refine the software architecture until it is represented\nby SOFTWARE UNITS that can be implemented and verified.\"\n",
+      "extracted_requirements": [
+        "Decompose the architecture into software units (leaf-level components that can be individually implemented and tested)",
+        "Document the detailed design for each software unit with sufficient detail to permit implementation without ambiguity",
+        "Verify that the detailed design implements the software architecture (no requirement left unaddressed)"
+      ]
+    },
+    {
+      "id": "OBL-62304-011",
+      "title": "Unit Verification",
+      "source": "IEC 62304:2006+AMD1:2015 §5.5.2 + §5.5.3",
+      "section": "§5.5 — Software unit implementation",
+      "scope_flags": [],
+      "topic": "verification",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Unit Verification Records",
+        "Code Review Records"
+      ],
+      "verbatim": "\"The MANUFACTURER shall verify SOFTWARE UNITS. The verification shall confirm that\nthe units implement the design and are free of common programming errors.\"\n",
+      "extracted_requirements": [
+        "Verify each software unit through code review, unit testing, or both",
+        "Class C: unit testing is required; define test cases per the detailed design",
+        "Class B: code review of each unit is sufficient (testing not mandated but recommended)",
+        "Record verification results — pass/fail per unit, reviewer/tester identity, date"
+      ]
+    },
+    {
+      "id": "OBL-62304-012",
+      "title": "Integration Testing",
+      "source": "IEC 62304:2006+AMD1:2015 §5.6.1 + §5.6.3",
+      "section": "§5.6 — Software integration",
+      "scope_flags": [],
+      "topic": "verification",
+      "artifact_type": "protocol",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Integration Test Plan",
+        "Integration Test Report"
+      ],
+      "verbatim": "\"The MANUFACTURER shall integrate the SOFTWARE ITEMS and verify that the\nintegrated SOFTWARE ITEMS implement the software architecture and satisfy\nthe SOFTWARE REQUIREMENTS.\"\n",
+      "extracted_requirements": [
+        "Produce an integration plan defining the sequence and method for integrating software items",
+        "Conduct integration testing at each integration step and upon full integration",
+        "Integration tests must verify that integrated software satisfies the SRS",
+        "Document integration test results with pass/fail per test case and anomalies found"
+      ]
+    },
+    {
+      "id": "OBL-62304-013",
+      "title": "System Testing",
+      "source": "IEC 62304:2006+AMD1:2015 §5.7.1 + §5.7.3",
+      "section": "§5.7 — Software system testing",
+      "scope_flags": [],
+      "topic": "validation",
+      "artifact_type": "protocol",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software System Test Plan",
+        "Software System Test Report"
+      ],
+      "verbatim": "\"The MANUFACTURER shall test the SOFTWARE SYSTEM for conformance to the SOFTWARE\nREQUIREMENTS. The testing shall include boundary conditions and stress conditions\nand shall check for ANOMALIES.\"\n",
+      "extracted_requirements": [
+        "Test the complete integrated software system against every SRS requirement",
+        "Test must include normal operating conditions, boundary conditions, stress conditions, and foreseeable misuse",
+        "Document a System Test Plan before testing begins; document results in a System Test Report",
+        "All test anomalies must be evaluated and resolved before release"
+      ]
+    },
+    {
+      "id": "OBL-62304-014",
+      "title": "Software Release",
+      "source": "IEC 62304:2006+AMD1:2015 §5.8.1 + §5.8.3 + §5.8.7",
+      "section": "§5.8 — Software release",
+      "scope_flags": [],
+      "topic": "configuration-change",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Release Package",
+        "Release Checklist"
+      ],
+      "verbatim": "\"The MANUFACTURER shall ensure that the software is released only when: all\nsoftware development activities are complete; the software configuration\nis documented; known ANOMALIES are evaluated and their impact on safety\nis acceptable; the software version identifier is assigned.\"\n",
+      "extracted_requirements": [
+        "Assign a unique version identifier to the released software (must be traceable in the DHF)",
+        "Document all known anomalies at release with their safety impact evaluation",
+        "Produce a release checklist confirming all §5 development activities are complete",
+        "Record the released configuration (version of each software item, SOUP versions, build environment)"
+      ]
+    },
+    {
+      "id": "OBL-62304-015",
+      "title": "Software Maintenance Plan",
+      "source": "IEC 62304:2006+AMD1:2015 §6.1",
+      "section": "§6 — Software maintenance process",
+      "scope_flags": [
+        "pccp"
+      ],
+      "topic": "post-market",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Software Maintenance Plan",
+        "Software Development Plan"
+      ],
+      "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE MAINTENANCE PLAN.\nThe plan shall address: problem and modification analysis; modification\nimplementation; release of modifications.\"\n",
+      "extracted_requirements": [
+        "Establish a Software Maintenance Plan (may be part of SDP or a separate document)",
+        "Maintenance plan must address: how post-market problems are analyzed, how modifications are scoped and implemented, how modified releases are managed",
+        "PCCP changes must follow the maintenance process — classify the change, evaluate safety impact, implement per §5 process appropriate to the classification"
+      ]
+    },
+    {
+      "id": "OBL-62304-016",
+      "title": "Software Hazard Analysis",
+      "source": "IEC 62304:2006+AMD1:2015 §7.1.1",
+      "section": "§7 — Software risk management",
+      "scope_flags": [],
+      "topic": "risk-management",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Risk Management File",
+        "Software FMEA",
+        "Hazard Analysis"
+      ],
+      "verbatim": "\"The MANUFACTURER shall identify SOFTWARE ITEMS that could contribute to a\nHAZARDOUS SITUATION. For each such SOFTWARE ITEM, the MANUFACTURER shall\nevaluate the contribution of the SOFTWARE ITEM to the HAZARDOUS SITUATION.\"\n",
+      "extracted_requirements": [
+        "For each hazardous situation in the risk file, identify which software items could contribute to it",
+        "Evaluate how and to what degree each software item contributes (causal analysis)",
+        "Document results in a software risk analysis record — typically a software FMEA or hazard analysis table"
+      ]
+    },
+    {
+      "id": "OBL-62304-017",
+      "title": "SOUP Risk Evaluation",
+      "source": "IEC 62304:2006+AMD1:2015 §7.1.3",
+      "section": "§7 — Software risk management",
+      "scope_flags": [],
+      "topic": "risk-management",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Risk Management File",
+        "SOUP Risk Evaluation"
+      ],
+      "verbatim": "\"The MANUFACTURER shall evaluate the ANOMALY LISTS and reported PROBLEMS for\nSOUP items and shall determine whether the anomalies or reported problems are\nrelevant to the SOFTWARE SYSTEM and document the conclusions.\"\n",
+      "extracted_requirements": [
+        "For each SOUP item, obtain and review the supplier's known anomaly list",
+        "Evaluate whether any known anomaly could affect the safety of the software system",
+        "Document the evaluation conclusion (relevant / not relevant / mitigated) in the risk management file",
+        "Repeat evaluation when a new SOUP version is adopted or new anomalies are reported"
+      ]
+    },
+    {
+      "id": "OBL-62304-018",
+      "title": "Software Configuration Management",
+      "source": "IEC 62304:2006+AMD1:2015 §8.1.1 + §8.1.2",
+      "section": "§8 — Software configuration management",
+      "scope_flags": [],
+      "topic": "configuration-change",
+      "artifact_type": "plan",
+      "dhf_owner": "item",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Configuration Management Plan",
+        "Software Development Plan"
+      ],
+      "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE CONFIGURATION\nMANAGEMENT PLAN that includes: identification of configuration items;\nchange control procedures; status accounting; configuration audits.\"\n",
+      "extracted_requirements": [
+        "Establish a Configuration Management Plan (may be part of SDP)",
+        "CM plan must define: what is a configuration item, how items are labeled/versioned, how changes are controlled, how configuration status is tracked",
+        "Configuration items must include: software items, test cases, tools, SOUP versions, build scripts, and DHF documents"
+      ]
+    },
+    {
+      "id": "OBL-62304-019",
+      "title": "Problem Resolution Process",
+      "source": "IEC 62304:2006+AMD1:2015 §9.1",
+      "section": "§9 — Software problem resolution",
+      "scope_flags": [],
+      "topic": "post-market",
+      "artifact_type": "record",
+      "dhf_owner": "system",
+      "min_iec62304_class": "B",
+      "applies_to": [
+        "Problem Resolution Process",
+        "Software Maintenance Plan"
+      ],
+      "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE PROBLEM RESOLUTION\nPROCESS that includes: problem reporting, analysis, resolution and verification,\nrelease of modified software, communication of resolution to relevant parties.\"\n",
+      "extracted_requirements": [
+        "Establish a problem resolution process covering: receipt, investigation, resolution, and closure",
+        "Each problem must be evaluated for: safety impact, causal analysis, resolution approach",
+        "Problem resolution records must be maintained — linked to the affected software version and release",
+        "Post-market problems feed back into the risk management file when they reveal new hazards"
+      ]
+    },
+    {
+      "id": "OBL-62304-020",
+      "title": "Software Traceability",
+      "source": "IEC 62304:2006+AMD1:2015 §5.1.6(d)",
+      "section": "§5.1 — Software development planning (traceability)",
+      "scope_flags": [],
+      "topic": "traceability",
+      "artifact_type": "record",
+      "dhf_owner": "item",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Trace Matrix",
+        "Software Development Plan"
+      ],
+      "verbatim": "\"The SOFTWARE DEVELOPMENT PLAN shall address traceability between: software\nrequirements and system requirements; software requirements and software system\ntests; software requirements and software architecture; and for Class C, between\nsoftware requirements and software units.\"\n",
+      "extracted_requirements": [
+        "Maintain bidirectional traceability: system requirements → software requirements → architecture → test cases",
+        "Class C additional: software requirements → individual software units",
+        "Document the traceability approach in the SDP",
+        "Produce a trace matrix as the formal traceability deliverable"
+      ]
+    }
+  ],
+  "by_topic": {
+    "architecture": [
+      "OBL-62304-007",
+      "OBL-62304-008",
+      "OBL-62304-009"
+    ],
+    "configuration-change": [
+      "OBL-62304-014",
+      "OBL-62304-018"
+    ],
+    "design-outputs": [
+      "OBL-62304-010"
+    ],
+    "post-market": [
+      "OBL-62304-015",
+      "OBL-62304-019"
+    ],
+    "requirements": [
+      "OBL-62304-004",
+      "OBL-62304-005",
+      "OBL-62304-006"
+    ],
+    "risk-management": [
+      "OBL-62304-016",
+      "OBL-62304-017"
+    ],
+    "software-lifecycle": [
+      "OBL-62304-001",
+      "OBL-62304-002",
+      "OBL-62304-003"
+    ],
+    "traceability": [
+      "OBL-62304-020"
+    ],
+    "validation": [
+      "OBL-62304-013"
+    ],
+    "verification": [
+      "OBL-62304-011",
+      "OBL-62304-012"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-62304-001",
+    "OBL-62304-002",
+    "OBL-62304-003",
+    "OBL-62304-004",
+    "OBL-62304-005",
+    "OBL-62304-006",
+    "OBL-62304-007",
+    "OBL-62304-008",
+    "OBL-62304-009",
+    "OBL-62304-010",
+    "OBL-62304-011",
+    "OBL-62304-012",
+    "OBL-62304-013",
+    "OBL-62304-014",
+    "OBL-62304-015",
+    "OBL-62304-016",
+    "OBL-62304-017",
+    "OBL-62304-018",
+    "OBL-62304-019",
+    "OBL-62304-020"
+  ]
+}

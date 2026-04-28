@@ -1,0 +1,47 @@
+# <Source Name> — DHF Obligations
+
+**Source**: <FDA guidance title | standard number and title>
+**Version**: <date issued or standard version>
+**Scope tags**: <space-separated dimensions: ai, hardware, software, pccp, 510k, tool-validation, multi-function, cybersecurity, usability-hf, clinical, common-baseline>
+**Distilled by**: <name or "skill-maintainer">
+**Distilled date**: YYYY-MM-DD
+
+---
+
+<!-- DISTILLATION NOTES
+  - One obligation record per paragraph (or per distinct obligation within a paragraph)
+  - Split a paragraph into multiple records only when it contains clearly distinct obligations
+  - Use verbatim text from the source; do not paraphrase
+  - extracted_requirements: actionable bullets that a DHF author must satisfy
+  - scope_flags: only add flags that materially restrict applicability; omit if always-required (use topic: common-baseline instead)
+  - min_iec62304_class: null if the obligation applies to all software items; B or C if class-restricted
+  - dhf_owner: system (device-level), item (per-software-item), or both
+-->
+
+## <Section X.X — Section Title>
+
+```yaml
+id: OBL-<SOURCE>-001
+source: "<Full guidance title or 'IEC 62304:2006+AMD1:2015 §5.3'"
+section: "<Section X.X — Section Title>"
+scope_flags: []          # empty = common-baseline (always applies)
+topic: <one of 16 DHF topics>
+artifact_type: <plan|spec|protocol|report|record|form>
+dhf_owner: <system|item|both>
+min_iec62304_class: null
+applies_to:
+  - "<Deliverable name>"
+verbatim: |
+  "<Exact quoted text from source document>"
+extracted_requirements:
+  - "<Actionable requirement — what must appear in the deliverable>"
+  - "<Second requirement if present>"
+```
+
+**Context:** <1–3 sentences explaining the regulatory intent, how this obligation typically manifests in DHF content, and any common interpretation pitfalls.>
+
+---
+
+## <Next Section>
+
+<!-- Repeat the record block for each obligation-bearing paragraph -->

@@ -21,10 +21,14 @@ fi
 
 if [ -n "$SESSION_ID" ]; then
     rm -f "$STATE_DIR/active-tasks-${SESSION_ID}.txt"
-    # Clear capture-armed and capture-exit-pending markers for this session
-    rm -f "$STATE_DIR"/capture-armed-"${SESSION_ID}"-*.txt 2>/dev/null
-    rm -f "$STATE_DIR"/capture-exit-pending-"${SESSION_ID}"-*.txt 2>/dev/null
 fi
+
+# Clean up any leftover capture-armed / capture-exit-pending markers from the
+# deprecated Strategy/Lessons capture hooks (removed in task v23). Targets all
+# sessions, not just this one, so pre-upgrade markers get cleared. Auto-purge
+# in check-active-task.sh also catches files older than 7 days as a fallback.
+rm -f "$STATE_DIR"/capture-armed-*.txt 2>/dev/null
+rm -f "$STATE_DIR"/capture-exit-pending-*.txt 2>/dev/null
 
 # Always clear the docflow-active marker as a belt-and-suspenders fallback for
 # /docflow agents that touched it but failed to remove it on their exit path.

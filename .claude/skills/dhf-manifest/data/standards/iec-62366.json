@@ -1,0 +1,263 @@
+{
+  "generated": "2026-04-24",
+  "category": "standards",
+  "source_file": "iec-62366.md",
+  "obligation_count": 9,
+  "obligations": [
+    {
+      "id": "OBL-62366-001",
+      "title": "Usability Engineering Plan",
+      "source": "IEC 62366-1:2015 §4.1",
+      "section": "4.1 — Usability Engineering Process",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Usability Engineering Plan",
+        "Design and Development Plan"
+      ],
+      "verbatim": "Establish and maintain a usability engineering process. The process must be integrated with the overall design and development process. Usability engineering activities must be traceable to the risk management process (ISO 14971).",
+      "extracted_requirements": [
+        "Establish a usability engineering process and maintain it throughout the development lifecycle",
+        "Integrate the usability engineering process with the design and development process (DDP)",
+        "Ensure traceability between usability engineering activities and the risk management process"
+      ]
+    },
+    {
+      "id": "OBL-62366-002",
+      "title": "Use Specification",
+      "source": "IEC 62366-1:2015 §5.1.1",
+      "section": "5.1.1 — Intended Users",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "specification",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Use Specification",
+        "Usability Engineering File"
+      ],
+      "verbatim": "Identify and characterize intended users. Consider: clinical role, training level, experience, physical capabilities.",
+      "extracted_requirements": [
+        "Identify and characterize the intended users for each use scenario",
+        "Consider user attributes including clinical role, training level, prior experience with similar devices, and physical capabilities",
+        "Document separate user profiles per module where user populations differ"
+      ]
+    },
+    {
+      "id": "OBL-62366-003",
+      "title": "User Profiles & Environments",
+      "source": "IEC 62366-1:2015 §5.1.2",
+      "section": "5.1.2 — Intended Use Environment",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "specification",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Use Specification",
+        "Usability Engineering File"
+      ],
+      "verbatim": "Document the use environment for each use scenario. Consider: lighting, noise, sterility, time pressure, distractions, PPE.",
+      "extracted_requirements": [
+        "Document the intended use environment for each module",
+        {
+          "Address": "ambient lighting, noise level, sterility requirements, time pressure, concurrent distractions, required PPE"
+        },
+        "Distinguish between OR and non-OR environments — Intra-Op operates in a sterile surgical field, Pre-Op in a clinic office"
+      ]
+    },
+    {
+      "id": "OBL-62366-004",
+      "title": "Use-Related Risk Analysis",
+      "source": "IEC 62366-1:2015 §5.2",
+      "section": "5.2 — Use-Related Risk Analysis",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "analysis",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Use-Related Risk Analysis",
+        "Usability Engineering File",
+        "Risk Management File"
+      ],
+      "verbatim": "Identify hazards and hazardous situations related to use. Identify potential use errors and their causes. Evaluate the severity and probability of harm from use errors. Feed use-related risks into the ISO 14971 risk management process.",
+      "extracted_requirements": [
+        "Identify all potential use errors per module — perception errors, cognitive errors, action errors",
+        "Identify the hazardous situation and potential harm sequence for each use error",
+        "Evaluate severity and probability of harm from each use error",
+        "Feed use-related risks into the ISO 14971 risk management process (risk inputs, not standalone)",
+        {
+          "Critical use error categories for SaMD": "misread measurements, missed alerts, incorrect plan selection, wrong patient data confirmation"
+        }
+      ]
+    },
+    {
+      "id": "OBL-62366-005",
+      "title": "User Interface Specification",
+      "source": "IEC 62366-1:2015 §5.3",
+      "section": "5.3 — User Interface Specification",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "specification",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "User Interface Specification",
+        "Software Requirements Specification"
+      ],
+      "verbatim": "Establish the user interface specification from use specification and risk analysis. Specify: information presentation, controls, navigation, feedback, error prevention. Include measurable acceptance criteria for critical use scenarios.",
+      "extracted_requirements": [
+        "Establish a UI specification derived from the use specification and use-related risk analysis",
+        {
+          "Specify": "information presentation, controls, navigation, feedback mechanisms, error prevention features"
+        },
+        "Define measurable acceptance criteria for critical use scenarios (tasks where use error could cause harm)",
+        "Critical use scenarios must be explicitly identified and flagged in the specification"
+      ]
+    },
+    {
+      "id": "OBL-62366-006",
+      "title": "UI Verification",
+      "source": "IEC 62366-1:2015 §5.5",
+      "section": "5.5 — Verification of User Interface",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "verification",
+      "artifact_type": "test-report",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "UI Verification Report",
+        "V&V Plan"
+      ],
+      "verbatim": "Verify the user interface meets the user interface specification. Include inspection, analysis, and testing methods. Verify risk control measures related to usability are implemented.",
+      "extracted_requirements": [
+        "Verify the implemented user interface meets the UI specification requirements",
+        "Use inspection, analysis, and testing methods as appropriate",
+        "Verify that all usability-related risk control measures from the use-related risk analysis are implemented and effective"
+      ]
+    },
+    {
+      "id": "OBL-62366-007",
+      "title": "Formative Usability Evaluation",
+      "source": "IEC 62366-1:2015 §5.6",
+      "section": "5.6 — User Interface Evaluation (Formative)",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "validation",
+      "artifact_type": "test-report",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Formative Evaluation Reports",
+        "Usability Engineering File"
+      ],
+      "verbatim": "Evaluate the user interface with representative users in representative environments (formative phase). Methods: cognitive walkthrough, heuristic evaluation, usability testing with think-aloud. Can be done with simulated environments and prototype interfaces. Multiple rounds expected.",
+      "extracted_requirements": [
+        "Conduct iterative formative usability evaluations during design",
+        "Use representative users (or similar proxies) in representative or simulated environments",
+        {
+          "Methods include": "cognitive walkthrough, heuristic evaluation, think-aloud usability testing"
+        },
+        "Multiple rounds expected — findings must be fed back into design changes",
+        "Document findings, design changes made in response, and rationale for accepted vs. deferred findings"
+      ]
+    },
+    {
+      "id": "OBL-62366-008",
+      "title": "Summative Usability Validation",
+      "source": "IEC 62366-1:2015 §5.6",
+      "section": "5.6 — User Interface Evaluation (Summative)",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "validation",
+      "artifact_type": "test-report",
+      "dhf_owner": "system",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "Summative Usability Evaluation Report",
+        "510(k) Submission"
+      ],
+      "verbatim": "Evaluate the user interface with representative users in representative environments (summative phase). Must use production-equivalent device in representative use environment. Must include statistical evidence that critical tasks can be completed safely. Deliverable: Summative Usability Evaluation Report.",
+      "extracted_requirements": [
+        "Conduct a final summative usability evaluation before market release",
+        "Use production-equivalent device and representative use environment (or validated simulation)",
+        "Include representative users — matching the intended user profiles defined in §5.1.1",
+        "Evaluate all critical tasks defined in the UI specification",
+        "Demonstrate with statistical evidence (task completion rates, error rates) that critical tasks can be completed safely",
+        {
+          "Document": "participant profiles, tasks tested, acceptance criteria, results, use errors observed and their root cause"
+        },
+        "Summative Usability Evaluation Report is required in the 510(k) submission for Class II SaMD"
+      ]
+    },
+    {
+      "id": "OBL-62366-009",
+      "title": "UOUP Evaluation",
+      "source": "IEC 62366-1:2015 §5.7",
+      "section": "5.7 — User Interface of Unknown Provenance (UOUP)",
+      "scope_flags": [
+        "common-baseline"
+      ],
+      "topic": "human-factors",
+      "artifact_type": "analysis",
+      "dhf_owner": "both",
+      "min_iec62304_class": "A",
+      "applies_to": [
+        "UOUP Evaluation",
+        "Usability Engineering File"
+      ],
+      "verbatim": "If reusing an existing user interface or UI components, evaluate them using this process. Applicable when using third-party UI frameworks or pre-built components in the clinical interface.",
+      "extracted_requirements": [
+        "If third-party UI frameworks or pre-built components are used in the clinical interface, evaluate them under the UOUP process",
+        "UOUP evaluation requires demonstrating that reused UI components meet the usability requirements for the device's intended use",
+        "Document the evaluation rationale — what was evaluated, how, and what was accepted or rejected"
+      ]
+    }
+  ],
+  "by_topic": {
+    "human-factors": [
+      "OBL-62366-001",
+      "OBL-62366-002",
+      "OBL-62366-003",
+      "OBL-62366-004",
+      "OBL-62366-005",
+      "OBL-62366-009"
+    ],
+    "validation": [
+      "OBL-62366-007",
+      "OBL-62366-008"
+    ],
+    "verification": [
+      "OBL-62366-006"
+    ]
+  },
+  "obligation_ids": [
+    "OBL-62366-001",
+    "OBL-62366-002",
+    "OBL-62366-003",
+    "OBL-62366-004",
+    "OBL-62366-005",
+    "OBL-62366-006",
+    "OBL-62366-007",
+    "OBL-62366-008",
+    "OBL-62366-009"
+  ]
+}

@@ -1,0 +1,71 @@
+# Frontmatter overlay for doc_type: requirement
+# Populated by scripts/infer_requirement_metadata.py after the body structurer
+# emits the H4 requirement blocks. Deep-merged into the base frontmatter
+# (templates/frontmatter-project.md) at adopt time.
+#
+# Task ben/089 session 4.
+
+overlay_name: requirement
+version: 1.0
+
+# Document-wide aggregate populated from parsed R1 per-requirement attributes
+# tables and detail tables. All keys listed below are emitted even when the
+# count is 0 (stable shape for downstream dashboards).
+requirements:
+  count: 0                # total H4 requirement blocks in body
+
+  # Map of Epic value (verbatim from source Epic Link column) -> occurrence
+  # count. Keys are the exact inline-code string from the attributes table,
+  # minus backticks. Example: "VIEW 3D RECONSTRUCTION": 5
+  epics: {}
+
+  # Multi-valued: a requirement with 3 classification tags contributes 3
+  # counts. The 9 canonical tags from references/classification-taxonomy.md
+  # — all listed here so aggregation has a stable shape even for unused tags.
+  classification:
+    functional: 0
+    safety: 0
+    security: 0
+    privacy: 0
+    usability: 0
+    performance: 0
+    reliability: 0
+    interoperability: 0
+    regulatory: 0
+
+  # Per-row CtX distribution (counts every row: Description row + each AC
+  # row). Multi-valued: a row with `CtF, CtS` contributes to both. `none`
+  # is the "no CtX could be inferred" row count. CtF will be 0 at adopt
+  # time because it is NEVER auto-inferred.
+  criticality:
+    CtF: 0
+    CtS: 0
+    CtC: 0
+    CtP: 0
+    none: 0
+
+  # Map of Target value -> count. Standard keys kept stable for dashboards;
+  # additional project-specific release strings may appear as extra keys.
+  target_releases:
+    v1: 0
+    v2: 0
+    future: 0
+    unassigned: 0
+
+  # Traces To resolution: did the Epic Link's value carry a DI- or UN-
+  # prefix? "resolved" = prefix matched; "unresolved" = no match (literal
+  # `null` in the attributes table).
+  traces_to:
+    resolved: 0
+    unresolved: 0
+
+  # Requirement lifecycle status distribution. Default at adopt is
+  # `proposed: <count>`; other keys are 0 until human curation advances them.
+  status:
+    proposed: 0
+    accepted: 0
+    implemented: 0
+    verified: 0
+    deferred: 0
+    rejected: 0
+    superseded: 0

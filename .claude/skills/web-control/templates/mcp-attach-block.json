@@ -1,0 +1,15 @@
+{
+  "_comment": "Optional: configure chrome-devtools MCP to attach to web-control's debug Chrome instead of spawning its own. Paste this block into project-root .mcp.json (replacing the existing chrome-devtools entry, if any). Note: requires a Claude Code session restart to take effect, and the debug Chrome must be running before the MCP starts.",
+  "mcpServers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--browser-url=http://localhost:9222"
+      ],
+      "env": {}
+    }
+  }
+}

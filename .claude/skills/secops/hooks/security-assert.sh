@@ -125,10 +125,32 @@ CHECK_TTL=$(yaml_val "check_ttl_days")
 
 # ---------------------------------------------------------------------------
 # Identify current user
+#
+# Primary path: resolve via the shared roster-matcher helper (git-email +
+# fuzzy heuristics, no network). Emits JSON with task_folder + name + github
+# + email. This replaces ~90 lines of hand-rolled YAML parsing (the old
+# yaml_task_folder_for + email-match loop) with a single tested resolver.
+#
+# Fallback path: if resolve_user.py doesn't match (unusual — e.g., missing
+# helper on an older clone), fall back to the legacy gh-api-user → yaml
+# lookup. This keeps the hook working during a partial rollout.
 # ---------------------------------------------------------------------------
 GH_AVAILABLE=false
 GH_USER=""
 TASK_FOLDER=""
+FULL_NAME=""
+
+RESOLVER="$PROJECT_DIR/.claude/skills/shared/scripts/resolve_user.py"
+if [[ -f "$RESOLVER" ]] && has_command python3 && has_command jq; then
+    resolve_json=$(python3 "$RESOLVER" 2>/dev/null || true)
+    if [[ -n "$resolve_json" ]]; then
+        unresolved=$(echo "$resolve_json" | jq -r '.unresolved // false' 2>/dev/null || echo "true")
+        if [[ "$unresolved" == "false" ]]; then
+            TASK_FOLDER=$(echo "$resolve_json" | jq -r '.task_folder // ""' 2>/dev/null || true)
+            FULL_NAME=$(echo "$resolve_json" | jq -r '.name // ""' 2>/dev/null || true)
+        fi
+    fi
+fi
 
 if has_command gh && has_command jq; then
     if run_with_timeout 3 gh auth status &>/dev/null 2>&1; then
@@ -137,38 +159,9 @@ if has_command gh && has_command jq; then
     fi
 fi
 
-if [[ -n "$GH_USER" ]]; then
+# Legacy fallback — only used if resolve_user.py failed to match.
+if [[ -z "$TASK_FOLDER" && -n "$GH_USER" ]]; then
     TASK_FOLDER=$(yaml_task_folder_for "$GH_USER")
-fi
-
-# Fallback: try git email → match to project.yml team
-if [[ -z "$TASK_FOLDER" ]]; then
-    local_email=$(git config user.email 2>/dev/null || true)
-    if [[ -n "$local_email" ]]; then
-        # Search project.yml for matching email → task_folder
-        in_active=false
-        found_email=false
-        while IFS= read -r line; do
-            if echo "$line" | grep -q '^[[:space:]]*active:'; then
-                in_active=true; continue
-            fi
-            if $in_active && echo "$line" | grep -q '^[a-z#]'; then
-                in_active=false; continue
-            fi
-            if $in_active; then
-                if echo "$line" | grep -q "^[[:space:]]*email:[[:space:]]*${local_email}"; then
-                    found_email=true
-                fi
-                if $found_email && echo "$line" | grep -q '^[[:space:]]*task_folder:'; then
-                    TASK_FOLDER=$(echo "$line" | sed 's/.*task_folder:[[:space:]]*//' | xargs)
-                    break
-                fi
-                if $found_email && echo "$line" | grep -q '^[[:space:]]*-[[:space:]]*name:'; then
-                    found_email=false
-                fi
-            fi
-        done < "$CONFIG_FILE"
-    fi
 fi
 
 if [[ -z "$TASK_FOLDER" ]]; then
@@ -560,26 +553,8 @@ fi
 # ---------------------------------------------------------------------------
 # Write/update SECOPS.md
 # ---------------------------------------------------------------------------
-FULL_NAME=""
-in_active=false
-while IFS= read -r line; do
-    if echo "$line" | grep -q '^[[:space:]]*active:'; then
-        in_active=true; continue
-    fi
-    if $in_active && echo "$line" | grep -q '^[a-z#]'; then
-        in_active=false; continue
-    fi
-    if $in_active && echo "$line" | grep -q "^[[:space:]]*task_folder:[[:space:]]*${TASK_FOLDER}[[:space:]]*$"; then
-        # Found our entry — look backwards for name
-        :
-    fi
-    if $in_active && echo "$line" | grep -q '^[[:space:]]*name:'; then
-        FULL_NAME=$(echo "$line" | sed 's/.*name:[[:space:]]*//' | xargs)
-    fi
-    if $in_active && echo "$line" | grep -q "^[[:space:]]*task_folder:[[:space:]]*${TASK_FOLDER}[[:space:]]*$"; then
-        break
-    fi
-done < "$CONFIG_FILE"
+# FULL_NAME is already populated by resolve_user.py in the happy path;
+# fall back to TASK_FOLDER if the legacy gh-api path was taken.
 [[ -z "$FULL_NAME" ]] && FULL_NAME="$TASK_FOLDER"
 
 NEXT_CHECK=$(python3 -c "

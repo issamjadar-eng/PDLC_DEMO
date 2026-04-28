@@ -289,10 +289,12 @@ main {
 /* Chat + docs pages break out of the 1040px main cap and use the full viewport. */
 body.chat-page main,
 body.docs-page main,
-body.dashboard-page main {
+body.dashboard-page main,
+body.workflow-page main {
   max-width: none;
   padding: 1rem 1.25rem;
 }
+body.workflow-page main { padding: 1.5rem 2rem 3rem; }
 body.dashboard-page main { padding: 0; }
 body.dashboard-page .site-footer { display: none; }
 /* Chat page still hides the footer — the chat form sits at the bottom of the
@@ -433,13 +435,20 @@ body.docs-page.resizing * {
   color: var(--gl-slate);
   font-size: .85rem;
 }
+.docs-frontmatter { min-width: 0; }
 .docs-frontmatter pre {
   background: var(--gl-gray-lighter);
   border-radius: var(--radius-sm);
   padding: .5rem .75rem;
   margin-top: .4rem;
   overflow-x: auto;
+  max-width: 100%;
   max-height: 180px;
+  /* YAML values can be very long (verbatim-quoted regulatory text). Wrap
+     instead of horizontal scroll so the reader doesn't have to scroll
+     sideways to read a single multi-paragraph value. */
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 .docs-summary {
   border-top: 1px solid var(--gl-border);
@@ -474,21 +483,34 @@ body.docs-page.resizing * {
   padding: 1.25rem 1.5rem;
   box-shadow: var(--shadow-soft);
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 60vh;
   overflow-y: auto;
+  /* Belt-and-braces: any descendant that still tries to push past
+     the pane's width is clipped, not allowed to stretch the layout. */
+  overflow-x: hidden;
 }
 .docs-content { min-width: 0; }
 .docs-placeholder { padding: 1rem; text-align: center; }
 .docs-placeholder.error { color: var(--gl-error); }
-.docs-rendered { max-width: 80ch; }
+/* Full-width rendered markdown — let content fill the content pane.
+   Per-element constraints (line-length for paragraphs via max-width on p)
+   can be added later if long-line readability becomes an issue. */
+.docs-rendered { min-width: 0; }
 .docs-text {
   background: var(--gl-gray-lighter);
   padding: .75rem;
   border-radius: var(--radius-sm);
+  max-width: 100%;
   overflow-x: auto;
   white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
-.docs-text.lang-yaml { white-space: pre; color: #1f2344; }
+/* Syntax-highlighted YAML / JSON (both use the lang-yaml class per
+   explorer.js). Keep the highlight colors; inherit the wrap behavior
+   from .docs-text so long string values don't push past the pane. */
+.docs-text.lang-yaml { color: #1f2344; }
 .lang-yaml .yml-comment { color: #8a94b4; font-style: italic; }
 .lang-yaml .yml-key     { color: var(--gl-purple-dark); font-weight: 600; }
 .lang-yaml .yml-string  { color: #0b6a3c; }
@@ -1055,11 +1077,12 @@ body.docs-page.resizing * {
   font-size: .95rem;
 }
 
-.md-content p { margin: .5rem 0; }
+.md-content { min-width: 0; }
+.md-content p { margin: .5rem 0; overflow-wrap: anywhere; }
 .md-content p:first-child { margin-top: 0; }
 .md-content p:last-child { margin-bottom: 0; }
 .md-content ul, .md-content ol { margin: .5rem 0 .5rem 1.25rem; padding: 0; }
-.md-content li { margin: .25rem 0; line-height: 1.55; }
+.md-content li { margin: .25rem 0; line-height: 1.55; overflow-wrap: anywhere; }
 .md-content strong { color: var(--gl-black); font-weight: 700; }
 .md-content em { font-style: italic; }
 .md-content code {
@@ -1068,6 +1091,49 @@ body.docs-page.resizing * {
   border-radius: 3px;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: .88em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* Fenced code blocks (```yaml, ```json, etc.) rendered into the docs body.
+   Container is `.md-content.docs-rendered`, NOT `.markdown-body`. Wrap
+   long lines (YAML `verbatim: "..."` values, JSON strings, long URLs)
+   so they never push past the content pane's width. */
+.md-content pre {
+  background: var(--gl-gray-lighter);
+  color: inherit;
+  padding: .75rem 1rem;
+  border-radius: var(--radius-sm);
+  margin: .75rem 0;
+  max-width: 100%;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: .85rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  overflow-x: auto;
+}
+.md-content pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  word-break: inherit;
+  overflow-wrap: inherit;
+}
+.md-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: .9rem;
+  table-layout: auto;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.md-content th, .md-content td {
+  border: 1px solid var(--gl-border);
+  padding: .5rem .75rem;
+  text-align: left;
+  vertical-align: top;
 }
 .md-content h3, .md-content h4, .md-content h5 {
   font-size: 1rem;
@@ -1107,21 +1173,37 @@ body.docs-page.resizing * {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: .875em;
 }
+.markdown-body { min-width: 0; }
 .markdown-body pre {
   background: #1d2033;
   color: #e6e6f0;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-md);
-  overflow-x: auto;
+  max-width: 100%;
   font-size: .85rem;
   line-height: 1.55;
+  /* Wrap long lines (e.g. YAML `verbatim:` values, long JSON strings)
+     instead of forcing horizontal scroll. Preserves whitespace and
+     newlines; breaks long unbroken tokens (paths, URLs) at word or
+     any-character boundary so they never push past the viewport. */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .markdown-body pre code { background: none; color: inherit; padding: 0; }
+/* Inline code wraps so long identifiers (paths, kebab-cased IDs) don't
+   force the block wider than its container. */
+.markdown-body code { overflow-wrap: anywhere; word-break: break-word; }
 .markdown-body table {
   border-collapse: collapse;
   width: 100%;
   margin: 1rem 0;
   font-size: .9rem;
+  table-layout: auto;
+  /* Long cell content (paths, URLs, multi-sentence descriptions) wraps
+     instead of pushing the table wider than the pane. */
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .markdown-body th, .markdown-body td {
   border: 1px solid var(--gl-border);
@@ -1427,6 +1509,43 @@ body.docs-page.resizing * {
 .pc-msg-user { background: #e8f0fb; color: #0f2e5c; align-self: flex-end; max-width: 85%; white-space: pre-wrap; }
 .pc-msg-assistant { background: #f6f7f9; color: #111; align-self: flex-start; max-width: 95%; }
 .pc-msg-warning { background: #fff7e6; color: #7a4d0f; align-self: stretch; padding: 0.4rem 0.6rem; }
+.pc-msg-info { background: #eef2f8; color: #274060; align-self: stretch; padding: 0.35rem 0.6rem; font-size: 0.8rem; }
+.pc-cite-sup { font-size: 0.75em; line-height: 0; margin-left: 1px; }
+.pc-cite-sup .pc-cite { color: var(--accent, #1f5bd9); text-decoration: none; padding: 0 2px; border-radius: 2px; }
+.pc-cite-sup .pc-cite:hover { background: rgba(31, 91, 217, 0.12); text-decoration: underline; }
+.pc-sources { margin-top: 0.6rem; padding: 0.4rem 0.6rem; background: var(--surface-2, #f0f2f5); border-radius: 4px; font-size: 0.85rem; }
+.pc-sources summary { cursor: pointer; color: #555; user-select: none; }
+.pc-sources summary:hover { color: #111; }
+.pc-cite-list { margin: 0.4rem 0 0 0; padding-left: 1.25rem; }
+.pc-cite-list li { margin: 0.15rem 0; word-break: break-all; }
+.pc-cite-list a.pc-cite { color: var(--accent, #1f5bd9); text-decoration: none; }
+.pc-cite-list a.pc-cite:hover { text-decoration: underline; }
+
+/* Jump-to-latest pill — shown only when streaming + user has scrolled up. */
+.pc-jump-latest {
+  position: absolute;
+  bottom: 4.2rem;       /* sit above the input row */
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  padding: 0.3rem 0.8rem;
+  background: var(--accent, #1f5bd9);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+  z-index: 10;
+}
+.pc-jump-latest.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.pc-jump-latest:hover { filter: brightness(1.08); }
 
 .pc-msg-assistant > *:first-child { margin-top: 0; }
 .pc-msg-assistant > *:last-child { margin-bottom: 0; }
