@@ -154,7 +154,7 @@ Skills are shared infrastructure — they ship in the registry and run in any pr
 
 Disambiguation rule: when `Arthrex` appears as a path slug or repo URL (e.g., `arthrex-pccp`), treat it as a project reference → `MedTech Project`. When it appears as a possessive describing process ownership (`Arthrex's QMS`, `Arthrex SOPs`), treat it as an organization reference → `MedTech Company`'s QMS / `MedTech Company` SOPs.
 
-The `/best-practices` skill enforces this with a Required check that greps the regression vocabulary and FAILs on any hit (with documented exceptions for the registry URL and the deferred `hiplink-*` filenames in `dhf-manifest`). When you're writing a new skill or extending an existing one, run that check before pushing — the canonical command is in PDLC_DEMO `tasks/ben/032`.
+The `/best-practices` skill enforces this with a Required check that greps the regression vocabulary and FAILs on any hit (with documented exceptions for the registry URL, this glossary doc itself, and post-update changelog notes that describe what was renamed). When you're writing a new skill or extending an existing one, run that check before pushing — the canonical command is in PDLC_DEMO `tasks/ben/032`.
 
 ### Self-Contained Skills & Symlink Pattern
 

@@ -25,7 +25,11 @@ SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = SKILL_DIR.parent.parent.parent
 
-TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest/hiplink-manifest.json"
+from _project_slug import project_slug, manifest_filename
+
+PROJECT_SLUG = project_slug(PROJECT_ROOT)
+MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
+TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest" / MANIFEST_JSON_NAME
 TIER3_YAML = SKILL_DIR / "data/tier3-reference/reference-dhf.yml"
 DEFAULT_OUTPUT = PROJECT_ROOT / "docs/project/dhf-manifest/gap-report.md"
 

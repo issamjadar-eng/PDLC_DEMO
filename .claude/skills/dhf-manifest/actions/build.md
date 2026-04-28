@@ -5,8 +5,8 @@ Three build steps feed one another. Each is idempotent.
 ```
 build-reference   (skill-owned)          data/tier1-regulatory/*.md   ──▶  data/tier3-reference/reference-dhf.{yml,md}
 build-qms         (project-owned)        docs/project/dhf-manifest/qms-manifest.md   ──▶  qms-manifest.json
-build-manifest    (project-owned)        reference-dhf.yml + qms-manifest.json + project.yml   ──▶  hiplink-manifest.{md,json} + hiplink-by-section.md
-dashboard         (project-owned)        hiplink-manifest.json   ──▶  hiplink-dashboard.md
+build-manifest    (project-owned)        reference-dhf.yml + qms-manifest.json + project.yml   ──▶  <project>-dhf-manifest.{md,json} + <project>-dhf-by-section.md
+dashboard         (project-owned)        <project>-dhf-manifest.json   ──▶  <project>-dhf-dashboard.md
 ```
 
 ---
@@ -88,12 +88,12 @@ python3 .claude/skills/dhf-manifest/scripts/build-manifest.py [--dry-run] [--del
 
 | File | Role |
 |------|------|
-| `hiplink-manifest.md` | **View 1** — one section per DHF; within each, topic subsections with enriched table (ID · Obligation · Artifact Type · Deliverables · Reg Source · QMS Grounding · Status) |
-| `hiplink-manifest.json` | Sidecar — full record per routed entry with `reg_source`, `qms_grounding`, and `status/location` |
-| `hiplink-by-section.md` | **View 2** — same data, outer grouping `Topic → DHF → obligations` for domain-SME review |
+| `<project>-dhf-manifest.md` | **View 1** — one section per DHF; within each, topic subsections with enriched table (ID · Obligation · Artifact Type · Deliverables · Reg Source · QMS Grounding · Status) |
+| `<project>-dhf-manifest.json` | Sidecar — full record per routed entry with `reg_source`, `qms_grounding`, and `status/location` |
+| `<project>-dhf-by-section.md` | **View 2** — same data, outer grouping `Topic → DHF → obligations` for domain-SME review |
 
 **Variants**:
-- `--delta` — diff the new run's routed IDs against the previously written `hiplink-manifest.json` and print added/dropped IDs.
+- `--delta` — diff the new run's routed IDs against the previously written `<project>-dhf-manifest.json` and print added/dropped IDs.
 - `--scope FLAG=VALUE` — apply a hypothetical scope override and render to stdout without writing (PCCP change-impact preview).
 
 **Per-item filtering** applied during routing:

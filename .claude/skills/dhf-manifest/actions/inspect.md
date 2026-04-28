@@ -2,7 +2,7 @@
 
 Read-only inspection actions — none mutate the skill-owned caches or project-side hand-authored files.
 
-> The separate obligation trace matrix / gap-report outputs from earlier versions are now subsumed by `hiplink-by-section.md` (topic-first trace) and `hiplink-dashboard.md` (per-module status + QMS-coverage bars). There is no standalone `trace-matrix/` folder anymore — the name also collided with the unrelated intra-DHF trace concept in `/trace-matrix`.
+> The separate obligation trace matrix / gap-report outputs from earlier versions are now subsumed by `<project>-dhf-by-section.md` (topic-first trace) and `<project>-dhf-dashboard.md` (per-module status + QMS-coverage bars). There is no standalone `trace-matrix/` folder anymore — the name also collided with the unrelated intra-DHF trace concept in `/trace-matrix`.
 
 ---
 
@@ -16,9 +16,9 @@ Per-module summary view — authoring status (GAP vs FOUND) plus QMS-coverage br
 python3 .claude/skills/dhf-manifest/scripts/dashboard.py
 ```
 
-**Inputs**: `docs/project/dhf-manifest/hiplink-manifest.json` (must exist — run `build-manifest` first).
+**Inputs**: `docs/project/dhf-manifest/<project>-dhf-manifest.json` (must exist — run `build-manifest` first).
 
-**Output**: `docs/project/dhf-manifest/hiplink-dashboard.md` — "what have we authored and what's left?" at a glance.
+**Output**: `docs/project/dhf-manifest/<project>-dhf-dashboard.md` — "what have we authored and what's left?" at a glance.
 
 ---
 
@@ -39,7 +39,7 @@ Structural compliance checks — deterministic, no LLM.
 | Min IEC class valid | `min_iec62304_class` ∈ {A, B, C, null} |
 | QMS-manifest parseable | every `<!-- QMS-DATA -->` block is valid YAML |
 | No duplicate QMS IDs | every `id:` in QMS-DATA blocks is unique |
-| Tier 4 ID consistency | every entry in `hiplink-manifest.json` corresponds to an OBL in Reference DHF |
+| Tier 4 ID consistency | every entry in `<project>-dhf-manifest.json` corresponds to an OBL in Reference DHF |
 | Anchors present | every Tier 1 OBL has an `<a id="OBL-xxx"></a>` line preceding its YAML block |
 
 Exit 0 only if all checks pass.
@@ -52,7 +52,7 @@ Delta view — diff the current routed-obligation set against the previously wri
 
 **Script**: `scripts/build-manifest.py --delta`
 
-Reads the old `hiplink-manifest.json`, recomputes the routing, and reports added/dropped OBL IDs per DHF. Used after editing `project.yml` scope or Tier 1 content to confirm the blast radius.
+Reads the old `<project>-dhf-manifest.json`, recomputes the routing, and reports added/dropped OBL IDs per DHF. Used after editing `project.yml` scope or Tier 1 content to confirm the blast radius.
 
 ---
 
@@ -62,7 +62,7 @@ Hypothetical scope override — preview the routing impact without writing.
 
 **Script**: `scripts/build-manifest.py --scope FLAG=VALUE`
 
-Runs a full projection with the given flag override applied to the in-memory scope vector, renders the resulting `hiplink-manifest.md` to stdout, and never writes. Useful for PCCP change-impact analysis (e.g., `--scope hardware=true` to see what the manifest would look like if MedTech Project added a hardware component).
+Runs a full projection with the given flag override applied to the in-memory scope vector, renders the resulting `<project>-dhf-manifest.md` to stdout, and never writes. Useful for PCCP change-impact analysis (e.g., `--scope hardware=true` to see what the manifest would look like if MedTech Project added a hardware component).
 
 ---
 
@@ -87,11 +87,11 @@ Runs a full projection with the given flag override applied to the in-memory sco
 
 ## Tracker integration (planned)
 
-`/tracker` currently reads per-filing composition manifests to determine which DHF deliverables are in each filing. Planned integration: filter `hiplink-manifest.json` by filing phase to show obligation coverage per filing.
+`/tracker` currently reads per-filing composition manifests to determine which DHF deliverables are in each filing. Planned integration: filter `<project>-dhf-manifest.json` by filing phase to show obligation coverage per filing.
 
 Pre-conditions not yet met:
 - Tier 1 obligations need `filing_phase[]` tags (`qsub`, `510k`, `pccp`, `all`).
 - `dashboard.py` needs a `--filing <name>` mode that filters by filing.
 - Composition manifests need real artifact lists before coverage numbers are meaningful.
 
-Until then, use `hiplink-dashboard.md` for all-filing coverage and `/tracker build` for filing-specific status.
+Until then, use `<project>-dhf-dashboard.md` for all-filing coverage and `/tracker build` for filing-specific status.

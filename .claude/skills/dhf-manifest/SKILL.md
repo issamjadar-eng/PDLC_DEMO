@@ -1,8 +1,8 @@
 ---
 name: dhf-manifest
 description: "DHF Manifest — 4-tier deliverable catalog that projects regulatory and QMS obligations through a project scope vector into per-DHF manifests with gap reports. Sibling to /trace-matrix (intra-DHF trace); this skill answers: are the right documents present and do they satisfy regulation + QMS?"
-version: 5
-updated: 2026-04-24
+version: 6
+updated: 2026-04-27
 ---
 
 # DHF Manifest Skill
@@ -21,10 +21,10 @@ SKILL-OWNED                                       PROJECT-OWNED
        │                                                                        │
        └── aggregate reference-dhf.yml (built)  × project.yml scope              ▼
                                                            ↓                × qms-manifest.json
-                                           build-manifest  ──▶  hiplink-manifest.{md,json} (View 1)
-                                                                ├──▶  hiplink-by-section.md (View 2)
+                                           build-manifest  ──▶  <project>-dhf-manifest.{md,json} (View 1)
+                                                                ├──▶  <project>-dhf-by-section.md (View 2)
                                                                 │
-                                                        dashboard  ──▶  hiplink-dashboard.md (View 3)
+                                                        dashboard  ──▶  <project>-dhf-dashboard.md (View 3)
 ```
 
 Layout is flat on both sides. Skill-side uses category folders mirroring `medtech-docs/references/` (fda-guidance, standards, industry-frameworks) — no tier prefixes. Each source MD has a sibling built JSON sidecar. Project-side holds all 7 user-facing files at its root.
@@ -61,6 +61,25 @@ Layout is flat on both sides. Skill-side uses category folders mirroring `medtec
 | `clinical_evaluation` | `scope.clinical_evaluation` | literature |
 | `interoperability` | `scope.interoperability` | true |
 | `geography` | `scope.geography` | [us] |
+
+## Output filename derivation
+
+The four output files emitted by `build-manifest` and `dashboard` are prefixed with a project-specific slug so each project's manifests are visually self-identifying:
+
+```
+<project-slug>-dhf-manifest.md
+<project-slug>-dhf-manifest.json
+<project-slug>-dhf-by-section.md
+<project-slug>-dhf-dashboard.md
+```
+
+`<project-slug>` resolves in this order (`scripts/_project_slug.py`):
+
+1. `dhf_manifest.output_prefix` in `project.yml` (explicit override)
+2. `project.name` slugified (default) — lowercase, whitespace + `_` → `-`, strip non-alphanumeric except `-`, collapse repeats, trim leading/trailing
+3. `dhf` literal fallback (no `project.yml` found — surfaces the missing config as a smell)
+
+Examples: `project.name: PDLC_DEMO` → `pdlc-demo` → `pdlc-demo-dhf-manifest.md`; `project.name: Arthrex PCCP` → `arthrex-pccp` → `arthrex-pccp-dhf-manifest.md`.
 
 ## Sibling skills
 

@@ -2,11 +2,10 @@
 
 **ID**: 033
 **Created**: 2026-04-27
-**Status**: Not Started
+**Status**: Complete (pending push)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
-**Blocked by**: ben/032 prose pass (so the readme/changelog references move first)
 
 ---
 
@@ -39,18 +38,18 @@ The `dhf-manifest` skill writes its outputs as `hiplink-manifest.{md,json}`, `hi
 
 ## Todos
 
-- [x] Design — confirmed naming pattern `<project-slug>-dhf-{manifest.md, manifest.json, by-section.md, dashboard.md}` driven from `project.yml` `project.name`, slugified. Optional `dhf_manifest.output_prefix` override.
-- [ ] Add slugifier helper (`scripts/_project_slug.py` or inline in `_linking.py` shared helper) — pure-stdlib, no PyYAML dep.
-- [ ] Update `scripts/build-manifest.py` — read `project.name` (with `dhf_manifest.output_prefix` override), slugify, use as prefix for all four output files. Replace the hardcoded `hiplink-intra-op` leaf-name branch with a config-driven flag.
-- [ ] Update `scripts/dashboard.py`, `scripts/validate.py`, `scripts/gap-report.py` — same slug-driven path resolution.
-- [ ] Update prose docs (`SKILL.md`, `README.md`, `actions/build.md`, `actions/init.md`, `actions/inspect.md`) — replace literal `hiplink-*` filenames with the `<project>-dhf-*` pattern, document the slug derivation rule, document the override knob.
-- [ ] Update `dhf-manifest/README.md` best-practice checks (lines 15, 17, 18, 19) so the grep targets the slug-driven filenames.
-- [ ] Migration: write the registry changelog entry + `**Post-update:**` block telling existing projects to either rename existing built outputs in-place or rerun `build-manifest` (which will write the new filenames; old ones remain on disk and can be deleted).
-- [ ] PDLC_DEMO local: rerun `build-manifest`/`build-qms` after pull to regenerate to the new filenames; verify `pdlc-demo-dhf-manifest.md` etc. appear.
-- [ ] arthrex-pccp coordination: their next `/sync-skills pull` will pick up the rename; `hiplink-manifest.md` and friends still on disk can be left in place or deleted by the project owner.
-- [ ] Update the `best-practices` "Skill content is anonymized" check from ben/032 Phase 4 — drop the `hiplink-manifest|hiplink-by-section|hiplink-dashboard` exception clause once the rename merges, and tighten the regex.
+- [x] Design locked: `<project-slug>-dhf-{manifest.md, manifest.json, by-section.md, dashboard.md}` from `project.yml` `project.name` (slugified), with optional `dhf_manifest.output_prefix` override.
+- [x] Added `scripts/_project_slug.py` — pure-stdlib slug helper. Smoke-tested against PDLC_DEMO (→ `pdlc-demo`), arthrex-pccp (→ `arthrex-pccp`), and the no-`project.yml` fallback (→ `dhf`).
+- [x] Wired slug into `scripts/build-manifest.py` — all four output filenames now derive from the slug via `manifest_filename()`. Replaced the hardcoded `if leaf == "hiplink-intra-op":` branch with a project-supplied `dhfs[].classification.subtitle_extra` field.
+- [x] Wired slug into `scripts/dashboard.py`, `scripts/validate.py`, `scripts/gap-report.py` — paths and module docstrings updated.
+- [x] Updated prose docs (`SKILL.md`, `README.md`, `actions/build.md`, `actions/init.md`, `actions/inspect.md`) — literal `hiplink-*` filenames replaced with the `<project>-dhf-*` pattern. New `## Output filename derivation` section in SKILL.md documents the resolution order with PDLC_DEMO + arthrex-pccp examples.
+- [x] Updated `dhf-manifest/README.md` best-practice grep checks to target the slug-driven filenames.
+- [x] Migration note written into `dhf-manifest/README.md` v6 changelog entry — projects rerun `build-manifest` after pull; old `hiplink-*` outputs remain on disk and can be deleted by the project owner; projects relying on the `hiplink-intra-op` "tablet / offline-capable" descriptor must add `subtitle_extra` to the DHF's classification block.
+- [x] Tightened the `best-practices` "Skill content is anonymized" check — dropped the `hiplink-manifest|hiplink-by-section|hiplink-dashboard` filename exception (no longer needed since the rename is in place); added explicit allowed exception for `skill-creator/SKILL.md` glossary section and post-update changelog notes that name what was renamed.
+- [x] Bumped dhf-manifest version 5 → 6, dated 2026-04-27.
 - [ ] Push to hitachi as a single PR titled `dhf-manifest: parameterize manifest output filenames from project.yml project.name`.
-- [ ] Verify build-reference + build-manifest on PDLC_DEMO after pull (114 obligations × 11 dimensions × 19 sources should still rebuild clean).
+- [ ] PDLC_DEMO local: rerun `build-manifest`/`build-qms` after merge to regenerate to the new filenames (currently blocked by a pre-existing project.yml gap — no `dhfs[]` with `role: system` — out of scope for this task).
+- [ ] arthrex-pccp coordination: their next `/sync-skills pull` will pick up the rename; `hiplink-manifest.md` and friends still on disk can be left in place or deleted by the project owner.
 
 ## Notes
 
@@ -61,3 +60,4 @@ The `dhf-manifest` skill writes its outputs as `hiplink-manifest.{md,json}`, `hi
 
 - 2026-04-27: Task created as the structural follow-up to ben/032's prose-only audit. Captured during ben/032 Phase 1 survey when the output filenames were identified as a programmatic leak (raised, not touched). User confirmed the prose-only constraint and the per-recommendation plan.
 - 2026-04-27: User locked the design — output prefix is `project.yml` `project.name` slugified, with optional `dhf_manifest.output_prefix` override. Output filename shape: `<project-slug>-dhf-{manifest.md, manifest.json, by-section.md, dashboard.md}`. Each project's manifests will be visually self-identifying, and the registry stays neutral. Implementation plan updated to reflect the slug-driven pattern (script changes, doc updates, migration note, best-practices lint tightening).
+- 2026-04-27: Implementation complete locally. `scripts/_project_slug.py` added (pure-stdlib slugifier with `dhf_manifest.output_prefix` override → `project.name` → `dhf` fallback). All four scripts (`build-manifest.py`, `dashboard.py`, `validate.py`, `gap-report.py`) now derive output filenames from the slug. Hardcoded `if leaf == "hiplink-intra-op":` branch replaced with `dhfs[].classification.subtitle_extra` field. Prose updated across SKILL.md (new `## Output filename derivation` section), README.md (best-practice grep checks retargeted; v6 changelog entry with migration note), and all `actions/*.md`. `best-practices` lint tightened to drop the `hiplink-*` filename exception and document the legitimate glossary-doc + post-update-note exceptions. Skill version bumped 5 → 6. Smoke tests: build-reference clean (114 obl × 11 dim × 19 src); validate passes (1 expected warning about no manifest yet); slug helper resolves correctly across PDLC_DEMO / arthrex-pccp / no-yml fallback.

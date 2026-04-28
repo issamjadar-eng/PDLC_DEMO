@@ -2,12 +2,13 @@
 """
 dashboard.py — View 3 status dashboard for the DHF Manifest.
 
-Reads hiplink-manifest.json, summarises per-DHF status (GAP / FOUND) and
-QMS coverage (direct / topic-only / none) per topic. Replaces gap-report.md
-with a status-first view that answers "what have we authored, and what's
-the coverage story."
+Reads the project's `<project-slug>-dhf-manifest.json` (slug derived from
+project.yml — see _project_slug.py), summarises per-DHF status (GAP /
+FOUND) and QMS coverage (direct / topic-only / none) per topic. Replaces
+gap-report.md with a status-first view that answers "what have we
+authored, and what's the coverage story."
 
-Output: docs/project/dhf-manifest/hiplink-dashboard.md
+Output: `docs/project/dhf-manifest/<project-slug>-dhf-dashboard.md`.
 """
 
 import sys
@@ -17,12 +18,20 @@ from pathlib import Path
 from datetime import date
 from collections import defaultdict
 
+from _project_slug import project_slug, manifest_filename
+
 SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = SKILL_DIR.parent.parent.parent
 
-TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest/hiplink-manifest.json"
-DEFAULT_OUTPUT = PROJECT_ROOT / "docs/project/dhf-manifest/hiplink-dashboard.md"
+PROJECT_SLUG = project_slug(PROJECT_ROOT)
+MANIFEST_MD_NAME = manifest_filename(PROJECT_SLUG, "manifest.md")
+MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
+BY_SECTION_MD_NAME = manifest_filename(PROJECT_SLUG, "by-section.md")
+DASHBOARD_MD_NAME = manifest_filename(PROJECT_SLUG, "dashboard.md")
+
+TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest" / MANIFEST_JSON_NAME
+DEFAULT_OUTPUT = PROJECT_ROOT / "docs/project/dhf-manifest" / DASHBOARD_MD_NAME
 
 TOPIC_DISPLAY = {
     "architecture": "Architecture",
@@ -114,8 +123,8 @@ def render_dashboard(tier4: dict) -> str:
         "have a direct QMS procedure (green), only a topic-level fallback (yellow), "
         "or no grounding at all (red)?",
         "",
-        "Companion views: [`hiplink-manifest.md`](hiplink-manifest.md) (by DHF), "
-        "[`hiplink-by-section.md`](hiplink-by-section.md) (by topic).",
+        f"Companion views: [`{MANIFEST_MD_NAME}`]({MANIFEST_MD_NAME}) (by DHF), "
+        f"[`{BY_SECTION_MD_NAME}`]({BY_SECTION_MD_NAME}) (by topic).",
         "",
         "---",
         "",

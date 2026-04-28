@@ -25,10 +25,15 @@ SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = SKILL_DIR.parent.parent.parent
 
+from _project_slug import project_slug, manifest_filename
+
 SOURCE_CATEGORIES = ["fda-guidance", "standards", "industry-frameworks"]
 SOURCE_ROOT = SKILL_DIR / "data"
 TIER3_YAML = SKILL_DIR / "data/reference-dhf.yml"
-TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest/hiplink-manifest.json"
+
+PROJECT_SLUG = project_slug(PROJECT_ROOT)
+MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
+TIER4_JSON = PROJECT_ROOT / "docs/project/dhf-manifest" / MANIFEST_JSON_NAME
 
 VALID_TOPICS = {
     "architecture", "requirements", "design-outputs", "traceability",

@@ -24,6 +24,7 @@ from datetime import date
 from collections import defaultdict
 
 from _linking import render_obl_link, render_qms_link, find_bare_ids
+from _project_slug import project_slug, manifest_filename
 
 SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
@@ -33,6 +34,13 @@ TIER3_YAML = SKILL_DIR / "data/reference-dhf.yml"
 PROJECT_YML = PROJECT_ROOT / "project.yml"
 OUTPUT_DIR = PROJECT_ROOT / "docs/project/dhf-manifest"
 QMS_MANIFEST_JSON = OUTPUT_DIR / "qms-manifest.json"
+
+# Output filename prefix derived from project.yml — see _project_slug.py.
+PROJECT_SLUG = project_slug(PROJECT_ROOT)
+MANIFEST_MD_NAME = manifest_filename(PROJECT_SLUG, "manifest.md")
+MANIFEST_JSON_NAME = manifest_filename(PROJECT_SLUG, "manifest.json")
+BY_SECTION_MD_NAME = manifest_filename(PROJECT_SLUG, "by-section.md")
+DASHBOARD_MD_NAME = manifest_filename(PROJECT_SLUG, "dashboard.md")
 # Tier 1 source dirs (categories mirror medtech-docs/references)
 SOURCE_CATEGORIES = ["fda-guidance", "standards", "industry-frameworks"]
 SOURCE_ROOT = SKILL_DIR / "data"
@@ -362,8 +370,10 @@ def render_dhf_section(
         parts.append(f"IEC 62304 Class {cls.get('iec62304', '?')}")
         if cls.get("ai_enabled"):
             parts.append("AI-enabled")
-        if leaf == "hiplink-intra-op":
-            parts.append("tablet / offline-capable")
+        # Project-supplied subtitle extra (e.g. "tablet / offline-capable") —
+        # set per-DHF in project.yml as `dhfs[].classification.subtitle_extra`.
+        if cls.get("subtitle_extra"):
+            parts.append(str(cls["subtitle_extra"]))
         subtitle = " · ".join(parts)
 
     lines = [
@@ -550,10 +560,10 @@ def render_by_section_view(
         f"**Generated**: {today}  ",
         "**View**: topic-first reading flow — for domain SME review  ",
         "**Companion views**: "
-        "[`hiplink-manifest.md`](hiplink-manifest.md) (by DHF), "
-        "[`hiplink-dashboard.md`](hiplink-dashboard.md) (status)  ",
+        f"[`{MANIFEST_MD_NAME}`]({MANIFEST_MD_NAME}) (by DHF), "
+        f"[`{DASHBOARD_MD_NAME}`]({DASHBOARD_MD_NAME}) (status)  ",
         "",
-        "> Same obligations as `hiplink-manifest.md`, reorganized so each DHF topic "
+        f"> Same obligations as `{MANIFEST_MD_NAME}`, reorganized so each DHF topic "
         "contains one subsection per DHF with that topic's obligations. Good for "
         "SME review by domain (Risk, Cyber, HF, V&V, etc.).",
         "",
@@ -743,9 +753,9 @@ def main() -> int:
         return 0
 
     # --delta: diff new IDs against previously written manifest
-    if args.delta and (OUTPUT_DIR / "hiplink-manifest.json").exists():
+    if args.delta and (OUTPUT_DIR / MANIFEST_JSON_NAME).exists():
         try:
-            old = json.loads((OUTPUT_DIR / "hiplink-manifest.json").read_text())
+            old = json.loads((OUTPUT_DIR / MANIFEST_JSON_NAME).read_text())
             old_ids: set[str] = set()
             for entries in old.get("dhf_manifest", {}).values():
                 old_ids.update(e["id"] for e in entries)
@@ -765,9 +775,9 @@ def main() -> int:
             pass  # Delta comparison failed — proceed with write
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_DIR / "hiplink-manifest.md").write_text(md_content)
-    (OUTPUT_DIR / "hiplink-manifest.json").write_text(json_content)
-    (OUTPUT_DIR / "hiplink-by-section.md").write_text(by_section_content)
+    (OUTPUT_DIR / MANIFEST_MD_NAME).write_text(md_content)
+    (OUTPUT_DIR / MANIFEST_JSON_NAME).write_text(json_content)
+    (OUTPUT_DIR / BY_SECTION_MD_NAME).write_text(by_section_content)
 
     direct_qms_count = sum(
         1 for leaf_obls in dhf_obligations.values()
@@ -785,14 +795,14 @@ def main() -> int:
         print(f"    {leaf}: {count}")
     print(f"  Tier 1 anchors     : {len(tier1_anchors)}")
     print(f"  Direct QMS hits    : {direct_qms_count} / {total_routed}")
-    print(f"  Output: {OUTPUT_DIR}/hiplink-manifest.{{md,json}}, hiplink-by-section.md")
+    print(f"  Output: {OUTPUT_DIR}/{MANIFEST_MD_NAME} (+ .json), {BY_SECTION_MD_NAME}")
 
     # Post-build bare-ID check (task 104 Phase 4) — every ID in rendered
     # dashboards must be inside a markdown link. Zero tolerance.
     bare_findings: list[tuple[str, int, str, str]] = []
     for md_path in [
-        OUTPUT_DIR / "hiplink-manifest.md",
-        OUTPUT_DIR / "hiplink-by-section.md",
+        OUTPUT_DIR / MANIFEST_MD_NAME,
+        OUTPUT_DIR / BY_SECTION_MD_NAME,
     ]:
         if not md_path.exists():
             continue
