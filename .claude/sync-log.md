@@ -4,6 +4,20 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-27 — push (anonymization regression-guard lint)
+
+- Files: `skills/best-practices/SKILL.md`, `skills/skill-creator/SKILL.md`
+- Branch: `sync/pdlc-demo-anonymization-lint-2026-04-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/88
+- Commit: "best-practices + skill-creator: anonymization regression-guard"
+- Status: merged (--merge requested)
+- Merge commit: `696359985c2a915dd7397bf06825c9e33511afb5`
+- Hitachi HEAD after sync: `6963599`
+- Trigger: closes the regression-guard story for ben/032. New Required `best-practices` check greps the named-entity vocabulary across `.claude/skills/**` and `.claude/agents/**` with documented exceptions (registry URL + deferred `hiplink-*` filenames). New `skill-creator` "Anonymization (Required)" section documents the canonical glossary so future skill authors land on the rule while reading the conventions doc.
+- Discovered + executed under PDLC_DEMO ben/032 Phase 4. Companion follow-up ben/033 will tighten the lint by dropping the `hiplink-*` exception once dhf-manifest output filenames get parameterized.
+
+---
+
 ## 2026-04-27 — push (skill tree anonymization — prose-only)
 
 - Files: 86 across 14 skills (dhf-manifest 47, docflow 11, project-console 8, change-control 5, strategy 2, advisors 1, best-practices 1, digest 1, medtech-docs 1, secops/shared 1, sync-skills 1, trace-matrix 1, web-control 1) — full list in PDLC_DEMO commits `bd2ddd3` + `3f76013`
