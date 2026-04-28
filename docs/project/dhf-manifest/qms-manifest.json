@@ -2,7 +2,7 @@
   "generated": "2026-04-27",
   "source_md": "docs/project/dhf-manifest/qms-manifest.md",
   "source_count": 1,
-  "obligation_count": 17,
+  "obligation_count": 20,
   "qms_obligations": [
     {
       "id": "QMS-ARCH-001",
@@ -427,6 +427,94 @@
         "Activate post-market surveillance per GL-SOP-PM-001 on clearance."
       ],
       "context": "The eSTAR submission shape is mandatory since October 2023.\nPre-assembly readiness (DHF baselined, V&V complete, RMF approved,\ncybersecurity docs complete) is the load-bearing check — submitting\nwith stale or missing DHF references guarantees AI Hold cycles."
+    },
+    {
+      "id": "QMS-HF-001",
+      "title": "Usability Engineering",
+      "source": "GL-SOP-UC-001 §6",
+      "source_title": "Usability Engineering",
+      "topic": "human-factors",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Usability Engineering File",
+        "Use Specification",
+        "Use-Related Risk Analysis",
+        "Formative Evaluation Report",
+        "Summative Evaluation Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-62366-001",
+        "OBL-62366-002",
+        "OBL-62366-003",
+        "OBL-62366-004"
+      ],
+      "verbatim": "\"Apply a Usability Engineering (UE) process to identify and mitigate\nuse-related risks for MedTech Company medical devices, per IEC\n62366-1:2015 and the FDA 2016 HFE/UE Guidance. The Usability\nEngineering File (UEF) compiles records produced by the UE process:\nUse Specification (intended users, use environments, primary\noperating functions), Use-Related Risk Analysis, formative\nevaluations during design, and summative evaluation pre-market.\"\n",
+      "extracted_requirements": [
+        "Author a Usability Engineering Plan at project start (per GL-TMP-DC-001).",
+        "Maintain a Usability Engineering File per device under GL-TMP-UC-002.",
+        "Author a Use Specification (GL-TMP-UC-001) covering intended users / environments / primary operating functions.",
+        "Conduct formative evaluations iteratively during design.",
+        "Conduct a summative usability evaluation pre-market (per GL-TMP-UC-003) on production-equivalent units in the intended use environment.",
+        "Integrate use-related risks into the Risk Management File (GL-SOP-RM-001)."
+      ],
+      "context": "HFE outputs feed three downstream artifacts: Design Inputs (use-\nderived requirements), the Risk Management File (use-related\nhazards), and the labeling pipeline (warnings, IFU, training).\nSummative evaluation is part of design validation per GL-SOP-DC-006."
+    },
+    {
+      "id": "QMS-CLIN-001",
+      "title": "Clinical Evaluation",
+      "source": "GL-SOP-UC-002 §6",
+      "source_title": "Clinical Evaluation",
+      "topic": "clinical",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Clinical Evaluation Plan",
+        "Clinical Evaluation Report",
+        "Post-Market Clinical Follow-up Plan"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-007"
+      ],
+      "verbatim": "\"Establish the process for planning and conducting Clinical\nEvaluation of MedTech Company medical devices to demonstrate safety,\nclinical performance, and clinical benefit — per EU MDR 2017/745\nArt. 61 and Annex XIV, informed by MDCG 2020-6 and MDCG 2020-13.\nWhere clinical investigation is conducted, align with ISO 14155:2020\nand (for US) 21 CFR Part 812. Sources of clinical data: clinical\ninvestigations, scientific literature, clinical experience, and PMS.\"\n",
+      "extracted_requirements": [
+        "Author a Clinical Evaluation Plan per GL-TMP-UC-004 covering scope, methodology, and acceptance criteria.",
+        "Conduct systematic literature search and appraisal.",
+        "Author a Clinical Evaluation Report per GL-TMP-UC-005 with clinical-data appraisal and benefit-risk conclusion.",
+        "Maintain a Post-Market Clinical Follow-up plan; feed PMCF data back into CER updates.",
+        "Update CER at defined cadences (typically annually for novel devices, every 2–5 years for stable devices)."
+      ],
+      "context": "Clinical evidence is the second leg of the regulatory submission\n(alongside non-clinical V&V). The CEP/CER are MDR-mandatory\nartifacts; for US 510(k) the level of clinical evidence is pathway-\nand risk-class dependent."
+    },
+    {
+      "id": "QMS-LBL-001",
+      "title": "Labeling and IFU Outputs",
+      "source": "GL-SOP-DC-004 §6 (Labeling)",
+      "source_title": "Design Outputs",
+      "topic": "labeling-ifu",
+      "artifact_type": "labeling",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Instructions for Use (IFU)",
+        "Package label",
+        "UDI carrier and database submission",
+        "AI-disclosure labeling (if AI-enabled)",
+        "Translations per market"
+      ],
+      "regulatory_grounding": [
+        "OBL-AI-LIFE-002",
+        "OBL-82304-007"
+      ],
+      "verbatim": "\"Labeling — including IFU, package label, UDI, and any\naccompanying training materials — is a Design Output (per\nGL-SOP-DC-004) and shall be approved before V&V validation\nactivities depending on labeling content. For AI/ML-enabled\ndevices, IFU shall disclose: that the device uses AI/ML, the\ndevice's performance metrics with confidence intervals from the\nvalidation study, the demographic breakdown of training and test\ndatasets, and which patient types are at the boundary of the\nvalidated use.\"\n",
+      "extracted_requirements": [
+        "Author IFU as a Design Output; route through GL-SOP-DC-005 design review.",
+        "Validate labeling content via summative usability (per GL-SOP-UC-001).",
+        "Maintain UDI per 21 CFR 830 / EU MDR Article 27 and submit to FDA GUDID / Eudamed.",
+        "For AI/ML devices: include AI disclosure, validation performance metrics with CIs, and training-data demographics.",
+        "Maintain market-specific translations of IFU per regulation (EU MDR Annex I §23, FDA 21 CFR 801).",
+        "Update labeling on every change that affects use; route changes through GL-SOP-DC-008."
+      ],
+      "context": "Labeling is currently distributed across GL-SOP-DC-004 (as a\ndesign output) and GL-SOP-PM-001 (post-market labeling updates).\nTask ben/026 considers whether labeling deserves its own dedicated\nSOP / WI under a future expansion. Until then this record grounds\nto the design-outputs SOP for the labeling content path."
     }
   ],
   "by_source": {
@@ -447,7 +535,10 @@
       "QMS-CYB-001",
       "QMS-VER-002",
       "QMS-RS-001",
-      "QMS-RS-002"
+      "QMS-RS-002",
+      "QMS-HF-001",
+      "QMS-CLIN-001",
+      "QMS-LBL-001"
     ]
   },
   "by_topic": {
@@ -455,6 +546,9 @@
       "QMS-ARCH-001",
       "QMS-ARCH-002",
       "QMS-ARCH-003"
+    ],
+    "clinical": [
+      "QMS-CLIN-001"
     ],
     "configuration-change": [
       "QMS-CC-001"
@@ -467,6 +561,12 @@
     ],
     "design-reviews": [
       "QMS-DR-001"
+    ],
+    "human-factors": [
+      "QMS-HF-001"
+    ],
+    "labeling-ifu": [
+      "QMS-LBL-001"
     ],
     "post-market": [
       "QMS-PM-001"
@@ -518,7 +618,8 @@
       "QMS-VER-001"
     ],
     "OBL-13485-007": [
-      "QMS-VAL-001"
+      "QMS-VAL-001",
+      "QMS-CLIN-001"
     ],
     "OBL-13485-009": [
       "QMS-CC-001"
@@ -557,11 +658,29 @@
     "OBL-62304-006": [
       "QMS-VER-002"
     ],
+    "OBL-62366-001": [
+      "QMS-HF-001"
+    ],
+    "OBL-62366-002": [
+      "QMS-HF-001"
+    ],
+    "OBL-62366-003": [
+      "QMS-HF-001"
+    ],
+    "OBL-62366-004": [
+      "QMS-HF-001"
+    ],
     "OBL-81001-001": [
       "QMS-CYB-001"
     ],
     "OBL-81001-002": [
       "QMS-CYB-001"
+    ],
+    "OBL-82304-007": [
+      "QMS-LBL-001"
+    ],
+    "OBL-AI-LIFE-002": [
+      "QMS-LBL-001"
     ]
   },
   "qms_to_obl": {
@@ -625,6 +744,19 @@
       "OBL-510K-001",
       "OBL-510K-002",
       "OBL-510K-003"
+    ],
+    "QMS-HF-001": [
+      "OBL-62366-001",
+      "OBL-62366-002",
+      "OBL-62366-003",
+      "OBL-62366-004"
+    ],
+    "QMS-CLIN-001": [
+      "OBL-13485-007"
+    ],
+    "QMS-LBL-001": [
+      "OBL-AI-LIFE-002",
+      "OBL-82304-007"
     ]
   }
 }

@@ -15,7 +15,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 ## Overall
 
 - **Authoring**: `░░░░░░░░░░░░░░░░░░░░` 0/437 bound (0.0%)
-- **QMS coverage**: `██████░░░░░░░░░░░░░░` 120/437 direct (27.5%) · 278 topic-only · 39 no-grounding
+- **QMS coverage**: `██████░░░░░░░░░░░░░░` 141/437 direct (32.3%) · 296 topic-only · 0 no-grounding
 
 ---
 
@@ -23,15 +23,15 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 
 | DHF | Obligations | Bound (FOUND) | GAP | QMS direct | QMS topic-only | No grounding |
 |-----|------------|---------------|-----|-----------|---------------|--------------|
-| `pca-device` | 75 | 0 (0.0%) | 75 | 16 (21.3%) | 52 | 7 |
-| `connectivity-adapter` | 49 | 0 (0.0%) | 49 | 13 (26.5%) | 32 | 4 |
-| `drug-library-manager` | 49 | 0 (0.0%) | 49 | 13 (26.5%) | 32 | 4 |
-| `fleet-management` | 41 | 0 (0.0%) | 41 | 13 (31.7%) | 24 | 4 |
-| `compliance-reports` | 41 | 0 (0.0%) | 41 | 13 (31.7%) | 24 | 4 |
-| `analytics-dashboard` | 41 | 0 (0.0%) | 41 | 13 (31.7%) | 24 | 4 |
-| `inventory-tracker` | 41 | 0 (0.0%) | 41 | 13 (31.7%) | 24 | 4 |
-| `alerts-engine` | 50 | 0 (0.0%) | 50 | 13 (26.0%) | 33 | 4 |
-| `clinical-interface` | 50 | 0 (0.0%) | 50 | 13 (26.0%) | 33 | 4 |
+| `pca-device` | 75 | 0 (0.0%) | 75 | 21 (28.0%) | 54 | 0 |
+| `connectivity-adapter` | 49 | 0 (0.0%) | 49 | 15 (30.6%) | 34 | 0 |
+| `drug-library-manager` | 49 | 0 (0.0%) | 49 | 15 (30.6%) | 34 | 0 |
+| `fleet-management` | 41 | 0 (0.0%) | 41 | 15 (36.6%) | 26 | 0 |
+| `compliance-reports` | 41 | 0 (0.0%) | 41 | 15 (36.6%) | 26 | 0 |
+| `analytics-dashboard` | 41 | 0 (0.0%) | 41 | 15 (36.6%) | 26 | 0 |
+| `inventory-tracker` | 41 | 0 (0.0%) | 41 | 15 (36.6%) | 26 | 0 |
+| `alerts-engine` | 50 | 0 (0.0%) | 50 | 15 (30.0%) | 35 | 0 |
+| `clinical-interface` | 50 | 0 (0.0%) | 50 | 15 (30.0%) | 35 | 0 |
 
 ---
 
@@ -49,8 +49,8 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 8 | 0 | 3 | 5 | 0 |
 | Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Labeling & IFU | 1 | 0 | 0 | 0 | 1 |
-| Human Factors | 6 | 0 | 0 | 0 | 6 |
+| Labeling & IFU | 1 | 0 | 1 | 0 | 0 |
+| Human Factors | 6 | 0 | 4 | 2 | 0 |
 | Cybersecurity | 5 | 0 | 1 | 4 | 0 |
 | Post-Market | 5 | 0 | 0 | 5 | 0 |
 | Regulatory Submission | 10 | 0 | 3 | 7 | 0 |
@@ -71,7 +71,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -89,7 +89,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -107,7 +107,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -125,7 +125,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -143,7 +143,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -161,7 +161,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 3 | 0 | 1 | 2 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -179,7 +179,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 
@@ -197,7 +197,7 @@ Companion views: [`pdlc-demo-dhf-manifest.md`](pdlc-demo-dhf-manifest.md) (by DH
 | Software Lifecycle | 10 | 0 | 5 | 5 | 0 |
 | Configuration & Change Control | 4 | 0 | 1 | 3 | 0 |
 | Design Reviews | 1 | 0 | 1 | 0 | 0 |
-| Human Factors | 4 | 0 | 0 | 0 | 4 |
+| Human Factors | 4 | 0 | 2 | 2 | 0 |
 
 ---
 

@@ -5,9 +5,9 @@ _Demo sample data — not for clinical use._
 Maps regulatory obligations (Tier 1 `OBL-*`) to MedTech Company QMS procedures that govern producing DHF deliverables satisfying them. Project-agnostic — reusable across any program built on the GlobalLogic QMS scaffold under `docs/internal/source-md/`.
 
 **Generated**: 2026-04-27 (hand-authored under tasks ben/035 + ben/036)
-**Total QMS obligations**: 18
-**Source documents**: 16 — GL-SOP-DC-001, GL-SOP-DC-002, GL-SOP-DC-003, GL-SOP-DC-004, GL-SOP-DC-005, GL-SOP-DC-006, GL-SOP-DC-008, GL-SOP-RM-001, GL-SOP-SW-001, GL-SOP-PM-001, GL-WI-DC-001, GL-WI-DC-002, GL-WI-SW-003, GL-WI-SW-004, GL-SOP-RA-001, GL-WI-RA-001 (plus standards GL-STD-RM-001, GL-STD-RM-002 cited)
-**DHF topics covered**: architecture, requirements, design-outputs, design-reviews, verification, validation, configuration-change, risk-management, software-lifecycle, post-market, traceability, cybersecurity, regulatory-submission
+**Total QMS obligations**: 20
+**Source documents**: 18 — GL-SOP-DC-001, GL-SOP-DC-002, GL-SOP-DC-003, GL-SOP-DC-004, GL-SOP-DC-005, GL-SOP-DC-006, GL-SOP-DC-008, GL-SOP-RM-001, GL-SOP-SW-001, GL-SOP-PM-001, GL-WI-DC-001, GL-WI-DC-002, GL-WI-SW-003, GL-WI-SW-004, GL-SOP-RA-001, GL-WI-RA-001, GL-SOP-UC-001, GL-SOP-UC-002 (plus standards GL-STD-RM-001, GL-STD-RM-002 cited)
+**DHF topics covered**: All 16 — architecture, requirements, design-outputs, design-reviews, verification, validation, configuration-change, risk-management, software-lifecycle, post-market, traceability, cybersecurity, regulatory-submission, human-factors, clinical, labeling-ifu
 
 ---
 
@@ -732,4 +732,156 @@ records:
       cybersecurity docs complete) is the load-bearing check — submitting
       with stale or missing DHF references guarantees AI Hold cycles.
 -->
+
+---
+
+## GL-SOP-UC-001 — Usability Engineering
+
+_1 QMS obligation covering human-factors / usability engineering._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-hf-001"></a>[`QMS-HF-001` · Usability Engineering](#qms-hf-001) — Author a Usability Engineering Plan at project start (per GL-TMP-DC-001). | GL-SOP-UC-001 §6 — Usability Engineering | `human-factors` | Usability Engineering File; Use Specification; Use-Related Risk Analysis; Formative Evaluation Report; Summative Evaluation Report | [`OBL-62366-001` · Usability Engineering Plan](../../../.claude/skills/dhf-manifest/data/standards/iec-62366.md#OBL-62366-001) — Establish a usability engineering process and maintain it throughout the development lifecycle; [`OBL-62366-002` · Use Specification](../../../.claude/skills/dhf-manifest/data/standards/iec-62366.md#OBL-62366-002) — Identify and characterize the intended users for each use scenario; [`OBL-62366-003` · User Profiles & Environments](../../../.claude/skills/dhf-manifest/data/standards/iec-62366.md#OBL-62366-003) — Document the intended use environment for each module; [`OBL-62366-004` · Use-Related Risk Analysis](../../../.claude/skills/dhf-manifest/data/standards/iec-62366.md#OBL-62366-004) — Identify all potential use errors per module — perception errors, cognitive errors, action errors |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-HF-001"
+    title: "Usability Engineering"
+    source: "GL-SOP-UC-001 §6"
+    source_title: "Usability Engineering"
+    topic: "human-factors"
+    artifact_type: "plan"
+    dhf_owner: "system"
+    applies_to:
+      - "Usability Engineering File"
+      - "Use Specification"
+      - "Use-Related Risk Analysis"
+      - "Formative Evaluation Report"
+      - "Summative Evaluation Report"
+    regulatory_grounding:
+      - "OBL-62366-001"
+      - "OBL-62366-002"
+      - "OBL-62366-003"
+      - "OBL-62366-004"
+    verbatim: |
+      "Apply a Usability Engineering (UE) process to identify and mitigate
+      use-related risks for MedTech Company medical devices, per IEC
+      62366-1:2015 and the FDA 2016 HFE/UE Guidance. The Usability
+      Engineering File (UEF) compiles records produced by the UE process:
+      Use Specification (intended users, use environments, primary
+      operating functions), Use-Related Risk Analysis, formative
+      evaluations during design, and summative evaluation pre-market."
+    extracted_requirements:
+      - "Author a Usability Engineering Plan at project start (per GL-TMP-DC-001)."
+      - "Maintain a Usability Engineering File per device under GL-TMP-UC-002."
+      - "Author a Use Specification (GL-TMP-UC-001) covering intended users / environments / primary operating functions."
+      - "Conduct formative evaluations iteratively during design."
+      - "Conduct a summative usability evaluation pre-market (per GL-TMP-UC-003) on production-equivalent units in the intended use environment."
+      - "Integrate use-related risks into the Risk Management File (GL-SOP-RM-001)."
+    context: |
+      HFE outputs feed three downstream artifacts: Design Inputs (use-
+      derived requirements), the Risk Management File (use-related
+      hazards), and the labeling pipeline (warnings, IFU, training).
+      Summative evaluation is part of design validation per GL-SOP-DC-006.
+-->
+
+---
+
+## GL-SOP-UC-002 — Clinical Evaluation
+
+_1 QMS obligation covering clinical evaluation._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-clin-001"></a>[`QMS-CLIN-001` · Clinical Evaluation](#qms-clin-001) — Author a Clinical Evaluation Plan per GL-TMP-UC-004 covering scope, methodology, and acceptance criteria. | GL-SOP-UC-002 §6 — Clinical Evaluation | `clinical` | Clinical Evaluation Plan; Clinical Evaluation Report; Post-Market Clinical Follow-up Plan | [`OBL-13485-007` · Design Transfer Procedure](../../../.claude/skills/dhf-manifest/data/standards/iso-13485.md#OBL-13485-007) — Define and follow a documented design transfer procedure |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-CLIN-001"
+    title: "Clinical Evaluation"
+    source: "GL-SOP-UC-002 §6"
+    source_title: "Clinical Evaluation"
+    topic: "clinical"
+    artifact_type: "plan"
+    dhf_owner: "system"
+    applies_to:
+      - "Clinical Evaluation Plan"
+      - "Clinical Evaluation Report"
+      - "Post-Market Clinical Follow-up Plan"
+    regulatory_grounding:
+      - "OBL-13485-007"
+    verbatim: |
+      "Establish the process for planning and conducting Clinical
+      Evaluation of MedTech Company medical devices to demonstrate safety,
+      clinical performance, and clinical benefit — per EU MDR 2017/745
+      Art. 61 and Annex XIV, informed by MDCG 2020-6 and MDCG 2020-13.
+      Where clinical investigation is conducted, align with ISO 14155:2020
+      and (for US) 21 CFR Part 812. Sources of clinical data: clinical
+      investigations, scientific literature, clinical experience, and PMS."
+    extracted_requirements:
+      - "Author a Clinical Evaluation Plan per GL-TMP-UC-004 covering scope, methodology, and acceptance criteria."
+      - "Conduct systematic literature search and appraisal."
+      - "Author a Clinical Evaluation Report per GL-TMP-UC-005 with clinical-data appraisal and benefit-risk conclusion."
+      - "Maintain a Post-Market Clinical Follow-up plan; feed PMCF data back into CER updates."
+      - "Update CER at defined cadences (typically annually for novel devices, every 2–5 years for stable devices)."
+    context: |
+      Clinical evidence is the second leg of the regulatory submission
+      (alongside non-clinical V&V). The CEP/CER are MDR-mandatory
+      artifacts; for US 510(k) the level of clinical evidence is pathway-
+      and risk-class dependent.
+-->
+
+---
+
+## GL-SOP-DC-004 — Design Outputs (Labeling Extension)
+
+_1 QMS obligation covering labeling-IFU outputs._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-lbl-001"></a>[`QMS-LBL-001` · Labeling and IFU Outputs](#qms-lbl-001) — Author IFU as a Design Output; route through GL-SOP-DC-005 design review. | GL-SOP-DC-004 §6 (Labeling) — Design Outputs | `labeling-ifu` | Instructions for Use (IFU); Package label; UDI carrier and database submission; AI-disclosure labeling (if AI-enabled); Translations per market | [`OBL-AI-LIFE-002` · AI Device Labeling](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-ai-lifecycle.md#OBL-AI-LIFE-002) — IFU must state that AI is included and describe its role in the device; [`OBL-82304-007` · Post-Market Problem Resolution](../../../.claude/skills/dhf-manifest/data/standards/iec-82304.md#OBL-82304-007) — IFU / user documentation must explicitly state: intended use, intended operating environment (hardware, OS, network requirements) |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-LBL-001"
+    title: "Labeling and IFU Outputs"
+    source: "GL-SOP-DC-004 §6 (Labeling)"
+    source_title: "Design Outputs"
+    topic: "labeling-ifu"
+    artifact_type: "labeling"
+    dhf_owner: "system"
+    applies_to:
+      - "Instructions for Use (IFU)"
+      - "Package label"
+      - "UDI carrier and database submission"
+      - "AI-disclosure labeling (if AI-enabled)"
+      - "Translations per market"
+    regulatory_grounding:
+      - "OBL-AI-LIFE-002"
+      - "OBL-82304-007"
+    verbatim: |
+      "Labeling — including IFU, package label, UDI, and any
+      accompanying training materials — is a Design Output (per
+      GL-SOP-DC-004) and shall be approved before V&V validation
+      activities depending on labeling content. For AI/ML-enabled
+      devices, IFU shall disclose: that the device uses AI/ML, the
+      device's performance metrics with confidence intervals from the
+      validation study, the demographic breakdown of training and test
+      datasets, and which patient types are at the boundary of the
+      validated use."
+    extracted_requirements:
+      - "Author IFU as a Design Output; route through GL-SOP-DC-005 design review."
+      - "Validate labeling content via summative usability (per GL-SOP-UC-001)."
+      - "Maintain UDI per 21 CFR 830 / EU MDR Article 27 and submit to FDA GUDID / Eudamed."
+      - "For AI/ML devices: include AI disclosure, validation performance metrics with CIs, and training-data demographics."
+      - "Maintain market-specific translations of IFU per regulation (EU MDR Annex I §23, FDA 21 CFR 801)."
+      - "Update labeling on every change that affects use; route changes through GL-SOP-DC-008."
+    context: |
+      Labeling is currently distributed across GL-SOP-DC-004 (as a
+      design output) and GL-SOP-PM-001 (post-market labeling updates).
+      Task ben/026 considers whether labeling deserves its own dedicated
+      SOP / WI under a future expansion. Until then this record grounds
+      to the design-outputs SOP for the labeling content path.
+-->
+
 
