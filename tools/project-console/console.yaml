@@ -3,6 +3,17 @@
 
 theme: globallogic
 
+grounding:
+  # Extra filesystem roots exposable to the assistant drawer's grounding
+  # surface AND browsable in the documents tree. The defaults
+  # (docs/project, docs/external, docs/internal/source-md) are always
+  # included. Paths below add skill-embedded distilled standards + FDA
+  # guidance and the dhf-manifest data folder so deep-links into manifest
+  # tier files (e.g. tier1-regulatory/<name>.md) resolve in the explorer.
+  extra_roots:
+    - .claude/skills/medtech-docs/references
+    - .claude/skills/dhf-manifest/data
+
 dashboards:
   patterns:
     - docs/**/*-tracker.html

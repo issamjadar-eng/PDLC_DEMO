@@ -4,6 +4,20 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-27 — push (project-console relative-link rewriter)
+
+- Files: `skills/project-console/console/documents/renderer.py`, `skills/project-console/console/documents/router.py`, `skills/project-console/console/workflows/router.py`
+- Branch: `sync/pdlc-demo-console-link-rewriter-2026-04-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/83
+- Commit: "project-console: rewrite relative md links in rendered HTML"
+- Status: merged (--merge requested)
+- Merge commit: `8ddfbe1db08c141cdfa9cc5b2639fff0c28842e0`
+- Hitachi HEAD after sync: `8ddfbe1`
+- Trigger: every cross-doc link in rendered markdown (qms-index → SOPs, DHF stubs → parent QMS templates, README cross-links) 404'd because the renderer emitted raw author-written hrefs that the browser resolved against `/documents`. Fix is a post-processing pass in `_render_markdown` that resolves relative `<a href>` / `<img src>` against the source doc's virtual dir and rewrites to `/documents/view/<vp>` (links) or `/documents/raw/<vp>` (images). Absolute / protocol-relative / root-relative / anchor-only / `..`-escape links pass through unchanged.
+- Discovered under task ben/031 while reviewing the QMS scaffold from ben/022. Same bug shipped in arthrex-pccp at 1.7.6 — fix benefits both projects on next pull.
+
+---
+
 ## 2026-04-22 — pull (docflow hook bash 3.2 fix + accumulated skill updates)
 
 - Hitachi HEAD after sync: `219d46d`

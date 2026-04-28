@@ -51,7 +51,7 @@ async def api_children(path: str = Query(...)):
 
 
 def _file_payload(virtual_path: str, abs_path: Path) -> dict:
-    rendered = renderer.render(abs_path)
+    rendered = renderer.render(abs_path, virtual_path=virtual_path)
     # URL-encode path segments but keep the slashes as separators so
     # filenames with spaces or special characters still resolve.
     encoded = quote(virtual_path, safe="/")
@@ -168,7 +168,7 @@ async def documents_summary(virtual_path: str):
     abs_path = tree.resolve_virtual_path(cfg.repo_root, virtual_path.strip("/"))
     if abs_path is None or not abs_path.is_file():
         raise HTTPException(404, "File not found")
-    rendered = renderer.render(abs_path)
+    rendered = renderer.render(abs_path, virtual_path=virtual_path.strip("/"))
     if rendered.kind not in SUMMARIZABLE_KINDS:
         raise HTTPException(400, f"Cannot summarize {rendered.kind} file")
 
