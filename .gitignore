@@ -15,4 +15,5 @@ build/
 .state/
 .claude/state/
 .claude/scheduled_tasks.lock
+.worktrees/
 docs/internal/source-md/.staging/
