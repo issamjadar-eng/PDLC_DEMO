@@ -1,9 +1,9 @@
 ---
 name: change-control
-description: Bridges Claude Code / GitHub authoring with downstream regulated systems — Confluence + Comala/SoftComply for Part 11 review and sign-off, Windchill as the released vault. Enforces a hybrid freeze-point lifecycle (draft → frozen → released) via a PreToolUse hook with in-chat consent. Provides `init`, `freeze`, `unfreeze`, `status`, and `release` actions. **STATUS: SCAFFOLD / DESIGN-CAPTURED. All actions and connectors are stubs — no live integrations yet.**
-version: 0.1.0
-updated: 2026-04-14
-status: scaffold
+description: Bridges Claude Code / GitHub authoring with downstream regulated systems — Google Docs (internal review tier), Confluence + Comala/SoftComply (formal Part 11 review), Windchill (released vault). Enforces a hybrid freeze-point lifecycle (draft → [internal-review optional] → frozen → released) via a PreToolUse hook with in-chat consent. Provides `init`, `freeze`, `unfreeze`, `status`, `release`, plus the new task-doc-driven internal-review tier (`review-start`, `review-status`, `review-update`, `review-abort`) and `help`.
+version: 0.5.0
+updated: 2026-04-27
+status: internal-review-v0.5
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -147,6 +147,56 @@ Reads from frontmatter (authoritative); validates against `state.json` cache (wa
 
 When implemented, will be triggered by the Comala "Released" webhook (or run manually). Pulls signed PDF, attaches to a new Windchill ECO referencing the Jira ECR, updates frontmatter with the ECO number, flips `state: frozen` → `state: released`.
 
+### `review-start <path>`
+
+**STATUS: v0.1 — task-doc-driven scaffolding ready; gdoc auto-create deferred to v0.2.**
+
+Kick off internal review for a doc. Prints manual steps to create the
+gdoc in your `AI_PDLC/<project.name>/<task_folder>/` folder, share with
+your reviewer group, and writes a sentinel-bounded metadata block to
+your active task doc.
+
+Args: `<path>` — repo-relative path to source (md / markdown / docx).
+
+The metadata block format and worked example are documented at length
+in `tasks/ben/116-change-control-internal-review-tier.md` "Workflow"
+section. Read that for the full mental model.
+
+### `review-status <path>`
+
+**STATUS: v0.1 — reads gdoc state via web-control.**
+
+Refresh the task-doc section's "Open" list with current open comments,
+suggestions, and body edits from the linked gdoc. Preserves user-edited
+"Already Addressed" + "Recently Synced" subsections.
+
+Requires: `/web-control launch` Chrome running + signed in.
+
+### `review-update <path>`
+
+**STATUS: v0.1 — replies + body-replace + state-snapshot.**
+
+Reads "Already Addressed" items from the task-doc section, posts replies
+on each addressed comment via web-control, accepts/rejects suggestions,
+then wholesale-pastes current source content into the gdoc body.
+
+State snapshots saved to `.state/web-control/<gdoc-id>.{last-sync.json,
+last-push.txt}` for body-edit detection on next `review-status`.
+
+### `review-abort <path>`
+
+**STATUS: v0.1 — clean cancellation.**
+
+Removes the task-doc metadata block and deletes state files. Does NOT
+delete the gdoc — user can manually clean up in Drive.
+
+### `help [<action>]`
+
+**STATUS: v0.1 — runtime help.**
+
+Prints lifecycle diagram + actions list, or per-action detail (purpose,
+args, examples, common errors). Same pattern as `gh help`.
+
 ### `reindex`
 
 **STATUS: STUB**
@@ -161,19 +211,8 @@ Rebuilds `docs/.change-control/state.json` by walking the doc tree and reading f
 - **Read `README.md`** for the full design rationale, the strategy decisions, the connector architecture, and the extensibility seams. The README is the design doc — SKILL.md is the user-facing manual.
 
 ## Best Practices
-
-<!-- Read by /best-practices skill to audit project setup -->
-
-| Check | How to Verify | Severity | Scope |
-|---|---|---|---|
-| Skill installed | `.claude/skills/change-control/SKILL.md` exists | Recommended | shared |
-| Skill in allowlist | `change-control` listed in `project.yml` `security.approved_skills` | Recommended | shared |
-| Project config exists | `change-control.yml` exists at project root | Recommended | shared |
-| State cache exists | `docs/.change-control/state.json` exists | Recommended | shared |
-| Hook registered | `.claude/settings.json` contains a `PreToolUse` entry pointing at `change-control-frozen.py` | Recommended | shared |
-
-(Severity is `Recommended` not `Required` because the skill is currently a scaffold. Will be raised to `Required` for the controlled-doc checks once implementation lands.)
+See [README.md](README.md) — consumed by `/best-practices` audit.
 
 ## Changelog
+See [README.md](README.md) for version history.
 
-- 0.1.0 (2026-04-14): Initial scaffold. Design captured in SKILL.md and README.md. All actions and connectors are stubs that print `NOT IMPLEMENTED`. Extensibility seams reserved: `Connector` base class, `Authenticator` interface, `ReviewPlugin` interface, deployment-flavor enum. Targets Atlassian Cloud first; Data Center planned for v2. Created under task 017.
