@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-27 — push (dhf-manifest dynamic project name in titles)
+
+- Files: `skills/dhf-manifest/scripts/{_project_slug,dashboard,gap-report}.py`
+- Branch: `sync/pdlc-demo-dhf-manifest-display-name-2026-04-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/91
+- Commit: "dhf-manifest: dynamic project name in dashboard + gap-report titles"
+- Status: merged (--merge requested)
+- Merge commit: `b57d469eb01c124241ff85c1c098e3e9f97dbb93`
+- Hitachi HEAD after sync: `b57d469`
+- Trigger: small polish caught while smoke-testing the dhf-manifest pipeline on PDLC_DEMO under ben/035. Dashboard + gap-report H1 titles were the only remaining hardcoded "MedTech Project" placeholder literals — now they read the project name from `project.yml`. Output renders `# PDLC_DEMO DHF — Dashboard` on PDLC_DEMO; arthrex-pccp will render `# Arthrex PCCP DHF — Dashboard` after pull.
+
+---
+
 ## 2026-04-27 — push (dhf-manifest output filename parameterization)
 
 - Files: 12 across `skills/dhf-manifest/` (SKILL.md, README.md, 3× actions/, 4× scripts/, new `scripts/_project_slug.py`) + `skills/best-practices/SKILL.md` + `skills/skill-creator/SKILL.md`

@@ -2,7 +2,7 @@
 
 **ID**: 035
 **Created**: 2026-04-27
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -40,13 +40,14 @@ PDLC_DEMO `project.yml` `dhfs[]` is missing the schema fields that `dhf-manifest
 
 ## Todos
 
-- [ ] Add `leaf`, `role`, `classification`, `composes` fields to all 10 entries in `project.yml` `dhfs[]`.
-- [ ] Run `python3 .claude/skills/dhf-manifest/scripts/build-qms.py` (depends on `qms-manifest.md` existing under `docs/project/dhf-manifest/`).
-- [ ] If `qms-manifest.md` doesn't exist yet, run `/dhf-manifest init` to scaffold it (or hand-author a stub). The skill expects `<!-- QMS-DATA -->` blocks for real obligations; an empty stub is fine for a first pipeline run.
-- [ ] Run `python3 .claude/skills/dhf-manifest/scripts/build-manifest.py`. Confirm it writes `pdlc-demo-dhf-manifest.{md,json}` and `pdlc-demo-dhf-by-section.md`.
-- [ ] Run `python3 .claude/skills/dhf-manifest/scripts/dashboard.py`. Confirm it writes `pdlc-demo-dhf-dashboard.md`.
-- [ ] Run `python3 .claude/skills/dhf-manifest/scripts/validate.py`. Confirm zero failures.
-- [ ] Commit `project.yml` + the four new manifest files + this task doc.
+- [x] Added `leaf`, `role`, `classification`, `composes` fields + project-level `scope:` block to `project.yml`. Decisions captured above.
+- [x] Hand-authored a minimal `docs/project/dhf-manifest/qms-manifest.md` stub (real obligations come via `/dhf-manifest distill-qms <topic>`).
+- [x] Ran `build-qms.py` — qms-manifest.json written (239 bytes, 0 obligations as expected for stub).
+- [x] Ran `build-manifest.py` — `pdlc-demo-dhf-manifest.{md,json}` (208 KB / 372 KB) + `pdlc-demo-dhf-by-section.md` written. 114 source obligations × scope = 437 routed entries across 9 DHFs.
+- [x] Ran `dashboard.py` — `pdlc-demo-dhf-dashboard.md` (7.5 KB) written.
+- [x] Ran `validate.py` — 12/12 PASS · 0 warnings · 0 failures.
+- [x] Folded in two small skill polish fixes: `_project_slug.py` gains `project_display_name()` helper; `dashboard.py` + `gap-report.py` use the project name in H1 titles instead of the placeholder. Pushed upstream as hitachi PR #91, squash-merged at `b57d469`.
+- [x] Committed locally: PDLC_DEMO `main` at `4235e9c`. Project.yml + 6 manifest files + skill polish + task doc.
 
 ## Notes
 
@@ -57,3 +58,4 @@ PDLC_DEMO `project.yml` `dhfs[]` is missing the schema fields that `dhf-manifest
 ## Changelog
 
 - 2026-04-27: Task created. Triggered by user request to run the dhf-manifest pipeline end-to-end after ben/033 landed the slug-driven output filenames. PDLC_DEMO `project.yml` lacks the `leaf`/`role`/`classification` schema fields the build script needs; this task fills the gap and exercises the pipeline.
+- 2026-04-27: Pipeline brought up end-to-end. `project.yml` `dhfs[]` extended with `leaf` / `role` / `classification` / `composes` fields and a project-level `scope:` block. Stub `qms-manifest.md` authored. `build-qms` → `build-manifest` → `dashboard` → `validate` all run clean: 437 routed entries across 9 DHFs, 12/12 validate PASS. Output files land as `pdlc-demo-dhf-*` per ben/033's slug logic. Two small polish fixes (project-name in dashboard / gap-report titles) folded in and pushed upstream as PR #91 (`b57d469`). Local commit `4235e9c` on PDLC_DEMO main. Task closed.
