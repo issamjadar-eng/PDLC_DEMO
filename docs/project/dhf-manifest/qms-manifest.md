@@ -4,10 +4,10 @@ _Demo sample data — not for clinical use._
 
 Maps regulatory obligations (Tier 1 `OBL-*`) to MedTech Company QMS procedures that govern producing DHF deliverables satisfying them. Project-agnostic — reusable across any program built on the GlobalLogic QMS scaffold under `docs/internal/source-md/`.
 
-**Generated**: 2026-04-27 (hand-authored under task ben/035)
-**Total QMS obligations**: 10
-**Source documents**: 10 — GL-SOP-DC-001, GL-SOP-DC-002, GL-SOP-DC-003, GL-SOP-DC-004, GL-SOP-DC-005, GL-SOP-DC-006, GL-SOP-DC-008, GL-SOP-RM-001, GL-SOP-SW-001, GL-SOP-PM-001
-**DHF topics covered**: architecture, requirements, design-outputs, design-reviews, verification, validation, configuration-change, risk-management, software-lifecycle, post-market
+**Generated**: 2026-04-27 (hand-authored under tasks ben/035 + ben/036)
+**Total QMS obligations**: 18
+**Source documents**: 16 — GL-SOP-DC-001, GL-SOP-DC-002, GL-SOP-DC-003, GL-SOP-DC-004, GL-SOP-DC-005, GL-SOP-DC-006, GL-SOP-DC-008, GL-SOP-RM-001, GL-SOP-SW-001, GL-SOP-PM-001, GL-WI-DC-001, GL-WI-DC-002, GL-WI-SW-003, GL-WI-SW-004, GL-SOP-RA-001, GL-WI-RA-001 (plus standards GL-STD-RM-001, GL-STD-RM-002 cited)
+**DHF topics covered**: architecture, requirements, design-outputs, design-reviews, verification, validation, configuration-change, risk-management, software-lifecycle, post-market, traceability, cybersecurity, regulatory-submission
 
 ---
 
@@ -460,3 +460,276 @@ records:
       audit — projects often have PMS data but no documented feedback
       pathway into the risk file.
 -->
+
+---
+
+## GL-WI-DC-001 — Design History File Process
+
+_1 QMS obligation covering DHF assembly._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-arch-003"></a>[`QMS-ARCH-003` · Design History File Process](#qms-arch-003) — Maintain a DHF Index at the root of every device DHF. | GL-WI-DC-001 §4-§5 — Design History File Process | `architecture` | DHF Index; Phase-gate freeze evidence | [`OBL-13485-001` · Design & Development Planning](../../../.claude/skills/dhf-manifest/data/standards/iso-13485.md#OBL-13485-001) — Document the stages of design and development with defined entry/exit criteria |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-ARCH-003"
+    title: "Design History File Process"
+    source: "GL-WI-DC-001 §4-§5"
+    source_title: "Design History File Process"
+    topic: "architecture"
+    artifact_type: "record"
+    dhf_owner: "system"
+    applies_to:
+      - "DHF Index"
+      - "Phase-gate freeze evidence"
+    regulatory_grounding:
+      - "OBL-13485-001"
+    verbatim: |
+      "Every DHF starts with a DHF Index (one markdown / spreadsheet file
+      at the DHF root) listing every controlled artifact. Required columns:
+      Doc ID, Title, Type, Phase, Status, Revision, Effective Date, Owner,
+      Path, Trace. The DHF lives under docs/project/dhfs/<dhf-name>/ with
+      this canonical layout: design-controls / risk-management /
+      cybersecurity / usability / clinical / postmarket subfolders."
+    extracted_requirements:
+      - "Maintain a DHF Index at the root of every device DHF."
+      - "Use the canonical folder layout (design-controls, risk-management, cybersecurity, usability, clinical, postmarket)."
+      - "Freeze the DHF at phase gates per GL-FORM-DC-002."
+      - "Apply submission freeze when an RA submission package is assembled."
+      - "Apply release freeze at design transfer."
+    context: |
+      The WI is the practitioner-level companion to GL-SOP-DC-001 — the
+      latter establishes that a DHF exists, the WI tells you how to
+      build one. The freeze-point convention (phase / submission /
+      release) is the most-cited audit pattern.
+-->
+
+---
+
+## GL-WI-DC-002 — Design Traceability Matrix
+
+_1 QMS obligation covering trace-matrix process._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-trc-001"></a>[`QMS-TRC-001` · Design Traceability Matrix](#qms-trc-001) — Author a Design Traceability Matrix per device DHF. | GL-WI-DC-002 §3-§6 — Design Traceability Matrix | `traceability` | Trace Matrix (markdown + JSON sidecar); Phase-gate orphan checks | [`OBL-13485-004` · Design Reviews](../../../.claude/skills/dhf-manifest/data/standards/iso-13485.md#OBL-13485-004) — Conduct design reviews at planned stages per the DDP; [`OBL-62304-001` · Software Safety Classification](../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-001) — Assign IEC 62304 safety class (A, B, or C) to each software item before development begins |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-TRC-001"
+    title: "Design Traceability Matrix"
+    source: "GL-WI-DC-002 §3-§6"
+    source_title: "Design Traceability Matrix"
+    topic: "traceability"
+    artifact_type: "record"
+    dhf_owner: "both"
+    applies_to:
+      - "Trace Matrix (markdown + JSON sidecar)"
+      - "Phase-gate orphan checks"
+    regulatory_grounding:
+      - "OBL-13485-004"
+      - "OBL-62304-001"
+    verbatim: |
+      "The five-column trace shape is required for every device DHF:
+      User Need (UN) → Design Input (DI) → Design Output (DO) → V&V
+      (Verification or Validation Activity) → Risk Control (if any).
+      Every User Need shall trace forward to at least one Design Input.
+      Every V&V activity shall trace backward to at least one Design Input."
+    extracted_requirements:
+      - "Author a Design Traceability Matrix per device DHF."
+      - "Establish baseline at Gate 2 (UN ↔ DI) and complete by Gate 4."
+      - "Run forward-orphan and backward-orphan checks at every phase gate."
+      - "Update the DTM in lockstep with every design change (per GL-SOP-DC-008)."
+    context: |
+      Trace-matrix gaps are the primary failure surface at audit because
+      they betray missing requirements, missing tests, or un-validated
+      risk controls. Building it once at the end is the canonical
+      anti-pattern.
+-->
+
+---
+
+## GL-WI-SW-003 — Threat Modeling
+
+_1 QMS obligation covering cybersecurity threat modeling._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-cyb-001"></a>[`QMS-CYB-001` · Threat Modeling](#qms-cyb-001) — Produce a Data-Flow Diagram showing asset flows + trust boundaries. | GL-WI-SW-003 §3-§5 — Threat Modeling | `cybersecurity` | Asset inventory; Data-flow diagram; Trust-boundary list; STRIDE-derived threat list; Mitigation map | [`OBL-81001-001` · Security Risk Management Plan](../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-001) — Integrate security risk management with the ISO 14971 risk management process — security risks must appear in the device risk file; [`OBL-81001-002` · Secure Development Plan](../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002) — Include security activities in the SDP: threat modeling, secure design, security testing, vulnerability management |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-CYB-001"
+    title: "Threat Modeling"
+    source: "GL-WI-SW-003 §3-§5"
+    source_title: "Threat Modeling"
+    topic: "cybersecurity"
+    artifact_type: "record"
+    dhf_owner: "both"
+    applies_to:
+      - "Asset inventory"
+      - "Data-flow diagram"
+      - "Trust-boundary list"
+      - "STRIDE-derived threat list"
+      - "Mitigation map"
+    regulatory_grounding:
+      - "OBL-81001-001"
+      - "OBL-81001-002"
+    verbatim: |
+      "A complete threat model produces five artifacts: Asset inventory,
+      Data-flow diagram (DFD), Trust-boundary list, Threat list (STRIDE-
+      derived), and Mitigation map. For each asset crossing each trust
+      boundary, walk the STRIDE categories and identify plausible threats.
+      Threats whose successful exploitation maps to patient harm receive
+      attack-tree drilldown."
+    extracted_requirements:
+      - "Produce a Data-Flow Diagram showing asset flows + trust boundaries."
+      - "Enumerate threats via STRIDE per asset per trust boundary."
+      - "Map each threat to a control + V&V evidence (per GL-WI-SW-004)."
+      - "Update the model at every phase gate and every CVE disclosure."
+      - "Pen-test scope derives from the threat model, not vice versa."
+    context: |
+      FDA's 2023 cybersecurity guidance specifically requires the threat
+      model as a pre-market deliverable — its absence is a frequent AI
+      Hold reason. Pen-test findings outside the model indicate the
+      model has gaps.
+-->
+
+---
+
+## GL-WI-SW-004 — Software Verification and Validation
+
+_1 QMS obligation covering software V&V depth by class._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-ver-002"></a>[`QMS-VER-002` · Software V&V (per IEC 62304 Class)](#qms-ver-002) — Author test protocols + reports for unit, integration, and system tests per Software Safety Class. | GL-WI-SW-004 §3-§6 — Software Verification and Validation | `verification` | Unit Test Protocol & Report; Integration Test Protocol & Report; System Test Protocol & Report | [`OBL-62304-005` · SRS Content Requirements](../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005) — SRS must cover: functional/capability requirements, I/O requirements, external interfaces; [`OBL-62304-006` · SRS Risk Control Trace](../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006) — Re-evaluate risk after SRS is established — update risk file if new hazards emerge |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-VER-002"
+    title: "Software V&V (per IEC 62304 Class)"
+    source: "GL-WI-SW-004 §3-§6"
+    source_title: "Software Verification and Validation"
+    topic: "verification"
+    artifact_type: "protocol"
+    dhf_owner: "item"
+    applies_to:
+      - "Unit Test Protocol & Report"
+      - "Integration Test Protocol & Report"
+      - "System Test Protocol & Report"
+    regulatory_grounding:
+      - "OBL-62304-005"
+      - "OBL-62304-006"
+    verbatim: |
+      "Three test levels are defined; their required execution depends
+      on Software Safety Class: Unit Test, Integration Test, System Test.
+      For Class B and C: statement coverage ≥ 80% (target 100% on Class C);
+      branch coverage ≥ 70% (target 100% on Class C). Software tools used
+      in V&V that impact the test result shall be validated for their
+      intended use per IEC 62304 §6.1."
+    extracted_requirements:
+      - "Author test protocols + reports for unit, integration, and system tests per Software Safety Class."
+      - "Class C software requires negative testing of every safety-critical input."
+      - "Class C software requires independent code review."
+      - "Tool-validate any V&V tool that affects the test result (coverage analyzers, test runners, static analyzers)."
+    context: |
+      Per-class test depth is the IEC 62304 lever. Class A is required
+      to do system test only; Class C must do all three with high
+      coverage and independent review. Misclassification (claiming A
+      when the code drives a safety control) is a frequent finding.
+-->
+
+---
+
+## GL-SOP-RA-001 — Regulatory Operations
+
+_1 QMS obligation covering regulatory operations + pathway determination._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-rs-001"></a>[`QMS-RS-001` · Regulatory Operations](#qms-rs-001) — Author Regulatory Strategy memo at Gate 1; update at every gate. | GL-SOP-RA-001 §5.1, §5.4 — Regulatory Operations | `regulatory-submission` | Regulatory Strategy memo; Regulatory Communications Register | [`OBL-510K-001` · Substantial Equivalence Argument](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-001) — Demonstrate same intended use as the predicate device — intended use is the general purpose/function, encompassing indications for use; [`OBL-510K-002` · Predicate Device Selection](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-002) — Select a primary predicate with intended use and technological characteristics most similar to MedTech Project |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-RS-001"
+    title: "Regulatory Operations"
+    source: "GL-SOP-RA-001 §5.1, §5.4"
+    source_title: "Regulatory Operations"
+    topic: "regulatory-submission"
+    artifact_type: "plan"
+    dhf_owner: "system"
+    applies_to:
+      - "Regulatory Strategy memo"
+      - "Regulatory Communications Register"
+    regulatory_grounding:
+      - "OBL-510K-001"
+      - "OBL-510K-002"
+    verbatim: |
+      "For each new device program, the Regulatory Affairs Lead produces
+      a Regulatory Strategy memo at Gate 1 (Concept → Feasibility) of the
+      project. The strategy classifies the device per the product code
+      system, recommends a pathway (510(k) traditional / abbreviated /
+      special, De Novo, PMA, MDR Annex IX or X), identifies predicates,
+      and identifies whether a Pre-Submission interaction is recommended."
+    extracted_requirements:
+      - "Author Regulatory Strategy memo at Gate 1; update at every gate."
+      - "Maintain Regulatory Communications Register for all agency interactions."
+      - "Apply pathway-specific submission WIs (e.g., GL-WI-RA-001 for 510(k))."
+      - "Apply change-significance test (FDA 2017 510(k) flowchart) at every post-clearance change."
+    context: |
+      Regulatory strategy is a living document, not a one-time deliverable.
+      The strategy memo + Communications Register are the two artifacts an
+      agency inspection looks for when assessing the regulatory function.
+-->
+
+---
+
+## GL-WI-RA-001 — 510(k) Submission Process
+
+_1 QMS obligation covering 510(k) submission assembly._
+
+| ID | Section | Topic | Applies To | Regulatory Grounding |
+|----|---------|-------|-----------|----------------------|
+| <a id="qms-rs-002"></a>[`QMS-RS-002` · 510(k) Submission Process](#qms-rs-002) — Confirm pre-assembly requirements complete before opening eSTAR. | GL-WI-RA-001 §4-§7 — 510(k) Submission Process | `regulatory-submission` | 510(k) Submission Package (eSTAR); Predicate Comparison Table; Substantial-Equivalence Narrative | [`OBL-510K-001` · Substantial Equivalence Argument](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-001) — Demonstrate same intended use as the predicate device — intended use is the general purpose/function, encompassing indications for use; [`OBL-510K-002` · Predicate Device Selection](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-002) — Select a primary predicate with intended use and technological characteristics most similar to MedTech Project; [`OBL-510K-003` · Performance Data for SE](../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-003) — Apply the least-burdensome principle: provide the minimum data necessary to demonstrate SE |
+
+<!-- QMS-DATA
+records:
+  - id: "QMS-RS-002"
+    title: "510(k) Submission Process"
+    source: "GL-WI-RA-001 §4-§7"
+    source_title: "510(k) Submission Process"
+    topic: "regulatory-submission"
+    artifact_type: "protocol"
+    dhf_owner: "system"
+    applies_to:
+      - "510(k) Submission Package (eSTAR)"
+      - "Predicate Comparison Table"
+      - "Substantial-Equivalence Narrative"
+    regulatory_grounding:
+      - "OBL-510K-001"
+      - "OBL-510K-002"
+      - "OBL-510K-003"
+    verbatim: |
+      "The eSTAR template (FDA-provided PDF form) is the canonical
+      container. Required sections include: Cover Sheet, Indications for
+      Use, 510(k) Summary, Standards, Software (if applicable per FDA
+      software guidance), Cybersecurity (per FDA 2023 guidance),
+      Performance — Bench / Animal / Clinical, Substantial Equivalence
+      Discussion, Labeling. Each attached document is a PDF derived from
+      the controlled DHF artifact at the cited revision."
+    extracted_requirements:
+      - "Confirm pre-assembly requirements complete before opening eSTAR."
+      - "Produce Predicate Comparison Table with same/different framework."
+      - "Author SE narrative: intended use, indications, technological characteristics, performance, conclusion."
+      - "Internal sign-off (RA Lead + Quality + VP RA) before transmittal."
+      - "Track in Regulatory Communications Register through clearance."
+      - "Activate post-market surveillance per GL-SOP-PM-001 on clearance."
+    context: |
+      The eSTAR submission shape is mandatory since October 2023.
+      Pre-assembly readiness (DHF baselined, V&V complete, RMF approved,
+      cybersecurity docs complete) is the load-bearing check — submitting
+      with stale or missing DHF references guarantees AI Hold cycles.
+-->
+

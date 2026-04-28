@@ -2,7 +2,7 @@
   "generated": "2026-04-27",
   "source_md": "docs/project/dhf-manifest/qms-manifest.md",
   "source_count": 1,
-  "obligation_count": 11,
+  "obligation_count": 17,
   "qms_obligations": [
     {
       "id": "QMS-ARCH-001",
@@ -268,6 +268,165 @@
         "Produce PSUR / PMSR per device class cadence."
       ],
       "context": "PMS closes the loop from field back into design controls. The\n'feedback into RMF' clause is the one most likely to surface in\naudit — projects often have PMS data but no documented feedback\npathway into the risk file."
+    },
+    {
+      "id": "QMS-ARCH-003",
+      "title": "Design History File Process",
+      "source": "GL-WI-DC-001 §4-§5",
+      "source_title": "Design History File Process",
+      "topic": "architecture",
+      "artifact_type": "record",
+      "dhf_owner": "system",
+      "applies_to": [
+        "DHF Index",
+        "Phase-gate freeze evidence"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-001"
+      ],
+      "verbatim": "\"Every DHF starts with a DHF Index (one markdown / spreadsheet file\nat the DHF root) listing every controlled artifact. Required columns:\nDoc ID, Title, Type, Phase, Status, Revision, Effective Date, Owner,\nPath, Trace. The DHF lives under docs/project/dhfs/<dhf-name>/ with\nthis canonical layout: design-controls / risk-management /\ncybersecurity / usability / clinical / postmarket subfolders.\"\n",
+      "extracted_requirements": [
+        "Maintain a DHF Index at the root of every device DHF.",
+        "Use the canonical folder layout (design-controls, risk-management, cybersecurity, usability, clinical, postmarket).",
+        "Freeze the DHF at phase gates per GL-FORM-DC-002.",
+        "Apply submission freeze when an RA submission package is assembled.",
+        "Apply release freeze at design transfer."
+      ],
+      "context": "The WI is the practitioner-level companion to GL-SOP-DC-001 — the\nlatter establishes that a DHF exists, the WI tells you how to\nbuild one. The freeze-point convention (phase / submission /\nrelease) is the most-cited audit pattern."
+    },
+    {
+      "id": "QMS-TRC-001",
+      "title": "Design Traceability Matrix",
+      "source": "GL-WI-DC-002 §3-§6",
+      "source_title": "Design Traceability Matrix",
+      "topic": "traceability",
+      "artifact_type": "record",
+      "dhf_owner": "both",
+      "applies_to": [
+        "Trace Matrix (markdown + JSON sidecar)",
+        "Phase-gate orphan checks"
+      ],
+      "regulatory_grounding": [
+        "OBL-13485-004",
+        "OBL-62304-001"
+      ],
+      "verbatim": "\"The five-column trace shape is required for every device DHF:\nUser Need (UN) → Design Input (DI) → Design Output (DO) → V&V\n(Verification or Validation Activity) → Risk Control (if any).\nEvery User Need shall trace forward to at least one Design Input.\nEvery V&V activity shall trace backward to at least one Design Input.\"\n",
+      "extracted_requirements": [
+        "Author a Design Traceability Matrix per device DHF.",
+        "Establish baseline at Gate 2 (UN ↔ DI) and complete by Gate 4.",
+        "Run forward-orphan and backward-orphan checks at every phase gate.",
+        "Update the DTM in lockstep with every design change (per GL-SOP-DC-008)."
+      ],
+      "context": "Trace-matrix gaps are the primary failure surface at audit because\nthey betray missing requirements, missing tests, or un-validated\nrisk controls. Building it once at the end is the canonical\nanti-pattern."
+    },
+    {
+      "id": "QMS-CYB-001",
+      "title": "Threat Modeling",
+      "source": "GL-WI-SW-003 §3-§5",
+      "source_title": "Threat Modeling",
+      "topic": "cybersecurity",
+      "artifact_type": "record",
+      "dhf_owner": "both",
+      "applies_to": [
+        "Asset inventory",
+        "Data-flow diagram",
+        "Trust-boundary list",
+        "STRIDE-derived threat list",
+        "Mitigation map"
+      ],
+      "regulatory_grounding": [
+        "OBL-81001-001",
+        "OBL-81001-002"
+      ],
+      "verbatim": "\"A complete threat model produces five artifacts: Asset inventory,\nData-flow diagram (DFD), Trust-boundary list, Threat list (STRIDE-\nderived), and Mitigation map. For each asset crossing each trust\nboundary, walk the STRIDE categories and identify plausible threats.\nThreats whose successful exploitation maps to patient harm receive\nattack-tree drilldown.\"\n",
+      "extracted_requirements": [
+        "Produce a Data-Flow Diagram showing asset flows + trust boundaries.",
+        "Enumerate threats via STRIDE per asset per trust boundary.",
+        "Map each threat to a control + V&V evidence (per GL-WI-SW-004).",
+        "Update the model at every phase gate and every CVE disclosure.",
+        "Pen-test scope derives from the threat model, not vice versa."
+      ],
+      "context": "FDA's 2023 cybersecurity guidance specifically requires the threat\nmodel as a pre-market deliverable — its absence is a frequent AI\nHold reason. Pen-test findings outside the model indicate the\nmodel has gaps."
+    },
+    {
+      "id": "QMS-VER-002",
+      "title": "Software V&V (per IEC 62304 Class)",
+      "source": "GL-WI-SW-004 §3-§6",
+      "source_title": "Software Verification and Validation",
+      "topic": "verification",
+      "artifact_type": "protocol",
+      "dhf_owner": "item",
+      "applies_to": [
+        "Unit Test Protocol & Report",
+        "Integration Test Protocol & Report",
+        "System Test Protocol & Report"
+      ],
+      "regulatory_grounding": [
+        "OBL-62304-005",
+        "OBL-62304-006"
+      ],
+      "verbatim": "\"Three test levels are defined; their required execution depends\non Software Safety Class: Unit Test, Integration Test, System Test.\nFor Class B and C: statement coverage ≥ 80% (target 100% on Class C);\nbranch coverage ≥ 70% (target 100% on Class C). Software tools used\nin V&V that impact the test result shall be validated for their\nintended use per IEC 62304 §6.1.\"\n",
+      "extracted_requirements": [
+        "Author test protocols + reports for unit, integration, and system tests per Software Safety Class.",
+        "Class C software requires negative testing of every safety-critical input.",
+        "Class C software requires independent code review.",
+        "Tool-validate any V&V tool that affects the test result (coverage analyzers, test runners, static analyzers)."
+      ],
+      "context": "Per-class test depth is the IEC 62304 lever. Class A is required\nto do system test only; Class C must do all three with high\ncoverage and independent review. Misclassification (claiming A\nwhen the code drives a safety control) is a frequent finding."
+    },
+    {
+      "id": "QMS-RS-001",
+      "title": "Regulatory Operations",
+      "source": "GL-SOP-RA-001 §5.1, §5.4",
+      "source_title": "Regulatory Operations",
+      "topic": "regulatory-submission",
+      "artifact_type": "plan",
+      "dhf_owner": "system",
+      "applies_to": [
+        "Regulatory Strategy memo",
+        "Regulatory Communications Register"
+      ],
+      "regulatory_grounding": [
+        "OBL-510K-001",
+        "OBL-510K-002"
+      ],
+      "verbatim": "\"For each new device program, the Regulatory Affairs Lead produces\na Regulatory Strategy memo at Gate 1 (Concept → Feasibility) of the\nproject. The strategy classifies the device per the product code\nsystem, recommends a pathway (510(k) traditional / abbreviated /\nspecial, De Novo, PMA, MDR Annex IX or X), identifies predicates,\nand identifies whether a Pre-Submission interaction is recommended.\"\n",
+      "extracted_requirements": [
+        "Author Regulatory Strategy memo at Gate 1; update at every gate.",
+        "Maintain Regulatory Communications Register for all agency interactions.",
+        "Apply pathway-specific submission WIs (e.g., GL-WI-RA-001 for 510(k)).",
+        "Apply change-significance test (FDA 2017 510(k) flowchart) at every post-clearance change."
+      ],
+      "context": "Regulatory strategy is a living document, not a one-time deliverable.\nThe strategy memo + Communications Register are the two artifacts an\nagency inspection looks for when assessing the regulatory function."
+    },
+    {
+      "id": "QMS-RS-002",
+      "title": "510(k) Submission Process",
+      "source": "GL-WI-RA-001 §4-§7",
+      "source_title": "510(k) Submission Process",
+      "topic": "regulatory-submission",
+      "artifact_type": "protocol",
+      "dhf_owner": "system",
+      "applies_to": [
+        "510(k) Submission Package (eSTAR)",
+        "Predicate Comparison Table",
+        "Substantial-Equivalence Narrative"
+      ],
+      "regulatory_grounding": [
+        "OBL-510K-001",
+        "OBL-510K-002",
+        "OBL-510K-003"
+      ],
+      "verbatim": "\"The eSTAR template (FDA-provided PDF form) is the canonical\ncontainer. Required sections include: Cover Sheet, Indications for\nUse, 510(k) Summary, Standards, Software (if applicable per FDA\nsoftware guidance), Cybersecurity (per FDA 2023 guidance),\nPerformance — Bench / Animal / Clinical, Substantial Equivalence\nDiscussion, Labeling. Each attached document is a PDF derived from\nthe controlled DHF artifact at the cited revision.\"\n",
+      "extracted_requirements": [
+        "Confirm pre-assembly requirements complete before opening eSTAR.",
+        "Produce Predicate Comparison Table with same/different framework.",
+        "Author SE narrative: intended use, indications, technological characteristics, performance, conclusion.",
+        "Internal sign-off (RA Lead + Quality + VP RA) before transmittal.",
+        "Track in Regulatory Communications Register through clearance.",
+        "Activate post-market surveillance per GL-SOP-PM-001 on clearance."
+      ],
+      "context": "The eSTAR submission shape is mandatory since October 2023.\nPre-assembly readiness (DHF baselined, V&V complete, RMF approved,\ncybersecurity docs complete) is the load-bearing check — submitting\nwith stale or missing DHF references guarantees AI Hold cycles."
     }
   ],
   "by_source": {
@@ -282,16 +441,26 @@
       "QMS-CC-001",
       "QMS-RM-001",
       "QMS-SW-001",
-      "QMS-PM-001"
+      "QMS-PM-001",
+      "QMS-ARCH-003",
+      "QMS-TRC-001",
+      "QMS-CYB-001",
+      "QMS-VER-002",
+      "QMS-RS-001",
+      "QMS-RS-002"
     ]
   },
   "by_topic": {
     "architecture": [
       "QMS-ARCH-001",
-      "QMS-ARCH-002"
+      "QMS-ARCH-002",
+      "QMS-ARCH-003"
     ],
     "configuration-change": [
       "QMS-CC-001"
+    ],
+    "cybersecurity": [
+      "QMS-CYB-001"
     ],
     "design-outputs": [
       "QMS-DOUT-001"
@@ -302,6 +471,10 @@
     "post-market": [
       "QMS-PM-001"
     ],
+    "regulatory-submission": [
+      "QMS-RS-001",
+      "QMS-RS-002"
+    ],
     "requirements": [
       "QMS-REQ-001"
     ],
@@ -311,16 +484,21 @@
     "software-lifecycle": [
       "QMS-SW-001"
     ],
+    "traceability": [
+      "QMS-TRC-001"
+    ],
     "validation": [
       "QMS-VAL-001"
     ],
     "verification": [
-      "QMS-VER-001"
+      "QMS-VER-001",
+      "QMS-VER-002"
     ]
   },
   "obl_to_qms": {
     "OBL-13485-001": [
-      "QMS-ARCH-001"
+      "QMS-ARCH-001",
+      "QMS-ARCH-003"
     ],
     "OBL-13485-002": [
       "QMS-ARCH-001",
@@ -330,7 +508,8 @@
       "QMS-REQ-001"
     ],
     "OBL-13485-004": [
-      "QMS-DOUT-001"
+      "QMS-DOUT-001",
+      "QMS-TRC-001"
     ],
     "OBL-13485-005": [
       "QMS-DR-001"
@@ -353,14 +532,36 @@
     "OBL-14971-002": [
       "QMS-RM-001"
     ],
+    "OBL-510K-001": [
+      "QMS-RS-001",
+      "QMS-RS-002"
+    ],
     "OBL-510K-002": [
-      "QMS-CC-001"
+      "QMS-CC-001",
+      "QMS-RS-001",
+      "QMS-RS-002"
+    ],
+    "OBL-510K-003": [
+      "QMS-RS-002"
     ],
     "OBL-62304-001": [
-      "QMS-SW-001"
+      "QMS-SW-001",
+      "QMS-TRC-001"
     ],
     "OBL-62304-002": [
       "QMS-SW-001"
+    ],
+    "OBL-62304-005": [
+      "QMS-VER-002"
+    ],
+    "OBL-62304-006": [
+      "QMS-VER-002"
+    ],
+    "OBL-81001-001": [
+      "QMS-CYB-001"
+    ],
+    "OBL-81001-002": [
+      "QMS-CYB-001"
     ]
   },
   "qms_to_obl": {
@@ -400,6 +601,30 @@
     ],
     "QMS-PM-001": [
       "OBL-13485-010"
+    ],
+    "QMS-ARCH-003": [
+      "OBL-13485-001"
+    ],
+    "QMS-TRC-001": [
+      "OBL-13485-004",
+      "OBL-62304-001"
+    ],
+    "QMS-CYB-001": [
+      "OBL-81001-001",
+      "OBL-81001-002"
+    ],
+    "QMS-VER-002": [
+      "OBL-62304-005",
+      "OBL-62304-006"
+    ],
+    "QMS-RS-001": [
+      "OBL-510K-001",
+      "OBL-510K-002"
+    ],
+    "QMS-RS-002": [
+      "OBL-510K-001",
+      "OBL-510K-002",
+      "OBL-510K-003"
     ]
   }
 }

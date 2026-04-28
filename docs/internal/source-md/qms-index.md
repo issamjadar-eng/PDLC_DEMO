@@ -47,6 +47,7 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | Usability & Clinical | [`usability-clinical/`](usability-clinical/README.md) | Human Factors Lead / Clinical Affairs Director |
 | Supplier & Production | [`supplier-production/`](supplier-production/README.md) | VP Operations |
 | Post-Market | [`post-market/`](post-market/README.md) | VP Quality / PMS Lead |
+| Regulatory Affairs | [`regulatory-affairs/`](regulatory-affairs/README.md) | VP Regulatory Affairs |
 
 ## 3. Master Index
 
@@ -65,6 +66,8 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | GL-FORM-QM-003 | Form | [Training Record](quality-management/templates/training-record.md) | 1.0 | 2026-04-21 | GL-SOP-QM-003 |
 | GL-FORM-QM-004 | Form | [Internal Audit Plan](quality-management/templates/audit-plan.md) | 1.0 | 2026-04-21 | GL-SOP-QM-004 |
 | GL-FORM-QM-005 | Form | [Document Change Request](quality-management/templates/document-change-request.md) | 1.0 | 2026-04-21 | GL-SOP-QM-001 |
+| GL-SOP-QM-006 | SOP | [Good Documentation Practices](quality-management/good-documentation-practices-sop.md) | 1.0 | 2026-04-27 | ISO 13485 §4.2.4/.5; 21 CFR Part 11; ALCOA+ |
+| GL-WI-QM-001 | WI | [Deviation Procedure](quality-management/deviation-procedure-wi.md) | 1.0 | 2026-04-27 | ISO 13485 §8.3; GL-SOP-QM-005 |
 
 ### 3.2 Design Controls
 
@@ -83,6 +86,9 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | GL-FORM-DC-001 | Form | [Design Review Record](design-controls/templates/design-review-record.md) | 1.0 | 2026-04-21 | GL-SOP-DC-005 |
 | GL-TMP-DC-003 | Template | [Design Verification Protocol & Report](design-controls/templates/verification-protocol-report.md) | 1.0 | 2026-04-21 | GL-SOP-DC-006 |
 | GL-TMP-DC-004 | Template | [Design Validation Protocol & Report](design-controls/templates/validation-protocol-report.md) | 1.0 | 2026-04-21 | GL-SOP-DC-006 |
+| GL-WI-DC-001 | WI | [Design History File Process](design-controls/design-history-file-process-wi.md) | 1.0 | 2026-04-27 | ISO 13485 §7.3.10; 21 CFR 820.30(j) |
+| GL-WI-DC-002 | WI | [Design Traceability Matrix](design-controls/design-traceability-matrix-wi.md) | 1.0 | 2026-04-27 | ISO 13485 §7.3.4; IEC 62304 §5.1.1 |
+| GL-FORM-DC-002 | Form | [Phase-Gate Review Checklist](design-controls/templates/phase-gate-checklist.md) | 1.0 | 2026-04-27 | GL-SOP-DC-005 |
 
 ### 3.3 Risk Management
 
@@ -95,6 +101,8 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | GL-TMP-RM-002 | Template | [Risk Management Report](risk-management/templates/risk-management-report.md) | 1.0 | 2026-04-21 | ISO 14971 §9 |
 | GL-TMP-RM-003 | Template | [Hazard Analysis Worksheet](risk-management/templates/hazard-analysis.md) | 1.0 | 2026-04-21 | ISO 14971 §5 |
 | GL-TMP-RM-004 | Template | [FMEA Worksheet](risk-management/templates/fmea-worksheet.md) | 1.0 | 2026-04-21 | IEC 60812 |
+| GL-STD-RM-001 | Standard | [Risk Assessment Criteria](risk-management/risk-assessment-criteria.md) | 1.0 | 2026-04-27 | ISO 14971 §4.5; ISO/TR 24971 |
+| GL-STD-RM-002 | Standard | [Master Harms List](risk-management/master-harms-list.md) | 1.0 | 2026-04-27 | ISO 14971 §C.2 |
 
 ### 3.4 Software & Cybersecurity
 
@@ -108,6 +116,8 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | GL-WI-SW-002 | WI | [SBOM Generation](software-cybersecurity/sbom-wi.md) | 1.0 | 2026-04-21 | FDA 2023; NTIA; CycloneDX/SPDX |
 | GL-TMP-SW-001 | Template | [Software Development Plan](software-cybersecurity/templates/software-development-plan.md) | 1.0 | 2026-04-21 | IEC 62304 §5.1 |
 | GL-TMP-SW-002 | Template | [Cybersecurity Plan](software-cybersecurity/templates/cybersecurity-plan.md) | 1.0 | 2026-04-21 | IEC 81001-5-1 §5 |
+| GL-WI-SW-003 | WI | [Threat Modeling](software-cybersecurity/threat-modeling-wi.md) | 1.0 | 2026-04-27 | IEC 81001-5-1 §5; FDA 2023; AAMI TIR57 |
+| GL-WI-SW-004 | WI | [Software Verification and Validation](software-cybersecurity/software-vv-wi.md) | 1.0 | 2026-04-27 | IEC 62304 §5.5–§5.7 |
 
 ### 3.5 Usability & Clinical
 
@@ -142,6 +152,13 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 | GL-SOP-PM-003 | SOP | [Adverse Event Reporting (Vigilance)](post-market/adverse-event-reporting-sop.md) | 1.0 | 2026-04-21 | 21 CFR 803, 806; EU MDR Art. 87–89; MDCG 2023-3 Rev.1 |
 | GL-TMP-PM-001 | Template | [PMS Plan](post-market/templates/pms-plan.md) | 1.0 | 2026-04-21 | EU MDR Annex III §1.1 |
 | GL-FORM-PM-001 | Form | [Complaint Form](post-market/templates/complaint-form.md) | 1.0 | 2026-04-21 | 21 CFR 820.198 |
+
+### 3.8 Regulatory Affairs
+
+| Doc ID | Type | Title | Rev | Effective | Standard Anchor |
+|---|---|---|---|---|---|
+| GL-SOP-RA-001 | SOP | [Regulatory Operations](regulatory-affairs/regulatory-operations-sop.md) | 1.0 | 2026-04-27 | ISO 13485 §7.2.1; 21 CFR Part 807; EU MDR Art. 10 |
+| GL-WI-RA-001 | WI | [510(k) Submission Process](regulatory-affairs/510k-submission-process-wi.md) | 1.0 | 2026-04-27 | 21 CFR 807 Subpart E; FDA 2019 Format guidance; FDA 2014 SE; FDA 2017 510(k) Change |
 
 ## 4. Cross-Category Relationships
 
@@ -190,14 +207,16 @@ Design Controls (§7.3)
 ## 6. Counts
 
 - Manuals: 1
-- SOPs: 25
-- Work Instructions: 6
+- SOPs: 26 (was 25; +GL-SOP-QM-006, +GL-SOP-RA-001)
+- Work Instructions: 11 (was 6; +GL-WI-QM-001, +GL-WI-DC-001, +GL-WI-DC-002, +GL-WI-SW-003, +GL-WI-SW-004, +GL-WI-RA-001)
+- Standards: 2 (new doc-class; +GL-STD-RM-001, +GL-STD-RM-002)
 - Templates: 14
-- Forms: 9
-- **Total released documents: 55** (all Rev 1.0, 2026-04-21)
+- Forms: 10 (was 9; +GL-FORM-DC-002)
+- **Total released documents: 67** (12 added under task ben/036)
 
 ## 7. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|
+| 1.1 | 2026-04-27 | Ben Xavier (via Claude, task ben/036) | Added 12 documents filling representative QMS gaps (risk standards, phase-gate checklist, GDP SOP, deviation WI, DHF process WI, trace-matrix WI, threat-modeling WI, software-V&V WI, regulatory-affairs folder + 2 docs). New `Standards` doc-class introduced. New `Regulatory Affairs` top-level category. |
 | 1.0 | 2026-04-21 | Ben Xavier (via Claude, task ben/022) | Initial index. Captures all 55 documents released across P1–P6. |

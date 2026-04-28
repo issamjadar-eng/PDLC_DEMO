@@ -22,11 +22,11 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-001"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "regulatory-submission",
-            "qms_count": 0
-          }
+          "direct": [
+            "QMS-RS-001",
+            "QMS-RS-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -50,7 +50,9 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-CC-001"
+            "QMS-CC-001",
+            "QMS-RS-001",
+            "QMS-RS-002"
           ],
           "topic_fallback": null
         },
@@ -75,11 +77,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/fda-guidance/fda-510k.md#OBL-510K-003"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "regulatory-submission",
-            "qms_count": 0
-          }
+          "direct": [
+            "QMS-RS-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -105,7 +106,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -133,7 +134,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -161,7 +162,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -188,7 +189,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -216,7 +217,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "cybersecurity",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -244,7 +245,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "cybersecurity",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -271,7 +272,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "cybersecurity",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -299,7 +300,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -326,7 +327,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -381,7 +382,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -409,7 +410,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -437,7 +438,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -464,7 +465,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -492,7 +493,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "regulatory-submission",
-            "qms_count": 0
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -573,7 +574,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -790,7 +791,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -896,11 +897,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-001"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "cybersecurity",
-            "qms_count": 0
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -923,11 +923,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -980,7 +979,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -1035,7 +1034,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -1117,7 +1116,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "cybersecurity",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -1388,7 +1387,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -1469,7 +1469,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -2117,7 +2118,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -2169,7 +2170,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -2271,11 +2273,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -2298,11 +2299,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -2327,7 +2327,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -2354,7 +2354,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -2381,7 +2381,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -2408,7 +2408,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -2435,7 +2435,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -2598,7 +2598,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -2706,7 +2706,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -2784,11 +2784,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -2841,7 +2840,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -2896,7 +2895,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -2975,7 +2974,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -3056,7 +3056,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -3439,7 +3440,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -3491,7 +3492,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -3593,11 +3595,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -3620,11 +3621,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -3649,7 +3649,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -3676,7 +3676,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -3703,7 +3703,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -3730,7 +3730,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -3757,7 +3757,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -3920,7 +3920,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -4028,7 +4028,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -4106,11 +4106,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -4163,7 +4162,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -4218,7 +4217,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -4297,7 +4296,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -4378,7 +4378,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -4761,7 +4762,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -4813,7 +4814,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -4915,11 +4917,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -4942,11 +4943,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -5026,7 +5026,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -5134,7 +5134,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -5212,11 +5212,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -5269,7 +5268,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -5324,7 +5323,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -5403,7 +5402,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -5484,7 +5484,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -5867,7 +5868,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -5919,7 +5920,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -6021,11 +6023,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -6048,11 +6049,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -6132,7 +6132,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -6240,7 +6240,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -6318,11 +6318,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -6375,7 +6374,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -6430,7 +6429,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -6509,7 +6508,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -6590,7 +6590,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -6973,7 +6974,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -7025,7 +7026,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -7127,11 +7129,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -7154,11 +7155,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -7238,7 +7238,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -7346,7 +7346,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -7424,11 +7424,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -7481,7 +7480,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -7536,7 +7535,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -7615,7 +7614,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -7696,7 +7696,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -8079,7 +8080,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -8131,7 +8132,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -8233,11 +8235,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -8260,11 +8261,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -8344,7 +8344,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -8452,7 +8452,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -8530,11 +8530,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -8587,7 +8586,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -8642,7 +8641,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -8721,7 +8720,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -8802,7 +8802,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -9185,7 +9186,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -9237,7 +9238,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -9339,11 +9341,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -9366,11 +9367,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -9395,7 +9395,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -9422,7 +9422,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -9449,7 +9449,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -9503,7 +9503,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -9530,7 +9530,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -9693,7 +9693,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -9801,7 +9801,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -9879,11 +9879,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -9936,7 +9935,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -9991,7 +9990,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -10070,7 +10069,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -10151,7 +10151,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -10534,7 +10535,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -10586,7 +10587,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-SW-001"
+            "QMS-SW-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
@@ -10688,11 +10690,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-005"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -10715,11 +10716,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-62304.md#OBL-62304-006"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "requirements",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-VER-002"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -10744,7 +10744,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -10771,7 +10771,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -10798,7 +10798,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -10852,7 +10852,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -10879,7 +10879,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -11042,7 +11042,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "traceability",
-            "qms_count": 0
+            "qms_count": 1
           }
         },
         "status": "GAP",
@@ -11150,7 +11150,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -11228,11 +11228,10 @@
           "anchor_url": "../../../.claude/skills/dhf-manifest/data/standards/iec-81001-5-1.md#OBL-81001-002"
         },
         "qms_grounding": {
-          "direct": [],
-          "topic_fallback": {
-            "topic": "software-lifecycle",
-            "qms_count": 1
-          }
+          "direct": [
+            "QMS-CYB-001"
+          ],
+          "topic_fallback": null
         },
         "status": "GAP",
         "location": null
@@ -11285,7 +11284,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "architecture",
-            "qms_count": 2
+            "qms_count": 3
           }
         },
         "status": "GAP",
@@ -11340,7 +11339,7 @@
           "direct": [],
           "topic_fallback": {
             "topic": "verification",
-            "qms_count": 1
+            "qms_count": 2
           }
         },
         "status": "GAP",
@@ -11419,7 +11418,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-ARCH-001"
+            "QMS-ARCH-001",
+            "QMS-ARCH-003"
           ],
           "topic_fallback": null
         },
@@ -11500,7 +11500,8 @@
         },
         "qms_grounding": {
           "direct": [
-            "QMS-DOUT-001"
+            "QMS-DOUT-001",
+            "QMS-TRC-001"
           ],
           "topic_fallback": null
         },
