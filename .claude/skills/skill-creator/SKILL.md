@@ -134,6 +134,28 @@ Severity: `Required` or `Recommended`. Scope: `shared` (project-wide) or `local`
 - 1 (2026-04-14): Initial version — what the skill does, adapted from what
 ```
 
+### Anonymization (Required)
+
+Skills are shared infrastructure — they ship in the registry and run in any project. Skill content (prose, comments, agent prompts, examples, changelog entries, "Context" notes in reference docs, kebab-case slugs in command examples) **must not name real organizations, products, customers, or projects.** A skill that says "for HipLink, the SDP must address..." or "Arthrex's QMS uses Work Instructions" is non-portable to any other project — and breaks the contract that the registry is reusable.
+
+**Use this canonical glossary** when authoring or revising any skill content:
+
+| Real term | Replacement |
+|---|---|
+| Real organization name (e.g. `Arthrex`, `GlobalLogic`) | `MedTech Company` |
+| Real project name or project slug (e.g. `HipLink`, `Arthrex PCCP`, `PDLC_DEMO`, `arthrex-pccp`) | `MedTech Project` |
+| Real module names tied to a specific product (e.g. `HipLink Pre-Op` / `Intra-Op` / `Management Services`) | `MFD A` / `MFD B` / `MFD C` |
+| Real device model number (e.g. `PP3500`) used in identifier contexts (Jira keys, Confluence space keys) | `PROJECT` |
+| Real device model number used in path examples (e.g. `submissions/510k-pp3500/`) | `submissions/510k-<device>/` |
+| Real device names in prose (e.g. `PainEase PCA Advanced`) | "the example infusion pump" / "the example device" |
+| Real customer hostname (e.g. `arthrex.com`) | `example.com` |
+| `GlobalLogic-a-Hitachi-Company/hitachi` registry URL in code/config defaults | **preserve as literal** — load-bearing |
+| FDA / ISO / IEC / AAMI / IMDRF / GMLP / MDCG / NIST / OWASP | **preserve as literal** — public regulatory bodies |
+
+Disambiguation rule: when `Arthrex` appears as a path slug or repo URL (e.g., `arthrex-pccp`), treat it as a project reference → `MedTech Project`. When it appears as a possessive describing process ownership (`Arthrex's QMS`, `Arthrex SOPs`), treat it as an organization reference → `MedTech Company`'s QMS / `MedTech Company` SOPs.
+
+The `/best-practices` skill enforces this with a Required check that greps the regression vocabulary and FAILs on any hit (with documented exceptions for the registry URL and the deferred `hiplink-*` filenames in `dhf-manifest`). When you're writing a new skill or extending an existing one, run that check before pushing — the canonical command is in PDLC_DEMO `tasks/ben/032`.
+
 ### Self-Contained Skills & Symlink Pattern
 
 Skills are self-contained — all hooks, agents, templates, and scripts live inside the skill directory. Claude Code only discovers hooks from `.claude/hooks/` and subagents from `.claude/agents/`, so skills that ship either must populate those directories with **symlinks** back to the skill-owned source. Never copy.

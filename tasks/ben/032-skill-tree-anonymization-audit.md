@@ -2,7 +2,7 @@
 
 **ID**: 032
 **Created**: 2026-04-27
-**Status**: In Progress (Phase 4 lint regression-guard outstanding)
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -88,10 +88,10 @@ Skills with no hits and not touched: `task`, `tracker`, `skill-creator`, `lesson
 - [x] Dropped duplicate `secops/scripts/resolve_user.py` from push branch (file was a local copy of `shared/scripts/resolve_user.py` and would have introduced unwanted duplication upstream).
 - [ ] Spot-check arthrex-pccp on next `/sync-skills pull`.
 
-### Phase 4 — Guard rails
+### Phase 4 — Guard rails — COMPLETE 2026-04-27
 
-- [ ] Add a check to `best-practices` (or a new `skill-creator` rule) that greps skill content for the anonymization vocabulary and FAILs on hits. Severity: Required. Reason: prevent regression — the next time someone authors content inside a skill while looking at a real project, the lint catches the leak.
-- [ ] Document the anonymization rule in `skill-creator` SKILL.md so it's load-bearing for any new skill.
+- [x] Added "Skill content is anonymized" Required check to `best-practices/SKILL.md`. Greps the regression vocabulary across `.claude/skills/**` and `.claude/agents/**`, with documented exceptions for the registry URL and the deferred `hiplink-*` filenames (ben/033). Embeds the canonical glossary in the How-to-Verify cell so the audit subagent can reapply substitutions if a regression appears.
+- [x] Added "Anonymization (Required)" section to `skill-creator/SKILL.md` between SKILL.md sections and the symlink pattern. Documents the full glossary, the disambiguation rule (org-vs-project reference for `Arthrex`), and the load-bearing exceptions. New skill authors land on this section when reading the conventions doc; future audits will catch leaks.
 
 ## Notes
 
