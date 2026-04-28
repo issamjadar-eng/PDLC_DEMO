@@ -56,7 +56,7 @@ Worked examples:
 |--------|-------------|-----------|------------------|
 | QMS-RM-004 | Risk Management Plan | `Risk Management Plan` | `Plan Shall State It is Created` (requirement fragment) |
 | QMS-RM-011 | Risk Management Report | `Risk Management Report` | `Has the Risk Management Plan Been` (fragment, incomplete) |
-| QMS-ARCH-005 | Design Control Policy | `Design Control Policy` | `Hiplink is a New Project` (project-specific, not procedure-level) |
+| QMS-ARCH-005 | Design Control Policy | `Design Control Policy` | `MedTech Project is a New Project` (project-specific, not procedure-level) |
 | QMS-RM-013 | Risk Management and Device Safety Policy §5.3 | `RM Device Safety Policy §5.3` | `Risk Management and Device Safety Policy` (collides with QMS-RM-014 same source_title) |
 
 **Enforcement**: `build-manifest.py` and `build-qms.py` run a post-build grep check for bare `QMS-\w+` / `OBL-\w+` occurrences outside markdown link syntax. Any bare ID in produced dashboards fails the build.

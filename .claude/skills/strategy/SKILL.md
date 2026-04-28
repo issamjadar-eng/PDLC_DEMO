@@ -55,7 +55,7 @@ Every decision in an assembled strategy doc is wrapped in sentinel comments that
 <!-- DECISION:start id=D-REG-1.1 status=active source=ben/032 created=2026-04-09 last-edited=2026-04-15 supersedes=D-REG-1.0 -->
 ### One Submission, One Intended Use, Multiple Indications
 
-HipLink files as **one 510(k) submission**…
+MedTech Project files as **one 510(k) submission**…
 
 **Why:** Three modules, but one product…
 <!-- Source: ben/032, "One Submission, ...", last modified 2026-04-09 -->
@@ -116,7 +116,7 @@ Every reference to a task — in prose, tables, headings, HTML comment markers, 
 **In strategy docs (user-visible prose/tables/headings):** render as a markdown hyperlink so the reference is navigable:
 
 ```
-[ben/056](../../../tasks/ben/056-hiplink-suite-parent-sub-dhf-structure.md)
+[ben/056](../../../tasks/ben/056-medtech-project-suite-parent-sub-dhf-structure.md)
 ```
 
 The relative path depth is `../../../tasks/<task_folder>/<full-filename>.md` from a strategy doc (which lives at `docs/project/strategies/`). The assembler resolves the full filename by globbing `tasks/<task_folder>/<NNN>-*.md` at assembly time.
@@ -213,7 +213,7 @@ Each domain has a key, output path, template, and list of formal plans it inform
 **Notes from v10 (all-shared)**:
 - Every strategy domain is shared. Strategy is a project-level story that describes how the DHFs relate to each other (filing sequence, platform architecture, one SDLC, integration V&V, platform risk chains, unified PMS program). Splitting it per-DHF fractured that story.
 - Formal design-control outputs (SDP, SAD, V&V Plan, Risk Mgmt Plan, PMS Plan, cybersecurity plan) **still live per-DHF** in `dhfs/<dhf>/design-controls/`, `risk-management/`, `postmarket/`, and `cybersecurity/`. Only the upstream strategy **briefs** that inform those formal outputs have moved up to `docs/project/strategies/`.
-- The v8 per-dhf output paths (`dhfs/<dhf>/design-controls/plans/regulatory-strategy.md`, etc.) are **not** automatically migrated. For PDLC_DEMO, ben/009 P1 executes the `git mv`. For fresh projects, the v10 shared paths apply from init time.
+- The v8 per-dhf output paths (`dhfs/<dhf>/design-controls/plans/regulatory-strategy.md`, etc.) are **not** automatically migrated. For MedTech Project, ben/009 P1 executes the `git mv`. For fresh projects, the v10 shared paths apply from init time.
 
 **Incubating subtopics** — start as topics within a parent domain, promote to standalone domain when they outgrow it:
 - `clinical` → inside `regulatory` until a clinical study is needed

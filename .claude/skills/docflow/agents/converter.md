@@ -155,7 +155,7 @@ Convert all tables to markdown format. **Tables are the hardest part of conversi
 4. **Axis labels** (typically rotated text in a merged leftmost column) emit with `rowspan=N` matching the source's `vMerge` span, plus `writing-mode:vertical-rl` + `transform:rotate(180deg)` for visual fidelity if the source renders vertically. Text is preserved verbatim (no added explanation).
 5. **Verification at Phase 7**: for every source table containing any `gridSpan>=2` or `vMerge=restart`, your emit must contain at least one matching `colspan="N"` or `rowspan="N"` attribute with the same N. A "clean" multi-table split with no `colspan`/`rowspan` anywhere is a T1 violation — flag in the report.
 
-*Rationale: the HipLink RMP adopt (Apr 2026) split the 8×8 composite risk matrix into two separate tables (legend + matrix) AND fabricated ISO-14971-flavored definitions for "Acceptable"/"Conditional"/"Unacceptable" that appeared nowhere in the source. Both are faithfulness violations — the MD no longer represented what the source said. This rule closes that gap.*
+*Rationale: the MedTech Project RMP adopt (Apr 2026) split the 8×8 composite risk matrix into two separate tables (legend + matrix) AND fabricated ISO-14971-flavored definitions for "Acceptable"/"Conditional"/"Unacceptable" that appeared nowhere in the source. Both are faithfulness violations — the MD no longer represented what the source said. This rule closes that gap.*
 
 **XLSX-specific table rules:**
 
@@ -669,7 +669,7 @@ If the source shows box A visually inside region B (nested rectangles, labeled e
 
 **Protocol**: before writing any Mermaid subgraph blocks, enumerate the source image's region boundaries. For each content element, record which region(s) contain it. Build the nested structure from these observations, not from what "seems natural" or "how architectures usually look."
 
-**Common failure mode**: placing service boxes (Resolvers, API Gateway, Lambda handlers) at the top level when the source shows them inside a VPC or private-network boundary. This flattens a security/deployment boundary that the source specifically communicates. Observed in the HipLink Web SAD — AppSync, API Gateway, Resolvers, API Handler, and Authorizer all drawn inside the VPC rectangle in the source were transcribed as top-level Mermaid nodes, losing the VPC containment semantic.
+**Common failure mode**: placing service boxes (Resolvers, API Gateway, Lambda handlers) at the top level when the source shows them inside a VPC or private-network boundary. This flattens a security/deployment boundary that the source specifically communicates. Observed in the MedTech Project Web SAD — AppSync, API Gateway, Resolvers, API Handler, and Authorizer all drawn inside the VPC rectangle in the source were transcribed as top-level Mermaid nodes, losing the VPC containment semantic.
 
 **Nested subgraphs are allowed and often required**: `subgraph VPC` containing `subgraph Management`, `subgraph Integrations`, etc. Depth follows source depth — don't flatten. Don't add nesting levels that aren't in the source either.
 
@@ -758,7 +758,7 @@ Flowchart transcription is error-prone at decision nodes. The agent may correctl
 - One branch short-circuits a chain and merges back downstream
 - Decision branches cross swim lanes or regions
 
-Observed in the HipLink Web SAD sales-rep-registration flow: the "Yes" branch of `"OKTA account exists"` was routed back to itself (`D2 -- "Yes" --> D2`) when the source clearly shows it going forward to `"Create user in DB"` (bypassing the "Create OKTA user" step).
+Observed in the MedTech Project Web SAD sales-rep-registration flow: the "Yes" branch of `"OKTA account exists"` was routed back to itself (`D2 -- "Yes" --> D2`) when the source clearly shows it going forward to `"Create user in DB"` (bypassing the "Create OKTA user" step).
 
 **Mandatory enumerate-before-emit protocol** for every flow diagram (F11a-a class):
 
@@ -885,7 +885,7 @@ else
 fi
 ```
 
-**Reporting obligation**: your Phase 7 notes must include one of three exact labels: `pagination: F15 (rendered)`, `pagination: F14 (author-intended)`, or `pagination: skipped (reason)`. If you skip, the reason must be one of: "≤2 pages", "0 explicit breaks AND no LibreOffice (probe returned <verbatim probe output>)", or "XLSX (sheets are the unit)". A bare "skipped" with no rationale is a Phase 7 failure — re-run the probe and retry. *Rationale: this closed the gap that allowed the HipLink RMP adopt run (Apr 2026) to skip pagination entirely while LibreOffice was installed and on PATH — the agent never ran the probe.*
+**Reporting obligation**: your Phase 7 notes must include one of three exact labels: `pagination: F15 (rendered)`, `pagination: F14 (author-intended)`, or `pagination: skipped (reason)`. If you skip, the reason must be one of: "≤2 pages", "0 explicit breaks AND no LibreOffice (probe returned <verbatim probe output>)", or "XLSX (sheets are the unit)". A bare "skipped" with no rationale is a Phase 7 failure — re-run the probe and retry. *Rationale: this closed the gap that allowed the MedTech Project RMP adopt run (Apr 2026) to skip pagination entirely while LibreOffice was installed and on PATH — the agent never ran the probe.*
 
 **DOCX extraction snippet (fallback F14)**:
 

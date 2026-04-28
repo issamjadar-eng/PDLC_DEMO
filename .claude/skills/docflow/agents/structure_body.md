@@ -85,12 +85,12 @@ don't exist in the source.**
   `User Roles`). Also accept: `Technology`, `Security`, `Review`, `Deployment`
   if present in the source.
 - **H3** — subsections explicitly named in the source. For the IntraOp SAD
-  canonical example: `HipLink IntraOp application Architecture`,
+  canonical example: `MedTech Project IntraOp application Architecture`,
   `Presentation Layer (View and ViewModel)`, `Business Logic Layer`, `Data
   Layer`, `Localhost PACS server (Orthanc)`, `AWS Backend`, `Admin user
   registration`, `Sales Representative user registration`,
   `Surgeon user registration`, `IntraOp Application high-level user flow`,
-  `Surgery flow on a tablet`, `Tablet provisioning`, `HipLink IntraOp
+  `Surgery flow on a tablet`, `Tablet provisioning`, `MedTech Project IntraOp
   application installation or upgrade`.
 
 **Heading detection heuristic** (for pdftotext output): a line is a heading if
@@ -221,7 +221,7 @@ Write the complete body to OUTPUT_PATH. Structure:
 ## Software Architecture
 <!-- IMAGE-PLACEHOLDER: descriptor="..." page="..." -->
 
-### HipLink IntraOp application Architecture
+### MedTech Project IntraOp application Architecture
 ...
 
 ## User Workflows

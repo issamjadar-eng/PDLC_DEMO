@@ -11,7 +11,7 @@
 
 Cited by: FDA AI/ML PCCP guidance uses IMDRF SaMD Risk Categorization (I-IV) as
 a framing device; FDA CDS guidance references IMDRF definitions.
-Relevant for HipLink's Pre-Op and Intra-Op SaMD classification and clinical
+Relevant for MedTech Project's Pre-Op and Intra-Op SaMD classification and clinical
 evaluation planning.
 
 To distill:

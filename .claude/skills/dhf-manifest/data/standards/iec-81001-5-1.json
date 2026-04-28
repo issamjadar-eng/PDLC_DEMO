@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "standards",
   "source_file": "iec-81001-5-1.md",
   "obligation_count": 10,
@@ -279,7 +279,7 @@
         "Classify security incidents by severity (e.g., patient safety impact, data breach severity)",
         "Track all security incidents and vulnerabilities from identification to resolution",
         "Report security incidents to FDA per MDR/MAUDE requirements when patient safety is affected",
-        "Coordinate with Arthrex post-market surveillance for cybersecurity-triggered adverse event reporting"
+        "Coordinate with MedTech Company post-market surveillance for cybersecurity-triggered adverse event reporting"
       ]
     }
   ],

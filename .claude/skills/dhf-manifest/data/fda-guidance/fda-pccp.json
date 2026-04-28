@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-pccp.md",
   "obligation_count": 6,
@@ -117,7 +117,7 @@
         },
         "Assess cumulative impact of implementing all PCCP modifications together — not just individually",
         {
-          "For HipLink (MFD)": "discuss impact on overall device functionality including both SaMD modules and Management Services"
+          "For MedTech Project (MFD)": "discuss impact on overall device functionality including both SaMD modules and Management Services"
         }
       ]
     },

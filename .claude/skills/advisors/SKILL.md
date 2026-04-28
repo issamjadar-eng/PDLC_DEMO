@@ -1,4 +1,4 @@
-Base directory for this skill: /Users/ben.xavier/Documents/projects/arthrex/pccp/.claude/skills/advisors
+Base directory for this skill: `${CLAUDE_SKILL_DIR}`
 
 # Advisors — Persona Subagents for Medtech Projects
 

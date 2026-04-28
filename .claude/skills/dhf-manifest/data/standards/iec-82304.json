@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "standards",
   "source_file": "iec-82304.md",
   "obligation_count": 8,
@@ -152,7 +152,7 @@
       ],
       "verbatim": "Validate the health software product in the intended operating environment. Validation must demonstrate the product meets user needs and intended uses.",
       "extracted_requirements": [
-        "Validate HipLink in the intended operating environment (or validated simulation) — not just on a development server",
+        "Validate MedTech Project in the intended operating environment (or validated simulation) — not just on a development server",
         "Validation must demonstrate the product meets all defined user needs and the intended use statement",
         "For SaMD with AI components, validation must include clinical performance testing (algorithm performance on representative patient data)"
       ]

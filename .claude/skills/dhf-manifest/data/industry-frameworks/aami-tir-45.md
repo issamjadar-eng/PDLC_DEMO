@@ -10,7 +10,7 @@
 <!-- STUB — no obligations distilled yet.
 
 Cited by: IEC 62304 implementation guidance and many SDLC best-practice docs.
-Relevant for Arthrex's agile/iterative dev model under PCCP.
+Relevant for MedTech Company's agile/iterative dev model under PCCP.
 
 To distill:
 - Read the TIR45 PDF (obtain via AAMI)

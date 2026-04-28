@@ -8,7 +8,7 @@ SUMMARY_SYSTEM = """You are a concise technical summarizer for documents in a Me
 Guidelines:
 - Start with a one-sentence statement of what the document is.
 - Follow with 2-4 bullet points covering the key content, decisions, or data.
-- If the document references a specific device (e.g., PP3500), standard (ISO/IEC), or regulation, mention it.
+- If the document references a specific device (e.g., PROJECT), standard (ISO/IEC), or regulation, mention it.
 - Keep the total under 150 words.
 - Do not invent details. If the document is short or has little content, say so and be brief.
 - Do not wrap the response in code fences.

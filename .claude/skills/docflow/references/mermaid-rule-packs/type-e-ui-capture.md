@@ -34,9 +34,9 @@ Type-e images produce **no** ```mermaid fence. Emit only the marker + alt text
 ```markdown
 <!-- F11-CLASSIFY: descriptor="login-screen" type="e" mermaid-emit="skip" skip-reason="ui-capture" -->
 
-![Screenshot of the HipLink IntraOp login screen: email and password fields, a "Sign in" button, and an OKTA SSO alternative link at the bottom.](images/login-screen.png)
+![Screenshot of the MedTech Project IntraOp login screen: email and password fields, a "Sign in" button, and an OKTA SSO alternative link at the bottom.](images/login-screen.png)
 
-*Figure N. HipLink IntraOp login screen (source p.5).*
+*Figure N. MedTech Project IntraOp login screen (source p.5).*
 ```
 
 No "Authoritative source" line — that disclaimer exists only for Mermaid

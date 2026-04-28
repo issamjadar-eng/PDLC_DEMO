@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-ai-lifecycle.md",
   "obligation_count": 6,
@@ -135,7 +135,7 @@
         "Conduct statistically powered subgroup analyses for key demographic subgroups when making subgroup performance claims",
         "Evaluate repeatability (same reader, same image, different times) and reproducibility (different readers, different sites)",
         {
-          "For human-in-the-loop AI (HipLink)": "evaluate human-device team performance — how does the surgeon perform WITH the AI vs. without?"
+          "For human-in-the-loop AI (MedTech Project)": "evaluate human-device team performance — how does the surgeon perform WITH the AI vs. without?"
         },
         "Report all primary endpoints with 95% two-sided confidence intervals"
       ]

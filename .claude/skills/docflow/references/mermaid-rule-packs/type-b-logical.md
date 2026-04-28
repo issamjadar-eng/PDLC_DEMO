@@ -33,7 +33,7 @@ exist but without arrowheads → `type-c-component.md`.
 
 ```mermaid
 flowchart TB
-    subgraph App["HipLink IntraOp Application"]
+    subgraph App["MedTech Project IntraOp Application"]
         subgraph Presentation["Presentation Layer"]
             View[View]
             ViewModel[ViewModel]
@@ -96,7 +96,7 @@ F11d.
 ## Label all subgraph titles literally
 
 ```mermaid
-subgraph Backend["HipLink AWS Backend"]
+subgraph Backend["MedTech Project AWS Backend"]
 ```
 
 Use the source's exact group label. Don't abbreviate. Don't translate.

@@ -10,7 +10,7 @@
 <!-- STUB — no obligations distilled yet.
 
 Cited by: FDA Cybersecurity Guidance (2023) §III as the recommended method for
-security risk management documentation; cited throughout Arthrex
+security risk management documentation; cited throughout MedTech Company
 SOP-000179692 Global Product Security.
 
 To distill:

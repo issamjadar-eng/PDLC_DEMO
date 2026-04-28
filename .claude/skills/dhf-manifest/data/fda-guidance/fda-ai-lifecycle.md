@@ -33,7 +33,7 @@ extracted_requirements:
   - Describe workflow integration: where in the clinical workflow the AI output is presented to the clinician
 ```
 
-**Context**: The "automation level" disclosure is critical for HipLink. Pre-Op AI (anatomy segmentation, implant sizing) is human-in-the-loop — the surgeon reviews and confirms AI results before they are used. Intra-Op guidance is more time-critical — the automation level for Intra-Op real-time guidance must be clearly stated (e.g., AI provides suggestions that the surgeon validates; surgeon maintains authority over all surgical decisions). Automation bias risk increases with higher automation levels.
+**Context**: The "automation level" disclosure is critical for MedTech Project. Pre-Op AI (anatomy segmentation, implant sizing) is human-in-the-loop — the surgeon reviews and confirms AI results before they are used. Intra-Op guidance is more time-critical — the automation level for Intra-Op real-time guidance must be clearly stated (e.g., AI provides suggestions that the surgeon validates; surgeon maintains authority over all surgical decisions). Automation bias risk increases with higher automation levels.
 
 ---
 
@@ -62,7 +62,7 @@ extracted_requirements:
   - Performance monitoring tools disclosure: how users can track device performance in their clinical setting
 ```
 
-**Context**: The AI labeling requirements are substantially more extensive than traditional software labeling. For HipLink, the IFU for Pre-Op must disclose: that CT/MRI segmentation is AI-generated, the performance metrics with CIs from the validation study, the demographic breakdown of the training and test datasets, and which patient types are at the boundary of the validated use (e.g., patients with severe dysplasia not well-represented in training data). This disclosure enables informed clinical decision-making.
+**Context**: The AI labeling requirements are substantially more extensive than traditional software labeling. For MedTech Project, the IFU for Pre-Op must disclose: that CT/MRI segmentation is AI-generated, the performance metrics with CIs from the validation study, the demographic breakdown of the training and test datasets, and which patient types are at the boundary of the validated use (e.g., patients with severe dysplasia not well-represented in training data). This disclosure enables informed clinical decision-making.
 
 ---
 
@@ -89,7 +89,7 @@ extracted_requirements:
   - Test data must be independent of development data — provide evidence of sequestration
 ```
 
-**Context**: For HipLink, training data likely includes CT/MRI scans from Arthrex's clinical network. The submission must demonstrate that this data is representative of US patients who will use HipLink (demographics, imaging equipment, clinical settings). If training data is primarily European or Asian datasets, the OUS justification must address whether those populations are representative of US hip morphology. This often drives a US-specific validation study even when broader datasets are used for training.
+**Context**: For MedTech Project, training data likely includes CT/MRI scans from MedTech Company's clinical network. The submission must demonstrate that this data is representative of US patients who will use MedTech Project (demographics, imaging equipment, clinical settings). If training data is primarily European or Asian datasets, the OUS justification must address whether those populations are representative of US hip morphology. This often drives a US-specific validation study even when broader datasets are used for training.
 
 ---
 
@@ -114,11 +114,11 @@ extracted_requirements:
   - State null and alternative hypotheses; apply multiplicity corrections for multiple endpoints
   - Conduct statistically powered subgroup analyses for key demographic subgroups when making subgroup performance claims
   - Evaluate repeatability (same reader, same image, different times) and reproducibility (different readers, different sites)
-  - For human-in-the-loop AI (HipLink): evaluate human-device team performance — how does the surgeon perform WITH the AI vs. without?
+  - For human-in-the-loop AI (MedTech Project): evaluate human-device team performance — how does the surgeon perform WITH the AI vs. without?
   - Report all primary endpoints with 95% two-sided confidence intervals
 ```
 
-**Context**: The human-device team performance evaluation is specifically important for HipLink's AI-assisted surgical guidance. FDA expects evidence not just that the AI algorithm performs well in isolation, but that the combined human-AI team (surgeon using HipLink guidance) performs better or at least equivalently to the baseline (without AI assistance). This may require a human factors study or a reader study comparing surgical planning/guidance accuracy with vs. without AI.
+**Context**: The human-device team performance evaluation is specifically important for MedTech Project's AI-assisted surgical guidance. FDA expects evidence not just that the AI algorithm performs well in isolation, but that the combined human-AI team (surgeon using MedTech Project guidance) performs better or at least equivalently to the baseline (without AI assistance). This may require a human factors study or a reader study comparing surgical planning/guidance accuracy with vs. without AI.
 
 ---
 
@@ -145,7 +145,7 @@ extracted_requirements:
   - For PCCP devices: the performance monitoring plan must integrate with the PCCP device monitoring plan
 ```
 
-**Context**: Post-market AI performance monitoring is a continuous obligation, not a one-time validation. For HipLink, real-world input data drift could occur as imaging technology evolves (new C-arm models, higher resolution DICOM formats) or as the clinical practice evolves (new surgical techniques, different patient populations). The monitoring plan must define specific triggers: e.g., if performance metrics on a rolling real-world sample drop below 90% of the accepted threshold, a root cause analysis and PCCP modification review are triggered.
+**Context**: Post-market AI performance monitoring is a continuous obligation, not a one-time validation. For MedTech Project, real-world input data drift could occur as imaging technology evolves (new C-arm models, higher resolution DICOM formats) or as the clinical practice evolves (new surgical techniques, different patient populations). The monitoring plan must define specific triggers: e.g., if performance metrics on a rolling real-world sample drop below 90% of the accepted threshold, a root cause analysis and PCCP modification review are triggered.
 
 ---
 
@@ -173,4 +173,4 @@ extracted_requirements:
   - AI model access controls: who can trigger re-training, update deployment, and model configuration changes
 ```
 
-**Context**: AI-specific security threats are an extension of the standard cybersecurity threat model required by the FDA Cybersecurity guidance. For HipLink, data poisoning is a relevant risk if re-training data is sourced from multiple hospital sites — a compromised hospital could contribute corrupted training data. Evasion attacks on Intra-Op's real-time guidance are particularly dangerous — adversary-manipulated C-arm images could cause AI to produce incorrect surgical guidance. These AI-specific threats must appear in HipLink's threat model.
+**Context**: AI-specific security threats are an extension of the standard cybersecurity threat model required by the FDA Cybersecurity guidance. For MedTech Project, data poisoning is a relevant risk if re-training data is sourced from multiple hospital sites — a compromised hospital could contribute corrupted training data. Evasion attacks on Intra-Op's real-time guidance are particularly dangerous — adversary-manipulated C-arm images could cause AI to produce incorrect surgical guidance. These AI-specific threats must appear in MedTech Project's threat model.

@@ -101,7 +101,7 @@ def render_dashboard(tier4: dict) -> str:
     pct_direct = round(100 * grand_direct / grand_total, 1) if grand_total else 0
 
     lines = [
-        "# HipLink DHF — Dashboard",
+        "# MedTech Project DHF — Dashboard",
         "",
         f"**Generated**: {today}  ",
         f"**Manifest date**: {generated}  ",

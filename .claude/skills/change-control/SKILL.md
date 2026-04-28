@@ -134,9 +134,9 @@ When implemented, will list every controlled doc and its phase/IDs:
 ```
 Path                                           State     Confluence  Jira          Windchill
 docs/project/dhfs/pca-device/inputs/pump-occlusion.md
-                                               frozen    458291 v1   PP3500-1234   —
+                                               frozen    458291 v1   PROJECT-1234   —
 docs/project/dhfs/pca-device/inputs/audible-alarm.md
-                                               released  458292 v3   PP3500-1235   ECO-9981
+                                               released  458292 v3   PROJECT-1235   ECO-9981
 ```
 
 Reads from frontmatter (authoritative); validates against `state.json` cache (warns on drift).

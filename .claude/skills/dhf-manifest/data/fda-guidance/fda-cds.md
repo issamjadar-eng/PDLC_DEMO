@@ -28,13 +28,13 @@ applies_to: [Device Classification Determination, 510(k) Submission — Device D
 verbatim: "The software function must not acquire, process, or analyze: medical images, signals from an IVD, or patterns or signals from a signal acquisition system. Any software that directly analyzes X-rays, CT scans, MRI, ultrasound, or similar data is a device regardless of whether it meets criteria 2-4."
 extracted_requirements:
   - Any software function that acquires, processes, or analyzes medical images FAILS criterion 1 and is a device (SaMD) — cannot claim CDS non-device status
-  - HipLink Pre-Op FAILS criterion 1: it processes CT/MRI images for anatomy segmentation and implant sizing → is a SaMD device
-  - HipLink Intra-Op FAILS criterion 1: it acquires and processes C-arm fluoroscopy images for surgical guidance → is a SaMD device
+  - MFD A FAILS criterion 1: it processes CT/MRI images for anatomy segmentation and implant sizing → is a SaMD device
+  - MFD B FAILS criterion 1: it acquires and processes C-arm fluoroscopy images for surgical guidance → is a SaMD device
   - Software analyzing HCP-reported findings (not images themselves) may qualify as non-device CDS if other criteria are met
   - Management Services PostOp Reports must be analyzed: if it analyzes imaging data → is a device; if it only displays clinical summaries from HCP-reported findings → may be non-device
 ```
 
-**Context**: This criterion confirms HipLink Pre-Op and Intra-Op ARE devices — they process medical images. This is not ambiguous. The CDS analysis must be documented to explain WHY these modules are devices (criterion 1 failure), and WHY Management Services PostOp reporting is NOT a device (must demonstrate it does not process medical images or signal patterns — it only displays clinical summaries from structured data reported by clinicians). Document this analysis in the device classification section of the 510(k).
+**Context**: This criterion confirms MFD A and Intra-Op ARE devices — they process medical images. This is not ambiguous. The CDS analysis must be documented to explain WHY these modules are devices (criterion 1 failure), and WHY Management Services PostOp reporting is NOT a device (must demonstrate it does not process medical images or signal patterns — it only displays clinical summaries from structured data reported by clinicians). Document this analysis in the device classification section of the 510(k).
 
 ---
 
@@ -85,4 +85,4 @@ extracted_requirements:
   - The CDS classification determination is a required part of the 510(k) device description section
 ```
 
-**Context**: The Management Services PostOp Reports classification (device vs. non-device) is an open Q-Sub question for HipLink. If FDA disagrees with the non-device positioning, it would require a separate regulatory pathway for PostOp Reports. Raising this as a specific Q-Sub question before filing the 510(k) is the least-burdensome approach — get FDA alignment on the classification early rather than receiving an NSE determination.
+**Context**: The Management Services PostOp Reports classification (device vs. non-device) is an open Q-Sub question for MedTech Project. If FDA disagrees with the non-device positioning, it would require a separate regulatory pathway for PostOp Reports. Raising this as a specific Q-Sub question before filing the 510(k) is the least-burdensome approach — get FDA alignment on the classification early rather than receiving an NSE determination.

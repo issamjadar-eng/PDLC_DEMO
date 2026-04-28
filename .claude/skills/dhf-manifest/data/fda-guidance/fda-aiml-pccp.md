@@ -34,7 +34,7 @@ extracted_requirements:
   - All modifications must keep the device within its authorized intended use and indications for use
 ```
 
-**Context**: HipLink's AI modifications are primarily manual (human-in-the-loop: Arthrex reviews V&V results before releasing an updated model) and global (same updated model deployed to all tablets). Local adaptation (site-specific model tuning) is a potential future capability but would require explicit PCCP coverage if intended. The modification frequency drives the monitoring plan cadence — quarterly re-training cycles require quarterly performance monitoring.
+**Context**: MedTech Project's AI modifications are primarily manual (human-in-the-loop: MedTech Company reviews V&V results before releasing an updated model) and global (same updated model deployed to all tablets). Local adaptation (site-specific model tuning) is a potential future capability but would require explicit PCCP coverage if intended. The modification frequency drives the monitoring plan cadence — quarterly re-training cycles require quarterly performance monitoring.
 
 ---
 
@@ -61,7 +61,7 @@ extracted_requirements:
   - Document measures to prevent unwanted bias from repeated use of test data sets
 ```
 
-**Context**: For HipLink's AI modifications, the data management practices define the rules for how future re-training datasets are collected and managed. The test data set used to evaluate each modification must be independent of training/tuning data and collected from multiple sites. This ensures that performance claims on the modified AI are not inflated by data leakage. Arthrex must define these practices at submission time — not re-specify them each time a modification is made.
+**Context**: For MedTech Project's AI modifications, the data management practices define the rules for how future re-training datasets are collected and managed. The test data set used to evaluate each modification must be independent of training/tuning data and collected from multiple sites. This ensures that performance claims on the modified AI are not inflated by data leakage. MedTech Company must define these practices at submission time — not re-specify them each time a modification is made.
 
 ---
 
@@ -88,7 +88,7 @@ extracted_requirements:
   - Root cause analysis allowed for resolvable failures (not due to PCCP-specific aspects)
 ```
 
-**Context**: Pre-specified acceptance criteria are the most important element of the Modification Protocol — they are what FDA pre-authorized when they cleared the PCCP. Arthrex cannot modify acceptance criteria after seeing V&V results without FDA concurrence. For HipLink Pre-Op's segmentation algorithm, acceptance criteria might include: ≥90% Dice similarity coefficient on test set, non-inferiority to the cleared version at p<0.05, and consistent performance across male/female patients and BMI quartiles.
+**Context**: Pre-specified acceptance criteria are the most important element of the Modification Protocol — they are what FDA pre-authorized when they cleared the PCCP. MedTech Company cannot modify acceptance criteria after seeing V&V results without FDA concurrence. For MFD A's segmentation algorithm, acceptance criteria might include: ≥90% Dice similarity coefficient on test set, non-inferiority to the cleared version at p<0.05, and consistent performance across male/female patients and BMI quartiles.
 
 ---
 
@@ -115,7 +115,7 @@ extracted_requirements:
   - Communication plan: how users are informed of modifications, version information availability, labeling update process
 ```
 
-**Context**: The update procedure defines how HipLink AI modifications flow from V&V approval to the surgical OR. For Intra-Op, post-update verification of critical safety features before clinical use is critical — a broken update should not reach the surgical field. The monitoring plan must track real-world performance post-deployment (not just pre-deployment V&V), including subpopulation drift (model performing worse for a specific patient type after re-training). Rollback criteria must be pre-defined.
+**Context**: The update procedure defines how MedTech Project AI modifications flow from V&V approval to the surgical OR. For Intra-Op, post-update verification of critical safety features before clinical use is critical — a broken update should not reach the surgical field. The monitoring plan must track real-world performance post-deployment (not just pre-deployment V&V), including subpopulation drift (model performing worse for a specific patient type after re-training). Rollback criteria must be pre-defined.
 
 ---
 
@@ -167,4 +167,4 @@ extracted_requirements:
   - QSR transition to ISO 13485 effective February 2, 2026 — QMS must be compliant before first post-market PCCP modification
 ```
 
-**Context**: Every PCCP modification implementation generates a set of required QMS records: V&V data, performance results vs. acceptance criteria, approval record, update deployment record, post-deployment monitoring results. These are not optional documentation — they are the evidence base that justifies NOT filing a new 510(k). Arthrex's QMS must have a defined PCCP implementation workflow that produces these records consistently for every modification.
+**Context**: Every PCCP modification implementation generates a set of required QMS records: V&V data, performance results vs. acceptance criteria, approval record, update deployment record, post-deployment monitoring results. These are not optional documentation — they are the evidence base that justifies NOT filing a new 510(k). MedTech Company's QMS must have a defined PCCP implementation workflow that produces these records consistently for every modification.

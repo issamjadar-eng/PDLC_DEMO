@@ -2,7 +2,7 @@
    chat sidecar. The page supplies the parameters via the `assistant` dict:
 
      assistant = {
-       "scope": "tm:PP3500"              # localStorage thread key suffix
+       "scope": "tm:PROJECT"              # localStorage thread key suffix
        "endpoint": "/assistant/chat/stream",
        "default_agent": "systems-engineering",
        "allowed_agents": ["systems-engineering", "regulatory-affairs", ...],
@@ -12,7 +12,7 @@
        "grounding_source": "static:{{...}}" | "element:#selector"
                                          # how the drawer gets grounding text (see below)
        "title": "Systems Engineering Assistant",
-       "subtitle": "PP3500",             # optional small line under title
+       "subtitle": "PROJECT",             # optional small line under title
        "placeholder": "Ask about the trace matrix…",
        "empty_hint": "Ask me about…",
        "open_button_id": "pc-assistant-open",

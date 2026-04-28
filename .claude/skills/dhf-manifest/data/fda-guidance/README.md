@@ -16,7 +16,7 @@ This is Tier 1 of the four-tier manifest architecture:
 | [`iec-62366.md`](iec-62366.md) | IEC 62366-1 | Usability engineering deliverables |
 | [`iec-81001-5-1.md`](iec-81001-5-1.md) | IEC 81001-5-1 | Cybersecurity activities in the software lifecycle |
 | [`iec-82304.md`](iec-82304.md) | IEC 82304-1 | Health software general safety |
-| [`iso-13485.md`](iso-13485.md) | ISO 13485 | QMS-level (typically Arthrex-QMS-deferred; flagged but not always projected) |
+| [`iso-13485.md`](iso-13485.md) | ISO 13485 | QMS-level (typically MedTech Company-QMS-deferred; flagged but not always projected) |
 | [`iso-14971.md`](iso-14971.md) | ISO 14971 | Risk management file deliverables |
 | [`fda-510k.md`](fda-510k.md) | FDA 510(k) | Submission-package deliverables for substantial equivalence |
 | [`fda-pccp.md`](fda-pccp.md) | FDA PCCP General | PCCP document structure and modification protocols |

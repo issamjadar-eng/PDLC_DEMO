@@ -17,7 +17,7 @@ Browser automation is **not the goal**. It is the workable fallback when corpora
 
 This pattern has multiple plausible consumers (any Workspace skill that gets API-blocked, plus skills that want to scrape user-facing dashboards or vendor portals). Hosting the lifecycle and connection layer as shared infrastructure avoids each consumer reinventing it.
 
-**Origin story** — see `tasks/ben/116`. Probe T10 confirmed GlobalLogic's Workspace admin uses App Access Control to block sensitive scopes (Docs, Drive) for both gcloud's first-party client and likely all third-party OAuth clients, but the user's authenticated browser accesses the same surfaces with no friction.
+**Origin story** — see `tasks/ben/116`. Probe T10 confirmed MedTech Company's Workspace admin uses App Access Control to block sensitive scopes (Docs, Drive) for both gcloud's first-party client and likely all third-party OAuth clients, but the user's authenticated browser accesses the same surfaces with no friction.
 
 ---
 

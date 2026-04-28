@@ -486,7 +486,7 @@ def _chat_system_prompt(sidecar: dict) -> str:
         "criticality, verification status, and cross-layer relationships.\n\n"
         "Ground every answer in the trace matrix data below. When the user "
         "asks a question, cite the relevant IDs (e.g. DI-004, UN-003, "
-        "VER-PP3500-SW-002). When they ask about gaps, look at orphan counts "
+        "VER-PROJECT-SW-002). When they ask about gaps, look at orphan counts "
         "and missing forward traces. When they ask about safety coverage, "
         "filter by criticality. Be concise. If a question can't be answered "
         "from the matrix alone, say so and explain what source document "

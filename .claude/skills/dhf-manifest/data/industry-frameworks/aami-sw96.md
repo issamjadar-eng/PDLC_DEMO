@@ -9,7 +9,7 @@
 
 <!-- STUB — no obligations distilled yet.
 
-Cited by: Arthrex Product Security Risk Management Plan (adopted in pre-op
+Cited by: MedTech Company Product Security Risk Management Plan (adopted in pre-op
 cybersecurity batch); sits alongside TIR57 as the current methodological
 baseline for medical-device security risk management.
 

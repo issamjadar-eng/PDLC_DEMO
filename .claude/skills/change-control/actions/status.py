@@ -6,8 +6,8 @@ frontmatter), prints a table of every controlled doc with its phase
 and cross-system IDs:
 
   Path                          State     Confluence  Jira          Windchill
-  inputs/pump-occlusion.md      frozen    458291 v1   PP3500-1234   —
-  inputs/audible-alarm.md       released  458292 v3   PP3500-1235   ECO-9981
+  inputs/pump-occlusion.md      frozen    458291 v1   PROJECT-1234   —
+  inputs/audible-alarm.md       released  458292 v3   PROJECT-1235   ECO-9981
 """
 from __future__ import annotations
 

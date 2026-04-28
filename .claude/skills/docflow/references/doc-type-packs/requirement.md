@@ -37,7 +37,7 @@ Specifications (URS). Loaded by the v30 adopt orchestrator when
 ## Required structural sections
 
 The working MD body MUST contain **one H2 section that hosts the per-
-requirement H4 blocks** — typically `## Requirements` or `## Stories` (Arthrex
+requirement H4 blocks** — typically `## Requirements` or `## Stories` (MedTech Company
 convention). Phase 7 validation matches either heading via the loose-match
 keyword set `Requirements | Stories | User Stories | Functional Requirements
 | Non-Functional Requirements`.
@@ -233,11 +233,11 @@ Phase 7 gates specific to requirement docs:
 
 ## Canonical test case
 
-`HipLink Planning - Software Requirements Specification (SRS) - 1.0.0` —
+`MedTech Project Planning - Software Requirements Specification (SRS) - 1.0.0` —
 Pre-Op SRS, 7 requirements (AFAI-4083, AFAI-3555, AFAI-3554, AFAI-3537,
 AFAI-3536, AFAI-3535, AFAI-3518). Fully R1-v22 shaped under v29 adopter.
 Ground-truth diff target for v30 re-adopt. Source:
-`docs/project/dhfs/hiplink-pre-op/design-controls/requirements/formal/HipLink
+`docs/project/dhfs/mfd-a/design-controls/requirements/formal/MedTech Project
 Planning - Software Requirements Specification (SRS) - 1.0.0.pdf`. Expected
 v30 Phase 7 outcome: pass; 7/7 H4 blocks with both tables; Classification
 regex matches `functional + safety + privacy + usability + performance`

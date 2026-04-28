@@ -41,8 +41,8 @@ def _resolve_dhf_root(repo_root: Path, entry: dict) -> tuple[str, Path] | None:
     """Return (leaf_name, absolute_dhf_root) for a project.yml dhfs[] entry.
 
     Tolerates two conventions that have appeared in the wild:
-      1. `path: <leaf>`               — PDLC_DEMO style (e.g. `path: pca-device`)
-      2. `path: docs/project/dhfs/<leaf>` — Arthrex PCCP style (full path)
+      1. `path: <leaf>`               — MedTech Project style (e.g. `path: pca-device`)
+      2. `path: docs/project/dhfs/<leaf>` — MedTech Project style (full path)
     An explicit `leaf:` field wins if present.
 
     Returns None if the entry is unusable.

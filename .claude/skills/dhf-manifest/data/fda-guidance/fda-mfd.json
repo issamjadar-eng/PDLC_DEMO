@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-mfd.md",
   "obligation_count": 4,
@@ -24,7 +24,7 @@
       "verbatim": "FDA shall not regulate non-device software functions as devices. However, FDA may assess the impact that non-device functions have on device functions when evaluating safety and effectiveness. Non-device and other functions are reviewed only when they could impact the device function-under-review.",
       "extracted_requirements": [
         {
-          "HipLink is a multiple function device product": "Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the \"other function\""
+          "MedTech Project is a multiple function device product": "Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the \"other function\""
         },
         "Management Services non-device functions (PostOp Reports, User Management, Account Management) are NOT reviewed unless they could adversely impact Pre-Op or Intra-Op",
         {

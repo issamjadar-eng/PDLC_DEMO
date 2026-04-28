@@ -47,8 +47,8 @@ Layout is flat on both sides. Skill-side uses category folders mirroring `medtec
 
 `build-manifest` reads two locations — no separate project-scope.yml:
 
-| Field | Location in project.yml | HipLink |
-|-------|------------------------|---------|
+| Field | Location in project.yml | Example value |
+|-------|------------------------|---------------|
 | `iec62304` class per item | `dhfs[].classification.iec62304` | B or C per item |
 | `ai_enabled` per item | `dhfs[].classification.ai_enabled` | true / false per item |
 | `samd` per item | `dhfs[].classification.samd` | true / false per item |

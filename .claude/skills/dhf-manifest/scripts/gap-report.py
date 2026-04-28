@@ -91,7 +91,7 @@ def render_gap_report(tier4: dict, tier3_map: dict) -> str:
     pct_complete = round(100 * grand_found / grand_total, 1) if grand_total else 0
 
     lines = [
-        "# HipLink DHF — Gap Report",
+        "# MedTech Project DHF — Gap Report",
         "",
         f"**Generated**: {today}  ",
         f"**Manifest date**: {generated}  ",

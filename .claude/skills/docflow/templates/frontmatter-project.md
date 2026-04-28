@@ -13,7 +13,7 @@ title: "{Document title, without doc-id or version suffix}"
 doc_type: "{user-need | requirement | architecture | plan | risk | vnv |
             sop-instance | form-instance | report | clinical | postmarket |
             cybersecurity | other}"
-dhf: "{hiplink-suite | hiplink-pre-op | hiplink-intra-op | hiplink-mgmt-services}"
+dhf: "{medtech-project-suite | mfd-a | mfd-b | mfd-c}"
 dhf_role: "{system | item}"                    # from project.yml dhfs[]
 dhf_area: "{design-controls/user-needs | design-controls/requirements |
              design-controls/architecture | design-controls/vnv |
@@ -104,7 +104,7 @@ template_hints:                       # Non-empty when confidence is medium/low 
 # "per SOP-XXX" / "per WI-XXX" phrasings). List of process artifacts, not a single
 # scalar — some docs are governed by multiple.
 #
-# IMPORTANT: In Arthrex's QMS, Work Instructions (WI-\d+) play a process-governance
+# IMPORTANT: In MedTech Company's QMS, Work Instructions (WI-\d+) play a process-governance
 # role equivalent to SOPs in other QMS frameworks — many DHF docs cite WIs without
 # any SOP reference. The adopter scans BOTH SOP-\d+ AND WI-\d+ patterns.
 authored_per:
@@ -209,7 +209,7 @@ notes: null                           # Conversion notes. REQUIRED when conversi
 | Field | Required | Description |
 |-------|----------|-------------|
 | `doc_version` | Yes | The source document's own version, normalized to `v<N>` form (no dot). Extracted from doc content at adopt time. |
-| `release_version` | No | Product/release version if embedded in title (e.g. `1.0.0` for `HipLink Web - SDP - 1.0.0`). `null` if absent. |
+| `release_version` | No | Product/release version if embedded in title (e.g. `1.0.0` for `MedTech Project Web - SDP - 1.0.0`). `null` if absent. |
 | `version_lineage` | Yes | Full chronological list of format transitions. Never truncated — this is the audit record. |
 
 **Version extraction hierarchy** (adopter runs these in order at adopt time; first match wins):
@@ -236,8 +236,8 @@ notes: null                           # Conversion notes. REQUIRED when conversi
 
 | File | Pattern | Example |
 |------|---------|---------|
-| Working MD | `<Title>.md` | `HipLink Web - Software Development Plan (SDP) - 1.0.0.md` |
-| Current formal | `formal/<Title>.<ext>` | `formal/HipLink Web - Software Development Plan (SDP) - 1.0.0.pdf` |
+| Working MD | `<Title>.md` | `MedTech Project Web - Software Development Plan (SDP) - 1.0.0.md` |
+| Current formal | `formal/<Title>.<ext>` | `formal/MedTech Project Web - Software Development Plan (SDP) - 1.0.0.pdf` |
 | Prior formals | (not on disk — in git history only) | `git log --follow -- formal/<Title>.pdf` |
 
 `<Title>` is extracted from the document at adopt time (see **Title extraction** below). Any release version embedded in the title (e.g. `- 1.0.0`) stays as part of the filename — it's part of the product/doc identity, not the doc version.
@@ -251,7 +251,7 @@ notes: null                           # Conversion notes. REQUIRED when conversi
 
 If sources 1 and 2 disagree: **cover page wins** (what the reader sees as canonical; metadata often goes stale on re-exports).
 
-**File sanitization**: strip filesystem-unsafe characters from extracted title (`/`, `\`, `:`, `*`, `?`, `<`, `>`, `|`, `"`). Most Arthrex doc titles use parentheses, hyphens, spaces — all legal on all major filesystems.
+**File sanitization**: strip filesystem-unsafe characters from extracted title (`/`, `\`, `:`, `*`, `?`, `<`, `>`, `|`, `"`). Most MedTech Company doc titles use parentheses, hyphens, spaces — all legal on all major filesystems.
 
 ### Provenance
 
@@ -278,7 +278,7 @@ Auto-inference heuristics (applied in priority order at adopt time):
 
 `authored_per` captures **which process artifacts (SOPs AND/OR Work Instructions) govern this doc's creation/review**. Unlike `template_of` (structural), this is process metadata — what procedure was followed.
 
-In Arthrex's QMS, many DHF docs cite Work Instructions (`WI-\d+`) as the governing process artifact **without any SOP reference** — e.g. `WI-000101591 HAA SDLC Model` governs Software Development Plans across the HAA-SDLC lifecycle. The adopter MUST scan both `SOP-\d+` AND `WI-\d+` patterns. Absence of SOP refs in a doc body does NOT mean the doc is ungoverned.
+In MedTech Company's QMS, many DHF docs cite Work Instructions (`WI-\d+`) as the governing process artifact **without any SOP reference** — e.g. `WI-000101591 HAA SDLC Model` governs Software Development Plans across the HAA-SDLC lifecycle. The adopter MUST scan both `SOP-\d+` AND `WI-\d+` patterns. Absence of SOP refs in a doc body does NOT mean the doc is ungoverned.
 
 Auto-inference:
 1. Scan doc body for `SOP-\d+` AND `WI-\d+` pattern matches.
@@ -287,7 +287,7 @@ Auto-inference:
 4. Matches found in passing prose → `authored_per_hints[]` with the citing sentence as `reason`.
 5. Each entry carries `doc_type: "SOP"` or `"WI"` inferred from the doc-id prefix, so downstream tooling can filter by process-artifact class without re-parsing the doc-id.
 
-**SOP vs WI equivalence for authored_per**: some QMS frameworks draw SOP and WI as a strict hierarchy (SOP = the how, WI = the step-by-step). Arthrex's HAA SDLC uses WIs as the primary governance artifact for software lifecycle, with SOPs layered on for cross-cutting controls. For `authored_per` purposes both are equivalent process citations and captured uniformly — the `doc_type` field preserves which is which for filter/grouping needs.
+**SOP vs WI equivalence for authored_per**: some QMS frameworks draw SOP and WI as a strict hierarchy (SOP = the how, WI = the step-by-step). MedTech Company's HAA SDLC uses WIs as the primary governance artifact for software lifecycle, with SOPs layered on for cross-cutting controls. For `authored_per` purposes both are equivalent process citations and captured uniformly — the `doc_type` field preserves which is which for filter/grouping needs.
 
 ### Filing composition
 

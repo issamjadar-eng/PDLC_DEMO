@@ -60,7 +60,7 @@ Read MANIFEST_PATH
 ```
 
 The cache is `pdftotext -layout` output. Requirement docs (especially
-Confluence-exported SRS like Arthrex's) typically render each requirement
+Confluence-exported SRS like MedTech Company's) typically render each requirement
 as a Jira-ticket block with labeled fields: `Key`, `Summary`, `Status`,
 `Description` (user story), `Acceptance Criteria`, `Epic Link` / `Parent`,
 `Fix Version`, plus miscellaneous metadata. Separators vary: horizontal
@@ -69,7 +69,7 @@ rules, blank lines, "Key: X" repetition.
 ## Step 3 — Identify the requirement blocks
 
 Scan the cache for patterns that delimit per-requirement content. Common
-shapes in Arthrex Confluence-native SRS exports:
+shapes in MedTech Company Confluence-native SRS exports:
 
 - A line starting with the project's typed Key prefix (e.g. `AFAI-4083`,
   `REQ-0017`) often immediately followed by the Summary on the same line
@@ -226,7 +226,7 @@ Heading + attributes table + detail table + Notes line. Exact shape:
 | **Traces To** | Inline-code DI-/UN- ID (`` `DI-0013` ``) if regex matched, else literal `null` (plain text, not inline-code). |
 | **Epic** | Verbatim Epic Link value wrapped in inline-code: `` `VIEW 3D RECONSTRUCTION` ``. If the source has a link on it, keep the link: `` [`DI-0013 MEASUREMENTS [UNITY]`](url) ``. If empty in source, literal `null`. |
 | **Classification** | Comma-separated inline-code tags + `(inferred)` suffix (lowercase, plain parens, not italic). |
-| **Target** | `` `v1` `` / `` `v2` `` / `` `future` `` / `` `unassigned` `` — inline-code. Default `unassigned`. **Normalize source Fix Version strings before emitting**: extract the major version from patterns like `<Product Name> v<N>.<n>.<n>` / `<Product Name> v<N>` / `v<N>.<n>.<n>` / `v<N>`. Examples: `HipLink Planning v1.0.0` → `v1`; `HipLink IntraOp v2.0.0` → `v2`; `Future Release` → `future`; empty / `Unassigned` / "TBD" → `unassigned`. Case-insensitive match on the version prefix; semver tail (`.0.0`, `.1.2`, etc.) discarded. A bare Jira release name without a `vN` prefix (rare) flags with `%% REVIEW: FIX-VERSION-UNPARSED — <raw> %%` and defaults to `unassigned`. |
+| **Target** | `` `v1` `` / `` `v2` `` / `` `future` `` / `` `unassigned` `` — inline-code. Default `unassigned`. **Normalize source Fix Version strings before emitting**: extract the major version from patterns like `<Product Name> v<N>.<n>.<n>` / `<Product Name> v<N>` / `v<N>.<n>.<n>` / `v<N>`. Examples: `MedTech Project Planning v1.0.0` → `v1`; `MedTech Project IntraOp v2.0.0` → `v2`; `Future Release` → `future`; empty / `Unassigned` / "TBD" → `unassigned`. Case-insensitive match on the version prefix; semver tail (`.0.0`, `.1.2`, etc.) discarded. A bare Jira release name without a `vN` prefix (rare) flags with `%% REVIEW: FIX-VERSION-UNPARSED — <raw> %%` and defaults to `unassigned`. |
 | **Status** | `` `proposed` `` at adopt (inline-code). Never emit `accepted` / `implemented` / `verified` — those are human-advanced. |
 
 ### Description + AC value-cell rules (R1e)
@@ -263,7 +263,7 @@ as standard markdown prose and tables under their own H2 headings
 BEFORE the requirements wrapper. R1's two-table shape applies only to
 the H4 blocks.
 
-If the source has an "Epics" summary section (Arthrex SRS convention: a
+If the source has an "Epics" summary section (MedTech Company SRS convention: a
 block listing parent Jira Epics with counts), keep it as its own H2 or
 H3 section BEFORE the requirements wrapper. Do not try to convert it
 into R1 shape — it is reference content, not requirements.

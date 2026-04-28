@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "standards",
   "source_file": "iso-13485.md",
   "obligation_count": 10,
@@ -251,7 +251,7 @@
         },
         "The DHF is an index/collection — it includes or references the artifacts, it is not itself all the artifacts",
         {
-          "For the flat multi-DHF structure": "the system DHF plus three item DHFs together constitute the DHF for the HipLink device family"
+          "For the flat multi-DHF structure": "the system DHF plus three item DHFs together constitute the DHF for the MedTech Project device family"
         }
       ]
     },

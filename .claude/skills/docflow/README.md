@@ -61,7 +61,7 @@ Each decision below has a **why** and a short **what we rejected** so the reason
 **Decision**: Working MD filenames are `<Title>.md`. Current formal filenames are `formal/<Title>.<ext>`. No `-v30`, `-v1`, `-Draft`, or any other suffix. Exactly one current formal per title.
 
 **Why**:
-- Source documents carry their own version lineage — Arthrex's Confluence pages have page-revision numbers (e.g. `v.30` in SDP Appendix E), QMS-controlled templates have their own doc-control versions. Adding a synthetic docflow counter is a parallel invention that drifts from the real one.
+- Source documents carry their own version lineage — MedTech Company's Confluence pages have page-revision numbers (e.g. `v.30` in SDP Appendix E), QMS-controlled templates have their own doc-control versions. Adding a synthetic docflow counter is a parallel invention that drifts from the real one.
 - Git already tracks filesystem history. Encoding versions in filenames is a workaround for not trusting git.
 - Filename stability lets composition manifests, READMEs, and cross-references point at `<Title>.pdf` forever. No rename churn on every version bump.
 - An auditor can run `git log --follow -- formal/<Title>.pdf` to see the full history; `git show <sha>:formal/<Title>.pdf` retrieves the exact bytes of any prior signed version.
@@ -93,7 +93,7 @@ Each decision below has a **why** and a short **what we rejected** so the reason
 
 **Decision**: The `authored_per` inference pass scans for both `SOP-\d+` and `WI-\d+` patterns. Each entry records `doc_type: "SOP"` or `"WI"`.
 
-**Why**: Arthrex's QMS uses Work Instructions as the primary process-governance artifact for software development — `WI-000101591 (HAA SDLC)` governs Software Development Plans across the entire lifecycle. Many DHF docs cite WIs with zero SOP references. A SOP-only scanner would leave these docs looking ungoverned. First shakedown surfaced this: the SDP cites 7 WIs and zero SOPs, and the original SOP-only pass reported `authored_per: []` which was actively misleading.
+**Why**: MedTech Company's QMS uses Work Instructions as the primary process-governance artifact for software development — `WI-000101591 (HAA SDLC)` governs Software Development Plans across the entire lifecycle. Many DHF docs cite WIs with zero SOP references. A SOP-only scanner would leave these docs looking ungoverned. First shakedown surfaced this: the SDP cites 7 WIs and zero SOPs, and the original SOP-only pass reported `authored_per: []` which was actively misleading.
 
 **Rejected**: SOP-only scanning (the initial v15 design). Silent failure mode — governed docs look orphaned.
 
@@ -140,7 +140,7 @@ Each decision below has a **why** and a short **what we rejected** so the reason
 **Decision**: The adopter captures null `template_of`, empty `authored_per`, and unresolved `references[]` entries in frontmatter without promoting them to adopter-level warnings. The `/tracker` skill reads these fields and renders them as dashboard issues for user review.
 
 **Why**:
-- Many valid software DHF docs will hit `template_of: null` because Arthrex software artifacts are Confluence page templates, not paper-form instances. Warning on every adopt would be noise.
+- Many valid software DHF docs will hit `template_of: null` because MedTech Company software artifacts are Confluence page templates, not paper-form instances. Warning on every adopt would be noise.
 - The tracker dashboard is the right surface for "things that need user review" — it aggregates across DHFs, persists state, and integrates with the filing timeline.
 - Separation of concerns: adopter captures truth, tracker renders issues.
 

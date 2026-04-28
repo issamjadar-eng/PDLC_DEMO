@@ -58,7 +58,7 @@ MANIFEST_JSON = PROJECT_ROOT / "docs/project/dhf-manifest/qms-manifest.json"
 TIER1_DIR = SKILL_DIR / "data"
 TIER1_CATEGORIES = ["fda-guidance", "standards", "industry-frameworks"]
 
-# Arthrex QMS source corpus — used to deep-link QMS-ID + Section cells into
+# MedTech Company QMS source corpus — used to deep-link QMS-ID + Section cells into
 # the actual SOP/WI/FORM/POL markdown.
 QMS_SOURCE_ROOT = PROJECT_ROOT / "docs/internal/source-md"
 

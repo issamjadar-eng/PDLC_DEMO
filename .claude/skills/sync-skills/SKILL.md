@@ -138,8 +138,8 @@ Arguments:
 - Verify the hitachi working tree is clean (`sync.sh push-prep` will refuse if it isn't — surface the error cleanly).
 
 **Step 2 — Draft branch name, commit message, and PR body.**
-- Branch: `sync/<project-name>-<topic>-<yyyy-mm-dd>` (e.g., `sync/pdlc-demo-sync-skills-2026-04-12`). Keep the topic concise — pull it from the filenames.
-- Commit message: first line is a tight summary (≤72 chars). Body explains *why* the change exists and links back to the originating project and task when possible (e.g., "Discovered while building sync-skills in PDLC_DEMO task 008").
+- Branch: `sync/<project-name>-<topic>-<yyyy-mm-dd>` (e.g., `sync/medtech-project-sync-skills-2026-04-12`). Keep the topic concise — pull it from the filenames.
+- Commit message: first line is a tight summary (≤72 chars). Body explains *why* the change exists and links back to the originating project and task when possible (e.g., "Discovered while building sync-skills in MedTech Project task 008").
 - PR body follows the Claude Code PR convention: `## Summary`, `## Test plan` sections. Include the list of files and a note on any behavioral changes.
 
 **Step 3 — Show the draft to the user.** Print the branch name, commit subject, commit body, PR title, and PR body. Ask for approval or edits. Loop until the user approves or aborts.
@@ -165,7 +165,7 @@ Arguments:
 ## 2026-04-12 — push
 
 - Files: `skills/sync-skills/SKILL.md`, `skills/sync-skills/scripts/sync.sh`
-- Branch: `sync/pdlc-demo-add-sync-skills-2026-04-12`
+- Branch: `sync/medtech-project-add-sync-skills-2026-04-12`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/3
 - Commit: "Add sync-skills skill for bidirectional registry sync"
 - Status: merged (--merge requested)

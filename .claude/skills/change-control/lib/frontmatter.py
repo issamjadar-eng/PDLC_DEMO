@@ -13,7 +13,7 @@ The frontmatter contract (see README.md "The Frontmatter Contract"):
     frozen_commit: a3f9c21
     confluence_page_id: 458291
     confluence_version_at_publish: 1
-    jira_ecr: PP3500-1234
+    jira_ecr: PROJECT-1234
     windchill_eco: null
     ---
 """

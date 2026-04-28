@@ -10,7 +10,7 @@
 <!-- STUB — no obligations distilled yet.
 
 Cited by: FDA AI/ML PCCP guidance and AI Lifecycle guidance.
-Directly applies to HipLink Pre-Op + Intra-Op (AI-enabled SaMD modules).
+Directly applies to MFD A + Intra-Op (AI-enabled SaMD modules).
 
 To distill:
 - Read the 10 GMLP guiding principles (Oct 2021)

@@ -612,8 +612,8 @@ def _self_test() -> int:
     """Smoke-test against existing adopted MDs in the repo."""
     repo = Path(__file__).resolve().parents[4]
     targets = [
-        repo / "docs/project/dhfs/hiplink-intra-op/design-controls/architecture"
-              / "HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0.md",
+        repo / "docs/project/dhfs/mfd-b/design-controls/architecture"
+              / "MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0.md",
     ]
     fails = 0
     for t in targets:

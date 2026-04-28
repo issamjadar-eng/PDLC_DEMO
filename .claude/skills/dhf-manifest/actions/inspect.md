@@ -62,7 +62,7 @@ Hypothetical scope override — preview the routing impact without writing.
 
 **Script**: `scripts/build-manifest.py --scope FLAG=VALUE`
 
-Runs a full projection with the given flag override applied to the in-memory scope vector, renders the resulting `hiplink-manifest.md` to stdout, and never writes. Useful for PCCP change-impact analysis (e.g., `--scope hardware=true` to see what the manifest would look like if HipLink added a hardware component).
+Runs a full projection with the given flag override applied to the in-memory scope vector, renders the resulting `hiplink-manifest.md` to stdout, and never writes. Useful for PCCP change-impact analysis (e.g., `--scope hardware=true` to see what the manifest would look like if MedTech Project added a hardware component).
 
 ---
 

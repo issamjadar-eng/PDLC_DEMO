@@ -6,7 +6,7 @@ You are adopting a formal DHF document into a round-trippable working-MD copy. U
 
 - **SOURCE_PATH**: `{{SOURCE_PATH}}` — path to the formal file AS DROPPED/MIGRATED. This is the *input* path; you rename the formal to a normalized filename after extracting the title.
 - **FORMAT**: `{{FORMAT}}` (pdf | docx | doc | xlsx | pptx)
-- **DHF**: `{{DHF}}` — DHF leaf name (e.g. `hiplink-pre-op`)
+- **DHF**: `{{DHF}}` — DHF leaf name (e.g. `mfd-a`)
 - **DHF_ROLE**: `{{DHF_ROLE}}` — `system` | `item` (from `project.yml`)
 - **DHF_AREA**: `{{DHF_AREA}}` — area path under the DHF (e.g. `design-controls/plans`)
 - **DHF_AREA_DIR**: `{{DHF_AREA_DIR}}` — absolute path to the DHF area folder (parent of `formal/`, where the working MD lands)
@@ -14,7 +14,7 @@ You are adopting a formal DHF document into a round-trippable working-MD copy. U
 - **DOC_VERSION_OVERRIDE**: `{{DOC_VERSION_OVERRIDE}}` — optional explicit version from `--doc-version` flag; null if not provided
 - **FORMS_INDEX_PATH**: `{{FORMS_INDEX_PATH}}` — `docs/internal/source-md/Forms/` (for template inference)
 - **SOPS_INDEX_PATH**: `{{SOPS_INDEX_PATH}}` — `docs/internal/source-md/SOPs/` (for SOP inference in `authored_per`)
-- **WIS_INDEX_PATH**: `{{WIS_INDEX_PATH}}` — `docs/internal/source-md/Work Instructions/` (for WI inference — Arthrex uses WIs as primary process-governance artifacts)
+- **WIS_INDEX_PATH**: `{{WIS_INDEX_PATH}}` — `docs/internal/source-md/Work Instructions/` (for WI inference — MedTech Company uses WIs as primary process-governance artifacts)
 - **MANIFEST_PATHS**: `{{MANIFEST_PATHS}}` — list of composition manifest paths (for filing inference)
 - **PROJECT_REFS_PATH**: `{{PROJECT_REFS_PATH}}` — `docs/internal/source/INDEX.md` + `docs/internal/qms-reference-graph.md` for cross-ref resolution
 
@@ -75,7 +75,7 @@ Before any content conversion, extract the document's **title** and **doc_versio
 
 **Sanitize the extracted title for filesystem** (applied regardless of which source won): strip `/`, `\`, `:`, `*`, `?`, `<`, `>`, `|`, `"`. Collapse multiple spaces to one. Trim leading/trailing whitespace.
 
-**Preserve release versions embedded in titles**: if the title contains a release version like `HipLink Web - Software Development Plan (SDP) - 1.0.0`, keep the `- 1.0.0` as part of the title — it's part of the product identity, distinct from `doc_version`. Capture it separately for `release_version:` frontmatter.
+**Preserve release versions embedded in titles**: if the title contains a release version like `MedTech Project Web - Software Development Plan (SDP) - 1.0.0`, keep the `- 1.0.0` as part of the title — it's part of the product identity, distinct from `doc_version`. Capture it separately for `release_version:` frontmatter.
 
 #### 0.2 Doc-version extraction (priority order, first success wins)
 
@@ -84,7 +84,7 @@ Before any content conversion, extract the document's **title** and **doc_versio
    - `Current document version:\s*v\.?(\d+)`
    - `Version\s+(\d+)\s*\(current\)`
    - `Revision:\s*(\d+)` (in a revision-history table context)
-   - Look especially in appendices named "Review", "Revision History", "Version History" (Arthrex Confluence Appendix E style).
+   - Look especially in appendices named "Review", "Revision History", "Version History" (MedTech Company Confluence Appendix E style).
 3. **Document header / footer**: `v\.?(\d+)` in running header/footer positions (top/bottom ~100 chars per page for PDF).
 4. **Cover page / title block**: version markers in prominent cover text.
 5. **PDF metadata**: check `/Subject`, `/Keywords` for version-like tokens.
@@ -105,7 +105,7 @@ Before any content conversion, extract the document's **title** and **doc_versio
 #### 0.3 Derive output paths from title + extension
 
 ```
-TITLE_STEM            = sanitized title from 0.1 (e.g. "HipLink Web - Software Development Plan (SDP) - 1.0.0")
+TITLE_STEM            = sanitized title from 0.1 (e.g. "MedTech Project Web - Software Development Plan (SDP) - 1.0.0")
 NEW_FORMAL_PATH       = {{DHF_AREA_DIR}}/formal/<TITLE_STEM>.<FORMAT>
 OUTPUT_PATH           = {{DHF_AREA_DIR}}/<TITLE_STEM>.md
 IMAGE_DIR             = {{DHF_AREA_DIR}}/images/
@@ -152,7 +152,7 @@ Create `{{STAGING_DIR}}`. All work goes here until validation passes.
 
 **Adopter-specific adjustments**:
 - **Image path prefix**: images sit in the sibling `images/` folder (not `../images/`). Every `![alt](images/name.png)` reference uses `images/` as the prefix. This differs from converter Phase 4.5.
-- **Image naming**: use the title-derived kebab-case stem, not a doc-id prefix: `hiplink-web-software-development-plan-sdp-1-0-0_rm-process-flow.png`.
+- **Image naming**: use the title-derived kebab-case stem, not a doc-id prefix: `medtech-project-web-software-development-plan-sdp-1-0-0_rm-process-flow.png`.
 - **Cross-ref resolution**: read `PROJECT_REFS_PATH` (INDEX.md + qms-reference-graph.md). Unresolved refs feed the frontmatter `references:` block with `resolved: false`.
 
 #### Optimization C — Single source-extract pass (v21+)
@@ -231,7 +231,7 @@ Infer `template_of` — the QMS form/template this document instantiates.
 
 Infer `authored_per` — process artifacts (SOPs AND Work Instructions) governing this document's creation/review.
 
-**CRITICAL**: Arthrex's QMS uses Work Instructions (`WI-\d+`) as the primary process-governance artifact for software development. Many DHF docs cite WIs with zero SOP references. **You MUST scan both `SOP-\d+` AND `WI-\d+` patterns.** Populating only SOPs on a WI-governed doc is a silent-failure bug.
+**CRITICAL**: MedTech Company's QMS uses Work Instructions (`WI-\d+`) as the primary process-governance artifact for software development. Many DHF docs cite WIs with zero SOP references. **You MUST scan both `SOP-\d+` AND `WI-\d+` patterns.** Populating only SOPs on a WI-governed doc is a silent-failure bug.
 
 1. **Scan body**: regexes `\bSOP-\d+\b` AND `\bWI-\d+\b`. Record each match + ~200 chars of surrounding context. Dedupe identical doc-ids.
 

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-cds.md",
   "obligation_count": 3,
@@ -26,10 +26,10 @@
       "extracted_requirements": [
         "Any software function that acquires, processes, or analyzes medical images FAILS criterion 1 and is a device (SaMD) — cannot claim CDS non-device status",
         {
-          "HipLink Pre-Op FAILS criterion 1": "it processes CT/MRI images for anatomy segmentation and implant sizing → is a SaMD device"
+          "MFD A FAILS criterion 1": "it processes CT/MRI images for anatomy segmentation and implant sizing → is a SaMD device"
         },
         {
-          "HipLink Intra-Op FAILS criterion 1": "it acquires and processes C-arm fluoroscopy images for surgical guidance → is a SaMD device"
+          "MFD B FAILS criterion 1": "it acquires and processes C-arm fluoroscopy images for surgical guidance → is a SaMD device"
         },
         "Software analyzing HCP-reported findings (not images themselves) may qualify as non-device CDS if other criteria are met",
         {

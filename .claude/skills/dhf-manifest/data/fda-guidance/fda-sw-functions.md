@@ -28,12 +28,12 @@ verbatim: "Enhanced documentation required when failure or latent flaw of ANY de
 extracted_requirements:
   - Determine documentation level (Basic or Enhanced) based on risk assessment — assessed BEFORE risk control measures
   - If ANY software function failure could cause death or serious injury pre-risk-controls → Enhanced documentation required for the entire submission
-  - For HipLink: Intra-Op failure during surgery (e.g., corrupted guidance data) could cause serious injury → Enhanced documentation applies to the whole submission
+  - For MedTech Project: Intra-Op failure during surgery (e.g., corrupted guidance data) could cause serious injury → Enhanced documentation applies to the whole submission
   - Provide a written documentation level statement with rationale leveraging risk assessment and intended use
   - Class II is NOT automatically Basic — sponsor determines level based on risk assessment
 ```
 
-**Context**: HipLink requires Enhanced documentation because Intra-Op guidance software, if it fails, could cause serious patient injury (wrong surgical positioning, incorrect implant sizing, etc.) assessed before risk controls. This applies to the entire 510(k) submission, even the Management Services documentation. The documentation level statement must explicitly call out this rationale and reference the risk assessment.
+**Context**: MedTech Project requires Enhanced documentation because Intra-Op guidance software, if it fails, could cause serious patient injury (wrong surgical positioning, incorrect implant sizing, etc.) assessed before risk controls. This applies to the entire 510(k) submission, even the Management Services documentation. The documentation level statement must explicitly call out this rationale and reference the risk assessment.
 
 ---
 
@@ -60,7 +60,7 @@ extracted_requirements:
   - Architecture diagrams must show how all modules/functions interact including shared resources
 ```
 
-**Context**: For HipLink, the software description and architecture diagram must cover all three modules (Pre-Op, Intra-Op, Management Services) and their interactions. The architecture must show: how Pre-Op generates a plan, how the plan is transmitted to Intra-Op, how Intra-Op receives DICOM data from the C-arm, and how Management Services supports both SaMD modules. The SRS covers all three modules — each item DHF has its item-level SRS that feeds the system SRS.
+**Context**: For MedTech Project, the software description and architecture diagram must cover all three modules (Pre-Op, Intra-Op, Management Services) and their interactions. The architecture must show: how Pre-Op generates a plan, how the plan is transmitted to Intra-Op, how Intra-Op receives DICOM data from the C-arm, and how Management Services supports both SaMD modules. The SRS covers all three modules — each item DHF has its item-level SRS that feeds the system SRS.
 
 ---
 
@@ -79,13 +79,13 @@ min_iec62304_class: A
 applies_to: [510(k) Submission — Software Documentation (Enhanced), Software Design Document]
 verbatim: "Enhanced: Include SDS showing technical design details, how design implements SRS, and traceability from SDS to SRS. Basic: Not required in submission (document in Design History File)."
 extracted_requirements:
-  - For Enhanced documentation (HipLink): include Software Design Specification in the submission
+  - For Enhanced documentation (MedTech Project): include Software Design Specification in the submission
   - SDS must show: technical design details, how the design implements the SRS requirements, traceability from SDS to SRS
   - SDS traceability links design decisions to requirements — bidirectional trace required
   - For Basic documentation only: SDS stays in DHF, not submitted
 ```
 
-**Context**: Because HipLink is Enhanced, the SDS goes into the 510(k) submission. This is a significant documentation effort — the SDS for Pre-Op and Intra-Op must show how the AI algorithms, surgical measurement logic, image processing pipelines, and device communication protocols are designed to meet each SRS requirement. Plan for SDS authorship as a significant Phase 2 deliverable.
+**Context**: Because MedTech Project is Enhanced, the SDS goes into the 510(k) submission. This is a significant documentation effort — the SDS for Pre-Op and Intra-Op must show how the AI algorithms, surgical measurement logic, image processing pipelines, and device communication protocols are designed to meet each SRS requirement. Plan for SDS authorship as a significant Phase 2 deliverable.
 
 ---
 
@@ -110,7 +110,7 @@ extracted_requirements:
   - The DoC must reference the specific IEC 62304 edition and list the applicable clauses
 ```
 
-**Context**: HipLink should pursue an IEC 62304 Declaration of Conformity (Option 1) — it simplifies submission documentation and aligns with the project's planned IEC 62304 conformance. Since Pre-Op and Intra-Op are IEC 62304 Class C, the DoC must cover the full Class C requirements. This is why the IEC 62304 compliance records in the item DHFs are submission artifacts, not just internal records.
+**Context**: MedTech Project should pursue an IEC 62304 Declaration of Conformity (Option 1) — it simplifies submission documentation and aligns with the project's planned IEC 62304 conformance. Since Pre-Op and Intra-Op are IEC 62304 Class C, the DoC must cover the full Class C requirements. This is why the IEC 62304 compliance records in the item DHFs are submission artifacts, not just internal records.
 
 ---
 
@@ -129,14 +129,14 @@ min_iec62304_class: A
 applies_to: [510(k) Submission — Software Testing, Test Protocols and Reports]
 verbatim: "Enhanced: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports + full unit and integration level test protocols and reports. Basic: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports only."
 extracted_requirements:
-  - For Enhanced documentation (HipLink): submit complete test protocols and reports at unit, integration, AND system levels
+  - For Enhanced documentation (MedTech Project): submit complete test protocols and reports at unit, integration, AND system levels
   - System-level test protocols and reports: required for both Basic and Enhanced
   - Unit and integration test protocols/reports: full submission required for Enhanced (not just summary)
   - Reference performance testing material across submission sections to reduce duplication
   - AI performance testing (algorithm validation studies) is part of the submission testing section
 ```
 
-**Context**: HipLink's Enhanced documentation requirement means full test protocols and reports at all levels go into the 510(k). This is a significant documentation burden — unit tests for AI model components, integration tests for the Pre-Op/Intra-Op plan handoff, and system-level tests including usability and clinical performance. Plan for the test documentation as a parallel effort with software development.
+**Context**: MedTech Project's Enhanced documentation requirement means full test protocols and reports at all levels go into the 510(k). This is a significant documentation burden — unit tests for AI model components, integration tests for the Pre-Op/Intra-Op plan handoff, and system-level tests including usability and clinical performance. Plan for the test documentation as a parallel effort with software development.
 
 ---
 
@@ -162,4 +162,4 @@ extracted_requirements:
   - No unresolved anomaly with patient safety impact can be left unjustified
 ```
 
-**Context**: The unresolved anomalies list is an important pre-market transparency artifact. For HipLink, any known software defect that is being shipped with the initial release must be documented and justified. This drives the practice of risk-based anomaly classification during development — anomalies that could affect patient safety must be fixed before release; cosmetic/minor anomalies may be deferred with documentation.
+**Context**: The unresolved anomalies list is an important pre-market transparency artifact. For MedTech Project, any known software defect that is being shipped with the initial release must be documented and justified. This drives the practice of risk-based anomaly classification during development — anomalies that could affect patient safety must be fixed before release; cosmetic/minor anomalies may be deferred with documentation.

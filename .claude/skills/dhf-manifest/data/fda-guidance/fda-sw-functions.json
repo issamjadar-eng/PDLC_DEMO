@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-sw-functions.md",
   "obligation_count": 6,
@@ -26,7 +26,7 @@
         "Determine documentation level (Basic or Enhanced) based on risk assessment — assessed BEFORE risk control measures",
         "If ANY software function failure could cause death or serious injury pre-risk-controls → Enhanced documentation required for the entire submission",
         {
-          "For HipLink": "Intra-Op failure during surgery (e.g., corrupted guidance data) could cause serious injury → Enhanced documentation applies to the whole submission"
+          "For MedTech Project": "Intra-Op failure during surgery (e.g., corrupted guidance data) could cause serious injury → Enhanced documentation applies to the whole submission"
         },
         "Provide a written documentation level statement with rationale leveraging risk assessment and intended use",
         "Class II is NOT automatically Basic — sponsor determines level based on risk assessment"
@@ -86,7 +86,7 @@
       "verbatim": "Enhanced: Include SDS showing technical design details, how design implements SRS, and traceability from SDS to SRS. Basic: Not required in submission (document in Design History File).",
       "extracted_requirements": [
         {
-          "For Enhanced documentation (HipLink)": "include Software Design Specification in the submission"
+          "For Enhanced documentation (MedTech Project)": "include Software Design Specification in the submission"
         },
         {
           "SDS must show": "technical design details, how the design implements the SRS requirements, traceability from SDS to SRS"
@@ -148,7 +148,7 @@
       "verbatim": "Enhanced: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports + full unit and integration level test protocols and reports. Basic: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports only.",
       "extracted_requirements": [
         {
-          "For Enhanced documentation (HipLink)": "submit complete test protocols and reports at unit, integration, AND system levels"
+          "For Enhanced documentation (MedTech Project)": "submit complete test protocols and reports at unit, integration, AND system levels"
         },
         {
           "System-level test protocols and reports": "required for both Basic and Enhanced"

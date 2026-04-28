@@ -16,7 +16,7 @@ Exit codes:
 
 Output: JSON on stdout with shape:
   {
-    "title": "HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0",
+    "title": "MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0",
     "title_basis": "pdf-metadata" | "cover-page" | "body-first-h1" | "filename-stem" | null,
     "doc_version": "v50",
     "doc_version_raw": "v.50",
@@ -309,7 +309,7 @@ def extract(pdf_path: str, override: Optional[str] = None) -> dict:
 def _self_test() -> int:
     """
     Smoke test against the IntraOp SAD. Ground truth:
-      title:              HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0
+      title:              MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0
       doc_version:        v50  (from "Current document version: v.50" in Review appendix)
       doc_version_raw:    "Current document version: v.50" (or similar text slice)
       doc_version_basis:  revision-history
@@ -318,8 +318,8 @@ def _self_test() -> int:
     repo_root = Path(__file__).resolve().parents[4]
     sad = (
         repo_root
-        / "docs/project/dhfs/hiplink-intra-op/design-controls/architecture/formal"
-        / "HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0.pdf"
+        / "docs/project/dhfs/mfd-b/design-controls/architecture/formal"
+        / "MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0.pdf"
     )
     if not sad.exists():
         print(f"[self-test] SKIP: SAD not at {sad}")
@@ -329,7 +329,7 @@ def _self_test() -> int:
     print(json.dumps(result, indent=2))
 
     fails = []
-    expected_title = "HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0"
+    expected_title = "MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0"
     if result["title"] != expected_title:
         fails.append(f"title: expected '{expected_title}', got '{result['title']}'")
     if result["doc_version"] != "v50":

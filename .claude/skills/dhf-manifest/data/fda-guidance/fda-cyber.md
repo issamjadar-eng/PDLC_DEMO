@@ -31,10 +31,10 @@ extracted_requirements:
   - Post-market cybersecurity plan is STATUTORY — must describe how manufacturer monitors, identifies, and addresses vulnerabilities
   - Process documentation demonstrating cybersecure design, development, and maintenance must be included in the submission
   - Update and patch capability must be built into the device — mechanism for both regular-cycle and out-of-cycle critical vulnerability patches
-  - HipLink qualifies as a "cyber device" (includes software, internet-connected, vulnerable to cyber threats) — all §524B requirements apply
+  - MedTech Project qualifies as a "cyber device" (includes software, internet-connected, vulnerable to cyber threats) — all §524B requirements apply
 ```
 
-**Context**: HipLink is a cyber device under FD&C Act §524B — it includes software, connects to the internet (Management Services cloud), and has characteristics vulnerable to cybersecurity threats. All four §524B requirements are statutory obligations, not just FDA recommendations. The SBOM and post-market cybersecurity plan are mandatory 510(k) submission artifacts. Non-compliance means the submission may be refused to accept (RTA).
+**Context**: MedTech Project is a cyber device under FD&C Act §524B — it includes software, connects to the internet (Management Services cloud), and has characteristics vulnerable to cybersecurity threats. All four §524B requirements are statutory obligations, not just FDA recommendations. The SBOM and post-market cybersecurity plan are mandatory 510(k) submission artifacts. Non-compliance means the submission may be refused to accept (RTA).
 
 ---
 
@@ -60,7 +60,7 @@ extracted_requirements:
   - Security risk management is distinct from safety risk management (ISO 14971) but the two must feed each other
 ```
 
-**Context**: For HipLink, the threat model must cover: the cloud-tablet communication link, the DICOM imaging device interface, Management Services APIs, the OTA update mechanism, and the tablet's local storage. Using exploitability (not probability) means the risk assessment must be grounded in what attackers can actually do (CVSS exploitability scores, STRIDE threat vectors) rather than statistical probabilities. The security risk management report is a 510(k) submission artifact, not just an internal document.
+**Context**: For MedTech Project, the threat model must cover: the cloud-tablet communication link, the DICOM imaging device interface, Management Services APIs, the OTA update mechanism, and the tablet's local storage. Using exploitability (not probability) means the risk assessment must be grounded in what attackers can actually do (CVSS exploitability scores, STRIDE threat vectors) rather than statistical probabilities. The security risk management report is a 510(k) submission artifact, not just an internal document.
 
 ---
 
@@ -87,7 +87,7 @@ extracted_requirements:
   - If transitive dependencies are unknown, this gap must be explicitly justified (not silently omitted)
 ```
 
-**Context**: HipLink's system-level SBOM aggregates component-level SBOMs from all three modules. Each item DHF (Pre-Op, Intra-Op, Management Services) generates its own SBOM; the system DHF rolls them up. Machine-readable format (CycloneDX or SPDX) is required — a human-readable spreadsheet is not acceptable as the primary SBOM. Plan for SBOM generation as part of the CI/CD build process, not a manual pre-release effort.
+**Context**: MedTech Project's system-level SBOM aggregates component-level SBOMs from all three modules. Each item DHF (Pre-Op, Intra-Op, Management Services) generates its own SBOM; the system DHF rolls them up. Machine-readable format (CycloneDX or SPDX) is required — a human-readable spreadsheet is not acceptable as the primary SBOM. Plan for SBOM generation as part of the CI/CD build process, not a manual pre-release effort.
 
 ---
 
@@ -114,7 +114,7 @@ extracted_requirements:
   - Architecture views must establish traceability to security requirements
 ```
 
-**Context**: The multi-patient harm view is particularly important for HipLink — a cloud-hosted platform means a single cybersecurity event could affect all hospitals running HipLink simultaneously. The updateability view must show the OTA update mechanism for Intra-Op tablets, including how updates are authenticated and how the tablet verifies integrity before applying them. These four views are part of the required 510(k) submission package.
+**Context**: The multi-patient harm view is particularly important for MedTech Project — a cloud-hosted platform means a single cybersecurity event could affect all hospitals running MedTech Project simultaneously. The updateability view must show the OTA update mechanism for Intra-Op tablets, including how updates are authenticated and how the tablet verifies integrity before applying them. These four views are part of the required 510(k) submission package.
 
 ---
 
@@ -142,7 +142,7 @@ extracted_requirements:
   - All four testing types are expected in the 510(k) submission regardless of device age/prior submissions
 ```
 
-**Context**: Penetration testing is the most effort-intensive requirement. For HipLink, pentest must cover: Management Services APIs (authenticated and unauthenticated access), Intra-Op tablet network interfaces, DICOM ingestion pipeline, OTA update mechanism, and cloud-tablet sync link. Plan for a third-party pentest engagement as a late-stage pre-submission activity. Results of all four testing types go into the cybersecurity section of the 510(k).
+**Context**: Penetration testing is the most effort-intensive requirement. For MedTech Project, pentest must cover: Management Services APIs (authenticated and unauthenticated access), Intra-Op tablet network interfaces, DICOM ingestion pipeline, OTA update mechanism, and cloud-tablet sync link. Plan for a third-party pentest engagement as a late-stage pre-submission activity. Results of all four testing types go into the cybersecurity section of the 510(k).
 
 ---
 
@@ -166,7 +166,7 @@ extracted_requirements:
   - Plan must specify: patching timeline (regular cycle and critical/out-of-cycle), patching capability (how frequently updates can be deployed)
   - Plan must identify personnel responsible (organizational roles with accountability — not individual names)
   - Periodic security testing cadence must be defined
-  - Cloud-hosted devices: describe the shared responsibility model (what Arthrex manages vs. cloud provider)
+  - Cloud-hosted devices: describe the shared responsibility model (what MedTech Company manages vs. cloud provider)
 ```
 
-**Context**: The Cybersecurity Management Plan is both a 510(k) submission artifact and a living post-market operational document. For HipLink, it must specify: how quickly critical vulnerabilities are patched (FDA expects out-of-cycle patches for critical vulnerabilities "as soon as possible"), who is responsible for monitoring (organizational role), and how Arthrex coordinates with cloud providers (AWS/Azure shared responsibility model). The plan becomes an operational commitment — Arthrex must actually follow it post-clearance.
+**Context**: The Cybersecurity Management Plan is both a 510(k) submission artifact and a living post-market operational document. For MedTech Project, it must specify: how quickly critical vulnerabilities are patched (FDA expects out-of-cycle patches for critical vulnerabilities "as soon as possible"), who is responsible for monitoring (organizational role), and how MedTech Company coordinates with cloud providers (AWS/Azure shared responsibility model). The plan becomes an operational commitment — MedTech Company must actually follow it post-clearance.

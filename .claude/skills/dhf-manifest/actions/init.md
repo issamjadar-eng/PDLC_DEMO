@@ -4,7 +4,7 @@ Scaffold `docs/project/dhf-manifest/` in the project and confirm the `scope:` bl
 
 ## Steps
 
-1. **Verify `project.yml` has `scope:` block** — read `project.yml`. If `scope:` is absent, add the 9 standard flags with HipLink defaults (hardware: false, cloud_hosted: true, tool_validation: true, multi_function_device: false, ota_updates: true, usability_hf: true, clinical_evaluation: literature, interoperability: true, geography: [us]). If present, confirm all 9 keys exist; add any missing with a `# TODO` comment.
+1. **Verify `project.yml` has `scope:` block** — read `project.yml`. If `scope:` is absent, add the 9 standard flags with example defaults (hardware: false, cloud_hosted: true, tool_validation: true, multi_function_device: false, ota_updates: true, usability_hf: true, clinical_evaluation: literature, interoperability: true, geography: [us]). If present, confirm all 9 keys exist; add any missing with a `# TODO` comment.
 
 2. **Scaffold `docs/project/dhf-manifest/` (flat layout)** — create the directory if not present, with only a `README.md` at its root. No subfolders; all manifest files (`qms-manifest.{md,json}`, `hiplink-manifest.{md,json}`, `hiplink-by-section.md`, `hiplink-dashboard.md`) sit flat under the root and are produced by subsequent build actions.
 

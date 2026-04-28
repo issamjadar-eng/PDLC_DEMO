@@ -33,7 +33,7 @@ extracted_requirements:
   - An NSE determination classifies the device into Class III (requiring PMA or De Novo)
 ```
 
-**Context**: The HipLink 510(k) SE argument is the core of the regulatory submission. The challenge is that HipLink Pre-Op and Intra-Op use AI/ML for anatomy segmentation and surgical guidance — technological differences that may raise different questions of safety/effectiveness compared to non-AI predicates. The SE argument must either find an AI-enabled predicate or demonstrate that the AI characteristics don't raise different safety/effectiveness questions beyond what non-AI predicates addressed.
+**Context**: The MedTech Project 510(k) SE argument is the core of the regulatory submission. The challenge is that MFD A and Intra-Op use AI/ML for anatomy segmentation and surgical guidance — technological differences that may raise different questions of safety/effectiveness compared to non-AI predicates. The SE argument must either find an AI-enabled predicate or demonstrate that the AI characteristics don't raise different safety/effectiveness questions beyond what non-AI predicates addressed.
 
 ---
 
@@ -52,7 +52,7 @@ min_iec62304_class: A
 applies_to: [Predicate Device Analysis, 510(k) Submission — Device Description]
 verbatim: "Only one predicate is required; FDA encourages identifying a single predicate to simplify review. A split predicate (comparing intended use to Device A while comparing technological characteristics to Device B with a different intended use) is prohibited. Multiple predicates are permitted when combining features from predicates with the same intended use."
 extracted_requirements:
-  - Select a primary predicate with intended use and technological characteristics most similar to HipLink
+  - Select a primary predicate with intended use and technological characteristics most similar to MedTech Project
   - Do NOT use a split predicate: cannot compare intended use to one device and technological characteristics to another device with a different intended use
   - Multiple predicates permitted if all have the same intended use — combining features from each
   - Predicate must be legally marketed: cleared via 510(k), pre-May 28, 1976, or reclassified from Class III
@@ -60,7 +60,7 @@ extracted_requirements:
   - Document predicate search rationale: how the predicate was identified and why it is the most similar legally marketed device
 ```
 
-**Context**: Arthrex does not have an existing cleared digital surgical tool — the predicate will be a competitor device. Finding an appropriate predicate is the highest-priority open question for the HipLink 510(k). The predicate search must be systematic (documented search of FDA 510(k) database, De Novo, PMA databases) and the selected predicate must have substantially similar intended use (FAI surgical planning and/or guidance) and technological characteristics. AI-enabled predicates (e.g., competitors using AI for anatomy segmentation) would simplify the SE argument.
+**Context**: MedTech Company does not have an existing cleared digital surgical tool — the predicate will be a competitor device. Finding an appropriate predicate is the highest-priority open question for the MedTech Project 510(k). The predicate search must be systematic (documented search of FDA 510(k) database, De Novo, PMA databases) and the selected predicate must have substantially similar intended use (FAI surgical planning and/or guidance) and technological characteristics. AI-enabled predicates (e.g., competitors using AI for anatomy segmentation) would simplify the SE argument.
 
 ---
 
@@ -86,7 +86,7 @@ extracted_requirements:
   - Document the rationale for the chosen performance data type and why it is sufficient
 ```
 
-**Context**: For HipLink, the primary performance data will likely be algorithm performance studies: sensitivity/specificity for anatomy segmentation (Pre-Op), measurement accuracy for surgical guidance (Intra-Op), compared to the predicate's published or cleared performance. Clinical data (involving actual surgeries) is a higher bar — it may be required if FDA determines that AI-based image analysis raises fundamentally different safety/effectiveness questions than the predicate's approach.
+**Context**: For MedTech Project, the primary performance data will likely be algorithm performance studies: sensitivity/specificity for anatomy segmentation (Pre-Op), measurement accuracy for surgical guidance (Intra-Op), compared to the predicate's published or cleared performance. Clinical data (involving actual surgeries) is a higher bar — it may be required if FDA determines that AI-based image analysis raises fundamentally different safety/effectiveness questions than the predicate's approach.
 
 ---
 
@@ -112,4 +112,4 @@ extracted_requirements:
   - For PCCP devices: public summary should include planned PCCP modifications, testing methods, and user communication plan
 ```
 
-**Context**: The HipLink 510(k) Summary is the permanent public record of the SE determination. It will be searchable in the FDA 510(k) database and may be cited by competitors as a predicate reference. The summary must be accurate and complete — it cannot omit the PCCP or describe capabilities not yet implemented. Write the summary alongside the main submission, not as an afterthought.
+**Context**: The MedTech Project 510(k) Summary is the permanent public record of the SE determination. It will be searchable in the FDA 510(k) database and may be cited by competitors as a predicate reference. The summary must be accurate and complete — it cannot omit the PCCP or describe capabilities not yet implemented. Write the summary alongside the main submission, not as an afterthought.

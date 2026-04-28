@@ -61,7 +61,7 @@ File:        docs/project/dhfs/pca-device/inputs/pump-occlusion.md
 State:       frozen (Phase 2 — formal review in Confluence)
 Frozen at:   2026-04-14 (commit a3f9c21)
 Confluence:  page 458291, version 1
-Jira ECR:    PP3500-1234
+Jira ECR:    PROJECT-1234
 Windchill:   not yet released
 
 Editing this file will UNFREEZE it, which means:
@@ -71,7 +71,7 @@ Editing this file will UNFREEZE it, which means:
   2. The Comala workflow will reset. Reviewers who already signed will
      need to sign again on the next freeze cycle.
   3. A new Confluence page version will be created on the next freeze.
-  4. Jira ticket PP3500-1234 will be re-opened with a comment.
+  4. Jira ticket PROJECT-1234 will be re-opened with a comment.
 
 Proposed change:
   [diff or summary of what Claude was about to do]
@@ -92,14 +92,14 @@ Every controlled doc carries a `state:` block in its frontmatter:
 
 ```yaml
 ---
-title: PP3500 Pump Occlusion Detection — Design Input
+title: PROJECT Pump Occlusion Detection — Design Input
 state: draft | frozen | released
 doc_class: design-input          # determines whether ECR is required
 frozen_at: 2026-04-14
 frozen_commit: a3f9c21
 confluence_page_id: 458291
 confluence_version_at_publish: 1
-jira_ecr: PP3500-1234
+jira_ecr: PROJECT-1234
 windchill_eco: null              # populated when Phase 3 completes
 ---
 ```
@@ -209,7 +209,7 @@ Order of operations when implementation begins:
 7. **`lib/comala.py`** — `ComalaPlugin` against a real Comala instance.
 8. **`actions/freeze.py` + `actions/unfreeze.py`** — wire the connectors together.
 9. **`actions/status.py`** — read-only spine view; useful for debugging by this point.
-10. **Generalization pass** — validate against `../../projects/arthrex/pccp/`.
+10. **Generalization pass** — validate against `../../projects/medtech-project/`.
 11. **`/sync-skills push`** — upstream to hitachi.
 12. **Phase 3 (`lib/windchill.py` + `actions/release.py`)** — separate task, after Phase 2 is solid.
 13. **v2 capabilities** — Data Center backend, OAuth 2.0 authenticator, SoftComply plugin.

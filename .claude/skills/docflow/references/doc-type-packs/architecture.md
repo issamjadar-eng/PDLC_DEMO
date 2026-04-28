@@ -142,7 +142,7 @@ Phase 7 gate checks specific to architecture docs:
 
 ## Canonical test case
 
-`HipLink IntraOp - Software Architecture Document (SAD) - 1.0.0` — 16 pages,
+`MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0` — 16 pages,
 8 content images (1× type-e cover banner, 1× type-a system overview, 1× type-b
 app architecture, 1× type-c AWS backend, 4× type-a user/surgery/provisioning
 flows). Expected Phase 7 outcome: pass; 7/8 mermaid fences emitted; 1/8 type-e

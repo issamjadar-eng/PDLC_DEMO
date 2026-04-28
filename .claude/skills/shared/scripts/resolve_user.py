@@ -38,7 +38,7 @@ def parse_roster(yml_text: str) -> list[dict[str, str]]:
     """Extract team.active[] entries from project.yml as a list of dicts.
 
     Minimal parser (no PyYAML dep) — matches the stable shape of
-    project.yml used across PDLC_DEMO + Arthrex PCCP. Each active entry
+    project.yml used across MedTech Project + MedTech Project. Each active entry
     is a block of `    <key>: <value>` lines under `  - name: ...`.
     """
     # Isolate the active: ... inactive: region.

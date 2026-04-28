@@ -49,7 +49,7 @@ obligations:
     from predicates with the same intended use.
   extracted_requirements:
   - Select a primary predicate with intended use and technological characteristics
-    most similar to HipLink
+    most similar to MedTech Project
   - Do NOT use a split predicate: cannot compare intended use to one device and technological
       characteristics to another device with a different intended use
   - Multiple predicates permitted if all have the same intended use — combining features
@@ -244,8 +244,8 @@ obligations:
     when making subgroup performance claims
   - Evaluate repeatability (same reader, same image, different times) and reproducibility
     (different readers, different sites)
-  - For human-in-the-loop AI (HipLink): evaluate human-device team performance — how
-      does the surgeon perform WITH the AI vs. without?
+  - For human-in-the-loop AI (MedTech Project): evaluate human-device team performance
+      — how does the surgeon perform WITH the AI vs. without?
   - Report all primary endpoints with 95% two-sided confidence intervals
   category: fda-guidance
 - id: OBL-AI-LIFE-005
@@ -538,10 +538,10 @@ obligations:
   extracted_requirements:
   - Any software function that acquires, processes, or analyzes medical images FAILS
     criterion 1 and is a device (SaMD) — cannot claim CDS non-device status
-  - HipLink Pre-Op FAILS criterion 1: it processes CT/MRI images for anatomy segmentation
-      and implant sizing → is a SaMD device
-  - HipLink Intra-Op FAILS criterion 1: it acquires and processes C-arm fluoroscopy
-      images for surgical guidance → is a SaMD device
+  - MFD A FAILS criterion 1: it processes CT/MRI images for anatomy segmentation and
+      implant sizing → is a SaMD device
+  - MFD B FAILS criterion 1: it acquires and processes C-arm fluoroscopy images for
+      surgical guidance → is a SaMD device
   - Software analyzing HCP-reported findings (not images themselves) may qualify as
     non-device CDS if other criteria are met
   - Management Services PostOp Reports must be analyzed: if it analyzes imaging data
@@ -639,7 +639,7 @@ obligations:
     must be included in the submission
   - Update and patch capability must be built into the device — mechanism for both
     regular-cycle and out-of-cycle critical vulnerability patches
-  - HipLink qualifies as a "cyber device" (includes software, internet-connected,
+  - MedTech Project qualifies as a "cyber device" (includes software, internet-connected,
     vulnerable to cyber threats) — all §524B requirements apply
   category: fda-guidance
 - id: OBL-CYBER-002
@@ -798,8 +798,8 @@ obligations:
   - Plan must identify personnel responsible (organizational roles with accountability
     — not individual names)
   - Periodic security testing cadence must be defined
-  - Cloud-hosted devices: describe the shared responsibility model (what Arthrex manages
-      vs. cloud provider)
+  - Cloud-hosted devices: describe the shared responsibility model (what MedTech Company
+      manages vs. cloud provider)
   category: fda-guidance
 - id: OBL-MFD-001
   title: MFD Core Policy
@@ -820,8 +820,8 @@ obligations:
     evaluating safety and effectiveness. Non-device and other functions are reviewed
     only when they could impact the device function-under-review.
   extracted_requirements:
-  - HipLink is a multiple function device product: Pre-Op (SaMD) + Intra-Op (SaMD)
-      are device functions; Management Services is the "other function"
+  - MedTech Project is a multiple function device product: Pre-Op (SaMD) + Intra-Op
+      (SaMD) are device functions; Management Services is the "other function"
   - Management Services non-device functions (PostOp Reports, User Management, Account
     Management) are NOT reviewed unless they could adversely impact Pre-Op or Intra-Op
   - Document in the 510(k): which functions are device functions under review and
@@ -1051,8 +1051,8 @@ obligations:
       of modification B
   - Assess cumulative impact of implementing all PCCP modifications together — not
     just individually
-  - For HipLink (MFD): discuss impact on overall device functionality including both
-      SaMD modules and Management Services
+  - For MedTech Project (MFD): discuss impact on overall device functionality including
+      both SaMD modules and Management Services
   category: fda-guidance
 - id: OBL-PCCP-005
   title: PCCP Scope Risk Assessment
@@ -1141,8 +1141,9 @@ obligations:
     BEFORE risk control measures
   - If ANY software function failure could cause death or serious injury pre-risk-controls
     → Enhanced documentation required for the entire submission
-  - For HipLink: Intra-Op failure during surgery (e.g., corrupted guidance data) could
-      cause serious injury → Enhanced documentation applies to the whole submission
+  - For MedTech Project: Intra-Op failure during surgery (e.g., corrupted guidance
+      data) could cause serious injury → Enhanced documentation applies to the whole
+      submission
   - Provide a written documentation level statement with rationale leveraging risk
     assessment and intended use
   - Class II is NOT automatically Basic — sponsor determines level based on risk assessment
@@ -1199,8 +1200,8 @@ obligations:
     SRS, and traceability from SDS to SRS. Basic: Not required in submission (document
     in Design History File).'
   extracted_requirements:
-  - For Enhanced documentation (HipLink): include Software Design Specification in
-      the submission
+  - For Enhanced documentation (MedTech Project): include Software Design Specification
+      in the submission
   - SDS must show: technical design details, how the design implements the SRS requirements,
       traceability from SDS to SRS
   - SDS traceability links design decisions to requirements — bidirectional trace
@@ -1253,8 +1254,8 @@ obligations:
     protocols and reports. Basic: Summary of unit, integration, and system-level testing
     + complete system-level test protocols and reports only.'
   extracted_requirements:
-  - For Enhanced documentation (HipLink): submit complete test protocols and reports
-      at unit, integration, AND system levels
+  - For Enhanced documentation (MedTech Project): submit complete test protocols and
+      reports at unit, integration, AND system levels
   - System-level test protocols and reports: required for both Basic and Enhanced
   - Unit and integration test protocols/reports: full submission required for Enhanced
       (not just summary)
@@ -2317,8 +2318,8 @@ obligations:
   - Track all security incidents and vulnerabilities from identification to resolution
   - Report security incidents to FDA per MDR/MAUDE requirements when patient safety
     is affected
-  - Coordinate with Arthrex post-market surveillance for cybersecurity-triggered adverse
-    event reporting
+  - Coordinate with MedTech Company post-market surveillance for cybersecurity-triggered
+    adverse event reporting
   category: standards
 - id: OBL-82304-001
   title: Health Software Requirements
@@ -2457,7 +2458,7 @@ obligations:
   verbatim: Validate the health software product in the intended operating environment.
     Validation must demonstrate the product meets user needs and intended uses.
   extracted_requirements:
-  - Validate HipLink in the intended operating environment (or validated simulation)
+  - Validate MedTech Project in the intended operating environment (or validated simulation)
     — not just on a development server
   - Validation must demonstrate the product meets all defined user needs and the intended
     use statement
@@ -2777,7 +2778,7 @@ obligations:
   - The DHF is an index/collection — it includes or references the artifacts, it is
     not itself all the artifacts
   - For the flat multi-DHF structure: the system DHF plus three item DHFs together
-      constitute the DHF for the HipLink device family
+      constitute the DHF for the MedTech Project device family
   category: standards
 - id: OBL-13485-010
   title: SOUP Supplier Qualification

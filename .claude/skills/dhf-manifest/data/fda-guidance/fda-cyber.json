@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-cyber.md",
   "obligation_count": 6,
@@ -28,7 +28,7 @@
         "Post-market cybersecurity plan is STATUTORY — must describe how manufacturer monitors, identifies, and addresses vulnerabilities",
         "Process documentation demonstrating cybersecure design, development, and maintenance must be included in the submission",
         "Update and patch capability must be built into the device — mechanism for both regular-cycle and out-of-cycle critical vulnerability patches",
-        "HipLink qualifies as a \"cyber device\" (includes software, internet-connected, vulnerable to cyber threats) — all §524B requirements apply"
+        "MedTech Project qualifies as a \"cyber device\" (includes software, internet-connected, vulnerable to cyber threats) — all §524B requirements apply"
       ]
     },
     {
@@ -193,7 +193,7 @@
         "Plan must identify personnel responsible (organizational roles with accountability — not individual names)",
         "Periodic security testing cadence must be defined",
         {
-          "Cloud-hosted devices": "describe the shared responsibility model (what Arthrex manages vs. cloud provider)"
+          "Cloud-hosted devices": "describe the shared responsibility model (what MedTech Company manages vs. cloud provider)"
         }
       ]
     }

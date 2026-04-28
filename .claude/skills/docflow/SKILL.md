@@ -278,9 +278,9 @@ PRODUCES:
   <dhf-area>/images/                           (extracted images, if any)
 
 EXAMPLES:
-  /docflow adopt hiplink-mgmt-services --plan
-  /docflow adopt hiplink-pre-op --area design-controls/user-needs
-  /docflow adopt docs/project/dhfs/hiplink-pre-op/design-controls/user-needs/formal/AFAI-HipLink\ Planning-170426-111505.pdf
+  /docflow adopt mfd-c --plan
+  /docflow adopt mfd-a --area design-controls/user-needs
+  /docflow adopt docs/project/dhfs/mfd-a/design-controls/user-needs/formal/AFAI-MedTech Project\ Planning-170426-111505.pdf
 ```
 
 #### `help batch`
@@ -539,7 +539,7 @@ Adopt DHF formal document(s) into round-trippable working markdown. Unlike `conv
 
 1. **Resolve target**:
    - **Single file** (absolute or relative path to a formal file) → one adoption job. Infer the DHF by walking up the path until a `project.yml` `dhfs[].path` match is found. Infer DHF_AREA from path segments between the DHF root and `formal/`.
-   - **DHF name** (e.g. `hiplink-mgmt-services`) → enumerate every file under `docs/project/dhfs/<dhf>/**/formal/` matching `{pdf,docx,doc,xlsx,pptx}`. Exclude patterns: `c-arm-simulator-main/**` (source code), `HLCAS-TC-*` + `*.dcm` + pure-evidence screenshots (runtime evidence, not documentation).
+   - **DHF name** (e.g. `mfd-c`) → enumerate every file under `docs/project/dhfs/<dhf>/**/formal/` matching `{pdf,docx,doc,xlsx,pptx}`. Exclude patterns: `c-arm-simulator-main/**` (source code), `HLCAS-TC-*` + `*.dcm` + pure-evidence screenshots (runtime evidence, not documentation).
    - **DHF + `--area <path>`** → scope to `docs/project/dhfs/<dhf>/<area>/formal/`.
 
 2. **Per-file adoption** (for each resolved file):
@@ -665,7 +665,7 @@ These are grep-friendly (`grep "%% REVIEW:"`) and dissolve when a human resolves
 - After every `/docflow adopt` — the "verify" step of the two-pass workflow
 - When the F11 spec or frontmatter schema updates — re-review existing adoptions for new regressions
 - Before `/tracker` aggregation — ensures the dashboard reflects verified state
-- On a cadence (e.g., `/docflow review hiplink-mgmt-services` weekly) for drift detection
+- On a cadence (e.g., `/docflow review mfd-c` weekly) for drift detection
 
 ### `adopt` → `review` two-pass workflow
 
@@ -692,7 +692,7 @@ If argument is `--index`, verify the source-catalog (`source/INDEX.md`) and the 
 
 1. **Collect functional-catalog doc-ids**: parse `docs/internal/source/INDEX.md` (everything before the `## Known References — Not Yet in Source` pointer section). Match all `FORM-\d+ | SOP-\d+ | POL-\d+ | WI-\d+ | QSD-\d+` tokens in functional tables. These are the "present in source/" claims.
 2. **Collect Known-References doc-ids**: parse `docs/internal/qms-reference-graph.md` (or legacy `source/INDEX.md` if the split hasn't happened yet) — find the `## Known References — Not Yet in Source` section and match doc-ids using a **column-aware** pattern (doc-ids ONLY in the first column of each table row: `^\|\s*(FORM-\d+|…)\s*\|` per line). **Do not grep the whole section** — the Title and Cited-By columns contain prose that may reference other doc-ids; those are NOT known-absences.
-3. **Collect Known-Reference titles + domain + scope**: for each first-column match, also capture columns 2 (Title), 3 (Domain), 4 (HipLink Scope). A Known Reference row with a blank/placeholder title (`_(unknown…)_` or empty) warns — the converter should have captured a title in its frontmatter `references:` block. A row with `review` scope warns too — manual classification needed.
+3. **Collect Known-Reference titles + domain + scope**: for each first-column match, also capture columns 2 (Title), 3 (Domain), 4 (MedTech Project Scope). A Known Reference row with a blank/placeholder title (`_(unknown…)_` or empty) warns — the converter should have captured a title in its frontmatter `references:` block. A row with `review` scope warns too — manual classification needed.
 4. **Collect source doc-ids**: enumerate `docs/internal/source/**/*.{pdf,docx,doc,xlsx}`, strip leading doc-id from each filename.
 5. **Diff**:
    - `source - INDEX_functional - Known_Refs` → **Gap A (ERROR)**: files in source/ that INDEX.md does not mention anywhere. INDEX is stale — user must add entries to the appropriate functional category.
@@ -795,7 +795,7 @@ The Known References table has six columns:
 | Missing Doc ID | doc-id cited by a converted source-md, not in source/ or INDEX functional tables | Primary key |
 | Title | Converter-written frontmatter `references: - title:` | Human-readable identification |
 | Domain | Classified from Title by keyword heuristics | Shared with `/advisors` + `/dhf-builder` — tells us which persona/topic owns this doc |
-| HipLink Scope | Derived from Domain + project `device_type` | Tells the team whether to request this doc from QMS |
+| MedTech Project Scope | Derived from Domain + project `device_type` | Tells the team whether to request this doc from QMS |
 | Expected Folder | Inferred from doc-id prefix | Where the PDF lands if exported |
 | Cited By | Aggregated from frontmatter across all converted files | Traceability |
 
@@ -820,7 +820,7 @@ The Known References table has six columns:
 | `manufacturing-inspection` | Inspection, test status, measurement equipment | manufacturing — **out-of-scope for SaMD** |
 | `unknown` | No title captured — needs manual | review |
 
-**HipLink Scope values**:
+**MedTech Project Scope values**:
 - `needed` — Domain ∈ {software-lifecycle, cybersecurity, risk-management, design-controls, regulatory, clinical, post-market, human-factors, labeling-udi}
 - `indirect` — Domain ∈ {quality-system, supplier, it-data, product-realization}
 - `not-needed` — Domain ∈ {manufacturing, manufacturing-inspection} — **don't request from QMS unless program scope expands to hardware**

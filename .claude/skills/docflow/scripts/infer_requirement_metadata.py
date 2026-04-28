@@ -503,8 +503,8 @@ def _read_body(md_path: Path) -> str:
 # ---------------------------------------------------------------------------
 
 _CANONICAL_SRS = (
-    "docs/project/dhfs/hiplink-pre-op/design-controls/requirements/"
-    "HipLink Planning - Software Requirements Specification (SRS) - 1.0.0.md"
+    "docs/project/dhfs/mfd-a/design-controls/requirements/"
+    "MedTech Project Planning - Software Requirements Specification (SRS) - 1.0.0.md"
 )
 
 

@@ -27,13 +27,13 @@ min_iec62304_class: A
 applies_to: [510(k) Submission — Device Description, MFD Impact Analysis]
 verbatim: "FDA shall not regulate non-device software functions as devices. However, FDA may assess the impact that non-device functions have on device functions when evaluating safety and effectiveness. Non-device and other functions are reviewed only when they could impact the device function-under-review."
 extracted_requirements:
-  - HipLink is a multiple function device product: Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the "other function"
+  - MedTech Project is a multiple function device product: Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the "other function"
   - Management Services non-device functions (PostOp Reports, User Management, Account Management) are NOT reviewed unless they could adversely impact Pre-Op or Intra-Op
   - Document in the 510(k): which functions are device functions under review and which are "other functions"
   - Conduct a two-step impact assessment: (A) does the other function have impact on the device function? (B) if yes, could the impact increase risk or degrade performance?
 ```
 
-**Context**: The HipLink system SAD's 5 enforcement rules (architectural separation between SaMD and non-SaMD) are directly relevant to MFD compliance. The architectural separation limits the impact of Management Services on Pre-Op and Intra-Op — Management Services cannot alter SaMD clinical outputs. This separation is the primary defense for limiting what FDA must review in Management Services.
+**Context**: The MedTech Project system SAD's 5 enforcement rules (architectural separation between SaMD and non-SaMD) are directly relevant to MFD compliance. The architectural separation limits the impact of Management Services on Pre-Op and Intra-Op — Management Services cannot alter SaMD clinical outputs. This separation is the primary defense for limiting what FDA must review in Management Services.
 
 ---
 
@@ -59,7 +59,7 @@ extracted_requirements:
   - Document the impact assessment in the hazard analysis (ISO 14971) — cross-function impacts are device hazards
 ```
 
-**Context**: For HipLink, the key MFD impact paths are: (1) Management Services delivers the Pre-Op plan to Intra-Op — a corrupted plan delivery is a device safety risk; (2) Management Services performs OTA updates to the Intra-Op tablet — a compromised update is a device safety risk; (3) Management Services hosts the Pre-Op web application — Management Services downtime means Pre-Op is unavailable. These must each be assessed for adverse impact on the device function.
+**Context**: For MedTech Project, the key MFD impact paths are: (1) Management Services delivers the Pre-Op plan to Intra-Op — a corrupted plan delivery is a device safety risk; (2) Management Services performs OTA updates to the Intra-Op tablet — a compromised update is a device safety risk; (3) Management Services hosts the Pre-Op web application — Management Services downtime means Pre-Op is unavailable. These must each be assessed for adverse impact on the device function.
 
 ---
 
@@ -85,7 +85,7 @@ extracted_requirements:
   - Higher architectural separation → simpler FDA review of the device functions in isolation
 ```
 
-**Context**: The 5 enforcement rules already defined in the HipLink system SAD (Section 7 of `hiplink-system-sad.md`) are the architectural separation mechanism that satisfies this MFD guidance requirement. The SAD must be included in the 510(k) submission, and the MFD impact analysis must reference the SAD's enforcement rules as the documented controls. This is a direct connection between the design architecture and the regulatory submission — the SAD IS the MFD architectural separation evidence.
+**Context**: The 5 enforcement rules already defined in the MedTech Project system SAD (Section 7 of the `<project>-system-sad.md`) are the architectural separation mechanism that satisfies this MFD guidance requirement. The SAD must be included in the 510(k) submission, and the MFD impact analysis must reference the SAD's enforcement rules as the documented controls. This is a direct connection between the design architecture and the regulatory submission — the SAD IS the MFD architectural separation evidence.
 
 ---
 

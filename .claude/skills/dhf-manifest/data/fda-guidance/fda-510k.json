@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24",
+  "generated": "2026-04-27",
   "category": "fda-guidance",
   "source_file": "fda-510k.md",
   "obligation_count": 4,
@@ -51,7 +51,7 @@
       ],
       "verbatim": "Only one predicate is required; FDA encourages identifying a single predicate to simplify review. A split predicate (comparing intended use to Device A while comparing technological characteristics to Device B with a different intended use) is prohibited. Multiple predicates are permitted when combining features from predicates with the same intended use.",
       "extracted_requirements": [
-        "Select a primary predicate with intended use and technological characteristics most similar to HipLink",
+        "Select a primary predicate with intended use and technological characteristics most similar to MedTech Project",
         {
           "Do NOT use a split predicate": "cannot compare intended use to one device and technological characteristics to another device with a different intended use"
         },

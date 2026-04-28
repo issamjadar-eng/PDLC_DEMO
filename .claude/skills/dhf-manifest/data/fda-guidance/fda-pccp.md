@@ -34,7 +34,7 @@ extracted_requirements:
   - PCCP referenced in the letter of authorization (title and version number)
 ```
 
-**Context**: The PCCP is a core component of HipLink's 510(k) submission — not an optional add-on. The HipLink PCCP must specify only the specific modifications Arthrex plans to make post-clearance (not every conceivable AI improvement). FDA's review determines reasonable assurance that even post-PCCP modifications maintain safety and effectiveness. Once authorized, every modification implemented under the PCCP must follow the Modification Protocol exactly.
+**Context**: The PCCP is a core component of MedTech Project's 510(k) submission — not an optional add-on. The MedTech Project PCCP must specify only the specific modifications MedTech Company plans to make post-clearance (not every conceivable AI improvement). FDA's review determines reasonable assurance that even post-PCCP modifications maintain safety and effectiveness. Once authorized, every modification implemented under the PCCP must follow the Modification Protocol exactly.
 
 ---
 
@@ -60,7 +60,7 @@ extracted_requirements:
   - All modifications must be verifiable and/or validatable — vague modifications are rejected
 ```
 
-**Context**: For HipLink, the Description of Modifications must separately enumerate each planned change type: e.g., "Re-train anatomy segmentation algorithm on expanded dataset to improve Pre-Op sizing accuracy," "Add support for new C-arm model for Intra-Op guidance," "Update UI for anatomical landmark confirmation workflow." Each is a separate enumerated modification with specific rationale and linked V&V activity.
+**Context**: For MedTech Project, the Description of Modifications must separately enumerate each planned change type: e.g., "Re-train anatomy segmentation algorithm on expanded dataset to improve Pre-Op sizing accuracy," "Add support for new C-arm model for Intra-Op guidance," "Update UI for anatomical landmark confirmation workflow." Each is a separate enumerated modification with specific rationale and linked V&V activity.
 
 ---
 
@@ -88,7 +88,7 @@ extracted_requirements:
   - A traceability table linking each modification to its performance evaluation methods is required
 ```
 
-**Context**: The Modification Protocol is the operational core of the PCCP — it pre-authorizes the V&V approach so Arthrex can implement modifications without a new 510(k). For HipLink AI modifications (algorithm re-training), the protocol must define: what datasets are used for testing (multi-site, representative), what metrics are required (sensitivity/specificity with acceptance thresholds), and how a performance failure triggers a halt. Pre-specification before implementation is essential — modifying acceptance criteria after seeing results requires FDA concurrence.
+**Context**: The Modification Protocol is the operational core of the PCCP — it pre-authorizes the V&V approach so MedTech Company can implement modifications without a new 510(k). For MedTech Project AI modifications (algorithm re-training), the protocol must define: what datasets are used for testing (multi-site, representative), what metrics are required (sensitivity/specificity with acceptance thresholds), and how a performance failure triggers a halt. Pre-specification before implementation is essential — modifying acceptance criteria after seeing results requires FDA concurrence.
 
 ---
 
@@ -112,10 +112,10 @@ extracted_requirements:
   - Explain how the Modification Protocol V&V activities ensure continued safety and effectiveness
   - Assess interaction effects: how implementing modification A affects the safety/effectiveness of modification B
   - Assess cumulative impact of implementing all PCCP modifications together — not just individually
-  - For HipLink (MFD): discuss impact on overall device functionality including both SaMD modules and Management Services
+  - For MedTech Project (MFD): discuss impact on overall device functionality including both SaMD modules and Management Services
 ```
 
-**Context**: The Impact Assessment is where Arthrex demonstrates that the PCCP modifications are safe. It must show that the cumulative effect of all planned modifications (individually and together) does not introduce new safety risks or degrade effectiveness. For HipLink, this means analyzing interactions between Pre-Op AI updates and Intra-Op guidance — a Pre-Op algorithm change may affect the quality of the plan that Intra-Op imports, which could have downstream patient safety implications.
+**Context**: The Impact Assessment is where MedTech Company demonstrates that the PCCP modifications are safe. It must show that the cumulative effect of all planned modifications (individually and together) does not introduce new safety risks or degrade effectiveness. For MedTech Project, this means analyzing interactions between Pre-Op AI updates and Intra-Op guidance — a Pre-Op algorithm change may affect the quality of the plan that Intra-Op imports, which could have downstream patient safety implications.
 
 ---
 
@@ -141,7 +141,7 @@ extracted_requirements:
   - Document the risk assessment reasoning for each modification's PCCP eligibility in the Impact Assessment
 ```
 
-**Context**: This gate-keeps what goes INTO the HipLink PCCP. For each planned modification category, Arthrex must document why it doesn't constitute a major intended use change and doesn't introduce new patient risks. Examples of modifications likely NOT eligible: adding a new clinical indication (hip dysplasia correction); modifications likely eligible: improving anatomy segmentation accuracy on the same patient population and imaging types.
+**Context**: This gate-keeps what goes INTO the MedTech Project PCCP. For each planned modification category, MedTech Company must document why it doesn't constitute a major intended use change and doesn't introduce new patient risks. Examples of modifications likely NOT eligible: adding a new clinical indication (hip dysplasia correction); modifications likely eligible: improving anatomy segmentation accuracy on the same patient population and imaging types.
 
 ---
 
@@ -168,4 +168,4 @@ extracted_requirements:
   - Subsequent 510(k)s using a PCCP-modified device as predicate compare to the version BEFORE PCCP changes
 ```
 
-**Context**: PCCP version control is a post-market quality system obligation. After clearance, Arthrex must maintain a single authoritative PCCP version and document each modification implementation as a QMS design change. If the PCCP itself needs to change (e.g., to add a new modification category), a new 510(k) is required. This creates the rhythm: initial 510(k) with PCCP → implement modifications under PCCP → future 510(k) to expand the PCCP → repeat.
+**Context**: PCCP version control is a post-market quality system obligation. After clearance, MedTech Company must maintain a single authoritative PCCP version and document each modification implementation as a QMS design change. If the PCCP itself needs to change (e.g., to add a new modification category), a new 510(k) is required. This creates the rhythm: initial 510(k) with PCCP → implement modifications under PCCP → future 510(k) to expand the PCCP → repeat.
