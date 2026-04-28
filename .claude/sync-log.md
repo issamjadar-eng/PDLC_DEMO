@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-04-28 — push + merge (sync-skills v6 → v7 → v8: closes task ben/029 Bug A + Bug B)
+
+- Three sequential PRs in the same session, each squash-merged immediately to validate the next:
+  - **PR #96** — sync-skills v6 — symlink-aware `check` content compare. Detects local symlinks and hashes link target text (no trailing newline) to mirror upstream symlink blob storage. Merge commit: `a45c928`.
+  - **PR #97** — sync-skills v7 — mixed-mode symlink-aware comparison; corrects v6 regression. Selects local-side hash strategy by upstream mode (`git ls-tree`) so the canonical "local symlink → upstream regular file" pattern is no longer flagged. Verified 28→0 false positives against PDLC_DEMO. Merge commit: `3586493`.
+  - **PR #98** — sync-skills v8 — `pull-file` reads from `origin/main` via git plumbing instead of the working tree (Bug A). Fetches origin first; preserves symlink mode (recreates as symlink, doesn't flatten); preserves `+x` bit for `100755` files. Merge commit: `a6958a0`.
+- Hitachi HEAD after sync: `a6958a0`
+- Local PDLC-DEMO files updated by manual copy of `skills/sync-skills/{scripts/sync.sh, SKILL.md, README.md}` (the script self-excludes from `pull-file`).
+- Final `check` against PDLC-DEMO: zero false positives — only the 3 expected `__pycache__/*.pyc` upstream-only entries remain.
+- Closes task ben/029 (both bugs).
+
+---
+
 ## 2026-04-28 — pull (broad upstream sync — change-control internal-review tier, project-console v1.7.6, web-control 0.2.0, best-practices v15)
 
 - Hitachi HEAD after sync: `00e53bb`

@@ -1,8 +1,8 @@
 ---
 name: sync-skills
 description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge)."
-version: 4
-updated: 2026-04-15
+version: 8
+updated: 2026-04-28
 ---
 
 # Sync Skills
@@ -138,8 +138,8 @@ Arguments:
 - Verify the hitachi working tree is clean (`sync.sh push-prep` will refuse if it isn't — surface the error cleanly).
 
 **Step 2 — Draft branch name, commit message, and PR body.**
-- Branch: `sync/<project-name>-<topic>-<yyyy-mm-dd>` (e.g., `sync/medtech-project-sync-skills-2026-04-12`). Keep the topic concise — pull it from the filenames.
-- Commit message: first line is a tight summary (≤72 chars). Body explains *why* the change exists and links back to the originating project and task when possible (e.g., "Discovered while building sync-skills in MedTech Project task 008").
+- Branch: `sync/<project-name>-<topic>-<yyyy-mm-dd>` (e.g., `sync/pdlc-demo-sync-skills-2026-04-12`). Keep the topic concise — pull it from the filenames.
+- Commit message: first line is a tight summary (≤72 chars). Body explains *why* the change exists and links back to the originating project and task when possible (e.g., "Discovered while building sync-skills in PDLC_DEMO task 008").
 - PR body follows the Claude Code PR convention: `## Summary`, `## Test plan` sections. Include the list of files and a note on any behavioral changes.
 
 **Step 3 — Show the draft to the user.** Print the branch name, commit subject, commit body, PR title, and PR body. Ask for approval or edits. Loop until the user approves or aborts.
@@ -165,7 +165,7 @@ Arguments:
 ## 2026-04-12 — push
 
 - Files: `skills/sync-skills/SKILL.md`, `skills/sync-skills/scripts/sync.sh`
-- Branch: `sync/medtech-project-add-sync-skills-2026-04-12`
+- Branch: `sync/pdlc-demo-add-sync-skills-2026-04-12`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/3
 - Commit: "Add sync-skills skill for bidirectional registry sync"
 - Status: merged (--merge requested)
@@ -190,21 +190,8 @@ Convenience wrapper: runs `pull` first (apply upstream changes), then shows any 
 - If there's no `gh` CLI auth, `push` will fail at Step 5 — tell the user to run `gh auth login` and re-run `push` (the commit is already pushed, so they can re-use the branch)
 
 ## Best Practices
-
-<!-- Read by /best-practices skill to audit sync hygiene -->
-
-| Check | How to Verify | Severity |
-|-------|--------------|----------|
-| Sync log exists | `.claude/sync-log.md` exists | Recommended |
-| Sync log has a recent entry | Last entry in `.claude/sync-log.md` is within 30 days | Recommended |
-| No silent divergence | Running `sync.sh check` returns zero `UPSTREAM_NEWER` entries, OR those entries are documented in the sync log with a rationale (local customization kept intentionally) | Recommended |
-| Hitachi path resolves | `sync.sh hitachi-path` exits 0 and points at an existing git repo | Required |
-| Script is executable | `.claude/skills/sync-skills/scripts/sync.sh` has the executable bit | Required |
-| Allowlist matches installed | Every skill directory under `.claude/skills/` is listed in `project.yml` `security.approved_skills` (and vice versa) | Required |
+See [README.md](README.md) — consumed by `/best-practices` audit.
 
 ## Changelog
+See [README.md](README.md) for version history.
 
-- 3 (2026-04-13): `pull` now performs mandatory Project Impact Analysis (new Step 5b) after every successful file pull. For each pulled file, Claude reads the updated changelog and any `**Post-update:**` annotations, then produces a Project Impact Report covering setup re-runs, template regeneration, best-practices table diffs, frontmatter/schema changes, terminology renames, and hook changes. Applies to single-file pulls too — silence is not acceptable. Rationale: previously, a pull could land a new-behavior skill version without Claude surfacing what the project needed to do to align. Now alignment analysis is part of what pull *means*.
-  **Post-update:** No user action. The new Step 5b executes automatically on the next `/sync-skills pull` or `/sync-skills sync`.
-- 2 (2026-04-12): Added opt-in `--merge` flag to `push`. When passed, the skill calls `gh pr merge --squash --delete-branch` after the PR is created, then `git pull --ff-only` in the local hitachi checkout so it stays in sync. Default remains PR-only — never merge without explicit request.
-- 1 (2026-04-12): Initial version. Four actions: `check`, `pull`, `push <files>`, `sync`. Script primitives: `check`, `pull-file`, `push-prep`, `push-stage`, `push-finalize`, `hitachi-path`, `hitachi-head`. Reads `registries[name=hitachi].local_path` from `project.yml` with `../hitachi` fallback. Excludes `sync-skills` from diffs. Push flow always opens a PR.

@@ -278,9 +278,45 @@ _walk_registry_tree() {
     case "$f" in
       skills/sync-skills/*) continue ;;
     esac
-    local upstream_blob local_blob
-    upstream_blob="$(git -C "$HITACHI" show "$upstream_ref:$f" 2>/dev/null | shasum -a 1 | cut -d' ' -f1)"
-    local_blob="$(shasum -a 1 "$LOCAL_BASE/$f" | cut -d' ' -f1)"
+    local upstream_blob local_blob upstream_mode hasher
+    # Portable SHA-1: sha1sum (GNU coreutils, always on Linux) preferred over
+    # shasum (Perl script, default on macOS and Debian/Ubuntu but not on minimal
+    # images like Alpine). Either works for content-equality comparisons.
+    if command -v sha1sum >/dev/null 2>&1; then
+      hasher="sha1sum"
+    else
+      hasher="shasum -a 1"
+    fi
+    # Mixed-mode symlink-aware comparison. `git show ref:path` of a
+    # symlink-mode blob (100644 mode 120000) emits the link target text;
+    # of a regular file blob (100644) emits the file content. Locally,
+    # `sha1sum`/`shasum` always *follows* symlinks and hashes the
+    # resolved file. Without compensation, we get false-positives in
+    # two scenarios:
+    #
+    #   (a) Both sides symlink to the same target — upstream hashes
+    #       link text, local hashes resolved content. NEVER MATCH
+    #       even when fully in sync.
+    #   (b) Local symlink → upstream regular file with identical
+    #       resolved content (the canonical "skill installs an agent
+    #       via symlink, registry stores it as a regular file" pattern)
+    #       — the v6 fix that hashed link text for any local symlink
+    #       broke this case.
+    #
+    # Pick the local hash strategy based on the *upstream* mode so it
+    # matches what git stored on that side:
+    #   - upstream mode 120000 (symlink) → hash local link text
+    #     (requires local to also be a symlink; otherwise it's a real
+    #     drift and should be flagged).
+    #   - upstream mode 100644/100755 (regular) → hash local resolved
+    #     content (sha1sum/shasum already follows symlinks).
+    upstream_mode="$(git -C "$HITACHI" ls-tree "$upstream_ref" "$f" 2>/dev/null | awk '{print $1}')"
+    upstream_blob="$(git -C "$HITACHI" show "$upstream_ref:$f" 2>/dev/null | $hasher | cut -d' ' -f1)"
+    if [[ "$upstream_mode" == "120000" ]] && [[ -L "$LOCAL_BASE/$f" ]]; then
+      local_blob="$(printf '%s' "$(readlink "$LOCAL_BASE/$f")" | $hasher | cut -d' ' -f1)"
+    else
+      local_blob="$($hasher "$LOCAL_BASE/$f" | cut -d' ' -f1)"
+    fi
     if [[ "$upstream_blob" != "$local_blob" ]]; then
       printf 'UPSTREAM_NEWER\t%s\n' "$f"
     fi
@@ -292,14 +328,47 @@ _walk_registry_tree() {
 cmd_pull_file() {
   local rel="$1"
   _assert_safe_path "$rel"
-  local src="$HITACHI/$rel"
+  local upstream_ref="origin/main"
   local dst="$LOCAL_BASE/$rel"
 
-  if [[ -e "$src" ]]; then
+  # Bug-A fix (task ben/029): the previous implementation used the hitachi
+  # working tree (`$HITACHI/$rel`) as the source of truth. If the working
+  # tree was on a stale commit, files that existed on origin/main but not
+  # in the working copy looked "missing" and got silently `rm`'d locally.
+  # Read from origin/main via git plumbing instead — independent of working
+  # tree state.
+  #
+  # Refresh origin/main first so a standalone `pull-file` invocation
+  # doesn't rely on a prior `check` to have done the fetch. Cheap when
+  # already up to date.
+  git -C "$HITACHI" fetch origin main --quiet 2>/dev/null || true
+
+  # Read the tree entry at origin/main: mode + blob + name. Empty output
+  # means the path is genuinely absent upstream (deletion is real).
+  local tree_entry mode
+  tree_entry="$(git -C "$HITACHI" ls-tree "$upstream_ref" -- "$rel" 2>/dev/null)"
+
+  if [[ -n "$tree_entry" ]]; then
+    mode="$(printf '%s' "$tree_entry" | awk '{print $1}')"
     mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
+    if [[ "$mode" == "120000" ]]; then
+      # Symlink — write the link target as a real symlink locally.
+      # `git show ref:path` of a symlink blob emits the link target text
+      # (no trailing newline); recreate the symlink so it stays a symlink
+      # and doesn't degrade into a regular file holding the link string.
+      local target
+      target="$(git -C "$HITACHI" show "$upstream_ref:$rel")"
+      [[ -e "$dst" || -L "$dst" ]] && rm -f "$dst"
+      ln -s "$target" "$dst"
+    else
+      # Regular file — write content; restore +x bit if upstream was 100755.
+      git -C "$HITACHI" show "$upstream_ref:$rel" > "$dst"
+      if [[ "$mode" == "100755" ]]; then
+        chmod +x "$dst"
+      fi
+    fi
     echo "pulled: $rel"
-  elif [[ -e "$dst" ]]; then
+  elif [[ -e "$dst" || -L "$dst" ]]; then
     rm "$dst"
     echo "deleted-locally (upstream removed): $rel"
   else

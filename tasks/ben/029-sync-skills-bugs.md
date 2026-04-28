@@ -2,7 +2,7 @@
 
 **ID**: 029
 **Created**: 2026-04-22
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -75,4 +75,6 @@ The prior sync-log entry (2026-04-20) already notes this as a "false-positive dr
 ## Changelog
 
 - 2026-04-22: Task created after both bugs surfaced during the 2026-04-22 pull. Bug A caused a silent-delete panic that was only caught because the broken docflow hook already had my attention; without that, I'd have committed the deletes. Bug B has existed at least since 2026-04-20 (papered over in that pull's log entry) — treating it as benign was a mistake because it trains users to ignore `check` output.
-- 2026-04-28: **Bug B fixed upstream.** Resurfaced during the 2026-04-28 broad pull when `agents/project-secops.md` showed `UPSTREAM_NEWER` immediately after a successful pull (resolved file was byte-identical to upstream). Patched `skills/sync-skills/scripts/sync.sh` `cmd_check()` content-compare loop: detect local symlinks with `[[ -L ... ]]` and hash the link target text via `printf '%s' "$(readlink ...)" | $hasher` (no trailing newline) so it matches how git stores the symlink blob upstream. Factored hasher selection (`sha1sum` vs `shasum -a 1`) into a single variable. Bumped sync-skills README changelog to v6 (SKILL.md frontmatter was already labeled v6 with no matching entry — this fills the gap). PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/96. Bug A still pending.
+- 2026-04-28: **Bug B fixed upstream (v6).** Resurfaced during the 2026-04-28 broad pull when `agents/project-secops.md` showed `UPSTREAM_NEWER` immediately after a successful pull. Patched `cmd_check()` to detect local symlinks and hash the link target text. PR #96 merged at hitachi `a45c928`.
+- 2026-04-28: **v6 regression caught + fixed via v7.** Once v6 was active, 28 spurious `UPSTREAM_NEWER` entries surfaced on top-level advisor symlinks (`agents/clinical-affairs.md` etc.) that resolve to identical content of upstream regular files. v6's "always hash link text when local is a symlink" branch broke the canonical mixed-mode case (local symlink → upstream regular file). v7 selects the local-side hash strategy by *upstream* mode (read via `git ls-tree`): upstream `120000` AND local symlink → hash link text; otherwise → hash resolved content. Verified zero false positives against PDLC_DEMO. PR #97 merged at hitachi `3586493`.
+- 2026-04-28: **Bug A fixed upstream (v8).** `cmd_pull_file()` previously copied from `$HITACHI/$rel` (working tree) and `rm`'d the local copy when missing. With a stale checkout, files added on `origin/main` looked missing → silent local delete. v8 reads via `git ls-tree origin/main` + `git show origin/main:<path>`, fetches origin first, and restores file-mode fidelity (symlinks stay as symlinks via `ln -s`, executable scripts get `chmod +x` based on mode `100755`). Verified against four scenarios including the stale-checkout regression case (file present at `origin/main` but moved out of working tree → pulled successfully, no delete). PR #98 merged at hitachi `a6958a0`. Both bugs now closed.
