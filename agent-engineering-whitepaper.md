@@ -713,13 +713,40 @@ Productivity uplift is the *first-order* return. The *second-order* return is ma
 
 | # | Mechanism | How it works | Margin shape |
 |---|---|---|---|
-| 1 | **Same delivered work, less labor → higher margin per engagement** | A fixed-scope engagement that previously required 10 engineers for 6 months now requires 7 engineers for the same 6 months at the same delivered quality. The unspent labor is either redeployed (capacity expansion) or returned to margin (price-held delivery). | Direct — 20–35 % gross-margin uplift on engagements where productivity gains are passed to delivery, not to price |
+| 1 | **Same delivered work, less labor → higher margin per engagement** | A fixed-scope engagement that previously required 10 engineers for 6 months now requires 7 engineers for the same 6 months at the same delivered quality. The unspent labor is either redeployed (capacity expansion) or returned to margin (price-held delivery). | Direct — 5–10 percentage-point gross-margin uplift on engagements where productivity gains are passed to delivery, not to price |
 | 2 | **Reusable IP eliminates per-engagement rebuild cost** | The first time the firm builds a trace-matrix skill or a 510(k)-section drafting agent, it is engagement-funded. The second through hundredth times, the cost is near zero. The customer is paying for the *application* of an asset the firm already owns. | Compounding — every subsequent engagement carries lower cost of goods. After 3–4 engagements in a domain, the firm's marginal cost is a small fraction of competitors who rebuild from scratch each time. |
-| 3 | **Premium pricing for differentiated, audit-defensible delivery** | An agentic-first vendor with a layered-guardrail stack (§C.9) and an IEC 62304 § 5.1.11 tool-validation determination (§C.5) defends a higher price than a vendor without those artifacts. Regulated buyers pay for risk reduction, not for hours. | Top-line — typically a 10–25 % price premium over commodity delivery firms in the same engagement scope |
+| 3 | **Premium pricing for differentiated, audit-defensible delivery** | An agentic-first vendor with a layered-guardrail stack (§C.9) and an IEC 62304 § 5.1.11 tool-validation determination (§C.5) defends a higher price than a vendor without those artifacts. Regulated buyers pay for risk reduction, not for hours. | Top-line — typically a 5–15% price premium over commodity delivery firms in the same engagement scope |
 
 The compounding mechanism (#2) is the most important and the least visible at the start. In the first year of agentic-first delivery, the bulk of the IP is engagement-funded and margin gains are modest. In the third year, the firm has a shelf of reusable agents and skills it can drop into new engagements, and the margin shape inverts: cost-of-goods drops faster than price, and gross margin grows even when the firm is winning at competitive prices.
 
-A delivery firm that holds gross margin steady at, say, 38 % under the legacy model can plausibly grow to **45–52 % gross margin within three years of agentic-first investment**, holding service mix roughly constant. This is the structural reason the investment is not a productivity tweak — it is a *margin-shape change*.
+#### Where we start, and where the uplift lands — actual firm baselines
+
+A globally-distributed engineering delivery firm typically holds gross margin in two distinct bands depending on geography:
+
+| Cost center | Current gross-margin band | After 3 years of agentic-first investment | Notes |
+|---|---|---|---|
+| **International (EE + India)** | **35–47%** | **42–55%** *(uplift of ~7 pp at the floor, ~8 pp at the ceiling)* | Lower labor cost is the structural baseline; the uplift comes mostly from reusable-IP compounding (mechanism #2). Repeatability lets International engagements absorb fixed-price work without margin sacrifice. |
+| **US** | **40–60%** | **48–68%** *(uplift of ~8 pp at the floor, ~8 pp at the ceiling)* | Higher rates already, plus the premium-pricing mechanism (#3) for audit-defensible delivery — regulated US buyers pay for risk reduction. The upper bound flirts with productized-software margins. |
+
+The uplift band of **5–10 percentage points within three years** is firmer than the earlier "7–14 pp" estimate; it accounts for (a) the geo-blended productivity gain that cannot all be captured in margin (some passes to price competition) and (b) the ramp time on reusable-IP compounding.
+
+#### Industry benchmarks — the engineering-services and adjacent-services context
+
+Where these margins sit in the broader engineering-services landscape:
+
+| Industry segment | Typical gross-margin band (mid) | Notes |
+|---|---|---|
+| **Automotive engineering / manufacturing services** | **~15%** | Commodity execution; fixed-price-on-contract is the norm; competition is fierce on rate. |
+| **IT services (broad / mainstream)** | **~20%** | Generalist application-development and managed-services work. |
+| **HCLS engineering services** *(regulated medtech, pharma, life-sciences delivery)* | **~25–35%** *[VERIFY against primary source before external citation]* | Premium for regulatory complexity, qualified-tester requirements, audit-defensibility. |
+| **Engineering R&D services (regulated, multi-vertical)** | **~30–40%** | Where most global delivery firms in HCLS / aerospace / regulated industrial sit today. |
+| **Productized SaaS** *(reference high-end)* | **~70–80%** | Not a delivery firm category; included as the upper bound the agentic project shape can plausibly approach for repeatable, IP-rich engagements. |
+
+The point of including the benchmarks is twofold. First, **our current margins (35–47% International; 40–60% US) already sit at the high end of engineering services** — *above* IT-mainstream and Automotive, *at or above* HCLS-services average. We are not trying to climb out of a low-margin commodity hole; we are starting from a defensible base and asking whether we can push into the productized-software margin band.
+
+Second, the **agentic project shape is the only delivery-side mechanism known to push past 50% gross margin without inverting into a productized-software business model**. It does this by replacing engagement-by-engagement labor with reusable IP that compounds across customer programs — exactly the cost-shape change a SaaS business has, but applied to *delivery* rather than *product*.
+
+A delivery firm that successfully runs the flywheel (§7.7) for three years can plausibly approach the **48–68% US-band ceiling** and the **42–55% International-band ceiling** — meaningfully above where the firm starts and well above the IT-services average. This is the structural reason the investment is not a productivity tweak — it is a *margin-shape change* that moves the business toward (without crossing into) the productized-software economics that capital markets value at higher multiples.
 
 ### 7.6 The pricing-model shift — from T&M to fixed-price (and why repeatability is the gate)
 
@@ -804,7 +831,7 @@ For a blended hard-dollar investment of **~$3 K per delivery engineer per year**
 
 - A **6–16× ROI** at a typical 15% US / 85% International delivery mix (substantially higher for US-heavy firms).
 - The structural repeatability that converts T\&M engagements to **fixed-price**.
-- A **7–14 percentage-point gross-margin expansion** within three years.
+- A **5–10 percentage-point gross-margin expansion** within three years.
 - The **right to compete at all** in the deals that 2026 customers are asking for.
 
 The cost of *not* investing is **$15–50 M per year** of foregone margin and lost deals at the 1,000-engineer firm scale, plus a compounding capability gap that widens as time passes.
