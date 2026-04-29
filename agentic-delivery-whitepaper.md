@@ -408,38 +408,94 @@ A 100% US delivery firm sees substantially higher per-engineer ROI because loade
 
 Productivity uplift is the *first-order* return. The *second-order* return is margin expansion, and at scale the second-order effect is larger than the first.
 
+#### Three first-order mechanisms
+
 | # | Mechanism | Margin shape |
 |---|---|---|
-| 1 | **Same delivered work, less labor → higher margin per engagement.** A fixed-scope engagement that previously required 10 engineers for 6 months now requires 7 at the same delivered quality. | 5–10 percentage-point gross-margin uplift on engagements where productivity gains are passed to delivery, not to price |
-| 2 | **Reusable IP eliminates per-engagement rebuild cost.** The first time the firm builds a skill, it is engagement-funded. The second through hundredth times, the cost is near zero. | Compounding — after 3–4 engagements in a domain, marginal cost is a small fraction of competitors who rebuild from scratch each time |
-| 3 | **Premium pricing for differentiated, audit-defensible delivery.** Regulated buyers pay for risk reduction, not for hours. | 5–15% price premium over commodity delivery firms in the same engagement scope |
+| 1 | **Same delivered work, less labor → higher margin per engagement.** | 5–10 percentage-point gross-margin uplift on engagements where productivity gains are passed to delivery, not to price |
+| 2 | **Reusable IP eliminates per-engagement rebuild cost.** | Compounding — after 3–4 engagements in a domain, marginal cost is a small fraction of competitors who rebuild from scratch each time |
+| 3 | **Premium pricing for differentiated, audit-defensible delivery.** | 5–15% price premium over commodity delivery firms in the same engagement scope |
 
-#### Where we start, and where the uplift lands — actual firm baselines
+#### Where we start — actual firm baselines
 
-A globally-distributed engineering delivery firm typically holds gross margin in two distinct bands depending on geography:
-
-| Cost center | Current gross-margin band | After 3 years of agentic-first investment |
-|---|---|---|
-| **International (EE + India)** | **35–47%** | **42–55%** (uplift ~7–8 pp) |
-| **US** | **40–60%** | **48–68%** (uplift ~8 pp; upper bound approaches productized-software territory) |
+- **International (EE + India): 35–47%** gross margin
+- **US: 40–60%** gross margin
 
 #### Industry benchmarks for context
 
-Where these margins sit in the broader engineering-services landscape:
-
 | Industry segment | Typical gross-margin (mid) |
 |---|---|
-| **Automotive engineering / manufacturing services** | **~15%** |
-| **IT services (broad / mainstream)** | **~20%** |
-| **HCLS engineering services** *(regulated medtech, pharma, life-sciences delivery)* | **~25–35%** *[VERIFY before external citation]* |
-| **Engineering R&D services (regulated, multi-vertical)** | **~30–40%** |
-| **Productized SaaS** *(reference high-end)* | **~70–80%** |
+| Automotive engineering / manufacturing services | **~15%** |
+| IT services (broad / mainstream) | **~20%** |
+| HCLS engineering services *(regulated medtech, pharma, life-sciences)* | **~25–35%** *[VERIFY before external citation]* |
+| Engineering R&D services (regulated, multi-vertical) | **~30–40%** |
+| Productized SaaS *(reference high-end)* | **~70–80%** |
 
-Two takeaways. First, **the firm's current margins (35–47% International; 40–60% US) already sit at the high end of engineering services** — *above* IT-mainstream and Automotive, *at or above* HCLS-services average. We are not climbing out of a low-margin commodity hole; we are starting from a defensible base and asking whether we can push into the productized-software margin band.
+The firm's current margins already sit at the high end of engineering services — *above* IT-mainstream and Automotive, *at or above* HCLS-services average. The pitch is "push from a defensible base toward productized-software band," not "climb out of a commodity hole."
 
-Second, the **agentic project shape is the only delivery-side mechanism known to push past 50% gross margin without inverting into a productized-software business model** — it does so by replacing engagement-by-engagement labor with reusable IP that compounds across customer programs.
+#### The five-year margin trajectory — first-order only
 
-A delivery firm that runs the flywheel (§6.6) for three years can plausibly approach the **48–68% US-band ceiling** and the **42–55% International-band ceiling** — meaningfully above where the firm starts and well above the IT-services average. **This is a margin-shape change**, not a productivity tweak, and it moves the business toward (without crossing into) the productized-software economics that capital markets value at higher multiples.
+| Year | International band | US band | What's active |
+|---|---|---|---|
+| **Year 0 (baseline)** | 35–47% | 40–60% | — |
+| **Year 1** | 36–49% (+1–2 pp) | 41–62% | Productivity gains, modest IP build |
+| **Year 2** | 38–51% (+3–4 pp) | 43–64% | Registry compounding starts, first fixed-price wins |
+| **Year 3** | 40–53% (+5–6 pp) | 45–66% | Repeatability mainstream, productized accelerators in market |
+| **Year 4** | 42–55% (+7–8 pp) | 47–68% | Account expansion, strategic-advisor positioning, multi-year contracts |
+| **Year 5** | 44–57% (+9–10 pp) | 49–70% | Full flywheel; productized-software-adjacent economics |
+
+#### Second-order amplifiers — upsides not yet priced into the trajectory
+
+| # | Amplifier | What it adds | Kicks in |
+|---|---|---|---|
+| 1 | **Account expansion (wallet share)** | Year-1 customer paying $5 M for a project becomes Year-4 customer paying $30 M for a transformation. Same logo, dramatically larger contract. | Year 2+ |
+| 2 | **Multi-year retainer model** | Customers lock into multi-year operating contracts. Recurring revenue with higher margin than transactional engagements. | Year 3+ |
+| 3 | **Strategic-advisor premium** | The firm competes with strategic consultancies (50–70% margins), not delivery firms, on transformation deals. | Year 3–4+ |
+| 4 | **IP licensing potential** | The agentic project shape components licensed to non-competing verticals. Pure-margin revenue. | Year 4–5 |
+| 5 | **Talent gravity** | Better engineers, lower acquisition cost. Reduces blended COGS. | Year 2+ |
+| 6 | **Brand / category-leader premium** | "The agentic delivery firm" becomes a buyable category; early-mover brand premium. | Year 3+ |
+| 7 | **Acquisition multiple uplift** | Capital markets price productized economics at higher EV/Revenue and EV/EBITDA multiples. | Year 3–5 |
+
+#### The strategic shift — tactical → transformation
+
+The most underweighted commercial effect of agentic delivery is what it does to the *kind of conversation* the firm has with the customer. Once a customer adopts the agentic project shape on one engagement, three things happen automatically:
+
+1. **The shape is visible to other parts of the customer's organization.** DHF, trace matrix, registry of skills — none of these stay inside one engagement.
+2. **Other divisions ask "can we have this?"** The agentic shape is portable across divisions because the shape is what's portable, not the device-specific content.
+3. **The buying conversation rises one level.** What started as a project bought by a delivery VP becomes a transformation initiative bought by a CTO or CEO.
+
+| Engagement type | Buyer | Sold on | Margin shape |
+|---|---|---|---|
+| **Tactical** *(traditional delivery)* | Director / VP of Delivery | Hours, rate, predicate work | Engineering-services band (20–35%) |
+| **Capability** *(early agentic)* | VP of Engineering / Head of Practice | Productivity uplift, audit-defensibility | High-end services band (35–50%) |
+| **Transformation** *(year-3+ agentic)* | CTO / COO / CEO | Strategic outcome, organizational change | Strategic-advisor band (50–70%) |
+
+The same engineer hours, sold into a transformation initiative at strategic-advisor prices, produce **1.5–3× the margin** of the same hours sold into a project at delivery rates. **This is the structural shift the agentic investment unlocks**, and it is the largest single contributor to the upper-band 5-year margin projection.
+
+#### Margin-contraction risks — the counter-position
+
+| # | Risk | Severity | Mitigation |
+|---|---|---|---|
+| 1 | Commoditization (everyone goes agentic) | Medium | Continuous registry reinvestment; sustained 1-year IP lead is the moat |
+| 2 | Frontier-model price increases | Low | Multi-model substrate hedges; supplier-pricing power |
+| 3 | Talent inflation on Tier 1 leads | Medium | Productivity multiplier dwarfs the wage premium; under-paying loses the flywheel |
+| 4 | Regulatory contraction (tighter AI-tooling rules) | Low / *positive* | Verification ratchet (§4.4 / §4.5) is already built in — *relative* tailwind |
+| 5 | Engagement-mix shift to rate-shopped work | Medium | Decline rate-shopped engagements; strategic-advisor positioning |
+| 6 | **Failed flywheel** — Category E (capability-building time) gets cut under budget pressure | **High** | The largest internal risk. Treat 10–15% senior time as non-negotiable. **Do not cut Category E to make a quarter.** |
+| 7 | Productivity over-passed to price | Medium | Sell outcomes, not hours (the §6.4 strategic shift) |
+
+The single largest internal risk is **#6 (failed flywheel)** because it is the only one fully under the firm's control.
+
+#### Integrated 5-year view — where margin can plausibly land
+
+| Year-5 case | International | US | Assumptions |
+|---|---|---|---|
+| **Conservative — no amplifiers** | 44–57% | 49–70% | Three first-order mechanisms only |
+| **Mid — half the amplifiers captured** | **47–60%** | **52–73%** | Account expansion + multi-year retainer + modest strategic-advisor premium |
+| **Best-case — all amplifiers active** | 50–63% | 55–75% | Full flywheel + brand premium + IP licensing |
+| **Contraction-case — flywheel cut by Year 3** | 36–48% | 41–61% | Roughly flat; competitive position eroded |
+
+The **mid case (47–60% International / 52–73% US)** is the most defensible board-pitch projection. The upper US bound is in productized-software territory; the lower International bound holds the firm's current ceiling. **The firm migrates toward software-adjacent economics — recurring, multi-year, strategic-advisor-priced, IP-leveraged — without ceasing to be a delivery firm.** That migration is the real prize, and it shows up in the *shape* of the revenue base over five years, and in the EV multiple capital markets attach to that shape.
 
 ### 6.5 The pricing-model shift — T&M to fixed-price
 
