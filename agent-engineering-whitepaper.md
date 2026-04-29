@@ -591,7 +591,7 @@ For a multi-program account, the scaffolding cost amortizes against the *program
 
 > **Audience.** Engineering and operating leadership making capability-investment decisions: CTO, CEO, head of delivery, head of practice, head of finance, head of innovation. This section converts the *agentic-first* posture into a defensible capital plan with named line items, ROI math, a path to margin expansion, and a credible route from time-and-materials to fixed-price commercial models.
 >
-> **One-line summary.** A roughly **$10,000-per-engineer-per-year** investment in agentic infrastructure returns **$50,000–$100,000-per-engineer-per-year** in delivered productivity, **and** unlocks the repeatability that lets the firm shift winnable engagements from T&M to fixed-price — which is where the structural margin uplift lives.
+> **One-line summary.** A blended hard-dollar investment of **~$2–3 K per engineer per year** (with **~$7–8 K** for the Tier 1 Agent Engineering Lead cohort and **~$1.5–2 K** for senior delivery engineers) in agentic infrastructure returns **$50,000–$100,000-per-engineer-per-year** in delivered productivity (a **17–42× ROI on the blended hard-dollar**), **and** unlocks the repeatability that lets the firm shift winnable engagements from T\&M to fixed-price — which is where the structural margin uplift lives.
 
 ### 7.1 The strategic claim — this is existential, not optional
 
@@ -616,51 +616,73 @@ Every engineering firm tells itself the same story: *we'll fund innovation from 
 
 The four failures compound. A firm that runs the customer-funded model produces shallow capability, fragmented IP, undertrained staff, and no demos — and then wonders why its agentic-delivery pitches don't land. The investment case in this section is the structural answer.
 
-### 7.3 What we are actually investing in — six categories with line-item costs
+### 7.3 What we are actually investing in — six categories, tiered by user role
 
-The investment is not a single budget; it is six categories, each with a distinct ask, a distinct cost shape, and a distinct return mechanism. Below, costs are typical-mid-range estimates for a senior agent/domain engineer in 2026 at a global delivery firm. Local labor markets shift the absolute numbers; the *ratios* hold.
+The investment is not a single budget and it is not a single per-engineer number. It tiers naturally by *who needs what*. The Agent Engineer running adversarial multi-model stacks and local-model eval suites needs much more equipment than the generalist delivery engineer who uses Copilot and Claude Pro. Pricing the whole bench at the heavy-user level overstates the ask; pricing it at the generalist level under-equips the leads. Below, all line-item costs are grounded in **public 2026 pricing** for the named tools (GitHub Copilot Business $19/seat/mo, Claude Pro $20/mo, Claude Max $100–200/mo, Cursor Pro $20/mo, Gemini for Workspace $30/mo, ChatGPT Team $25/mo) plus typical infrastructure-allocated costs.
 
-| # | Category | What it actually is | Per senior engineer / yr | At 1,000-engineer firm / yr | What it enables |
-|---|---|---|---|---|---|
-| **A** | **Universal frontier-model access** | Claude Max-tier (or equivalent) seat for every agent/domain engineer, treated like email or a laptop — not a permission-gated request | ~$2.4–3 K | ~$3 M | No engineer is rate-limited or quota-blocked; agentic work happens at the speed of thought, not the speed of procurement |
-| **B** | **High-spec hardware for local-model and adversarial-agent work** | MacBook Pros with 128 GB unified memory (or equivalent workstations) for the staff cohort that runs local models, eval suites, and privacy-bounded customer simulations | ~$1.5–2.5 K (amortized over 3 years) | ~$0.5–2 M (depending on cohort size) | Privacy-sensitive customer work that cannot leave the device; fast eval iteration; adversarial-agent stacks running in parallel without burning cloud budget |
-| **C** | **Multi-model substrate (Claude + GPT + Gemini + open-weight)** | API access to multiple frontier models *and* open-weight model serving (Llama, Mistral, Qwen) so adversarial-agent stacks work the way §C.9 requires | ~$1–2 K (subscriptions + usage) | ~$1–2 M | Layered guardrails (§C.9 Layer 3) require *different* models checking each other — one Claude validating another Claude does not catch the same class of errors as Claude validating GPT validating Gemini |
-| **D** | **MCP infrastructure into corporate tools** | Engineered MCP integration into Google Drive, Google Docs, Confluence, Jira, Slack, GitHub, internal SharePoint, plus security review and ongoing IT support | ~$1–2 K (allocated infra) | ~$1–2 M + dedicated IT staff | Agents read *real* corporate context — the proposal that won the last deal, the deck the customer sent, the technical spec under review — not synthetic substitutes; engagement onboarding stops restarting from zero each time |
-| **E** | **Capability-building time** *(the structural investment)* | 10–15% of senior agent/domain engineer time *deliberately* held back from billable work for skill authoring, registry maintenance, advisor design, lessons promotion, customer-IP harvest into reusable form | ~$25–35 K per senior engineer (loaded-cost time) | ~$15–25 M depending on senior cohort size | The reusable IP exists at all; the registry compounds; the firm's IP grows independent of any single engagement |
-| **F** | **IT and operating support for agentic workflows** | Dedicated IT roles trained on agentic systems, security-review processes that don't take 6 weeks per MCP server, operating playbooks, onboarding flows for new agentic engineers | ~$1 K (allocated) per engineer | ~$1 M plus 1–2 dedicated FTE per ~100 engineers | An agentic engineer waiting six weeks for IT to approve an MCP server is functionally not agentic. This category removes the friction that quietly kills the other five. |
+#### The three user tiers
 
-**Two ways to read the total.** Hard-dollar (categories A–D + F, the line items a CFO can move on a budget): **roughly $8–10 K per senior engineer per year**, and **$6–10 M per year at the 1,000-engineer firm**. Total-cost including the structural capability-building time (category E): **roughly $33–45 K per senior engineer per year**, **$22–35 M per year at the 1,000-engineer firm**. The hard-dollar figure is what makes this possible; the structural figure is what makes it durable.
-
-### 7.4 The ROI per engineer — the $10 K → $100 K case in plain math
-
-The user-facing claim — *roughly $10,000 invested per engineer returns $100,000 in productivity* — is the conservative-mid case under standard assumptions. Here is the math.
-
-**Investment side, hard-dollar, per senior engineer, per year:**
-
-| Line item | Annual cost |
-|---|---|
-| Frontier-model seat (Claude Max-tier or equivalent) | $2,400 |
-| Multi-model API allocation (Claude + GPT + Gemini + open-weight, usage-based) | $1,500 |
-| Hardware uplift (high-spec laptop amortized over 3 years) | $2,000 |
-| MCP / IT-allocated infrastructure | $1,500 |
-| Subscription tooling (eval platforms, registry hosting, observability) | $1,500 |
-| Buffer | $1,100 |
-| **Total hard-dollar investment per senior engineer per year** | **≈ $10,000** |
-
-**Return side, per senior engineer, per year:**
-
-A senior agent/domain engineer at a typical global delivery firm carries a loaded annual cost of **$200,000–$300,000** depending on geography and seniority mix. Productivity uplift from properly-equipped agentic delivery is conservatively **30–50 %** on the share of work that is automatable or assistive (drafting, reviewing, searching, structuring, testing, documenting). Public studies of even narrow agentic uplift in coding alone (GitHub Copilot, Cursor) report 30–55 % gains; agentic delivery in the *full* PDLC scope this paper describes covers a much broader work surface and should match or exceed the narrow-coding number.
-
-| Productivity uplift assumption | Direct delivered-value gain (on a $250 K-loaded engineer) | ROI on $10 K hard-dollar investment |
+| Tier | Description | Typical share of senior bench |
 |---|---|---|
-| **Conservative — 20 %** | $50,000 | **5×** |
-| **Mid-conservative — 30 %** | $75,000 | **7.5×** |
-| **Mid — 40 %** | $100,000 | **10×** |
-| **Aggressive — 50 %** | $125,000 | **12.5×** |
+| **Tier 1 — Agent Engineering Lead** | Authors skills, designs advisor topologies, runs adversarial multi-model validation, runs local models for privacy-sensitive customer work | **10–15%** |
+| **Tier 2 — Senior Delivery Engineer** | Uses agentic tooling daily on customer engagements; consumes the registry, contributes lessons | **40–50%** |
+| **Tier 3 — Generalist Engineer** | Uses one AI seat for routine assistance; benefits from the firm's reusable IP without authoring it | **35–45%** |
 
-A 5–10× ROI is the conservative reading. A 10–15× ROI is the realistic mid-case. Either way, the investment is unambiguously accretive, and the floor is *higher* than almost any alternative use of the same capital — including hiring, marketing, or M&A.
+#### Hard-dollar costs by tier (2026 pricing)
 
-The same math applies at the firm scale: **a $10 M hard-dollar annual investment across a 1,000-engineer bench returns $50–125 M in delivered productivity per year**, before any of the second-order effects (margin expansion, fixed-price conversion, talent retention) that compound on top.
+| # | Category | Tier 1 — Lead | Tier 2 — Senior Delivery | Tier 3 — Generalist |
+|---|---|---|---|---|
+| **A** | Frontier-model seats | Claude Max ($1.2–2.4 K) + Copilot Business ($228) + Gemini ($360) + GPT Team ($300) for cross-model experimentation = **~$2.1–3.3 K** | Claude Pro ($240) + Copilot ($228) = **~$470** | One AI seat (Copilot OR Claude Pro): **~$240** |
+| **B** | Hardware uplift (3-yr amortized) | High-spec laptop (128 GB Mac Pro): **~$1.5 K/yr** | Standard laptop, no uplift: **$0** | Standard laptop: **$0** |
+| **C** | Multi-model API budget for adversarial validation | **~$1–1.5 K** | Occasional access: **~$200–400** | Minimal: **~$100** |
+| **D** | MCP infrastructure into corporate tools (allocated) | Full integration: **~$1 K** | Shared: **~$500** | Shared: **~$300** |
+| **E** | Capability-building time *(structural; 10–15% of senior time held back from billable)* | **~$25–35 K loaded-cost-time** | **~$15–20 K loaded-cost-time** for senior cohort engaged in registry use | Not allocated |
+| **F** | Subscription tooling (eval platforms, registry, observability) | **~$1 K** | Shared: **~$200** | Minimal: **~$100** |
+| **Tier hard-dollar subtotal (A+B+C+D+F)** | | **~$7–8 K/yr** | **~$1.5–2 K/yr** | **~$0.5–0.8 K/yr** |
+
+#### Blended firm-wide cost — the number a CFO actually moves
+
+| Mix | Per-engineer hard-dollar (blended) | At a 1,000-engineer firm |
+|---|---|---|
+| **15% Tier 1 / 45% Tier 2 / 40% Tier 3** | **~$2–3 K/yr blended hard-dollar** | **~$2–3 M/yr blended** |
+| Plus structural capability-building time on the senior cohort (E) | + ~$15–25 K/yr per senior engineer in scope | + ~$10–15 M/yr depending on senior cohort size |
+
+The hard-dollar figure (~$2–3 K/yr blended) is what unblocks the bench; it is the number to put in front of finance first. The structural capability-building time (Category E) is the larger investment but is treated separately because it is an *opportunity cost* on senior time, not a discrete budget line — and because the productivity uplift on those very senior engineers (the heaviest beneficiaries of the agentic shape) substantially offsets the time held back.
+
+#### A note on the "every engineer should have a Claude Max account" framing
+
+Claude Max-tier (or equivalent) is the right ask for the **Tier 1 Agent Engineering Lead** cohort — the people who actually need adversarial multi-model coverage, long-context reasoning, and uncapped usage to run the heavy work the rest of the bench consumes. **Trying to give every engineer a Claude Max account at $100–200/mo is overspending.** The right shape is: Claude Max for Tier 1, Claude Pro + Copilot (or one of GPT Team / Cursor / Gemini) for Tier 2, one seat for Tier 3. That puts ≥1 frontier-model seat in front of every engineer (the table-stakes "AI access at the same level as email" claim) without paying enterprise-tier prices for engineers whose work doesn't yet require the heavy tier.
+
+> **External validation.** Public statements from AI-native firms support this tiered framing. NVIDIA's CEO has been explicit that aggressive per-engineer AI tooling spend is dramatically underpriced relative to productivity returns; AI-native software companies have been spending in the low single-digit thousands per generalist engineer and high single-digit thousands per AI-engineering specialist. The ratios in the tier table above are aligned with that public direction. *[Specific Jensen Huang figures and AI-native firm internal-spend numbers should be verified against primary sources before external citation.]*
+
+### 7.4 The ROI per engineer — in plain math, against the tiered investment
+
+The investment side is the tiered model from §7.3: **~$2–3 K/yr blended hard-dollar per engineer**, with Tier 1 leads at ~$7–8 K/yr and Tier 3 generalists at ~$0.5–0.8 K/yr.
+
+The return side is unchanged: a senior engineer at a typical global delivery firm carries a loaded annual cost of **$200,000–$300,000**. Productivity uplift from properly-equipped agentic delivery is conservatively **30–50%** on the share of work that is automatable or assistive (drafting, reviewing, searching, structuring, testing, documenting). Public studies of even the narrowest agentic case (coding alone with GitHub Copilot) report 30–55% gains [1]; agentic delivery in the full PDLC scope covers a much broader work surface and should match or exceed.
+
+#### ROI sensitivity — blended hard-dollar investment
+
+| Productivity uplift on $250 K-loaded engineer | Direct delivered-value gain | ROI on **~$3 K** blended hard-dollar investment |
+|---|---|---|
+| **Conservative — 20%** | $50,000 | **17×** |
+| **Mid-conservative — 30%** | $75,000 | **25×** |
+| **Mid — 40%** | $100,000 | **33×** |
+| **Aggressive — 50%** | $125,000 | **42×** |
+
+#### ROI sensitivity — Tier 1 (Agent Engineering Lead) hard-dollar investment
+
+The Tier 1 cohort is a smaller share but produces most of the reusable IP. Their ROI math is what the rest of the bench's productivity is built on:
+
+| Productivity uplift on a Tier 1 lead | Direct delivered-value gain | ROI on **~$8 K** Tier 1 hard-dollar investment |
+|---|---|---|
+| **Conservative — 30%** | $75,000 | **9×** |
+| **Mid — 50%** | $125,000 | **16×** |
+| **Aggressive (typical for Tier 1) — 70%** | $175,000 | **22×** |
+
+A 17–42× ROI on the blended investment is unambiguously accretive — the floor is *higher* than almost any alternative use of the same capital. **At the firm scale, a $2–3 M hard-dollar annual investment across a 1,000-engineer bench returns $50–125 M in delivered productivity per year** — before any second-order effects (margin expansion, fixed-price conversion, talent retention) that compound on top.
+
+> **Why the previous "$10 K per engineer" framing was conservative-too-high.** Earlier drafts of this paper used a uniform $10 K/engineer/yr hard-dollar number. That figure is correct for the Tier 1 cohort (Agent Engineering Leads). It overstates the cost for the ~85% of the bench that does not yet need Claude Max, dedicated 128 GB workstations, or large multi-model API budgets. The tiered model in §7.3 is the more defensible framing: equip the Tier 1 cohort heavily, equip Tier 2 and Tier 3 with table-stakes seats, and the blended firm-wide hard-dollar number lands in the $2–3 K range.
 
 ### 7.5 Margin expansion — where the second-order value lives
 
@@ -707,8 +729,8 @@ The first-order productivity gain, the margin expansion, the pricing-model shift
 
 ```mermaid
 flowchart LR
-    INV["<b>Investment</b><br/>~$10K/eng/yr hard<br/>+ 10–15% time"]
-    PROD["<b>Productivity</b><br/>30–50% uplift<br/>10× ROI on hard cost"]
+    INV["<b>Investment</b><br/>$2-3K blended<br/>$7-8K Tier 1<br/>+ senior time"]
+    PROD["<b>Productivity</b><br/>30–50% uplift<br/>17–42× ROI on hard cost"]
     REPEAT["<b>Repeatability</b><br/>versioned skills<br/>idempotent workflows<br/>spec primacy"]
     FIXED["<b>Fixed-price</b><br/>40–60% gross margin<br/>vs 20–35% T&amp;M"]
     IP["<b>Reusable IP</b><br/>compounds across<br/>customer programs"]
@@ -755,9 +777,9 @@ Each phase is independently fundable and produces visible business signal before
 
 ---
 
-For a roughly **$10,000-per-engineer-per-year** hard-dollar investment, the firm gains:
+For a blended hard-dollar investment of **~$2–3 K per engineer per year** (with **~$7–8 K** for Tier 1 Agent Engineering Leads and **~$1.5–2 K** for senior delivery engineers), the firm gains:
 
-- A **5–10× productivity multiple** on the engineering bench.
+- A **17–42× ROI** on the blended hard-dollar investment.
 - The structural repeatability that converts T\&M engagements to **fixed-price**.
 - A **7–14 percentage-point gross-margin expansion** within three years.
 - The **right to compete at all** in the deals that 2026 customers are asking for.
