@@ -1066,12 +1066,11 @@ Three things follow from this framing immediately, all of which the corpus bears
 ```mermaid
 flowchart LR
     subgraph CONDUCTOR["The Conductor — the lead"]
-      direction TB
-      EM["<b>Calibration Mode</b><br/>(Agent Engineer)<br/>listens for drift"]
-      DM["<b>Domain Mode</b><br/>(Domain Expert)<br/>knows the piece"]
+      EM["<b>Calibration Mode</b><br/>Agent Engineer<br/>listens for drift"]
+      DM["<b>Domain Mode</b><br/>Domain Expert<br/>knows the piece"]
     end
     SCORE["<b>Score</b><br/>specs · skills<br/>rules · rubrics"]
-    ORCH["<b>Orchestra</b><br/>model + advisors<br/>+ panels"]
+    ORCH["<b>Orchestra</b><br/>model · advisors<br/>panels"]
     PERF["<b>Performance</b><br/>artifact for<br/>the customer"]
     REC["<b>Recording</b><br/>audit trail · sync<br/>lessons · digest"]
 
