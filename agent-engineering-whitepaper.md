@@ -603,9 +603,9 @@ The traditional model — *win workload → bill hours → fund innovation from 
 
 This section makes the investment case in line items, with ROI, and with explicit attention to the two commercial mechanisms that pay the investment back: *productivity uplift* (immediate) and *T&M-to-fixed-price conversion* (compounding).
 
-### 7.2 The trap of customer-funded innovation
+### 7.2 Why customer-funded innovation is unlikely to keep pace
 
-Every engineering firm tells itself the same story: *we'll fund innovation from billable margin, and we'll let customer engagements be the proving ground.* The story is appealing — it externalizes the cost. It also fails for four structural reasons that show up sequentially.
+Every engineering firm tells itself the same story: *we'll fund innovation from billable margin, and we'll let customer engagements be the proving ground.* The story is appealing — it externalizes the cost. It also has a low probability of succeeding at the pace the inflection demands, for four structural reasons that compound. None of these are individually fatal; the compounding effect is what makes catching up difficult once a competitor has a 12–18 month flywheel lead.
 
 | # | Failure mode | What it looks like in practice |
 |---|---|---|
@@ -705,7 +705,6 @@ Most global delivery firms operate closer to the **15% US / 85% International** 
 
 **At the firm scale, a $3–3.5 M annual hard-dollar investment across a 1,000-engineer delivery bench returns $19–48 M in delivered productivity per year**, before any second-order effects (margin expansion, fixed-price conversion, talent retention) that compound on top. The total economic case strengthens further once we factor in the GTM/Corporate productivity uplift (Tier 3, 80% US-mix, with very small per-person investment producing high per-person ROI on US-loaded labor).
 
-> **Why the earlier framing was overconfident.** Prior versions of this section assumed (a) every engineer needed Tier 1 equipment and (b) every engineer carried a US loaded cost. Both assumptions inflate the case. The corrected framing — tiered investment + geo-blended loaded cost — produces a 6–16× blended ROI and a $19–48 M firm-scale annual return. Smaller, but verifiable in front of any auditor or finance team.
 
 ### 7.5 Margin expansion — where the second-order value lives
 
@@ -746,18 +745,35 @@ The point of including the benchmarks is twofold. First, **our current margins (
 
 #### 7.5.4 The five-year margin trajectory
 
-Margin expansion is not a single-year event. It is a year-by-year flywheel where each successive year compounds the prior. The trajectory below is *first-order only* — it counts the three mechanisms above and excludes the second-order amplifiers (§7.5.5) and the strategic shift (§7.5.6) which both add upside.
+Margin expansion is **not linear**. The technology, the spec corpus, the registry, and the customer-relationship deepening all compound — each successive year lifts off a higher base than the year before. A linear projection systematically understates years 3–5. The trajectory below counts the three first-order mechanisms only (productivity, IP compounding, premium pricing) and excludes the second-order amplifiers (§7.5.5) and the strategic shift (§7.5.6) which add further upside.
 
-| Year | International band (35–47% start) | US band (40–60% start) | What's active that year |
+| Year | International band (35–47% start) | US band (40–60% start) | What's active that year — and why the curve compounds |
 |---|---|---|---|
 | **Year 0 (baseline)** | 35–47% | 40–60% | — |
-| **Year 1** | 36–49% (+1–2 pp) | 41–62% (+1–2 pp) | Mostly productivity gains absorbed in delivery; modest IP build; first reference engagements |
-| **Year 2** | 38–51% (+3–4 pp) | 43–64% (+3–4 pp) | Registry compounding starts; first fixed-price wins; premium-pricing on regulated work |
-| **Year 3** | 40–53% (+5–6 pp) | 45–66% (+5–6 pp) | Bench fully equipped; repeatability mainstream across engagements; productized accelerators in market |
-| **Year 4** | 42–55% (+7–8 pp) | 47–68% (+7–8 pp) | Account expansion (transactional → transformation); strategic-advisor positioning; multi-year contracts |
-| **Year 5** | 44–57% (+9–10 pp) | 49–70% (+9–10 pp) | Full flywheel; the firm operates at productized-software-adjacent economics |
+| **Year 1** | 36–49% (+1–2 pp) | 41–62% (+1–2 pp) | Productivity gains absorbed mostly in delivery; modest IP build; first reference engagements. The flywheel has not yet started spinning. |
+| **Year 2** | 39–52% (+4–5 pp) | 44–65% (+4–5 pp) | Registry crosses 30–50 reusable skills; first fixed-price wins land; premium-pricing on regulated work begins to show. Each new engagement starts from a higher IP base than the last. |
+| **Year 3** | 44–57% (+9–10 pp) | 49–70% (+9–10 pp) | **Compounding takeoff.** Bench fully equipped; repeatability mainstream across engagements; productized accelerators in market. Marginal cost on new engagements drops sharply because the registry now covers most recurring work. |
+| **Year 4** | 48–62% (+13–15 pp) | 53–75% (+13–15 pp) | Account expansion converts top customers from project to division-wide rollout; multi-year retainers replace transactional engagements; the strategic-advisor positioning prices in. |
+| **Year 5** | 53–67% (+18–20 pp) | 58–80% (+18–20 pp) | Full flywheel; transformation deals at top accounts; selected IP-licensing revenue. The firm operates at productized-software-adjacent economics across both geos. |
 
-By **Year 5** the upper US bound (70%) is firmly in productized-software territory; the lower International bound (44%) is comfortably above HCLS-services average. **The firm becomes structurally a different kind of business** — not because margins doubled, but because the *shape* of the revenue (recurring, multi-year, strategic-advisor-priced, IP-leveraged) is closer to a software business than to a delivery business.
+##### Assumptions beneath the trajectory
+
+The compounding curve above holds *only* if the following are sustained. Each is under firm control; each is a non-negotiable line item.
+
+| # | Assumption | Why it matters |
+|---|---|---|
+| 1 | **Capability-building time (Category E in §7.3) held at 10–15% of senior cohort throughout, never cut for quarterly margin pressure.** | The registry is what compounds. Cut Category E and the curve flattens by Year 3. |
+| 2 | **Registry compounds across at least 3–5 customer programs per year by Year 2.** | Diversity of context is what surfaces the reusable patterns. A registry built against one customer is engagement IP, not firm IP. |
+| 3 | **At least one transformation-tier engagement closed by Year 3** (CTO/COO-level deal, organizational rollout, multi-year scope). | The strategic-advisor margin band only opens once the firm has a credible reference. |
+| 4 | **Account expansion from one division to three or more divisions on top accounts by Year 4.** | Wallet-share is what carries the upper-band margin growth from Year 4 onward. |
+| 5 | **Multi-year retainer model formalized by Year 3** with at least 20% of revenue under retainer by Year 4. | Recurring-revenue mix is what shifts the firm toward software-adjacent EV multiples. |
+| 6 | **Tier 1 talent retention >80% annually** for the cohort that authors the registry. | A Tier 1 lead that leaves takes ~6 months of compounding registry contributions with them. |
+| 7 | **Competitive lag of ≥12 months** on registry coverage in named customer domains. | The moat is timing. A competitor 18 months behind is a generation behind on compounded IP. |
+| 8 | **No mass-market commoditization of the agentic delivery category** before Year 4 (i.e., the firm runs the flywheel for at least 3 years before market saturation). | Plausible given current adoption rates; the §7.5.7 contraction risks address what happens if this fails. |
+
+If any one of these fails, the curve drops back toward linear-flat and the upper bands become unreachable. If all eight hold, the upper bands of Year 5 are achievable. The mid case in §7.5.8 represents 5–6 of these holding fully and 2–3 partial.
+
+By **Year 5** the upper US bound (~80%) sits firmly in productized-software territory; the lower International bound (~53%) is comfortably above the firm's current ceiling and well above any engineering-services benchmark. **The firm becomes structurally a different kind of business** — not because margins doubled, but because the *shape* of the revenue (recurring, multi-year, strategic-advisor-priced, IP-leveraged) is closer to a software business than to a delivery business.
 
 #### 7.5.5 Second-order amplifiers — the upsides not yet priced in
 
@@ -789,7 +805,7 @@ Agentic delivery is structural. Once a customer adopts the agentic project shape
 
 | Engagement type | Buyer | Sold on | Margin shape |
 |---|---|---|---|
-| **Tactical** *(traditional delivery firm)* | Director / VP of Delivery | Hours, rate, predicate work | Engineering-services band (20–35%) |
+| **Tactical** *(traditional delivery firm)* | Director / VP of Delivery | Hours, rate, predicate work | Firm T\&M band: ~30–42% Int'l / ~35–50% US (industry-mainstream T\&M ~20–35%) |
 | **Capability** *(early agentic engagements)* | VP of Engineering / Head of Practice | Productivity uplift, audit-defensibility | High-end engineering-services band (35–50%) |
 | **Transformation** *(year-3+ agentic engagements)* | CTO / COO / CEO | Strategic outcome, organizational change | Strategic-advisor band (50–70%) |
 
@@ -817,12 +833,12 @@ Combining the 5-year trajectory + second-order amplifiers (− contraction risks
 
 | Year-5 case | International band | US band | What it assumes |
 |---|---|---|---|
-| **Conservative — no amplifiers, no transformation premium** | **44–57%** | **49–70%** | Three first-order mechanisms compound; modest strategic positioning |
-| **Mid — half the amplifiers captured, modest transformation premium** | **47–60%** | **52–73%** | Account expansion + multi-year retainer + early strategic-advisor premium captured on top accounts |
-| **Best-case — all amplifiers active, IP licensing in adjacent verticals, full transformation premium** | **50–63%** | **55–75%** | Full flywheel + brand premium + selected productized-IP licensing + transformation engagements at top-tier accounts |
-| **Contraction-case — flywheel cut by Year 3** | **36–48%** | **41–61%** | Roughly flat; competitive position eroded; back to commodity |
+| **Conservative — first-order mechanisms only, no amplifiers** | **53–67%** | **58–80%** | Compounding curve plays out; eight assumptions in §7.5.4 hold; no transformation deals priced in |
+| **Mid — half the amplifiers captured, modest transformation premium** | **57–70%** | **62–82%** | Account expansion + multi-year retainer + early strategic-advisor premium captured on top accounts |
+| **Best-case — all amplifiers active, IP licensing, full transformation premium** | **60–73%** | **65–85%** | Full flywheel + brand premium + selected productized-IP licensing + transformation engagements at top-tier accounts |
+| **Contraction-case — flywheel cut by Year 3 (Category E reduced or eliminated)** | **38–50%** | **43–63%** | Linear-flat curve; competitive position eroded; back toward commodity |
 
-The **mid case (47–60% International, 52–73% US)** is the most defensible 5-year projection for a board pitch. The upper US bound is in productized-software territory; the lower International bound holds the firm's current ceiling. In the mid case, **the firm has structurally migrated toward software-adjacent economics — recurring, multi-year, strategic-advisor-priced, IP-leveraged — without ceasing to be a delivery firm.**
+The **mid case (57–70% International, 62–82% US)** is the most defensible 5-year projection for a board pitch. The upper US bound is squarely in productized-software territory; the International band has fully cleared the firm's current ceiling and entered software-adjacent economics. In the mid case, **the firm has structurally migrated toward software-adjacent economics — recurring, multi-year, strategic-advisor-priced, IP-leveraged — without ceasing to be a delivery firm.**
 
 That migration is the real prize, and it does not appear in any single year's P&L. It appears in the *shape* of the revenue base over five years, and in the EV multiple capital markets attach to that shape.
 
@@ -860,7 +876,7 @@ flowchart LR
     INV["<b>Investment</b><br/>$3K blended<br/>$8K Tier 1<br/>+ senior time"]
     PROD["<b>Productivity</b><br/>30–50% uplift<br/>6–16× geo-blended ROI"]
     REPEAT["<b>Repeatability</b><br/>versioned skills<br/>idempotent workflows<br/>spec primacy"]
-    FIXED["<b>Fixed-price</b><br/>40–60% gross margin<br/>vs 20–35% T&amp;M"]
+    FIXED["<b>Fixed-price</b><br/>50–70% gross margin<br/>vs ~30–42% Int'l<br/>and ~35–50% US T and M"]
     IP["<b>Reusable IP</b><br/>compounds across<br/>customer programs"]
     MARGIN["<b>Margin expansion</b><br/>38% → 45–52%<br/>over 3 years"]
 
@@ -909,7 +925,7 @@ For a blended hard-dollar investment of **~$3 K per delivery engineer per year**
 
 - A **6–16× ROI** at a typical 15% US / 85% International delivery mix (substantially higher for US-heavy firms).
 - The structural repeatability that converts T\&M engagements to **fixed-price**.
-- A **5–10 percentage-point gross-margin expansion** within three years.
+- A **9–10 pp gross-margin expansion by Year 3 and 18–20 pp by Year 5** (compounding, not linear).
 - The **right to compete at all** in the deals that 2026 customers are asking for.
 
 The cost of *not* investing is **$15–50 M per year** of foregone margin and lost deals at the 1,000-engineer firm scale, plus a compounding capability gap that widens as time passes.
@@ -1050,21 +1066,21 @@ Three things follow from this framing immediately, all of which the corpus bears
 ```mermaid
 flowchart LR
     subgraph CONDUCTOR["The Conductor — the lead"]
-        EM["<b>Calibration Mode</b><br/>(Agent Engineer)<br/>listens for drift"]
-        DM["<b>Domain Mode</b><br/>(Domain Expert)<br/>knows the piece"]
+      direction TB
+      EM["<b>Calibration Mode</b><br/>(Agent Engineer)<br/>listens for drift"]
+      DM["<b>Domain Mode</b><br/>(Domain Expert)<br/>knows the piece"]
     end
-    SCORE["<b>The Score</b><br/>specs · skills · rules · rubrics<br/>(versioned, addressable, shippable)"]
-    ORCH["<b>The Orchestra</b><br/>model + advisors + panels<br/>(capable, fast, fungible)"]
-    PERF["<b>The Performance</b><br/>artifact delivered to the customer"]
-    REC["<b>The Recording</b><br/>audit trail · sync log · lessons · digest"]
+    SCORE["<b>Score</b><br/>specs · skills<br/>rules · rubrics"]
+    ORCH["<b>Orchestra</b><br/>model + advisors<br/>+ panels"]
+    PERF["<b>Performance</b><br/>artifact for<br/>the customer"]
+    REC["<b>Recording</b><br/>audit trail · sync<br/>lessons · digest"]
 
-    CONDUCTOR -- "amends (Domain Mode)" --> SCORE
-    CONDUCTOR -- "cues (both modes)" --> ORCH
-    SCORE -- "directs" --> ORCH
-    ORCH -- "produces" --> PERF
-    PERF -- "filed in" --> REC
-    REC -. "sharpens (Calibration Mode)" .-> SCORE
-    REC -. "trains the next conductor" .-> CONDUCTOR
+    CONDUCTOR --> SCORE
+    SCORE --> ORCH
+    ORCH --> PERF
+    PERF --> REC
+    REC -.-> SCORE
+    REC -.-> CONDUCTOR
 ```
 
 Two loops are visible in the picture, and both are load-bearing. **The fast loop** runs left-to-right every session — conductor cues the orchestra against the score, the performance lands, the recording captures it. **The slow loop** runs back from the recording — corrections sharpen the score, lessons train the next conductor, and the score becomes the durable IP that crosses programs through the registry. A team that operates only the fast loop produces good performances tonight and the same orchestra tomorrow; a team that operates both loops produces a *bench* that gets stronger every quarter.

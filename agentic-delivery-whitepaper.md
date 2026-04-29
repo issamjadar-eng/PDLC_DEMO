@@ -20,7 +20,7 @@ This paper makes three arguments and one ask.
 
 **Argument 2 — The differentiator is the *project shape*, not the model.** Most "agentic" claims in the market are code-completion vendors rebranded, chatbots bolted onto delivery, or vendor-locked platforms. The durable differentiator is an **agentic project shape** — a versioned, audit-trailed, domain-ground operating model that lives in the customer's repository, raises the quality bar before harvesting productivity, and improves itself over time through a registry-mediated feedback loop. *Specifications* outrank model choice. *Scaffolding* outranks single-shot generation. *Layered guardrails* outrank any single safety mechanism. *Cross-surface corrections* (codified domain knowledge) outrank tactical fixes.
 
-**Argument 3 — The commercial impact is structural, not productivity-tweak.** A blended hard-dollar investment of **~$3 K per delivery engineer per year** — Tier 1 Agent Engineering Leads at **~$8 K** (Claude Max 200 + multi-model + 128 GB workstation), Tier 2 senior delivery at **~$2.5–3 K** (Claude Max 100 minimum + Copilot Business), GTM/Corporate at one AI seat — returns **6–16× ROI** on a geo-blended loaded cost of ~$95 K per delivery engineer (typical 15% US / 85% International delivery mix; substantially higher for US-heavy firms). More importantly, the same investment unlocks **repeatability**, which is the structural prerequisite for shifting engagements from time-and-materials to fixed-price. Fixed-price-with-repeatability operates at **40–60% gross margin** versus 20–35% for T\&M. The compounding effect produces **a 5–10 percentage-point gross-margin expansion within three years** at firms that invest at the inflection.
+**Argument 3 — The commercial impact is structural, not productivity-tweak.** A blended hard-dollar investment of **~$3 K per delivery engineer per year** — Tier 1 Agent Engineering Leads at **~$8 K** (Claude Max 200 + multi-model + 128 GB workstation), Tier 2 senior delivery at **~$2.5–3 K** (Claude Max 100 minimum + Copilot Business), GTM/Corporate at one AI seat — returns **6–16× ROI** on a geo-blended loaded cost of ~$95 K per delivery engineer (typical 15% US / 85% International delivery mix; substantially higher for US-heavy firms). More importantly, the same investment unlocks **repeatability**, which is the structural prerequisite for shifting engagements from time-and-materials to fixed-price. Fixed-price-with-repeatability lifts gross margin meaningfully above current T\&M baselines (firm averages ~30–42% International / ~35–50% US for T\&M, vs ~50–70% for fixed-price-with-repeatability). The compounding effect produces **a 9–10 percentage-point gross-margin expansion by Year 3 and 18–20 pp by Year 5** (compounding curve, not linear) at firms that invest at the inflection.
 
 **The ask.** Engineering leadership at delivery firms must front-fund this capability. The traditional model of *win workload → bill hours → fund innovation from margin spillover* is too slow for this transition. The cost of inaction at a 1,000-engineer firm is **$15–50 M per year** in foregone margin and lost deals within 24 months of the inflection. **You cannot innovate while waiting for customers to pay you to innovate.**
 
@@ -190,21 +190,21 @@ A useful frame for the role of the human in an agentic system is *conducting, no
 ```mermaid
 flowchart LR
     subgraph CONDUCTOR["The Conductor — the lead"]
-        EM["<b>Calibration Mode</b><br/>(Agent Engineer)<br/>listens for drift"]
-        DM["<b>Domain Mode</b><br/>(Domain Expert)<br/>knows the piece"]
+      direction TB
+      EM["<b>Calibration Mode</b><br/>(Agent Engineer)<br/>listens for drift"]
+      DM["<b>Domain Mode</b><br/>(Domain Expert)<br/>knows the piece"]
     end
-    SCORE["<b>The Score</b><br/>specs · skills · rules · rubrics<br/>(versioned, addressable, shippable)"]
-    ORCH["<b>The Orchestra</b><br/>model + advisors + panels<br/>(capable, fast, fungible)"]
-    PERF["<b>The Performance</b><br/>artifact delivered to the customer"]
-    REC["<b>The Recording</b><br/>audit trail · sync log · lessons · digest"]
+    SCORE["<b>Score</b><br/>specs · skills<br/>rules · rubrics"]
+    ORCH["<b>Orchestra</b><br/>model + advisors<br/>+ panels"]
+    PERF["<b>Performance</b><br/>artifact for<br/>the customer"]
+    REC["<b>Recording</b><br/>audit trail · sync<br/>lessons · digest"]
 
-    CONDUCTOR -- "amends (Domain Mode)" --> SCORE
-    CONDUCTOR -- "cues (both modes)" --> ORCH
-    SCORE -- "directs" --> ORCH
-    ORCH -- "produces" --> PERF
-    PERF -- "filed in" --> REC
-    REC -. "sharpens (Calibration Mode)" .-> SCORE
-    REC -. "trains the next conductor" .-> CONDUCTOR
+    CONDUCTOR --> SCORE
+    SCORE --> ORCH
+    ORCH --> PERF
+    PERF --> REC
+    REC -.-> SCORE
+    REC -.-> CONDUCTOR
 ```
 
 Three things follow:
@@ -316,7 +316,7 @@ The two examples above are samples from a larger pattern set. Across the corpus,
 
 This section converts the strategic posture of *agentic-first delivery* into a defensible capital plan with named line items, ROI math, a path to margin expansion, and a credible route from time-and-materials to fixed-price commercial models.
 
-### 6.1 Why customer-funded innovation does not work
+### 6.1 Why customer-funded innovation is unlikely to keep pace
 
 Every engineering firm tells itself the same story: *we'll fund innovation from billable margin, and we'll let customer engagements be the proving ground.* The story is appealing — it externalizes the cost. It also fails for four structural reasons:
 
@@ -402,7 +402,6 @@ A 100% US delivery firm sees substantially higher per-engineer ROI because loade
 
 **At the firm scale, a $3–3.5 M annual hard-dollar investment across a 1,000-engineer delivery bench returns $19–48 M in delivered productivity per year**, before any second-order effects (margin expansion, fixed-price conversion, talent retention, GTM/Corporate productivity).
 
-> **Why earlier framing was overconfident.** Prior versions of this section assumed (a) every engineer needed Tier 1 equipment and (b) every engineer carried a US loaded cost. Both inflate the case. The corrected framing — tiered investment + geo-blended loaded cost — produces a 6–16× ROI and a $19–48 M firm-scale annual return. Smaller, but verifiable in front of any auditor or finance team.
 
 ### 6.4 Margin expansion — where the second-order value lives
 
@@ -433,16 +432,33 @@ Productivity uplift is the *first-order* return. The *second-order* return is ma
 
 The firm's current margins already sit at the high end of engineering services — *above* IT-mainstream and Automotive, *at or above* HCLS-services average. The pitch is "push from a defensible base toward productized-software band," not "climb out of a commodity hole."
 
-#### The five-year margin trajectory — first-order only
+#### The five-year margin trajectory — first-order only, compounding curve
 
-| Year | International band | US band | What's active |
+Margin expansion is **not linear**. The technology, the spec corpus, the registry, and customer-relationship deepening all compound — each successive year lifts off a higher base than the year before.
+
+| Year | International band | US band | Why the curve compounds |
 |---|---|---|---|
 | **Year 0 (baseline)** | 35–47% | 40–60% | — |
-| **Year 1** | 36–49% (+1–2 pp) | 41–62% | Productivity gains, modest IP build |
-| **Year 2** | 38–51% (+3–4 pp) | 43–64% | Registry compounding starts, first fixed-price wins |
-| **Year 3** | 40–53% (+5–6 pp) | 45–66% | Repeatability mainstream, productized accelerators in market |
-| **Year 4** | 42–55% (+7–8 pp) | 47–68% | Account expansion, strategic-advisor positioning, multi-year contracts |
-| **Year 5** | 44–57% (+9–10 pp) | 49–70% | Full flywheel; productized-software-adjacent economics |
+| **Year 1** | 36–49% (+1–2 pp) | 41–62% | Productivity gains absorbed in delivery; flywheel has not yet started spinning |
+| **Year 2** | 39–52% (+4–5 pp) | 44–65% | Registry crosses 30–50 reusable skills; first fixed-price wins; each new engagement starts from a higher IP base |
+| **Year 3** | 44–57% (+9–10 pp) | 49–70% | **Compounding takeoff.** Bench fully equipped; repeatability mainstream; marginal cost on new engagements drops sharply |
+| **Year 4** | 48–62% (+13–15 pp) | 53–75% | Account expansion to division-wide rollouts; multi-year retainers replace transactional engagements; strategic-advisor positioning prices in |
+| **Year 5** | 53–67% (+18–20 pp) | 58–80% | Full flywheel; transformation deals; selected IP-licensing revenue. Productized-software-adjacent economics across both geos |
+
+##### Assumptions beneath the trajectory
+
+The compounding curve above holds *only* if the following are sustained — each is under firm control:
+
+1. **Capability-building time (Category E in §6.2) held at 10–15% of senior cohort throughout** — never cut for quarterly margin pressure.
+2. **Registry compounds across 3–5 customer programs per year** by Year 2.
+3. **At least one transformation-tier engagement closed by Year 3** (CTO/COO-level deal, multi-year scope).
+4. **Account expansion to 3+ divisions on top accounts by Year 4.**
+5. **Multi-year retainer model formalized by Year 3**; 20%+ of revenue under retainer by Year 4.
+6. **Tier 1 talent retention >80% annually** for the cohort that authors the registry.
+7. **Competitive lag ≥12 months** on registry coverage in named customer domains.
+8. **No mass-market commoditization of the agentic delivery category** before Year 4.
+
+If any one fails, the curve drops back toward linear-flat. If all eight hold, the upper bands of Year 5 are achievable. The mid case in the integrated view below represents 5–6 of these holding fully and 2–3 partial.
 
 #### Second-order amplifiers — upsides not yet priced into the trajectory
 
@@ -466,7 +482,7 @@ The most underweighted commercial effect of agentic delivery is what it does to 
 
 | Engagement type | Buyer | Sold on | Margin shape |
 |---|---|---|---|
-| **Tactical** *(traditional delivery)* | Director / VP of Delivery | Hours, rate, predicate work | Engineering-services band (20–35%) |
+| **Tactical** *(traditional delivery)* | Director / VP of Delivery | Hours, rate, predicate work | Firm T\&M band: ~30–42% Int'l / ~35–50% US (industry-mainstream T\&M ~20–35%) |
 | **Capability** *(early agentic)* | VP of Engineering / Head of Practice | Productivity uplift, audit-defensibility | High-end services band (35–50%) |
 | **Transformation** *(year-3+ agentic)* | CTO / COO / CEO | Strategic outcome, organizational change | Strategic-advisor band (50–70%) |
 
@@ -490,12 +506,12 @@ The single largest internal risk is **#6 (failed flywheel)** because it is the o
 
 | Year-5 case | International | US | Assumptions |
 |---|---|---|---|
-| **Conservative — no amplifiers** | 44–57% | 49–70% | Three first-order mechanisms only |
-| **Mid — half the amplifiers captured** | **47–60%** | **52–73%** | Account expansion + multi-year retainer + modest strategic-advisor premium |
-| **Best-case — all amplifiers active** | 50–63% | 55–75% | Full flywheel + brand premium + IP licensing |
-| **Contraction-case — flywheel cut by Year 3** | 36–48% | 41–61% | Roughly flat; competitive position eroded |
+| **Conservative — first-order mechanisms only** | 53–67% | 58–80% | Compounding curve plays out; eight assumptions above hold; no transformation deals priced in |
+| **Mid — half the amplifiers captured** | **57–70%** | **62–82%** | Account expansion + multi-year retainer + early strategic-advisor premium |
+| **Best-case — all amplifiers active** | 60–73% | 65–85% | Full flywheel + brand premium + IP licensing |
+| **Contraction-case — flywheel cut by Year 3** | 38–50% | 43–63% | Linear-flat curve; competitive position eroded |
 
-The **mid case (47–60% International / 52–73% US)** is the most defensible board-pitch projection. The upper US bound is in productized-software territory; the lower International bound holds the firm's current ceiling. **The firm migrates toward software-adjacent economics — recurring, multi-year, strategic-advisor-priced, IP-leveraged — without ceasing to be a delivery firm.** That migration is the real prize, and it shows up in the *shape* of the revenue base over five years, and in the EV multiple capital markets attach to that shape.
+The **mid case (57–70% International / 62–82% US)** is the most defensible board-pitch projection. The upper US bound is squarely in productized-software territory; the International band has fully cleared the firm's current ceiling and entered software-adjacent economics. **The firm migrates toward software-adjacent economics — recurring, multi-year, strategic-advisor-priced, IP-leveraged — without ceasing to be a delivery firm.** That migration is the real prize, and it shows up in the *shape* of the revenue base over five years, and in the EV multiple capital markets attach to that shape.
 
 ### 6.5 The pricing-model shift — T&M to fixed-price
 
@@ -512,9 +528,9 @@ The customer would prefer **fixed-price**: a defined scope, a defined deliverabl
 
 | Pricing model                                            | Vendor margin shape                                                                                                   | When it works                                                                                                                     |
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **T\&M**                                           | Margin = rate − loaded cost. Typically 20–35% gross. Capped by competitive rate pressure.                           | When scope is exploratory, when the vendor cannot estimate, when the customer has no fixed budget.                                |
+| **T\&M**                                           | Margin = rate − loaded cost. Firm baseline ~30–42% Int'l / ~35–50% US (industry-mainstream ~20–35%). Capped by competitive rate pressure.                           | When scope is exploratory, when the vendor cannot estimate, when the customer has no fixed budget.                                |
 | **Fixed-price (without repeatability)**            | High variance: large gain if work goes well, large loss if not. Average margin lower than T\&M after risk adjustment. | Almost never — most fixed-price engagements without repeatability lose money.                                                    |
-| **Fixed-price (with agentic-shape repeatability)** | Margin = price − repeatable-cost. Typically 40–60% gross.                                                           | When the vendor has versioned skills, idempotent workflows, layered guardrails, and a spec corpus that makes the work repeatable. |
+| **Fixed-price (with agentic-shape repeatability)** | Margin = price − repeatable-cost. Lifts firm baseline meaningfully — typically into the ~50–70% band, well above current T\&M margins.                                                           | When the vendor has versioned skills, idempotent workflows, layered guardrails, and a spec corpus that makes the work repeatable. |
 
 **The pricing-model shift is the single largest commercial value lever in this paper, and it is structurally locked behind the agentic investment.** A vendor without the investment cannot credibly offer fixed-price in regulated work; a vendor with the investment can charge a premium for predictability while operating at a higher gross margin than the T\&M alternative.
 
@@ -527,9 +543,9 @@ flowchart LR
     INV["<b>Investment</b><br/>$3K blended<br/>$8K Tier 1<br/>+ senior time"]
     PROD["<b>Productivity</b><br/>30–50% uplift<br/>6–16× geo-blended ROI"]
     REPEAT["<b>Repeatability</b><br/>versioned skills<br/>idempotent workflows<br/>spec primacy"]
-    FIXED["<b>Fixed-price</b><br/>40–60% gross margin<br/>vs 20–35% T and M"]
+    FIXED["<b>Fixed-price</b><br/>50–70% gross margin<br/>vs ~30–42% Int'l<br/>and ~35–50% US T and M"]
     IP["<b>Reusable IP</b><br/>compounds across<br/>customer programs"]
-    MARGIN["<b>Margin expansion</b><br/>38% to 45-52%<br/>over 3 years"]
+    MARGIN["<b>Margin expansion</b><br/>+9–10pp by Yr 3<br/>+18–20pp by Yr 5<br/>(compounding)"]
 
     INV --> PROD
     INV --> REPEAT
@@ -552,7 +568,7 @@ The honest counter-question to any investment proposal is *"what happens if we d
 | 1 | **Lost deals**                 | A single $5–20 M lost engagement per year is a multiple of the firm-scale annual investment.                                                                                                                            |
 | 2 | **Compounding capability gap** | A competitor that started one year earlier has ~100 reusable skills and a year of compound learnings. None of that can be recreated in a quarter.                                                                        |
 | 3 | **Talent flight**              | The strongest agent/domain engineers will not stay at firms that gate their access to AI tooling, refuse to fund local-model hardware, or treat capability-building time as a cost.                                      |
-| 4 | **Stuck in T&M, structurally** | A firm without repeatability cannot offer fixed-price profitably and is stuck competing on rate. As agentic-first competitors move to fixed-price at higher margins, the T&M-only firm's revenue base erodes from below. |
+| 4 | **Stuck in T&M, structurally** | A firm without repeatability cannot offer fixed-price profitably and is stuck competing on rate. As agentic-first competitors move to fixed-price at higher margins, the T\&M-only firm's revenue base erodes from below — bid-shopped on rate, undercut on outcome. |
 
 **Conservative estimate of the dollar value of inaction at a 1,000-engineer firm: $15–50 M per year within 24 months of the inflection.** This is not a forecast; it is the *spread* between a firm that invested at the inflection and one that did not.
 
@@ -593,7 +609,7 @@ For a blended hard-dollar investment of **~$3 K per delivery engineer per year**
 
 - A **6–16× ROI** at a typical 15% US / 85% International delivery mix (substantially higher for US-heavy firms).
 - The structural repeatability that converts T\&M engagements to **fixed-price**.
-- A **5–10 percentage-point gross-margin expansion** within three years.
+- A **9–10 pp gross-margin expansion by Year 3 and 18–20 pp by Year 5** (compounding, not linear).
 - The **right to compete at all** in the deals that 2026 customers are asking for.
 
 The cost of *not* investing is **$15–50 M per year** of foregone margin and lost deals at the 1,000-engineer firm scale, plus a compounding capability gap that widens as time passes.
