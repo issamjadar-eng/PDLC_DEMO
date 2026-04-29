@@ -20,9 +20,9 @@ This paper makes three arguments and one ask.
 
 **Argument 2 — The differentiator is the *project shape*, not the model.** Most "agentic" claims in the market are code-completion vendors rebranded, chatbots bolted onto delivery, or vendor-locked platforms. The durable differentiator is an **agentic project shape** — a versioned, audit-trailed, domain-ground operating model that lives in the customer's repository, raises the quality bar before harvesting productivity, and improves itself over time through a registry-mediated feedback loop. *Specifications* outrank model choice. *Scaffolding* outranks single-shot generation. *Layered guardrails* outrank any single safety mechanism. *Cross-surface corrections* (codified domain knowledge) outrank tactical fixes.
 
-**Argument 3 — The commercial impact is structural, not productivity-tweak.** A blended hard-dollar investment of **~$2–3 K per engineer per year** — with **~$7–8 K** concentrated on the Tier 1 Agent Engineering Lead cohort (10–15% of the senior bench) and **~$1.5–2 K** on senior delivery engineers — returns **$50,000–$100,000-per-engineer-per-year** in delivered productivity (a **17–42× ROI on the blended hard-dollar**). More importantly, the same investment unlocks **repeatability**, which is the structural prerequisite for shifting engagements from time-and-materials to fixed-price. Fixed-price-with-repeatability operates at **40–60% gross margin** versus 20–35% for T\&M. The compounding effect produces **a 7–14 percentage-point gross-margin expansion within three years** at firms that invest at the inflection.
+**Argument 3 — The commercial impact is structural, not productivity-tweak.** A blended hard-dollar investment of **~$3 K per delivery engineer per year** — Tier 1 Agent Engineering Leads at **~$8 K** (Claude Max 200 + multi-model + 128 GB workstation), Tier 2 senior delivery at **~$2.5–3 K** (Claude Max 100 minimum + Copilot Business), GTM/Corporate at one AI seat — returns **6–16× ROI** on a geo-blended loaded cost of ~$95 K per delivery engineer (typical 15% US / 85% International delivery mix; substantially higher for US-heavy firms). More importantly, the same investment unlocks **repeatability**, which is the structural prerequisite for shifting engagements from time-and-materials to fixed-price. Fixed-price-with-repeatability operates at **40–60% gross margin** versus 20–35% for T\&M. The compounding effect produces **a 7–14 percentage-point gross-margin expansion within three years** at firms that invest at the inflection.
 
-**The ask.** Engineering leadership at delivery firms must front-fund this capability. The traditional model of *win workload → bill hours → fund innovation from margin spillover* is too slow for this transition. The cost of inaction at a 1,000-engineer firm is **$30–80 M per year** in foregone margin and lost deals within 24 months of the inflection. **You cannot innovate while waiting for customers to pay you to innovate.**
+**The ask.** Engineering leadership at delivery firms must front-fund this capability. The traditional model of *win workload → bill hours → fund innovation from margin spillover* is too slow for this transition. The cost of inaction at a 1,000-engineer firm is **$15–50 M per year** in foregone margin and lost deals within 24 months of the inflection. **You cannot innovate while waiting for customers to pay you to innovate.**
 
 The rest of this paper builds the case. §1 names the market inflection. §2 explains what agent engineering actually is, in plain language. §3 distinguishes the three terms most often conflated (PDLC, SDLC, AI-in-Product). §4 covers the discipline in practice. §5 presents proof points. §6 is the investment case. §7 is the action plan. §8 closes. References and a glossary follow.
 
@@ -327,65 +327,82 @@ Every engineering firm tells itself the same story: *we'll fund innovation from 
 | 3 | **Training requires release from billable, and release is the hardest political ask in delivery operations.** | Firms that count training time as a cost-of-goods line item undertrain by ~3× what is needed.                                                                                |
 | 4 | **Demos and reference architectures have no billable owner.**                                                 | Without an*unbillable* budget, none of them get built. They are the highest-leverage assets in the GTM motion and they are structurally homeless in a billable-only firm.   |
 
-### 6.2 What we are actually investing in — six categories, tiered by user role
+### 6.2 What we are actually investing in — six categories, tiered by user role and geography
 
-The investment is not a single per-engineer number. It tiers naturally by who needs what. The Agent Engineering Lead running adversarial multi-model stacks needs much more than the generalist who uses Copilot. Pricing the whole bench at the heavy-user level overstates the ask; pricing it at the generalist level under-equips the leads. **All line-item costs below are grounded in public 2026 pricing for the named tools** (GitHub Copilot Business $19/seat/mo, Claude Pro $20/mo, Claude Max $100–200/mo, Gemini for Workspace $30/mo, ChatGPT Team $25/mo).
+The investment is not a single per-engineer number. It tiers naturally by **role** (who does what work) and **geography** (which cost center they sit in). The firm operates from three major cost centers — **US**, **Eastern Europe**, and **India** — and we blend Eastern Europe + India together as **International** for cost-modeling purposes.
+
+- **Delivery bench (Tier 1 + Tier 2)**: typical mix **10–20% US / 80–90% International**.
+- **GTM and Corporate (Tier 3)**: typical mix **80% US / 20% International**.
+
+The geo mix matters because it shifts the *blended loaded cost* per engineer dramatically; the *per-engineer hard-dollar AI investment* is geography-independent (Claude Max costs the same in Bangalore as in Boston). All line-item costs below are grounded in **public 2026 pricing** for the named tools (GitHub Copilot Business $19/seat/mo, Claude Pro $20/mo, Claude Max 100 $100/mo, Claude Max 200 $200/mo, Gemini for Workspace $30/mo, ChatGPT Team $25/mo).
 
 #### The three user tiers
 
-| Tier | Description | Typical share of senior bench |
-|---|---|---|
-| **Tier 1 — Agent Engineering Lead** | Authors skills, designs advisor topologies, runs adversarial multi-model validation, runs local models for privacy-sensitive customer work | **10–15%** |
-| **Tier 2 — Senior Delivery Engineer** | Uses agentic tooling daily on customer engagements; consumes the registry, contributes lessons | **40–50%** |
-| **Tier 3 — Generalist Engineer** | Uses one AI seat for routine assistance; benefits from the firm's reusable IP without authoring it | **35–45%** |
+| Tier | Description | Org | Typical share | Geographic mix |
+|---|---|---|---|---|
+| **Tier 1 — Agent Engineering Lead** | Authors skills, designs advisor topologies, runs adversarial multi-model validation, runs local models for privacy-sensitive customer work | Delivery bench | **10–15% of delivery** | 20–25% US / 75–80% Int'l |
+| **Tier 2 — Senior Delivery Engineer** | Uses agentic tooling daily on customer engagements; consumes the registry, contributes lessons | Delivery bench | **85–90% of delivery** | **10–20% US / 80–90% Int'l** |
+| **Tier 3 — GTM / Corporate Generalist** | Sales, pre-sales, marketing, finance, HR, operations. Uses one AI seat for productivity assistance — drafting, summarizing, prepping. Not part of the delivery bench. | GTM + Corporate | Separate org, ~10–20% of total firm headcount | **80% US / 20% Int'l** |
 
 #### Hard-dollar cost by tier
 
-| # | Category | Tier 1 — Lead | Tier 2 — Senior Delivery | Tier 3 — Generalist |
+| # | Category | Tier 1 — Lead | Tier 2 — Senior Delivery | Tier 3 — GTM/Corporate |
 |---|---|---|---|---|
-| **A** | Frontier-model seats | Claude Max + Copilot Business + Gemini + GPT Team for cross-model: **~$2.1–3.3 K** | Claude Pro + Copilot: **~$470** | One AI seat: **~$240** |
+| **A** | Frontier-model seats | **Claude Max 200** ($2.4 K) + Copilot Business ($228) + Gemini ($360) + GPT Team ($300) for cross-model: **~$3.3 K** | **Claude Max 100** ($1.2 K, minimum tier for senior delivery) + Copilot Business ($228): **~$1.4 K** | One AI seat: **~$240** |
 | **B** | Hardware uplift (3-yr amortized) | 128 GB Mac Pro: **~$1.5 K** | Standard, no uplift: **$0** | Standard: **$0** |
 | **C** | Multi-model API for adversarial validation | **~$1–1.5 K** | **~$200–400** | **~$100** |
 | **D** | MCP infrastructure (allocated) | Full: **~$1 K** | Shared: **~$500** | Shared: **~$300** |
-| **E** | Capability-building time *(structural)* | **~$25–35 K loaded-cost-time** | **~$15–20 K** for senior cohort engaged in registry use | Not allocated |
+| **E** | Capability-building time *(structural)* | **~$25–35 K loaded-cost-time (US-heavy senior)** or **~$10–15 K Int'l-blended** | **~$5–15 K loaded-cost-time (Int'l-blended)** for senior cohort engaged in registry use | Not allocated |
 | **F** | Subscription tooling (eval / registry / observability) | **~$1 K** | Shared: **~$200** | Minimal: **~$100** |
-| **Tier hard-dollar subtotal (A+B+C+D+F)** | | **~$7–8 K/yr** | **~$1.5–2 K/yr** | **~$0.5–0.8 K/yr** |
+| **Tier hard-dollar subtotal (A+B+C+D+F)** | | **~$8 K/yr** | **~$2.5–3 K/yr** | **~$0.5–0.8 K/yr** |
 
-#### Blended firm-wide cost
+#### Loaded-cost reality (the geographic context that shapes ROI)
 
-| Mix (15% T1 / 45% T2 / 40% T3) | Per-engineer hard-dollar (blended) | At a 1,000-engineer firm |
-|---|---|---|
-| Hard-dollar only | **~$2–3 K/yr blended** | **~$2–3 M/yr** |
-| Plus structural capability-building time on senior cohort (E) | + ~$15–25 K/yr per senior engineer in scope | + ~$10–15 M/yr |
+A senior **US** delivery engineer typically carries a loaded annual cost of **~$200–300 K**. A senior **International (EE / India)** delivery engineer typically carries **~$50–100 K**. Blended at a **15% US / 85% International** delivery mix, the per-engineer loaded cost is approximately **$80–110 K**. This shift makes the ROI math more conservative-honest but the investment still unambiguously accretive.
 
-The hard-dollar figure (~$2–3 K/yr blended) is what unblocks the bench. The structural capability-building time is the larger investment but is treated separately because it is an *opportunity cost* on senior time, not a discrete budget line — and because the productivity uplift on those senior engineers (the heaviest beneficiaries) substantially offsets the time held back.
+#### Blended firm-wide cost — sized separately for delivery and GTM/Corporate
+
+| Cost stream | Mix assumption | Per-engineer hard-dollar | At 1,000-engineer delivery bench |
+|---|---|---|---|
+| **Delivery bench (Tier 1 + Tier 2)** | 15% Tier 1 / 85% Tier 2; 15% US / 85% Int'l geo mix | **~$3 K/yr blended hard-dollar** | **~$3 M/yr** |
+| **GTM / Corporate (Tier 3)** | One AI seat per person; 80% US / 20% Int'l | **~$0.4–0.7 K/yr per person** | An additional **~$60–150 K/yr** at a typical 150–250-person GTM/Corporate cohort |
+| **Plus structural capability-building time on senior delivery cohort (E)** | 10–15% of senior delivery time held back from billable | + ~$5–15 K/yr per senior engineer in scope (Int'l-blended) | + ~$3–10 M/yr depending on senior cohort size |
+| **Total firm-scale hard-dollar (delivery + GTM/Corp)** | | | **~$3–3.5 M/yr** at a 1,000-engineer delivery firm |
+
+The hard-dollar figure (~$3 M/yr at the 1,000-engineer firm) is what unblocks the bench. The structural capability-building time is treated separately because it is an *opportunity cost* on senior time, not a discrete budget line.
 
 > **External validation.** Public statements from AI-native firms — including NVIDIA's CEO speaking on aggressive per-engineer AI tooling spend — support the directional thesis that current AI-tool investment is dramatically underpriced relative to productivity returns. The tier ratios above are aligned with publicly reported AI-native firm spend patterns. *[Specific dollar figures from primary sources should be verified before external citation.]*
 
-### 6.3 The ROI per engineer — in plain math, against the tiered investment
+### 6.3 The ROI per engineer — in plain math, against the tiered investment and the geographic mix
 
-A senior agent/domain engineer at a typical global delivery firm carries a loaded annual cost of **$200,000–$300,000**. Productivity uplift from properly-equipped agentic delivery is conservatively **30–50%** on the share of work that is automatable or assistive. Public studies of the *narrowest* agentic uplift (coding alone) report 30–55% gains [1]; agentic delivery in the *full* PDLC scope this paper describes covers a much broader work surface and should match or exceed.
+The investment side is the tiered model from §6.2: **~$3 K/yr blended hard-dollar per delivery engineer**, with Tier 1 leads at ~$8 K/yr.
 
-#### ROI sensitivity — blended hard-dollar investment
+The return side requires honesty about geographic loaded cost. At a typical **15% US / 85% International** delivery mix, the blended loaded cost is **~$80–110 K per delivery engineer**. Productivity uplift remains **30–50%** on automatable / assistive work [1].
 
-| Productivity uplift on $250 K-loaded engineer | Direct delivered-value gain | ROI on **~$3 K** blended hard-dollar investment |
+#### ROI sensitivity — blended delivery engineer (geo-blended loaded cost ~$95 K)
+
+| Productivity uplift | Direct delivered-value gain | ROI on **~$3 K** blended hard-dollar investment |
 |---|---|---|
-| **Conservative — 20%** | $50,000 | **17×** |
-| **Mid-conservative — 30%** | $75,000 | **25×** |
-| **Mid — 40%** | $100,000 | **33×** |
-| **Aggressive — 50%** | $125,000 | **42×** |
+| **Conservative — 20%** | $19,000 | **6×** |
+| **Mid-conservative — 30%** | $28,500 | **9×** |
+| **Mid — 40%** | $38,000 | **12×** |
+| **Aggressive — 50%** | $47,500 | **16×** |
 
-#### ROI sensitivity — Tier 1 (Agent Engineering Lead) hard-dollar investment
+#### ROI sensitivity — Tier 1 Agent Engineering Lead (geo-blended loaded cost ~$140 K)
 
-| Productivity uplift on a Tier 1 lead | Direct delivered-value gain | ROI on **~$8 K** Tier 1 hard-dollar investment |
+| Productivity uplift | Direct delivered-value gain | ROI on **~$8 K** Tier 1 hard-dollar investment |
 |---|---|---|
-| **Conservative — 30%** | $75,000 | **9×** |
-| **Mid — 50%** | $125,000 | **16×** |
-| **Aggressive (typical for Tier 1) — 70%** | $175,000 | **22×** |
+| **Conservative — 30%** | $42,000 | **5×** |
+| **Mid — 50%** | $70,000 | **9×** |
+| **Aggressive (typical for Tier 1) — 70%** | $98,000 | **12×** |
 
-A 17–42× ROI on the blended investment is unambiguously accretive. **At the firm scale, a $2–3 M hard-dollar annual investment across a 1,000-engineer bench returns $50–125 M in delivered productivity per year** — before any second-order effects (margin expansion, fixed-price conversion, talent retention) that compound on top.
+#### Reference — US-heavy assumption
 
-> **Why earlier "$10 K per engineer" framing was conservative-too-high.** Earlier drafts used a uniform $10 K/engineer/yr hard-dollar number. That figure is correct for the Tier 1 cohort. It overstates the cost for the ~85% of the bench that does not yet need Claude Max, dedicated 128 GB workstations, or large multi-model API budgets. The tiered model above is the more defensible framing.
+A 100% US delivery firm sees substantially higher per-engineer ROI because loaded costs are higher — 30% uplift × $250 K = $75 K return = **25×** ROI on $3 K investment. Most global delivery firms operate closer to the 15% US / 85% International blend, so the **6–16× geo-blended ROI is the more defensible number to put in front of a board**.
+
+**At the firm scale, a $3–3.5 M annual hard-dollar investment across a 1,000-engineer delivery bench returns $19–48 M in delivered productivity per year**, before any second-order effects (margin expansion, fixed-price conversion, talent retention, GTM/Corporate productivity).
+
+> **Why earlier framing was overconfident.** Prior versions of this section assumed (a) every engineer needed Tier 1 equipment and (b) every engineer carried a US loaded cost. Both inflate the case. The corrected framing — tiered investment + geo-blended loaded cost — produces a 6–16× ROI and a $19–48 M firm-scale annual return. Smaller, but verifiable in front of any auditor or finance team.
 
 ### 6.4 Margin expansion — where the second-order value lives
 
@@ -426,8 +443,8 @@ The first-order productivity gain, the margin expansion, the pricing-model shift
 
 ```mermaid
 flowchart LR
-    INV["<b>Investment</b><br/>$2-3K blended<br/>$7-8K Tier 1<br/>+ senior time"]
-    PROD["<b>Productivity</b><br/>30–50% uplift<br/>17–42× ROI on hard cost"]
+    INV["<b>Investment</b><br/>$3K blended<br/>$8K Tier 1<br/>+ senior time"]
+    PROD["<b>Productivity</b><br/>30–50% uplift<br/>6–16× geo-blended ROI"]
     REPEAT["<b>Repeatability</b><br/>versioned skills<br/>idempotent workflows<br/>spec primacy"]
     FIXED["<b>Fixed-price</b><br/>40–60% gross margin<br/>vs 20–35% T and M"]
     IP["<b>Reusable IP</b><br/>compounds across<br/>customer programs"]
@@ -456,7 +473,7 @@ The honest counter-question to any investment proposal is *"what happens if we d
 | 3 | **Talent flight**              | The strongest agent/domain engineers will not stay at firms that gate their access to AI tooling, refuse to fund local-model hardware, or treat capability-building time as a cost.                                      |
 | 4 | **Stuck in T&M, structurally** | A firm without repeatability cannot offer fixed-price profitably and is stuck competing on rate. As agentic-first competitors move to fixed-price at higher margins, the T&M-only firm's revenue base erodes from below. |
 
-**Conservative estimate of the dollar value of inaction at a 1,000-engineer firm: $30–80 M per year within 24 months of the inflection.** This is not a forecast; it is the *spread* between a firm that invested at the inflection and one that did not.
+**Conservative estimate of the dollar value of inaction at a 1,000-engineer firm: $15–50 M per year within 24 months of the inflection.** This is not a forecast; it is the *spread* between a firm that invested at the inflection and one that did not.
 
 ---
 
@@ -491,14 +508,14 @@ Each phase is independently fundable and produces visible business signal before
 
 ---
 
-For a blended hard-dollar investment of **~$2–3 K per engineer per year** (with **~$7–8 K** for Tier 1 Agent Engineering Leads and **~$1.5–2 K** for senior delivery engineers), the firm gains:
+For a blended hard-dollar investment of **~$3 K per delivery engineer per year** (Tier 1 leads at **~$8 K** with Claude Max 200, Tier 2 senior delivery at **~$2.5–3 K** with Claude Max 100 minimum, GTM/Corporate at one AI seat), the firm gains:
 
-- A **17–42× ROI** on the blended hard-dollar investment.
+- A **6–16× ROI** at a typical 15% US / 85% International delivery mix (substantially higher for US-heavy firms).
 - The structural repeatability that converts T\&M engagements to **fixed-price**.
 - A **7–14 percentage-point gross-margin expansion** within three years.
 - The **right to compete at all** in the deals that 2026 customers are asking for.
 
-The cost of *not* investing is **$30–80 M per year** of foregone margin and lost deals at the 1,000-engineer firm scale, plus a compounding capability gap that widens as time passes.
+The cost of *not* investing is **$15–50 M per year** of foregone margin and lost deals at the 1,000-engineer firm scale, plus a compounding capability gap that widens as time passes.
 
 This is not a productivity initiative. **It is the cost of competing in the next decade of regulated engineering delivery.**
 
