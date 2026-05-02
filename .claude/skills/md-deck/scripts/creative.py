@@ -43,29 +43,78 @@ CREATIVE_PALETTE = FRONTEND_SLIDES_DIR / "creative-palette.md"
 
 SLOT_PERSONALITIES = {
     "bold-metaphor": dedent("""
-        Personality: BOLD METAPHOR.
+        Personality: BOLD METAPHOR — illustrative / atmospheric.
 
-        Lead with a visual primitive — a drawn diagram, a conic-gradient figure,
-        a diagonal split, a layered stack of cards, a CSS-art motif, a numeric
-        ladder, a process loop. Use the brand colors aggressively. The goal is
-        "this slide is a THING, not just type." The primitive should *encode*
-        the content's meaning, not merely decorate it.
+        Lead with a visual primitive that ENCODES the content's meaning. Drawn
+        diagrams, conic-gradient figures, diagonal/clip-path splits, layered
+        stacks of cards, CSS-art motifs, layered shapes with depth, gradients
+        as texture. Aesthetic-first. The goal is "this slide is a THING that
+        carries the idea visually" — color, layout, and form do the talking.
 
-        Pick a metaphor that is honest to the content. Free-flow on disconnect
+        Pick a metaphor that is HONEST to the content. Free-flow on disconnect
         is not a daisy chain. A 38% reduction is not a sunset. Reach for the
-        metaphor that the content itself implies.
+        metaphor the content itself implies, then render it with brand colors,
+        gradients, shapes — not just type.
+
+        At least 60% of the slide-content area must be NON-TEXT visual primitives
+        (drawn shapes, gradients, geometric figures, illustrative SVG-style
+        compositions). Text is supporting, never the main element.
         """).strip(),
+    "structured-diagram": dedent("""
+        Personality: STRUCTURED DIAGRAM — precise / data-driven.
+
+        Build a clean, information-dense visualization that a stakeholder can
+        SCAN and UNDERSTAND in seconds. Drawn bar charts, donut/conic gradients,
+        timelines with stops, process loops, swimlanes, before/after deltas,
+        threat-mitigation pair grids, hazard-control chains, treemaps,
+        feature-matrix grids with checks/crosses, sankey flows. Function-first.
+        The goal is "this slide IS a chart or diagram, not a paragraph with
+        decoration."
+
+        **Hard rule: this slide must not be primarily typography.** No oversized
+        headline as the hero. No "big phrase + small phrase" stacks. No
+        eyebrow-headline-supporting-line restraint plays. If you find yourself
+        reaching for `font-family: var(--font-display)` at clamp(2rem, 6vw, 5rem)
+        as the centerpiece, STOP and choose a structural diagram instead.
+
+        When the section dossier carries a `data:` block, ENCODE THAT DATA into
+        the diagram — bars proportional to values, donut segments matching the
+        ratios, timeline stops at the named milestones. Use the data's accent
+        color hints. When no `data:` block exists, look for relationships you
+        can structure: "in vs out", "before vs after", "actor → action → outcome",
+        "cause → control → residual", "phase → phase → phase".
+
+        At least 70% of the slide-content area must be drawn structural elements
+        (axes, bars, dots, connecting lines, grids, shapes encoding values or
+        relationships). Text is annotation, never the main element.
+        """).strip(),
+    # Legacy alias — `restrained-takeaway` redirects to structured-diagram so
+    # cached briefs from older runs still resolve. The personality name in the
+    # build pipeline (slot identifier "creative-d") stays the same.
     "restrained-takeaway": dedent("""
-        Personality: RESTRAINED TAKEAWAY.
+        Personality: STRUCTURED DIAGRAM — precise / data-driven.
 
-        Strip to the essential message. Oversized typography, generous
-        whitespace, one or two visual elements max. Rhetorical force through
-        restraint. The goal is "this slide makes you stop and read."
+        (slot D — replaces the v0.5 "restrained-takeaway" typography play.)
 
-        Pull out the single most important idea from the section, render it
-        as the slide hero, and let everything else fall away. A small eyebrow,
-        a punchy headline, an optional supporting line. No cards, no grids,
-        no decoration unless it carries meaning.
+        Build a clean, information-dense visualization a stakeholder can SCAN
+        in seconds. Drawn bar charts, donut/conic gradients, timelines with
+        stops, process loops, swimlanes, before/after deltas, threat-mitigation
+        pair grids, treemaps, feature-matrix grids, sankey flows.
+
+        **Hard rule: not primarily typography.** No oversized headline as the
+        hero. No "big phrase + small phrase" stacks. If you find yourself
+        reaching for `font-family: var(--font-display)` at the largest clamp()
+        size as the centerpiece, STOP and choose a structural diagram instead.
+
+        When the section dossier carries a `data:` block, ENCODE THAT DATA — bars
+        proportional to values, donut segments matching ratios, timeline stops
+        at named milestones. When no data block exists, look for structural
+        relationships: in vs out, before vs after, actor→action→outcome,
+        cause→control→residual, phase→phase→phase.
+
+        At least 70% of the slide-content area must be drawn structural elements
+        (axes, bars, dots, connecting lines, shapes encoding values or
+        relationships). Text is annotation, never the main element.
         """).strip(),
 }
 

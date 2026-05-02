@@ -2388,7 +2388,7 @@ def build(
         if creative_mode and (creative_section is None or creative_section == anchor):
             anchor_cache = creative_cache.get(anchor) or {}
             for slot, personality in (("creative-c", "bold-metaphor"),
-                                       ("creative-d", "restrained-takeaway")):
+                                       ("creative-d", "structured-diagram")):
                 cached = anchor_cache.get(slot) or {}
                 cached_html = cached.get("html")
                 stale = cached.get("source_sha") != sha
@@ -2441,12 +2441,14 @@ def build(
 
     # ── Parallel fan-out: generate all pending creative slots concurrently ──
     if creative_pending:
+        import threading
         from concurrent.futures import ThreadPoolExecutor, as_completed
         from creative import generate_creative_slide
         from distill import deck_brief_block, section_brief_block, section_dossier
 
         deck_block = deck_brief_block(distillation)
         max_workers = max(1, min(creative_parallelism, len(creative_pending)))
+        cache_lock = threading.Lock()
         print(
             f"  · creative fan-out: {len(creative_pending)} agent calls × parallelism={max_workers}"
             f" (~{15 * (len(creative_pending) // max_workers + 1)}s estimated)",
@@ -2481,20 +2483,27 @@ def build(
                 slot = task["slot"]
                 personality = task["personality"]
                 creative_calls += 1
-                anchor_cache = creative_cache.get(anchor) or {}
+                # Thread-safe read-modify-write on creative_cache. Without the
+                # lock, two threads writing slots for the same anchor (or even
+                # different anchors via dict-rehash races) could clobber the
+                # other's entry, leading to a partially-populated picks.json
+                # at the end of the run.
+                with cache_lock:
+                    anchor_cache = creative_cache.get(anchor) or {}
+                    if html_frag:
+                        anchor_cache[slot] = {
+                            "html": html_frag,
+                            "personality": personality,
+                            "source_sha": sha,
+                            "generated_at": built_at,
+                        }
+                    creative_cache[anchor] = anchor_cache
                 if html_frag:
-                    anchor_cache[slot] = {
-                        "html": html_frag,
-                        "personality": personality,
-                        "source_sha": sha,
-                        "generated_at": built_at,
-                    }
                     print(f"    ✓ {slot} for {anchor} ({personality})", file=sys.stderr)
                 else:
                     debug_path = out_dir / f"creative-debug-{anchor}-{slot}.txt"
                     debug_path.write_text(raw or "(empty response)", encoding="utf-8")
                     print(f"    ⚠ {slot} for {anchor} ({personality}) — extraction failed; raw saved to {debug_path.name}", file=sys.stderr)
-                creative_cache[anchor] = anchor_cache
 
                 # Splice the generated html into the placeholder candidate card
                 for sec in section_candidates:
