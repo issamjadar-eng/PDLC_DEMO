@@ -1,364 +1,345 @@
 {
-  "generator": "md-deck",
-  "version": "0.2.0",
+  "schema": "md-deck/manifest@1",
+  "generator": "md-deck v0.2.0",
   "source": {
     "path": "project-overview.md",
     "sha256": "69e976d891e709f2a1afdb0d164cc2958b0a8909739a8538f2ebf48fbb2557c8",
-    "size_bytes": 36191,
-    "modified_at": "2026-04-22T06:11:04.999668+00:00"
+    "size_bytes": 36191
   },
   "build": {
-    "built_at": "2026-05-02T03:37:59.558704+00:00",
-    "built_by": "Ben Xavier",
-    "command": "md-deck build project-overview.md"
-  },
-  "style": {
-    "preset": "bold-signal",
-    "overrides": {}
+    "at": "2026-05-02T04:34:03Z",
+    "by": "benxavier",
+    "style": "bold-signal"
   },
   "slides": [
     {
-      "n": 1,
+      "index": 0,
       "type": "title",
-      "section": null,
       "title": "PDLC_DEMO \u2014 Project Overview",
-      "source_anchor": "L1"
-    },
-    {
-      "n": 2,
-      "type": "agenda",
       "section": null,
+      "anchor": "L1"
+    },
+    {
+      "index": 1,
+      "type": "agenda",
       "title": "Agenda",
-      "source_anchor": "computed"
+      "section": null,
+      "anchor": "computed"
     },
     {
-      "n": 3,
+      "index": 2,
       "type": "divider",
-      "section": "1",
       "title": "Project Overview & Strategy",
-      "source_anchor": "L13"
+      "section": "1",
+      "anchor": "L13"
     },
     {
-      "n": 4,
+      "index": 3,
       "type": "table-slide",
-      "section": "1.1",
       "title": "What PP3500 is",
-      "source_anchor": "L15-L37"
-    },
-    {
-      "n": 5,
-      "type": "table-slide",
       "section": "1.1",
-      "title": "What PP3500 is (cont.)",
-      "source_anchor": "L15-L37"
+      "anchor": "L15-L37"
     },
     {
-      "n": 6,
+      "index": 4,
       "type": "card-grid",
-      "section": "1.2",
       "title": "Regulatory strategy at a glance",
-      "source_anchor": "L39-L49"
+      "section": "1.2",
+      "anchor": "L39-L49"
     },
     {
-      "n": 7,
-      "type": "scope-iceberg",
-      "section": "1.2",
+      "index": 5,
+      "type": "principle-tiles",
       "title": "Regulatory strategy at a glance",
-      "source_anchor": "L39-L49"
+      "section": "1.2",
+      "anchor": "L39-L49"
     },
     {
-      "n": 8,
+      "index": 6,
       "type": "card-grid",
-      "section": "1.3",
       "title": "Key deliverables",
-      "source_anchor": "L51-L58"
+      "section": "1.3",
+      "anchor": "L51-L58"
     },
     {
-      "n": 9,
+      "index": 7,
+      "type": "principle-tiles",
+      "title": "Key deliverables",
+      "section": "1.3",
+      "anchor": "L51-L58"
+    },
+    {
+      "index": 8,
       "type": "divider",
-      "section": "2",
       "title": "Agentic Approach \u2014 Project Shape, Structure & Capabilities",
-      "source_anchor": "L60"
+      "section": "2",
+      "anchor": "L60"
     },
     {
-      "n": 10,
+      "index": 9,
       "type": "prose-slide",
-      "section": "2.1",
       "title": "Project shape & structure",
-      "source_anchor": "L64-L105"
+      "section": "2.1",
+      "anchor": "L64-L105"
     },
     {
-      "n": 11,
+      "index": 10,
       "type": "card-grid",
-      "section": "2.2",
       "title": "Operating rules baked into the project",
-      "source_anchor": "L107-L114"
+      "section": "2.2",
+      "anchor": "L107-L109"
     },
     {
-      "n": 12,
+      "index": 11,
       "type": "principle-tiles",
-      "section": "2.2",
       "title": "Operating rules baked into the project",
-      "source_anchor": "L107-L114"
+      "section": "2.2",
+      "anchor": "L107-L109"
     },
     {
-      "n": 13,
+      "index": 12,
       "type": "table-slide",
-      "section": "2.3",
       "title": "Skills (project-level)",
-      "source_anchor": "L116-L136"
+      "section": "2.3",
+      "anchor": "L116-L120"
     },
     {
-      "n": 14,
+      "index": 13,
       "type": "catalog-mosaic",
-      "section": "2.3",
       "title": "Skills (project-level)",
-      "source_anchor": "L116-L136"
+      "section": "2.3",
+      "anchor": "L116-L120"
     },
     {
-      "n": 15,
+      "index": 14,
       "type": "catalog-mosaic",
-      "section": "2.3",
       "title": "Skills (project-level) (continued \u00b7 2/2)",
-      "source_anchor": "L116-L136"
-    },
-    {
-      "n": 16,
-      "type": "catalog-featured",
       "section": "2.3",
+      "anchor": "L116-L120"
+    },
+    {
+      "index": 15,
+      "type": "catalog-featured",
       "title": "Skills (project-level)",
-      "source_anchor": "L116-L136"
+      "section": "2.3",
+      "anchor": "L116-L120"
     },
     {
-      "n": 17,
+      "index": 16,
       "type": "table-slide",
-      "section": "2.4",
       "title": "Agents (persona advisors)",
-      "source_anchor": "L138-L178"
+      "section": "2.4",
+      "anchor": "L138-L178"
     },
     {
-      "n": 18,
+      "index": 17,
       "type": "catalog-mosaic",
-      "section": "2.4",
       "title": "Agents (persona advisors)",
-      "source_anchor": "L138-L178"
+      "section": "2.4",
+      "anchor": "L138-L178"
     },
     {
-      "n": 19,
+      "index": 18,
       "type": "catalog-mosaic",
-      "section": "2.4",
       "title": "Agents (persona advisors) (continued \u00b7 2/2)",
-      "source_anchor": "L138-L178"
+      "section": "2.4",
+      "anchor": "L138-L178"
     },
     {
-      "n": 20,
+      "index": 19,
       "type": "catalog-featured",
-      "section": "2.4",
       "title": "Agents (persona advisors)",
-      "source_anchor": "L138-L178"
-    },
-    {
-      "n": 21,
-      "type": "table-slide",
       "section": "2.4",
-      "title": "Agents (persona advisors) (cont.)",
-      "source_anchor": "L138-L178"
+      "anchor": "L138-L178"
     },
     {
-      "n": 22,
-      "type": "catalog-mosaic",
-      "section": "2.4",
-      "title": "Agents (persona advisors) (cont.)",
-      "source_anchor": "L138-L178"
-    },
-    {
-      "n": 23,
-      "type": "catalog-mosaic",
-      "section": "2.4",
-      "title": "Agents (persona advisors) (cont.) (continued \u00b7 2/2)",
-      "source_anchor": "L138-L178"
-    },
-    {
-      "n": 24,
-      "type": "catalog-featured",
-      "section": "2.4",
-      "title": "Agents (persona advisors) (cont.)",
-      "source_anchor": "L138-L178"
-    },
-    {
-      "n": 25,
+      "index": 20,
       "type": "divider",
-      "section": "3",
       "title": "Quality & Process \u2014 How the Guardrails Work",
-      "source_anchor": "L180"
+      "section": "3",
+      "anchor": "L180"
     },
     {
-      "n": 26,
+      "index": 21,
       "type": "table-slide",
-      "section": "3.1",
       "title": "Skills \u2014 reusable, expert-grade playbooks",
-      "source_anchor": "L186-L201"
+      "section": "3.1",
+      "anchor": "L186-L194"
     },
     {
-      "n": 27,
+      "index": 22,
       "type": "catalog-mosaic",
-      "section": "3.1",
       "title": "Skills \u2014 reusable, expert-grade playbooks",
-      "source_anchor": "L186-L201"
+      "section": "3.1",
+      "anchor": "L186-L194"
     },
     {
-      "n": 28,
+      "index": 23,
       "type": "catalog-featured",
-      "section": "3.1",
       "title": "Skills \u2014 reusable, expert-grade playbooks",
-      "source_anchor": "L186-L201"
+      "section": "3.1",
+      "anchor": "L186-L194"
     },
     {
-      "n": 29,
+      "index": 24,
       "type": "table-slide",
-      "section": "3.2",
       "title": "Hooks \u2014 automatic tripwires you can't forget to run",
-      "source_anchor": "L203-L220"
+      "section": "3.2",
+      "anchor": "L203-L220"
     },
     {
-      "n": 30,
+      "index": 25,
       "type": "card-grid",
-      "section": "3.3",
       "title": "Rules \u2014 project conventions the tool reads and obeys",
-      "source_anchor": "L222-L234"
+      "section": "3.3",
+      "anchor": "L222-L230"
     },
     {
-      "n": 31,
+      "index": 26,
       "type": "principle-tiles",
-      "section": "3.3",
       "title": "Rules \u2014 project conventions the tool reads and obeys",
-      "source_anchor": "L222-L234"
+      "section": "3.3",
+      "anchor": "L222-L230"
     },
     {
-      "n": 32,
+      "index": 27,
       "type": "card-grid",
-      "section": "3.4",
       "title": "What this adds up to",
-      "source_anchor": "L236-L249"
+      "section": "3.4",
+      "anchor": "L236-L249"
     },
     {
-      "n": 33,
-      "type": "concept-canvas",
-      "section": "3.4",
+      "index": 28,
+      "type": "principle-tiles",
       "title": "What this adds up to",
-      "source_anchor": "L236-L249"
+      "section": "3.4",
+      "anchor": "L236-L249"
     },
     {
-      "n": 34,
+      "index": 29,
       "type": "divider",
-      "section": "4",
       "title": "Agentic Approach \u2014 Solving Complex Problems with Humans in Charge",
-      "source_anchor": "L251"
+      "section": "4",
+      "anchor": "L251"
     },
     {
-      "n": 35,
+      "index": 30,
       "type": "card-grid",
-      "section": "4.1",
       "title": "What an \"agent\" actually is here",
-      "source_anchor": "L255-L264"
+      "section": "4.1",
+      "anchor": "L255-L264"
     },
     {
-      "n": 36,
+      "index": 31,
       "type": "concept-canvas",
-      "section": "4.1",
       "title": "What an \"agent\" actually is here",
-      "source_anchor": "L255-L264"
+      "section": "4.1",
+      "anchor": "L255-L264"
     },
     {
-      "n": 37,
+      "index": 32,
+      "type": "principle-tiles",
+      "title": "What an \"agent\" actually is here",
+      "section": "4.1",
+      "anchor": "L255-L264"
+    },
+    {
+      "index": 33,
       "type": "card-grid",
-      "section": "4.2",
       "title": "How it helps with complex problems",
-      "source_anchor": "L266-L279"
+      "section": "4.2",
+      "anchor": "L266-L279"
     },
     {
-      "n": 38,
-      "type": "card-grid",
-      "section": "4.3",
-      "title": "Humans decide. Agents advise.",
-      "source_anchor": "L281-L297"
+      "index": 34,
+      "type": "principle-tiles",
+      "title": "How it helps with complex problems",
+      "section": "4.2",
+      "anchor": "L266-L279"
     },
     {
-      "n": 39,
-      "type": "table-slide",
-      "section": "4.4",
-      "title": "Where the handoff happens",
-      "source_anchor": "L299-L310"
-    },
-    {
-      "n": 40,
-      "type": "handoff-relay",
-      "section": "4.4",
-      "title": "Where the handoff happens",
-      "source_anchor": "L299-L310"
-    },
-    {
-      "n": 41,
+      "index": 35,
       "type": "list-slide",
-      "section": "4.5",
-      "title": "Why this works for regulated work",
-      "source_anchor": "L312-L325"
+      "title": "Humans decide. Agents advise.",
+      "section": "4.3",
+      "anchor": "L281-L297"
     },
     {
-      "n": 42,
-      "type": "divider",
-      "section": "5",
-      "title": "The Project Console",
-      "source_anchor": "L327"
-    },
-    {
-      "n": 43,
-      "type": "image-feature",
-      "section": "5.1",
-      "title": "Landing page",
-      "source_anchor": "L334-L339"
-    },
-    {
-      "n": 44,
-      "type": "image-feature",
-      "section": "5.2",
-      "title": "Agents (persona advisors)",
-      "source_anchor": "L341-L355"
-    },
-    {
-      "n": 45,
-      "type": "image-feature",
-      "section": "5.3",
-      "title": "Documents explorer",
-      "source_anchor": "L357-L365"
-    },
-    {
-      "n": 46,
-      "type": "image-feature",
-      "section": "5.4",
-      "title": "Dashboards",
-      "source_anchor": "L367-L384"
-    },
-    {
-      "n": 47,
-      "type": "image-feature",
-      "section": "5.5",
-      "title": "Trace Matrix",
-      "source_anchor": "L386-L399"
-    },
-    {
-      "n": 48,
+      "index": 36,
       "type": "table-slide",
-      "section": "5.6",
-      "title": "How the console relates to Claude Code",
-      "source_anchor": "L401-L410"
+      "title": "Where the handoff happens",
+      "section": "4.4",
+      "anchor": "L299-L310"
     },
     {
-      "n": 49,
+      "index": 37,
+      "type": "handoff-relay",
+      "title": "Where the handoff happens",
+      "section": "4.4",
+      "anchor": "L299-L310"
+    },
+    {
+      "index": 38,
+      "type": "list-slide",
+      "title": "Why this works for regulated work",
+      "section": "4.5",
+      "anchor": "L312-L325"
+    },
+    {
+      "index": 39,
       "type": "divider",
-      "section": "6",
-      "title": "Appendix \u2014 Quick links",
-      "source_anchor": "L412"
+      "title": "The Project Console",
+      "section": "5",
+      "anchor": "L327"
+    },
+    {
+      "index": 40,
+      "type": "prose-slide",
+      "title": "Landing page",
+      "section": "5.1",
+      "anchor": "L334-L338"
+    },
+    {
+      "index": 41,
+      "type": "card-grid",
+      "title": "Agents (persona advisors)",
+      "section": "5.2",
+      "anchor": "L341-L354"
+    },
+    {
+      "index": 42,
+      "type": "principle-tiles",
+      "title": "Agents (persona advisors)",
+      "section": "5.2",
+      "anchor": "L341-L354"
+    },
+    {
+      "index": 43,
+      "type": "list-slide",
+      "title": "Documents explorer",
+      "section": "5.3",
+      "anchor": "L357-L361"
+    },
+    {
+      "index": 44,
+      "type": "list-slide",
+      "title": "Dashboards",
+      "section": "5.4",
+      "anchor": "L367-L383"
+    },
+    {
+      "index": 45,
+      "type": "prose-slide",
+      "title": "Trace Matrix",
+      "section": "5.5",
+      "anchor": "L386-L398"
+    },
+    {
+      "index": 46,
+      "type": "table-slide",
+      "title": "How the console relates to Claude Code",
+      "section": "5.6",
+      "anchor": "L401-L410"
     }
   ],
   "components_used": [
@@ -369,13 +350,10 @@
     "concept-canvas",
     "divider",
     "handoff-relay",
-    "image-feature",
     "list-slide",
     "principle-tiles",
     "prose-slide",
-    "scope-iceberg",
     "table-slide",
     "title"
-  ],
-  "track_a_version": "0.0 (pre-extraction; uses inline Bold Signal CSS)"
+  ]
 }
