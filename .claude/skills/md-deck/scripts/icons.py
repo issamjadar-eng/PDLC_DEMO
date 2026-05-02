@@ -120,6 +120,80 @@ ICONS: dict[str, str] = {
     "brain-circuit": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3"/><path d="M15 4a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
     "sparkles": '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 13.5,8.5 19,10 13.5,11.5 12,17 10.5,11.5 5,10 10.5,8.5"/><polygon points="19,16 19.5,18 21.5,18.5 19.5,19 19,21 18.5,19 16.5,18.5 18.5,18"/></svg>',
 
+    # ===== Healthcare extended =====
+    "bandage": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><circle cx="10" cy="11" r="0.8" fill="currentColor"/><circle cx="14" cy="13" r="0.8" fill="currentColor"/><circle cx="11" cy="14" r="0.8" fill="currentColor"/><circle cx="13" cy="10" r="0.8" fill="currentColor"/></svg>',
+    "scalpel": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21l8-8"/><path d="M11 13L20 4l-1 5-4 4z"/></svg>',
+    "vitals": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M5 12h3l1.5-3 2.5 6 1.5-3h6"/></svg>',
+    "ambulance": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="8" width="14" height="9" rx="1"/><path d="M16 11h3l2 3v3h-5z"/><circle cx="6.5" cy="18.5" r="1.5"/><circle cx="17.5" cy="18.5" r="1.5"/><line x1="9" y1="11" x2="9" y2="14"/><line x1="7.5" y1="12.5" x2="10.5" y2="12.5"/></svg>',
+    "prescription": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 4h6a3 3 0 0 1 0 6h-6V4z"/><line x1="6" y1="10" x2="6" y2="20"/><line x1="9" y1="10" x2="14" y2="15"/><line x1="14" y1="10" x2="9" y2="15"/></svg>',
+    "wheelchair": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M11 9l1 5h6l-2 6"/><circle cx="11" cy="18" r="4"/></svg>',
+
+    # ===== Engineering / hardware extended =====
+    "caliper": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="10" width="20" height="4"/><line x1="6" y1="10" x2="6" y2="6"/><line x1="6" y1="14" x2="6" y2="18"/><line x1="10" y1="10" x2="10" y2="13"/><line x1="14" y1="10" x2="14" y2="13"/><line x1="18" y1="10" x2="18" y2="13"/></svg>',
+    "multimeter": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="13" rx="1"/><rect x="6" y="6" width="12" height="4"/><line x1="3" y1="20" x2="9" y2="20"/><line x1="15" y1="20" x2="21" y2="20"/></svg>',
+    "screwdriver": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l4-4 4 4-4 4z"/><line x1="14" y1="6" x2="3" y2="17"/><rect x="2" y="16" width="6" height="4" transform="rotate(-45 5 18)"/></svg>',
+    "hammer": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 4l6 6-2 2-3-3-9 9-3-3 9-9-3-3z"/></svg>',
+    "hard-hat": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 17h18v-2a8 8 0 0 0-16 0v2z"/><line x1="10" y1="9" x2="10" y2="6"/><line x1="14" y1="9" x2="14" y2="6"/><line x1="3" y1="20" x2="21" y2="20"/></svg>',
+    "valve": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="9" y1="4" x2="15" y2="4"/></svg>',
+    "sensor": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M9 12a3 3 0 0 1 6 0"/><path d="M6 12a6 6 0 0 1 12 0"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>',
+    "antenna": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M8 5a8 8 0 0 0 0 6"/><path d="M16 5a8 8 0 0 1 0 6"/><path d="M5 3a12 12 0 0 0 0 10"/><path d="M19 3a12 12 0 0 1 0 10"/></svg>',
+    "battery": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="8" width="16" height="8" rx="1"/><line x1="20" y1="11" x2="20" y2="13"/><rect x="5" y="10" width="9" height="4" fill="currentColor"/></svg>',
+
+    # ===== Tooling / craft =====
+    "toolbox": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M8 8V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3"/><line x1="3" y1="13" x2="21" y2="13"/><rect x="10" y="11" width="4" height="4" rx="0.5"/></svg>',
+    "puzzle": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M10 4h4v3a2 2 0 1 0 0 4v3h-4v-3a2 2 0 1 1-4 0v-3h4z"/></svg>',
+    "magnet": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4v8a7 7 0 0 0 14 0V4h-4v8a3 3 0 0 1-6 0V4z"/></svg>',
+    "level-tool": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6"/><circle cx="12" cy="12" r="1.5"/><line x1="6" y1="15" x2="6" y2="13"/><line x1="18" y1="15" x2="18" y2="13"/></svg>',
+    "filter-funnel": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 4h18l-7 8v8l-4-2v-6z"/></svg>',
+
+    # ===== Web / UI / Internet =====
+    "browser": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><circle cx="6" cy="6.5" r="0.6" fill="currentColor"/><circle cx="8.5" cy="6.5" r="0.6" fill="currentColor"/><circle cx="11" cy="6.5" r="0.6" fill="currentColor"/></svg>',
+    "window-ui": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="8" x2="21" y2="8"/></svg>',
+    "mouse-pointer": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3l4 16 3-7 7-3z"/></svg>',
+    "globe-www": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg>',
+    "server-rack": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="6" rx="1"/><rect x="4" y="11" width="16" height="6" rx="1"/><line x1="7" y1="6" x2="9" y2="6"/><line x1="7" y1="14" x2="9" y2="14"/><circle cx="17" cy="6" r="0.8" fill="currentColor"/><circle cx="17" cy="14" r="0.8" fill="currentColor"/></svg>',
+    "load-balancer": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg>',
+    "share-net": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><line x1="8" y1="11" x2="16" y2="7"/><line x1="8" y1="13" x2="16" y2="17"/></svg>',
+    "https-secure": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><path d="M11 15l1 1 2-2"/></svg>',
+    "wifi-signal": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12a10 10 0 0 1 14 0"/><path d="M8 15a6 6 0 0 1 8 0"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>',
+
+    # ===== Ideas / vision / leadership =====
+    "lightbulb": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 18h6v-2a6 6 0 1 0-6 0v2z"/><line x1="10" y1="21" x2="14" y2="21"/></svg>',
+    "north-star": '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 13,10 22,12 13,14 12,22 11,14 2,12 11,10"/></svg>',
+    "telescope": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 14l8-3 6 5-1 2-7 2z"/><line x1="13" y1="11" x2="20" y2="4"/><line x1="11" y1="20" x2="13" y2="14"/><line x1="8" y1="21" x2="11" y2="20"/></svg>',
+    "vision-eye": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
+    "mountain-summit": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="3,20 9,9 13,15 16,11 21,20"/><circle cx="9" cy="6" r="1.5"/></svg>',
+    "podium": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="6" width="6" height="14"/><rect x="3" y="11" width="6" height="9"/><rect x="15" y="9" width="6" height="11"/></svg>',
+    "trophy": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4v3a3 3 0 0 0 3 3"/><path d="M17 6h3v3a3 3 0 0 1-3 3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="15" x2="12" y2="20"/></svg>',
+    "medal": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 3l3 8M17 3l-3 8"/><circle cx="12" cy="15" r="6"/><polygon points="12,12 13.5,14 16,14 14,15.5 14.5,18 12,16.5 9.5,18 10,15.5 8,14 10.5,14"/></svg>',
+    "crown": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7l4 4 5-7 5 7 4-4-2 12H5z"/></svg>',
+    "roadmap": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 19c4-2 6-2 9-9 3-7 5-7 9-5"/><circle cx="6" cy="17" r="1.5" fill="currentColor"/><circle cx="12" cy="10" r="1.5" fill="currentColor"/><circle cx="18" cy="6" r="1.5" fill="currentColor"/></svg>',
+    "beacon": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="6"/><circle cx="12" cy="9" r="3" fill="currentColor"/><line x1="6" y1="3" x2="8" y2="6"/><line x1="18" y1="3" x2="16" y2="6"/><path d="M5 20l3-9h8l3 9z"/></svg>',
+    "hand-raised": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 13v-9a1.5 1.5 0 0 1 3 0v7"/><path d="M12 11v-6a1.5 1.5 0 0 1 3 0v8"/><path d="M15 11v-4a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-3l-3-5a1.5 1.5 0 0 1 3-1.5L7 16V8a1.5 1.5 0 0 1 3 0v6"/></svg>',
+
+    # ===== Strategy / planning =====
+    "target-bullseye": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
+    "chess-king": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="10" y1="4" x2="14" y2="4"/><path d="M12 6c-3 2-5 5-5 8h10c0-3-2-6-5-8z"/><rect x="6" y="14" width="12" height="3"/><rect x="4" y="17" width="16" height="3"/></svg>',
+    "scenario-tree": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="3" cy="20" r="2"/><circle cx="9" cy="20" r="2"/><circle cx="15" cy="20" r="2"/><circle cx="21" cy="20" r="2"/><line x1="12" y1="6" x2="6" y2="10"/><line x1="12" y1="6" x2="18" y2="10"/><line x1="6" y1="14" x2="3" y2="18"/><line x1="6" y1="14" x2="9" y2="18"/><line x1="18" y1="14" x2="15" y2="18"/><line x1="18" y1="14" x2="21" y2="18"/></svg>',
+    "map-pin": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 22s7-7.5 7-13a7 7 0 0 0-14 0c0 5.5 7 13 7 13z"/><circle cx="12" cy="9" r="3"/></svg>',
+    "hourglass": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="6" y1="3" x2="18" y2="3"/><line x1="6" y1="21" x2="18" y2="21"/><path d="M7 3l5 9-5 9"/><path d="M17 3l-5 9 5 9"/></svg>',
+    "flag-checkered": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="5" y1="3" x2="5" y2="21" stroke-linecap="round"/><rect x="5" y="4" width="14" height="8"/><line x1="9" y1="4" x2="9" y2="12"/><line x1="13" y1="4" x2="13" y2="12"/><line x1="17" y1="4" x2="17" y2="12"/><line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="10" x2="19" y2="10"/></svg>',
+
+    # ===== Reporting / analytics extended =====
+    "ledger": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="11" y1="11" x2="18" y2="11"/><line x1="11" y1="14" x2="18" y2="14"/><line x1="11" y1="17" x2="16" y2="17"/></svg>',
+    "scorecard": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="8" x2="21" y2="8"/><line x1="9" y1="11" x2="9" y2="19"/><line x1="15" y1="11" x2="15" y2="19"/><circle cx="6" cy="14" r="0.8" fill="currentColor"/><circle cx="12" cy="15" r="0.8" fill="currentColor"/><circle cx="18" cy="13" r="0.8" fill="currentColor"/></svg>',
+    "traffic-light": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="2" width="8" height="20" rx="3"/><circle cx="12" cy="7" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="17" r="1.5"/></svg>',
+    "heatmap": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6"/><rect x="9" y="3" width="6" height="6" fill="currentColor" opacity="0.4"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="9" width="6" height="6" fill="currentColor" opacity="0.7"/><rect x="9" y="9" width="6" height="6" fill="currentColor"/><rect x="15" y="9" width="6" height="6" fill="currentColor" opacity="0.4"/><rect x="3" y="15" width="6" height="6"/><rect x="9" y="15" width="6" height="6" fill="currentColor" opacity="0.7"/><rect x="15" y="15" width="6" height="6"/></svg>',
+    "audit-trail": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><line x1="6" y1="8" x2="6" y2="10"/><line x1="6" y1="14" x2="6" y2="16"/><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="17" y2="12"/><line x1="9" y1="18" x2="14" y2="18"/></svg>',
+    "report-doc": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/><line x1="8" y1="13" x2="16" y2="13"/><polyline points="8,16 11,16 11,18 14,18"/></svg>',
+    "donut": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 7 7" stroke-linecap="round"/></svg>',
+    "ranking": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="14" width="5" height="6"/><rect x="9.5" y="9" width="5" height="11"/><rect x="16" y="4" width="5" height="16"/></svg>',
+
+    # ===== Meeting / collaboration =====
+    "meeting": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><line x1="7" y1="7" x2="10" y2="11"/><line x1="17" y1="7" x2="14" y2="11"/><line x1="7" y1="17" x2="10" y2="13"/><line x1="17" y1="17" x2="14" y2="13"/></svg>',
+    "whiteboard": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="1"/><line x1="6" y1="20" x2="9" y2="17"/><line x1="18" y1="20" x2="15" y2="17"/><polyline points="6,9 9,12 13,8 18,11"/></svg>',
+    "thumbs-up": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11h4v9H3z"/><path d="M7 11l5-8a2 2 0 0 1 4 1l-1 5h5a2 2 0 0 1 2 2l-1 7a2 2 0 0 1-2 2h-9a3 3 0 0 1-3-3"/></svg>',
+
     # ===== Generic fallback pool =====
     "hexagon": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,8 21,16 12,21 3,16 3,8"/></svg>',
     "diamond": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg>',
@@ -149,6 +223,12 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     (["heart", "cardiac", "ecg", "ekg", "heart-rate"],     "heartbeat"),
     (["pain", "ease", "pca", "analgesia", "anesthet"],     "pill"),
     (["drug", "pharmac", "dose", "formular"],              "pill"),
+    (["bandage", "wound", "dressing", "first-aid"],        "bandage"),
+    (["scalpel", "surgery", "surgical", "incision"],       "scalpel"),
+    (["vital", "monitor-vitals", "patient-monitor"],       "vitals"),
+    (["ambulance", "emergency-vehicle", "ems", "911"],     "ambulance"),
+    (["prescription", "rx", "script"],                     "prescription"),
+    (["wheelchair", "mobility", "accessibility"],          "wheelchair"),
     (["needle", "vaccin", "injecti"],                      "syringe"),
     (["infusion", "iv", "drip", "intraven"],               "iv-drip"),
     (["dna", "gene", "genom", "sequenc"],                  "dna"),
@@ -171,7 +251,7 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     # Engineering
     (["mechanic", "machine", "gear", "tolera"],            "gear"),
     (["wrench", "fix", "repair"],                          "wrench"),
-    (["circuit", "pcb", "board", "schematic"],             "circuit"),
+    (["circuit", "pcb", "schematic"],                      "circuit"),
     (["chip", "asic", "microchip", "soc", "mcu"],          "microchip"),
     (["measure", "ruler", "dimens"],                       "ruler"),
     (["draw", "blueprint", "cad", "design"],               "blueprint"),
@@ -227,7 +307,7 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     (["chart-bar", "histogram", "bar"],                    "chart-bar"),
     (["chart", "trend", "metric", "kpi"],                  "chart-line"),
     (["pie", "share", "split", "compos"],                  "chart-pie"),
-    (["gauge", "speed", "score"],                          "gauge"),
+    (["gauge", "speedometer", "rpm-dial"],                 "gauge"),
     (["dashboard", "panel", "console", "view"],            "dashboard"),
 
     # Workflow / state
@@ -249,7 +329,7 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     (["compass", "navigat", "direction"],                  "compass-rose"),
 
     # AI / agents / LLM
-    (["ai", "llm", "model", "claude", "gpt", "gemini"],    "robot"),
+    (["ai-", "llm", "model", "claude-ai", "gpt", "gemini", " ai "], "robot"),
     (["mental", "cogniti", "thinking"],                    "brain-circuit"),
     (["magic", "highlight", "feature"],                    "sparkles"),
 
@@ -257,6 +337,75 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     (["source of truth", "manifest", "config", "yaml", "single", "registry"], "compass-rose"),
     (["fabricat", "verify", "[verify]", "ground", "citation"], "search"),
     (["demo", "banner", "mark"],                           "tag"),
+
+    # ===== Extended categories (v0.2-rebuild expansion) =====
+
+    # Engineering / hardware extended
+    (["caliper", "tolerance check", "precision-measure"],  "caliper"),
+    (["multimeter", "voltage", "amperage", "ohm"],         "multimeter"),
+    (["screwdriver", "fasten", "drive"],                   "screwdriver"),
+    (["hammer", "strike", "nail"],                         "hammer"),
+    (["hard-hat", "construction", "site-safety", "ppe"],   "hard-hat"),
+    (["valve", "regulator-flow", "spigot"],                "valve"),
+    (["sensor", "transducer", "iot-sensor"],               "sensor"),
+    (["antenna", "broadcast-rf", "wireless-rf"],           "antenna"),
+    (["battery", "power", "charge", "voltage-cell"],       "battery"),
+
+    # Tooling / craft
+    (["toolbox", "kit", "set-of-tools", "toolset"],        "toolbox"),
+    (["puzzle", "piece", "modular", "component"],          "puzzle"),
+    (["magnet", "attract", "polarity"],                    "magnet"),
+    (["level-tool", "alignment", "horizontal", "plumb"],   "level-tool"),
+    (["filter", "funnel", "narrow", "select"],             "filter-funnel"),
+
+    # Web / UI / Internet
+    (["browser", "web-page", "webpage", "site-page"],      "browser"),
+    (["window-ui", "window", "dialog", "modal"],           "window-ui"),
+    (["mouse-pointer", "click", "cursor"],                 "mouse-pointer"),
+    (["globe", "internet", "www", "world"],                "globe-www"),
+    (["server", "rack", "datacenter", "host-machine"],     "server-rack"),
+    (["load-balancer", "traffic-split", "load-balance"],   "load-balancer"),
+    (["share", "social", "broadcast-net"],                 "share-net"),
+    (["https", "ssl", "tls", "secure-connection"],         "https-secure"),
+    (["wifi", "wireless", "signal-strength"],              "wifi-signal"),
+
+    # Ideas / vision / leadership
+    (["idea", "lightbulb", "insight-spark", "eureka"],     "lightbulb"),
+    (["north-star", "guiding", "polestar"],                "north-star"),
+    (["telescope", "future-look", "long-view", "horizon"], "telescope"),
+    (["vision", "see-the-future", "outlook"],              "vision-eye"),
+    (["mountain", "summit", "peak", "ascent", "climb"],    "mountain-summit"),
+    (["podium", "stage", "speaker"],                       "podium"),
+    (["trophy", "award", "win", "champion"],               "trophy"),
+    (["medal", "honor", "recognition"],                    "medal"),
+    (["crown", "leader", "authority", "executive"],        "crown"),
+    (["roadmap", "journey", "path-forward"],               "roadmap"),
+    (["beacon", "signal-fire", "light-house"],             "beacon"),
+    (["raise-hand", "volunteer", "advocate"],              "hand-raised"),
+
+    # Strategy / planning
+    (["target", "bullseye", "objective", "goal-set"],      "target-bullseye"),
+    (["chess", "tactic", "game-plan", "strategic-move"],   "chess-king"),
+    (["scenario", "decision-tree", "branching"],           "scenario-tree"),
+    (["heatmap", "intensity-grid", "density-map"],         "heatmap"),
+    (["map", "pin", "geo", "place"],                       "map-pin"),
+    (["hourglass", "deadline", "time-pressure"],           "hourglass"),
+    (["finish", "checkered-flag", "race"],                 "flag-checkered"),
+
+    # Reporting / analytics extended
+    (["ledger", "books", "accounting"],                    "ledger"),
+    (["scorecard", "report-card", "evaluation"],           "scorecard"),
+    (["traffic-light", "rag-status", "ryg"],               "traffic-light"),
+    (["heatmap", "intensity-grid", "density-map"],         "heatmap"),
+    (["audit-trail", "history-log", "changelog"],          "audit-trail"),
+    (["report", "summary", "writeup"],                     "report-doc"),
+    (["donut", "ring-chart", "completion"],                "donut"),
+    (["ranking", "top-10", "leaderboard", "stack-rank"],   "ranking"),
+
+    # Meeting / collaboration
+    (["meeting", "session-mtg", "sync-up"],                "meeting"),
+    (["whiteboard", "brainstorm", "diagram-board"],        "whiteboard"),
+    (["thumbs-up", "approve-vote", "endorse"],             "thumbs-up"),
 ]
 
 
