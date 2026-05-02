@@ -239,6 +239,25 @@ registries:
       - task
       - tracker
 
+  # Third-party community skills (MIT-licensed, not GlobalLogic-authored).
+  # /sync-skills MUST NOT push to these registries — pull-only / reinstall-only.
+  # If a skill from this registry goes missing, reinstall via:
+  #   git clone --depth=1 https://github.com/<repo>.git /tmp/<name>
+  #   cd /tmp/<name> && git checkout <pinned_sha>
+  #   cp -r SKILL.md STYLE_PRESETS.md viewport-base.css html-template.md \
+  #         animation-patterns.md README.md LICENSE scripts/ \
+  #         <project>/.claude/skills/<name>/
+  #   echo <pinned_sha> > <project>/.claude/skills/<name>/.pinned-sha
+  - name: community-zarazhangrui
+    type: github-public
+    repo: zarazhangrui/frontend-slides
+    pinned_sha: 8dca834fc61abc9dd633cbe6a74ed7be3d82a608
+    license: MIT
+    sync_policy: pull-only   # never push — third-party upstream
+    description: Community frontend-slides skill — animation-rich HTML presentations
+    skills:
+      - frontend-slides
+
 # ─── Security Policy ───
 
 security:

@@ -152,6 +152,15 @@ The design evolved through several iterations during task 015 (see `tasks/ben/01
 - **Extension-hook surfaces** — `project_extensions.py` and `_project_overrides/` are documented but not yet loaded by `app.py`. Scheduled for v1.1.
 - **Dark mode switching** — right now the theme is fixed at launch. A runtime toggle would be nice but requires cookies + render-time theme resolution.
 
+## Markdown Rendering Conventions
+
+The documents view (and chat assistant) renders markdown via `console/web/static/console.css`'s `.md-content` rule block. Two rendering decisions are load-bearing and should not drift:
+
+1. **Tables size to content, not to the pane.** Tables use `display: block; width: max-content; max-width: 100%; overflow-x: auto` — the GitHub / VS Code pattern. Tables that fit naturally stay narrow; wide tables scroll horizontally rather than crushing column widths. Do **not** re-introduce `width: 100%` on `table` — combined with auto-layout it pushes 2-col tables to span the pane and lets short-label columns get squeezed when the same table contains a long-paragraph cell.
+2. **Cells wrap at word boundaries.** Cell `<th>` / `<td>` use `word-break: normal; overflow-wrap: break-word` (browser default for prose). Character-level breaking (`overflow-wrap: anywhere`) is **scoped to `<code>` and `<a>` inside cells** — the only places where unbreakable tokens (URLs, paths, kebab IDs) appear and need it.
+
+The CSS comment at `.md-content table` records the rationale.
+
 ## Best Practices
 
 <!-- Read by /best-practices skill to audit project setup -->
@@ -169,6 +178,14 @@ The design evolved through several iterations during task 015 (see `tasks/ben/01
 
 ## Changelog
 
+- 1.9.0 (2026-05-01): **B3 strategy reassembly — single-button "Run Assembler" + Original/Diff tabs + per-callout review for edits.** Replaces the prior B3 UX (separate detection-pass button, manual `/strategy assemble` from Claude Code, single static doc preview) with a one-button flow plus a tabbed Original / Diff view of the strategy document. After Run Assembler, the Diff tab appears with **Save & Publish** and **Throw Away** controls; the existing **Awaiting your review** section continues to surface per-callout Accept / Reject / Modify cards. Two layers of control: whole-doc Save & Publish / Throw Away at the Diff tab; per-callout Accept / Reject / Modify in the review section. Fixes the "I clicked Re-assemble and nothing changed" failure mode — detection-pass-only behavior is correct under the hood but invisible to the user; one button + diff makes the result visible. Worktree model is canonical: B3 runs in `.worktrees/workflow-strategy-<domain>-<date>/` on a `workflow/strategy-<domain>-<date>` branch backed by a session task. **Throw Away** discards the pending assembler run only — keeps the worktree open so the user can retry. **Cancel Workflow** is a separate explicit control that tears down the entire session (worktree + branch + task). **Save & Publish** commits, fast-forward merges to main, pushes, tears down the worktree, and marks the session task Complete. Diff format is unified (GitHub-style single pane). Concurrent runs blocked with "Save & Publish or Throw Away the pending diff first." Conflict-aware merge logic stays in `/strategy assemble` (the console invokes it; doesn't re-implement it).
+
+  **Files (5):** `console/web/static/assistant.js` + `console/web/templates/workflow_b3_index.html` (front-end tabs + Run Assembler button + Save & Publish / Throw Away controls); `console/workflows/b3_session.py` (session lifecycle, worktree management); `console/workflows/b3_strategy_reassembly.py` (assembler invocation, diff computation, per-callout review wiring); `console/workflows/router.py` (B3 endpoint surface).
+
+  **Post-update:** Run `/project-console sync` and restart the console (Python module state needs full restart). Browser hard-refresh for the JS/HTML.
+
+- 1.7.8 (2026-05-01): **Markdown table rendering — match VS Code / GitHub preview behavior.** Replace `width: 100%; word-break: break-word; overflow-wrap: anywhere` on `.md-content table` (and parallel `.markdown-body table`) with `display: block; width: max-content; max-width: 100%; overflow-x: auto`. Cell text now wraps at word boundaries; character-level breaking scoped to `<code>` / `<a>` inside cells. New "Markdown Rendering Conventions" section documents the invariants so they survive future drift.
+- 1.7.7 (2026-05-01): **Documents view: folder landing prefers `index.md` over `README.md`.** Page trees adopted from external CMS (e.g., Confluence) use `index.md` as the canonical landing file; legacy folders use `README.md`. When both are present, `index.md` wins. Single change in `documents/tree.py` (`README_CANDIDATES` → `FOLDER_LANDING_CANDIDATES`).
 - 1.7.6 (2026-04-24): **Documents viewer: browsable skill-library roots + top-level docs in sidebar + relative-link resolution + md/yaml/json wrap fixes.** Several related UX polish items discovered while validating v1.7.5 in-product.
 
   **Tree sidebar now shows everything the agent can ground on.** `tree.py` `list_dir` + `list_tree` extended to render each multi-segment grounding root (from `Config.grounding_roots`) as a top-level node alongside `docs/` and `tasks/`. Display name strips `.claude/skills/` so the label reads e.g. `medtech-docs/references` rather than the noisy full path. New helper `_extra_root_entries()`.

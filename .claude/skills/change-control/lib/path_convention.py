@@ -27,7 +27,7 @@ AI_PDLC_PREFIX = "AI_PDLC"
 
 
 def project_root() -> Path:
-    """Return the arthrex-pccp project root by walking up from cwd looking
+    """Return the consuming project's root by walking up from cwd looking
     for project.yml."""
     cur = Path.cwd().resolve()
     for parent in [cur] + list(cur.parents):
@@ -104,12 +104,12 @@ def doc_name_from_repo_path(rel_path: str | Path) -> str:
     """Convert a repo-relative md path to a Drive-safe doc name.
 
     Examples:
-      docs/project/dhfs/hiplink-suite/design-controls/architecture/foo.md
-        → docs_project_dhfs_hiplink-suite_design-controls_architecture_foo
-      tasks/ben/119-some-task.md
-        → tasks_ben_119-some-task
-      hiplink-system-sad.md
-        → hiplink-system-sad
+      docs/project/dhfs/<dhf-name>/design-controls/architecture/foo.md
+        → docs_project_dhfs_<dhf-name>_design-controls_architecture_foo
+      tasks/<user>/119-some-task.md
+        → tasks_<user>_119-some-task
+      <doc-slug>-system-sad.md
+        → <doc-slug>-system-sad
 
     Rules:
       - Path separators (/) → underscore (_)
@@ -129,9 +129,9 @@ def doc_name_from_repo_path(rel_path: str | Path) -> str:
 def drive_path_for(rel_path: str | Path, task_folder: str | None = None) -> list[str]:
     """Return the AI_PDLC folder path components + final doc name.
 
-    Returns a list like ['AI_PDLC', 'Arthrex PCCP', 'ben', 'docs_..._foo']
+    Returns a list like ['AI_PDLC', '<project name>', '<task_folder>', 'docs_..._foo']
     where the last element is the doc name and the rest are folder names
-    (in order).
+    (in order). Project name and task_folder are read from project.yml.
     """
     tf = task_folder or resolve_current_user_task_folder()
     return [

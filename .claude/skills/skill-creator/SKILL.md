@@ -1,8 +1,20 @@
 ---
 name: skill-creator
-description: "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when users mention skill conventions, skill structure, or ask about how skills should be organized."
-version: 5
-updated: 2026-04-27
+description: |
+  Create, modify, audit, and measure skills. Owns the trigger surface (frontmatter `description` + § Actions) of every skill in `.claude/skills/<name>/`.
+
+  TRIGGER when the user wants to **create, modify, edit, extend, fix, refactor, audit, evaluate, optimize, package, or test any skill** — including:
+    - Explicit skill work: "create a skill for X", "make a new skill", "modify the X skill", "optimize the X skill description", "run evals on the X skill", "package the X skill"
+    - Maintenance / extension framed as feature work: "add an action to X skill", "extend X to also handle Y", "fix a bug in the Y skill", "the Z skill should also do W", "add Confluence support to change-control", "add internal review tier to <skill>"
+    - Path-based — ANY edit/write to files under `.claude/skills/<name>/`, especially `SKILL.md` (frontmatter or § Actions), `actions/`, `hooks/`, or `scripts/`. **If the deliverable lands in `.claude/skills/`, the work IS skill modification regardless of how the user frames it.** Past tasks built/modified skills end-to-end without firing this skill because they were framed as feature tiers — that gap is what these triggers fix.
+    - Audit / quality: "are the trigger words for X conflicting with Y?", "audit the triggers on the X skill", "does the X skill description handle natural language?", "is the X skill being undertriggered?", "check skill X against other skills"
+    - Skill conventions: "how should I structure a skill", "what goes in SKILL.md vs README", "skill conventions"
+
+  Actions: `setup`, `audit-triggers <skill>`, `improve-description <skill>`, `package <skill>`, plus the iterative create/eval/improve flow described below.
+
+  A PreToolUse hook (installed by `setup`) emits a one-line reminder when a SKILL.md frontmatter or § Actions section is edited — armed once per skill per session, auto-cleared when `audit-triggers` runs or the session ends, body-only edits skipped.
+version: 6
+updated: 2026-04-28
 ---
 
 # Skill Creator
@@ -40,9 +52,49 @@ Then after the skill is done (but again, the order is flexible), you can also ru
 | `agents/comparator.md` | Subagent: blind A/B comparison between two outputs |
 | `agents/analyzer.md` | Subagent: analyzes why one version beat another |
 | `references/schemas.md` | JSON schemas for evals, grading, benchmark, comparison, analysis |
-| `scripts/` | Python automation: eval runner, benchmark aggregation, description optimization |
+| `scripts/` | Python automation: eval runner, benchmark aggregation, description optimization, **trigger audit** |
+| `scripts/audit_triggers.py` | `audit-triggers` action — runs trigger eval + cross-skill conflict scan, produces report |
+| `hooks/skill-md-watch.py` | PreToolUse hook — fires once per skill per session when SKILL.md frontmatter / § Actions is edited; reminds to run `audit-triggers` |
+| `hooks/skill-md-watch-cleanup.sh` | SessionEnd hook — clears per-session armed state |
 | `eval-viewer/` | HTML review interface and feedback collection |
 | `assets/eval_review.html` | Interactive trigger eval query editor |
+
+## Actions
+
+### `setup`
+
+Install the SKILL.md watch hooks (PreToolUse + SessionEnd) into `.claude/settings.json`. Idempotent — safe to re-run.
+
+Steps:
+1. Verify `jq` and `.claude/hooks/register-hook.sh` are present (the latter is installed by `/task setup`).
+2. Create `.state/` at project root if missing (gitignored runtime state).
+3. Symlink `.claude/hooks/skill-creator-watch.py` → `../skills/skill-creator/hooks/skill-md-watch.py` (skip if exists).
+4. Symlink `.claude/hooks/skill-creator-cleanup.sh` → `../skills/skill-creator/hooks/skill-md-watch-cleanup.sh` (skip if exists).
+5. Register PreToolUse hook on `Edit|Write|NotebookEdit` matcher pointing at `skill-creator-watch.py`.
+6. Register SessionEnd hook (no matcher) pointing at `skill-creator-cleanup.sh`.
+7. Report what was wired vs already present.
+
+### `audit-triggers <skill-name>`
+
+Audit a skill's trigger surface. Produces a report covering:
+
+1. **Trigger eval** — runs 20 evaluation queries against the skill's current frontmatter description via `claude -p` (uses existing `scripts/run_eval.py` infrastructure):
+   - 10 should-trigger paraphrases covering: explicit skill work ("modify the X skill"), maintenance/feature framings ("add an action to X", "extend X to handle Y", "fix bug in X"), path-based ("I'm editing `.claude/skills/X/SKILL.md`"), natural language ("we want to do <X's domain> on <object>").
+   - 10 should-not-trigger near-misses — feature work outside skill scope, similar-vocabulary tasks for other skills, generic "improve X" where X isn't a skill.
+2. **Cross-skill conflict scan** — pure-Python checks against every other skill in the project:
+   - **Trigger-verb overlap with object-disambiguation** — flags only conflicts where verb AND likely object overlap.
+   - **PreToolUse hook matcher collisions** — scans every SKILL.md for hook registration patterns; reports stacking/conflict.
+   - **Project-name leakage** — regex against `project.yml` `project.name` and DHF leaf names; skills must stay project-agnostic.
+   - **`actions/` vs § Actions documentation drift** — flags any file under `actions/` not documented in SKILL.md, and vice versa.
+3. **Pass/fail summary** + concrete remediation suggestions.
+
+Output: stdout report + JSON log to `.state/skill-creator-audit-<skill>-<YYYY-MM-DD>.json`. Clears the skill from the per-session armed state (so the watch hook can re-fire if the skill is edited again).
+
+This action is **automatically recommended** by the SKILL.md watch hook whenever a skill's frontmatter or Actions section is edited.
+
+### Iterative create / improve flow
+
+(Existing — see "Communicating with the user" + scripts/run_loop.py for the eval+improve loop.)
 
 ## Communicating with the user
 
@@ -198,6 +250,24 @@ The setup action must be **idempotent** — safe to re-run. Skip symlinks that a
 **Agent ownership rule:** the skill's `agents/` directory is the source of truth. A project that wants to customize an advisor forks the agent file (converts the symlink into a regular file); `/sync-skills` and `/advisors sync` detect the divergence and leave forks alone.
 
 **Registry-level `agents/` directory** (hitachi root `agents/`): only for cross-skill registry agents that don't belong to any one skill (e.g., `project-secops.md` is owned by the `secops` skill and lives under `skills/secops/agents/`, not at the registry root). Do not push per-skill agent files to the registry root.
+
+### Multi-Hook Coexistence (HARD RULE)
+
+Multiple skills can — and routinely do — register hooks against the **same event** (e.g., `task` and `change-control` both hook PreToolUse on `Edit|Write|NotebookEdit`; `task`, `secops`, and `digest` all hook SessionStart). Claude Code chains them in registration order. The shared `.claude/hooks/register-hook.sh` helper handles JSON-merging into `settings.json` without clobbering existing entries. **This is the design, not a coordination problem to solve.**
+
+To make your skill's hooks coexist safely with other skills' hooks, follow these five rules:
+
+1. **Symlink names must be skill-prefixed.** Use `.claude/hooks/<skill>-<purpose>.{sh,py}` (e.g., `task-active-check.sh`, `skill-creator-watch.py`, `change-control-frozen.py`). Never use a generic name like `pre-tool-use.sh` — two skills doing that collide on the symlink.
+2. **State files must be skill-prefixed and session-scoped.** If your hook persists per-session state, name the file `.state/<skill>-<purpose>-{session_id}.{json,txt}` (e.g., `.state/active-tasks-{session_id}.txt`, `.state/skill-creator-armed-{session_id}.json`). Never read or write another skill's state file — a hook that touches another skill's state is no longer self-contained.
+3. **Never assume execution order.** Other skills' hooks may run before or after yours. Your hook must be correct in isolation, with no dependency on what ran first.
+4. **Default to exit 0.** Informational nudges go to stderr (visible to user, not blocking). Use the structured PreToolUse JSON contract (`{"decision": "block", "reason": "..."}`) only when you genuinely need to deny the operation.
+5. **Provide a SessionEnd cleanup hook** if you create per-session state — and make it purge ONLY your own state files (matching `<skill>-` prefix). Don't loop over `.state/*-{session_id}.*` and clean everything; that would corrupt other skills' state.
+
+**Reference implementation pairs** (good to learn from):
+- `task` skill: `hooks/check-active-task.sh` (PreToolUse) + `hooks/session-cleanup.sh` (SessionEnd) + state file `.state/active-tasks-{session_id}.txt`
+- `skill-creator` skill: `hooks/skill-md-watch.py` (PreToolUse) + `hooks/skill-md-watch-cleanup.sh` (SessionEnd) + state file `.state/skill-creator-armed-{session_id}.json`
+
+Both pairs hook the same events (PreToolUse Edit/Write/NotebookEdit + SessionEnd), use skill-prefixed symlink names + state files, and have no awareness of each other. That's the canonical shape.
 
 **Note on WSL2:** Symlinks created in WSL2 may not be visible in VS Code's file explorer. This is expected. The hooks and agents still resolve from the CLI, and source files can be edited via the skill directory directly.
 

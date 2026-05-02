@@ -269,18 +269,28 @@ def _children(
     return out
 
 
-README_CANDIDATES = ("README.md", "readme.md", "Readme.md", "README.markdown", "readme.markdown")
+FOLDER_LANDING_CANDIDATES = (
+    "index.md",
+    "index.markdown",
+    "README.md",
+    "README.markdown",
+)
 
 
 def find_folder_readme(abs_dir: Path) -> Path | None:
-    """Return the first README-like file inside ``abs_dir``, case-insensitive."""
+    """Return the folder's landing doc, preferring ``index.md`` over ``README.md``.
+
+    Case-insensitive. Page trees adopted from external CMS (e.g., Confluence)
+    use ``index.md`` as the canonical landing file; legacy folders use
+    ``README.md``. When both are present, ``index.md`` wins.
+    """
     if not abs_dir.is_dir():
         return None
     try:
         by_lower = {p.name.lower(): p for p in abs_dir.iterdir() if p.is_file()}
     except OSError:
         return None
-    for name in README_CANDIDATES:
+    for name in FOLDER_LANDING_CANDIDATES:
         hit = by_lower.get(name.lower())
         if hit is not None:
             return hit

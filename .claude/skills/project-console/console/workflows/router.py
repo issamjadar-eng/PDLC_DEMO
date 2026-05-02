@@ -126,12 +126,23 @@ async def workflow_view(request: Request, slug: str):
                 stripped = b3_strategy_reassembly._dedent_callout_body(p.raw)
                 md_engine.reset()
                 body_html = md_engine.convert(stripped)
-                existing_md = b3_strategy_reassembly.existing_section_content(text, p)
-                if existing_md:
-                    md_engine.reset()
-                    existing_html = md_engine.convert(existing_md)
-                else:
+                # New-addition callouts are explicitly tagged by the assembler
+                # via `<!-- STRATEGY PROPOSED: new addition, section "X" -->`.
+                # When that marker is present, skip the side-by-side
+                # "Currently in this section" pane — there's nothing to compare
+                # against, the proposal is brand-new content. Older heuristic
+                # (existing_section_content emptiness) misclassifies new
+                # additions placed at the end of a populated section.
+                is_new_add = b3_strategy_reassembly.is_new_addition_proposal(text, p)
+                if is_new_add:
                     existing_html = ""
+                else:
+                    existing_md = b3_strategy_reassembly.existing_section_content(text, p)
+                    if existing_md:
+                        md_engine.reset()
+                        existing_html = md_engine.convert(existing_md)
+                    else:
+                        existing_html = ""
                 proposals_rendered.append({
                     "idx": p.idx,
                     "task_id": p.task_id,
@@ -145,7 +156,7 @@ async def workflow_view(request: Request, slug: str):
                     "stripped": stripped,
                     "body_html": body_html,
                     "existing_html": existing_html,
-                    "is_new_addition": not bool(existing_md),
+                    "is_new_addition": is_new_add or not existing_html,
                 })
             # Parse decisions for the domain pane action bar.
             decisions_list = b3_strategy_reassembly.parse_decisions(text)
@@ -196,6 +207,8 @@ async def workflow_view(request: Request, slug: str):
                 })
 
             session_info = None
+            strategy_doc_diff_html = ""
+            strategy_doc_dirty = False
             if sess is not None:
                 # Decompose `git status --porcelain` output `XY <path>` into
                 # {code, path} pairs so the UI can list per-file actions.
@@ -207,6 +220,16 @@ async def workflow_view(request: Request, slug: str):
                         "code": code.strip() or "??",
                         "path": rel,
                     })
+                # Pre-render the strategy-doc whole-file diff for the Diff tab.
+                # This is the canonical "what changed" view at the doc level —
+                # per-file rows in the technical-view stay below for power users.
+                strategy_doc_dirty = b3_session.worktree_strategy_doc_dirty(
+                    Path(sess.worktree_path), d.slug
+                )
+                if strategy_doc_dirty:
+                    strategy_doc_diff_html = b3_session.friendly_file_diff_html(
+                        Path(sess.worktree_path), d.virtual_path
+                    )
                 session_info = {
                     "task_id": sess.task_id,
                     "task_path": sess.task_path,
@@ -215,11 +238,14 @@ async def workflow_view(request: Request, slug: str):
                     "has_diff": sess.has_diff,
                     "diff_count": len(sess.diff_summary),
                     "pending_files": pending_files,
+                    "strategy_doc_dirty": strategy_doc_dirty,
                 }
             domain_views.append({
                 "doc": d,
                 "raw_md": text,
                 "body_html": _rewrite_task_links(rendered.body_html),
+                "strategy_doc_diff_html": strategy_doc_diff_html,
+                "strategy_doc_dirty": strategy_doc_dirty,
                 "proposals": [
                     {**p, "body_html": _rewrite_task_links(p["body_html"])}
                     for p in proposals_rendered
@@ -495,7 +521,7 @@ async def b3_execute(request: Request, domain_slug: str):
                 "task_id": task_id,
                 "task_path": str(task_path.relative_to(cfg.repo_root)),
                 "worktree_path": str(worktree_root),
-                "branch": b3_session.worktree_branch(domain_slug),
+                "branch": b3_session.worktree_branch(cfg.repo_root, domain_slug),
                 "has_diff": bool(sess and sess.has_diff),
                 "diff_summary": sess.diff_summary if sess else [],
             },
@@ -524,16 +550,48 @@ def _assembler_model(cfg) -> str:
 
 _ASSEMBLER_SYSTEM_PROMPT = (
     "You are the /strategy assembler agent. Run in NON-INTERACTIVE mode: "
-    "when conflicts are detected between sources, do NOT prompt the user. "
-    "Instead, write each conflicting newer block as a `> **Proposed change**` "
-    "blockquote callout alongside the existing section and add the "
-    "`<!-- STRATEGY PROPOSED: vs <older_task>, section \"X\" -->` marker. "
-    "The project-console will surface each callout for per-proposal "
-    "Accept / Reject / Modify review. Otherwise follow the canonical "
-    "assembler.md flow: scan task docs for `<!-- STRATEGY CONTENT -->` tags "
-    "in the specified domain, update the strategy doc under "
-    "`docs/project/strategies/<domain>-strategy.md`, preserve History, "
-    "update Sources + Source Traceability appendix. No git commits."
+    "do NOT prompt the user under any circumstances. Every newly-introduced "
+    "or modified decision must be emitted as a `> **Proposed change**` "
+    "blockquote callout so the user can review each one independently in "
+    "the project-console. There are TWO callout flavors:\n"
+    "\n"
+    "Every callout's first line MUST be exactly:\n"
+    "    > **Proposed change** — <task_folder>/<NNN> (\"<Heading>\", <Author>, <YYYY-MM-DD>)\n"
+    "with `<task_folder>/<NNN>` written as PLAIN TEXT (NOT a markdown link). "
+    "Example: `> **Proposed change** — ben/136 (\"Corpus & Retrieval Architecture\", Ben Xavier, 2026-05-01)`. "
+    "The console's parser depends on this exact shape — markdown-link "
+    "decoration like `[ben/136](path)` will break it.\n"
+    "\n"
+    "1. CONFLICT — a newer source rewrites an existing decision in the "
+    "strategy doc. Write the newer block as a `> **Proposed change**` "
+    "callout placed immediately after the existing decision, and emit the "
+    "marker `<!-- STRATEGY PROPOSED: vs <older_task>, section \"X\" -->` "
+    "right after the callout's closing line.\n"
+    "\n"
+    "2. NEW ADDITION — a source contributes a decision that has no existing "
+    "equivalent in the strategy doc. Do NOT append this directly into the "
+    "doc body. Instead, write it as a `> **Proposed change**` callout at "
+    "the END of the relevant `## N. <Section>` block, with marker "
+    "`<!-- STRATEGY PROPOSED: new addition, section \"X\" -->` right after. "
+    "Inside the callout body, include the decision wrapped in placeholder "
+    "DECISION sentinels: `<!-- DECISION:start id=NEW status=proposed "
+    "source=<task_id> created=<YYYY-MM-DD> -->` ... body ... "
+    "`<!-- DECISION:end id=NEW -->`. The console assigns a real id when the "
+    "user clicks Accept. Use heading prefix `N.NEW` (e.g. `### 3.NEW Title`) "
+    "as a placeholder; the real index is allocated at Accept time too.\n"
+    "\n"
+    "Every callout body must be the FULL decision body the user would see "
+    "if accepted (including any tables, lists, formatting). The user reviews "
+    "each callout independently — they may Accept, Reject, Modify, or "
+    "Re-categorize each one.\n"
+    "\n"
+    "Aside from emitting callouts, follow the canonical assembler.md flow: "
+    "scan task docs for `<!-- STRATEGY CONTENT -->` tags in the specified "
+    "domain, update the strategy doc's header metadata "
+    "(`<!-- Assembled: ... -->` and `<!-- Sources: ... -->`) and append "
+    "Source Traceability + History entries. NEVER write a new authoritative "
+    "decision (DECISION:start/end with a real id) directly into the doc — "
+    "always go through the callout path. NEVER make git commits."
 )
 _ASSEMBLER_ALLOWED_TOOLS = ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
 
@@ -564,6 +622,21 @@ async def b3_execute_assembler_stream(request: Request, domain_slug: str):
         )
     except RuntimeError as e:
         raise HTTPException(409, str(e))
+
+    # Concurrent-run guard: refuse to start a new assembler run if the
+    # strategy doc inside the worktree already has uncommitted changes
+    # from a prior run. The user must Save & Publish or Throw Away first
+    # — otherwise the agent's writes silently overwrite their prior
+    # unresolved diff.
+    if b3_session.worktree_strategy_doc_dirty(worktree_root, domain_slug):
+        raise HTTPException(
+            409,
+            (
+                "There's already a pending assembler run for this domain. "
+                "Save & Publish it (commits + merges to main) or Throw Away "
+                "the pending diff before running the assembler again."
+            ),
+        )
 
     # Pre-activate the auto-created task for the agent's session by
     # generating a UUID, writing `.state/active-tasks-<uuid>.txt` in BOTH
@@ -598,7 +671,7 @@ async def b3_execute_assembler_stream(request: Request, domain_slug: str):
 
     async def event_gen():
         # Header line carrying session metadata.
-        yield f"data: {_json.dumps({'type': 'session', 'task_id': task_id, 'worktree': str(worktree_root), 'branch': b3_session.worktree_branch(domain_slug), 'agent_session_id': agent_session_id})}\n\n"
+        yield f"data: {_json.dumps({'type': 'session', 'task_id': task_id, 'worktree': str(worktree_root), 'branch': b3_session.worktree_branch(cfg.repo_root, domain_slug), 'agent_session_id': agent_session_id})}\n\n"
         prompt = (
             f"Run /strategy assemble {domain_slug} in non-interactive mode. "
             f"Working directory is this worktree ({worktree_root}). Target "
@@ -785,6 +858,16 @@ async def b3_execute_assembler_stream(request: Request, domain_slug: str):
                 ),
                 **health,
             }
+            # Loud server-log line so the user can correlate run outcomes
+            # against the timestamped console-out.log without piecing together
+            # SSE frames from the browser.
+            print(
+                f"[b3-assembler] domain={domain_slug} status={terminal['status']} "
+                f"tool_count={tool_count} write_count={write_count} "
+                f"denial_count={denial_count} worktree_diff_files={len(health['worktree_diff'])} "
+                f"reason={terminal['reason']!r}",
+                flush=True,
+            )
             yield f"data: {_json.dumps(terminal)}\n\n"
         yield f"data: {_json.dumps({'type': 'done'})}\n\n"
 
@@ -1074,8 +1157,11 @@ async def b3_section_edit_via_chat(request: Request, domain_slug: str, section_i
     if not new_section_md:
         raise HTTPException(400, "`new_section_md` is required")
     chat_summary = body.get("chat_summary") or []
+    # Same per-proposal-review semantics as decision edits: queue as a
+    # `> **Proposed change**` callout in the worktree, ship via Save & Publish
+    # in the tab bar — never auto-merge mid-review.
     try:
-        result = b3_strategy_reassembly.perform_section_edit(
+        result = b3_strategy_reassembly.perform_section_edit_as_proposal(
             worktree_root, doc_wt, section_idx, new_section_md,
             actor=actor, active_task_ids_=[task_id],
         )
@@ -1105,13 +1191,13 @@ async def b3_section_edit_via_chat(request: Request, domain_slug: str, section_i
             break
     except Exception as ex:
         result["task_doc_append_error"] = str(ex)
-    msg = (
-        f"workflow: edit section {section_idx} (via chat) · {domain_slug} · "
-        f"by {actor}"
-    )
-    result["auto_commit"] = _auto_commit_after_decision_action(
-        cfg, doc_wt, domain_slug, actor_folder, actor, msg
-    )
+    # Skip auto-commit — the section edit is now a `> **Proposed change**`
+    # callout awaiting review alongside any other pending proposals.
+    result["auto_commit"] = {
+        "committed": False,
+        "deferred": True,
+        "note": "Queued as proposal — review in '📝 Awaiting your review' and ship via Save & Publish on the tab bar.",
+    }
     return JSONResponse(result)
 
 
@@ -1185,8 +1271,16 @@ async def b3_decision_edit_via_chat(request: Request, domain_slug: str, decision
     chat_summary = body.get("chat_summary") or []
     if not isinstance(chat_summary, list):
         chat_summary = []
+    # When a review session is active, decision edits land as `> **Proposed
+    # change**` callouts in the worktree — not direct in-place rewrites
+    # followed by auto-merge. The user reviews them in 📝 Awaiting your review
+    # alongside assembler proposals and ships everything together via Save &
+    # Publish on the tab bar. This keeps decision edits inside the same
+    # per-proposal review pipeline (Accept / Reject / Modify / Re-categorize)
+    # instead of bypassing the queue and silently shipping any unreviewed
+    # callouts that already exist in the worktree.
     try:
-        result = b3_strategy_reassembly.perform_decision_edit(
+        result = b3_strategy_reassembly.perform_decision_edit_as_proposal(
             worktree_root, doc_wt, decision_id, new_body,
             actor=actor, active_task_ids_=[task_id],
         )
@@ -1215,10 +1309,14 @@ async def b3_decision_edit_via_chat(request: Request, domain_slug: str, decision
             break
     except Exception as e:
         result["task_doc_append_error"] = str(e)
-    msg = f"workflow: edit (via chat) decision {decision_id} · {domain_slug} · by {actor}"
-    result["auto_commit"] = _auto_commit_after_decision_action(
-        cfg, doc_wt, domain_slug, actor_folder, actor, msg
-    )
+    # Skip auto-commit: the edit is now a `> **Proposed change**` callout
+    # awaiting review. User ships it via Save & Publish on the tab bar
+    # alongside any other pending proposals.
+    result["auto_commit"] = {
+        "committed": False,
+        "deferred": True,
+        "note": "Queued as proposal — review in '📝 Awaiting your review' and ship via Save & Publish on the tab bar.",
+    }
     return JSONResponse(result)
 
 
@@ -1320,6 +1418,35 @@ async def b3_discard(request: Request, domain_slug: str):
         raise HTTPException(400, "`path` is required")
     result = b3_session.worktree_discard(wt, path)
     return JSONResponse(result)
+
+
+@router.post("/workflows/strategy-reassembly/{domain_slug}/throw-away-all")
+async def b3_throw_away_all(domain_slug: str):
+    """Whole-doc Throw Away: revert ALL pending changes in this domain's
+    worktree (the assembler's strategy-doc edits + any other staged-in
+    files), but KEEP the worktree, branch, and backing session task open
+    so the user can Run Assembler again. Use `/cancel-workflow` to also
+    tear down the session."""
+    cfg = get_config()
+    wt = b3_session.worktree_path(cfg.repo_root, domain_slug)
+    if not wt.is_dir():
+        raise HTTPException(404, f"no open worktree for {domain_slug}")
+    return JSONResponse(b3_session.worktree_discard_all(wt))
+
+
+@router.post("/workflows/strategy-reassembly/{domain_slug}/cancel-workflow")
+async def b3_cancel_workflow(domain_slug: str):
+    """Tear down the entire workflow session for this domain: discard any
+    pending diff, remove the worktree, delete the branch, mark the backing
+    session task Abandoned. The opposite of Save & Publish."""
+    cfg = get_config()
+    actor_info = _resolve_actor(cfg.repo_root)
+    if actor_info.get("unresolved"):
+        raise HTTPException(403, f"Actor unresolved ({actor_info.get('reason')}).")
+    actor_folder = actor_info.get("task_folder") or ""
+    if not actor_folder:
+        raise HTTPException(403, "Actor has no task_folder in project.yml")
+    return JSONResponse(b3_session.cancel_workflow(cfg.repo_root, actor_folder, domain_slug))
 
 
 @router.post("/workflows/strategy-reassembly/{domain_slug}/commit")

@@ -1120,20 +1120,38 @@ body.docs-page.resizing * {
   word-break: inherit;
   overflow-wrap: inherit;
 }
+/* Markdown table rendering — match VS Code / GitHub preview behavior.
+   - display: block + width: max-content + max-width: 100% + overflow-x: auto
+     means tables size to natural content width up to the pane, then scroll
+     horizontally rather than crushing columns.
+   - Cell text wraps at word boundaries (overflow-wrap: break-word, the
+     default). The previous `overflow-wrap: anywhere` + `word-break:
+     break-word` made every cell character-breakable, which let the
+     auto-layout algorithm crush short-label columns to ~60px when the
+     same table also contained a long-paragraph cell.
+   - Character-level breaking is reserved for code spans and links — the
+     only places where unbreakable tokens (URLs, paths, kebab IDs) appear. */
 .md-content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
-  width: 100%;
   margin: 1rem 0;
   font-size: .9rem;
-  table-layout: auto;
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 .md-content th, .md-content td {
   border: 1px solid var(--gl-border);
   padding: .5rem .75rem;
   text-align: left;
   vertical-align: top;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+.md-content td code, .md-content td a,
+.md-content th code, .md-content th a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .md-content h3, .md-content h4, .md-content h5 {
   font-size: 1rem;
@@ -1194,22 +1212,29 @@ body.docs-page.resizing * {
 /* Inline code wraps so long identifiers (paths, kebab-cased IDs) don't
    force the block wider than its container. */
 .markdown-body code { overflow-wrap: anywhere; word-break: break-word; }
+/* See `.md-content table` above for the design rationale. Same rules
+   applied here so the two parallel rule blocks don't drift. */
 .markdown-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
-  width: 100%;
   margin: 1rem 0;
   font-size: .9rem;
-  table-layout: auto;
-  /* Long cell content (paths, URLs, multi-sentence descriptions) wraps
-     instead of pushing the table wider than the pane. */
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 .markdown-body th, .markdown-body td {
   border: 1px solid var(--gl-border);
   padding: .55rem .8rem;
   text-align: left;
   vertical-align: top;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+.markdown-body td code, .markdown-body td a,
+.markdown-body th code, .markdown-body th a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .markdown-body th {
   background: var(--gl-gray-lighter);

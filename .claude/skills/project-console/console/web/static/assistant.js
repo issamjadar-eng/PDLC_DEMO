@@ -392,7 +392,11 @@
       const html = renderMarkdown(body);
       el.innerHTML = wrapInlineCitations(html, citations) + renderSourcesBlock(citations);
     } else {
-      el.textContent = content;
+      // User-authored content. Render as markdown too so prompts that paste
+      // markdown (proposal bodies, code blocks, lists, headings, etc.)
+      // display formatted instead of as raw text. Safe-ish: the user is
+      // typing their own input — at worst they HTML-inject themselves.
+      el.innerHTML = renderMarkdown(content);
     }
   }
 

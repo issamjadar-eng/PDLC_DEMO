@@ -1,9 +1,36 @@
 ---
 name: change-control
-description: Bridges Claude Code / GitHub authoring with downstream regulated systems — Google Docs (internal review tier), Confluence + Comala/SoftComply (formal Part 11 review), Windchill (released vault). Enforces a hybrid freeze-point lifecycle (draft → [internal-review optional] → frozen → released) via a PreToolUse hook with in-chat consent. Provides `init`, `freeze`, `unfreeze`, `status`, `release`, plus the new task-doc-driven internal-review tier (`review-start`, `review-status`, `review-update`, `review-abort`) and `help`.
-version: 0.5.0
-updated: 2026-04-27
-status: internal-review-v0.5
+description: |
+  Bidirectional bridge between Claude Code / GitHub authoring and regulated downstream systems — Google Docs (internal review tier), Confluence + Comala/SoftComply (formal Part 11 review), Windchill (released vault), Jira (ECRs).
+
+  TRIGGER for INBOUND (Confluence → repo) — when the user wants to **grab, pull, acquire, import, adopt, mirror, copy, sync, ingest, fetch, snapshot, or bring** a Confluence page (or page tree / subtree / section / space) into the project's markdown tree under `docs/`. Natural-language phrasings that should fire this skill include:
+    - "grab the Confluence page(s) at <url>"
+    - "pull the Confluence page <title> into our docs"
+    - "sync the Confluence page <url> into the project"
+    - "import this Confluence subtree into docs/project/dhfs"
+    - "mirror the <space> Confluence pages locally"
+    - "adopt the existing Confluence content for <topic>"
+    - "copy the Confluence pages over to our repo"
+    - "acquire the formal Confluence content as markdown"
+    - "we already have these pages in Confluence — bring them in"
+  Inbound actions: `adopt` (single page), `adopt-tree` (subtree, bulk), `pull` (refresh side-by-side comparison), `promote` (staging → canonical DHF location). Output goes to `docs/confluence-staging/<space>/...` first; promotion to `docs/project/dhfs/...` is a deliberate later step.
+
+  TRIGGER for OUTBOUND (repo → Confluence/Windchill) — when the user wants to **publish, push, freeze, release, send-up, hand off, or sign off** local markdown to the regulated stack. Natural-language phrasings:
+    - "publish this doc to Confluence"
+    - "freeze <path> for formal review"
+    - "kick off Part 11 review on <path>"
+    - "release this to Windchill / the vault"
+    - "send this up for formal sign-off"
+  Outbound actions: `publish` (push markdown → Confluence page with divergence detection), `freeze` (lock local + start formal review), `unfreeze` (revert with consent), `release` (Confluence → Windchill ECO).
+
+  TRIGGER for INTERNAL REVIEW (md ↔ Google Docs) — when the user wants pre-formal team review via Google Docs comments before Confluence/Comala. Natural-language phrasings: "send this for team review", "open a review gdoc", "start internal review on <path>", "pull comments back from the gdoc". Actions: `review-start`, `review-status`, `review-update`, `review-abort`.
+
+  Lifecycle: `draft → published → review-formal → frozen → released`. Enforces freeze gate via PreToolUse hook with in-chat consent.
+
+  Other actions: `init`, `status`, `help`, `reindex`, `verify`.
+version: 0.13.0
+updated: 2026-04-29
+status: adopt-publish-probe-validated
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -12,31 +39,59 @@ Base directory for this skill: `${CLAUDE_SKILL_DIR}`
 
 Owns the **change-management bridge** between AI-accelerated authoring (Claude Code + GitHub) and the regulated downstream stack (Confluence + Comala/SoftComply for Part 11 review and sign-off, Windchill as the released vault, Jira for ECRs).
 
-Implements **Strategy C** — a hybrid freeze-point lifecycle:
+## Two flow directions, one skill
+
+This skill handles **both directions** of the bridge between local markdown and the regulated stack:
+
+**INBOUND — Confluence → repo (`adopt` / `adopt-tree` / `pull` / `promote`)**
+
+When formal content already exists in Confluence and the team wants to bring it into the project's markdown tree (so Claude Code can author against it, trace tooling can index it, V&V can verify against it). Use this when the user says "grab", "pull", "import", "adopt", "mirror", "sync", "acquire", or "copy" Confluence pages into the repo.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  PHASE 1: DRAFT  (git is authoritative)                     │
-│  Claude Code authors freely. Iteration is cheap.            │
-└─────────────────────────────────────────────────────────────┘
-                   │  -- FREEZE POINT (change-control:freeze) --
-                   ▼
-┌─────────────────────────────────────────────────────────────┐
-│  PHASE 2: FORMAL REVIEW  (Confluence is authoritative)      │
-│  Comala/SoftComply workflow. Part 11 e-signatures.          │
-│  Git path is locked. Edits blocked by PreToolUse hook.      │
-└─────────────────────────────────────────────────────────────┘
-                   │  -- RELEASE (Comala "Released" webhook) --
-                   ▼
-┌─────────────────────────────────────────────────────────────┐
-│  PHASE 3: VAULT  (Windchill is authoritative)               │
-│  Signed PDF → ECO → BOM/training assignments                │
-└─────────────────────────────────────────────────────────────┘
+Confluence page(s)
+        │  -- adopt / adopt-tree (Atlassian MCP fetch, ADF→md, snapshot) --
+        ▼
+docs/confluence-staging/<space>/<path>.md     ← staged hybrid (frontmatter snapshot kept)
+        │  -- promote (operator-supervised) --
+        ▼
+docs/project/dhfs/<dhf>/<canonical-location>.md
 ```
+
+**OUTBOUND — repo → Confluence → Windchill (`publish` / `freeze` / `unfreeze` / `release`)**
+
+The original Strategy C hybrid freeze-point lifecycle, now with `published` and `review-formal` as distinct states between `draft` and `frozen`:
+
+```
+draft  →  published  →  review-formal  →  frozen  →  released
+   │           │              │              │           │
+   git      Confluence     Comala /     Confluence    Windchill
+authoring  page exists,  SoftComply   page locked,   ECO + signed
+           bidirectional  Part 11      git Edit       PDF, BOM
+           sync via       e-sign       blocked by     impact
+           publish/pull   workflow     PreToolUse     assignments
+```
+
+**INTERNAL REVIEW (Google Docs round-trip) — `review-start` / `review-status` / `review-update` / `review-abort`**
+
+Team comments on a gdoc copy of the source before formal Confluence review. Optional pre-formal lane.
 
 The freeze enforcement lives in a **PreToolUse hook** that blocks Edit/Write on any file with `state: frozen` in its frontmatter. The hook emits a structured briefing to the user explaining what will be invalidated (Confluence page state, in-progress reviewer signatures, Jira ticket state) and requires an explicit typed phrase to authorize the unfreeze. **No PR ceremony — consent happens in the chat where the context lives.**
 
-> ⚠️ **STATUS — SCAFFOLD ONLY.** This skill is design-captured and structurally complete but functionally a stub. All actions print `NOT IMPLEMENTED`. All connectors raise `NotImplementedError`. The scaffold exists so the design lives in code, the extensibility seams are reserved, and implementation can proceed incrementally without rewrites. See `README.md` for the full design rationale and `tasks/ben/017-change-control-skill.md` for the open questions still being worked through.
+## Implementation status — per-action snapshot
+
+| Action | Status | Notes |
+|---|---|---|
+| `adopt` | **Probe-validated, agent-orchestrated** | Live MCP fetch, ADF→markdown, frontmatter + snapshot working; per `actions/adopt.md` procedure. Build remains for full pipeline (incl. images, smartlink labels, success-panel preservation). |
+| `adopt-tree` | **Probe-validated** | JSON-directive MCP bridge for bulk subtree pulls. Avoids per-page agent turn cost. Per `actions/adopt_tree.md`. |
+| `pull` | **Probe-validated** | Refreshes `<doc>.confluence-side.md` next to source. Required by `publish` Merge branch. |
+| `publish` | **Probe-validated** | First-publish + update with divergence detection + Confluence Zone preservation. Per `actions/publish.md`. |
+| `promote` | **Stub** (`actions/promote.py`) | Move adopted content from staging to canonical DHF path. |
+| `freeze` / `unfreeze` | **Stub** | Lifecycle transitions; PreToolUse hook design captured but enforcement not yet wired. |
+| `release` | **Stub** | Confluence → Windchill ECO handoff. |
+| `review-start` / `review-status` / `review-update` / `review-abort` | **v0.1 shipped** | gdoc round-trip via web-control + task-doc metadata block. |
+| `init` / `help` / `status` / `reindex` | Mixed (init stub, help v0.1, status stub, reindex stub) | |
+
+Eleven live probes from task 120 validate the v0.6 architecture end-to-end (5-state lifecycle, Confluence Zones via reserved `<details>` titles + ADF splice, divergence detection with Overwrite/Merge/Abort prompt + snapshot cache, image sync via web-control cookie reuse, plugin seam for Document Control / Comala / SoftComply). The `adopt` and `publish` paths are the most mature; build remaining is roughly 50–55 person-hours per task 120's resume-ready block.
 
 ## Dependencies (planned — none enforced yet)
 
@@ -74,7 +129,45 @@ The freeze enforcement lives in a **PreToolUse hook** that blocks Edit/Write on 
 
 ## Actions
 
-Parse the user's argument string `$ARGUMENTS` to determine which action to perform. **All actions are currently stubs** — they print what they *would* do and exit 0.
+Parse the user's argument string `$ARGUMENTS` to determine which action to perform. See the per-action **Status snapshot** above; not all are implementation-shipped yet.
+
+### `adopt <page-url-or-id> [--target <repo-path>]`
+
+**STATUS: Probe-validated, agent-orchestrated.** Per `actions/adopt.md`.
+
+Pulls one Confluence page into the repo as markdown. Default target is `docs/confluence-staging/<space-key>/<sanitized-page-path>.md`. The page's ADF body is fetched via Atlassian MCP, normalized to markdown locally, and written with frontmatter capturing `confluence.page_id`, `confluence.version`, and a content snapshot used by `publish` for divergence detection.
+
+Use when the user says: *"grab/pull/import/adopt/sync/mirror/copy/acquire the Confluence page at <url>"*, *"bring this Confluence page into our docs"*, *"we already have this in Confluence — pull it in"*.
+
+### `adopt-tree <root-page-url-or-id> [--target <root>] [--max-depth N] [--dry-run]`
+
+**STATUS: Probe-validated.** Per `actions/adopt_tree.md`.
+
+Bulk variant of `adopt` — walks a Confluence subtree from the given root and mirrors all descendants. Uses a JSON-directive bridge (fd 3 / fd 4) so a Python loop drives the bulk fetch instead of paying one agent turn per page. Suitable for ~95+ page subtrees.
+
+Use when the user says: *"pull the whole <space> Confluence tree"*, *"import all the pages under <root>"*, *"mirror the Product Overview subtree"*, *"sync this entire Confluence section into the repo"*.
+
+### `pull <doc>`
+
+**STATUS: Probe-validated.** Per `actions/pull.md`.
+
+Reads the current Confluence page body for an already-published doc and writes a side-by-side `<doc>.confluence-side.md` for comparison. Does NOT push, does NOT modify the source. Used in `publish`'s Merge branch and as an explicit "what does Confluence look like right now?" check.
+
+Use when the user says: *"refresh the Confluence side of <doc>"*, *"show me what Confluence has for this page right now"*, *"diff our markdown against Confluence"*.
+
+### `promote <staged-path> <target-path>`
+
+**STATUS: Stub.** Move adopted content from `docs/confluence-staging/<space>/...` into a canonical DHF location under `docs/project/dhfs/...`. Updates frontmatter and any cross-references. Operator-supervised — never auto-promotes.
+
+### `publish <doc>`
+
+**STATUS: Probe-validated.** Per `actions/publish.md`.
+
+Push local markdown to its Confluence page. Either creates a new page (when no `confluence.page_id` in frontmatter) or updates an existing page with **divergence detection** + **Confluence Zone preservation** (reserved `<details>` titles preserved across round-trips via ADF splice).
+
+On divergence (Confluence has been edited since last sync), prompts Overwrite / Merge / Abort. Refuses when `state ∈ {review-formal, frozen, released}`.
+
+Use when the user says: *"publish this doc to Confluence"*, *"push our markdown up to Confluence"*, *"update the Confluence page from our local copy"*.
 
 ### `init`
 
@@ -134,9 +227,9 @@ When implemented, will list every controlled doc and its phase/IDs:
 ```
 Path                                           State     Confluence  Jira          Windchill
 docs/project/dhfs/pca-device/inputs/pump-occlusion.md
-                                               frozen    458291 v1   PROJECT-1234   —
+                                               frozen    458291 v1   PP3500-1234   —
 docs/project/dhfs/pca-device/inputs/audible-alarm.md
-                                               released  458292 v3   PROJECT-1235   ECO-9981
+                                               released  458292 v3   PP3500-1235   ECO-9981
 ```
 
 Reads from frontmatter (authoritative); validates against `state.json` cache (warns on drift).
@@ -202,6 +295,49 @@ args, examples, common errors). Same pattern as `gh help`.
 **STATUS: STUB**
 
 Rebuilds `docs/.change-control/state.json` by walking the doc tree and reading frontmatter. Use if the cache drifts out of sync with frontmatter (shouldn't happen, but escape hatch).
+
+### `verify <kind>`
+
+**STATUS: v0.12 — repeatable smoke tests.** Per `actions/verify.md`.
+
+Runs an end-to-end verification flow against the `test_target` configured in `project.yml` `change_control.test_target` and writes a structured JSON report under `tasks/<person>/_scratch/verify-<kind>-<date>.json`.
+
+Sub-actions:
+- `audit` — config-only audit (no live calls).
+- `orphan-file` — round-trip a synthetic test PDF + plain-link markdown through publish + re-adopt.
+- `cross-page-resolution` — adopt a page known to carry `UNKNOWN_MEDIA_ID` and assert the resolver replaces it.
+- `drift-detection` — re-adopt a hand-edited page and assert the structured conflict prompt fires.
+- `all` — runs all of the above.
+
+The skill code stays project-agnostic: the `test_target` carries `space_key`, `parent_page_id`, `parent_title`, and `title_prefix` — every project plugs in its own AI_PDLC sandbox parent and `verify` works the same way against it.
+
+## Project config (`project.yml change_control` block)
+
+v0.12.0 introduced project-level defaults so the action helpers don't need their `--cloud-id`, `--base-url`, `--space-key`, or `--target-root` flags spelled out in every invocation. The `change_control:` block in `project.yml` is the single source of truth for project-specific values; the skill code reads it via `lib/config.py`.
+
+Schema (all fields optional; missing block = legacy CLI-required behavior):
+
+```yaml
+change_control:
+  cloud_id: <atlassian-cloud-uuid>
+  base_url: https://<site>.atlassian.net
+  spaces:
+    - key: <SPACE_KEY>
+      name: <human label>
+      staging_target_root: docs/project/_confluence
+      title_prefixes_to_strip: [...]
+  test_target:
+    space_key: <SPACE_KEY>
+    parent_page_id: "<page id>"
+    parent_title: <title>
+    title_prefix: <string>
+  cross_page_source_map:
+    "<page_id>":
+      - filename: "<file>"
+        source_page_title: "<title>"
+```
+
+CLI flags continue to override config values — backward-compatible with v0.11.0 invocations.
 
 ## Notes
 
