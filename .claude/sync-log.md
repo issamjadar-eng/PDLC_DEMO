@@ -35,11 +35,22 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 - `frontend-slides/*` (11 files) — third-party MIT skill from `zarazhangrui/frontend-slides`. Not GlobalLogic-authored; belongs in our project as a local install only.
 
-### Awaiting
+### Merged 2026-05-02
 
-- PRs #113, #114, #115 pending review/merge in hitachi.
-- After merge of PR #114 (secops audit), `/secops setup` may need re-running locally to install audit scaffolding.
-- After merge of PR (#?) registering `skill-md-watch` hook, `/skill-creator setup` should be re-run to register the new PreToolUse hook in `settings.json`.
+- **PR #115 merged** (squash) — commit `21bd076`. Hitachi `.gitignore` added; 3 leaked `.pyc` files removed.
+- **PR #114 merged** (squash) — commit `e0c7422`. secops v6 → v7 with `audit` action + `audit_artifacts.py`.
+- **PR #113 merged** (squash) — commit `0b64361`. md-deck skill added to registry.
+
+**Hitachi HEAD after sync**: `0b64361` (fast-forwarded local clone).
+
+### Final state
+
+`check` after merges: only the 11 expected `frontend-slides/*` entries remain `LOCAL_ONLY` (held from push by design — third-party MIT skill recorded under registry `community-zarazhangrui` with `sync_policy: pull-only`). Zero `UPSTREAM_NEWER`, zero `UPSTREAM_ONLY`.
+
+### Local follow-ups (done)
+
+- `/skill-creator setup` re-run — `skill-md-watch` PreToolUse + `cleanup` SessionEnd hooks registered, smoke-tested.
+- `/secops setup` re-run — agent + `security-assert.sh` already in place; permissions merged (71 → 71 unique); git identity already aligned.
 
 ---
 
