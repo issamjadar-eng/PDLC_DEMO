@@ -4,6 +4,45 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-01 — pull + push (3 PRs) + 1 cleanup PR
+
+**Hitachi HEAD before sync**: `222ddf1` (project-console v1.7.8 → v1.9.0 PR #112)
+
+### Pull (committed locally)
+
+- **skill-creator v5 → v6** (5 files): non-blocking PreToolUse `skill-md-watch` hook + `audit-triggers` action. Hook will need `/skill-creator setup` re-run to register in `settings.json`.
+- **project-console v1.5.0 → v1.9.0** (10 files): workflow B3 strategy reassembly + assistant.js / console.css updates.
+- **change-control major expansion** (61 files): new INBOUND triggers (`adopt`, `adopt-tree`, `pull`, `promote`) for Confluence → repo, plus formal-review and internal-review action sets, lib/ rewrite, ~10 new test files.
+
+### Skipped on pull
+
+- 3 `.pyc` files leaked into `hitachi/skills/shared/scripts/office/__pycache__/` — flagged for upstream cleanup (PR #115 below).
+
+### Push (PR-only, no `--merge`)
+
+- **md-deck (PR #113)** — new skill from PDLC_DEMO task ben/039. 5 files. Note: README.md not yet authored (Best Practices follow-up).
+- **secops audit (PR #114)** — bumps secops v6 → v7. Adds `audit` action + `audit_artifacts.py` static-analysis scanner from task ben/041.
+
+### Cleanup (separate PR against hitachi)
+
+- **gitignore + pyc removal (PR #115)** — hitachi had no `.gitignore`; added one and `git rm --cached` removed the three leaked `.pyc` files.
+
+### project.yml change
+
+- Added third registry entry `community-zarazhangrui` recording the upstream provenance and pinned SHA (`8dca834`) for `frontend-slides`. `sync_policy: pull-only` — never push to third-party upstream.
+
+### Held from upstream push
+
+- `frontend-slides/*` (11 files) — third-party MIT skill from `zarazhangrui/frontend-slides`. Not GlobalLogic-authored; belongs in our project as a local install only.
+
+### Awaiting
+
+- PRs #113, #114, #115 pending review/merge in hitachi.
+- After merge of PR #114 (secops audit), `/secops setup` may need re-running locally to install audit scaffolding.
+- After merge of PR (#?) registering `skill-md-watch` hook, `/skill-creator setup` should be re-run to register the new PreToolUse hook in `settings.json`.
+
+---
+
 ## 2026-04-28 — push + merge (sync-skills v6 → v7 → v8: closes task ben/029 Bug A + Bug B)
 
 - Three sequential PRs in the same session, each squash-merged immediately to validate the next:
