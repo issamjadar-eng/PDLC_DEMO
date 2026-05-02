@@ -103,7 +103,8 @@ Summary: 0 Critical · 5 High · 4 Medium · 0 Low. Every match was triaged as *
   - `EXEC-EVAL-SUBSHELL` suppressed in `secops/scripts/audit_artifacts.py` (the rule self-matches its own pattern string).
   - New `Rule.skip_in_py_string_literals` flag + tokenize-based span detection: matches that fall *inside* a Python string literal or comment are dropped (handles trailing-comma case where the line also has an OP token). Applied to `CFG-GIT-CONFIG-GLOBAL` and `SEC-DOTENV` so user-facing instruction strings don't trip them.
   - `FS-WRITE-SYSTEM` suppressed in `web-control/scripts/install-chrome-wsl.sh` (legitimate Chrome apt-source-list installer, documented purpose, runs only on explicit user-invoked `web-control setup`).
-  - Final state: `Skill/agent audit: no findings.` exit 0. Status: complete pending upstream push.
+  - Final state: `Skill/agent audit: no findings.` exit 0.
+- 2026-05-01 — Pushed locally (`6e7e95a` to PDLC_DEMO main) and upstream as hitachi PR [#109](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/109) (`secops/v7-skill-audit`). Status: substantively complete pending upstream merge.
 
 ## Task Gate State File
 

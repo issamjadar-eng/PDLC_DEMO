@@ -1,11 +1,11 @@
-# Security Posture — ben
+# Security Posture — Ben Xavier
 
 ## Last Check
-- Date: 2026-04-22
+- Date: 2026-04-29
 - Result: FAIL
 - Checks passed: 11/16 automated
 - Skipped: 0 (gh unavailable or API timeout)
-- Next check due: 2026-04-29
+- Next check due: 2026-05-06
 
 ## Attestations
 
@@ -25,5 +25,4 @@
 
 | Date | Result | Failures | Notes |
 |------|--------|----------|-------|
-| 2026-04-22 | FAIL | Skills allowlist (Unknown: change-control trace-matrix), GitHub 2FA (2FA not enabled on GitHub), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main), Collaborators in roster (Unauthorized: orestdanchak-gl) | Automated check |
-| 2026-04-20 | FAIL | Git email domain (Domain 'gmail.com' not in approved list), SSH key exists (No SSH key found), Skills allowlist (Unknown: change-control trace-matrix), GitHub 2FA (2FA not enabled on GitHub), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main) | Automated check |
+| 2026-04-29 | FAIL | SSH key exists (No SSH key found), GitHub 2FA (2FA not enabled on GitHub), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main), Collaborators in roster (Unauthorized: vyanovych mykhailochaus-GLO orestdanchak-gl dmytro-savenkov-gl WojtekTGL) | Automated check |
