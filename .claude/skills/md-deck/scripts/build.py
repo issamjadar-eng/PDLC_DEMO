@@ -943,6 +943,10 @@ def render_card_grid(s: dict) -> str:
         f'<div class="mini-card {accents[i % 3]}">'
         f'<div class="mc-label">{render_inline(t["label"])}</div>'
         f'<div class="mc-sub">{render_inline(t.get("subtitle", ""))}</div>'
+        f'<div class="mc-full">'
+        f'<div class="mc-full-label">{render_inline(t["label"])}</div>'
+        f'<div class="mc-full-body">{render_inline(t.get("subtitle", ""))}</div>'
+        '</div>'
         '</div>'
         for i, t in enumerate(s.get("tiles", []))
     )

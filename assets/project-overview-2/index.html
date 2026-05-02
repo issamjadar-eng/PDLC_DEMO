@@ -5,7 +5,7 @@
   md-deck v0.2.0 — DO NOT HAND-EDIT
   Source: project-overview-2.md
   SHA-256: 217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d
-  Built:  2026-05-02T05:24:49Z by benxavier
+  Built:  2026-05-02T05:28:51Z by benxavier
   Update: python .claude/skills/md-deck/scripts/build.py project-overview-2.md
 -->
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
 <meta name="generator" content="md-deck v0.2.0">
 <meta name="md-deck:source" content="project-overview-2.md">
 <meta name="md-deck:source-sha256" content="217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d">
-<meta name="md-deck:built-at" content="2026-05-02T05:24:49Z">
+<meta name="md-deck:built-at" content="2026-05-02T05:28:51Z">
 <meta name="md-deck:built-by" content="benxavier">
 <meta name="md-deck:style" content="bold-signal">
 <meta name="md-deck:slide-count" content="27">
@@ -168,21 +168,82 @@ table.compact-table {
 @media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 540px) { .card-grid { grid-template-columns: 1fr; } }
 .mini-card {
+    position: relative;
     padding: clamp(0.6rem, 1.3vw, 1rem);
     background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 100%);
     border: 1px solid var(--rule); border-radius: 4px;
-    transition: border-color 0.25s, transform 0.25s;
+    /* Resting cells stay put. Hover reveals .mc-full popup overlay
+       (absolutely positioned), so neighbors don't shift. */
+    transition: border-color 0.25s, box-shadow 0.25s, z-index 0s;
+    min-height: clamp(110px, 18vh, 170px);
+    z-index: 1;
 }
-.mini-card:hover { border-color: var(--card-orange); transform: translateY(-2px); }
-.mini-card .name {
+.mini-card:hover {
+    border-color: var(--card-orange);
+    z-index: 50;
+}
+.mini-card.accent-orange { border-top: 3px solid var(--card-orange); }
+.mini-card.accent-amber  { border-top: 3px solid var(--card-amber); }
+.mini-card.accent-coral  { border-top: 3px solid var(--card-coral); }
+.mini-card.accent-orange:hover { box-shadow: 0 12px 32px -8px rgba(255,87,34,0.40); }
+.mini-card.accent-amber:hover  { box-shadow: 0 12px 32px -8px rgba(255,180,0,0.40); }
+.mini-card.accent-coral:hover  { box-shadow: 0 12px 32px -8px rgba(255,112,67,0.40); }
+.mini-card .mc-label {
     font-family: var(--font-display);
-    font-size: clamp(0.85rem, 1.5vw, 1.1rem); line-height: 1.1;
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem); line-height: 1.15;
+    margin-bottom: clamp(0.25rem, 0.55vh, 0.45rem);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.mini-card .mc-sub {
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    color: var(--text-secondary); line-height: 1.4;
+    /* Truncate the resting-state subtitle to ~5 lines so cards stay
+       evenly-sized; the full text lives in .mc-full popup. */
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* Hover popup — absolutely positioned overlay that paints OVER the
+   card on hover. No neighbor displacement; matches the cat-cell pattern. */
+.mini-card .mc-full {
+    position: absolute;
+    top: -4px; left: -4px; right: -4px;
+    min-height: calc(100% + 8px);
+    height: max-content;
+    padding: clamp(0.7rem, 1.4vw, 1.1rem);
+    border-radius: 4px;
+    background: linear-gradient(160deg, rgba(28,28,32,0.98) 0%, rgba(20,20,24,0.98) 100%);
+    border: 1px solid currentColor;
+    box-shadow: 0 16px 40px -8px rgba(0,0,0,0.55), 0 0 0 1px currentColor;
+    color: var(--text-primary);
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    line-height: 1.5;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-3px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 5;
+    overflow: visible;
+}
+.mini-card .mc-full .mc-full-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    font-weight: 600;
     margin-bottom: clamp(0.25rem, 0.55vh, 0.45rem);
     color: var(--text-primary);
 }
-.mini-card .desc {
-    font-size: clamp(0.65rem, 1.1vw, 0.85rem);
-    color: var(--text-secondary); line-height: 1.35;
+.mini-card .mc-full .mc-full-body {
+    color: var(--text-secondary);
+}
+.mini-card.accent-orange .mc-full { color: var(--card-orange); }
+.mini-card.accent-amber  .mc-full { color: var(--card-amber); }
+.mini-card.accent-coral  .mc-full { color: var(--card-coral); }
+.mini-card:hover .mc-full {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .bullets { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.9rem); }
@@ -863,7 +924,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Filing scope at a glance</h2>
         <p class="lead reveal">We are filing <strong>one 510(k)</strong> for the SP6500 hardware + firmware + Drug Library Manager (DLM) bundle, with an integrated PCCP that pre-authorizes drug-library updates and bounded firmware revisions.</p>
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Filing scope = SP6500 pump + DLM.</div><div class="mc-sub">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is <strong>out of the SP6500 filing</strong>, scheduled for a separate 510(k) using SP6000-AlarmGuard (K215555) as predicate. The Cloud Sync Service (CSS) and Asset Tracking Service (ATS) are MDDS components, <strong>out of scope</strong> entirely.</div></div><div class="mini-card accent-amber"><div class="mc-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="mc-sub">Every user need and design input is tagged Critical to Safety / Function / Performance. Only Ct\*-tagged requirements are in scope for the 510(k); commercial features ship post-clearance on the marketing track.</div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP envelope.</div><div class="mc-sub">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked risk profile, and dose-error-reduction tuning that meets the bounded change protocol.</div></div><div class="mini-card accent-orange"><div class="mc-label">Predicate.</div><div class="mc-sub">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope plus the touchscreen UX update are the substantive deltas; clinical equivalence carries the rest.</div></div><div class="mini-card accent-amber"><div class="mc-label">PAM filing posture.</div><div class="mc-sub">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six months later, predicate AlarmGuard. This is a deliberate carve-out — bundling PAM would extend the SP6500 timeline by an estimated 9 months.</div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Filing scope = SP6500 pump + DLM.</div><div class="mc-sub">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is <strong>out of the SP6500 filing</strong>, scheduled for a separate 510(k) using SP6000-AlarmGuard (K215555) as predicate. The Cloud Sync Service (CSS) and Asset Tracking Service (ATS) are MDDS components, <strong>out of scope</strong> entirely.</div><div class="mc-full"><div class="mc-full-label">Filing scope = SP6500 pump + DLM.</div><div class="mc-full-body">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is <strong>out of the SP6500 filing</strong>, scheduled for a separate 510(k) using SP6000-AlarmGuard (K215555) as predicate. The Cloud Sync Service (CSS) and Asset Tracking Service (ATS) are MDDS components, <strong>out of scope</strong> entirely.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="mc-sub">Every user need and design input is tagged Critical to Safety / Function / Performance. Only Ct\*-tagged requirements are in scope for the 510(k); commercial features ship post-clearance on the marketing track.</div><div class="mc-full"><div class="mc-full-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="mc-full-body">Every user need and design input is tagged Critical to Safety / Function / Performance. Only Ct\*-tagged requirements are in scope for the 510(k); commercial features ship post-clearance on the marketing track.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP envelope.</div><div class="mc-sub">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked risk profile, and dose-error-reduction tuning that meets the bounded change protocol.</div><div class="mc-full"><div class="mc-full-label">PCCP envelope.</div><div class="mc-full-body">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked risk profile, and dose-error-reduction tuning that meets the bounded change protocol.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Predicate.</div><div class="mc-sub">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope plus the touchscreen UX update are the substantive deltas; clinical equivalence carries the rest.</div><div class="mc-full"><div class="mc-full-label">Predicate.</div><div class="mc-full-body">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope plus the touchscreen UX update are the substantive deltas; clinical equivalence carries the rest.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">PAM filing posture.</div><div class="mc-sub">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six months later, predicate AlarmGuard. This is a deliberate carve-out — bundling PAM would extend the SP6500 timeline by an estimated 9 months.</div><div class="mc-full"><div class="mc-full-label">PAM filing posture.</div><div class="mc-full-body">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six months later, predicate AlarmGuard. This is a deliberate carve-out — bundling PAM would extend the SP6500 timeline by an estimated 9 months.</div></div></div></div>
     </div>
 </section>
 
@@ -903,7 +964,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Key deliverables</h2>
         
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Q-Sub package</div><div class="mc-sub">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA pre-feedback.</div></div><div class="mini-card accent-amber"><div class="mc-label">510(k) submission</div><div class="mc-sub">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level, performance and validation data, complete risk analysis, draft labeling.</div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP document</div><div class="mc-sub">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance criteria, post-market reporting plan.</div></div><div class="mini-card accent-orange"><div class="mc-label">Trace matrix</div><div class="mc-sub">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags and a <strong>PAM-or-pump</strong> column carving the SaMD work.</div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Q-Sub package</div><div class="mc-sub">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA pre-feedback.</div><div class="mc-full"><div class="mc-full-label">Q-Sub package</div><div class="mc-full-body">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA pre-feedback.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">510(k) submission</div><div class="mc-sub">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level, performance and validation data, complete risk analysis, draft labeling.</div><div class="mc-full"><div class="mc-full-label">510(k) submission</div><div class="mc-full-body">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level, performance and validation data, complete risk analysis, draft labeling.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP document</div><div class="mc-sub">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance criteria, post-market reporting plan.</div><div class="mc-full"><div class="mc-full-label">PCCP document</div><div class="mc-full-body">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance criteria, post-market reporting plan.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Trace matrix</div><div class="mc-sub">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags and a <strong>PAM-or-pump</strong> column carving the SaMD work.</div><div class="mc-full"><div class="mc-full-label">Trace matrix</div><div class="mc-full-body">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags and a <strong>PAM-or-pump</strong> column carving the SaMD work.</div></div></div></div>
     </div>
 </section>
 
@@ -932,7 +993,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Core program team</h2>
         <p class="lead reveal">The SP6500 program runs as a <strong>cross-functional pod</strong> with a single program manager driving cadence and the clinical voice carried by two practicing anesthesiologists embedded in design reviews.</p>
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Program leadership.</div><div class="mc-sub">PM owns scope and calendar; clinical lead owns the use-case backlog; regulatory lead owns the FDA timeline.</div></div><div class="mini-card accent-amber"><div class="mc-label">Engineering execution.</div><div class="mc-sub">Firmware, mechanical, and SaMD report into an R&amp;D lead who chairs design reviews.</div></div><div class="mini-card accent-coral"><div class="mc-label">Quality + Risk.</div><div class="mc-sub">QE owns the QMS evidence chain; risk-management lead owns the ISO 14971 file end-to-end.</div></div><div class="mini-card accent-orange"><div class="mc-label">Human factors.</div><div class="mc-sub">A dedicated HF engineer runs formative testing in three sites; summative is contracted to a CRO under the program manager&#x27;s oversight.</div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Program leadership.</div><div class="mc-sub">PM owns scope and calendar; clinical lead owns the use-case backlog; regulatory lead owns the FDA timeline.</div><div class="mc-full"><div class="mc-full-label">Program leadership.</div><div class="mc-full-body">PM owns scope and calendar; clinical lead owns the use-case backlog; regulatory lead owns the FDA timeline.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Engineering execution.</div><div class="mc-sub">Firmware, mechanical, and SaMD report into an R&amp;D lead who chairs design reviews.</div><div class="mc-full"><div class="mc-full-label">Engineering execution.</div><div class="mc-full-body">Firmware, mechanical, and SaMD report into an R&amp;D lead who chairs design reviews.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Quality + Risk.</div><div class="mc-sub">QE owns the QMS evidence chain; risk-management lead owns the ISO 14971 file end-to-end.</div><div class="mc-full"><div class="mc-full-label">Quality + Risk.</div><div class="mc-full-body">QE owns the QMS evidence chain; risk-management lead owns the ISO 14971 file end-to-end.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Human factors.</div><div class="mc-sub">A dedicated HF engineer runs formative testing in three sites; summative is contracted to a CRO under the program manager&#x27;s oversight.</div><div class="mc-full"><div class="mc-full-label">Human factors.</div><div class="mc-full-body">A dedicated HF engineer runs formative testing in three sites; summative is contracted to a CRO under the program manager&#x27;s oversight.</div></div></div></div>
     </div>
 </section>
 
@@ -1012,7 +1073,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Hazard register summary</h2>
         <p class="lead reveal">The ISO 14971 hazard analysis identifies six high-priority hazards driving the V&amp;V scope. Each carries documented residual-risk acceptance after control implementation.</p>
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Free flow on disconnect.</div><div class="mc-sub">A break-away on the IV set could deliver an uncontrolled bolus. Controlled by a passive anti-free-flow valve plus active flow detection in firmware.</div></div><div class="mini-card accent-amber"><div class="mc-label">Drug library mismatch.</div><div class="mc-sub">A drug entry mismapped to a wrong concentration could deliver 10× overdose. Controlled by a dual-witness library deployment workflow plus runtime concentration cross-check against the prescriber&#x27;s order.</div></div><div class="mini-card accent-coral"><div class="mc-label">Alarm fatigue masking critical events.</div><div class="mc-sub">Routine occlusion alarms could habituate clinicians, masking a true infiltration. Controlled by predictive-alarm module (PAM, separately filed) with a measured 38% nuisance-alarm reduction.</div></div><div class="mini-card accent-orange"><div class="mc-label">Battery depletion mid-infusion.</div><div class="mc-sub">A depleted battery without grace-period warning could pause an active infusion. Controlled by 30-minute reserve + visual + audible escalating warnings starting at 60 minutes remaining.</div></div><div class="mini-card accent-amber"><div class="mc-label">Pump tampering during transport.</div><div class="mc-sub">A jostled pump could drift the rate setting. Controlled by mechanical key-lock plus firmware setting-change audit trail.</div></div><div class="mini-card accent-coral"><div class="mc-label">Software defect introducing dose calculation error.</div><div class="mc-sub">A regression in the dose-rate path could under- or over-deliver. Controlled by IEC 62304 enhanced documentation, automated regression suite, and field-failure telemetry feedback loop.</div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Free flow on disconnect.</div><div class="mc-sub">A break-away on the IV set could deliver an uncontrolled bolus. Controlled by a passive anti-free-flow valve plus active flow detection in firmware.</div><div class="mc-full"><div class="mc-full-label">Free flow on disconnect.</div><div class="mc-full-body">A break-away on the IV set could deliver an uncontrolled bolus. Controlled by a passive anti-free-flow valve plus active flow detection in firmware.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Drug library mismatch.</div><div class="mc-sub">A drug entry mismapped to a wrong concentration could deliver 10× overdose. Controlled by a dual-witness library deployment workflow plus runtime concentration cross-check against the prescriber&#x27;s order.</div><div class="mc-full"><div class="mc-full-label">Drug library mismatch.</div><div class="mc-full-body">A drug entry mismapped to a wrong concentration could deliver 10× overdose. Controlled by a dual-witness library deployment workflow plus runtime concentration cross-check against the prescriber&#x27;s order.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Alarm fatigue masking critical events.</div><div class="mc-sub">Routine occlusion alarms could habituate clinicians, masking a true infiltration. Controlled by predictive-alarm module (PAM, separately filed) with a measured 38% nuisance-alarm reduction.</div><div class="mc-full"><div class="mc-full-label">Alarm fatigue masking critical events.</div><div class="mc-full-body">Routine occlusion alarms could habituate clinicians, masking a true infiltration. Controlled by predictive-alarm module (PAM, separately filed) with a measured 38% nuisance-alarm reduction.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Battery depletion mid-infusion.</div><div class="mc-sub">A depleted battery without grace-period warning could pause an active infusion. Controlled by 30-minute reserve + visual + audible escalating warnings starting at 60 minutes remaining.</div><div class="mc-full"><div class="mc-full-label">Battery depletion mid-infusion.</div><div class="mc-full-body">A depleted battery without grace-period warning could pause an active infusion. Controlled by 30-minute reserve + visual + audible escalating warnings starting at 60 minutes remaining.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Pump tampering during transport.</div><div class="mc-sub">A jostled pump could drift the rate setting. Controlled by mechanical key-lock plus firmware setting-change audit trail.</div><div class="mc-full"><div class="mc-full-label">Pump tampering during transport.</div><div class="mc-full-body">A jostled pump could drift the rate setting. Controlled by mechanical key-lock plus firmware setting-change audit trail.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Software defect introducing dose calculation error.</div><div class="mc-sub">A regression in the dose-rate path could under- or over-deliver. Controlled by IEC 62304 enhanced documentation, automated regression suite, and field-failure telemetry feedback loop.</div><div class="mc-full"><div class="mc-full-label">Software defect introducing dose calculation error.</div><div class="mc-full-body">A regression in the dose-rate path could under- or over-deliver. Controlled by IEC 62304 enhanced documentation, automated regression suite, and field-failure telemetry feedback loop.</div></div></div></div>
     </div>
 </section>
 
@@ -1032,7 +1093,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Quality system anchors</h2>
         
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">ISO 13485 design controls</div><div class="mc-sub">govern every input → output → V&amp;V → risk trace.</div></div><div class="mini-card accent-amber"><div class="mc-label">IEC 62304 enhanced documentation</div><div class="mc-sub">required because PAM is Class C SaMD by safety classification.</div></div><div class="mini-card accent-coral"><div class="mc-label">ISO 14971 risk management file</div><div class="mc-sub">integrated into the trace matrix as a first-class column, not an after-thought.</div></div><div class="mini-card accent-orange"><div class="mc-label">21 CFR 820 compliance</div><div class="mc-sub">carries the QMS evidence chain end-to-end through design transfer and post-market.</div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">ISO 13485 design controls</div><div class="mc-sub">govern every input → output → V&amp;V → risk trace.</div><div class="mc-full"><div class="mc-full-label">ISO 13485 design controls</div><div class="mc-full-body">govern every input → output → V&amp;V → risk trace.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">IEC 62304 enhanced documentation</div><div class="mc-sub">required because PAM is Class C SaMD by safety classification.</div><div class="mc-full"><div class="mc-full-label">IEC 62304 enhanced documentation</div><div class="mc-full-body">required because PAM is Class C SaMD by safety classification.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">ISO 14971 risk management file</div><div class="mc-sub">integrated into the trace matrix as a first-class column, not an after-thought.</div><div class="mc-full"><div class="mc-full-label">ISO 14971 risk management file</div><div class="mc-full-body">integrated into the trace matrix as a first-class column, not an after-thought.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">21 CFR 820 compliance</div><div class="mc-sub">carries the QMS evidence chain end-to-end through design transfer and post-market.</div><div class="mc-full"><div class="mc-full-label">21 CFR 820 compliance</div><div class="mc-full-body">carries the QMS evidence chain end-to-end through design transfer and post-market.</div></div></div></div>
     </div>
 </section>
 
@@ -1120,7 +1181,7 @@ table.compact-table {
     <dl>
       <dt>Source</dt><dd><code>project-overview-2.md</code></dd>
       <dt>SHA-256</dt><dd><code>217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d</code></dd>
-      <dt>Built</dt><dd>2026-05-02T05:24:49Z</dd>
+      <dt>Built</dt><dd>2026-05-02T05:28:51Z</dd>
       <dt>By</dt><dd>benxavier</dd>
       <dt>Generator</dt><dd>md-deck v0.2.0 · style=bold-signal</dd>
       <dt>Slides</dt><dd>27</dd>
