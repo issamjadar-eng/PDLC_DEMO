@@ -30,8 +30,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "agentic-delivery-whitepaper.md"
-OUT_PDF = ROOT / "agentic-delivery-whitepaper.pdf"
+SRC = ROOT / "articles" / "agentic-delivery-whitepaper.md"
+OUT_PDF = ROOT / "articles" / "agentic-delivery-whitepaper.pdf"
 TMP = ROOT / ".tmp" / "whitepaper-render"
 TMP.mkdir(parents=True, exist_ok=True)
 
