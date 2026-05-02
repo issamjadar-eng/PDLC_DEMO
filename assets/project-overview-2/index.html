@@ -5,7 +5,7 @@
   md-deck v0.5.0 — DO NOT HAND-EDIT
   Source: project-overview-2.md
   SHA-256: 217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d
-  Built:  2026-05-02T10:30:13Z by benxavier
+  Built:  2026-05-02T10:45:42Z by benxavier
   Update: python .claude/skills/md-deck/scripts/build.py project-overview-2.md
 -->
 <meta charset="utf-8">
@@ -13,10 +13,10 @@
 <meta name="generator" content="md-deck v0.5.0">
 <meta name="md-deck:source" content="project-overview-2.md">
 <meta name="md-deck:source-sha256" content="217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d">
-<meta name="md-deck:built-at" content="2026-05-02T10:30:13Z">
+<meta name="md-deck:built-at" content="2026-05-02T10:45:42Z">
 <meta name="md-deck:built-by" content="benxavier">
 <meta name="md-deck:style" content="bold-signal">
-<meta name="md-deck:slide-count" content="18">
+<meta name="md-deck:slide-count" content="27">
 <title>project-overview-2</title>
 <style>
 /* === viewport-base.css (frontend-slides canonical viewport contract) === */
@@ -1638,12 +1638,20 @@ table.compact-table {
 
 
 <section class="slide" data-source-anchor="L15-L19">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.1 · What SP6500 actually is · variant A — concept canvas</span></div>
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.1 · What SP6500 actually is</span></div>
     <div class="slide-content">
-        <div class="eyebrow reveal">Variation A · Concept Canvas</div>
         <h2 class="reveal">What SP6500 actually is</h2>
-        
-        <div class="concept-canvas-grid reveal"><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text"></div></div></div>
+        <div class="prose"><p class="reveal">SP6500 is a <strong>large-volume single-channel IV infusion pump</strong> with a 7&quot; capacitive touchscreen, an on-pump drug library (formulary up to 5,000 entries), and a <strong>predictive-alarm SaMD module</strong> that reduces nuisance alarms by 38% in benchtop testing against historical SP6000 data. It is <strong>not</strong> a multi-channel pump and <strong>not</strong> a syringe pump — those are the SP6500-MC and SP6500-S product line variants, separately classified and separately filed.</p><p class="reveal">The closed-loop title earned in early literature is misleading: SP6500 has <strong>dose-error reduction</strong> software, but the prescriber loop remains open — clinicians authorize each dose against the active formulary entry, the pump enforces the boundary. &quot;Closed-loop&quot; in marketing copy refers only to the pump&#x27;s internal flow-rate control loop, not to a clinician-out-of-the-loop control system.</p></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L21-L25">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.2 · Filing scope at a glance</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Filing scope at a glance</h2>
+        <p class="lead reveal">We are filing <strong>one 510(k)</strong> for the SP6500 hardware + firmware + Drug Library Manager (DLM) bundle, with an integrated PCCP that pre-authorizes drug-library updates and bounded firmware revisions.</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Filing scope = SP6500 pump + DLM.</div><div class="mc-sub">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is <strong>out of the SP6500 filing</strong>, scheduled for a separate 510(k) using SP6000-AlarmGuard (K215555) as predicate. The Cloud Sync Service (CSS) and Asset Tracking Service (ATS) are MDDS components, <strong>out of scope</strong> entirely.</div><div class="mc-full"><div class="mc-full-label">Filing scope = SP6500 pump + DLM.</div><div class="mc-full-body">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is <strong>out of the SP6500 filing</strong>, scheduled for a separate 510(k) using SP6000-AlarmGuard (K215555) as predicate. The Cloud Sync Service (CSS) and Asset Tracking Service (ATS) are MDDS components, <strong>out of scope</strong> entirely.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="mc-sub">Every user need and design input is tagged Critical to Safety / Function / Performance. Only Ct\*-tagged requirements are in scope for the 510(k); commercial features ship post-clearance on the marketing track.</div><div class="mc-full"><div class="mc-full-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="mc-full-body">Every user need and design input is tagged Critical to Safety / Function / Performance. Only Ct\*-tagged requirements are in scope for the 510(k); commercial features ship post-clearance on the marketing track.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP envelope.</div><div class="mc-sub">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked risk profile, and dose-error-reduction tuning that meets the bounded change protocol.</div><div class="mc-full"><div class="mc-full-label">PCCP envelope.</div><div class="mc-full-body">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked risk profile, and dose-error-reduction tuning that meets the bounded change protocol.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Predicate.</div><div class="mc-sub">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope plus the touchscreen UX update are the substantive deltas; clinical equivalence carries the rest.</div><div class="mc-full"><div class="mc-full-label">Predicate.</div><div class="mc-full-body">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope plus the touchscreen UX update are the substantive deltas; clinical equivalence carries the rest.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">PAM filing posture.</div><div class="mc-sub">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six months later, predicate AlarmGuard. This is a deliberate carve-out — bundling PAM would extend the SP6500 timeline by an estimated 9 months.</div><div class="mc-full"><div class="mc-full-label">PAM filing posture.</div><div class="mc-full-body">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six months later, predicate AlarmGuard. This is a deliberate carve-out — bundling PAM would extend the SP6500 timeline by an estimated 9 months.</div></div></div></div>
     </div>
 </section>
 
@@ -1668,22 +1676,32 @@ table.compact-table {
 </section>
 
 
-<section class="slide" data-source-anchor="L31-L38">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.3 · Key deliverables · variant A — scope iceberg</span></div>
+<section class="slide" data-source-anchor="L21-L25">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.2 · Filing scope at a glance · variant A — principle tiles</span></div>
     <div class="slide-content">
-        <div class="eyebrow reveal">Variation A · Scope Iceberg</div>
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Filing scope at a glance</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="6" y1="21" x2="18" y2="21"/><line x1="4" y1="6" x2="20" y2="6"/><path d="M5 6l-3 6h6zM19 6l-3 6h6z"/></svg></div><div class="p-label">Filing scope = SP6500 pump + DLM.</div><div class="p-sub">The Predictive Alarm Module (PAM) is a Class II SaMD accessory and is **out…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">Critical-requirement carve-out (CtS / CtF / CtP).</div><div class="p-sub">Every user need and design input is tagged Critical to Safety / Function /…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">PCCP envelope.</div><div class="p-sub">The PCCP pre-authorizes formulary updates against fixed acceptance criteria, firmware patches against the locked…</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a4 4 0 0 0 8 0V3"/><circle cx="18" cy="14" r="2.5"/><path d="M9 13v3a5 5 0 0 0 9 3"/></svg></div><div class="p-label">Predicate.</div><div class="p-sub">SP6000 (K200111) — direct technical predecessor in the same product family. The PCCP envelope…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3h6"/><line x1="12" y1="3" x2="12" y2="7"/><path d="M8 7h8l-1 6H9z"/><line x1="12" y1="13" x2="12" y2="20"/><circle cx="12" cy="20.5" r="0.8" fill="currentColor"/></svg></div><div class="p-label">PAM filing posture.</div><div class="p-sub">The Predictive Alarm Module is <strong>outside</strong> the SP6500 filing. Its own 510(k) sequences six…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L31-L38">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.3 · Key deliverables</span></div>
+    <div class="slide-content">
         <h2 class="reveal">Key deliverables</h2>
         
-        <div class="iceberg-grid reveal">
-            <div class="iceberg-side iceberg-in">
-                <div class="iside-label">FILING SCOPE — IN</div>
-                <ul><li>Q-Sub package</li><li>510(k) submission</li><li>PCCP document</li><li>Trace matrix</li></ul>
-            </div>
-            <div class="iceberg-side iceberg-out">
-                <div class="iside-label">OUT OF SCOPE</div>
-                <ul></ul>
-            </div>
-        </div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Q-Sub package</div><div class="mc-sub">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA pre-feedback.</div><div class="mc-full"><div class="mc-full-label">Q-Sub package</div><div class="mc-full-body">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA pre-feedback.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">510(k) submission</div><div class="mc-sub">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level, performance and validation data, complete risk analysis, draft labeling.</div><div class="mc-full"><div class="mc-full-label">510(k) submission</div><div class="mc-full-body">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level, performance and validation data, complete risk analysis, draft labeling.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP document</div><div class="mc-sub">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance criteria, post-market reporting plan.</div><div class="mc-full"><div class="mc-full-label">PCCP document</div><div class="mc-full-body">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance criteria, post-market reporting plan.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Trace matrix</div><div class="mc-sub">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags and a <strong>PAM-or-pump</strong> column carving the SaMD work.</div><div class="mc-full"><div class="mc-full-label">Trace matrix</div><div class="mc-full-body">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags and a <strong>PAM-or-pump</strong> column carving the SaMD work.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L31-L38">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.3 · Key deliverables · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Key deliverables</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4"/><rect x="4" y="8" width="16" height="13"/><line x1="9" y1="12" x2="15" y2="12"/></svg></div><div class="p-label">Q-Sub package</div><div class="p-sub">(<code>docs/project/sp6500/qsub/</code>) — pre-submission cover letter, device description, classification confirmation, PCCP scope questions for FDA…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">510(k) submission</div><div class="p-sub">(<code>docs/project/sp6500/510k/</code>) — substantial-equivalence argument to SP6000, software docs at IEC 62304 enhanced documentation level…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">PCCP document</div><div class="p-sub">(<code>docs/project/sp6500/pccp/</code>) — three change categories (drug library, firmware patch, dose-error tuning), modification protocols, acceptance…</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><line x1="6" y1="7" x2="6" y2="17"/><path d="M6 12h6c2 0 4-2 4-5"/></svg></div><div class="p-label">Trace matrix</div><div class="p-sub">per DHF (<code>docs/project/dhfs/sp6500/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔…</div></div></div>
     </div>
 </section>
 
@@ -1698,6 +1716,16 @@ table.compact-table {
 
 
 <section class="slide" data-source-anchor="L42-L46">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.1 · Core program team</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Core program team</h2>
+        <p class="lead reveal">The SP6500 program runs as a <strong>cross-functional pod</strong> with a single program manager driving cadence and the clinical voice carried by two practicing anesthesiologists embedded in design reviews.</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Program leadership.</div><div class="mc-sub">PM owns scope and calendar; clinical lead owns the use-case backlog; regulatory lead owns the FDA timeline.</div><div class="mc-full"><div class="mc-full-label">Program leadership.</div><div class="mc-full-body">PM owns scope and calendar; clinical lead owns the use-case backlog; regulatory lead owns the FDA timeline.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Engineering execution.</div><div class="mc-sub">Firmware, mechanical, and SaMD report into an R&amp;D lead who chairs design reviews.</div><div class="mc-full"><div class="mc-full-label">Engineering execution.</div><div class="mc-full-body">Firmware, mechanical, and SaMD report into an R&amp;D lead who chairs design reviews.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Quality + Risk.</div><div class="mc-sub">QE owns the QMS evidence chain; risk-management lead owns the ISO 14971 file end-to-end.</div><div class="mc-full"><div class="mc-full-label">Quality + Risk.</div><div class="mc-full-body">QE owns the QMS evidence chain; risk-management lead owns the ISO 14971 file end-to-end.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Human factors.</div><div class="mc-sub">A dedicated HF engineer runs formative testing in three sites; summative is contracted to a CRO under the program manager&#x27;s oversight.</div><div class="mc-full"><div class="mc-full-label">Human factors.</div><div class="mc-full-body">A dedicated HF engineer runs formative testing in three sites; summative is contracted to a CRO under the program manager&#x27;s oversight.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L42-L46">
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.1 · Core program team · variant A — principle tiles</span></div>
     <div class="slide-content">
         <div class="eyebrow reveal">Variation A · Principle Tiles</div>
@@ -1706,14 +1734,54 @@ table.compact-table {
     </div>
 </section>
 
-<section class="slide" data-source-anchor="L51-L55"><div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · KOL persona advisors</span></div><div class="slide-content"><h2 class="reveal">KOL persona advisors</h2><div class="roster-cards reveal"><div class="roster-card reveal"><div class="roster-medallion">OA</div><div><div class="roster-name">Dr. Okafor Anesthesia</div><div class="roster-role">PACU &amp; post-op pain anesthesiologist; reviews dose-error use cases and alarm tuning thresholds</div></div></div><div class="roster-card reveal"><div class="roster-medallion">SI</div><div><div class="roster-name">Dr. Shah Icu</div><div class="roster-role">Critical-care intensivist; reviews concomitant-infusion and drug-library multi-drug interaction logic</div></div></div><div class="roster-card reveal"><div class="roster-medallion">PM</div><div><div class="roster-name">Dr. Park Pain Mgmt</div><div class="roster-role">Outpatient pain management; reviews ambulatory PCA workflows and discharge-handoff flows</div></div></div><div class="roster-card reveal"><div class="roster-medallion">VS</div><div><div class="roster-name">Dr. Vega Surgical</div><div class="roster-role">Cardiothoracic surgical anesthesia; reviews high-acuity dose-rate ramps</div></div></div><div class="roster-card reveal"><div class="roster-medallion">MP</div><div><div class="roster-name">Dr. Mendez Pediatric</div><div class="roster-role">Pediatric anesthesia; reviews mg/kg dosing and pediatric-mode formulary curation</div></div></div><div class="roster-card reveal"><div class="roster-medallion">YR</div><div><div class="roster-name">Dr. Yamamoto Research</div><div class="roster-role">Anesthesia research / academic medical center; reviews investigational-use pathway</div></div></div><div class="roster-card reveal"><div class="roster-medallion">OC</div><div><div class="roster-name">Nurse Osborne Charge</div><div class="roster-role">Charge nurse, 32-bed step-down; reviews shift-handoff alarm acknowledgment workflow</div></div></div><div class="roster-card reveal"><div class="roster-medallion">RI</div><div><div class="roster-name">Nurse Rivera Icu</div><div class="roster-role">ICU nurse, 18-bed mixed; reviews high-frequency titration use cases</div></div></div></div></div></section>
+
+<section class="slide" data-source-anchor="L51-L55">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · KOL persona advisors</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">KOL persona advisors</h2>
+        <p class="lead reveal">KOL advisors run as <strong>digital twins</strong> in the agentic console — each persona has a curated knowledge corpus, opinionated review criteria, and a callable interface from any task that needs their voice during authoring.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>Advisor</th><th>Capability</th></tr></thead>
+                <tbody><tr><td><code>dr-okafor-anesthesia</code></td><td>PACU &amp; post-op pain anesthesiologist; reviews dose-error use cases and alarm tuning thresholds</td></tr><tr><td><code>dr-shah-icu</code></td><td>Critical-care intensivist; reviews concomitant-infusion and drug-library multi-drug interaction logic</td></tr><tr><td><code>dr-park-pain-mgmt</code></td><td>Outpatient pain management; reviews ambulatory PCA workflows and discharge-handoff flows</td></tr><tr><td><code>dr-vega-surgical</code></td><td>Cardiothoracic surgical anesthesia; reviews high-acuity dose-rate ramps</td></tr><tr><td><code>dr-mendez-pediatric</code></td><td>Pediatric anesthesia; reviews mg/kg dosing and pediatric-mode formulary curation</td></tr><tr><td><code>dr-yamamoto-research</code></td><td>Anesthesia research / academic medical center; reviews investigational-use pathway</td></tr><tr><td><code>nurse-osborne-charge</code></td><td>Charge nurse, 32-bed step-down; reviews shift-handoff alarm acknowledgment workflow</td></tr><tr><td><code>nurse-rivera-icu</code></td><td>ICU nurse, 18-bed mixed; reviews high-frequency titration use cases</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L51-L55">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · KOL persona advisors · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic</div>
+        <h2 class="reveal">KOL persona advisors</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-okafor-anesthesia</div><div class="cc-tag">PACU &amp; post-op pain anesthesiologist; reviews dose-error use…</div><div class="cc-full"><div class="cc-full-name">dr-okafor-anesthesia</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">PACU &amp; post-op pain anesthesiologist; reviews dose-error use cases and alarm tuning thresholds</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-shah-icu</div><div class="cc-tag">Critical-care intensivist; reviews concomitant-infusion and drug-library multi-drug interaction…</div><div class="cc-full"><div class="cc-full-name">dr-shah-icu</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Critical-care intensivist; reviews concomitant-infusion and drug-library multi-drug interaction logic</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-park-pain-mgmt</div><div class="cc-tag">Outpatient pain management; reviews ambulatory PCA workflows and…</div><div class="cc-full"><div class="cc-full-name">dr-park-pain-mgmt</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Outpatient pain management; reviews ambulatory PCA workflows and discharge-handoff flows</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-vega-surgical</div><div class="cc-tag">Cardiothoracic surgical anesthesia; reviews high-acuity dose-rate ramps</div><div class="cc-full"><div class="cc-full-name">dr-vega-surgical</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Cardiothoracic surgical anesthesia; reviews high-acuity dose-rate ramps</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-mendez-pediatric</div><div class="cc-tag">Pediatric anesthesia; reviews mg/kg dosing and pediatric-mode formulary…</div><div class="cc-full"><div class="cc-full-name">dr-mendez-pediatric</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Pediatric anesthesia; reviews mg/kg dosing and pediatric-mode formulary curation</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">dr-yamamoto-research</div><div class="cc-tag">Anesthesia research / academic medical center; reviews investigational-use…</div><div class="cc-full"><div class="cc-full-name">dr-yamamoto-research</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Anesthesia research / academic medical center; reviews investigational-use pathway</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">nurse-osborne-charge</div><div class="cc-tag">Charge nurse, 32-bed step-down; reviews shift-handoff alarm acknowledgment…</div><div class="cc-full"><div class="cc-full-name">nurse-osborne-charge</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Charge nurse, 32-bed step-down; reviews shift-handoff alarm acknowledgment workflow</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">nurse-rivera-icu</div><div class="cc-tag">ICU nurse, 18-bed mixed; reviews high-frequency titration use…</div><div class="cc-full"><div class="cc-full-name">nurse-rivera-icu</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">ICU nurse, 18-bed mixed; reviews high-frequency titration use cases</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L51-L55">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · KOL persona advisors · variant B — featured</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation B · Featured</div>
+        <h2 class="reveal">KOL persona advisors</h2>
+        <div class="cat-hero-row reveal"><div class="cat-hero cat-default"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">dr-okafor-anesthesia</div><div class="ch-tag">Capability</div><div class="ch-desc">PACU &amp; post-op pain anesthesiologist; reviews dose-error use cases and alarm tuning thresholds</div></div><div class="cat-hero cat-default"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">dr-shah-icu</div><div class="ch-tag">Capability</div><div class="ch-desc">Critical-care intensivist; reviews concomitant-infusion and drug-library multi-drug interaction logic</div></div><div class="cat-hero cat-default"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">dr-park-pain-mgmt</div><div class="ch-tag">Capability</div><div class="ch-desc">Outpatient pain management; reviews ambulatory PCA workflows and discharge-handoff flows</div></div></div>
+        <div class="cat-chip-row"><div class="chip-eyebrow">↓ The rest of the catalog</div><div class="chip-grid"><span class="cat-chip cat-default">dr-vega-surgical</span><span class="cat-chip cat-default">dr-mendez-pediatric</span><span class="cat-chip cat-default">dr-yamamoto-research</span><span class="cat-chip cat-default">nurse-osborne-charge</span><span class="cat-chip cat-default">nurse-rivera-icu</span></div></div>
+    </div>
+</section>
+
 
 <section class="slide" data-source-anchor="L66-L77">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Investigator sites · variant A — principle tiles</span></div>
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Investigator sites</span></div>
     <div class="slide-content">
-        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
         <h2 class="reveal">Investigator sites</h2>
-        <div class="principle-tile-grid reveal"></div>
+        <p class="lead reveal">We are recruiting four sites for the post-market clinical follow-up plan. Each site brings a different patient mix and care-setting profile.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>Site</th><th>Profile</th></tr></thead>
+                <tbody><tr><td>Northshore Medical Center</td><td>Tertiary care · 800 beds · academic anesthesiology fellowship</td></tr><tr><td>Cascade Pacific Hospital</td><td>Regional · 320 beds · high-volume orthopedic surgical</td></tr><tr><td>Mercy Children&#x27;s Health</td><td>Pediatric specialty · 200 beds · NICU + general peds</td></tr><tr><td>Ridgeline Surgical Institute</td><td>Ambulatory surgery center · 18 ORs · outpatient pain</td></tr></tbody>
+            </table>
+        </div>
     </div>
 </section>
 
@@ -1723,6 +1791,16 @@ table.compact-table {
     <div class="slide-content divider-content">
         <div class="divider-num reveal">3</div>
         <h2 class="divider-title reveal">Risk &amp; Quality Posture</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L81-L85">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.1 · Hazard register summary</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Hazard register summary</h2>
+        <p class="lead reveal">The ISO 14971 hazard analysis identifies six high-priority hazards driving the V&amp;V scope. Each carries documented residual-risk acceptance after control implementation.</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Free flow on disconnect.</div><div class="mc-sub">A break-away on the IV set could deliver an uncontrolled bolus. Controlled by a passive anti-free-flow valve plus active flow detection in firmware.</div><div class="mc-full"><div class="mc-full-label">Free flow on disconnect.</div><div class="mc-full-body">A break-away on the IV set could deliver an uncontrolled bolus. Controlled by a passive anti-free-flow valve plus active flow detection in firmware.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Drug library mismatch.</div><div class="mc-sub">A drug entry mismapped to a wrong concentration could deliver 10× overdose. Controlled by a dual-witness library deployment workflow plus runtime concentration cross-check against the prescriber&#x27;s order.</div><div class="mc-full"><div class="mc-full-label">Drug library mismatch.</div><div class="mc-full-body">A drug entry mismapped to a wrong concentration could deliver 10× overdose. Controlled by a dual-witness library deployment workflow plus runtime concentration cross-check against the prescriber&#x27;s order.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Alarm fatigue masking critical events.</div><div class="mc-sub">Routine occlusion alarms could habituate clinicians, masking a true infiltration. Controlled by predictive-alarm module (PAM, separately filed) with a measured 38% nuisance-alarm reduction.</div><div class="mc-full"><div class="mc-full-label">Alarm fatigue masking critical events.</div><div class="mc-full-body">Routine occlusion alarms could habituate clinicians, masking a true infiltration. Controlled by predictive-alarm module (PAM, separately filed) with a measured 38% nuisance-alarm reduction.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Battery depletion mid-infusion.</div><div class="mc-sub">A depleted battery without grace-period warning could pause an active infusion. Controlled by 30-minute reserve + visual + audible escalating warnings starting at 60 minutes remaining.</div><div class="mc-full"><div class="mc-full-label">Battery depletion mid-infusion.</div><div class="mc-full-body">A depleted battery without grace-period warning could pause an active infusion. Controlled by 30-minute reserve + visual + audible escalating warnings starting at 60 minutes remaining.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Pump tampering during transport.</div><div class="mc-sub">A jostled pump could drift the rate setting. Controlled by mechanical key-lock plus firmware setting-change audit trail.</div><div class="mc-full"><div class="mc-full-label">Pump tampering during transport.</div><div class="mc-full-body">A jostled pump could drift the rate setting. Controlled by mechanical key-lock plus firmware setting-change audit trail.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Software defect introducing dose calculation error.</div><div class="mc-sub">A regression in the dose-rate path could under- or over-deliver. Controlled by IEC 62304 enhanced documentation, automated regression suite, and field-failure telemetry feedback loop.</div><div class="mc-full"><div class="mc-full-label">Software defect introducing dose calculation error.</div><div class="mc-full-body">A regression in the dose-rate path could under- or over-deliver. Controlled by IEC 62304 enhanced documentation, automated regression suite, and field-failure telemetry feedback loop.</div></div></div></div>
     </div>
 </section>
 
@@ -1742,12 +1820,17 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Quality system anchors</h2>
         
-        <div class="table-wrap reveal">
-            <table class="compact-table ">
-                <thead><tr></tr></thead>
-                <tbody></tbody>
-            </table>
-        </div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">ISO 13485 design controls</div><div class="mc-sub">govern every input → output → V&amp;V → risk trace.</div><div class="mc-full"><div class="mc-full-label">ISO 13485 design controls</div><div class="mc-full-body">govern every input → output → V&amp;V → risk trace.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">IEC 62304 enhanced documentation</div><div class="mc-sub">required because PAM is Class C SaMD by safety classification.</div><div class="mc-full"><div class="mc-full-label">IEC 62304 enhanced documentation</div><div class="mc-full-body">required because PAM is Class C SaMD by safety classification.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">ISO 14971 risk management file</div><div class="mc-sub">integrated into the trace matrix as a first-class column, not an after-thought.</div><div class="mc-full"><div class="mc-full-label">ISO 14971 risk management file</div><div class="mc-full-body">integrated into the trace matrix as a first-class column, not an after-thought.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">21 CFR 820 compliance</div><div class="mc-sub">carries the QMS evidence chain end-to-end through design transfer and post-market.</div><div class="mc-full"><div class="mc-full-label">21 CFR 820 compliance</div><div class="mc-full-body">carries the QMS evidence chain end-to-end through design transfer and post-market.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L92-L99">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.2 · Quality system anchors · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Quality system anchors</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><circle cx="12" cy="11" r="3"/><path d="M10 14l-1 6 3-2 3 2-1-6"/></svg></div><div class="p-label">ISO 13485 design controls</div><div class="p-sub">govern every input → output → V&amp;V → risk trace.</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><circle cx="12" cy="11" r="3"/><path d="M10 14l-1 6 3-2 3 2-1-6"/></svg></div><div class="p-label">IEC 62304 enhanced documentation</div><div class="p-sub">required because PAM is Class C SaMD by safety classification.</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><circle cx="12" cy="11" r="3"/><path d="M10 14l-1 6 3-2 3 2-1-6"/></svg></div><div class="p-label">ISO 14971 risk management file</div><div class="p-sub">integrated into the trace matrix as a first-class column, not an after-thought.</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17c2 0 3-2 5-6s4-7 6-7 1 4 1 7 0 6 3 6"/><line x1="3" y1="21" x2="21" y2="21"/></svg></div><div class="p-label">21 CFR 820 compliance</div><div class="p-sub">carries the QMS evidence chain end-to-end through design transfer and post-market.</div></div></div>
     </div>
 </section>
 
@@ -1762,15 +1845,39 @@ table.compact-table {
 
 
 <section class="slide" data-source-anchor="L103-L107">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · Where the handoff actually happens · variant A — principle tiles</span></div>
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · Where the handoff actually happens</span></div>
     <div class="slide-content">
-        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
         <h2 class="reveal">Where the handoff actually happens</h2>
-        <div class="principle-tile-grid reveal"></div>
+        <p class="lead reveal">Authoring DHF documents in this program is <strong>not fully automated</strong> — it is a deliberate handoff between human judgment and AI execution at known stages. The boundary is documented, audited, and enforced via session hooks.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>Actor</th><th>Stage</th></tr></thead>
+                <tbody><tr><td>Human · PM</td><td>Drafts the task brief and the success criteria</td></tr><tr><td>Agent · skill</td><td>Executes the structural authoring (templates, scaffolds, trace links)</td></tr><tr><td>Human · clinical</td><td>Reviews each dose-related design input for clinical acceptability</td></tr><tr><td>Agent · clinical-affairs</td><td>Generates KOL feedback summary from the digital-twin advisors</td></tr><tr><td>Human · regulatory</td><td>Approves substantial-equivalence argumentation before submission</td></tr><tr><td>Agent · vnv-lead</td><td>Drafts the V&amp;V protocol from design inputs + risk file</td></tr></tbody>
+            </table>
+        </div>
     </div>
 </section>
 
-<section class="slide big-stat" data-source-anchor="L116-L122"><div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.2 · What we measured</span></div><div class="slide-content"><div class="eyebrow reveal">§4.2 · KEY METRIC</div><div class="reveal"><div class="stat-hero">12<span class="unit"></span></div></div><div class="stat-label reveal">What we measured</div><div class="stat-support reveal">The 12 weeks of SP6500 design-input authoring with the agentic console produced equivalent IEC 62304 documentation in 38% of the calendar time of SP6000&#x27;s equivalent phase, with reviewer-flagged clinical-correctness defects down 21%.</div></div></section>
+
+<section class="slide" data-source-anchor="L103-L107">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · Where the handoff actually happens · variant A — handoff relay</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Handoff Relay</div>
+        <h2 class="reveal">Where the handoff actually happens</h2>
+        <div class="relay-track reveal"><div class="relay-box human"><div class="r-step">01</div><div class="r-actor">Human · PM</div><div class="r-label">Drafts the task brief and the success criteria</div></div><div class="relay-box agent"><div class="r-step">02</div><div class="r-actor">Agent · skill</div><div class="r-label">Executes the structural authoring (templates, scaffolds, trace links)</div></div><div class="relay-box human"><div class="r-step">03</div><div class="r-actor">Human · clinical</div><div class="r-label">Reviews each dose-related design input for clinical acceptability</div></div><div class="relay-box agent"><div class="r-step">04</div><div class="r-actor">Agent · clinical-affairs</div><div class="r-label">Generates KOL feedback summary from the digital-twin advisors</div></div><div class="relay-box human"><div class="r-step">05</div><div class="r-actor">Human · regulatory</div><div class="r-label">Approves substantial-equivalence argumentation before submission</div></div><div class="relay-box agent"><div class="r-step">06</div><div class="r-actor">Agent · vnv-lead</div><div class="r-label">Drafts the V&amp;V protocol from design inputs + risk file</div></div></div>
+        <p class="muted reveal" style="text-align:center;margin-top:1rem;">Authoring DHF documents in this program is <strong>not fully automated</strong> — it is a deliberate handoff between human judgment and AI execution at known stages. The boundary is documented, audited, and enforced via session hooks.</p>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L116-L122">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.2 · What we measured</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">What we measured</h2>
+        <blockquote class="reveal">The 12 weeks of SP6500 design-input authoring with the agentic console produced equivalent IEC 62304 documentation in 38% of the calendar time of SP6000&#x27;s equivalent phase, with reviewer-flagged clinical-correctness defects down 21%.</blockquote>
+    </div>
+</section>
+
 
 <section class="slide divider-slide" data-source-anchor="L124">
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5</span></div>
@@ -1780,7 +1887,18 @@ table.compact-table {
     </div>
 </section>
 
-<section class="slide" data-source-anchor="L124-L130"><div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5 · What&#x27;s Next</span></div><div class="slide-content"><h2 class="reveal">What&#x27;s Next</h2><div class="timeline-h reveal"><div class="axis"></div><div class="stops" style="--stops:4;"><div class="stop reveal"><span class="when">WEEK 4</span><div class="what">Lock the predicate-comparison table by</div></div><div class="stop reveal"><span class="when">WEEK 8</span><div class="what">Submit Q-Sub package by  with FDA pre-feedback target by week 12</div></div><div class="stop reveal"><span class="when">WEEK 10</span><div class="what">Begin formative HF testing against the production touchscreen prototype in</div></div><div class="stop reveal"><span class="when">MARKET</span><div class="what">Open the post- data plan with the four investigator sites by week 14</div></div></div></div></div></section>
+
+<section class="slide" data-source-anchor="L124-L130">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5 · What&#x27;s Next</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">What&#x27;s Next</h2>
+        <div class="image-feature-grid reveal">
+            <div class="image-text"><p class="reveal">The next 90 days focus on closing the Q-Sub package and locking the predicate-comparison table for the 510(k). The console provides per-document drift detection and an always-on advisor drawer so reviewers can ground feedback against the exact authored version.</p><ul class="bullets"><li class="reveal">Lock the predicate-comparison table by week 4.</li><li class="reveal">Submit Q-Sub package by week 8 with FDA pre-feedback target by week 12.</li><li class="reveal">Begin formative HF testing against the production touchscreen prototype in week 10.</li><li class="reveal">Open the post-market data plan with the four investigator sites by week 14.</li></ul></div>
+            <div class="image-hero"><img src="assets/project-overview/console-01-landing.png" alt="Console landing"/></div>
+        </div>
+    </div>
+</section>
+
 <div class="progress-bar"><div class="progress-fill"></div></div>
 <div class="nav-dots"></div>
 <div class="keyboard-hint">← → space · ? for provenance</div>
@@ -1790,10 +1908,10 @@ table.compact-table {
     <dl>
       <dt>Source</dt><dd><code>project-overview-2.md</code></dd>
       <dt>SHA-256</dt><dd><code>217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d</code></dd>
-      <dt>Built</dt><dd>2026-05-02T10:30:13Z</dd>
+      <dt>Built</dt><dd>2026-05-02T10:45:42Z</dd>
       <dt>By</dt><dd>benxavier</dd>
       <dt>Generator</dt><dd>md-deck v0.5.0 · style=bold-signal</dd>
-      <dt>Slides</dt><dd>18</dd>
+      <dt>Slides</dt><dd>27</dd>
     </dl>
     <p class="dim">Update by re-running the source-of-truth build:<br>
     <code>python .claude/skills/md-deck/scripts/build.py project-overview-2.md</code></p>

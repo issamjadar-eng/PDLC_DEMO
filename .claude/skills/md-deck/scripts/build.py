@@ -2338,8 +2338,8 @@ def build(
     re_roll_creative: list[str] | None = None,
     re_roll_distillation: bool = False,
     creative_parallelism: int = 5,
-    template_slots: int = 2,
-    agent_slots: int = 2,
+    template_slots: int = 1,
+    agent_slots: int = 3,
 ) -> dict:
     text = source_path.read_text(encoding="utf-8")
     sha = hashlib.sha256(text.encode()).hexdigest()
@@ -2398,13 +2398,15 @@ def build(
     cands_by_anchor: dict[str, list] = {}
 
     # Slot-personality plan derived from --candidate-mix N,M
-    # M ∈ {0,1,2,3}; mapping creative-c → bold-metaphor, creative-d →
-    # structured-diagram, creative-e → free-creative (the wild card).
+    # M ∈ {0..4}; mapping creative-c → bold-metaphor, creative-d →
+    # structured-diagram, creative-e → free-creative (first wild card),
+    # creative-f → free-creative (second wild card; independent roll).
     _slot_plan_creative = [
         ("creative-c", "bold-metaphor"),
         ("creative-d", "structured-diagram"),
         ("creative-e", "free-creative"),
-    ][:max(0, min(3, agent_slots))]
+        ("creative-f", "free-creative"),
+    ][:max(0, min(4, agent_slots))]
 
     for base in base_slides:
         cands = propose_candidates(base, registry, top_k=max(1, template_slots))
@@ -2765,11 +2767,13 @@ def main() -> int:
     parser.add_argument("--dump-distillation", action="store_true",
                         help="Print the loaded distillation YAML to stdout after build "
                              "(implies --creative — runs distillation if needed).")
-    parser.add_argument("--candidate-mix", default="2,2",
-                        help="Mix of candidate slots: '<templates>,<agents>'. Default '2,2' "
-                             "(2 template slots A/B + 2 agent slots C/D = bold-metaphor + "
-                             "structured-diagram). '1,3' adds the wild-card free-creative "
-                             "agent (slot E). Sum must be ≥ 1 and ≤ 4.")
+    parser.add_argument("--candidate-mix", default="1,3",
+                        help="Mix of candidate slots: '<templates>,<agents>'. Default '1,3' "
+                             "(1 template + 3 agents: bold-metaphor / structured-diagram / "
+                             "free-creative wild card). '2,2' is the conservative mix "
+                             "(2 templates + bold-metaphor + structured-diagram). '0,4' is "
+                             "agents-only (the 4th slot is a second independent free-creative "
+                             "roll for divergent options). Sum must be ≥ 1 and ≤ 4.")
     args = parser.parse_args()
 
     source_path = Path(args.source)
