@@ -18,6 +18,15 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-direct-conversion.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/skill-creator-watch.py"
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -56,6 +65,15 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-cleanup.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/skill-creator-cleanup.sh"
           }
         ]
       }
