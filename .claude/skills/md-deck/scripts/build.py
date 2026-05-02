@@ -363,6 +363,31 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
                     "section": m.group(1),
                     "anchor": f"L{b['line']}",
                 })
+                # If the H2 has body content directly under it (no H3 child
+                # before the next H2), emit a content slide for that body.
+                peek = i + 1
+                direct_body: list[dict] = []
+                while peek < len(blocks):
+                    nb = blocks[peek]
+                    if nb["type"] == "heading" and nb["level"] <= 2:
+                        break
+                    if nb["type"] == "heading" and nb["level"] >= 3:
+                        direct_body = []  # reset; H3 will own its own content
+                        break
+                    direct_body.append(nb)
+                    peek += 1
+                if direct_body:
+                    body_anchor_end = direct_body[-1].get("line", b["line"])
+                    body_slide = _classify_section_slide(
+                        title=current_section_title,
+                        section=current_section,
+                        content=direct_body,
+                        anchor=f"L{b['line']}-L{body_anchor_end}",
+                    )
+                    if body_slide is not None:
+                        slides.append(body_slide)
+                    i = peek
+                    continue
             else:
                 current_section = None
                 current_section_title = b["text"]
@@ -530,11 +555,18 @@ def _inject_variants(slide: dict) -> list[dict]:
     title = (slide.get("title") or "").lower()
     corpus = _slide_text_corpus(slide)
 
-    # Catalog tables → mosaic (paginated) + featured
+    # Handoff-relay takes priority on tables whose content reads as a
+    # sequence of actor → step. Otherwise, ≥6-row 2-col tables become the
+    # catalog mosaic + featured pair.
     if slide["type"] == "table-slide":
         table = slide.get("table") or {}
         rows = table.get("rows", [])
         cols = table.get("header", [])
+        if any(k in corpus for k in HANDOFF_KEYWORDS):
+            v = _make_handoff_relay(slide)
+            if v and len(v.get("steps", [])) >= 2:
+                out.append(v)
+                return out
         if len(rows) >= 6 and len(cols) == 2:
             out.extend(_make_catalog_mosaic_slides(slide))
             out.append(_make_catalog_featured_slide(slide))
