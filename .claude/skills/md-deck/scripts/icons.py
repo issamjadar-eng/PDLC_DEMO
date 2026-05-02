@@ -194,6 +194,14 @@ ICONS: dict[str, str] = {
     "whiteboard": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="1"/><line x1="6" y1="20" x2="9" y2="17"/><line x1="18" y1="20" x2="15" y2="17"/><polyline points="6,9 9,12 13,8 18,11"/></svg>',
     "thumbs-up": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11h4v9H3z"/><path d="M7 11l5-8a2 2 0 0 1 4 1l-1 5h5a2 2 0 0 1 2 2l-1 7a2 2 0 0 1-2 2h-9a3 3 0 0 1-3-3"/></svg>',
 
+    # ===== Hazard / failure-mode specific =====
+    "bell-alarm": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6v4l-2 4h16l-2-4V9a6 6 0 0 0-6-6z"/><path d="M10 19a2 2 0 0 0 4 0"/><line x1="3" y1="3" x2="6" y2="6" stroke-linecap="round"/><line x1="21" y1="3" x2="18" y2="6" stroke-linecap="round"/></svg>',
+    "leak-drop": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l5 8a5 5 0 1 1-10 0z"/><circle cx="12" cy="11" r="1.5" fill="currentColor"/><path d="M5 18l-1 3M19 18l1 3M12 21v1"/></svg>',
+    "bug-defect": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="11" rx="5"/><line x1="12" y1="8" x2="12" y2="19"/><path d="M9 6l-2-2M15 6l2-2"/><path d="M5 12H3M5 16H3M19 12h2M19 16h2M5 9l2-2M19 9l-2-2"/></svg>',
+    "tamper-shield": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><line x1="9" y1="9" x2="15" y2="15" stroke-linecap="round"/><line x1="15" y1="9" x2="9" y2="15" stroke-linecap="round"/></svg>',
+    "battery-low": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="8" width="16" height="8" rx="1"/><line x1="20" y1="11" x2="20" y2="13"/><rect x="5" y="10" width="3" height="4" fill="currentColor"/><line x1="9" y1="12" x2="9" y2="12"/></svg>',
+    "alarm-clock-noisy": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><polyline points="12,9 12,13 15,15"/><line x1="3" y1="6" x2="6" y2="3" stroke-linecap="round"/><line x1="21" y1="6" x2="18" y2="3" stroke-linecap="round"/></svg>',
+
     # ===== Generic fallback pool =====
     "hexagon": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,8 21,16 12,21 3,16 3,8"/></svg>',
     "diamond": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg>',
@@ -458,20 +466,86 @@ FALLBACK_POOL: list[str] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Intent phrases — multi-word semantic patterns that should match BEFORE the
+# single-word keyword registry. These capture *what the slide is actually
+# about* (the hazard, the failure mode, the concept) rather than incidental
+# vocabulary. First match wins; ordered most-specific first.
+# ---------------------------------------------------------------------------
+
+INTENT_PHRASES: list[tuple[list[str], str]] = [
+    # Hazards / failure modes — medical-device specific
+    (["free flow", "uncontrolled bolus", "anti-free-flow", "runaway flow"], "leak-drop"),
+    (["drug library mismatch", "wrong concentration", "overdose",
+      "underdose", "mismapped"], "pill"),
+    (["alarm fatigue", "alarm masking", "nuisance alarm",
+      "alarm habituate", "alert habituate"], "bell-alarm"),
+    (["battery depletion", "depleted battery", "battery low",
+      "battery reserve", "grace-period"], "battery-low"),
+    (["pump tampering", "tamper", "unauthorized access",
+      "intrusion", "tamper-evident"], "tamper-shield"),
+    (["software defect", "regression", "calculation error",
+      "code defect", "dose calculation", "field-failure"], "bug-defect"),
+    # Concept / phrase shortcuts — strong signals that should not lose
+    # to incidental substrings.
+    (["digital twin", "persona advisor"], "user-single"),
+    (["filing scope", "in-scope", "out of scope"], "scale-justice"),
+    (["substantial equivalence", "predicate device"], "circle-target"),
+    (["risk register", "hazard register"], "warn"),
+    (["change control", "change protocol"], "git-merge"),
+    (["dose-error reduction", "dose reduction"], "shield-check"),
+]
+
+
+def _scan_phrases(s: str) -> str | None:
+    """Return an icon NAME if any INTENT_PHRASES entry matches; else None."""
+    for phrases, name in INTENT_PHRASES:
+        for p in phrases:
+            if p in s:
+                return name
+    return None
+
+
+def _scan_keywords(s: str) -> str | None:
+    """Return an icon NAME from KEYWORD_REGISTRY if any keyword matches; else None."""
+    for kws, name in KEYWORD_REGISTRY:
+        for kw in kws:
+            if kw in s:
+                return name
+    return None
+
+
+def pick_strict(label: str) -> str | None:
+    """Return SVG markup if `label` produces a phrase or keyword match.
+
+    Returns None when no semantic match exists (i.e. the label would have
+    fallen back to a hash-based generic). Useful for prioritized lookup
+    where the caller wants to try the slide's primary label first, then a
+    broader corpus only if the primary label produced no signal.
+    """
+    s = (label or "").lower()
+    name = _scan_phrases(s) or _scan_keywords(s)
+    if name is None:
+        return None
+    return ICONS.get(name, ICONS["hexagon"])
+
+
 def pick(label: str) -> str:
     """Return inline SVG markup for the given label.
 
     Strategy:
-      1. Lowercase the label and search KEYWORD_REGISTRY in order. First
-         match wins.
-      2. If no keyword match, deterministically pick from FALLBACK_POOL
-         based on a hash of the label.
+      1. Multi-word INTENT_PHRASES (most specific). Captures hazard /
+         failure-mode / concept patterns the author actually wrote.
+      2. KEYWORD_REGISTRY single-word substrings (broad).
+      3. Hash-based selection from FALLBACK_POOL (so unmapped labels still
+         get visual variety instead of all-hexagon).
     """
-    s = label.lower() if label else ""
-    for kws, icon_name in KEYWORD_REGISTRY:
-        for kw in kws:
-            if kw in s:
-                return ICONS.get(icon_name, ICONS["hexagon"])
+    s = (label or "").lower()
+    name = _scan_phrases(s)
+    if name is None:
+        name = _scan_keywords(s)
+    if name is not None:
+        return ICONS.get(name, ICONS["hexagon"])
     digest = hashlib.md5(s.encode()).digest()[0]
     chosen = FALLBACK_POOL[digest % len(FALLBACK_POOL)]
     return ICONS.get(chosen, ICONS["hexagon"])

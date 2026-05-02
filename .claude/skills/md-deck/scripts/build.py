@@ -32,6 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from icons import (  # noqa: E402
     pick as _pick_icon_from_repo,
+    pick_strict as _pick_icon_strict,
     detect_group as _detect_group,
     pick_group as _pick_group_icon,
 )
@@ -711,10 +712,17 @@ def _make_principle_tiles(slide: dict) -> dict:
     for t in tiles_in[:6]:
         label = t.get("label", "")
         sub = t.get("subtitle", "")
+        # Prioritize the LABEL — that's the author's primary intent for
+        # the tile. Try INTENT_PHRASES + KEYWORD_REGISTRY against the label
+        # alone first; only widen to label + subtitle if no semantic match.
+        # This stops incidental words in the description (e.g. "infusion"
+        # in a battery hazard's body, or "module" in an alarm hazard) from
+        # dragging the icon away from the actual concept.
+        icon = _pick_icon_strict(label) or _pick_icon_strict(label + " " + sub) or _pick_icon(label)
         tiles_out.append({
             "label": label,
             "subtitle": _shorten(sub, 14),
-            "icon": _pick_icon(label + " " + sub),
+            "icon": icon,
         })
     return {
         "type": "principle-tiles",
