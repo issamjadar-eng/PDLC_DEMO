@@ -559,3 +559,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Follow-ups optional:
   - `/dhf-manifest init` to bootstrap the new sibling-of-/trace-matrix manifest skill
   - `/web-control setup` if/when a consumer skill needs Chrome automation
+
+## 2026-05-02 — push (md-deck v0.5 + frontend-slides registration)
+
+- Files: 43
+  - md-deck (5): SKILL.md, scripts/build.py, scripts/classify.py, scripts/creative.py, scripts/distill.py
+  - frontend-slides (38): SKILL.md, STYLE_PRESETS.md, viewport-base.css, animation-patterns.md, html-template.md, README.md, LICENSE, .pinned-sha, components/ (16 READMEs + _v04-components.css), presets/bold-signal.css, creative-palette.md, scripts/{deploy.sh, export-pdf.sh, extract-pptx.py}
+- Branch: `sync/pdlc-demo-md-deck-v0.5-creative-agents-2026-05-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/116
+- Commit: "md-deck v0.5 + frontend-slides shared layer + creative agent slots"
+- Status: merged
+- Merge commit: `58738c1`
+- Hitachi HEAD after sync: `58738c1`
+- Provenance: PDLC_DEMO task ben/042; local commits 946e710 → e9e5386 → 57298c8 → a185bfb
