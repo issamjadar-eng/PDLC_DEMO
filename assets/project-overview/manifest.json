@@ -7,7 +7,7 @@
     "size_bytes": 36191
   },
   "build": {
-    "at": "2026-05-02T04:34:03Z",
+    "at": "2026-05-02T04:54:23Z",
     "by": "benxavier",
     "style": "bold-signal"
   },
@@ -49,63 +49,63 @@
     },
     {
       "index": 5,
-      "type": "principle-tiles",
+      "type": "scope-iceberg",
       "title": "Regulatory strategy at a glance",
       "section": "1.2",
       "anchor": "L39-L49"
     },
     {
       "index": 6,
-      "type": "card-grid",
-      "title": "Key deliverables",
-      "section": "1.3",
-      "anchor": "L51-L58"
+      "type": "principle-tiles",
+      "title": "Regulatory strategy at a glance",
+      "section": "1.2",
+      "anchor": "L39-L49"
     },
     {
       "index": 7,
-      "type": "principle-tiles",
+      "type": "card-grid",
       "title": "Key deliverables",
       "section": "1.3",
       "anchor": "L51-L58"
     },
     {
       "index": 8,
+      "type": "principle-tiles",
+      "title": "Key deliverables",
+      "section": "1.3",
+      "anchor": "L51-L58"
+    },
+    {
+      "index": 9,
       "type": "divider",
       "title": "Agentic Approach \u2014 Project Shape, Structure & Capabilities",
       "section": "2",
       "anchor": "L60"
     },
     {
-      "index": 9,
+      "index": 10,
       "type": "prose-slide",
       "title": "Project shape & structure",
       "section": "2.1",
       "anchor": "L64-L105"
     },
     {
-      "index": 10,
+      "index": 11,
       "type": "card-grid",
       "title": "Operating rules baked into the project",
       "section": "2.2",
       "anchor": "L107-L109"
     },
     {
-      "index": 11,
+      "index": 12,
       "type": "principle-tiles",
       "title": "Operating rules baked into the project",
       "section": "2.2",
       "anchor": "L107-L109"
     },
     {
-      "index": 12,
-      "type": "table-slide",
-      "title": "Skills (project-level)",
-      "section": "2.3",
-      "anchor": "L116-L120"
-    },
-    {
       "index": 13,
-      "type": "catalog-mosaic",
+      "type": "table-slide",
       "title": "Skills (project-level)",
       "section": "2.3",
       "anchor": "L116-L120"
@@ -113,27 +113,27 @@
     {
       "index": 14,
       "type": "catalog-mosaic",
-      "title": "Skills (project-level) (continued \u00b7 2/2)",
+      "title": "Skills (project-level)",
       "section": "2.3",
       "anchor": "L116-L120"
     },
     {
       "index": 15,
+      "type": "catalog-mosaic",
+      "title": "Skills (project-level) (continued \u00b7 2/2)",
+      "section": "2.3",
+      "anchor": "L116-L120"
+    },
+    {
+      "index": 16,
       "type": "catalog-featured",
       "title": "Skills (project-level)",
       "section": "2.3",
       "anchor": "L116-L120"
     },
     {
-      "index": 16,
-      "type": "table-slide",
-      "title": "Agents (persona advisors)",
-      "section": "2.4",
-      "anchor": "L138-L178"
-    },
-    {
       "index": 17,
-      "type": "catalog-mosaic",
+      "type": "table-slide",
       "title": "Agents (persona advisors)",
       "section": "2.4",
       "anchor": "L138-L178"
@@ -141,201 +141,236 @@
     {
       "index": 18,
       "type": "catalog-mosaic",
-      "title": "Agents (persona advisors) (continued \u00b7 2/2)",
+      "title": "Agents (persona advisors)",
       "section": "2.4",
       "anchor": "L138-L178"
     },
     {
       "index": 19,
+      "type": "catalog-mosaic",
+      "title": "Agents (persona advisors) (continued \u00b7 2/2)",
+      "section": "2.4",
+      "anchor": "L138-L178"
+    },
+    {
+      "index": 20,
       "type": "catalog-featured",
       "title": "Agents (persona advisors)",
       "section": "2.4",
       "anchor": "L138-L178"
     },
     {
-      "index": 20,
+      "index": 21,
       "type": "divider",
       "title": "Quality & Process \u2014 How the Guardrails Work",
       "section": "3",
       "anchor": "L180"
     },
     {
-      "index": 21,
-      "type": "table-slide",
-      "title": "Skills \u2014 reusable, expert-grade playbooks",
-      "section": "3.1",
-      "anchor": "L186-L194"
-    },
-    {
       "index": 22,
-      "type": "catalog-mosaic",
+      "type": "table-slide",
       "title": "Skills \u2014 reusable, expert-grade playbooks",
       "section": "3.1",
       "anchor": "L186-L194"
     },
     {
       "index": 23,
-      "type": "catalog-featured",
+      "type": "catalog-mosaic",
       "title": "Skills \u2014 reusable, expert-grade playbooks",
       "section": "3.1",
       "anchor": "L186-L194"
     },
     {
       "index": 24,
+      "type": "catalog-featured",
+      "title": "Skills \u2014 reusable, expert-grade playbooks",
+      "section": "3.1",
+      "anchor": "L186-L194"
+    },
+    {
+      "index": 25,
       "type": "table-slide",
       "title": "Hooks \u2014 automatic tripwires you can't forget to run",
       "section": "3.2",
       "anchor": "L203-L220"
     },
     {
-      "index": 25,
-      "type": "card-grid",
-      "title": "Rules \u2014 project conventions the tool reads and obeys",
-      "section": "3.3",
-      "anchor": "L222-L230"
-    },
-    {
       "index": 26,
-      "type": "principle-tiles",
+      "type": "card-grid",
       "title": "Rules \u2014 project conventions the tool reads and obeys",
       "section": "3.3",
       "anchor": "L222-L230"
     },
     {
       "index": 27,
-      "type": "card-grid",
-      "title": "What this adds up to",
-      "section": "3.4",
-      "anchor": "L236-L249"
+      "type": "principle-tiles",
+      "title": "Rules \u2014 project conventions the tool reads and obeys",
+      "section": "3.3",
+      "anchor": "L222-L230"
     },
     {
       "index": 28,
-      "type": "principle-tiles",
+      "type": "card-grid",
       "title": "What this adds up to",
       "section": "3.4",
       "anchor": "L236-L249"
     },
     {
       "index": 29,
+      "type": "principle-tiles",
+      "title": "What this adds up to",
+      "section": "3.4",
+      "anchor": "L236-L249"
+    },
+    {
+      "index": 30,
       "type": "divider",
       "title": "Agentic Approach \u2014 Solving Complex Problems with Humans in Charge",
       "section": "4",
       "anchor": "L251"
     },
     {
-      "index": 30,
-      "type": "card-grid",
-      "title": "What an \"agent\" actually is here",
-      "section": "4.1",
-      "anchor": "L255-L264"
-    },
-    {
       "index": 31,
-      "type": "concept-canvas",
+      "type": "card-grid",
       "title": "What an \"agent\" actually is here",
       "section": "4.1",
       "anchor": "L255-L264"
     },
     {
       "index": 32,
-      "type": "principle-tiles",
+      "type": "concept-canvas",
       "title": "What an \"agent\" actually is here",
       "section": "4.1",
       "anchor": "L255-L264"
     },
     {
       "index": 33,
-      "type": "card-grid",
-      "title": "How it helps with complex problems",
-      "section": "4.2",
-      "anchor": "L266-L279"
+      "type": "principle-tiles",
+      "title": "What an \"agent\" actually is here",
+      "section": "4.1",
+      "anchor": "L255-L264"
     },
     {
       "index": 34,
-      "type": "principle-tiles",
+      "type": "card-grid",
       "title": "How it helps with complex problems",
       "section": "4.2",
       "anchor": "L266-L279"
     },
     {
       "index": 35,
+      "type": "concept-canvas",
+      "title": "How it helps with complex problems",
+      "section": "4.2",
+      "anchor": "L266-L279"
+    },
+    {
+      "index": 36,
+      "type": "principle-tiles",
+      "title": "How it helps with complex problems",
+      "section": "4.2",
+      "anchor": "L266-L279"
+    },
+    {
+      "index": 37,
       "type": "list-slide",
       "title": "Humans decide. Agents advise.",
       "section": "4.3",
       "anchor": "L281-L297"
     },
     {
-      "index": 36,
+      "index": 38,
+      "type": "principle-tiles",
+      "title": "Humans decide. Agents advise.",
+      "section": "4.3",
+      "anchor": "L281-L297"
+    },
+    {
+      "index": 39,
       "type": "table-slide",
       "title": "Where the handoff happens",
       "section": "4.4",
       "anchor": "L299-L310"
     },
     {
-      "index": 37,
+      "index": 40,
       "type": "handoff-relay",
       "title": "Where the handoff happens",
       "section": "4.4",
       "anchor": "L299-L310"
     },
     {
-      "index": 38,
+      "index": 41,
       "type": "list-slide",
       "title": "Why this works for regulated work",
       "section": "4.5",
       "anchor": "L312-L325"
     },
     {
-      "index": 39,
+      "index": 42,
+      "type": "principle-tiles",
+      "title": "Why this works for regulated work",
+      "section": "4.5",
+      "anchor": "L312-L325"
+    },
+    {
+      "index": 43,
       "type": "divider",
       "title": "The Project Console",
       "section": "5",
       "anchor": "L327"
     },
     {
-      "index": 40,
+      "index": 44,
       "type": "prose-slide",
       "title": "Landing page",
       "section": "5.1",
       "anchor": "L334-L338"
     },
     {
-      "index": 41,
+      "index": 45,
       "type": "card-grid",
       "title": "Agents (persona advisors)",
       "section": "5.2",
       "anchor": "L341-L354"
     },
     {
-      "index": 42,
+      "index": 46,
       "type": "principle-tiles",
       "title": "Agents (persona advisors)",
       "section": "5.2",
       "anchor": "L341-L354"
     },
     {
-      "index": 43,
+      "index": 47,
       "type": "list-slide",
       "title": "Documents explorer",
       "section": "5.3",
       "anchor": "L357-L361"
     },
     {
-      "index": 44,
+      "index": 48,
+      "type": "principle-tiles",
+      "title": "Documents explorer",
+      "section": "5.3",
+      "anchor": "L357-L361"
+    },
+    {
+      "index": 49,
       "type": "list-slide",
       "title": "Dashboards",
       "section": "5.4",
       "anchor": "L367-L383"
     },
     {
-      "index": 45,
+      "index": 50,
       "type": "prose-slide",
       "title": "Trace Matrix",
       "section": "5.5",
       "anchor": "L386-L398"
     },
     {
-      "index": 46,
+      "index": 51,
       "type": "table-slide",
       "title": "How the console relates to Claude Code",
       "section": "5.6",
@@ -353,6 +388,7 @@
     "list-slide",
     "principle-tiles",
     "prose-slide",
+    "scope-iceberg",
     "table-slide",
     "title"
   ]

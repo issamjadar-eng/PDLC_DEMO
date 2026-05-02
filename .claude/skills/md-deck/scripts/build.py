@@ -306,20 +306,19 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
     if cursor < len(blocks) and blocks[cursor]["level"] == 1:
         title_text = blocks[cursor]["text"]
         cursor += 1
-        # Optional lead paragraph
-        if cursor < len(blocks) and blocks[cursor]["type"] == "para":
-            lead = blocks[cursor]["text"]
-            cursor += 1
-        # Optional **Key:** value meta paragraph
+        # Walk subsequent paragraphs and classify each as meta vs lead.
+        # A paragraph is "meta" if it contains ≥2 `**Key:** value` pairs.
+        meta_re = re.compile(r"\*\*([^*]+):\*\*\s*([^*]+?)(?=\s*\*\*[^*]+:\*\*|\s*$)")
         while cursor < len(blocks) and blocks[cursor]["type"] == "para":
             t = blocks[cursor]["text"]
-            for m in re.finditer(r"\*\*([^*]+):\*\*\s*([^*]+?)(?=\s*\*\*|\s*$)", t):
-                meta_pairs.append((m.group(1).strip(), m.group(2).strip()))
-            if meta_pairs:
-                cursor += 1
-                break
+            matches = list(meta_re.finditer(t))
+            if len(matches) >= 2 and not meta_pairs:
+                meta_pairs = [(m.group(1).strip(), m.group(2).strip()) for m in matches]
+            elif not lead:
+                lead = t
             else:
-                cursor += 1
+                break  # both filled; stop
+            cursor += 1
 
     if title_text:
         slides.append({
@@ -503,10 +502,33 @@ HANDOFF_KEYWORDS = (
 CATALOG_MOSAIC_PER_SLIDE = 8
 
 
+def _slide_text_corpus(slide: dict) -> str:
+    """Concatenate everything textual on the slide for keyword-content checks."""
+    parts: list[str] = [str(slide.get("title", "")), str(slide.get("lead", ""))]
+    for t in slide.get("tiles", []) or []:
+        if isinstance(t, dict):
+            parts.extend([str(t.get("label", "")), str(t.get("subtitle", ""))])
+    for it in slide.get("items", []) or []:
+        if isinstance(it, tuple):
+            parts.append(" ".join(str(x) for x in it))
+        else:
+            parts.append(str(it))
+    parts.extend(str(p) for p in (slide.get("paragraphs") or []))
+    parts.extend(str(b) for b in (slide.get("bullets") or []))
+    return " ".join(p for p in parts if p).lower()
+
+
 def _inject_variants(slide: dict) -> list[dict]:
-    """Return zero-or-more variant slides to emit RIGHT AFTER the input slide."""
+    """Return zero-or-more variant slides to emit RIGHT AFTER the input slide.
+
+    Detection is broadened in v0.3 so dense card-grids and numbered lists
+    always emit at least one variant (principle-tiles by default), without
+    requiring a title-keyword match. Scope-iceberg, concept-canvas, and
+    handoff-relay also check the slide's content corpus, not just the title.
+    """
     out: list[dict] = []
     title = (slide.get("title") or "").lower()
+    corpus = _slide_text_corpus(slide)
 
     # Catalog tables → mosaic (paginated) + featured
     if slide["type"] == "table-slide":
@@ -518,27 +540,44 @@ def _inject_variants(slide: dict) -> list[dict]:
             out.append(_make_catalog_featured_slide(slide))
             return out  # catalog skips other variants
 
-    # Scope-iceberg
-    if any(k in title for k in SCOPE_KEYWORDS):
+    # Scope-iceberg — title OR strong content signal (≥2 scope-keyword mentions).
+    # Single passing mentions in unrelated slides are false positives.
+    title_has_scope = any(k in title for k in SCOPE_KEYWORDS)
+    scope_hits = sum(corpus.count(k) for k in SCOPE_KEYWORDS)
+    if title_has_scope or scope_hits >= 2:
         v = _make_scope_iceberg(slide)
-        if v:
+        if v and (len(v.get("in_items", [])) + len(v.get("out_items", []))) >= 3:
             out.append(v)
 
-    # Concept-canvas
-    if any(k in title for k in TEACH_KEYWORDS):
+    # Concept-canvas — title OR content keyword
+    if any(k in corpus for k in TEACH_KEYWORDS):
         v = _make_concept_canvas(slide)
-        if v:
+        if v and len(v.get("facets", [])) >= 3:
             out.append(v)
 
-    # Handoff-relay
-    if any(k in title for k in HANDOFF_KEYWORDS):
+    # Handoff-relay — title OR content keyword
+    if any(k in corpus for k in HANDOFF_KEYWORDS):
         v = _make_handoff_relay(slide)
-        if v:
+        if v and len(v.get("steps", [])) >= 2:
             out.append(v)
 
-    # Principle-tiles for dense card-grids
+    # Principle-tiles — broadened: any card-grid with ≥4 tiles, OR any
+    # list-slide whose bullets read like principles (≥4 items). v0.3 fix
+    # for slides 6/8 of project-overview.
     if slide["type"] == "card-grid" and len(slide.get("tiles") or []) >= 4:
-        v = _make_principle_tiles(slide)
+        if not any(v.get("type") == "principle-tiles" for v in out):
+            v = _make_principle_tiles(slide)
+            if v:
+                out.append(v)
+    elif slide["type"] == "list-slide" and len(slide.get("items") or []) >= 4:
+        # Synthesize tiles from list items (split bold lead from rest if any)
+        synthetic_tiles = []
+        for it in (slide.get("items") or [])[:6]:
+            m = re.match(r"^\*\*([^*]+?)\*\*[:.\s—-]*\s*(.*)$", it)
+            label, sub = (m.group(1).strip(), m.group(2).strip()) if m else (it[:60], "")
+            synthetic_tiles.append({"label": label, "subtitle": sub})
+        synthetic_slide = {**slide, "type": "card-grid", "tiles": synthetic_tiles}
+        v = _make_principle_tiles(synthetic_slide)
         if v:
             out.append(v)
 
@@ -658,11 +697,17 @@ def _make_scope_iceberg(slide: dict) -> dict | None:
     text = ""
     in_items: list[str] = []
     out_items: list[str] = []
+    out_kws = (
+        "out of scope", "out-of-scope", "out scope",
+        "out of the", "outside",
+        "carve-out", "exclude", "not in scope",
+        "post-clearance", "ships post",
+    )
     if slide["type"] == "card-grid":
         for t in slide.get("tiles", []):
             line = (t.get("label", "") + " " + t.get("subtitle", "")).lower()
             tag = t.get("label", "")
-            if any(k in line for k in ("out of scope", "out-of-scope", "out scope", "carve-out", "delete", "exclude")):
+            if any(k in line for k in out_kws):
                 out_items.append(tag)
             else:
                 in_items.append(tag)
@@ -974,13 +1019,17 @@ def render_catalog_mosaic(s: dict) -> str:
     cells = []
     for it in s.get("items", []):
         cat_class = f'cat-{it.get("category", "default")}'
-        # Tagline shown in resting state, full description visible in popup
+        # Resting state: icon + name + tagline. Hover popup (.cc-full) is
+        # absolutely positioned so it paints above neighbors without
+        # displacing them.
         cells.append(
-            f'<div class="cat-cell {cat_class}" data-full="{_esc(it.get("full_desc", ""))}">'
-            f'<div class="cc-icon lg {cat_class}">{it["icon"]}</div>'
+            f'<div class="cat-cell {cat_class}">'
+            f'<div class="cc-icon">{it["icon"]}</div>'
             f'<div class="cc-name">{_esc(it.get("name", ""))}</div>'
-            f'<div class="cc-cat-row"><span class="cc-cat">{_esc(it.get("category_label", ""))}</span></div>'
-            f'<div class="cc-tagline">{render_inline(it.get("tagline", ""))}</div>'
+            f'<div class="cc-tag">{render_inline(it.get("tagline", ""))}</div>'
+            f'<div class="cc-full"><div class="cc-full-name">{_esc(it.get("name", ""))}</div>'
+            f'<div class="cc-full-cat">{_esc(it.get("category_label", ""))}</div>'
+            f'<div class="cc-full-desc">{render_inline(it.get("full_desc", ""))}</div></div>'
             '</div>'
         )
     page_idx = s.get("page_idx", 0)
