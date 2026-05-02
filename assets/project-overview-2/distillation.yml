@@ -1,0 +1,420 @@
+meta:
+  source: project-overview-2.md
+  source_sha256: 217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d
+  distilled_by_agent: claude-opus-4-7
+  distilled_at: 2026-05-02T09:45:22Z
+  document_title: SP6500 Smart Pump Program Overview
+  document_kind: program-overview
+
+executive_summary: |
+  SP6500 is a large-volume single-channel IV infusion pump filed as a 510(k) traditional submission against the SP6000 predicate (K200111), bundling pump hardware, firmware, and the Drug Library Manager under one filing with an integrated PCCP. The Predictive Alarm Module is deliberately carved out to a separate later filing to protect the SP6500 timeline. The program runs as a cross-functional pod backed by a network of KOL digital-twin advisors and four investigator sites, with a documented human-AI handoff pattern that delivered equivalent IEC 62304 documentation in 38% of SP6000's calendar time and reduced clinical-correctness defects by 21%. The next 90 days lock the predicate-comparison table, file the Q-Sub, and open formative HF testing.
+
+executive_takeaways:
+  - Filing scope is tight on purpose — SP6500 pump plus DLM only; PAM and MDDS components are excluded to keep the timeline.
+  - PCCP is the substantive delta — pre-authorizing drug-library, firmware, and dose-error tuning changes against fixed acceptance criteria.
+  - Critical-to-Safety/Function/Performance tagging is the gating mechanism — only Ct* requirements are in scope for 510(k); commercial features ride the marketing track.
+  - The agentic console measured a real productivity delta — 38% calendar time and 21% fewer clinical defects — by automating structure, not judgment.
+  - Risk file is a first-class column in the trace matrix, integrated end-to-end, not bolted on after V&V.
+  - KOL voice is operationalized as digital-twin personas that any task can call, not a periodic human review.
+
+key_concepts:
+  - name: PCCP envelope
+    definition: Predetermined Change Control Plan pre-authorizing three categories of bounded post-clearance modifications.
+  - name: Critical-requirement carve-out
+    definition: CtS / CtF / CtP tagging scheme that gates which user needs and design inputs land in the 510(k) versus ship post-clearance.
+  - name: PAM filing posture
+    definition: Predictive Alarm Module filed separately six months later against AlarmGuard predicate to avoid extending SP6500 by an estimated 9 months.
+  - name: Digital-twin KOL advisors
+    definition: Eight callable persona agents with curated corpora and review criteria, embedded in authoring tasks.
+  - name: Human-AI handoff pattern
+    definition: Documented and hook-enforced boundary between human judgment stages and agent execution stages in DHF authoring.
+  - name: Closed-loop disambiguation
+    definition: SP6500's closed loop is the internal flow-rate controller, not clinician-out-of-the-loop dosing.
+
+audience:
+  inferred: true
+  primary_named: Steering committee (16-slide pitch in 2 weeks)
+  personas:
+    - role: Steering committee executive
+      lens: Wants timeline confidence, scope discipline, and competitive differentiation in one frame.
+      cares_about: Filing date, predicate strength, PCCP leverage, productivity story.
+    - role: Regulatory and clinical leads
+      lens: Need to verify that scope carve-outs and predicate logic hold up to FDA scrutiny.
+      cares_about: Substantial-equivalence argument, PAM separation rationale, Ct* tagging traceability.
+    - role: Cross-functional engineering pod
+      lens: Implementing day-to-day under the handoff pattern and trace-matrix discipline.
+      cares_about: Where their work lands in scope, how the agentic tooling changes their cadence, hazard-control coverage.
+
+unifying_theme:
+  metaphor: A surgical incision rather than a sweeping cut — the program succeeds by cutting precisely where scope ends, not by enlarging the field.
+  big_idea: |
+    SP6500 is a discipline story. The program wins not by doing more but by carving the filing scope, the predicate envelope, and the human-AI boundary into clear, defensible lines — and letting the agentic tooling accelerate everything inside those lines.
+  confidence: 0.72
+
+guardrails:
+  language:
+    - Always mark fabricated content with the demo banner; never imply real DHF evidence.
+    - Use 'closed-loop' only for the internal flow controller; never for dosing autonomy.
+    - Refer to PAM as out-of-scope-this-filing, not cancelled or descoped.
+  framing:
+    - Lead with scope discipline, not feature count.
+    - Treat the 38% time and 21% defect numbers as benchtop / program metrics, not clinical claims.
+    - Cite SP6000 K200111 as the predicate by name where substantial equivalence is asserted.
+  forbidden:
+    - Do not describe SP6500 as multi-channel or as a syringe pump.
+    - Do not bundle PAM into the SP6500 filing in any narrative.
+    - Do not present KOL digital twins as substitutes for live clinical review.
+
+sections:
+  - id: 1.1
+    title: What SP6500 actually is
+    anchor: L19-L23
+    rhetorical_move: Definitional fence-setting — establishes what the device is and explicitly what it is not.
+    primary_takeaway: SP6500 is a single-channel large-volume IV pump with a 7-inch touchscreen, a 5,000-entry drug library, and a benchtop 38% nuisance-alarm reduction; it is neither multi-channel nor a syringe pump, and 'closed-loop' refers only to internal flow control.
+    key_facts:
+      - 7" capacitive touchscreen
+      - On-pump drug library up to 5,000 formulary entries
+      - 38% nuisance-alarm reduction in benchtop testing vs SP6000 historical data
+      - SP6500-MC and SP6500-S are separate variants, separately filed
+      - Dose-error reduction software keeps prescriber-in-the-loop
+    metaphor_candidates:
+      - A precision scalpel, not a Swiss army knife
+      - A guard rail at the edge of dosing, not a self-driving car
+    contrast_pairs:
+      - Single-channel vs multi-channel
+      - Internal control loop vs clinician-out-of-the-loop
+      - Marketing 'closed-loop' vs engineering reality
+    callbacks: [1.2, 3.1]
+    audience_alignment: Anchors steering committee and regulators on a shared, narrow definition before scope discussion.
+    tone: precise, corrective
+    warnings:
+      - 38% number is benchtop only; do not generalize to clinical claim.
+    data:
+      kind: bar
+      title: SP6500 alarm-fatigue improvement vs SP6000 baseline
+      series:
+        - { label: 'Nuisance-alarm reduction', value: 38, unit: '%', accent: 'orange' }
+      baseline: 100
+      annotation: Benchtop comparison against historical SP6000 alarm data.
+
+  - id: 1.2
+    title: Filing scope at a glance
+    anchor: L25-L31
+    rhetorical_move: Scope-fencing — declares what is in and what is deliberately out.
+    primary_takeaway: One 510(k) covers SP6500 pump plus DLM with an integrated PCCP; PAM, CSS, and ATS are intentionally excluded to protect the timeline by an estimated 9 months.
+    key_facts:
+      - Single 510(k) for pump + firmware + Drug Library Manager
+      - PAM is Class II SaMD accessory, separate 510(k) using SP6000-AlarmGuard K215555 as predicate
+      - CSS and ATS are MDDS, fully out of scope
+      - Only Ct*-tagged requirements are in 510(k) scope
+      - PCCP covers formulary updates, firmware patches, and dose-error tuning
+      - Predicate SP6000 K200111
+      - Bundling PAM would add an estimated 9 months
+    metaphor_candidates:
+      - A surgical incision around the filing
+      - A bulkhead protecting the timeline from scope creep
+    contrast_pairs:
+      - In-scope (pump + DLM) vs out-of-scope (PAM, CSS, ATS)
+      - Ct* requirements vs commercial features
+      - 510(k) deltas (PCCP + UX) vs predicate equivalence
+    callbacks: [1.1, 1.3, 3.2]
+    audience_alignment: Gives executives a clean mental model of what the submission actually contains.
+    tone: declarative, disciplined
+    warnings:
+      - Do not soften the PAM carve-out — it is deliberate, not deferred.
+    data:
+      kind: comparison
+      title: Filing scope inclusion versus exclusion
+      series:
+        - { label: 'SP6500 pump', value: 1, unit: 'in', accent: 'orange' }
+        - { label: 'Drug Library Manager', value: 1, unit: 'in', accent: 'orange' }
+        - { label: 'Predictive Alarm Module', value: 0, unit: 'out', accent: 'muted' }
+        - { label: 'Cloud Sync Service', value: 0, unit: 'out', accent: 'muted' }
+        - { label: 'Asset Tracking Service', value: 0, unit: 'out', accent: 'muted' }
+      annotation: Bundling PAM would extend timeline by an estimated 9 months.
+
+  - id: 1.3
+    title: Key deliverables
+    anchor: L33-L36
+    rhetorical_move: Enumeration — the four artifact streams that make up the program output.
+    primary_takeaway: Four artifact streams (Q-Sub, 510(k), PCCP, trace matrix) operationalize the filing scope and the Ct* gating.
+    key_facts:
+      - Q-Sub package covers cover letter, device description, classification, PCCP scope questions
+      - 510(k) submission carries SE argument, IEC 62304 enhanced documentation, V&V data, risk analysis, labeling
+      - PCCP covers three change categories with modification protocols and post-market reporting
+      - Trace matrix has Filing Scope and PAM-or-pump columns derived from Ct* tags
+    metaphor_candidates:
+      - Four pillars of the submission
+      - Four lanes feeding one finish line
+    contrast_pairs:
+      - Pre-submission (Q-Sub) vs submission (510(k))
+      - Static document (510(k)) vs living envelope (PCCP)
+    callbacks: [1.2, 3.2]
+    audience_alignment: Reassures regulatory leads and PM that artifacts map cleanly to the scope.
+    tone: structured, operational
+    warnings: []
+    data:
+      kind: cohort
+      title: Four deliverable streams
+      series:
+        - { label: 'Q-Sub package', accent: 'orange' }
+        - { label: '510(k) submission', accent: 'amber' }
+        - { label: 'PCCP document', accent: 'coral' }
+        - { label: 'Trace matrix per DHF', accent: 'muted' }
+
+  - id: 2.1
+    title: Core program team
+    anchor: L40-L46
+    rhetorical_move: Roster framing — names the operating model as a cross-functional pod.
+    primary_takeaway: The program runs as a cross-functional pod with a single PM driving cadence and clinical voice carried by two practicing anesthesiologists embedded in design reviews.
+    key_facts:
+      - PM owns scope and calendar
+      - Clinical lead owns the use-case backlog
+      - Regulatory lead owns the FDA timeline
+      - R&D lead chairs design reviews across firmware, mechanical, SaMD
+      - QE owns QMS evidence chain; risk lead owns ISO 14971 file
+      - Dedicated HF engineer runs formative testing in three sites
+      - Summative testing contracted to a CRO under PM oversight
+    metaphor_candidates:
+      - A pod, not a relay race
+      - One conductor, several first chairs
+    contrast_pairs:
+      - In-house formative vs contracted summative
+      - Embedded clinical voice vs periodic clinical review
+    callbacks: [2.2, 4.1]
+    audience_alignment: Helps the steering committee see ownership lines at a glance.
+    tone: organized, confident
+    warnings: []
+    data:
+      kind: cohort
+      title: Core pod ownership
+      series:
+        - { label: 'Program manager', accent: 'orange' }
+        - { label: 'Clinical lead', accent: 'amber' }
+        - { label: 'Regulatory lead', accent: 'coral' }
+        - { label: 'R&D lead', accent: 'orange' }
+        - { label: 'Quality engineering', accent: 'muted' }
+        - { label: 'Risk management lead', accent: 'muted' }
+        - { label: 'Human factors engineer', accent: 'amber' }
+
+  - id: 2.2
+    title: KOL persona advisors
+    anchor: L48-L59
+    rhetorical_move: Capability roster — operationalizes clinical voice as callable agents.
+    primary_takeaway: Eight KOL digital twins span anesthesia, ICU, pediatrics, surgical, research, and nursing, each callable from any authoring task to inject opinionated review before human sign-off.
+    key_facts:
+      - 8 personas total covering anesthesia, critical care, pain management, surgical, pediatric, research, charge nursing, ICU nursing
+      - Each persona has curated corpus and review criteria
+      - Personas are callable from any task that needs their voice during authoring
+    metaphor_candidates:
+      - A standing review board you can call mid-draft
+      - Always-on panel, never a calendar invite
+    contrast_pairs:
+      - Always-on advisors vs scheduled clinical reviews
+      - Persona-specific corpus vs generic review checklist
+    callbacks: [2.1, 4.1, 4.2]
+    audience_alignment: Demonstrates to executives how clinical rigor scales without bottlenecks.
+    tone: confident, productized
+    warnings:
+      - Do not present digital twins as replacing live clinical sign-off.
+    data:
+      kind: cohort
+      title: KOL digital-twin advisor roster
+      series:
+        - { label: 'dr-okafor-anesthesia', accent: 'orange' }
+        - { label: 'dr-shah-icu', accent: 'amber' }
+        - { label: 'dr-park-pain-mgmt', accent: 'coral' }
+        - { label: 'dr-vega-surgical', accent: 'orange' }
+        - { label: 'dr-mendez-pediatric', accent: 'amber' }
+        - { label: 'dr-yamamoto-research', accent: 'coral' }
+        - { label: 'nurse-osborne-charge', accent: 'muted' }
+        - { label: 'nurse-rivera-icu', accent: 'muted' }
+
+  - id: 2.3
+    title: Investigator sites
+    anchor: L61-L68
+    rhetorical_move: Site enumeration — establishes patient-mix breadth for post-market follow-up.
+    primary_takeaway: Four investigator sites span tertiary academic, regional surgical, pediatric specialty, and ambulatory surgical settings to cover the post-market patient mix.
+    key_facts:
+      - Northshore Medical Center — 800 beds, academic anesthesiology fellowship
+      - Cascade Pacific Hospital — 320 beds, high-volume orthopedic surgical
+      - Mercy Children's Health — 200 beds, NICU plus general pediatrics
+      - Ridgeline Surgical Institute — 18 ORs, ambulatory outpatient pain
+    metaphor_candidates:
+      - Four corners of the care setting
+      - A patient-mix dragnet, not a single archetype
+    contrast_pairs:
+      - Inpatient academic vs ambulatory outpatient
+      - Adult tertiary vs pediatric specialty
+    callbacks: [5]
+    audience_alignment: Gives clinical and regulatory leads confidence that post-market data will not be skewed.
+    tone: factual, balanced
+    warnings: []
+    data:
+      kind: cohort
+      title: Investigator site portfolio
+      series:
+        - { label: 'Northshore (tertiary, 800 beds)', accent: 'orange' }
+        - { label: 'Cascade Pacific (regional, 320 beds)', accent: 'amber' }
+        - { label: "Mercy Children's (peds, 200 beds)", accent: 'coral' }
+        - { label: 'Ridgeline (ambulatory, 18 ORs)', accent: 'muted' }
+
+  - id: 3.1
+    title: Hazard register summary
+    anchor: L72-L79
+    rhetorical_move: Risk enumeration — names the six load-bearing hazards and their controls.
+    primary_takeaway: Six high-priority hazards drive the V&V scope; each has documented residual-risk acceptance after layered controls combining mechanical, firmware, and procedural mitigations.
+    key_facts:
+      - Free flow on disconnect — anti-free-flow valve plus active flow detection
+      - Drug library mismatch — dual-witness deployment plus runtime concentration cross-check
+      - Alarm fatigue masking critical events — PAM 38% nuisance-alarm reduction
+      - Battery depletion — 30-minute reserve plus escalating warnings starting at 60 minutes
+      - Pump tampering during transport — mechanical key-lock plus firmware audit trail
+      - Dose calculation regression — IEC 62304 enhanced docs plus automated regression suite plus telemetry
+    metaphor_candidates:
+      - Six fault lines, six reinforced bridges
+      - Defense in depth, hazard by hazard
+    contrast_pairs:
+      - Passive control (mechanical valve) vs active control (firmware detection)
+      - Pre-deployment control (dual-witness) vs runtime control (cross-check)
+    callbacks: [1.1, 1.2, 3.2]
+    audience_alignment: Gives risk and regulatory leads the spine of the V&V scope.
+    tone: rigorous, layered
+    warnings:
+      - Note PAM is the alarm-fatigue control but is filed separately, not in SP6500 510(k).
+    data:
+      kind: bar
+      title: Six load-bearing hazards driving V&V scope
+      series:
+        - { label: 'Free flow on disconnect', value: 1, unit: 'hazard', accent: 'orange' }
+        - { label: 'Drug library mismatch', value: 1, unit: 'hazard', accent: 'orange' }
+        - { label: 'Alarm fatigue', value: 1, unit: 'hazard', accent: 'amber' }
+        - { label: 'Battery depletion', value: 1, unit: 'hazard', accent: 'amber' }
+        - { label: 'Tampering in transport', value: 1, unit: 'hazard', accent: 'coral' }
+        - { label: 'Dose calculation defect', value: 1, unit: 'hazard', accent: 'coral' }
+
+  - id: 3.2
+    title: Quality system anchors
+    anchor: L81-L84
+    rhetorical_move: Standards anchoring — pins the QMS evidence chain to four authorities.
+    primary_takeaway: ISO 13485, IEC 62304 enhanced, ISO 14971, and 21 CFR 820 form the four-pillar QMS evidence chain, with risk treated as a first-class trace-matrix column rather than an afterthought.
+    key_facts:
+      - ISO 13485 governs design controls input → output → V&V → risk
+      - IEC 62304 enhanced documentation triggered by Class C SaMD classification (PAM)
+      - ISO 14971 risk file is a first-class trace column
+      - 21 CFR 820 carries the QMS evidence chain through design transfer and post-market
+    metaphor_candidates:
+      - A four-leg stool — pull one and the chain collapses
+      - Risk as a load-bearing column, not a panel insert
+    contrast_pairs:
+      - Risk as first-class column vs risk as appendix
+      - Design transfer cutoff vs continuous post-market chain
+    callbacks: [1.3, 3.1]
+    audience_alignment: Reassures auditors and regulatory leads the QMS spine is intact.
+    tone: structured, normative
+    warnings: []
+    data:
+      kind: cohort
+      title: Four QMS anchors
+      series:
+        - { label: 'ISO 13485 design controls', accent: 'orange' }
+        - { label: 'IEC 62304 enhanced docs', accent: 'amber' }
+        - { label: 'ISO 14971 risk file', accent: 'coral' }
+        - { label: '21 CFR 820 QMS chain', accent: 'muted' }
+
+  - id: 4.1
+    title: Where the handoff actually happens
+    anchor: L88-L95
+    rhetorical_move: Boundary drawing — names the explicit human and agent stages in DHF authoring.
+    primary_takeaway: The handoff is documented, audited, and hook-enforced — humans own briefs, clinical acceptability, and SE approval; agents own structural authoring, KOL summarization, and protocol drafting.
+    key_facts:
+      - Human PM drafts task brief and success criteria
+      - Agent skill executes structural authoring, templates, scaffolds, trace links
+      - Human clinical reviews each dose-related design input
+      - Agent clinical-affairs generates KOL feedback summaries from digital twins
+      - Human regulatory approves SE argumentation before submission
+      - Agent vnv-lead drafts V&V protocol from design inputs and risk file
+    metaphor_candidates:
+      - A relay where each runner knows exactly when the baton drops
+      - Tide line between human judgment and agent execution
+    contrast_pairs:
+      - Human judgment stage vs agent execution stage
+      - Structural authoring (agent) vs clinical acceptability (human)
+    callbacks: [2.1, 2.2, 4.2]
+    audience_alignment: Settles executive concern about AI overreach by showing the audited boundary.
+    tone: clear, accountable
+    warnings:
+      - Boundary is enforced by session hooks; do not present as advisory only.
+    data:
+      kind: ladder
+      title: Human-AI handoff stages in DHF authoring
+      series:
+        - { label: 'Human PM — task brief and success criteria', accent: 'orange' }
+        - { label: 'Agent skill — structural authoring', accent: 'amber' }
+        - { label: 'Human clinical — dose input review', accent: 'orange' }
+        - { label: 'Agent clinical-affairs — KOL summary', accent: 'amber' }
+        - { label: 'Human regulatory — SE argument approval', accent: 'orange' }
+        - { label: 'Agent vnv-lead — V&V protocol draft', accent: 'amber' }
+
+  - id: 4.2
+    title: What we measured
+    anchor: L97-L100
+    rhetorical_move: Evidence drop — quantifies the productivity and quality delta versus the SP6000 baseline.
+    primary_takeaway: Twelve weeks of SP6500 design-input authoring with the agentic console produced equivalent IEC 62304 documentation in 38% of the SP6000 calendar time, with reviewer-flagged clinical-correctness defects down 21%.
+    key_facts:
+      - 12-week measurement window for SP6500 design-input authoring
+      - 38% of SP6000 calendar time to produce equivalent IEC 62304 documentation
+      - 21% reduction in reviewer-flagged clinical-correctness defects
+      - Speed gain attributed to template execution, not clinical judgment shortcuts
+      - Defect reduction attributed to always-on KOL persona reviewers
+    metaphor_candidates:
+      - Same destination, fewer miles
+      - The advisors caught the typos before the surgeon picked up the pen
+    contrast_pairs:
+      - SP6500 cadence vs SP6000 cadence
+      - Template execution (allowed acceleration) vs clinical judgment (not shortcut)
+    callbacks: [4.1, 2.2]
+    audience_alignment: Hands the steering committee a defensible productivity headline.
+    tone: confident, specific
+    warnings:
+      - Frame as program metrics, not clinical claims; never extrapolate to patient outcomes.
+    data:
+      kind: bar
+      title: Agentic console productivity and quality delta vs SP6000
+      series:
+        - { label: 'Calendar time vs SP6000', value: 38, unit: '%', accent: 'orange' }
+        - { label: 'Clinical-correctness defects reduction', value: 21, unit: '%', accent: 'amber' }
+      baseline: 100
+      annotation: 12-week measurement window; equivalent IEC 62304 documentation output.
+
+  - id: 5
+    title: What's Next
+    anchor: L104-L112
+    rhetorical_move: Forward roadmap — names the four 90-day milestones with explicit week markers.
+    primary_takeaway: The next 90 days close the Q-Sub package, lock the predicate-comparison table, begin formative HF testing, and open the post-market data plan with the four investigator sites.
+    key_facts:
+      - Lock the predicate-comparison table by week 4
+      - Submit Q-Sub package by week 8
+      - FDA pre-feedback target by week 12
+      - Begin formative HF testing on production touchscreen prototype in week 10
+      - Open post-market data plan with four investigator sites by week 14
+      - Console provides per-document drift detection and always-on advisor drawer
+    metaphor_candidates:
+      - Four checkpoints on the runway before takeoff
+      - A 90-day glide path with FDA at the far end
+    contrast_pairs:
+      - Authoring milestone (week 4 table lock) vs submission milestone (week 8 Q-Sub)
+      - In-program HF (week 10) vs post-market data (week 14)
+    callbacks: [1.3, 2.3, 4.1]
+    audience_alignment: Gives the steering committee the calendar they came for.
+    tone: forward, committed
+    warnings: []
+    data:
+      kind: timeline
+      title: 90-day SP6500 program milestones
+      series:
+        - { label: 'Lock predicate-comparison table', when: 'Week 4', accent: 'orange' }
+        - { label: 'Submit Q-Sub package', when: 'Week 8', accent: 'amber' }
+        - { label: 'Begin formative HF testing', when: 'Week 10', accent: 'coral' }
+        - { label: 'FDA pre-feedback target', when: 'Week 12', accent: 'orange' }
+        - { label: 'Open post-market data plan with sites', when: 'Week 14', accent: 'muted' }

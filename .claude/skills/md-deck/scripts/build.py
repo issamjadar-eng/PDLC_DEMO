@@ -37,10 +37,146 @@ from icons import (  # noqa: E402
     pick_group as _pick_group_icon,
 )
 
-VERSION = "0.2.0"
+VERSION = "0.5.0"
 SKILL_DIR = Path(__file__).resolve().parent.parent  # .claude/skills/md-deck/
-CSS_PATH = SKILL_DIR / "styles" / "bold-signal.css"
+SKILLS_ROOT = SKILL_DIR.parent  # .claude/skills/
+FRONTEND_SLIDES_DIR = SKILLS_ROOT / "frontend-slides"
+COMPONENTS_DIR = FRONTEND_SLIDES_DIR / "components"
 JS_PATH = SKILL_DIR / "runtime" / "deck-runtime.js"
+
+
+# ---------------------------------------------------------------------------
+# Component registry (v0.4 PR 1) — scaffolding only; CSS still emitted from the
+# monolithic preset stylesheet. Per-component CSS extraction lands in later PRs.
+# ---------------------------------------------------------------------------
+
+def _parse_component_readme(path: Path) -> dict | None:
+    """Parse a component README.md frontmatter block.
+
+    Returns a dict with keys: name, cluster, purpose, favors, requires, forbids,
+    status, body. Returns None if the file is missing or has no frontmatter.
+
+    Hand-rolled YAML-subset parser — no PyYAML dependency. Supports:
+      - top-level scalar keys (name, cluster, purpose, status)
+      - one-level nested mapping (favors)
+      - flow-list `requires: [a, b, c]`
+      - empty mapping `favors: {}`
+    Anything more exotic should fail loudly so we notice schema drift.
+    """
+    if not path.exists():
+        return None
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return None
+    end = text.find("\n---\n", 4)
+    if end == -1:
+        return None
+    fm_lines = text[4:end].splitlines()
+    body = text[end + 5:]
+
+    out: dict = {
+        "favors": {},
+        "requires": [],
+        "forbids": [],
+        "body": body,
+    }
+    current_map_key: str | None = None
+    for raw in fm_lines:
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        if raw.startswith("  ") and current_map_key:
+            # nested mapping under current_map_key
+            k, _, v = raw.strip().partition(":")
+            if not _:
+                continue
+            v = v.strip()
+            try:
+                out[current_map_key][k.strip()] = float(v)
+            except ValueError:
+                out[current_map_key][k.strip()] = v
+            continue
+        current_map_key = None
+        k, _, v = raw.partition(":")
+        if not _:
+            continue
+        key = k.strip()
+        val = v.strip()
+        if val == "":
+            current_map_key = key
+            out.setdefault(key, {})
+            continue
+        if val == "{}":
+            out[key] = {}
+            continue
+        if val.startswith("[") and val.endswith("]"):
+            inner = val[1:-1].strip()
+            out[key] = [s.strip() for s in inner.split(",") if s.strip()] if inner else []
+            continue
+        out[key] = val
+    return out
+
+
+def load_component_registry() -> dict[str, dict]:
+    """Walk frontend-slides/components/ and return name → metadata dict.
+
+    Returns an empty dict if the directory is absent (e.g., a project that
+    installs md-deck without frontend-slides). The build proceeds either way
+    in v0.4 PR 1 — registry is informational at this stage, not yet wired
+    into rendering decisions. PR 2 will consume it for classifier scoring.
+    """
+    registry: dict[str, dict] = {}
+    if not COMPONENTS_DIR.exists():
+        return registry
+    for child in sorted(COMPONENTS_DIR.iterdir()):
+        if not child.is_dir():
+            continue
+        readme = child / "README.md"
+        meta = _parse_component_readme(readme)
+        if meta is None:
+            continue
+        name = meta.get("name") or child.name
+        meta["name"] = name
+        meta["folder"] = str(child.relative_to(SKILLS_ROOT))
+        registry[name] = meta
+    return registry
+
+
+def _resolve_style_css(style: str) -> tuple[Path | None, Path | None]:
+    """Resolve the (viewport-base, preset) CSS pair for a given style name.
+
+    Prefer the canonical sources in frontend-slides; fall back to md-deck's
+    own styles/ directory when frontend-slides is absent. Each returned path
+    is None if not found — caller decides how to degrade.
+
+    Owner of viewport rules: frontend-slides/viewport-base.css.
+    Owner of style presets: frontend-slides/presets/<name>.css, with a
+    legacy fallback to md-deck/styles/<name>.css for the bold-signal preset
+    that predates the shared layer.
+    """
+    fs_viewport = FRONTEND_SLIDES_DIR / "viewport-base.css"
+    fs_preset = FRONTEND_SLIDES_DIR / "presets" / f"{style}.css"
+    md_legacy = SKILL_DIR / "styles" / f"{style}.css"
+
+    viewport = fs_viewport if fs_viewport.exists() else None
+    if fs_preset.exists():
+        preset = fs_preset
+    elif md_legacy.exists():
+        preset = md_legacy
+    else:
+        preset = None
+    return viewport, preset
+
+
+def _v04_component_css() -> Path | None:
+    """Return the v0.4 shared component CSS file if present.
+
+    Holds the styling for the 8 PR-3 components (big-stat, mic-drop,
+    timeline-horizontal, phase-stack, before-after, versus-split, bar-chart,
+    roster-cards) plus the `candidates.html` chooser strip styling. Loaded
+    after the preset CSS so component selectors override preset defaults.
+    """
+    p = FRONTEND_SLIDES_DIR / "components" / "_v04-components.css"
+    return p if p.exists() else None
 
 
 # ---------------------------------------------------------------------------
@@ -1207,6 +1343,336 @@ def render_handoff_relay(s: dict) -> str:
 
 
 # Dispatch
+# ---------------------------------------------------------------------------
+# v0.4 component renderers (PR 3) — 8 new visual components.
+# ---------------------------------------------------------------------------
+
+_NUM_TOKEN_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(%|x|×|kg|mg|ms|sec|min|hr)?", re.IGNORECASE)
+_TIME_TOKEN_RE = re.compile(
+    r"\b("
+    r"week\s*\d+|q[1-4]\b|h[12]\b|"
+    r"\d{4}[-/]\d{1,2}([-/]\d{1,2})?|"
+    r"\d{4}-q[1-4]|"
+    r"jan\w*|feb\w*|mar\w*|apr\w*|may|jun\w*|jul\w*|aug\w*|sep\w*|oct\w*|nov\w*|dec\w*"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def _extract_first_number(text: str) -> tuple[str, str] | None:
+    """Return (value, unit) for the first number-with-unit found, or None."""
+    if not text:
+        return None
+    m = _NUM_TOKEN_RE.search(text)
+    if not m:
+        return None
+    return (m.group(1), m.group(2) or "")
+
+
+def _shortest_sentence(text: str) -> str:
+    """Pick the shortest sentence from a paragraph — the punchline candidate."""
+    if not text:
+        return ""
+    sents = re.split(r"(?<=[.!?])\s+", text.strip())
+    sents = [s for s in sents if s and len(s.split()) >= 4]
+    if not sents:
+        return text
+    return min(sents, key=lambda s: len(s.split()))
+
+
+def _person_initials(name: str) -> str:
+    """Derive a 2-char initials medallion from a name string."""
+    cleaned = re.sub(r"[^A-Za-z\s.-]", " ", name.replace("`", ""))
+    # Handle dr-okafor-anesthesia → "dr okafor anesthesia"
+    cleaned = re.sub(r"[-_]", " ", cleaned)
+    tokens = [t for t in cleaned.split() if t and t.lower() not in ("dr", "dr.", "nurse", "the", "a", "an")]
+    if not tokens:
+        return "•"
+    if len(tokens) == 1:
+        return tokens[0][:2].upper()
+    return (tokens[0][:1] + tokens[-1][:1]).upper()
+
+
+def render_big_stat(s: dict) -> str:
+    """One number + label + supporting line, oversized."""
+    title = s.get("title", "")
+    section = s.get("section")
+    text_pool = s.get("quote") or s.get("lead") or " ".join(s.get("paragraphs") or []) or ""
+    num = _extract_first_number(text_pool)
+    if num:
+        value, unit = num
+        hero = f'<div class="stat-hero">{_esc(value)}<span class="unit">{_esc(unit)}</span></div>'
+    else:
+        # Fall back: render the title prominently
+        hero = f'<div class="stat-label">{_esc(title)}</div>'
+    label = _esc(title)
+    support = _esc(_shorten(text_pool, 36)) if text_pool else ""
+    section_label = f'<div class="eyebrow reveal">§{section} · KEY METRIC</div>' if section else '<div class="eyebrow reveal">KEY METRIC</div>'
+    return (
+        f'<section class="slide big-stat" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'{section_label}'
+        f'<div class="reveal">{hero}</div>'
+        f'<div class="stat-label reveal">{label}</div>'
+        f'<div class="stat-support reveal">{support}</div>'
+        f'</div>'
+        f'</section>'
+    )
+
+
+def render_mic_drop(s: dict) -> str:
+    """One short sentence, oversized, centered."""
+    title = s.get("title", "")
+    text_pool = s.get("quote") or s.get("lead") or " ".join(s.get("paragraphs") or []) or title
+    line = _shortest_sentence(text_pool)
+    return (
+        f'<section class="slide mic-drop" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<div class="punchline reveal">{render_inline(line)}</div>'
+        f'<div class="punchline-source reveal">§{_esc(s.get("section") or "")} · {_esc(title)}</div>'
+        f'</div>'
+        f'</section>'
+    )
+
+
+def render_timeline_horizontal(s: dict) -> str:
+    """Dated milestones as a horizontal axis with dot-and-stem markers."""
+    items = s.get("items") or s.get("bullets") or []
+    if not items:
+        # Try table rows
+        table = s.get("table") or {}
+        items = [" — ".join(str(c) for c in row) for row in (table.get("rows") or [])]
+    items = items[:6]
+    stops_html: list[str] = []
+    for i, raw in enumerate(items):
+        text = raw if isinstance(raw, str) else " ".join(str(x) for x in raw)
+        m = _TIME_TOKEN_RE.search(text)
+        when = m.group(0).upper() if m else f"STEP {i+1}"
+        # Strip the time token from the body
+        what = _TIME_TOKEN_RE.sub("", text, count=1).strip(" ,—-:.;")
+        stops_html.append(
+            f'<div class="stop reveal">'
+            f'<span class="when">{_esc(when)}</span>'
+            f'<div class="what">{render_inline(what)}</div>'
+            f'</div>'
+        )
+    n = len(items) or 1
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
+        f'<div class="timeline-h reveal">'
+        f'<div class="axis"></div>'
+        f'<div class="stops" style="--stops:{n};">{"".join(stops_html)}</div>'
+        f'</div></div></section>'
+    )
+
+
+def render_phase_stack(s: dict) -> str:
+    """Numbered phases with big-numeral blocks."""
+    items = s.get("items") or s.get("bullets") or []
+    if not items:
+        table = s.get("table") or {}
+        items = [" — ".join(str(c) for c in row) for row in (table.get("rows") or [])]
+    items = items[:4]
+    phases_html: list[str] = []
+    for i, raw in enumerate(items):
+        text = raw if isinstance(raw, str) else " — ".join(str(x) for x in raw)
+        # Try to split "Actor — Description" via en-dash, em-dash, or pipe
+        parts = re.split(r"\s*[—–|·]\s*", text, maxsplit=1)
+        actor = parts[0].strip() if len(parts) > 1 else ""
+        desc = (parts[1] if len(parts) > 1 else text).strip()
+        phases_html.append(
+            f'<div class="phase reveal">'
+            f'<div class="phase-num">{i+1:02d}</div>'
+            f'<div class="phase-actor">{_esc(actor)}</div>'
+            f'<div class="phase-text">{render_inline(desc)}</div>'
+            f'</div>'
+        )
+    cols = len(items) or 1
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
+        f'<div class="phase-stack reveal" style="--phase-cols:{cols};">{"".join(phases_html)}</div>'
+        f'</div></section>'
+    )
+
+
+def render_before_after(s: dict) -> str:
+    """Two states side-by-side with an arrow + delta line."""
+    title = s.get("title", "")
+    pool = s.get("quote") or " ".join(s.get("paragraphs") or []) or s.get("lead") or ""
+    sentences = re.split(r"(?<=[.!?])\s+", pool.strip()) or [pool]
+    # Pick first two non-trivial sentences as before / after states
+    before_text = sentences[0] if sentences else title
+    after_text = sentences[1] if len(sentences) > 1 else ""
+    if not after_text:
+        # Try splitting the lead by commas; otherwise reuse title
+        parts = re.split(r"[,;]\s+", before_text, maxsplit=1)
+        if len(parts) == 2:
+            before_text, after_text = parts
+        else:
+            after_text = title
+    before_num = _extract_first_number(before_text)
+    after_num = _extract_first_number(after_text)
+    delta_match = _RATIO_PHRASE_RE.search(pool)
+    delta_html = f'<div class="delta reveal">{_esc(delta_match.group(0))}</div>' if delta_match else ''
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(title)}</h2>'
+        f'<div class="before-after reveal">'
+        f'<div class="ba-card before"><div class="ba-tag">BEFORE</div>'
+        f'{f"<div class=\"ba-stat\">{_esc(before_num[0])}<span style=\"font-size:0.5em\">{_esc(before_num[1])}</span></div>" if before_num else ""}'
+        f'<div class="ba-text">{render_inline(_shorten(before_text, 28))}</div></div>'
+        f'<div class="arrow">→</div>'
+        f'<div class="ba-card after"><div class="ba-tag">AFTER</div>'
+        f'{f"<div class=\"ba-stat\">{_esc(after_num[0])}<span style=\"font-size:0.5em\">{_esc(after_num[1])}</span></div>" if after_num else ""}'
+        f'<div class="ba-text">{render_inline(_shorten(after_text, 28))}</div></div>'
+        f'{delta_html}'
+        f'</div></div></section>'
+    )
+
+
+_RATIO_PHRASE_RE = re.compile(
+    r"\b(reduction|down|up|increase|decrease|improvement|drop|rise|cut)\s+(by\s+)?\d+\S*",
+    re.IGNORECASE,
+)
+
+
+def render_versus_split(s: dict) -> str:
+    """Two columns with one accent color per column."""
+    items = s.get("items") or s.get("bullets") or []
+    tiles = s.get("tiles") or []
+    if tiles:
+        flat = [(t.get("label", "") + (" — " + t["subtitle"] if t.get("subtitle") else "")) for t in tiles]
+    else:
+        flat = [it if isinstance(it, str) else " ".join(str(x) for x in it) for it in items]
+    # Heuristic split: items mentioning "in", "scope", "us", "ours" → left; items with "out", "them" → right
+    left, right = [], []
+    for f in flat:
+        low = f.lower()
+        if any(k in low for k in (" out ", "out of", "outside", "them", "theirs", "after")):
+            right.append(f)
+        elif any(k in low for k in (" in ", "in-scope", "scope =", "ours", "us ", "before")):
+            left.append(f)
+        else:
+            (left if len(left) <= len(right) else right).append(f)
+    left, right = left[:4], right[:4]
+    if not left or not right:
+        # Fallback: simple half-and-half split of all items
+        flat = flat[:6]
+        mid = len(flat) // 2 or 1
+        left, right = flat[:mid], flat[mid:]
+
+    def _li_html(items: list[str]) -> str:
+        return "".join(f'<li>{render_inline(_shorten(i, 22))}</li>' for i in items)
+
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
+        f'<div class="versus-split reveal">'
+        f'<div class="vs-side left"><div class="vs-tag">A</div><ul class="vs-list">{_li_html(left)}</ul></div>'
+        f'<div class="vs-divider">VS</div>'
+        f'<div class="vs-side right"><div class="vs-tag">B</div><ul class="vs-list">{_li_html(right)}</ul></div>'
+        f'</div></div></section>'
+    )
+
+
+def render_bar_chart(s: dict) -> str:
+    """Labels with values rendered as drawn CSS bars."""
+    items = s.get("items") or s.get("bullets") or []
+    tiles = s.get("tiles") or []
+    if tiles:
+        rows_in = [(t.get("label", ""), t.get("subtitle", "")) for t in tiles]
+    else:
+        rows_in = []
+        for raw in items:
+            text = raw if isinstance(raw, str) else " ".join(str(x) for x in raw)
+            # Split off bold lead if present
+            m = re.match(r"^\*\*([^*]+)\*\*\s*[—.:-]\s*(.*)$", text)
+            if m:
+                rows_in.append((m.group(1).strip(), m.group(2).strip()))
+            else:
+                rows_in.append((text, text))
+
+    # Extract numeric value per row
+    parsed: list[tuple[str, float, str]] = []
+    for label, body in rows_in:
+        n = _extract_first_number(body) or _extract_first_number(label)
+        if n:
+            try:
+                parsed.append((label, float(n[0]), n[0] + (n[1] or "")))
+            except ValueError:
+                continue
+    if not parsed:
+        # Bar chart non-viable when there are no numeric values; render as list
+        return render_list_slide(s)
+    parsed = parsed[:6]
+    max_val = max(v for _, v, _ in parsed) or 1.0
+    rows_html: list[str] = []
+    for i, (label, val, display) in enumerate(parsed):
+        pct = (val / max_val) * 100
+        muted = " muted" if i > 0 and val == min(v for _, v, _ in parsed) else ""
+        rows_html.append(
+            f'<div class="bar-row{muted} reveal">'
+            f'<div class="bar-label">{render_inline(_shorten(label, 8))}</div>'
+            f'<div class="bar-track"><div class="bar-fill" style="--bar-width:{pct:.1f}%;"></div></div>'
+            f'<div class="bar-value">{_esc(display)}</div>'
+            f'</div>'
+        )
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
+        f'<div class="bar-chart reveal">{"".join(rows_html)}</div>'
+        f'</div></section>'
+    )
+
+
+def render_roster_cards(s: dict) -> str:
+    """Cohorts of people: initials medallion + name + role."""
+    table = s.get("table") or {}
+    rows = table.get("rows") or []
+    if not rows:
+        # Fall back to mosaic-style if no table
+        return render_catalog_mosaic(s)
+    cards_html: list[str] = []
+    for row in rows[:9]:
+        if len(row) < 2:
+            continue
+        name = str(row[0]).strip().strip("`")
+        role = str(row[1]).strip()
+        initials = _person_initials(name)
+        # Friendlier display name
+        display = name.replace("dr-", "Dr. ").replace("nurse-", "Nurse ").replace("-", " ").title()
+        cards_html.append(
+            f'<div class="roster-card reveal">'
+            f'<div class="roster-medallion">{_esc(initials)}</div>'
+            f'<div>'
+            f'<div class="roster-name">{_esc(display)}</div>'
+            f'<div class="roster-role">{render_inline(_shorten(role, 14))}</div>'
+            f'</div></div>'
+        )
+    return (
+        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'{_chrome(s)}'
+        f'<div class="slide-content">'
+        f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
+        f'<div class="roster-cards reveal">{"".join(cards_html)}</div>'
+        f'</div></section>'
+    )
+
+
 RENDERERS = {
     "title": render_title_slide,
     "agenda": render_agenda_slide,
@@ -1223,6 +1689,17 @@ RENDERERS = {
     "scope-iceberg": render_scope_iceberg,
     "concept-canvas": render_concept_canvas,
     "handoff-relay": render_handoff_relay,
+    # v0.4 PR 3
+    "big-stat": render_big_stat,
+    "mic-drop": render_mic_drop,
+    "timeline-horizontal": render_timeline_horizontal,
+    "phase-stack": render_phase_stack,
+    "before-after": render_before_after,
+    "versus-split": render_versus_split,
+    "bar-chart": render_bar_chart,
+    "roster-cards": render_roster_cards,
+    # v0.5 — creative agent-authored slides return raw HTML verbatim
+    "raw-html": lambda s: s.get("raw_html", ""),
 }
 
 
@@ -1247,7 +1724,25 @@ def _load_asset(path: Path) -> str:
 
 def wrap_document(*, body: str, source_path: Path, source_sha: str,
                   built_at: str, slide_count: int, style: str) -> str:
-    css = _load_asset(CSS_PATH)
+    viewport_path, preset_path = _resolve_style_css(style)
+    css_parts: list[str] = []
+    if viewport_path is not None:
+        css_parts.append(
+            "/* === viewport-base.css (frontend-slides canonical viewport contract) === */\n"
+            + _load_asset(viewport_path)
+        )
+    if preset_path is not None:
+        css_parts.append(
+            f"/* === preset: {style} (from {preset_path.parent.parent.name}/{preset_path.parent.name}/{preset_path.name}) === */\n"
+            + _load_asset(preset_path)
+        )
+    v04_path = _v04_component_css()
+    if v04_path is not None:
+        css_parts.append(
+            "/* === v0.4 component library (frontend-slides/components/_v04-components.css) === */\n"
+            + _load_asset(v04_path)
+        )
+    css = "\n\n".join(css_parts)
     js = _load_asset(JS_PATH)
     built_by = getpass.getuser()
     src_rel = source_path.name
@@ -1346,6 +1841,218 @@ def write_manifest(*, out_dir: Path, source_path: Path, source_sha: str,
 # Main pipeline
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# v0.4 PR 4: 3-candidate selection + candidates.html + picks.json
+# ---------------------------------------------------------------------------
+
+# Slide types that DO get variant proposals — section content slides.
+# Title / agenda / divider / image-feature / catalog-mosaic / catalog-featured
+# are excluded: title and agenda are layout-fixed; dividers are ornamental;
+# image-feature is structurally gated; catalog-mosaic / catalog-featured already
+# split a single source into multiple slides with their own contract.
+_VARIANT_ELIGIBLE = {
+    "card-grid", "list-slide", "quote-slide", "prose-slide", "table-slide",
+    "image-feature",  # eligible — image + bullets can score timeline / phase-stack
+}
+
+
+def _adapt_slide_to_component(base: dict, component_name: str) -> dict:
+    """Adapt a base slide to a target component's expected data shape.
+
+    Most components inherit the base shape directly (title, lead, items,
+    bullets, tiles, paragraphs, table, anchor, section). The legacy variant
+    builders (_make_principle_tiles, _make_scope_iceberg, _make_concept_canvas,
+    _make_handoff_relay, _make_catalog_featured_slide) need to do data
+    transformation — call them through. Otherwise pass through with type retag.
+    """
+    if component_name == "principle-tiles":
+        # Needs tiles → add icons and shorten subtitles
+        tiles = base.get("tiles") or []
+        if not tiles:
+            # Convert items/bullets into bold-led tiles
+            items = base.get("items") or base.get("bullets") or []
+            tiles = []
+            for it in items:
+                text = it if isinstance(it, str) else " ".join(str(x) for x in it)
+                m = re.match(r"^\*\*([^*]+)\*\*\s*[—.:-]?\s*(.*)$", text)
+                if m:
+                    tiles.append({"label": m.group(1).strip(), "subtitle": m.group(2).strip()})
+                else:
+                    tiles.append({"label": _shorten(text, 6), "subtitle": ""})
+            base = dict(base, tiles=tiles)
+        return _make_principle_tiles(base) | {"_base_type": base["type"], "_picked_component": component_name, "anchor": base.get("anchor", "")}
+    if component_name == "scope-iceberg":
+        out = _make_scope_iceberg(base)
+        if out is None:
+            # Fallback: synthesize a 2-column scope
+            items = base.get("items") or base.get("bullets") or []
+            half = max(1, len(items) // 2)
+            out = {
+                "type": "scope-iceberg", "title": base.get("title", ""), "section": base.get("section"),
+                "anchor": base.get("anchor", ""),
+                "in_items": [str(i) for i in items[:half]][:4],
+                "out_items": [str(i) for i in items[half:]][:4],
+            }
+        out["_base_type"] = base["type"]
+        out["_picked_component"] = component_name
+        return out
+    if component_name == "concept-canvas":
+        out = _make_concept_canvas(base)
+        if out is None:
+            items = base.get("items") or base.get("bullets") or [base.get("lead", "")]
+            out = {
+                "type": "concept-canvas", "title": base.get("title", ""), "section": base.get("section"),
+                "anchor": base.get("anchor", ""),
+                "facets": [str(i)[:60] for i in items[:4]],
+            }
+        out["_base_type"] = base["type"]
+        out["_picked_component"] = component_name
+        return out
+    if component_name == "handoff-relay":
+        out = _make_handoff_relay(base)
+        if out is None:
+            # Fallback: take items as actor strings
+            items = base.get("items") or []
+            tiles = base.get("tiles") or []
+            actors = [str(it) for it in items] or [t.get("label", "") for t in tiles]
+            out = {
+                "type": "handoff-relay", "title": base.get("title", ""), "section": base.get("section"),
+                "anchor": base.get("anchor", ""), "actors": actors[:6],
+            }
+        out["_base_type"] = base["type"]
+        out["_picked_component"] = component_name
+        return out
+    if component_name == "catalog-mosaic":
+        # Reuse the first emitted mosaic slide for preview purposes
+        slides = _make_catalog_mosaic_slides(base) if (base.get("table") or {}).get("rows") else []
+        if slides:
+            slides[0]["_base_type"] = base["type"]
+            slides[0]["_picked_component"] = component_name
+            return slides[0]
+    if component_name == "catalog-featured":
+        if (base.get("table") or {}).get("rows"):
+            out = _make_catalog_featured_slide(base)
+            out["_base_type"] = base["type"]
+            out["_picked_component"] = component_name
+            return out
+
+    # Default: pass through with type retag — components that read directly
+    # from base shape (card-grid, list-slide, prose-slide, quote-slide,
+    # table-slide, big-stat, mic-drop, timeline-horizontal, phase-stack,
+    # before-after, versus-split, bar-chart, roster-cards).
+    adapted = dict(base)
+    adapted["_base_type"] = base["type"]
+    adapted["_picked_component"] = component_name
+    adapted["type"] = component_name
+    return adapted
+
+
+def propose_candidates(
+    base_slide: dict,
+    registry: dict[str, dict],
+    *,
+    top_k: int = 2,
+) -> list[tuple[dict, "ComponentScore"]]:
+    """Return the top-K (adapted_slide, ComponentScore) pairs for a base slide.
+
+    The first slot is always a no-op variant (the base slide unchanged) so the
+    user can pick "the original card-grid" as a candidate. Slots 2 and 3 are
+    drawn from the classifier's top picks, excluding the base slide's component.
+    """
+    from classify import extract_features, score_components, ComponentScore  # local import to keep top clean
+
+    if base_slide.get("type") not in _VARIANT_ELIGIBLE:
+        return []
+
+    features = extract_features(base_slide)
+    scored = score_components(features, registry, top_k=8, cluster_spread=True)
+
+    # Filter to renderers we actually have wired up
+    renderable = {n for n in RENDERERS}
+    scored = [s for s in scored if s.name in renderable]
+
+    # Always include the base type as the "safe" candidate at slot 1.
+    base_type = base_slide["type"]
+    base_meta = registry.get(base_type) or {"cluster": "uncategorized"}
+    base_score = ComponentScore(
+        name=base_type, cluster=base_meta.get("cluster", "uncategorized"),
+        score=0.50, rationale="base classification (md-deck heuristic)", viable=True,
+    )
+
+    result: list[tuple[dict, ComponentScore]] = [
+        (_adapt_slide_to_component(base_slide, base_type), base_score)
+    ]
+    seen_clusters = {base_score.cluster}
+    seen_names = {base_score.name}
+
+    for cs in scored:
+        if len(result) >= top_k:
+            break
+        if cs.name in seen_names:
+            continue
+        # Cluster-spread rule: max 2 per cluster
+        if list(seen_clusters).count(cs.cluster) >= 2:
+            continue
+        result.append((_adapt_slide_to_component(base_slide, cs.name), cs))
+        seen_names.add(cs.name)
+        seen_clusters.add(cs.cluster)
+
+    # Top up with raw-score order if cluster-spread left us short
+    if len(result) < top_k:
+        for cs in scored:
+            if len(result) >= top_k:
+                break
+            if cs.name in seen_names:
+                continue
+            result.append((_adapt_slide_to_component(base_slide, cs.name), cs))
+            seen_names.add(cs.name)
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# picks.json — assets-folder persistence (open question 5, revised 2026-05-02:
+# picks.json lives inside the deck's assets folder alongside index.html /
+# candidates.html / manifest.json, not next to the source markdown).
+# ---------------------------------------------------------------------------
+
+def _picks_path(out_dir: Path) -> Path:
+    """Path to picks.json inside the deck's assets folder."""
+    return out_dir / "picks.json"
+
+
+def load_picks(out_dir: Path) -> dict[str, dict]:
+    """Return {anchor: pick_entry} or empty dict if no picks file exists.
+
+    pick_entry is the full dict from picks.json — typically {component, html?,
+    rolled_at}. Creative picks carry an inlined `html` key so the locked deck
+    re-renders without re-calling the agent.
+    """
+    p = _picks_path(out_dir)
+    if not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    picks_block = data.get("picks") or {}
+    return {anchor: entry for anchor, entry in picks_block.items() if entry.get("component")}
+
+
+def _slice_source_markdown(source_text: str, anchor: str) -> str:
+    """Extract the source markdown lines covered by a `data-source-anchor`
+    string like "L13-L25" or "L116" so the creative agent sees the original
+    section text. Falls back to the whole source if the anchor can't be parsed.
+    """
+    m = re.match(r"L(\d+)(?:-L(\d+))?", str(anchor or ""))
+    if not m:
+        return source_text
+    lo = int(m.group(1))
+    hi = int(m.group(2)) if m.group(2) else lo
+    lines = source_text.splitlines()
+    return "\n".join(lines[lo - 1: hi])
+
+
 def expand_with_variants(slides: list[dict]) -> list[dict]:
     out: list[dict] = []
     for s in slides:
@@ -1355,24 +2062,245 @@ def expand_with_variants(slides: list[dict]) -> list[dict]:
     return out
 
 
-def build(source_path: Path, output_dir: Path | None, style: str) -> dict:
+# Per-slide-type density limits (frontend-slides density-limits table).
+# When a slide exceeds the limit, it is split into N continuation slides
+# instead of relying on shrinking type to fit. Tables are intentionally
+# absent — table density is owned by the catalog-mosaic / table-density
+# path, which paginates rows instead of shrinking columns.
+DENSITY_LIMITS = {
+    "card-grid": 6,   # 2x3 / 3x2 max
+    "list-slide": 6,  # 4-6 bullets sweet spot
+}
+
+
+def _split_dense_slide(slide: dict) -> list[dict]:
+    """If `slide` exceeds its density limit, split into N continuation slides.
+
+    Continuation slides carry "(cont.)" suffix in title; numbering chrome
+    auto-renumbers from DOM position via deck-runtime.js. The original
+    `data-source-anchor` is preserved on every part for drift detection.
+    """
+    stype = slide.get("type")
+    limit = DENSITY_LIMITS.get(stype)
+    if limit is None:
+        return [slide]
+    if stype == "card-grid":
+        tiles = slide.get("tiles") or []
+        if len(tiles) <= limit:
+            return [slide]
+        parts: list[dict] = []
+        for chunk_i, start in enumerate(range(0, len(tiles), limit)):
+            part = dict(slide)
+            part["tiles"] = tiles[start:start + limit]
+            if chunk_i > 0:
+                part["title"] = f"{slide['title']} (cont.)"
+                part["lead"] = ""  # lead only on first part
+            parts.append(part)
+        return parts
+    if stype == "list-slide":
+        items = slide.get("items") or []
+        if len(items) <= limit:
+            return [slide]
+        parts = []
+        for chunk_i, start in enumerate(range(0, len(items), limit)):
+            part = dict(slide)
+            part["items"] = items[start:start + limit]
+            if chunk_i > 0:
+                part["title"] = f"{slide['title']} (cont.)"
+                part["lead"] = ""
+            parts.append(part)
+        return parts
+    return [slide]
+
+
+def apply_density_splits(slides: list[dict]) -> list[dict]:
+    """Pre-pass: enforce per-slide-type density limits by splitting, not shrinking."""
+    out: list[dict] = []
+    for s in slides:
+        out.extend(_split_dense_slide(s))
+    return out
+
+
+def _emit_candidates_html(
+    section_candidates: list[dict],
+    *,
+    source_path: Path,
+    source_sha: str,
+    built_at: str,
+    style: str,
+) -> str:
+    """Render the candidates.html review page — every variant-eligible section
+    shown three-up with its scoring rationale. Picks persist via a download flow
+    that writes picks.json into the deck's assets folder.
+    """
+    parts: list[str] = []
+    parts.append('<header class="candidates-header">')
+    parts.append('<h1>md-deck candidates · review &amp; pick</h1>')
+    parts.append(
+        '<p>Three visual treatments per variant-eligible section. Click '
+        '<strong>Pick</strong> on a card to lock that component for the section. '
+        f'Save into the deck assets folder as <code>picks.json</code> '
+        '(same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. '
+        'Re-run the build to lock the picks into <code>index.html</code>.</p>'
+        f'<p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">'
+        f'source: {_esc(source_path.name)} · sha256: {source_sha[:16]}… · built: {built_at}'
+        '</p>'
+    )
+    parts.append('</header>')
+
+    for section in section_candidates:
+        anchor = section["anchor"]
+        title = section["title"] or "(untitled)"
+        parts.append(f'<div class="candidate-section" data-anchor="{_esc(anchor)}">')
+        parts.append(f'<h2>{_esc(title)}</h2>')
+        parts.append(f'<div class="anchor-tag">§{_esc(section.get("section") or "?")} · {_esc(anchor)}</div>')
+        parts.append('<div class="candidate-grid">')
+        for i, cand in enumerate(section["candidates"]):
+            letter = chr(ord("A") + i)
+            slide_html = cand["html"]
+            kind = cand.get("kind", "template")
+            agent_badge = ' <span style="color: var(--card-amber, #ffb400); font-weight: 700;">✨ AGENT</span>' if kind == "creative" else ""
+            parts.append(
+                f'<div class="candidate-card" data-component="{_esc(cand["component"])}" data-kind="{_esc(kind)}">'
+                f'<div class="candidate-header">'
+                f'<span class="pick-letter">{letter}</span>'
+                f'<span class="pick-name">{_esc(cand["component"])}{agent_badge}</span>'
+                f'<span class="pick-score">score {cand["score"]:.2f}</span>'
+                f'</div>'
+                f'<div class="candidate-preview">{slide_html}</div>'
+                f'<div class="candidate-rationale">{_esc(cand["rationale"])} · cluster: {_esc(cand["cluster"])}</div>'
+                f'<div class="candidate-actions"><button onclick="pick(this, \'{_esc(anchor)}\', \'{_esc(cand["component"])}\')">Pick {letter}</button></div>'
+                f'</div>'
+            )
+        parts.append('</div></div>')
+
+    body = "\n".join(parts)
+    chooser_js = '''
+<script>
+const PICKS = JSON.parse(localStorage.getItem('md-deck-picks-' + DECK_KEY) || '{}');
+
+function pick(btn, anchor, component) {
+    const card = btn.closest('.candidate-card');
+    const isCreative = card && card.dataset.kind === 'creative';
+    const entry = { component: component, rolled_at: new Date().toISOString() };
+    if (isCreative) {
+        // Capture the inlined HTML so the locked deck doesn't need to re-call the agent
+        const previewWrap = card.querySelector('.candidate-preview');
+        if (previewWrap) entry.html = previewWrap.innerHTML;
+    }
+    PICKS[anchor] = entry;
+    localStorage.setItem('md-deck-picks-' + DECK_KEY, JSON.stringify(PICKS));
+    // Highlight picked card and clear siblings
+    const section = btn.closest('.candidate-section');
+    section.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('picked'));
+    btn.closest('.candidate-card').classList.add('picked');
+    updateSummary();
+}
+
+function updateSummary() {
+    const summary = document.getElementById('picks-summary');
+    const n = Object.keys(PICKS).length;
+    summary.textContent = `${n} pick${n!==1?'s':''} · download picks.json`;
+}
+
+function downloadPicks() {
+    const out = {
+        schema: 'md-deck/picks@1',
+        source: SOURCE_NAME,
+        source_sha256: SOURCE_SHA,
+        picks: PICKS,
+    };
+    const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'picks.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Restore picks from localStorage on load
+document.addEventListener('DOMContentLoaded', () => {
+    Object.entries(PICKS).forEach(([anchor, entry]) => {
+        const sec = document.querySelector(`.candidate-section[data-anchor="${anchor}"]`);
+        if (!sec) return;
+        const card = sec.querySelector(`.candidate-card[data-component="${entry.component}"]`);
+        if (card) card.classList.add('picked');
+    });
+    updateSummary();
+});
+</script>
+'''
+    return body + (
+        f'<div id="picks-summary" class="picks-summary" onclick="downloadPicks()">0 picks · download picks.json</div>'
+        f'<script>'
+        f'const DECK_KEY = "{_esc(source_path.stem)}";'
+        f'const SOURCE_NAME = "{_esc(source_path.name)}";'
+        f'const SOURCE_STEM = "{_esc(source_path.stem)}";'
+        f'const SOURCE_SHA = "{source_sha}";'
+        f'</script>'
+        + chooser_js
+    )
+
+
+def _save_creative_cache(out_dir: Path, source_sha: str, source_name: str, cache: dict) -> None:
+    """Persist creative-slot HTML cache so subsequent builds skip re-calling the agent.
+
+    Stored as a top-level `creative_cache` block in picks.json so picks and
+    cache live in one file. Schema:
+      creative_cache[anchor][slot_name] = {html, generated_at, source_sha}
+    """
+    p = _picks_path(out_dir)
+    if p.exists():
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            data = {}
+    else:
+        data = {}
+    data.setdefault("schema", "md-deck/picks@2")
+    data["source"] = source_name
+    data["source_sha256"] = source_sha
+    data.setdefault("picks", {})
+    data["creative_cache"] = cache
+    p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
+def _load_creative_cache(out_dir: Path) -> dict:
+    p = _picks_path(out_dir)
+    if not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return data.get("creative_cache") or {}
+
+
+def build(
+    source_path: Path,
+    output_dir: Path | None,
+    style: str,
+    *,
+    review: bool = False,
+    creative_mode: bool = False,
+    creative_section: str | None = None,
+    re_roll_creative: list[str] | None = None,
+    re_roll_distillation: bool = False,
+    creative_parallelism: int = 5,
+) -> dict:
     text = source_path.read_text(encoding="utf-8")
     sha = hashlib.sha256(text.encode()).hexdigest()
     built_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     blocks = parse_markdown(text)
     base_slides = synthesize_slides(blocks, source_path)
-    slides = expand_with_variants(base_slides)
+    base_slides = apply_density_splits(base_slides)
 
-    body = render_slides_html(slides)
-    html = wrap_document(
-        body=body, source_path=source_path, source_sha=sha,
-        built_at=built_at, slide_count=len(slides), style=style,
-    )
-
+    # Resolve the output directory first — picks.json now lives inside it
+    # (revised location 2026-05-02: assets folder, not source-adjacent).
     slug = _slugify(source_path.stem)
     if output_dir is None:
-        # find project root by walking up for .claude/
         cur = source_path.resolve().parent
         root = cur
         while root != root.parent:
@@ -1384,16 +2312,319 @@ def build(source_path: Path, output_dir: Path | None, style: str) -> dict:
         out_dir = output_dir.resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # v0.4 PR 4 — load picks from the assets folder + load component registry
+    picks = load_picks(out_dir)
+    registry = load_component_registry()
+    creative_cache = _load_creative_cache(out_dir) if creative_mode else {}
+    re_roll_set = set(re_roll_creative or [])
+
+    # v0.5 — when --creative is on, run the deck-wide distillation pass first.
+    # Cached at out_dir/distillation.yml, source-SHA-tagged. Slot briefs ingest
+    # both the deck-wide intelligence and the per-section dossier.
+    distillation: dict = {}
+    if creative_mode:
+        from distill import distill_source
+        try:
+            distillation = distill_source(
+                source_path, out_dir, source_sha=sha,
+                force=bool(re_roll_distillation),
+            )
+        except Exception as e:
+            print(f"  ⚠ distillation failed: {e}; creative slots will fall back to raw markdown only", file=sys.stderr)
+            distillation = {}
+
+    # For each base slide, propose 2 template candidates + (optionally) 2
+    # creative agent-authored candidates. Pick the locked component if a pick
+    # exists for the anchor; otherwise pick the top-scoring template.
+    section_candidates: list[dict] = []  # for candidates.html
+    final_slides: list[dict] = []
+    slide_plan: list[dict] = []  # ordered: {"kind": "passthrough"|"chosen", "base"?, "anchor"?}
+    components_used: set[str] = set()
+    creative_calls = 0
+    creative_pending: list[dict] = []   # tasks for parallel fan-out
+    base_slide_by_anchor: dict[str, dict] = {}   # for finalize-pass lookups
+    cands_by_anchor: dict[str, list] = {}
+
+    for base in base_slides:
+        cands = propose_candidates(base, registry, top_k=2)
+        if not cands:
+            slide_plan.append({"kind": "passthrough", "base": base})
+            continue
+        # Eligible — record the position; chosen slide materializes after fan-out.
+        slide_plan.append({"kind": "chosen", "anchor": base.get("anchor", "")})
+
+        anchor = base.get("anchor", "")
+        pick_entry = picks.get(anchor) or {}
+        locked_name = pick_entry.get("component")
+        locked_html = pick_entry.get("html")
+
+        # Render the two template candidates' HTML
+        template_rendered: list[dict] = []
+        for adapted, cs in cands:
+            try:
+                renderer = RENDERERS.get(adapted["type"], render_prose_slide)
+                template_rendered.append({
+                    "component": cs.name,
+                    "score": cs.score,
+                    "rationale": cs.rationale,
+                    "cluster": cs.cluster,
+                    "kind": "template",
+                    "html": renderer(adapted),
+                })
+            except Exception as e:
+                template_rendered.append({
+                    "component": cs.name,
+                    "score": cs.score,
+                    "rationale": f"render failed: {e}",
+                    "cluster": cs.cluster,
+                    "kind": "template",
+                    "html": f'<section class="slide"><div class="slide-content"><h2>render failed</h2><p>{_esc(str(e))}</p></div></section>',
+                })
+
+        # Reuse cached creative slots inline; queue uncached ones for parallel
+        # fan-out below. We need template_rendered for ref_a/ref_b in the brief,
+        # so cached entries materialize here and pending entries are placeholders.
+        creative_rendered: list[dict] = []
+        if creative_mode and (creative_section is None or creative_section == anchor):
+            anchor_cache = creative_cache.get(anchor) or {}
+            for slot, personality in (("creative-c", "bold-metaphor"),
+                                       ("creative-d", "restrained-takeaway")):
+                cached = anchor_cache.get(slot) or {}
+                cached_html = cached.get("html")
+                stale = cached.get("source_sha") != sha
+                if cached_html and not stale and anchor not in re_roll_set:
+                    creative_rendered.append({
+                        "component": slot,
+                        "score": 0.95 if slot == "creative-c" else 0.92,
+                        "rationale": f"agent-authored ({personality}) · cached",
+                        "cluster": "creative",
+                        "kind": "creative",
+                        "html": cached_html,
+                    })
+                else:
+                    # Queue this slot for parallel generation. The placeholder
+                    # carries the metadata needed to fill in the html later.
+                    creative_pending.append({
+                        "anchor": anchor,
+                        "slot": slot,
+                        "personality": personality,
+                        "section_title": base.get("title", ""),
+                        "section_number": base.get("section"),
+                        "ref_a": template_rendered[0]["html"] if template_rendered else "",
+                        "ref_b": template_rendered[1]["html"] if len(template_rendered) > 1 else "",
+                    })
+                    creative_rendered.append({
+                        "component": slot,
+                        "score": 0.95 if slot == "creative-c" else 0.92,
+                        "rationale": f"agent-authored ({personality}) · pending",
+                        "cluster": "creative",
+                        "kind": "creative",
+                        "html": "",  # filled in after parallel fan-out
+                        "_pending": True,
+                    })
+            creative_cache[anchor] = anchor_cache
+
+        all_candidates = template_rendered + creative_rendered
+
+        # Stash for the finalize-pass below. Final chosen-slide computation
+        # happens AFTER the parallel creative fan-out so pending HTML is filled.
+        section_candidates.append({
+            "anchor": anchor,
+            "section": base.get("section"),
+            "title": base.get("title", ""),
+            "candidates": all_candidates,
+            "_locked_name": locked_name,
+            "_locked_html": locked_html,
+        })
+        base_slide_by_anchor[anchor] = base
+        cands_by_anchor[anchor] = cands
+
+    # ── Parallel fan-out: generate all pending creative slots concurrently ──
+    if creative_pending:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        from creative import generate_creative_slide
+        from distill import deck_brief_block, section_brief_block, section_dossier
+
+        deck_block = deck_brief_block(distillation)
+        max_workers = max(1, min(creative_parallelism, len(creative_pending)))
+        print(
+            f"  · creative fan-out: {len(creative_pending)} agent calls × parallelism={max_workers}"
+            f" (~{15 * (len(creative_pending) // max_workers + 1)}s estimated)",
+            file=sys.stderr,
+        )
+
+        def _generate(task: dict) -> tuple[dict, str | None, str]:
+            section_md = _slice_source_markdown(text, task["anchor"])
+            dossier = section_dossier(distillation, task["anchor"])
+            section_block = section_brief_block(dossier)
+            try:
+                html_frag, raw = generate_creative_slide(
+                    section_markdown=section_md,
+                    section_title=task["section_title"],
+                    section_anchor=task["anchor"],
+                    section_number=task["section_number"],
+                    slot_personality=task["personality"],
+                    reference_html_a=task["ref_a"],
+                    reference_html_b=task["ref_b"],
+                    deck_brief=deck_block,
+                    section_brief=section_block,
+                )
+                return task, html_frag, raw
+            except Exception as e:
+                return task, None, f"(exception: {e})"
+
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futures = [pool.submit(_generate, t) for t in creative_pending]
+            for fut in as_completed(futures):
+                task, html_frag, raw = fut.result()
+                anchor = task["anchor"]
+                slot = task["slot"]
+                personality = task["personality"]
+                creative_calls += 1
+                anchor_cache = creative_cache.get(anchor) or {}
+                if html_frag:
+                    anchor_cache[slot] = {
+                        "html": html_frag,
+                        "personality": personality,
+                        "source_sha": sha,
+                        "generated_at": built_at,
+                    }
+                    print(f"    ✓ {slot} for {anchor} ({personality})", file=sys.stderr)
+                else:
+                    debug_path = out_dir / f"creative-debug-{anchor}-{slot}.txt"
+                    debug_path.write_text(raw or "(empty response)", encoding="utf-8")
+                    print(f"    ⚠ {slot} for {anchor} ({personality}) — extraction failed; raw saved to {debug_path.name}", file=sys.stderr)
+                creative_cache[anchor] = anchor_cache
+
+                # Splice the generated html into the placeholder candidate card
+                for sec in section_candidates:
+                    if sec["anchor"] != anchor:
+                        continue
+                    for c in sec["candidates"]:
+                        if c.get("component") == slot and c.get("_pending"):
+                            c["html"] = html_frag or ""
+                            c["rationale"] = (
+                                f"agent-authored ({personality})"
+                                if html_frag else
+                                f"agent-authored ({personality}) · extraction failed"
+                            )
+                            c.pop("_pending", None)
+                            if not html_frag:
+                                # Drop the score so a working candidate wins
+                                c["score"] = 0.0
+
+    # ── Finalize pass: walk slide_plan in source order; choose per eligible section now that all html exists ──
+    sec_by_anchor = {sec["anchor"]: sec for sec in section_candidates}
+
+    def _choose(sec: dict, base: dict, cands_list: list) -> dict | None:
+        anchor = sec["anchor"]
+        all_candidates = sec["candidates"]
+        locked_name = sec.pop("_locked_name", None)
+        locked_html = sec.pop("_locked_html", None)
+        viable = [c for c in all_candidates if c.get("html")]
+        if not viable:
+            viable = all_candidates  # last-resort fallback
+        chosen_idx = 0
+        if locked_name:
+            found = False
+            for i, c in enumerate(all_candidates):
+                if c["component"] == locked_name and c.get("html"):
+                    chosen_idx = i
+                    found = True
+                    break
+            if not found and locked_html:
+                all_candidates.insert(0, {
+                    "component": locked_name,
+                    "score": 1.0,
+                    "rationale": "locked from picks.json",
+                    "cluster": "locked",
+                    "kind": "creative" if str(locked_name).startswith("creative-") else "template",
+                    "html": locked_html,
+                })
+                chosen_idx = 0
+            elif not found:
+                chosen = max(viable, key=lambda c: c["score"])
+                chosen_idx = all_candidates.index(chosen)
+        else:
+            chosen = max(viable, key=lambda c: c["score"])
+            chosen_idx = all_candidates.index(chosen)
+        return all_candidates[chosen_idx]
+
+    for entry in slide_plan:
+        if entry["kind"] == "passthrough":
+            final_slides.append(entry["base"])
+            continue
+        anchor = entry["anchor"]
+        sec = sec_by_anchor.get(anchor)
+        base = base_slide_by_anchor.get(anchor)
+        cands_list = cands_by_anchor.get(anchor) or []
+        if sec is None or base is None:
+            if base is not None:
+                final_slides.append(base)
+            continue
+        chosen = _choose(sec, base, cands_list)
+        components_used.add(chosen["component"])
+        if chosen.get("kind") == "creative":
+            final_slides.append({
+                "type": "raw-html",
+                "title": base.get("title", ""),
+                "section": base.get("section"),
+                "anchor": anchor,
+                "raw_html": chosen.get("html", ""),
+            })
+        else:
+            for adapted, cs in cands_list:
+                if cs.name == chosen["component"]:
+                    final_slides.append(adapted)
+                    break
+            else:
+                final_slides.append(base)
+
+    # Persist the creative cache (and create empty picks.json scaffolding if absent)
+    if creative_mode:
+        _save_creative_cache(out_dir, source_sha=sha, source_name=source_path.name, cache=creative_cache)
+
+    # Variant injection (v0.2 multi-emit) runs on the locked slide list
+    slides = expand_with_variants(final_slides)
+
+    body = render_slides_html(slides)
+    html = wrap_document(
+        body=body, source_path=source_path, source_sha=sha,
+        built_at=built_at, slide_count=len(slides), style=style,
+    )
+
     out_html = out_dir / "index.html"
     out_html.write_text(html, encoding="utf-8")
     out_manifest = write_manifest(
         out_dir=out_dir, source_path=source_path, source_sha=sha,
         built_at=built_at, style=style, slides=slides,
     )
+
+    # Emit candidates.html when:
+    #   (a) --review explicitly requested, or
+    #   (b) no picks.json exists yet (first-build auto-open per open-question 6)
+    candidates_html_path: Path | None = None
+    if section_candidates and (review or not picks):
+        cand_body = _emit_candidates_html(
+            section_candidates, source_path=source_path,
+            source_sha=sha, built_at=built_at, style=style,
+        )
+        full = wrap_document(
+            body=f'<div class="candidates-page">{cand_body}</div>',
+            source_path=source_path, source_sha=sha,
+            built_at=built_at, slide_count=len(section_candidates), style=style,
+        )
+        candidates_html_path = out_dir / "candidates.html"
+        candidates_html_path.write_text(full, encoding="utf-8")
+
     return {
         "html": out_html,
+        "candidates_html": candidates_html_path,
         "manifest": out_manifest,
         "slide_count": len(slides),
+        "section_count": len(section_candidates),
+        "components_used": sorted(components_used),
+        "picks_loaded": len(picks),
         "size_bytes": out_html.stat().st_size,
         "sha": sha,
     }
@@ -1403,9 +2634,36 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="md-deck build")
     parser.add_argument("source", help="Markdown source file")
     parser.add_argument("--style", default="bold-signal",
-                        help="Style preset (currently only bold-signal)")
+                        help="Style preset (resolved against frontend-slides/presets/<name>.css; "
+                             "falls back to md-deck/styles/<name>.css)")
     parser.add_argument("--output-dir", default=None,
                         help="Override output directory (default: <root>/assets/<slug>/)")
+    parser.add_argument("--review", action="store_true",
+                        help="Always emit candidates.html for the 4-up review UI; "
+                             "without --review, candidates.html only emits when no "
+                             "picks.json exists yet (first build).")
+    parser.add_argument("--creative", action="store_true",
+                        help="Generate slots C and D as agent-authored bespoke slides "
+                             "via `claude -p`. Off by default; opt-in adds ~5–30s of "
+                             "latency per build (cached after first run).")
+    parser.add_argument("--creative-section", default=None,
+                        help="When set, only generate creative slots for the section "
+                             "with this anchor (e.g., L116-L120). Other sections still "
+                             "render template slots A and B but skip creative slots.")
+    parser.add_argument("--re-roll-creative", action="append", default=[],
+                        help="Force re-generation of creative slots for an anchor, "
+                             "ignoring the cache. Can be passed multiple times. "
+                             "Example: --re-roll-creative L116-L120 --re-roll-creative L40-L65")
+    parser.add_argument("--re-roll-distillation", action="store_true",
+                        help="Force the deck-wide distillation to regenerate "
+                             "even if the cached distillation.yml is current.")
+    parser.add_argument("--creative-parallelism", type=int, default=5,
+                        help="Max concurrent `claude -p` calls during the creative "
+                             "fan-out (default: 5). Higher values speed up the "
+                             "pass but may hit rate limits.")
+    parser.add_argument("--dump-distillation", action="store_true",
+                        help="Print the loaded distillation YAML to stdout after build "
+                             "(implies --creative — runs distillation if needed).")
     args = parser.parse_args()
 
     source_path = Path(args.source)
@@ -1414,15 +2672,28 @@ def main() -> int:
         return 2
 
     out_dir = Path(args.output_dir) if args.output_dir else None
-    result = build(source_path, out_dir, args.style)
+    creative_mode = args.creative or args.dump_distillation
+    result = build(
+        source_path, out_dir, args.style,
+        review=args.review,
+        creative_mode=creative_mode,
+        creative_section=args.creative_section,
+        re_roll_creative=args.re_roll_creative,
+        re_roll_distillation=args.re_roll_distillation,
+        creative_parallelism=args.creative_parallelism,
+    )
 
     size_kb = result["size_bytes"] // 1024
     print(f"✓ md-deck v{VERSION} build complete")
     print(f"  source:   {source_path}")
     print(f"  output:   {result['html'].relative_to(Path.cwd()) if Path.cwd() in result['html'].parents else result['html']}")
-    print(f"  slides:   {result['slide_count']}")
+    print(f"  slides:   {result['slide_count']} ({result['section_count']} variant-eligible sections)")
+    print(f"  picks:    {result['picks_loaded']} loaded from picks.json")
+    print(f"  used:     {', '.join(result['components_used']) or '(only existing components)'}")
     print(f"  size:     {size_kb} KB")
     print(f"  sha256:   {result['sha'][:16]}…")
+    if result.get("candidates_html"):
+        print(f"  review:   {result['candidates_html'].relative_to(Path.cwd()) if Path.cwd() in result['candidates_html'].parents else result['candidates_html']}")
     return 0
 
 

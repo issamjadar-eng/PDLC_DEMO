@@ -4,6 +4,8 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 
 **Viewport CSS:** For mandatory base styles, see [viewport-base.css](viewport-base.css). Include in every presentation.
 
+**Also consumed by `md-deck`.** Presets in this registry are reused by the sibling `md-deck` skill via its `--style <name>` flag. Full preset stylesheets live under [`presets/<name>.css`](presets/) — md-deck resolves `presets/<style>.css` from this directory at build time. Adding a new preset here automatically makes it available to both skills; the canonical full stylesheet must land under `presets/`.
+
 ---
 
 ## Dark Themes

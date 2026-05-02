@@ -7,6 +7,20 @@ description: Create stunning, animation-rich HTML presentations from scratch or 
 
 Create zero-dependency, animation-rich HTML presentations that run entirely in the browser.
 
+## Used by `md-deck` (sibling skill)
+
+`frontend-slides` is the **canonical source** of slide-rendering infrastructure for the project's two slide-authoring skills. The non-interactive markdown pipeline `md-deck` consumes the following files at build time:
+
+| File | Consumed by md-deck |
+|---|---|
+| `viewport-base.css` | Prepended to every md-deck output — owns the `100vh` / `clamp()` viewport contract |
+| `presets/<name>.css` | Resolved by md-deck `--style <name>`; bold-signal canonical lives here |
+| `STYLE_PRESETS.md` | Reference index for available preset names |
+| `scripts/export-pdf.sh` | md-deck has no PDF export of its own; it documents this script as the export path |
+| `scripts/deploy.sh` | md-deck has no deploy of its own; documented for share workflows |
+
+When adding a new preset or changing viewport rules, both skills inherit. When adding the interactive wizard, PPTX ingest, or in-browser editing — that is `frontend-slides` only and not exposed to md-deck.
+
 ## Core Principles
 
 1. **Zero Dependencies** — Single HTML files with inline CSS/JS. No npm, no build tools.
