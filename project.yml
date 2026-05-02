@@ -269,7 +269,9 @@ security:
     - digest
     - docflow
     - docx
+    - frontend-slides
     - lessons
+    - md-deck
     - medtech-docs
     - pdf
     - pptx
