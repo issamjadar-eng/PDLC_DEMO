@@ -2021,12 +2021,15 @@ def _picks_path(out_dir: Path) -> Path:
     return out_dir / "picks.json"
 
 
-def load_picks(out_dir: Path) -> dict[str, dict]:
-    """Return {anchor: pick_entry} or empty dict if no picks file exists.
+def load_picks(out_dir: Path) -> dict[str, list[dict]]:
+    """Return {anchor: [pick_entry, ...]} where each entry has {component, html?, rolled_at}.
 
-    pick_entry is the full dict from picks.json — typically {component, html?,
-    rolled_at}. Creative picks carry an inlined `html` key so the locked deck
-    re-renders without re-calling the agent.
+    Schema v3 (current): `picks[anchor].selected = [pick_entry, ...]` — a list,
+    so the user can pick multiple slides for one section. The build emits one
+    final slide per pick in selection order.
+
+    Schema v2 (legacy): `picks[anchor] = pick_entry` — a single dict. Auto-
+    migrated to a one-element list.
     """
     p = _picks_path(out_dir)
     if not p.exists():
@@ -2036,7 +2039,20 @@ def load_picks(out_dir: Path) -> dict[str, dict]:
     except json.JSONDecodeError:
         return {}
     picks_block = data.get("picks") or {}
-    return {anchor: entry for anchor, entry in picks_block.items() if entry.get("component")}
+    out: dict[str, list[dict]] = {}
+    for anchor, entry in picks_block.items():
+        if not entry:
+            continue
+        # v3 — entry is a dict with `selected: [...]`
+        if isinstance(entry, dict) and isinstance(entry.get("selected"), list):
+            out[anchor] = [e for e in entry["selected"] if e.get("component")]
+        # v2 legacy — entry is a single pick dict
+        elif isinstance(entry, dict) and entry.get("component"):
+            out[anchor] = [entry]
+        # extreme legacy — entry is a flat list
+        elif isinstance(entry, list):
+            out[anchor] = [e for e in entry if isinstance(e, dict) and e.get("component")]
+    return {a: picks for a, picks in out.items() if picks}
 
 
 def _slice_source_markdown(source_text: str, anchor: str) -> str:
@@ -2137,11 +2153,11 @@ def _emit_candidates_html(
     parts.append('<header class="candidates-header">')
     parts.append('<h1>md-deck candidates · review &amp; pick</h1>')
     parts.append(
-        '<p>Three visual treatments per variant-eligible section. Click '
-        '<strong>Pick</strong> on a card to lock that component for the section. '
-        f'Save into the deck assets folder as <code>picks.json</code> '
-        '(same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. '
-        'Re-run the build to lock the picks into <code>index.html</code>.</p>'
+        '<p>Multiple visual treatments per variant-eligible section — 2 templates + 2 agents by default. '
+        '<strong>Pick toggles independently</strong>: click Pick on multiple cards in a section and the deck '
+        'will emit one slide per picked card (in selection order). Save into the deck assets folder as '
+        '<code>picks.json</code> (same directory as <code>index.html</code> / <code>candidates.html</code>) '
+        'when you are done. Re-run the build to lock the picks into <code>index.html</code>.</p>'
         f'<p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">'
         f'source: {_esc(source_path.name)} · sha256: {source_sha[:16]}… · built: {built_at}'
         '</p>'
@@ -2152,7 +2168,7 @@ def _emit_candidates_html(
         anchor = section["anchor"]
         title = section["title"] or "(untitled)"
         parts.append(f'<div class="candidate-section" data-anchor="{_esc(anchor)}">')
-        parts.append(f'<h2>{_esc(title)}</h2>')
+        parts.append(f'<h2>{_esc(title)} <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>')
         parts.append(f'<div class="anchor-tag">§{_esc(section.get("section") or "?")} · {_esc(anchor)}</div>')
         parts.append('<div class="candidate-grid">')
         for i, cand in enumerate(section["candidates"]):
@@ -2177,35 +2193,66 @@ def _emit_candidates_html(
     body = "\n".join(parts)
     chooser_js = '''
 <script>
+// PICKS shape (v3): { <anchor>: { selected: [ {component, html?, rolled_at}, ... ] } }
+// Each card toggles independently — you can pick 1, 2, 3 or all 4 candidates per
+// section. The build emits one final slide per pick in selection order. Pick
+// order is preserved (the array is append/remove rather than re-sorted).
 const PICKS = JSON.parse(localStorage.getItem('md-deck-picks-' + DECK_KEY) || '{}');
+
+// Migrate v2 (single pick dict) → v3 (selected list)
+Object.entries(PICKS).forEach(([anchor, entry]) => {
+    if (entry && !entry.selected && entry.component) {
+        PICKS[anchor] = { selected: [entry] };
+    } else if (entry && !entry.selected) {
+        PICKS[anchor] = { selected: [] };
+    }
+});
 
 function pick(btn, anchor, component) {
     const card = btn.closest('.candidate-card');
     const isCreative = card && card.dataset.kind === 'creative';
-    const entry = { component: component, rolled_at: new Date().toISOString() };
-    if (isCreative) {
-        // Capture the inlined HTML so the locked deck doesn't need to re-call the agent
-        const previewWrap = card.querySelector('.candidate-preview');
-        if (previewWrap) entry.html = previewWrap.innerHTML;
+    if (!PICKS[anchor]) PICKS[anchor] = { selected: [] };
+    const list = PICKS[anchor].selected;
+    const existingIdx = list.findIndex(e => e.component === component);
+
+    if (existingIdx >= 0) {
+        // Toggle off — un-pick
+        list.splice(existingIdx, 1);
+        card.classList.remove('picked');
+    } else {
+        // Add to selection
+        const entry = { component: component, rolled_at: new Date().toISOString() };
+        if (isCreative) {
+            const previewWrap = card.querySelector('.candidate-preview');
+            if (previewWrap) entry.html = previewWrap.innerHTML;
+        }
+        list.push(entry);
+        card.classList.add('picked');
     }
-    PICKS[anchor] = entry;
+
     localStorage.setItem('md-deck-picks-' + DECK_KEY, JSON.stringify(PICKS));
-    // Highlight picked card and clear siblings
-    const section = btn.closest('.candidate-section');
-    section.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('picked'));
-    btn.closest('.candidate-card').classList.add('picked');
     updateSummary();
+    updateSectionCount(anchor);
+}
+
+function updateSectionCount(anchor) {
+    const sec = document.querySelector(`.candidate-section[data-anchor="${anchor}"]`);
+    if (!sec) return;
+    const tag = sec.querySelector('.section-pick-count');
+    const n = ((PICKS[anchor] || {}).selected || []).length;
+    if (tag) tag.textContent = n === 0 ? '' : `${n} picked`;
 }
 
 function updateSummary() {
     const summary = document.getElementById('picks-summary');
-    const n = Object.keys(PICKS).length;
-    summary.textContent = `${n} pick${n!==1?'s':''} · download picks.json`;
+    const totalPicks = Object.values(PICKS).reduce((sum, e) => sum + ((e.selected || []).length), 0);
+    const sectionsWithPicks = Object.values(PICKS).filter(e => (e.selected || []).length > 0).length;
+    summary.textContent = `${totalPicks} pick${totalPicks!==1?'s':''} across ${sectionsWithPicks} section${sectionsWithPicks!==1?'s':''} · download picks.json`;
 }
 
 function downloadPicks() {
     const out = {
-        schema: 'md-deck/picks@1',
+        schema: 'md-deck/picks@3',
         source: SOURCE_NAME,
         source_sha256: SOURCE_SHA,
         picks: PICKS,
@@ -2219,13 +2266,16 @@ function downloadPicks() {
     URL.revokeObjectURL(url);
 }
 
-// Restore picks from localStorage on load
+// Restore picked state from localStorage on load
 document.addEventListener('DOMContentLoaded', () => {
     Object.entries(PICKS).forEach(([anchor, entry]) => {
         const sec = document.querySelector(`.candidate-section[data-anchor="${anchor}"]`);
         if (!sec) return;
-        const card = sec.querySelector(`.candidate-card[data-component="${entry.component}"]`);
-        if (card) card.classList.add('picked');
+        ((entry.selected) || []).forEach(picked => {
+            const card = sec.querySelector(`.candidate-card[data-component="${picked.component}"]`);
+            if (card) card.classList.add('picked');
+        });
+        updateSectionCount(anchor);
     });
     updateSummary();
 });
@@ -2288,6 +2338,8 @@ def build(
     re_roll_creative: list[str] | None = None,
     re_roll_distillation: bool = False,
     creative_parallelism: int = 5,
+    template_slots: int = 2,
+    agent_slots: int = 2,
 ) -> dict:
     text = source_path.read_text(encoding="utf-8")
     sha = hashlib.sha256(text.encode()).hexdigest()
@@ -2345,8 +2397,17 @@ def build(
     base_slide_by_anchor: dict[str, dict] = {}   # for finalize-pass lookups
     cands_by_anchor: dict[str, list] = {}
 
+    # Slot-personality plan derived from --candidate-mix N,M
+    # M ∈ {0,1,2,3}; mapping creative-c → bold-metaphor, creative-d →
+    # structured-diagram, creative-e → free-creative (the wild card).
+    _slot_plan_creative = [
+        ("creative-c", "bold-metaphor"),
+        ("creative-d", "structured-diagram"),
+        ("creative-e", "free-creative"),
+    ][:max(0, min(3, agent_slots))]
+
     for base in base_slides:
-        cands = propose_candidates(base, registry, top_k=2)
+        cands = propose_candidates(base, registry, top_k=max(1, template_slots))
         if not cands:
             slide_plan.append({"kind": "passthrough", "base": base})
             continue
@@ -2354,9 +2415,13 @@ def build(
         slide_plan.append({"kind": "chosen", "anchor": base.get("anchor", "")})
 
         anchor = base.get("anchor", "")
-        pick_entry = picks.get(anchor) or {}
-        locked_name = pick_entry.get("component")
-        locked_html = pick_entry.get("html")
+        pick_entries = picks.get(anchor) or []  # list of {component, html?}
+        # First pick's component drives the candidate's "is locked" state
+        # (used to highlight in candidates.html); the full list drives how
+        # many final slides this section emits.
+        locked_name = pick_entries[0].get("component") if pick_entries else None
+        locked_html = pick_entries[0].get("html") if pick_entries else None
+        locked_set = {p.get("component") for p in pick_entries if p.get("component")}
 
         # Render the two template candidates' HTML
         template_rendered: list[dict] = []
@@ -2387,8 +2452,7 @@ def build(
         creative_rendered: list[dict] = []
         if creative_mode and (creative_section is None or creative_section == anchor):
             anchor_cache = creative_cache.get(anchor) or {}
-            for slot, personality in (("creative-c", "bold-metaphor"),
-                                       ("creative-d", "structured-diagram")):
+            for slot, personality in _slot_plan_creative:
                 cached = anchor_cache.get(slot) or {}
                 cached_html = cached.get("html")
                 stale = cached.get("source_sha") != sha
@@ -2435,6 +2499,7 @@ def build(
             "candidates": all_candidates,
             "_locked_name": locked_name,
             "_locked_html": locked_html,
+            "_pick_entries": pick_entries,  # list — emit one slide per entry
         })
         base_slide_by_anchor[anchor] = base
         cands_by_anchor[anchor] = cands
@@ -2559,19 +2624,8 @@ def build(
             chosen_idx = all_candidates.index(chosen)
         return all_candidates[chosen_idx]
 
-    for entry in slide_plan:
-        if entry["kind"] == "passthrough":
-            final_slides.append(entry["base"])
-            continue
-        anchor = entry["anchor"]
-        sec = sec_by_anchor.get(anchor)
-        base = base_slide_by_anchor.get(anchor)
-        cands_list = cands_by_anchor.get(anchor) or []
-        if sec is None or base is None:
-            if base is not None:
-                final_slides.append(base)
-            continue
-        chosen = _choose(sec, base, cands_list)
+    def _emit_chosen(chosen: dict, base: dict, cands_list: list, anchor: str) -> None:
+        """Append the right kind of final slide for `chosen` candidate dict."""
         components_used.add(chosen["component"])
         if chosen.get("kind") == "creative":
             final_slides.append({
@@ -2585,9 +2639,47 @@ def build(
             for adapted, cs in cands_list:
                 if cs.name == chosen["component"]:
                     final_slides.append(adapted)
-                    break
-            else:
+                    return
+            final_slides.append(base)
+
+    for entry in slide_plan:
+        if entry["kind"] == "passthrough":
+            final_slides.append(entry["base"])
+            continue
+        anchor = entry["anchor"]
+        sec = sec_by_anchor.get(anchor)
+        base = base_slide_by_anchor.get(anchor)
+        cands_list = cands_by_anchor.get(anchor) or []
+        if sec is None or base is None:
+            if base is not None:
                 final_slides.append(base)
+            continue
+
+        pick_entries = sec.pop("_pick_entries", None) or []
+        if pick_entries:
+            # Multi-pick: emit one slide per pick in selection order. Each pick
+            # finds its candidate by component name; locked html (from picks.json)
+            # wins over candidate html, so a creative pick re-emits the cached
+            # HTML rather than re-rolling.
+            for pe in pick_entries:
+                comp = pe.get("component")
+                cached_html = pe.get("html")
+                # Find the matching candidate card to determine kind/template-vs-creative
+                match = next((c for c in sec["candidates"] if c.get("component") == comp), None)
+                if cached_html and (not match or not match.get("html")):
+                    # Splice in a synthetic chosen card carrying the cached html
+                    match = {
+                        "component": comp,
+                        "kind": "creative" if str(comp).startswith("creative-") else "template",
+                        "html": cached_html,
+                    }
+                if match is None:
+                    continue  # picked component not present in current candidates AND no cached html
+                _emit_chosen(match, base, cands_list, anchor)
+        else:
+            # No picks → fall back to the top-scoring candidate
+            chosen = _choose(sec, base, cands_list)
+            _emit_chosen(chosen, base, cands_list, anchor)
 
     # Persist the creative cache (and create empty picks.json scaffolding if absent)
     if creative_mode:
@@ -2673,6 +2765,11 @@ def main() -> int:
     parser.add_argument("--dump-distillation", action="store_true",
                         help="Print the loaded distillation YAML to stdout after build "
                              "(implies --creative — runs distillation if needed).")
+    parser.add_argument("--candidate-mix", default="2,2",
+                        help="Mix of candidate slots: '<templates>,<agents>'. Default '2,2' "
+                             "(2 template slots A/B + 2 agent slots C/D = bold-metaphor + "
+                             "structured-diagram). '1,3' adds the wild-card free-creative "
+                             "agent (slot E). Sum must be ≥ 1 and ≤ 4.")
     args = parser.parse_args()
 
     source_path = Path(args.source)
@@ -2682,6 +2779,15 @@ def main() -> int:
 
     out_dir = Path(args.output_dir) if args.output_dir else None
     creative_mode = args.creative or args.dump_distillation
+    # Parse --candidate-mix N,M
+    try:
+        ts, ags = (int(x.strip()) for x in args.candidate_mix.split(","))
+    except (ValueError, AttributeError):
+        print(f"error: --candidate-mix must be 'N,M' (got: {args.candidate_mix!r})", file=sys.stderr)
+        return 2
+    if ts < 0 or ags < 0 or (ts + ags) < 1 or (ts + ags) > 4:
+        print(f"error: --candidate-mix sum must be 1..4 with both ≥ 0 (got: {ts},{ags})", file=sys.stderr)
+        return 2
     result = build(
         source_path, out_dir, args.style,
         review=args.review,
@@ -2690,6 +2796,8 @@ def main() -> int:
         re_roll_creative=args.re_roll_creative,
         re_roll_distillation=args.re_roll_distillation,
         creative_parallelism=args.creative_parallelism,
+        template_slots=ts,
+        agent_slots=ags,
     )
 
     size_kb = result["size_bytes"] // 1024

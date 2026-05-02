@@ -88,6 +88,39 @@ SLOT_PERSONALITIES = {
         (axes, bars, dots, connecting lines, grids, shapes encoding values or
         relationships). Text is annotation, never the main element.
         """).strip(),
+    "free-creative": dedent("""
+        Personality: FREE CREATIVE — wild card.
+
+        **Ignore the deck's unifying metaphor and visual motifs.** Do not try
+        to be coherent with sibling slides. The deck-wide brief is for context
+        only; do not let it constrain your composition. Reach for an
+        UNEXPECTED, visually compelling treatment that fits THIS section's
+        content alone. Surprise the viewer.
+
+        Be willing to:
+        - Pick a metaphor or layout the other slots wouldn't reach for.
+        - Use bold color combinations from the brand palette in unusual ways
+          (orange + amber + coral mixed; gradients running diagonally; layered
+          translucency; clip-path geometry).
+        - Try editorial-magazine layouts, cinematic compositions, asymmetric
+          grids, oversized photographic-style hero blocks, art-poster
+          treatments, museum-label callouts, geometric pattern backgrounds.
+        - Break the deck's restraint. If sibling slides are spare, go bold.
+          If sibling slides are bold, find an angle that's *differently* bold —
+          quiet confidence rather than visual volume.
+
+        Only constraints (the rest is yours):
+        - Honor the chrome contract (`<section class="slide creative">` +
+          chrome strip + slide-content body).
+        - Use the preset CSS variables and `clamp()` for sizes.
+        - Fit at 100vh with overflow:hidden.
+        - The slide must read as visually-led, not text-led.
+
+        The goal: this slot delivers the surprise the safe choices can't. Some
+        sections will land beautifully; some will be weird. That's the point —
+        the user sees the wild option alongside the considered ones and picks
+        whichever earns its place.
+        """).strip(),
     # Legacy alias — `restrained-takeaway` redirects to structured-diagram so
     # cached briefs from older runs still resolve. The personality name in the
     # build pipeline (slot identifier "creative-d") stays the same.
