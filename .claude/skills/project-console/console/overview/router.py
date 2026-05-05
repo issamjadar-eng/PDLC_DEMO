@@ -5,6 +5,7 @@ added conditionally by the base template when discovery finds either file.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
@@ -17,6 +18,27 @@ router = APIRouter()
 templates = Jinja2Templates(
     directory=str(Path(__file__).parent.parent / "web" / "templates")
 )
+
+
+def _extract_asset_title(html_path: Path) -> str | None:
+    try:
+        text = html_path.read_text(encoding="utf-8", errors="ignore")
+        m = re.search(r"<title[^>]*>([^<]+)</title>", text, re.IGNORECASE)
+        return m.group(1).strip() if m else None
+    except Exception:
+        return None
+
+
+def _discover_assets(repo_root: str) -> list[dict]:
+    assets_dir = Path(repo_root) / "assets"
+    items = []
+    if assets_dir.is_dir():
+        for sub in sorted(assets_dir.iterdir()):
+            if sub.is_dir() and (sub / "index.html").exists():
+                raw_title = _extract_asset_title(sub / "index.html")
+                title = raw_title or sub.name.replace("-", " ").title()
+                items.append({"name": sub.name, "title": title, "url": f"/assets/{sub.name}/"})
+    return items
 
 
 def discover(repo_root: Path) -> dict:
@@ -46,7 +68,7 @@ async def overview_page(request: Request):
     return templates.TemplateResponse(
         request,
         "overview.html",
-        {"config": cfg, "found": found},
+        {"config": cfg, "found": found, "asset_items": _discover_assets(cfg.repo_root)},
     )
 
 
