@@ -32,10 +32,13 @@ This task document is the **session-recovery point** for this work. Keep it upda
 
 ## Architecture
 
-4 assets in `assets/`: `agentic-delivery/`, `project-overview/`, `project-overview-2/`. Each has `index.html` (slide decks). Implementation: static mount at `/assets`, discovery function scanning dirs + extracting `<title>` tags, asset cards in landing template with inline iframe viewer. Company-agnostic feature.
+Assets (directories with `index.html` files) in `assets/` directory are discovered via scan + title extraction, mounted at `/assets` for static serving, and rendered as card grid on `/overview` route with inline iframe viewer. Asset cards only render when assets exist (conditional in template). Company-agnostic feature.
+
+Additionally: Workflows card on landing page wired to `/workflows` route with descriptive text ("Automation and process templates").
 
 ## Changelog
 
 2026-05-05 — Task created; starting exploration phase
 2026-05-05 — Exploration + plan complete; starting implementation
-2026-05-05 — All 4 files edited; console restarted; 3 asset cards rendering + iframe viewer working; static serving verified
+2026-05-05 — All 4 files edited; console restarted; 3 asset cards rendering + iframe viewer working; static serving verified (initial placement on landing page)
+2026-05-05 — Corrected placement: moved asset cards from landing page to /overview route; extracted discovery to overview/router.py; removed unused code from chat/router.py; wired Workflows card to /workflows (commit 2211647)
