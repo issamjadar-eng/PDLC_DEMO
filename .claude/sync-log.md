@@ -4,6 +4,24 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-05 — push + merge (project-console asset card selector)
+
+- Files: 5
+  - `skills/project-console/console/app.py` (mount `/assets` static dir)
+  - `skills/project-console/console/overview/router.py` (asset discovery + context)
+  - `skills/project-console/console/web/templates/overview.html` (card grid + viewer)
+  - `skills/project-console/console/web/static/console.css` (card + viewer styles)
+  - `skills/project-console/console/web/templates/index.html` (Workflows navigation)
+- Branch: `sync/pdlc-demo-project-console-asset-cards-2026-05-05`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/142
+- Commit: "project-console: Add asset card selector to /overview"
+- Status: merged (`--merge` requested)
+- Merge commit: `980e14f634a2f599c115b997a7a013559455cd4a`
+- Hitachi HEAD after sync: `980e14f`
+- Feature: Asset discovery via `assets/*/index.html` scan, card-based selector, inline iframe viewer, consolidated bottom button bar. Company-agnostic, portable across projects.
+
+---
+
 ## 2026-05-01 — pull + push (3 PRs) + 1 cleanup PR
 
 **Hitachi HEAD before sync**: `222ddf1` (project-console v1.7.8 → v1.9.0 PR #112)
