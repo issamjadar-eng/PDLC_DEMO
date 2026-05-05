@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
@@ -20,7 +21,7 @@ templates = Jinja2Templates(
 )
 
 
-def _extract_asset_title(html_path: Path) -> str | None:
+def _extract_asset_title(html_path: Path) -> Optional[str]:
     try:
         text = html_path.read_text(encoding="utf-8", errors="ignore")
         m = re.search(r"<title[^>]*>([^<]+)</title>", text, re.IGNORECASE)
@@ -65,10 +66,20 @@ async def overview_page(request: Request):
     found = discover(cfg.repo_root)
     if not found["has_any"]:
         raise HTTPException(404, "No project-overview.{pdf,pptx,md} at repo root")
+
+    items = []
+    if found["pdf"]:
+        items.append({"type": "overview", "title": "Project Overview", "url": "/overview/raw.pdf", "name": "PDF"})
+    if found["pptx"]:
+        items.append({"type": "overview", "title": "Project Overview", "url": "/overview/download.pptx", "name": "PPTX"})
+
+    asset_items = _discover_assets(str(cfg.repo_root))
+    items.extend(asset_items)
+
     return templates.TemplateResponse(
         request,
         "overview.html",
-        {"config": cfg, "found": found, "asset_items": _discover_assets(cfg.repo_root)},
+        {"config": cfg, "found": found, "items": items},
     )
 
 
