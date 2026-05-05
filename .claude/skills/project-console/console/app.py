@@ -85,6 +85,11 @@ app.include_router(workflows_router)
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
+# Serve project asset decks (assets/*/index.html) at /assets if the dir exists.
+_assets_root = Path(get_config().repo_root) / "assets"
+if _assets_root.is_dir():
+    app.mount("/assets", StaticFiles(directory=str(_assets_root), html=True), name="project-assets")
+
 
 @app.get("/theme/assets/{filename:path}")
 async def theme_asset(filename: str):

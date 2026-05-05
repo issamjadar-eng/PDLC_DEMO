@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 from typing import AsyncIterator
 
@@ -27,6 +28,27 @@ def _agent_count(groups: list[Group]) -> int:
     return sum(len(g.agents) for g in groups)
 
 
+def _extract_asset_title(html_path: Path) -> str | None:
+    try:
+        text = html_path.read_text(encoding="utf-8", errors="ignore")
+        m = re.search(r"<title[^>]*>([^<]+)</title>", text, re.IGNORECASE)
+        return m.group(1).strip() if m else None
+    except Exception:
+        return None
+
+
+def _discover_assets(repo_root: str) -> list[dict]:
+    assets_dir = Path(repo_root) / "assets"
+    items = []
+    if assets_dir.is_dir():
+        for sub in sorted(assets_dir.iterdir()):
+            if sub.is_dir() and (sub / "index.html").exists():
+                raw_title = _extract_asset_title(sub / "index.html")
+                title = raw_title or sub.name.replace("-", " ").title()
+                items.append({"name": sub.name, "title": title, "url": f"/assets/{sub.name}/"})
+    return items
+
+
 @router.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
     cfg = get_config()
@@ -34,7 +56,7 @@ async def landing(request: Request):
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"config": cfg, "agent_count": _agent_count(groups)},
+        {"config": cfg, "agent_count": _agent_count(groups), "asset_items": _discover_assets(cfg.repo_root)},
     )
 
 

@@ -34,5 +34,42 @@
       <p class="muted">Coming soon.</p>
     </div>
   </div>
+  {% if asset_items %}
+  <h2 class="section-heading">Assets</h2>
+  <div class="cards asset-cards" id="asset-card-list">
+    {% for item in asset_items %}
+    <button class="card asset-card" data-url="{{ item.url }}" onclick="showAsset(this)">
+      <h3>{{ item.title }}</h3>
+      <p class="muted">{{ item.name }}</p>
+    </button>
+    {% endfor %}
+  </div>
+  <div id="asset-viewer" class="asset-viewer" hidden>
+    <div class="asset-viewer-bar">
+      <span id="asset-viewer-title" class="asset-viewer-label"></span>
+      <a id="asset-viewer-newtab" href="#" target="_blank" class="asset-viewer-btn">Open in tab ↗</a>
+      <button class="asset-viewer-btn" onclick="closeAsset()">✕ Close</button>
+    </div>
+    <iframe id="asset-frame" src="" title="Asset viewer" class="asset-frame"></iframe>
+  </div>
+  <script>
+  function showAsset(btn) {
+    document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const url = btn.dataset.url;
+    const viewer = document.getElementById('asset-viewer');
+    document.getElementById('asset-frame').src = url;
+    document.getElementById('asset-viewer-title').textContent = btn.querySelector('h3').textContent;
+    document.getElementById('asset-viewer-newtab').href = url;
+    viewer.hidden = false;
+    viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function closeAsset() {
+    document.getElementById('asset-viewer').hidden = true;
+    document.getElementById('asset-frame').src = '';
+    document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
+  }
+  </script>
+  {% endif %}
 </section>
 {% endblock %}
