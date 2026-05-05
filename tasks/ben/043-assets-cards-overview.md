@@ -32,9 +32,18 @@ This task document is the **session-recovery point** for this work. Keep it upda
 
 ## Architecture
 
-Assets (directories with `index.html` files) in `assets/` directory are discovered via scan + title extraction, mounted at `/assets` for static serving, and rendered as card grid on `/overview` route with inline iframe viewer. Asset cards only render when assets exist (conditional in template). Company-agnostic feature.
+`/overview` route now displays a card grid combining:
+1. **Project overview items** — PDF and PPTX files at repo root, rendered as cards with titles
+2. **Asset items** — discovered via `assets/*/index.html` scan + `<title>` tag extraction
 
-Additionally: Workflows card on landing page wired to `/workflows` route with descriptive text ("Automation and process templates").
+All items are selectable cards. Clicking a card loads its content in a shared iframe viewer below the cards. Viewer includes:
+- Header bar with title, "Open in tab ↗" link, and close button
+- 80vh iframe displaying the content
+- Card selection updates the iframe URL and highlights active card
+
+Static serving of assets via FastAPI `StaticFiles` mount at `/assets` (with `html=True` for index.html auto-serve). Discovery is company-agnostic: activates whenever overview files exist.
+
+Workflows card on landing page wired to `/workflows` route with descriptive text ("Automation and process templates").
 
 ## Changelog
 
@@ -42,3 +51,4 @@ Additionally: Workflows card on landing page wired to `/workflows` route with de
 2026-05-05 — Exploration + plan complete; starting implementation
 2026-05-05 — All 4 files edited; console restarted; 3 asset cards rendering + iframe viewer working; static serving verified (initial placement on landing page)
 2026-05-05 — Corrected placement: moved asset cards from landing page to /overview route; extracted discovery to overview/router.py; removed unused code from chat/router.py; wired Workflows card to /workflows (commit 2211647)
+2026-05-05 — Restructured /overview to show project overview as cards (PDF + PPTX) + asset decks as selectable cards with unified iframe viewer below; users select any card to view inline; verified PDF and asset HTML decks working (commit a39609b)
