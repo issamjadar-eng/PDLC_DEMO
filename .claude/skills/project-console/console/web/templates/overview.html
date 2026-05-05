@@ -23,11 +23,6 @@
 </div>
 
 <div id="item-viewer" class="item-viewer" hidden>
-  <div class="item-viewer-bar">
-    <span id="item-viewer-title" class="item-viewer-label"></span>
-    <a id="item-viewer-newtab" href="#" target="_blank" class="item-viewer-btn">Open in tab ↗</a>
-    <button class="item-viewer-btn" onclick="closeItem()">✕ Close</button>
-  </div>
   <iframe id="item-frame" src="" title="Item viewer" class="item-frame"></iframe>
 </div>
 
@@ -38,14 +33,17 @@ function selectItem(btn) {
   const url = btn.dataset.url;
   const viewer = document.getElementById('item-viewer');
   document.getElementById('item-frame').src = url;
-  document.getElementById('item-viewer-title').textContent = btn.querySelector('h3').textContent;
   document.getElementById('item-viewer-newtab').href = url;
+  document.getElementById('item-viewer-newtab').hidden = false;
+  document.getElementById('item-viewer-close').hidden = false;
   viewer.hidden = false;
   viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function closeItem() {
   document.getElementById('item-viewer').hidden = true;
   document.getElementById('item-frame').src = '';
+  document.getElementById('item-viewer-newtab').hidden = true;
+  document.getElementById('item-viewer-close').hidden = true;
   document.querySelectorAll('.overview-card').forEach(c => c.classList.remove('active'));
 }
 </script>
@@ -65,6 +63,14 @@ function closeItem() {
     <a class="btn-secondary" href="/documents#path=project-overview.md">
       Open markdown
     </a>
+  {% endif %}
+  {% if items %}
+    <a id="item-viewer-newtab" href="#" target="_blank" class="btn-secondary" hidden>
+      Open in tab ↗
+    </a>
+    <button id="item-viewer-close" class="btn-secondary" onclick="closeItem()" hidden>
+      ✕ Close
+    </button>
   {% endif %}
 </div>
 {% endblock %}
