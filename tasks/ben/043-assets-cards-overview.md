@@ -52,3 +52,4 @@ Workflows card on landing page wired to `/workflows` route with descriptive text
 2026-05-05 — All 4 files edited; console restarted; 3 asset cards rendering + iframe viewer working; static serving verified (initial placement on landing page)
 2026-05-05 — Corrected placement: moved asset cards from landing page to /overview route; extracted discovery to overview/router.py; removed unused code from chat/router.py; wired Workflows card to /workflows (commit 2211647)
 2026-05-05 — Restructured /overview to show project overview as cards (PDF + PPTX) + asset decks as selectable cards with unified iframe viewer below; users select any card to view inline; verified PDF and asset HTML decks working (commit a39609b)
+2026-05-05 — Consolidated all control buttons into single bottom bar: Download .pptx, Open markdown, Open in tab, Close; removed viewer header bar; verified across PDF and asset deck; feature complete and portable (commit fef0560)
