@@ -1,0 +1,130 @@
+# User-row registry schema
+#
+# Defines the shape of entries in `tracker-user-rows.yml`.
+# Field rules are project-agnostic; allowed-value sets for `scope`, `phase`,
+# `effort`, and `status` are RESOLVED AT VALIDATE TIME against the project's
+# own `project.yml` and `regulatory.yml`. The skill ships safe defaults that
+# match the canonical tracker conventions.
+#
+# Do not hand-edit this schema in a project — it lives in the registry-owned
+# `/tracker` skill. Project-specific value sets go in `project.yml` under
+# `tracker:` (status_vocabulary, scope_vocabulary, phase_vocabulary,
+# effort_vocabulary). The validator merges project overrides on top of skill
+# defaults at every run.
+
+schema_version: "0.1"
+
+# ── Per-row required fields ─────────────────────────────────────────────────
+required:
+  - id
+  - name
+  - scope
+  - phase
+  - status
+  - reason
+
+# ── Per-row optional fields ─────────────────────────────────────────────────
+optional:
+  - ref                  # Primary REF citation (e.g., "FDA SE Guidance §III")
+  - effort               # Effort scale value (project-defined; default Low/Med/High/V.High)
+  - path                 # Repo-relative path to the artifact (or planned location)
+  - related_catalog_row  # Cross-link to a catalog-derived row that addresses the same artifact
+  - kind                 # deliverable | header | gap-tracker (visual hint)
+  - linked_row_ids       # Other row IDs that share the same artifact (multi-row attachment)
+
+# ── Auto-managed metadata block ─────────────────────────────────────────────
+# Written by the skill on add/update; never set by hand. Validator enforces
+# presence on update operations and ignores it on add (skill fills it in).
+auto_meta:
+  - created_by
+  - created_at
+  - last_updated_at
+  - schema_version
+
+# ── Field type rules ────────────────────────────────────────────────────────
+fields:
+  id:
+    type: string
+    pattern: '^[A-Z][A-Z0-9-]+$'
+    rules:
+      - must be unique within the registry
+      - must NOT collide with a generator-derived row id (validator checks
+        against generate.py's row inventory at validate time)
+  name:
+    type: string
+    min_length: 3
+    max_length: 200
+  scope:
+    type: enum
+    source:
+      - project.yml `tracker.scope_vocabulary` (if present), OR
+      - default: union of {dhfs[].name from project.yml,
+                           '(submission)', 'Suite', 'Engineering'}
+    rules:
+      - case-sensitive match against the resolved set
+  phase:
+    type: enum
+    source:
+      - project.yml `tracker.phase_vocabulary` (if present), OR
+      - default: regulatory.yml `milestones[].short_label or .name`
+    rules:
+      - case-sensitive match against the resolved set
+  status:
+    type: enum
+    source:
+      - project.yml `tracker.status_vocabulary.states[].display_label` (always present)
+      - aliases also accepted; validator coerces to canonical display_label
+  effort:
+    type: enum
+    source:
+      - project.yml `tracker.effort_vocabulary` (if present), OR
+      - default: ['Low', 'Med', 'High', 'V.High']
+  ref:
+    type: string
+    rules:
+      - free text; convention is "<authority> <doc> §<section>"
+        (e.g., "FDA sw-functions §V", "IEC 62304 §5.3", "ISO 13485 §7.3.4")
+      - validator does NOT enforce a regex — citation conventions vary
+  path:
+    type: string
+    rules:
+      - relative to docs/project/ or to the project root; either resolves
+      - validator warns (not errors) if the path doesn't exist on disk —
+        Not Started rows often have a planned-location path
+  reason:
+    type: string
+    min_length: 10
+    rules:
+      - must explain why the row is user-injected vs. catalog-derived
+        (e.g., "predicate analysis is not milestone-driven", "phase header
+        scaffolding", "Q-Sub readiness highlight")
+  related_catalog_row:
+    type: string
+    rules:
+      - if present, must match a row id emitted by generate.py
+      - useful for the Q1↔Q-PS125 case (user row alongside catalog row)
+  kind:
+    type: enum
+    source:
+      - one of: deliverable, header, gap-tracker
+    default: deliverable
+  linked_row_ids:
+    type: list[string]
+    rules:
+      - each entry must be a valid row id (user or generator)
+      - mirrors render.py's multi-row-attachment support; if present,
+        details/help sidecar entries can attach to all listed IDs
+
+# ── Project-adaptation guidance for projects ───────────────────────────────
+# Place these in your project.yml under `tracker:` to override skill defaults:
+#   tracker:
+#     scope_vocabulary: ['Suite', 'PreOp', 'IntraOp', 'MgmtSvc', '(submission)', 'Engineering']
+#     phase_vocabulary: ['QSub', '510k+PCCP', 'LMR1', 'LMR2']
+#     effort_vocabulary: ['Low', 'Med', 'High', 'V.High']
+#     status_vocabulary: { ... }   # already exists per the tracker skill v8 R2 design
+
+# ── Empty-registry policy ───────────────────────────────────────────────────
+# An empty `rows:` list is valid. Projects that have no user-injected rows
+# (everything derives cleanly from the catalog) should still ship the file
+# with an empty list, so generate.py's read_user_rows() has nothing to merge
+# but doesn't crash on missing-file.

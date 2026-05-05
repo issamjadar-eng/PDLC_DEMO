@@ -1,316 +1,758 @@
 #!/usr/bin/env python3
 """
-Submission Tracker — HTML Dashboard Generator
+Submission Tracker — HTML Dashboard Generator (milestone-driven).
 
-Reads docs/project/submissions/submission-tracker.md and generates
-docs/project/submissions/submission-tracker.html.
+Reads docs/project/submissions/submission-tracker.md (milestone-driven shape:
+per-Phase sections with sub-tables per binding source, Engineering Prerequisites,
+and a Deliverable Details appendix) and emits docs/project/submissions/
+submission-tracker.html.
 
-Preserves existing help content from the previous HTML when items haven't changed.
-New items get auto-generated help content.
+Project-agnostic — no project-specific names hardcoded. Scope/Phase values are
+discovered from the markdown; color cycle is stable across runs. Relative file
+links in row paths + detail content are rewritten to project-console virtual
+paths (/documents#path=<virtual>) so clicks open in the Documents tab.
 
 Usage: python3 render.py [--project-dir PATH]
-  --project-dir  Project root directory (default: current working directory)
+  --project-dir  Project root directory (default: detected via CLAUDE.md walk)
 """
 
 import re
 import sys
 import os
-from collections import OrderedDict, Counter
+from pathlib import Path
+from collections import OrderedDict, Counter, defaultdict
 from datetime import date
 
+
+# ─── Project discovery ───
+
 def find_project_dir():
-    """Find the project root by looking for CLAUDE.md."""
-    d = os.getcwd()
+    """Walk up from cwd looking for CLAUDE.md (project root marker)."""
+    d = Path(os.getcwd())
     for _ in range(10):
-        if os.path.exists(os.path.join(d, 'CLAUDE.md')):
+        if (d / 'CLAUDE.md').exists():
             return d
-        parent = os.path.dirname(d)
-        if parent == d:
+        if d.parent == d:
             break
-        d = parent
-    return os.getcwd()
+        d = d.parent
+    return Path(os.getcwd())
 
-def _project_subtitle():
-    """Build the tracker subtitle from project.yml when available.
 
-    Reads project.name and project.regulatory_pathway from the project manifest.
-    Uses regex rather than a YAML dependency to keep this script free of
-    external packages. Falls back to a generic subtitle if project.yml is
-    missing or unreadable.
-    """
+def project_subtitle(project_dir):
+    """Build the tracker subtitle from project.yml if available."""
     try:
-        path = os.path.join(find_project_dir(), 'project.yml')
-        with open(path, 'r') as f:
-            text = f.read()
+        text = (project_dir / 'project.yml').read_text()
         name_m = re.search(r'^\s{2}name:\s*(.+?)\s*$', text, re.MULTILINE)
         pathway_m = re.search(r'^\s{2}regulatory_pathway:\s*(.+?)\s*$', text, re.MULTILINE)
-        name = name_m.group(1).strip() if name_m else None
-        pathway = pathway_m.group(1).strip() if pathway_m else None
-        if name and pathway:
-            pathway_label = {
-                '510k': '510(k)',
-                'denovo': 'De Novo',
-                'pma': 'PMA',
-                'tbd': 'TBD',
-            }.get(pathway.lower(), pathway)
-            return f'{name} &mdash; {pathway_label} Submission Package'
-        if name:
-            return f'{name} &mdash; Submission Package'
-    except (OSError, IOError):
-        pass
-    return 'Submission Package'
+        name = name_m.group(1).strip() if name_m else 'Project'
+        pathway = (pathway_m.group(1).strip() if pathway_m else '510k').lower()
+        pathway_label = {'510k': '510(k)', 'denovo': 'De Novo', 'pma': 'PMA',
+                         'mdr': 'EU MDR', 'ind': 'IND', 'nda': 'NDA',
+                         'ivd': 'IVD', 'ce': 'CE Mark'}.get(pathway, pathway.upper())
+        return f'{name} — {pathway_label} milestone-driven readiness'
+    except Exception:
+        return 'Submission Package Tracker'
 
-def sanitize_help_content(content):
-    """Remove inline <table>/<tr>/<td>/<th> from help content.
 
-    Help content lives inside a <td> of the outer item-table. Nested table
-    elements confuse the browser's parser — it treats inner <tr> as rows of
-    the outer table, breaking the DOM and hiding everything after the bad row.
-    Strip all table-related tags (including unclosed/truncated ones).
+# ─── Tracker config from project.yml (R10 portability) ───
+# All fields optional — skill defaults are HCLS-sensible; projects override
+# only what their tool chain or vocabulary requires. See SKILL.md HCLS
+# Portability section for the schema.
+
+DEFAULT_TRACKER_CONFIG = {
+    'coverage_thresholds': {
+        'in_review_min': 70,
+        'draft_min': 30,
+        'scaffold_max': 30,
+    },
+    'display': {
+        'scope_label_max_chars': 12,
+        'architecture_short_overrides': {},
+    },
+    'lifecycle_plugin': 'confluence_comala',
+}
+
+
+def load_tracker_config(project_dir):
+    """Read project.yml `tracker:` block; merge with defaults.
+
+    Avoids a YAML dependency at this layer — does best-effort regex parse for
+    the fields render.py uses today (display.scope_label_max_chars,
+    display.architecture_short_overrides). Future fields (status_vocabulary,
+    coverage_thresholds, lifecycle_plugin) load via full YAML parse in
+    /tracker assess + /tracker generate when those actions ship.
     """
-    if '<table' not in content and '<tr' not in content:
-        return content
-    # Remove table tags (both closed and unclosed)
-    content = re.sub(r'</?table[^>]*>', '', content)
-    content = re.sub(r'</?tbody[^>]*>', '', content)
-    content = re.sub(r'</?thead[^>]*>', '', content)
-    # Convert rows/cells to simple text with separators
-    content = re.sub(r'<tr[^>]*>', '<p>', content)
-    content = re.sub(r'</tr>', '</p>', content)
-    content = re.sub(r'<t[hd][^>]*>', '', content)
-    content = re.sub(r'</t[hd]>', ' | ', content)
-    # Clean up trailing separators before </p>
-    content = re.sub(r'\s*\|\s*</p>', '</p>', content)
-    return content
+    cfg = {k: dict(v) if isinstance(v, dict) else v for k, v in DEFAULT_TRACKER_CONFIG.items()}
+    try:
+        text = (project_dir / 'project.yml').read_text()
+    except Exception:
+        return cfg
 
-def extract_help_content(html_path):
-    """Extract existing help content by item ID from previous HTML."""
-    help_content = {}
-    if not os.path.exists(html_path):
-        return help_content
-    with open(html_path) as f:
-        html = f.read()
-    pattern = r'<td class="id-col">([^<]+)</td>.*?<tr class="help-row"[^>]*><td[^>]*>(.*?)</td>\s*</tr>'
-    for m in re.finditer(pattern, html, re.DOTALL):
-        content = sanitize_help_content(m.group(2).strip())
-        help_content[m.group(1).strip()] = content
-    return help_content
+    # display.scope_label_max_chars
+    m = re.search(r'^\s{4}scope_label_max_chars:\s*(\d+)\s*$', text, re.MULTILINE)
+    if m:
+        cfg['display']['scope_label_max_chars'] = int(m.group(1))
+
+    # display.architecture_short_overrides — block-scalar style
+    m = re.search(r'^\s{4}architecture_short_overrides:\s*\n((?:\s{6}.+\n?)+)', text, re.MULTILINE)
+    if m:
+        for line in m.group(1).split('\n'):
+            kv = re.match(r'^\s{6}([\w-]+):\s*(.+?)\s*(?:#.*)?$', line)
+            if kv:
+                cfg['display']['architecture_short_overrides'][kv.group(1)] = kv.group(2).strip()
+
+    # lifecycle_plugin
+    m = re.search(r'^\s{2}lifecycle_plugin:\s*(\S+)\s*$', text, re.MULTILINE)
+    if m:
+        cfg['lifecycle_plugin'] = m.group(1)
+
+    # coverage_thresholds — best-effort
+    for key in ('in_review_min', 'draft_min', 'scaffold_max'):
+        m = re.search(rf'^\s{{4}}{key}:\s*(\d+)\s*$', text, re.MULTILINE)
+        if m:
+            cfg['coverage_thresholds'][key] = int(m.group(1))
+
+    return cfg
+
+
+# ─── URL rewriting ───
+
+def rewrite_url(url, src_dir, repo_root):
+    """Rewrite relative file links to /documents#path=<virtual-path>.
+
+    External URLs (http/https/mailto), absolute paths (/...), and pure
+    anchors (#...) are returned unchanged.
+    """
+    if not url:
+        return url
+    frag = ''
+    if '#' in url and not url.startswith('#'):
+        url, frag = url.split('#', 1)
+        frag = '#' + frag
+    if url.startswith(('http://', 'https://', 'mailto:', '/')) or url.startswith('#'):
+        return url + frag if frag else url
+    try:
+        target = (src_dir / url).resolve()
+        rel = target.relative_to(repo_root)
+        return f'/documents#path={rel}{frag}'
+    except (ValueError, OSError):
+        return url + frag
+
+
+def md_inline_to_html(text, src_dir=None, repo_root=None):
+    """Render minimal markdown inline tokens (links, bold, code) to HTML."""
+    text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
+    text = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', text)
+
+    def link_sub(match):
+        label, url = match.group(1), match.group(2)
+        if src_dir and repo_root:
+            url = rewrite_url(url, src_dir, repo_root)
+        return f'<a href="{url}">{label}</a>'
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', link_sub, text)
+    return text
+
+
+def detail_md_to_html(md, src_dir=None, repo_root=None):
+    """Convert detail-block markdown to compact HTML for click-row expansion."""
+    out = []
+    in_list = False
+    for raw in md.split('\n'):
+        line = raw.rstrip()
+        if not line:
+            if in_list:
+                out.append('</ul>')
+                in_list = False
+            continue
+        if line.startswith('- '):
+            if not in_list:
+                out.append('<ul>')
+                in_list = True
+            out.append(f'<li>{md_inline_to_html(line[2:], src_dir, repo_root)}</li>')
+        else:
+            if in_list:
+                out.append('</ul>')
+                in_list = False
+            out.append(f'<p>{md_inline_to_html(line, src_dir, repo_root)}</p>')
+    if in_list:
+        out.append('</ul>')
+    return '\n'.join(out)
+
+
+# ─── Parser (milestone-driven shape) ───
 
 def parse_markdown(md_path):
-    """Parse submission-tracker.md into structured items."""
-    with open(md_path) as f:
-        md = f.read()
+    """Parse milestone-driven submission-tracker.md.
 
-    items = []
-    current_section = ""
-    current_section_num = ""
-    is_eng = False
+    Returns dict with:
+        rows[]    — deliverable rows (id, name, scope, phase, ref, effort, status, path, subsection)
+        eng[]     — engineering prereqs (id, name, scope, phase, effort, status, gates)
+        details   — dict id → detail markdown body
+        scales    — dict {status, phase, effort} → list of {label, definition} rows from Scale sections
+    """
+    md = Path(md_path).read_text()
+    rows, eng, details = [], [], {}
+    scales = {'status': [], 'phase': [], 'effort': []}
+    in_scale = None  # 'status' | 'phase' | 'effort' | None
+    scale_h2 = re.compile(r'^## (Status|Phase|Effort) Scale\s*$')
+    current_phase = None
+    current_subsection = None
+    in_eng = False
+    in_details = False
+    current_detail_id = None
+    current_detail_buf = []
+
+    phase_h2 = re.compile(r'^## Phase:\s*(.+?)\s*$')
+    eng_h2 = re.compile(r'^## Engineering Prerequisites')
+    details_h2 = re.compile(r'^## Deliverable Details')
+    end_h2 = re.compile(r'^## ')
+    subsection_h3 = re.compile(r'^### (.+?)\s*$')
+    detail_h3 = re.compile(r'^### ([A-Z][A-Z0-9-]+) — (.+?)\s*$')
+    # Deliverable row: 8 columns (# | Deliverable | Scope | Phase | REF | Effort | Status | Path)
+    row_re = re.compile(
+        r'^\| ([A-Z][A-Z0-9-]+) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \|\s*$'
+    )
+    # ENG row: 7 columns (# | Prerequisite | Scope | Phase | Effort | Status | Gates)
+    eng_re = re.compile(
+        r'^\| (ENG\d+) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \|\s*$'
+    )
+
+    def flush_detail():
+        nonlocal current_detail_id, current_detail_buf
+        if current_detail_id and current_detail_buf:
+            details[current_detail_id] = '\n'.join(current_detail_buf).strip()
+        current_detail_id = None
+        current_detail_buf = []
 
     for line in md.split('\n'):
-        if line.startswith('### '):
-            current_section = line.replace('### ', '').strip()
-            m2 = re.match(r'(\d+\.\d+)', current_section)
-            current_section_num = m2.group(1) if m2 else ""
-            is_eng = current_section.startswith('4.')
+        m = phase_h2.match(line)
+        if m:
+            flush_detail()
+            current_phase = m.group(1).strip()
+            current_subsection = None
+            in_eng = False
+            in_details = False
+            continue
+        if eng_h2.match(line):
+            flush_detail()
+            in_eng = True; in_details = False
+            current_phase = None; current_subsection = None
+            continue
+        if details_h2.match(line):
+            flush_detail()
+            in_details = True; in_eng = False
+            current_phase = None; current_subsection = None
+            continue
+        # Scale section heading (## Status Scale / ## Phase Scale / ## Effort Scale)
+        # — checked BEFORE the in_details exit so a scale heading immediately after
+        # Deliverable Details doesn't get swallowed by the in_details ## exit.
+        m_sc = scale_h2.match(line)
+        if m_sc:
+            flush_detail()
+            in_scale = m_sc.group(1).lower()
+            current_phase = None; current_subsection = None
+            in_eng = False; in_details = False
+            continue
+        if in_details and end_h2.match(line) and not details_h2.match(line):
+            flush_detail()
+            in_details = False
+            continue
 
-        if is_eng:
-            m = re.match(r'\| (ENG\w+) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \|', line)
+        # Any unrecognized ## heading exits all parsing modes
+        if end_h2.match(line):
+            current_phase = None; current_subsection = None
+            in_eng = False; in_details = False; in_scale = None
+            continue
+
+        # Capture Scale section table rows (key | definition[ | extra...])
+        if in_scale and line.startswith('|') and '|' in line[1:]:
+            cells = [c.strip() for c in line.strip().strip('|').split('|')]
+            # Skip header + separator rows
+            if not cells or len(cells) < 2:
+                continue
+            first = cells[0].strip('*').strip()
+            if first in ('', 'Status', 'Phase', 'Effort') or set(first).issubset(set(':-')):
+                continue
+            # Strip surrounding ** from the label
+            label = re.sub(r'^\*\*|\*\*$', '', first).strip()
+            definition = cells[-1]
+            scales[in_scale].append({'label': label, 'definition': definition, 'extra': cells[1:-1]})
+            continue
+
+        m_sub = subsection_h3.match(line)
+        if m_sub and current_phase:
+            heading = m_sub.group(1).strip()
+            if '(' in heading:
+                heading = heading[:heading.index('(')].rstrip()
+            current_subsection = heading
+            continue
+        if m_sub and in_details:
+            flush_detail()
+            md_match = detail_h3.match(line)
+            if md_match:
+                current_detail_id = md_match.group(1)
+                current_detail_buf = [f"**{md_match.group(2).strip()}**"]
+            continue
+
+        if in_details and current_detail_id:
+            current_detail_buf.append(line)
+            continue
+
+        if in_eng:
+            m = eng_re.match(line)
             if m:
-                items.append({
-                    'id': m.group(1).strip(), 'name': m.group(2).strip(),
-                    'scope': m.group(3).strip(), 'effort': m.group(4).strip(),
-                    'phase': m.group(5).strip(), 'ref': '', 'location': '',
-                    'status': m.group(6).strip(), 'evidence': m.group(7).strip(),
-                    'section': current_section, 'section_num': current_section_num,
-                    'is_eng': True
+                eng.append({
+                    'id': m.group(1).strip(),
+                    'name': m.group(2).strip(),
+                    'scope': m.group(3).strip(),
+                    'phase': m.group(4).strip(),
+                    'effort': m.group(5).strip(),
+                    'status': coerce_status(re.sub(r'[*:]', '', m.group(6)).strip()),
+                    'gates': m.group(7).strip(),
                 })
-        else:
-            m = re.match(r'\| ([A-Z][A-Z0-9]+[a-c]?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \| (.+?) \|', line)
-            if m:
-                items.append({
-                    'id': m.group(1).strip(), 'name': m.group(2).strip(),
-                    'scope': m.group(3).strip(), 'effort': m.group(4).strip(),
-                    'phase': m.group(5).strip(), 'ref': m.group(6).strip(),
-                    'location': m.group(7).strip(), 'status': m.group(8).strip(),
-                    'evidence': m.group(9).strip(), 'section': current_section,
-                    'section_num': current_section_num, 'is_eng': False
-                })
+            continue
 
-    return items
+        if current_phase:
+            m = row_re.match(line)
+            if not m or m.group(1).strip() == '#':
+                continue
+            rows.append({
+                'id': m.group(1).strip(),
+                'name': m.group(2).strip(),
+                'scope': m.group(3).strip(),
+                'phase': m.group(4).strip(),
+                'ref': m.group(5).strip(),
+                'effort': m.group(6).strip(),
+                'status': coerce_status(re.sub(r'[*]', '', m.group(7)).strip()),
+                'path': m.group(8).strip(),
+                'subsection': current_subsection or '(all bindings)',
+            })
+
+    flush_detail()
+    return {'rows': rows, 'eng': eng, 'details': details, 'scales': scales}
 
 
-VALID_SCOPES = {'Device', 'Per-Module', 'Both'}
-VALID_EFFORTS = {'Low', 'Med', 'High', 'V.High'}
-VALID_PHASES = {'Filing', 'Filing (proto)', 'Release 1', 'Release 2', 'Release 3'}
-VALID_STATUSES = {'Not Started', 'Partial', 'In Progress', 'Done'}
+# ─── Validation (advisory) ───
+#
+# 7-state lifecycle vocabulary (locked in 2026-05-03). Source of truth =
+# project.yml `tracker.status_vocabulary`. The set below is the canonical
+# display-label form. `STATUS_ALIAS_MAP` coerces legacy v7 values + project.yml
+# alias entries to their canonical form so the renderer keeps working
+# while md rows are migrated row-by-row.
+
+VALID_STATUSES = {
+    'Not Started', 'Drafting', 'Drafted', 'In Review',
+    'Needs Revision', 'Approved', 'N/A',
+}
+
+# Legacy values (v7 vocab) → canonical 7-state value. Renderer coerces at
+# parse time; validator no longer warns on legacy values that have a known
+# alias mapping. Drives both Status and AI Status columns.
+STATUS_ALIAS_MAP = {
+    'Done': 'Approved',
+    'Complete': 'Approved',
+    'Released': 'Approved',
+    'In Progress': 'Drafting',
+    'Partial': 'Drafting',
+    'WIP': 'Drafting',
+    # Inherited is provenance, not lifecycle — coerce to Approved until the
+    # 🔗 provenance marker lands as a separate row attribute.
+    'Inherited': 'Approved',
+    'Needs Rev': 'Needs Revision',
+}
 
 
-def validate(items, project_dir):
-    """Validate tracker items for structural correctness and referential integrity."""
-    warnings = []
-    errors = []
+def coerce_status(s):
+    """Normalize a legacy status value to its canonical 7-state form.
+    Returns the input unchanged if already canonical."""
+    if not s:
+        return s
+    s = s.strip()
+    if s in VALID_STATUSES:
+        return s
+    return STATUS_ALIAS_MAP.get(s, s)
 
-    all_ids = {i['id'] for i in items}
-    reg_ids = {i['id'] for i in items if not i['is_eng']}
-    eng_items = [i for i in items if i['is_eng']]
 
-    for item in items:
-        iid = item['id']
+# ─── Human overlay (submission-tracker.human.json) — render-time merge ───
+#
+# The overlay is the durable record of human-curated divergence from the
+# generator's structural view. Console writes (Save & Publish) update the
+# overlay JSON, NOT the md cell. At render time we merge:
+#     md row    (generator-owned: id, name, scope, phase, ref, effort,
+#                status-baseline, path)
+#   + overlay   (human-curated: status, ref override, notes, owner,
+#                target_date, blockers, pinned_decision, updated_at,
+#                updated_by)
+#   = resolved row rendered to html.
+#
+# Schema (per task-154 design contract):
+#   {
+#     "schema_version": "0.1",
+#     "rows": {
+#       "<row_id>": {
+#         "status": "Drafted" | ... ,    # overrides md cell
+#         "ref": "..." | null,           # overrides generator's REF pick
+#         "notes": "free-form text",
+#         "owner": "BX" | null,
+#         "target_date": "2026-06-15" | null,
+#         "blockers": ["ENG3", "..."] | null,
+#         "pinned_decision": "docs/project/strategies/..." | null,
+#         "updated_at": "ISO8601",
+#         "updated_by": "actor name"
+#       }
+#     }
+#   }
 
-        # Valid values
-        if item['scope'] not in VALID_SCOPES:
-            errors.append(f"{iid}: invalid Scope '{item['scope']}' — expected {VALID_SCOPES}")
-        if item['effort'] not in VALID_EFFORTS:
-            errors.append(f"{iid}: invalid Effort '{item['effort']}' — expected {VALID_EFFORTS}")
-        if item['phase'] not in VALID_PHASES:
-            errors.append(f"{iid}: invalid Phase '{item['phase']}' — expected {VALID_PHASES}")
-        if item['status'] not in VALID_STATUSES:
-            errors.append(f"{iid}: invalid Status '{item['status']}' — expected {VALID_STATUSES}")
 
-    # Per-Module completeness: check a/b pairs
-    # Exempt: MS* items (single module — Mgmt Services), standalone IDs (SW3, SW4)
-    base_ids = set()
-    for item in items:
-        if not item['is_eng'] and item['scope'] == 'Per-Module' and not item['id'].startswith('MS'):
-            base = re.sub(r'[a-c]$', '', item['id'])
-            base_ids.add(base)
+def load_human_overlay(project_dir):
+    """Return per-row human overlay map keyed by row ID. Empty dict if the
+    sidecar is missing or malformed (best-effort; never raises)."""
+    import json
+    sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.human.json'
+    if not sidecar.is_file():
+        return {}
+    try:
+        data = json.loads(sidecar.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+    rows = data.get('rows') if isinstance(data, dict) else None
+    if not isinstance(rows, dict):
+        return {}
+    return rows
 
-    for base in base_ids:
-        has_a = f'{base}a' in all_ids
-        has_b = f'{base}b' in all_ids
-        has_standalone = base in all_ids and not has_a and not has_b
-        if has_standalone:
-            continue  # standalone ID like SW3, SW4 — no suffix convention
-        if has_a and not has_b:
-            warnings.append(f"{base}: has Intra-Op ({base}a) but missing Pre-Op ({base}b)")
-        elif has_b and not has_a:
-            warnings.append(f"{base}: has Pre-Op ({base}b) but missing Intra-Op ({base}a)")
 
-    # Engineering gates referential integrity
-    for item in eng_items:
-        gates = item.get('evidence', '')
-        if gates and gates != '—':
-            for gate_id in re.split(r',\s*', gates):
-                gate_id = gate_id.strip()
-                if gate_id and gate_id not in reg_ids and gate_id not in all_ids:
-                    warnings.append(f"{item['id']}: gates unknown ID '{gate_id}'")
+def apply_human_overlay(rows, overlay):
+    """Merge overlay onto generated rows in place. Each row dict gains a
+    `human` key with the overlay payload; the row's `status`/`ref` cells
+    are overridden in place when the overlay supplies values. Unmatched
+    overlay row IDs are silently ignored (operators see them via /tracker
+    generate's stderr orphan warnings — not the renderer's concern)."""
+    if not overlay:
+        return rows
+    by_id = {r['id']: r for r in rows}
+    for row_id, entry in overlay.items():
+        target = by_id.get(row_id)
+        if target is None:
+            continue
+        # Carry the full overlay payload as a nested block (renderer can
+        # surface owner / target_date / blockers in the Detail block).
+        target['human'] = dict(entry)
+        # Apply the overrides that affect cell-level rendering.
+        if entry.get('status'):
+            target['status'] = coerce_status(entry['status'])
+        if entry.get('ref'):
+            target['ref'] = entry['ref']
+    return rows
 
-    # Evidence path existence (spot check)
-    for item in items:
-        loc = item.get('location', '')
-        if loc and loc != '' and not item['is_eng']:
-            # Strip backticks and check if directory exists
-            clean_loc = loc.strip('`').strip()
-            full_path = os.path.join(project_dir, 'docs/project', clean_loc)
-            if clean_loc and not os.path.exists(full_path) and not os.path.exists(os.path.join(project_dir, clean_loc)):
-                pass  # Don't warn on locations — they're target paths, not existing files
 
-    # Duplicate IDs
-    seen = set()
-    for item in items:
-        if item['id'] in seen:
-            errors.append(f"Duplicate ID: {item['id']}")
-        seen.add(item['id'])
-
+def validate(data):
+    warnings, errors = [], []
+    seen_ids = set()
+    for r in data['rows']:
+        if r['id'] in seen_ids:
+            errors.append(f"Duplicate row ID: {r['id']}")
+        seen_ids.add(r['id'])
+        canon = coerce_status(r['status'])
+        if canon not in VALID_STATUSES:
+            warnings.append(f"{r['id']}: unknown Status '{r['status']}'")
+    for e in data['eng']:
+        if e['id'] in seen_ids:
+            errors.append(f"Duplicate ID (eng vs row): {e['id']}")
+        seen_ids.add(e['id'])
+        canon = coerce_status(e['status'])
+        if canon not in VALID_STATUSES:
+            warnings.append(f"{e['id']}: unknown Status '{e['status']}'")
     return errors, warnings
 
 
+# ─── Slugification + class helpers ───
+
+def slug(s):
+    return re.sub(r'[^a-z0-9]+', '-', (s or '').lower()).strip('-') or 'unset'
+
+
 def status_class(s):
-    return 'done' if s == 'Done' else ('partial' if s in ('Partial', 'In Progress') else 'not-started')
+    return f'status-badge {slug(s)}'
+
+
+# ─── AI Status (R7) — separate first-class column sourced from
+# `submission-tracker.agent.json` sidecar. Render-time only; the agent that
+# populates the sidecar is owned by `/tracker assess` (separate action).
+
+def load_agent_sidecar(project_dir):
+    """Return per-row AI-status map keyed by row ID. Schema:
+        {row_id: {"value": str, "rationale": str?, "analyzed_at": str?,
+                  "source_hash": str?, "sources_consulted": list?}}
+    Returns {} when the sidecar is missing or malformed."""
+    import json
+    sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.agent.json'
+    if not sidecar.is_file():
+        return {}
+    try:
+        data = json.loads(sidecar.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+    rows = data.get('rows') if isinstance(data, dict) else None
+    if not isinstance(rows, dict):
+        return {}
+    return rows
+
+
+def load_details_sidecar(project_dir):
+    """Return per-row deterministic detail map, keyed by row ID. Schema:
+        {row_id: detail_md_body}
+    The sidecar's `entries[]` list each carries `row_ids: [...]` (multi-row
+    attachment); we expand to one entry per row id. Each row's body is
+    composed from the structured fields (phase_text, scope, path,
+    primary_ref, all_applicable_refs, notes) into the same markdown shape
+    the inline `## Deliverable Details` blocks use, so detail_md_to_html()
+    can render it without changes.
+
+    When the sidecar is missing or malformed, returns {}.
+
+    Populated by /tracker enrich-details (details-author agent) — see
+    .claude/skills/tracker/agents/details-author.md."""
+    import json
+    sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.details.json'
+    if not sidecar.is_file():
+        return {}
+    try:
+        data = json.loads(sidecar.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+    entries = data.get('entries') if isinstance(data, dict) else None
+    if not isinstance(entries, list):
+        return {}
+    out = {}
+    for e in entries:
+        if not isinstance(e, dict):
+            continue
+        row_ids = e.get('row_ids') or []
+        if not isinstance(row_ids, list) or not row_ids:
+            continue
+        body = _details_entry_to_md(e)
+        if not body:
+            continue
+        for rid in row_ids:
+            if isinstance(rid, str):
+                out[rid] = body
+    return out
+
+
+def _details_entry_to_md(entry):
+    """Compose a structured details entry into the same markdown shape that
+    inline `### <ID> — <name>` blocks use. detail_md_to_html() then renders
+    it identically to the legacy path."""
+    parts = []
+    phase_text = entry.get('phase_text')
+    scope = entry.get('scope')
+    path = entry.get('path')
+    primary_ref = entry.get('primary_ref')
+    refs = entry.get('all_applicable_refs') or []
+    notes = entry.get('notes')
+
+    if phase_text or scope or path:
+        meta_bits = []
+        if phase_text:
+            meta_bits.append(f'**Phase**: {phase_text}')
+        if scope:
+            meta_bits.append(f'**Scope**: {scope}')
+        if path:
+            meta_bits.append(f'**Path**: `{path}`')
+        parts.append(' · '.join(meta_bits))
+    if primary_ref:
+        parts.append(f'- **Primary REF**: {primary_ref}')
+    if refs:
+        parts.append('- **All applicable REFs**:')
+        for r in refs:
+            parts.append(f'  - {r}')
+    if notes:
+        parts.append(f'- **Notes**: {notes}')
+
+    return '\n'.join(parts).strip()
+
+
+def load_row_source_sidecar(project_dir):
+    """Return per-row source_kind map from submission-tracker.row-source.json
+    written by /tracker generate (Model D). Schema:
+        {row_id: {source_kind: "user"|"derived", reason?: str, ...}}
+    Returns {} when the sidecar is missing or malformed. When present,
+    user-injected rows get a small "user-added" badge in the row chrome
+    with the `reason` as a hover-tooltip."""
+    import json
+    sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.row-source.json'
+    if not sidecar.is_file():
+        return {}
+    try:
+        data = json.loads(sidecar.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+    rows = data.get('rows') if isinstance(data, dict) else None
+    return rows if isinstance(rows, dict) else {}
+
+
+def source_badge_html(iid, row_source_map):
+    """Return a small inline badge for user-injected rows; empty string for
+    catalog-derived rows. Tooltip surfaces the `reason` so reviewers can
+    see why this row is user-injected vs. catalog-derived."""
+    entry = row_source_map.get(iid) or {}
+    if entry.get('source_kind') != 'user':
+        return ''
+    reason = (entry.get('reason') or 'user-injected row (not derived from milestone catalog)')
+    return (f'<span class="row-icon source-user" '
+            f'title="user-added: {_esc(reason)}">★</span>')
+
+
+def load_help_sidecar(project_dir):
+    """Return per-row LLM-generated help map, keyed by row ID. Schema:
+        {row_id: {"title": str, "description": str, "why_important_in_project": str,
+                  "main_topics": [{"name": str, "summary": str}],
+                  "regulatory_anchors": [{"citation": str, "role": str}],
+                  "generated_at": str?, "context_signature": dict?}}
+    Returns {} when the sidecar is missing or malformed. Populated by the
+    /tracker help (help-author agent) — see .claude/skills/tracker/agents/help-author.md."""
+    import json
+    sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.help.json'
+    if not sidecar.is_file():
+        return {}
+    try:
+        data = json.loads(sidecar.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+    rows = data.get('rows') if isinstance(data, dict) else None
+    if not isinstance(rows, dict):
+        return {}
+    return rows
+
+
+def _esc(s):
+    """Minimal HTML-escape for help content text fields."""
+    if s is None:
+        return ''
+    return (str(s).replace('&', '&amp;').replace('<', '&lt;')
+                  .replace('>', '&gt;').replace('"', '&quot;'))
+
+
+def help_row_html(row_id, help_map, colspan):
+    """Return the `<tr class="help-row">` HTML for a row's LLM-generated help
+    panel. Falls back to a 'not generated yet' placeholder when no entry."""
+    entry = help_map.get(row_id) if isinstance(help_map, dict) else None
+    if not entry:
+        return (f'<tr class="help-row"><td colspan="{colspan}">'
+                f'<div class="help-content help-empty">'
+                f'❓ No help generated yet for <code>{_esc(row_id)}</code> &mdash; '
+                f'run <code>/tracker help</code> to populate via the help-author agent.'
+                f'</div></td></tr>')
+    parts = ['<div class="help-content">']
+    title = entry.get('title') or row_id
+    parts.append(f'<h4>What is {_esc(title)}?</h4>')
+    parts.append(f'<p>{_esc(entry.get("description") or "")}</p>')
+    why = entry.get('why_important_in_project') or entry.get('why_important')
+    if why:
+        parts.append('<h4>Why it matters in this project</h4>')
+        parts.append(f'<p>{_esc(why)}</p>')
+    topics = entry.get('main_topics') or []
+    if topics:
+        parts.append('<h4>Main topics</h4><ul>')
+        for t in topics:
+            if isinstance(t, dict):
+                name = _esc(t.get('name') or '')
+                summary = _esc(t.get('summary') or '')
+                parts.append(f'<li><strong>{name}</strong>: {summary}</li>')
+            else:
+                parts.append(f'<li>{_esc(t)}</li>')
+        parts.append('</ul>')
+    anchors = entry.get('regulatory_anchors') or []
+    if anchors:
+        rendered = []
+        for a in anchors:
+            if isinstance(a, dict):
+                cit = _esc(a.get('citation') or '')
+                role = a.get('role') or ''
+                if role and role != 'primary':
+                    rendered.append(f'<code>{cit}</code> <span style="opacity:.7">({_esc(role)})</span>')
+                else:
+                    rendered.append(f'<code>{cit}</code>')
+            else:
+                rendered.append(f'<code>{_esc(a)}</code>')
+        parts.append('<div class="anchors"><strong>Regulatory anchors:</strong> ' +
+                     ' · '.join(rendered) + '</div>')
+    parts.append('</div>')
+    return f'<tr class="help-row"><td colspan="{colspan}">{"".join(parts)}</td></tr>'
+
+
+def ai_status_cell(row_id, agent_map):
+    """Return the `<td>` HTML for the AI Status column. Falls back to a
+    `not-analyzed` placeholder when the row has no sidecar entry."""
+    entry = agent_map.get(row_id) if isinstance(agent_map, dict) else None
+    if not entry:
+        return ('<td class="ai-status-col"><span class="status-badge ai-status not-analyzed" '
+                'title="not analyzed yet — run /tracker assess">🤖 —</span></td>')
+    value = (entry.get('value') or '').strip() or '—'
+    klass = f'status-badge ai-status {slug(value)}'
+    title_bits = []
+    if entry.get('analyzed_at'):
+        title_bits.append(f"analyzed_at: {entry['analyzed_at']}")
+    if entry.get('rationale'):
+        rat = entry['rationale']
+        if len(rat) > 200:
+            rat = rat[:197] + '…'
+        title_bits.append(rat)
+    title_attr = ''
+    if title_bits:
+        title_attr = ' title="' + ' · '.join(b.replace('"', '&quot;') for b in title_bits) + '"'
+    return f'<td class="ai-status-col"><span class="{klass}"{title_attr}>🤖 {value}</span></td>'
+
 
 def scope_class(s):
-    return 'device' if 'Device' in s else ('both' if 'Both' in s else 'per-module')
+    return f'scope-badge {slug(s)}'
 
-def effort_class(e):
-    return 'vhigh' if 'V.High' in e else ('high' if 'High' in e else ('med' if 'Med' in e else 'low'))
 
 def phase_class(p):
-    if 'proto' in p: return 'filing-proto'
-    if 'Release 3' in p: return 'release-3'
-    if 'Release 2' in p: return 'release-2'
-    if 'Release 1' in p: return 'release-1'
-    return 'filing'
-
-def phase_label(p):
-    if 'proto' in p: return 'Filing (proto)'
-    for r in ['Release 3', 'Release 2', 'Release 1']:
-        if r in p: return r
-    return 'Filing'
-
-def gen_help(item, help_content):
-    """Generate help content for items without existing help."""
-    iid = item['id']
-
-    if iid.startswith('ENG'):
-        gates = item['evidence']
-        return (f'<div class="help-content"><span class="help-label">What is it?</span>'
-                f'<p>{item["name"]}. This engineering capability must be in place before '
-                f'the gated deliverables can be completed.</p>'
-                f'<span class="help-label">Gates deliverables</span>'
-                f'<p><code>{gates}</code></p></div>')
-
-    parent_id = re.sub(r'[a-c]$', '', iid)
-    if iid.endswith('b') and parent_id in help_content:
-        return (f'<div class="help-content"><span class="help-label">What is it?</span>'
-                f'<p>Pre-Op module version of {parent_id}. Phase: Filing (proto) &mdash; '
-                f'prototype quality sufficient for filing. Production upgrade at Release 2.</p></div>')
-    elif iid.endswith('a') and parent_id in help_content:
-        return help_content[parent_id].replace(
-            '<div class="help-content">',
-            '<div class="help-content"><p><em>Intra-Op module version.</em></p>')
-    elif iid.startswith('MS'):
-        descs = {
-            'MS1': 'Requirements for Management Services.',
-            'MS2': 'Software Design Specification for Management Services sub-modules.',
-            'MS3': 'MDDS Class I registration and listing with FDA.',
-            'MS4': 'MFD impact assessment &mdash; how Management Services failures affect SaMD modules.',
-            'MS5': 'SBOM for Management Services (Section 524B applies to full system).',
-            'MS6': 'Basic V&amp;V for Management Services.',
-            'MS7': 'Security controls documentation for Management Services.',
-        }
-        return (f'<div class="help-content"><span class="help-label">What is it?</span>'
-                f'<p>{descs.get(iid, item["name"])}</p></div>')
-
-    return (f'<div class="help-content"><span class="help-label">What is it?</span>'
-            f'<p>{item["name"]}.</p></div>')
+    return f'phase-badge {slug(p)}'
 
 
-# Section metadata: id, help text, part number
-SECTION_META = {
-    '1.1 Administrative & Cover': ('cat-admin', 'Standard FDA paperwork. Mostly fill-in forms completed last.', 1),
-    '1.2 Device Description & Intended Use': ('cat-device', 'Core description of what the device does. Foundation for predicate comparison and testing.', 1),
-    '1.3 Predicate Comparison & Substantial Equivalence': ('cat-pred', 'Proving substantial equivalence to an already-cleared predicate device.', 1),
-    '1.4 Software Documentation (Enhanced Level)': ('cat-sw', 'Software development documentation. Enhanced level required because Intra-Op failure could cause serious injury.', 1),
-    '1.5 Risk Management': ('cat-risk', 'ISO 14971-based risk management. One of the most scrutinized sections.', 1),
-    '1.6 Performance Testing & Clinical Data': ('cat-perf', 'Evidence the device performs as intended. Measurement accuracy, algorithm correctness.', 1),
-    '1.7 Labeling': ('cat-label', 'User manuals, IFU, in-app text. Must match cleared indications.', 1),
-    '1.8 Cybersecurity': ('cat-cyber', 'Mandatory since FDORA 2023. SBOM is statutory (Section 524B).', 1),
-    '1.9 Human Factors & Usability': ('cat-hf', 'IEC 62366-1 usability engineering. Formative + summative studies.', 1),
-    '1.10 Standards & Conformity': ('cat-std', 'Declarations of conformity to recognized consensus standards.', 1),
-    '1.11 Design Controls (DHF Supporting)': ('cat-dc', 'Core DHF documents per 21 CFR 820.30. Parent DDP references child DDPs.', 1),
-    '1.12 Q-Sub (Pre-Submission)': ('cat-qsub', 'Formal request to FDA for feedback before filing. Validates strategy.', 1),
-    '2.1 PCCP Core Document': ('cat-pccp-core', 'The PCCP itself &mdash; modifications, protocols, impact assessments.', 2),
-    '2.2 PCCP Integration into 510(k)': ('cat-pccp-int', 'How the PCCP is referenced throughout the submission.', 2),
-    '2.3 PCCP-Specific Labeling': ('cat-pccp-label', 'Labeling requirements for PCCP devices.', 2),
-    '2.4 PCCP Support Documentation': ('cat-pccp-support', 'Monitoring, rollback, surveillance, and deviation plans.', 2),
-    '2.5 AI/ML-Specific Documentation (PCCP-Driven)': ('cat-ai', 'Required because PCCP covers AI-enabled modules. Per-model documentation.', 2),
-    '2.6 PCCP Qualification Framework (Internal)': ('cat-pccp-qual', 'Internal frameworks for PCCP qualification decisions.', 2),
-    '3.1 Management Services (Non-Submission)': ('cat-mgmt', 'MDDS/non-device items not in the 510(k) but required for compliance.', 3),
-    '4.1 Requirements & Architecture': ('cat-eng-req', 'Requirements engineering and architecture design that gates SRS, SAD, and risk deliverables.', 4),
-    '4.2 AI/ML Development': ('cat-eng-ai', 'AI model development, training data, and clinical dataset curation.', 4),
-    '4.3 Software Development': ('cat-eng-sw', 'Production/prototype software, cloud infrastructure, device connectivity.', 4),
-    '4.4 Testing & Tooling': ('cat-eng-test', 'Test infrastructure, build pipelines, CI/CD.', 4),
-    '4.5 User Research & Cybersecurity': ('cat-eng-ux', 'Usability studies and cybersecurity implementation.', 4),
-}
+def effort_class(e):
+    # Normalize V.High → vhigh; Low/Med/High pass through slug
+    s = slug(e).replace('v-high', 'vhigh')
+    return f'effort-badge {s}'
 
-PART_DIVIDERS = {
-    1: ('base', 'Base 510(k) Requirements'),
-    2: ('pccp', 'PCCP Additive Requirements'),
-    3: ('mgmt', 'Management Services (Non-Submission)'),
-    4: ('eng', 'Engineering Prerequisites'),
-}
 
-CSS = '''<style>
+SCOPE_COLOR_CYCLE = [
+    ('--accent', 'rgba(56,189,248,.15)'),
+    ('--cyan', 'rgba(6,182,212,.15)'),
+    ('--accent2', 'rgba(129,140,248,.15)'),
+    ('--orange', 'rgba(249,115,22,.15)'),
+    ('--pink', 'rgba(236,72,153,.15)'),
+    ('--text-muted', 'rgba(148,163,184,.15)'),
+]
+PHASE_COLOR_CYCLE = [
+    ('--accent', 'rgba(56,189,248,.2)'),
+    ('--accent2', 'rgba(129,140,248,.2)'),
+    ('--green', 'rgba(34,197,94,.15)'),
+    ('--orange', 'rgba(249,115,22,.15)'),
+    ('--text-muted', 'rgba(148,163,184,.15)'),
+]
+
+
+def gen_dynamic_css(scope_values, phase_values):
+    out = []
+    for i, val in enumerate(sorted(scope_values)):
+        fg, bg = SCOPE_COLOR_CYCLE[i % len(SCOPE_COLOR_CYCLE)]
+        out.append(f'.scope-badge.{slug(val)}{{background:{bg};color:var({fg})}}')
+    for i, val in enumerate(sorted(phase_values)):
+        fg, bg = PHASE_COLOR_CYCLE[i % len(PHASE_COLOR_CYCLE)]
+        out.append(f'.phase-badge.{slug(val)}{{background:{bg};color:var({fg})}}')
+    return '\n'.join(out)
+
+
+# ─── CSS — preserved dark-theme aesthetic ───
+#
+# `_CSS_BASE_INNER` is the raw CSS (no `<style>` wrapper) — single source of
+# truth, served as `/workflows/tracker/dashboard.css` for the inline-rendered
+# dashboard view, and wrapped into `CSS_BASE` for the standalone `.html` file.
+
+_CSS_BASE_INNER = '''
 :root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--text-muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--help-bg:#1a2744;--eng:#a78bfa}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem}
@@ -318,33 +760,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .header h1{font-size:1.8rem;font-weight:700;color:var(--accent);margin-bottom:.3rem}
 .header .subtitle{color:var(--text-muted);font-size:.95rem}
 .header .timestamp{color:var(--text-muted);font-size:.8rem;margin-top:.5rem}
-.controls{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.controls{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.controls .label{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin-right:.2rem}
 .controls button{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.72rem;cursor:pointer;transition:all .2s}
 .controls button:hover{background:var(--surface2);color:var(--text)}
 .controls button.active{background:var(--accent);color:#000;border-color:var(--accent)}
 .controls .sep{border-left:1px solid var(--border);height:24px;margin:0 .15rem}
-.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-bottom:1.5rem}
-.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;border-left-width:4px}
 .summary-card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:.3rem}
 .summary-card .number{font-size:2rem;font-weight:700}
 .summary-card .detail{font-size:.72rem;color:var(--text-muted);margin-top:.2rem}
-.summary-card.base .number{color:var(--accent)}.summary-card.pccp .number{color:var(--accent2)}
-.summary-card.mgmt .number{color:var(--cyan)}.summary-card.eng .number{color:var(--eng)}
-.summary-card.total .number{color:var(--text)}
+.summary-card.total{border-left-color:var(--text)}.summary-card.total .number{color:var(--text)}
+.summary-card.eng{border-left-color:var(--eng)}.summary-card.eng .number{color:var(--eng)}
 .progress-section{margin-bottom:1.5rem}
 .progress-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem}
-.progress-label{width:100px;font-size:.78rem;font-weight:600;text-align:right;flex-shrink:0}
+.progress-label{width:130px;font-size:.78rem;font-weight:600;text-align:right;flex-shrink:0}
 .progress-bar-container{flex:1;background:var(--surface);border-radius:8px;height:22px;overflow:hidden;display:flex;border:1px solid var(--border)}
 .progress-segment{height:100%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600}
-.progress-segment.done{background:var(--green);color:#000}.progress-segment.partial{background:var(--yellow);color:#000}
-.progress-stats{width:60px;font-size:.75rem;color:var(--text-muted);text-align:left;flex-shrink:0}
+.progress-segment.done{background:var(--green);color:#000}
+.progress-segment.partial{background:var(--yellow);color:#000}
+.progress-segment.inherited{background:var(--accent);color:#000}
+.progress-stats{width:80px;font-size:.75rem;color:var(--text-muted);text-align:left;flex-shrink:0}
 .tier-divider{display:flex;align-items:center;gap:1rem;margin:2rem 0 1.2rem}
 .tier-divider .line{flex:1;height:1px;background:var(--border)}
 .tier-divider .badge{padding:.4rem 1rem;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.tier-divider .badge.base{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3)}
-.tier-divider .badge.pccp{background:rgba(129,140,248,.15);color:var(--accent2);border:1px solid rgba(129,140,248,.3)}
-.tier-divider .badge.mgmt{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid rgba(6,182,212,.3)}
-.tier-divider .badge.eng{background:rgba(167,139,250,.15);color:var(--eng);border:1px solid rgba(167,139,250,.3)}
+.phase-divider .badge{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3)}
+.eng-divider .badge{background:rgba(167,139,250,.15);color:var(--eng);border:1px solid rgba(167,139,250,.3)}
+.phase-meta{text-align:center;font-size:.78rem;color:var(--text-muted);margin:-.4rem 0 1rem}
+.phase-meta strong{color:var(--text)}
 .category{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:.8rem;overflow:hidden}
 .category-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;cursor:pointer;user-select:none;transition:background .2s}
 .category-header:hover{background:var(--surface2)}
@@ -352,339 +796,497 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .category-header .cat-stats{display:flex;gap:.5rem;font-size:.75rem}
 .cat-stats .stat{display:flex;align-items:center;gap:.25rem}
 .stat .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
-.dot.done{background:var(--green)}.dot.partial{background:var(--yellow)}.dot.not-started{background:var(--border)}
+.dot.done{background:var(--green)}.dot.partial{background:var(--yellow)}.dot.not-started{background:var(--border)}.dot.inherited{background:var(--accent)}
+.dot.in-review{background:var(--accent2)}.dot.drafted{background:var(--cyan)}.dot.needs-revision{background:var(--orange)}
+.progress-segment.drafted{background:var(--cyan);color:#000}
 .chevron{transition:transform .2s;color:var(--text-muted)}
 .category.open .chevron{transform:rotate(180deg)}
 .category.open .category-header{border-bottom:1px solid var(--border)}
 .category-body{display:none;padding:0}.category.open .category-body{display:block}
-.cat-help{background:var(--help-bg);border-bottom:1px solid var(--border);padding:.6rem 1rem;font-size:.82rem;color:var(--text-muted)}
-.cat-help strong{color:var(--text)}
 .item-table{width:100%;border-collapse:collapse;font-size:.78rem}
-.item-table th{text-align:left;padding:.35rem .6rem;background:var(--surface2);color:var(--text-muted);font-weight:600;font-size:.67rem;text-transform:uppercase;letter-spacing:.04em}
+.item-table th{text-align:left;padding:.35rem .6rem;background:var(--surface2);color:var(--text-muted);font-weight:600;font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;z-index:1}
 .item-table td{padding:.35rem .6rem;border-top:1px solid rgba(71,85,105,.4);vertical-align:top}
 .item-row{cursor:pointer;transition:background .15s}.item-row:hover td{background:rgba(56,189,248,.05)}
+.item-row.expanded-info td{background:rgba(56,189,248,.08)}
+.item-row.expanded-help td{background:rgba(168,85,247,.08)}
+/* Info row — deterministic Deliverable Details (Phase, Scope, Path, REFs).
+   Toggled by clicking the row body or the (i) icon. */
+.info-row{display:none!important}.info-row.visible{display:table-row!important}
+.info-row td{padding:.5rem .8rem .6rem 3rem;background:var(--help-bg);border-top:none;border-left:3px solid var(--accent)}
+.info-content{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+.info-content strong{color:var(--text)}
+.info-content p{margin:.2rem 0}.info-content ul{margin:.2rem 0 .2rem 1.2rem}.info-content li{margin:.1rem 0}
+.info-content code{font-size:.75rem;color:var(--cyan);background:rgba(6,182,212,.1);padding:.1rem .3rem;border-radius:3px}
+.info-content a{color:var(--accent);text-decoration:none}.info-content a:hover{text-decoration:underline}
+.info-empty{color:var(--text-muted);font-style:italic;font-size:.78rem}
+/* Help row — LLM-generated artifact help from submission-tracker.help.json.
+   Toggled by clicking the (?) icon only. Distinct purple accent so it does
+   not visually conflict with the cyan info-row. */
 .help-row{display:none!important}.help-row.visible{display:table-row!important}
-.help-row td{padding:.5rem .8rem .6rem 3rem;background:var(--help-bg);border-top:none}
-.help-content{font-size:.8rem;color:var(--text-muted);line-height:1.5}
-.help-content .help-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);font-weight:600;margin-top:.6rem;display:block}
-.help-content .help-label:first-child{margin-top:0}
-.help-content p{margin:.2rem 0}.help-content ul{margin:.2rem 0 .2rem 1.2rem}.help-content li{margin:.1rem 0}
-.help-content code{font-size:.75rem;color:var(--cyan);background:rgba(6,182,212,.1);padding:.1rem .3rem;border-radius:3px}
-.reg-quote{border-left:3px solid var(--accent2);background:rgba(129,140,248,.06);padding:.4rem .7rem;margin:.3rem 0;font-size:.75rem;font-style:italic;color:var(--text);border-radius:0 4px 4px 0}
-.reg-quote .reg-src{display:block;font-style:normal;font-size:.68rem;color:var(--accent2);margin-top:.2rem}
-.example-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.3rem 0}
-.example-box{border:1px solid var(--border);border-radius:6px;padding:.4rem .6rem;font-size:.75rem}
-.example-box.ai{border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.05)}
-.example-box.nonai{border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.05)}
-.example-box .ex-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:.2rem}
-.example-box.ai .ex-title{color:var(--pink)}.example-box.nonai .ex-title{color:var(--cyan)}
-.example-box ul{margin:0 0 0 1rem}.example-box li{margin:.1rem 0}
-@media(max-width:768px){.example-grid{grid-template-columns:1fr}}
-.info-hint{color:var(--accent);font-size:.68rem;margin-left:.3rem;opacity:.5;transition:opacity .2s}
-.item-row:hover .info-hint{opacity:1}
+.help-row td{padding:.5rem .8rem .6rem 3rem;background:rgba(168,85,247,.06);border-top:none;border-left:3px solid #a855f7}
+.help-content{font-size:.8rem;color:var(--text);line-height:1.55}
+.help-content h4{font-size:.78rem;color:#c084fc;text-transform:uppercase;letter-spacing:.05em;margin:.6rem 0 .15rem 0}
+.help-content h4:first-child{margin-top:0}
+.help-content p{margin:.2rem 0;color:var(--text-muted)}
+.help-content ul{margin:.2rem 0 .4rem 1.2rem}.help-content li{margin:.15rem 0;color:var(--text-muted)}
+.help-content li strong{color:var(--text)}
+.help-content code{font-size:.75rem;color:#c084fc;background:rgba(168,85,247,.1);padding:.1rem .3rem;border-radius:3px}
+.help-content .anchors{font-size:.72rem;color:var(--text-muted);margin-top:.3rem}
+.help-content .anchors code{color:#c084fc}
+.help-empty{color:var(--text-muted);font-style:italic;font-size:.78rem}
+.help-empty code{color:#c084fc}
+/* Per-row icon affordances. Clickable; spaced; tooltip on hover. */
+.row-icons{display:inline-flex;gap:.25rem;margin-left:.4rem;vertical-align:middle}
+.row-icon{display:inline-block;width:1.1rem;height:1.1rem;line-height:1.1rem;text-align:center;border-radius:50%;font-size:.7rem;font-weight:600;cursor:pointer;user-select:none;opacity:.55;transition:opacity .15s,background .15s}
+.row-icon.info{color:var(--accent);background:rgba(56,189,248,.12)}
+.row-icon.info:hover{opacity:1;background:rgba(56,189,248,.25)}
+.row-icon.help{color:#c084fc;background:rgba(168,85,247,.12)}
+.row-icon.help:hover{opacity:1;background:rgba(168,85,247,.25)}
+.item-row:hover .row-icon{opacity:.85}
 .status-badge{display:inline-block;padding:.12rem .45rem;border-radius:10px;font-size:.67rem;font-weight:600;white-space:nowrap}
+/* 7-state lifecycle vocabulary (canonical) */
+.status-badge.not-started{background:rgba(71,85,105,.3);color:var(--text-muted)}
+.status-badge.drafting{background:rgba(234,179,8,.15);color:var(--yellow)}
+.status-badge.drafted{background:rgba(6,182,212,.15);color:var(--cyan)}
+.status-badge.in-review{background:rgba(129,140,248,.15);color:var(--accent2)}
+.status-badge.needs-revision{background:rgba(249,115,22,.15);color:var(--orange)}
+.status-badge.approved{background:rgba(34,197,94,.15);color:var(--green)}
+.status-badge.n-a{background:rgba(148,163,184,.15);color:var(--text-muted)}
+/* Legacy v7 classes — kept so any md row that hasn't been coerced yet
+   still gets a sane badge color (matches the canonical mapping). */
 .status-badge.done{background:rgba(34,197,94,.15);color:var(--green)}
 .status-badge.partial{background:rgba(234,179,8,.15);color:var(--yellow)}
-.status-badge.not-started{background:rgba(71,85,105,.3);color:var(--text-muted)}
-.scope-badge{display:inline-block;padding:.1rem .35rem;border-radius:10px;font-size:.62rem;font-weight:600;white-space:nowrap}
-.scope-badge.device{background:rgba(56,189,248,.15);color:var(--accent)}
-.scope-badge.per-module{background:rgba(6,182,212,.15);color:var(--cyan)}
-.scope-badge.both{background:rgba(129,140,248,.15);color:var(--accent2)}
-.effort-badge{display:inline-block;padding:.1rem .35rem;border-radius:10px;font-size:.62rem;font-weight:600;white-space:nowrap}
+.status-badge.in-progress{background:rgba(234,179,8,.15);color:var(--yellow)}
+.status-badge.inherited{background:rgba(34,197,94,.15);color:var(--green)}
+.scope-badge,.phase-badge,.effort-badge{display:inline-block;padding:.1rem .35rem;border-radius:10px;font-size:.62rem;font-weight:600;white-space:nowrap}
 .effort-badge.low{background:rgba(34,197,94,.15);color:var(--green)}
 .effort-badge.med{background:rgba(234,179,8,.15);color:var(--yellow)}
 .effort-badge.high{background:rgba(249,115,22,.15);color:var(--orange)}
 .effort-badge.vhigh{background:rgba(239,68,68,.15);color:var(--red)}
-.phase-badge{display:inline-block;padding:.1rem .35rem;border-radius:10px;font-size:.62rem;font-weight:600;white-space:nowrap}
-.phase-badge.filing{background:rgba(56,189,248,.2);color:var(--accent)}
-.phase-badge.filing-proto{background:transparent;color:var(--accent);border:1px dashed rgba(56,189,248,.5)}
-.phase-badge.release-1{background:rgba(34,197,94,.15);color:var(--green)}
-.phase-badge.release-2{background:rgba(249,115,22,.15);color:var(--orange)}
-.phase-badge.release-3{background:rgba(129,140,248,.15);color:var(--accent2)}
-.id-col{width:48px;color:var(--text-muted);font-family:monospace;font-size:.72rem}
-.status-col{width:85px}.ref-col{color:var(--text-muted);font-size:.75rem}
-.evidence-col{font-size:.75rem;color:var(--text-muted)}
+.scale-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;margin-bottom:1rem}
+.scale-section h3{font-size:.95rem;margin-bottom:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.scale-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.scale-table th{text-align:left;padding:.3rem .6rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.04em}
+.scale-table td{padding:.4rem .6rem;border-bottom:1px solid rgba(71,85,105,.3);vertical-align:top;color:var(--text-muted)}
+.scale-table td:first-child{width:120px}
+.scale-table strong{color:var(--text)}
+.scales-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1rem;margin-top:1.5rem}
+.id-col{width:84px;white-space:nowrap;color:var(--text-muted);font-family:monospace;font-size:.72rem}
+.status-col{width:90px}.ai-status-col{width:108px}.scope-col{width:90px}.phase-col{width:100px}
+.status-badge.ai-status{background:rgba(129,140,248,.12);color:var(--accent2);border:1px dashed rgba(129,140,248,.4);font-style:italic;cursor:help}
+.status-badge.ai-status.not-analyzed{background:rgba(148,163,184,.08);color:var(--text-muted);border-color:rgba(148,163,184,.25)}
+.ref-col{color:var(--text-muted);font-size:.72rem;max-width:180px}
+.path-col{color:var(--text-muted);font-size:.7rem;font-family:monospace;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.path-col a{color:var(--accent);text-decoration:none}.path-col a:hover{text-decoration:underline}
 .gates-col{font-size:.72rem;color:var(--cyan);font-family:monospace}
-.additive-callout{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);border-radius:10px;padding:.8rem 1.2rem;margin-bottom:1.2rem;font-size:.85rem;color:var(--text-muted)}
-.additive-callout strong{color:var(--accent2)}
 .legend{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem;font-size:.75rem;color:var(--text-muted)}
 .legend-item{display:flex;align-items:center;gap:.3rem}
-.scale-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem}
-.scale-section h3{font-size:.85rem;margin-bottom:.6rem;color:var(--accent)}
-.scale-table{width:100%;border-collapse:collapse;font-size:.78rem}
-.scale-table th{text-align:left;padding:.3rem .6rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.67rem;text-transform:uppercase}
-.scale-table td{padding:.3rem .6rem;border-bottom:1px solid rgba(71,85,105,.3);vertical-align:top}
-.footer{text-align:center;margin-top:1.5rem;padding-top:.8rem;border-top:1px solid var(--border);color:var(--text-muted);font-size:.72rem}
 .help-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
 .help-mode-banner.visible{display:block}.help-mode-banner strong{color:var(--accent)}
+.info-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:.6rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
+.info-mode-banner.visible{display:block}.info-mode-banner strong{color:var(--accent)}
+.help-mode-banner.purple{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2)}
+.help-mode-banner.purple strong{color:#c084fc}
+.footer{text-align:center;margin-top:1.5rem;padding-top:.8rem;border-top:1px solid var(--border);color:var(--text-muted);font-size:.72rem}
+.footer code{color:var(--cyan)}
 @media(max-width:768px){
-body{padding:.8rem}
-.header h1{font-size:1.4rem}
-.controls{gap:.3rem}
-.controls button{padding:.3rem .5rem;font-size:.65rem}
-.summary-grid{grid-template-columns:repeat(3,1fr);gap:.5rem}
-.summary-card{padding:.6rem}
-.summary-card .number{font-size:1.5rem}
-.summary-card .detail{font-size:.6rem}
-.progress-label{width:70px;font-size:.7rem}
-.progress-stats{width:45px;font-size:.65rem}
-.category-header{padding:.6rem .8rem}
-.category-header .cat-title{font-size:.82rem}
-.item-table{font-size:.68rem;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.item-table th,.item-table td{padding:.25rem .4rem;white-space:nowrap}
-.item-table td:nth-child(2){white-space:normal;min-width:150px}
-.help-row td{padding:.4rem .6rem .5rem 1rem;white-space:normal}
-.help-content{font-size:.75rem}
-.reg-quote{font-size:.7rem;padding:.3rem .5rem}
-.example-grid{grid-template-columns:1fr}
-.scope-badge,.effort-badge,.phase-badge,.status-badge{font-size:.58rem;padding:.08rem .3rem}
-.scale-section{padding:.8rem}
-.scale-table{font-size:.7rem;display:block;overflow-x:auto}
-.tier-divider{margin:1.5rem 0 1rem}
-.tier-divider .badge{font-size:.65rem;padding:.3rem .7rem}
-.footer{font-size:.65rem}
-.info-hint{display:none}
+  body{padding:.8rem}
+  .header h1{font-size:1.4rem}
+  .controls{gap:.3rem}
+  .controls button{padding:.3rem .5rem;font-size:.65rem}
+  .summary-grid{grid-template-columns:repeat(2,1fr);gap:.5rem}
+  .summary-card{padding:.6rem}
+  .summary-card .number{font-size:1.5rem}
+  .progress-label{width:90px;font-size:.7rem}
+  .item-table{font-size:.68rem;display:block;overflow-x:auto}
+  .item-table td:nth-child(2){white-space:normal;min-width:150px}
+  .scope-badge,.phase-badge,.status-badge{font-size:.58rem;padding:.08rem .3rem}
+  .tier-divider .badge{font-size:.65rem;padding:.3rem .7rem}
 }
-@media(max-width:480px){
-.summary-grid{grid-template-columns:1fr 1fr}
-.controls button{padding:.25rem .4rem;font-size:.6rem}
-.item-table{font-size:.62rem}
-}
-</style>'''
+'''
 
-JS = '''<script>
+CSS_BASE = '<style>' + _CSS_BASE_INNER + '</style>'
+
+
+# `_JS_INNER` is the raw JS (no `<script>` wrapper) — single source of truth,
+# served as `/workflows/tracker/dashboard.js` for the inline-rendered dashboard
+# view, and wrapped into `JS` for the standalone `.html` file.
+
+_JS_INNER = '''
 function toggle(id){document.getElementById(id).classList.toggle('open')}
 function toggleAllSections(o){document.querySelectorAll('.category').forEach(function(c){if(o)c.classList.add('open');else c.classList.remove('open')})}
+var allInfoVisible=false;
+function toggleAllInfo(){allInfoVisible=!allInfoVisible;document.querySelectorAll('.info-row').forEach(function(h){var prev=h.previousElementSibling;if(allInfoVisible){h.classList.add('visible');if(prev&&prev.classList.contains('item-row'))prev.classList.add('expanded-info')}else{h.classList.remove('visible');if(prev&&prev.classList.contains('item-row'))prev.classList.remove('expanded-info')}});var b=document.getElementById('btn-info');if(b){b.textContent=allInfoVisible?'Hide All Info':'Show All Info';b.classList.toggle('active',allInfoVisible)}var bn=document.getElementById('info-banner');if(bn)bn.classList.toggle('visible',allInfoVisible)}
 var allHelpVisible=false;
-function toggleAllHelp(){allHelpVisible=!allHelpVisible;document.querySelectorAll('.help-row').forEach(function(h){if(allHelpVisible){h.classList.add('visible');h.previousElementSibling.classList.add('expanded')}else{h.classList.remove('visible');h.previousElementSibling.classList.remove('expanded')}});document.getElementById('btn-help').textContent=allHelpVisible?'Hide All Help':'Show All Help';document.getElementById('btn-help').classList.toggle('active',allHelpVisible);document.getElementById('help-banner').classList.toggle('visible',allHelpVisible)}
-var filters={status:'all',scope:'all',phase:'all',part:'all'};
-function setFilter(t,v){filters[t]=v;document.querySelectorAll('[id^="btn-'+t+'-"]').forEach(function(b){b.classList.remove('active')});document.getElementById('btn-'+t+'-'+v).classList.add('active');applyFilters()}
-function applyFilters(){document.querySelectorAll('.item-row').forEach(function(r){var s=true;if(filters.status!=='all'&&r.getAttribute('data-status')!==filters.status)s=false;if(filters.scope!=='all'&&r.getAttribute('data-scope')!==filters.scope)s=false;if(filters.phase!=='all'&&r.getAttribute('data-phase')!==filters.phase)s=false;if(filters.part!=='all'&&r.getAttribute('data-part')!==filters.part)s=false;r.style.display=s?'':'none';var h=r.nextElementSibling;if(h&&h.classList.contains('help-row')){if(!s){h.classList.remove('visible');h.style.display='none';r.classList.remove('expanded')}else{h.style.display=''}}})}
-document.addEventListener('click',function(e){var r=e.target.closest('.item-row');if(!r)return;var h=r.nextElementSibling;if(h&&h.classList.contains('help-row')){h.classList.toggle('visible');r.classList.toggle('expanded')}})
-</script>'''
+function toggleAllHelp(){allHelpVisible=!allHelpVisible;document.querySelectorAll('.help-row').forEach(function(h){var prev=h.previousElementSibling;while(prev&&!prev.classList.contains('item-row'))prev=prev.previousElementSibling;if(allHelpVisible){h.classList.add('visible');if(prev)prev.classList.add('expanded-help')}else{h.classList.remove('visible');if(prev)prev.classList.remove('expanded-help')}});var b=document.getElementById('btn-help');if(b){b.textContent=allHelpVisible?'Hide All Help':'Show All Help';b.classList.toggle('active',allHelpVisible)}var bn=document.getElementById('help-banner');if(bn)bn.classList.toggle('visible',allHelpVisible)}
+function findItemRow(el){var r=el;while(r&&!r.classList.contains('item-row'))r=r.parentElement;return r}
+function siblingByClass(itemRow,cls){var n=itemRow.nextElementSibling;while(n&&!n.classList.contains('item-row')){if(n.classList.contains(cls))return n;n=n.nextElementSibling}return null}
+function toggleRowInfo(itemRow){var info=siblingByClass(itemRow,'info-row');if(!info)return;info.classList.toggle('visible');itemRow.classList.toggle('expanded-info')}
+function toggleRowHelp(itemRow){var help=siblingByClass(itemRow,'help-row');if(!help)return;help.classList.toggle('visible');itemRow.classList.toggle('expanded-help')}
+var filters={status:'all',scope:'all',phase:'all',effort:'all'};
+function setFilter(t,v){filters[t]=v;document.querySelectorAll('button[data-group="'+t+'"]').forEach(function(b){b.classList.remove('active')});document.querySelector('button[data-group="'+t+'"][data-value="'+v+'"]').classList.add('active');applyFilters()}
+function applyFilters(){document.querySelectorAll('.item-row').forEach(function(r){var s=true;if(filters.status!=='all'&&r.getAttribute('data-status')!==filters.status)s=false;if(filters.scope!=='all'&&r.getAttribute('data-scope')!==filters.scope)s=false;if(filters.phase!=='all'&&r.getAttribute('data-phase')!==filters.phase)s=false;if(filters.effort!=='all'&&r.getAttribute('data-effort')!==filters.effort)s=false;r.style.display=s?'':'none';var n=r.nextElementSibling;while(n&&!n.classList.contains('item-row')){if(n.classList.contains('info-row')||n.classList.contains('help-row')){if(!s){n.classList.remove('visible')}}n=n.nextElementSibling}if(!s){r.classList.remove('expanded-info');r.classList.remove('expanded-help')}});document.querySelectorAll('.category').forEach(function(c){var visibleRows=c.querySelectorAll('.item-row:not([style*="display: none"])').length;c.style.display=visibleRows===0?'none':''})}
+document.addEventListener('click',function(e){var t=e.target;if(t.tagName==='A'||t.tagName==='BUTTON'||t.tagName==='SELECT'||t.tagName==='OPTION')return;if(t.classList&&t.classList.contains('row-icon')){var ri=findItemRow(t);if(!ri)return;if(t.classList.contains('info'))toggleRowInfo(ri);else if(t.classList.contains('help'))toggleRowHelp(ri);e.stopPropagation();return}var r=t.closest('.item-row');if(!r)return;toggleRowInfo(r)})
+'''
+
+JS = '<script>' + _JS_INNER + '</script>'
 
 
-def render(project_dir):
-    md_path = os.path.join(project_dir, 'docs/project/submissions/submission-tracker.md')
-    html_path = os.path.join(project_dir, 'docs/project/submissions/submission-tracker.html')
+# ─── Render ───
 
-    help_content = extract_help_content(html_path)
-    items = parse_markdown(md_path)
+def render(project_dir, embed=False):
+    """Render the submission tracker.
 
-    # Validate before rendering
-    errors, warnings = validate(items, project_dir)
+    `embed=False` (default): emit a complete self-contained HTML document and
+    write it to `docs/project/submissions/submission-tracker.html`.
+    `embed=True`: emit only the body fragment (no doctype, no `<style>` shell
+    other than the data-derived dynamic-css block, no `<script>` shell, no
+    page header) and return the HTML string. The caller provides chrome and
+    loads `_CSS_BASE_INNER` + `_JS_INNER` via separate static routes.
+    """
+    project_dir = Path(project_dir)
+    md_path = project_dir / 'docs/project/submissions/submission-tracker.md'
+    html_path = project_dir / 'docs/project/submissions/submission-tracker.html'
+    src_dir = md_path.parent
+
+    data = parse_markdown(md_path)
+    rows, eng, details, scales = data['rows'], data['eng'], data['details'], data.get('scales', {'status':[],'phase':[],'effort':[]})
+
+    # Sidecar override: when submission-tracker.details.json exists, its
+    # entries take precedence over the inline `## Deliverable Details`
+    # markdown. Sidecar entries support multi-row attachment (one entry,
+    # many row IDs) — collapsing the duplication that hand-authoring of
+    # paired rows (e.g. early-phase readiness + final-package row for
+    # the same artifact) used to require.
+    details_sidecar = load_details_sidecar(project_dir)
+    if details_sidecar:
+        details = {**details, **details_sidecar}
+    agent_map = load_agent_sidecar(project_dir)
+    help_map = load_help_sidecar(project_dir)
+    row_source_map = load_row_source_sidecar(project_dir)
+
+    # Apply human overlay so the rendered dashboard / standalone html show
+    # the resolved md+overlay union. The md itself stays generator-owned;
+    # the overlay is the durable record of human-curated divergence.
+    human_overlay = load_human_overlay(project_dir)
+    apply_human_overlay(rows, human_overlay)
+    apply_human_overlay(eng, human_overlay)
+
+    errors, warnings = validate(data)
     if errors:
         print(f"  ERRORS ({len(errors)}):")
         for e in errors:
             print(f"    ✗ {e}")
     if warnings:
         print(f"  WARNINGS ({len(warnings)}):")
-        for w in warnings:
+        for w in warnings[:10]:
             print(f"    ⚠ {w}")
-    if errors:
-        print("  Rendering anyway (errors should be fixed)")
+        if len(warnings) > 10:
+            print(f"    ... ({len(warnings)-10} more)")
 
-    # Group by section
-    sections = OrderedDict()
-    for item in items:
-        s = item['section']
-        if s not in sections:
-            sections[s] = []
-        sections[s].append(item)
+    by_phase = OrderedDict()
+    for r in rows:
+        if r['phase'] not in by_phase:
+            by_phase[r['phase']] = OrderedDict()
+        sub = r['subsection']
+        if sub not in by_phase[r['phase']]:
+            by_phase[r['phase']][sub] = []
+        by_phase[r['phase']][sub].append(r)
 
-    # Stats
-    reg_items = [i for i in items if not i['is_eng']]
-    eng_items = [i for i in items if i['is_eng']]
-    base = [i for i in reg_items if not i['id'].startswith(('PC', 'PI', 'PL', 'PS', 'AI', 'PQ', 'MS'))]
-    pccp = [i for i in reg_items if i['id'].startswith(('PC', 'PI', 'PL', 'PS', 'AI', 'PQ'))]
-    ms = [i for i in reg_items if i['id'].startswith('MS')]
-    total = len(items)
-    phase_counts = Counter(phase_class(i['phase']) for i in items)
+    scope_values = sorted({r['scope'] for r in rows} | {e['scope'] for e in eng})
+    phase_values = list(by_phase.keys())
 
-    lines = []
-    w = lines.append
+    def count_status(items, s):
+        return sum(1 for i in items if i['status'] == s)
 
-    # Header
-    w(f'<!DOCTYPE html>\n<html lang="en"><head><meta charset="UTF-8">'
-      f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
-      f'<title>Submission Package Tracker</title>')
-    w(CSS)
-    w('</head><body>')
-    w(f'<div class="header"><h1>Submission Package Tracker</h1>'
-      f'<div class="subtitle">{_project_subtitle()}</div>'
-      f'<div class="timestamp">Generated: {date.today().isoformat()}</div></div>')
+    out = []
+    w = out.append
 
-    # Controls
-    w('<div class="controls">'
-      '<button onclick="toggleAllSections(true)">Expand All</button>'
-      '<button onclick="toggleAllSections(false)">Collapse All</button>'
-      '<button onclick="toggleAllHelp()" id="btn-help">Show All Help</button>'
-      '<span class="sep"></span>'
-      '<button onclick="setFilter(\'status\',\'all\')" class="active" id="btn-status-all">All</button>'
-      '<button onclick="setFilter(\'status\',\'not-started\')" id="btn-status-not-started">Not Started</button>'
-      '<button onclick="setFilter(\'status\',\'partial\')" id="btn-status-partial">Partial</button>'
-      '<button onclick="setFilter(\'status\',\'done\')" id="btn-status-done">Done</button>'
-      '<span class="sep"></span>'
-      '<button onclick="setFilter(\'scope\',\'all\')" class="active" id="btn-scope-all">All Scopes</button>'
-      '<button onclick="setFilter(\'scope\',\'device\')" id="btn-scope-device">Device</button>'
-      '<button onclick="setFilter(\'scope\',\'per-module\')" id="btn-scope-per-module">Per-Module</button>'
-      '<button onclick="setFilter(\'scope\',\'both\')" id="btn-scope-both">Both</button>'
-      '<span class="sep"></span>'
-      '<button onclick="setFilter(\'phase\',\'all\')" class="active" id="btn-phase-all">All Phases</button>'
-      '<button onclick="setFilter(\'phase\',\'filing\')" id="btn-phase-filing">Filing</button>'
-      '<button onclick="setFilter(\'phase\',\'filing-proto\')" id="btn-phase-filing-proto">Filing (proto)</button>'
-      '<button onclick="setFilter(\'phase\',\'release-1\')" id="btn-phase-release-1">Release 1</button>'
-      '<button onclick="setFilter(\'phase\',\'release-2\')" id="btn-phase-release-2">Release 2</button>'
-      '<span class="sep"></span>'
-      '<button onclick="setFilter(\'part\',\'all\')" class="active" id="btn-part-all">All Parts</button>'
-      '<button onclick="setFilter(\'part\',\'1\')" id="btn-part-1">Base</button>'
-      '<button onclick="setFilter(\'part\',\'2\')" id="btn-part-2">PCCP</button>'
-      '<button onclick="setFilter(\'part\',\'3\')" id="btn-part-3">Mgmt Svc</button>'
-      '<button onclick="setFilter(\'part\',\'4\')" id="btn-part-4">Engineering</button>'
-      '</div>')
-    w('<div class="help-mode-banner" id="help-banner"><strong>Help mode active</strong> &mdash; click any row for details.</div>')
+    if not embed:
+        w('<!DOCTYPE html>\n<html lang="en"><head><meta charset="UTF-8">')
+        w('<meta name="viewport" content="width=device-width,initial-scale=1.0">')
+        w('<title>Submission Package Tracker</title>')
+        w(CSS_BASE)
+        w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
+        w('</head><body>')
+
+        w(f'<div class="header"><h1>Submission Package Tracker</h1>'
+          f'<div class="subtitle">{project_subtitle(project_dir)}</div>'
+          f'<div class="timestamp">Generated: {date.today().isoformat()}</div></div>')
+    else:
+        # Embed mode: only the data-derived dynamic CSS goes inline (the
+        # base CSS + JS are loaded via separate static routes by the host).
+        w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
+        w('<div class="tracker-embed">')
+
+    w('<div class="controls">')
+    w('<button onclick="toggleAllSections(true)">Expand All</button>')
+    w('<button onclick="toggleAllSections(false)">Collapse All</button>')
+    w('<button onclick="toggleAllInfo()" id="btn-info">Show All Info</button>')
+    w('<button onclick="toggleAllHelp()" id="btn-help">Show All Help</button>')
+
+    w('<span class="sep"></span><span class="label">Status</span>')
+    w('<button class="active" data-group="status" data-value="all" onclick="setFilter(\'status\',\'all\')">All</button>')
+    for s in ['Approved', 'In Review', 'Drafted', 'Drafting', 'Needs Revision', 'Not Started', 'N/A']:
+        w(f'<button data-group="status" data-value="{s}" onclick="setFilter(\'status\',\'{s}\')">{s}</button>')
+
+    w('<span class="sep"></span><span class="label">Scope</span>')
+    w('<button class="active" data-group="scope" data-value="all" onclick="setFilter(\'scope\',\'all\')">All</button>')
+    for s in scope_values:
+        w(f'<button data-group="scope" data-value="{s}" onclick="setFilter(\'scope\',\'{s}\')">{s}</button>')
+
+    w('<span class="sep"></span><span class="label">Phase</span>')
+    w('<button class="active" data-group="phase" data-value="all" onclick="setFilter(\'phase\',\'all\')">All</button>')
+    for p in phase_values:
+        w(f'<button data-group="phase" data-value="{p}" onclick="setFilter(\'phase\',\'{p}\')">{p}</button>')
+
+    w('<span class="sep"></span><span class="label">Effort</span>')
+    w('<button class="active" data-group="effort" data-value="all" onclick="setFilter(\'effort\',\'all\')">All</button>')
+    for e_val in ['Low', 'Med', 'High', 'V.High']:
+        w(f'<button data-group="effort" data-value="{e_val}" onclick="setFilter(\'effort\',\'{e_val}\')">{e_val}</button>')
+    w('</div>')
+
+    w('<div class="info-mode-banner" id="info-banner"><strong>Info mode active</strong> &mdash; per-row deterministic details (Phase, Scope, Path, References) expanded.</div>')
+    w('<div class="help-mode-banner purple" id="help-banner"><strong>Help mode active</strong> &mdash; LLM-generated artifact help (what is this, why it matters in this project) expanded. Run <code>/tracker help</code> to populate empty rows.</div>')
+
+    # `inflight` = active work between Not Started and Approved
+    INFLIGHT_STATES = ('Drafting', 'Drafted', 'In Review', 'Needs Revision')
+
+    def count_inflight(items):
+        return sum(1 for i in items if i['status'] in INFLIGHT_STATES)
 
     # Summary cards
-    def count_status(group, s): return sum(1 for i in group if i['status'] == s)
-    w(f'<div class="summary-grid">'
-      f'<div class="summary-card base"><div class="label">Base 510(k)</div><div class="number">{len(base)}</div>'
-      f'<div class="detail">{count_status(base,"Partial")} partial &middot; {count_status(base,"Not Started")} not started</div></div>'
-      f'<div class="summary-card pccp"><div class="label">PCCP Additive</div><div class="number">{len(pccp)}</div>'
-      f'<div class="detail">{count_status(pccp,"Done")} done &middot; {count_status(pccp,"Not Started")} not started</div></div>'
-      f'<div class="summary-card mgmt"><div class="label">Mgmt Services</div><div class="number">{len(ms)}</div>'
-      f'<div class="detail">{len(ms)} not started</div></div>'
-      f'<div class="summary-card eng"><div class="label">Engineering</div><div class="number">{len(eng_items)}</div>'
-      f'<div class="detail">{count_status(eng_items,"Partial")} partial &middot; {count_status(eng_items,"Not Started")} not started</div></div>'
-      f'<div class="summary-card total"><div class="label">Grand Total</div><div class="number">{total}</div>'
-      f'<div class="detail">{phase_counts.get("filing",0)} Filing &middot; {phase_counts.get("filing-proto",0)} Proto &middot; '
-      f'{phase_counts.get("release-1",0)} R1 &middot; {phase_counts.get("release-2",0)} R2</div></div></div>')
+    w('<div class="summary-grid">')
+    for p in phase_values:
+        flat = [r for sub in by_phase[p].values() for r in sub]
+        n = len(flat)
+        d = count_status(flat, 'Approved')
+        inflight = count_inflight(flat)
+        ns = count_status(flat, 'Not Started')
+        pct = round(d / n * 100) if n else 0
+        w(f'<div class="summary-card"><div class="label">{p}</div>'
+          f'<div class="number">{n}</div>'
+          f'<div class="detail">{d} approved · {inflight} in flight · {ns} not started · {pct}% ready</div></div>')
+    eng_done = count_status(eng, 'Approved')
+    eng_inflight = count_inflight(eng)
+    w(f'<div class="summary-card eng"><div class="label">Engineering Prereqs</div>'
+      f'<div class="number">{len(eng)}</div>'
+      f'<div class="detail">{eng_done} approved · {eng_inflight} in flight</div></div>')
+    total = len(rows)
+    overall_done = count_status(rows, 'Approved')
+    w(f'<div class="summary-card total"><div class="label">Grand Total</div>'
+      f'<div class="number">{total}</div>'
+      f'<div class="detail">{overall_done}/{total} approved · {round(overall_done/total*100) if total else 0}%</div></div>')
+    w('</div>')
 
-    # Legend
     w('<div class="legend">'
-      '<div class="legend-item"><span class="dot done"></span> Done</div>'
-      '<div class="legend-item"><span class="dot partial"></span> Partial</div>'
+      '<div class="legend-item"><span class="dot done"></span> Approved</div>'
+      '<div class="legend-item"><span class="dot in-review"></span> In Review</div>'
+      '<div class="legend-item"><span class="dot drafted"></span> Drafted</div>'
+      '<div class="legend-item"><span class="dot partial"></span> Drafting</div>'
+      '<div class="legend-item"><span class="dot needs-revision"></span> Needs Revision</div>'
       '<div class="legend-item"><span class="dot not-started"></span> Not Started</div>'
       '<div class="legend-item" style="color:var(--accent)">&#9432; Click row for help</div></div>')
 
-    # Progress bars
-    for label, color, group in [('Base 510(k)', 'var(--accent)', base), ('PCCP Additive', 'var(--accent2)', pccp),
-                                 ('Mgmt Services', 'var(--cyan)', ms), ('Engineering', 'var(--eng)', eng_items)]:
-        d = count_status(group, 'Done')
-        p = count_status(group, 'Partial') + count_status(group, 'In Progress')
-        t = len(group)
+    # Per-Phase progress bars
+    w('<div class="progress-section">')
+    for p in phase_values:
+        flat = [r for sub in by_phase[p].values() for r in sub]
+        n = len(flat)
+        if n == 0:
+            continue
+        d = count_status(flat, 'Approved')
+        rev = count_status(flat, 'In Review')
+        drft = count_status(flat, 'Drafted')
+        ing = count_status(flat, 'Drafting') + count_status(flat, 'Needs Revision')
         segs = ''
-        if d: segs += f'<div class="progress-segment done" style="width:{round(d/t*100,1)}%">{d}</div>'
-        if p: segs += f'<div class="progress-segment partial" style="width:{round(p/t*100,1)}%">{p}</div>'
-        w(f'<div class="progress-section"><div class="progress-row">'
-          f'<div class="progress-label" style="color:{color}">{label}</div>'
+        if d:
+            segs += f'<div class="progress-segment done" style="width:{round(d/n*100,1)}%">{d}</div>'
+        if rev:
+            segs += f'<div class="progress-segment inherited" style="width:{round(rev/n*100,1)}%">{rev}</div>'
+        if drft:
+            segs += f'<div class="progress-segment drafted" style="width:{round(drft/n*100,1)}%">{drft}</div>'
+        if ing:
+            segs += f'<div class="progress-segment partial" style="width:{round(ing/n*100,1)}%">{ing}</div>'
+        w(f'<div class="progress-row">'
+          f'<div class="progress-label">{p}</div>'
           f'<div class="progress-bar-container">{segs}</div>'
-          f'<div class="progress-stats">{d}/{t}</div></div></div>')
+          f'<div class="progress-stats">{d}/{n} done</div></div>')
+    w('</div>')
 
-    # Sections
-    last_part = 0
-    for sec_name, sec_items in sections.items():
-        meta = SECTION_META.get(sec_name)
-        if not meta:
-            cat_id = 'cat-' + re.sub(r'[^a-z0-9]', '-', sec_name.lower())[:20]
-            meta = (cat_id, '', 1)
-        cat_id, help_text, part = meta
+    # Per-Phase sections
+    for p in phase_values:
+        w(f'<div class="tier-divider phase-divider">'
+          f'<div class="line"></div>'
+          f'<div class="badge">{p}</div>'
+          f'<div class="line"></div></div>')
 
-        if part != last_part:
-            cls, lbl = PART_DIVIDERS[part]
-            w(f'<div class="tier-divider"><div class="line"></div><div class="badge {cls}">{lbl}</div><div class="line"></div></div>')
-            if part == 2:
-                w('<div class="additive-callout"><strong>Additional work required ONLY because we include a PCCP.</strong></div>')
-            last_part = part
+        for sub, sub_items in by_phase[p].items():
+            cat_id = f'cat-{slug(p)}-{slug(sub)}'
+            d = count_status(sub_items, 'Approved')
+            rev = count_status(sub_items, 'In Review')
+            drft = count_status(sub_items, 'Drafted')
+            ing = count_status(sub_items, 'Drafting') + count_status(sub_items, 'Needs Revision')
+            ns = count_status(sub_items, 'Not Started')
+            stats = ''
+            if d:
+                stats += f'<div class="stat"><span class="dot done"></span>{d}</div>'
+            if rev:
+                stats += f'<div class="stat"><span class="dot in-review"></span>{rev}</div>'
+            if drft:
+                stats += f'<div class="stat"><span class="dot drafted"></span>{drft}</div>'
+            if ing:
+                stats += f'<div class="stat"><span class="dot partial"></span>{ing}</div>'
+            if ns:
+                stats += f'<div class="stat"><span class="dot not-started"></span>{ns}</div>'
 
-        done_c = count_status(sec_items, 'Done')
-        partial_c = count_status(sec_items, 'Partial') + count_status(sec_items, 'In Progress')
-        ns_c = len(sec_items) - done_c - partial_c
-        stats = ''
-        if done_c: stats += f'<div class="stat"><span class="dot done"></span> {done_c}</div>'
-        if partial_c: stats += f'<div class="stat"><span class="dot partial"></span> {partial_c}</div>'
-        if ns_c: stats += f'<div class="stat"><span class="dot not-started"></span> {ns_c}</div>'
+            w(f'<div class="category open" id="{cat_id}">'
+              f'<div class="category-header" onclick="toggle(\'{cat_id}\')">'
+              f'<div class="cat-title">{sub} <span style="color:var(--text-muted);font-weight:400;font-size:.78rem">({len(sub_items)})</span></div>'
+              f'<div class="cat-stats">{stats}<span class="chevron">▼</span></div></div>'
+              f'<div class="category-body">'
+              f'<table class="item-table"><thead><tr>'
+              f'<th class="id-col">ID</th><th>Deliverable</th>'
+              f'<th class="scope-col">Scope</th><th class="phase-col">Phase</th>'
+              f'<th class="ref-col">REF</th><th>Effort</th>'
+              f'<th class="ai-status-col">AI Status</th><th class="status-col">Status</th>'
+              f'<th class="path-col">Path</th></tr></thead><tbody>')
 
-        is_eng_section = sec_items[0]['is_eng'] if sec_items else False
-        if is_eng_section:
-            header_row = '<tr><th class="id-col">ID</th><th>Prerequisite</th><th>Scope</th><th>Effort</th><th>Phase</th><th class="status-col">Status</th><th>Gates</th></tr>'
-            colspan = 7
-        else:
-            header_row = '<tr><th class="id-col">ID</th><th>Deliverable</th><th>Scope</th><th>Effort</th><th>Phase</th><th>FDA Ref</th><th class="status-col">Status</th><th>Notes</th></tr>'
-            colspan = 8
+            for r in sub_items:
+                iid = r['id']
+                w(f'<tr class="item-row" data-id="{iid}" data-status="{r["status"]}" data-scope="{r["scope"]}" data-phase="{r["phase"]}" data-effort="{r.get("effort","")}">'
+                  f'<td class="id-col">{iid}<span class="row-icons">'
+                  f'<span class="row-icon info" title="Show details (Phase, Scope, Path, References)">&#9432;</span>'
+                  f'<span class="row-icon help" title="Show artifact help (what is this, why it matters)">?</span>'
+                  f'{source_badge_html(iid, row_source_map)}'
+                  f'</span></td>'
+                  f'<td>{md_inline_to_html(r["name"], src_dir, project_dir)}</td>'
+                  f'<td><span class="{scope_class(r["scope"])}">{r["scope"]}</span></td>'
+                  f'<td><span class="{phase_class(r["phase"])}">{r["phase"]}</span></td>'
+                  f'<td class="ref-col">{md_inline_to_html(r["ref"], src_dir, project_dir)}</td>'
+                  f'<td><span class="{effort_class(r.get("effort",""))}">{r.get("effort","")}</span></td>'
+                  f'{ai_status_cell(iid, agent_map)}'
+                  f'<td><span class="{status_class(r["status"])}" data-row-id="{iid}" data-status="{r["status"]}">{r["status"]}</span></td>'
+                  f'<td class="path-col">{md_inline_to_html(r["path"], src_dir, project_dir)}</td>'
+                  f'</tr>')
+                if iid in details:
+                    detail_html = detail_md_to_html(details[iid], src_dir, project_dir)
+                    w(f'<tr class="info-row"><td colspan="9"><div class="info-content">{detail_html}</div></td></tr>')
+                else:
+                    w(f'<tr class="info-row"><td colspan="9"><div class="info-content info-empty">No detail entry yet for <code>{iid}</code> &mdash; populate via Deliverable Details section in the markdown.</div></td></tr>')
+                w(help_row_html(iid, help_map, colspan=9))
 
-        w(f'<div class="category open" id="{cat_id}" data-part="{part}">'
-          f'<div class="category-header" onclick="toggle(\'{cat_id}\')">'
-          f'<div class="cat-title"><span class="chevron">&#9662;</span> {sec_name}</div>'
-          f'<div class="cat-right"><div class="cat-stats">{stats}</div></div></div>'
-          f'<div class="category-body">'
-          f'<div class="cat-help"><strong>What is this?</strong> {help_text}</div>'
-          f'<table class="item-table">{header_row}')
+            w('</tbody></table></div></div>')
 
-        for item in sec_items:
-            sc = scope_class(item['scope']); ec = effort_class(item['effort'])
-            stc = status_class(item['status']); pc = phase_class(item['phase'])
-            pl = phase_label(item['phase'])
+    # Engineering Prerequisites
+    w(f'<div class="tier-divider eng-divider">'
+      f'<div class="line"></div>'
+      f'<div class="badge">Engineering Prerequisites</div>'
+      f'<div class="line"></div></div>')
+    w('<div class="phase-meta"><strong>Cross-cutting</strong> — capabilities that gate multiple deliverables across milestones</div>')
 
-            if is_eng_section:
-                gates = item['evidence'] if item['evidence'] != '—' else '&mdash;'
-                w(f'<tr class="item-row" data-status="{stc}" data-scope="{sc}" data-phase="{pc}" data-part="{part}">'
-                  f'<td class="id-col">{item["id"]}</td><td>{item["name"]} <span class="info-hint">&#9432;</span></td>'
-                  f'<td><span class="scope-badge {sc}">{item["scope"]}</span></td>'
-                  f'<td><span class="effort-badge {ec}">{item["effort"]}</span></td>'
-                  f'<td><span class="phase-badge {pc}">{pl}</span></td>'
-                  f'<td><span class="status-badge {stc}">{item["status"]}</span></td>'
-                  f'<td class="gates-col">{gates}</td></tr>')
-            else:
-                ev = item['evidence'] if item['evidence'] != '—' else '&mdash;'
-                w(f'<tr class="item-row" data-status="{stc}" data-scope="{sc}" data-phase="{pc}" data-part="{part}">'
-                  f'<td class="id-col">{item["id"]}</td><td>{item["name"]} <span class="info-hint">&#9432;</span></td>'
-                  f'<td><span class="scope-badge {sc}">{item["scope"]}</span></td>'
-                  f'<td><span class="effort-badge {ec}">{item["effort"]}</span></td>'
-                  f'<td><span class="phase-badge {pc}">{pl}</span></td>'
-                  f'<td class="ref-col">{item["ref"]}</td>'
-                  f'<td><span class="status-badge {stc}">{item["status"]}</span></td>'
-                  f'<td class="evidence-col">{ev}</td></tr>')
+    cat_id = 'cat-engineering'
+    d = count_status(eng, 'Approved')
+    inflight = count_inflight(eng)
+    ns = count_status(eng, 'Not Started')
+    stats = ''
+    if d:
+        stats += f'<div class="stat"><span class="dot done"></span>{d}</div>'
+    if inflight:
+        stats += f'<div class="stat"><span class="dot partial"></span>{inflight}</div>'
+    if ns:
+        stats += f'<div class="stat"><span class="dot not-started"></span>{ns}</div>'
 
-            hc = help_content.get(item['id'], gen_help(item, help_content))
-            w(f'<tr class="help-row"><td colspan="{colspan}">{hc}</td></tr>')
+    w(f'<div class="category open" id="{cat_id}">'
+      f'<div class="category-header" onclick="toggle(\'{cat_id}\')">'
+      f'<div class="cat-title">Engineering Prerequisites <span style="color:var(--text-muted);font-weight:400;font-size:.78rem">({len(eng)})</span></div>'
+      f'<div class="cat-stats">{stats}<span class="chevron">▼</span></div></div>'
+      f'<div class="category-body">'
+      f'<table class="item-table"><thead><tr>'
+      f'<th class="id-col">ID</th><th>Prerequisite</th>'
+      f'<th class="scope-col">Scope</th><th class="phase-col">Phase</th>'
+      f'<th>Effort</th>'
+      f'<th class="ai-status-col">AI Status</th><th class="status-col">Status</th>'
+      f'<th>Gates</th></tr></thead><tbody>')
 
-        w('</table></div></div>')
+    for e in eng:
+        w(f'<tr class="item-row" data-id="{e["id"]}" data-status="{e["status"]}" data-scope="{e["scope"]}" data-phase="{e["phase"]}" data-effort="{e.get("effort","")}">'
+          f'<td class="id-col">{e["id"]}<span class="row-icons">'
+          f'<span class="row-icon info" title="Show details">&#9432;</span>'
+          f'<span class="row-icon help" title="Show artifact help">?</span>'
+          f'</span></td>'
+          f'<td>{md_inline_to_html(e["name"], src_dir, project_dir)}</td>'
+          f'<td><span class="{scope_class(e["scope"])}">{e["scope"]}</span></td>'
+          f'<td><span class="{phase_class(e["phase"])}">{e["phase"]}</span></td>'
+          f'<td><span class="{effort_class(e.get("effort",""))}">{e.get("effort","")}</span></td>'
+          f'{ai_status_cell(e["id"], agent_map)}'
+          f'<td><span class="{status_class(e["status"])}" data-row-id="{e["id"]}" data-status="{e["status"]}">{e["status"]}</span></td>'
+          f'<td class="gates-col">{md_inline_to_html(e["gates"], src_dir, project_dir)}</td>'
+          f'</tr>')
+        w(f'<tr class="info-row"><td colspan="8"><div class="info-content info-empty">Engineering prerequisite — see project README for capability ownership.</div></td></tr>')
+        w(help_row_html(e["id"], help_map, colspan=8))
+    w('</tbody></table></div></div>')
 
-    # Scale sections
-    w('<div class="scale-section"><h3>Effort Scale</h3><table class="scale-table">'
-      '<tr><th>Level</th><th>Meaning</th><th>Examples</th></tr>'
-      '<tr><td><span class="effort-badge low">Low</span></td><td>Template-driven; boilerplate</td><td>Cover letter, forms, version history</td></tr>'
-      '<tr><td><span class="effort-badge med">Med</span></td><td>Bounded analysis; days</td><td>Predicate table, SOUP report, model card</td></tr>'
-      '<tr><td><span class="effort-badge high">High</span></td><td>Cross-functional; weeks</td><td>SRS, risk plan, threat model, child SAD</td></tr>'
-      '<tr><td><span class="effort-badge vhigh">V.High</span></td><td>Engineering data/testing; months</td><td>Performance studies, summative usability, dFMEA</td></tr>'
-      '</table></div>')
-    w('<div class="scale-section" style="margin-top:.8rem"><h3>Phase Scale</h3><table class="scale-table">'
-      '<tr><th>Phase</th><th>When</th><th>Quality</th><th>Scope</th></tr>'
-      '<tr><td><span class="phase-badge filing">Filing</span></td><td>510(k)+PCCP</td><td>Production</td><td>Device-level, Intra-Op, Mgmt Svc submission items</td></tr>'
-      '<tr><td><span class="phase-badge filing-proto">Filing (proto)</span></td><td>510(k)+PCCP</td><td>Prototype</td><td>Pre-Op items</td></tr>'
-      '<tr><td><span class="phase-badge release-1">Release 1</span></td><td>Intra-Op + Mgmt Svc launch</td><td>Production</td><td>Mgmt Svc non-submission items</td></tr>'
-      '<tr><td><span class="phase-badge release-2">Release 2</span></td><td>Pre-Op commercial</td><td>Production</td><td>Pre-Op upgrades from prototype</td></tr>'
-      '</table></div>')
+    # Scale sections (Status / Phase / Effort) — definitions of each badge value
+    has_any_scale = any(scales.get(k) for k in ('status', 'phase', 'effort'))
+    if has_any_scale:
+        w('<div class="scales-grid">')
+        for kind, title in [('status', 'Status Scale'), ('phase', 'Phase Scale'), ('effort', 'Effort Scale')]:
+            entries = scales.get(kind, [])
+            if not entries:
+                continue
+            w(f'<div class="scale-section"><h3>{title}</h3>')
+            w('<table class="scale-table"><tbody>')
+            for s in entries:
+                # Render the label with appropriate badge styling
+                if kind == 'status':
+                    badge = f'<span class="{status_class(s["label"])}">{s["label"]}</span>'
+                elif kind == 'phase':
+                    badge = f'<span class="{phase_class(s["label"])}">{s["label"]}</span>'
+                else:
+                    badge = f'<span class="{effort_class(s["label"])}">{s["label"]}</span>'
+                w(f'<tr><td>{badge}</td><td>{md_inline_to_html(s["definition"], src_dir, project_dir)}</td></tr>')
+            w('</tbody></table></div>')
+        w('</div>')
 
-    # Footer + JS
-    w(f'<div class="footer">Source: <code>submission-tracker.md</code> &middot; '
-      f'{total} items ({len(base)} base + {len(pccp)} PCCP + {len(ms)} Mgmt Svc + {len(eng_items)} engineering) &middot; '
-      f'Click any row for help</div>')
-    w(JS)
-    w('</body></html>')
+    w('<div class="footer">Generated by <code>/tracker render</code> · '
+      'Source: <code>docs/project/submissions/submission-tracker.md</code> · '
+      'Plan: <code>docs/project/milestones/regulatory.yml</code></div>')
 
-    with open(html_path, 'w') as f:
-        f.write('\n'.join(lines))
+    if not embed:
+        w(JS)
+        w('</body></html>')
 
-    print(f"Generated {html_path}")
-    print(f"  {total} items: {len(base)} base + {len(pccp)} PCCP + {len(ms)} Mgmt Svc + {len(eng_items)} engineering")
-    print(f"  Status: {count_status(items, 'Done')} done, {count_status(items, 'Partial')} partial, {count_status(items, 'Not Started')} not started")
-    print(f"  Help content: {len(help_content)} preserved, {total - len([i for i in items if i['id'] in help_content])} generated")
+        html_path.write_text('\n'.join(out))
+        print(f"  Wrote {html_path.relative_to(project_dir)} ({html_path.stat().st_size:,} bytes)")
+        print(f"  rows: {len(rows)} · eng: {len(eng)} · details: {len(details)}")
+        by_phase_counts = Counter(r['phase'] for r in rows)
+        print(f"  phases: {dict(by_phase_counts)}")
+        by_status_counts = Counter(r['status'] for r in rows)
+        print(f"  statuses: {dict(by_status_counts)}")
+        return None
+
+    # Embed mode: close wrapper and return HTML string (no file write).
+    w('</div>')
+    return '\n'.join(out)
+
+
+def render_embed_fragment(project_dir):
+    """Convenience wrapper — returns the embed-mode HTML fragment string."""
+    return render(project_dir, embed=True)
+
+
+def main():
+    args = sys.argv[1:]
+    project_dir = None
+    if '--project-dir' in args:
+        i = args.index('--project-dir')
+        project_dir = args[i + 1]
+    if not project_dir:
+        project_dir = find_project_dir()
+    print(f"Tracker render — project_dir={project_dir}")
+    render(project_dir)
 
 
 if __name__ == '__main__':
-    project_dir = find_project_dir()
-    for i, arg in enumerate(sys.argv[1:]):
-        if arg == '--project-dir' and i + 2 < len(sys.argv):
-            project_dir = sys.argv[i + 2]
-    render(project_dir)
+    main()

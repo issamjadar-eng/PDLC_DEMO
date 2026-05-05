@@ -289,6 +289,7 @@ security:
     - docflow
     - docx
     - frontend-slides
+    - jira-pull
     - lessons
     - md-deck
     - medtech-docs
@@ -314,6 +315,8 @@ security:
     - chrome-devtools
   approved_plugins: []
   approved_agents:
+    - dhf-manifest/agents/tier1-enricher
+    - dhf-manifest/agents/tier1-restructure
     - project-secops
 
 # Advisors — persona subagents installed by /advisors init.

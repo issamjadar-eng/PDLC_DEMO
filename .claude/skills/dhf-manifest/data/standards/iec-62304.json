@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "standards",
   "source_file": "iec-62304.md",
   "obligation_count": 20,
@@ -14,9 +14,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-sdp",
+      "criticality": "must-have",
       "applies_to": [
-        "Safety Classification Record",
-        "Software Development Plan"
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*safety-classification*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall assign a software safety class (Class A, B, or C) to\nthe SOFTWARE SYSTEM based on the severity of HAZARDOUS SITUATION that could\nresult if the SOFTWARE SYSTEM should fail to behave as specified.\"\n",
       "extracted_requirements": [
@@ -36,9 +44,17 @@
       "artifact_type": "plan",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-sdp",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Development Plan",
-        "Design and Development Plan"
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*design-and-development-plan*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall establish a SOFTWARE DEVELOPMENT PLAN for conducting\nthe activities of the software development process.\"\n",
       "extracted_requirements": [
@@ -57,8 +73,13 @@
       "artifact_type": "plan",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-sdp",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Development Plan"
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "\"The SOFTWARE DEVELOPMENT PLAN shall address: (a) the software development life cycle\nmodel including the activities and tasks to be performed and their sequencing;\n(b) the deliverables of the software development process and the criteria for their\nacceptance; (c) the standards, methods, and tools to be used; (d) traceability\nbetween software requirements and software system test cases.\"\n",
       "extracted_requirements": [
@@ -79,8 +100,13 @@
       "artifact_type": "spec",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "requirements",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Requirements Specification"
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall define and document the SOFTWARE REQUIREMENTS from the\nSYSTEM REQUIREMENTS and the results of RISK MANAGEMENT activities.\"\n",
       "extracted_requirements": [
@@ -99,8 +125,13 @@
       "artifact_type": "spec",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "requirements",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Requirements Specification"
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        }
       ],
       "verbatim": "\"The software requirements shall include: functional and capability requirements;\nsoftware system inputs and outputs; interfaces between the software system and\nother systems; software-operated alarms, warnings, and operator messages;\nsecurity requirements; usability engineering requirements.\"\n",
       "extracted_requirements": [
@@ -122,9 +153,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "requirements",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Requirements Specification",
-        "Risk Management File"
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall re-evaluate the RISK associated with the software\nafter establishing the SOFTWARE REQUIREMENTS and update the RISK MANAGEMENT\nFILE as necessary.\"\n",
       "extracted_requirements": [
@@ -142,8 +181,13 @@
       "artifact_type": "spec",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Architecture Document"
+        {
+          "role": "architecture",
+          "file_pattern": "*software-architecture-document*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall transform the SOFTWARE REQUIREMENTS into a documented\narchitecture that describes the structure of the software and identifies the\nSOFTWARE ITEMS.\"\n",
       "extracted_requirements": [
@@ -162,9 +206,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "SOUP List",
-        "Software Architecture Document"
+        {
+          "role": "sbom",
+          "file_pattern": "*soup-list*.md"
+        },
+        {
+          "role": "architecture",
+          "file_pattern": "*software-architecture-document*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall identify SOUP items including: (a) the title, manufacturer,\nand unique SOUP designator; (b) the requirements for the SOUP item.\"\n",
       "extracted_requirements": [
@@ -183,9 +235,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Architecture Document",
-        "Architecture Verification Record"
+        {
+          "role": "architecture",
+          "file_pattern": "*software-architecture-document*.md"
+        },
+        {
+          "role": "vnv",
+          "file_pattern": "*architecture-verification*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall verify that the software architecture implements all\nsoftware requirements and identify potential causes of hazardous situations.\"\n",
       "extracted_requirements": [
@@ -204,9 +264,17 @@
       "artifact_type": "spec",
       "dhf_owner": "item",
       "min_iec62304_class": "C",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Design Document",
-        "Software Detailed Design"
+        {
+          "role": "design",
+          "file_pattern": "*software-design-document*.md"
+        },
+        {
+          "role": "design",
+          "file_pattern": "*software-detailed-design*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall refine the software architecture until it is represented\nby SOFTWARE UNITS that can be implemented and verified.\"\n",
       "extracted_requirements": [
@@ -225,9 +293,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Unit Verification Records",
-        "Code Review Records"
+        {
+          "role": "vnv",
+          "file_pattern": "*unit-verification*.md"
+        },
+        {
+          "role": "vnv",
+          "file_pattern": "*code-review*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall verify SOFTWARE UNITS. The verification shall confirm that\nthe units implement the design and are free of common programming errors.\"\n",
       "extracted_requirements": [
@@ -247,9 +323,17 @@
       "artifact_type": "protocol",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Integration Test Plan",
-        "Integration Test Report"
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*integration-test-plan*.md"
+        },
+        {
+          "role": "vnv-results",
+          "file_pattern": "*integration-test-report*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall integrate the SOFTWARE ITEMS and verify that the\nintegrated SOFTWARE ITEMS implement the software architecture and satisfy\nthe SOFTWARE REQUIREMENTS.\"\n",
       "extracted_requirements": [
@@ -269,9 +353,17 @@
       "artifact_type": "protocol",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Software System Test Plan",
-        "Software System Test Report"
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*software-system-test-plan*.md"
+        },
+        {
+          "role": "vnv-results",
+          "file_pattern": "*software-system-test-report*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall test the SOFTWARE SYSTEM for conformance to the SOFTWARE\nREQUIREMENTS. The testing shall include boundary conditions and stress conditions\nand shall check for ANOMALIES.\"\n",
       "extracted_requirements": [
@@ -291,9 +383,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-release",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Release Package",
-        "Release Checklist"
+        {
+          "role": "plans-release",
+          "file_pattern": "*software-release-package*.md"
+        },
+        {
+          "role": "plans-release",
+          "file_pattern": "*release-checklist*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall ensure that the software is released only when: all\nsoftware development activities are complete; the software configuration\nis documented; known ANOMALIES are evaluated and their impact on safety\nis acceptable; the software version identifier is assigned.\"\n",
       "extracted_requirements": [
@@ -315,9 +415,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "postmarket",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Maintenance Plan",
-        "Software Development Plan"
+        {
+          "role": "postmarket",
+          "file_pattern": "*software-maintenance-plan*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE MAINTENANCE PLAN.\nThe plan shall address: problem and modification analysis; modification\nimplementation; release of modifications.\"\n",
       "extracted_requirements": [
@@ -336,10 +444,21 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management File",
-        "Software FMEA",
-        "Hazard Analysis"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*software-fmea*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*hazard-analysis*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall identify SOFTWARE ITEMS that could contribute to a\nHAZARDOUS SITUATION. For each such SOFTWARE ITEM, the MANUFACTURER shall\nevaluate the contribution of the SOFTWARE ITEM to the HAZARDOUS SITUATION.\"\n",
       "extracted_requirements": [
@@ -358,9 +477,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management File",
-        "SOUP Risk Evaluation"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*soup-risk-evaluation*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall evaluate the ANOMALY LISTS and reported PROBLEMS for\nSOUP items and shall determine whether the anomalies or reported problems are\nrelevant to the SOFTWARE SYSTEM and document the conclusions.\"\n",
       "extracted_requirements": [
@@ -380,9 +507,17 @@
       "artifact_type": "plan",
       "dhf_owner": "item",
       "min_iec62304_class": "B",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "Configuration Management Plan",
-        "Software Development Plan"
+        {
+          "role": "plans",
+          "file_pattern": "*configuration-management-plan*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE CONFIGURATION\nMANAGEMENT PLAN that includes: identification of configuration items;\nchange control procedures; status accounting; configuration audits.\"\n",
       "extracted_requirements": [
@@ -401,9 +536,17 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "B",
+      "canonical_role": "postmarket",
+      "criticality": "must-have",
       "applies_to": [
-        "Problem Resolution Process",
-        "Software Maintenance Plan"
+        {
+          "role": "postmarket",
+          "file_pattern": "*problem-resolution*.md"
+        },
+        {
+          "role": "postmarket",
+          "file_pattern": "*software-maintenance-plan*.md"
+        }
       ],
       "verbatim": "\"The MANUFACTURER shall establish and document a SOFTWARE PROBLEM RESOLUTION\nPROCESS that includes: problem reporting, analysis, resolution and verification,\nrelease of modified software, communication of resolution to relevant parties.\"\n",
       "extracted_requirements": [
@@ -423,9 +566,17 @@
       "artifact_type": "record",
       "dhf_owner": "item",
       "min_iec62304_class": "A",
+      "canonical_role": "trace-matrix",
+      "criticality": "must-have",
       "applies_to": [
-        "Trace Matrix",
-        "Software Development Plan"
+        {
+          "role": "trace-matrix",
+          "file_pattern": "*trace-matrix*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "\"The SOFTWARE DEVELOPMENT PLAN shall address traceability between: software\nrequirements and system requirements; software requirements and software system\ntests; software requirements and software architecture; and for Class C, between\nsoftware requirements and software units.\"\n",
       "extracted_requirements": [

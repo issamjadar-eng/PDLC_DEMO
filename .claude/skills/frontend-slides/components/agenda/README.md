@@ -20,9 +20,9 @@ Implicit — built from H2s. Authors do not write this slide directly.
 ```markdown
 ## 1. Program at a Glance
 ...
-## 2. Team & KOL Network
+## 2. Team & Advisor Network
 ...
-## 3. Risk & Quality Posture
+## 3. Risk & Operating Posture
 ```
 
 ## Gotchas

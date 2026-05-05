@@ -23,7 +23,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Documentation, Documentation Level Statement]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: plans-doc-level
+    file_pattern: "*documentation-level-statement*.md"
 verbatim: "Enhanced documentation required when failure or latent flaw of ANY device software function could present a hazardous situation with a probable risk of death or serious injury to a patient, user, or others, assessed prior to implementing risk control measures. The documentation level reflects the device as a whole — if any software function's failure could cause death/serious injury, enhanced documentation applies to the entire submission."
 extracted_requirements:
   - Determine documentation level (Basic or Enhanced) based on risk assessment — assessed BEFORE risk control measures
@@ -49,7 +55,15 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Documentation, SRS, Architecture Document]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: requirements
+    file_pattern: "*software-requirements-specification*.md"
+  - role: architecture
+    file_pattern: "*software-architecture-document*.md"
 verbatim: "Comprehensive overview: significant features, analyses, inputs, outputs, hardware platforms. Software requirements specification — complete documentation of software requirements, organized format with traceability to other documentation elements. System and software architecture diagram — detailed diagrams of modules, layers, interfaces, data inputs/outputs/flow, user/external product interactions."
 extracted_requirements:
   - Include a Software Description: overview of significant features, inputs, outputs, hardware platforms
@@ -76,7 +90,13 @@ topic: design-outputs
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Documentation (Enhanced), Software Design Document]
+canonical_role: architecture
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: design
+    file_pattern: "*software-design-document*.md"
 verbatim: "Enhanced: Include SDS showing technical design details, how design implements SRS, and traceability from SDS to SRS. Basic: Not required in submission (document in Design History File)."
 extracted_requirements:
   - For Enhanced documentation (MedTech Project): include Software Design Specification in the submission
@@ -101,7 +121,13 @@ topic: software-lifecycle
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Documentation, IEC 62304 Declaration of Conformity]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: submission-authored
+    file_pattern: "*iec-62304-declaration-of-conformity*.md"
 verbatim: "Option 1: Declaration of Conformity to FDA-recognized IEC 62304 (specific sections for basic vs. enhanced). Option 2 Without IEC 62304 conformity (Enhanced): Complete configuration management and maintenance plan + summary documentation."
 extracted_requirements:
   - Option 1 (preferred): Submit a Declaration of Conformity to IEC 62304 — this substitutes for the SW development practices documentation section
@@ -126,7 +152,13 @@ topic: verification
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Testing, Test Protocols and Reports]
+canonical_role: vnv
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: vnv
+    file_pattern: "*test-protocols-and-reports*.md"
 verbatim: "Enhanced: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports + full unit and integration level test protocols and reports. Basic: Summary of unit, integration, and system-level testing + complete system-level test protocols and reports only."
 extracted_requirements:
   - For Enhanced documentation (MedTech Project): submit complete test protocols and reports at unit, integration, AND system levels
@@ -152,7 +184,13 @@ topic: software-lifecycle
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Software Documentation, Unresolved Anomalies List]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: submission-authored
+    file_pattern: "*unresolved-anomalies-list*.md"
 verbatim: "History of tested software revisions: date, version number, brief description of changes. Last entry = final released version, including differences from tested version and safety/effectiveness assessment. List of remaining unresolved anomalies in tabular format. For each: description, how discovered, root cause, impact on safety/effectiveness, outcome of evaluation, risk-based rationale for not fixing."
 extracted_requirements:
   - Include software version history from first version under design controls to the final released version

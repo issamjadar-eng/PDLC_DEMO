@@ -1,20 +1,40 @@
 """md-deck icon repository.
 
-A curated library of inline SVG icons covering healthcare / regulatory /
-engineering / software / documents / people / security / analytics /
-workflow / AI domains. Each icon is a self-contained 24×24 viewBox SVG
-that uses `currentColor` so it inherits the surrounding text/border color.
+A curated library of inline SVG icons + a domain-neutral keyword/phrase
+classifier. Each icon is a self-contained 24×24 viewBox SVG that uses
+`currentColor` so it inherits the surrounding text/border color.
+
+The trunk routing tables (`KEYWORD_REGISTRY`, `INTENT_PHRASES`,
+`GROUP_ICONS`, `GROUP_TITLE_HINTS`) cover **domain-neutral** concepts:
+engineering, software / dev / infra, documents, people, security, analytics,
+workflow, ideas / leadership, planning, reporting, meetings, AI. Glyphs for
+domain-specific subjects (clinical, regulatory, surgical, …) remain in the
+`ICONS` dict — they are visual primitives any project may invoke.
+
+Domain-specific keyword routing (medtech, finance, manufacturing, …) lives
+in opt-in vocabulary packs under `vocabularies/<pack>.py`. Activate via:
+
+    from icons import configure_vocabularies
+    configure_vocabularies(["medtech"])           # single-domain practice
+    configure_vocabularies(["medtech", "finance"]) # multi-domain practice
+
+When packs are loaded, their entries are PREPENDED to trunk's scan order,
+so domain-specific terms match before generic catches.
 
 Public API:
     pick(label) -> str            # keyword-matched icon, hash fallback
+    pick_strict(label) -> str|None # match-or-None (no hash fallback)
     detect_group(items, title, hint) -> str | None   # homogeneous-group key
     pick_group(group_type) -> str # kind-icon for a detected group
+    configure_vocabularies(packs) -> None  # opt-in domain extension
     list_icons() -> list[str]     # debugging
 """
 
 from __future__ import annotations
 
 import hashlib
+import importlib
+from types import ModuleType
 
 # ---------------------------------------------------------------------------
 # Icon definitions — 24x24 viewBox, currentColor only. Each is one or two
@@ -226,33 +246,8 @@ ICONS: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
-    # Healthcare / clinical / medical
-    (["clinical", "patient", "diagnos"],                   "stethoscope"),
-    (["heart", "cardiac", "ecg", "ekg", "heart-rate"],     "heartbeat"),
-    (["pain", "ease", "pca", "analgesia", "anesthet"],     "pill"),
-    (["drug", "pharmac", "dose", "formular"],              "pill"),
-    (["bandage", "wound", "dressing", "first-aid"],        "bandage"),
-    (["scalpel", "surgery", "surgical", "incision"],       "scalpel"),
-    (["vital", "monitor-vitals", "patient-monitor"],       "vitals"),
-    (["ambulance", "emergency-vehicle", "ems", "911"],     "ambulance"),
-    (["prescription", "rx", "script"],                     "prescription"),
-    (["wheelchair", "mobility", "accessibility"],          "wheelchair"),
-    (["needle", "vaccin", "injecti"],                      "syringe"),
-    (["infusion", "iv", "drip", "intraven"],               "iv-drip"),
-    (["dna", "gene", "genom", "sequenc"],                  "dna"),
-    (["lab", "biolog", "molecul", "specimen"],             "microscope"),
-    (["brain", "cogniti", "neuro"],                        "brain"),
-    (["respirat", "breath", "lung"],                       "lungs"),
-    (["sample", "test-tube", "assay"],                     "test-tube"),
-    (["hospital", "clinic", "facility"],                   "hospital"),
-    (["medical-record", "medical record", "ehr", "emr"],   "clipboard-medical"),
-    (["device", "samd", "simd"],                           "circuit"),
-
-    # Regulatory / QMS
-    (["regulator", "fda", "510(k)", "510k", "submission", "pccp", "ema"], "shield-check"),
-    (["audit", "iso 13485", "iso 14971", "iec 62304"],     "certificate"),
+    # Approval / certification (domain-neutral artifacts of any process)
     (["release", "approval", "stamp", "sign-off"],         "stamp"),
-    (["risk-management", "iso 14971", "hazard", "fmea"],   "scale-justice"),
     (["cert", "certif", "ribbon", "credenti"],             "ribbon"),
     (["sign", "signat", "signoff"],                        "signature"),
 
@@ -297,7 +292,7 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
     (["readme", "convention", "rule", "format"],           "stack-sheets"),
 
     # People / communication
-    (["team", "panel", "advisor", "advisors", "kol", "expert"], "users"),
+    (["team", "panel", "advisor", "advisors", "expert"], "users"),
     (["agent", "persona"],                                 "user-single"),
     (["chat", "conversation", "message", "thread"],        "chat"),
     (["broadcast", "announc", "notify"],                   "megaphone"),
@@ -419,37 +414,32 @@ KEYWORD_REGISTRY: list[tuple[list[str], str]] = [
 
 # ---------------------------------------------------------------------------
 # Group-icon registry — when a catalog slide represents N instances of the
-# same kind of thing (KOLs, test cases, rules, sites, predicates, …),
-# every cell shares one "kind" icon and differentiates by name/color,
+# same kind of thing (teams, deliverables, milestones, integrations, plus
+# pack-specific cohorts like KOLs / predicates / hazards in medtech, LPs /
+# portfolios in finance, etc.), every cell shares one "kind" icon and
+# differentiates by name/color,
 # not by glyph. detect_group() returns one of these keys (or None).
 # ---------------------------------------------------------------------------
 
 GROUP_ICONS: dict[str, str] = {
+    # Domain-neutral group keys. Domain packs may add extra keys
+    # (e.g. medtech adds "test-case", "site", "predicate", "hazard").
     "persona":   "user-single",
     "team":      "users",
-    "test-case": "clipboard-medical",
     "rule":      "scale-justice",
-    "site":      "hospital",
-    "predicate": "circle-target",
     "document":  "document",
-    "hazard":    "warn",
     "milestone": "flag",
     "metric":    "chart-line",
 }
 
 GROUP_TITLE_HINTS: list[tuple[list[str], str]] = [
-    (["kol", "advisor", "advisors", "persona", "personas",
-      "digital twin", "digital twins", "expert reviewer"], "persona"),
+    # Domain-neutral title hints. Domain packs may prepend their own
+    # cohort hints (e.g. medtech adds KOL, test protocol, predicate, …).
     (["team", "teams", "panel", "cohort", "participants"], "team"),
-    (["test case", "test cases", "test protocol", "test protocols",
-      "v&v", "verification protocol", "validation protocol"], "test-case"),
     (["rule", "rules", "policy", "policies", "convention",
       "conventions", "governance"], "rule"),
-    (["site", "sites", "facility", "facilities", "clinic", "clinics",
-      "location", "locations"], "site"),
-    (["predicate", "predicates", "comparator"], "predicate"),
+    (["location", "locations", "region", "regions"], "team"),
     (["deliverable", "deliverables", "artifact", "artifacts"], "document"),
-    (["hazard", "hazards", "risk register", "failure mode"], "hazard"),
     (["milestone", "milestones", "gate", "gates", "phase"], "milestone"),
     (["kpi", "kpis", "metric", "metrics", "indicator"], "metric"),
 ]
@@ -474,31 +464,68 @@ FALLBACK_POOL: list[str] = [
 # ---------------------------------------------------------------------------
 
 INTENT_PHRASES: list[tuple[list[str], str]] = [
-    # Hazards / failure modes — medical-device specific
-    (["free flow", "uncontrolled bolus", "anti-free-flow", "runaway flow"], "leak-drop"),
-    (["drug library mismatch", "wrong concentration", "overdose",
-      "underdose", "mismapped"], "pill"),
-    (["alarm fatigue", "alarm masking", "nuisance alarm",
-      "alarm habituate", "alert habituate"], "bell-alarm"),
-    (["battery depletion", "depleted battery", "battery low",
-      "battery reserve", "grace-period"], "battery-low"),
-    (["pump tampering", "tamper", "unauthorized access",
-      "intrusion", "tamper-evident"], "tamper-shield"),
-    (["software defect", "regression", "calculation error",
-      "code defect", "dose calculation", "field-failure"], "bug-defect"),
-    # Concept / phrase shortcuts — strong signals that should not lose
-    # to incidental substrings.
-    (["digital twin", "persona advisor"], "user-single"),
-    (["filing scope", "in-scope", "out of scope"], "scale-justice"),
-    (["substantial equivalence", "predicate device"], "circle-target"),
-    (["risk register", "hazard register"], "warn"),
-    (["change control", "change protocol"], "git-merge"),
-    (["dose-error reduction", "dose reduction"], "shield-check"),
+    # Trunk INTENT_PHRASES are intentionally minimal. Domain-coupled phrases
+    # (medical-device failure modes, regulatory concepts, cohort idioms) live
+    # in vocabulary packs under `vocabularies/` and are loaded via
+    # `configure_vocabularies()`. Add a trunk entry only when the phrase is
+    # genuinely cross-domain (e.g., "north star metric" — generic strategy).
 ]
 
 
+# ---------------------------------------------------------------------------
+# Vocabulary pack loader
+#
+# Loaded packs PREPEND their entries to the trunk scan order. This means:
+#   - configure_vocabularies(["medtech"]) makes medtech terms (fda, kol, …)
+#     match BEFORE generic catches in the trunk
+#   - the trunk routes are still consulted as a fallback
+#   - GROUP_ICONS / GROUP_TITLE_HINTS from packs are merged with trunk
+# ---------------------------------------------------------------------------
+
+_LOADED_VOCABS: list[ModuleType] = []
+
+
+def configure_vocabularies(packs: list[str]) -> None:
+    """Activate one or more named vocabulary packs.
+
+    Each pack is a module under `vocabularies/<pack>.py` (e.g. "medtech").
+    Pack tables are prepended to the trunk scan order at lookup time, so
+    domain-specific terms match before generic catches.
+
+    Calling with an empty list resets to trunk-only behavior. Calling more
+    than once REPLACES the active set (does not accumulate); pass all the
+    packs you want active in a single call.
+
+    Raises:
+        ImportError: if a named pack module cannot be located.
+    """
+    global _LOADED_VOCABS
+    new: list[ModuleType] = []
+    for name in packs:
+        if not name:
+            continue
+        # Pack lives next to icons.py at vocabularies/<name>.py.
+        mod = importlib.import_module(f"vocabularies.{name}")
+        new.append(mod)
+    _LOADED_VOCABS = new
+
+
+def _pack_attr(pack: ModuleType, attr: str, default):
+    """Read an optional table from a pack module. Missing attr → default."""
+    return getattr(pack, attr, default)
+
+
 def _scan_phrases(s: str) -> str | None:
-    """Return an icon NAME if any INTENT_PHRASES entry matches; else None."""
+    """Return an icon NAME if any pack or trunk INTENT_PHRASES entry matches.
+
+    Loaded packs are scanned BEFORE the trunk so domain-specific phrases
+    take precedence over generic ones.
+    """
+    for pack in _LOADED_VOCABS:
+        for phrases, name in _pack_attr(pack, "INTENT_PHRASES", []):
+            for p in phrases:
+                if p in s:
+                    return name
     for phrases, name in INTENT_PHRASES:
         for p in phrases:
             if p in s:
@@ -507,7 +534,16 @@ def _scan_phrases(s: str) -> str | None:
 
 
 def _scan_keywords(s: str) -> str | None:
-    """Return an icon NAME from KEYWORD_REGISTRY if any keyword matches; else None."""
+    """Return an icon NAME if any pack or trunk KEYWORD_REGISTRY matches.
+
+    Loaded packs are scanned BEFORE the trunk so domain-specific keywords
+    take precedence over generic ones.
+    """
+    for pack in _LOADED_VOCABS:
+        for kws, name in _pack_attr(pack, "KEYWORD_REGISTRY", []):
+            for kw in kws:
+                if kw in s:
+                    return name
     for kws, name in KEYWORD_REGISTRY:
         for kw in kws:
             if kw in s:
@@ -551,26 +587,40 @@ def pick(label: str) -> str:
     return ICONS.get(chosen, ICONS["hexagon"])
 
 
+def _all_group_icons() -> dict[str, str]:
+    """Trunk + loaded-pack GROUP_ICONS merged. Pack entries override trunk."""
+    merged = dict(GROUP_ICONS)
+    for pack in _LOADED_VOCABS:
+        merged.update(_pack_attr(pack, "GROUP_ICONS", {}))
+    return merged
+
+
 def detect_group(items: list, title: str = "", hint: str = "") -> str | None:
     """Return a group-type key (e.g. "persona") if the catalog represents
     N instances of the same kind of thing; otherwise None.
 
     Signals (any one trips it):
-      1. Explicit `hint` argument.
-      2. Slide title matches a whitelisted group noun.
+      1. Explicit `hint` argument (resolves against trunk + loaded packs).
+      2. Slide title matches a whitelisted group noun (loaded packs scanned
+         BEFORE trunk so domain-specific cohorts win).
 
     Conservative: requires ≥4 items so small lists don't accidentally
-    collapse. Lexical-homogeneity (signal 3) deferred to v0.3.
+    collapse. Lexical-homogeneity (signal 3) deferred to a future version.
     """
     if not items or len(items) < 4:
         return None
 
     if hint:
         h = hint.lower().strip()
-        if h in GROUP_ICONS:
+        if h in _all_group_icons():
             return h
 
     t = (title or "").lower()
+    for pack in _LOADED_VOCABS:
+        for kws, group_key in _pack_attr(pack, "GROUP_TITLE_HINTS", []):
+            for kw in kws:
+                if kw in t:
+                    return group_key
     for kws, group_key in GROUP_TITLE_HINTS:
         for kw in kws:
             if kw in t:
@@ -580,8 +630,12 @@ def detect_group(items: list, title: str = "", hint: str = "") -> str | None:
 
 
 def pick_group(group_type: str) -> str:
-    """Return the inline SVG for the kind-icon associated with a group type."""
-    name = GROUP_ICONS.get(group_type, "user-single")
+    """Return the inline SVG for the kind-icon associated with a group type.
+
+    Consults trunk + loaded-pack GROUP_ICONS. Falls back to "user-single"
+    when the type is unknown.
+    """
+    name = _all_group_icons().get(group_type, "user-single")
     return ICONS.get(name, ICONS["hexagon"])
 
 

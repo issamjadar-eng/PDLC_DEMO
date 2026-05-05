@@ -95,6 +95,7 @@ Major version milestones:
 - v5: README meta-model with strict section ordering
 - v7: Formal/ subfolder pattern for controlled documents
 - v8: Synced templates with actual docs/ state, added project infrastructure creation
+- v23 (2026-05-04): `render-sentinels.py` enhancements — `dhf-table` now reads `architecture_name`/`marketed_name`/`dhf_purpose` from `project.yml dhfs[]` (fallback to preserve-column then `TODO`); new `variant=` dispatcher for `dhf-table` with `default`/`naming`/`flat-multi` schemas; `folder-tree` and `folder-tree-subset` now support `depth=N` recursion (defaults 1 and 2 respectively, hard-capped at 4) with proper `├── │   └──` connectors. Graceful handling of `class: non-device` (drops "Class X" prefix). New `tests/test_render_sentinels.py` — 11 assertions cover variants, depth, idempotence, fallback chains, and error paths.
 
 ## Best Practices
 
@@ -113,6 +114,11 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 | Project manifest exists | `project.yml` exists in project root with `project:`, `dhfs:`, `team:`, `registries:`, and `security:` sections | Required | shared |
 | Project has at least one DHF | `project.yml` `dhfs[]` list is non-empty, and every entry's `path` resolves to an existing folder under `docs/project/dhfs/` | Required | cross-cutting |
 | DHF leaf names are unique | For every entry in `project.yml` `dhfs[]`, the last segment of `path` is unique across the list (case-sensitive). | Required | cross-cutting |
+| DHF identity names present | Every entry in `project.yml` `dhfs[]` carries both `architecture_name` (technical/internal name) and `marketed_name` (commercial/customer-facing name). Both are strings; either may differ from the `leaf` slug. WARN if either is missing on any entry — downstream tools (submissions, dashboards, trace tooling) need both to render context-appropriate names. | Recommended | cross-cutting |
+| Per-DHF Jira binding references valid project | If `change_control.jira.project_keys` is set in `project.yml`, every `dhfs[]` entry that includes a `jira:` block must have its `jira.project_key` appear in that list. FAIL on any reference to an unknown project key. INFO if a DHF has no `jira:` block at all (DHFs without a Jira binding are valid; system DHFs in particular often have none). | Required | cross-cutting |
+| Per-DHF Confluence binding references valid space | If `change_control.spaces[]` is set in `project.yml`, every `dhfs[]` entry that includes a `confluence:` block must have its `confluence.space_key` appear in some entry's `key` field. FAIL on any reference to an unknown space key. INFO if a DHF has no `confluence:` block at all. | Required | cross-cutting |
+| Per-DHF evidence file paths exist | For every `dhfs[]` entry that has an `evidence:` block, every leaf path inside it (`xlsx`, `page`, paths inside `xlsx_variants[]`) must resolve to an existing file or folder on disk. FAIL on broken references — these are stale pointers to artifacts that have been moved or removed. | Required | cross-cutting |
+| Item DHFs declare classification | Every `dhfs[]` entry with `role: item` carries a `classification:` block with at least `samd` (bool) and `class`. WARN if missing or contains `tbd`. | Recommended | cross-cutting |
 | Docs folder exists | `docs/` directory exists with `README.md` | Required | shared |
 | Three-tier structure | `docs/external/`, `docs/internal/`, `docs/project/` all exist | Required | shared |
 | Strategies folder exists | `docs/project/strategies/` directory exists with `README.md` | Required | shared |

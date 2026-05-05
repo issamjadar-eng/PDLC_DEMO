@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "standards",
   "source_file": "iso-13485.md",
   "obligation_count": 10,
@@ -16,9 +16,17 @@
       "artifact_type": "plan",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-sdp",
+      "criticality": "must-have",
       "applies_to": [
-        "Design and Development Plan",
-        "Software Development Plan"
+        {
+          "role": "plans",
+          "file_pattern": "*design-and-development-plan*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "How does the organization plan and control the design and development of product? Is there evidence that the organization documents the following? (a) Stages of design and development; (b) Reviews needed at these stages; (c) Appropriate activities at these stages (e.g. verification, validation, transfer); (d) The responsibility and authority for design and development; (e) The methods to ensure that outputs trace back to inputs; (f) Resources needed including necessary personnel competencies needed.",
       "extracted_requirements": [
@@ -42,10 +50,21 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "requirements",
+      "criticality": "must-have",
       "applies_to": [
-        "Design Inputs Record",
-        "Software Requirements Specification",
-        "User Needs Document"
+        {
+          "role": "requirements",
+          "file_pattern": "*design-inputs-record*.md"
+        },
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        },
+        {
+          "role": "user-needs",
+          "file_pattern": "*user-needs*.md"
+        }
       ],
       "verbatim": "Are design inputs identified and documented, including the following? (a) Functional, performance and safety requirements; are usability requirements documented; are these requirements in accordance with the intended use? (b) Applicable regulatory requirements documented? (c) Applicable outputs for risk management processes? (d) Information from similar prior designs, as appropriate? (e) Any other essential requirements? Is there a record of the inputs being reviewed for adequacy and approved? How is it determined that the inputs are complete, not ambiguous, are not in conflict with each other and are able to be verified and validated?",
       "extracted_requirements": [
@@ -72,10 +91,21 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "Design Outputs Record",
-        "Software Architecture Document",
-        "Software Design Document"
+        {
+          "role": "architecture",
+          "file_pattern": "*design-outputs-record*.md"
+        },
+        {
+          "role": "architecture",
+          "file_pattern": "*software-architecture-document*.md"
+        },
+        {
+          "role": "design",
+          "file_pattern": "*software-design-document*.md"
+        }
       ],
       "verbatim": "Do the outputs (a) meet the input requirements? (b) Provide information for purchasing, production and service provision? (c) Reference or contain product acceptance criteria? (d) Specify the characteristics for safe and proper use of the product? Are records of the outputs maintained in a manner that is suitable for verification against the inputs? What evidence is there that outputs are approved before release?",
       "extracted_requirements": [
@@ -100,9 +130,17 @@
       "artifact_type": "review-record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "Design Review Records",
-        "Phase Gate Records"
+        {
+          "role": "plans",
+          "file_pattern": "*design-review-records*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*phase-gate-records*.md"
+        }
       ],
       "verbatim": "Is there evidence of planned arrangements for design review stages? Do the arrangements (a) Evaluate the design and development process to meet the identified requirements? (b) Identify and propose necessary actions? Who participates in design reviews? Do they represent the functions concerned with the stage(s) being reviewed? Do specialists participate in the reviews? Are there records of the reviews that include the date(s) and participants? Are actions recorded? Do the records identify the design being reviewed?",
       "extracted_requirements": [
@@ -129,10 +167,21 @@
       "artifact_type": "test-report",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Verification Plan",
-        "Verification Reports",
-        "V&V Plan"
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*verification-plan*.md"
+        },
+        {
+          "role": "vnv-results",
+          "file_pattern": "*verification-report*.md"
+        },
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*vnv-plan*.md"
+        }
       ],
       "verbatim": "Is there evidence of planned arrangements for design verification? Do the verification plans include: Methods, acceptance criteria, and, if appropriate, statistical justification for sampling? Does the device intended use require it to be interfaced with or connected to other devices? If so, does the verification confirm that the outputs still meet inputs when the device is connected or interfaced? Are there records of the verification results and conclusions? Are any necessary actions being recorded and maintained?",
       "extracted_requirements": [
@@ -157,10 +206,21 @@
       "artifact_type": "test-report",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Validation Plan",
-        "Clinical Validation Report",
-        "V&V Plan"
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*validation-plan*.md"
+        },
+        {
+          "role": "vnv-results",
+          "file_pattern": "*clinical-validation-report*.md"
+        },
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*vnv-plan*.md"
+        }
       ],
       "verbatim": "Is there evidence of planned arrangements for design validation? Do the validation plans include: Methods, acceptance criteria, and, if appropriate, statistical justification for sampling? Has the validation been conducted on representative product? Are clinical evaluations and/or evaluation of performance performed with the new device as required by regulations? Was validation completed prior to product release for customer use? Are there records of the validation results and conclusions?",
       "extracted_requirements": [
@@ -186,10 +246,21 @@
       "artifact_type": "process-record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "Design Transfer Record",
-        "Release Package",
-        "Configuration Baseline"
+        {
+          "role": "plans",
+          "file_pattern": "*design-transfer-record*.md"
+        },
+        {
+          "role": "plans-release",
+          "file_pattern": "*release-package*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*configuration-baseline*.md"
+        }
       ],
       "verbatim": "Are there documented procedures for design transfer? Are the results and conclusions of the transfer recorded?",
       "extracted_requirements": [
@@ -211,10 +282,21 @@
       "artifact_type": "change-record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "Design Change Records",
-        "PCCP Change Records",
-        "ECO Records"
+        {
+          "role": "plans",
+          "file_pattern": "*design-change-records*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*pccp-change-records*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*eco-records*.md"
+        }
       ],
       "verbatim": "Are the changes reviewed, verified, validated (as appropriate) and approved prior to implementation? Are the changes evaluated for the effect on inputs or outputs of the risk management process? On the product realization process? On constituent parts and delivered products? Are the results of the review of changes and any necessary actions recorded?",
       "extracted_requirements": [
@@ -238,10 +320,21 @@
       "artifact_type": "dhf-file",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "trace-matrix",
+      "criticality": "must-have",
       "applies_to": [
-        "Design History File",
-        "DHF README",
-        "DHF Manifest"
+        {
+          "role": "trace-matrix",
+          "file_pattern": "*design-history-file*.md"
+        },
+        {
+          "role": "trace-matrix",
+          "file_pattern": "*dhf-readme*.md"
+        },
+        {
+          "role": "trace-matrix",
+          "file_pattern": "*dhf-manifest*.md"
+        }
       ],
       "verbatim": "Does the organization have a file for each type or family of devices? The file shall include or reference: records for design and development changes; records that demonstrate conformity to the design and development requirements.",
       "extracted_requirements": [
@@ -267,10 +360,21 @@
       "artifact_type": "process-record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "SOUP List",
-        "Supplier Qualification Records",
-        "Approved Supplier List"
+        {
+          "role": "plans",
+          "file_pattern": "*soup-list*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*supplier-qualification-records*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*approved-supplier-list*.md"
+        }
       ],
       "verbatim": "This clause is intended to ensure supplier capability meets the organization's requirements. Are suppliers evaluated and selected based on their ability to supply product in accordance with organization's requirements? Are criteria for selection, evaluation and re-evaluation of suppliers documented? Are records of the evaluation results maintained?",
       "extracted_requirements": [

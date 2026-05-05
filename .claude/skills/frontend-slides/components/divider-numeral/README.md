@@ -15,7 +15,7 @@ Auto-emitted before each `## N. Section` body. Acts as a section "chapter break"
 ## Source shape
 
 ```markdown
-## 2. Team & KOL Network
+## 2. Team & Advisor Network
 ```
 
 ## Gotchas

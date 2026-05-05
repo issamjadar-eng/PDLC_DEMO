@@ -12,22 +12,23 @@ status: existing
 
 ## When to use
 
-Auto-emitted when a section contains a 2-column table with ≥6 rows representing a homogeneous cohort (KOLs, sites, test cases, hazards, milestones, predicates). Splits into 8/slide pages with shared kind-iconography.
+Auto-emitted when a section contains a 2-column table with ≥6 rows representing a homogeneous cohort (teams, integrations, milestones, deliverables, metrics, plus pack-specific cohorts). Splits into 8/slide pages with shared kind-iconography.
 
 ## Source shape
 
 ```markdown
-### 2.2 KOL persona advisors
+### 2.2 Source connectors at GA
 
-| Advisor | Capability |
+| Connector | Capability |
 |---|---|
-| `dr-okafor-anesthesia` | PACU & post-op pain anesthesiologist |
-| `dr-shah-icu` | Critical-care intensivist |
-| `dr-park-pain-mgmt` | Outpatient pain management |
+| `salesforce-sync` | Bi-directional sync of accounts, contacts, opportunities |
+| `stripe-events` | Subscription, invoice, dispute, refund event stream |
+| `zendesk-tickets` | Ticket lifecycle + macro / SLA breach signals |
+| `segment-cdp` | User-event firehose with identity resolution |
 | ...8+ rows ... |
 ```
 
 ## Gotchas
 
-- Triggers `detect_group()`; group whitelist nouns: `persona`, `team`, `test-case`, `rule`, `site`, `predicate`, `document`, `hazard`, `milestone`, `metric`. Cohorts not on the list still render as mosaic but each cell gets its own keyword-matched icon.
+- Triggers `detect_group()`; trunk group whitelist nouns: `persona`, `team`, `rule`, `document`, `milestone`, `metric`. Vocabulary packs (e.g. `medtech`) extend this with domain-specific cohort nouns. Cohorts not on the list still render as mosaic but each cell gets its own keyword-matched icon.
 - For people-cohorts specifically, the v0.4 `roster-cards` variant (initials, role, one-liner) is usually a better candidate — md-deck's classifier should propose both.

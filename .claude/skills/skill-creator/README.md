@@ -81,6 +81,7 @@ The README.md serves as the skill's index layer (per README Navigation Rule) and
 | Setup action idempotent | Re-running setup doesn't duplicate hooks, agent symlinks, or hook registrations | Required | shared |
 | SKILL.md under 500 lines | Progressive disclosure respected | Recommended | shared |
 | Evals exist | `evals/evals.json` with test cases | Recommended | local |
+| New schema fields justified | Before adding fields to a skill's catalog/manifest/sidecar schema, the SKILL.md or design doc states what was checked in `project.yml`, sibling skill outputs (taxonomy yamls, milestone yamls, evidence_layout, etc.), and adjacent SKILL.md docs. If the answer was already encoded there, the new field is replaced by a lookup against existing config. Justification is recorded inline. | Required | shared |
 
 ## Changelog
 

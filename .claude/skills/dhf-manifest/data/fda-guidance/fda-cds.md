@@ -24,7 +24,15 @@ topic: regulatory-submission
 artifact_type: analysis
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Device Classification Determination, 510(k) Submission — Device Description, CDS Exemption Analysis]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*device-classification-determination*.md"
+  - role: submission-authored
+    file_pattern: "*510k-device-description*.md"
+  - role: submission-authored
+    file_pattern: "*cds-exemption-analysis*.md"
 verbatim: "The software function must not acquire, process, or analyze: medical images, signals from an IVD, or patterns or signals from a signal acquisition system. Any software that directly analyzes X-rays, CT scans, MRI, ultrasound, or similar data is a device regardless of whether it meets criteria 2-4."
 extracted_requirements:
   - Any software function that acquires, processes, or analyzes medical images FAILS criterion 1 and is a device (SaMD) — cannot claim CDS non-device status
@@ -50,7 +58,15 @@ topic: regulatory-submission
 artifact_type: analysis
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Device Classification Determination, 510(k) Submission — Indications for Use, Labeling]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*device-classification-determination*.md"
+  - role: submission-authored
+    file_pattern: "*510k-indications-for-use*.md"
+  - role: submission-authored
+    file_pattern: "*labeling*.md"
 verbatim: "Criterion 3: Does not provide a specific preventive, diagnostic, or treatment output or directive; is not intended to replace the HCP's judgment. Criterion 4: The software enables an HCP to independently review the basis for recommendations so the HCP does not rely primarily on such recommendations. Higher automation increases risk of automation bias; time-critical nature moves from criterion 3 to criterion 4."
 extracted_requirements:
   - For Management Services PostOp Reports: evaluate against all four CDS criteria to confirm non-device status
@@ -76,7 +92,13 @@ topic: regulatory-submission
 artifact_type: process-record
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Q-Sub Package, Device Classification Documentation]
+canonical_role: submission-authored
+criticality: should-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*qsub-package*.md"
+  - role: submission-authored
+    file_pattern: "*device-classification-documentation*.md"
 verbatim: "For software where CDS status is uncertain, FDA recommends submitting a 513(g) request for device determination, or using a Q-Submission to discuss with FDA."
 extracted_requirements:
   - For any software function where CDS non-device status is uncertain: use a Q-Sub (pre-submission meeting) to get FDA feedback before filing the 510(k)

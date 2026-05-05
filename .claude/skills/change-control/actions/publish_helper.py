@@ -337,6 +337,7 @@ def cmd_precheck(args: argparse.Namespace) -> int:
             "missed": report.missed,
             "fence_swaps": report.fence_swaps,
             "frontmatter_stripped": report.frontmatter_stripped,
+            "internal_blocks_stripped": report.internal_blocks_stripped,
         },
         "zones_captured": captured_zones,
         "diverged": diverged,

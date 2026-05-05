@@ -1,13 +1,109 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified shared strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market, operations; topic-first with per-component callouts"
-version: 16
-updated: 2026-04-25
+version: 19
+updated: 2026-05-03
+# v19: Added Q-Sub Authoring Guardrails section — HARD RULE that authors must load current regulator Q-Sub guidance into context before drafting Q-Sub strategy content; codifies the agreement-seeking pattern and the patterns-to-avoid list per FDA Q-Submission Program guidance.
+# v18: Added Design Philosophy + Agent Contract sections making narrative-first explicit. Schema unchanged from v16 (the v17 metadata-field additions were reverted — see Design Philosophy for why).
 ---
 
 # Strategy Harvester
 
 Scan task documents for tagged strategy content, route by domain, and assemble into unified strategy documents that inform formal plans. Usage: `/strategy <action> [arguments]`
+
+## Design Philosophy — narrative is the contract
+
+Strategy documents are **narrative artifacts**. The narrative IS the contract. The schema's only job is to give each decision a stable address, a lifecycle state, and source attribution — nothing more.
+
+**Why narrative-first, not metadata-first.** Strategy authors write the way humans actually think about strategy: in plain language with rich, ambiguous, context-laden phrasing. *"We commit to addressing MDDS classification in the Q-Sub response. This will need to be reflected in the system architecture, and FDA will likely ask us to enumerate which Mgmt Services operations are clinical-scope vs. transfer-only."* That sentence carries a Q-Sub commitment, an architecture obligation, and a hint about what FDA acceptance might look like — all in prose. Coercing it into typed fields (`obligation-type=qsub-commitment, dhf-targets=..., canonical-role=architecture, acceptance=...`) over-specifies the decision and burdens the author with classification work that downstream agents should be doing themselves.
+
+**Strategy is upstream of everything.** A strategy decision can be made before `project.yml` `dhfs[]` is populated, before any DHF folder structure exists, before any concrete artifact has been authored, and before any catalog vocabulary has been chosen. Strategy is what *justifies creating those layers in the first place*. Therefore the strategy schema cannot reference any of those layers — that would be a chicken-and-egg violation.
+
+**The decision schema in one sentence.** Every DECISION block carries `id` (stable address), `status` (lifecycle), `source` (provenance), and timestamps. **That is the entire schema.** Everything else lives in the **prose body** of the decision and is inferred by downstream readers.
+
+**What lives in the prose, not in metadata:**
+
+- What kind of commitment this is (Q-Sub commitment, predicate finding, classification choice, PCCP scope, structural decision, …)
+- What downstream artifacts it might generate or constrain
+- Which DHFs, modules, or jurisdictions it touches
+- What acceptance criteria might eventually look like
+- What FDA / Notified Body / regulatory body might ask
+- What this decision commits us to
+
+**Author convention (suggested, not enforced).** To help downstream agents infer richly, decision bodies often include subsections like:
+
+- **Decision** — one paragraph stating the commitment in plain language
+- **Why** — the rationale, including alternatives considered and rejected
+- **What this commits us to** — what work this decision generates downstream (in prose, not bullet-point IDs)
+- **Downstream implications** — which workstreams, modules, or filings this affects (in prose)
+- **Open questions** — what remains unresolved, what FDA / NB feedback we're still waiting on
+- **Q-Sub framing** *(when relevant)* — how we'd phrase this as a question to FDA, what response we'd predict
+
+These are author hints to write inference-friendly prose. They are NOT enforced structure and they are NOT metadata. A decision body can be a single well-crafted paragraph; structure as the content demands.
+
+**Rule of thumb for any future schema proposal.** If a proposed field would let a downstream skill answer its question by **looking at metadata instead of reading the prose**, that field is a layering violation. The right answer is to teach the downstream skill to read prose richly (e.g., LLM-driven inference over decision bodies), not to push classification work upstream into the schema.
+
+## Agent Contract — how downstream skills consume strategy
+
+Downstream skills (`/dhf-manifest`, `/medtech-docs`, `/tracker`, `/trace-matrix`, `/jira-pull`, the project-console, R&D agents, clinical agents, post-market agents) consume strategy decisions by **reading the prose body of each `<DECISION:start ... ><DECISION:end>` block and applying their own inference logic in their own vocabulary**.
+
+**The contract:**
+
+- Strategy provides **stable addresses** (`id`) and **stable provenance** (source task, lifecycle state). Downstream skills can cite a decision by ID with confidence that the address is durable.
+- Strategy provides **rich narrative** in each decision body. Downstream skills are expected to read it (with LLM-driven inference if they're agentic, or with a human in the loop if they're not).
+- Strategy makes **no commitments** about taxonomy, classification, routing, or artifact mapping. Different downstream skills derive different things from the same decision body and that is expected.
+- A downstream skill that needs to filter or classify decisions does so against the prose, not against metadata. Example: `/dhf-manifest harvest-decisions` (when implemented) reads each decision body, infers Q-Sub-vs-classification-vs-structural intent from language cues, projects through the project's scope vector, and emits obligations in dhf-manifest's own vocabulary. Strategy itself never touches that vocabulary.
+- This is **deliberately inefficient at the metadata layer** — that inefficiency is the price of keeping strategy reusable across projects with different downstream conventions and keeping authors free to write strategy as strategy, not as a typed form.
+
+**Implication for skill builders.** When you build a downstream skill that consumes strategy, the right interface is "give me a decision body as prose, I'll infer what I need" — not "give me a row in a typed table." Resist the urge to add a `obligation-type` field "just to make filtering easier." The filtering belongs in the consumer, against the prose.
+
+## Q-Sub Authoring Guardrails (HARD RULE)
+
+When a strategy decision is being authored as a **Q-Submission (Pre-Submission) question** — a question to a regulator (FDA, Notified Body, Health Canada, MHRA, etc.) about a specific submitter proposal — the author MUST review the relevant regulator's Q-Submission / Pre-Submission guidance **before** drafting the decision body. Q-Sub authoring without grounding in current guidance reliably produces open-ended question framings that regulators decline to answer; this is the highest-leverage authoring failure mode the strategy skill encounters and must be guarded against by skill design, not by author discipline alone.
+
+**Pre-flight requirement.** Before authoring any decision that will become Q-Sub content (any decision whose prose body proposes asking a regulator for feedback — e.g., contains phrasing like "Question to FDA", "Q-Sub question", "Pre-Sub topic", "we will ask the Notified Body"), load the **current** regulator guidance on Q-Sub / Pre-Sub framing into the working context. The guidance is what tells the author whether their proposed framing matches the agreement-seeking pattern the regulator expects.
+
+**Where to load the guidance from (in order of preference):**
+
+1. **Project-local distillation** under `docs/external/<regulator>-guidance/q-submission/` if the project has imported the guidance via `/medtech-docs import-guidance` or equivalent.
+2. **Live regulator publication** via WebFetch (e.g., the FDA Q-Submission Program guidance page on fda.gov). Use this when no project-local copy exists.
+3. **Skill-registry summary** if a downstream skill wraps the guidance with a current-version pointer.
+
+If no copy is available and live fetch is unavailable, **stop authoring** and surface the gap to the lead before proceeding. Do not proceed by inference from training-data memory of an older guidance version — Q-Sub guidance evolves and the current version may have refined acceptable phrasings.
+
+**Why this rule exists.** Q-Sub questions framed without grounding in current guidance reliably default to open-ended patterns ("What does FDA expect?", "What boundary does FDA draw?", "Does FDA have any concerns?", "At what point would X cross into Y?", "How should we approach X?") that regulator guidance explicitly warns against. These framings are routinely declined or answered with vague non-committal feedback — the regulator will not design the submission for the submitter; they react to specific proposals. The cost of this mistake is significant: Q-Sub air is limited (FDA recommends ≤ 4 primary topics per submission), reviewer credibility is finite, and re-asking a reframed question typically costs another submission cycle.
+
+**The agreement-seeking pattern (canonical for regulator Q-Subs):**
+
+1. **Specific submitter proposal** — what we plan to do, with rationale.
+2. **Reference to applicable guidance** — which regulator guidance / standard supports the proposal.
+3. **Agreement-seeking question** — *"Does \[regulator\] agree with the proposed \[X\]?"* or *"Is the proposed \[X\] appropriate?"*
+4. **Optional refinement-seeking follow-up (conditional)** — *"If \[regulator\] does not agree with \[X\], which specific elements would \[regulator\] modify?"*
+
+This pattern is the canonical effective Q-Sub shape and is recommended explicitly in current FDA Q-Submission Program guidance. Equivalent regulator guidance for Notified Body scientific advice, MHRA Pre-Application meetings, and Health Canada Meeting Requests favours the same agreement-seeking shape.
+
+**Patterns to avoid (per regulator guidance):**
+
+- Open-ended exploratory: *"What does \[regulator\] think about...?"*, *"What does \[regulator\] expect for...?"*
+- Boundary-definition delegation: *"What boundary does \[regulator\] draw...?"*, *"At what point would X cross into Y?"*
+- Concern-elicitation without proposal: *"Does \[regulator\] have any concerns?"*, *"Are there any issues?"*
+- Outcome-prediction: *"Will an IDE / 510(k) / PMA / CE mark be approved if...?"*
+- Design delegation: *"How should we approach X?"*, *"What study design should we use?"*
+- Data-heavy without targeted proposal: dumping evidence without asking a specific question.
+
+If a draft Q-Sub question matches any of these patterns, the question must be reframed to the agreement-seeking pattern before it lands in the strategy doc.
+
+**How this guardrail applies in practice:**
+
+- The lead (or Claude assisting the lead) identifies that a strategy decision will become a Q-Sub question. **Stop authoring.** Load the relevant regulator's Q-Sub guidance into context.
+- After loading, draft the Q-Sub decision using all four canonical components: proposal → guidance reference → agreement-seeking question → optional refinement question.
+- Cite the regulator guidance reference inline in the decision body (e.g., "*Per the FDA Q-Submission Program guidance (2025 final), recommended question pattern...*") so a downstream reader can verify framing alignment without re-checking the source.
+- After drafting, audit the decision against the patterns-to-avoid list. If any pattern is matched, reframe before persisting.
+- If the project has not imported the relevant guidance into `docs/external/`, surface that as a gap to the lead and offer to import via `/medtech-docs import-guidance` (or equivalent) before continuing.
+
+**Why this guardrail lives in the strategy skill (not CLAUDE.md or a separate rule).** Q-Sub authoring is one of the highest-leverage activities the strategy skill supports — Q-Sub questions in regulatory-domain strategy decisions directly drive regulator correspondence and shape pre-market submission scope. Placing the guardrail in the skill keeps it co-located with the activity it governs and makes it project-agnostic (any project using the strategy skill for Q-Sub content benefits, regardless of device, jurisdiction, or QMS). For non-FDA regulators (Notified Bodies, Health Canada, MHRA), the same pattern applies — load the relevant regulator's pre-submission guidance first; the canonical agreement-seeking shape transfers.
+
+**Audit trail.** When a Q-Sub decision is reframed in response to this guardrail (e.g., an open-ended draft is replaced with an agreement-seeking version), the decision's source-attribution comment should note the reframe, e.g., *"Reframed YYYY-MM-DD from open-ended to agreement-seeking per FDA Q-Submission Program guidance recommended question pattern."* This preserves the audit trail of when and why the framing was corrected.
 
 ## Supporting Files
 
@@ -74,6 +170,7 @@ MedTech Project files as **one 510(k) submission**…
 | `supersedes` | optional | another decision's ID — used by `proposed-change` and `superseded` states |
 | `withdrawn-date` | optional | `YYYY-MM-DD` — when status flipped to `withdrawn` |
 | `withdrawn-by` | optional | actor name |
+**The schema deliberately stops at identity, lifecycle, and provenance — see "Design Philosophy" and "Agent Contract" sections.** Strategy decision blocks never carry taxonomy fields (obligation-type, decision-kind, classification), routing fields (drives-requirements, dhf-targets, scope-vector), artifact fields (evidence-target, paths, globs), or acceptance fields (canonical-role, acceptance criteria, requirement IDs). Every one of those is downstream inference work performed by the consuming skill against the **prose body** of the decision, not a metadata coercion. If a proposed schema addition would let a downstream skill skip reading the decision body, that's the wrong direction — it shifts inference cost to the strategy author and locks strategy into a downstream vocabulary.
 
 ### Lifecycle states
 

@@ -2,6 +2,19 @@
 
 A Claude Code skill for creating stunning, animation-rich HTML presentations — from scratch or by converting PowerPoint files.
 
+## Origin & Modifications
+
+This skill is a **fork** of the original [`frontend-slides`](https://github.com/zarazhangrui/frontend-slides) skill by **Zara Zhang** (Copyright © 2025), licensed under the [MIT License](LICENSE).
+
+The pinned upstream commit at fork time is recorded in [`.pinned-sha`](.pinned-sha) — sync against that file when pulling new upstream changes.
+
+The fork is maintained by the **medtech-docs registry contributors** under the same MIT terms (see the "Modifications" block in `LICENSE`). The summary of changes:
+
+- **Cross-domain neutralization** — example READMEs and design-language references rotate across multiple domains (SaaS, finance, manufacturing, healthcare, education) so the skill teaches by pattern, not by single-domain idiom. Domain-specific keyword routing was moved to opt-in vocabulary packs in the sibling `md-deck` skill.
+- **Registry integration** — sync-skills compatibility, attribution surfacing, MIT modifications block.
+
+The original Zara MIT copyright + license text is preserved verbatim in `LICENSE`. Modifications copyright is appended below the original block, also under MIT, so downstream redistribution + further forking remain unimpeded.
+
 ## What This Does
 
 **Frontend Slides** helps non-designers create beautiful web presentations without knowing CSS or JavaScript. It uses a "show, don't tell" approach: instead of asking you to describe your aesthetic preferences in words, it generates visual previews and lets you pick what you like.

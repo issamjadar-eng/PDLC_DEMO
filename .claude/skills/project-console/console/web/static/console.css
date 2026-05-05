@@ -1634,7 +1634,12 @@ body.docs-page.resizing * {
 .pc-input-row textarea:focus { outline: 2px solid var(--brand, #2a5db0); outline-offset: -1px; }
 .pc-input-row button[disabled] { opacity: 0.5; cursor: wait; }
 
-/* Floating "Ask about this doc" button on the Documents explorer */
+/* Shared "Ask the advisor" launcher — floating bubble, bottom-right.
+   Used by every page that hosts `_assistant_drawer.html` via the
+   `_assistant_launcher.html` partial (Documents, Trace Matrix, Strategy
+   Workflow, Tracker Dashboard). `.docs-assistant-fab` retained as alias
+   for backward-compat. */
+.pc-assistant-launcher,
 .docs-assistant-fab {
   position: fixed; right: 1.25rem; bottom: 1.25rem;
   z-index: 50;
@@ -1643,7 +1648,9 @@ body.docs-page.resizing * {
   padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 500;
   cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
+.pc-assistant-launcher:hover:not([disabled]),
 .docs-assistant-fab:hover:not([disabled]) { opacity: 0.92; }
+.pc-assistant-launcher[disabled],
 .docs-assistant-fab[disabled] {
   opacity: 0.5; cursor: not-allowed; background: var(--muted, #8b94a0);
 }

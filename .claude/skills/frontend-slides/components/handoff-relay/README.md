@@ -23,11 +23,13 @@ When the title or content corpus contains handoff-keywords: "handoff", "who does
 |---|---|
 | Human · PM | Drafts the task brief and the success criteria |
 | Agent · skill | Executes the structural authoring |
-| Human · clinical | Reviews each dose-related design input |
-| Agent · clinical-affairs | Generates KOL feedback summary |
-| Human · regulatory | Approves substantial-equivalence argumentation |
-| Agent · vnv-lead | Drafts the V&V protocol |
+| Human · domain SME | Reviews each substantive design input for accuracy |
+| Agent · summarizer | Generates the cross-team status summary |
+| Human · approver | Signs off on the release-blocking decisions |
+| Agent · qa | Drafts the test protocol and traceability matrix |
 ```
+
+(Use handoff-relay for any sequential collaboration: a software release pipeline, a regulatory submission flow, a finance close cycle, a manufacturing changeover, a content-publication chain. Each row is one actor + one stage.)
 
 ## Gotchas
 

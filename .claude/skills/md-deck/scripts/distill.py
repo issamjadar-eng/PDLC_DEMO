@@ -146,6 +146,40 @@ def _strip_yaml_fence(raw: str) -> str:
     return text.strip()
 
 
+def _normalize_sections(parsed: dict, slug_index: dict[str, dict] | None) -> tuple[dict, int]:
+    """Promote each section's identity to slug form (ben/163 1.8).
+
+    The agent emits `anchor: L<lo>-L<hi>` because it counts lines reliably.
+    We resolve each line-range to its slug + source_sha256 via `slug_index`
+    (built by the caller from synthesized slides) and rewrite the section
+    in-place. Sections we cannot resolve keep their legacy anchor — orphan
+    sweep retires them on the next build cycle.
+
+    `slug_index` shape: `{ "L<lo>-L<hi>": {"slug", "source_sha256", "title"} }`.
+
+    Returns the same dict (mutated) plus a count of remapped sections so the
+    caller can decide whether to re-write the cached YAML.
+    """
+    if not slug_index:
+        return parsed, 0
+    remapped = 0
+    for section in (parsed.get("sections") or []):
+        anchor = section.get("anchor")
+        # Already-slug sections (rebuilds carrying forward a remapped cache)
+        # short-circuit; we only patch sections whose anchor is the legacy form.
+        if not anchor or not isinstance(anchor, str):
+            continue
+        hit = slug_index.get(anchor)
+        if not hit:
+            continue
+        section["slug"] = hit["slug"]
+        section["source_sha256"] = hit["source_sha256"]
+        section["source_lines"] = anchor  # keep the line-range as informational
+        section["anchor"] = hit["slug"]    # primary identity flips to slug
+        remapped += 1
+    return parsed, remapped
+
+
 def distill_source(
     source_path: Path,
     out_dir: Path,
@@ -153,12 +187,18 @@ def distill_source(
     source_sha: str,
     force: bool = False,
     model: str | None = None,
+    slug_index: dict[str, dict] | None = None,
 ) -> dict:
     """Produce or load a distillation for `source_path`.
 
     Cached at `out_dir/distillation.yml`. Returns the parsed dict. Re-runs
     when source SHA mismatches, when `force=True`, or when the cache file is
     absent or unparseable.
+
+    `slug_index` (ben/163 1.8) — optional `{legacy_anchor: {slug, source_sha256,
+    title}}` map built by the caller from synthesized slides. When provided,
+    `_normalize_sections` rewrites each section's identity to slug form on load.
+    Cached YAML is rewritten when remap touches a previously-unmigrated file.
     """
     cache_path = out_dir / "distillation.yml"
 
@@ -167,6 +207,16 @@ def distill_source(
         try:
             cached = yaml.safe_load(cache_path.read_text(encoding="utf-8"))
             if cached and cached.get("meta", {}).get("source_sha256") == source_sha:
+                cached, remapped = _normalize_sections(cached, slug_index)
+                if remapped:
+                    cache_path.write_text(
+                        yaml.safe_dump(cached, sort_keys=False, allow_unicode=True),
+                        encoding="utf-8",
+                    )
+                    print(
+                        f"  · distillation: remapped {remapped} sections to slug keys",
+                        file=sys.stderr,
+                    )
                 return cached
         except yaml.YAMLError:
             pass  # fall through to regenerate
@@ -197,15 +247,26 @@ def distill_source(
     if not isinstance(parsed, dict) or "meta" not in parsed:
         raise RuntimeError("distillation missing required top-level structure (meta + …)")
 
-    cache_path.write_text(text, encoding="utf-8")
+    parsed, _remapped = _normalize_sections(parsed, slug_index)
+    # Persist whatever we have — already-slug-keyed if slug_index was supplied,
+    # legacy-keyed otherwise (next build with an index will migrate it).
+    cache_path.write_text(
+        yaml.safe_dump(parsed, sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
     print(f"  · distillation cached to {cache_path.relative_to(Path.cwd()) if Path.cwd() in cache_path.parents else cache_path}", file=sys.stderr)
     return parsed
 
 
-def section_dossier(distillation: dict, anchor: str) -> dict | None:
-    """Look up the per-section dossier for a given source-line anchor."""
+def section_dossier(distillation: dict, key: str) -> dict | None:
+    """Look up the per-section dossier by slug, with legacy-anchor fallback.
+
+    `key` is the section slug (ben/163). For backward compatibility with
+    distillation YAMLs produced before slug normalization, we also accept the
+    legacy `L<lo>-L<hi>` form via the `anchor` field.
+    """
     for section in (distillation.get("sections") or []):
-        if section.get("anchor") == anchor:
+        if section.get("slug") == key or section.get("anchor") == key:
             return section
     return None
 

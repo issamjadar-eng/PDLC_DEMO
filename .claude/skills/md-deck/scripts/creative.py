@@ -164,6 +164,8 @@ def build_brief(
     reference_html_b: str,
     deck_brief: str = "",
     section_brief: str = "",
+    previous_html: str = "",
+    previous_critique: str = "",
 ) -> str:
     """Compose the system+user prompt for one creative slide generation.
 
@@ -172,8 +174,35 @@ def build_brief(
     present they replace raw-markdown context with a structured intelligence
     dossier — the agent designs against a shared deck understanding instead of
     re-reading the markdown.
+
+    `previous_html` + `previous_critique` (ben/167 v2) — when both are non-empty
+    the brief includes a "previous attempt + critique" block, turning the
+    re-roll into a *directed iteration* rather than a blind fresh sample. The
+    critique is rendered text from `lint-creative.py` listing the specific
+    risk patterns flagged in the previous attempt.
     """
     personality_block = SLOT_PERSONALITIES.get(slot_personality, SLOT_PERSONALITIES["bold-metaphor"])
+
+    iteration_section = ""
+    if previous_html and previous_critique:
+        iteration_section = dedent(f"""
+            ────────────────────────────────────────────
+            DIRECTED ITERATION — previous attempt + critique
+            ────────────────────────────────────────────
+            You produced the design below in an earlier pass. A static lint
+            flagged the following layout-risk patterns. Produce a NEW design
+            that addresses these issues. You may keep the conceptual approach
+            if it was sound — but the geometry must change to resolve the
+            flagged patterns. Do not just tweak the same layout; if the
+            structure is the source of the issue, redesign it.
+
+            PREVIOUS ATTEMPT:
+            {previous_html.strip()}
+
+            FLAGGED ISSUES:
+            {previous_critique.strip()}
+            ────────────────────────────────────────────
+        """).strip()
 
     distillation_section = ""
     if deck_brief or section_brief:
@@ -190,6 +219,8 @@ def build_brief(
 
     return dedent(f"""
         You are a slide designer for md-deck, building one bespoke slide of an HTML presentation. You are not selecting from a fixed component library — you are AUTHORING a custom layout that fits this specific content.
+
+        {iteration_section}
 
         {distillation_section}
 
@@ -237,6 +268,14 @@ def build_brief(
         6. Differ visually from slot A and slot B in *layout shape*, not just colors.
         7. **When the section dossier carries a `data:` block, prefer encoding that data visually** (drawn bars, donuts, timelines, ladders, comparison pairs) over running prose. Honor the data's `accent` color hints when present.
         8. **Lean into the deck's unifying metaphor and visual motifs** when their confidence is high — coherence with sibling slides is a feature, not a constraint. Use language register from the distillation; avoid the anti-patterns it lists.
+
+        Layout guidances (not hard rules — break them when you have a clear reason):
+
+        9. **Inner-gutter when filling.** When a child stretches to its parent (`inset: 0` or `width: 100%; height: 100%`), keep the text it contains padded in by at least `clamp(0.5rem, 1.5vw, 1rem)`. Outer slide padding does not propagate into absolutely-positioned children — bleed must be opted *in*, not *out*.
+        10. **Density-aware layout choice.** Don't reserve slots the source can't fill. If your grid has N rows/columns and the section dossier carries fewer than N concrete items, pick a layout shape that doesn't leave dead bands (single hero, asymmetric pair, side-by-side instead of 3-column). Empty grid cells read as truncated, not minimal.
+        11. **Overlap with intent.** Overlapping cards/elements is fine when each overlapping element has its own opaque background (so the lower text never shows through). Decorative shapes that *should* sit over text must carry `pointer-events: none` and stay clear of the prose region. Absolute-positioned elements should set all four `inset` sides (or `top/left/width/height`) — partial constraints drift when the parent reflows.
+        12. **Body text legibility.** Prose stays at `clamp(0.85rem, 1.5vw, 1.05rem)` or larger. Small text (≤ `0.7rem`) is fine for micro-labels, table cells, axis ticks — not for the body of an argument. If you find yourself shrinking body text to fit, the layout is too dense; redesign instead of zoom.
+        13. **Self-check before emitting.** Mentally render the slide: (a) is any text within ~6px of the slide rim without a clear reason? (b) is more than half the slide blank with no rhetorical purpose? (c) does any text sit on top of other text? If yes to any, fix it before emitting. Intentional asymmetry, breathing room, and overlay are all fine — the test is whether a reader on first glance reads it as defective.
 
         Output: emit the `<section>` tag and nothing else. No prose, no Markdown fence, no commentary. The very first character of your response must be `<` and the very last character must be `>`.
     """).strip()
@@ -320,6 +359,8 @@ def generate_creative_slide(
     reference_html_b: str = "",
     deck_brief: str = "",
     section_brief: str = "",
+    previous_html: str = "",
+    previous_critique: str = "",
     model: str | None = None,
     timeout: int = 240,
 ) -> tuple[str | None, str]:
@@ -327,6 +368,10 @@ def generate_creative_slide(
 
     The raw_response is preserved for diagnostic logging — when extraction
     fails (None HTML), the caller can write the raw text to a debug file.
+
+    `previous_html` + `previous_critique` (ben/167 v2) — when supplied,
+    the agent runs as a directed iteration: previous attempt + lint findings
+    are spliced into the brief.
     """
     palette = load_palette()
     brief = build_brief(
@@ -340,6 +385,8 @@ def generate_creative_slide(
         reference_html_b=reference_html_b,
         deck_brief=deck_brief,
         section_brief=section_brief,
+        previous_html=previous_html,
+        previous_critique=previous_critique,
     )
     raw = _call_claude(brief, model=model, timeout=timeout)
     html = extract_slide_html(raw)
@@ -349,7 +396,7 @@ def generate_creative_slide(
 if __name__ == "__main__":
     # Smoke test: generate a slide for a fixture section and print the result.
     sample = {
-        "markdown": "### 4.2 What we measured\n\n> The 12 weeks produced equivalent IEC 62304 documentation in 38% of the calendar time.",
+        "markdown": "### 4.2 What we measured\n\n> The 12 weeks produced equivalent compliance documentation in 38% of the calendar time.",
         "title": "What we measured",
         "anchor": "L116-L120",
         "number": "4.2",

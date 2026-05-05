@@ -13,6 +13,7 @@ from fastapi.templating import Jinja2Templates
 
 from console.config import get_config
 from console.workflows import b1_doc_roundtrip, b3_session, b3_strategy_reassembly
+from console.workflows import tracker_session, tracker_writer
 from console.workflows.catalog import CATALOG, get_by_slug, grouped
 
 
@@ -61,6 +62,16 @@ async def workflow_view(request: Request, slug: str):
     wf = get_by_slug(slug)
     if wf is None:
         raise HTTPException(404, f"Workflow '{slug}' not found")
+
+    if slug == "tracker-status-update":
+        return templates.TemplateResponse(
+            request, "workflow_tracker.html", {"config": cfg, "workflow": wf},
+        )
+
+    if slug == "tracker-advisor":
+        return templates.TemplateResponse(
+            request, "workflow_tracker_advisor.html", {"config": cfg, "workflow": wf},
+        )
 
     if slug == "strategy-reassembly":
         import re as _re
@@ -1513,3 +1524,436 @@ async def b1_dry_run(request: Request):
             ),
         }
     )
+
+
+# ── B4 / B5 Tracker workflows (task ben/154 P3) ──────────────────────────
+#
+# Two workflow kinds share the same session/worktree machinery:
+#   * "status"  — interactive status updates (B4)
+#   * "advisor" — Ask the Tracker Advisor (B5)
+#
+# All four endpoints (session / apply / save / cancel) are kind-parameterized.
+# Apply is status-only today (advisor uses chat infra in P5/P6).
+
+
+def _tracker_actor_or_error(cfg) -> tuple[str, str]:
+    """Resolve actor → (name, task_folder) or raise HTTPException."""
+    actor_info = _resolve_actor(cfg.repo_root)
+    if actor_info.get("unresolved"):
+        raise HTTPException(403, f"Actor unresolved ({actor_info.get('reason')}).")
+    name = actor_info.get("name") or ""
+    folder = actor_info.get("task_folder") or ""
+    if not folder:
+        raise HTTPException(403, "Actor has no task_folder in project.yml")
+    return name, folder
+
+
+@router.get("/workflows/tracker/{kind}/session")
+async def tracker_session_snapshot(request: Request, kind: str):
+    """Return the current session state for (actor, kind), plus the
+    pending-changes list (parsed from the session task doc's changelog).
+    UI polls this to render the sidebar pending-changes panel."""
+    if kind not in tracker_session.VALID_KINDS:
+        raise HTTPException(400, f"invalid kind {kind!r}")
+    cfg = get_config()
+    actor_info = _resolve_actor(cfg.repo_root)
+    actor_folder = actor_info.get("task_folder") or ""
+    if not actor_folder:
+        return JSONResponse({"session": None, "pending": []})
+    sess = tracker_session.snapshot(cfg.repo_root, actor_folder, kind)
+    if sess is None:
+        return JSONResponse({"session": None, "pending": []})
+    pending = []
+    if kind == "status":
+        pending = tracker_writer.parse_pending_changes(
+            cfg.repo_root / sess.task_path
+        )
+    return JSONResponse(
+        {
+            "session": {
+                "kind": sess.kind,
+                "task_id": sess.task_id,
+                "task_path": sess.task_path,
+                "worktree_path": sess.worktree_path,
+                "branch": sess.branch,
+                "has_diff": sess.has_diff,
+                "diff_summary": sess.diff_summary,
+            },
+            "pending": pending,
+        }
+    )
+
+
+@router.post("/workflows/tracker/status/apply")
+async def tracker_status_apply(request: Request):
+    """Apply ONE status change. Auto-creates session + worktree on first
+    call (lazy bootstrap). Body:
+        {"row_id": "PA1", "new_status": "Done", "rationale": "..." | null}
+    Returns the structured write result (old/new status + side effects)."""
+    cfg = get_config()
+    actor, actor_folder = _tracker_actor_or_error(cfg)
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "Expected JSON body")
+    row_id = (body.get("row_id") or "").strip()
+    new_status = (body.get("new_status") or "").strip()
+    rationale = body.get("rationale") or None
+    if not row_id or not new_status:
+        raise HTTPException(400, "row_id and new_status required")
+    if new_status not in tracker_writer.VALID_STATUSES:
+        raise HTTPException(
+            400,
+            f"new_status {new_status!r} not in valid set "
+            f"{sorted(tracker_writer.VALID_STATUSES)}",
+        )
+    try:
+        task_id, task_path, wt = tracker_session.resolve_or_create(
+            cfg.repo_root, actor_folder, actor, "status"
+        )
+    except RuntimeError as e:
+        raise HTTPException(409, f"session bootstrap failed: {e}")
+    try:
+        result = tracker_writer.write_status_change(
+            wt=wt,
+            row_id=row_id,
+            new_status=new_status,
+            rationale=rationale,
+            actor=actor,
+            task_path=task_path,
+            repo_root=cfg.repo_root,
+        )
+    except FileNotFoundError as e:
+        raise HTTPException(409, str(e))
+    except LookupError as e:
+        raise HTTPException(404, str(e))
+    except (tracker_writer.RowParseError, ValueError) as e:
+        raise HTTPException(400, str(e))
+    return JSONResponse({"task_id": task_id, "result": result})
+
+
+@router.post("/workflows/tracker/{kind}/save")
+async def tracker_save(request: Request, kind: str):
+    """Stage + commit pending changes inside the worktree, ff-merge into
+    main, push to origin, tear down worktree, mark session task Complete.
+    Returns commit_and_merge result."""
+    if kind not in tracker_session.VALID_KINDS:
+        raise HTTPException(400, f"invalid kind {kind!r}")
+    cfg = get_config()
+    actor, actor_folder = _tracker_actor_or_error(cfg)
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    msg = (body.get("message") or "").strip() or _default_commit_message(
+        cfg, actor_folder, kind
+    )
+    try:
+        result = tracker_session.commit_and_merge(
+            cfg.repo_root, actor_folder, actor, kind, msg
+        )
+    except RuntimeError as e:
+        raise HTTPException(409, str(e))
+    return JSONResponse({"saved": True, "kind": kind, "result": result})
+
+
+@router.post("/workflows/tracker/{kind}/cancel")
+async def tracker_cancel(request: Request, kind: str):
+    """Discard pending changes, remove worktree + branch, mark task
+    Abandoned. Idempotent."""
+    if kind not in tracker_session.VALID_KINDS:
+        raise HTTPException(400, f"invalid kind {kind!r}")
+    cfg = get_config()
+    _, actor_folder = _tracker_actor_or_error(cfg)
+    result = tracker_session.cancel_workflow(cfg.repo_root, actor_folder, kind)
+    return JSONResponse({"kind": kind, "result": result})
+
+
+@router.get("/workflows/tracker/embed", response_class=HTMLResponse)
+async def tracker_embed(request: Request):
+    """Serve submission-tracker.html with the interactive overlay
+    (tracker_interactive.css + tracker_interactive.js) injected before
+    `</body>`. If a tracker-status worktree is open for this actor, serve
+    the worktree's tracker html instead of main's so badge state reflects
+    pending changes."""
+    cfg = get_config()
+    actor_info = _resolve_actor(cfg.repo_root)
+    actor_folder = actor_info.get("task_folder") or ""
+    # Prefer worktree HTML when a session is active (so the human sees the
+    # current state including pending edits).
+    html_path = cfg.repo_root / tracker_session.TRACKER_HTML_REL
+    if actor_folder:
+        sess = tracker_session.snapshot(cfg.repo_root, actor_folder, "status")
+        if sess is not None:
+            wt_html = Path(sess.worktree_path) / tracker_session.TRACKER_HTML_REL
+            if wt_html.is_file():
+                html_path = wt_html
+    if not html_path.is_file():
+        raise HTTPException(404, f"tracker html missing: {html_path}")
+    html = html_path.read_text(encoding="utf-8")
+    inject = (
+        '<link rel="stylesheet" href="/static/tracker_interactive.css">\n'
+        '<script src="/static/tracker_interactive.js" defer></script>\n'
+        '</body>'
+    )
+    if "</body>" in html:
+        html = html.replace("</body>", inject, 1)
+    else:
+        html = html + inject
+    return HTMLResponse(content=html)
+
+
+@router.get("/workflows/tracker-status-update", response_class=HTMLResponse)
+async def tracker_status_update_page(request: Request):
+    """Override the generic placeholder page for the tracker-status-update
+    workflow with the interactive view (iframe + sidebar)."""
+    cfg = get_config()
+    return templates.TemplateResponse(
+        request,
+        "workflow_tracker.html",
+        {"config": cfg, "workflow": get_by_slug("tracker-status-update")},
+    )
+
+
+# ── Dashboard inline-render assets ────────────────────────────────────────
+# `_load_tracker_render()` dynamically imports `.claude/skills/tracker/scripts/
+# render.py` so the dashboard inline-render path can reach `_CSS_BASE_INNER`,
+# `_JS_INNER`, and `render_embed_fragment()` directly. Cached by mtime so
+# edits to render.py take effect without restarting the console (uvicorn's
+# auto-reload reloads `router.py` on its own change but does not invalidate
+# importlib-loaded modules from outside the watched tree).
+
+_TRACKER_RENDER_CACHE = {"mtime": None, "module": None}
+
+
+def _load_tracker_render():
+    cfg = get_config()
+    script = cfg.repo_root / ".claude/skills/tracker/scripts/render.py"
+    if not script.is_file():
+        raise HTTPException(503, f"tracker render.py missing: {script}")
+    mtime = script.stat().st_mtime
+    if _TRACKER_RENDER_CACHE["mtime"] == mtime and _TRACKER_RENDER_CACHE["module"] is not None:
+        return _TRACKER_RENDER_CACHE["module"]
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("tracker_render", script)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    _TRACKER_RENDER_CACHE["mtime"] = mtime
+    _TRACKER_RENDER_CACHE["module"] = mod
+    return mod
+
+
+@router.get("/workflows/tracker/dashboard.css")
+async def tracker_dashboard_css():
+    """Serve the tracker grid's base CSS for inline-rendered dashboards
+    (dashboard_view.html). Single source of truth: render.py's
+    `_CSS_BASE_INNER` constant."""
+    from fastapi.responses import Response
+    mod = _load_tracker_render()
+    return Response(content=mod._CSS_BASE_INNER, media_type="text/css")
+
+
+@router.get("/workflows/tracker/dashboard.js")
+async def tracker_dashboard_js():
+    """Serve the tracker grid's base JS for inline-rendered dashboards.
+    Single source of truth: render.py's `_JS_INNER` constant."""
+    from fastapi.responses import Response
+    mod = _load_tracker_render()
+    return Response(content=mod._JS_INNER, media_type="application/javascript")
+
+
+def _tracker_embed_fragment_for_actor(cfg, actor_folder: str) -> str:
+    """Return the embed-mode HTML fragment for the tracker dashboard.
+    Renders against the actor's worktree md if a status-session is open
+    (so pending edits are visible); otherwise renders against main."""
+    mod = _load_tracker_render()
+    project_dir = cfg.repo_root
+    if actor_folder:
+        sess = tracker_session.snapshot(cfg.repo_root, actor_folder, "status")
+        if sess is not None and Path(sess.worktree_path).is_dir():
+            project_dir = Path(sess.worktree_path)
+    return mod.render_embed_fragment(str(project_dir))
+
+
+@router.get("/workflows/tracker/grounding")
+async def tracker_grounding():
+    """Serve the live submission-tracker.md as advisor grounding context.
+    Returns the actor's worktree version when a status-session is open
+    (so the advisor sees pending edits); otherwise main's. Consumed by
+    the dashboard's `_assistant_drawer.html` via `grounding_source=
+    "url:/workflows/tracker/grounding"`."""
+    from fastapi.responses import Response
+    cfg = get_config()
+    actor_info = _resolve_actor(cfg.repo_root)
+    actor_folder = actor_info.get("task_folder") or ""
+    md_path = cfg.repo_root / tracker_session.TRACKER_MD_REL
+    if actor_folder:
+        sess = tracker_session.snapshot(cfg.repo_root, actor_folder, "status")
+        if sess is not None:
+            wt_md = Path(sess.worktree_path) / tracker_session.TRACKER_MD_REL
+            if wt_md.is_file():
+                md_path = wt_md
+    if not md_path.is_file():
+        return Response(content="", media_type="text/plain")
+    return Response(
+        content=md_path.read_text(encoding="utf-8"),
+        media_type="text/plain",
+    )
+
+
+@router.get("/workflows/tracker/advisor/agents")
+async def tracker_advisor_agents(request: Request):
+    """Return the list of solo (non-panel, non-system) advisor agents
+    available for B5. UI's persona picker calls this on page load."""
+    from console.chat.domain_agents import load_all
+
+    cfg = get_config()
+    agents, _ = load_all(cfg.agents_dir)
+    out = []
+    for name, agent in sorted(agents.items()):
+        if agent.is_panel or agent.is_system:
+            continue
+        out.append({
+            "name": name,
+            "title": agent.title,
+            "description": agent.description,
+        })
+    return JSONResponse({"agents": out})
+
+
+@router.post("/workflows/tracker/advisor/stream")
+@router.post("/workflows/tracker/advisor/stream/{agent_name}")
+async def tracker_advisor_stream(request: Request, agent_name: str | None = None):
+    """B5 Ask-the-Advisor — stream a single advisor turn with the
+    submission-tracker.md loaded as additional grounding context.
+
+    Auto-bootstraps the tracker-advisor session+worktree on first turn.
+    After the stream completes, appends the Q&A turn to the session task
+    doc's `## Changelog` so Save & Close persists the transcript.
+
+    Body: {"agent_name": "...", "history": [...], "message": "..."}.
+    `agent_name` may be provided in URL (legacy `/stream/{agent_name}` for
+    `workflow_tracker_advisor.html`) or in body (new shape used by the
+    `_assistant_drawer.html` partial that drives the dashboard).
+    """
+    from console.chat.domain_agents import load_all
+    from console.chat.sdk_client import stream_response
+    from console.chat.sources import resolve_with_meta
+    from fastapi.responses import StreamingResponse
+
+    cfg = get_config()
+    actor, actor_folder = _tracker_actor_or_error(cfg)
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "Expected JSON body")
+    if not agent_name:
+        agent_name = (body.get("agent_name") or "").strip()
+        if not agent_name:
+            raise HTTPException(400, "agent_name required (URL or body)")
+    history = body.get("history") or []
+    message = (body.get("message") or "").strip()
+    if not message:
+        raise HTTPException(400, "message required")
+
+    agents, _ = load_all(cfg.agents_dir)
+    agent = agents.get(agent_name)
+    if agent is None or agent.is_system or agent.is_panel:
+        raise HTTPException(404, f"Advisor '{agent_name}' not found / not solo")
+
+    # Bootstrap session (lazy on first turn).
+    try:
+        task_id, task_path, wt = tracker_session.resolve_or_create(
+            cfg.repo_root, actor_folder, actor, "advisor"
+        )
+    except RuntimeError as e:
+        raise HTTPException(409, f"session bootstrap failed: {e}")
+
+    # Build the augmented system prompt: persona + agent's normal grounding
+    # + the tracker md as primary tracker context (D3 — full md).
+    resolved = resolve_with_meta(cfg.repo_root, agent.sources)
+    tracker_md_path = wt / tracker_session.TRACKER_MD_REL
+    tracker_text = ""
+    if tracker_md_path.is_file():
+        tracker_text = tracker_md_path.read_text(encoding="utf-8")
+    elif (cfg.repo_root / tracker_session.TRACKER_MD_REL).is_file():
+        tracker_text = (cfg.repo_root / tracker_session.TRACKER_MD_REL).read_text(encoding="utf-8")
+
+    system = (
+        agent.system_prompt
+        + "\n\n===== GROUNDING SOURCES =====\n"
+        + resolved.text
+        + "\n\n===== SUBMISSION TRACKER (PRIMARY CONTEXT) =====\n"
+        + "_The user is asking about the submission package tracker. The full "
+        "current state of `docs/project/submissions/submission-tracker.md` "
+        "follows. Cite specific row IDs (PA1, PP3, ENG7, …) when answering "
+        "row-specific questions._\n\n"
+        + tracker_text
+    )
+    user_prompt = _format_prompt(history, message) if history else message
+
+    # Stream + capture full response for the task-doc transcript.
+    captured: list[str] = []
+
+    def _sse(event: dict) -> str:
+        return f"data: {json.dumps(event)}\n\n"
+
+    async def event_stream():
+        try:
+            yield _sse({"type": "session", "task_id": task_id, "kind": "advisor"})
+            yield _sse({"type": "speaker", "name": agent.name, "title": agent.title})
+            async for token in stream_response(
+                system_prompt=system,
+                user_message=user_prompt,
+                model=agent.model,
+            ):
+                captured.append(token)
+                yield _sse({"type": "token", "text": token})
+            yield _sse({"type": "speaker_done", "name": agent.name})
+            # Persist the Q&A turn to the session task doc Changelog.
+            full_response = "".join(captured).strip()
+            entry = (
+                f"{tracker_writer._today()} — Advisor `{agent_name}` — "
+                f"Q: {_truncate(message, 240)} — A: {_truncate(full_response, 480)} "
+                f"(by {actor})"
+            )
+            tracker_writer.append_task_changelog(task_path, entry)
+            yield _sse({"type": "persisted", "entry_chars": len(entry)})
+            yield _sse({"type": "done"})
+        except Exception as e:
+            yield _sse({"type": "error", "message": str(e)})
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+def _format_prompt(history: list[dict], latest: str) -> str:
+    if not history:
+        return latest
+    parts = ["<conversation>"]
+    for m in history:
+        role = "user" if m.get("role") == "user" else "assistant"
+        content = (m.get("content") or "").strip()
+        if not content:
+            continue
+        parts.append(f'  <turn role="{role}">{content}</turn>')
+    parts.append("</conversation>\n")
+    parts.append(f"Latest user message:\n{latest}")
+    return "\n".join(parts)
+
+
+def _truncate(s: str, n: int) -> str:
+    s = s.strip().replace("\n", " ")
+    return s if len(s) <= n else s[:n - 1] + "…"
+
+
+def _default_commit_message(cfg, actor_folder: str, kind: str) -> str:
+    """Compose a default commit message from pending-changes count."""
+    sess = tracker_session.snapshot(cfg.repo_root, actor_folder, kind)
+    if sess is None or kind != "status":
+        return f"tracker {kind}: console workflow save"
+    pending = tracker_writer.parse_pending_changes(cfg.repo_root / sess.task_path)
+    return f"tracker status: {len(pending)} change(s) via console workflow"

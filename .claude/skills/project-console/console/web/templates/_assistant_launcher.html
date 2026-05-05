@@ -1,0 +1,24 @@
+{# Shared "Ask the advisor" launcher — floating bubble, bottom-right corner.
+
+   Standardizes placement, styling, and label across every page that hosts
+   the assistant drawer (Documents, Trace Matrix, Strategy Workflow, Tracker
+   Dashboard, and any future surfaces). The button id MUST match the
+   `assistant.open_button_id` value consumed by `_assistant_drawer.html`.
+
+   Page contract:
+     {% set launcher = {
+       "button_id": "<id matching assistant.open_button_id>",
+       "disabled_initially": false,         # optional; Docs tab starts disabled
+       "label": "Ask the advisor",          # optional override (avoid)
+       "title": "Ask the advisor"           # optional tooltip override
+     } %}
+     {% include "_assistant_launcher.html" %}
+#}
+{% set _l = launcher | default({}) %}
+<button type="button"
+        id="{{ _l.button_id | default('pc-assistant-open') }}"
+        class="pc-assistant-launcher"
+        title="{{ _l.title | default('Ask the advisor') }}"
+        {% if _l.disabled_initially %}disabled{% endif %}>
+  💬 {{ _l.label | default('Ask the advisor') }}
+</button>

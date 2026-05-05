@@ -1,8 +1,8 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.9.0
-updated: 2026-05-01
+version: 1.17.0
+updated: 2026-05-04
 ---
 
 # Project Console
@@ -75,7 +75,7 @@ Scrape a company website and materialize a project-local theme pack at `tools/pr
 5. Write a minimal `footer.html.j2` using the scraped tagline.
 6. Do **not** auto-select the new theme — report what was extracted, flag what needs verification, and tell the user how to activate it (edit `tools/project-console/console.yaml` `theme: <slug>`).
 
-Default slug (when `--name` is omitted) is derived from the hostname (e.g., `www.arthrex.com` → `arthrex`).
+Default slug (when `--name` is omitted) is derived from the hostname — strip the leading `www.` and the TLD, then lowercase (e.g., `www.example.com` → `example`).
 
 #### Logo Selection Heuristics
 
@@ -90,7 +90,7 @@ When scraping, look in this priority order and stop at the first viable hit:
 
 **Format priority:** SVG > PNG with transparency > PNG > JPG. SVGs scale losslessly and play nicely with both light and dark topnavs.
 
-**Light/dark variants:** if the scraped site's header is dark (like arthrex.com), also look for a white-on-transparent logo variant (common filenames: `logo-white.svg`, `Logo_White_RGB.png`, `logo-reversed.svg`). Save as `logo.png` (primary, matches the active topnav) and `logo-dark.png` (optional secondary).
+**Light/dark variants:** if the scraped site's header is dark, also look for a white-on-transparent logo variant (common filenames: `logo-white.svg`, `Logo_White_RGB.png`, `logo-reversed.svg`). Save as `logo.png` (primary, matches the active topnav) and `logo-dark.png` (optional secondary).
 
 **Aspect ratio sanity check:** after download, examine the image dimensions. If width/height > 2 it's a clean horizontal wordmark and works great at the header size. If width/height < 1.2 it's roughly square — still works via `object-fit: contain` but will render small in the topnav; prefer a horizontal alternative if one exists. Don't try to "fix" a square logo with CSS — that's what stretches it. Just pick a better source.
 
@@ -166,6 +166,56 @@ When sync detects drift in a skill-owned file that the user hasn't declared in t
 ```
 
 The `console/` package is imported by the project's `run.sh` via `PYTHONPATH` injection — there is no install step, no `uv add`, no separate publishing. A `/sync-skills pull` that updates `.claude/skills/project-console/` is immediately effective on the next launch.
+
+## Trace-matrix drift overlay (read-side data contract)
+
+The trace-matrix view in the console renders an optional drift overlay when a
+sibling `drift.json` is colocated with any of the trace-matrix sources. The
+console is a generic consumer — it knows nothing about how the drift was
+computed; it only reads the JSON contract.
+
+**Discovery rule:** for each `source_files[]` path declared by the
+trace-matrix skill in the JSON sidecar, the console checks whether
+`<same-dir>/drift.json` exists. Each unique `drift.json` is loaded once,
+violations are grouped by `item_id`, and the worst severity per item is
+computed (rank: `error > warning > info`). Multiple drift files merge their
+summaries.
+
+**`drift.json` contract** (project-agnostic — any producer can emit this):
+
+```json
+{
+  "summary": {
+    "violations_total": 16,
+    "by_severity": { "error": 0, "warning": 0, "info": 16 },
+    "by_category": { "A": 0, "B": 0, "C": 16 },
+    "by_rule":     { "A1": 0, "...": 0, "C2": 13, "C5": 3 }
+  },
+  "violations": [
+    {
+      "rule": "C2",
+      "severity": "info",
+      "item_id": "<row id matching trace-matrix item.id>",
+      "item_kind": "epic",
+      "message": "human-readable description of the drift",
+      "resolution_hint": "what to do about it",
+      "references": { "<key>": "<value-or-url>" }
+    }
+  ]
+}
+```
+
+**What the overlay renders:**
+- Per-DHF KPI bar (totals + by-severity + by-category badges + source list).
+- Per-row severity badge (`✗`/`⚠`/`ℹ` + count) on the trace-matrix table.
+- Click-row drawer listing every violation with rule, severity, message,
+  resolution hint, and references (URLs auto-linked).
+- A "Drift only" filter chip beside the existing "Orphans only" toggle.
+
+**The first concrete producer is `jira-pull`'s `audit` action**, which writes
+`drift.json` under `_jira/<arch>/<version>/` next to the mirror tables. Any
+other skill that emits the same JSON shape next to a trace-matrix source
+gets the overlay automatically — no console changes required.
 
 ## Best Practices
 See [README.md](README.md) — consumed by `/best-practices` audit.

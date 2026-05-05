@@ -444,13 +444,13 @@
   </h1>
   <p class="sub">{{ workflow.one_liner }}</p>
 
-  <div style="padding: 0.55rem 1rem; background: rgba(46,125,50,0.08); border-left: 4px solid #2e7d32; margin: 0.75rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-    <div>
-      🟢 <strong>Live.</strong> Pick a strategy on the left, review pending proposals, and take action. Every Accept / Reject / Modify / Re-categorize updates the strategy and adds a History note. Re-categorize also saves and publishes automatically. We need to know who's making the change, so make sure your project task is active.
-    </div>
-    <button type="button" id="b3-assistant-fab" class="docs-assistant-fab"
-            title="Ask the domain advisor about this strategy">💬 Ask the advisor</button>
+  <div style="padding: 0.55rem 1rem; background: rgba(46,125,50,0.08); border-left: 4px solid #2e7d32; margin: 0.75rem 0;">
+    🟢 <strong>Live.</strong> Pick a strategy on the left, review pending proposals, and take action. Every Accept / Reject / Modify / Re-categorize updates the strategy and adds a History note. Re-categorize also saves and publishes automatically. We need to know who's making the change, so make sure your project task is active.
   </div>
+
+  {# Shared floating launcher (bottom-right). #}
+  {% set launcher = {"button_id": "b3-assistant-fab"} %}
+  {% include "_assistant_launcher.html" %}
 
   {# ── Domain summary table — one row per strategy domain ─────── #}
   <table class="domain-summary">

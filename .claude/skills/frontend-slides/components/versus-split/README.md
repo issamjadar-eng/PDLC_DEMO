@@ -17,10 +17,10 @@ When content is a side-by-side comparison without a temporal arrow (which would 
 ## Source shape
 
 ```markdown
-### 1.2 Filing scope at a glance
+### 1.2 v1.0 scope at a glance
 
-- **Filing scope = SP6500 pump + DLM.** PAM is out of scope…
-- **PAM filing posture.** PAM is outside the SP6500 filing.
+- **In scope = Atlas core + dashboards.** Reporting add-on is out of scope…
+- **Reporting add-on posture.** Reporting ships after the v1.0 release.
 ```
 
 When the section is dominated by an in/out / mine/yours framing, the renderer splits items by polarity keywords ("scope", "in", "out", "us", "them"). Falls back to first-half / second-half split.

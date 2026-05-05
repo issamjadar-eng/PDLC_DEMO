@@ -24,7 +24,13 @@ topic: regulatory-submission
 artifact_type: analysis
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Device Description, MFD Impact Analysis]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*device-description*.md"
+  - role: submission-authored
+    file_pattern: "*mfd-impact-analysis*.md"
 verbatim: "FDA shall not regulate non-device software functions as devices. However, FDA may assess the impact that non-device functions have on device functions when evaluating safety and effectiveness. Non-device and other functions are reviewed only when they could impact the device function-under-review."
 extracted_requirements:
   - MedTech Project is a multiple function device product: Pre-Op (SaMD) + Intra-Op (SaMD) are device functions; Management Services is the "other function"
@@ -49,7 +55,15 @@ topic: architecture
 artifact_type: analysis
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [MFD Impact Analysis, System Hazard Analysis, Architecture Document]
+canonical_role: architecture
+criticality: should-have
+applies_to:
+  - role: architecture
+    file_pattern: "*mfd-impact-analysis*.md"
+  - role: risk-management
+    file_pattern: "*system-hazard-analysis*.md"
+  - role: architecture
+    file_pattern: "*software-architecture-document*.md"
 verbatim: "Consider whether the functions share: computational resources, data dependencies (input data from other function used in critical calculations), code necessary for proper execution, memory or storage, output screen or GUI, programming pointers. Does the other function provide input data for a critical calculation? Does the other function affect processing time when sharing a processor? Does the other function serve as or impact a risk control measure for the device function?"
 extracted_requirements:
   - Assess shared resources between Management Services and the SaMD modules: computational resources, data dependencies, code, memory/storage, GUI
@@ -75,7 +89,15 @@ topic: architecture
 artifact_type: design-document
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [System Architecture Document, 510(k) Submission — Architecture, Hazard Analysis]
+canonical_role: architecture
+criticality: must-have
+applies_to:
+  - role: architecture
+    file_pattern: "*system-architecture-document*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*architecture*.md"
+  - role: risk-management
+    file_pattern: "*hazard-analysis*.md"
 verbatim: "Architectural separation strongly recommended. Logical separation, architectural separation, code and data partitioning should be used to the extent possible. Higher separation leads to easier independent review of safety and effectiveness. When separation is not achievable, interconnections and interdependencies must be explained in the hazard analysis with appropriate risk controls."
 extracted_requirements:
   - The system SAD must document the architectural separation between device functions (Pre-Op, Intra-Op) and "other functions" (Management Services)
@@ -101,7 +123,15 @@ topic: configuration-change
 artifact_type: process-record
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Design Change Records, PCCP Change Records, Change Impact Analysis]
+canonical_role: plans
+criticality: must-have
+applies_to:
+  - role: plans
+    file_pattern: "*design-change-records*.md"
+  - role: submission-authored
+    file_pattern: "*pccp-change-records*.md"
+  - role: plans
+    file_pattern: "*change-impact-analysis*.md"
 verbatim: "When an other function is modified: assess whether the modification could significantly impact safety or effectiveness of the device function. If adverse impact (or labeled positive impact): reference applicable guidance to determine if a new premarket submission is required. Document the impact assessment per the quality system."
 extracted_requirements:
   - Every modification to Management Services must be assessed for adverse impact on Pre-Op and Intra-Op safety/effectiveness

@@ -16,14 +16,17 @@ When a `### N.M Subsection` body has only paragraphs — no bullets, no table, n
 ## Source shape
 
 ```markdown
-### 1.1 What SP6500 actually is
+### 1.1 What Atlas actually is
 
-SP6500 is a large-volume single-channel IV infusion pump with a 7" capacitive
-touchscreen, an on-pump drug library, and a predictive-alarm SaMD module…
+Atlas is a multi-tenant data platform for analytics teams with a notebook
+surface, a connector library, and an at-least-once ingest tier…
 
-The closed-loop title earned in early literature is misleading: SP6500 has
-dose-error reduction software, but the prescriber loop remains open…
+The "real-time" framing in early marketing is misleading: Atlas has a
+streaming connector path, but the warehouse-side materialization remains
+batch on a 5-minute cadence…
 ```
+
+(Prose-slide is for a section that's genuinely paragraph-shaped — definitional, narrative, or argumentative content that doesn't decompose to bullets cleanly. Use it for an executive summary, a research-finding narrative, a strategy rationale, or any paragraph that needs to read as prose, not a list.)
 
 ## Gotchas
 

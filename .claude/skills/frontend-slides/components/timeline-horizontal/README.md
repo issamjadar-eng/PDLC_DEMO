@@ -19,10 +19,10 @@ When bullets or rows carry explicit temporal markers (week N, Q1, 2026-Q2, dates
 ```markdown
 ### 5. What's Next
 
-- Lock the predicate-comparison table by week 4.
-- Submit Q-Sub package by week 8 with FDA pre-feedback target by week 12.
-- Begin formative HF testing against the production touchscreen prototype in week 10.
-- Open the post-market data plan with the four investigator sites by week 14.
+- Lock the comparison matrix against alternatives by week 4.
+- Ship the milestone package by week 8 with stakeholder review target by week 12.
+- Begin user-research sessions against the production prototype in week 10.
+- Open the post-launch monitoring plan with the partner sites by week 14.
 ```
 
 ## Gotchas

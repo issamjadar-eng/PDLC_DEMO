@@ -1,8 +1,8 @@
 ---
 name: web-control
-description: Cross-platform browser automation as shared infrastructure — owns Chrome lifecycle (install / launch / status / stop) and DevTools-Protocol connection helpers (Python lib) for consumer skills. Use when other skills need to drive a Chromium-family browser under the user's corporate Google identity (e.g., Workspace operations where API access is denied by org policy). Provides `setup`, `launch`, `status`, `stop` actions plus a `connect` Python library API. NOT a workflow skill — owns no web-app-specific logic.
-version: 0.2.0
-updated: 2026-04-27
+description: Cross-platform browser automation as shared infrastructure — owns Chrome lifecycle (install / launch / status / stop) and DevTools-Protocol connection helpers (Python lib) for consumer skills. Use when other skills need to drive a Chromium-family browser under the user's corporate Google identity (e.g., Workspace operations where API access is denied by org policy), or when a consumer skill needs to make authenticated REST calls reusing the user's signed-in session cookies. Provides `setup`, `launch`, `status`, `stop`, `cookies` actions plus a `connect` Python library API and a `lib.cookies` cookie-extraction API. NOT a workflow skill — owns no web-app-specific logic.
+version: 0.3.0
+updated: 2026-05-02
 status: ready
 ---
 
@@ -42,6 +42,8 @@ Owns **browser automation as shared infrastructure** for the project. When other
 | `actions/launch.py` | Start debug Chrome (calls `scripts/launch-debug-chrome.sh`), idempotent | **Ready** |
 | `actions/status.py` | Health-check: platform / binary / profile / processes / port / sign-in heuristic | **Ready** |
 | `actions/stop.py` | Terminate debug Chrome processes — only those matching our profile dir | **Ready** |
+| `actions/cookies.py` | `/web-control cookies <url-or-domain>` — extract cookies from the debug Chrome jar; redacts values by default; `--format=header\|json\|summary` and `--show-values` gates | **Ready** |
+| `lib/cookies.py` | `extract_cookies(url)` + `cookies_to_header(cookies)` — Python API for consumer skills that need to reuse the user's signed-in session for raw HTTP calls | **Ready** |
 | `lib/errors.py` | `WebControlError` hierarchy with built-in recovery hints | **Ready** |
 | `lib/platform.py` | Platform detection, Chrome path resolution, canonical flag list | **Ready** |
 | `lib/lifecycle.py` | PID lookup, port-listening detection, kill | **Ready** |
@@ -99,6 +101,41 @@ Exit code 0 if all green or harmlessly missing; non-zero if Chrome is missing en
 ### `stop`
 
 Send SIGTERM to Chrome processes matching our `--user-data-dir`. The user's main Chrome (different profile dir) is never touched. Falls back to SIGKILL after 5s if needed. Idempotent — succeeds if no matching process.
+
+### `cookies`
+
+Extract cookies from the debug Chrome's cookie jar for a given URL or domain, via CDP `Network.getCookies`. The output is suitable for use as a `Cookie:` request header (default: redacted summary; opt in to raw values for piping into a consumer).
+
+**The use case.** A consumer skill needs to make authenticated REST calls to a service whose API the user has signed into via the debug Chrome — but no MCP / SDK exposes the endpoint, or the service's MCP doesn't cover the surface needed (Confluence attachment endpoints are the canonical example). The debug Chrome's cookie jar is the auth surface; this action is the bridge from interactive sign-in to programmatic HTTP.
+
+**Usage:**
+
+```
+/web-control cookies <url-or-domain>                          # default: redacted human-readable summary
+/web-control cookies <url-or-domain> --format=json            # full CDP cookie array
+/web-control cookies <url-or-domain> --format=header --show-values   # raw "name=val; name=val" Cookie header (sensitive)
+```
+
+The consumer skill is expected to source the URL/domain from project config (e.g., its own `project.yml` block), never to hard-code it. `web-control` itself is project-agnostic — it accepts the URL as an argument.
+
+**Security model.**
+- Values are redacted by default (length-only summaries).
+- `--format=header` requires `--show-values` — refuses otherwise (a redacted Cookie header would be unusable).
+- Raw cookie output is sensitive (session tokens). Pipe directly into the consumer; never paste into chat or logs.
+
+**Library API** (preferred for in-process consumers):
+
+```python
+from lib.cookies import extract_cookies, cookies_to_header
+
+cookies = extract_cookies(base_url)            # base_url comes from consumer config
+header  = cookies_to_header(cookies)           # "name1=val1; name2=val2; ..."
+# pass `header` to httpx / urllib / requests as the Cookie: header
+```
+
+**Failure modes** (all surfaced with recovery hints):
+- `ChromeNotRunning` — debug port unreachable. Recovery: `/web-control launch`.
+- Empty cookie list — user not signed in to the target site in the debug Chrome. Recovery: open the site in the debug Chrome window, sign in (check "Remember me" so the session persists), then re-run.
 
 ## Consumer-skill integration
 

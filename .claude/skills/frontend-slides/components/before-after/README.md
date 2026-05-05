@@ -20,11 +20,11 @@ When the section reads as a transformation: a baseline, a change, an outcome. St
 ```markdown
 ### 4.2 What we measured
 
-> equivalent IEC 62304 documentation in 38% of the calendar time of SP6000's
-> equivalent phase, with reviewer-flagged clinical-correctness defects down 21%.
+> equivalent compliance documentation in 38% of the calendar time of the
+> previous baseline, with reviewer-flagged correctness defects down 21%.
 ```
 
-The renderer extracts the two states from the prose (SP6000 baseline vs SP6500 with agents) and the delta from the percentage.
+The renderer extracts the two states from the prose (baseline vs agentic-console run) and the delta from the percentage.
 
 ## Gotchas
 

@@ -92,9 +92,9 @@ One oversized number, with thin lead-in lines pointing to clarifying labels. Use
 
 ```html
 <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center;">
-    <div style="text-align: right; color: var(--text-muted);">SP6000 baseline<br><strong style="color: var(--text-primary);">100%</strong></div>
+    <div style="text-align: right; color: var(--text-muted);">v1 baseline<br><strong style="color: var(--text-primary);">100%</strong></div>
     <div style="font-family: var(--font-display); font-size: clamp(5rem, 18vw, 14rem); line-height: 1; color: var(--card-orange); letter-spacing: -0.04em;">38<span style="font-size: 0.4em; color: var(--text-secondary);">%</span></div>
-    <div style="color: var(--text-muted);">SP6500 with agents<br><strong style="color: var(--card-orange);">↓ 62 pts</strong></div>
+    <div style="color: var(--text-muted);">v2 with agents<br><strong style="color: var(--card-orange);">↓ 62 pts</strong></div>
 </div>
 ```
 
@@ -116,11 +116,11 @@ Bars drawn with CSS, baseline annotation, optional reference lines. Stronger tha
 
 ```html
 <div style="display: grid; grid-template-columns: minmax(140px, 22%) 1fr; gap: 1rem 1.4rem; align-items: center;">
-    <div>SP6000 baseline</div>
+    <div>v1 baseline</div>
     <div style="position: relative; height: 24px; background: rgba(255,255,255,0.06);">
         <div style="position: absolute; inset: 0 0 0 0; width: 100%; background: var(--text-muted);"></div>
     </div>
-    <div>SP6500 with agents</div>
+    <div>v2 with agents</div>
     <div style="position: relative; height: 24px; background: rgba(255,255,255,0.06);">
         <div style="position: absolute; inset: 0; width: 38%; background: var(--card-orange);"></div>
     </div>
@@ -134,10 +134,10 @@ A pulled quote in the center, with smaller commentary in the margins (left or ri
 ```html
 <div style="display: grid; grid-template-columns: 1fr 14rem; gap: 3rem;">
     <blockquote style="font-family: var(--font-display); font-size: clamp(1.5rem, 3.5vw, 2.8rem); line-height: 1.2; color: var(--text-primary);">
-        The 12 weeks produced equivalent IEC 62304 documentation in <em style="color: var(--card-orange); font-style: normal;">38%</em> of the calendar time.
+        The 12 weeks produced equivalent compliance documentation in <em style="color: var(--card-orange); font-style: normal;">38%</em> of the calendar time.
     </blockquote>
     <aside style="font-size: 0.85em; color: var(--text-muted); border-left: 2px solid var(--card-orange); padding-left: 1rem;">
-        Speed gain attributed to template execution. Defect reduction (down 21%) attributed to KOL persona reviewers.
+        Speed gain attributed to template execution. Defect reduction (down 21%) attributed to expert-persona reviewers.
     </aside>
 </div>
 ```
@@ -167,7 +167,7 @@ Vertical stack of values from smallest to largest, each visually proportional. U
 ```html
 <div style="display: flex; flex-direction: column; gap: 0.6rem;">
     <div style="font-family: var(--font-display); font-size: 2rem; color: var(--text-muted);">2 sites</div>
-    <div style="font-family: var(--font-display); font-size: 4rem; color: var(--card-amber);">4 KOLs</div>
+    <div style="font-family: var(--font-display); font-size: 4rem; color: var(--card-amber);">4 advisors</div>
     <div style="font-family: var(--font-display); font-size: 7rem; color: var(--card-orange); line-height: 1;">38%</div>
 </div>
 ```
@@ -226,3 +226,82 @@ Items arranged in a circle around a central anchor — for cyclic processes (RAC
 - **Two slot personalities:**
   - **Slot C (bold metaphor):** lead with a visual primitive — a drawn diagram, a conic donut, a diagonal split, a layered stack, a CSS-art figure. Use color aggressively. The goal is "this slide is a *thing*, not just type."
   - **Slot D (restrained takeaway):** strip to the essential message. Oversized typography, generous whitespace, one or two visual elements max. Rhetorical force through restraint. The goal is "this slide makes you stop and read."
+
+---
+
+## Layout pitfalls (worked good/bad pairs)
+
+These are the recurring failure modes from the v0.6 cache audit. They aren't hard rules — break them when you have a deliberate reason — but if you find yourself in one of these shapes by accident, redesign.
+
+### Pitfall A — text bleeding to the slide rim
+
+The outer `--slide-padding` lives on `.slide-content`, and it does **not** propagate into absolutely-positioned children that fill the slide. When you reach for a colored band that spans edge-to-edge, you're now inside that band's coordinate system; if the band has `padding: 0`, your text sits at the rim.
+
+```html
+<!-- ✗ BAD: text touches the right edge of the band -->
+<div style="position: absolute; inset: 0; background: var(--card-orange); padding: 0;">
+  <h2 style="font-size: var(--h2-size);">Headline</h2>
+  <p>Body text reaches the rim.</p>
+</div>
+
+<!-- ✓ GOOD: band fills, but inner content keeps a gutter -->
+<div style="position: absolute; inset: 0; background: var(--card-orange);
+            padding: clamp(0.75rem, 2vw, 1.25rem); display: flex; flex-direction: column;
+            justify-content: center;">
+  <h2 style="font-size: var(--h2-size);">Headline</h2>
+  <p>Body text breathes inside the band.</p>
+</div>
+```
+
+When the band's role is *purely decorative* (e.g., a colored half of a diagonal split with no text on it), `padding: 0` is fine — the rim test only applies when text rides on the band.
+
+### Pitfall B — half the slide blank because the grid reserves slots the source can't fill
+
+Reaching for a 3-row grid because the section *might* have 3 phases reads as truncated when the source carries 2.
+
+```html
+<!-- ✗ BAD: 3 rows reserved, only 2 filled — bottom band is dead space -->
+<div style="display: grid; grid-template-rows: 1fr 1fr 1fr; gap: 1rem; height: 100%;">
+  <div>Phase 1</div>
+  <div>Phase 2</div>
+  <!-- nothing here, but the row still claims 1/3 of the slide -->
+</div>
+
+<!-- ✓ GOOD: layout matches actual item count — asymmetric pair, hero+sub, side-by-side -->
+<div style="display: grid; grid-template-columns: 5fr 4fr; gap: clamp(1rem, 2vw, 2rem); height: 100%;">
+  <div>Phase 1 (the headline)</div>
+  <div>Phase 2 (the consequence)</div>
+</div>
+```
+
+If the dossier carries one fact, design a hero card. Two facts → asymmetric pair or before/after split. Three+ → grids and ladders earn their slots. **Count the items first; pick the layout shape second.**
+
+### Pitfall C — overlap that obscures text
+
+Layered cards (the fan-stack) work when each card has its own opaque background. They fail when an absolute element with no background sits over running text.
+
+```html
+<!-- ✗ BAD: callout sits on body text with no opaque backing -->
+<p>Body paragraph that reads through the callout.</p>
+<div style="position: absolute; top: 40%; left: 50%; transform: translateX(-50%);
+            color: var(--card-orange); font-size: 2rem;">→ KEY POINT</div>
+
+<!-- ✓ GOOD: callout has its own background AND clearance from prose -->
+<p>Body paragraph above the callout zone.</p>
+<div style="position: absolute; bottom: clamp(1rem, 3vh, 2rem); right: clamp(1rem, 3vw, 2rem);
+            background: var(--bg-primary); border-left: 3px solid var(--card-orange);
+            padding: clamp(0.5rem, 1.5vw, 1rem); color: var(--text-default);">
+  Key point
+</div>
+
+<!-- ✓ ALSO GOOD: pure decoration that doesn't touch text -->
+<div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 14px; border-radius: 50%; background: var(--card-orange);
+            pointer-events: none;"></div>
+```
+
+When you place an absolute element, set all four anchors (`inset: T R B L` or `top/right/bottom/left`) — partial constraints drift when the parent reflows due to content length.
+
+### Pitfall D — body text shrunk below readable size
+
+If you find yourself at `font-size: 0.6rem` to fit prose into a band, the band is too small. Redesign the layout — don't zoom out the type. Small fonts (`≤ 0.7rem`) are reserved for micro-labels, axis ticks, table cells. Body prose stays at `clamp(0.85rem, 1.5vw, 1.05rem)` or larger.

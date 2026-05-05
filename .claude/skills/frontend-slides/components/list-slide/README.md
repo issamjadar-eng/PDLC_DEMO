@@ -18,9 +18,9 @@ Bullet list where fewer than half the items start with `**bold**`. The "default"
 ```markdown
 ### 5. What's Next
 
-- Lock the predicate-comparison table by week 4.
-- Submit Q-Sub package by week 8 with FDA pre-feedback target by week 12.
-- Begin formative HF testing against the production touchscreen prototype in week 10.
+- Lock the comparison matrix against alternatives by week 4.
+- Ship the milestone package by week 8 with stakeholder review target by week 12.
+- Begin user-research sessions against the production prototype in week 10.
 ```
 
 ## Gotchas

@@ -1,7 +1,234 @@
 {% extends "_base.html" %}
 {% block title %}{{ dashboard.title }} · PDLC Console{% endblock %}
-{% block body_class %}dashboard-page{% endblock %}
+{% block body_class %}dashboard-page{% if interactive %} dashboard-page-interactive{% endif %}{% endblock %}
 {% block content %}
+{% if interactive %}
+{# ── Interactive tracker dashboard (b3 strategy-workflow parity) ───────── #}
+<link rel="stylesheet" href="/workflows/tracker/dashboard.css">
+<link rel="stylesheet" href="/static/tracker_interactive.css">
+<style>
+  /* Reset embed-mode tracker base so it sits inside the console chrome
+     without fighting _base.html's body styles. The tracker grid CSS targets
+     `body` for padding + colors; scope those to the embed wrapper instead. */
+  .tracker-embed { padding: 1rem 1.5rem; }
+  .dashboard-page-interactive .tracker-chrome {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--border, #1e293b);
+    background: var(--surface, #1e293b);
+  }
+  .tracker-chrome .chrome-title h1 { font-size: 1.05rem; margin: 0; }
+  .tracker-chrome .chrome-title p { font-size: 0.78rem; margin: 0.1rem 0 0; opacity: 0.7; }
+  .tracker-chrome .chrome-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .tracker-chrome .session-badge { font-size: 0.78rem; padding: 0.2rem 0.55rem; border-radius: 999px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; }
+  .tracker-chrome .session-badge.idle { background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); color: #94a3b8; }
+  .tracker-chrome .pending-pill { font-size: 0.78rem; padding: 0.2rem 0.55rem; border-radius: 999px; background: rgba(234, 179, 8, 0.15); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.3); }
+  .tracker-chrome .pending-pill.zero { background: rgba(148, 163, 184, 0.08); color: #94a3b8; border-color: rgba(148, 163, 184, 0.2); }
+  .tracker-chrome button.btn-chrome {
+    font-size: 0.8rem; padding: 0.35rem 0.85rem; border-radius: 6px;
+    border: 1px solid var(--border, #475569); cursor: pointer;
+    background: var(--surface2, #334155); color: var(--text, #e2e8f0);
+  }
+  .tracker-chrome button.btn-chrome.primary { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.5); color: #86efac; font-weight: 600; }
+  .tracker-chrome button.btn-chrome.danger { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+  .tracker-chrome button.btn-chrome:disabled { opacity: 0.4; cursor: not-allowed; }
+  .tracker-chrome a.btn-chrome { text-decoration: none; }
+  .tracker-pending-panel {
+    position: fixed; right: 1rem; bottom: 1rem; width: 320px;
+    max-height: 60vh; overflow-y: auto;
+    background: var(--surface, #1e293b);
+    border: 1px solid var(--border, #475569); border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    z-index: 50; padding: 0.85rem;
+    display: none;
+  }
+  .tracker-pending-panel.visible { display: block; }
+  .tracker-pending-panel h3 { font-size: 0.85rem; margin: 0 0 0.5rem; }
+</style>
+
+<div class="tracker-chrome">
+  <div class="chrome-title">
+    <h1>{{ dashboard.title }}</h1>
+    <p>{{ dashboard.description }}</p>
+  </div>
+  <div class="chrome-actions">
+    <span id="tracker-session-badge" class="session-badge {% if not session_active %}idle{% endif %}">
+      {% if session_active %}Session: task {{ session_task_id }}{% else %}No active session{% endif %}
+    </span>
+    <span id="tracker-pending-pill" class="pending-pill {% if pending_count == 0 %}zero{% endif %}">
+      <span id="tracker-pending-count">{{ pending_count }}</span> pending
+    </span>
+    <button id="tracker-toggle-pending" class="btn-chrome" type="button">Pending changes</button>
+    <button id="tracker-save-btn" class="btn-chrome primary" type="button" {% if pending_count == 0 %}disabled{% endif %}>Save &amp; Publish</button>
+    <button id="tracker-cancel-btn" class="btn-chrome danger" type="button" {% if not session_active %}disabled{% endif %}>Cancel session</button>
+    <a class="btn-chrome" href="{{ dashboard.source_url }}">Source</a>
+  </div>
+</div>
+
+<aside id="tracker-pending-panel" class="tracker-pending-panel" aria-hidden="true">
+  <h3>Pending status changes</h3>
+  <div id="tracker-pending-list">
+    <p class="muted" style="font-size:0.78rem;">Click any Status badge in the table to start a session.</p>
+  </div>
+  <div style="margin-top:0.5rem;display:flex;flex-direction:column;gap:0.35rem;">
+    <input id="tracker-commit-msg" type="text" placeholder="Commit message (optional)" style="font-size:0.78rem;padding:0.35rem;border:1px solid var(--border,#475569);border-radius:4px;background:var(--surface2,#334155);color:var(--text,#e2e8f0);">
+  </div>
+</aside>
+
+<section class="tracker-inline-host">
+  {{ tracker_fragment | safe }}
+</section>
+
+{# Tracker grid base JS (filter/toggle/click-expansion) — same single-source-
+   of-truth as the standalone HTML, served from render.py's `_JS_INNER`. #}
+<script src="/workflows/tracker/dashboard.js" defer></script>
+
+{# Interactive overlay (P4) — clickable Status badges → POST changeset. #}
+<script src="/static/tracker_interactive.js" defer></script>
+
+<script>
+(function() {
+  const sessionBadge = document.getElementById('tracker-session-badge');
+  const pendingPill = document.getElementById('tracker-pending-pill');
+  const pendingCount = document.getElementById('tracker-pending-count');
+  const togglePending = document.getElementById('tracker-toggle-pending');
+  const pendingPanel = document.getElementById('tracker-pending-panel');
+  const pendingList = document.getElementById('tracker-pending-list');
+  const saveBtn = document.getElementById('tracker-save-btn');
+  const cancelBtn = document.getElementById('tracker-cancel-btn');
+  const commitMsgEl = document.getElementById('tracker-commit-msg');
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function refreshSession() {
+    try {
+      const r = await fetch('/workflows/tracker/status/session');
+      if (!r.ok) return;
+      const data = await r.json();
+      const session = data.session;
+      const pending = data.pending || [];
+      pendingCount.textContent = pending.length;
+      saveBtn.disabled = pending.length === 0;
+      cancelBtn.disabled = !session;
+      if (pending.length === 0) {
+        pendingPill.classList.add('zero');
+      } else {
+        pendingPill.classList.remove('zero');
+      }
+      if (session) {
+        sessionBadge.textContent = 'Session: task ' + session.task_id;
+        sessionBadge.classList.remove('idle');
+      } else {
+        sessionBadge.textContent = 'No active session';
+        sessionBadge.classList.add('idle');
+      }
+      if (pending.length === 0) {
+        pendingList.innerHTML = '<p class="muted" style="font-size:0.78rem;">Click any Status badge in the table to start a session.</p>';
+      } else {
+        pendingList.innerHTML = pending.map(p =>
+          '<div style="padding:6px 0;border-bottom:1px solid var(--border,#1e293b);font-size:0.78rem;">' +
+          '<div style="font-family:monospace;color:var(--text-muted,#94a3b8);">' + escapeHtml(p.row_id) + '</div>' +
+          '<div><strong>' + escapeHtml(p.old_status) + '</strong> → <strong style="color:#86efac;">' + escapeHtml(p.new_status) + '</strong></div>' +
+          (p.rationale ? '<div style="font-style:italic;color:var(--text-muted,#94a3b8);">' + escapeHtml(p.rationale) + '</div>' : '') +
+          '</div>'
+        ).join('');
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  togglePending.addEventListener('click', () => {
+    pendingPanel.classList.toggle('visible');
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+    try {
+      const r = await fetch('/workflows/tracker/status/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: (commitMsgEl.value || '').trim() || null }),
+      });
+      const data = await r.json();
+      if (r.ok && data.saved) {
+        commitMsgEl.value = '';
+        // Reload the page to pick up the post-merge HTML.
+        window.location.reload();
+        return;
+      }
+      alert('Save failed: ' + JSON.stringify(data));
+    } catch (e) {
+      alert('Network error: ' + e.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save & Publish';
+    }
+  });
+
+  cancelBtn.addEventListener('click', async () => {
+    if (!confirm('Discard all pending changes and tear down the session?')) return;
+    cancelBtn.disabled = true;
+    try {
+      const r = await fetch('/workflows/tracker/status/cancel', { method: 'POST' });
+      if (r.ok) {
+        window.location.reload();
+        return;
+      }
+      const data = await r.json();
+      alert('Cancel failed: ' + JSON.stringify(data));
+    } catch (e) {
+      alert('Network error: ' + e.message);
+    } finally {
+      cancelBtn.disabled = false;
+    }
+  });
+
+  // tracker_interactive.js posts a `tracker:apply` message after each badge
+  // change. Refresh the chrome state on each.
+  window.addEventListener('message', (e) => {
+    if (!e.data || !e.data.tracker) return;
+    if (e.data.tracker.type === 'apply' || e.data.tracker.type === 'ready') {
+      refreshSession();
+    }
+  });
+
+  // Custom event from same-document tracker_interactive.js (no postMessage
+  // needed when overlay + chrome share a DOM, but support both for safety).
+  document.addEventListener('tracker:apply', refreshSession);
+
+  // Initial refresh + light polling for out-of-band changes.
+  refreshSession();
+  setInterval(refreshSession, 10000);
+})();
+</script>
+
+{# Assistant drawer — same partial used on documents/trace-matrix/b3.
+   Default agent = program-manager (cross-cutting tracker view).
+   Grounding = live submission-tracker.md (worktree if a status-session is
+   open, else main) served by /workflows/tracker/grounding. #}
+{% set assistant = {
+  "scope": "tracker:submission",
+  "endpoint": "/workflows/tracker/advisor/stream",
+  "default_agent": "program-manager",
+  "allowed_agents": advisor_allowed_agents,
+  "grounding_label": "SUBMISSION TRACKER",
+  "grounding_source": "url:/workflows/tracker/grounding",
+  "title": "Submission Tracker Advisor",
+  "subtitle": "Grounded in submission-tracker.md (live)",
+  "placeholder": "Ask about pending status, blockers, evidence gaps…",
+  "empty_hint": "Pick an advisor and ask about the submission tracker.",
+  "open_button_id": "pc-assistant-open"
+} %}
+{% include "_assistant_drawer.html" %}
+
+{# Shared floating launcher (bottom-right). #}
+{% set launcher = {"button_id": "pc-assistant-open"} %}
+{% include "_assistant_launcher.html" %}
+
+{% else %}
+{# ── Generic dashboard (iframe) ──────────────────────────────────────── #}
 <section class="dashboard-wrap">
   <div class="dashboard-header">
     <div>
@@ -15,4 +242,5 @@
   </div>
   <iframe class="dashboard-frame" src="{{ dashboard.embed_url }}" title="{{ dashboard.title }}"></iframe>
 </section>
+{% endif %}
 {% endblock %}
