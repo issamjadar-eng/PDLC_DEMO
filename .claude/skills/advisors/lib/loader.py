@@ -36,6 +36,13 @@ class DomainAgent:
     group: str | None = None
     tools: list[str] = field(default_factory=list)
     excludes: list[str] = field(default_factory=list)
+    # Canonical-role grounding mode (opt-in). When `canonical_roles` is populated,
+    # the renderer emits a 3-tier grounding block instead of literal-glob mode.
+    # Shape: {"tier_1": [{"role": str, "dhfs": dict|str, "submissions": str}, ...],
+    #         "tier_2": [...],
+    #         "tier_3": {"researcher": str}}
+    canonical_roles: dict | None = None
+    researcher: str | None = None
 
     @property
     def is_panel(self) -> bool:
@@ -44,6 +51,10 @@ class DomainAgent:
     @property
     def is_system(self) -> bool:
         return self.name.startswith("_")
+
+    @property
+    def is_canonical_role_mode(self) -> bool:
+        return bool(self.canonical_roles)
 
 
 @dataclass(frozen=True)
@@ -111,6 +122,16 @@ def load_agent_file(path: Path) -> DomainAgent:
         console_ext.get("moderator") or meta.get("moderator") or "round-robin"
     )
 
+    # Canonical-role grounding (opt-in, three-tier mode).
+    canonical_roles = console_ext.get("canonical_roles")
+    if canonical_roles is not None and not isinstance(canonical_roles, dict):
+        raise ValueError(f"console.canonical_roles must be a dict, got {type(canonical_roles).__name__}")
+    researcher = None
+    if isinstance(canonical_roles, dict):
+        tier_3 = canonical_roles.get("tier_3") or {}
+        if isinstance(tier_3, dict):
+            researcher = tier_3.get("researcher")
+
     return DomainAgent(
         name=name,
         title=title,
@@ -125,6 +146,8 @@ def load_agent_file(path: Path) -> DomainAgent:
         path=path,
         group=group,
         tools=tools,
+        canonical_roles=canonical_roles,
+        researcher=researcher,
     )
 
 

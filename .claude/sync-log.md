@@ -4,6 +4,22 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-12 — pull (advisors v1.2.0 + dhf-manifest v9, post-trace-matrix-push sync)
+
+- Source: hitachi HEAD `d3c3429` (post my own #159 merge)
+- Pulled: 27 files
+  - `skills/advisors/*` (19 files) — v1.2.0: canonical-role grounding model now default; literal-glob retained as legacy fallback. Rollout to all 11 advisor agents (clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, regulatory-affairs, risk-management, systems-engineering, vnv-lead). New `advisor-researcher` helper agent. (hitachi PRs #156 / #158)
+  - `skills/dhf-manifest/*` (2 SKILL + 4 new) — v9 catalog expansion (43 roles total) + `multi_file: true` flag; v8 new `discovery-index` action with `data/canonical-roles.yaml`, `scripts/discovery-index.py`, `tests/test_discovery_index.sh`. (hitachi PRs from arthrex-pccp ben/191)
+  - `agents/advisor-researcher.md` — new agent at registry-root path (project pulls because it didn't exist locally).
+- Post-update actions required:
+  - **Run `/dhf-manifest discovery-index`** to bootstrap the per-project discovery index at `docs/project/dhf-manifest/pdlc-demo-dhf-discovery.json`. Without this, advisor agents fall back to literal-glob mode (still works, lower fidelity grounding).
+  - No other actions surfaced — no new approved_skills / approved_agents entries required; no setup re-runs.
+- Skipped:
+  - `agents/<name>.md` registry-root copies (13 files) reported as BOTH_DIVERGED — expected drift: the project installs advisor agents as symlinks `.claude/agents/<n>.md` → `.claude/skills/advisors/agents/<n>.md` (skill-internal source of truth), while hitachi keeps a parallel registry-root `agents/<n>.md` copy with different content. This is the project's design choice, not real divergence.
+  - `skills/project-console/console/web/static/console.overrides.css` — LOCAL_AHEAD push candidate (Manrope font fix from prior session); deferred for a later push.
+
+---
+
 ## 2026-05-12 — push (trace-matrix v7→v8: bidirectional edge engine)
 
 - Files: `skills/trace-matrix/SKILL.md`, `skills/trace-matrix/README.md`, `skills/trace-matrix/scripts/graph.py`, `skills/trace-matrix/scripts/analyze.py`, `skills/trace-matrix/tests/test_graph_bidirectional.py`

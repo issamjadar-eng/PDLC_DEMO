@@ -1,8 +1,10 @@
 ---
 name: dhf-manifest
 description: "DHF Manifest — 4-tier deliverable catalog that projects regulatory and QMS obligations through a project scope vector into per-DHF manifests with gap reports. Sibling to /trace-matrix (intra-DHF trace); this skill answers: are the right documents present and do they satisfy regulation + QMS?"
-version: 7
-updated: 2026-05-04
+version: 9
+updated: 2026-05-12
+# v9 (advisor-grounding rollout): canonical-role catalog expansion (16 → 43 roles) + `multi_file: true` flag for folder-pointer artifact families. Resolver emits `{folder, exists, file_count, patterns_used}` for multi_file roles — same shape as `external_data` resolutions — so advisor researcher subagents can be given "look here, N files" hints. New roles span clinical (clinical_evaluation_plan/report, benefit_risk_analysis, literature_search, pmcf_plan, pmcf_studies), postmarket (complaints, capa, adverse_events, field_safety_corrective_actions, psur), cybersecurity (threat_model, sbom, cybersecurity_plan, vulnerability_management), risk additions (fmea, risk_management_report), design-controls additions (user_needs, software_requirements, software_design_specification, verification_plan, verification_protocols, verification_reports), and project-scoped input-analysis subfolders (kol_feedback, market_research, competitive_landscape, filing_strategy). Per-DHF external-mode multi-file deferred. Fixture tests 23 → 36 (added cases 7 + 8 for project-scoped and per-DHF multi-file). README.md rewritten with full Design & Architecture section consolidating pipeline architecture, IoC model, resolution algorithm, multi-file mode, and project-agnostic discipline. (task ben/191 Phase 6)
+# v8 (advisor-grounding pilot): add `discovery-index` action — resolves canonical document roles (system_architecture, regulatory_strategy, …) to project file paths via three-level registry pattern (L1+L2 canonical-roles.yaml in skill; L3 generated <project>-dhf-discovery.json + optional project.yml evidence_layout overrides). Handles both `dhf_organization: internal` and `external` modes; external mode reads taxonomy_path and supports both nested (folder/v*.md) and flat (folder.md) sub-conventions. Bootstrap path: new projects need zero role-specific authoring. Designed for advisor-agent grounding consumers; piloted on `regulatory-affairs`.
 # v7 (task ben/158 Phase 1): catalog schema clean break — `status` and `location` removed from per-obligation entries; new optional fields `canonical_role`, `criticality`, structured `applies_to: [{role, scope, artifact_pattern}]`, `extracted_requirements` plumbed through; top-level `obligation_set_hash` added as tracker cache key. `reproject` action retired (was tied to the dropped `location` field); `scope diff` retained for PCCP change-impact analysis. Coverage / lifecycle / evidence-binding now exclusively the responsibility of `/tracker assess` (agent sidecar).
 ---
 
@@ -42,6 +44,7 @@ Layout is flat on both sides. Skill-side uses category folders mirroring `medtec
 | `distill-qms [topic]` | [actions/distill.md](actions/distill.md) | agents/dhf-distiller.md |
 | `validate` | [actions/inspect.md](actions/inspect.md) | scripts/validate.py |
 | `scope diff <flag>=<val>` | [actions/inspect.md](actions/inspect.md) | scripts/build-manifest.py --dry-run |
+| `discovery-index` | [actions/discovery-index.md](actions/discovery-index.md) | scripts/discovery-index.py |
 
 ## Scope flags (`project.yml`)
 
