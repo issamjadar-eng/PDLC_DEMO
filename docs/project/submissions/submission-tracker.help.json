@@ -5665,6 +5665,802 @@
         "evidence_source_hash": null,
         "claude_md_hash": null
       }
+    },
+    "ENG1": {
+      "title": "Hardware Design Freeze (pump mechanism, sensors, enclosure)",
+      "description": "Locks the physical PP3500 architecture: linear-peristaltic pump mechanism, occlusion + air-in-line sensors, enclosure / sterilization barrier, motor + drive electronics. Hardware freeze means the BOM is fixed and the pre-clinical / IEC 60601 test campaign can begin against a stable target.",
+      "why_important_in_project": "Hardware drift after freeze invalidates downstream risk evidence, V&V testing on the HIL rig, and clinical reliance on PP3000 (K190567) predicate similarity. The hardware-design-freeze gate is what lets risk (RM2a/RM3a), system V&V (SW6a), and clinical (CL2) work begin.",
+      "main_topics": [
+        {
+          "name": "BOM lock",
+          "summary": "All hardware part numbers, vendors, revisions frozen"
+        },
+        {
+          "name": "Sensors finalized",
+          "summary": "Occlusion + air-in-line sensor selection + calibration baseline"
+        },
+        {
+          "name": "Enclosure / sterilization barrier",
+          "summary": "Per IEC 60601-1 + EtO/gamma compatibility"
+        },
+        {
+          "name": "Pre-clinical readiness",
+          "summary": "Test articles built to frozen design"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 60601-1:2005+A1:2012",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a77 (residual risk anchored to hardware)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG2": {
+      "title": "RTOS + Device Platform Baseline (M7)",
+      "description": "Establishes the M7 platform stack: RTOS selection, board support package (BSP), boot chain, and the development toolchain that the M-series infusion-control modules build on. All Enhanced-Documentation-level software stacks on top of this baseline.",
+      "why_important_in_project": "Class C software documentation requires demonstration that the underlying platform is stable, configured securely, and free of known critical defects. The M7 baseline gates SW3a/SW4a/SW5a/SW6a/SW11 and the cyber controls (CY2a, CY7a) anchored to platform features (secure boot, hardware crypto).",
+      "main_topics": [
+        {
+          "name": "RTOS selection + justification",
+          "summary": "SIL-rated RTOS evaluation, vendor support"
+        },
+        {
+          "name": "BSP + drivers",
+          "summary": "Board-specific drivers, validated config"
+        },
+        {
+          "name": "Boot chain",
+          "summary": "Secure boot anchors for ENG17 verifier"
+        },
+        {
+          "name": "Development toolchain",
+          "summary": "Compilers, debuggers, linkers \u2014 feeds tool-validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a78.1 SOUP",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Cybersecurity \u00a7V",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG3": {
+      "title": "Drug Library Payload Format Finalized",
+      "description": "Defines the schema + serialization of the drug-library payload that flows from the cloud-suite drug-library-manager (D-series) to the M2 ingest path on the pump. Locks field semantics, version negotiation, and signing/integrity envelope.",
+      "why_important_in_project": "The payload format is the dependency contract that pump + cloud + PCCP-support documentation all reference. Freezing it gates SRS rows on both sides (SW2a/SW2b), risk analysis (RM2a/RM2b), and the PCCP support documents (PS1/PS2/PS3) that describe drug-library change envelopes.",
+      "main_topics": [
+        {
+          "name": "Schema definition",
+          "summary": "Fields, types, units, ranges"
+        },
+        {
+          "name": "Serialization format",
+          "summary": "JSON/CBOR/proprietary + version field"
+        },
+        {
+          "name": "Integrity envelope",
+          "summary": "Signing surface for ENG7 (D4 signing service)"
+        },
+        {
+          "name": "Backward compatibility",
+          "summary": "How the pump handles older/newer payload versions"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA PCCP General Guidance \u00a7V (drug library)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.2 interface req",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG4": {
+      "title": "Crypto / Signing Stack (KMS, cert store, HSM)",
+      "description": "Production cryptographic infrastructure: key management service (KMS), certificate store, hardware security module integration on M7 device and D4 cloud-side signing service. Provides root of trust for OTA, mutual auth, drug-library signing, and audit-log integrity.",
+      "why_important_in_project": "FDA premarket cybersecurity guidance \u00a7V expects demonstrable secure key management. ENG4 gates CY2a/CY2b/CY4a/CY4b (cybersecurity controls on device + drug-library-manager) and PS1/PS4 (PCCP support docs covering payload integrity).",
+      "main_topics": [
+        {
+          "name": "KMS architecture",
+          "summary": "Key lifecycle, rotation, escrow"
+        },
+        {
+          "name": "Cert store on M7",
+          "summary": "Hardware-anchored root of trust"
+        },
+        {
+          "name": "HSM integration",
+          "summary": "For high-value signing operations"
+        },
+        {
+          "name": "Audit & access controls",
+          "summary": "Who can sign / rotate / revoke"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-57 Key Management",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG5": {
+      "title": "Cyber Comms Stack (TLS 1.3, mutual auth, cert provisioning)",
+      "description": "End-to-end secure communications stack across device \u2194 adapter \u2194 management-services. TLS 1.3 mutual authentication, cert provisioning + rotation, session control, replay protection.",
+      "why_important_in_project": "The pump-adapter-cloud chain has three trust boundaries; TLS 1.3 mutual auth is the FDA-visible control that prevents impersonation, MITM, and replay. Gates CY5 (architecture cyber row), CY7a/CY7c (pump + adapter secure comms), and MS5 (management-services interface).",
+      "main_topics": [
+        {
+          "name": "TLS 1.3 mutual auth",
+          "summary": "Certificate-based two-way authentication"
+        },
+        {
+          "name": "Cert provisioning",
+          "summary": "Initial enrollment + lifecycle"
+        },
+        {
+          "name": "Session control",
+          "summary": "Timeouts, rebinding, replay protection"
+        },
+        {
+          "name": "Downgrade protection",
+          "summary": "Strict policy on TLS version + cipher suite"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IETF RFC 8446 (TLS 1.3)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG6": {
+      "title": "Drug Library Authoring Workflow (D1\u2013D3)",
+      "description": "End-to-end drug-library authoring application: D1 authoring UI, D2 storage with version control, D3 validation rule engine. Pharmacist authors entries against clinical-safety constraints before publish; signed by D4 (ENG7) before delivery to the pump.",
+      "why_important_in_project": "Drug-library authoring is the highest-leverage clinical-safety surface in the cloud-suite \u2014 a mis-keyed concentration can directly cause patient harm. The authoring workflow is where clinical-safety validation lives BEFORE the payload reaches the pump. Gates SW2b (drug-library-manager SRS) and HF evaluations.",
+      "main_topics": [
+        {
+          "name": "Author UX (D1)",
+          "summary": "Pharmacist workflow, dual-control, draft/review/publish"
+        },
+        {
+          "name": "Storage (D2)",
+          "summary": "Versioned, audited, Part 11 compliant"
+        },
+        {
+          "name": "Validation rules (D3)",
+          "summary": "Range checks, contraindication, formulary policy"
+        },
+        {
+          "name": "Hand-off to signing (D4)",
+          "summary": "Locked payload format per ENG3"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR Part 11",
+          "role": "primary"
+        },
+        {
+          "citation": "ISTM 14971 \u00a76.5 control by clinical workflow",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG7": {
+      "title": "Drug Library Signing Service (D4)",
+      "description": "D4 signing service receives validated drug-library payloads from D3 and issues authenticated, integrity-protected bundles signed by the production crypto stack (ENG4). The pump's drug-library ingest (M2) verifies the signature before applying.",
+      "why_important_in_project": "The signing boundary is what prevents an attacker who compromises D1/D2/D3 from delivering malicious payloads to fielded pumps. Gates CY2b (drug-library cybersecurity controls) and PCCP support documentation (PS1, PS2).",
+      "main_topics": [
+        {
+          "name": "Signing protocol",
+          "summary": "Per-payload signature with cert chain"
+        },
+        {
+          "name": "Key handling",
+          "summary": "Anchored to ENG4 KMS / HSM"
+        },
+        {
+          "name": "Verification on pump",
+          "summary": "Signature check before M2 applies payload"
+        },
+        {
+          "name": "Revocation",
+          "summary": "How a bad payload is invalidated post-issue"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V (integrity)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG8": {
+      "title": "Audit Log Infrastructure (D6, 21 CFR Part 11)",
+      "description": "D6 audit-log infrastructure providing tamper-evident, append-only event logging for drug-library actions (author, review, sign, publish, retract). 21 CFR Part 11 conformant \u2014 electronic signatures, secure timestamps, retention.",
+      "why_important_in_project": "Part 11 is the FDA-visible control for electronic records. Audit-log integrity is what enables forensic investigation of any drug-library incident. Gates SW2b (drug-library SRS audit rows) and SW6b (system V&V audit-log tests).",
+      "main_topics": [
+        {
+          "name": "Append-only log chain",
+          "summary": "Hash-linked entries, tamper detection"
+        },
+        {
+          "name": "Electronic signatures",
+          "summary": "Per 21 CFR Part 11 Subpart C"
+        },
+        {
+          "name": "Retention",
+          "summary": "Reg-mandated retention windows"
+        },
+        {
+          "name": "Replay / forensics",
+          "summary": "Investigation workflow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR Part 11",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Electronic Records / Signatures Guidance",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG9": {
+      "title": "21 CFR Part 11 Conformance (D2 + D6)",
+      "description": "End-to-end Part 11 conformance covering D2 storage (electronic records) and D6 audit-log (electronic signatures). Covers user-facing Part 11 controls: identity, access, signature meaning, signing ceremony, periodic review.",
+      "why_important_in_project": "Part 11 is required for any electronic record/signature that supports a regulated submission or post-market obligation. ENG9 closes the loop on D2 + D6 (which ENG8 builds the infra for) by certifying user-facing conformance. Gates SW2b and labeling row LB3.",
+      "main_topics": [
+        {
+          "name": "Identity + access control",
+          "summary": "User identification, password, MFA"
+        },
+        {
+          "name": "Signature meaning",
+          "summary": "Bind signature to specific record + intent"
+        },
+        {
+          "name": "Periodic review",
+          "summary": "Required Part 11 surveillance"
+        },
+        {
+          "name": "Labeling claims",
+          "summary": "LB3 user-facing Part 11 statements"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR Part 11",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG10": {
+      "title": "Adapter Pass-Through Architecture (A3, A4)",
+      "description": "Connectivity-adapter modules A3 (pass-through routing) and A4 (session control). Implements the MDDS scope \u2014 data transfer without interpretation, faithful pump-cloud round-tripping under all error conditions.",
+      "why_important_in_project": "Without A3/A4, the adapter can't maintain the data-transfer-only behavior that justifies MDDS classification under 21 CFR 880.6310. Gates MS5 (management-services interface) and CY7c (adapter cybersecurity).",
+      "main_topics": [
+        {
+          "name": "Pass-through routing (A3)",
+          "summary": "No data alteration, no decisions"
+        },
+        {
+          "name": "Session control (A4)",
+          "summary": "Authenticated session lifecycle"
+        },
+        {
+          "name": "MDDS-scope guard",
+          "summary": "Explicit no-clinical-decision invariants"
+        },
+        {
+          "name": "Failure resilience",
+          "summary": "Adapter outage degrades gracefully"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 880.6310 MDDS",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG11": {
+      "title": "Occlusion / Air-in-Line Sensor Calibration",
+      "description": "Sensor calibration protocols and traceable references for the PP3500's occlusion detection (pressure-based) and air-in-line detection (ultrasonic) subsystems. Provides the calibrated sensor characteristic curves that risk + V&V rely on.",
+      "why_important_in_project": "Occlusion-missed and air-in-line are top-10 PCA-pump hazards. Calibration accuracy directly bounds alarm performance and risk control effectiveness. Gates RM2a (pump risk), CL2 (pre-clinical), and SW6a (system V&V alarm scenarios).",
+      "main_topics": [
+        {
+          "name": "Pressure sensor calibration",
+          "summary": "Per IEC 60601-2-24 infusion-pump perf"
+        },
+        {
+          "name": "Air-in-line sensor calibration",
+          "summary": "Ultrasonic detector + threshold characterization"
+        },
+        {
+          "name": "Traceability",
+          "summary": "Reference standards, lot traceability"
+        },
+        {
+          "name": "Drift monitoring",
+          "summary": "Field re-calibration triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 60601-2-24:2012 (Infusion pumps)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-1-8 (alarms)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG12": {
+      "title": "Alarm System IEC 60601-1-8 Conformance",
+      "description": "Full IEC 60601-1-8 alarm system conformance: priority categorization, signal characteristics (audio + visual), user response model, alarm reset/silence/pause behaviors. Includes alarm-fatigue mitigations called out by FDA HF guidance for PCA pumps.",
+      "why_important_in_project": "PCA pumps generate alarm-rich workflows; IEC 60601-1-8 compliance is regulatory table-stakes. Alarm-fatigue and alarm-conflict are the top HF-related hazards. Gates RM2a (alarm risks), HF3a (formative HF alarm-recognition tasks), and SW6a (system V&V alarm scenarios).",
+      "main_topics": [
+        {
+          "name": "Priority taxonomy",
+          "summary": "High / medium / low / info per 60601-1-8"
+        },
+        {
+          "name": "Signal characteristics",
+          "summary": "Audio frequencies, visual icons, persistence"
+        },
+        {
+          "name": "User response model",
+          "summary": "Acknowledge, silence, reset, pause"
+        },
+        {
+          "name": "Alarm-fatigue mitigations",
+          "summary": "Cancel rules, smart suppression"
+        },
+        {
+          "name": "AI/ML predictive-alarm integration (LMR2)",
+          "summary": "Envelope sits OUTSIDE 60601-1-8 alarm critical path"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 60601-1-8:2006+A1:2012",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance \u00a7V",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG13": {
+      "title": "HIL Test Rig + System V&V Harness",
+      "description": "Hardware-in-the-loop test rig that exercises full pump scenarios end-to-end: physical fluid path + sensors + pump motor + the actual M7 firmware. The system V&V harness drives the rig under reproducible scenarios.",
+      "why_important_in_project": "System V&V demands evidence under realistic hardware-software conditions. The HIL rig is the load-bearing infrastructure for SW6a/SW6b (system V&V) and CY7a (cyber under realistic conditions). Without it, V&V coverage devolves to bench testing.",
+      "main_topics": [
+        {
+          "name": "Rig design",
+          "summary": "Pumping head, fluid loop, sensor harness"
+        },
+        {
+          "name": "Scenario library",
+          "summary": "Curated test scenarios per SRS REQ"
+        },
+        {
+          "name": "Automation harness",
+          "summary": "Reproducible scripted execution"
+        },
+        {
+          "name": "Defect feedback loop",
+          "summary": "Failures \u2192 SRS/SAD updates"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a75.6 system testing",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-2-24:2012",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG14": {
+      "title": "Usability Test Cohort Recruitment",
+      "description": "Recruitment of representative user cohort (RNs, anesthesiologists, biomedical engineers) for formative + summative HF evaluations. Cohort size, demographic mix, and training-state criteria per IEC 62366-1 + FDA HF Guidance.",
+      "why_important_in_project": "Summative HF validation is required for 510(k) submission. Cohort representativeness directly determines whether HF results generalize to clinical practice \u2014 under-representation triggers FDA pushback. Gates HF4a/HF4b (summative HF on pump + drug-library-manager).",
+      "main_topics": [
+        {
+          "name": "Cohort design",
+          "summary": "RN / anesthesiology / biomed split, experience range"
+        },
+        {
+          "name": "Recruitment pipeline",
+          "summary": "Sourcing, screening, scheduling"
+        },
+        {
+          "name": "IRB / consent",
+          "summary": "Study ethics, informed consent"
+        },
+        {
+          "name": "Cohort retention",
+          "summary": "For formative iteration + summative final"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62366-1:2015 \u00a75.7-5.9",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance (2016) \u00a7V",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG15": {
+      "title": "SBOM Generation Pipeline",
+      "description": "CI pipeline that generates a Software Bill of Materials for every device + cloud build, per FDA premarket cybersecurity guidance. Tracks direct + transitive dependencies, license metadata, and continuous vulnerability mapping.",
+      "why_important_in_project": "SBOM is mandatory per FDA cyber guidance (Sept 2023). Continuous SBOM generation enables vulnerability monitoring across the whole pump + adapter + cloud stack \u2014 the FDA-visible transparency control. Gates CY4a/CY4b/CY4c (SBOM rows) and MS7 (management-services SBOM).",
+      "main_topics": [
+        {
+          "name": "SBOM format",
+          "summary": "SPDX / CycloneDX export"
+        },
+        {
+          "name": "Pipeline integration",
+          "summary": "Per-build automatic generation"
+        },
+        {
+          "name": "Vulnerability mapping",
+          "summary": "SBOM \u2192 CVE feed \u2192 triage queue"
+        },
+        {
+          "name": "Disclosure linkage",
+          "summary": "Surface to coordinated-disclosure workflow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V SBOM",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG16": {
+      "title": "Drug Library Validation Rule Engine (D3)",
+      "description": "D3 validates drug-library entries against clinical-safety constraints before publish: range checks (concentration, rate, max-dose), contraindication checks, formulary policy enforcement. Failure to validate blocks publish.",
+      "why_important_in_project": "D3 is the algorithmic clinical-safety boundary BEFORE the payload reaches the pump. Bad rules \u2192 bad payloads \u2192 patient harm. Gates SW2b (drug-library SRS) and RM2b (risk row for invalid payloads).",
+      "main_topics": [
+        {
+          "name": "Range checks",
+          "summary": "Concentration, rate, max-dose, max-bolus"
+        },
+        {
+          "name": "Contraindication checks",
+          "summary": "Drug-drug / drug-condition"
+        },
+        {
+          "name": "Formulary policy",
+          "summary": "Hospital-specific overrides"
+        },
+        {
+          "name": "Rule maintenance",
+          "summary": "Who updates rules; review cadence"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971 \u00a76.5 control by software",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG17": {
+      "title": "Firmware Update Verifier (M6/M7 secure boot)",
+      "description": "Secure-boot firmware update verifier on M6/M7. Validates signed OTA payloads (signed by ENG4-anchored keys), enforces rollback protection, and gates the boot chain.",
+      "why_important_in_project": "OTA firmware update is a high-leverage cyber attack surface \u2014 if compromised, an attacker can ship a malicious image to every pump. ENG17 is the device-side verifier that closes the loop with ENG4 (crypto) and the cloud-side OTA delivery. Gates CY2a/CY7a (pump cybersecurity) and PS4/PS5 (PCCP firmware update support).",
+      "main_topics": [
+        {
+          "name": "Boot chain verification",
+          "summary": "Per-stage signature check"
+        },
+        {
+          "name": "Rollback protection",
+          "summary": "Anti-downgrade enforcement"
+        },
+        {
+          "name": "Anti-bricking",
+          "summary": "Recovery boot if update fails"
+        },
+        {
+          "name": "Key revocation handling",
+          "summary": "Bad-key response model"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V OTA",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG18": {
+      "title": "Time Sync / Trusted Time Source (M7)",
+      "description": "Trusted time source on M7 device. Provides authenticated time for audit-log timestamps, event ordering, certificate validity checks, and replay-protection windows.",
+      "why_important_in_project": "Without trusted time, audit logs become contestable, cert validity can't be checked deterministically, and replay-protection windows break. Gates RM2a (timestamp integrity on events) and CY7a (replay protection).",
+      "main_topics": [
+        {
+          "name": "Time source",
+          "summary": "NTPS/RFC 5905 + authenticated source"
+        },
+        {
+          "name": "Drift handling",
+          "summary": "Local oscillator vs. authoritative time"
+        },
+        {
+          "name": "Audit timestamp anchoring",
+          "summary": "D6 audit-log timestamps"
+        },
+        {
+          "name": "Replay-protection windows",
+          "summary": "Cert validity, session lifetime"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a74.3.3",
+          "role": "primary"
+        },
+        {
+          "citation": "NTPS RFC 5905",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG19": {
+      "title": "AI/ML Training Infrastructure (predictive alarms)",
+      "description": "Training infrastructure for the LMR2 predictive-alarm models: data pipeline (de-identified clinical signals), model development environment, validation suite, and reproducibility tooling. Backbone of the LMR2 AI/ML PCCP envelope.",
+      "why_important_in_project": "Predictive alarms are the headline LMR2 PCCP-authorized capability. The training infrastructure is what FDA reviewers scrutinize for Good Machine Learning Practice compliance \u2014 data quality, training rigor, validation independence, model versioning. Gates AI1/AI2/AI3/AI4 (AI/ML PCCP support documentation).",
+      "main_topics": [
+        {
+          "name": "Data pipeline",
+          "summary": "De-identification, curation, splits"
+        },
+        {
+          "name": "Model development env",
+          "summary": "Reproducible training, versioning"
+        },
+        {
+          "name": "Validation suite",
+          "summary": "Hold-out, cross-cohort, distribution shift"
+        },
+        {
+          "name": "GMLP alignment",
+          "summary": "Per FDA GMLP guiding principles"
+        },
+        {
+          "name": "Bias / fairness analysis",
+          "summary": "Demographic + cohort generalization"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "ENG20": {
+      "title": "AI/ML Drift Monitoring Pipeline",
+      "description": "Production drift-monitoring telemetry pipeline for LMR2 predictive-alarm models: feature distribution monitoring, performance metric tracking, retraining triggers per FDA AI/ML PCCP guidance.",
+      "why_important_in_project": "AI models drift in production. Monitoring is what makes the PCCP-authorized \"modification protocol\" credible \u2014 without drift signal, the team can't detect when a model has degraded enough to trigger retraining + re-validation. Gates AI5 (monitoring plan) + AI6 (re-validation criteria).",
+      "main_topics": [
+        {
+          "name": "Feature distribution monitoring",
+          "summary": "Per-input drift detectors"
+        },
+        {
+          "name": "Performance metric tracking",
+          "summary": "Sensitivity/specificity over time"
+        },
+        {
+          "name": "Retraining triggers",
+          "summary": "Thresholds \u2192 trigger criteria"
+        },
+        {
+          "name": "Re-validation hand-off",
+          "summary": "To AI/ML re-validation workflow"
+        },
+        {
+          "name": "Audit trail",
+          "summary": "PCCP-evidence-grade retention"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V drift",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:18:40.464560Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
     }
   }
 }
