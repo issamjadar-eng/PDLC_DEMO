@@ -1,0 +1,1218 @@
+{
+  "schema_version": "0.1",
+  "generated_by": "/tracker enrich-details (programmatic projection, ben/047)",
+  "entries": [
+    {
+      "row_ids": [
+        "CA1",
+        "L1-CA1",
+        "L2-CA1",
+        "Q-CA1"
+      ],
+      "title": "Adapter SAD",
+      "phase_text": "510k+PCCP (CA1) + LMR1 (L1-CA1) + LMR2 (L2-CA1) + QSub (Q-CA1)",
+      "scope": "Adapter",
+      "path": "docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md",
+      "primary_ref": "IEC 62304 \u00a75.3 / FDA sw-functions \u00a7V",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.3 / FDA sw-functions \u00a7V"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.992734Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:065f80e2834f92f613baa48cbbd08709acd2c98af1cbec815305a7baa75147cd",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA12",
+        "L1-CA12",
+        "L2-CA12",
+        "Q-CA12"
+      ],
+      "title": "Adapter Cybersecurity Plan",
+      "phase_text": "510k+PCCP (CA12) + LMR1 (L1-CA12) + LMR2 (L2-CA12) + QSub (Q-CA12)",
+      "scope": "Adapter",
+      "path": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md",
+      "primary_ref": "FDA cybersecurity \u00a7V / IEC 81001-5-1",
+      "all_applicable_refs": [
+        "FDA cybersecurity \u00a7V / IEC 81001-5-1"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993380Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:8d23451c16548d9e9063b98aa9471572c81f547717635429504bbe65d42b5859",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA16",
+        "L1-CA16",
+        "L2-CA16",
+        "Q-CA16"
+      ],
+      "title": "Adapter Tool Validation",
+      "phase_text": "510k+PCCP (CA16) + LMR1 (L1-CA16) + LMR2 (L2-CA16) + QSub (Q-CA16)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "No Class-C tooling in scope",
+      "all_applicable_refs": [
+        "No Class-C tooling in scope"
+      ],
+      "notes": "Out of scope for MDDS \u2014 see project.yml dhfs[].connectivity-adapter",
+      "generated_at": "2026-05-12T09:12:38.993385Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:a2e7d636fade0996495ce68a627a8f791c304ca5ac0ad965668682ce89b5f238",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA2",
+        "L1-CA2",
+        "L2-CA2",
+        "Q-CA2"
+      ],
+      "title": "Adapter SRS",
+      "phase_text": "510k+PCCP (CA2) + LMR1 (L1-CA2) + LMR2 (L2-CA2) + QSub (Q-CA2)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a75.2 / FDA sw-functions \u00a7VI",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.2 / FDA sw-functions \u00a7VI"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993389Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:b6bb2fe7501cdeb00275c8e88d2982c822f73bc1224fa67f8a11c055e69c6214",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA23",
+        "L1-CA23",
+        "L2-CA23",
+        "Q-CA23"
+      ],
+      "title": "Adapter Clinical Evaluation",
+      "phase_text": "510k+PCCP (CA23) + LMR1 (L1-CA23) + LMR2 (L2-CA23) + QSub (Q-CA23)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "No clinical claims (MDDS / non-medical)",
+      "all_applicable_refs": [
+        "No clinical claims (MDDS / non-medical)"
+      ],
+      "notes": "Out of scope for MDDS \u2014 see project.yml dhfs[].connectivity-adapter",
+      "generated_at": "2026-05-12T09:12:38.993393Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA24",
+        "L1-CA24",
+        "L2-CA24",
+        "Q-CA24"
+      ],
+      "title": "Adapter Postmarket Surveillance (PSUR)",
+      "phase_text": "510k+PCCP (CA24) + LMR1 (L1-CA24) + LMR2 (L2-CA24) + QSub (Q-CA24)",
+      "scope": "Adapter",
+      "path": "docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md",
+      "primary_ref": "Rolled into parent-system PSUR",
+      "all_applicable_refs": [
+        "Rolled into parent-system PSUR"
+      ],
+      "notes": "Out of scope for MDDS \u2014 see project.yml dhfs[].connectivity-adapter",
+      "generated_at": "2026-05-12T09:12:38.993397Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:d381281aa5b20b08cb9013c63a17e4e6a816844e14bef0c5e53ea2243cf00ba7",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA25",
+        "L1-CA25",
+        "L2-CA25",
+        "Q-CA25"
+      ],
+      "title": "Adapter User Needs",
+      "phase_text": "510k+PCCP (CA25) + LMR1 (L1-CA25) + LMR2 (L2-CA25) + QSub (Q-CA25)",
+      "scope": "Adapter",
+      "path": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md",
+      "primary_ref": "MDDS / non-medical \u2014 no clinical user-needs",
+      "all_applicable_refs": [
+        "MDDS / non-medical \u2014 no clinical user-needs"
+      ],
+      "notes": "Out of scope for MDDS \u2014 see project.yml dhfs[].connectivity-adapter",
+      "generated_at": "2026-05-12T09:12:38.993402Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:8e9645c54de8caa68611c8c52c7ff1f36be11581b9b239df642b0047fa7af8a3",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA26",
+        "L1-CA26",
+        "L2-CA26",
+        "Q-CA26"
+      ],
+      "title": "Adapter D&D Plan",
+      "phase_text": "510k+PCCP (CA26) + LMR1 (L1-CA26) + LMR2 (L2-CA26) + QSub (Q-CA26)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2",
+      "all_applicable_refs": [
+        "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993405Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:e4e8f2888137cfdb4b67e0dd0b2f8e935eaae5b32792d0dd8ddd39c8d6f0607c",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA27",
+        "L1-CA27",
+        "L2-CA27",
+        "Q-CA27"
+      ],
+      "title": "Adapter V&V Protocol & Report",
+      "phase_text": "510k+PCCP (CA27) + LMR1 (L1-CA27) + LMR2 (L2-CA27) + QSub (Q-CA27)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a75.6 / \u00a75.7",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.6 / \u00a75.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993409Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:416ac50c7d0a2ef7cf656fc0cc8bf943ff992d402fd936e331ded8b0883cbe65",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA28",
+        "L1-CA28",
+        "L2-CA28",
+        "Q-CA28"
+      ],
+      "title": "Adapter Trace Matrix",
+      "phase_text": "510k+PCCP (CA28) + LMR1 (L1-CA28) + LMR2 (L2-CA28) + QSub (Q-CA28)",
+      "scope": "Adapter",
+      "path": "docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md",
+      "primary_ref": "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7",
+      "all_applicable_refs": [
+        "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993413Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:9cffc7f2cf6c8242281137923f427d2f8218e35dbc0629413bf4ab58bbe2b83a",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CA9",
+        "L1-CA9",
+        "L2-CA9",
+        "Q-CA9"
+      ],
+      "title": "Adapter Risk Management Report",
+      "phase_text": "510k+PCCP (CA9) + LMR1 (L1-CA9) + LMR2 (L2-CA9) + QSub (Q-CA9)",
+      "scope": "Adapter",
+      "path": null,
+      "primary_ref": "ISO 14971 \u00a77",
+      "all_applicable_refs": [
+        "ISO 14971 \u00a77"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993416Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:55a4df185d91764dedf1bbf21ed955dd922784c4ab2a2492edf5044bc9e3b71a",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS1",
+        "L1-CS1",
+        "L2-CS1",
+        "Q-CS1"
+      ],
+      "title": "Cloud SAD",
+      "phase_text": "510k+PCCP (CS1) + LMR1 (L1-CS1) + LMR2 (L2-CS1) + QSub (Q-CS1)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a75.3 / FDA sw-functions \u00a7V",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.3 / FDA sw-functions \u00a7V"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993420Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS12",
+        "L1-CS12",
+        "L2-CS12",
+        "Q-CS12"
+      ],
+      "title": "Cloud Cybersecurity Plan",
+      "phase_text": "510k+PCCP (CS12) + LMR1 (L1-CS12) + LMR2 (L2-CS12) + QSub (Q-CS12)",
+      "scope": "Cloud",
+      "path": "docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md",
+      "primary_ref": "FDA cybersecurity \u00a7V / IEC 81001-5-1",
+      "all_applicable_refs": [
+        "FDA cybersecurity \u00a7V / IEC 81001-5-1"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993423Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:41863d5bd4d5c0cc9a1420448c798707c3217e8a648e1206d04bf25587ca7112",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS16",
+        "L1-CS16",
+        "L2-CS16",
+        "Q-CS16"
+      ],
+      "title": "Cloud Tool Validation",
+      "phase_text": "510k+PCCP (CS16) + LMR1 (L1-CS16) + LMR2 (L2-CS16) + QSub (Q-CS16)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "No Class-C tooling in scope",
+      "all_applicable_refs": [
+        "No Class-C tooling in scope"
+      ],
+      "notes": "Out of scope \u2014 cloud-suite is non-medical; see project.yml dhfs[].cloud-suite",
+      "generated_at": "2026-05-12T09:12:38.993427Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:d90860d734a2b9c774eecaa01d24070f1d62b54030d48ffd6b5c08855cd6fef7",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS2",
+        "L1-CS2",
+        "L2-CS2",
+        "Q-CS2"
+      ],
+      "title": "Cloud SRS",
+      "phase_text": "510k+PCCP (CS2) + LMR1 (L1-CS2) + LMR2 (L2-CS2) + QSub (Q-CS2)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a75.2 / FDA sw-functions \u00a7VI",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.2 / FDA sw-functions \u00a7VI"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993430Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:feb4507d7d21558607a7e4b72ff4925450ce95a3cbc8a1e94fabd9daeb1457e1",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS23",
+        "L1-CS23",
+        "L2-CS23",
+        "Q-CS23"
+      ],
+      "title": "Cloud Clinical Evaluation",
+      "phase_text": "510k+PCCP (CS23) + LMR1 (L1-CS23) + LMR2 (L2-CS23) + QSub (Q-CS23)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "No clinical claims (MDDS / non-medical)",
+      "all_applicable_refs": [
+        "No clinical claims (MDDS / non-medical)"
+      ],
+      "notes": "Out of scope \u2014 cloud-suite is non-medical; see project.yml dhfs[].cloud-suite",
+      "generated_at": "2026-05-12T09:12:38.993433Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS24",
+        "L1-CS24",
+        "L2-CS24",
+        "Q-CS24"
+      ],
+      "title": "Cloud Postmarket Surveillance (PSUR)",
+      "phase_text": "510k+PCCP (CS24) + LMR1 (L1-CS24) + LMR2 (L2-CS24) + QSub (Q-CS24)",
+      "scope": "Cloud",
+      "path": "docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md",
+      "primary_ref": "Rolled into parent-system PSUR",
+      "all_applicable_refs": [
+        "Rolled into parent-system PSUR"
+      ],
+      "notes": "Out of scope \u2014 cloud-suite is non-medical; see project.yml dhfs[].cloud-suite",
+      "generated_at": "2026-05-12T09:12:38.993437Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:a833b4c0b482c65f1d69a36c3e21b17736979fd17a85eddd4f6b948d9ff6568f",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS25",
+        "L1-CS25",
+        "L2-CS25",
+        "Q-CS25"
+      ],
+      "title": "Cloud User Needs",
+      "phase_text": "510k+PCCP (CS25) + LMR1 (L1-CS25) + LMR2 (L2-CS25) + QSub (Q-CS25)",
+      "scope": "Cloud",
+      "path": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md",
+      "primary_ref": "MDDS / non-medical \u2014 no clinical user-needs",
+      "all_applicable_refs": [
+        "MDDS / non-medical \u2014 no clinical user-needs"
+      ],
+      "notes": "Out of scope \u2014 cloud-suite is non-medical; see project.yml dhfs[].cloud-suite",
+      "generated_at": "2026-05-12T09:12:38.993441Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:958e2ee1fba8cbff7e34fa79e3c7f70099003199111fd8fe283a1ea63652244c",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS26",
+        "L1-CS26",
+        "L2-CS26",
+        "Q-CS26"
+      ],
+      "title": "Cloud D&D Plan",
+      "phase_text": "510k+PCCP (CS26) + LMR1 (L1-CS26) + LMR2 (L2-CS26) + QSub (Q-CS26)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2",
+      "all_applicable_refs": [
+        "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993444Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:34a5fac86022e946f5b2c38cea4afe6bd035611025873b950f277add60e56b7a",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS27",
+        "L1-CS27",
+        "L2-CS27",
+        "Q-CS27"
+      ],
+      "title": "Cloud V&V Protocol & Report",
+      "phase_text": "510k+PCCP (CS27) + LMR1 (L1-CS27) + LMR2 (L2-CS27) + QSub (Q-CS27)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a75.6 / \u00a75.7",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.6 / \u00a75.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993447Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:cda15d7616dd93652e1d49db85bab9ced6b97f79d607b2d8c02e1fa6554e6a9d",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS28",
+        "L1-CS28",
+        "L2-CS28",
+        "Q-CS28"
+      ],
+      "title": "Cloud Trace Matrix",
+      "phase_text": "510k+PCCP (CS28) + LMR1 (L1-CS28) + LMR2 (L2-CS28) + QSub (Q-CS28)",
+      "scope": "Cloud",
+      "path": "docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md",
+      "primary_ref": "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7",
+      "all_applicable_refs": [
+        "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993451Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:87afe72d53374bc1a7d3a3de5bcfc3aefe59edc25442cf9380734afa192a5841",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "CS9",
+        "L1-CS9",
+        "L2-CS9",
+        "Q-CS9"
+      ],
+      "title": "Cloud Risk Management Report",
+      "phase_text": "510k+PCCP (CS9) + LMR1 (L1-CS9) + LMR2 (L2-CS9) + QSub (Q-CS9)",
+      "scope": "Cloud",
+      "path": null,
+      "primary_ref": "ISO 14971 \u00a77",
+      "all_applicable_refs": [
+        "ISO 14971 \u00a77"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993454Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:848d4ac03cdf0af3fc724ee741de82d8711de90088c8ed075c721abb6723e2dd",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG1"
+      ],
+      "title": "Hardware Design Freeze (pump mechanism, sensors, enclosure)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993457Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG10"
+      ],
+      "title": "Adapter Pass-Through Architecture (A3, A4)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993460Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG11"
+      ],
+      "title": "Occlusion / Air-in-Line Sensor Calibration",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993464Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG12"
+      ],
+      "title": "Alarm System IEC 60601-1-8 Conformance",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993467Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG13"
+      ],
+      "title": "HIL Test Rig + System V&V Harness",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993469Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG14"
+      ],
+      "title": "Usability Test Cohort Recruitment",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993472Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG15"
+      ],
+      "title": "SBOM Generation Pipeline",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993475Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG16"
+      ],
+      "title": "Drug Library Validation Rule Engine (D3)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993477Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG17"
+      ],
+      "title": "Firmware Update Verifier (M6/M7 secure boot)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993480Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG18"
+      ],
+      "title": "Time Sync / Trusted Time Source (M7)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993483Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG19"
+      ],
+      "title": "AI/ML Training Infrastructure (predictive alarms)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993486Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG2"
+      ],
+      "title": "RTOS + Device Platform Baseline (M7)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993488Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG20"
+      ],
+      "title": "AI/ML Drift Monitoring Pipeline",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993491Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG3"
+      ],
+      "title": "Drug Library Payload Format Finalized",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993494Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG4"
+      ],
+      "title": "Crypto / Signing Stack (KMS, cert store, HSM)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993497Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG5"
+      ],
+      "title": "Cyber Comms Stack (TLS 1.3, mutual auth, cert provisioning)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993499Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG6"
+      ],
+      "title": "Drug Library Authoring Workflow (D1\u2013D3)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993502Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG7"
+      ],
+      "title": "Drug Library Signing Service (D4)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993504Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG8"
+      ],
+      "title": "Audit Log Infrastructure (D6, 21 CFR Part 11)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993508Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "ENG9"
+      ],
+      "title": "21 CFR Part 11 Conformance (D2 + D6)",
+      "phase_text": "510k+PCCP",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993510Z",
+      "context_signature": {
+        "canonical_role": "engineering-prereq",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC1",
+        "L2-PC1",
+        "PC1",
+        "Q-PC1"
+      ],
+      "title": "System SAD \u2014 LMR1 Release",
+      "phase_text": "LMR1 (L1-PC1) + LMR2 (L2-PC1) + 510k+PCCP (PC1) + QSub (Q-PC1)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md",
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993514Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:b482a588f38f580f742de21ee261a98c5a1033c07a66033532dc52f6df89af8a",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC12",
+        "L2-PC12",
+        "PC12",
+        "Q-PC12"
+      ],
+      "title": "Cybersecurity Vulnerability Management Plan",
+      "phase_text": "LMR1 (L1-PC12) + LMR2 (L2-PC12) + 510k+PCCP (PC12) + QSub (Q-PC12)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md",
+      "primary_ref": "FDA cybersecurity \u00a7V",
+      "all_applicable_refs": [
+        "FDA cybersecurity \u00a7V"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993519Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:ed4ce0e74db432af2540d95bed88df86559cec0710f18b5de0a32f2fb677b51a",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC16",
+        "L2-PC16",
+        "PC16",
+        "Q-PC16"
+      ],
+      "title": "Tool Validation Records",
+      "phase_text": "LMR1 (L1-PC16) + LMR2 (L2-PC16) + 510k+PCCP (PC16) + QSub (Q-PC16)",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "IEC 62304 \u00a78.1.3",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a78.1.3"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993522Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:3e81d01607db0db619ff1052685e5ff50b61007291ebb8cc6f2bf26b27fad2ad",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC2",
+        "L2-PC2",
+        "PC2",
+        "Q-PC2"
+      ],
+      "title": "Design Input Specification (SRS)",
+      "phase_text": "LMR1 (L1-PC2) + LMR2 (L2-PC2) + 510k+PCCP (PC2) + QSub (Q-PC2)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md",
+      "primary_ref": "FDA sw-functions \u00a7VI",
+      "all_applicable_refs": [
+        "FDA sw-functions \u00a7VI"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993525Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:9f61fd81ec472939c0297194e25f6901ddd1b5be554d87aeceec13726ed139df",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC23",
+        "L2-PC23",
+        "PC23",
+        "Q-PC23"
+      ],
+      "title": "Clinical Evaluation Report",
+      "phase_text": "LMR1 (L1-PC23) + LMR2 (L2-PC23) + 510k+PCCP (PC23) + QSub (Q-PC23)",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "FDA Clinical Evaluation Guidance",
+      "all_applicable_refs": [
+        "FDA Clinical Evaluation Guidance"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993529Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC24",
+        "L2-PC24",
+        "PC24",
+        "Q-PC24"
+      ],
+      "title": "Periodic Safety Update Report (PSUR)",
+      "phase_text": "LMR1 (L1-PC24) + LMR2 (L2-PC24) + 510k+PCCP (PC24) + QSub (Q-PC24)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md",
+      "primary_ref": "21 CFR 803 / FDA PSUR template",
+      "all_applicable_refs": [
+        "21 CFR 803 / FDA PSUR template"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993532Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:33539827d1c8ea65fe68d7afced174123aaef2e8b409c2e66b1fbf5454153581",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC25",
+        "L2-PC25",
+        "PC25",
+        "Q-PC25"
+      ],
+      "title": "Use Specification (User Needs)",
+      "phase_text": "LMR1 (L1-PC25) + LMR2 (L2-PC25) + 510k+PCCP (PC25) + QSub (Q-PC25)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md",
+      "primary_ref": "IEC 62366-1 \u00a75.2",
+      "all_applicable_refs": [
+        "IEC 62366-1 \u00a75.2"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993536Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:eb7fd22c361fee8e148d1225da81e7ee4d644b687f282eba46b2e37f60ccddc2",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC26",
+        "L2-PC26",
+        "PC26",
+        "Q-PC26"
+      ],
+      "title": "Design & Development Plan",
+      "phase_text": "LMR1 (L1-PC26) + LMR2 (L2-PC26) + 510k+PCCP (PC26) + QSub (Q-PC26)",
+      "scope": "Suite",
+      "path": null,
+      "primary_ref": "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2",
+      "all_applicable_refs": [
+        "21 CFR 820.30(b) / ISO 13485 \u00a77.3.2"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993539Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:450005b3cac7109c74e73faa8f5ecd2f1cce795227d2bd58a6fc81fa4fcce531",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC27",
+        "L2-PC27",
+        "PC27",
+        "Q-PC27"
+      ],
+      "title": "Verification & Validation Protocol & Report",
+      "phase_text": "LMR1 (L1-PC27) + LMR2 (L2-PC27) + 510k+PCCP (PC27) + QSub (Q-PC27)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md",
+      "primary_ref": "IEC 62304 \u00a75.6 / \u00a75.7",
+      "all_applicable_refs": [
+        "IEC 62304 \u00a75.6 / \u00a75.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993542Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:cc7cd2251d8a5ba2db194fbf5bf31c437e9aa7745a82aa2a625b98956dad3caf",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC28",
+        "L2-PC28",
+        "PC28",
+        "Q-PC28"
+      ],
+      "title": "Design Trace Matrix (UN \u2194 DI \u2194 Arch \u2194 V&V)",
+      "phase_text": "LMR1 (L1-PC28) + LMR2 (L2-PC28) + 510k+PCCP (PC28) + QSub (Q-PC28)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md",
+      "primary_ref": "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7",
+      "all_applicable_refs": [
+        "21 CFR 820.30(g) / ISO 13485 \u00a77.3.7"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993545Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:4365fe877a55abf6e5c16f6fd616543bfe6d54a56f7816327a2cf044c8fc24fa",
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "L1-PC9",
+        "L2-PC9",
+        "PC9",
+        "Q-PC9"
+      ],
+      "title": "Risk Management Report (ISO 14971)",
+      "phase_text": "LMR1 (L1-PC9) + LMR2 (L2-PC9) + 510k+PCCP (PC9) + QSub (Q-PC9)",
+      "scope": "Suite",
+      "path": "docs/project/dhfs/pca-device/risk-management/risk-strategy.md",
+      "primary_ref": "\u2014",
+      "all_applicable_refs": [
+        "\u2014"
+      ],
+      "notes": null,
+      "generated_at": "2026-05-12T09:12:38.993549Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": "sha256:f8f056485bc4485475a81aea0376bde359926385e47e8f1beaac8312acf686e1",
+        "composition_manifest_signature": null
+      }
+    }
+  ]
+}

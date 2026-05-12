@@ -1,0 +1,2310 @@
+{
+  "schema_version": "0.1",
+  "generated_by": "/tracker enrich-help (inline, ben/047)",
+  "rows": {
+    "Q-PC1": {
+      "title": "System Software Architecture Document (SAD)",
+      "description": "The SAD describes the top-level structural design of the PP3500 system software: the M-series pump firmware modules (M1\u2013M7), the SaMD/SiMD boundary, the deterministic infusion-control core vs. the AI/ML predictive-alarm envelope, the connectivity-adapter and cloud-suite dependency contracts, and the architectural decisions that satisfy the device requirements. It is the anchor design output that risk, V&V, and trace-matrix activities flow back to.",
+      "why_important_in_project": "This is the FDA reviewer's first stop to validate the IEC 62304 Class C software safety classification, the SaMD-vs-SiMD partition, the AI/ML envelope boundary that the LMR2 PCCP-authorized changes target, and the documented dependency on the connectivity-adapter (MDDS) and cloud-suite (non-medical) modules. The SAD also anchors the cybersecurity threat model required by the FDA premarket cybersecurity guidance.",
+      "main_topics": [
+        {
+          "name": "Module decomposition",
+          "summary": "M1\u2013M7 modules with responsibilities, interfaces, and data ownership"
+        },
+        {
+          "name": "SaMD/SiMD partition",
+          "summary": "Software boundaries justifying Class C designation and AI envelope isolation"
+        },
+        {
+          "name": "Deterministic core vs AI envelope",
+          "summary": "How the PCCP-authorized AI/ML predictive-alarm sits outside the infusion-control critical path"
+        },
+        {
+          "name": "Cross-DHF dependencies",
+          "summary": "Documented contracts with connectivity-adapter (MDDS) and cloud-suite (non-medical) for SBOM, OTA, storage"
+        },
+        {
+          "name": "Security architecture",
+          "summary": "Threat model anchors, trust boundaries, TLS 1.3 mutual auth, secure boot"
+        },
+        {
+          "name": "Architectural decisions",
+          "summary": "Key trade-offs documented as ADRs with regulatory rationale"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.4",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC1": {
+      "title": "System Software Architecture Document (SAD)",
+      "description": "The SAD describes the top-level structural design of the PP3500 system software: the M-series pump firmware modules (M1\u2013M7), the SaMD/SiMD boundary, the deterministic infusion-control core vs. the AI/ML predictive-alarm envelope, the connectivity-adapter and cloud-suite dependency contracts, and the architectural decisions that satisfy the device requirements. It is the anchor design output that risk, V&V, and trace-matrix activities flow back to.",
+      "why_important_in_project": "This is the FDA reviewer's first stop to validate the IEC 62304 Class C software safety classification, the SaMD-vs-SiMD partition, the AI/ML envelope boundary that the LMR2 PCCP-authorized changes target, and the documented dependency on the connectivity-adapter (MDDS) and cloud-suite (non-medical) modules. The SAD also anchors the cybersecurity threat model required by the FDA premarket cybersecurity guidance.",
+      "main_topics": [
+        {
+          "name": "Module decomposition",
+          "summary": "M1\u2013M7 modules with responsibilities, interfaces, and data ownership"
+        },
+        {
+          "name": "SaMD/SiMD partition",
+          "summary": "Software boundaries justifying Class C designation and AI envelope isolation"
+        },
+        {
+          "name": "Deterministic core vs AI envelope",
+          "summary": "How the PCCP-authorized AI/ML predictive-alarm sits outside the infusion-control critical path"
+        },
+        {
+          "name": "Cross-DHF dependencies",
+          "summary": "Documented contracts with connectivity-adapter (MDDS) and cloud-suite (non-medical) for SBOM, OTA, storage"
+        },
+        {
+          "name": "Security architecture",
+          "summary": "Threat model anchors, trust boundaries, TLS 1.3 mutual auth, secure boot"
+        },
+        {
+          "name": "Architectural decisions",
+          "summary": "Key trade-offs documented as ADRs with regulatory rationale"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.4",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC1": {
+      "title": "System Software Architecture Document (SAD)",
+      "description": "The SAD describes the top-level structural design of the PP3500 system software: the M-series pump firmware modules (M1\u2013M7), the SaMD/SiMD boundary, the deterministic infusion-control core vs. the AI/ML predictive-alarm envelope, the connectivity-adapter and cloud-suite dependency contracts, and the architectural decisions that satisfy the device requirements. It is the anchor design output that risk, V&V, and trace-matrix activities flow back to.",
+      "why_important_in_project": "This is the FDA reviewer's first stop to validate the IEC 62304 Class C software safety classification, the SaMD-vs-SiMD partition, the AI/ML envelope boundary that the LMR2 PCCP-authorized changes target, and the documented dependency on the connectivity-adapter (MDDS) and cloud-suite (non-medical) modules. The SAD also anchors the cybersecurity threat model required by the FDA premarket cybersecurity guidance.",
+      "main_topics": [
+        {
+          "name": "Module decomposition",
+          "summary": "M1\u2013M7 modules with responsibilities, interfaces, and data ownership"
+        },
+        {
+          "name": "SaMD/SiMD partition",
+          "summary": "Software boundaries justifying Class C designation and AI envelope isolation"
+        },
+        {
+          "name": "Deterministic core vs AI envelope",
+          "summary": "How the PCCP-authorized AI/ML predictive-alarm sits outside the infusion-control critical path"
+        },
+        {
+          "name": "Cross-DHF dependencies",
+          "summary": "Documented contracts with connectivity-adapter (MDDS) and cloud-suite (non-medical) for SBOM, OTA, storage"
+        },
+        {
+          "name": "Security architecture",
+          "summary": "Threat model anchors, trust boundaries, TLS 1.3 mutual auth, secure boot"
+        },
+        {
+          "name": "Architectural decisions",
+          "summary": "Key trade-offs documented as ADRs with regulatory rationale"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.4",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC1": {
+      "title": "System Software Architecture Document (SAD)",
+      "description": "The SAD describes the top-level structural design of the PP3500 system software: the M-series pump firmware modules (M1\u2013M7), the SaMD/SiMD boundary, the deterministic infusion-control core vs. the AI/ML predictive-alarm envelope, the connectivity-adapter and cloud-suite dependency contracts, and the architectural decisions that satisfy the device requirements. It is the anchor design output that risk, V&V, and trace-matrix activities flow back to.",
+      "why_important_in_project": "This is the FDA reviewer's first stop to validate the IEC 62304 Class C software safety classification, the SaMD-vs-SiMD partition, the AI/ML envelope boundary that the LMR2 PCCP-authorized changes target, and the documented dependency on the connectivity-adapter (MDDS) and cloud-suite (non-medical) modules. The SAD also anchors the cybersecurity threat model required by the FDA premarket cybersecurity guidance.",
+      "main_topics": [
+        {
+          "name": "Module decomposition",
+          "summary": "M1\u2013M7 modules with responsibilities, interfaces, and data ownership"
+        },
+        {
+          "name": "SaMD/SiMD partition",
+          "summary": "Software boundaries justifying Class C designation and AI envelope isolation"
+        },
+        {
+          "name": "Deterministic core vs AI envelope",
+          "summary": "How the PCCP-authorized AI/ML predictive-alarm sits outside the infusion-control critical path"
+        },
+        {
+          "name": "Cross-DHF dependencies",
+          "summary": "Documented contracts with connectivity-adapter (MDDS) and cloud-suite (non-medical) for SBOM, OTA, storage"
+        },
+        {
+          "name": "Security architecture",
+          "summary": "Threat model anchors, trust boundaries, TLS 1.3 mutual auth, secure boot"
+        },
+        {
+          "name": "Architectural decisions",
+          "summary": "Key trade-offs documented as ADRs with regulatory rationale"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.3",
+          "role": "supporting"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.4",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC26": {
+      "title": "Design & Development Plan",
+      "description": "The Design & Development Plan defines the project's design control process: stage gates, design inputs/outputs/reviews, V&V execution, design transfer criteria, and change-control posture. It is the procedural backbone that 21 CFR 820.30 design controls hangs on.",
+      "why_important_in_project": "PP3500 is filed under 510(k)+PCCP with a planned post-clearance LMR1 commercial release and LMR2 AI/ML envelope expansion. The plan documents the milestone cadence (QSub \u2192 510(k)+PCCP filing \u2192 LMR1 \u2192 LMR2), the per-milestone evidence package composition, and how change control flows between PCCP-authorized modifications and traditional 510(k) re-filings.",
+      "main_topics": [
+        {
+          "name": "Design control phases",
+          "summary": "Phase definitions, entry/exit criteria, design review checkpoints"
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "R&D lead, regulatory, quality, clinical, cyber, AI/ML lead"
+        },
+        {
+          "name": "Milestone cadence",
+          "summary": "QSub / 510(k)+PCCP / LMR1 / LMR2 readiness criteria"
+        },
+        {
+          "name": "V&V execution model",
+          "summary": "HIL test harness, formative + summative HF studies, system V&V"
+        },
+        {
+          "name": "Design transfer",
+          "summary": "Criteria for moving from design to production"
+        },
+        {
+          "name": "Change control linkage",
+          "summary": "How PCCP-authorized changes vs. new 510(k) decisions flow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC26": {
+      "title": "Design & Development Plan",
+      "description": "The Design & Development Plan defines the project's design control process: stage gates, design inputs/outputs/reviews, V&V execution, design transfer criteria, and change-control posture. It is the procedural backbone that 21 CFR 820.30 design controls hangs on.",
+      "why_important_in_project": "PP3500 is filed under 510(k)+PCCP with a planned post-clearance LMR1 commercial release and LMR2 AI/ML envelope expansion. The plan documents the milestone cadence (QSub \u2192 510(k)+PCCP filing \u2192 LMR1 \u2192 LMR2), the per-milestone evidence package composition, and how change control flows between PCCP-authorized modifications and traditional 510(k) re-filings.",
+      "main_topics": [
+        {
+          "name": "Design control phases",
+          "summary": "Phase definitions, entry/exit criteria, design review checkpoints"
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "R&D lead, regulatory, quality, clinical, cyber, AI/ML lead"
+        },
+        {
+          "name": "Milestone cadence",
+          "summary": "QSub / 510(k)+PCCP / LMR1 / LMR2 readiness criteria"
+        },
+        {
+          "name": "V&V execution model",
+          "summary": "HIL test harness, formative + summative HF studies, system V&V"
+        },
+        {
+          "name": "Design transfer",
+          "summary": "Criteria for moving from design to production"
+        },
+        {
+          "name": "Change control linkage",
+          "summary": "How PCCP-authorized changes vs. new 510(k) decisions flow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC26": {
+      "title": "Design & Development Plan",
+      "description": "The Design & Development Plan defines the project's design control process: stage gates, design inputs/outputs/reviews, V&V execution, design transfer criteria, and change-control posture. It is the procedural backbone that 21 CFR 820.30 design controls hangs on.",
+      "why_important_in_project": "PP3500 is filed under 510(k)+PCCP with a planned post-clearance LMR1 commercial release and LMR2 AI/ML envelope expansion. The plan documents the milestone cadence (QSub \u2192 510(k)+PCCP filing \u2192 LMR1 \u2192 LMR2), the per-milestone evidence package composition, and how change control flows between PCCP-authorized modifications and traditional 510(k) re-filings.",
+      "main_topics": [
+        {
+          "name": "Design control phases",
+          "summary": "Phase definitions, entry/exit criteria, design review checkpoints"
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "R&D lead, regulatory, quality, clinical, cyber, AI/ML lead"
+        },
+        {
+          "name": "Milestone cadence",
+          "summary": "QSub / 510(k)+PCCP / LMR1 / LMR2 readiness criteria"
+        },
+        {
+          "name": "V&V execution model",
+          "summary": "HIL test harness, formative + summative HF studies, system V&V"
+        },
+        {
+          "name": "Design transfer",
+          "summary": "Criteria for moving from design to production"
+        },
+        {
+          "name": "Change control linkage",
+          "summary": "How PCCP-authorized changes vs. new 510(k) decisions flow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC26": {
+      "title": "Design & Development Plan",
+      "description": "The Design & Development Plan defines the project's design control process: stage gates, design inputs/outputs/reviews, V&V execution, design transfer criteria, and change-control posture. It is the procedural backbone that 21 CFR 820.30 design controls hangs on.",
+      "why_important_in_project": "PP3500 is filed under 510(k)+PCCP with a planned post-clearance LMR1 commercial release and LMR2 AI/ML envelope expansion. The plan documents the milestone cadence (QSub \u2192 510(k)+PCCP filing \u2192 LMR1 \u2192 LMR2), the per-milestone evidence package composition, and how change control flows between PCCP-authorized modifications and traditional 510(k) re-filings.",
+      "main_topics": [
+        {
+          "name": "Design control phases",
+          "summary": "Phase definitions, entry/exit criteria, design review checkpoints"
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "R&D lead, regulatory, quality, clinical, cyber, AI/ML lead"
+        },
+        {
+          "name": "Milestone cadence",
+          "summary": "QSub / 510(k)+PCCP / LMR1 / LMR2 readiness criteria"
+        },
+        {
+          "name": "V&V execution model",
+          "summary": "HIL test harness, formative + summative HF studies, system V&V"
+        },
+        {
+          "name": "Design transfer",
+          "summary": "Criteria for moving from design to production"
+        },
+        {
+          "name": "Change control linkage",
+          "summary": "How PCCP-authorized changes vs. new 510(k) decisions flow"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC25": {
+      "title": "Use Specification (User Needs)",
+      "description": "The Use Specification captures the intended-use envelope: who uses the PP3500 (RNs, anesthesiologists, biomedical engineers), where (acute care, ICU, OR, perioperative), under what use scenarios (PCA bolus + continuous infusion, drug library lookup, alarm response), and the user needs each scenario derives. It feeds the IEC 62366-1 usability engineering file and the Design Input Specification.",
+      "why_important_in_project": "PCA pumps are alarm-rich, use-error-sensitive devices \u2014 the IEC 60601-1-8 alarm scenarios and the AI/ML predictive-alarm UX in LMR2 must trace cleanly to documented user needs. The Use Spec is also the entry point for the summative HF validation under FDA HF Guidance + IEC 62366-1.",
+      "main_topics": [
+        {
+          "name": "User profiles",
+          "summary": "Trained clinical users (RN, anesthesiology), biomedical engineers, drug library authors"
+        },
+        {
+          "name": "Use environments",
+          "summary": "Acute care, ICU, OR, perioperative; transport scenarios"
+        },
+        {
+          "name": "Use scenarios",
+          "summary": "PCA bolus, continuous infusion, alarm management, drug library lookup, OTA update"
+        },
+        {
+          "name": "User needs",
+          "summary": "Derived needs traced to design inputs"
+        },
+        {
+          "name": "Foreseeable misuse",
+          "summary": "Wrong drug, wrong concentration, alarm fatigue, occlusion missed"
+        },
+        {
+          "name": "AI/ML transparency needs",
+          "summary": "LMR2 predictive-alarm explainability for clinical trust"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62366-1:2015+A1:2020 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance (2016) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC25": {
+      "title": "Use Specification (User Needs)",
+      "description": "The Use Specification captures the intended-use envelope: who uses the PP3500 (RNs, anesthesiologists, biomedical engineers), where (acute care, ICU, OR, perioperative), under what use scenarios (PCA bolus + continuous infusion, drug library lookup, alarm response), and the user needs each scenario derives. It feeds the IEC 62366-1 usability engineering file and the Design Input Specification.",
+      "why_important_in_project": "PCA pumps are alarm-rich, use-error-sensitive devices \u2014 the IEC 60601-1-8 alarm scenarios and the AI/ML predictive-alarm UX in LMR2 must trace cleanly to documented user needs. The Use Spec is also the entry point for the summative HF validation under FDA HF Guidance + IEC 62366-1.",
+      "main_topics": [
+        {
+          "name": "User profiles",
+          "summary": "Trained clinical users (RN, anesthesiology), biomedical engineers, drug library authors"
+        },
+        {
+          "name": "Use environments",
+          "summary": "Acute care, ICU, OR, perioperative; transport scenarios"
+        },
+        {
+          "name": "Use scenarios",
+          "summary": "PCA bolus, continuous infusion, alarm management, drug library lookup, OTA update"
+        },
+        {
+          "name": "User needs",
+          "summary": "Derived needs traced to design inputs"
+        },
+        {
+          "name": "Foreseeable misuse",
+          "summary": "Wrong drug, wrong concentration, alarm fatigue, occlusion missed"
+        },
+        {
+          "name": "AI/ML transparency needs",
+          "summary": "LMR2 predictive-alarm explainability for clinical trust"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62366-1:2015+A1:2020 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance (2016) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC25": {
+      "title": "Use Specification (User Needs)",
+      "description": "The Use Specification captures the intended-use envelope: who uses the PP3500 (RNs, anesthesiologists, biomedical engineers), where (acute care, ICU, OR, perioperative), under what use scenarios (PCA bolus + continuous infusion, drug library lookup, alarm response), and the user needs each scenario derives. It feeds the IEC 62366-1 usability engineering file and the Design Input Specification.",
+      "why_important_in_project": "PCA pumps are alarm-rich, use-error-sensitive devices \u2014 the IEC 60601-1-8 alarm scenarios and the AI/ML predictive-alarm UX in LMR2 must trace cleanly to documented user needs. The Use Spec is also the entry point for the summative HF validation under FDA HF Guidance + IEC 62366-1.",
+      "main_topics": [
+        {
+          "name": "User profiles",
+          "summary": "Trained clinical users (RN, anesthesiology), biomedical engineers, drug library authors"
+        },
+        {
+          "name": "Use environments",
+          "summary": "Acute care, ICU, OR, perioperative; transport scenarios"
+        },
+        {
+          "name": "Use scenarios",
+          "summary": "PCA bolus, continuous infusion, alarm management, drug library lookup, OTA update"
+        },
+        {
+          "name": "User needs",
+          "summary": "Derived needs traced to design inputs"
+        },
+        {
+          "name": "Foreseeable misuse",
+          "summary": "Wrong drug, wrong concentration, alarm fatigue, occlusion missed"
+        },
+        {
+          "name": "AI/ML transparency needs",
+          "summary": "LMR2 predictive-alarm explainability for clinical trust"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62366-1:2015+A1:2020 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance (2016) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC25": {
+      "title": "Use Specification (User Needs)",
+      "description": "The Use Specification captures the intended-use envelope: who uses the PP3500 (RNs, anesthesiologists, biomedical engineers), where (acute care, ICU, OR, perioperative), under what use scenarios (PCA bolus + continuous infusion, drug library lookup, alarm response), and the user needs each scenario derives. It feeds the IEC 62366-1 usability engineering file and the Design Input Specification.",
+      "why_important_in_project": "PCA pumps are alarm-rich, use-error-sensitive devices \u2014 the IEC 60601-1-8 alarm scenarios and the AI/ML predictive-alarm UX in LMR2 must trace cleanly to documented user needs. The Use Spec is also the entry point for the summative HF validation under FDA HF Guidance + IEC 62366-1.",
+      "main_topics": [
+        {
+          "name": "User profiles",
+          "summary": "Trained clinical users (RN, anesthesiology), biomedical engineers, drug library authors"
+        },
+        {
+          "name": "Use environments",
+          "summary": "Acute care, ICU, OR, perioperative; transport scenarios"
+        },
+        {
+          "name": "Use scenarios",
+          "summary": "PCA bolus, continuous infusion, alarm management, drug library lookup, OTA update"
+        },
+        {
+          "name": "User needs",
+          "summary": "Derived needs traced to design inputs"
+        },
+        {
+          "name": "Foreseeable misuse",
+          "summary": "Wrong drug, wrong concentration, alarm fatigue, occlusion missed"
+        },
+        {
+          "name": "AI/ML transparency needs",
+          "summary": "LMR2 predictive-alarm explainability for clinical trust"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62366-1:2015+A1:2020 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA HF Guidance (2016) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC2": {
+      "title": "Design Input Specification (SRS)",
+      "description": "The Software Requirements Specification translates the Use Spec's user needs into testable software requirements covering the deterministic infusion-control core, the alarm subsystem, the drug-library ingest path, the connectivity-adapter interface, the cloud-suite dependency contract, and the AI/ML predictive-alarm envelope (LMR2). Each requirement is uniquely identified and traceable.",
+      "why_important_in_project": "The SRS is the regulated design-input artifact under 21 CFR 820.30(c) and the trace anchor for V&V. For PP3500 the SRS must cleanly partition deterministic-vs-AI requirements (so the AI/ML envelope can be PCCP-modified independently), document the drug-library payload contract, and pin the IEC 60601-1-8 alarm requirements that drive the alarm-rich V&V protocols.",
+      "main_topics": [
+        {
+          "name": "Functional requirements",
+          "summary": "Infusion control, dose calculation, drug-library lookup, alarm logic"
+        },
+        {
+          "name": "Performance requirements",
+          "summary": "Bolus accuracy, occlusion detection time, alarm latency"
+        },
+        {
+          "name": "Interface requirements",
+          "summary": "Connectivity-adapter API, cloud-suite OTA & telemetry contracts"
+        },
+        {
+          "name": "AI/ML envelope requirements",
+          "summary": "Predictive-alarm inputs/outputs, drift thresholds \u2014 LMR2 PCCP scope"
+        },
+        {
+          "name": "Safety requirements",
+          "summary": "IEC 60601-1-8 alarm system, fail-safe behaviors, watchdog"
+        },
+        {
+          "name": "Cybersecurity requirements",
+          "summary": "TLS 1.3 mutual auth, secure boot, SBOM-driven"
+        },
+        {
+          "name": "Traceability metadata",
+          "summary": "Each REQ \u2192 user need ID, each REQ \u2192 V&V test ID"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VI",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC2": {
+      "title": "Design Input Specification (SRS)",
+      "description": "The Software Requirements Specification translates the Use Spec's user needs into testable software requirements covering the deterministic infusion-control core, the alarm subsystem, the drug-library ingest path, the connectivity-adapter interface, the cloud-suite dependency contract, and the AI/ML predictive-alarm envelope (LMR2). Each requirement is uniquely identified and traceable.",
+      "why_important_in_project": "The SRS is the regulated design-input artifact under 21 CFR 820.30(c) and the trace anchor for V&V. For PP3500 the SRS must cleanly partition deterministic-vs-AI requirements (so the AI/ML envelope can be PCCP-modified independently), document the drug-library payload contract, and pin the IEC 60601-1-8 alarm requirements that drive the alarm-rich V&V protocols.",
+      "main_topics": [
+        {
+          "name": "Functional requirements",
+          "summary": "Infusion control, dose calculation, drug-library lookup, alarm logic"
+        },
+        {
+          "name": "Performance requirements",
+          "summary": "Bolus accuracy, occlusion detection time, alarm latency"
+        },
+        {
+          "name": "Interface requirements",
+          "summary": "Connectivity-adapter API, cloud-suite OTA & telemetry contracts"
+        },
+        {
+          "name": "AI/ML envelope requirements",
+          "summary": "Predictive-alarm inputs/outputs, drift thresholds \u2014 LMR2 PCCP scope"
+        },
+        {
+          "name": "Safety requirements",
+          "summary": "IEC 60601-1-8 alarm system, fail-safe behaviors, watchdog"
+        },
+        {
+          "name": "Cybersecurity requirements",
+          "summary": "TLS 1.3 mutual auth, secure boot, SBOM-driven"
+        },
+        {
+          "name": "Traceability metadata",
+          "summary": "Each REQ \u2192 user need ID, each REQ \u2192 V&V test ID"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VI",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC2": {
+      "title": "Design Input Specification (SRS)",
+      "description": "The Software Requirements Specification translates the Use Spec's user needs into testable software requirements covering the deterministic infusion-control core, the alarm subsystem, the drug-library ingest path, the connectivity-adapter interface, the cloud-suite dependency contract, and the AI/ML predictive-alarm envelope (LMR2). Each requirement is uniquely identified and traceable.",
+      "why_important_in_project": "The SRS is the regulated design-input artifact under 21 CFR 820.30(c) and the trace anchor for V&V. For PP3500 the SRS must cleanly partition deterministic-vs-AI requirements (so the AI/ML envelope can be PCCP-modified independently), document the drug-library payload contract, and pin the IEC 60601-1-8 alarm requirements that drive the alarm-rich V&V protocols.",
+      "main_topics": [
+        {
+          "name": "Functional requirements",
+          "summary": "Infusion control, dose calculation, drug-library lookup, alarm logic"
+        },
+        {
+          "name": "Performance requirements",
+          "summary": "Bolus accuracy, occlusion detection time, alarm latency"
+        },
+        {
+          "name": "Interface requirements",
+          "summary": "Connectivity-adapter API, cloud-suite OTA & telemetry contracts"
+        },
+        {
+          "name": "AI/ML envelope requirements",
+          "summary": "Predictive-alarm inputs/outputs, drift thresholds \u2014 LMR2 PCCP scope"
+        },
+        {
+          "name": "Safety requirements",
+          "summary": "IEC 60601-1-8 alarm system, fail-safe behaviors, watchdog"
+        },
+        {
+          "name": "Cybersecurity requirements",
+          "summary": "TLS 1.3 mutual auth, secure boot, SBOM-driven"
+        },
+        {
+          "name": "Traceability metadata",
+          "summary": "Each REQ \u2192 user need ID, each REQ \u2192 V&V test ID"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VI",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC2": {
+      "title": "Design Input Specification (SRS)",
+      "description": "The Software Requirements Specification translates the Use Spec's user needs into testable software requirements covering the deterministic infusion-control core, the alarm subsystem, the drug-library ingest path, the connectivity-adapter interface, the cloud-suite dependency contract, and the AI/ML predictive-alarm envelope (LMR2). Each requirement is uniquely identified and traceable.",
+      "why_important_in_project": "The SRS is the regulated design-input artifact under 21 CFR 820.30(c) and the trace anchor for V&V. For PP3500 the SRS must cleanly partition deterministic-vs-AI requirements (so the AI/ML envelope can be PCCP-modified independently), document the drug-library payload contract, and pin the IEC 60601-1-8 alarm requirements that drive the alarm-rich V&V protocols.",
+      "main_topics": [
+        {
+          "name": "Functional requirements",
+          "summary": "Infusion control, dose calculation, drug-library lookup, alarm logic"
+        },
+        {
+          "name": "Performance requirements",
+          "summary": "Bolus accuracy, occlusion detection time, alarm latency"
+        },
+        {
+          "name": "Interface requirements",
+          "summary": "Connectivity-adapter API, cloud-suite OTA & telemetry contracts"
+        },
+        {
+          "name": "AI/ML envelope requirements",
+          "summary": "Predictive-alarm inputs/outputs, drift thresholds \u2014 LMR2 PCCP scope"
+        },
+        {
+          "name": "Safety requirements",
+          "summary": "IEC 60601-1-8 alarm system, fail-safe behaviors, watchdog"
+        },
+        {
+          "name": "Cybersecurity requirements",
+          "summary": "TLS 1.3 mutual auth, secure boot, SBOM-driven"
+        },
+        {
+          "name": "Traceability metadata",
+          "summary": "Each REQ \u2192 user need ID, each REQ \u2192 V&V test ID"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VI",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC27": {
+      "title": "Verification & Validation Protocol & Report",
+      "description": "The V&V Protocol & Report document the test design, execution, results, and pass/fail evidence covering every SRS requirement. For PP3500 this spans unit/integration software testing, system V&V on the HIL test rig (ENG13), IEC 60601-1-8 alarm conformance, summative HF studies, and the AI/ML predictive-alarm performance evaluation (LMR2 envelope).",
+      "why_important_in_project": "V&V evidence is the load-bearing pillar of the 510(k) substantial-equivalence argument and the PCCP's \"modification protocol\" demonstration. The full V&V package gates the 510(k)+PCCP filing milestone; readiness check at QSub validates approach with FDA.",
+      "main_topics": [
+        {
+          "name": "Test design coverage",
+          "summary": "Every SRS REQ mapped to \u22651 test case; equivalence-class + boundary coverage"
+        },
+        {
+          "name": "System V&V harness",
+          "summary": "HIL rig (ENG13) end-to-end pump scenarios; HIL-driven regression"
+        },
+        {
+          "name": "Alarm conformance",
+          "summary": "IEC 60601-1-8 priority, signal characteristics, response-time tests"
+        },
+        {
+          "name": "Summative HF validation",
+          "summary": "Representative-cohort summative study per IEC 62366-1 \u00a75.9"
+        },
+        {
+          "name": "AI/ML performance evaluation",
+          "summary": "LMR2 envelope \u2014 sensitivity/specificity, drift, generalization across cohorts"
+        },
+        {
+          "name": "Cybersecurity testing",
+          "summary": "Threat-model-driven test cases per FDA cyber \u00a7V"
+        },
+        {
+          "name": "Results & pass/fail",
+          "summary": "Per-test verdict with traceable defect IDs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.6, \u00a75.7",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VIII",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-1-8:2006+A1:2012 alarms",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 62366-1:2015 \u00a75.9",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC27": {
+      "title": "Verification & Validation Protocol & Report",
+      "description": "The V&V Protocol & Report document the test design, execution, results, and pass/fail evidence covering every SRS requirement. For PP3500 this spans unit/integration software testing, system V&V on the HIL test rig (ENG13), IEC 60601-1-8 alarm conformance, summative HF studies, and the AI/ML predictive-alarm performance evaluation (LMR2 envelope).",
+      "why_important_in_project": "V&V evidence is the load-bearing pillar of the 510(k) substantial-equivalence argument and the PCCP's \"modification protocol\" demonstration. The full V&V package gates the 510(k)+PCCP filing milestone; readiness check at QSub validates approach with FDA.",
+      "main_topics": [
+        {
+          "name": "Test design coverage",
+          "summary": "Every SRS REQ mapped to \u22651 test case; equivalence-class + boundary coverage"
+        },
+        {
+          "name": "System V&V harness",
+          "summary": "HIL rig (ENG13) end-to-end pump scenarios; HIL-driven regression"
+        },
+        {
+          "name": "Alarm conformance",
+          "summary": "IEC 60601-1-8 priority, signal characteristics, response-time tests"
+        },
+        {
+          "name": "Summative HF validation",
+          "summary": "Representative-cohort summative study per IEC 62366-1 \u00a75.9"
+        },
+        {
+          "name": "AI/ML performance evaluation",
+          "summary": "LMR2 envelope \u2014 sensitivity/specificity, drift, generalization across cohorts"
+        },
+        {
+          "name": "Cybersecurity testing",
+          "summary": "Threat-model-driven test cases per FDA cyber \u00a7V"
+        },
+        {
+          "name": "Results & pass/fail",
+          "summary": "Per-test verdict with traceable defect IDs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.6, \u00a75.7",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VIII",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-1-8:2006+A1:2012 alarms",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 62366-1:2015 \u00a75.9",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC27": {
+      "title": "Verification & Validation Protocol & Report",
+      "description": "The V&V Protocol & Report document the test design, execution, results, and pass/fail evidence covering every SRS requirement. For PP3500 this spans unit/integration software testing, system V&V on the HIL test rig (ENG13), IEC 60601-1-8 alarm conformance, summative HF studies, and the AI/ML predictive-alarm performance evaluation (LMR2 envelope).",
+      "why_important_in_project": "V&V evidence is the load-bearing pillar of the 510(k) substantial-equivalence argument and the PCCP's \"modification protocol\" demonstration. The full V&V package gates the 510(k)+PCCP filing milestone; readiness check at QSub validates approach with FDA.",
+      "main_topics": [
+        {
+          "name": "Test design coverage",
+          "summary": "Every SRS REQ mapped to \u22651 test case; equivalence-class + boundary coverage"
+        },
+        {
+          "name": "System V&V harness",
+          "summary": "HIL rig (ENG13) end-to-end pump scenarios; HIL-driven regression"
+        },
+        {
+          "name": "Alarm conformance",
+          "summary": "IEC 60601-1-8 priority, signal characteristics, response-time tests"
+        },
+        {
+          "name": "Summative HF validation",
+          "summary": "Representative-cohort summative study per IEC 62366-1 \u00a75.9"
+        },
+        {
+          "name": "AI/ML performance evaluation",
+          "summary": "LMR2 envelope \u2014 sensitivity/specificity, drift, generalization across cohorts"
+        },
+        {
+          "name": "Cybersecurity testing",
+          "summary": "Threat-model-driven test cases per FDA cyber \u00a7V"
+        },
+        {
+          "name": "Results & pass/fail",
+          "summary": "Per-test verdict with traceable defect IDs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.6, \u00a75.7",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VIII",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-1-8:2006+A1:2012 alarms",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 62366-1:2015 \u00a75.9",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC27": {
+      "title": "Verification & Validation Protocol & Report",
+      "description": "The V&V Protocol & Report document the test design, execution, results, and pass/fail evidence covering every SRS requirement. For PP3500 this spans unit/integration software testing, system V&V on the HIL test rig (ENG13), IEC 60601-1-8 alarm conformance, summative HF studies, and the AI/ML predictive-alarm performance evaluation (LMR2 envelope).",
+      "why_important_in_project": "V&V evidence is the load-bearing pillar of the 510(k) substantial-equivalence argument and the PCCP's \"modification protocol\" demonstration. The full V&V package gates the 510(k)+PCCP filing milestone; readiness check at QSub validates approach with FDA.",
+      "main_topics": [
+        {
+          "name": "Test design coverage",
+          "summary": "Every SRS REQ mapped to \u22651 test case; equivalence-class + boundary coverage"
+        },
+        {
+          "name": "System V&V harness",
+          "summary": "HIL rig (ENG13) end-to-end pump scenarios; HIL-driven regression"
+        },
+        {
+          "name": "Alarm conformance",
+          "summary": "IEC 60601-1-8 priority, signal characteristics, response-time tests"
+        },
+        {
+          "name": "Summative HF validation",
+          "summary": "Representative-cohort summative study per IEC 62366-1 \u00a75.9"
+        },
+        {
+          "name": "AI/ML performance evaluation",
+          "summary": "LMR2 envelope \u2014 sensitivity/specificity, drift, generalization across cohorts"
+        },
+        {
+          "name": "Cybersecurity testing",
+          "summary": "Threat-model-driven test cases per FDA cyber \u00a7V"
+        },
+        {
+          "name": "Results & pass/fail",
+          "summary": "Per-test verdict with traceable defect IDs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.6, \u00a75.7",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Submissions for Device Software Functions (June 2023) \u00a7VIII",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-1-8:2006+A1:2012 alarms",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 62366-1:2015 \u00a75.9",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC28": {
+      "title": "Design Trace Matrix (UN \u2194 DI \u2194 Arch \u2194 V&V)",
+      "description": "The Design Trace Matrix is the bidirectional crosswalk linking User Needs \u2192 Design Inputs (SRS) \u2192 Architecture elements (SAD) \u2192 V&V test evidence \u2192 Risk controls. For PP3500 it is implemented as a structured xlsx + the project-console interactive view, with drift detection against the Jira mirror.",
+      "why_important_in_project": "Trace integrity is what proves the regulated chain \"user need \u2192 satisfied by design \u2192 verified by test \u2192 risk-controlled\" \u2014 auditors and reviewers walk this matrix to evaluate evidence sufficiency. With PCCP authorization in play, the trace also documents which requirements live INSIDE the AI/ML envelope (PCCP-modifiable) vs OUTSIDE.",
+      "main_topics": [
+        {
+          "name": "Vertical traces",
+          "summary": "UN \u2192 DI \u2192 Arch \u2192 V&V chains, no orphans"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Each hazard \u2192 mitigation requirement \u2192 verifying test"
+        },
+        {
+          "name": "AI envelope partitioning",
+          "summary": "Which traces sit inside the PCCP-authorized boundary"
+        },
+        {
+          "name": "Drift detection",
+          "summary": "Crosswalk vs Jira mirror; drift report consumed by reviewers"
+        },
+        {
+          "name": "Coverage gaps",
+          "summary": "Uncovered DIs flagged for closure before filing"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.7",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1.6",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC28": {
+      "title": "Design Trace Matrix (UN \u2194 DI \u2194 Arch \u2194 V&V)",
+      "description": "The Design Trace Matrix is the bidirectional crosswalk linking User Needs \u2192 Design Inputs (SRS) \u2192 Architecture elements (SAD) \u2192 V&V test evidence \u2192 Risk controls. For PP3500 it is implemented as a structured xlsx + the project-console interactive view, with drift detection against the Jira mirror.",
+      "why_important_in_project": "Trace integrity is what proves the regulated chain \"user need \u2192 satisfied by design \u2192 verified by test \u2192 risk-controlled\" \u2014 auditors and reviewers walk this matrix to evaluate evidence sufficiency. With PCCP authorization in play, the trace also documents which requirements live INSIDE the AI/ML envelope (PCCP-modifiable) vs OUTSIDE.",
+      "main_topics": [
+        {
+          "name": "Vertical traces",
+          "summary": "UN \u2192 DI \u2192 Arch \u2192 V&V chains, no orphans"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Each hazard \u2192 mitigation requirement \u2192 verifying test"
+        },
+        {
+          "name": "AI envelope partitioning",
+          "summary": "Which traces sit inside the PCCP-authorized boundary"
+        },
+        {
+          "name": "Drift detection",
+          "summary": "Crosswalk vs Jira mirror; drift report consumed by reviewers"
+        },
+        {
+          "name": "Coverage gaps",
+          "summary": "Uncovered DIs flagged for closure before filing"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.7",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1.6",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC28": {
+      "title": "Design Trace Matrix (UN \u2194 DI \u2194 Arch \u2194 V&V)",
+      "description": "The Design Trace Matrix is the bidirectional crosswalk linking User Needs \u2192 Design Inputs (SRS) \u2192 Architecture elements (SAD) \u2192 V&V test evidence \u2192 Risk controls. For PP3500 it is implemented as a structured xlsx + the project-console interactive view, with drift detection against the Jira mirror.",
+      "why_important_in_project": "Trace integrity is what proves the regulated chain \"user need \u2192 satisfied by design \u2192 verified by test \u2192 risk-controlled\" \u2014 auditors and reviewers walk this matrix to evaluate evidence sufficiency. With PCCP authorization in play, the trace also documents which requirements live INSIDE the AI/ML envelope (PCCP-modifiable) vs OUTSIDE.",
+      "main_topics": [
+        {
+          "name": "Vertical traces",
+          "summary": "UN \u2192 DI \u2192 Arch \u2192 V&V chains, no orphans"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Each hazard \u2192 mitigation requirement \u2192 verifying test"
+        },
+        {
+          "name": "AI envelope partitioning",
+          "summary": "Which traces sit inside the PCCP-authorized boundary"
+        },
+        {
+          "name": "Drift detection",
+          "summary": "Crosswalk vs Jira mirror; drift report consumed by reviewers"
+        },
+        {
+          "name": "Coverage gaps",
+          "summary": "Uncovered DIs flagged for closure before filing"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.7",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1.6",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC28": {
+      "title": "Design Trace Matrix (UN \u2194 DI \u2194 Arch \u2194 V&V)",
+      "description": "The Design Trace Matrix is the bidirectional crosswalk linking User Needs \u2192 Design Inputs (SRS) \u2192 Architecture elements (SAD) \u2192 V&V test evidence \u2192 Risk controls. For PP3500 it is implemented as a structured xlsx + the project-console interactive view, with drift detection against the Jira mirror.",
+      "why_important_in_project": "Trace integrity is what proves the regulated chain \"user need \u2192 satisfied by design \u2192 verified by test \u2192 risk-controlled\" \u2014 auditors and reviewers walk this matrix to evaluate evidence sufficiency. With PCCP authorization in play, the trace also documents which requirements live INSIDE the AI/ML envelope (PCCP-modifiable) vs OUTSIDE.",
+      "main_topics": [
+        {
+          "name": "Vertical traces",
+          "summary": "UN \u2192 DI \u2192 Arch \u2192 V&V chains, no orphans"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Each hazard \u2192 mitigation requirement \u2192 verifying test"
+        },
+        {
+          "name": "AI envelope partitioning",
+          "summary": "Which traces sit inside the PCCP-authorized boundary"
+        },
+        {
+          "name": "Drift detection",
+          "summary": "Crosswalk vs Jira mirror; drift report consumed by reviewers"
+        },
+        {
+          "name": "Coverage gaps",
+          "summary": "Uncovered DIs flagged for closure before filing"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.7",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.1.6",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC16": {
+      "title": "Tool Validation Records",
+      "description": "Tool Validation Records document the validation status of every software tool used to develop or test the regulated device software \u2014 compilers, test harnesses, simulators, static analyzers, CI/CD orchestration, AI training pipelines. Each tool gets a risk-based validation depth per its use in the design output chain.",
+      "why_important_in_project": "PP3500 is IEC 62304 Class C: tool failures can propagate into the device. The HIL rig (ENG13), AI/ML training pipeline (ENG19), and SBOM generation pipeline (ENG15) are all in scope. LMR2's AI training tooling requires deeper validation per FDA GMLP.",
+      "main_topics": [
+        {
+          "name": "Tool inventory",
+          "summary": "All tools listed with version, vendor, use context"
+        },
+        {
+          "name": "Use-risk classification",
+          "summary": "How each tool affects regulated artifacts"
+        },
+        {
+          "name": "Validation evidence per tool",
+          "summary": "Test record / vendor cert / use-history-justification"
+        },
+        {
+          "name": "AI/ML training tools",
+          "summary": "LMR2 envelope \u2014 data pipeline, model dev, validation suite"
+        },
+        {
+          "name": "Re-validation triggers",
+          "summary": "When tool changes require re-running validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a78.1.3",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA General Principles of Software Validation (Jan 2002)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR 820.70(i)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC16": {
+      "title": "Tool Validation Records",
+      "description": "Tool Validation Records document the validation status of every software tool used to develop or test the regulated device software \u2014 compilers, test harnesses, simulators, static analyzers, CI/CD orchestration, AI training pipelines. Each tool gets a risk-based validation depth per its use in the design output chain.",
+      "why_important_in_project": "PP3500 is IEC 62304 Class C: tool failures can propagate into the device. The HIL rig (ENG13), AI/ML training pipeline (ENG19), and SBOM generation pipeline (ENG15) are all in scope. LMR2's AI training tooling requires deeper validation per FDA GMLP.",
+      "main_topics": [
+        {
+          "name": "Tool inventory",
+          "summary": "All tools listed with version, vendor, use context"
+        },
+        {
+          "name": "Use-risk classification",
+          "summary": "How each tool affects regulated artifacts"
+        },
+        {
+          "name": "Validation evidence per tool",
+          "summary": "Test record / vendor cert / use-history-justification"
+        },
+        {
+          "name": "AI/ML training tools",
+          "summary": "LMR2 envelope \u2014 data pipeline, model dev, validation suite"
+        },
+        {
+          "name": "Re-validation triggers",
+          "summary": "When tool changes require re-running validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a78.1.3",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA General Principles of Software Validation (Jan 2002)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR 820.70(i)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC16": {
+      "title": "Tool Validation Records",
+      "description": "Tool Validation Records document the validation status of every software tool used to develop or test the regulated device software \u2014 compilers, test harnesses, simulators, static analyzers, CI/CD orchestration, AI training pipelines. Each tool gets a risk-based validation depth per its use in the design output chain.",
+      "why_important_in_project": "PP3500 is IEC 62304 Class C: tool failures can propagate into the device. The HIL rig (ENG13), AI/ML training pipeline (ENG19), and SBOM generation pipeline (ENG15) are all in scope. LMR2's AI training tooling requires deeper validation per FDA GMLP.",
+      "main_topics": [
+        {
+          "name": "Tool inventory",
+          "summary": "All tools listed with version, vendor, use context"
+        },
+        {
+          "name": "Use-risk classification",
+          "summary": "How each tool affects regulated artifacts"
+        },
+        {
+          "name": "Validation evidence per tool",
+          "summary": "Test record / vendor cert / use-history-justification"
+        },
+        {
+          "name": "AI/ML training tools",
+          "summary": "LMR2 envelope \u2014 data pipeline, model dev, validation suite"
+        },
+        {
+          "name": "Re-validation triggers",
+          "summary": "When tool changes require re-running validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a78.1.3",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA General Principles of Software Validation (Jan 2002)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR 820.70(i)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC16": {
+      "title": "Tool Validation Records",
+      "description": "Tool Validation Records document the validation status of every software tool used to develop or test the regulated device software \u2014 compilers, test harnesses, simulators, static analyzers, CI/CD orchestration, AI training pipelines. Each tool gets a risk-based validation depth per its use in the design output chain.",
+      "why_important_in_project": "PP3500 is IEC 62304 Class C: tool failures can propagate into the device. The HIL rig (ENG13), AI/ML training pipeline (ENG19), and SBOM generation pipeline (ENG15) are all in scope. LMR2's AI training tooling requires deeper validation per FDA GMLP.",
+      "main_topics": [
+        {
+          "name": "Tool inventory",
+          "summary": "All tools listed with version, vendor, use context"
+        },
+        {
+          "name": "Use-risk classification",
+          "summary": "How each tool affects regulated artifacts"
+        },
+        {
+          "name": "Validation evidence per tool",
+          "summary": "Test record / vendor cert / use-history-justification"
+        },
+        {
+          "name": "AI/ML training tools",
+          "summary": "LMR2 envelope \u2014 data pipeline, model dev, validation suite"
+        },
+        {
+          "name": "Re-validation triggers",
+          "summary": "When tool changes require re-running validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a78.1.3",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA General Principles of Software Validation (Jan 2002)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR 820.70(i)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC9": {
+      "title": "Risk Management Report (ISO 14971)",
+      "description": "The Risk Management Report consolidates the hazard analysis, risk evaluations, risk controls, and residual-risk acceptability for the PP3500. For an opioid PCA pump, hazards include over-infusion, under-infusion, occlusion-missed, air-in-line, wrong drug/concentration, alarm fatigue, and AI/ML predictive-alarm false-negatives (LMR2 envelope).",
+      "why_important_in_project": "PCA pumps have one of the highest IEC 60601 risk profiles among infusion devices due to opioid dosing and patient-controlled bolus. ISO 14971 risk evidence is load-bearing for both 510(k) substantial equivalence and the PCCP's benefit-risk reframing for AI/ML modifications. Connects to ENG1 hardware design freeze, ENG11 sensor calibration, and ENG12 alarm conformance.",
+      "main_topics": [
+        {
+          "name": "Hazard inventory",
+          "summary": "Over/under-infusion, occlusion, air-in-line, alarm-related, cyber, AI-related"
+        },
+        {
+          "name": "Hazardous-situation analysis",
+          "summary": "P1 \u00d7 P2 \u00d7 Severity per ISO 14971"
+        },
+        {
+          "name": "Risk controls",
+          "summary": "Design controls \u2192 protective measures \u2192 information for safety"
+        },
+        {
+          "name": "Residual risk evaluation",
+          "summary": "Per-hazard ALARP + overall benefit-risk balance"
+        },
+        {
+          "name": "AI/ML predictive-alarm risks",
+          "summary": "LMR2 envelope \u2014 false-positive/negative, drift, distribution shift"
+        },
+        {
+          "name": "Production + post-market loop",
+          "summary": "PSUR feedback \u2192 risk file update triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO/TR 24971:2020",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 60601-1:2005+A1:2012 \u00a74.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC9": {
+      "title": "Risk Management Report (ISO 14971)",
+      "description": "The Risk Management Report consolidates the hazard analysis, risk evaluations, risk controls, and residual-risk acceptability for the PP3500. For an opioid PCA pump, hazards include over-infusion, under-infusion, occlusion-missed, air-in-line, wrong drug/concentration, alarm fatigue, and AI/ML predictive-alarm false-negatives (LMR2 envelope).",
+      "why_important_in_project": "PCA pumps have one of the highest IEC 60601 risk profiles among infusion devices due to opioid dosing and patient-controlled bolus. ISO 14971 risk evidence is load-bearing for both 510(k) substantial equivalence and the PCCP's benefit-risk reframing for AI/ML modifications. Connects to ENG1 hardware design freeze, ENG11 sensor calibration, and ENG12 alarm conformance.",
+      "main_topics": [
+        {
+          "name": "Hazard inventory",
+          "summary": "Over/under-infusion, occlusion, air-in-line, alarm-related, cyber, AI-related"
+        },
+        {
+          "name": "Hazardous-situation analysis",
+          "summary": "P1 \u00d7 P2 \u00d7 Severity per ISO 14971"
+        },
+        {
+          "name": "Risk controls",
+          "summary": "Design controls \u2192 protective measures \u2192 information for safety"
+        },
+        {
+          "name": "Residual risk evaluation",
+          "summary": "Per-hazard ALARP + overall benefit-risk balance"
+        },
+        {
+          "name": "AI/ML predictive-alarm risks",
+          "summary": "LMR2 envelope \u2014 false-positive/negative, drift, distribution shift"
+        },
+        {
+          "name": "Production + post-market loop",
+          "summary": "PSUR feedback \u2192 risk file update triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO/TR 24971:2020",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 60601-1:2005+A1:2012 \u00a74.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC9": {
+      "title": "Risk Management Report (ISO 14971)",
+      "description": "The Risk Management Report consolidates the hazard analysis, risk evaluations, risk controls, and residual-risk acceptability for the PP3500. For an opioid PCA pump, hazards include over-infusion, under-infusion, occlusion-missed, air-in-line, wrong drug/concentration, alarm fatigue, and AI/ML predictive-alarm false-negatives (LMR2 envelope).",
+      "why_important_in_project": "PCA pumps have one of the highest IEC 60601 risk profiles among infusion devices due to opioid dosing and patient-controlled bolus. ISO 14971 risk evidence is load-bearing for both 510(k) substantial equivalence and the PCCP's benefit-risk reframing for AI/ML modifications. Connects to ENG1 hardware design freeze, ENG11 sensor calibration, and ENG12 alarm conformance.",
+      "main_topics": [
+        {
+          "name": "Hazard inventory",
+          "summary": "Over/under-infusion, occlusion, air-in-line, alarm-related, cyber, AI-related"
+        },
+        {
+          "name": "Hazardous-situation analysis",
+          "summary": "P1 \u00d7 P2 \u00d7 Severity per ISO 14971"
+        },
+        {
+          "name": "Risk controls",
+          "summary": "Design controls \u2192 protective measures \u2192 information for safety"
+        },
+        {
+          "name": "Residual risk evaluation",
+          "summary": "Per-hazard ALARP + overall benefit-risk balance"
+        },
+        {
+          "name": "AI/ML predictive-alarm risks",
+          "summary": "LMR2 envelope \u2014 false-positive/negative, drift, distribution shift"
+        },
+        {
+          "name": "Production + post-market loop",
+          "summary": "PSUR feedback \u2192 risk file update triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO/TR 24971:2020",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 60601-1:2005+A1:2012 \u00a74.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC9": {
+      "title": "Risk Management Report (ISO 14971)",
+      "description": "The Risk Management Report consolidates the hazard analysis, risk evaluations, risk controls, and residual-risk acceptability for the PP3500. For an opioid PCA pump, hazards include over-infusion, under-infusion, occlusion-missed, air-in-line, wrong drug/concentration, alarm fatigue, and AI/ML predictive-alarm false-negatives (LMR2 envelope).",
+      "why_important_in_project": "PCA pumps have one of the highest IEC 60601 risk profiles among infusion devices due to opioid dosing and patient-controlled bolus. ISO 14971 risk evidence is load-bearing for both 510(k) substantial equivalence and the PCCP's benefit-risk reframing for AI/ML modifications. Connects to ENG1 hardware design freeze, ENG11 sensor calibration, and ENG12 alarm conformance.",
+      "main_topics": [
+        {
+          "name": "Hazard inventory",
+          "summary": "Over/under-infusion, occlusion, air-in-line, alarm-related, cyber, AI-related"
+        },
+        {
+          "name": "Hazardous-situation analysis",
+          "summary": "P1 \u00d7 P2 \u00d7 Severity per ISO 14971"
+        },
+        {
+          "name": "Risk controls",
+          "summary": "Design controls \u2192 protective measures \u2192 information for safety"
+        },
+        {
+          "name": "Residual risk evaluation",
+          "summary": "Per-hazard ALARP + overall benefit-risk balance"
+        },
+        {
+          "name": "AI/ML predictive-alarm risks",
+          "summary": "LMR2 envelope \u2014 false-positive/negative, drift, distribution shift"
+        },
+        {
+          "name": "Production + post-market loop",
+          "summary": "PSUR feedback \u2192 risk file update triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO/TR 24971:2020",
+          "role": "supporting"
+        },
+        {
+          "citation": "IEC 60601-1:2005+A1:2012 \u00a74.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC23": {
+      "title": "Clinical Evaluation Report",
+      "description": "The Clinical Evaluation Report consolidates the clinical evidence supporting the PP3500's safety and performance claims: predicate device clinical history (PP3000, K190567), literature review, post-market clinical data from the predicate, and any prospective evidence required to bridge the new claims (AI/ML predictive-alarm, OTA updates, drug-library expansion).",
+      "why_important_in_project": "For a 510(k) under substantial equivalence, the clinical evaluation justifies why predicate performance applies to PP3500's differences. The AI/ML envelope (LMR2) introduces predictions that may require Q-Sub-validated clinical evidence; the QSub readiness draft sets up FDA alignment on what evidence is sufficient.",
+      "main_topics": [
+        {
+          "name": "Predicate clinical history",
+          "summary": "PP3000 (K190567) field performance, MDR data, real-world evidence"
+        },
+        {
+          "name": "Literature review",
+          "summary": "PCA pump clinical safety/efficacy across the published evidence base"
+        },
+        {
+          "name": "Gap analysis",
+          "summary": "PP3500 differences vs predicate; clinical implications"
+        },
+        {
+          "name": "AI/ML clinical evidence",
+          "summary": "LMR2 envelope \u2014 what evidence supports predictive-alarm benefit-risk"
+        },
+        {
+          "name": "Clinical benefit-risk",
+          "summary": "Overall benefit vs residual risks per ISO 14971"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Clinical Evaluation Guidance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a77.4",
+          "role": "supporting"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC23": {
+      "title": "Clinical Evaluation Report",
+      "description": "The Clinical Evaluation Report consolidates the clinical evidence supporting the PP3500's safety and performance claims: predicate device clinical history (PP3000, K190567), literature review, post-market clinical data from the predicate, and any prospective evidence required to bridge the new claims (AI/ML predictive-alarm, OTA updates, drug-library expansion).",
+      "why_important_in_project": "For a 510(k) under substantial equivalence, the clinical evaluation justifies why predicate performance applies to PP3500's differences. The AI/ML envelope (LMR2) introduces predictions that may require Q-Sub-validated clinical evidence; the QSub readiness draft sets up FDA alignment on what evidence is sufficient.",
+      "main_topics": [
+        {
+          "name": "Predicate clinical history",
+          "summary": "PP3000 (K190567) field performance, MDR data, real-world evidence"
+        },
+        {
+          "name": "Literature review",
+          "summary": "PCA pump clinical safety/efficacy across the published evidence base"
+        },
+        {
+          "name": "Gap analysis",
+          "summary": "PP3500 differences vs predicate; clinical implications"
+        },
+        {
+          "name": "AI/ML clinical evidence",
+          "summary": "LMR2 envelope \u2014 what evidence supports predictive-alarm benefit-risk"
+        },
+        {
+          "name": "Clinical benefit-risk",
+          "summary": "Overall benefit vs residual risks per ISO 14971"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Clinical Evaluation Guidance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a77.4",
+          "role": "supporting"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC23": {
+      "title": "Clinical Evaluation Report",
+      "description": "The Clinical Evaluation Report consolidates the clinical evidence supporting the PP3500's safety and performance claims: predicate device clinical history (PP3000, K190567), literature review, post-market clinical data from the predicate, and any prospective evidence required to bridge the new claims (AI/ML predictive-alarm, OTA updates, drug-library expansion).",
+      "why_important_in_project": "For a 510(k) under substantial equivalence, the clinical evaluation justifies why predicate performance applies to PP3500's differences. The AI/ML envelope (LMR2) introduces predictions that may require Q-Sub-validated clinical evidence; the QSub readiness draft sets up FDA alignment on what evidence is sufficient.",
+      "main_topics": [
+        {
+          "name": "Predicate clinical history",
+          "summary": "PP3000 (K190567) field performance, MDR data, real-world evidence"
+        },
+        {
+          "name": "Literature review",
+          "summary": "PCA pump clinical safety/efficacy across the published evidence base"
+        },
+        {
+          "name": "Gap analysis",
+          "summary": "PP3500 differences vs predicate; clinical implications"
+        },
+        {
+          "name": "AI/ML clinical evidence",
+          "summary": "LMR2 envelope \u2014 what evidence supports predictive-alarm benefit-risk"
+        },
+        {
+          "name": "Clinical benefit-risk",
+          "summary": "Overall benefit vs residual risks per ISO 14971"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Clinical Evaluation Guidance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a77.4",
+          "role": "supporting"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC23": {
+      "title": "Clinical Evaluation Report",
+      "description": "The Clinical Evaluation Report consolidates the clinical evidence supporting the PP3500's safety and performance claims: predicate device clinical history (PP3000, K190567), literature review, post-market clinical data from the predicate, and any prospective evidence required to bridge the new claims (AI/ML predictive-alarm, OTA updates, drug-library expansion).",
+      "why_important_in_project": "For a 510(k) under substantial equivalence, the clinical evaluation justifies why predicate performance applies to PP3500's differences. The AI/ML envelope (LMR2) introduces predictions that may require Q-Sub-validated clinical evidence; the QSub readiness draft sets up FDA alignment on what evidence is sufficient.",
+      "main_topics": [
+        {
+          "name": "Predicate clinical history",
+          "summary": "PP3000 (K190567) field performance, MDR data, real-world evidence"
+        },
+        {
+          "name": "Literature review",
+          "summary": "PCA pump clinical safety/efficacy across the published evidence base"
+        },
+        {
+          "name": "Gap analysis",
+          "summary": "PP3500 differences vs predicate; clinical implications"
+        },
+        {
+          "name": "AI/ML clinical evidence",
+          "summary": "LMR2 envelope \u2014 what evidence supports predictive-alarm benefit-risk"
+        },
+        {
+          "name": "Clinical benefit-risk",
+          "summary": "Overall benefit vs residual risks per ISO 14971"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Clinical Evaluation Guidance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a77.4",
+          "role": "supporting"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC24": {
+      "title": "Periodic Safety Update Report (PSUR)",
+      "description": "The PSUR is the post-market vigilance and trend-analysis report aggregating complaints, MDRs, CAPAs, field-safety corrective actions, and post-market clinical follow-up over a defined reporting period. It is the feedback loop that closes back into the risk management file.",
+      "why_important_in_project": "PP3500 inherits a PCA-pump field-history pattern from the PP3000 predicate. Post-market signals (alarm fatigue, occlusion misses, drug-library mis-keying) directly drive risk file revision and may trigger PCCP-authorized modifications. The LMR2 AI/ML envelope requires drift monitoring as part of postmarket surveillance per FDA AI/ML guidance.",
+      "main_topics": [
+        {
+          "name": "Complaint trend analysis",
+          "summary": "Categorized by hazard, severity, frequency"
+        },
+        {
+          "name": "MDR / FSCA history",
+          "summary": "Reportable events, root-cause analyses, corrective actions"
+        },
+        {
+          "name": "Risk file feedback",
+          "summary": "Which signals trigger risk re-evaluation"
+        },
+        {
+          "name": "AI/ML drift monitoring",
+          "summary": "LMR2 envelope \u2014 predictive-alarm performance over time"
+        },
+        {
+          "name": "PMCF activities",
+          "summary": "Planned + executed post-market clinical follow-up"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Postmarket Surveillance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a710",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC24": {
+      "title": "Periodic Safety Update Report (PSUR)",
+      "description": "The PSUR is the post-market vigilance and trend-analysis report aggregating complaints, MDRs, CAPAs, field-safety corrective actions, and post-market clinical follow-up over a defined reporting period. It is the feedback loop that closes back into the risk management file.",
+      "why_important_in_project": "PP3500 inherits a PCA-pump field-history pattern from the PP3000 predicate. Post-market signals (alarm fatigue, occlusion misses, drug-library mis-keying) directly drive risk file revision and may trigger PCCP-authorized modifications. The LMR2 AI/ML envelope requires drift monitoring as part of postmarket surveillance per FDA AI/ML guidance.",
+      "main_topics": [
+        {
+          "name": "Complaint trend analysis",
+          "summary": "Categorized by hazard, severity, frequency"
+        },
+        {
+          "name": "MDR / FSCA history",
+          "summary": "Reportable events, root-cause analyses, corrective actions"
+        },
+        {
+          "name": "Risk file feedback",
+          "summary": "Which signals trigger risk re-evaluation"
+        },
+        {
+          "name": "AI/ML drift monitoring",
+          "summary": "LMR2 envelope \u2014 predictive-alarm performance over time"
+        },
+        {
+          "name": "PMCF activities",
+          "summary": "Planned + executed post-market clinical follow-up"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Postmarket Surveillance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a710",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC24": {
+      "title": "Periodic Safety Update Report (PSUR)",
+      "description": "The PSUR is the post-market vigilance and trend-analysis report aggregating complaints, MDRs, CAPAs, field-safety corrective actions, and post-market clinical follow-up over a defined reporting period. It is the feedback loop that closes back into the risk management file.",
+      "why_important_in_project": "PP3500 inherits a PCA-pump field-history pattern from the PP3000 predicate. Post-market signals (alarm fatigue, occlusion misses, drug-library mis-keying) directly drive risk file revision and may trigger PCCP-authorized modifications. The LMR2 AI/ML envelope requires drift monitoring as part of postmarket surveillance per FDA AI/ML guidance.",
+      "main_topics": [
+        {
+          "name": "Complaint trend analysis",
+          "summary": "Categorized by hazard, severity, frequency"
+        },
+        {
+          "name": "MDR / FSCA history",
+          "summary": "Reportable events, root-cause analyses, corrective actions"
+        },
+        {
+          "name": "Risk file feedback",
+          "summary": "Which signals trigger risk re-evaluation"
+        },
+        {
+          "name": "AI/ML drift monitoring",
+          "summary": "LMR2 envelope \u2014 predictive-alarm performance over time"
+        },
+        {
+          "name": "PMCF activities",
+          "summary": "Planned + executed post-market clinical follow-up"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Postmarket Surveillance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a710",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC24": {
+      "title": "Periodic Safety Update Report (PSUR)",
+      "description": "The PSUR is the post-market vigilance and trend-analysis report aggregating complaints, MDRs, CAPAs, field-safety corrective actions, and post-market clinical follow-up over a defined reporting period. It is the feedback loop that closes back into the risk management file.",
+      "why_important_in_project": "PP3500 inherits a PCA-pump field-history pattern from the PP3000 predicate. Post-market signals (alarm fatigue, occlusion misses, drug-library mis-keying) directly drive risk file revision and may trigger PCCP-authorized modifications. The LMR2 AI/ML envelope requires drift monitoring as part of postmarket surveillance per FDA AI/ML guidance.",
+      "main_topics": [
+        {
+          "name": "Complaint trend analysis",
+          "summary": "Categorized by hazard, severity, frequency"
+        },
+        {
+          "name": "MDR / FSCA history",
+          "summary": "Reportable events, root-cause analyses, corrective actions"
+        },
+        {
+          "name": "Risk file feedback",
+          "summary": "Which signals trigger risk re-evaluation"
+        },
+        {
+          "name": "AI/ML drift monitoring",
+          "summary": "LMR2 envelope \u2014 predictive-alarm performance over time"
+        },
+        {
+          "name": "PMCF activities",
+          "summary": "Planned + executed post-market clinical follow-up"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Postmarket Surveillance",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14971:2019 \u00a710",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-PC12": {
+      "title": "Cybersecurity Vulnerability Management Plan",
+      "description": "The Cybersecurity Plan documents the security architecture, threat model, security controls, SBOM (ENG15), vulnerability disclosure process, patch/update mechanism (ENG17 secure-boot firmware verifier), and incident response posture. It covers the pump (M-series), connectivity-adapter (MDDS), and cloud-suite (dependency platform) collectively.",
+      "why_important_in_project": "FDA premarket cybersecurity guidance (Sept 2023) requires evidence across the pump-adapter-cloud chain. PP3500's SBOM, TLS 1.3 mutual-auth comms (ENG5), crypto/signing stack (ENG4), and OTA firmware verifier (ENG17) are all in scope. Post-market vulnerability monitoring is the bridge to PSUR.",
+      "main_topics": [
+        {
+          "name": "Threat model & attack surface",
+          "summary": "Per-trust-boundary enumeration; STRIDE-style decomposition"
+        },
+        {
+          "name": "Security architecture controls",
+          "summary": "TLS 1.3 mutual auth, secure boot, signed payloads, access control"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Software Bill of Materials generation, attestation, vulnerability mapping"
+        },
+        {
+          "name": "Vulnerability monitoring & disclosure",
+          "summary": "Continuous SBOM-driven scan; coordinated disclosure process"
+        },
+        {
+          "name": "OTA update integrity",
+          "summary": "Signed firmware verifier (ENG17); rollback protection"
+        },
+        {
+          "name": "Incident response",
+          "summary": "Detection, containment, recovery, regulatory notification"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "AAMI TIR57:2016",
+          "role": "supporting"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PC12": {
+      "title": "Cybersecurity Vulnerability Management Plan",
+      "description": "The Cybersecurity Plan documents the security architecture, threat model, security controls, SBOM (ENG15), vulnerability disclosure process, patch/update mechanism (ENG17 secure-boot firmware verifier), and incident response posture. It covers the pump (M-series), connectivity-adapter (MDDS), and cloud-suite (dependency platform) collectively.",
+      "why_important_in_project": "FDA premarket cybersecurity guidance (Sept 2023) requires evidence across the pump-adapter-cloud chain. PP3500's SBOM, TLS 1.3 mutual-auth comms (ENG5), crypto/signing stack (ENG4), and OTA firmware verifier (ENG17) are all in scope. Post-market vulnerability monitoring is the bridge to PSUR.",
+      "main_topics": [
+        {
+          "name": "Threat model & attack surface",
+          "summary": "Per-trust-boundary enumeration; STRIDE-style decomposition"
+        },
+        {
+          "name": "Security architecture controls",
+          "summary": "TLS 1.3 mutual auth, secure boot, signed payloads, access control"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Software Bill of Materials generation, attestation, vulnerability mapping"
+        },
+        {
+          "name": "Vulnerability monitoring & disclosure",
+          "summary": "Continuous SBOM-driven scan; coordinated disclosure process"
+        },
+        {
+          "name": "OTA update integrity",
+          "summary": "Signed firmware verifier (ENG17); rollback protection"
+        },
+        {
+          "name": "Incident response",
+          "summary": "Detection, containment, recovery, regulatory notification"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "AAMI TIR57:2016",
+          "role": "supporting"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-PC12": {
+      "title": "Cybersecurity Vulnerability Management Plan",
+      "description": "The Cybersecurity Plan documents the security architecture, threat model, security controls, SBOM (ENG15), vulnerability disclosure process, patch/update mechanism (ENG17 secure-boot firmware verifier), and incident response posture. It covers the pump (M-series), connectivity-adapter (MDDS), and cloud-suite (dependency platform) collectively.",
+      "why_important_in_project": "FDA premarket cybersecurity guidance (Sept 2023) requires evidence across the pump-adapter-cloud chain. PP3500's SBOM, TLS 1.3 mutual-auth comms (ENG5), crypto/signing stack (ENG4), and OTA firmware verifier (ENG17) are all in scope. Post-market vulnerability monitoring is the bridge to PSUR.",
+      "main_topics": [
+        {
+          "name": "Threat model & attack surface",
+          "summary": "Per-trust-boundary enumeration; STRIDE-style decomposition"
+        },
+        {
+          "name": "Security architecture controls",
+          "summary": "TLS 1.3 mutual auth, secure boot, signed payloads, access control"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Software Bill of Materials generation, attestation, vulnerability mapping"
+        },
+        {
+          "name": "Vulnerability monitoring & disclosure",
+          "summary": "Continuous SBOM-driven scan; coordinated disclosure process"
+        },
+        {
+          "name": "OTA update integrity",
+          "summary": "Signed firmware verifier (ENG17); rollback protection"
+        },
+        {
+          "name": "Incident response",
+          "summary": "Detection, containment, recovery, regulatory notification"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "AAMI TIR57:2016",
+          "role": "supporting"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-PC12": {
+      "title": "Cybersecurity Vulnerability Management Plan",
+      "description": "The Cybersecurity Plan documents the security architecture, threat model, security controls, SBOM (ENG15), vulnerability disclosure process, patch/update mechanism (ENG17 secure-boot firmware verifier), and incident response posture. It covers the pump (M-series), connectivity-adapter (MDDS), and cloud-suite (dependency platform) collectively.",
+      "why_important_in_project": "FDA premarket cybersecurity guidance (Sept 2023) requires evidence across the pump-adapter-cloud chain. PP3500's SBOM, TLS 1.3 mutual-auth comms (ENG5), crypto/signing stack (ENG4), and OTA firmware verifier (ENG17) are all in scope. Post-market vulnerability monitoring is the bridge to PSUR.",
+      "main_topics": [
+        {
+          "name": "Threat model & attack surface",
+          "summary": "Per-trust-boundary enumeration; STRIDE-style decomposition"
+        },
+        {
+          "name": "Security architecture controls",
+          "summary": "TLS 1.3 mutual auth, secure boot, signed payloads, access control"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Software Bill of Materials generation, attestation, vulnerability mapping"
+        },
+        {
+          "name": "Vulnerability monitoring & disclosure",
+          "summary": "Continuous SBOM-driven scan; coordinated disclosure process"
+        },
+        {
+          "name": "OTA update integrity",
+          "summary": "Signed firmware verifier (ENG17); rollback protection"
+        },
+        {
+          "name": "Incident response",
+          "summary": "Detection, containment, recovery, regulatory notification"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "AAMI TIR57:2016",
+          "role": "supporting"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:14:39.017591Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    }
+  }
+}
