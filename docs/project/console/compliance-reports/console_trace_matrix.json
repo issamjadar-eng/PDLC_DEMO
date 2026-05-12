@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "dhf": "cloud-suite",
+  "dhf": "compliance-reports",
   "generated_at": "2026-05-12T09:33:50Z",
   "layers": [
     {
@@ -8,13 +8,13 @@
       "title": "User Needs",
       "id_prefix": "UN",
       "source_files": [
-        "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md"
+        "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/user-needs/user-needs.md"
       ],
       "items": [],
       "missing_reason": "no_items_parsed",
       "edges_known": true,
       "warnings": [
-        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md"
+        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/user-needs/user-needs.md"
       ]
     },
     {
@@ -22,13 +22,13 @@
       "title": "Design Inputs",
       "id_prefix": "DI",
       "source_files": [
-        "docs/project/dhfs/cloud-suite/design-controls/requirements/design-inputs.md"
+        "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/requirements/design-inputs.md"
       ],
       "items": [],
       "missing_reason": "no_items_parsed",
       "edges_known": true,
       "warnings": [
-        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/design-controls/requirements/design-inputs.md"
+        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/requirements/design-inputs.md"
       ]
     },
     {
@@ -46,13 +46,13 @@
       "title": "Architecture",
       "id_prefix": "M",
       "source_files": [
-        "docs/project/dhfs/cloud-suite/design-controls/architecture/cloud-suite-system-sad.md"
+        "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/architecture/compliance-reports-system-sad.md"
       ],
       "items": [],
       "missing_reason": "no_items_parsed",
       "edges_known": false,
       "warnings": [
-        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/design-controls/architecture/cloud-suite-system-sad.md"
+        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/architecture/compliance-reports-system-sad.md"
       ]
     },
     {
@@ -72,7 +72,7 @@
       "title": "Risk",
       "id_prefix": "HZ",
       "source_files": [
-        "docs/project/dhfs/cloud-suite/risk-management/risk-strategy.md"
+        "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/risk-management/risk-strategy.md"
       ],
       "items": [],
       "missing_reason": "no_items_parsed",
