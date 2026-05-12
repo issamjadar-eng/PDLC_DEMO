@@ -11,6 +11,7 @@
 
 ## Context & Sources
 
+
 ### 1. Composition Manifest (source of truth for what's included)
 - [`docs/project/submissions/510k/composition-manifest.md`](../510k/composition-manifest.md) — PP3500 510(k) filing composition
 - `docs/project/submissions/qsub/composition-manifest.md` — pre-submission package (planned, Stage 3 of ben/047)
@@ -40,6 +41,7 @@
 
 ## Status Legend
 
+
 | Status | Meaning |
 |---|---|
 | **Approved** | Substantially complete; reviewed and signed off |
@@ -53,6 +55,7 @@
 
 ## Scope Legend
 
+
 | Scope | Meaning |
 |---|---|
 | **Suite** | System-level deliverable applying to the whole PP3500 filing |
@@ -63,6 +66,7 @@ Future per-module scopes when bindings expand: `connectivity-adapter`, `drug-lib
 
 ## Phase Legend
 
+
 | Phase | Meaning |
 |---|---|
 | **QSub** | Pre-submission meeting (`qsub-release` milestone) — validate PCCP scope, predicate, module classification before formal filing |
@@ -72,9 +76,11 @@ Future per-module scopes when bindings expand: `connectivity-adapter`, `drug-lib
 
 ## REF Priority
 
+
 Single citation per row in priority order: **FDA → IEC → other Standards → QMS**. Full applicable list goes in the Deliverable Details appendix.
 
 ## Two-Level Deliverable Model
+
 
 Deliverables are tracked at two levels where the architecture demands it:
 - **Device-level** items apply across the whole filing.
@@ -87,7 +93,9 @@ Generator-emitted rows currently use `PC` (pca-device) prefix only; cross-DHF le
 
 ## Phase: QSub
 
+
 ### (submission)
+
 
 _Filing-narrative pieces authored under `submissions/qsub/`. Each carries the disabled `tracker-action-btn` placeholder in the Path column — `render.py` wires it into a live B6 Create Draft button when status is `Not Started` / `Drafting` / `Drafted` / `Needs Revision`._
 
@@ -100,6 +108,7 @@ _Filing-narrative pieces authored under `submissions/qsub/`. Each carries the di
 | Q8 | PCCP summary for FDA feedback | Suite | QSub | FDA AI/ML PCCP (Sept 2023) §V | Med | **Not Started** | <button class="tracker-action-btn" disabled>Create Draft</button> |
 
 ### Suite (system DHF, IEC 62304 Class C)
+
 
 | # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
 |---|---|---|---|---|---|---|---|
@@ -115,11 +124,49 @@ _Filing-narrative pieces authored under `submissions/qsub/`. Each carries the di
 | Q-PC24 | Periodic Safety Update Report (PSUR) | Suite | QSub | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md) |
 | Q-PC12 | Cybersecurity Vulnerability Management Plan | Suite | QSub | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/pca-device/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
 
+### Adapter (item DHF, SaMD Class I, IEC 62304 Class B)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| Q-CA1 | architecture | Adapter | QSub | — | — | **Not Started** | [`connectivity-adapter-system-sad.md`](docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md) |
+| Q-CA26 | plans | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| Q-CA25 | user-needs | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| Q-CA2 | requirements | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| Q-CA27 | vnv | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| Q-CA28 | trace-matrix | Adapter | QSub | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| Q-CA16 | tool-validation | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/connectivity-adapter/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| Q-CA9 | risk-management | Adapter | QSub | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| Q-CA23 | clinical | Adapter | QSub | — | — | **Not Started** | [`clinical`](docs/project/dhfs/connectivity-adapter/clinical/) |
+| Q-CA24 | postmarket | Adapter | QSub | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md) |
+| Q-CA12 | cybersecurity | Adapter | QSub | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/connectivity-adapter/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
+---
+
+### Cloud (system DHF)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| Q-CS1 | architecture | Cloud | QSub | — | — | **Not Started** | [`architecture`](docs/project/dhfs/cloud-suite/design-controls/architecture/) |
+| Q-CS26 | plans | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| Q-CS25 | user-needs | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/cloud-suite/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| Q-CS2 | requirements | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/cloud-suite/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| Q-CS27 | vnv | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| Q-CS28 | trace-matrix | Cloud | QSub | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| Q-CS16 | tool-validation | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/cloud-suite/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| Q-CS9 | risk-management | Cloud | QSub | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| Q-CS23 | clinical | Cloud | QSub | — | — | **Not Started** | [`clinical`](docs/project/dhfs/cloud-suite/clinical/) |
+| Q-CS24 | postmarket | Cloud | QSub | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md) |
+| Q-CS12 | cybersecurity | Cloud | QSub | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/cloud-suite/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
 ---
 
 ## Phase: 510k+PCCP
 
+
 ### (submission)
+
 
 _PCCP Core + Support narrative pieces. Authored under `dhfs/pca-device/design-controls/pccp/` once the B6 Create Draft workflow lands content; each carries the disabled `tracker-action-btn` placeholder until then._
 
@@ -139,6 +186,7 @@ _PCCP Core + Support narrative pieces. Authored under `dhfs/pca-device/design-co
 
 ### Suite (system DHF, IEC 62304 Class C)
 
+
 | # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
 |---|---|---|---|---|---|---|---|
 | PC1 | System Software Architecture Document (SAD) | Suite | 510k+PCCP | — | — | **Not Started** | [`pca-device-system-sad.md`](docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md) |
@@ -153,11 +201,49 @@ _PCCP Core + Support narrative pieces. Authored under `dhfs/pca-device/design-co
 | PC24 | Periodic Safety Update Report (PSUR) | Suite | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md) |
 | PC12 | Cybersecurity Vulnerability Management Plan | Suite | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/pca-device/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
 
+### Adapter (item DHF, SaMD Class I, IEC 62304 Class B)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| CA1 | architecture | Adapter | 510k+PCCP | — | — | **Not Started** | [`connectivity-adapter-system-sad.md`](docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md) |
+| CA26 | plans | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| CA25 | user-needs | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| CA2 | requirements | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| CA27 | vnv | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| CA28 | trace-matrix | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| CA16 | tool-validation | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/connectivity-adapter/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| CA9 | risk-management | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| CA23 | clinical | Adapter | 510k+PCCP | — | — | **Not Started** | [`clinical`](docs/project/dhfs/connectivity-adapter/clinical/) |
+| CA24 | postmarket | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md) |
+| CA12 | cybersecurity | Adapter | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/connectivity-adapter/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
+---
+
+### Cloud (system DHF)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| CS1 | architecture | Cloud | 510k+PCCP | — | — | **Not Started** | [`architecture`](docs/project/dhfs/cloud-suite/design-controls/architecture/) |
+| CS26 | plans | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| CS25 | user-needs | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/cloud-suite/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| CS2 | requirements | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/cloud-suite/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| CS27 | vnv | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| CS28 | trace-matrix | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| CS16 | tool-validation | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/cloud-suite/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| CS9 | risk-management | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| CS23 | clinical | Cloud | 510k+PCCP | — | — | **Not Started** | [`clinical`](docs/project/dhfs/cloud-suite/clinical/) |
+| CS24 | postmarket | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md) |
+| CS12 | cybersecurity | Cloud | 510k+PCCP | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/cloud-suite/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
 ---
 
 ## Phase: LMR1
 
+
 ### Suite (system DHF, IEC 62304 Class C)
+
 
 | # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
 |---|---|---|---|---|---|---|---|
@@ -173,11 +259,49 @@ _PCCP Core + Support narrative pieces. Authored under `dhfs/pca-device/design-co
 | L1-PC24 | Periodic Safety Update Report (PSUR) | Suite | LMR1 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md) |
 | L1-PC12 | Cybersecurity Vulnerability Management Plan | Suite | LMR1 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/pca-device/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
 
+### Adapter (item DHF, SaMD Class I, IEC 62304 Class B)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| L1-CA1 | architecture | Adapter | LMR1 | — | — | **Not Started** | [`connectivity-adapter-system-sad.md`](docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md) |
+| L1-CA26 | plans | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| L1-CA25 | user-needs | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| L1-CA2 | requirements | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| L1-CA27 | vnv | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| L1-CA28 | trace-matrix | Adapter | LMR1 | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| L1-CA16 | tool-validation | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/connectivity-adapter/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| L1-CA9 | risk-management | Adapter | LMR1 | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| L1-CA23 | clinical | Adapter | LMR1 | — | — | **Not Started** | [`clinical`](docs/project/dhfs/connectivity-adapter/clinical/) |
+| L1-CA24 | postmarket | Adapter | LMR1 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md) |
+| L1-CA12 | cybersecurity | Adapter | LMR1 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/connectivity-adapter/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
+---
+
+### Cloud (system DHF)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| L1-CS1 | architecture | Cloud | LMR1 | — | — | **Not Started** | [`architecture`](docs/project/dhfs/cloud-suite/design-controls/architecture/) |
+| L1-CS26 | plans | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| L1-CS25 | user-needs | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/cloud-suite/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| L1-CS2 | requirements | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/cloud-suite/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| L1-CS27 | vnv | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| L1-CS28 | trace-matrix | Cloud | LMR1 | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| L1-CS16 | tool-validation | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/cloud-suite/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| L1-CS9 | risk-management | Cloud | LMR1 | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| L1-CS23 | clinical | Cloud | LMR1 | — | — | **Not Started** | [`clinical`](docs/project/dhfs/cloud-suite/clinical/) |
+| L1-CS24 | postmarket | Cloud | LMR1 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md) |
+| L1-CS12 | cybersecurity | Cloud | LMR1 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/cloud-suite/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
 ---
 
 ## Phase: LMR2
 
+
 ### (submission)
+
 
 _AI/ML PCCP-driven documentation. Surfaces with LMR2 since the AI/ML envelope ships in that release per regulatory strategy._
 
@@ -191,6 +315,7 @@ _AI/ML PCCP-driven documentation. Surfaces with LMR2 since the AI/ML envelope sh
 | AI6 | AI Drift Monitoring Plan | Suite | LMR2 | FDA PCCP AI/ML §V.E; AI-DSF | Med | **Not Started** | <button class="tracker-action-btn" disabled>Create Draft</button> |
 
 ### Suite (system DHF, IEC 62304 Class C)
+
 
 | # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
 |---|---|---|---|---|---|---|---|
@@ -206,9 +331,46 @@ _AI/ML PCCP-driven documentation. Surfaces with LMR2 since the AI/ML envelope sh
 | L2-PC24 | Periodic Safety Update Report (PSUR) | Suite | LMR2 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md) |
 | L2-PC12 | Cybersecurity Vulnerability Management Plan | Suite | LMR2 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/pca-device/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
 
+### Adapter (item DHF, SaMD Class I, IEC 62304 Class B)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| L2-CA1 | architecture | Adapter | LMR2 | — | — | **Not Started** | [`connectivity-adapter-system-sad.md`](docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md) |
+| L2-CA26 | plans | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| L2-CA25 | user-needs | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| L2-CA2 | requirements | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/connectivity-adapter/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| L2-CA27 | vnv | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| L2-CA28 | trace-matrix | Adapter | LMR2 | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| L2-CA16 | tool-validation | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/connectivity-adapter/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| L2-CA9 | risk-management | Adapter | LMR2 | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| L2-CA23 | clinical | Adapter | LMR2 | — | — | **Not Started** | [`clinical`](docs/project/dhfs/connectivity-adapter/clinical/) |
+| L2-CA24 | postmarket | Adapter | LMR2 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md) |
+| L2-CA12 | cybersecurity | Adapter | LMR2 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/connectivity-adapter/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
+---
+
+### Cloud (system DHF)
+
+
+| # | Deliverable | Scope | Phase | REF | Effort | Status | Path |
+|---|---|---|---|---|---|---|---|
+| L2-CS1 | architecture | Cloud | LMR2 | — | — | **Not Started** | [`architecture`](docs/project/dhfs/cloud-suite/design-controls/architecture/) |
+| L2-CS26 | plans | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-001-design-and-development-plan.md`](docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md) |
+| L2-CS25 | user-needs | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-UC-001-use-specification.md`](docs/project/dhfs/cloud-suite/design-controls/user-needs/GL-TMP-UC-001-use-specification.md) |
+| L2-CS2 | requirements | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-002-design-input-specification.md`](docs/project/dhfs/cloud-suite/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md) |
+| L2-CS27 | vnv | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-003-verification-protocol-report.md`](docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md) |
+| L2-CS28 | trace-matrix | Cloud | LMR2 | — | — | **Not Started** | [`GL-SOP-DC-003-trace-matrix-overview.md`](docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md) |
+| L2-CS16 | tool-validation | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-DC-003-tool-validation-record.md`](docs/project/dhfs/cloud-suite/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md) |
+| L2-CS9 | risk-management | Cloud | LMR2 | — | — | **Not Started** | [`GL-TMP-RM-002-risk-management-report.md`](docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-002-risk-management-report.md) |
+| L2-CS23 | clinical | Cloud | LMR2 | — | — | **Not Started** | [`clinical`](docs/project/dhfs/cloud-suite/clinical/) |
+| L2-CS24 | postmarket | Cloud | LMR2 | — | — | **Not Started** | [`GL-SOP-PM-001-psur.md`](docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md) |
+| L2-CS12 | cybersecurity | Cloud | LMR2 | — | — | **Not Started** | [`GL-SOP-SW-004-vulnerability-management-plan.md`](docs/project/dhfs/cloud-suite/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md) |
+
 ---
 
 ## Engineering Prerequisites
+
 
 Cross-cutting engineering capabilities required for filing readiness. Source: [`milestones/engineering.yml`](../milestones/engineering.yml). Each row lists the design-control rows it unblocks.
 
@@ -239,26 +401,30 @@ Cross-cutting engineering capabilities required for filing readiness. Source: [`
 
 ## Deliverable Details
 
+
 _Per-ID detail entries surface as inline click-row expansion in the dashboard. Populated by `/tracker enrich-details` (Stage 6) into `submission-tracker.details.json` — the sidecar overrides any inline content here when present. Until that action runs, this section is empty._
 
 ## Cross-Milestone Summary
+
 
 _Rollup table — populated as rows land. See per-row Status above; run `/tracker status` for live counts._
 
 | Milestone | Deliverable rows | Done | In Progress | Drafted | Not Started |
 |---|---|---|---|---|---|
-| QSub | 16 | 0 | 0 | 0 | 16 |
-| 510k+PCCP | 22 | 0 | 0 | 0 | 22 |
-| LMR1 | 11 | 0 | 0 | 0 | 11 |
-| LMR2 | 17 | 0 | 0 | 0 | 17 |
+| QSub | 38 | 0 | 0 | 0 | 38 |
+| 510k+PCCP | 44 | 0 | 0 | 0 | 44 |
+| LMR1 | 33 | 0 | 0 | 0 | 33 |
+| LMR2 | 39 | 0 | 0 | 0 | 39 |
 | **Engineering Prereqs** | 20 | 0 | 0 | 0 | 20 |
-| **Totals** | **86** | **0** | **0** | **0** | **86** |
+| **Totals** | **174** | **0** | **0** | **0** | **174** |
 
 ## Notable Findings
+
 
 _Surfaced during build / review. None yet._
 
 ## Status Scale
+
 
 | Status | Definition |
 |---|---|
@@ -272,6 +438,7 @@ _Surfaced during build / review. None yet._
 
 ## Effort Scale
 
+
 | Effort | Definition |
 |---|---|
 | **Low** | < 1 engineer-week |
@@ -280,6 +447,7 @@ _Surfaced during build / review. None yet._
 | **V.High** | > 8 engineer-weeks |
 
 ## Phase Scale
+
 
 | Phase | Definition |
 |---|---|
@@ -290,6 +458,7 @@ _Surfaced during build / review. None yet._
 
 ## Reviewer Sign-off
 
+
 _Roles required per QMS separation-of-duties (ISO 13485 §7.3). Author/contributor tracking lives in the Changelog table below, NOT here._
 
 | Role | Reviewer | Date | Status |
@@ -299,6 +468,7 @@ _Roles required per QMS separation-of-duties (ISO 13485 §7.3). Author/contribut
 | Quality Assurance Lead | — | — | Pending |
 
 ## Changelog
+
 
 | Date | Author | Summary |
 |---|---|---|

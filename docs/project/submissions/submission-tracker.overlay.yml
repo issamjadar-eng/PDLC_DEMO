@@ -78,86 +78,772 @@ defaults:
 
 rows:
 
-  # ── QSub-phase pca-device walk ──
+  # ────────────────────────────────────────────────────────────────────────────
+  # pca-device walk — 11 roles per phase, real-file paths where authored content
+  # exists, "—" where only GL-TMP-* template scaffolds are present (no real evidence).
+  # ────────────────────────────────────────────────────────────────────────────
 
+  # ── QSub · pca-device ──
   Q-PC1:
     status: Drafting
     effort: V.High
-    ref:    "FDA sw-functions §V"
-    owner:  ben
-
+    ref: "FDA sw-functions §V"
+    path: "[`pca-device-system-sad.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md)"
+    owner: ben
   Q-PC2:
     status: Drafting
     effort: V.High
-    ref:    "FDA sw-functions §VI"
-
+    ref: "FDA sw-functions §VI"
+    path: "[`design-inputs.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md)"
   Q-PC9:
-    name:   "Risk Management Report (Q-Sub readiness draft)"   # per-row name override demo
+    name: "Risk Management Report (Q-Sub readiness draft)"
     status: Drafting
     effort: High
-    ref:    "ISO 14971 §7"
-
+    ref: "ISO 14971 §7"
+    path: "[`risk-strategy.md`](/documents#path=docs/project/dhfs/pca-device/risk-management/risk-strategy.md)"
   Q-PC12:
     status: Drafting
     effort: High
-    ref:    "FDA cybersecurity §V"
-
-  Q-PC25:
-    status: Drafting
+    ref: "FDA cybersecurity §V"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md)"
+  Q-PC16:
     effort: Med
-    ref:    "IEC 62366-1 §5.2"
-
-  Q-PC27:
-    status: Drafting
-    effort: High
-    ref:    "IEC 62304 §5.6 / §5.7"
-
+    ref: "IEC 62304 §8.1.3"
+    path: "—"
   Q-PC23:
-    status: Not Started
+    status: "Not Started"
     effort: V.High
-    ref:    "FDA Clinical Evaluation Guidance"
-
+    ref: "FDA Clinical Evaluation Guidance"
+    path: "—"
   Q-PC24:
     status: Drafting
     effort: Med
-    ref:    "21 CFR 803 / FDA PSUR template"
-
-  # ── 510k+PCCP-phase pca-device walk (post-Q-Sub, pre-filing) ──
-
-  PC1:
-    effort: V.High
-    ref:    "FDA sw-functions §V"
-
-  PC9:
-    effort: V.High
-    ref:    "ISO 14971 §7"
-
-  PC12:
-    effort: High
-    ref:    "FDA cybersecurity §V"
-
-  PC25:
+    ref: "21 CFR 803 / FDA PSUR template"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md)"
+  Q-PC25:
+    status: Drafting
     effort: Med
-    ref:    "IEC 62366-1 §5.2"
+    ref: "IEC 62366-1 §5.2"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md)"
+  Q-PC26:
+    effort: High
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  Q-PC27:
+    status: Drafting
+    effort: High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "[`testing-strategy.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md)"
+  Q-PC28:
+    status: Drafting
+    effort: Med
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`trace-matrix.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md)"
 
-  PC27:
+  # ────────────────────────────────────────────────────────────────────────────
+  # connectivity-adapter (MDDS) — 7 applicable roles + 4 N/A.
+  # ────────────────────────────────────────────────────────────────────────────
+
+  # ── QSub · connectivity-adapter ──
+  Q-CA1:
+    status: Drafting
+    name: "Adapter SAD"
+    effort: Med
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "[`connectivity-adapter-system-sad.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md)"
+  Q-CA2:
+    name: "Adapter SRS"
+    effort: Med
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  Q-CA9:
+    name: "Adapter Risk Management Report"
+    effort: Med
+    ref: "ISO 14971 §7"
+    path: "—"
+  Q-CA12:
+    status: Drafting
+    name: "Adapter Cybersecurity Plan"
+    effort: High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md)"
+  Q-CA16:
+    name: "Adapter Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  Q-CA23:
+    name: "Adapter Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  Q-CA24:
+    name: "Adapter Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  Q-CA25:
+    name: "Adapter User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  Q-CA26:
+    name: "Adapter D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  Q-CA27:
+    name: "Adapter V&V Protocol & Report"
+    effort: Med
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  Q-CA28:
+    status: Drafting
+    name: "Adapter Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # cloud-suite (non-medical dependency) — 7 applicable roles + 4 N/A.
+  # ────────────────────────────────────────────────────────────────────────────
+
+  # ── QSub · cloud-suite ──
+  Q-CS1:
+    name: "Cloud SAD"
+    effort: Med
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "—"
+  Q-CS2:
+    name: "Cloud SRS"
+    effort: Med
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  Q-CS9:
+    name: "Cloud Risk Management Report"
+    effort: Med
+    ref: "ISO 14971 §7"
+    path: "—"
+  Q-CS12:
+    status: Drafting
+    name: "Cloud Cybersecurity Plan"
+    effort: High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md)"
+  Q-CS16:
+    name: "Cloud Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  Q-CS23:
+    name: "Cloud Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  Q-CS24:
+    name: "Cloud Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  Q-CS25:
+    name: "Cloud User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  Q-CS26:
+    name: "Cloud D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  Q-CS27:
+    name: "Cloud V&V Protocol & Report"
+    effort: Med
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  Q-CS28:
+    status: Drafting
+    name: "Cloud Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
+
+  # ── 510k+PCCP · pca-device ──
+  PC1:
+    status: Drafting
     effort: V.High
-    ref:    "IEC 62304 §5.6 / §5.7"
+    ref: "FDA sw-functions §V"
+    path: "[`pca-device-system-sad.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md)"
+  PC2:
+    status: Drafting
+    effort: V.High
+    ref: "FDA sw-functions §VI"
+    path: "[`design-inputs.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md)"
+  PC9:
+    status: Drafting
+    effort: V.High
+    ref: "ISO 14971 §7"
+    path: "[`risk-strategy.md`](/documents#path=docs/project/dhfs/pca-device/risk-management/risk-strategy.md)"
+  PC12:
+    status: Drafting
+    effort: High
+    ref: "FDA cybersecurity §V"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md)"
+  PC16:
+    effort: Med
+    ref: "IEC 62304 §8.1.3"
+    path: "—"
+  PC23:
+    effort: V.High
+    ref: "FDA Clinical Evaluation Guidance"
+    path: "—"
+  PC24:
+    status: Drafting
+    effort: Med
+    ref: "21 CFR 803 / FDA PSUR template"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md)"
+  PC25:
+    status: Drafting
+    effort: Med
+    ref: "IEC 62366-1 §5.2"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md)"
+  PC26:
+    effort: Med
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  PC27:
+    status: Drafting
+    effort: V.High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "[`testing-strategy.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md)"
+  PC28:
+    status: Drafting
+    effort: High
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`trace-matrix.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md)"
 
-  # ── LMR1 (first commercial release — phase-naming demo) ──
+  # ── 510k+PCCP · connectivity-adapter ──
+  CA1:
+    status: Drafting
+    name: "Adapter SAD"
+    effort: High
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "[`connectivity-adapter-system-sad.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md)"
+  CA2:
+    name: "Adapter SRS"
+    effort: High
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  CA9:
+    name: "Adapter Risk Management Report"
+    effort: High
+    ref: "ISO 14971 §7"
+    path: "—"
+  CA12:
+    status: Drafting
+    name: "Adapter Cybersecurity Plan"
+    effort: High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md)"
+  CA16:
+    name: "Adapter Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  CA23:
+    name: "Adapter Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  CA24:
+    name: "Adapter Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  CA25:
+    name: "Adapter User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  CA26:
+    name: "Adapter D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  CA27:
+    name: "Adapter V&V Protocol & Report"
+    effort: High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  CA28:
+    status: Drafting
+    name: "Adapter Trace Matrix"
+    effort: Med
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
 
+  # ── 510k+PCCP · cloud-suite ──
+  CS1:
+    name: "Cloud SAD"
+    effort: High
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "—"
+  CS2:
+    name: "Cloud SRS"
+    effort: High
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  CS9:
+    name: "Cloud Risk Management Report"
+    effort: High
+    ref: "ISO 14971 §7"
+    path: "—"
+  CS12:
+    status: Drafting
+    name: "Cloud Cybersecurity Plan"
+    effort: V.High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md)"
+  CS16:
+    name: "Cloud Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  CS23:
+    name: "Cloud Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  CS24:
+    name: "Cloud Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  CS25:
+    name: "Cloud User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  CS26:
+    name: "Cloud D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  CS27:
+    name: "Cloud V&V Protocol & Report"
+    effort: High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  CS28:
+    status: Drafting
+    name: "Cloud Trace Matrix"
+    effort: Med
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
+
+  # ── LMR1 · pca-device ──
   L1-PC1:
-    name:   "System SAD — LMR1 Release"        # per-row name override
+    status: Drafting
+    name: "System SAD — LMR1 Release"
     effort: High
-
+    path: "[`pca-device-system-sad.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md)"
+  L1-PC2:
+    status: Drafting
+    effort: Med
+    ref: "FDA sw-functions §VI"
+    path: "[`design-inputs.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md)"
   L1-PC9:
+    status: Drafting
     effort: High
+    path: "[`risk-strategy.md`](/documents#path=docs/project/dhfs/pca-device/risk-management/risk-strategy.md)"
+  L1-PC12:
+    status: Drafting
+    effort: Med
+    ref: "FDA cybersecurity §V"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L1-PC16:
+    effort: Low
+    ref: "IEC 62304 §8.1.3"
+    path: "—"
+  L1-PC23:
+    effort: Med
+    ref: "FDA Clinical Evaluation Guidance"
+    path: "—"
+  L1-PC24:
+    status: Drafting
+    effort: Low
+    ref: "21 CFR 803 / FDA PSUR template"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md)"
+  L1-PC25:
+    status: Drafting
+    effort: Low
+    ref: "IEC 62366-1 §5.2"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md)"
+  L1-PC26:
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L1-PC27:
+    status: Drafting
+    effort: High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "[`testing-strategy.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md)"
+  L1-PC28:
+    status: Drafting
+    effort: Med
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`trace-matrix.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md)"
 
-  # ── LMR2 (AI/ML envelope release — phase-naming demo) ──
+  # ── LMR1 · connectivity-adapter ──
+  L1-CA1:
+    status: Drafting
+    name: "Adapter SAD"
+    effort: Low
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "[`connectivity-adapter-system-sad.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md)"
+  L1-CA2:
+    name: "Adapter SRS"
+    effort: Low
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  L1-CA9:
+    name: "Adapter Risk Management Report"
+    effort: Low
+    ref: "ISO 14971 §7"
+    path: "—"
+  L1-CA12:
+    status: Drafting
+    name: "Adapter Cybersecurity Plan"
+    effort: Med
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L1-CA16:
+    name: "Adapter Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L1-CA23:
+    name: "Adapter Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L1-CA24:
+    name: "Adapter Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L1-CA25:
+    name: "Adapter User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L1-CA26:
+    name: "Adapter D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L1-CA27:
+    name: "Adapter V&V Protocol & Report"
+    effort: Med
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  L1-CA28:
+    status: Drafting
+    name: "Adapter Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
 
+  # ── LMR1 · cloud-suite ──
+  L1-CS1:
+    name: "Cloud SAD"
+    effort: Low
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "—"
+  L1-CS2:
+    name: "Cloud SRS"
+    effort: Low
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  L1-CS9:
+    name: "Cloud Risk Management Report"
+    effort: Med
+    ref: "ISO 14971 §7"
+    path: "—"
+  L1-CS12:
+    status: Drafting
+    name: "Cloud Cybersecurity Plan"
+    effort: High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L1-CS16:
+    name: "Cloud Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L1-CS23:
+    name: "Cloud Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L1-CS24:
+    name: "Cloud Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L1-CS25:
+    name: "Cloud User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L1-CS26:
+    name: "Cloud D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L1-CS27:
+    name: "Cloud V&V Protocol & Report"
+    effort: Med
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  L1-CS28:
+    status: Drafting
+    name: "Cloud Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
+
+  # ── LMR2 · pca-device ──
   L2-PC1:
-    name:   "System SAD — LMR2 Release"
+    status: Drafting
+    name: "System SAD — LMR2 Release"
     effort: High
-
+    path: "[`pca-device-system-sad.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md)"
+  L2-PC2:
+    status: Drafting
+    effort: Med
+    ref: "FDA sw-functions §VI"
+    path: "[`design-inputs.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md)"
   L2-PC9:
+    status: Drafting
     effort: High
+    path: "[`risk-strategy.md`](/documents#path=docs/project/dhfs/pca-device/risk-management/risk-strategy.md)"
+  L2-PC12:
+    status: Drafting
+    effort: Med
+    ref: "FDA cybersecurity §V"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L2-PC16:
+    effort: Med
+    ref: "IEC 62304 §8.1.3 (AI tooling)"
+    path: "—"
+  L2-PC23:
+    effort: High
+    ref: "FDA Good Machine Learning Practice"
+    path: "—"
+  L2-PC24:
+    status: Drafting
+    effort: Med
+    ref: "21 CFR 803 / FDA PSUR template (AI drift)"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md)"
+  L2-PC25:
+    status: Drafting
+    effort: Low
+    ref: "IEC 62366-1 §5.2"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md)"
+  L2-PC26:
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L2-PC27:
+    status: Drafting
+    effort: V.High
+    ref: "IEC 62304 §5.6 / §5.7 (AI/ML envelope)"
+    path: "[`testing-strategy.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md)"
+  L2-PC28:
+    status: Drafting
+    effort: Med
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`trace-matrix.md`](/documents#path=docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md)"
+
+  # ── LMR2 · connectivity-adapter ──
+  L2-CA1:
+    status: Drafting
+    name: "Adapter SAD"
+    effort: Low
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "[`connectivity-adapter-system-sad.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md)"
+  L2-CA2:
+    name: "Adapter SRS"
+    effort: Low
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  L2-CA9:
+    name: "Adapter Risk Management Report"
+    effort: Low
+    ref: "ISO 14971 §7"
+    path: "—"
+  L2-CA12:
+    status: Drafting
+    name: "Adapter Cybersecurity Plan"
+    effort: Med
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L2-CA16:
+    name: "Adapter Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L2-CA23:
+    name: "Adapter Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L2-CA24:
+    name: "Adapter Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L2-CA25:
+    name: "Adapter User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope for MDDS — see project.yml dhfs[].connectivity-adapter"
+  L2-CA26:
+    name: "Adapter D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L2-CA27:
+    name: "Adapter V&V Protocol & Report"
+    effort: Med
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  L2-CA28:
+    status: Drafting
+    name: "Adapter Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"
+
+  # ── LMR2 · cloud-suite ──
+  L2-CS1:
+    name: "Cloud SAD"
+    effort: Med
+    ref: "IEC 62304 §5.3 / FDA sw-functions §V"
+    path: "—"
+  L2-CS2:
+    name: "Cloud SRS"
+    effort: Med
+    ref: "IEC 62304 §5.2 / FDA sw-functions §VI"
+    path: "—"
+  L2-CS9:
+    name: "Cloud Risk Management Report"
+    effort: Med
+    ref: "ISO 14971 §7"
+    path: "—"
+  L2-CS12:
+    status: Drafting
+    name: "Cloud Cybersecurity Plan"
+    effort: High
+    ref: "FDA cybersecurity §V / IEC 81001-5-1"
+    path: "[`GL-WI-SW-002-sbom.md`](/documents#path=docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md)"
+  L2-CS16:
+    name: "Cloud Tool Validation"
+    status: N/A
+    effort: Low
+    ref: "No Class-C tooling in scope"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L2-CS23:
+    name: "Cloud Clinical Evaluation"
+    status: N/A
+    effort: Low
+    ref: "No clinical claims (MDDS / non-medical)"
+    path: "—"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L2-CS24:
+    name: "Cloud Postmarket Surveillance (PSUR)"
+    status: N/A
+    effort: Low
+    ref: "Rolled into parent-system PSUR"
+    path: "[`GL-SOP-PM-001-psur.md`](/documents#path=docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L2-CS25:
+    name: "Cloud User Needs"
+    status: N/A
+    effort: Low
+    ref: "MDDS / non-medical — no clinical user-needs"
+    path: "[`user-needs-register.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md)"
+    notes: "Out of scope — cloud-suite is non-medical; see project.yml dhfs[].cloud-suite"
+  L2-CS26:
+    name: "Cloud D&D Plan"
+    effort: Low
+    ref: "21 CFR 820.30(b) / ISO 13485 §7.3.2"
+    path: "—"
+  L2-CS27:
+    name: "Cloud V&V Protocol & Report"
+    effort: High
+    ref: "IEC 62304 §5.6 / §5.7"
+    path: "—"
+  L2-CS28:
+    status: Drafting
+    name: "Cloud Trace Matrix"
+    effort: Low
+    ref: "21 CFR 820.30(g) / ISO 13485 §7.3.7"
+    path: "[`GL-SOP-DC-003-trace-matrix-overview.md`](/documents#path=docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md)"

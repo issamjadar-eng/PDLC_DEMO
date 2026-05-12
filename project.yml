@@ -52,17 +52,30 @@ dhfs:
 - leaf: connectivity-adapter
   path: docs/project/dhfs/connectivity-adapter
   role: item
+  # MDDS (21 CFR 880.6310) — Class I exempt from 510(k) premarket, still under
+  # 21 CFR 820.30 design controls. Tracker-scope trim: architecture / plans /
+  # requirements / vnv / trace-matrix / risk-management / cybersecurity. Skipped:
+  # user-needs (no clinical UI), tool-validation (no Class-C tooling), clinical
+  # (no clinical claims), postmarket (rolled into parent-system PSUR).
+  architecture_name: Adapter
   classification:
     samd: true
-    class: II
+    class: I
     iec62304: B
     ai_enabled: false
+    mdds: true
   regulatory: in-development
   filing: 510k
   parent: null
 - leaf: cloud-suite
   path: docs/project/dhfs/cloud-suite
   role: system
+  # Non-medical, but PCA + connectivity-adapter depend on cloud-suite for
+  # architecture context, SBOM, storage, and OTA/device-management. Tracker-scope
+  # trim: architecture / plans / requirements / vnv / trace-matrix /
+  # risk-management / cybersecurity (covers the dependency contract). Skipped:
+  # user-needs, tool-validation, clinical, postmarket (non-medical scope).
+  architecture_name: Cloud
   composes:
   - drug-library-manager
   - fleet-management
@@ -257,6 +270,14 @@ tracker:
       pccp-release: 510k+PCCP
       lmr1-release: LMR1
       lmr2-release: LMR2
+  # Explicit DHF prefix map — keeps generated row IDs readable as the DHF set
+  # grows. Without this map, generate.py:dhf_prefix() falls back to first-two-
+  # letters-of-leaf which gives "CO" / "CL" (ambiguous on cloud-* siblings).
+  row_id_schema:
+    dhf_prefix_map:
+      pca-device:           PC
+      connectivity-adapter: CA
+      cloud-suite:          CS
 
 advisors:
   enabled:

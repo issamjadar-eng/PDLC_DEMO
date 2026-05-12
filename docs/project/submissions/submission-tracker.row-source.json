@@ -188,6 +188,138 @@
       "from_dhf": "pca-device",
       "canonical_role": "cybersecurity"
     },
+    "Q-CA1": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "architecture"
+    },
+    "Q-CA26": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "plans"
+    },
+    "Q-CA25": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "user-needs"
+    },
+    "Q-CA2": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "requirements"
+    },
+    "Q-CA27": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "vnv"
+    },
+    "Q-CA28": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "trace-matrix"
+    },
+    "Q-CA16": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "tool-validation"
+    },
+    "Q-CA9": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "risk-management"
+    },
+    "Q-CA23": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "clinical"
+    },
+    "Q-CA24": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "postmarket"
+    },
+    "Q-CA12": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "cybersecurity"
+    },
+    "Q-CS1": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "architecture"
+    },
+    "Q-CS26": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "plans"
+    },
+    "Q-CS25": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "user-needs"
+    },
+    "Q-CS2": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "requirements"
+    },
+    "Q-CS27": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "vnv"
+    },
+    "Q-CS28": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "trace-matrix"
+    },
+    "Q-CS16": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "tool-validation"
+    },
+    "Q-CS9": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "risk-management"
+    },
+    "Q-CS23": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "clinical"
+    },
+    "Q-CS24": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "postmarket"
+    },
+    "Q-CS12": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "cybersecurity"
+    },
     "PC1": {
       "source_kind": "derived",
       "from_milestone": "pccp-release",
@@ -252,6 +384,138 @@
       "source_kind": "derived",
       "from_milestone": "pccp-release",
       "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    },
+    "CA1": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "architecture"
+    },
+    "CA26": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "plans"
+    },
+    "CA25": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "user-needs"
+    },
+    "CA2": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "requirements"
+    },
+    "CA27": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "vnv"
+    },
+    "CA28": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "trace-matrix"
+    },
+    "CA16": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "tool-validation"
+    },
+    "CA9": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "risk-management"
+    },
+    "CA23": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "clinical"
+    },
+    "CA24": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "postmarket"
+    },
+    "CA12": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "cybersecurity"
+    },
+    "CS1": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "architecture"
+    },
+    "CS26": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "plans"
+    },
+    "CS25": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "user-needs"
+    },
+    "CS2": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "requirements"
+    },
+    "CS27": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "vnv"
+    },
+    "CS28": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "trace-matrix"
+    },
+    "CS16": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "tool-validation"
+    },
+    "CS9": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "risk-management"
+    },
+    "CS23": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "clinical"
+    },
+    "CS24": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "postmarket"
+    },
+    "CS12": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "cloud-suite",
       "canonical_role": "cybersecurity"
     },
     "L1-PC1": {
@@ -320,6 +584,138 @@
       "from_dhf": "pca-device",
       "canonical_role": "cybersecurity"
     },
+    "L1-CA1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "architecture"
+    },
+    "L1-CA26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "plans"
+    },
+    "L1-CA25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "user-needs"
+    },
+    "L1-CA2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "requirements"
+    },
+    "L1-CA27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "vnv"
+    },
+    "L1-CA28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "trace-matrix"
+    },
+    "L1-CA16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "tool-validation"
+    },
+    "L1-CA9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "risk-management"
+    },
+    "L1-CA23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "clinical"
+    },
+    "L1-CA24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "postmarket"
+    },
+    "L1-CA12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "cybersecurity"
+    },
+    "L1-CS1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "architecture"
+    },
+    "L1-CS26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "plans"
+    },
+    "L1-CS25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "user-needs"
+    },
+    "L1-CS2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "requirements"
+    },
+    "L1-CS27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "vnv"
+    },
+    "L1-CS28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "trace-matrix"
+    },
+    "L1-CS16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "tool-validation"
+    },
+    "L1-CS9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "risk-management"
+    },
+    "L1-CS23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "clinical"
+    },
+    "L1-CS24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "postmarket"
+    },
+    "L1-CS12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "cybersecurity"
+    },
     "L2-PC1": {
       "source_kind": "derived",
       "from_milestone": "lmr2-release",
@@ -384,6 +780,138 @@
       "source_kind": "derived",
       "from_milestone": "lmr2-release",
       "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    },
+    "L2-CA1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "architecture"
+    },
+    "L2-CA26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "plans"
+    },
+    "L2-CA25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "user-needs"
+    },
+    "L2-CA2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "requirements"
+    },
+    "L2-CA27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "vnv"
+    },
+    "L2-CA28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "trace-matrix"
+    },
+    "L2-CA16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "tool-validation"
+    },
+    "L2-CA9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "risk-management"
+    },
+    "L2-CA23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "clinical"
+    },
+    "L2-CA24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "postmarket"
+    },
+    "L2-CA12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "connectivity-adapter",
+      "canonical_role": "cybersecurity"
+    },
+    "L2-CS1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "architecture"
+    },
+    "L2-CS26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "plans"
+    },
+    "L2-CS25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "user-needs"
+    },
+    "L2-CS2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "requirements"
+    },
+    "L2-CS27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "vnv"
+    },
+    "L2-CS28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "trace-matrix"
+    },
+    "L2-CS16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "tool-validation"
+    },
+    "L2-CS9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "risk-management"
+    },
+    "L2-CS23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "clinical"
+    },
+    "L2-CS24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
+      "canonical_role": "postmarket"
+    },
+    "L2-CS12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "cloud-suite",
       "canonical_role": "cybersecurity"
     }
   }

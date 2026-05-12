@@ -33,6 +33,20 @@ milestones:
         doc_pattern: '**/*'
         version: current
         required: true
+      # MDDS — trimmed scope, see project.yml dhfs[].connectivity-adapter.
+      # All 11 canonical roles will emit since the upstream generator walks the
+      # full system-DHF role map; non-applicable roles are marked status: N/A
+      # in submission-tracker.overlay.yml.
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      # Non-medical dependency platform — trimmed scope, see project.yml
+      # dhfs[].cloud-suite. Same N/A-overlay trim pattern as connectivity-adapter.
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
 
   - id: pccp-release
     name: 510k+PCCP Release
@@ -51,6 +65,14 @@ milestones:
         # tagging lands. See ben/047 Phase-3 backlog.
         version: current
         required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
 
   - id: lmr1-release
     name: LMR1 Release
@@ -65,6 +87,14 @@ milestones:
         doc_pattern: '**/*'
         version: current   # see pccp-release note above re version pinning
         required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
 
   - id: lmr2-release
     name: LMR2 Release
@@ -78,3 +108,11 @@ milestones:
         doc_pattern: '**/*'
         version: current   # see pccp-release note above re version pinning
         required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
