@@ -1,0 +1,3582 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-05-12T22:55:41.671562+00:00",
+  "project": "pdlc-demo",
+  "project_roles": {
+    "regulatory_strategy": {
+      "path": "docs/project/strategies/regulatory-strategy.md",
+      "exists": true,
+      "size_bytes": 21300,
+      "tokens_estimate": 5325,
+      "matched_pattern": "docs/project/strategies/regulatory-strategy.md"
+    },
+    "architecture_strategy": {
+      "path": "docs/project/strategies/architecture-strategy.md",
+      "exists": true,
+      "size_bytes": 13325,
+      "tokens_estimate": 3331,
+      "matched_pattern": "docs/project/strategies/architecture-strategy.md"
+    },
+    "development_strategy": {
+      "path": "docs/project/strategies/development-strategy.md",
+      "exists": true,
+      "size_bytes": 1120,
+      "tokens_estimate": 280,
+      "matched_pattern": "docs/project/strategies/development-strategy.md"
+    },
+    "operations_strategy": {
+      "path": "docs/project/strategies/operations-strategy.md",
+      "exists": true,
+      "size_bytes": 1173,
+      "tokens_estimate": 293,
+      "matched_pattern": "docs/project/strategies/operations-strategy.md"
+    },
+    "postmarket_strategy": {
+      "path": "docs/project/strategies/postmarket-strategy.md",
+      "exists": true,
+      "size_bytes": 1183,
+      "tokens_estimate": 295,
+      "matched_pattern": "docs/project/strategies/postmarket-strategy.md"
+    },
+    "kol_feedback": {
+      "folder": "docs/project/input-analysis/kol-feedback",
+      "exists": true,
+      "file_count": 9,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "market_research": {
+      "folder": "docs/project/input-analysis/market-research",
+      "exists": true,
+      "file_count": 4,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "competitive_landscape": {
+      "folder": "docs/project/input-analysis/competitive-landscape",
+      "exists": true,
+      "file_count": 4,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "filing_strategy": {
+      "folder": "docs/project/input-analysis/filing-strategy",
+      "exists": false,
+      "file_count": 0,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    }
+  },
+  "dhf_roles": {
+    "pca-device": {
+      "role": "system",
+      "dhf_organization": "internal",
+      "system_architecture": {
+        "path": "docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md",
+        "exists": true,
+        "size_bytes": 8755,
+        "tokens_estimate": 2188,
+        "matched_pattern": "*-system-sad.md"
+      },
+      "module_design": null,
+      "user_needs": {
+        "path": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md",
+        "exists": true,
+        "size_bytes": 13598,
+        "tokens_estimate": 3399,
+        "matched_pattern": "user-needs.md"
+      },
+      "software_requirements": {
+        "path": "docs/project/dhfs/pca-device/design-controls/requirements/software-requirements.md",
+        "exists": true,
+        "size_bytes": 21462,
+        "tokens_estimate": 5365,
+        "matched_pattern": "software-requirements.md"
+      },
+      "software_design_specification": null,
+      "verification_plan": {
+        "path": "docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md",
+        "exists": true,
+        "size_bytes": 1169,
+        "tokens_estimate": 292,
+        "matched_pattern": "testing-strategy.md"
+      },
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/pca-device/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/pca-device/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/pca-device/clinical/literature-search",
+        "exists": true,
+        "file_count": 7,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": {
+        "path": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+        "exists": true,
+        "size_bytes": 1877,
+        "tokens_estimate": 469,
+        "matched_pattern": "*pmcf-plan*.md"
+      },
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/pca-device/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 6,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/pca-device/postmarket/complaints",
+        "exists": true,
+        "file_count": 3,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/pca-device/postmarket/capa",
+        "exists": true,
+        "file_count": 3,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/pca-device/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/pca-device/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/pca-device/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1810,
+        "tokens_estimate": 452,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1715,
+        "tokens_estimate": 428,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/pca-device/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "connectivity-adapter": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": {
+        "path": "docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md",
+        "exists": true,
+        "size_bytes": 6852,
+        "tokens_estimate": 1713,
+        "matched_pattern": "*-system-sad.md"
+      },
+      "module_design": null,
+      "user_needs": {
+        "path": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs.md",
+        "exists": true,
+        "size_bytes": 11741,
+        "tokens_estimate": 2935,
+        "matched_pattern": "user-needs.md"
+      },
+      "software_requirements": {
+        "path": "docs/project/dhfs/connectivity-adapter/design-controls/requirements/software-requirements.md",
+        "exists": true,
+        "size_bytes": 17075,
+        "tokens_estimate": 4268,
+        "matched_pattern": "software-requirements.md"
+      },
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/connectivity-adapter/clinical/literature-search",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": {
+        "path": "docs/project/dhfs/connectivity-adapter/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+        "exists": true,
+        "size_bytes": 1927,
+        "tokens_estimate": 481,
+        "matched_pattern": "*pmcf-plan*.md"
+      },
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/connectivity-adapter/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/connectivity-adapter/postmarket/complaints",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/connectivity-adapter/postmarket/capa",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/connectivity-adapter/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/connectivity-adapter/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1860,
+        "tokens_estimate": 465,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1765,
+        "tokens_estimate": 441,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/connectivity-adapter/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "cloud-suite": {
+      "role": "system",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": {
+        "path": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md",
+        "exists": true,
+        "size_bytes": 12121,
+        "tokens_estimate": 3030,
+        "matched_pattern": "user-needs.md"
+      },
+      "software_requirements": {
+        "path": "docs/project/dhfs/cloud-suite/design-controls/requirements/software-requirements.md",
+        "exists": true,
+        "size_bytes": 17423,
+        "tokens_estimate": 4355,
+        "matched_pattern": "software-requirements.md"
+      },
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/clinical/literature-search",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": {
+        "path": "docs/project/dhfs/cloud-suite/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+        "exists": true,
+        "size_bytes": 1882,
+        "tokens_estimate": 470,
+        "matched_pattern": "*pmcf-plan*.md"
+      },
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/postmarket/complaints",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/postmarket/capa",
+        "exists": true,
+        "file_count": 2,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1815,
+        "tokens_estimate": 453,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1720,
+        "tokens_estimate": 430,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "drug-library-manager": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/architecture/drug-library-manager-system-sad.md",
+        "exists": true,
+        "size_bytes": 7306,
+        "tokens_estimate": 1826,
+        "matched_pattern": "*-system-sad.md"
+      },
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1933,
+        "tokens_estimate": 483,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1790,
+        "tokens_estimate": 447,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "fleet-management": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1913,
+        "tokens_estimate": 478,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1770,
+        "tokens_estimate": 442,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "compliance-reports": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1923,
+        "tokens_estimate": 480,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1780,
+        "tokens_estimate": 445,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "analytics-dashboard": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1928,
+        "tokens_estimate": 482,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1785,
+        "tokens_estimate": 446,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "inventory-tracker": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1918,
+        "tokens_estimate": 479,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1775,
+        "tokens_estimate": 443,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "alerts-engine": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1898,
+        "tokens_estimate": 474,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1755,
+        "tokens_estimate": 438,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    },
+    "clinical-interface": {
+      "role": "item",
+      "dhf_organization": "internal",
+      "system_architecture": null,
+      "module_design": null,
+      "user_needs": null,
+      "software_requirements": null,
+      "software_design_specification": null,
+      "verification_plan": null,
+      "verification_protocols": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/protocols",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "verification_reports": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/reports",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "risk_management_plan": null,
+      "software_risk_assessment": null,
+      "hazard_analysis": null,
+      "hazard_traceability_matrix": null,
+      "fmea": null,
+      "risk_management_report": null,
+      "clinical_evaluation_plan": null,
+      "clinical_evaluation_report": null,
+      "benefit_risk_analysis": null,
+      "literature_search": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/clinical/literature-search",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "pmcf_plan": null,
+      "pmcf_studies": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/pmcf-studies",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "complaints": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/complaints",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "capa": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/capa",
+        "exists": true,
+        "file_count": 1,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "adverse_events": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/adverse-events",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "field_safety_corrective_actions": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/fsca",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      },
+      "psur": null,
+      "threat_model": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/GL-TMP-SW-002-threat-model.md",
+        "exists": true,
+        "size_bytes": 1923,
+        "tokens_estimate": 480,
+        "matched_pattern": "*threat-model*.md"
+      },
+      "sbom": {
+        "path": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/GL-WI-SW-002-sbom.md",
+        "exists": true,
+        "size_bytes": 1780,
+        "tokens_estimate": 445,
+        "matched_pattern": "*sbom*.md"
+      },
+      "cybersecurity_plan": null,
+      "vulnerability_management": {
+        "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/vulnerabilities",
+        "exists": false,
+        "file_count": 0,
+        "patterns_used": [
+          "**/*.md"
+        ]
+      }
+    }
+  },
+  "submission_roles": {
+    "510k": {
+      "submission_package": {
+        "path": "docs/project/submissions/510k/composition-manifest.md",
+        "exists": true,
+        "size_bytes": 9190,
+        "tokens_estimate": 2297,
+        "matched_pattern": "composition-manifest.md"
+      }
+    },
+    "pccp": {
+      "submission_package": null
+    },
+    "qsub": {
+      "submission_package": null
+    }
+  },
+  "external_roles": {
+    "fda_guidance": {
+      "folder": "docs/external/fda-guidance",
+      "exists": true,
+      "file_count": 11,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "standards": {
+      "folder": "docs/external/standards",
+      "exists": true,
+      "file_count": 7,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "industry_frameworks": {
+      "folder": "docs/external/industry-frameworks",
+      "exists": true,
+      "file_count": 7,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    }
+  },
+  "gaps": [
+    {
+      "scope": "project",
+      "role": "predicate_analysis",
+      "reason": "no file matched any pattern in docs/project/input-analysis/predicate-analysis",
+      "patterns_tried": [
+        "**/predicate-landscape.md",
+        "**/se-argument.md",
+        "**/qsub-summary.md",
+        "**/README.md"
+      ]
+    },
+    {
+      "scope": "project",
+      "role": "filing_strategy",
+      "reason": "folder does not exist: docs/project/input-analysis/filing-strategy",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "system_architecture",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*-system-sad.md",
+        "*Software Architecture Document*.md",
+        "*-sad.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "module_design",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Detailed Design*.md",
+        "*-sdd.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "user_needs",
+      "reason": "no file matched any pattern in design-controls/user-needs",
+      "patterns_tried": [
+        "user-needs.md",
+        "*user-needs*.md",
+        "*User Needs*.md",
+        "*-un.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "software_requirements",
+      "reason": "no file matched any pattern in design-controls/requirements",
+      "patterns_tried": [
+        "software-requirements.md",
+        "*Software Requirements*.md",
+        "*-srs.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "software_design_specification",
+      "reason": "no file matched any pattern in design-controls/architecture",
+      "patterns_tried": [
+        "*Software Design Specification*.md",
+        "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "verification_plan",
+      "reason": "no file matched any pattern in design-controls/vnv",
+      "patterns_tried": [
+        "*Verification*Plan*.md",
+        "*V&V Plan*.md",
+        "*verification-plan*.md",
+        "*vnv-plan*.md",
+        "testing-strategy.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/pca-device/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/connectivity-adapter/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "verification_protocols",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/protocols",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/pca-device/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/connectivity-adapter/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "verification_reports",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/reports",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "risk_management_plan",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "* - Risk Management Plan.md",
+        "*-risk-management-plan.md",
+        "*-rmp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "software_risk_assessment",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Software Risk Assessment*.md",
+        "*-sra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "hazard_analysis",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Preliminary Hazard Analysis*.md",
+        "*Hazard Analysis*.md",
+        "*-pha.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "hazard_traceability_matrix",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Hazard Traceability Matrix*.md",
+        "*-htm.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "fmea",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*FMEA*.md",
+        "*-fmea.md",
+        "*Failure Mode*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "risk_management_report",
+      "reason": "no file matched any pattern in risk-management",
+      "patterns_tried": [
+        "*Risk Management Report*.md",
+        "*-rmr.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "clinical_evaluation_plan",
+      "reason": "no file matched any pattern in clinical/evaluation-plans",
+      "patterns_tried": [
+        "*Clinical Evaluation Plan*.md",
+        "*-cep.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "clinical_evaluation_report",
+      "reason": "no file matched any pattern in clinical",
+      "patterns_tried": [
+        "*Clinical Evaluation Report*.md",
+        "*-cer.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "benefit_risk_analysis",
+      "reason": "no file matched any pattern in clinical/benefit-risk",
+      "patterns_tried": [
+        "*Benefit*Risk*.md",
+        "*-bra.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "pmcf_plan",
+      "reason": "no file matched any pattern in postmarket/pmcf-plans",
+      "patterns_tried": [
+        "*PMCF Plan*.md",
+        "*pmcf-plan*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/pca-device/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/connectivity-adapter/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "adverse_events",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/adverse-events",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/pca-device/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/connectivity-adapter/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "field_safety_corrective_actions",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/fsca",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "psur",
+      "reason": "no file matched any pattern in postmarket",
+      "patterns_tried": [
+        "*PSUR*.md",
+        "*PMSR*.md",
+        "*Periodic Safety*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "cybersecurity_plan",
+      "reason": "no file matched any pattern in cybersecurity",
+      "patterns_tried": [
+        "*Cybersecurity*Plan*.md",
+        "*cybersecurity-plan*.md",
+        "*-csp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/pca-device/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/connectivity-adapter/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "vulnerability_management",
+      "reason": "folder does not exist: docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/vulnerabilities",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "per-submission",
+      "submission": "pccp",
+      "role": "submission_package",
+      "reason": "no file matched any pattern in docs/project/submissions/pccp",
+      "patterns_tried": [
+        "composition-manifest.md"
+      ]
+    },
+    {
+      "scope": "per-submission",
+      "submission": "qsub",
+      "role": "submission_package",
+      "reason": "no file matched any pattern in docs/project/submissions/qsub",
+      "patterns_tried": [
+        "composition-manifest.md"
+      ]
+    }
+  ],
+  "ambiguity_notes": [
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "user_needs",
+      "winning_pattern": "user-needs.md",
+      "winning_path": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md",
+      "alternatives": [
+        {
+          "pattern": "*user-needs*.md",
+          "path": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md"
+        }
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "user_needs",
+      "winning_pattern": "user-needs.md",
+      "winning_path": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs.md",
+      "alternatives": [
+        {
+          "pattern": "*user-needs*.md",
+          "path": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md"
+        }
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "user_needs",
+      "winning_pattern": "user-needs.md",
+      "winning_path": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md",
+      "alternatives": [
+        {
+          "pattern": "*user-needs*.md",
+          "path": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md"
+        }
+      ]
+    }
+  ]
+}
