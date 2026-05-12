@@ -1213,6 +1213,481 @@
         "evidence_source_hash": "sha256:f8f056485bc4485475a81aea0376bde359926385e47e8f1beaac8312acf686e1",
         "composition_manifest_signature": null
       }
+    },
+    {
+      "row_ids": [
+        "Q4"
+      ],
+      "title": "Q-Sub cover letter",
+      "phase_text": "QSub",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA Q-Sub Guidance Appendix 1",
+      "all_applicable_refs": [
+        "FDA Q-Sub Guidance Appendix 1",
+        "FDA Q-Sub Guidance \u00a7III meeting format"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "Q5"
+      ],
+      "title": "Device description (Q-Sub formal)",
+      "phase_text": "QSub",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA Q-Sub Guidance \u00a7 Content requirements",
+      "all_applicable_refs": [
+        "FDA Q-Sub Guidance \u00a7 Content"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "Q6"
+      ],
+      "title": "Proposed indications for use",
+      "phase_text": "QSub",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA Q-Sub Guidance \u00a7 Content requirements",
+      "all_applicable_refs": [
+        "FDA SE Guidance (2014) \u00a7III IFU",
+        "FDA Q-Sub Guidance"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "Q7"
+      ],
+      "title": "Predicate device analysis (Q-Sub summary)",
+      "phase_text": "QSub",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA SE Guidance (2014) \u00a7III",
+      "all_applicable_refs": [
+        "FDA SE Guidance (2014) \u00a7III",
+        "21 USC 360c(i) substantial equivalence"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "Q8"
+      ],
+      "title": "PCCP summary for FDA feedback",
+      "phase_text": "QSub",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA AI/ML PCCP (Sept 2023) \u00a7V",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V",
+        "FDA General PCCP (Aug 2024)"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP1"
+      ],
+      "title": "PCCP Cover Section",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7IV.A",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7IV.A"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP2"
+      ],
+      "title": "PCCP \u2014 Description of Modifications",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7IV.B",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7IV.B"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP3"
+      ],
+      "title": "PCCP \u2014 Modification Protocol",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V",
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V (for AI parts)"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP4"
+      ],
+      "title": "PCCP \u2014 Impact Assessment",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7VI",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7VI"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP5"
+      ],
+      "title": "PCCP Traceability Table",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7VII",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7VII"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PCCP6"
+      ],
+      "title": "PCCP Public Summary",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7VIII",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7VIII"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PS1"
+      ],
+      "title": "Drug Library Update Protocol",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V",
+        "21 CFR Part 11 (D2, D6)"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PS2"
+      ],
+      "title": "Drug Library V&V Plan",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V.B",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V.B",
+        "IEC 62304 \u00a75.7"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PS3"
+      ],
+      "title": "Drug Library Acceptance Criteria",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V.C",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V.C"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PS4"
+      ],
+      "title": "Firmware Update Protocol",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V",
+        "FDA Premarket Cybersecurity (Sept 2023) \u00a7V OTA"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "PS5"
+      ],
+      "title": "Firmware Update V&V Plan",
+      "phase_text": "510k+PCCP",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP General \u00a7V.B",
+      "all_applicable_refs": [
+        "FDA General PCCP (Aug 2024) \u00a7V.B",
+        "IEC 62304 \u00a75.7"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI1"
+      ],
+      "title": "AI-DSF Description of Modifications",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7IV",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7IV"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI2"
+      ],
+      "title": "AI Re-Training Practices Protocol",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7V.A",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V.A",
+        "FDA Good Machine Learning Practice (Oct 2021)"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI3"
+      ],
+      "title": "AI Data Management Practices",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7V.B",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V.B",
+        "FDA Good Machine Learning Practice"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI4"
+      ],
+      "title": "AI Performance Evaluation Plan",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7V.C",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V.C"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI5"
+      ],
+      "title": "AI Update Procedures & User Communication",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7V.D",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V.D",
+        "IEC 62366-1:2015 \u00a75 user-facing changes"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
+    },
+    {
+      "row_ids": [
+        "AI6"
+      ],
+      "title": "AI Drift Monitoring Plan",
+      "phase_text": "LMR2",
+      "scope": "(submission)",
+      "path": null,
+      "primary_ref": "FDA PCCP AI/ML \u00a7V.E",
+      "all_applicable_refs": [
+        "FDA AI/ML PCCP (Sept 2023) \u00a7V.E",
+        "FDA Good Machine Learning Practice"
+      ],
+      "notes": "Filing-narrative row \u2014 Create Draft button surfaces the B6 authoring workflow until content is authored.",
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "composition_manifest_signature": null
+      }
     }
   ]
 }

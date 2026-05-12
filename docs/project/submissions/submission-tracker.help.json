@@ -6461,6 +6461,902 @@
         "evidence_source_hash": null,
         "claude_md_hash": null
       }
+    },
+    "Q4": {
+      "title": "Q-Sub cover letter",
+      "description": "Cover letter for the Q-Submission package. Identifies the device (PP3500), the regulatory pathway (510(k)+PCCP under K210345), the predicate (PP3000, K190567), the specific questions for FDA, and the proposed meeting format.",
+      "why_important_in_project": "The cover letter is FDA's first touchpoint with the submission. It frames what is being asked, the scope of the meeting, and what alignment is sought before formal filing. Quality here directly shapes reviewer expectations and meeting structure.",
+      "main_topics": [
+        {
+          "name": "Device identification",
+          "summary": "PP3500 + intended use"
+        },
+        {
+          "name": "Pathway",
+          "summary": "510(k)+PCCP under K210345 framework"
+        },
+        {
+          "name": "Predicate strategy",
+          "summary": "PP3000 (K190567) substantial-equivalence anchor"
+        },
+        {
+          "name": "Specific questions",
+          "summary": "PCCP scope, AI/ML envelope, predicate-difference framing"
+        },
+        {
+          "name": "Meeting format",
+          "summary": "Written feedback vs. in-person meeting request"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Q-Sub Guidance Appendix 1",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Q-Sub Guidance \u00a7III meeting format",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q5": {
+      "title": "Device description (Q-Sub formal)",
+      "description": "Formal device description covering PP3500 hardware, software architecture, AI/ML envelope, and the connectivity-adapter + cloud-suite dependency footprint. Establishes the device-as-system view FDA needs to evaluate the questions.",
+      "why_important_in_project": "A clean device description reduces reviewer rework \u2014 they can map the technical answers to a coherent system picture instead of triangulating from the SAD + risk + V&V separately.",
+      "main_topics": [
+        {
+          "name": "Hardware overview",
+          "summary": "Pump mechanism, sensors, M-series modules"
+        },
+        {
+          "name": "Software architecture",
+          "summary": "Deterministic core + AI/ML envelope"
+        },
+        {
+          "name": "Connectivity stack",
+          "summary": "Pump \u2192 adapter (MDDS) \u2192 cloud-suite"
+        },
+        {
+          "name": "Drug-library architecture",
+          "summary": "D-series modules, authoring + signing"
+        },
+        {
+          "name": "Intended use",
+          "summary": "PCA infusion in acute care"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Q-Sub Guidance \u00a7 Content",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q6": {
+      "title": "Proposed indications for use",
+      "description": "Proposed indications-for-use statement for PP3500 \u2014 patient population, clinical setting, intended drug classes, contraindications. Includes the LMR2 AI/ML predictive-alarm envelope as an indications-supporting capability.",
+      "why_important_in_project": "IFU framing is the regulatory anchor for substantial equivalence. Getting FDA alignment at Q-Sub on IFU language saves substantive 510(k) review cycles.",
+      "main_topics": [
+        {
+          "name": "Patient population",
+          "summary": "Adult patients requiring PCA"
+        },
+        {
+          "name": "Clinical setting",
+          "summary": "Hospital acute care + perioperative"
+        },
+        {
+          "name": "Drug classes",
+          "summary": "Opioids; expansion via drug-library updates"
+        },
+        {
+          "name": "Contraindications",
+          "summary": "Per predicate + new device-specific"
+        },
+        {
+          "name": "AI/ML envelope framing",
+          "summary": "Predictive-alarm as decision-support, not autonomous control"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA SE Guidance (2014) \u00a7III IFU",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Q-Sub Guidance",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q7": {
+      "title": "Predicate device analysis (Q-Sub summary)",
+      "description": "Summary predicate analysis identifying PP3000 (K190567) as the proposed predicate. Maps PP3500 against PP3000 on intended use, technological characteristics, and performance, flagging differences that require new clinical/V&V evidence.",
+      "why_important_in_project": "Predicate selection is the FOUNDATION of a 510(k) \u2014 wrong predicate sinks the submission. Getting Q-Sub alignment on PP3000 + the differences-handling strategy de-risks the formal filing.",
+      "main_topics": [
+        {
+          "name": "Predicate identification",
+          "summary": "PP3000, K190567 (cleared 2019)"
+        },
+        {
+          "name": "Intended-use comparison",
+          "summary": "Equivalent indications + minor refinements"
+        },
+        {
+          "name": "Technological characteristics",
+          "summary": "M-series modular vs. predicate monolithic"
+        },
+        {
+          "name": "Performance comparison",
+          "summary": "Bolus accuracy, occlusion detection, alarm latency"
+        },
+        {
+          "name": "Differences-handling",
+          "summary": "AI/ML envelope, connectivity, drug-library expansion \u2192 PCCP-authorized scope"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA SE Guidance (2014) \u00a7III",
+          "role": "primary"
+        },
+        {
+          "citation": "21 USC 360c(i) substantial equivalence",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q8": {
+      "title": "PCCP summary for FDA feedback",
+      "description": "PCCP scope summary outlining the proposed modification envelope: AI/ML predictive-alarm refresh, drug-library expansion, firmware OTA updates. Frames the modification-protocol concept for FDA validation before formal submission.",
+      "why_important_in_project": "PCCP is the strategic centerpiece of PP3500's regulatory posture \u2014 getting FDA alignment on what falls inside vs outside the envelope at Q-Sub is what makes the 510(k)+PCCP filing tractable.",
+      "main_topics": [
+        {
+          "name": "PCCP envelope scope",
+          "summary": "AI/ML predictive-alarm; drug-library; firmware OTA"
+        },
+        {
+          "name": "Modification protocol concept",
+          "summary": "How proposed changes are pre-cleared"
+        },
+        {
+          "name": "Impact-assessment framework",
+          "summary": "Per-modification risk + V&V scope"
+        },
+        {
+          "name": "Boundary cases",
+          "summary": "What needs new 510(k) vs. PCCP-authorized"
+        },
+        {
+          "name": "AI-specific GMLP alignment",
+          "summary": "Drift monitoring, re-training discipline"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA General PCCP (Aug 2024)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP1": {
+      "title": "PCCP Cover Section",
+      "description": "PCCP cover section \u2014 identifies the PCCP scope, the device under modification, the modification envelope, and the modification protocol. Top of the PCCP document.",
+      "why_important_in_project": "Sets the FDA-facing frame for the PCCP submission portion. Cover-section ambiguity is the #1 reason PCCPs get RTA'd.",
+      "main_topics": [
+        {
+          "name": "Device + clearance reference",
+          "summary": "PP3500, K210345"
+        },
+        {
+          "name": "Modification envelope scope",
+          "summary": "High-level summary"
+        },
+        {
+          "name": "Modification protocol reference",
+          "summary": "Pointer to detailed protocol document"
+        },
+        {
+          "name": "Scope boundaries",
+          "summary": "What is + isn't in this PCCP"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7IV.A",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP2": {
+      "title": "PCCP \u2014 Description of Modifications",
+      "description": "Detailed description of each modification within the PCCP envelope: what the modification is, why it's being made, how it will be implemented, and which device characteristics it touches.",
+      "why_important_in_project": "Each modification must be specifically described \u2014 FDA evaluates the modification protocol for whether it can credibly handle each named modification. Vague descriptions get pushed back.",
+      "main_topics": [
+        {
+          "name": "AI/ML predictive-alarm modifications",
+          "summary": "Model update cadence, training-data refresh"
+        },
+        {
+          "name": "Drug-library expansion",
+          "summary": "New entries via D-series authoring"
+        },
+        {
+          "name": "Firmware OTA updates",
+          "summary": "Bug fixes, perf improvements within envelope"
+        },
+        {
+          "name": "Per-modification impact summary",
+          "summary": "Touched characteristics + reg implications"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7IV.B",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP3": {
+      "title": "PCCP \u2014 Modification Protocol",
+      "description": "The Modification Protocol \u2014 the regulatory engine of the PCCP. Defines how each in-envelope modification is reviewed, validated, and released without a new 510(k). Includes V&V scope, impact-assessment criteria, and decision tree.",
+      "why_important_in_project": "The Modification Protocol IS the PCCP's value proposition. Its rigor determines what FDA will allow inside the envelope.",
+      "main_topics": [
+        {
+          "name": "V&V scope per modification class",
+          "summary": "What test packages each modification triggers"
+        },
+        {
+          "name": "Impact-assessment decision tree",
+          "summary": "When does a modification leave the envelope"
+        },
+        {
+          "name": "Release gate criteria",
+          "summary": "What evidence supports release"
+        },
+        {
+          "name": "Documentation control",
+          "summary": "Per-modification audit trail"
+        },
+        {
+          "name": "Pre-defined out-of-envelope triggers",
+          "summary": "Auto-escalation to new 510(k)"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V (for AI parts)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP4": {
+      "title": "PCCP \u2014 Impact Assessment",
+      "description": "Impact assessment framework \u2014 methodology for evaluating each proposed in-envelope modification for safety/effectiveness impact before release.",
+      "why_important_in_project": "Impact-assessment is what gives FDA confidence that the Modification Protocol can identify when a modification exceeds envelope.",
+      "main_topics": [
+        {
+          "name": "Hazard re-evaluation",
+          "summary": "ISO 14971 re-run per modification"
+        },
+        {
+          "name": "Performance re-evaluation",
+          "summary": "V&V scope decision"
+        },
+        {
+          "name": "User-impact analysis",
+          "summary": "Per IEC 62366-1"
+        },
+        {
+          "name": "Cyber re-evaluation",
+          "summary": "Threat model + SBOM impact"
+        },
+        {
+          "name": "Decision criteria",
+          "summary": "Quantitative thresholds where applicable"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7VI",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP5": {
+      "title": "PCCP Traceability Table",
+      "description": "Traceability table crosswalking each in-envelope modification to: (a) device characteristic affected, (b) impact-assessment decision, (c) V&V scope, (d) release gate.",
+      "why_important_in_project": "Traceability is the auditable record reviewers + post-market inspectors walk to confirm the Modification Protocol was followed.",
+      "main_topics": [
+        {
+          "name": "Modification \u2192 characteristic mapping",
+          "summary": "One row per modification"
+        },
+        {
+          "name": "Modification \u2192 impact decision",
+          "summary": "Mapping to PCCP4"
+        },
+        {
+          "name": "Modification \u2192 V&V scope",
+          "summary": "Mapping to PCCP3"
+        },
+        {
+          "name": "Modification \u2192 release status",
+          "summary": "Current state per modification"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7VII",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PCCP6": {
+      "title": "PCCP Public Summary",
+      "description": "Public-facing summary of the PCCP scope, intended for FDA database publication. Plain-language description of what changes can occur within the PCCP envelope.",
+      "why_important_in_project": "Public summary supports transparency for healthcare providers + patients about authorized modifications. Required per FDA PCCP guidance.",
+      "main_topics": [
+        {
+          "name": "Plain-language modification scope",
+          "summary": "Patient/provider-friendly language"
+        },
+        {
+          "name": "Predictable change envelope",
+          "summary": "Reassuring transparency about what is + isn't allowed"
+        },
+        {
+          "name": "Update notification model",
+          "summary": "How users learn about specific modifications"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7VIII",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PS1": {
+      "title": "Drug Library Update Protocol",
+      "description": "PCCP support document \u2014 protocol for drug-library updates within the PCCP envelope. Defines the authoring \u2192 validation \u2192 signing \u2192 distribution pipeline (D1\u2013D4) + the V&V scope per update.",
+      "why_important_in_project": "Drug-library expansion is one of PP3500's headline PCCP-authorized capabilities. The protocol is what makes routine library updates safe + auditable without new 510(k).",
+      "main_topics": [
+        {
+          "name": "Authoring (D1)",
+          "summary": "Pharmacist workflow"
+        },
+        {
+          "name": "Validation rule engine (D3 / ENG16)",
+          "summary": "Range, contraindication, formulary"
+        },
+        {
+          "name": "Signing (D4 / ENG7)",
+          "summary": "Crypto-anchored integrity"
+        },
+        {
+          "name": "Distribution",
+          "summary": "Versioned roll-out to fielded pumps"
+        },
+        {
+          "name": "Per-update V&V scope",
+          "summary": "Pre-release test package"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2, D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PS2": {
+      "title": "Drug Library V&V Plan",
+      "description": "V&V plan for drug-library updates under the PCCP envelope. Defines test scope per library change class, regression coverage, and acceptance criteria.",
+      "why_important_in_project": "Pre-defined V&V scope is what enables fast, safe drug-library cadence without new 510(k). Reviewers evaluate the V&V plan for whether it catches credible defects.",
+      "main_topics": [
+        {
+          "name": "Per-change-class test scope",
+          "summary": "New drug / new concentration / new dose model"
+        },
+        {
+          "name": "Regression on existing entries",
+          "summary": "Don't break what works"
+        },
+        {
+          "name": "End-to-end ingest test",
+          "summary": "Authoring \u2192 signing \u2192 pump receive"
+        },
+        {
+          "name": "Clinical-safety smoke test",
+          "summary": "Per-class hazardous-situation re-evaluation"
+        },
+        {
+          "name": "Acceptance criteria",
+          "summary": "Pre-release gate"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V.B",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.7",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PS3": {
+      "title": "Drug Library Acceptance Criteria",
+      "description": "Acceptance criteria for drug-library updates \u2014 quantitative thresholds the V&V results must meet for release within PCCP scope.",
+      "why_important_in_project": "Without explicit acceptance criteria, \"passes V&V\" is ambiguous. PCCP-authorized release demands pre-defined, FDA-aligned thresholds.",
+      "main_topics": [
+        {
+          "name": "Functional accuracy thresholds",
+          "summary": "Range / boundary / dose limits"
+        },
+        {
+          "name": "Safety-test pass rates",
+          "summary": "Hazard-class minimums"
+        },
+        {
+          "name": "Regression test pass rates",
+          "summary": "Existing-entry preservation"
+        },
+        {
+          "name": "Performance bounds",
+          "summary": "Ingest time, validation time"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V.C",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PS4": {
+      "title": "Firmware Update Protocol",
+      "description": "PCCP support document \u2014 protocol for firmware OTA updates within the PCCP envelope. Defines the cloud-side build + signing (ENG4, ENG7) \u2192 device-side verifier (ENG17) \u2192 rollout governance.",
+      "why_important_in_project": "Firmware OTA is the highest-leverage PCCP capability (and the highest cyber-risk surface). The protocol's rigor is what makes routine bug fixes + perf improvements safe without new 510(k).",
+      "main_topics": [
+        {
+          "name": "Build + signing pipeline",
+          "summary": "Signed by ENG4-anchored keys"
+        },
+        {
+          "name": "Device-side verifier (ENG17)",
+          "summary": "Secure boot + signature check"
+        },
+        {
+          "name": "Rollout governance",
+          "summary": "Phased deployment, monitoring"
+        },
+        {
+          "name": "Rollback mechanism",
+          "summary": "How to revert a bad release"
+        },
+        {
+          "name": "Per-update V&V scope",
+          "summary": "Test package per change class"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V OTA",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "PS5": {
+      "title": "Firmware Update V&V Plan",
+      "description": "V&V plan for firmware OTA updates under the PCCP envelope. Defines test scope per firmware change class, HIL coverage (ENG13), regression, and acceptance.",
+      "why_important_in_project": "Firmware V&V is the regulatory anchor for safe OTA cadence. Pre-defined scope keeps the release loop short while preserving safety evidence.",
+      "main_topics": [
+        {
+          "name": "Change-class test scope",
+          "summary": "Bug fix / perf / minor enhancement"
+        },
+        {
+          "name": "HIL regression on ENG13",
+          "summary": "End-to-end pump scenarios"
+        },
+        {
+          "name": "Cyber re-test scope",
+          "summary": "Threat-model affected paths"
+        },
+        {
+          "name": "Acceptance criteria",
+          "summary": "Pre-release gate"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA General PCCP (Aug 2024) \u00a7V.B",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.7",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI1": {
+      "title": "AI-DSF Description of Modifications",
+      "description": "AI-specific Description of Modifications under the AI/ML-DSF (Determined Specifications Framework). Details the predictive-alarm modification envelope, model architectures in scope, and training-data refresh model.",
+      "why_important_in_project": "FDA AI/ML PCCP guidance requires AI-specific modification description. This is where the PP3500 LMR2 predictive-alarm modification envelope is precisely framed for FDA.",
+      "main_topics": [
+        {
+          "name": "Model in scope",
+          "summary": "Predictive-alarm architecture, parameters"
+        },
+        {
+          "name": "Modification classes",
+          "summary": "Re-training, hyperparameter retune, data refresh"
+        },
+        {
+          "name": "Training-data refresh model",
+          "summary": "Cadence, sources, curation"
+        },
+        {
+          "name": "Performance-envelope claim",
+          "summary": "What stays stable across modifications"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7IV",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI2": {
+      "title": "AI Re-Training Practices Protocol",
+      "description": "AI/ML re-training protocol \u2014 defines when, how, and with what controls the predictive-alarm model is re-trained within the PCCP envelope. Anchored to ENG19 (training infra) + ENG20 (drift monitoring).",
+      "why_important_in_project": "Re-training is the central PCCP-authorized AI/ML activity. The protocol is what makes routine model refresh trustworthy without new 510(k).",
+      "main_topics": [
+        {
+          "name": "Re-training triggers",
+          "summary": "Drift signals, scheduled refresh, label-distribution shift"
+        },
+        {
+          "name": "Training-data discipline",
+          "summary": "Source curation, de-identification, version locking"
+        },
+        {
+          "name": "Validation independence",
+          "summary": "Hold-out + cross-cohort validation"
+        },
+        {
+          "name": "Model versioning",
+          "summary": "Strict version control + audit trail"
+        },
+        {
+          "name": "GMLP alignment",
+          "summary": "Per FDA GMLP guiding principles"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V.A",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI3": {
+      "title": "AI Data Management Practices",
+      "description": "AI training-data management practices \u2014 sourcing, de-identification, curation, labeling discipline, bias analysis, retention.",
+      "why_important_in_project": "Training-data quality determines model quality. FDA AI/ML PCCP scrutinizes data practices for cohort representativeness, label quality, and bias.",
+      "main_topics": [
+        {
+          "name": "Data sourcing",
+          "summary": "Provenance, consent, de-identification"
+        },
+        {
+          "name": "Curation pipeline",
+          "summary": "Quality filters, labeling discipline"
+        },
+        {
+          "name": "Bias / fairness analysis",
+          "summary": "Demographic + cohort representativeness"
+        },
+        {
+          "name": "Versioning + retention",
+          "summary": "Training-set immutability"
+        },
+        {
+          "name": "Re-curation triggers",
+          "summary": "When to refresh the dataset"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V.B",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI4": {
+      "title": "AI Performance Evaluation Plan",
+      "description": "AI/ML performance evaluation plan \u2014 pre-release evaluation methodology for each re-trained predictive-alarm model. Sensitivity/specificity targets, calibration, cohort-stratified analysis, distribution-shift testing.",
+      "why_important_in_project": "FDA AI/ML PCCP requires pre-release performance evaluation for every re-trained model within the envelope. This is the load-bearing pre-deployment gate.",
+      "main_topics": [
+        {
+          "name": "Sensitivity / specificity thresholds",
+          "summary": "Per cohort + per alarm class"
+        },
+        {
+          "name": "Calibration analysis",
+          "summary": "Confidence calibration over time"
+        },
+        {
+          "name": "Cohort-stratified performance",
+          "summary": "Sub-population breakdown"
+        },
+        {
+          "name": "Distribution-shift testing",
+          "summary": "Cross-site generalization"
+        },
+        {
+          "name": "Acceptance criteria",
+          "summary": "Pre-deployment gate"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V.C",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI5": {
+      "title": "AI Update Procedures & User Communication",
+      "description": "Procedures for deploying re-trained models + communicating updates to clinical users. Per-update transparency about what changed and what was preserved.",
+      "why_important_in_project": "Clinical trust in AI tools depends on transparency. FDA AI/ML PCCP expects user-communication discipline for in-envelope updates.",
+      "main_topics": [
+        {
+          "name": "Deployment procedure",
+          "summary": "Phased rollout + monitoring"
+        },
+        {
+          "name": "User communication",
+          "summary": "What changed, what didn't, what users should expect"
+        },
+        {
+          "name": "Training requirements",
+          "summary": "New behaviors \u2192 user training updates"
+        },
+        {
+          "name": "Rollback procedure",
+          "summary": "How to revert in-clinic"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V.D",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62366-1:2015 \u00a75 user-facing changes",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "AI6": {
+      "title": "AI Drift Monitoring Plan",
+      "description": "Production drift-monitoring plan for predictive-alarm models. Defines monitoring metrics, drift thresholds, and re-training trigger criteria. Anchored to ENG20 monitoring pipeline.",
+      "why_important_in_project": "AI models degrade in production. Drift monitoring is what makes the AI/ML PCCP credible \u2014 without it, FDA can't trust that the envelope-authorized modifications detect when retraining is needed.",
+      "main_topics": [
+        {
+          "name": "Drift metrics",
+          "summary": "Feature distribution + performance drift"
+        },
+        {
+          "name": "Drift thresholds",
+          "summary": "When does drift trigger retraining"
+        },
+        {
+          "name": "Monitoring cadence",
+          "summary": "Continuous vs. periodic eval"
+        },
+        {
+          "name": "Trigger criteria",
+          "summary": "Auto-trigger to AI2 retraining protocol"
+        },
+        {
+          "name": "Audit trail",
+          "summary": "PCCP-evidence-grade retention via ENG8"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA AI/ML PCCP (Sept 2023) \u00a7V.E",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:20:21.498814Z",
+      "context_signature": {
+        "canonical_role": "submission-narrative",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
     }
   }
 }
