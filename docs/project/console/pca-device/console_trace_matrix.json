@@ -1,0 +1,2477 @@
+{
+  "version": "1.1",
+  "dhf": "pca-device",
+  "generated_at": "2026-05-12T09:03:25Z",
+  "layers": [
+    {
+      "key": "user_needs",
+      "title": "User Needs",
+      "id_prefix": "UN",
+      "source_files": [
+        "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md"
+      ],
+      "items": [
+        {
+          "id": "UN-001",
+          "summary": "The device must deliver on-demand analgesic bolus doses within prescribed limits to…",
+          "full_text": "The device must deliver on-demand analgesic bolus doses within prescribed limits to provide effective, patient-titrated pain control across postoperative, acute, and chronic pain scenarios.",
+          "category": "CLIN",
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": "Patient, Nurse, Anesthesiologist",
+          "priority": "High",
+          "source_ref": "KOL-0006 (Paul); acute pain service workflow analysis",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            },
+            {
+              "id": "DI-002",
+              "summary": "The device shall deliver patient-activated bolus doses from 0.01 to 20 mL with a…"
+            },
+            {
+              "id": "DI-009",
+              "summary": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-002",
+          "summary": "The device must support a programmable continuous (basal) infusion rate alongside PCA…",
+          "full_text": "The device must support a programmable continuous (basal) infusion rate alongside PCA bolus delivery so clinicians can tailor therapy to opioid-tolerant and chronic-pain patients.",
+          "category": "CLIN",
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": "Anesthesiologist, Nurse",
+          "priority": "High",
+          "source_ref": "KOL-0006 (Paul); predicate IFU; clinical literature",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-003",
+          "summary": "The device must enforce clinician-programmed lockout intervals and 1-hour / 4-hour…",
+          "full_text": "The device must enforce clinician-programmed lockout intervals and 1-hour / 4-hour cumulative dose limits to prevent over-sedation between bolus requests.",
+          "category": "CLIN",
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": "Anesthesiologist, Pharmacist",
+          "priority": "High",
+          "source_ref": "KOL-0006 (Paul); ISMP PCA safety guidelines",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-003",
+              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
+            },
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-004",
+          "summary": "The device must prevent any programming pathway from delivering a dose that exceeds the…",
+          "full_text": "The device must prevent any programming pathway from delivering a dose that exceeds the institution's drug-library hard limits, regardless of operator role or override attempt.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": "Patient, Nurse, Pharmacist",
+          "priority": "High",
+          "source_ref": "ISO 14971 hazard analysis; CAPA-2023-001 root-cause review",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            },
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-008",
+          "summary": "Clinicians must be able to verify the medication, concentration, and patient identity at…",
+          "full_text": "Clinicians must be able to verify the medication, concentration, and patient identity at the bedside via integrated barcode scanning to reduce wrong-drug and wrong-patient errors.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": "Nurse, Pharmacist",
+          "priority": "High",
+          "source_ref": "KOL-0006 (Paul); ISMP medication safety best practices",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-016",
+              "summary": "The device shall include an integrated 1D/2D barcode scanner capable of reading…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-009",
+          "summary": "Clinicians must be able to load a current institution-approved drug library onto the pump…",
+          "full_text": "Clinicians must be able to load a current institution-approved drug library onto the pump and confirm the active library version before initiating therapy.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": "Nurse",
+          "priority": "High",
+          "source_ref": "Pharmacy & Therapeutics committee feedback; predicate workflow gap",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            },
+            {
+              "id": "DI-015",
+              "summary": "The device shall maintain an on-board drug library of at least 200 medications with…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-006",
+          "summary": "The device must detect downstream occlusions and air-in-line conditions and alert the…",
+          "full_text": "The device must detect downstream occlusions and air-in-line conditions and alert the clinician before patient harm can occur.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": "Patient, Nurse",
+          "priority": "High",
+          "source_ref": "IEC 60601-2-24 §201.12; KOL-0006 (Paul)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-007",
+              "summary": "The device shall detect downstream occlusions in the range 3 to 15 psi and annunciate a…"
+            },
+            {
+              "id": "DI-008",
+              "summary": "The device shall detect single air-in-line bubbles ≥50 µL and cumulative air ≥1 mL over a…"
+            },
+            {
+              "id": "DI-009",
+              "summary": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-010",
+          "summary": "Alarms must be reliably audible and distinguishable in a typical acute-care ward…",
+          "full_text": "Alarms must be reliably audible and distinguishable in a typical acute-care ward environment without contributing to alarm fatigue.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": "Patient, Nurse",
+          "priority": "High",
+          "source_ref": "KOL-0008 (Shah); IEC 60601-1-8",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-019",
+              "summary": "The device shall provide audible alarms compliant with IEC 60601-1-8 for high-, medium-,…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-005",
+          "summary": "The device must prevent gravity-driven free flow of medication if the administration set…",
+          "full_text": "The device must prevent gravity-driven free flow of medication if the administration set is removed or improperly loaded.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": "Patient, Nurse",
+          "priority": "High",
+          "source_ref": "IEC 60601-2-24; predicate field history",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-006",
+              "summary": "The device shall prevent free-flow delivery of medication when the administration set is…"
+            },
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-015",
+          "summary": "All patient-contacting materials (administration set, lockbox surfaces, button surfaces)…",
+          "full_text": "All patient-contacting materials (administration set, lockbox surfaces, button surfaces) must be biocompatible for the intended duration and route of contact.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": "Patient",
+          "priority": "High",
+          "source_ref": "ISO 10993-1; risk file",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-011",
+              "summary": "All patient-contacting materials of the dedicated administration set, lockbox exterior,…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-007",
+          "summary": "Clinicians must be able to enter and confirm decimal-point dose values without ambiguity,…",
+          "full_text": "Clinicians must be able to enter and confirm decimal-point dose values without ambiguity, so that a 1.0 mg dose cannot be misread or mis-entered as 10 mg.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": "Nurse, Pharmacist",
+          "priority": "High",
+          "source_ref": "CAPA-2023-001 (decimal-point visibility, 2023-01-10); Field Safety Notice 2023-01-20",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-013",
+              "summary": "The device's numeric entry interface shall display all dose values with an unambiguous…"
+            },
+            {
+              "id": "DI-021",
+              "summary": "The device shall present therapy parameters, alarm states, and remaining battery life on…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-014",
+          "summary": "The user interface must be operable by a trained nurse with minimal training time and…",
+          "full_text": "The user interface must be operable by a trained nurse with minimal training time and must minimize use errors during programming, bolus delivery, and alarm response.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": "Nurse, Anesthesiologist",
+          "priority": "High",
+          "source_ref": "IEC 62366-1 process; usability validation lessons (predicate)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-013",
+              "summary": "The device's numeric entry interface shall display all dose values with an unambiguous…"
+            },
+            {
+              "id": "DI-014",
+              "summary": "The device shall provide a 3.5-inch color LCD touchscreen user interface supporting…"
+            },
+            {
+              "id": "DI-020",
+              "summary": "The device shall allow a trained nurse to complete the standard PCA programming task…"
+            },
+            {
+              "id": "DI-021",
+              "summary": "The device shall present therapy parameters, alarm states, and remaining battery life on…"
+            },
+            {
+              "id": "DI-027",
+              "summary": "The device development shall apply a usability engineering process compliant with IEC…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-011",
+          "summary": "The pump must operate continuously on battery for at least one full nursing shift cycle…",
+          "full_text": "The pump must operate continuously on battery for at least one full nursing shift cycle to support intra-hospital patient transport and bedside ambulation without interruption.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": "Nurse, Biomed Engineer",
+          "priority": "High",
+          "source_ref": "Nursing workflow study; predicate complaint data",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-017",
+              "summary": "The device shall operate continuously on a single fully-charged internal lithium-ion…"
+            },
+            {
+              "id": "DI-018",
+              "summary": "The device shall recharge from 0% to 100% state-of-charge in ≤4 hours from the supplied…"
+            },
+            {
+              "id": "DI-033",
+              "summary": "The device shall weigh ≤0.85 kg with a full medication cassette and shall provide both an…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-016",
+          "summary": "The device must support routine cleaning and disinfection per the institution's…",
+          "full_text": "The device must support routine cleaning and disinfection per the institution's infection-control protocols without degrading housings, displays, or seals.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": "Biomed Engineer",
+          "priority": "Medium",
+          "source_ref": "Biomed feedback; CDC environmental cleaning guidelines",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-030",
+              "summary": "The device housing, touchscreen, and lockbox shall withstand cleaning and disinfection…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-020",
+          "summary": "The lockbox / drug cassette must be tamper-evident and physically secure against…",
+          "full_text": "The lockbox / drug cassette must be tamper-evident and physically secure against unauthorized access to controlled substances.",
+          "category": "MARK",
+          "criticality": null,
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": "Pharmacist, Nurse",
+          "priority": "Medium",
+          "source_ref": "DEA controlled-substance handling expectations; hospital security policy",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-032",
+              "summary": "The drug-cassette lockbox shall require a physical key or PIN-released latch and shall be…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-022",
+          "summary": "The device must be light enough and ergonomically suitable to attach to an IV pole,…",
+          "full_text": "The device must be light enough and ergonomically suitable to attach to an IV pole, bedrail, or patient belt clip without impeding mobility.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": "Nurse, Patient",
+          "priority": "Medium",
+          "source_ref": "Nursing workflow study; predicate weight (0.6 kg) baseline",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-033",
+              "summary": "The device shall weigh ≤0.85 kg with a full medication cassette and shall provide both an…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-012",
+          "summary": "The device must integrate with the hospital wireless network and EHR/EMR systems so that…",
+          "full_text": "The device must integrate with the hospital wireless network and EHR/EMR systems so that programmed therapy and event logs flow into the patient record without manual transcription.",
+          "category": "MARK",
+          "criticality": null,
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": "Hospital IT, Nurse",
+          "priority": "Medium",
+          "source_ref": "Sales win/loss analysis; KOL-0006 (Paul)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-022",
+              "summary": "The device shall support 802.11 a/b/g/n/ac Wi-Fi (2.4 / 5 GHz) and Bluetooth 5.0…"
+            },
+            {
+              "id": "DI-023",
+              "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…"
+            },
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-021",
+          "summary": "The device should optionally publish therapy events via HL7 FHIR to support smart-pump…",
+          "full_text": "The device should optionally publish therapy events via HL7 FHIR to support smart-pump interoperability initiatives and analytics dashboards.",
+          "category": "MARK",
+          "criticality": null,
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": "Hospital IT, Anesthesiologist",
+          "priority": "Low",
+          "source_ref": "KOL-0006 (Paul); AAMI infusion-interoperability roadmap",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-023",
+              "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-013",
+          "summary": "The device must protect patient data and therapy integrity against unauthorized network…",
+          "full_text": "The device must protect patient data and therapy integrity against unauthorized network access, malware, and tampering throughout its operational life.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": "Hospital IT, Biomed Engineer, Regulatory Affairs",
+          "priority": "High",
+          "source_ref": "IEC 81001-5-1; FDA premarket cybersecurity guidance (2023)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-024",
+              "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
+            },
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            },
+            {
+              "id": "DI-025",
+              "summary": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-017",
+          "summary": "The device must provide diagnostic logs, calibration access, and field-replaceable parts…",
+          "full_text": "The device must provide diagnostic logs, calibration access, and field-replaceable parts to support routine preventive maintenance on a 6-month interval.",
+          "category": "USER",
+          "criticality": null,
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": "Biomed Engineer",
+          "priority": "Medium",
+          "source_ref": "Biomed feedback; service economics",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-031",
+              "summary": "The device shall provide a serviceability menu (PIN-protected) exposing diagnostic logs,…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-018",
+          "summary": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy…",
+          "full_text": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy 21 CFR 801, 21 CFR 830, and EU MDR 2017/745 requirements.",
+          "category": "REGU",
+          "criticality": null,
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": "Regulatory Affairs, Patient",
+          "priority": "High",
+          "source_ref": "21 CFR 801, 21 CFR 830; EU MDR Annex I",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            },
+            {
+              "id": "DI-012",
+              "summary": "The device shall meet the EMC immunity and emissions requirements of IEC 60601-1-2 (4th…"
+            },
+            {
+              "id": "DI-028",
+              "summary": "The device, primary packaging, and shipping packaging shall bear a Unique Device…"
+            },
+            {
+              "id": "DI-029",
+              "summary": "The Instructions for Use (IFU), labeling, and warning content shall comply with 21 CFR…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-019",
+          "summary": "Device software must be developed, documented, and verified under a software lifecycle…",
+          "full_text": "Device software must be developed, documented, and verified under a software lifecycle process commensurate with its safety classification.",
+          "category": "REGU",
+          "criticality": null,
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": "Regulatory Affairs",
+          "priority": "High",
+          "source_ref": "IEC 62304; FDA premarket software guidance (2023)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-025",
+              "summary": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all…"
+            },
+            {
+              "id": "DI-026",
+              "summary": "Device software shall be developed under an IEC 62304 lifecycle process at Software…"
+            },
+            {
+              "id": "DI-027",
+              "summary": "The device development shall apply a usability engineering process compliant with IEC…"
+            }
+          ],
+          "traces_reverse": []
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "design_inputs",
+      "title": "Design Inputs",
+      "id_prefix": "DI",
+      "source_files": [
+        "docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md"
+      ],
+      "items": [
+        {
+          "id": "DI-001",
+          "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…",
+          "full_text": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an accuracy of ±5% (or ±0.5 mL/hr, whichever is greater) across the full operating range.",
+          "category": "PERF",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Gravimetric bench test per IEC 60601-2-24 §201.12.1.101 at 5 set points (0.1, 1, 5, 15, 25 mL/hr); n≥3 units, 3 replicates each; all measurements within ±5%.",
+          "verification_method": "Bench test (VER-PP3500-BT-005)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-BT-005",
+              "summary": "Bench test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-001",
+              "summary": "The device must deliver on-demand analgesic bolus doses within prescribed limits to…"
+            },
+            {
+              "id": "UN-002",
+              "summary": "The device must support a programmable continuous (basal) infusion rate alongside PCA…"
+            }
+          ]
+        },
+        {
+          "id": "DI-002",
+          "summary": "The device shall deliver patient-activated bolus doses from 0.01 to 20 mL with a…",
+          "full_text": "The device shall deliver patient-activated bolus doses from 0.01 to 20 mL with a delivered-volume accuracy of ±5% across the dose range.",
+          "category": "PERF",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Gravimetric bench test per IEC 60601-2-24 §201.12; n≥30 bolus deliveries at 3 dose levels; all within ±5%.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-001",
+              "summary": "The device must deliver on-demand analgesic bolus doses within prescribed limits to…"
+            }
+          ]
+        },
+        {
+          "id": "DI-003",
+          "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…",
+          "full_text": "The device shall support a programmable lockout interval from 1 to 99 minutes between consecutive PCA bolus requests.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: program lockout at 1, 15, and 99 min; verify no bolus delivered before interval expires.",
+          "verification_method": "Software test (VER-PP3500-SW-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-003",
+              "summary": "The device must enforce clinician-programmed lockout intervals and 1-hour / 4-hour…"
+            }
+          ]
+        },
+        {
+          "id": "DI-004",
+          "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…",
+          "full_text": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall block any bolus that would exceed the limit.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: attempt over-limit bolus via PCA button, clinician menu, and barcode-loaded order; all blocked with alert.",
+          "verification_method": "Software test (VER-PP3500-SW-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-003",
+              "summary": "The device must enforce clinician-programmed lockout intervals and 1-hour / 4-hour…"
+            },
+            {
+              "id": "UN-004",
+              "summary": "The device must prevent any programming pathway from delivering a dose that exceeds the…"
+            }
+          ]
+        },
+        {
+          "id": "DI-005",
+          "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…",
+          "full_text": "The device shall enforce drug-library hard maximum limits such that no programming path — manual entry, barcode-loaded order, or clinician override — can program a value exceeding the active library's hard cap.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test per VER-PP3500-SW-006: traverse all programming entry paths against a 200-medication test library; zero hard-limit breaches.",
+          "verification_method": "Software test (VER-PP3500-SW-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-006",
+              "summary": "Software test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-004",
+              "summary": "The device must prevent any programming pathway from delivering a dose that exceeds the…"
+            },
+            {
+              "id": "UN-009",
+              "summary": "Clinicians must be able to load a current institution-approved drug library onto the pump…"
+            }
+          ]
+        },
+        {
+          "id": "DI-015",
+          "summary": "The device shall maintain an on-board drug library of at least 200 medications with…",
+          "full_text": "The device shall maintain an on-board drug library of at least 200 medications with editable hard and soft limits, and shall display the active library version on the home screen and at therapy start.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Load reference library; verify count ≥200, version banner visible, version recorded in audit log.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-009",
+              "summary": "Clinicians must be able to load a current institution-approved drug library onto the pump…"
+            }
+          ]
+        },
+        {
+          "id": "DI-016",
+          "summary": "The device shall include an integrated 1D/2D barcode scanner capable of reading…",
+          "full_text": "The device shall include an integrated 1D/2D barcode scanner capable of reading medication container barcodes (NDC, GS1) and matching them against the active drug library before therapy start.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test with reference barcode set (50 medications, 5 print qualities); ≥98% first-read success; mismatch produces blocking alert.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-008",
+              "summary": "Clinicians must be able to verify the medication, concentration, and patient identity at…"
+            }
+          ]
+        },
+        {
+          "id": "DI-007",
+          "summary": "The device shall detect downstream occlusions in the range 3 to 15 psi and annunciate a…",
+          "full_text": "The device shall detect downstream occlusions in the range 3 to 15 psi and annunciate a high-priority occlusion alarm within the response time required by IEC 60601-2-24.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test per IEC 60601-2-24 §201.12.4.4.103 at 3 flow rates (1, 5, 25 mL/hr); alarm time within standard limits for n=10 trials.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-006",
+              "summary": "The device must detect downstream occlusions and air-in-line conditions and alert the…"
+            }
+          ]
+        },
+        {
+          "id": "DI-008",
+          "summary": "The device shall detect single air-in-line bubbles ≥50 µL and cumulative air ≥1 mL over a…",
+          "full_text": "The device shall detect single air-in-line bubbles ≥50 µL and cumulative air ≥1 mL over a 15-minute window and shall annunciate a high-priority air-in-line alarm.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test with calibrated air injector at 0.05, 0.1, and 0.5 mL boluses; 100% detection across n=20 trials per condition.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-006",
+              "summary": "The device must detect downstream occlusions and air-in-line conditions and alert the…"
+            }
+          ]
+        },
+        {
+          "id": "DI-009",
+          "summary": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the…",
+          "full_text": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the measured delivered volume deviates from the programmed volume by more than 10% over any rolling 1-hour window.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software-in-the-loop test injecting motor-position faults; alarm within 60 s and motor halt verified for all n=10 fault scenarios.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-001",
+              "summary": "The device must deliver on-demand analgesic bolus doses within prescribed limits to…"
+            },
+            {
+              "id": "UN-006",
+              "summary": "The device must detect downstream occlusions and air-in-line conditions and alert the…"
+            }
+          ]
+        },
+        {
+          "id": "DI-019",
+          "summary": "The device shall provide audible alarms compliant with IEC 60601-1-8 for high-, medium-,…",
+          "full_text": "The device shall provide audible alarms compliant with IEC 60601-1-8 for high-, medium-, and low-priority alarm categories, with sound pressure level adjustable from 45 to 80 dB(A) at 1 m.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Acoustic measurement in anechoic chamber; verify SPL range and alarm melody compliance for all alarm categories.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-010",
+              "summary": "Alarms must be reliably audible and distinguishable in a typical acute-care ward…"
+            }
+          ]
+        },
+        {
+          "id": "DI-006",
+          "summary": "The device shall prevent free-flow delivery of medication when the administration set is…",
+          "full_text": "The device shall prevent free-flow delivery of medication when the administration set is removed from the pumping mechanism, via an integral anti-siphon mechanism on the dedicated administration set.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test per IEC 60601-2-24 §201.12.1.103: open the door under +/-1 m head pressure with set installed; measure free-flow ≤0.1 mL over 60 s for n=10 sets.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-005",
+              "summary": "The device must prevent gravity-driven free flow of medication if the administration set…"
+            }
+          ]
+        },
+        {
+          "id": "DI-010",
+          "summary": "The device shall meet the general electrical-safety and essential-performance…",
+          "full_text": "The device shall meet the general electrical-safety and essential-performance requirements of IEC 60601-1 (3rd edition + A1) and the particular standard IEC 60601-2-24.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Third-party safety testing report demonstrating compliance with all applicable clauses; no deviations.",
+          "verification_method": "Electrical safety test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-005",
+              "summary": "The device must prevent gravity-driven free flow of medication if the administration set…"
+            },
+            {
+              "id": "UN-018",
+              "summary": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy…"
+            }
+          ]
+        },
+        {
+          "id": "DI-011",
+          "summary": "All patient-contacting materials of the dedicated administration set, lockbox exterior,…",
+          "full_text": "All patient-contacting materials of the dedicated administration set, lockbox exterior, and user-interface surfaces shall be biocompatible per ISO 10993-1 for the intended contact category (limited contact, intact skin / indirect blood contact via fluid path).",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Biocompatibility evaluation per ISO 10993-1 hazard table; cytotoxicity, sensitization, and irritation tests passed per ISO 10993-5/-10.",
+          "verification_method": "Biocompat test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-015",
+              "summary": "All patient-contacting materials (administration set, lockbox surfaces, button surfaces)…"
+            }
+          ]
+        },
+        {
+          "id": "DI-012",
+          "summary": "The device shall meet the EMC immunity and emissions requirements of IEC 60601-1-2 (4th…",
+          "full_text": "The device shall meet the EMC immunity and emissions requirements of IEC 60601-1-2 (4th edition) for professional healthcare facility environments.",
+          "category": "INTE",
+          "criticality": "CtS",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Third-party EMC test report; all immunity tests pass with essential performance maintained; emissions within Class B limits.",
+          "verification_method": "EMC test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-018",
+              "summary": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy…"
+            }
+          ]
+        },
+        {
+          "id": "DI-013",
+          "summary": "The device's numeric entry interface shall display all dose values with an unambiguous…",
+          "full_text": "The device's numeric entry interface shall display all dose values with an unambiguous decimal point that remains legible at viewing distances up to 1 m and viewing angles up to ±45°, and shall require explicit confirmation of decimal placement on entry.",
+          "category": "USAB",
+          "criticality": "CtS",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Summative usability test per IEC 62366-1 with n≥15 representative nurses; zero decimal-point misread errors across all critical tasks. Display contrast ratio ≥4.5:1 verified by inspection.",
+          "verification_method": "Usability test (summative)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-007",
+              "summary": "Clinicians must be able to enter and confirm decimal-point dose values without ambiguity,…"
+            },
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
+            }
+          ]
+        },
+        {
+          "id": "DI-014",
+          "summary": "The device shall provide a 3.5-inch color LCD touchscreen user interface supporting…",
+          "full_text": "The device shall provide a 3.5-inch color LCD touchscreen user interface supporting programming of all therapy parameters and review of active therapy.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Functional verification of all UI screens against UI specification; touch response <200 ms; n=3 units.",
+          "verification_method": "Bench test / inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
+            }
+          ]
+        },
+        {
+          "id": "DI-020",
+          "summary": "The device shall allow a trained nurse to complete the standard PCA programming task…",
+          "full_text": "The device shall allow a trained nurse to complete the standard PCA programming task (load library, scan medication, enter parameters, confirm, start therapy) in ≤5 minutes with zero use errors classified as harmful.",
+          "category": "USAB",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Summative usability test per IEC 62366-1 with n≥15 representative nurses; ≥90% task success; no harmful use errors.",
+          "verification_method": "Usability test (summative)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
+            }
+          ]
+        },
+        {
+          "id": "DI-021",
+          "summary": "The device shall present therapy parameters, alarm states, and remaining battery life on…",
+          "full_text": "The device shall present therapy parameters, alarm states, and remaining battery life on a home screen readable from 1 m in ambient light up to 1000 lux.",
+          "category": "USAB",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspection and formative usability evaluation under controlled lighting; all key fields legible by n≥10 evaluators.",
+          "verification_method": "Usability test (formative)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
+            },
+            {
+              "id": "UN-007",
+              "summary": "Clinicians must be able to enter and confirm decimal-point dose values without ambiguity,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-017",
+          "summary": "The device shall operate continuously on a single fully-charged internal lithium-ion…",
+          "full_text": "The device shall operate continuously on a single fully-charged internal lithium-ion battery for ≥150 hours under nominal therapy conditions (5 mL/hr continuous, 10 boluses/24 hr, default backlight).",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Battery endurance bench test on n=5 production-equivalent units; mean runtime ≥150 hr, minimum ≥140 hr.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-011",
+              "summary": "The pump must operate continuously on battery for at least one full nursing shift cycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-018",
+          "summary": "The device shall recharge from 0% to 100% state-of-charge in ≤4 hours from the supplied…",
+          "full_text": "The device shall recharge from 0% to 100% state-of-charge in ≤4 hours from the supplied charger.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test on n=5 units; all units reach 100% within 4 hr at 23 °C.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-011",
+              "summary": "The pump must operate continuously on battery for at least one full nursing shift cycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-030",
+          "summary": "The device housing, touchscreen, and lockbox shall withstand cleaning and disinfection…",
+          "full_text": "The device housing, touchscreen, and lockbox shall withstand cleaning and disinfection with hospital-approved quaternary ammonium and isopropyl alcohol wipes for the device service life without functional or cosmetic degradation.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Compatibility test: 1000 wipe cycles per agent on n=3 units; visual inspection and functional check pass.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-016",
+              "summary": "The device must support routine cleaning and disinfection per the institution's…"
+            }
+          ]
+        },
+        {
+          "id": "DI-032",
+          "summary": "The drug-cassette lockbox shall require a physical key or PIN-released latch and shall be…",
+          "full_text": "The drug-cassette lockbox shall require a physical key or PIN-released latch and shall be tamper-evident, providing visible indication of any unauthorized opening.",
+          "category": "SAFE",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Mechanical inspection and 50-cycle tamper-attempt test on n=5 lockboxes; all unauthorized entries leave visible evidence.",
+          "verification_method": "Bench test / inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-020",
+              "summary": "The lockbox / drug cassette must be tamper-evident and physically secure against…"
+            }
+          ]
+        },
+        {
+          "id": "DI-033",
+          "summary": "The device shall weigh ≤0.85 kg with a full medication cassette and shall provide both an…",
+          "full_text": "The device shall weigh ≤0.85 kg with a full medication cassette and shall provide both an IV-pole clamp and a belt-clip mounting interface.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Mass measurement on n=10 production-equivalent units; mechanical fit-check on standard IV pole and belt clip.",
+          "verification_method": "Bench test / inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-022",
+              "summary": "The device must be light enough and ergonomically suitable to attach to an IV pole,…"
+            },
+            {
+              "id": "UN-011",
+              "summary": "The pump must operate continuously on battery for at least one full nursing shift cycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-022",
+          "summary": "The device shall support 802.11 a/b/g/n/ac Wi-Fi (2.4 / 5 GHz) and Bluetooth 5.0…",
+          "full_text": "The device shall support 802.11 a/b/g/n/ac Wi-Fi (2.4 / 5 GHz) and Bluetooth 5.0 connectivity for integration with hospital networks.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Interoperability test against reference Wi-Fi infrastructure (WPA2-Enterprise); successful association and data exchange across 100 trials.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-012",
+              "summary": "The device must integrate with the hospital wireless network and EHR/EMR systems so that…"
+            }
+          ]
+        },
+        {
+          "id": "DI-023",
+          "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…",
+          "full_text": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events to a configurable EHR endpoint via HL7 v2.5 messaging, with optional HL7 FHIR R4 message profile.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Interface protocol test against reference HL7 listener; zero message validation errors over 1000-event run.",
+          "verification_method": "Bench test (interface)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-012",
+              "summary": "The device must integrate with the hospital wireless network and EHR/EMR systems so that…"
+            },
+            {
+              "id": "UN-021",
+              "summary": "The device should optionally publish therapy events via HL7 FHIR to support smart-pump…"
+            }
+          ]
+        },
+        {
+          "id": "DI-024",
+          "summary": "The device shall implement cybersecurity controls — including authenticated firmware…",
+          "full_text": "The device shall implement cybersecurity controls — including authenticated firmware update, signed software, role-based access control, encrypted network communications (TLS 1.2+), and tamper-evident audit logging — to protect against unauthorized access and modification.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Cybersecurity test per IEC 81001-5-1 and FDA premarket cybersecurity guidance; penetration test with zero exploitable critical findings.",
+          "verification_method": "Cybersecurity test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-013",
+              "summary": "The device must protect patient data and therapy integrity against unauthorized network…"
+            }
+          ]
+        },
+        {
+          "id": "DI-034",
+          "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…",
+          "full_text": "The device shall provide a tamper-evident audit log capable of storing at least 10,000 events (therapy, alarm, programming, security) with timestamp, user ID, and event type, and shall expose the log via the service interface and EHR gateway.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: generate 10,000 events, verify retention, integrity hash, and export; n=3 units.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-013",
+              "summary": "The device must protect patient data and therapy integrity against unauthorized network…"
+            },
+            {
+              "id": "UN-012",
+              "summary": "The device must integrate with the hospital wireless network and EHR/EMR systems so that…"
+            }
+          ]
+        },
+        {
+          "id": "DI-025",
+          "summary": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all…",
+          "full_text": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all third-party and open-source software components, in CycloneDX or SPDX format, updated for each released firmware version.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspection of SBOM artifact; coverage cross-checked against build manifest; vulnerability monitoring procedure in place.",
+          "verification_method": "Inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-013",
+              "summary": "The device must protect patient data and therapy integrity against unauthorized network…"
+            },
+            {
+              "id": "UN-019",
+              "summary": "Device software must be developed, documented, and verified under a software lifecycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-026",
+          "summary": "Device software shall be developed under an IEC 62304 lifecycle process at Software…",
+          "full_text": "Device software shall be developed under an IEC 62304 lifecycle process at Software Safety Class C, with documented requirements, architecture, unit/integration/system testing, and traceability.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Audit of software development files against IEC 62304 clauses 5 through 9; no major nonconformities.",
+          "verification_method": "Inspection / analysis",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-019",
+              "summary": "Device software must be developed, documented, and verified under a software lifecycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-027",
+          "summary": "The device development shall apply a usability engineering process compliant with IEC…",
+          "full_text": "The device development shall apply a usability engineering process compliant with IEC 62366-1, including a use specification, user-interface specification, formative evaluations, and a summative validation.",
+          "category": "USAB",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspection of usability engineering file; all required deliverables present and approved.",
+          "verification_method": "Inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
+            },
+            {
+              "id": "UN-019",
+              "summary": "Device software must be developed, documented, and verified under a software lifecycle…"
+            }
+          ]
+        },
+        {
+          "id": "DI-028",
+          "summary": "The device, primary packaging, and shipping packaging shall bear a Unique Device…",
+          "full_text": "The device, primary packaging, and shipping packaging shall bear a Unique Device Identifier (UDI) carrier and human-readable text per 21 CFR 830 and shall be submitted to GUDID.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspection of label artwork and GUDID submission record; UDI scannable on n=10 units.",
+          "verification_method": "Inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-018",
+              "summary": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy…"
+            }
+          ]
+        },
+        {
+          "id": "DI-029",
+          "summary": "The Instructions for Use (IFU), labeling, and warning content shall comply with 21 CFR…",
+          "full_text": "The Instructions for Use (IFU), labeling, and warning content shall comply with 21 CFR 801 and EU MDR Annex I labeling requirements, including the required opioid warning content.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Regulatory labeling review checklist; no open findings.",
+          "verification_method": "Inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-018",
+              "summary": "The device, packaging, and IFU must carry UDI, symbols, and labeling content that satisfy…"
+            }
+          ]
+        },
+        {
+          "id": "DI-031",
+          "summary": "The device shall provide a serviceability menu (PIN-protected) exposing diagnostic logs,…",
+          "full_text": "The device shall provide a serviceability menu (PIN-protected) exposing diagnostic logs, calibration routines, sensor readouts, and field-replaceable unit identifiers for biomedical engineering.",
+          "category": "FUNC",
+          "criticality": "Supporting",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Functional verification of all service menu items; access gated by service PIN.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "UN-017",
+              "summary": "The device must provide diagnostic logs, calibration access, and field-replaceable parts…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "software",
+      "title": "SW Reqs",
+      "id_prefix": "",
+      "source_files": [],
+      "items": [],
+      "missing_reason": "source_missing",
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "architecture",
+      "title": "Architecture",
+      "id_prefix": "M",
+      "source_files": [
+        "docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md"
+      ],
+      "items": [
+        {
+          "id": "M1",
+          "summary": "Therapy Control — Pump motor control, flow rate regulation, bolus delivery, lockout…",
+          "full_text": "Pump motor control, flow rate regulation, bolus delivery, lockout enforcement",
+          "category": "SiMD",
+          "criticality": "CtS, CtF, CtP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "C",
+          "module_name": "Therapy Control",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M2",
+          "summary": "Safety Monitor — Occlusion detection, air-in-line, dose ceiling, alarm prioritization…",
+          "full_text": "Occlusion detection, air-in-line, dose ceiling, alarm prioritization (IEC 60601-1-8)",
+          "category": "SiMD",
+          "criticality": "CtS, CtC",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "C",
+          "module_name": "Safety Monitor",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M3",
+          "summary": "Drug Library Enforcement — Local cache of cleared drug library; enforces…",
+          "full_text": "Local cache of cleared drug library; enforces dose/concentration limits at therapy start",
+          "category": "SiMD",
+          "criticality": "CtS, CtF",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "C",
+          "module_name": "Drug Library Enforcement",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M4",
+          "summary": "Clinician UI — Touchscreen workflow for programming therapy, viewing status, silencing…",
+          "full_text": "Touchscreen workflow for programming therapy, viewing status, silencing alarms",
+          "category": "SaMD (on-device)",
+          "criticality": "CtF, CtC",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "B",
+          "module_name": "Clinician UI",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M5",
+          "summary": "Patient Interface — Bolus request button, lockout feedback, patient-facing status LEDs",
+          "full_text": "Bolus request button, lockout feedback, patient-facing status LEDs",
+          "category": "SiMD",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "B",
+          "module_name": "Patient Interface",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M6",
+          "summary": "Cybersecurity & Comms — TLS stack, certificate store, firmware update verifier, audit…",
+          "full_text": "TLS stack, certificate store, firmware update verifier, audit log, Section 524B SBOM surface",
+          "category": "SiMD",
+          "criticality": "CtC, CtS",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "B",
+          "module_name": "Cybersecurity & Comms",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        },
+        {
+          "id": "M7",
+          "summary": "Device Platform — Boot, RTOS, watchdog, self-test, power management, time source, crypto…",
+          "full_text": "Boot, RTOS, watchdog, self-test, power management, time source, crypto primitives",
+          "category": "SiMD",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": "C",
+          "module_name": "Device Platform",
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": []
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": false,
+      "warnings": []
+    },
+    {
+      "key": "vnv",
+      "title": "VnV",
+      "id_prefix": "VER",
+      "source_files": [],
+      "items": [
+        {
+          "id": "VER-PP3500-BT-005",
+          "summary": "Bench test",
+          "full_text": "Bench test (VER-PP3500-BT-005)",
+          "category": null,
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-001",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            }
+          ]
+        },
+        {
+          "id": "VER-PP3500-SW-002",
+          "summary": "Software test",
+          "full_text": "Software test (VER-PP3500-SW-002)",
+          "category": null,
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-003",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
+            },
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            }
+          ]
+        },
+        {
+          "id": "VER-PP3500-SW-006",
+          "summary": "Software test",
+          "full_text": "Software test (VER-PP3500-SW-006)",
+          "category": null,
+          "criticality": null,
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-005",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": [
+        "v1 default: V&V nodes derived from DI verification column"
+      ]
+    },
+    {
+      "key": "risk",
+      "title": "Risk",
+      "id_prefix": "HZ",
+      "source_files": [
+        "docs/project/dhfs/pca-device/risk-management/risk-strategy.md"
+      ],
+      "items": [],
+      "missing_reason": "no_items_parsed",
+      "edges_known": true,
+      "warnings": [
+        "source is awaiting-content placeholder"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "DI-001",
+      "to": "VER-PP3500-BT-005",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-002",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-002",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "DI-003",
+      "to": "VER-PP3500-SW-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-003",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "DI-004",
+      "to": "VER-PP3500-SW-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "DI-005",
+      "to": "VER-PP3500-SW-006",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-015",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-008",
+      "to": "DI-016",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-007",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-008",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-010",
+      "to": "DI-019",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-006",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-015",
+      "to": "DI-011",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-012",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-014",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-020",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-017",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-018",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-016",
+      "to": "DI-030",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-020",
+      "to": "DI-032",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-022",
+      "to": "DI-033",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-033",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-022",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-023",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-021",
+      "to": "DI-023",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-024",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-034",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-034",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-025",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-025",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-026",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-027",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-027",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-028",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-029",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-017",
+      "to": "DI-031",
+      "kind": "un_to_di"
+    }
+  ],
+  "gaps": {
+    "orphans": {
+      "user_needs": [],
+      "design_inputs": [
+        "DI-002",
+        "DI-015",
+        "DI-016",
+        "DI-007",
+        "DI-008",
+        "DI-009",
+        "DI-019",
+        "DI-006",
+        "DI-010",
+        "DI-011",
+        "DI-012",
+        "DI-013",
+        "DI-014",
+        "DI-020",
+        "DI-021",
+        "DI-017",
+        "DI-018",
+        "DI-030",
+        "DI-032",
+        "DI-033",
+        "DI-022",
+        "DI-023",
+        "DI-024",
+        "DI-034",
+        "DI-025",
+        "DI-026",
+        "DI-027",
+        "DI-028",
+        "DI-029",
+        "DI-031"
+      ],
+      "software": [],
+      "architecture": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "vnv": [],
+      "risk": []
+    },
+    "broken_refs": [],
+    "empty_layers": [
+      "software",
+      "risk"
+    ]
+  },
+  "stats": {
+    "user_needs": {
+      "count": 22,
+      "with_forward": 22,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "design_inputs": {
+      "count": 34,
+      "with_forward": 4,
+      "with_reverse": 34,
+      "orphan": 30
+    },
+    "software": {
+      "count": 0,
+      "missing_reason": "source_missing",
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "architecture": {
+      "count": 7,
+      "edges_known": false,
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 7
+    },
+    "vnv": {
+      "count": 3,
+      "with_forward": 0,
+      "with_reverse": 3,
+      "orphan": 0
+    },
+    "risk": {
+      "count": 0,
+      "missing_reason": "no_items_parsed",
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    }
+  }
+}
