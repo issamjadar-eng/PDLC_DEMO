@@ -3953,6 +3953,1718 @@
         "evidence_source_hash": null,
         "claude_md_hash": null
       }
+    },
+    "Q-CS1": {
+      "title": "Cloud SAD",
+      "description": "The Cloud-Suite Interface Architecture documents the dependency boundary that the regulated devices (PP3500 pump and the MDDS connectivity-adapter) consume from the cloud-suite. Components in scope: drug-library-manager (D-series), fleet-management, compliance-reports, analytics-dashboard, inventory-tracker, alerts-engine, clinical-interface. The SAD focuses on interface contracts, SBOM, storage architecture, and OTA / device-management hooks \u2014 not on the cloud features themselves.",
+      "why_important_in_project": "Cloud-suite itself is non-medical and is not directly filed under 510(k), but FDA reviewers need to see that the regulated devices' dependency on it is well-characterized. This SAD documents what the pump/adapter expects from the cloud, the trust boundary, and how a cloud-side change can or cannot impact regulated device behavior.",
+      "main_topics": [
+        {
+          "name": "Dependency boundary",
+          "summary": "What pump + adapter consume from cloud; what is opaque"
+        },
+        {
+          "name": "D1\u2013D6 module overview",
+          "summary": "Drug-library-manager: authoring, validation, signing, audit (Part 11)"
+        },
+        {
+          "name": "OTA / device-management",
+          "summary": "Firmware update channel (ENG17 secure boot verifier on the device side)"
+        },
+        {
+          "name": "Storage architecture",
+          "summary": "PHI handling, encryption at rest, retention, multi-tenant isolation"
+        },
+        {
+          "name": "SBOM transparency",
+          "summary": "Cloud SBOM contributes to the device-side cyber posture (FDA cyber \u00a7V)"
+        },
+        {
+          "name": "Failure isolation",
+          "summary": "Cloud outage MUST NOT degrade pump local safety behaviors"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V (dependency)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.3 (interface design)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS1": {
+      "title": "Cloud SAD",
+      "description": "The Cloud-Suite Interface Architecture documents the dependency boundary that the regulated devices (PP3500 pump and the MDDS connectivity-adapter) consume from the cloud-suite. Components in scope: drug-library-manager (D-series), fleet-management, compliance-reports, analytics-dashboard, inventory-tracker, alerts-engine, clinical-interface. The SAD focuses on interface contracts, SBOM, storage architecture, and OTA / device-management hooks \u2014 not on the cloud features themselves.",
+      "why_important_in_project": "Cloud-suite itself is non-medical and is not directly filed under 510(k), but FDA reviewers need to see that the regulated devices' dependency on it is well-characterized. This SAD documents what the pump/adapter expects from the cloud, the trust boundary, and how a cloud-side change can or cannot impact regulated device behavior.",
+      "main_topics": [
+        {
+          "name": "Dependency boundary",
+          "summary": "What pump + adapter consume from cloud; what is opaque"
+        },
+        {
+          "name": "D1\u2013D6 module overview",
+          "summary": "Drug-library-manager: authoring, validation, signing, audit (Part 11)"
+        },
+        {
+          "name": "OTA / device-management",
+          "summary": "Firmware update channel (ENG17 secure boot verifier on the device side)"
+        },
+        {
+          "name": "Storage architecture",
+          "summary": "PHI handling, encryption at rest, retention, multi-tenant isolation"
+        },
+        {
+          "name": "SBOM transparency",
+          "summary": "Cloud SBOM contributes to the device-side cyber posture (FDA cyber \u00a7V)"
+        },
+        {
+          "name": "Failure isolation",
+          "summary": "Cloud outage MUST NOT degrade pump local safety behaviors"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V (dependency)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.3 (interface design)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS1": {
+      "title": "Cloud SAD",
+      "description": "The Cloud-Suite Interface Architecture documents the dependency boundary that the regulated devices (PP3500 pump and the MDDS connectivity-adapter) consume from the cloud-suite. Components in scope: drug-library-manager (D-series), fleet-management, compliance-reports, analytics-dashboard, inventory-tracker, alerts-engine, clinical-interface. The SAD focuses on interface contracts, SBOM, storage architecture, and OTA / device-management hooks \u2014 not on the cloud features themselves.",
+      "why_important_in_project": "Cloud-suite itself is non-medical and is not directly filed under 510(k), but FDA reviewers need to see that the regulated devices' dependency on it is well-characterized. This SAD documents what the pump/adapter expects from the cloud, the trust boundary, and how a cloud-side change can or cannot impact regulated device behavior.",
+      "main_topics": [
+        {
+          "name": "Dependency boundary",
+          "summary": "What pump + adapter consume from cloud; what is opaque"
+        },
+        {
+          "name": "D1\u2013D6 module overview",
+          "summary": "Drug-library-manager: authoring, validation, signing, audit (Part 11)"
+        },
+        {
+          "name": "OTA / device-management",
+          "summary": "Firmware update channel (ENG17 secure boot verifier on the device side)"
+        },
+        {
+          "name": "Storage architecture",
+          "summary": "PHI handling, encryption at rest, retention, multi-tenant isolation"
+        },
+        {
+          "name": "SBOM transparency",
+          "summary": "Cloud SBOM contributes to the device-side cyber posture (FDA cyber \u00a7V)"
+        },
+        {
+          "name": "Failure isolation",
+          "summary": "Cloud outage MUST NOT degrade pump local safety behaviors"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V (dependency)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.3 (interface design)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS1": {
+      "title": "Cloud SAD",
+      "description": "The Cloud-Suite Interface Architecture documents the dependency boundary that the regulated devices (PP3500 pump and the MDDS connectivity-adapter) consume from the cloud-suite. Components in scope: drug-library-manager (D-series), fleet-management, compliance-reports, analytics-dashboard, inventory-tracker, alerts-engine, clinical-interface. The SAD focuses on interface contracts, SBOM, storage architecture, and OTA / device-management hooks \u2014 not on the cloud features themselves.",
+      "why_important_in_project": "Cloud-suite itself is non-medical and is not directly filed under 510(k), but FDA reviewers need to see that the regulated devices' dependency on it is well-characterized. This SAD documents what the pump/adapter expects from the cloud, the trust boundary, and how a cloud-side change can or cannot impact regulated device behavior.",
+      "main_topics": [
+        {
+          "name": "Dependency boundary",
+          "summary": "What pump + adapter consume from cloud; what is opaque"
+        },
+        {
+          "name": "D1\u2013D6 module overview",
+          "summary": "Drug-library-manager: authoring, validation, signing, audit (Part 11)"
+        },
+        {
+          "name": "OTA / device-management",
+          "summary": "Firmware update channel (ENG17 secure boot verifier on the device side)"
+        },
+        {
+          "name": "Storage architecture",
+          "summary": "PHI handling, encryption at rest, retention, multi-tenant isolation"
+        },
+        {
+          "name": "SBOM transparency",
+          "summary": "Cloud SBOM contributes to the device-side cyber posture (FDA cyber \u00a7V)"
+        },
+        {
+          "name": "Failure isolation",
+          "summary": "Cloud outage MUST NOT degrade pump local safety behaviors"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V (dependency)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304 \u00a75.3 (interface design)",
+          "role": "supporting"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "architecture",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS26": {
+      "title": "Cloud D&D Plan",
+      "description": "D&D Plan for the cloud-suite dependency contract. Defines how cloud-side changes are reviewed for impact on regulated devices, change-control gates with the pca-device + connectivity-adapter teams, and release coordination.",
+      "why_important_in_project": "Cloud-suite ships continuously but the regulated devices have controlled releases. This plan documents how cloud changes that touch the dependency contract trigger device-side design control review.",
+      "main_topics": [
+        {
+          "name": "Dependency-impact review process",
+          "summary": "Which cloud changes go to device-design-review"
+        },
+        {
+          "name": "Release coordination",
+          "summary": "Cloud CI/CD vs. device milestone cadence"
+        },
+        {
+          "name": "Cross-team gates",
+          "summary": "Cloud + pump + adapter sync points"
+        },
+        {
+          "name": "Rollback strategy",
+          "summary": "How to revert a cloud-side change without device outage"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b) (applied to dependency contract)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS26": {
+      "title": "Cloud D&D Plan",
+      "description": "D&D Plan for the cloud-suite dependency contract. Defines how cloud-side changes are reviewed for impact on regulated devices, change-control gates with the pca-device + connectivity-adapter teams, and release coordination.",
+      "why_important_in_project": "Cloud-suite ships continuously but the regulated devices have controlled releases. This plan documents how cloud changes that touch the dependency contract trigger device-side design control review.",
+      "main_topics": [
+        {
+          "name": "Dependency-impact review process",
+          "summary": "Which cloud changes go to device-design-review"
+        },
+        {
+          "name": "Release coordination",
+          "summary": "Cloud CI/CD vs. device milestone cadence"
+        },
+        {
+          "name": "Cross-team gates",
+          "summary": "Cloud + pump + adapter sync points"
+        },
+        {
+          "name": "Rollback strategy",
+          "summary": "How to revert a cloud-side change without device outage"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b) (applied to dependency contract)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS26": {
+      "title": "Cloud D&D Plan",
+      "description": "D&D Plan for the cloud-suite dependency contract. Defines how cloud-side changes are reviewed for impact on regulated devices, change-control gates with the pca-device + connectivity-adapter teams, and release coordination.",
+      "why_important_in_project": "Cloud-suite ships continuously but the regulated devices have controlled releases. This plan documents how cloud changes that touch the dependency contract trigger device-side design control review.",
+      "main_topics": [
+        {
+          "name": "Dependency-impact review process",
+          "summary": "Which cloud changes go to device-design-review"
+        },
+        {
+          "name": "Release coordination",
+          "summary": "Cloud CI/CD vs. device milestone cadence"
+        },
+        {
+          "name": "Cross-team gates",
+          "summary": "Cloud + pump + adapter sync points"
+        },
+        {
+          "name": "Rollback strategy",
+          "summary": "How to revert a cloud-side change without device outage"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b) (applied to dependency contract)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS26": {
+      "title": "Cloud D&D Plan",
+      "description": "D&D Plan for the cloud-suite dependency contract. Defines how cloud-side changes are reviewed for impact on regulated devices, change-control gates with the pca-device + connectivity-adapter teams, and release coordination.",
+      "why_important_in_project": "Cloud-suite ships continuously but the regulated devices have controlled releases. This plan documents how cloud changes that touch the dependency contract trigger device-side design control review.",
+      "main_topics": [
+        {
+          "name": "Dependency-impact review process",
+          "summary": "Which cloud changes go to device-design-review"
+        },
+        {
+          "name": "Release coordination",
+          "summary": "Cloud CI/CD vs. device milestone cadence"
+        },
+        {
+          "name": "Cross-team gates",
+          "summary": "Cloud + pump + adapter sync points"
+        },
+        {
+          "name": "Rollback strategy",
+          "summary": "How to revert a cloud-side change without device outage"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(b) (applied to dependency contract)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.2",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "plans",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS25": {
+      "title": "Cloud User Needs",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure with no direct clinical user contact. End-user-facing clinical workflows live in the pca-device and (where applicable) clinical-interface app under the parent cloud-suite. Cloud-suite's \"users\" are the regulated devices themselves consuming APIs.",
+      "why_important_in_project": "Documenting the N/A rationale prevents confusion: cloud-suite's consumer is not a clinical end-user but the regulated devices. Clinical user-needs are captured under pca-device.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope",
+          "summary": "No clinical UI in cloud-suite scope"
+        },
+        {
+          "name": "Device consumers",
+          "summary": "pca-device + connectivity-adapter consume cloud APIs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS25": {
+      "title": "Cloud User Needs",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure with no direct clinical user contact. End-user-facing clinical workflows live in the pca-device and (where applicable) clinical-interface app under the parent cloud-suite. Cloud-suite's \"users\" are the regulated devices themselves consuming APIs.",
+      "why_important_in_project": "Documenting the N/A rationale prevents confusion: cloud-suite's consumer is not a clinical end-user but the regulated devices. Clinical user-needs are captured under pca-device.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope",
+          "summary": "No clinical UI in cloud-suite scope"
+        },
+        {
+          "name": "Device consumers",
+          "summary": "pca-device + connectivity-adapter consume cloud APIs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS25": {
+      "title": "Cloud User Needs",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure with no direct clinical user contact. End-user-facing clinical workflows live in the pca-device and (where applicable) clinical-interface app under the parent cloud-suite. Cloud-suite's \"users\" are the regulated devices themselves consuming APIs.",
+      "why_important_in_project": "Documenting the N/A rationale prevents confusion: cloud-suite's consumer is not a clinical end-user but the regulated devices. Clinical user-needs are captured under pca-device.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope",
+          "summary": "No clinical UI in cloud-suite scope"
+        },
+        {
+          "name": "Device consumers",
+          "summary": "pca-device + connectivity-adapter consume cloud APIs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS25": {
+      "title": "Cloud User Needs",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure with no direct clinical user contact. End-user-facing clinical workflows live in the pca-device and (where applicable) clinical-interface app under the parent cloud-suite. Cloud-suite's \"users\" are the regulated devices themselves consuming APIs.",
+      "why_important_in_project": "Documenting the N/A rationale prevents confusion: cloud-suite's consumer is not a clinical end-user but the regulated devices. Clinical user-needs are captured under pca-device.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope",
+          "summary": "No clinical UI in cloud-suite scope"
+        },
+        {
+          "name": "Device consumers",
+          "summary": "pca-device + connectivity-adapter consume cloud APIs"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "user-needs",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS2": {
+      "title": "Cloud SRS",
+      "description": "Software Requirements Specification for the cloud-suite dependency interface \u2014 the API contract the pump and adapter rely on. Covers drug-library payload format (D1\u2013D3), authoring + signing (D4), storage (D2), audit-log (D6 Part 11), and OTA delivery (ENG17 verifier on the device side).",
+      "why_important_in_project": "The cloud SRS is what the device-side design inputs trace TO when they depend on a cloud capability. Without this anchor, the device SRS would have dangling external references; with it, the trace closes cleanly.",
+      "main_topics": [
+        {
+          "name": "Drug-library payload contract",
+          "summary": "Schema + serialization (ENG3); signing (D4 / ENG7)"
+        },
+        {
+          "name": "Storage requirements",
+          "summary": "Encryption at rest, tenant isolation, retention"
+        },
+        {
+          "name": "OTA update API",
+          "summary": "Payload format + signing for firmware updates (ENG17 device-side)"
+        },
+        {
+          "name": "Audit-log API (Part 11)",
+          "summary": "D6 audit-log infrastructure / 21 CFR Part 11"
+        },
+        {
+          "name": "AI/ML envelope APIs (LMR2)",
+          "summary": "Model delivery + drift telemetry \u2014 predictive-alarm support"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity \u00a7V (interface req)",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS2": {
+      "title": "Cloud SRS",
+      "description": "Software Requirements Specification for the cloud-suite dependency interface \u2014 the API contract the pump and adapter rely on. Covers drug-library payload format (D1\u2013D3), authoring + signing (D4), storage (D2), audit-log (D6 Part 11), and OTA delivery (ENG17 verifier on the device side).",
+      "why_important_in_project": "The cloud SRS is what the device-side design inputs trace TO when they depend on a cloud capability. Without this anchor, the device SRS would have dangling external references; with it, the trace closes cleanly.",
+      "main_topics": [
+        {
+          "name": "Drug-library payload contract",
+          "summary": "Schema + serialization (ENG3); signing (D4 / ENG7)"
+        },
+        {
+          "name": "Storage requirements",
+          "summary": "Encryption at rest, tenant isolation, retention"
+        },
+        {
+          "name": "OTA update API",
+          "summary": "Payload format + signing for firmware updates (ENG17 device-side)"
+        },
+        {
+          "name": "Audit-log API (Part 11)",
+          "summary": "D6 audit-log infrastructure / 21 CFR Part 11"
+        },
+        {
+          "name": "AI/ML envelope APIs (LMR2)",
+          "summary": "Model delivery + drift telemetry \u2014 predictive-alarm support"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity \u00a7V (interface req)",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS2": {
+      "title": "Cloud SRS",
+      "description": "Software Requirements Specification for the cloud-suite dependency interface \u2014 the API contract the pump and adapter rely on. Covers drug-library payload format (D1\u2013D3), authoring + signing (D4), storage (D2), audit-log (D6 Part 11), and OTA delivery (ENG17 verifier on the device side).",
+      "why_important_in_project": "The cloud SRS is what the device-side design inputs trace TO when they depend on a cloud capability. Without this anchor, the device SRS would have dangling external references; with it, the trace closes cleanly.",
+      "main_topics": [
+        {
+          "name": "Drug-library payload contract",
+          "summary": "Schema + serialization (ENG3); signing (D4 / ENG7)"
+        },
+        {
+          "name": "Storage requirements",
+          "summary": "Encryption at rest, tenant isolation, retention"
+        },
+        {
+          "name": "OTA update API",
+          "summary": "Payload format + signing for firmware updates (ENG17 device-side)"
+        },
+        {
+          "name": "Audit-log API (Part 11)",
+          "summary": "D6 audit-log infrastructure / 21 CFR Part 11"
+        },
+        {
+          "name": "AI/ML envelope APIs (LMR2)",
+          "summary": "Model delivery + drift telemetry \u2014 predictive-alarm support"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity \u00a7V (interface req)",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS2": {
+      "title": "Cloud SRS",
+      "description": "Software Requirements Specification for the cloud-suite dependency interface \u2014 the API contract the pump and adapter rely on. Covers drug-library payload format (D1\u2013D3), authoring + signing (D4), storage (D2), audit-log (D6 Part 11), and OTA delivery (ENG17 verifier on the device side).",
+      "why_important_in_project": "The cloud SRS is what the device-side design inputs trace TO when they depend on a cloud capability. Without this anchor, the device SRS would have dangling external references; with it, the trace closes cleanly.",
+      "main_topics": [
+        {
+          "name": "Drug-library payload contract",
+          "summary": "Schema + serialization (ENG3); signing (D4 / ENG7)"
+        },
+        {
+          "name": "Storage requirements",
+          "summary": "Encryption at rest, tenant isolation, retention"
+        },
+        {
+          "name": "OTA update API",
+          "summary": "Payload format + signing for firmware updates (ENG17 device-side)"
+        },
+        {
+          "name": "Audit-log API (Part 11)",
+          "summary": "D6 audit-log infrastructure / 21 CFR Part 11"
+        },
+        {
+          "name": "AI/ML envelope APIs (LMR2)",
+          "summary": "Model delivery + drift telemetry \u2014 predictive-alarm support"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity \u00a7V (interface req)",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR Part 11 (D2 + D6)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "requirements",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS27": {
+      "title": "Cloud V&V Protocol & Report",
+      "description": "V&V of the cloud-suite's device-facing interfaces and the LMR2 AI/ML envelope back-end. Covers API conformance, payload integrity, OTA signing/verification, audit-log Part 11 conformance, and AI model delivery + drift-monitoring.",
+      "why_important_in_project": "The regulated devices ASSUME cloud interfaces behave per the SRS. V&V evidence is what supports that assumption \u2014 it's how a 510(k) reviewer accepts that the pump's drug-library lookup is trustworthy.",
+      "main_topics": [
+        {
+          "name": "API conformance tests",
+          "summary": "Cloud-side endpoints match the device-side contract"
+        },
+        {
+          "name": "Payload integrity tests",
+          "summary": "Signed drug-library + firmware payloads validated end-to-end"
+        },
+        {
+          "name": "Audit-log Part 11 tests",
+          "summary": "21 CFR Part 11 evidence (D2 + D6)"
+        },
+        {
+          "name": "AI/ML delivery + drift tests",
+          "summary": "LMR2 envelope \u2014 model deployment, telemetry validation"
+        },
+        {
+          "name": "Cross-tenant isolation",
+          "summary": "Multi-tenant security boundary tests"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a75.6, \u00a75.7 (applied to interface)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting (LMR2)"
+        },
+        {
+          "citation": "21 CFR Part 11 \u00a711.10",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS27": {
+      "title": "Cloud V&V Protocol & Report",
+      "description": "V&V of the cloud-suite's device-facing interfaces and the LMR2 AI/ML envelope back-end. Covers API conformance, payload integrity, OTA signing/verification, audit-log Part 11 conformance, and AI model delivery + drift-monitoring.",
+      "why_important_in_project": "The regulated devices ASSUME cloud interfaces behave per the SRS. V&V evidence is what supports that assumption \u2014 it's how a 510(k) reviewer accepts that the pump's drug-library lookup is trustworthy.",
+      "main_topics": [
+        {
+          "name": "API conformance tests",
+          "summary": "Cloud-side endpoints match the device-side contract"
+        },
+        {
+          "name": "Payload integrity tests",
+          "summary": "Signed drug-library + firmware payloads validated end-to-end"
+        },
+        {
+          "name": "Audit-log Part 11 tests",
+          "summary": "21 CFR Part 11 evidence (D2 + D6)"
+        },
+        {
+          "name": "AI/ML delivery + drift tests",
+          "summary": "LMR2 envelope \u2014 model deployment, telemetry validation"
+        },
+        {
+          "name": "Cross-tenant isolation",
+          "summary": "Multi-tenant security boundary tests"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a75.6, \u00a75.7 (applied to interface)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting (LMR2)"
+        },
+        {
+          "citation": "21 CFR Part 11 \u00a711.10",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS27": {
+      "title": "Cloud V&V Protocol & Report",
+      "description": "V&V of the cloud-suite's device-facing interfaces and the LMR2 AI/ML envelope back-end. Covers API conformance, payload integrity, OTA signing/verification, audit-log Part 11 conformance, and AI model delivery + drift-monitoring.",
+      "why_important_in_project": "The regulated devices ASSUME cloud interfaces behave per the SRS. V&V evidence is what supports that assumption \u2014 it's how a 510(k) reviewer accepts that the pump's drug-library lookup is trustworthy.",
+      "main_topics": [
+        {
+          "name": "API conformance tests",
+          "summary": "Cloud-side endpoints match the device-side contract"
+        },
+        {
+          "name": "Payload integrity tests",
+          "summary": "Signed drug-library + firmware payloads validated end-to-end"
+        },
+        {
+          "name": "Audit-log Part 11 tests",
+          "summary": "21 CFR Part 11 evidence (D2 + D6)"
+        },
+        {
+          "name": "AI/ML delivery + drift tests",
+          "summary": "LMR2 envelope \u2014 model deployment, telemetry validation"
+        },
+        {
+          "name": "Cross-tenant isolation",
+          "summary": "Multi-tenant security boundary tests"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a75.6, \u00a75.7 (applied to interface)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting (LMR2)"
+        },
+        {
+          "citation": "21 CFR Part 11 \u00a711.10",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS27": {
+      "title": "Cloud V&V Protocol & Report",
+      "description": "V&V of the cloud-suite's device-facing interfaces and the LMR2 AI/ML envelope back-end. Covers API conformance, payload integrity, OTA signing/verification, audit-log Part 11 conformance, and AI model delivery + drift-monitoring.",
+      "why_important_in_project": "The regulated devices ASSUME cloud interfaces behave per the SRS. V&V evidence is what supports that assumption \u2014 it's how a 510(k) reviewer accepts that the pump's drug-library lookup is trustworthy.",
+      "main_topics": [
+        {
+          "name": "API conformance tests",
+          "summary": "Cloud-side endpoints match the device-side contract"
+        },
+        {
+          "name": "Payload integrity tests",
+          "summary": "Signed drug-library + firmware payloads validated end-to-end"
+        },
+        {
+          "name": "Audit-log Part 11 tests",
+          "summary": "21 CFR Part 11 evidence (D2 + D6)"
+        },
+        {
+          "name": "AI/ML delivery + drift tests",
+          "summary": "LMR2 envelope \u2014 model deployment, telemetry validation"
+        },
+        {
+          "name": "Cross-tenant isolation",
+          "summary": "Multi-tenant security boundary tests"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "IEC 62304 \u00a75.6, \u00a75.7 (applied to interface)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Good Machine Learning Practice (Oct 2021)",
+          "role": "supporting (LMR2)"
+        },
+        {
+          "citation": "21 CFR Part 11 \u00a711.10",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "vnv",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS28": {
+      "title": "Cloud Trace Matrix",
+      "description": "Bidirectional trace linking cloud-side SRS requirements (the dependency contract) \u2194 architecture \u2194 V&V \u2194 risk controls. Crosswalks with the device-side trace where the device requirement consumes a cloud capability.",
+      "why_important_in_project": "Where pca-device requires a cloud capability, this trace closes the loop so reviewers can follow the dependency contract end-to-end. Without it, the device trace has dangling external references.",
+      "main_topics": [
+        {
+          "name": "Dependency-contract trace",
+          "summary": "Cloud SRS \u2192 architecture \u2192 V&V"
+        },
+        {
+          "name": "Cross-DHF crosswalk",
+          "summary": "Device requirements pointing into cloud capabilities"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Cloud-side hazards (outage, drift, tenant leak) \u2192 controls"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g) (applied to dependency)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS28": {
+      "title": "Cloud Trace Matrix",
+      "description": "Bidirectional trace linking cloud-side SRS requirements (the dependency contract) \u2194 architecture \u2194 V&V \u2194 risk controls. Crosswalks with the device-side trace where the device requirement consumes a cloud capability.",
+      "why_important_in_project": "Where pca-device requires a cloud capability, this trace closes the loop so reviewers can follow the dependency contract end-to-end. Without it, the device trace has dangling external references.",
+      "main_topics": [
+        {
+          "name": "Dependency-contract trace",
+          "summary": "Cloud SRS \u2192 architecture \u2192 V&V"
+        },
+        {
+          "name": "Cross-DHF crosswalk",
+          "summary": "Device requirements pointing into cloud capabilities"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Cloud-side hazards (outage, drift, tenant leak) \u2192 controls"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g) (applied to dependency)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS28": {
+      "title": "Cloud Trace Matrix",
+      "description": "Bidirectional trace linking cloud-side SRS requirements (the dependency contract) \u2194 architecture \u2194 V&V \u2194 risk controls. Crosswalks with the device-side trace where the device requirement consumes a cloud capability.",
+      "why_important_in_project": "Where pca-device requires a cloud capability, this trace closes the loop so reviewers can follow the dependency contract end-to-end. Without it, the device trace has dangling external references.",
+      "main_topics": [
+        {
+          "name": "Dependency-contract trace",
+          "summary": "Cloud SRS \u2192 architecture \u2192 V&V"
+        },
+        {
+          "name": "Cross-DHF crosswalk",
+          "summary": "Device requirements pointing into cloud capabilities"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Cloud-side hazards (outage, drift, tenant leak) \u2192 controls"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g) (applied to dependency)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS28": {
+      "title": "Cloud Trace Matrix",
+      "description": "Bidirectional trace linking cloud-side SRS requirements (the dependency contract) \u2194 architecture \u2194 V&V \u2194 risk controls. Crosswalks with the device-side trace where the device requirement consumes a cloud capability.",
+      "why_important_in_project": "Where pca-device requires a cloud capability, this trace closes the loop so reviewers can follow the dependency contract end-to-end. Without it, the device trace has dangling external references.",
+      "main_topics": [
+        {
+          "name": "Dependency-contract trace",
+          "summary": "Cloud SRS \u2192 architecture \u2192 V&V"
+        },
+        {
+          "name": "Cross-DHF crosswalk",
+          "summary": "Device requirements pointing into cloud capabilities"
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "Cloud-side hazards (outage, drift, tenant leak) \u2192 controls"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(g) (applied to dependency)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "trace-matrix",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS16": {
+      "title": "Cloud Tool Validation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure. Tooling used by cloud-suite development (CI/CD, terraform, k8s, infra-as-code) is not regulated under IEC 62304 tool validation. Tools that DO touch regulated artifacts (e.g., the AI/ML training pipeline in ENG19) are validated under pca-device tool-validation.",
+      "why_important_in_project": "Scoping decision documented: cloud-side infra tooling stays in the cloud-suite's general SDLC. Tools that produce regulated outputs are pulled into pca-device's tool-validation file.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "Cloud infra tools out of IEC 62304 scope"
+        },
+        {
+          "name": "Regulated-output tools cross-link",
+          "summary": "AI/ML pipeline (ENG19) \u2192 pca-device tool-validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS16": {
+      "title": "Cloud Tool Validation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure. Tooling used by cloud-suite development (CI/CD, terraform, k8s, infra-as-code) is not regulated under IEC 62304 tool validation. Tools that DO touch regulated artifacts (e.g., the AI/ML training pipeline in ENG19) are validated under pca-device tool-validation.",
+      "why_important_in_project": "Scoping decision documented: cloud-side infra tooling stays in the cloud-suite's general SDLC. Tools that produce regulated outputs are pulled into pca-device's tool-validation file.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "Cloud infra tools out of IEC 62304 scope"
+        },
+        {
+          "name": "Regulated-output tools cross-link",
+          "summary": "AI/ML pipeline (ENG19) \u2192 pca-device tool-validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS16": {
+      "title": "Cloud Tool Validation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure. Tooling used by cloud-suite development (CI/CD, terraform, k8s, infra-as-code) is not regulated under IEC 62304 tool validation. Tools that DO touch regulated artifacts (e.g., the AI/ML training pipeline in ENG19) are validated under pca-device tool-validation.",
+      "why_important_in_project": "Scoping decision documented: cloud-side infra tooling stays in the cloud-suite's general SDLC. Tools that produce regulated outputs are pulled into pca-device's tool-validation file.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "Cloud infra tools out of IEC 62304 scope"
+        },
+        {
+          "name": "Regulated-output tools cross-link",
+          "summary": "AI/ML pipeline (ENG19) \u2192 pca-device tool-validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS16": {
+      "title": "Cloud Tool Validation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure. Tooling used by cloud-suite development (CI/CD, terraform, k8s, infra-as-code) is not regulated under IEC 62304 tool validation. Tools that DO touch regulated artifacts (e.g., the AI/ML training pipeline in ENG19) are validated under pca-device tool-validation.",
+      "why_important_in_project": "Scoping decision documented: cloud-side infra tooling stays in the cloud-suite's general SDLC. Tools that produce regulated outputs are pulled into pca-device's tool-validation file.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "Cloud infra tools out of IEC 62304 scope"
+        },
+        {
+          "name": "Regulated-output tools cross-link",
+          "summary": "AI/ML pipeline (ENG19) \u2192 pca-device tool-validation"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "tool-validation",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS9": {
+      "title": "Cloud Risk Management Report",
+      "description": "Cloud-side dependency risks: outage, drift / version skew vs. devices, multi-tenant data leak, OTA payload integrity failure, audit-log corruption (Part 11), AI/ML model drift (LMR2 envelope). Controls flow to ENG3 (payload format), ENG4 (crypto), ENG7 (signing), ENG8 (audit log), ENG17 (OTA verifier).",
+      "why_important_in_project": "Even though cloud-suite isn't a regulated device, its failure modes can propagate into regulated device safety. This risk file is the FDA-visible analysis of those propagation paths.",
+      "main_topics": [
+        {
+          "name": "Outage / availability risks",
+          "summary": "Pump pump must stay safe under cloud outage"
+        },
+        {
+          "name": "Data-integrity risks",
+          "summary": "Drug-library / firmware / model payloads corrupted"
+        },
+        {
+          "name": "Multi-tenant security",
+          "summary": "PHI leakage / cross-tenant trust violations"
+        },
+        {
+          "name": "AI/ML drift (LMR2)",
+          "summary": "Model distribution shift, retraining gap, degradation"
+        },
+        {
+          "name": "Audit-log integrity (Part 11)",
+          "summary": "Log tampering / loss of regulatory evidence"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 80001-1:2010 (IT-network risk)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS9": {
+      "title": "Cloud Risk Management Report",
+      "description": "Cloud-side dependency risks: outage, drift / version skew vs. devices, multi-tenant data leak, OTA payload integrity failure, audit-log corruption (Part 11), AI/ML model drift (LMR2 envelope). Controls flow to ENG3 (payload format), ENG4 (crypto), ENG7 (signing), ENG8 (audit log), ENG17 (OTA verifier).",
+      "why_important_in_project": "Even though cloud-suite isn't a regulated device, its failure modes can propagate into regulated device safety. This risk file is the FDA-visible analysis of those propagation paths.",
+      "main_topics": [
+        {
+          "name": "Outage / availability risks",
+          "summary": "Pump pump must stay safe under cloud outage"
+        },
+        {
+          "name": "Data-integrity risks",
+          "summary": "Drug-library / firmware / model payloads corrupted"
+        },
+        {
+          "name": "Multi-tenant security",
+          "summary": "PHI leakage / cross-tenant trust violations"
+        },
+        {
+          "name": "AI/ML drift (LMR2)",
+          "summary": "Model distribution shift, retraining gap, degradation"
+        },
+        {
+          "name": "Audit-log integrity (Part 11)",
+          "summary": "Log tampering / loss of regulatory evidence"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 80001-1:2010 (IT-network risk)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS9": {
+      "title": "Cloud Risk Management Report",
+      "description": "Cloud-side dependency risks: outage, drift / version skew vs. devices, multi-tenant data leak, OTA payload integrity failure, audit-log corruption (Part 11), AI/ML model drift (LMR2 envelope). Controls flow to ENG3 (payload format), ENG4 (crypto), ENG7 (signing), ENG8 (audit log), ENG17 (OTA verifier).",
+      "why_important_in_project": "Even though cloud-suite isn't a regulated device, its failure modes can propagate into regulated device safety. This risk file is the FDA-visible analysis of those propagation paths.",
+      "main_topics": [
+        {
+          "name": "Outage / availability risks",
+          "summary": "Pump pump must stay safe under cloud outage"
+        },
+        {
+          "name": "Data-integrity risks",
+          "summary": "Drug-library / firmware / model payloads corrupted"
+        },
+        {
+          "name": "Multi-tenant security",
+          "summary": "PHI leakage / cross-tenant trust violations"
+        },
+        {
+          "name": "AI/ML drift (LMR2)",
+          "summary": "Model distribution shift, retraining gap, degradation"
+        },
+        {
+          "name": "Audit-log integrity (Part 11)",
+          "summary": "Log tampering / loss of regulatory evidence"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 80001-1:2010 (IT-network risk)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS9": {
+      "title": "Cloud Risk Management Report",
+      "description": "Cloud-side dependency risks: outage, drift / version skew vs. devices, multi-tenant data leak, OTA payload integrity failure, audit-log corruption (Part 11), AI/ML model drift (LMR2 envelope). Controls flow to ENG3 (payload format), ENG4 (crypto), ENG7 (signing), ENG8 (audit log), ENG17 (OTA verifier).",
+      "why_important_in_project": "Even though cloud-suite isn't a regulated device, its failure modes can propagate into regulated device safety. This risk file is the FDA-visible analysis of those propagation paths.",
+      "main_topics": [
+        {
+          "name": "Outage / availability risks",
+          "summary": "Pump pump must stay safe under cloud outage"
+        },
+        {
+          "name": "Data-integrity risks",
+          "summary": "Drug-library / firmware / model payloads corrupted"
+        },
+        {
+          "name": "Multi-tenant security",
+          "summary": "PHI leakage / cross-tenant trust violations"
+        },
+        {
+          "name": "AI/ML drift (LMR2)",
+          "summary": "Model distribution shift, retraining gap, degradation"
+        },
+        {
+          "name": "Audit-log integrity (Part 11)",
+          "summary": "Log tampering / loss of regulatory evidence"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "ISO 14971:2019 \u00a77",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 80001-1:2010 (IT-network risk)",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "risk-management",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS23": {
+      "title": "Cloud Clinical Evaluation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure and makes no clinical claims. Clinical safety/efficacy is captured at the pca-device level. Cloud-suite components that surface clinical content (e.g., drug-library entries) do so as configured by the drug-library authoring workflow \u2014 clinical responsibility flows back to the device + pharmacy.",
+      "why_important_in_project": "Explicit N/A documents that the team evaluated and scoped out clinical evaluation for the cloud \u2014 protects from inspector questions.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "No clinical claims by cloud-suite"
+        },
+        {
+          "name": "Clinical responsibility chain",
+          "summary": "Pump + pharmacy own clinical correctness of drug library"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS23": {
+      "title": "Cloud Clinical Evaluation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure and makes no clinical claims. Clinical safety/efficacy is captured at the pca-device level. Cloud-suite components that surface clinical content (e.g., drug-library entries) do so as configured by the drug-library authoring workflow \u2014 clinical responsibility flows back to the device + pharmacy.",
+      "why_important_in_project": "Explicit N/A documents that the team evaluated and scoped out clinical evaluation for the cloud \u2014 protects from inspector questions.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "No clinical claims by cloud-suite"
+        },
+        {
+          "name": "Clinical responsibility chain",
+          "summary": "Pump + pharmacy own clinical correctness of drug library"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS23": {
+      "title": "Cloud Clinical Evaluation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure and makes no clinical claims. Clinical safety/efficacy is captured at the pca-device level. Cloud-suite components that surface clinical content (e.g., drug-library entries) do so as configured by the drug-library authoring workflow \u2014 clinical responsibility flows back to the device + pharmacy.",
+      "why_important_in_project": "Explicit N/A documents that the team evaluated and scoped out clinical evaluation for the cloud \u2014 protects from inspector questions.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "No clinical claims by cloud-suite"
+        },
+        {
+          "name": "Clinical responsibility chain",
+          "summary": "Pump + pharmacy own clinical correctness of drug library"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS23": {
+      "title": "Cloud Clinical Evaluation",
+      "description": "N/A \u2014 cloud-suite is non-medical infrastructure and makes no clinical claims. Clinical safety/efficacy is captured at the pca-device level. Cloud-suite components that surface clinical content (e.g., drug-library entries) do so as configured by the drug-library authoring workflow \u2014 clinical responsibility flows back to the device + pharmacy.",
+      "why_important_in_project": "Explicit N/A documents that the team evaluated and scoped out clinical evaluation for the cloud \u2014 protects from inspector questions.",
+      "main_topics": [
+        {
+          "name": "Non-medical scope decision",
+          "summary": "No clinical claims by cloud-suite"
+        },
+        {
+          "name": "Clinical responsibility chain",
+          "summary": "Pump + pharmacy own clinical correctness of drug library"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "Cloud-suite non-medical scope \u2014 N/A rationale",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "clinical",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS24": {
+      "title": "Cloud Postmarket Surveillance (PSUR)",
+      "description": "N/A \u2014 cloud-suite postmarket signals (outage events, drift metrics, multi-tenant incidents) are tracked operationally but report into the pca-device PSUR for any signals that affect regulated-device safety. LMR2 AI/ML drift monitoring (ENG20) feeds the device PSUR for predictive-alarm performance.",
+      "why_important_in_project": "Roll-up to device PSUR keeps cloud-suite signals visible in the regulated post-market loop without duplicating MDR-class reporting.",
+      "main_topics": [
+        {
+          "name": "Roll-up rationale",
+          "summary": "Cloud signals \u2192 pca-device PSUR"
+        },
+        {
+          "name": "AI/ML drift telemetry (LMR2)",
+          "summary": "ENG20 drift monitoring \u2192 PSUR feedback"
+        },
+        {
+          "name": "Operational signals",
+          "summary": "Outage, latency, tenant isolation events"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803 (rolled up to pca-device PSUR)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS24": {
+      "title": "Cloud Postmarket Surveillance (PSUR)",
+      "description": "N/A \u2014 cloud-suite postmarket signals (outage events, drift metrics, multi-tenant incidents) are tracked operationally but report into the pca-device PSUR for any signals that affect regulated-device safety. LMR2 AI/ML drift monitoring (ENG20) feeds the device PSUR for predictive-alarm performance.",
+      "why_important_in_project": "Roll-up to device PSUR keeps cloud-suite signals visible in the regulated post-market loop without duplicating MDR-class reporting.",
+      "main_topics": [
+        {
+          "name": "Roll-up rationale",
+          "summary": "Cloud signals \u2192 pca-device PSUR"
+        },
+        {
+          "name": "AI/ML drift telemetry (LMR2)",
+          "summary": "ENG20 drift monitoring \u2192 PSUR feedback"
+        },
+        {
+          "name": "Operational signals",
+          "summary": "Outage, latency, tenant isolation events"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803 (rolled up to pca-device PSUR)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS24": {
+      "title": "Cloud Postmarket Surveillance (PSUR)",
+      "description": "N/A \u2014 cloud-suite postmarket signals (outage events, drift metrics, multi-tenant incidents) are tracked operationally but report into the pca-device PSUR for any signals that affect regulated-device safety. LMR2 AI/ML drift monitoring (ENG20) feeds the device PSUR for predictive-alarm performance.",
+      "why_important_in_project": "Roll-up to device PSUR keeps cloud-suite signals visible in the regulated post-market loop without duplicating MDR-class reporting.",
+      "main_topics": [
+        {
+          "name": "Roll-up rationale",
+          "summary": "Cloud signals \u2192 pca-device PSUR"
+        },
+        {
+          "name": "AI/ML drift telemetry (LMR2)",
+          "summary": "ENG20 drift monitoring \u2192 PSUR feedback"
+        },
+        {
+          "name": "Operational signals",
+          "summary": "Outage, latency, tenant isolation events"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803 (rolled up to pca-device PSUR)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS24": {
+      "title": "Cloud Postmarket Surveillance (PSUR)",
+      "description": "N/A \u2014 cloud-suite postmarket signals (outage events, drift metrics, multi-tenant incidents) are tracked operationally but report into the pca-device PSUR for any signals that affect regulated-device safety. LMR2 AI/ML drift monitoring (ENG20) feeds the device PSUR for predictive-alarm performance.",
+      "why_important_in_project": "Roll-up to device PSUR keeps cloud-suite signals visible in the regulated post-market loop without duplicating MDR-class reporting.",
+      "main_topics": [
+        {
+          "name": "Roll-up rationale",
+          "summary": "Cloud signals \u2192 pca-device PSUR"
+        },
+        {
+          "name": "AI/ML drift telemetry (LMR2)",
+          "summary": "ENG20 drift monitoring \u2192 PSUR feedback"
+        },
+        {
+          "name": "Operational signals",
+          "summary": "Outage, latency, tenant isolation events"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 803 (rolled up to pca-device PSUR)",
+          "role": "primary"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "postmarket",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "Q-CS12": {
+      "title": "Cloud Cybersecurity Plan",
+      "description": "Cybersecurity plan for the cloud-suite dependency: SBOM (D-series and shared), TLS termination, encryption at rest, multi-tenant isolation, OTA signing service (D4 / ENG7), audit-log integrity (Part 11), vulnerability monitoring, incident response. Maps the cloud side of the regulated-device threat model.",
+      "why_important_in_project": "Cloud-suite is the highest-leverage cyber attack surface for the program \u2014 a compromise here can deliver a malicious drug-library or firmware to every fielded pump. SBOM transparency, OTA signing, and audit-log integrity are the load-bearing FDA-visible controls.",
+      "main_topics": [
+        {
+          "name": "Threat model (cloud-side)",
+          "summary": "Supply chain, tenant isolation, OTA payload injection"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "D-series + shared infrastructure components"
+        },
+        {
+          "name": "OTA signing (D4)",
+          "summary": "ENG7 signing service; verifier on device (ENG17)"
+        },
+        {
+          "name": "Encryption at rest + in transit",
+          "summary": "Storage encryption (D2); TLS 1.3 mutual auth"
+        },
+        {
+          "name": "Audit-log integrity (D6)",
+          "summary": "21 CFR Part 11 tamper-evident log chain"
+        },
+        {
+          "name": "Incident response & disclosure",
+          "summary": "Coordinated disclosure; FSCA triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "CS12": {
+      "title": "Cloud Cybersecurity Plan",
+      "description": "Cybersecurity plan for the cloud-suite dependency: SBOM (D-series and shared), TLS termination, encryption at rest, multi-tenant isolation, OTA signing service (D4 / ENG7), audit-log integrity (Part 11), vulnerability monitoring, incident response. Maps the cloud side of the regulated-device threat model.",
+      "why_important_in_project": "Cloud-suite is the highest-leverage cyber attack surface for the program \u2014 a compromise here can deliver a malicious drug-library or firmware to every fielded pump. SBOM transparency, OTA signing, and audit-log integrity are the load-bearing FDA-visible controls.",
+      "main_topics": [
+        {
+          "name": "Threat model (cloud-side)",
+          "summary": "Supply chain, tenant isolation, OTA payload injection"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "D-series + shared infrastructure components"
+        },
+        {
+          "name": "OTA signing (D4)",
+          "summary": "ENG7 signing service; verifier on device (ENG17)"
+        },
+        {
+          "name": "Encryption at rest + in transit",
+          "summary": "Storage encryption (D2); TLS 1.3 mutual auth"
+        },
+        {
+          "name": "Audit-log integrity (D6)",
+          "summary": "21 CFR Part 11 tamper-evident log chain"
+        },
+        {
+          "name": "Incident response & disclosure",
+          "summary": "Coordinated disclosure; FSCA triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L1-CS12": {
+      "title": "Cloud Cybersecurity Plan",
+      "description": "Cybersecurity plan for the cloud-suite dependency: SBOM (D-series and shared), TLS termination, encryption at rest, multi-tenant isolation, OTA signing service (D4 / ENG7), audit-log integrity (Part 11), vulnerability monitoring, incident response. Maps the cloud side of the regulated-device threat model.",
+      "why_important_in_project": "Cloud-suite is the highest-leverage cyber attack surface for the program \u2014 a compromise here can deliver a malicious drug-library or firmware to every fielded pump. SBOM transparency, OTA signing, and audit-log integrity are the load-bearing FDA-visible controls.",
+      "main_topics": [
+        {
+          "name": "Threat model (cloud-side)",
+          "summary": "Supply chain, tenant isolation, OTA payload injection"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "D-series + shared infrastructure components"
+        },
+        {
+          "name": "OTA signing (D4)",
+          "summary": "ENG7 signing service; verifier on device (ENG17)"
+        },
+        {
+          "name": "Encryption at rest + in transit",
+          "summary": "Storage encryption (D2); TLS 1.3 mutual auth"
+        },
+        {
+          "name": "Audit-log integrity (D6)",
+          "summary": "21 CFR Part 11 tamper-evident log chain"
+        },
+        {
+          "name": "Incident response & disclosure",
+          "summary": "Coordinated disclosure; FSCA triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
+    },
+    "L2-CS12": {
+      "title": "Cloud Cybersecurity Plan",
+      "description": "Cybersecurity plan for the cloud-suite dependency: SBOM (D-series and shared), TLS termination, encryption at rest, multi-tenant isolation, OTA signing service (D4 / ENG7), audit-log integrity (Part 11), vulnerability monitoring, incident response. Maps the cloud side of the regulated-device threat model.",
+      "why_important_in_project": "Cloud-suite is the highest-leverage cyber attack surface for the program \u2014 a compromise here can deliver a malicious drug-library or firmware to every fielded pump. SBOM transparency, OTA signing, and audit-log integrity are the load-bearing FDA-visible controls.",
+      "main_topics": [
+        {
+          "name": "Threat model (cloud-side)",
+          "summary": "Supply chain, tenant isolation, OTA payload injection"
+        },
+        {
+          "name": "SBOM management",
+          "summary": "D-series + shared infrastructure components"
+        },
+        {
+          "name": "OTA signing (D4)",
+          "summary": "ENG7 signing service; verifier on device (ENG17)"
+        },
+        {
+          "name": "Encryption at rest + in transit",
+          "summary": "Storage encryption (D2); TLS 1.3 mutual auth"
+        },
+        {
+          "name": "Audit-log integrity (D6)",
+          "summary": "21 CFR Part 11 tamper-evident log chain"
+        },
+        {
+          "name": "Incident response & disclosure",
+          "summary": "Coordinated disclosure; FSCA triggers"
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Premarket Cybersecurity (Sept 2023) \u00a7V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021",
+          "role": "primary"
+        },
+        {
+          "citation": "NIST SP 800-218 SSDF",
+          "role": "supporting"
+        }
+      ],
+      "generated_at": "2026-05-12T09:17:04.868015Z",
+      "context_signature": {
+        "canonical_role": "cybersecurity",
+        "obligation_ids": [],
+        "evidence_source_hash": null,
+        "claude_md_hash": null
+      }
     }
   }
 }
