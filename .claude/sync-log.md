@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-12 — push (trace-matrix v7→v8: bidirectional edge engine)
+
+- Files: `skills/trace-matrix/SKILL.md`, `skills/trace-matrix/README.md`, `skills/trace-matrix/scripts/graph.py`, `skills/trace-matrix/scripts/analyze.py`, `skills/trace-matrix/tests/test_graph_bidirectional.py`
+- Branch: `sync/pdlc-demo-trace-matrix-v8-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/159
+- Commit subject: `trace-matrix v7→v8: bidirectional edge engine + scope-filter refinement`
+- Status: merged (--merge requested)
+- Merge commit: `d3c3429`
+- Hitachi HEAD after sync: `d3c3429`
+- Source: ben/050 — surfaced by ben/049 SRS authoring; v7 V&V scope filter dropped DI-derived VER nodes when SW was added. Refactor introduces bidirectional canonical-edge model, adds SW→VER edges, refines scope filter to run only when V&V has independent source and accept any-requirement reciprocation. Sister-project (Arthrex/PCCP) validated zero regression before push.
+
+---
+
 ## 2026-05-12 — push (tracker: unified overlay sidecar — supersedes #153)
 
 - Files: `skills/tracker/scripts/generate.py`, `skills/tracker/scripts/render.py`
