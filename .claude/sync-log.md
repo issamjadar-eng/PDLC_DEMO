@@ -4,6 +4,47 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-11 — push (sync-skills SKILL.md genericization)
+
+- Files: `skills/sync-skills/SKILL.md`
+- Branch: `sync/pdlc-demo-sync-skills-leak-fix-2026-05-11`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/148
+- Commit subject: `sync-skills: genericize project-name examples in SKILL.md`
+- Status: merged (--merge requested)
+- Merge commit: `bd753b0`
+- Hitachi HEAD after sync: `bd753b0`
+- Context: task `ben/048` #1 — adopted from arthrex/pccp sister (they had it locally; never pushed upstream). 3 example-string substitutions in §Step-2 and §"2026-04-12 push" example block. No behavior change.
+
+---
+
+## 2026-05-11 — pull (visual polish + regulatory-affairs grounding)
+
+- Hitachi origin/main: `f17e3bc` (was `4751abd` earlier today)
+- Pulled (14 files, all clean — no local mods on any):
+  - **`tracker` v12** (PR #145): `skills/tracker/README.md` only (changelog backfill for color-coded legend + readable disabled action buttons; the `render.py` changes shipped earlier with #143 are already local)
+  - **`project-console` v1.17.0 → v1.21.1** (PR #146): `SKILL.md`, `README.md`, `VERSION`, `console/themes.py`, `console/web/static/{console.css, explorer.js}`, `console/web/templates/{_assistant_drawer.html, trace_matrix_index.html, trace_matrix_view.html, workflow_b3_index.html}`, `themes/dark/theme.yaml` — theme-token system, B6 workflow polish, asset-card CSS merge, full hardcoded-color sweep on B3 strategy-reassembly modals + chat textarea + diff buttons (no white-bg elements left on dark theme)
+  - **`regulatory-affairs` agent** (PR #147): `agents/regulatory-affairs.md` + `skills/advisors/agents/regulatory-affairs.md` — grounding glob aligned to flat-strategies layout
+- Post-update actions required: none (no `**Post-update:**` blocks in any changelog)
+- project-console scaffold: synced 1.17.0 → 1.21.1
+- Console restarted, all endpoints 200 (`/`, `/dashboards/submission-tracker`, `/trace-matrix`, `/workflows`, `/workflows/tracker-draft/Q1`)
+
+---
+
+## 2026-05-11 — pull (reset-to-upstream)
+
+- Hitachi origin/main: `4751abd` (md-deck/build.py py3.9 fix, on top of `7fbaa3b` B6 Create Draft v1)
+- Pulled (15 files):
+  - **New B6 Create Draft workflow** — `skills/project-console/console/workflows/{draft_session.py,draft_writer.py}`, `skills/project-console/console/web/templates/workflow_tracker_draft.html`, `skills/project-console/tests/test_draft_workflow_e2e.py`, `skills/tracker/agents/draft-author.md`, `skills/tracker/scripts/build-draft-context.py`, `skills/tracker/tests/test_create_draft_wiring.py`
+  - **B6 wiring updates** — `skills/project-console/console/workflows/router.py`, `skills/project-console/console/web/static/{assistant.js,tracker_interactive.js}`, `skills/tracker/scripts/render.py`
+  - **md-deck py3.9 compat** — `skills/md-deck/scripts/build.py`
+  - **Tracker baseline reset** — `skills/tracker/{SKILL.md,README.md,scripts/generate.py}` overwriting local v16/v17 WIP (init-taxonomy, classify-folders, assess-phases, reconcile-taxonomy actions; folder-classifier + phase-mapper agents; taxonomy.py + 6 helper scripts; schemas/taxonomy.schema.yml). Local WIP archived to `tasks/ben/044/archive/wip-dropped-2026-05-11/skill/`.
+- project.yml: no changes
+- project-console scaffold: synced 1.7.6 → 1.17.0
+- Submission tracker regenerated from upstream v11 generator: `submission-tracker.md` (5.8KB / 52 table rows) + `submission-tracker.html` (24.7KB / 44 item rows / 6 Create Draft buttons). Project-side sidecars + candidate from the dropped WIP also archived under the same task-044 archive folder.
+- Follow-ups: ben/047 captures the project-data + small upstream-pushable improvements to reach 118-row demo depth.
+
+---
+
 ## 2026-05-05 — push + merge (project-console asset card selector)
 
 - Files: 5

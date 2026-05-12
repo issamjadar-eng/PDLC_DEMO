@@ -1657,6 +1657,14 @@ def render_before_after(s: dict) -> str:
     after_num = _extract_first_number(after_text)
     delta_match = _RATIO_PHRASE_RE.search(pool)
     delta_html = f'<div class="delta reveal">{_esc(delta_match.group(0))}</div>' if delta_match else ''
+    before_stat_html = (
+        f'<div class="ba-stat">{_esc(before_num[0])}<span style="font-size:0.5em">{_esc(before_num[1])}</span></div>'
+        if before_num else ''
+    )
+    after_stat_html = (
+        f'<div class="ba-stat">{_esc(after_num[0])}<span style="font-size:0.5em">{_esc(after_num[1])}</span></div>'
+        if after_num else ''
+    )
     return (
         f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
@@ -1664,11 +1672,11 @@ def render_before_after(s: dict) -> str:
         f'<h2 class="reveal">{render_inline(title)}</h2>'
         f'<div class="before-after reveal">'
         f'<div class="ba-card before"><div class="ba-tag">BEFORE</div>'
-        f'{f"<div class=\"ba-stat\">{_esc(before_num[0])}<span style=\"font-size:0.5em\">{_esc(before_num[1])}</span></div>" if before_num else ""}'
+        f'{before_stat_html}'
         f'<div class="ba-text">{render_inline(_shorten(before_text, 28))}</div></div>'
         f'<div class="arrow">→</div>'
         f'<div class="ba-card after"><div class="ba-tag">AFTER</div>'
-        f'{f"<div class=\"ba-stat\">{_esc(after_num[0])}<span style=\"font-size:0.5em\">{_esc(after_num[1])}</span></div>" if after_num else ""}'
+        f'{after_stat_html}'
         f'<div class="ba-text">{render_inline(_shorten(after_text, 28))}</div></div>'
         f'{delta_html}'
         f'</div></div></section>'
@@ -2468,8 +2476,16 @@ def _parse_cache_header(text: str) -> tuple[dict, str] | None:
     return meta, body
 
 
+_CACHE_SLUG_BYTE_CAP = 180
+
+
 def _cache_file_path(out_dir: Path, slug: str, sha7: str, slot: str) -> Path:
-    return _cache_dir(out_dir) / f"{slug}__{sha7}-{slot}.html"
+    name_slug = slug
+    if len(name_slug.encode("utf-8")) > _CACHE_SLUG_BYTE_CAP:
+        digest = hashlib.sha1(slug.encode("utf-8")).hexdigest()[:8]
+        prefix = slug.encode("utf-8")[: _CACHE_SLUG_BYTE_CAP - 9].decode("utf-8", errors="ignore")
+        name_slug = f"{prefix.rstrip('-')}-{digest}"
+    return _cache_dir(out_dir) / f"{name_slug}__{sha7}-{slot}.html"
 
 
 def _save_creative_cache(out_dir: Path, source_sha: str, source_name: str, cache: dict) -> None:

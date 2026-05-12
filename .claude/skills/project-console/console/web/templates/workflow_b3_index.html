@@ -7,11 +7,11 @@
      Each row activates a domain pane below on click; hash-routing preserved. */
   .domain-summary {
     width: 100%; border-collapse: collapse; margin: 1rem 0 0;
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
     overflow: hidden; font-size: 0.95rem;
   }
   .domain-summary thead th {
-    background: rgba(0,0,0,0.04); text-align: left; padding: 0.55rem 0.85rem;
+    background: var(--surface-2); text-align: left; padding: 0.55rem 0.85rem;
     font-weight: 600; border-bottom: 1px solid var(--border, #e0e0e0);
     font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em;
     color: var(--muted, #555);
@@ -21,7 +21,7 @@
     transition: background 120ms ease;
   }
   .domain-summary tbody tr:last-child { border-bottom: none; }
-  .domain-summary tbody tr:hover { background: rgba(0,0,0,0.03); }
+  .domain-summary tbody tr:hover { background: var(--surface-2); }
   .domain-summary tbody tr.active {
     background: rgba(4,88,161,0.08);
     box-shadow: inset 4px 0 0 var(--brand-primary, #0458a1);
@@ -30,15 +30,15 @@
   .domain-summary .col-domain { font-weight: 600; }
   .domain-summary .col-num { text-align: right; font-variant-numeric: tabular-nums; }
   .domain-summary .col-status code {
-    background: rgba(0,0,0,0.06); padding: 0.05rem 0.4rem; border-radius: 3px;
+    background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.4rem; border-radius: 3px;
     font-size: 0.85em;
   }
   .domain-summary .count-pill {
     display: inline-block; min-width: 1.6em; padding: 0.05rem 0.45rem;
     border-radius: 10px; font-size: 0.82em; font-weight: 600; text-align: center;
   }
-  .domain-summary .count-pill.has { background: #f9a825; color: #000; }
-  .domain-summary .count-pill.zero { background: rgba(0,0,0,0.08); color: var(--muted, #888); font-weight: 400; }
+  .domain-summary .count-pill.has { background: rgba(245, 158, 11, 0.20); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); }
+  .domain-summary .count-pill.zero { background: var(--surface-2); color: var(--body-text-muted); font-weight: 400; }
 
   .domain-pane { display: none; padding: 1.5rem 0 0; }
   .domain-pane.active { display: block; }
@@ -57,12 +57,12 @@
     font-weight: 600; font-size: 0.88rem;
     border-bottom-color: currentColor !important; margin-bottom: 0 !important;
   }
-  .section-tabs li.action button.discard-btn { background: #fff; color: #c62828; }
-  .section-tabs li.action button.discard-btn:hover { background: #c62828; color: #fff; }
-  .section-tabs li.action button.end-btn { background: #fff; color: #555; border-color: #999; font-weight: 500; }
-  .section-tabs li.action button.end-btn:hover { background: #555; color: #fff; }
-  .section-tabs li.action button.publish-btn { background: #2e7d32; color: #fff; border-color: #2e7d32; }
-  .section-tabs li.action button.publish-btn:hover { background: #1b5e20; }
+  .section-tabs li.action button.discard-btn { background: var(--surface); color: #ef4444; }
+  .section-tabs li.action button.discard-btn:hover { background: #ef4444; color: #ffffff; }
+  .section-tabs li.action button.end-btn { background: var(--surface); color: var(--body-text-muted); border-color: var(--border); font-weight: 500; }
+  .section-tabs li.action button.end-btn:hover { background: var(--body-text-muted); color: var(--surface); }
+  .section-tabs li.action button.publish-btn { background: rgba(34, 197, 94, 0.20); color: #4ade80; border-color: rgba(34, 197, 94, 0.45); }
+  .section-tabs li.action button.publish-btn:hover { background: rgba(34, 197, 94, 0.32); color: #86efac; }
   .section-tabs li.action.divider {
     width: 1px; background: var(--border, #ddd); margin: 0.4rem 0.45rem 0.6rem;
     padding: 0;
@@ -72,36 +72,38 @@
     padding: 0.4rem 0.85rem; cursor: pointer; font-size: 0.9rem;
     color: inherit; margin-bottom: -1px; font-family: inherit;
   }
-  .section-tabs button:hover { background: rgba(0,0,0,0.04); }
+  .section-tabs button:hover { background: var(--surface-2); color: var(--body-text); }
   .section-tabs button.active { border-bottom-color: var(--brand-primary, #0458a1); font-weight: 600; }
   .section-pane { display: none; padding: 0.75rem 0; }
   .section-pane.active { display: block; }
 
   .tab-badge {
-    display: inline-block; background: #f9a825; color: #000; font-weight: 700;
+    display: inline-block; background: rgba(245, 158, 11, 0.20); color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    font-weight: 700;
     border-radius: 10px; padding: 0.05rem 0.45rem; font-size: 0.72em;
     margin-left: 0.3rem; vertical-align: middle;
   }
-  .tab-badge.dim { background: rgba(0,0,0,0.12); color: inherit; }
+  .tab-badge.dim { background: var(--surface-2); color: var(--body-text-muted); }
 
   /* Rendered markdown viewer — full document flow; outer page handles scroll. */
   .md-view {
     padding: 1rem 1.25rem;
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
   }
   .md-view h1 { font-size: 1.6rem; margin-top: 0; }
   .md-view h2 { font-size: 1.3rem; margin-top: 1.25rem; border-bottom: 1px solid var(--border, #eee); padding-bottom: 0.2rem; }
   .md-view h3 { font-size: 1.1rem; margin-top: 1rem; }
   .md-view h4 { font-size: 1rem; margin-top: 0.8rem; }
-  .md-view code { background: rgba(0,0,0,0.06); padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.88em; }
-  .md-view pre { background: rgba(0,0,0,0.04); padding: 0.6rem; border-radius: 4px; overflow-x: auto; }
+  .md-view code { background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.88em; }
+  .md-view pre { background: var(--code-bg); color: var(--code-text); padding: 0.6rem; border-radius: 4px; overflow-x: auto; }
   .md-view pre code { background: transparent; padding: 0; }
   .md-view table { border-collapse: collapse; margin: 0.6rem 0; }
   .md-view th, .md-view td { border: 1px solid var(--border, #ddd); padding: 0.3rem 0.6rem; text-align: left; }
-  .md-view th { background: rgba(0,0,0,0.04); }
+  .md-view th { background: var(--surface-2); }
   .md-view blockquote {
     border-left: 3px solid var(--border, #ccc); margin: 0.5rem 0; padding: 0.1rem 0.8rem;
-    background: rgba(0,0,0,0.02); color: inherit;
+    background: var(--surface-muted); color: var(--body-text-muted);
   }
   .md-view ul, .md-view ol { padding-left: 1.5rem; }
 
@@ -118,13 +120,15 @@
   }
   .b3-summary-pill {
     display: inline-block; padding: 0.3rem 0.85rem; border-radius: 999px;
-    background: rgba(4,88,161,0.08); color: var(--brand-primary, #0458a1);
+    background: rgba(56, 189, 248, 0.12); color: var(--brand-primary);
+    border: 1px solid rgba(56, 189, 248, 0.35);
     font-weight: 600; font-size: 0.95rem;
   }
   .b3-action-drawer {
     display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
     padding: 0.75rem 1rem; margin: 0.5rem 0 1rem;
-    background: rgba(46,125,50,0.05); border: 1px solid rgba(46,125,50,0.2);
+    background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.30);
+    color: var(--body-text);
     border-radius: 4px;
   }
   .b3-action-drawer .b3-action-info { flex: 1; min-width: 200px; font-size: 0.9rem; }
@@ -139,8 +143,9 @@
 
   /* Proposal cards */
   .proposal {
-    border: 1px solid var(--border, #ddd); border-left: 4px solid #f9a825;
-    background: rgba(249,168,37,0.05); border-radius: 4px;
+    border: 1px solid var(--border); border-left: 4px solid #fbbf24;
+    background: rgba(245, 158, 11, 0.06); color: var(--body-text);
+    border-radius: 4px;
     padding: 0.75rem 1rem; margin: 0.75rem 0;
   }
   /* Side-by-side comparison: what's currently in the strategy vs the proposed change */
@@ -150,19 +155,20 @@
   }
   @media (max-width: 900px) { .prop-comparison { grid-template-columns: 1fr; } }
   .prop-comparison > div {
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
     padding: 0.5rem 0.75rem;
   }
-  .prop-comparison > .prop-existing { border-left: 3px solid #888; }
-  .prop-comparison > .prop-incoming { border-left: 3px solid #ef6c00; background: rgba(239,108,0,0.04); }
+  .prop-comparison > .prop-existing { border-left: 3px solid var(--body-text-muted); }
+  .prop-comparison > .prop-incoming { border-left: 3px solid #fbbf24; background: rgba(245, 158, 11, 0.07); }
   .prop-comparison .pane-label {
     font-size: 0.78em; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; color: var(--muted, #555);
+    letter-spacing: 0.04em; color: var(--body-text-muted);
     margin-bottom: 0.4rem; display: block;
   }
-  .prop-incoming .pane-label { color: #ef6c00; }
+  .prop-incoming .pane-label { color: #fbbf24; }
   .prop-new-note {
-    background: rgba(46,125,50,0.08); border-left: 3px solid #2e7d32;
+    background: rgba(34, 197, 94, 0.10); color: var(--body-text);
+    border-left: 3px solid #4ade80;
     padding: 0.5rem 0.85rem; margin: 0.5rem 0; border-radius: 3px;
     font-size: 0.92em;
   }
@@ -170,40 +176,41 @@
   /* Friendly file-diff viewer (regulator-readable) */
   .friendly-diff {
     width: 100%; border-collapse: collapse; font-size: 0.85em;
-    background: #fff; border: 1px solid var(--border, #e0e0e0);
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border);
     border-radius: 4px; overflow: hidden;
   }
   .friendly-diff thead th {
-    background: rgba(0,0,0,0.04); padding: 0.4rem 0.6rem; text-align: left;
-    font-weight: 600; font-size: 0.78em; color: var(--muted, #555);
+    background: var(--surface-2); padding: 0.4rem 0.6rem; text-align: left;
+    font-weight: 600; font-size: 0.78em; color: var(--body-text-muted);
     text-transform: uppercase; letter-spacing: 0.04em;
   }
   .friendly-diff td {
     padding: 0.25rem 0.5rem; vertical-align: top;
-    border-top: 1px solid var(--border, #f3f3f3);
+    border-top: 1px solid var(--border);
   }
   .friendly-diff td.ln {
-    text-align: right; color: var(--muted, #aaa); font-family: var(--font-mono, monospace);
+    text-align: right; color: var(--body-text-muted); font-family: var(--font-mono, monospace);
     width: 3rem; min-width: 3rem; user-select: none;
-    background: rgba(0,0,0,0.02);
+    background: var(--surface-muted);
   }
   .friendly-diff th.ln-col { width: 3rem; min-width: 3rem; }
   .friendly-diff td.content {
     font-family: var(--font-mono, monospace);
     white-space: pre-wrap; word-break: break-word;
   }
-  .friendly-diff tr.diff-context td.content { color: #555; }
-  .friendly-diff tr.diff-added td { background: rgba(46,125,50,0.08); }
-  .friendly-diff tr.diff-added td.content { color: #1b5e20; }
-  .friendly-diff tr.diff-removed td { background: rgba(198,40,40,0.08); }
-  .friendly-diff tr.diff-removed td.content { color: #b71c1c; text-decoration: line-through; text-decoration-color: rgba(183,28,28,0.45); }
+  .friendly-diff tr.diff-context td.content { color: var(--body-text-muted); }
+  .friendly-diff tr.diff-added td { background: rgba(34, 197, 94, 0.12); }
+  .friendly-diff tr.diff-added td.content { color: #86efac; }
+  .friendly-diff tr.diff-removed td { background: rgba(239, 68, 68, 0.12); }
+  .friendly-diff tr.diff-removed td.content { color: #fca5a5; text-decoration: line-through; text-decoration-color: rgba(252, 165, 165, 0.55); }
   .friendly-diff .badge-add, .friendly-diff .badge-rm {
-    display: inline-block; font-size: 0.75em; font-weight: 700; color: #fff;
+    display: inline-block; font-size: 0.75em; font-weight: 700;
     padding: 0.05rem 0.45rem; border-radius: 2px; margin-right: 0.4rem;
     vertical-align: middle; text-decoration: none;
   }
-  .friendly-diff .badge-add { background: #2e7d32; }
-  .friendly-diff .badge-rm  { background: #c62828; }
+  .friendly-diff .badge-add { background: rgba(34, 197, 94, 0.30); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.5); }
+  .friendly-diff .badge-rm  { background: rgba(239, 68, 68, 0.30); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
   .diff-summary {
     margin: 0.4rem 0 0.5rem; font-size: 0.88em; color: var(--muted, #555);
   }
@@ -213,7 +220,7 @@
   }
   .diff-raw-pane {
     display: none; margin-top: 0.4rem; max-height: 30vh; overflow: auto;
-    background: rgba(0,0,0,0.04); padding: 0.5rem 0.75rem; border-radius: 3px;
+    background: var(--surface-2); padding: 0.5rem 0.75rem; border-radius: 3px;
     font-family: var(--font-mono, monospace); font-size: 0.78em;
     white-space: pre-wrap;
   }
@@ -229,14 +236,14 @@
   .b3-decision-actions button {
     padding: 0.1rem 0.5rem; font-size: 0.72rem; font-weight: 600;
     border: 1px solid var(--border, #ccc); border-radius: 3px;
-    background: #fff; cursor: pointer;
+    background: var(--surface); cursor: pointer;
   }
-  .b3-decision-actions button.act-edit { color: #ef6c00; }
-  .b3-decision-actions button.act-remove { color: #c62828; }
+  .b3-decision-actions button.act-edit { color: #f59e0b; }
+  .b3-decision-actions button.act-remove { color: #ef4444; }
   .b3-decision-id-badge {
     display: inline-block; font-family: var(--font-mono, monospace);
     font-size: 0.7rem; color: var(--muted, #888);
-    padding: 0.1rem 0.45rem; background: rgba(0,0,0,0.04);
+    padding: 0.1rem 0.45rem; background: var(--surface-2);
     border-radius: 3px; margin-left: 0.5rem; vertical-align: middle;
   }
   .b3-md-with-decisions h3.decision-withdrawn,
@@ -255,63 +262,84 @@
   .b3-section-actions button {
     padding: 0.15rem 0.6rem; font-size: 0.74rem; font-weight: 600;
     border: 1px solid #0458a1; border-radius: 3px;
-    background: #fff; color: #0458a1; cursor: pointer;
+    background: var(--surface); color: var(--brand-primary); cursor: pointer;
   }
-  .b3-section-actions button:hover { background: #0458a1; color: #fff; }
+  .b3-section-actions button:hover { background: var(--brand-primary); color: #ffffff; }
 
   .b3-add-decision-bar {
     margin: 0.85rem 0; padding: 0.6rem 0.85rem;
-    background: rgba(46,125,50,0.05); border: 1px dashed rgba(46,125,50,0.4);
+    background: rgba(34, 197, 94, 0.06); border: 1px dashed rgba(34, 197, 94, 0.4);
+    color: var(--body-text);
     border-radius: 4px; display: flex; gap: 0.6rem; align-items: center;
     flex-wrap: wrap; font-size: 0.92rem;
   }
-  .b3-add-decision-bar select { padding: 0.3rem 0.4rem; }
-  .b3-add-decision-bar button {
-    padding: 0.4rem 0.85rem; cursor: pointer; background: #2e7d32; color: #fff;
-    border: 1px solid #2e7d32; border-radius: 3px; font-weight: 600;
+  .b3-add-decision-bar select {
+    padding: 0.3rem 0.4rem;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border);
+    border-radius: 3px;
   }
+  .b3-add-decision-bar button {
+    padding: 0.4rem 0.85rem; cursor: pointer;
+    background: rgba(34, 197, 94, 0.20); color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.45); border-radius: 3px; font-weight: 600;
+  }
+  .b3-add-decision-bar button:hover { background: rgba(34, 197, 94, 0.32); }
   .b3-add-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000;
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 1000;
     display: flex; align-items: center; justify-content: center;
   }
   .b3-add-modal-inner {
-    background: #fff; padding: 1.25rem 1.5rem; border-radius: 6px;
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem; border-radius: 6px;
     width: min(640px, 90vw); max-height: 86vh; overflow: auto;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   }
-  .b3-add-modal-inner h4 { margin: 0 0 0.6rem; font-size: 1.1rem; }
+  .b3-add-modal-inner h4 { margin: 0 0 0.6rem; font-size: 1.1rem; color: var(--body-text); }
   .b3-edit-textarea {
     width: 100%; min-height: 8rem; padding: 0.45rem;
     font-family: var(--font-mono, monospace); font-size: 0.9rem;
-    border: 1px solid var(--border, #ccc); border-radius: 3px;
+    border: 1px solid var(--border); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
   }
-  .proposal h4 { margin: 0 0 0.35rem; font-size: 1rem; }
-  .proposal .prop-meta { font-size: 0.85em; color: var(--muted, #666); margin-bottom: 0.5rem; }
+  .proposal h4 { margin: 0 0 0.35rem; font-size: 1rem; color: var(--body-text); }
+  .proposal .prop-meta { font-size: 0.85em; color: var(--body-text-muted); margin-bottom: 0.5rem; }
   .proposal .prop-body {
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border); border-radius: 3px;
     padding: 0.5rem 0.75rem; margin-bottom: 0.5rem;
   }
   .proposal .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .proposal .actions button {
-    padding: 0.35rem 0.85rem; cursor: pointer; border: 1px solid var(--border, #ccc);
-    border-radius: 3px; background: #fff; font-family: inherit; font-size: 0.88rem;
+    padding: 0.35rem 0.85rem; cursor: pointer; border: 1px solid var(--border);
+    border-radius: 3px; background: var(--surface); color: var(--body-text);
+    font-family: inherit; font-size: 0.88rem;
   }
-  .proposal .actions button.accept { background: #2e7d32; color: #fff; border-color: #2e7d32; }
-  .proposal .actions button.reject { background: #c62828; color: #fff; border-color: #c62828; }
-  .proposal .actions button.modify { background: #ef6c00; color: #fff; border-color: #ef6c00; }
-  .proposal .actions button.recat { background: #6a1b9a; color: #fff; border-color: #6a1b9a; }
+  .proposal .actions button.accept { background: rgba(34, 197, 94, 0.18); color: #4ade80; border-color: rgba(34, 197, 94, 0.45); }
+  .proposal .actions button.accept:hover  { background: rgba(34, 197, 94, 0.30); }
+  .proposal .actions button.reject { background: rgba(239, 68, 68, 0.18); color: #f87171; border-color: rgba(239, 68, 68, 0.45); }
+  .proposal .actions button.reject:hover  { background: rgba(239, 68, 68, 0.30); }
+  .proposal .actions button.modify { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border-color: rgba(245, 158, 11, 0.45); }
+  .proposal .actions button.modify:hover  { background: rgba(245, 158, 11, 0.30); }
+  .proposal .actions button.recat  { background: rgba(168, 85, 247, 0.18); color: #c084fc; border-color: rgba(168, 85, 247, 0.45); }
+  .proposal .actions button.recat:hover   { background: rgba(168, 85, 247, 0.30); }
   .proposal .recat-box { display: none; margin-top: 0.5rem; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-  .proposal .recat-box select { padding: 0.3rem 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 3px; font-family: inherit; font-size: 0.88rem; }
+  .proposal .recat-box select {
+    padding: 0.3rem 0.5rem; border: 1px solid var(--border); border-radius: 3px;
+    font-family: inherit; font-size: 0.88rem;
+    background: var(--surface); color: var(--body-text);
+  }
   .proposal .modify-box { display: none; margin-top: 0.5rem; }
   .proposal .modify-box textarea {
     width: 100%; min-height: 6rem; font-family: var(--font-mono, monospace);
-    font-size: 0.85rem; padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 3px;
+    font-size: 0.85rem; padding: 0.5rem; border: 1px solid var(--border); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
   }
   .proposal .modify-box .modify-actions { margin-top: 0.4rem; display: flex; gap: 0.4rem; }
 
   .plan-out {
     margin-top: 0.75rem; font-family: var(--font-mono, monospace); font-size: 0.85em;
-    background: rgba(0,0,0,0.04); border-radius: 4px; padding: 0.5rem 0.75rem;
+    background: var(--surface-2); border-radius: 4px; padding: 0.5rem 0.75rem;
     display: none; white-space: pre-wrap;
   }
   .plan-out.show { display: block; }
@@ -334,14 +362,15 @@
     flex: 1; font-weight: 500;
   }
   .diff-action-bar button.publish {
-    background: #2e7d32; color: #fff; border: 1px solid #2e7d32;
+    background: rgba(34, 197, 94, 0.20); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.45);
     padding: 0.45rem 1rem; border-radius: 3px; cursor: pointer; font-weight: 600;
   }
+  .diff-action-bar button.publish:hover { background: rgba(34, 197, 94, 0.32); color: #86efac; }
   .diff-action-bar button.throw-away {
-    background: #fff; color: #c62828; border: 1px solid #c62828;
+    background: var(--surface); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45);
     padding: 0.45rem 1rem; border-radius: 3px; cursor: pointer; font-weight: 600;
   }
-  .diff-action-bar button.throw-away:hover { background: #c62828; color: #fff; }
+  .diff-action-bar button.throw-away:hover { background: rgba(239, 68, 68, 0.18); color: #fca5a5; }
 
   /* Friendly diff table — shared with per-file diff view but owns its
      own scoping at the doc level. */
@@ -351,7 +380,7 @@
   }
   .doc-diff-pane .friendly-diff th {
     text-align: left; padding: 0.35rem 0.5rem;
-    background: rgba(0,0,0,0.04); border-bottom: 1px solid var(--border, #ddd);
+    background: var(--surface-2); border-bottom: 1px solid var(--border, #ddd);
     font-weight: 600;
   }
   .doc-diff-pane .friendly-diff td {
@@ -418,7 +447,7 @@
   }
   .b3-asm-running .b3-asm-clock {
     font-family: var(--font-mono, monospace);
-    background: rgba(0,0,0,0.06);
+    background: var(--code-bg); color: var(--code-text);
     padding: 0.1rem 0.45rem;
     border-radius: 3px;
     font-size: 0.85em;
@@ -522,7 +551,7 @@
             <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
               <code style="flex: 1; font-size: 0.85em;">{{ f.path }}</code>
               <button onclick="b3ToggleDiff('{{ dv.doc.slug }}', '{{ f.path }}', this)"
-                      style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border, #ccc); border-radius: 3px; background: #fff;">View what changed</button>
+                      style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); color: var(--body-text);">View what changed</button>
               <button onclick="b3DiscardFile('{{ dv.doc.slug }}', '{{ f.path }}', this)"
                       style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid #c62828; border-radius: 3px; background: #c62828; color: #fff;">Throw away</button>
             </div>
@@ -942,20 +971,15 @@ function b3OpenProposalEditDrawer(domain, prop) {
     const idEl = document.getElementById('pc-edit-decision-id');
     const headingEl = document.getElementById('pc-edit-decision-heading');
     if (idEl) idEl.textContent = `proposal #${prop.idx}` + (prop.taskId ? ` (${prop.taskId})` : '');
-    if (headingEl) headingEl.textContent = prop.heading || '(no heading)';
+    if (headingEl) {
+      const h = (prop.heading || '').trim();
+      headingEl.textContent = h;
+      headingEl.hidden = !h;
+    }
     const saveBtn = document.getElementById('pc-edit-save');
     if (saveBtn) {
       saveBtn.textContent = '💾 Save proposal edit';
       saveBtn.title = 'Update the proposed text only — proposal stays pending; ship via Save & Publish in the tab bar.';
-    }
-    // Replace the bottom hint copy to match proposal-modify semantics.
-    const hint = bar.querySelector('.muted:last-child');
-    if (hint) {
-      hint.innerHTML =
-        'Discuss what should change in the proposal. When you click <strong>Save proposal edit</strong>, ' +
-        'a synthesis pass produces the revised proposal body for your confirmation. ' +
-        'The proposal stays <strong>pending</strong> after save — you still need to <strong>Save &amp; Publish</strong> ' +
-        'from the tab bar to actually merge it into the strategy.';
     }
   }
   // Override grounding to focus on the proposal being modified + the
@@ -1072,7 +1096,7 @@ function b3RenderPlan(data) {
           `<strong>Audit:</strong> ${actorLine} &middot; ${taskLine}</div>`;
   if (data.history_entry_preview) {
     html += `<div style="margin-top:0.4rem;"><em>Would append to <code>## History</code>:</em></div>`;
-    html += `<pre style="background:#fff;border:1px solid var(--border,#ddd);padding:0.4rem 0.6rem;margin:0.25rem 0 0;border-radius:3px;white-space:pre-wrap;">${escapeHtml(data.history_entry_preview)}</pre>`;
+    html += `<pre style="background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);padding:0.4rem 0.6rem;margin:0.25rem 0 0;border-radius:3px;white-space:pre-wrap;">${escapeHtml(data.history_entry_preview)}</pre>`;
   }
   if (data.can_execute_live) {
     if (data.action === 're-assemble') {
@@ -1576,7 +1600,11 @@ function b3OpenSectionEditDrawer(domain, sec) {
     const idEl = document.getElementById('pc-edit-decision-id');
     const hdEl = document.getElementById('pc-edit-decision-heading');
     if (idEl) idEl.textContent = 'Section ' + sec.idx;
-    if (hdEl) hdEl.textContent = sec.label || '(no label)';
+    if (hdEl) {
+      const lbl = (sec.label || '').trim();
+      hdEl.textContent = lbl;
+      hdEl.hidden = !lbl;
+    }
   }
   // Override grounding: full section + full strategy doc + discussion-only guard.
   const stratNode = document.querySelector(`script[type="text/markdown"][data-strategy-md="${domain}"]`);
@@ -1648,7 +1676,12 @@ function b3OpenDecisionEditDrawer(domain, dec) {
   if (bar) {
     bar.hidden = false;
     document.getElementById('pc-edit-decision-id').textContent = dec.id;
-    document.getElementById('pc-edit-decision-heading').textContent = dec.heading || '(no heading)';
+    const hdEl2 = document.getElementById('pc-edit-decision-heading');
+    if (hdEl2) {
+      const h = (dec.heading || '').trim();
+      hdEl2.textContent = h;
+      hdEl2.hidden = !h;
+    }
   }
   // Override grounding to focus on the decision being edited + full strategy doc.
   // The leading guard tells the agent to discuss only — never to call file
@@ -1901,22 +1934,16 @@ function b3InstallEditModeSaveHandler() {
       const bar = document.getElementById('pc-edit-mode-bar');
       if (bar) {
         bar.hidden = true;
-        // Restore the default button label + hint in case the bar opens
-        // next in a non-proposal mode (decision / section). Cheap reset.
+        // Reset the Save button label in case the bar reopens next in a
+        // non-proposal mode (decision / section).
         const saveBtn = document.getElementById('pc-edit-save');
         if (saveBtn) {
           saveBtn.textContent = '💾 Save edit & publish';
           saveBtn.title = '';
         }
-        const hint = bar.querySelector('.muted:last-child');
-        if (hint) {
-          hint.innerHTML =
-            'Have a normal conversation with the advisor about what should change. ' +
-            'Cover as many topics as you like. When you click <strong>Save edit & publish</strong>, ' +
-            'a synthesis pass reads the whole discussion, preserves the fidelity of the existing ' +
-            'content, applies only the changes you approved, and shows you the recommended revision ' +
-            'for confirmation before publishing.';
-        }
+        // Reset the heading row so the next opener starts clean.
+        const hdEl = document.getElementById('pc-edit-decision-heading');
+        if (hdEl) { hdEl.textContent = ''; hdEl.hidden = true; }
       }
       if (typeof window.pcAssistantClose === 'function') window.pcAssistantClose();
     });
@@ -1939,14 +1966,14 @@ function b3ShowSynthesisPreview(ctx) {
   modal.id = 'b3-synth-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
       <h3 style="margin:0 0 0.4rem;">Recommended change for ${b3EscHtml(ctx.decisionId)}</h3>
       <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
         Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. Fidelity of the existing content is preserved; only what you explicitly approved was changed.
       </p>
       ${ctx.unchanged ? '<div style="padding:0.55rem 0.85rem;background:rgba(239,108,0,0.1);border-left:4px solid #ef6c00;margin:0.4rem 0;font-size:0.92rem;">⚠ The synthesis pass produced an <strong>unchanged</strong> body — your conversation didn\'t result in any approved revisions. Refining the discussion or canceling are both fine.</div>' : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:0.6rem 0;flex:1;min-height:0;">
-        <div style="background:#fff;border:1px solid var(--border,#e0e0e0);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid #888;display:flex;flex-direction:column;min-height:0;">
+        <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid var(--body-text-muted);display:flex;flex-direction:column;min-height:0;">
           <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#555);margin-bottom:0.4rem;">Currently in this section</div>
           <div class="md-view" style="flex:1;overflow:auto;">${ctx.originalBodyHtml || ''}</div>
         </div>
@@ -1954,7 +1981,7 @@ function b3ShowSynthesisPreview(ctx) {
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
             <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
             <button id="b3-synth-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
-            <button id="b3-synth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border,#ccc);background:#fff;color:#333;border-radius:3px;cursor:pointer;">Edit</button>
+            <button id="b3-synth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
           </div>
           <div id="b3-synth-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedBodyHtml || ''}</div>
           <textarea id="b3-synth-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedBody)}</textarea>
@@ -2072,7 +2099,7 @@ function b3ShowProposalSynthesisPreview(ctx) {
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
   const headingLabel = `Proposal #${ctx.proposalIdx}` + (ctx.taskId ? ` from ${ctx.taskId}` : '');
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
       <h3 style="margin:0 0 0.4rem;">Recommended change for ${b3EscHtml(headingLabel)}</h3>
       <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
         Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. The proposal stays <strong>pending</strong> after publish — you can still Accept / Reject / Re-categorize it.
@@ -2086,7 +2113,7 @@ function b3ShowProposalSynthesisPreview(ctx) {
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
             <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
             <button id="b3-psynth-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
-            <button id="b3-psynth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border,#ccc);background:#fff;color:#333;border-radius:3px;cursor:pointer;">Edit</button>
+            <button id="b3-psynth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
           </div>
           <div id="b3-psynth-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedBodyHtml || ''}</div>
           <textarea id="b3-psynth-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedBody)}</textarea>
@@ -2191,14 +2218,14 @@ function b3ShowSectionSynthesisPreview(ctx) {
   modal.id = 'b3-synth-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
       <h3 style="margin:0 0 0.4rem;">Recommended revision for section ${b3EscHtml(ctx.sectionIdx)} — ${b3EscHtml(ctx.sectionLabel || '')}</h3>
       <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
         Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. Existing decision IDs are preserved; new decisions are written as <code>id=NEW</code> placeholders and will be assigned real IDs (D-&lt;DOMAIN&gt;-${b3EscHtml(ctx.sectionIdx)}.&lt;n&gt;) on publish.
       </p>
       ${ctx.unchanged ? '<div style="padding:0.55rem 0.85rem;background:rgba(239,108,0,0.1);border-left:4px solid #ef6c00;margin:0.4rem 0;font-size:0.92rem;">⚠ The synthesis pass produced an <strong>unchanged</strong> section — your conversation didn\'t result in any approved revisions. Refining the discussion or canceling are both fine.</div>' : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:0.6rem 0;flex:1;min-height:0;">
-        <div style="background:#fff;border:1px solid var(--border,#e0e0e0);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid #888;display:flex;flex-direction:column;min-height:0;">
+        <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid var(--body-text-muted);display:flex;flex-direction:column;min-height:0;">
           <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#555);margin-bottom:0.4rem;">Currently in this section</div>
           <div class="md-view" style="flex:1;overflow:auto;">${ctx.originalSectionHtml || ''}</div>
         </div>
@@ -2206,7 +2233,7 @@ function b3ShowSectionSynthesisPreview(ctx) {
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
             <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
             <button id="b3-sect-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
-            <button id="b3-sect-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border,#ccc);background:#fff;color:#333;border-radius:3px;cursor:pointer;">Edit</button>
+            <button id="b3-sect-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
           </div>
           <div id="b3-sect-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedSectionHtml || ''}</div>
           <textarea id="b3-sect-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedSectionMd)}</textarea>

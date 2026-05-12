@@ -217,6 +217,57 @@ summaries.
 other skill that emits the same JSON shape next to a trace-matrix source
 gets the overlay automatically — no console changes required.
 
+## Theme tokens (theme.yaml fields)
+
+A theme pack's `theme.yaml` may set any subset of the following keys; each maps to a CSS variable injected into a `<style id="theme-overrides">` block at the top of every page. Unset keys fall through to the defaults in `console.css` `:root`.
+
+| `theme.yaml` key | CSS var | Purpose |
+|---|---|---|
+| `primary` | `--brand-primary` | Brand accent — link color, active filter chip, primary buttons |
+| `primary_dark` | `--brand-primary-dark` | Hover state for primary |
+| `primary_tint` | `--brand-primary-tint` | Soft fill — `.pc-msg-user` chat bubble bg |
+| `accent` | `--brand-accent` | Secondary accent (info badges, citation links) |
+| `topnav_bg` / `topnav_text` | `--topnav-bg` / `--topnav-text` | Topnav surface + text |
+| `body_bg` / `text` / `text_muted` | `--body-bg` / `--body-text` / `--body-text-muted` | Page bg + body copy + secondary text |
+| `border` | `--border` | Default border color for cards, panels, separators |
+| `font_body` / `font_heading` | `--font-body` / `--font-heading` | Type stack |
+| `logo_filter` | `--logo-filter` | CSS `filter` applied to `.brand-logo`. Set to `invert(1) brightness(1.05)` for dark themes when only a dark-on-transparent logo asset is available |
+| `surface` | `--surface` | Primary card / panel / drawer fill (light themes: `#ffffff`; dark themes: e.g. slate-800) |
+| `surface_2` | `--surface-2` | Slightly lifted surface — table headers, toolbars, hover states |
+| `surface_muted` | `--surface-muted` | Recessed surface — assistant message bubble, input wells |
+| `code_bg` / `code_text` | `--code-bg` / `--code-text` | Inline code + `<pre>` blocks |
+| `banner_warning_bg` / `banner_warning_text` | `--banner-warning-bg` / `--banner-warning-text` | `.pc-msg-warning` and similar soft-warning panels |
+| `footer_bg` / `footer_text` / `footer_heading` / `footer_muted` / `footer_divider` | `--footer-*` | Site footer pill — decoupled from `--body-text` so dark themes can keep the footer visually grounded (e.g. slate-900 below a slate-950 body) instead of inheriting light-on-light or dark-on-dark |
+| `icon_folder` | `--icon-folder` | Color of the folder glyph in the docs explorer tree. Defaults to amber so folders pop against either light or dark surfaces |
+| `badge_bg` / `badge_text` | `--badge-bg` / `--badge-text` | Pill background + text for `.badge` (agents page "Panel · N members" and similar). Decoupled from primary so themes can hit a high-contrast pair without having to bend the brand palette |
+
+### Theme inheritance (`extends:`)
+
+A theme pack may declare `extends: <theme-name>` at the top of its `theme.yaml` to inherit every key from a named parent and override only the keys it cares about. The resolver looks up the parent the same way it looks up any theme — project `themes_dir/<name>/` first, then skill `themes/<name>/`. Inheritance is shallow (every theme value is a scalar; child wins on conflict) and recursive (the parent itself may extend another theme; cycles raise `ValueError`).
+
+```yaml
+# tools/project-console/themes/<your-pack>/theme.yaml
+extends: dark            # inherit slate+sky palette + all semantic tokens
+
+name: My Project Dark
+brand_name: My Project
+tagline: "..."
+logo_filter: "invert(1)"  # if your stock logo is dark-on-transparent
+accent: "#f59e0b"          # optional: override only this token
+```
+
+**Adding a new project theme pack:** start with `extends: dark` and override only `brand_name`, `tagline`, and `logo_filter`. Add color overrides only when the brand differs from the slate+sky default.
+
+## Inline action buttons in markdown content
+
+Markdown rendered inside the console (submission tracker, dashboards, any doc-explorer page) can embed inline buttons for row-level actions without inline styles. The console ships theme-aware styling for one shared class:
+
+| Class | Purpose | Example |
+|-------|---------|---------|
+| `tracker-action-btn` | Inline placeholder/action button — typically used in tracker tables for row-level CTAs (e.g., "Create Draft", "Open Worktree"). Theme-aware (derives all colors from `--brand-*` / `--gl-*` tokens). Honors the standard HTML `disabled` attribute. | `<button class="tracker-action-btn" disabled>Create Draft</button>` |
+
+**Scope:** the skill provides styling only. Click handlers (slash-command dispatch, worktree creation, draft scaffolding) are intentionally **not implemented** — projects wire those up themselves when ready. Until then, mark buttons `disabled` to make the deferred state visible to readers.
+
 ## Best Practices
 See [README.md](README.md) — consumed by `/best-practices` audit.
 

@@ -69,8 +69,12 @@ function renderNode(node) {
   }
 
   const icon = document.createElement("span");
-  icon.className = "tree-icon";
-  icon.textContent = node.is_dir ? "📁" : fileIcon(node.name);
+  icon.className = node.is_dir ? "tree-icon tree-icon-folder" : "tree-icon tree-icon-file";
+  // Folder icon is a CSS-drawn mask (see .tree-icon-folder in console.css) so
+  // it tints to the active --icon-folder color. File icons stay emoji-driven
+  // via fileIcon() — file-type recognition is the more important affordance
+  // there and emojis convey type at a glance.
+  if (!node.is_dir) icon.textContent = fileIcon(node.name);
   row.appendChild(icon);
 
   const label = document.createElement("span");

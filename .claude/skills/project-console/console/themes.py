@@ -46,6 +46,31 @@ class Theme:
             "border": "--border",
             "font_body": "--font-body",
             "font_heading": "--font-heading",
+            "logo_filter": "--logo-filter",
+            # Semantic surfaces — primary/secondary/recessed panel fills.
+            "surface": "--surface",
+            "surface_2": "--surface-2",
+            "surface_muted": "--surface-muted",
+            # Inline-code / pre wells.
+            "code_bg": "--code-bg",
+            "code_text": "--code-text",
+            # Warning banners (.pc-msg-warning etc.).
+            "banner_warning_bg": "--banner-warning-bg",
+            "banner_warning_text": "--banner-warning-text",
+            # Footer pill — independent of body-text so dark themes
+            # can keep the footer visually grounded.
+            "footer_bg": "--footer-bg",
+            "footer_text": "--footer-text",
+            "footer_heading": "--footer-heading",
+            "footer_muted": "--footer-muted",
+            "footer_divider": "--footer-divider",
+            # Docs-explorer folder glyph color.
+            "icon_folder": "--icon-folder",
+            # Badge pill (e.g. agents page "Panel · 5 members") — separate
+            # from primary so themes can pick a high-contrast pair without
+            # disturbing brand-primary.
+            "badge_bg": "--badge-bg",
+            "badge_text": "--badge-text",
         }
         lines = [f"  {css}: {self.tokens[key]};"
                  for key, css in mapping.items()
@@ -65,26 +90,79 @@ def _load_pack(pack_dir: Path) -> dict | None:
         return None
 
 
-def resolve(cfg: Config) -> Theme:
-    name = cfg.theme_name
-    candidates: list[Path] = []
+def _resolve_pack(name: str, cfg: Config) -> tuple[Path, dict] | None:
+    """Find a theme pack by name. Project themes win over skill defaults.
 
-    project_pack = cfg.themes_dir / name
-    candidates.append(project_pack)
-
+    Returns (pack_dir, tokens) for the first match, or None.
+    """
+    candidates: list[Path] = [cfg.themes_dir / name]
     if cfg.skill_root is not None:
         candidates.append(cfg.skill_root / "themes" / name)
-        candidates.append(cfg.skill_root / "themes" / "light")  # ultimate fallback
-
     for pack_dir in candidates:
         tokens = _load_pack(pack_dir)
         if tokens is not None:
-            return Theme(
-                name=name if pack_dir == candidates[0] or pack_dir.name == name else pack_dir.name,
-                pack_dir=pack_dir,
-                tokens=tokens,
-                source_url=tokens.get("source_url"),
-            )
+            return pack_dir, tokens
+    return None
+
+
+def _load_with_inheritance(name: str, cfg: Config, _seen: set[str] | None = None) -> tuple[Path, dict] | None:
+    """Load a theme pack and recursively merge any `extends:` parent.
+
+    A theme.yaml may declare `extends: <theme-name>` to inherit all tokens
+    from the named parent. Child fields override parent fields key-by-key
+    (shallow merge — every token is a scalar, no nested structures). The
+    parent itself may also extend another theme; cycles raise ValueError.
+
+    Project theme packs are resolved first by `_resolve_pack`, so a project
+    pack can extend a skill default (`extends: dark`) and override only the
+    brand-specific bits (logo_filter, brand_name, tagline, accent).
+    """
+    if _seen is None:
+        _seen = set()
+    if name in _seen:
+        raise ValueError(f"theme inheritance cycle: {' -> '.join(list(_seen) + [name])}")
+    _seen.add(name)
+
+    found = _resolve_pack(name, cfg)
+    if found is None:
+        return None
+    pack_dir, tokens = found
+
+    parent_name = tokens.get("extends")
+    if parent_name:
+        parent = _load_with_inheritance(parent_name, cfg, _seen)
+        if parent is None:
+            # Parent missing — proceed with child-only tokens (still better
+            # than failing the whole console launch over a typoed extends).
+            return pack_dir, tokens
+        _, parent_tokens = parent
+        merged = {**parent_tokens, **tokens}  # child wins
+        merged.pop("extends", None)
+        return pack_dir, merged
+
+    return pack_dir, tokens
+
+
+def resolve(cfg: Config) -> Theme:
+    name = cfg.theme_name
+
+    found = _load_with_inheritance(name, cfg)
+    if found is not None:
+        pack_dir, tokens = found
+        return Theme(
+            name=name,
+            pack_dir=pack_dir,
+            tokens=tokens,
+            source_url=tokens.get("source_url"),
+        )
+
+    # Ultimate fallback: skill's bundled `light` theme
+    if cfg.skill_root is not None:
+        fallback = cfg.skill_root / "themes" / "light"
+        tokens = _load_pack(fallback)
+        if tokens is not None:
+            return Theme(name="light", pack_dir=fallback, tokens=tokens,
+                         source_url=tokens.get("source_url"))
 
     # Absolute last-resort: empty theme
     return Theme(name="default", pack_dir=Path("/nonexistent"), tokens={}, source_url=None)

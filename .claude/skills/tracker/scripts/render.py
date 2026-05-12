@@ -153,6 +153,88 @@ def md_inline_to_html(text, src_dir=None, repo_root=None):
     return text
 
 
+# ─── B6 Create Draft button wiring ───
+#
+# Source markdown carries `<button class="tracker-action-btn" disabled>Create Draft</button>`
+# in the Path cell of every row that needs an artifact authored. The renderer
+# rewrites those disabled buttons into live ones with `data-row-id` +
+# `data-action="create-draft"` so `tracker_interactive.js` picks them up.
+#
+# When an in-progress draft exists for a row (file at `_drafting/<row-id>-*.md`),
+# the button label flips to "Edit Draft" and `data-draft-state` carries the
+# stage badge.
+
+_CREATE_DRAFT_BTN_RE = re.compile(
+    r'<button\s+class="tracker-action-btn"\s+disabled\s*>\s*Create Draft\s*</button>',
+    re.IGNORECASE,
+)
+
+_DRAFT_ELIGIBLE_STATUSES = {
+    'Not Started', 'Drafting', 'Drafted', 'Needs Revision',
+}
+
+
+def find_draft_stage(project_dir, row_id):
+    """Probe project root `_drafting/` for an in-progress draft for this row.
+
+    Returns one of: None (no draft), 'outline', 'drafting', 'drafted'.
+    """
+    drafting = Path(project_dir) / '_drafting'
+    if not drafting.is_dir():
+        return None
+    matches = list(drafting.glob(f'{row_id}-*.md'))
+    if not matches:
+        return None
+    f = max(matches, key=lambda p: p.stat().st_mtime)
+    try:
+        head_lines = f.read_text(errors='replace').split('\n', 200)
+    except Exception:
+        return 'drafting'
+    fm = []
+    if head_lines and head_lines[0].strip() == '---':
+        for line in head_lines[1:]:
+            if line.strip() == '---':
+                break
+            fm.append(line)
+    fm_text = '\n'.join(fm)
+
+    def _has_iso_value(key):
+        marker = f'{key}:'
+        if marker not in fm_text:
+            return False
+        tail = fm_text.split(marker, 1)[1].split('\n', 1)[0].strip()
+        return tail and tail.lower() not in ('null', '~', '')
+
+    if _has_iso_value('synthesis_completed_at'):
+        return 'drafted'
+    if _has_iso_value('outline_approved_at'):
+        return 'drafting'
+    return 'outline'
+
+
+def wire_create_draft_button(html, row_id, status, draft_stage=None):
+    """Rewrite a disabled Create Draft button in `html` into a wired one.
+
+    No match or ineligible status → return `html` unchanged. When `draft_stage`
+    is set, flip label to 'Edit Draft' and emit `data-draft-state`.
+    """
+    if not _CREATE_DRAFT_BTN_RE.search(html):
+        return html
+    if status not in _DRAFT_ELIGIBLE_STATUSES:
+        return html
+    label = 'Edit Draft' if draft_stage else 'Create Draft'
+    attrs = [
+        'class="tracker-action-btn"',
+        f'data-row-id="{row_id}"',
+        'data-action="create-draft"',
+    ]
+    if draft_stage:
+        attrs.append(f'data-draft-state="{draft_stage}"')
+    badge = f' <span class="draft-stage-badge" title="Draft stage">{draft_stage}</span>' if draft_stage else ''
+    new_btn = f'<button {" ".join(attrs)}>{label}{badge}</button>'
+    return _CREATE_DRAFT_BTN_RE.sub(new_btn, html)
+
+
 def detail_md_to_html(md, src_dir=None, repo_root=None):
     """Convert detail-block markdown to compact HTML for click-row expansion."""
     out = []
@@ -878,9 +960,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ref-col{color:var(--text-muted);font-size:.72rem;max-width:180px}
 .path-col{color:var(--text-muted);font-size:.7rem;font-family:monospace;max-width:280px;overflow:hidden;text-overflow:ellipsis}
 .path-col a{color:var(--accent);text-decoration:none}.path-col a:hover{text-decoration:underline}
+/* Tracker action buttons (e.g., "Create Draft") authored inline in the source markdown.
+   Visually match the .controls filter-chip style so the dashboard's button language
+   stays consistent. Project-console skill ships a parallel rule for the docs-view render. */
+.tracker-action-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.3rem .65rem;font-size:.72rem;font-family:inherit;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s}
+.tracker-action-btn:hover:not(:disabled):not([disabled]){background:var(--accent);color:#000;border-color:var(--accent)}
+.tracker-action-btn:disabled,.tracker-action-btn[disabled]{cursor:not-allowed;background:transparent;color:var(--text-muted);border-style:dashed;opacity:.85}
+.tracker-action-btn[data-draft-state]{background:var(--accent-soft,rgba(255,193,7,.12));border-color:var(--accent,#ffc107)}
+.tracker-action-btn .draft-stage-badge{display:inline-block;margin-left:.4em;padding:0 .4em;border-radius:6px;background:var(--accent,#ffc107);color:#000;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .gates-col{font-size:.72rem;color:var(--cyan);font-family:monospace}
 .legend{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem;font-size:.75rem;color:var(--text-muted)}
-.legend-item{display:flex;align-items:center;gap:.3rem}
+.legend-item{display:flex;align-items:center;gap:.3rem;font-weight:600}
+.legend-item.l-done{color:var(--green)}
+.legend-item.l-in-review{color:var(--accent2)}
+.legend-item.l-drafted{color:var(--cyan)}
+.legend-item.l-partial{color:var(--yellow)}
+.legend-item.l-needs-revision{color:var(--orange)}
+.legend-item.l-not-started{color:var(--text-muted)}
 .help-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
 .help-mode-banner.visible{display:block}.help-mode-banner strong{color:var(--accent)}
 .info-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:.6rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
@@ -1080,12 +1176,12 @@ def render(project_dir, embed=False):
     w('</div>')
 
     w('<div class="legend">'
-      '<div class="legend-item"><span class="dot done"></span> Approved</div>'
-      '<div class="legend-item"><span class="dot in-review"></span> In Review</div>'
-      '<div class="legend-item"><span class="dot drafted"></span> Drafted</div>'
-      '<div class="legend-item"><span class="dot partial"></span> Drafting</div>'
-      '<div class="legend-item"><span class="dot needs-revision"></span> Needs Revision</div>'
-      '<div class="legend-item"><span class="dot not-started"></span> Not Started</div>'
+      '<div class="legend-item l-done"><span class="dot done"></span> Approved</div>'
+      '<div class="legend-item l-in-review"><span class="dot in-review"></span> In Review</div>'
+      '<div class="legend-item l-drafted"><span class="dot drafted"></span> Drafted</div>'
+      '<div class="legend-item l-partial"><span class="dot partial"></span> Drafting</div>'
+      '<div class="legend-item l-needs-revision"><span class="dot needs-revision"></span> Needs Revision</div>'
+      '<div class="legend-item l-not-started"><span class="dot not-started"></span> Not Started</div>'
       '<div class="legend-item" style="color:var(--accent)">&#9432; Click row for help</div></div>')
 
     # Per-Phase progress bars
@@ -1167,7 +1263,7 @@ def render(project_dir, embed=False):
                   f'<td><span class="{effort_class(r.get("effort",""))}">{r.get("effort","")}</span></td>'
                   f'{ai_status_cell(iid, agent_map)}'
                   f'<td><span class="{status_class(r["status"])}" data-row-id="{iid}" data-status="{r["status"]}">{r["status"]}</span></td>'
-                  f'<td class="path-col">{md_inline_to_html(r["path"], src_dir, project_dir)}</td>'
+                  f'<td class="path-col">{wire_create_draft_button(md_inline_to_html(r["path"], src_dir, project_dir), iid, r["status"], find_draft_stage(project_dir, iid))}</td>'
                   f'</tr>')
                 if iid in details:
                     detail_html = detail_md_to_html(details[iid], src_dir, project_dir)

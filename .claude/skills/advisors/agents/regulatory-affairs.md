@@ -8,7 +8,7 @@ console:
   group: core-team
   context:
     - docs/project/dhfs/**/design-controls/architecture/**/*.md
-    - docs/project/strategies/regulatory/**/*.md
+    - docs/project/strategies/*.md
   sources:
     - docs/project/submissions/**/*.md
     - docs/project/input-analysis/predicate-analysis/**/*.md
@@ -43,7 +43,7 @@ establish the module architecture, regulatory strategy, scope boundaries,
 and key decisions the program has already made.
 
 - `docs/project/dhfs/**/design-controls/architecture/**/*.md`
-- `docs/project/strategies/regulatory/**/*.md`
+- `docs/project/strategies/*.md`
 
 ### Sources (triage per question)
 

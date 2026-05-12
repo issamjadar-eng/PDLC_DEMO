@@ -140,6 +140,35 @@
     });
   }
 
+  // B6 Create Draft / Edit Draft button handler. Wired buttons carry
+  // data-action="create-draft" + data-row-id. Click navigates the parent
+  // window (the iframe container) to the two-panel draft page.
+  function wireCreateDraftButtons() {
+    document.querySelectorAll('button.tracker-action-btn[data-action="create-draft"]').forEach(btn => {
+      if (btn.dataset.wired) return;
+      btn.dataset.wired = '1';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const rowId = btn.getAttribute('data-row-id');
+        if (!rowId) return;
+        const url = '/workflows/tracker-draft/' + encodeURIComponent(rowId);
+        // Navigate the parent (so the user leaves the dashboard iframe and
+        // lands on the dedicated two-panel page). Fallback to current
+        // window if there's no parent context.
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.location.href = url;
+          } else {
+            window.location.href = url;
+          }
+        } catch (err) {
+          window.location.href = url;
+        }
+      });
+    });
+  }
+
   // Highlight rows that are already pending (badge state differs from md
   // baseline). On first load there's no diff; the parent panel will tell
   // us via postMessage which row IDs are pending.
@@ -168,13 +197,18 @@
     if (e.key === 'Escape') closeAnyPopover();
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wireBadges);
-  } else {
+  function wireAll() {
     wireBadges();
+    wireCreateDraftButtons();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireAll);
+  } else {
+    wireAll();
   }
   // Wire any badges added dynamically.
-  const obs = new MutationObserver(wireBadges);
+  const obs = new MutationObserver(wireAll);
   obs.observe(document.documentElement, { childList: true, subtree: true });
 
   // Notify parent on load so it can poll session state.
