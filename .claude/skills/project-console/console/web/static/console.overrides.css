@@ -1,0 +1,22 @@
+/* Project overrides — extension-hook seam. Skill /sync leaves this file
+   alone. Use it for project-specific CSS that should not live in the
+   skill's brand-neutral console.css. */
+
+/* Redirect the Manrope @font-face to the active theme pack's font asset.
+   The skill's console.css declares the @font-face with src pointing at
+   /static/fonts/manrope-latin.woff2, but the skill ships no woff2 there
+   (Manrope is a brand-flavored choice, not a generic skill default). The
+   GlobalLogic theme pack ships the woff2 under its fonts/ dir and serves
+   it via the /theme/assets route, so we redeclare @font-face here pointing
+   at that location. Later cascade wins — this declaration overrides the
+   skill's. */
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/theme/assets/fonts/manrope-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+                 U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}

@@ -1,7 +1,7 @@
 # tools/project-console/console.yaml
 # Project-local configuration. Safe to edit.
 
-theme: globallogic
+theme: globallogic-dark
 
 grounding:
   # Extra filesystem roots exposable to the assistant drawer's grounding
@@ -34,7 +34,7 @@ dashboards:
   overrides:
     submission-tracker:
       title: "Submission Package Tracker"
-      description: "510(k) submission package readiness across base submission, PCCP, and supporting engineering artifacts."
+      description: ""
       group: "Submissions"
       order: 1
 

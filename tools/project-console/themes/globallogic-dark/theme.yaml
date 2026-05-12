@@ -1,0 +1,29 @@
+# GlobalLogic dark theme pack for PDLC_DEMO.
+# Inherits the stock slate+sky dark palette from the skill's `dark` theme
+# and overrides only the brand identity tokens + GlobalLogic primary purple.
+
+extends: dark
+
+name: GlobalLogic Dark
+brand_name: GlobalLogic
+
+# GlobalLogic brand purple — kept from the light pack so the brand accent
+# carries through. The slate body + topnav already provide the dark base.
+primary: "#a855f7"
+primary_dark: "#7a00df"
+primary_tint: "#3b0764"
+accent: "#38bdf8"
+
+# Manrope is the GlobalLogic web font (already shipped under fonts/ for the
+# light pack — the same files are referenced here via the shared static
+# mount, so no duplication is needed).
+font_body: "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+font_heading: "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+
+# The shipped logo.png is dark-on-transparent (designed for the white
+# topnav of the light pack). Invert it so it reads on the slate topnav.
+logo_filter: "invert(1) brightness(1.05)"
+
+tagline: "A GlobalLogic demo of agentic PDLC workflows in MedTech."
+
+source_url: "https://www.globallogic.com"
