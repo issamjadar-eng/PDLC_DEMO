@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "dhf": "pca-device",
-  "generated_at": "2026-05-12T14:59:40Z",
+  "generated_at": "2026-05-12T19:12:53Z",
   "layers": [
     {
       "key": "user_needs",
@@ -628,12 +628,12 @@
               "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
             },
             {
-              "id": "DI-034",
-              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
-            },
-            {
               "id": "DI-025",
               "summary": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all…"
+            },
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
             }
           ],
           "traces_reverse": []
@@ -787,6 +787,10 @@
             {
               "id": "SW-005",
               "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…"
+            },
+            {
+              "id": "VER-PP3500-BT-005",
+              "summary": "Bench test"
             }
           ],
           "traces_reverse": [
@@ -863,6 +867,10 @@
             {
               "id": "SW-003",
               "summary": "The lockout-interval state machine shall block any patient-requested bolus while the…"
+            },
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
             }
           ],
           "traces_reverse": [
@@ -897,6 +905,10 @@
             {
               "id": "SW-004",
               "summary": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume…"
+            },
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
             }
           ],
           "traces_reverse": [
@@ -939,6 +951,10 @@
             {
               "id": "SW-006",
               "summary": "The hard-limit enforcement layer shall reject any programmed value exceeding the active…"
+            },
+            {
+              "id": "VER-PP3500-SW-006",
+              "summary": "Software test"
             }
           ],
           "traces_reverse": [
@@ -1425,12 +1441,12 @@
           ],
           "traces_reverse": [
             {
-              "id": "UN-014",
-              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
-            },
-            {
               "id": "UN-007",
               "summary": "Clinicians must be able to enter and confirm decimal-point dose values without ambiguity,…"
+            },
+            {
+              "id": "UN-014",
+              "summary": "The user interface must be operable by a trained nurse with minimal training time and…"
             }
           ]
         },
@@ -1589,12 +1605,12 @@
           "traces_forward": [],
           "traces_reverse": [
             {
-              "id": "UN-022",
-              "summary": "The device must be light enough and ergonomically suitable to attach to an IV pole,…"
-            },
-            {
               "id": "UN-011",
               "summary": "The pump must operate continuously on battery for at least one full nursing shift cycle…"
+            },
+            {
+              "id": "UN-022",
+              "summary": "The device must be light enough and ergonomically suitable to attach to an IV pole,…"
             }
           ]
         },
@@ -1749,12 +1765,12 @@
           ],
           "traces_reverse": [
             {
-              "id": "UN-013",
-              "summary": "The device must protect patient data and therapy integrity against unauthorized network…"
-            },
-            {
               "id": "UN-012",
               "summary": "The device must integrate with the hospital wireless network and EHR/EMR systems so that…"
+            },
+            {
+              "id": "UN-013",
+              "summary": "The device must protect patient data and therapy integrity against unauthorized network…"
             }
           ]
         },
@@ -2047,7 +2063,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-003",
@@ -2076,7 +2097,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-002",
+              "summary": "Software test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-004",
@@ -2142,7 +2168,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-006",
+              "summary": "Software test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-005",
@@ -2200,7 +2231,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-PP3500-SW-006",
+              "summary": "Software test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-016",
@@ -3095,12 +3131,119 @@
       "title": "VnV",
       "id_prefix": "VER",
       "source_files": [],
-      "items": [],
+      "items": [
+        {
+          "id": "VER-PP3500-BT-005",
+          "summary": "Bench test",
+          "full_text": "Bench test (VER-PP3500-BT-005)",
+          "category": null,
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-001",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            }
+          ]
+        },
+        {
+          "id": "VER-PP3500-SW-002",
+          "summary": "Software test",
+          "full_text": "Software test (VER-PP3500-SW-002)",
+          "category": null,
+          "criticality": null,
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-003",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
+            },
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            },
+            {
+              "id": "SW-003",
+              "summary": "The lockout-interval state machine shall block any patient-requested bolus while the…"
+            },
+            {
+              "id": "SW-004",
+              "summary": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume…"
+            }
+          ]
+        },
+        {
+          "id": "VER-PP3500-SW-006",
+          "summary": "Software test",
+          "full_text": "Software test (VER-PP3500-SW-006)",
+          "category": null,
+          "criticality": null,
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-005",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            },
+            {
+              "id": "SW-006",
+              "summary": "The hard-limit enforcement layer shall reject any programmed value exceeding the active…"
+            },
+            {
+              "id": "SW-008",
+              "summary": "The barcode-scan handler shall capture 1D/2D barcodes from the integrated scanner, parse…"
+            }
+          ]
+        }
+      ],
       "missing_reason": null,
       "edges_known": true,
       "warnings": [
-        "v1 default: V&V nodes derived from DI verification column",
-        "scope_filter:vnv_to_sw dropped=3"
+        "v1 default: V&V nodes derived from DI verification column"
       ]
     },
     {
@@ -3120,243 +3263,28 @@
   ],
   "edges": [
     {
-      "from": "UN-001",
-      "to": "DI-001",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-002",
-      "to": "DI-001",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-001",
-      "to": "DI-002",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-003",
-      "to": "DI-003",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-003",
-      "to": "DI-004",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-004",
-      "to": "DI-004",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-004",
-      "to": "DI-005",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-009",
-      "to": "DI-005",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-009",
-      "to": "DI-015",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-008",
-      "to": "DI-016",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-006",
-      "to": "DI-007",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-006",
-      "to": "DI-008",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-001",
-      "to": "DI-009",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-006",
-      "to": "DI-009",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-010",
-      "to": "DI-019",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-005",
-      "to": "DI-006",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-005",
-      "to": "DI-010",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-018",
-      "to": "DI-010",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-015",
-      "to": "DI-011",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-018",
-      "to": "DI-012",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-007",
-      "to": "DI-013",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-014",
-      "to": "DI-013",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-014",
-      "to": "DI-014",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-014",
-      "to": "DI-020",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-014",
-      "to": "DI-021",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-007",
-      "to": "DI-021",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-011",
-      "to": "DI-017",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-011",
-      "to": "DI-018",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-016",
-      "to": "DI-030",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-020",
-      "to": "DI-032",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-022",
-      "to": "DI-033",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-011",
-      "to": "DI-033",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-012",
-      "to": "DI-022",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-012",
-      "to": "DI-023",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-021",
-      "to": "DI-023",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-013",
-      "to": "DI-024",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-013",
-      "to": "DI-034",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-012",
-      "to": "DI-034",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-013",
-      "to": "DI-025",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-019",
-      "to": "DI-025",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-019",
-      "to": "DI-026",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-014",
-      "to": "DI-027",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-019",
-      "to": "DI-027",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-018",
-      "to": "DI-028",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-018",
-      "to": "DI-029",
-      "kind": "un_to_di"
-    },
-    {
-      "from": "UN-017",
-      "to": "DI-031",
-      "kind": "un_to_di"
-    },
-    {
       "from": "DI-001",
       "to": "SW-001",
       "kind": "di_to_sw"
     },
     {
+      "from": "DI-001",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "VER-PP3500-BT-005",
+      "kind": "di_to_vnv"
+    },
+    {
       "from": "DI-002",
       "to": "SW-002",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-005",
       "kind": "di_to_sw"
     },
     {
@@ -3365,19 +3293,19 @@
       "kind": "di_to_sw"
     },
     {
+      "from": "DI-003",
+      "to": "VER-PP3500-SW-002",
+      "kind": "di_to_vnv"
+    },
+    {
       "from": "DI-004",
       "to": "SW-004",
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-001",
-      "to": "SW-005",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-002",
-      "to": "SW-005",
-      "kind": "di_to_sw"
+      "from": "DI-004",
+      "to": "VER-PP3500-SW-002",
+      "kind": "di_to_vnv"
     },
     {
       "from": "DI-005",
@@ -3390,13 +3318,13 @@
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-015",
-      "to": "SW-007",
-      "kind": "di_to_sw"
+      "from": "DI-005",
+      "to": "VER-PP3500-SW-006",
+      "kind": "di_to_vnv"
     },
     {
-      "from": "DI-016",
-      "to": "SW-008",
+      "from": "DI-006",
+      "to": "SW-013",
       "kind": "di_to_sw"
     },
     {
@@ -3415,16 +3343,6 @@
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-019",
-      "to": "SW-012",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-006",
-      "to": "SW-013",
-      "kind": "di_to_sw"
-    },
-    {
       "from": "DI-010",
       "to": "SW-014",
       "kind": "di_to_sw"
@@ -3435,18 +3353,18 @@
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-020",
-      "to": "SW-016",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-021",
-      "to": "SW-017",
-      "kind": "di_to_sw"
-    },
-    {
       "from": "DI-014",
       "to": "SW-018",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-007",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "SW-008",
       "kind": "di_to_sw"
     },
     {
@@ -3460,8 +3378,18 @@
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-032",
-      "to": "SW-021",
+      "from": "DI-019",
+      "to": "SW-012",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-016",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-017",
       "kind": "di_to_sw"
     },
     {
@@ -3495,6 +3423,26 @@
       "kind": "di_to_sw"
     },
     {
+      "from": "DI-026",
+      "to": "SW-030",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-028",
+      "to": "SW-032",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-031",
+      "to": "SW-031",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-032",
+      "to": "SW-021",
+      "kind": "di_to_sw"
+    },
+    {
       "from": "DI-034",
       "to": "SW-028",
       "kind": "di_to_sw"
@@ -3505,19 +3453,254 @@
       "kind": "di_to_sw"
     },
     {
-      "from": "DI-026",
-      "to": "SW-030",
-      "kind": "di_to_sw"
+      "from": "SW-003",
+      "to": "VER-PP3500-SW-002",
+      "kind": "sw_to_vnv"
     },
     {
-      "from": "DI-031",
-      "to": "SW-031",
-      "kind": "di_to_sw"
+      "from": "SW-004",
+      "to": "VER-PP3500-SW-002",
+      "kind": "sw_to_vnv"
     },
     {
-      "from": "DI-028",
-      "to": "SW-032",
-      "kind": "di_to_sw"
+      "from": "SW-006",
+      "to": "VER-PP3500-SW-006",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-008",
+      "to": "VER-PP3500-SW-006",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-002",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-002",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-003",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-006",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-007",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-008",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-008",
+      "to": "DI-016",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-015",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-010",
+      "to": "DI-019",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-017",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-018",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-033",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-022",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-023",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-034",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-024",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-025",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-034",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-014",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-020",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-027",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-015",
+      "to": "DI-011",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-016",
+      "to": "DI-030",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-017",
+      "to": "DI-031",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-012",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-028",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-029",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-025",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-026",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-027",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-020",
+      "to": "DI-032",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-021",
+      "to": "DI-023",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-022",
+      "to": "DI-033",
+      "kind": "un_to_di"
     }
   ],
   "gaps": {
@@ -3535,12 +3718,8 @@
       "software": [
         "SW-001",
         "SW-002",
-        "SW-003",
-        "SW-004",
         "SW-005",
-        "SW-006",
         "SW-007",
-        "SW-008",
         "SW-009",
         "SW-010",
         "SW-011",
@@ -3580,28 +3759,22 @@
     },
     "broken_refs": [
       {
-        "from": "DI-001",
-        "to": "VER-PP3500-BT-005",
+        "from": "SW-001",
+        "to": "VER-PP3500-SW-001",
         "reason": "unknown_id"
       },
       {
-        "from": "DI-003",
-        "to": "VER-PP3500-SW-002",
+        "from": "SW-002",
+        "to": "VER-PP3500-SW-001",
         "reason": "unknown_id"
       },
       {
-        "from": "DI-004",
-        "to": "VER-PP3500-SW-002",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-005",
-        "to": "VER-PP3500-SW-006",
+        "from": "SW-009",
+        "to": "VER-PP3500-SW-003",
         "reason": "unknown_id"
       }
     ],
     "empty_layers": [
-      "vnv",
       "risk"
     ]
   },
@@ -3620,9 +3793,9 @@
     },
     "software": {
       "count": 32,
-      "with_forward": 0,
+      "with_forward": 4,
       "with_reverse": 32,
-      "orphan": 32
+      "orphan": 28
     },
     "architecture": {
       "count": 7,
@@ -3632,9 +3805,9 @@
       "orphan": 7
     },
     "vnv": {
-      "count": 0,
+      "count": 3,
       "with_forward": 0,
-      "with_reverse": 0,
+      "with_reverse": 3,
       "orphan": 0
     },
     "risk": {

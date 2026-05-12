@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "dhf": "connectivity-adapter",
-  "generated_at": "2026-05-12T14:59:40Z",
+  "generated_at": "2026-05-12T19:12:53Z",
   "layers": [
     {
       "key": "user_needs",
@@ -670,6 +670,10 @@
             {
               "id": "SW-023",
               "summary": "The pump-session keepalive watchdog shall detect pump-side disconnects within 15 s (3×…"
+            },
+            {
+              "id": "VER-CA-LT-001",
+              "summary": "Bench load test"
             }
           ],
           "traces_reverse": [
@@ -704,6 +708,10 @@
             {
               "id": "SW-002",
               "summary": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event…"
+            },
+            {
+              "id": "VER-CA-FI-001",
+              "summary": "Fault-injection test"
             }
           ],
           "traces_reverse": [
@@ -742,6 +750,10 @@
             {
               "id": "SW-030",
               "summary": "The event de-duplication index shall maintain pump-assigned event IDs for 72 hours and…"
+            },
+            {
+              "id": "VER-CA-IT-002",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -780,6 +792,10 @@
             {
               "id": "SW-005",
               "summary": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and…"
+            },
+            {
+              "id": "VER-CA-CT-001",
+              "summary": "Conformance test"
             }
           ],
           "traces_reverse": [
@@ -814,6 +830,10 @@
             {
               "id": "SW-006",
               "summary": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable…"
+            },
+            {
+              "id": "VER-CA-CT-002",
+              "summary": "Conformance test"
             }
           ],
           "traces_reverse": [
@@ -848,6 +868,10 @@
             {
               "id": "SW-007",
               "summary": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and…"
+            },
+            {
+              "id": "VER-CA-IT-003",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -882,6 +906,10 @@
             {
               "id": "SW-008",
               "summary": "The drug-library signature verifier shall validate every library payload (RSA-3072+,…"
+            },
+            {
+              "id": "VER-CA-ST-001",
+              "summary": "Security test"
             }
           ],
           "traces_reverse": [
@@ -916,6 +944,10 @@
             {
               "id": "SW-009",
               "summary": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress…"
+            },
+            {
+              "id": "VER-CA-BT-001",
+              "summary": "Bench test"
             }
           ],
           "traces_reverse": [
@@ -954,6 +986,10 @@
             {
               "id": "SW-024",
               "summary": "The drug-library rollback handler shall, on operator command, restore the previous…"
+            },
+            {
+              "id": "VER-CA-IT-004",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -988,6 +1024,10 @@
             {
               "id": "SW-011",
               "summary": "The firmware signature verifier shall validate every firmware bundle before queuing it…"
+            },
+            {
+              "id": "VER-CA-ST-002",
+              "summary": "Security test"
             }
           ],
           "traces_reverse": [
@@ -1026,6 +1066,10 @@
             {
               "id": "SW-025",
               "summary": "The firmware rollback handler shall revert pumps in a cohort to their pre-rollout…"
+            },
+            {
+              "id": "VER-CA-IT-005",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -1060,6 +1104,10 @@
             {
               "id": "SW-013",
               "summary": "The fleet-health view-model shall aggregate pump session state (connected, last…"
+            },
+            {
+              "id": "VER-CA-SY-001",
+              "summary": "System test"
             }
           ],
           "traces_reverse": [
@@ -1098,6 +1146,10 @@
             {
               "id": "SW-026",
               "summary": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit…"
+            },
+            {
+              "id": "VER-CA-PT-001",
+              "summary": "Performance test"
             }
           ],
           "traces_reverse": [
@@ -1136,6 +1188,10 @@
             {
               "id": "SW-029",
               "summary": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint…"
+            },
+            {
+              "id": "VER-CA-UT-001",
+              "summary": "Usability test"
             }
           ],
           "traces_reverse": [
@@ -1168,12 +1224,16 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "SW-016",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            },
+            {
               "id": "SW-026",
               "summary": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit…"
             },
             {
-              "id": "SW-016",
-              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+              "id": "VER-CA-ST-003",
+              "summary": "Security test"
             }
           ],
           "traces_reverse": [
@@ -1208,6 +1268,10 @@
             {
               "id": "SW-017",
               "summary": "The CEF audit-log streamer shall emit every security audit event in Common Event Format…"
+            },
+            {
+              "id": "VER-CA-IT-006",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -1246,6 +1310,10 @@
             {
               "id": "SW-029",
               "summary": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint…"
+            },
+            {
+              "id": "VER-CA-ST-004",
+              "summary": "Security test"
             }
           ],
           "traces_reverse": [
@@ -1280,6 +1348,10 @@
             {
               "id": "SW-019",
               "summary": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter…"
+            },
+            {
+              "id": "VER-CA-DR-001",
+              "summary": "Document review"
             }
           ],
           "traces_reverse": [
@@ -1318,6 +1390,10 @@
             {
               "id": "SW-028",
               "summary": "The Adapter self-test routine shall, at every process start, validate disk-write…"
+            },
+            {
+              "id": "VER-CA-SY-002",
+              "summary": "System test"
             }
           ],
           "traces_reverse": [
@@ -1356,6 +1432,10 @@
             {
               "id": "SW-027",
               "summary": "The configuration migration tool shall translate the operator's previous-version…"
+            },
+            {
+              "id": "VER-CA-SY-003",
+              "summary": "System test"
             }
           ],
           "traces_reverse": [
@@ -1390,6 +1470,10 @@
             {
               "id": "SW-022",
               "summary": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum:…"
+            },
+            {
+              "id": "VER-CA-IT-007",
+              "summary": "Integration test"
             }
           ],
           "traces_reverse": [
@@ -1433,7 +1517,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-LT-001",
+              "summary": "Bench load test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-001",
@@ -1462,7 +1551,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-FI-001",
+              "summary": "Fault-injection test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-002",
@@ -1491,7 +1585,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-002",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-003",
@@ -1607,7 +1706,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-CT-001",
+              "summary": "Conformance test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-004",
@@ -1636,7 +1740,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-CT-002",
+              "summary": "Conformance test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-005",
@@ -1665,7 +1774,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-003",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-006",
@@ -1694,7 +1808,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-001",
+              "summary": "Security test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-007",
@@ -1723,7 +1842,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-BT-001",
+              "summary": "Bench test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-008",
@@ -1752,7 +1876,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-004",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-009",
@@ -1810,7 +1939,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-002",
+              "summary": "Security test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-010",
@@ -1839,7 +1973,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-005",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-011",
@@ -1897,7 +2036,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-001",
+              "summary": "System test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-012",
@@ -1926,7 +2070,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-PT-001",
+              "summary": "Performance test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-013",
@@ -1955,7 +2104,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-UT-001",
+              "summary": "Usability test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-014",
@@ -2017,7 +2171,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-003",
+              "summary": "Security test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-015",
@@ -2046,7 +2205,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-006",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-016",
@@ -2075,7 +2239,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-004",
+              "summary": "Security test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-017",
@@ -2104,7 +2273,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-DR-001",
+              "summary": "Document review"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-018",
@@ -2136,12 +2310,12 @@
           "traces_forward": [],
           "traces_reverse": [
             {
-              "id": "DI-017",
-              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
-            },
-            {
               "id": "DI-014",
               "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            },
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
             }
           ]
         },
@@ -2166,7 +2340,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-002",
+              "summary": "System test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-019",
@@ -2195,7 +2374,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-003",
+              "summary": "System test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-020",
@@ -2224,7 +2408,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-007",
+              "summary": "Integration test"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "DI-021",
@@ -2312,12 +2501,705 @@
       "title": "VnV",
       "id_prefix": "VER",
       "source_files": [],
-      "items": [],
+      "items": [
+        {
+          "id": "VER-CA-LT-001",
+          "summary": "Bench load test",
+          "full_text": "Bench load test (VER-CA-LT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-001",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            },
+            {
+              "id": "SW-001",
+              "summary": "The mutual-TLS ingest listener shall accept ≥500 concurrent pump sessions on a single…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-FI-001",
+          "summary": "Fault-injection test",
+          "full_text": "Fault-injection test (VER-CA-FI-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-002",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "The Adapter shall durably persist every pump-originated alarm and therapy event to local…"
+            },
+            {
+              "id": "SW-002",
+              "summary": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-002",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-003",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            },
+            {
+              "id": "SW-003",
+              "summary": "The replay engine shall hold queued events for downstream consumers up to 24 hours of…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-CT-001",
+          "summary": "Conformance test",
+          "full_text": "Conformance test (VER-CA-CT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-004",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration…"
+            },
+            {
+              "id": "SW-005",
+              "summary": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-CT-002",
+          "summary": "Conformance test",
+          "full_text": "Conformance test (VER-CA-CT-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-005",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a…"
+            },
+            {
+              "id": "SW-006",
+              "summary": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-003",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-006",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7…"
+            },
+            {
+              "id": "SW-007",
+              "summary": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-001",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-007",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or…"
+            },
+            {
+              "id": "SW-008",
+              "summary": "The drug-library signature verifier shall validate every library payload (RSA-3072+,…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-BT-001",
+          "summary": "Bench test",
+          "full_text": "Bench test (VER-CA-BT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-008",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library…"
+            },
+            {
+              "id": "SW-009",
+              "summary": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-004",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-009",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…"
+            },
+            {
+              "id": "SW-010",
+              "summary": "The rollout scheduler shall accept a cohort spec (serial set / ward / all-fleet),…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-002",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-010",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The Adapter shall verify the digital signature of every firmware bundle before queuing it…"
+            },
+            {
+              "id": "SW-011",
+              "summary": "The firmware signature verifier shall validate every firmware bundle before queuing it…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-005",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-005)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-011",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…"
+            },
+            {
+              "id": "SW-012",
+              "summary": "The staged-rollout state machine shall support operator-controlled pause, resume, and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-001",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-012",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware…"
+            },
+            {
+              "id": "SW-013",
+              "summary": "The fleet-health view-model shall aggregate pump session state (connected, last…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-PT-001",
+          "summary": "Performance test",
+          "full_text": "Performance test (VER-CA-PT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-013",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…"
+            },
+            {
+              "id": "SW-014",
+              "summary": "The audit-log search service shall support filtering by pump serial, user identity,…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-UT-001",
+          "summary": "Usability test",
+          "full_text": "Usability test (VER-CA-UT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-014",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            },
+            {
+              "id": "SW-015",
+              "summary": "The \"Needs Attention\" landing-page composer shall aggregate offline pumps (>24 h), certs…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-003",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-015",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            },
+            {
+              "id": "SW-016",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-006",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-006)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-016",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS…"
+            },
+            {
+              "id": "SW-017",
+              "summary": "The CEF audit-log streamer shall emit every security audit event in Common Event Format…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-004",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-017",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
+            },
+            {
+              "id": "SW-018",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-cert…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-DR-001",
+          "summary": "Document review",
+          "full_text": "Document review (VER-CA-DR-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-018",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-018",
+              "summary": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to…"
+            },
+            {
+              "id": "SW-019",
+              "summary": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-002",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-019",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…"
+            },
+            {
+              "id": "SW-020",
+              "summary": "The installer package shall install the Adapter on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-003",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-020",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…"
+            },
+            {
+              "id": "SW-021",
+              "summary": "The in-place upgrade orchestrator shall execute version N→N+1 upgrades with no…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-007",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-007)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-021",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or…"
+            },
+            {
+              "id": "SW-022",
+              "summary": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum:…"
+            }
+          ]
+        }
+      ],
       "missing_reason": null,
       "edges_known": true,
       "warnings": [
-        "v1 default: V&V nodes derived from DI verification column",
-        "scope_filter:vnv_to_sw dropped=21"
+        "v1 default: V&V nodes derived from DI verification column"
       ]
     },
     {
@@ -2336,6 +3218,376 @@
     }
   ],
   "edges": [
+    {
+      "from": "DI-001",
+      "to": "SW-001",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-004",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-023",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "VER-CA-LT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-002",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "VER-CA-FI-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-003",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-030",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "VER-CA-IT-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-004",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-004",
+      "to": "VER-CA-CT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-005",
+      "to": "SW-006",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-005",
+      "to": "VER-CA-CT-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-006",
+      "to": "SW-007",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-006",
+      "to": "VER-CA-IT-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-007",
+      "to": "SW-008",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-007",
+      "to": "VER-CA-ST-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-008",
+      "to": "SW-009",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-008",
+      "to": "VER-CA-BT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-010",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-024",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "VER-CA-IT-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-010",
+      "to": "SW-011",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-010",
+      "to": "VER-CA-ST-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-012",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-025",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "VER-CA-IT-005",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-012",
+      "to": "SW-013",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-012",
+      "to": "VER-CA-SY-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-014",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "VER-CA-PT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-015",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "VER-CA-UT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-016",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "VER-CA-ST-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-016",
+      "to": "SW-017",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "VER-CA-IT-006",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-018",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "VER-CA-ST-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-018",
+      "to": "SW-019",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-018",
+      "to": "VER-CA-DR-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-020",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-028",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "VER-CA-SY-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-021",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-027",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "VER-CA-SY-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-022",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "VER-CA-IT-007",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "SW-001",
+      "to": "VER-CA-LT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-002",
+      "to": "VER-CA-FI-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-003",
+      "to": "VER-CA-IT-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-005",
+      "to": "VER-CA-CT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-006",
+      "to": "VER-CA-CT-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-007",
+      "to": "VER-CA-IT-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-008",
+      "to": "VER-CA-ST-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-009",
+      "to": "VER-CA-BT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-010",
+      "to": "VER-CA-IT-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-011",
+      "to": "VER-CA-ST-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-012",
+      "to": "VER-CA-IT-005",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-013",
+      "to": "VER-CA-SY-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-014",
+      "to": "VER-CA-PT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-015",
+      "to": "VER-CA-UT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-016",
+      "to": "VER-CA-ST-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-017",
+      "to": "VER-CA-IT-006",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-018",
+      "to": "VER-CA-ST-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-019",
+      "to": "VER-CA-DR-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-020",
+      "to": "VER-CA-SY-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-021",
+      "to": "VER-CA-SY-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-022",
+      "to": "VER-CA-IT-007",
+      "kind": "sw_to_vnv"
+    },
     {
       "from": "UN-001",
       "to": "DI-001",
@@ -2372,13 +3624,13 @@
       "kind": "un_to_di"
     },
     {
-      "from": "UN-008",
-      "to": "DI-007",
+      "from": "UN-007",
+      "to": "DI-008",
       "kind": "un_to_di"
     },
     {
-      "from": "UN-007",
-      "to": "DI-008",
+      "from": "UN-008",
+      "to": "DI-007",
       "kind": "un_to_di"
     },
     {
@@ -2445,166 +3697,6 @@
       "from": "UN-021",
       "to": "DI-021",
       "kind": "un_to_di"
-    },
-    {
-      "from": "DI-001",
-      "to": "SW-001",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-002",
-      "to": "SW-002",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-003",
-      "to": "SW-003",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-001",
-      "to": "SW-004",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-001",
-      "to": "SW-023",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-003",
-      "to": "SW-030",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-004",
-      "to": "SW-005",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-005",
-      "to": "SW-006",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-006",
-      "to": "SW-007",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-007",
-      "to": "SW-008",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-008",
-      "to": "SW-009",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-009",
-      "to": "SW-010",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-009",
-      "to": "SW-024",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-010",
-      "to": "SW-011",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-011",
-      "to": "SW-012",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-011",
-      "to": "SW-025",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-012",
-      "to": "SW-013",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-013",
-      "to": "SW-014",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-014",
-      "to": "SW-015",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-013",
-      "to": "SW-026",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-015",
-      "to": "SW-026",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-015",
-      "to": "SW-016",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-016",
-      "to": "SW-017",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-017",
-      "to": "SW-018",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-018",
-      "to": "SW-019",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-017",
-      "to": "SW-029",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-014",
-      "to": "SW-029",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-019",
-      "to": "SW-020",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-020",
-      "to": "SW-021",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-021",
-      "to": "SW-022",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-020",
-      "to": "SW-027",
-      "kind": "di_to_sw"
-    },
-    {
-      "from": "DI-019",
-      "to": "SW-028",
-      "kind": "di_to_sw"
     }
   ],
   "gaps": {
@@ -2612,34 +3704,13 @@
       "user_needs": [],
       "design_inputs": [],
       "software": [
-        "SW-001",
-        "SW-002",
-        "SW-003",
         "SW-004",
         "SW-023",
         "SW-030",
-        "SW-005",
-        "SW-006",
-        "SW-007",
-        "SW-008",
-        "SW-009",
-        "SW-010",
         "SW-024",
-        "SW-011",
-        "SW-012",
         "SW-025",
-        "SW-013",
-        "SW-014",
-        "SW-015",
         "SW-026",
-        "SW-016",
-        "SW-017",
-        "SW-018",
-        "SW-019",
         "SW-029",
-        "SW-020",
-        "SW-021",
-        "SW-022",
         "SW-027",
         "SW-028"
       ],
@@ -2647,116 +3718,9 @@
       "vnv": [],
       "risk": []
     },
-    "broken_refs": [
-      {
-        "from": "DI-001",
-        "to": "VER-CA-LT-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-002",
-        "to": "VER-CA-FI-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-003",
-        "to": "VER-CA-IT-002",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-004",
-        "to": "VER-CA-CT-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-005",
-        "to": "VER-CA-CT-002",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-006",
-        "to": "VER-CA-IT-003",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-007",
-        "to": "VER-CA-ST-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-008",
-        "to": "VER-CA-BT-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-009",
-        "to": "VER-CA-IT-004",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-010",
-        "to": "VER-CA-ST-002",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-011",
-        "to": "VER-CA-IT-005",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-012",
-        "to": "VER-CA-SY-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-013",
-        "to": "VER-CA-PT-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-014",
-        "to": "VER-CA-UT-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-015",
-        "to": "VER-CA-ST-003",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-016",
-        "to": "VER-CA-IT-006",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-017",
-        "to": "VER-CA-ST-004",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-018",
-        "to": "VER-CA-DR-001",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-019",
-        "to": "VER-CA-SY-002",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-020",
-        "to": "VER-CA-SY-003",
-        "reason": "unknown_id"
-      },
-      {
-        "from": "DI-021",
-        "to": "VER-CA-IT-007",
-        "reason": "unknown_id"
-      }
-    ],
+    "broken_refs": [],
     "empty_layers": [
       "architecture",
-      "vnv",
       "risk"
     ]
   },
@@ -2775,9 +3739,9 @@
     },
     "software": {
       "count": 30,
-      "with_forward": 0,
+      "with_forward": 21,
       "with_reverse": 30,
-      "orphan": 30
+      "orphan": 9
     },
     "architecture": {
       "count": 0,
@@ -2788,9 +3752,9 @@
       "orphan": 0
     },
     "vnv": {
-      "count": 0,
+      "count": 21,
       "with_forward": 0,
-      "with_reverse": 0,
+      "with_reverse": 21,
       "orphan": 0
     },
     "risk": {

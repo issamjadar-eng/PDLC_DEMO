@@ -1,8 +1,8 @@
 ---
 name: trace-matrix
-description: "Bidirectional design-controls trace matrix builder — parses User Needs / Design Inputs / Software Requirements / Architecture / V&V / Risk source docs in any DHF via project-adaptive parsers and emits a controlled markdown deliverable plus a JSON sidecar consumed by project-console. Supports a shared `jira-mirror` adapter for item DHFs whose layers are sourced from `_jira/<arch>/<version>/` mirror tables."
-version: 7
-updated: 2026-05-04
+description: "Bidirectional design-controls trace matrix builder — parses User Needs / Design Inputs / Software Requirements / Architecture / V&V / Risk source docs in any DHF via project-adaptive parsers and emits a controlled markdown deliverable plus a JSON sidecar consumed by project-console. Layer-pair edges build from claims authored on either side (child→parent via `traces_forward_ids`, parent→child via `verification_ids`); the canonical edge set dedupes when both sides agree and flags asymmetric authoring when V&V has an independent source. Supports a shared `jira-mirror` adapter for item DHFs whose layers are sourced from `_jira/<arch>/<version>/` mirror tables."
+version: 8
+updated: 2026-05-12
 ---
 
 # Trace Matrix Skill
@@ -57,6 +57,8 @@ Resolution order in `adapter_api.load_adapter`: explicit `adapter:` name → pro
 | `${CLAUDE_SKILL_DIR}/scripts/parsers/defaults/*.py` | Shipped defaults for the six layers. |
 | `${CLAUDE_SKILL_DIR}/scripts/parsers/jira_mirror.py` | Shared `jira-mirror` adapter — parses `_jira/<arch>/<version>/{epics,stories,hazards,tests}.md` mirror tables. |
 | `${CLAUDE_SKILL_DIR}/scripts/parsers/markdown_table.py` | Shared GFM pipe-table tokenizer used by every default adapter. |
+| `${CLAUDE_SKILL_DIR}/tests/test_graph_bidirectional.py` | Unit tests for the bidirectional edge engine, scope filter, asymmetric-trace warnings, and orphan rules. |
+| `${CLAUDE_SKILL_DIR}/tests/test_jira_mirror.py` | Unit tests for the shared `jira-mirror` adapter. |
 
 ## Default layer source convention
 
@@ -70,6 +72,28 @@ Resolution order in `adapter_api.load_adapter`: explicit `adapter:` name → pro
 | Risk | `risk-management/<source>` | `HZ` | If source is empty or an `awaiting-content` placeholder, layer renders with `source_empty` |
 
 All defaults are overridable per DHF in `trace-matrix.yml`. For structural divergences a project adapter file in `tools/project-console/trace-matrix/adapters/` takes over entirely.
+
+## Edge model — bidirectional authoring (since v8)
+
+Each layer-pair relationship is treated as an undirected logical link that either side may author. Adapters populate one or more of three authoring fields on each node; the engine collects every claim into a canonical `(upstream_id, downstream_id)` edge set, dedupes when both sides author the same relationship, and builds the rendered edge plus per-item forward/reverse lists from that set.
+
+| Field on item | Convention | Read as |
+|---|---|---|
+| `traces_forward_ids` | child-points-up | "the upstream parent(s) I trace to" |
+| `verifies_di_ids` | child-points-up (legacy) | "the DI parent(s) I verify" — emitted by the default DI parser onto V&V nodes |
+| `verification_ids` | parent-points-down | "the V&V child(ren) that verify me" — emitted from DI rows' or SW rows' Verification Method column |
+
+Adapter authors only set the fields the source doc actually supports. The engine does not require both sides to author the same relationship — one side is enough to build the edge. When both author the same relationship, the canonical set dedupes naturally.
+
+### V&V scope filter
+
+When the V&V layer has its own source files (jira-mirror, or a real verification-protocols doc), the engine runs a narrow scope filter: V&V items whose authored upstream targets do not resolve to any requirement-layer node (DI or SW) are dropped, and a `scope_filter` warning is recorded on the V&V layer. This keeps test-execution mirrors scoped to "tests that verify requirements" rather than the full execution universe (which a Jira mirror may include defect-fix tests, hazards-only tests, etc.).
+
+The filter does **not** run when V&V is DI-derived (no V&V source files). In that case every VER node is a DI-verifying node by construction — filtering would drop legitimate trace data.
+
+### Asymmetric-trace warnings
+
+When V&V has an independent source AND a parent (DI or SW) references a VER that authors other upstream claims but does not reciprocate the parent's claim, the engine emits an `asymmetric_trace` warning on the V&V layer. The warning surfaces inconsistent authoring (e.g., DI lists a VER in its verification column, but the VER's own "Verifies" column points at different requirements) so a human can reconcile. Both authored edges still build — the warning is informational, not a broken_ref. DI-derived V&V is silent here for the same reason the scope filter is silent: there is no independent VER source to disagree.
 
 ### `trace-matrix.yml` per-layer fields
 

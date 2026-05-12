@@ -82,8 +82,9 @@ The console's Trace Matrix view currently shows broken/empty SW columns for thes
 - [ ] Inspect rendered output in console (refresh `/trace-matrix` page) — manual smoke test pending
 
 ### Phase 4 — Commit + push
-- [ ] Commit changes with concise message naming the three DHFs + trace-matrix.yml + console sidecar regen
-- [ ] Push to `origin/main` (user confirmed explicit push)
+- [x] Two commits landed on `origin/main` (2026-05-12, user confirmed two-commit shape + push):
+      - `534a280` `ben/048-prereq: theme switch + Manrope fix + connectivity-adapter & cloud-suite UN/DI` — closes the prior-session work that had been sitting uncommitted since 2026-05-12 evening
+      - `51f8294` `ben/049: SRS authoring — pca-device + connectivity-adapter + cloud-suite` — the SRS layer + project adapter + sidecar regens
 
 ## Resume Command
 
