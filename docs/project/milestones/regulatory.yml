@@ -35,7 +35,7 @@ milestones:
         required: true
 
   - id: pccp-release
-    name: 510(k)+PCCP Release
+    name: 510k+PCCP Release
     short_label: 510k+PCCP
     description: >
       Filing event — full 510(k) submission with PCCP envelope (K210345).
@@ -45,7 +45,11 @@ milestones:
     bindings:
       - dhf: pca-device
         doc_pattern: '**/*'
-        version: v1.0
+        # Until per-milestone version evidence trees exist on disk
+        # (`docs/project/dhfs/pca-device/_versions/v1.0/...`), all milestone
+        # bindings resolve against `current`. Re-pin to vN.M when version
+        # tagging lands. See ben/047 Phase-3 backlog.
+        version: current
         required: true
 
   - id: lmr1-release
@@ -59,7 +63,7 @@ milestones:
     bindings:
       - dhf: pca-device
         doc_pattern: '**/*'
-        version: v1.1
+        version: current   # see pccp-release note above re version pinning
         required: true
 
   - id: lmr2-release
@@ -72,5 +76,5 @@ milestones:
     bindings:
       - dhf: pca-device
         doc_pattern: '**/*'
-        version: v1.2
+        version: current   # see pccp-release note above re version pinning
         required: true

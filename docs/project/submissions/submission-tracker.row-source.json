@@ -2,6 +2,126 @@
   "schema_version": "0.1",
   "generated_by": "/tracker generate (Model D row-source sidecar)",
   "rows": {
+    "ENG1": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG2": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG3": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG4": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG5": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG6": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG7": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG8": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG9": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG10": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG16": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG17": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG18": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG13": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG15": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG11": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG12": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG14": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG19": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
+    "ENG20": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": null,
+      "canonical_role": "engineering-prereq"
+    },
     "Q-PC1": {
       "source_kind": "derived",
       "from_milestone": "qsub-release",

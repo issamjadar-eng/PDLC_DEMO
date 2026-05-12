@@ -1,0 +1,163 @@
+# Submission Tracker — Overlay Sidecar
+#
+# Single hand-managed sidecar that overlays per-row + per-(DHF, canonical_role)
+# values onto the tracker. Persistent across `/tracker generate --write-canonical`
+# regenerations because the sidecar is hand-authored and the generator/renderer
+# only READ it (never write).
+#
+# Supersedes the previous split:
+#   - submission-tracker.deliverable-names.yml  (per-DHF × role naming)  ← rolled in
+#   - submission-tracker.human.json             (per-row status/ref)     ← rolled in
+#
+# Loaded by:
+#   - `generate.py::load_overlay()`     — reads `defaults.by_dhf_role[<dhf>][<role>]`
+#                                          when emitting row `name_token`
+#   - `render.py::load_overlay()`       — reads `rows.<row_id>` to overlay
+#                                          name / status / effort / ref / path
+#                                          + carry owner/target_date/blockers/notes
+#                                          into the row's detail panel
+#
+# Precedence — name:
+#   1. rows.<row_id>.name                       — per-row override (highest)
+#   2. defaults.by_dhf_role.<dhf>.<role>        — per-(DHF, role) default
+#   3. folder.name / entry.name                 — generator's fallback
+#
+# Precedence — status / effort / ref / path:
+#   1. rows.<row_id>.<field>                    — per-row override (highest)
+#   2. generator's emitted value                 — derived from evidence walk
+#                                                  (status defaults Not Started,
+#                                                   effort defaults —,
+#                                                   ref defaults —,
+#                                                   path defaults to file link)
+
+schema_version: "0.1"
+
+# ─── Per-(DHF × canonical_role) defaults ─────────────────────────────────────
+# Apply across every milestone that shares the (DHF, role) pair. Same SAD
+# applies to Q-PC1 / PC1 / L1-PC1 / L2-PC1 by default; per-row overrides
+# (below) take precedence.
+defaults:
+
+  by_dhf_role:
+
+    pca-device:
+      architecture:     "System Software Architecture Document (SAD)"
+      plans:            "Design & Development Plan"
+      user-needs:       "Use Specification (User Needs)"
+      requirements:     "Design Input Specification (SRS)"
+      vnv:              "Verification & Validation Protocol & Report"
+      trace-matrix:     "Design Trace Matrix (UN ↔ DI ↔ Arch ↔ V&V)"
+      tool-validation:  "Tool Validation Records"
+      risk-management:  "Risk Management Report (ISO 14971)"
+      clinical:         "Clinical Evaluation Report"
+      postmarket:       "Periodic Safety Update Report (PSUR)"
+      cybersecurity:    "Cybersecurity Vulnerability Management Plan"
+
+    # Future: add connectivity-adapter / drug-library-manager entries here as
+    # those DHFs come online. Use a "*" wildcard block for cross-DHF defaults
+    # (e.g., if every DHF's "vnv" role gets the same friendly name).
+
+# ─── Per-row overrides ────────────────────────────────────────────────────────
+# Highest precedence. Override any cell value for a specific row. Carry
+# metadata (owner / target_date / blockers / notes) into the row's detail
+# panel without putting it in the canonical's cell display.
+#
+# Schema per row entry:
+#   <row-id>:
+#     name:        "..."          # overrides default name + folder.name
+#     status:      Drafting       # overrides default Not Started
+#     effort:      V.High         # overrides default —
+#     ref:         "..."          # overrides default —
+#     path:        "..."          # overrides generator-derived path link
+#                                  # Set to disabled-button HTML to enable B6
+#                                  # Create Draft button on the row.
+#     owner:       <handle>       # metadata; surfaces in (i) panel
+#     target_date: 2026-MM-DD     # metadata; surfaces in (i) panel
+#     blockers:    [...]          # metadata; surfaces in (i) panel
+#     notes:       "..."          # free text; surfaces in (i) panel
+
+rows:
+
+  # ── QSub-phase pca-device walk ──
+
+  Q-PC1:
+    status: Drafting
+    effort: V.High
+    ref:    "FDA sw-functions §V"
+    owner:  ben
+
+  Q-PC2:
+    status: Drafting
+    effort: V.High
+    ref:    "FDA sw-functions §VI"
+
+  Q-PC9:
+    name:   "Risk Management Report (Q-Sub readiness draft)"   # per-row name override demo
+    status: Drafting
+    effort: High
+    ref:    "ISO 14971 §7"
+
+  Q-PC12:
+    status: Drafting
+    effort: High
+    ref:    "FDA cybersecurity §V"
+
+  Q-PC25:
+    status: Drafting
+    effort: Med
+    ref:    "IEC 62366-1 §5.2"
+
+  Q-PC27:
+    status: Drafting
+    effort: High
+    ref:    "IEC 62304 §5.6 / §5.7"
+
+  Q-PC23:
+    status: Not Started
+    effort: V.High
+    ref:    "FDA Clinical Evaluation Guidance"
+
+  Q-PC24:
+    status: Drafting
+    effort: Med
+    ref:    "21 CFR 803 / FDA PSUR template"
+
+  # ── 510k+PCCP-phase pca-device walk (post-Q-Sub, pre-filing) ──
+
+  PC1:
+    effort: V.High
+    ref:    "FDA sw-functions §V"
+
+  PC9:
+    effort: V.High
+    ref:    "ISO 14971 §7"
+
+  PC12:
+    effort: High
+    ref:    "FDA cybersecurity §V"
+
+  PC25:
+    effort: Med
+    ref:    "IEC 62366-1 §5.2"
+
+  PC27:
+    effort: V.High
+    ref:    "IEC 62304 §5.6 / §5.7"
+
+  # ── LMR1 (first commercial release — phase-naming demo) ──
+
+  L1-PC1:
+    name:   "System SAD — LMR1 Release"        # per-row name override
+    effort: High
+
+  L1-PC9:
+    effort: High
+
+  # ── LMR2 (AI/ML envelope release — phase-naming demo) ──
+
+  L2-PC1:
+    name:   "System SAD — LMR2 Release"
+    effort: High
+
+  L2-PC9:
+    effort: High

@@ -1,14 +1,3 @@
-# project.yml — Project manifest
-#
-# Single source of truth for project identity, team roster, and security policy.
-# Skills and agents read this for project-specific context.
-# This file is committed to the repo.
-#
-# Maintained by: medtech-docs init (creation), manual edits (ongoing)
-# Consumed by: security-assert.sh, setup.sh, best-practices, task skill, secops agent
-
-# ─── Project Identity ───
-
 project:
   name: PDLC_DEMO
   repo: GlobalLogic-a-Hitachi-Company/PDLC_DEMO
@@ -18,317 +7,262 @@ project:
   device_family: patient-controlled-analgesia-pump
   lead_product: PP3500 (PainEase PCA Advanced)
   portfolio_context:
-    # Full 5-device infusion portfolio retained as predicate/portfolio reference
-    # under docs/project/input-analysis/predicate-analysis/. PP3500 is the DHF anchor.
-    - IP5000  # FlexFlow Pro — general-purpose IV pump (portfolio ref)
-    - PP3000  # PainEase PCA — direct predicate to PP3500
-    - PP3500  # PainEase PCA Advanced — LEAD PRODUCT (DHF anchor)
-    - SP6000  # MicroDose Pro — syringe pump (portfolio ref)
-    - SP6500  # MicroDose Elite — syringe pump (portfolio ref)
+  - IP5000
+  - PP3000
+  - PP3500
+  - SP6000
+  - SP6500
   composition:
-    - samd      # Software as a Medical Device components
-    - simd      # Software in a Medical Device (pump firmware)
-    - hardware  # Custom medical electrical hardware
+  - samd
+  - simd
+  - hardware
   capabilities:
     ai_ml: true
-    ehr_integration: true     # HL7 FHIR
+    ehr_integration: true
     medical_imaging: false
     surgical_navigation: false
-
-# ─── DHFs ───
-#
-# Every project has at least one DHF. A DHF is a component with its own
-# design controls, risk-management, clinical, postmarket, and cybersecurity
-# folders. This section is the single source of truth for the project's DHF
-# topology. Consumed by /medtech-docs, /strategy, /tracker, /best-practices.
-#
-# Added 2026-04-13 as part of task 007 P6 (unified DHF shape reorg).
-# PDLC_DEMO starts with one DHF (pca-device, the PP3500 DHF anchor); other
-# components (connectivity-adapter, cloud-suite + 7 child apps) will be added
-# via /medtech-docs add-dhf as they are scoped.
-#
-# Fields:
-#   path       — required; folder name under docs/project/dhfs/ (or nested path)
-#   regulatory — concept | in-development | cleared | mixed
-#   filing     — submission folder this DHF rolls up into (null if not scoped)
-#   parent     — parent DHF path (null for top-level)
-
-# ─── DHF Manifest scope vector ───
-#
-# Read by /dhf-manifest build-manifest to project the Reference DHF (Tier 3)
-# through this project's specific scope. Added 2026-04-27 as part of ben/035.
 scope:
-  hardware: true              # PP3500 has SiMD pump firmware + custom medical electrical hardware
-  cloud_hosted: true          # cloud-suite components hosted in shared cloud infra
-  tool_validation: true       # development tool validation in scope
-  multi_function_device: true # pump + cloud-suite + connectivity-adapter under one program
-  ota_updates: true           # OTA updates for cloud-suite + connectivity firmware
-  usability_hf: true          # IEC 62366-1 HFE in scope
+  hardware: true
+  cloud_hosted: true
+  tool_validation: true
+  multi_function_device: true
+  ota_updates: true
+  usability_hf: true
   clinical_evaluation: literature
-  interoperability: true      # HL7 / FHIR / DICOM via connectivity-adapter
-  geography: [us]
-
+  interoperability: true
+  geography:
+  - us
 dhfs:
-  # ── System DHF — lead device (PP3500 PCA infusion pump) ──
-  - leaf: pca-device
-    path: pca-device
-    role: system
-    composes: []
-    classification:
-      samd: false
-      class: II
-      iec62304: C
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: null
-
-  # ── Item DHF — connectivity adapter (separate filing) ──
-  - leaf: connectivity-adapter
-    path: connectivity-adapter
-    role: item
-    classification:
-      samd: true
-      class: II
-      iec62304: B
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: null
-
-  # ── Platform System DHF — cloud-suite (composes 7 children) ──
-  - leaf: cloud-suite
-    path: cloud-suite
-    role: system
-    composes:
-      - drug-library-manager
-      - fleet-management
-      - compliance-reports
-      - analytics-dashboard
-      - inventory-tracker
-      - alerts-engine
-      - clinical-interface
-    regulatory: mixed
-    filing: null
-    parent: null
-
-  # ── Cloud-suite child item DHFs ──
-  - leaf: drug-library-manager
-    path: cloud-suite/dhfs/drug-library-manager
-    role: item
-    classification:
-      samd: true
-      class: II
-      iec62304: B
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: fleet-management
-    path: cloud-suite/dhfs/fleet-management
-    role: item
-    classification:
-      samd: false
-      class: non-device
-      iec62304: A
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: compliance-reports
-    path: cloud-suite/dhfs/compliance-reports
-    role: item
-    classification:
-      samd: false
-      class: non-device
-      iec62304: A
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: analytics-dashboard
-    path: cloud-suite/dhfs/analytics-dashboard
-    role: item
-    classification:
-      samd: false
-      class: non-device
-      iec62304: A
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: inventory-tracker
-    path: cloud-suite/dhfs/inventory-tracker
-    role: item
-    classification:
-      samd: false
-      class: non-device
-      iec62304: A
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: alerts-engine
-    path: cloud-suite/dhfs/alerts-engine
-    role: item
-    classification:
-      samd: true
-      class: II
-      iec62304: C
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-  - leaf: clinical-interface
-    path: cloud-suite/dhfs/clinical-interface
-    role: item
-    classification:
-      samd: true
-      class: II
-      iec62304: C
-      ai_enabled: false
-    regulatory: in-development
-    filing: 510k
-    parent: cloud-suite
-
-# ─── Team Roster ───
-#
-# Every repo collaborator must have a row here.
-# task_folder is the lowercase name used under tasks/{folder}/
-# GitHub username must be exact (case-sensitive) for API matching.
-
+- leaf: pca-device
+  path: docs/project/dhfs/pca-device
+  role: system
+  # architecture_name drives the tracker Scope column for rows from this DHF's
+  # evidence walks. Without this, scope renders as the leaf name ("pca-device").
+  # "Suite" is the conventional label for the system-level deliverable scope.
+  architecture_name: Suite
+  composes: []
+  classification:
+    samd: false
+    class: II
+    iec62304: C
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: null
+- leaf: connectivity-adapter
+  path: docs/project/dhfs/connectivity-adapter
+  role: item
+  classification:
+    samd: true
+    class: II
+    iec62304: B
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: null
+- leaf: cloud-suite
+  path: docs/project/dhfs/cloud-suite
+  role: system
+  composes:
+  - drug-library-manager
+  - fleet-management
+  - compliance-reports
+  - analytics-dashboard
+  - inventory-tracker
+  - alerts-engine
+  - clinical-interface
+  regulatory: mixed
+  filing: null
+  parent: null
+- leaf: drug-library-manager
+  path: docs/project/dhfs/cloud-suite/dhfs/drug-library-manager
+  role: item
+  classification:
+    samd: true
+    class: II
+    iec62304: B
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: fleet-management
+  path: docs/project/dhfs/cloud-suite/dhfs/fleet-management
+  role: item
+  classification:
+    samd: false
+    class: non-device
+    iec62304: A
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: compliance-reports
+  path: docs/project/dhfs/cloud-suite/dhfs/compliance-reports
+  role: item
+  classification:
+    samd: false
+    class: non-device
+    iec62304: A
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: analytics-dashboard
+  path: docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard
+  role: item
+  classification:
+    samd: false
+    class: non-device
+    iec62304: A
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: inventory-tracker
+  path: docs/project/dhfs/cloud-suite/dhfs/inventory-tracker
+  role: item
+  classification:
+    samd: false
+    class: non-device
+    iec62304: A
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: alerts-engine
+  path: docs/project/dhfs/cloud-suite/dhfs/alerts-engine
+  role: item
+  classification:
+    samd: true
+    class: II
+    iec62304: C
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
+- leaf: clinical-interface
+  path: docs/project/dhfs/cloud-suite/dhfs/clinical-interface
+  role: item
+  classification:
+    samd: true
+    class: II
+    iec62304: C
+    ai_enabled: false
+  regulatory: in-development
+  filing: 510k
+  parent: cloud-suite
 team:
   active:
-    - name: Ben Xavier
-      github: benxavier-gl
-      task_folder: ben
-      role: Demo Owner
-      email: ben.xavier@globallogic.com
-      added: 2026-04-12
+  - name: Ben Xavier
+    github: benxavier-gl
+    task_folder: ben
+    role: Demo Owner
+    email: ben.xavier@globallogic.com
+    added: 2026-04-12
   inactive: []
-
-# ─── Skill Registries ───
-#
-# Approved sources for skills, agents, and templates.
-# Skills/agents not traceable to an approved registry trigger secops warnings.
-
 registries:
-  - name: anthropic
-    type: builtin
-    description: Anthropic official skills (docx, pptx, xlsx, pdf)
-    skills:
-      - docx
-      - pptx
-      - xlsx
-      - pdf
-
-  - name: hitachi
-    type: github
-    repo: GlobalLogic-a-Hitachi-Company/hitachi
-    path: skills/manifest.md
-    local_path: ../hitachi    # local working checkout used by /sync-skills (relative to project root)
-    description: Internal shared registry — project skills and best practices
-    skills:
-      - best-practices
-      - docflow
-      - lessons
-      - medtech-docs
-      - skill-creator
-      - strategy
-      - sync-skills
-      - task
-      - tracker
-
-  # Third-party community skills (MIT-licensed, not GlobalLogic-authored).
-  # /sync-skills MUST NOT push to these registries — pull-only / reinstall-only.
-  # If a skill from this registry goes missing, reinstall via:
-  #   git clone --depth=1 https://github.com/<repo>.git /tmp/<name>
-  #   cd /tmp/<name> && git checkout <pinned_sha>
-  #   cp -r SKILL.md STYLE_PRESETS.md viewport-base.css html-template.md \
-  #         animation-patterns.md README.md LICENSE scripts/ \
-  #         <project>/.claude/skills/<name>/
-  #   echo <pinned_sha> > <project>/.claude/skills/<name>/.pinned-sha
-  - name: community-zarazhangrui
-    type: github-public
-    repo: zarazhangrui/frontend-slides
-    pinned_sha: 8dca834fc61abc9dd633cbe6a74ed7be3d82a608
-    license: MIT
-    sync_policy: pull-only   # never push — third-party upstream
-    description: Community frontend-slides skill — animation-rich HTML presentations
-    skills:
-      - frontend-slides
-
-# ─── Security Policy ───
-
+- name: anthropic
+  type: builtin
+  description: Anthropic official skills (docx, pptx, xlsx, pdf)
+  skills:
+  - docx
+  - pptx
+  - xlsx
+  - pdf
+- name: hitachi
+  type: github
+  repo: GlobalLogic-a-Hitachi-Company/hitachi
+  path: skills/manifest.md
+  local_path: ../hitachi
+  description: Internal shared registry — project skills and best practices
+  skills:
+  - best-practices
+  - docflow
+  - lessons
+  - medtech-docs
+  - skill-creator
+  - strategy
+  - sync-skills
+  - task
+  - tracker
+- name: community-zarazhangrui
+  type: github-public
+  repo: zarazhangrui/frontend-slides
+  pinned_sha: 8dca834fc61abc9dd633cbe6a74ed7be3d82a608
+  license: MIT
+  sync_policy: pull-only
+  description: Community frontend-slides skill — animation-rich HTML presentations
+  skills:
+  - frontend-slides
 security:
   approved_email_domains:
-    - globallogic.com
-    - method.com
-
+  - globallogic.com
+  - method.com
   check_ttl_days: 7
   attestation_ttl_days: 30
-
   required_gitignore_patterns:
-    - ".env"
-    - "*.pem"
-    - "*.key"
-    - "*.p12"
-    - "credentials*"
-    - "**/PHI/**"
-    - "**/patient*data*"
-
-  # Auto-populated from registries.skills lists (union, alphabetized).
-  # When a new skill is added to a registry entry above, also add it here
-  # so the secops audit can verify the installed set matches the approved set.
+  - .env
+  - '*.pem'
+  - '*.key'
+  - '*.p12'
+  - credentials*
+  - '**/PHI/**'
+  - '**/patient*data*'
   approved_skills:
-    - advisors
-    - best-practices
-    - change-control
-    - dhf-manifest
-    - digest
-    - docflow
-    - docx
-    - frontend-slides
-    - jira-pull
-    - lessons
-    - md-deck
-    - medtech-docs
-    - pdf
-    - pptx
-    - project-console
-    - secops
-    - skill-creator
-    - strategy
-    - sync-skills
-    - task
-    - trace-matrix
-    - tracker
-    - web-control
-    - xlsx
+  - advisors
+  - best-practices
+  - change-control
+  - dhf-manifest
+  - digest
+  - docflow
+  - docx
+  - frontend-slides
+  - jira-pull
+  - lessons
+  - md-deck
+  - medtech-docs
+  - pdf
+  - pptx
+  - project-console
+  - secops
+  - skill-creator
+  - strategy
+  - sync-skills
+  - task
+  - trace-matrix
+  - tracker
+  - web-control
+  - xlsx
   approved_mcps:
-    # chrome-devtools — Google's Chrome DevTools MCP server. Lets Claude
-    # drive a real Chrome instance for visual validation: navigate, take
-    # screenshots, inspect computed styles, evaluate JS in the page. Used
-    # during project-console frontend work (task 003) to verify layouts
-    # that can't be checked from source alone.
-    # Install: `claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest`
-    - chrome-devtools
+  - chrome-devtools
   approved_plugins: []
   approved_agents:
-    - dhf-manifest/agents/tier1-enricher
-    - dhf-manifest/agents/tier1-restructure
-    - project-secops
+  - dhf-manifest/agents/tier1-enricher
+  - dhf-manifest/agents/tier1-restructure
+  - project-secops
 
-# Advisors — persona subagents installed by /advisors init.
-# `enabled` curates which advisors are exposed to CC and the console.
-# `overlays.<name>.add` adds project-specific globs on top of the agent's
-# baseline (universal + shape-stable) sources. `overlays.<name>.exclude`
-# filters paths out of the resolved file list. Tier-3 entries start empty.
+# ─── Tracker skill — project-local config ───
+# Consumed by `/tracker generate` and `/tracker render` for per-project tuning.
+# All fields optional; skill ships sensible defaults.
+tracker:
+  display:
+    # Map milestone IDs to the Phase column short labels. Workaround for the
+    # upstream generate.py bug where ENG rows pass milestone_id as both args
+    # to _phase_for_milestone(), so without this override ENG rows render
+    # "pccp-release" / "lmr2-release" instead of "510k+PCCP" / "LMR2".
+    # Deliverable rows derive the same label from milestone.name (stripped),
+    # so this override also keeps both code paths aligned.
+    phase_label_overrides:
+      qsub-release: QSub
+      pccp-release: 510k+PCCP
+      lmr1-release: LMR1
+      lmr2-release: LMR2
+
 advisors:
   enabled:
-    - regulatory-affairs
-    - clinical-affairs
-    - risk-management
+  - regulatory-affairs
+  - clinical-affairs
+  - risk-management
   overlays:
     regulatory-affairs:
       add: []
@@ -339,3 +273,8 @@ advisors:
     risk-management:
       add: []
       exclude: []
+taxonomies:
+- id: pca-device
+  file: docs/project/dhfs/pca-device/.taxonomy.yml
+  applies_to_dhfs:
+  - pca-device
