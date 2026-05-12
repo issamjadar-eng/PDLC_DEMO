@@ -292,6 +292,87 @@ def read_taxonomy(taxonomy_yml_path):
 
 USER_ROWS_REL = 'docs/project/submissions/tracker-user-rows.yml'
 
+# ─── Tracker overlay sidecar (unified per-row + per-(DHF, role) overrides) ───
+#
+# `submission-tracker.overlay.yml` is the hand-managed sidecar that overlays
+# row data onto the tracker. Persistent across `--write-canonical` regens
+# because generator/renderer only READ this file — they never write to it.
+# Sidecar is OPTIONAL; absence falls back to current generator behavior.
+#
+# Two sections:
+#   defaults.by_dhf_role.<dhf>.<role>   — per-(DHF × canonical_role) name
+#                                         default. Applied by THIS module
+#                                         (generate.py) at row-emission time
+#                                         so all milestones sharing the pair
+#                                         get the same friendly name.
+#   rows.<row_id>.<field>               — per-row override (name, status,
+#                                         effort, ref, path, owner, etc.)
+#                                         Applied by render.py at render time.
+#
+# Schema v0.1:
+#
+#   schema_version: "0.1"
+#   defaults:
+#     by_dhf_role:
+#       <dhf-leaf>:
+#         <canonical_role>: "Friendly Name"
+#       "*":                                # wildcard for any DHF
+#         <canonical_role>: "..."
+#   rows:
+#     <row-id>:
+#       name:    "..."                      # overrides default name
+#       status:  Drafting
+#       effort:  V.High
+#       ref:     "..."
+#       path:    "..."                      # may be HTML (e.g., a B6 button)
+#       owner:   <handle>
+#       target_date: 2026-MM-DD
+#       blockers:    [...]
+#       notes:       "..."
+#
+# Generator name precedence (this module):
+#   defaults.by_dhf_role[<dhf>][<role>]  >  defaults.by_dhf_role["*"][<role>]
+#   > folder.name fallback.
+# Per-row `name` overrides are applied later by render.py at render time.
+
+OVERLAY_REL = 'docs/project/submissions/submission-tracker.overlay.yml'
+
+
+def load_overlay(project_dir):
+    """Load `submission-tracker.overlay.yml` if present.
+
+    Returns the parsed dict (with `defaults` + `rows` sections) — or `{}` when
+    the sidecar is absent or empty. Sidecar shape is fully documented at the
+    `OVERLAY_REL` declaration above. Behavior is additive + backward-compatible:
+    projects without the sidecar see the generator's pre-overlay behavior.
+    """
+    path = Path(project_dir) / OVERLAY_REL
+    if not path.exists():
+        return {}
+    return load_yaml(path) or {}
+
+
+def lookup_friendly_name(overlay, dhf_leaf, canonical_role, fallback):
+    """Resolve a deliverable's display name through the overlay sidecar's
+    `defaults.by_dhf_role` section.
+
+    Precedence:
+      1. `defaults.by_dhf_role[<dhf>][<role>]`   — specific DHF wins
+      2. `defaults.by_dhf_role["*"][<role>]`     — wildcard for any DHF
+      3. `fallback`                              — generator's default
+
+    Per-row `rows.<id>.name` overrides are layered on by render.py — this
+    function only consults the shared defaults.
+    """
+    by_dhf_role = (overlay.get('defaults', {}) or {}).get('by_dhf_role', {}) or {}
+    by_dhf = by_dhf_role.get(dhf_leaf, {}) or {}
+    if canonical_role in by_dhf:
+        return by_dhf[canonical_role]
+    wildcard = by_dhf_role.get('*', {}) or {}
+    if canonical_role in wildcard:
+        return wildcard[canonical_role]
+    return fallback
+
 
 def read_user_rows(project_dir, milestones=None):
     """Load `tracker-user-rows.yml` and convert each entry to the row shape
@@ -680,6 +761,13 @@ def generate_rows(project_dir):
     load_project_role_index(tracker_cfg)
     load_project_system_dhf_layout(tracker_cfg)
     load_project_manifest_sections(tracker_cfg)
+    # Load optional tracker overlay sidecar — provides per-(DHF, role) name
+    # defaults (applied here at row-emission time) AND per-row overrides for
+    # name / status / effort / ref / path / owner / target_date / blockers
+    # (those are applied by render.py at render time; we just emit the
+    # baseline values here). Sidecar is optional; absence falls back to
+    # default behavior. See `load_overlay()` for the full schema.
+    overlay = load_overlay(project_dir)
 
     # Index DHFs by leaf for quick lookup
     dhfs_by_leaf = {d['leaf']: d for d in dhfs}
@@ -759,7 +847,10 @@ def generate_rows(project_dir):
                             'phase': _phase_for_milestone(ms_id, ms_short.replace('Release', '').strip() or ms_short, display_cfg),
                             'canonical_role': ev['canonical_role'],
                             'subkind': ev['subkind'],
-                            'name_token': ev['name'],
+                            'name_token': lookup_friendly_name(
+                                overlay, dhf_leaf,
+                                ev['canonical_role'], ev['name'],
+                            ),
                             'version': v['id'],
                             'path': v.get('path'),
                             'required': required,

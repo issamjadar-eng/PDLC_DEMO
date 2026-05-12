@@ -4,6 +4,32 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-12 — push (tracker: unified overlay sidecar — supersedes #153)
+
+- Files: `skills/tracker/scripts/generate.py`, `skills/tracker/scripts/render.py`
+- Branch: `sync/pdlc-demo-tracker-unified-overlay-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/154
+- Commit subject: `tracker: unified overlay sidecar (supersedes deliverable-names.yml + human.json)`
+- Status: merged (--merge requested; atomic supersede of #153)
+- Merge commit: `735fc17`
+- Hitachi HEAD after sync: `735fc17`
+- Context: task `ben/047` Stage 5c — consolidates `deliverable-names.yml` (#153) + legacy `human.json` into one `submission-tracker.overlay.yml` with `defaults.by_dhf_role` + `rows.<id>` sections. Closes the `effort` + `path` override gaps that neither prior overlay supported. Per-row `name` flexibility enables milestone-distinct titles ("System SAD — Draft (Q-Sub Review)" vs "System SAD — LMR1 Release"). `render.py::load_human_overlay()` falls back to legacy `human.json` for back-compat (no project has adopted the JSON format yet anyway). Atomic supersede valid because #153 was merged 30 min prior with no downstream adopters.
+
+---
+
+## 2026-05-12 — push (tracker: deliverable-names sidecar)
+
+- Files: `skills/tracker/scripts/generate.py`
+- Branch: `sync/pdlc-demo-tracker-deliverable-names-sidecar-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/153
+- Commit subject: `tracker: deliverable-names sidecar — persistent friendly per-DHF row names`
+- Status: merged (--merge requested)
+- Merge commit: `faae97e`
+- Hitachi HEAD after sync: `faae97e`
+- Context: task `ben/047` Stage 5b — adds optional `docs/project/submissions/submission-tracker.deliverable-names.yml` sidecar with v0.1 schema (per-DHF × canonical-role mapping; "*" wildcard supported; precedence: specific > wildcard > folder.name fallback). 3 hunks / ~60 lines added / zero removed. Backward-compatible: projects without sidecar fall back to current behavior. Local PDLC_DEMO now renders friendly names ("System Software Architecture Document (SAD)", "Risk Management Report (ISO 14971)", etc.) across all 11 canonical roles × 4 phases.
+
+---
+
 ## 2026-05-11 — push (sync-skills SKILL.md genericization)
 
 - Files: `skills/sync-skills/SKILL.md`

@@ -487,8 +487,27 @@ def coerce_status(s):
 
 
 def load_human_overlay(project_dir):
-    """Return per-row human overlay map keyed by row ID. Empty dict if the
-    sidecar is missing or malformed (best-effort; never raises)."""
+    """Return the per-row overlay map keyed by row ID. Reads the unified
+    tracker overlay sidecar (`submission-tracker.overlay.yml`, `rows` section).
+
+    Falls back to the legacy `submission-tracker.human.json` location when the
+    unified sidecar is absent, so projects that adopted the older JSON-format
+    overlay continue to work without migration. Empty dict if neither file is
+    present or both are malformed (best-effort; never raises).
+    """
+    # Preferred: unified YAML overlay
+    overlay_yml = Path(project_dir) / 'docs/project/submissions/submission-tracker.overlay.yml'
+    if overlay_yml.is_file():
+        try:
+            import yaml  # type: ignore
+            data = yaml.safe_load(overlay_yml.read_text(encoding='utf-8')) or {}
+            rows = data.get('rows') if isinstance(data, dict) else None
+            if isinstance(rows, dict):
+                return rows
+            return {}
+        except Exception:
+            pass  # fall through to legacy
+    # Legacy: human.json (pre-overlay-unification)
     import json
     sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.human.json'
     if not sidecar.is_file():
@@ -498,32 +517,57 @@ def load_human_overlay(project_dir):
     except Exception:
         return {}
     rows = data.get('rows') if isinstance(data, dict) else None
-    if not isinstance(rows, dict):
-        return {}
-    return rows
+    return rows if isinstance(rows, dict) else {}
 
 
 def apply_human_overlay(rows, overlay):
     """Merge overlay onto generated rows in place. Each row dict gains a
-    `human` key with the overlay payload; the row's `status`/`ref` cells
-    are overridden in place when the overlay supplies values. Unmatched
-    overlay row IDs are silently ignored (operators see them via /tracker
-    generate's stderr orphan warnings — not the renderer's concern)."""
+    `human` key with the overlay payload; cell-level overrides for
+    `name` / `status` / `effort` / `ref` / `path` are applied when the
+    overlay supplies them. Unmatched overlay row IDs are silently ignored
+    (operators see them via /tracker generate's stderr orphan warnings —
+    not the renderer's concern).
+
+    Field-override set (per-row):
+      - `name`   → renders in the Deliverable column (overrides whatever
+                   generate.py emitted, including the per-(DHF, role)
+                   default from overlay.defaults.by_dhf_role)
+      - `status` → Status column (coerced via STATUS_ALIAS_MAP)
+      - `effort` → Effort column
+      - `ref`    → REF column
+      - `path`   → Path column (may be raw HTML, e.g. the B6 Create Draft
+                   disabled-button placeholder that render.py later wires
+                   into a live button)
+
+    Metadata fields (`owner` / `target_date` / `blockers` / `notes`)
+    pass through in `target['human']` for downstream consumers (detail
+    panels, etc.) but don't directly override a cell.
+    """
     if not overlay:
         return rows
     by_id = {r['id']: r for r in rows}
+    # Renderer's parsed rows use `name` (not `name_token` — that's generate.py's
+    # internal field). Accept either key from the overlay author so the same
+    # sidecar shape works whether you think in render-side or generate-side terms.
     for row_id, entry in overlay.items():
         target = by_id.get(row_id)
         if target is None:
             continue
         # Carry the full overlay payload as a nested block (renderer can
-        # surface owner / target_date / blockers in the Detail block).
+        # surface owner / target_date / blockers / notes in the Detail panel).
         target['human'] = dict(entry)
-        # Apply the overrides that affect cell-level rendering.
+        # Apply the cell-level overrides.
+        name_val = entry.get('name') or entry.get('name_token')
+        if name_val:
+            target['name'] = name_val
         if entry.get('status'):
             target['status'] = coerce_status(entry['status'])
+        if entry.get('effort'):
+            target['effort'] = entry['effort']
         if entry.get('ref'):
             target['ref'] = entry['ref']
+        if entry.get('path'):
+            target['path'] = entry['path']
     return rows
 
 
