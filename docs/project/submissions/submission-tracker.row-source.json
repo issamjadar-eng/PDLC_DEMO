@@ -1,0 +1,270 @@
+{
+  "schema_version": "0.1",
+  "generated_by": "/tracker generate (Model D row-source sidecar)",
+  "rows": {
+    "Q-PC1": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "architecture"
+    },
+    "Q-PC26": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "plans"
+    },
+    "Q-PC25": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "user-needs"
+    },
+    "Q-PC2": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "requirements"
+    },
+    "Q-PC27": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "vnv"
+    },
+    "Q-PC28": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "trace-matrix"
+    },
+    "Q-PC16": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "tool-validation"
+    },
+    "Q-PC9": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "risk-management"
+    },
+    "Q-PC23": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "clinical"
+    },
+    "Q-PC24": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "postmarket"
+    },
+    "Q-PC12": {
+      "source_kind": "derived",
+      "from_milestone": "qsub-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    },
+    "PC1": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "architecture"
+    },
+    "PC26": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "plans"
+    },
+    "PC25": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "user-needs"
+    },
+    "PC2": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "requirements"
+    },
+    "PC27": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "vnv"
+    },
+    "PC28": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "trace-matrix"
+    },
+    "PC16": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "tool-validation"
+    },
+    "PC9": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "risk-management"
+    },
+    "PC23": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "clinical"
+    },
+    "PC24": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "postmarket"
+    },
+    "PC12": {
+      "source_kind": "derived",
+      "from_milestone": "pccp-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    },
+    "L1-PC1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "architecture"
+    },
+    "L1-PC26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "plans"
+    },
+    "L1-PC25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "user-needs"
+    },
+    "L1-PC2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "requirements"
+    },
+    "L1-PC27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "vnv"
+    },
+    "L1-PC28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "trace-matrix"
+    },
+    "L1-PC16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "tool-validation"
+    },
+    "L1-PC9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "risk-management"
+    },
+    "L1-PC23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "clinical"
+    },
+    "L1-PC24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "postmarket"
+    },
+    "L1-PC12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr1-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    },
+    "L2-PC1": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "architecture"
+    },
+    "L2-PC26": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "plans"
+    },
+    "L2-PC25": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "user-needs"
+    },
+    "L2-PC2": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "requirements"
+    },
+    "L2-PC27": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "vnv"
+    },
+    "L2-PC28": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "trace-matrix"
+    },
+    "L2-PC16": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "tool-validation"
+    },
+    "L2-PC9": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "risk-management"
+    },
+    "L2-PC23": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "clinical"
+    },
+    "L2-PC24": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "postmarket"
+    },
+    "L2-PC12": {
+      "source_kind": "derived",
+      "from_milestone": "lmr2-release",
+      "from_dhf": "pca-device",
+      "canonical_role": "cybersecurity"
+    }
+  }
+}
