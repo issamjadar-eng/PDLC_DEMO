@@ -17,6 +17,9 @@ dhfs:
       design_inputs:
         source: docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md
         id_prefix: DI
+      software:
+        source: docs/project/dhfs/pca-device/design-controls/requirements/software-requirements.md
+        id_prefix: SW
       architecture:
         source: docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md
         id_prefix: M
@@ -35,6 +38,9 @@ dhfs:
       design_inputs:
         source: docs/project/dhfs/connectivity-adapter/design-controls/requirements/design-inputs.md
         id_prefix: DI
+      software:
+        source: docs/project/dhfs/connectivity-adapter/design-controls/requirements/software-requirements.md
+        id_prefix: SW
       architecture:
         source: docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md
         id_prefix: M
@@ -53,6 +59,9 @@ dhfs:
       design_inputs:
         source: docs/project/dhfs/cloud-suite/design-controls/requirements/design-inputs.md
         id_prefix: DI
+      software:
+        source: docs/project/dhfs/cloud-suite/design-controls/requirements/software-requirements.md
+        id_prefix: SW
       architecture:
         source: docs/project/dhfs/cloud-suite/design-controls/architecture/cloud-suite-system-sad.md
         id_prefix: M

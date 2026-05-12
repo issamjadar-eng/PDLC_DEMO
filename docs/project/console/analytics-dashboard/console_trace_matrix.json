@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "dhf": "analytics-dashboard",
-  "generated_at": "2026-05-12T09:33:50Z",
+  "generated_at": "2026-05-12T14:59:40Z",
   "layers": [
     {
       "key": "user_needs",
@@ -39,7 +39,9 @@
       "items": [],
       "missing_reason": "source_missing",
       "edges_known": true,
-      "warnings": []
+      "warnings": [
+        "source missing: None"
+      ]
     },
     {
       "key": "architecture",

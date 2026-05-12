@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "dhf": "pca-device",
-  "generated_at": "2026-05-12T09:33:50Z",
+  "generated_at": "2026-05-12T14:59:40Z",
   "layers": [
     {
       "key": "user_needs",
@@ -781,8 +781,12 @@
           "duedate": null,
           "traces_forward": [
             {
-              "id": "VER-PP3500-BT-005",
-              "summary": "Bench test"
+              "id": "SW-001",
+              "summary": "The pump-motor control firmware shall maintain commanded flow rate within ±5% (or ±0.5…"
+            },
+            {
+              "id": "SW-005",
+              "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…"
             }
           ],
           "traces_reverse": [
@@ -817,7 +821,16 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-002",
+              "summary": "The bolus-delivery routine shall compute and deliver patient-activated bolus doses…"
+            },
+            {
+              "id": "SW-005",
+              "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-001",
@@ -848,8 +861,8 @@
           "duedate": null,
           "traces_forward": [
             {
-              "id": "VER-PP3500-SW-002",
-              "summary": "Software test"
+              "id": "SW-003",
+              "summary": "The lockout-interval state machine shall block any patient-requested bolus while the…"
             }
           ],
           "traces_reverse": [
@@ -882,8 +895,8 @@
           "duedate": null,
           "traces_forward": [
             {
-              "id": "VER-PP3500-SW-002",
-              "summary": "Software test"
+              "id": "SW-004",
+              "summary": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume…"
             }
           ],
           "traces_reverse": [
@@ -920,8 +933,12 @@
           "duedate": null,
           "traces_forward": [
             {
-              "id": "VER-PP3500-SW-006",
-              "summary": "Software test"
+              "id": "SW-005",
+              "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…"
+            },
+            {
+              "id": "SW-006",
+              "summary": "The hard-limit enforcement layer shall reject any programmed value exceeding the active…"
             }
           ],
           "traces_reverse": [
@@ -956,7 +973,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-007",
+              "summary": "The drug-library loader shall accept signed library packages (≥200 medications), validate…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-009",
@@ -985,7 +1007,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-008",
+              "summary": "The barcode-scan handler shall capture 1D/2D barcodes from the integrated scanner, parse…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-008",
@@ -1014,7 +1041,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-009",
+              "summary": "The occlusion-detection routine shall sample downstream-pressure sensor output at ≥10 Hz,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-006",
@@ -1043,7 +1075,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-010",
+              "summary": "The air-in-line detection algorithm shall identify single bubbles ≥50 µL and accumulated…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-006",
@@ -1072,7 +1109,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-011",
+              "summary": "The over-infusion detector shall compute the difference between commanded delivered…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-001",
@@ -1105,7 +1147,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-012",
+              "summary": "The alarm-priority engine shall route alarm events to the audio driver with IEC…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-010",
@@ -1134,7 +1181,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-013",
+              "summary": "The door-state monitor shall sample the cassette-door sensor at ≥10 Hz, halt the motor…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-005",
@@ -1163,7 +1215,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-014",
+              "summary": "The power-on self-test shall validate motor encoder, pressure sensor, air-in-line sensor,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-005",
@@ -1254,7 +1311,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-015",
+              "summary": "The numeric-entry widget shall render every entered value with an unambiguous decimal…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-007",
@@ -1287,7 +1349,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-018",
+              "summary": "The touchscreen input driver shall process touch events with ≤200 ms end-to-end latency…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-014",
@@ -1316,7 +1383,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-016",
+              "summary": "The programming task-flow state machine shall guide the operator through load-library →…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-014",
@@ -1345,7 +1417,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-017",
+              "summary": "The home-screen renderer shall display active therapy parameters, current alarm state (if…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-014",
@@ -1378,7 +1455,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-019",
+              "summary": "The battery state-of-charge estimator shall maintain SoC within ±5% of coulomb-counted…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-011",
@@ -1407,7 +1489,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-020",
+              "summary": "The charge-controller firmware shall manage cell-balanced charging from 0% to 100% within…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-011",
@@ -1465,7 +1552,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-021",
+              "summary": "The lockbox-state monitor shall poll the lockbox latch sensor at ≥1 Hz and shall record…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-020",
@@ -1527,7 +1619,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-022",
+              "summary": "The Wi-Fi / Bluetooth stack shall associate with WPA2-Enterprise networks (2.4 / 5 GHz,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-012",
@@ -1556,7 +1653,16 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-023",
+              "summary": "The HL7 v2.5 message builder shall encode therapy start, stop, parameter-change, bolus,…"
+            },
+            {
+              "id": "SW-024",
+              "summary": "The FHIR R4 publisher shall serialize therapy administration events as…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-012",
@@ -1589,7 +1695,20 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-025",
+              "summary": "The firmware-update verifier shall validate the digital signature of every firmware…"
+            },
+            {
+              "id": "SW-026",
+              "summary": "The RBAC engine shall enforce role-based access for clinician, biomed, service, and admin…"
+            },
+            {
+              "id": "SW-027",
+              "summary": "All outbound network channels (EHR, FHIR, audit-log export, telemetry) shall use TLS 1.2…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-013",
@@ -1618,7 +1737,16 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-028",
+              "summary": "The tamper-evident audit log shall append every therapy, alarm, programming, and security…"
+            },
+            {
+              "id": "SW-029",
+              "summary": "The audit-log export interface shall expose the audit log over the service interface…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-013",
@@ -1684,7 +1812,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-030",
+              "summary": "The device firmware shall be developed and tested under the IEC 62304 Class C lifecycle,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-019",
@@ -1746,7 +1879,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-032",
+              "summary": "The device-info accessor shall return the UDI (DI + PI components per 21 CFR 830) to the…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-018",
@@ -1804,7 +1942,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "SW-031",
+              "summary": "The service-menu interface shall be PIN-gated and shall expose diagnostic logs,…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-017",
@@ -1820,10 +1963,949 @@
     {
       "key": "software",
       "title": "SW Reqs",
-      "id_prefix": "",
-      "source_files": [],
-      "items": [],
-      "missing_reason": "source_missing",
+      "id_prefix": "SW",
+      "source_files": [
+        "docs/project/dhfs/pca-device/design-controls/requirements/software-requirements.md"
+      ],
+      "items": [
+        {
+          "id": "SW-001",
+          "summary": "The pump-motor control firmware shall maintain commanded flow rate within ±5% (or ±0.5…",
+          "full_text": "The pump-motor control firmware shall maintain commanded flow rate within ±5% (or ±0.5 mL/hr, whichever is greater) across 0.01–25 mL/hr by closed-loop position feedback on the syringe-drive encoder.",
+          "category": "PERF",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software-in-the-loop test with calibrated encoder model; verify rate error within ±5% across 5 setpoints; n=100 control-loop iterations per setpoint.",
+          "verification_method": "Software test (VER-PP3500-SW-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            }
+          ]
+        },
+        {
+          "id": "SW-002",
+          "summary": "The bolus-delivery routine shall compute and deliver patient-activated bolus doses…",
+          "full_text": "The bolus-delivery routine shall compute and deliver patient-activated bolus doses (0.01–20 mL) within ±5% delivered volume, integrating motor steps against the encoder-measured displacement.",
+          "category": "FUNC",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Unit + integration test: simulate 30 bolus deliveries at 3 dose levels; all delivered volumes within ±5% of programmed.",
+          "verification_method": "Software test (VER-PP3500-SW-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "The device shall deliver patient-activated bolus doses from 0.01 to 20 mL with a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-003",
+          "summary": "The lockout-interval state machine shall block any patient-requested bolus while the…",
+          "full_text": "The lockout-interval state machine shall block any patient-requested bolus while the current lockout timer (1–99 min) is active, and shall log every blocked request to the audit log.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: program lockout at 1, 15, 99 min; issue PCA-button presses during interval; verify zero bolus deliveries; verify each press is logged.",
+          "verification_method": "Software test (VER-PP3500-SW-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
+            }
+          ]
+        },
+        {
+          "id": "SW-004",
+          "summary": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume…",
+          "full_text": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume sums per active therapy and shall block any bolus that would cause a sum to exceed its configured cap, regardless of programming path (PCA button, clinician menu, barcode-loaded order).",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: drive 50 boluses across all three entry paths against a 1-hr cap; verify zero over-limit deliveries; verify rolling-sum resets after window elapses.",
+          "verification_method": "Software test (VER-PP3500-SW-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            }
+          ]
+        },
+        {
+          "id": "SW-005",
+          "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…",
+          "full_text": "The therapy-parameter validator shall reject programming submissions whose rate, bolus, or lockout values fall outside library-defined hard limits, and shall return the violating field plus the active library version to the UI for display.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G1",
+          "group_label": "G1 — Therapy Delivery",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Unit test: 100 randomized invalid parameter sets against the reference library; verify 100% rejection; verify violation reason is structured (field + limit).",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            },
+            {
+              "id": "DI-002",
+              "summary": "The device shall deliver patient-activated bolus doses from 0.01 to 20 mL with a…"
+            },
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            }
+          ]
+        },
+        {
+          "id": "SW-006",
+          "summary": "The hard-limit enforcement layer shall reject any programmed value exceeding the active…",
+          "full_text": "The hard-limit enforcement layer shall reject any programmed value exceeding the active library's hard cap, at all four programming entry points (manual UI, barcode-loaded order, clinician override, service-menu test mode), with no path bypass.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Code review: identify every parameter-write entry point; verify each calls the central enforcement routine. Software test: 200-medication test library; exercise every entry; zero hard-limit breaches.",
+          "verification_method": "Software test (VER-PP3500-SW-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            }
+          ]
+        },
+        {
+          "id": "SW-007",
+          "summary": "The drug-library loader shall accept signed library packages (≥200 medications), validate…",
+          "full_text": "The drug-library loader shall accept signed library packages (≥200 medications), validate signature against the GlobalLogic root, persist the package to internal NVRAM, and display the active library version (vMAJ.MIN.PATCH) on the home screen and at therapy start.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: load reference 200-medication library; verify count, signature pass, version banner visible at home + start, version recorded in audit log.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The device shall maintain an on-board drug library of at least 200 medications with…"
+            }
+          ]
+        },
+        {
+          "id": "SW-008",
+          "summary": "The barcode-scan handler shall capture 1D/2D barcodes from the integrated scanner, parse…",
+          "full_text": "The barcode-scan handler shall capture 1D/2D barcodes from the integrated scanner, parse NDC and GS1 formats, perform a library lookup, and block therapy start with a non-dismissible alert if no match is found.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G2",
+          "group_label": "G2 — Drug Library & Medication Safety",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench + software test: 50-medication barcode set at 5 print qualities; ≥98% first-read success; mismatch produces blocking alert; no programming progresses past start.",
+          "verification_method": "Software test (VER-PP3500-SW-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The device shall include an integrated 1D/2D barcode scanner capable of reading…"
+            }
+          ]
+        },
+        {
+          "id": "SW-009",
+          "summary": "The occlusion-detection routine shall sample downstream-pressure sensor output at ≥10 Hz,…",
+          "full_text": "The occlusion-detection routine shall sample downstream-pressure sensor output at ≥10 Hz, identify pressures in the 3–15 psi range as occlusion-class events, and raise a high-priority occlusion alarm within the response time required by IEC 60601-2-24 for the active flow rate.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software-in-the-loop with sensor-emulator: inject 30 occlusion profiles across 3 flow rates; verify alarm raised within standard limit for all trials.",
+          "verification_method": "Software test (VER-PP3500-SW-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The device shall detect downstream occlusions in the range 3 to 15 psi and annunciate a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-010",
+          "summary": "The air-in-line detection algorithm shall identify single bubbles ≥50 µL and accumulated…",
+          "full_text": "The air-in-line detection algorithm shall identify single bubbles ≥50 µL and accumulated air ≥1 mL over a rolling 15-minute window using the in-line ultrasonic sensor, and shall raise a high-priority air-in-line alarm.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test against captured sensor traces with calibrated bubble injections; 100% detection at 0.05/0.1/0.5 mL across n=20 trials per condition.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "The device shall detect single air-in-line bubbles ≥50 µL and cumulative air ≥1 mL over a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-011",
+          "summary": "The over-infusion detector shall compute the difference between commanded delivered…",
+          "full_text": "The over-infusion detector shall compute the difference between commanded delivered volume and encoder-measured delivered volume over a rolling 1-hour window and shall halt the motor and raise a high-priority alarm if the delta exceeds 10%.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software-in-the-loop: inject motor-step / encoder-position faults; verify motor halt + alarm within 60 s for n=10 fault scenarios.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the…"
+            }
+          ]
+        },
+        {
+          "id": "SW-012",
+          "summary": "The alarm-priority engine shall route alarm events to the audio driver with IEC…",
+          "full_text": "The alarm-priority engine shall route alarm events to the audio driver with IEC 60601-1-8-compliant priority melodies (high / medium / low) and shall mix per-priority SPL between 45 and 80 dB(A) at 1 m per configuration.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G3",
+          "group_label": "G3 — Alarms & Annunciation",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Acoustic measurement + software test: trigger each alarm class at min/mid/max SPL; verify melody and SPL bands.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "The device shall provide audible alarms compliant with IEC 60601-1-8 for high-, medium-,…"
+            }
+          ]
+        },
+        {
+          "id": "SW-013",
+          "summary": "The door-state monitor shall sample the cassette-door sensor at ≥10 Hz, halt the motor…",
+          "full_text": "The door-state monitor shall sample the cassette-door sensor at ≥10 Hz, halt the motor within 200 ms of an open-door signal during active therapy, and require explicit operator acknowledgement before resuming delivery.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench + software test: open the door during active therapy at 3 flow rates; verify motor-halt time and resume-confirmation requirement; n=20 cycles.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The device shall prevent free-flow delivery of medication when the administration set is…"
+            }
+          ]
+        },
+        {
+          "id": "SW-014",
+          "summary": "The power-on self-test shall validate motor encoder, pressure sensor, air-in-line sensor,…",
+          "full_text": "The power-on self-test shall validate motor encoder, pressure sensor, air-in-line sensor, watchdog timer, and battery voltage rails before allowing therapy programming, and shall annunciate a service-required alarm on any failed sub-test.",
+          "category": "SAFE",
+          "criticality": "CtC",
+          "group": "G4",
+          "group_label": "G4 — Hazard Controls & Essential Performance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: inject each sub-test failure; verify self-test reports the failed subsystem and the therapy path is blocked.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            }
+          ]
+        },
+        {
+          "id": "SW-015",
+          "summary": "The numeric-entry widget shall render every entered value with an unambiguous decimal…",
+          "full_text": "The numeric-entry widget shall render every entered value with an unambiguous decimal point (color-contrast ≥4.5:1, position-fixed display field), and shall require explicit operator confirmation of decimal placement before the value is accepted into therapy parameters.",
+          "category": "USAB",
+          "criticality": "CtS",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Unit + summative usability test: verify decimal rendering in light/dark themes; n≥15 nurses complete the standard PCA programming task; zero decimal-misread errors.",
+          "verification_method": "Usability test (summative)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "The device's numeric entry interface shall display all dose values with an unambiguous…"
+            }
+          ]
+        },
+        {
+          "id": "SW-016",
+          "summary": "The programming task-flow state machine shall guide the operator through load-library →…",
+          "full_text": "The programming task-flow state machine shall guide the operator through load-library → scan-medication → enter-parameters → confirm → start in a fixed forward order, with explicit step-back, and shall log every transition.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: traverse all 5 transitions and step-back paths; verify task-flow log captures each transition with timestamp + operator identity.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The device shall allow a trained nurse to complete the standard PCA programming task…"
+            }
+          ]
+        },
+        {
+          "id": "SW-017",
+          "summary": "The home-screen renderer shall display active therapy parameters, current alarm state (if…",
+          "full_text": "The home-screen renderer shall display active therapy parameters, current alarm state (if any), and remaining battery life in fields legible from 1 m at ambient illumination up to 1000 lux.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspection + software test: verify field placement and font sizes match the UI spec; render contrast measured with illuminance meter.",
+          "verification_method": "Inspection / bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The device shall present therapy parameters, alarm states, and remaining battery life on…"
+            }
+          ]
+        },
+        {
+          "id": "SW-018",
+          "summary": "The touchscreen input driver shall process touch events with ≤200 ms end-to-end latency…",
+          "full_text": "The touchscreen input driver shall process touch events with ≤200 ms end-to-end latency (sensor → UI response) on the 3.5-inch display.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G5",
+          "group_label": "G5 — User Interface & Usability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test with high-speed camera: 100 touch events; measure response latency; p95 ≤200 ms.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The device shall provide a 3.5-inch color LCD touchscreen user interface supporting…"
+            }
+          ]
+        },
+        {
+          "id": "SW-019",
+          "summary": "The battery state-of-charge estimator shall maintain SoC within ±5% of coulomb-counted…",
+          "full_text": "The battery state-of-charge estimator shall maintain SoC within ±5% of coulomb-counted truth and shall raise a medium-priority low-battery alarm at 30 minutes of projected runtime remaining.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test: run a battery-discharge curve from 100% to 0%; compare estimator to coulomb-counter; verify alarm trigger point.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "The device shall operate continuously on a single fully-charged internal lithium-ion…"
+            }
+          ]
+        },
+        {
+          "id": "SW-020",
+          "summary": "The charge-controller firmware shall manage cell-balanced charging from 0% to 100% within…",
+          "full_text": "The charge-controller firmware shall manage cell-balanced charging from 0% to 100% within 4 hours at 23 °C, and shall protect against over-current, over-temperature, and over-voltage by halting the charge cycle.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test on n=5 production-equivalent boards; measure charge time + fault-trigger response.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-018",
+              "summary": "The device shall recharge from 0% to 100% state-of-charge in ≤4 hours from the supplied…"
+            }
+          ]
+        },
+        {
+          "id": "SW-021",
+          "summary": "The lockbox-state monitor shall poll the lockbox latch sensor at ≥1 Hz and shall record…",
+          "full_text": "The lockbox-state monitor shall poll the lockbox latch sensor at ≥1 Hz and shall record every open/close transition (timestamp, operator identity if known, latch source: key/PIN) in a tamper-evident sub-log.",
+          "category": "SAFE",
+          "criticality": "CtF",
+          "group": "G6",
+          "group_label": "G6 — Power, Portability & Physical",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: 50 open/close cycles with mixed key/PIN sources; verify sub-log entries and tamper indicator state.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-032",
+              "summary": "The drug-cassette lockbox shall require a physical key or PIN-released latch and shall be…"
+            }
+          ]
+        },
+        {
+          "id": "SW-022",
+          "summary": "The Wi-Fi / Bluetooth stack shall associate with WPA2-Enterprise networks (2.4 / 5 GHz,…",
+          "full_text": "The Wi-Fi / Bluetooth stack shall associate with WPA2-Enterprise networks (2.4 / 5 GHz, 802.11 a/b/g/n/ac) and Bluetooth 5.0, and shall automatically reconnect after link loss without operator intervention.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench test: 100 disassociation events; verify automatic reconnect within 30 s; verify no operator prompt.",
+          "verification_method": "Bench test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-022",
+              "summary": "The device shall support 802.11 a/b/g/n/ac Wi-Fi (2.4 / 5 GHz) and Bluetooth 5.0…"
+            }
+          ]
+        },
+        {
+          "id": "SW-023",
+          "summary": "The HL7 v2.5 message builder shall encode therapy start, stop, parameter-change, bolus,…",
+          "full_text": "The HL7 v2.5 message builder shall encode therapy start, stop, parameter-change, bolus, and alarm events as ADT^A08 and RDE^O11 messages conformant to IHE Pharmacy profile transactions and shall deliver them to the configured EHR endpoint.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "IHE Gazelle conformance test: PHARM-1 + PHARM-2 transactions pass with 0 errors over 1000-event run.",
+          "verification_method": "Conformance test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-023",
+              "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…"
+            }
+          ]
+        },
+        {
+          "id": "SW-024",
+          "summary": "The FHIR R4 publisher shall serialize therapy administration events as…",
+          "full_text": "The FHIR R4 publisher shall serialize therapy administration events as MedicationAdministration resources conformant to US Core 6.0 and shall POST them to a configurable FHIR endpoint.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "G7",
+          "group_label": "G7 — Connectivity & Interoperability",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Validate 100 emitted resources with fhir-validator against US Core 6.0; 0 schema or profile errors.",
+          "verification_method": "Conformance test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-023",
+              "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…"
+            }
+          ]
+        },
+        {
+          "id": "SW-025",
+          "summary": "The firmware-update verifier shall validate the digital signature of every firmware…",
+          "full_text": "The firmware-update verifier shall validate the digital signature of every firmware bundle (RSA-3072 or higher, chain to the GlobalLogic signing root) before unlocking the bootloader, and shall refuse any bundle that fails verification with a logged reason code.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: present (a) valid bundle, (b) corrupted-signature bundle, (c) bundle signed by non-trust-anchor key; verify only (a) installs; verify the other two log a structured refusal.",
+          "verification_method": "Cybersecurity test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-024",
+              "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
+            }
+          ]
+        },
+        {
+          "id": "SW-026",
+          "summary": "The RBAC engine shall enforce role-based access for clinician, biomed, service, and admin…",
+          "full_text": "The RBAC engine shall enforce role-based access for clinician, biomed, service, and admin roles at every privileged operation (program therapy, edit library, export audit log, install firmware) with no operation reachable by an unauthenticated session.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Code review + penetration test: enumerate privileged operations; verify each has RBAC enforcement; attempt bypass with unauthenticated and lower-role sessions; verify rejection.",
+          "verification_method": "Cybersecurity test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-024",
+              "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
+            }
+          ]
+        },
+        {
+          "id": "SW-027",
+          "summary": "All outbound network channels (EHR, FHIR, audit-log export, telemetry) shall use TLS 1.2…",
+          "full_text": "All outbound network channels (EHR, FHIR, audit-log export, telemetry) shall use TLS 1.2 or higher with server certificate validation against a configured trust store; sessions to untrusted endpoints shall be refused.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Configure each outbound channel; attempt connection with valid, expired, and untrusted server certs; verify only valid succeeds.",
+          "verification_method": "Cybersecurity test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-024",
+              "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
+            }
+          ]
+        },
+        {
+          "id": "SW-028",
+          "summary": "The tamper-evident audit log shall append every therapy, alarm, programming, and security…",
+          "full_text": "The tamper-evident audit log shall append every therapy, alarm, programming, and security event to a hash-chained on-board log of at least 10,000 entries, with timestamp, user ID, and event type.",
+          "category": "SEC",
+          "criticality": "CtF",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: generate 10,000 events; export log; verify hash-chain integrity intact; attempt log mutation; verify detection on next-event append.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            }
+          ]
+        },
+        {
+          "id": "SW-029",
+          "summary": "The audit-log export interface shall expose the audit log over the service interface…",
+          "full_text": "The audit-log export interface shall expose the audit log over the service interface (PIN-gated) and over the EHR gateway (TLS + RBAC-authenticated) in a structured format (JSON or HL7).",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "G8",
+          "group_label": "G8 — Cybersecurity & Data Integrity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: export via both channels; verify content equivalence; verify gating works.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            }
+          ]
+        },
+        {
+          "id": "SW-030",
+          "summary": "The device firmware shall be developed and tested under the IEC 62304 Class C lifecycle,…",
+          "full_text": "The device firmware shall be developed and tested under the IEC 62304 Class C lifecycle, with documented unit-test coverage ≥80% on safety-classified modules (G1, G3, G4, G6, G8), integration-test coverage of every inter-module interface, and a system test suite traceable to every SRS row.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Audit firmware development files against IEC 62304 clauses 5 through 9; review coverage reports; verify trace from every SW-NNN row to ≥1 test artifact.",
+          "verification_method": "Inspection / analysis",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-026",
+              "summary": "Device software shall be developed under an IEC 62304 lifecycle process at Software…"
+            }
+          ]
+        },
+        {
+          "id": "SW-031",
+          "summary": "The service-menu interface shall be PIN-gated and shall expose diagnostic logs,…",
+          "full_text": "The service-menu interface shall be PIN-gated and shall expose diagnostic logs, calibration routines, sensor readouts, and field-replaceable unit identifiers for biomedical engineering use.",
+          "category": "FUNC",
+          "criticality": "Supporting",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: verify PIN gate; verify each diagnostic returns expected payload on n=3 service-mode entries.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-031",
+              "summary": "The device shall provide a serviceability menu (PIN-protected) exposing diagnostic logs,…"
+            }
+          ]
+        },
+        {
+          "id": "SW-032",
+          "summary": "The device-info accessor shall return the UDI (DI + PI components per 21 CFR 830) to the…",
+          "full_text": "The device-info accessor shall return the UDI (DI + PI components per 21 CFR 830) to the label-render and EHR-gateway interfaces, populated at manufacturing time and read-only at runtime.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "G9",
+          "group_label": "G9 — Regulatory, Labeling & Lifecycle Compliance",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Unit test: read UDI on n=10 production-equivalent units; verify format and content match GUDID submission record.",
+          "verification_method": "Software test / inspection",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-028",
+              "summary": "The device, primary packaging, and shipping packaging shall bear a Unique Device…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
       "edges_known": true,
       "warnings": []
     },
@@ -2013,103 +3095,12 @@
       "title": "VnV",
       "id_prefix": "VER",
       "source_files": [],
-      "items": [
-        {
-          "id": "VER-PP3500-BT-005",
-          "summary": "Bench test",
-          "full_text": "Bench test (VER-PP3500-BT-005)",
-          "category": null,
-          "criticality": null,
-          "group": "G1",
-          "group_label": "G1 — Therapy Delivery",
-          "stakeholder": null,
-          "priority": null,
-          "source_ref": "derived from DI-001",
-          "acceptance_criteria": null,
-          "verification_method": null,
-          "iec_class": null,
-          "module_name": null,
-          "jira_key": null,
-          "status": null,
-          "assignee": null,
-          "reporter": null,
-          "resolution": null,
-          "duedate": null,
-          "traces_forward": [],
-          "traces_reverse": [
-            {
-              "id": "DI-001",
-              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
-            }
-          ]
-        },
-        {
-          "id": "VER-PP3500-SW-002",
-          "summary": "Software test",
-          "full_text": "Software test (VER-PP3500-SW-002)",
-          "category": null,
-          "criticality": null,
-          "group": "G1",
-          "group_label": "G1 — Therapy Delivery",
-          "stakeholder": null,
-          "priority": null,
-          "source_ref": "derived from DI-003",
-          "acceptance_criteria": null,
-          "verification_method": null,
-          "iec_class": null,
-          "module_name": null,
-          "jira_key": null,
-          "status": null,
-          "assignee": null,
-          "reporter": null,
-          "resolution": null,
-          "duedate": null,
-          "traces_forward": [],
-          "traces_reverse": [
-            {
-              "id": "DI-003",
-              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
-            },
-            {
-              "id": "DI-004",
-              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
-            }
-          ]
-        },
-        {
-          "id": "VER-PP3500-SW-006",
-          "summary": "Software test",
-          "full_text": "Software test (VER-PP3500-SW-006)",
-          "category": null,
-          "criticality": null,
-          "group": "G2",
-          "group_label": "G2 — Drug Library & Medication Safety",
-          "stakeholder": null,
-          "priority": null,
-          "source_ref": "derived from DI-005",
-          "acceptance_criteria": null,
-          "verification_method": null,
-          "iec_class": null,
-          "module_name": null,
-          "jira_key": null,
-          "status": null,
-          "assignee": null,
-          "reporter": null,
-          "resolution": null,
-          "duedate": null,
-          "traces_forward": [],
-          "traces_reverse": [
-            {
-              "id": "DI-005",
-              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
-            }
-          ]
-        }
-      ],
+      "items": [],
       "missing_reason": null,
       "edges_known": true,
       "warnings": [
-        "v1 default: V&V nodes derived from DI verification column"
+        "v1 default: V&V nodes derived from DI verification column",
+        "scope_filter:vnv_to_sw dropped=3"
       ]
     },
     {
@@ -2129,11 +3120,6 @@
   ],
   "edges": [
     {
-      "from": "DI-001",
-      "to": "VER-PP3500-BT-005",
-      "kind": "di_to_vnv"
-    },
-    {
       "from": "UN-001",
       "to": "DI-001",
       "kind": "un_to_di"
@@ -2149,19 +3135,9 @@
       "kind": "un_to_di"
     },
     {
-      "from": "DI-003",
-      "to": "VER-PP3500-SW-002",
-      "kind": "di_to_vnv"
-    },
-    {
       "from": "UN-003",
       "to": "DI-003",
       "kind": "un_to_di"
-    },
-    {
-      "from": "DI-004",
-      "to": "VER-PP3500-SW-002",
-      "kind": "di_to_vnv"
     },
     {
       "from": "UN-003",
@@ -2172,11 +3148,6 @@
       "from": "UN-004",
       "to": "DI-004",
       "kind": "un_to_di"
-    },
-    {
-      "from": "DI-005",
-      "to": "VER-PP3500-SW-006",
-      "kind": "di_to_vnv"
     },
     {
       "from": "UN-004",
@@ -2377,44 +3348,224 @@
       "from": "UN-017",
       "to": "DI-031",
       "kind": "un_to_di"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-001",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-002",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-003",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-004",
+      "to": "SW-004",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-005",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-005",
+      "to": "SW-006",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-007",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "SW-008",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-007",
+      "to": "SW-009",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-008",
+      "to": "SW-010",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-011",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-012",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-006",
+      "to": "SW-013",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-010",
+      "to": "SW-014",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-015",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-016",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-017",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-018",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-019",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-018",
+      "to": "SW-020",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-032",
+      "to": "SW-021",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-022",
+      "to": "SW-022",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-023",
+      "to": "SW-023",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-023",
+      "to": "SW-024",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-024",
+      "to": "SW-025",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-024",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-024",
+      "to": "SW-027",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-034",
+      "to": "SW-028",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-034",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-026",
+      "to": "SW-030",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-031",
+      "to": "SW-031",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-028",
+      "to": "SW-032",
+      "kind": "di_to_sw"
     }
   ],
   "gaps": {
     "orphans": {
       "user_needs": [],
       "design_inputs": [
-        "DI-002",
-        "DI-015",
-        "DI-016",
-        "DI-007",
-        "DI-008",
-        "DI-009",
-        "DI-019",
-        "DI-006",
-        "DI-010",
         "DI-011",
         "DI-012",
-        "DI-013",
-        "DI-014",
-        "DI-020",
-        "DI-021",
-        "DI-017",
-        "DI-018",
         "DI-030",
-        "DI-032",
         "DI-033",
-        "DI-022",
-        "DI-023",
-        "DI-024",
-        "DI-034",
         "DI-025",
-        "DI-026",
         "DI-027",
-        "DI-028",
-        "DI-029",
-        "DI-031"
+        "DI-029"
       ],
-      "software": [],
+      "software": [
+        "SW-001",
+        "SW-002",
+        "SW-003",
+        "SW-004",
+        "SW-005",
+        "SW-006",
+        "SW-007",
+        "SW-008",
+        "SW-009",
+        "SW-010",
+        "SW-011",
+        "SW-012",
+        "SW-013",
+        "SW-014",
+        "SW-015",
+        "SW-016",
+        "SW-017",
+        "SW-018",
+        "SW-019",
+        "SW-020",
+        "SW-021",
+        "SW-022",
+        "SW-023",
+        "SW-024",
+        "SW-025",
+        "SW-026",
+        "SW-027",
+        "SW-028",
+        "SW-029",
+        "SW-030",
+        "SW-031",
+        "SW-032"
+      ],
       "architecture": [
         "M1",
         "M2",
@@ -2427,9 +3578,30 @@
       "vnv": [],
       "risk": []
     },
-    "broken_refs": [],
+    "broken_refs": [
+      {
+        "from": "DI-001",
+        "to": "VER-PP3500-BT-005",
+        "reason": "unknown_id"
+      },
+      {
+        "from": "DI-003",
+        "to": "VER-PP3500-SW-002",
+        "reason": "unknown_id"
+      },
+      {
+        "from": "DI-004",
+        "to": "VER-PP3500-SW-002",
+        "reason": "unknown_id"
+      },
+      {
+        "from": "DI-005",
+        "to": "VER-PP3500-SW-006",
+        "reason": "unknown_id"
+      }
+    ],
     "empty_layers": [
-      "software",
+      "vnv",
       "risk"
     ]
   },
@@ -2442,16 +3614,15 @@
     },
     "design_inputs": {
       "count": 34,
-      "with_forward": 4,
+      "with_forward": 27,
       "with_reverse": 34,
-      "orphan": 30
+      "orphan": 7
     },
     "software": {
-      "count": 0,
-      "missing_reason": "source_missing",
+      "count": 32,
       "with_forward": 0,
-      "with_reverse": 0,
-      "orphan": 0
+      "with_reverse": 32,
+      "orphan": 32
     },
     "architecture": {
       "count": 7,
@@ -2461,9 +3632,9 @@
       "orphan": 7
     },
     "vnv": {
-      "count": 3,
+      "count": 0,
       "with_forward": 0,
-      "with_reverse": 3,
+      "with_reverse": 0,
       "orphan": 0
     },
     "risk": {
