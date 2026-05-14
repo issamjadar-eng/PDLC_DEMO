@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-13 — push (dhf-manifest canonical-roles resolution improvements v9→v12)
+
+- Files: `skills/dhf-manifest/README.md`, `skills/dhf-manifest/SKILL.md`, `skills/dhf-manifest/actions/discovery-index.md`, `skills/dhf-manifest/data/canonical-roles.yaml`, `skills/dhf-manifest/scripts/discovery-index.py`, `skills/dhf-manifest/tests/test_discovery_index.sh`
+- Branch: `sync/pdlc-demo-dhf-manifest-canonical-roles-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/161
+- Commit: "dhf-manifest: canonical-roles resolution improvements (v9→v12)"
+- Status: merged (--merge requested)
+- Merge commit: `a85260dc3b93664abafea18d02ed733c6290d605`
+- Hitachi HEAD after sync: `a85260d`
+- Origin: pdlc_demo task ben/051. Three discovery-index follow-ups — v10 multi-match no-winner bug fix (ambiguity_notes + paired gap), v11 lowercase-hyphen pattern variants for user_needs/software_requirements, v12 frontmatter `canonical_role:` author opt-in. Test suite 36 → 43. Sister project arthrex/pccp validated with zero functional regression.
+
+---
+
 ## 2026-05-12 — pull (advisors v1.2.0 + dhf-manifest v9, post-trace-matrix-push sync)
 
 - Source: hitachi HEAD `d3c3429` (post my own #159 merge)
@@ -686,3 +699,28 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Merge commit: `58738c1`
 - Hitachi HEAD after sync: `58738c1`
 - Provenance: PDLC_DEMO task ben/042; local commits 946e710 → e9e5386 → 57298c8 → a185bfb
+
+## 2026-05-13 — pull
+
+- Hitachi HEAD: `d3c3429` (checkout 0 behind / 0 ahead of origin/main)
+- Pulled: 0 files — nothing in the auto-pull bucket.
+- `check --analyzed` found 18 UPSTREAM_NEWER files, all cases where **local is the newer/better version**:
+  - **12 agents** (`agents/*.md` — clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, risk-management, systems-engineering, vnv-lead) → `BOTH_DIVERGED`. Local has the **three-tier `canonical_roles:` grounding** refactor (committed `620e15e`, 2026-04-20); hitachi's `3393bab` (2026-04-23) *added* these agents to the registry for the first time but sourced the **older `context:`/`sources:` glob-list format** from the Arthrex PCCP project. Pulling would regress the local refactor → not pulled; surfaced as push candidates.
+  - **5 dhf-manifest files** (`README.md`, `SKILL.md`, `actions/discovery-index.md`, `scripts/discovery-index.py`, `tests/test_discovery_index.sh`) → `LOCAL_AHEAD`. **Uncommitted WIP** in the working tree (task ben/051, status Not Started) — not pull-eligible and not push-ready.
+  - **1 file** `skills/project-console/console/web/static/console.overrides.css` → `LOCAL_AHEAD`, committed locally, clean push candidate.
+- project.yml: no changes
+- Follow-ups: push decision pending user — see push candidates above.
+
+## 2026-05-13 — push (12 advisor agents → three-tier canonical-role grounding)
+
+- Files: 13
+  - agents (12): clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, risk-management, systems-engineering, vnv-lead — refactored from `context:`/`sources:` glob-list grounding to three-tier `canonical_roles:` grounding (tier_1 / tier_2 / tier_3 advisor-researcher) + `Agent` tool
+  - skills/project-console/console/web/static/console.overrides.css (local-ahead styling override)
+- Branch: `sync/pdlc-demo-agent-canonical-roles-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/160
+- Commit: "Refactor 12 advisor agents to three-tier canonical-role grounding"
+- Status: merged (--merge requested)
+- Merge commit: `4b43fff`
+- Hitachi HEAD after sync: `4b43fff`
+- Provenance: PDLC_DEMO — local agent refactor committed `620e15e` (2026-04-20). These agents had entered the registry via hitachi #63 (`3393bab`) in the pre-refactor Arthrex-sourced format.
+- Not pushed: 5 dhf-manifest files (uncommitted WIP, task ben/051 — Not Started).
