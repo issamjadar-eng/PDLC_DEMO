@@ -235,6 +235,11 @@ security:
   - credentials*
   - '**/PHI/**'
   - '**/patient*data*'
+  # Google Drive for Desktop sync metadata — kept ignored so Drive's transient
+  # sync artifacts never land in a commit when the tree is synced via Drive.
+  - .tmp.driveupload/
+  - .tmp.drivedownload/
+  - desktop.ini
   approved_skills:
   - advisors
   - best-practices

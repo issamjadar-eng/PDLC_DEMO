@@ -41,6 +41,8 @@ import argparse
 import html as _html
 import json
 import re
+import shutil
+import subprocess
 import sys
 import textwrap
 from pathlib import Path
@@ -126,6 +128,15 @@ def _scope_rules(css: str, scope: str) -> str:
                 k += 1
             body = css[j + 1:k - 1]
             closer = "}"
+            if at_name == "media" and re.search(r"max-(width|height)", prelude):
+                # DROP "collapse on small viewport" media queries entirely.
+                # The composite deck is always rendered at a fixed 1400x900
+                # slide size (HTML view + PDF alike), so these never *should*
+                # fire — and Chrome's --print-to-pdf evaluates max-width/height
+                # against a narrow default page width, NOT the @page size, so
+                # they spuriously fire in print: card grids collapse to one
+                # column, content doubles in height, and slides clip.
+                i = k; continue
             if at_name in _AT_BLOCK_NESTABLE:
                 out.append(prelude + _scope_rules(body, scope) + closer)
             else:
@@ -1859,9 +1870,84 @@ FINAL_NAV_JS = r"""
 })();
 """
 
+# Scale-to-fit: a handful of source slides carry more content than fits a
+# 900px-tall box (AD#6 "Three external signals" is the worst — 2-line h2 +
+# 3 stat cards + a callout). The source CSS uses `overflow: hidden`, so the
+# overflow gets *clipped* top and bottom rather than shrunk. This measures
+# each slide's content box and applies a uniform downscale transform when it
+# overflows — so dense slides shrink to fit instead of clipping. Runs on the
+# screen view AND re-runs on `beforeprint` (Chrome headless print-to-PDF fires
+# it with print layout active), so the PDF and the browser stay consistent.
+FINAL_FIT_JS = r"""
+(function () {
+  function fitOne(box) {
+    if (!box || !box.children.length) return;
+    box.style.transform = "";
+    box.style.transformOrigin = "center center";
+    // The content boxes use `justify-content: center`, so overflow spills
+    // both above AND below the box — scrollHeight only sees the downward
+    // half. Measure the true span from the first child's top to the last
+    // child's bottom instead.
+    var kids = box.children;
+    var top = kids[0].getBoundingClientRect().top;
+    var bottom = kids[kids.length - 1].getBoundingClientRect().bottom;
+    var needed = Math.max(bottom - top, box.scrollHeight);
+    var avail = box.clientHeight;
+    if (avail > 0 && needed > avail) {
+      // 0.97 leaves a hair of breathing room above/below.
+      box.style.transform = "scale(" + ((avail / needed) * 0.97).toFixed(4) + ")";
+    }
+  }
+  function fitAll() {
+    var slides = document.querySelectorAll(".cp-slide-final");
+    for (var i = 0; i < slides.length; i++) {
+      fitOne(
+        slides[i].querySelector("section.slide > .slide-content") ||
+        slides[i].querySelector(".deco-slide > .content")
+      );
+    }
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  window.addEventListener("load", fitAll);
+  window.addEventListener("resize", fitAll);
+  window.addEventListener("beforeprint", fitAll);
+  window.addEventListener("afterprint", fitAll);
+  fitAll();
+})();
+"""
+
 FINAL_CSS = """
 html, body { margin: 0; padding: 0; background: #000; }
 .cp-slide-final { position: relative; }
+
+/* ---- Print / PDF: one slide per page. Page box == 1400x900 CSS px, but
+       expressed in INCHES (14.5833in x 9.375in = 1400x900 at 96dpi). Chrome's
+       print engine mis-handles px units in `@page size` — vw/vh then resolve
+       against a wrong box and content renders ~2x too tall. Inches resolve
+       correctly, so vw/vh inside the slides match the 1400x900 screen view
+       the deck is authored at. ---- */
+@media print {
+  @page { size: 14.5833in 9.375in; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body { margin: 0; padding: 0; background: #000; }
+  .cp-slide-final {
+    width: 1400px;
+    height: 900px;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+  .cp-slide-final:last-child { break-after: auto; page-break-after: avoid; }
+  /* Pin the slide + scope wrappers to the page box so 100vw/100vh content
+     fills exactly one page. */
+  .cp-slide-final > div,
+  .cp-slide-final > section,
+  .cp-slide-final .slide,
+  .cp-slide-final .deco-slide {
+    width: 1400px !important;
+    height: 900px !important;
+  }
+}
 """
 
 
@@ -1951,11 +2037,69 @@ def build_final() -> Path:
 <script>
 {FINAL_NAV_JS}
 </script>
+<script>
+{FINAL_FIT_JS}
+</script>
 </body>
 </html>
 """
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
+    return out
+
+
+# ---------------------------------------------------------------------------
+# PDF export (Chrome headless print-to-PDF)
+# ---------------------------------------------------------------------------
+
+def _find_chrome() -> str | None:
+    candidates = [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    ]
+    for c in candidates:
+        if Path(c).is_file():
+            return c
+    for name in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome"):
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+def build_pdf() -> Path:
+    """Render index.html to GlobalLogic_Agentic_PDLC.pdf via Chrome headless print-to-PDF.
+    The @media print rules in FINAL_CSS pin each slide to a 13.333in x 7.5in
+    page (16:9 widescreen), one slide per page."""
+    index = ROOT / "index.html"
+    if not index.is_file():
+        sys.exit("missing index.html — run `python build.py --final` first")
+    chrome = _find_chrome()
+    if not chrome:
+        sys.exit("Chrome/Chromium not found — install Google Chrome, or print "
+                 "index.html to PDF manually (the @media print CSS is already in place)")
+    out = ROOT / "GlobalLogic_Agentic_PDLC.pdf"
+    cmd = [
+        chrome,
+        "--headless=new",
+        "--disable-gpu",
+        "--no-pdf-header-footer",
+        "--hide-scrollbars",
+        "--allow-file-access-from-files",
+        # Window size == the @page box (1400x900) so the scale-to-fit script
+        # (FINAL_FIT_JS, runs on `load`) measures slides against the same box
+        # the print engine uses — headless --print-to-pdf does not reliably
+        # fire `beforeprint`, so the on-load measurement must already be right.
+        "--window-size=1400,900",
+        "--virtual-time-budget=20000",   # let Google Fonts + console PNGs settle
+        f"--print-to-pdf={out}",
+        index.as_uri(),
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+    if result.returncode != 0 or not out.is_file():
+        sys.exit(f"chrome print-to-pdf failed (rc={result.returncode}):\n"
+                 f"{(result.stderr or result.stdout)[-1000:]}")
     return out
 
 
@@ -1969,6 +2113,7 @@ def main():
     g.add_argument("--candidate", action="store_true", help="Pass 1: build candidate.html in SELECT mode (KEEP/REMOVE per slide, source order)")
     g.add_argument("--reorder",   action="store_true", help="Pass 2: rebuild candidate.html in REORDER mode (drag/▲/▼ for kept slides only). Requires picks.json.")
     g.add_argument("--final",     action="store_true", help="Build index.html from picks.json (kept slides in chosen order)")
+    g.add_argument("--pdf",       action="store_true", help="Render index.html to GlobalLogic_Agentic_PDLC.pdf via Chrome headless (run --final first)")
     args = ap.parse_args()
 
     if args.candidate:
@@ -1986,6 +2131,9 @@ def main():
         text = out.read_text(encoding="utf-8")
         n = text.count('class="cp-slide-final"')
         print(f"wrote {out}  ({out.stat().st_size:,} bytes, {n} kept slides)")
+    elif args.pdf:
+        out = build_pdf()
+        print(f"wrote {out}  ({out.stat().st_size:,} bytes)")
 
 
 if __name__ == "__main__":
