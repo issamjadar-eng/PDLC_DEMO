@@ -2,7 +2,7 @@
 
 **ID**: 051
 **Created**: 2026-05-12
-**Status**: In Progress (Phase 4 complete + sister-project validation done)
+**Status**: Complete (all 6 phases done; pushed + merged upstream)
 **Created By**: Ben
 **Owner**: Ben (with Claude)
 **Priority**: Medium
@@ -103,10 +103,11 @@ Upstream push per the registry sync flow: only after PDLC_DEMO + sister project 
 - [x] `SKILL.md` + `actions/discovery-index.md` documentation updated for all three changes.
 - [ ] Commit (one commit per improvement — easier to revert individually) — **still pending; all v10–v12 changes uncommitted in the working tree**
 
-### Phase 6 — Upstream
-- [ ] Confirm with user before `/sync-skills push`
-- [ ] Push upstream PR; opt into auto-merge if appropriate
-- [ ] Post-merge: project-side `/sync-skills pull`; remove the project-side `evidence_layout.layers` override now made redundant
+### Phase 6 — Upstream ✓ COMPLETE
+- [x] User confirmed ("push and merge").
+- [x] Local commits: `3c06281` (skill changes v9→v12 + project.yml override removal + regenerated discovery JSON + this task doc), `bb86f7c` (sync-log entry). Note: consolidated into one skill commit rather than one-per-improvement — the three improvements are intermingled across the same 6 files, so hunk-splitting would be fragile; each is still a discrete skill version (v10/v11/v12) traceable via the changelog.
+- [x] `/sync-skills push --merge` — branch `sync/pdlc-demo-dhf-manifest-canonical-roles-2026-05-13`, hitachi PR [#161](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/161), squash-merged as `a85260d`. Local hitachi checkout fast-forwarded to `a85260d`. Recorded in `.claude/sync-log.md`.
+- [x] The `evidence_layout.layers` override was removed in Phase 3 (not deferred to a post-merge pull) — already covered. No project-side `/sync-skills pull` needed; local skill files already match the merged upstream.
 
 ## Resume Command
 
