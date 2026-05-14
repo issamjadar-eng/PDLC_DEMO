@@ -204,6 +204,7 @@ roles:
     internal:
       folder: design-controls/user-needs
       patterns:
+        - "user-needs.md"        # exact medtech-docs convention (most-specific — outranks the broad wildcard below)
         - "*user-needs*.md"
         - "*User Needs*.md"
         - "*-un.md"
@@ -220,6 +221,8 @@ roles:
     internal:
       folder: design-controls/requirements
       patterns:
+        - "software-requirements.md"   # exact medtech-docs convention (most-specific)
+        - "*software-requirements*.md" # lowercase-hyphen variant (e.g. pca-software-requirements.md)
         - "*Software Requirements*.md"
         - "*-srs.md"
     external:

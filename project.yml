@@ -32,20 +32,6 @@ scope:
   interoperability: true
   geography:
   - us
-# Project-side overrides for `/dhf-manifest discovery-index` pattern resolution.
-# The canonical-roles.yaml shipped patterns are Title Case; our docs use the
-# medtech-docs default lowercase-hyphen convention. patterns_extra prepends
-# exact-match probes that win before the broader patterns fire.
-# Task ben/051 will push lowercase-hyphen pattern variants upstream so the
-# overrides become unnecessary for new projects.
-evidence_layout:
-  layers:
-    user_needs:
-      patterns_extra:
-      - user-needs.md
-    software_requirements:
-      patterns_extra:
-      - software-requirements.md
 dhfs:
 - leaf: pca-device
   path: docs/project/dhfs/pca-device

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated": "2026-05-12T22:55:41.671562+00:00",
+  "generated": "2026-05-14T05:28:58.359334+00:00",
   "project": "pdlc-demo",
   "project_roles": {
     "regulatory_strategy": {
@@ -1278,7 +1278,7 @@
     {
       "scope": "project",
       "role": "predicate_analysis",
-      "reason": "no file matched any pattern in docs/project/input-analysis/predicate-analysis",
+      "reason": "multi-match: no pattern produced exactly-one match in docs/project/input-analysis/predicate-analysis \u2014 see ambiguity_notes",
       "patterns_tried": [
         "**/predicate-landscape.md",
         "**/se-argument.md",
@@ -1562,6 +1562,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1573,6 +1574,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1584,6 +1586,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1595,6 +1598,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1606,6 +1610,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1617,6 +1622,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -1628,6 +1634,7 @@
       "reason": "no file matched any pattern in design-controls/requirements",
       "patterns_tried": [
         "software-requirements.md",
+        "*software-requirements*.md",
         "*Software Requirements*.md",
         "*-srs.md"
       ]
@@ -2453,7 +2460,7 @@
       "scope": "per-dhf",
       "dhf": "pca-device",
       "role": "fmea",
-      "reason": "no file matched any pattern in risk-management",
+      "reason": "multi-match: no pattern produced exactly-one match in risk-management \u2014 see ambiguity_notes",
       "patterns_tried": [
         "*FMEA*.md",
         "*-fmea.md",
@@ -2464,7 +2471,7 @@
       "scope": "per-dhf",
       "dhf": "connectivity-adapter",
       "role": "fmea",
-      "reason": "no file matched any pattern in risk-management",
+      "reason": "multi-match: no pattern produced exactly-one match in risk-management \u2014 see ambiguity_notes",
       "patterns_tried": [
         "*FMEA*.md",
         "*-fmea.md",
@@ -2475,7 +2482,7 @@
       "scope": "per-dhf",
       "dhf": "cloud-suite",
       "role": "fmea",
-      "reason": "no file matched any pattern in risk-management",
+      "reason": "multi-match: no pattern produced exactly-one match in risk-management \u2014 see ambiguity_notes",
       "patterns_tried": [
         "*FMEA*.md",
         "*-fmea.md",
@@ -3540,6 +3547,26 @@
   ],
   "ambiguity_notes": [
     {
+      "scope": "project",
+      "role": "predicate_analysis",
+      "winning_pattern": null,
+      "winning_path": null,
+      "alternatives": [
+        {
+          "pattern": "**/README.md",
+          "path": "docs/project/input-analysis/predicate-analysis/README.md"
+        },
+        {
+          "pattern": "**/README.md",
+          "path": "docs/project/input-analysis/predicate-analysis/concepts/README.md"
+        },
+        {
+          "pattern": "**/README.md",
+          "path": "docs/project/input-analysis/predicate-analysis/portfolio/README.md"
+        }
+      ]
+    },
+    {
       "scope": "per-dhf",
       "dhf": "pca-device",
       "role": "user_needs",
@@ -3575,6 +3602,57 @@
         {
           "pattern": "*user-needs*.md",
           "path": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md"
+        }
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "fmea",
+      "winning_pattern": null,
+      "winning_path": null,
+      "alternatives": [
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-004-design-fmea.md"
+        },
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-004-process-fmea.md"
+        }
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "fmea",
+      "winning_pattern": null,
+      "winning_path": null,
+      "alternatives": [
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-004-design-fmea.md"
+        },
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-004-process-fmea.md"
+        }
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "fmea",
+      "winning_pattern": null,
+      "winning_path": null,
+      "alternatives": [
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-004-design-fmea.md"
+        },
+        {
+          "pattern": "*-fmea.md",
+          "path": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-004-process-fmea.md"
         }
       ]
     }

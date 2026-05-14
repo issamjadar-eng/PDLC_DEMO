@@ -13,6 +13,10 @@ Writes:
     <PROJECT_ROOT>/docs/project/dhf-manifest/<project>-dhf-discovery.json
 
 Resolution algorithm (per role):
+    0. Frontmatter opt-in: if a file in the role's folder declares
+       `canonical_role: <role>` in its YAML frontmatter, it wins outright —
+       filename patterns are not consulted. Multiple files declaring the same
+       role is a conflict (no winner; surfaced in ambiguity_notes[] + gaps[]).
     1. Compute effective patterns list:
          L3 patterns_extra  (from project.yml evidence_layout.layers[role])
          ++ L2 patterns     (from canonical-roles.yaml)
@@ -113,9 +117,68 @@ def glob_pattern(pattern: str, search_root: Path) -> list[Path]:
         return sorted(p for p in search_root.iterdir() if fnmatch.fnmatch(p.name, pattern))
 
 
-def resolve_one(patterns: list[str], search_root: Path, project_root: Path) -> tuple[dict | None, list[dict], list[str]]:
+def parse_frontmatter_role(path: Path) -> str | None:
+    """Read a markdown file's leading YAML frontmatter and return its declared
+    `canonical_role` (a single slug), or None if absent/unparseable."""
+    try:
+        text = path.read_text()
+    except Exception:
+        return None
+    if not text.startswith("---"):
+        return None
+    end = text.find("\n---", 3)
+    if end == -1:
+        return None
+    try:
+        fm = yaml.safe_load(text[3:end])
+    except Exception:
+        return None
+    if not isinstance(fm, dict):
+        return None
+    role = fm.get("canonical_role")
+    return role if isinstance(role, str) else None
+
+
+def frontmatter_winner(role_name: str, search_root: Path,
+                       project_root: Path) -> tuple[dict | None, list[dict]]:
+    """Author-facing opt-in: scan the immediate *.md children of search_root for
+    files whose frontmatter declares `canonical_role: <role_name>`. Returns
+    (winner_entry, conflict_alternatives):
+      - exactly one declarer  → (entry, [])         frontmatter wins outright
+      - more than one declarer → (None, [alts])     conflicting declarations, no winner
+      - zero declarers        → (None, [])          caller falls through to patterns
+    """
+    if not search_root.is_dir():
+        return None, []
+    declarers = [p for p in sorted(search_root.iterdir())
+                 if p.is_file() and p.suffix == ".md"
+                 and parse_frontmatter_role(p) == role_name]
+    if len(declarers) == 1:
+        return build_entry(declarers[0], project_root, "frontmatter:canonical_role"), []
+    if len(declarers) > 1:
+        alts = [{"pattern": "frontmatter:canonical_role", "path": relpath(p, project_root)}
+                for p in declarers]
+        return None, alts
+    return None, []
+
+
+def resolve_one(patterns: list[str], search_root: Path, project_root: Path,
+                role_name: str | None = None) -> tuple[dict | None, list[dict], list[str]]:
     """Try patterns in order. Return (winner_entry, alternatives, patterns_tried).
-    winner_entry is None if no pattern produced exactly one match."""
+    winner_entry is None if no pattern produced exactly one match.
+
+    Frontmatter opt-in (v11+): when role_name is supplied, a file declaring
+    `canonical_role: <role_name>` in its frontmatter takes precedence over all
+    filename patterns. A single declarer wins outright; multiple declarers are a
+    conflict surfaced as no-winner alternatives (the resolver does NOT then fall
+    through to filename patterns — the author's contradictory intent needs human
+    resolution, not a silent pattern pick)."""
+    if role_name is not None:
+        fm_winner, fm_conflict = frontmatter_winner(role_name, search_root, project_root)
+        if fm_winner:
+            return fm_winner, [], ["frontmatter:canonical_role"]
+        if fm_conflict:
+            return None, fm_conflict, ["frontmatter:canonical_role"]
     winner = None
     alternatives = []
     tried = []
@@ -196,7 +259,7 @@ def resolve_project_role(role_name: str, role_def: dict, override: dict,
             })
         return
 
-    winner, alternatives, tried = resolve_one(patterns, search_root, project_root)
+    winner, alternatives, tried = resolve_one(patterns, search_root, project_root, role_name)
     if winner:
         output["project_roles"][role_name] = winner
         if alternatives:
@@ -206,6 +269,22 @@ def resolve_project_role(role_name: str, role_def: dict, override: dict,
                 "winning_path": winner["path"],
                 "alternatives": alternatives,
             })
+    elif alternatives:
+        # Multi-match but no pattern produced exactly-one — surface in
+        # ambiguity_notes[] for human disambiguation AND in gaps[] for visibility.
+        output["ambiguity_notes"].append({
+            "scope": "project", "role": role_name,
+            "winning_pattern": None,
+            "winning_path": None,
+            "alternatives": alternatives,
+        })
+        output["gaps"].append({
+            "scope": "project", "role": role_name,
+            "reason": f"multi-match: no pattern produced exactly-one match"
+                      + (f" in {folder}" if folder else "")
+                      + " — see ambiguity_notes",
+            "patterns_tried": tried,
+        })
     else:
         output["gaps"].append({
             "scope": "project", "role": role_name,
@@ -345,7 +424,7 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
 
 def _bind_per_dhf(role_name: str, dhf_id: str, search_root: Path, patterns: list,
                   project_root: Path, output: dict, folder_label: str) -> None:
-    winner, alternatives, tried = resolve_one(patterns, search_root, project_root)
+    winner, alternatives, tried = resolve_one(patterns, search_root, project_root, role_name)
     if winner:
         output["dhf_roles"][dhf_id][role_name] = winner
         if alternatives:
@@ -355,6 +434,22 @@ def _bind_per_dhf(role_name: str, dhf_id: str, search_root: Path, patterns: list
                 "winning_path": winner["path"],
                 "alternatives": alternatives,
             })
+    elif alternatives:
+        # Multi-match but no pattern produced exactly-one — surface in
+        # ambiguity_notes[] for human disambiguation AND in gaps[] for visibility.
+        output["dhf_roles"][dhf_id][role_name] = None
+        output["ambiguity_notes"].append({
+            "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
+            "winning_pattern": None,
+            "winning_path": None,
+            "alternatives": alternatives,
+        })
+        output["gaps"].append({
+            "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
+            "reason": f"multi-match: no pattern produced exactly-one match in "
+                      f"{folder_label or '<dhf-root>'} — see ambiguity_notes",
+            "patterns_tried": tried,
+        })
     else:
         output["dhf_roles"][dhf_id][role_name] = None
         output["gaps"].append({
@@ -374,7 +469,7 @@ def resolve_per_submission_role(role_name: str, role_def: dict, override: dict,
         folder = folder_template.replace("{submission_id}", sub_id)
         search_root = project_root / folder
         output["submission_roles"].setdefault(sub_id, {})
-        winner, alternatives, tried = resolve_one(patterns, search_root, project_root)
+        winner, alternatives, tried = resolve_one(patterns, search_root, project_root, role_name)
         if winner:
             output["submission_roles"][sub_id][role_name] = winner
             if alternatives:
@@ -384,6 +479,22 @@ def resolve_per_submission_role(role_name: str, role_def: dict, override: dict,
                     "winning_path": winner["path"],
                     "alternatives": alternatives,
                 })
+        elif alternatives:
+            # Multi-match but no pattern produced exactly-one — surface in
+            # ambiguity_notes[] for human disambiguation AND in gaps[] for visibility.
+            output["submission_roles"][sub_id][role_name] = None
+            output["ambiguity_notes"].append({
+                "scope": "per-submission", "submission": sub_id, "role": role_name,
+                "winning_pattern": None,
+                "winning_path": None,
+                "alternatives": alternatives,
+            })
+            output["gaps"].append({
+                "scope": "per-submission", "submission": sub_id, "role": role_name,
+                "reason": f"multi-match: no pattern produced exactly-one match in "
+                          f"{folder} — see ambiguity_notes",
+                "patterns_tried": tried,
+            })
         else:
             output["submission_roles"][sub_id][role_name] = None
             output["gaps"].append({

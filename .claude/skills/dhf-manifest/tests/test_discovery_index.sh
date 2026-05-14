@@ -542,6 +542,161 @@ EOF
 }
 
 # ──────────────────────────────────────────────────────────────────────
+# Case 9: multi-match no-winner — every pattern hits >1 file, none wins.
+# A user-needs folder holding `user-needs-register.md` + `user-needs-archive.md`:
+# both match the broad `*user-needs*.md`, neither matches the exact-match
+# `user-needs.md` (v11) or any other more-specific pattern, so no pattern
+# resolves to exactly-one. Expectation: an ambiguity_notes[] entry with
+# winning_* fields null + alternatives listing all candidates, AND a paired
+# gaps[] entry referencing the ambiguity_notes for visibility.
+# NOTE: the original PDLC_DEMO repro (`user-needs.md` + `user-needs-register.md`)
+# is no longer a no-winner case — v11 added the exact-match `user-needs.md`
+# pattern that resolves it. This fixture uses non-exact filenames to keep the
+# no-winner resolver path under test.
+# ──────────────────────────────────────────────────────────────────────
+
+case9() {
+    local TMP
+    TMP=$(mktemp -d)
+    trap "rm -rf $TMP" RETURN
+
+    mkdir -p "$TMP/docs/project/strategies"
+    mkdir -p "$TMP/docs/project/dhfs/ambig-dhf/design-controls/user-needs"
+    mkdir -p "$TMP/docs/project/dhf-manifest"
+
+    echo "# Reg" > "$TMP/docs/project/strategies/regulatory-strategy.md"
+    # Two files BOTH match the broad pattern *user-needs*.md; neither matches
+    # the exact `user-needs.md` (v11) or any other more-specific pattern.
+    echo "# Register" > "$TMP/docs/project/dhfs/ambig-dhf/design-controls/user-needs/user-needs-register.md"
+    echo "# Archive" > "$TMP/docs/project/dhfs/ambig-dhf/design-controls/user-needs/user-needs-archive.md"
+
+    cat > "$TMP/project.yml" <<EOF
+project:
+  name: fixture-multi-match-no-winner
+dhfs:
+  - leaf: ambig-dhf
+    path: docs/project/dhfs/ambig-dhf
+    role: system
+EOF
+
+    run_resolver "$TMP"
+    local OUT
+    OUT=$(read_json "$TMP" "fixture-multi-match-no-winner")
+
+    # user_needs resolution should be null
+    local un_value
+    un_value=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['ambig-dhf']['user_needs']; print('NULL' if v is None else v.get('path'))")
+    assert_eq "case9.ambig-dhf.user_needs" "NULL" "$un_value"
+
+    # ambiguity_notes should contain a no-winner entry for this role
+    local amb_no_winner
+    amb_no_winner=$(echo "$OUT" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+notes = [n for n in d['ambiguity_notes']
+         if n.get('dhf') == 'ambig-dhf'
+         and n.get('role') == 'user_needs'
+         and n.get('winning_pattern') is None
+         and n.get('winning_path') is None]
+print(len(notes))
+")
+    assert_eq "case9.ambig-dhf.user_needs.ambiguity_no_winner" "1" "$amb_no_winner"
+
+    # The ambiguity note should list BOTH candidates as alternatives
+    local alt_count
+    alt_count=$(echo "$OUT" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+notes = [n for n in d['ambiguity_notes']
+         if n.get('dhf') == 'ambig-dhf'
+         and n.get('role') == 'user_needs'
+         and n.get('winning_pattern') is None]
+print(len(notes[0]['alternatives']) if notes else 0)
+")
+    assert_eq "case9.ambig-dhf.user_needs.alternatives_count" "2" "$alt_count"
+
+    # A paired gap entry should exist with a reason that references ambiguity_notes
+    local gap_refs_amb
+    gap_refs_amb=$(echo "$OUT" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+gaps = [g for g in d['gaps']
+        if g.get('dhf') == 'ambig-dhf'
+        and g.get('role') == 'user_needs'
+        and 'ambiguity_notes' in (g.get('reason') or '')]
+print(len(gaps))
+")
+    assert_eq "case9.ambig-dhf.user_needs.gap_refs_ambiguity" "1" "$gap_refs_amb"
+}
+
+# ──────────────────────────────────────────────────────────────────────
+# Case 10: frontmatter `canonical_role:` opt-in takes precedence over
+# filename patterns. The user-needs folder holds TWO files:
+#   - user-needs.md          — would win via the exact-match pattern (v11)
+#   - legacy-un-doc.md       — declares `canonical_role: user_needs` in frontmatter
+# Expectation: the frontmatter declarer wins, NOT the pattern match, and the
+# winning entry's matched_pattern is `frontmatter:canonical_role`.
+# ──────────────────────────────────────────────────────────────────────
+
+case10() {
+    local TMP
+    TMP=$(mktemp -d)
+    trap "rm -rf $TMP" RETURN
+
+    mkdir -p "$TMP/docs/project/strategies"
+    mkdir -p "$TMP/docs/project/dhfs/fm-dhf/design-controls/user-needs"
+    mkdir -p "$TMP/docs/project/dhf-manifest"
+
+    echo "# Reg" > "$TMP/docs/project/strategies/regulatory-strategy.md"
+    # This file would win via the exact-match `user-needs.md` pattern...
+    echo "# Conventionally-named user needs" \
+        > "$TMP/docs/project/dhfs/fm-dhf/design-controls/user-needs/user-needs.md"
+    # ...but this non-conventionally-named file declares the role explicitly,
+    # and the frontmatter opt-in must outrank the filename pattern.
+    cat > "$TMP/docs/project/dhfs/fm-dhf/design-controls/user-needs/legacy-un-doc.md" <<'EOF'
+---
+title: Legacy User Needs Document
+canonical_role: user_needs
+---
+
+# Legacy user needs
+EOF
+
+    cat > "$TMP/project.yml" <<EOF
+project:
+  name: fixture-frontmatter-optin
+dhfs:
+  - leaf: fm-dhf
+    path: docs/project/dhfs/fm-dhf
+    role: system
+EOF
+
+    run_resolver "$TMP"
+    local OUT
+    OUT=$(read_json "$TMP" "fixture-frontmatter-optin")
+
+    # user_needs should resolve to the frontmatter declarer, not user-needs.md
+    local un_path
+    un_path=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['dhf_roles']['fm-dhf']['user_needs']['path'])")
+    assert_path_endswith "case10.fm-dhf.user_needs.path" "legacy-un-doc.md" "$un_path"
+
+    # ...and the winning entry must record the frontmatter match, not a glob pattern
+    local un_pat
+    un_pat=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['dhf_roles']['fm-dhf']['user_needs']['matched_pattern'])")
+    assert_eq "case10.fm-dhf.user_needs.matched_pattern" "frontmatter:canonical_role" "$un_pat"
+
+    # no ambiguity_notes for user_needs — frontmatter wins cleanly, patterns not consulted
+    local amb
+    amb=$(echo "$OUT" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+print(len([n for n in d['ambiguity_notes']
+           if n.get('dhf') == 'fm-dhf' and n.get('role') == 'user_needs']))
+")
+    assert_eq "case10.fm-dhf.user_needs.no_ambiguity" "0" "$amb"
+}
+
+# ──────────────────────────────────────────────────────────────────────
 # Drive
 # ──────────────────────────────────────────────────────────────────────
 
@@ -554,6 +709,8 @@ case5; echo "case5: external-mode DHF — nested sub-convention (folder/v*.md)"
 case6; echo "case6: external-mode DHF — flat sub-convention (folder.md)"
 case7; echo "case7: project-scoped multi_file role — folder pointer with file_count"
 case8; echo "case8: per-dhf multi_file role (internal mode) — folder pointer"
+case9; echo "case9: multi-match no-winner — ambiguity_notes + paired gap (was silently lost pre-fix)"
+case10; echo "case10: frontmatter canonical_role: opt-in outranks filename patterns"
 
 echo
 echo "Results: $PASS passed, $FAIL failed"
