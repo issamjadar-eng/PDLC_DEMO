@@ -390,13 +390,22 @@ fi
 if $GH_AVAILABLE && [[ -n "$GH_USER" ]]; then
 
     # --- Check 1: GitHub 2FA enabled ---
-    tfa=$(run_with_timeout 3 gh api /user --jq '.two_factor_authentication // false' 2>/dev/null || echo "error")
+    # `gh api /user` only exposes `two_factor_authentication` as a real boolean
+    # for some token types; keyring OAuth tokens get `null`. `null` means "this
+    # token cannot see 2FA status" — NOT "2FA is off". Keep the three states
+    # distinct: do not collapse null -> false. null/empty -> SKIP (no method to
+    # verify), real false -> FAIL (genuine signal), error -> SKIP.
+    tfa=$(run_with_timeout 3 gh api /user --jq '.two_factor_authentication' 2>/dev/null || echo "error")
     if [[ "$tfa" == "true" ]]; then
         record_check 1 "GitHub 2FA" "Critical" "PASS"
+    elif [[ "$tfa" == "false" ]]; then
+        record_check 1 "GitHub 2FA" "Critical" "FAIL" "2FA not enabled on GitHub"
     elif [[ "$tfa" == "error" ]]; then
         record_check 1 "GitHub 2FA" "Critical" "SKIP" "API call failed"
     else
-        record_check 1 "GitHub 2FA" "Critical" "FAIL" "2FA not enabled on GitHub"
+        # null / empty — GitHub does not expose 2FA status for this token type.
+        record_check 1 "GitHub 2FA" "Critical" "SKIP" \
+            "2FA status not exposed by this token — verify manually at github.com/settings/security"
     fi
 
     # --- Check 3: GitHub email on approved domain ---
