@@ -52,8 +52,9 @@ _Approach pivoted from a "PDLC-phase × control-posture matrix" to a chunked rol
 - [x] Chunk 2 — edge topology: V-shape + two test universes + independence-by-charter ✅ 2026-05-13
 - [x] Chunk 3 — constraint corpora: per-axis cross-group strategies (Architecture / Tooling / Technology) ✅ 2026-05-13
 - [x] Chunk 4 — TDD linkage: form-neutral TC meta-pattern + content-hash audit + test-node anchoring ✅ 2026-05-13
-- [ ] Chunk 5 — current-structure fit: mark each skill/agent Reuse / Extend / Create-new (feeds Phase 3)
-- [ ] Map non-negotiable human checkpoints (design review approvals, risk acceptance, V&V sign-off, release authorization) onto the V-shape edges
+- [x] Chunk 5 — bootstrap vs. steady-state: iterative device bootstrap, skeleton shape, doc↔code capture model, rd-lead consistency check ✅ 2026-05-14
+- [ ] Chunk 6 — current-structure fit: mark each skill/agent Reuse / Extend / Create-new (feeds Phase 3)
+- [x] Map non-negotiable human checkpoints onto the V-shape edges ✅ 2026-05-14 — 8 checkpoints tabled; "agents produce, humans accept" principle
 - [ ] Walk one end-to-end agent flow for a sample PP3500 requirement to validate the frame
 
 ### Phase 2 — Agent team blueprint (G2)
@@ -496,7 +497,189 @@ Extractor implication: the test extractor must walk BOTH file-level markers AND 
 
 **Chunk 4 is now fully closed.** TC meta-pattern, 1:N cardinality, content-hash audit (domain + normalization + storage), test-node anchoring (case/procedure, mixed allowed), carve-out + dedup rules — all decided.
 
+#### Chunk 5 — Bootstrap vs. steady-state; the simulated device as build substrate (in discussion, opened 2026-05-14)
+
+<!-- STRATEGY CONTENT: architecture, development, operations
+Topic: Bootstrap-vs-steady-state distinction; the simulated device is a prerequisite substrate for TDD, and it has its own prerequisite (device architecture / interface contracts)
+
+User raised (2026-05-14): where do we define the test tools/frameworks, and is there a dependency we must satisfy before TDD can proceed? The demo's goal is to demonstrate the PDLC approach; documentation workflows are mostly covered; the user wants the demo to be able to **build a simulated device from the requirements**, and suspects that must be tackled before TDD.
+
+Key distinction this surfaces — **bootstrap vs. steady-state**:
+
+- **Steady-state** — the V-shape (Chunks 1–4) describes the per-feature flow once the machine is running. It assumes a substrate exists to build into and test against.
+- **Bootstrap** — for a *demo* there is no real device, so the substrate must be a **simulated device**, built once as a foundation before any per-feature V-shape can spin. This is a distinct, one-time phase the strategy frame had not named.
+
+**Where test tools/frameworks are defined** — already answered by Chunk 3: the **Tooling Strategy** axis doc. Dev section = unit/integration frameworks, build pipeline, static analysis, coverage. V&V section = functional/system frameworks, simulation rigs, HIL fixtures, UAT/validation harness. UAT (≈ validation) is NOT a dependency ahead of test tooling — it is another testing band in the same Tooling Strategy, sharing the simulated-device prerequisite.
+
+**The bootstrap dependency chain:**
+
+```
+Architecture Strategy   → device module boundaries + INTERFACE CONTRACTS
+        ↓                  (harnesses bind to interfaces — can't tool an undefined interface)
+Technology Strategy     → sim language / platform / runtime
+        ↓
+Tooling Strategy        → test frameworks, harnesses, CI, coverage (now answerable)
+        ↓
+Simulated device SKELETON → runnable scaffold, interfaces live, behavior stubbed
+        ↓
+Per-feature TDD V-shape  → now it can spin
+```
+
+So the simulated device comes first — but its own prerequisite is the **device architecture**, specifically the **interface contracts**. This overlaps task 046 ("no top-level system architecture doc / system SAD has no home") — the bootstrap of this task and the architecture gap of task 046 are the same upstream dependency. Flag for coordination.
+
+`src/` today holds "SaMD + pump firmware placeholders" (per CLAUDE.md). The simulated device is the requirements-derived realization of those placeholders — it lives in `src/`, and turning placeholders into a real requirements-traced simulated device is the bootstrap deliverable.
+
+OPEN QUESTION (next turn): how is the simulated device bootstrapped — built broad upfront, or grown feature-by-feature by the demonstrated V-shape itself?
+-->
+
+**In discussion**: the strategy frame needs a named **bootstrap phase** distinct from the steady-state V-shape. The simulated device is the build substrate TDD needs; its prerequisite is the device architecture (interface contracts) — which overlaps task 046. Test tools/frameworks are defined in the Tooling Strategy axis doc (already designed in Chunk 3).
+
+##### Chunk 5 addendum 1 — Bootstrap mode: iterative (option 1) + skeleton shape + capture model (in discussion, 2026-05-14)
+
+<!-- STRATEGY CONTENT: architecture, development
+Topic: Iterative device bootstrap — minimal skeleton grown by the V-shape; architecture doc and skeleton code as different-jurisdiction projections of one design
+
+Decision: bootstrap mode = **option 1, iterative** — minimal runnable skeleton, then the demonstrated per-feature V-shape GROWS the device. The device build IS the demo.
+
+**Skeleton shape — "interface-complete, behavior-empty":**
+- A device runtime that boots and runs clean (event loop / process).
+- Module decomposition declared as stub modules (dose-management, pump-control, alarm-subsystem, clinician-UI, connectivity, …) — each exists, is importable, exposes its full interface.
+- Interface contracts live — every inter-module API and the external-facing interface (V&V black-box test surface) has real signatures, types, error contracts.
+- Behavior stubbed — methods raise `NotImplementedError` or return safe documented defaults.
+- Net effect: the skeleton is the TDD **"red" state at device scale** — one large failing test surface; the per-feature V-shape turns red → green one TC at a time.
+
+**Capture model — architecture doc and skeleton are two projections of one design, with DIFFERENT JURISDICTIONS (not competing copies):**
+
+| Artifact | Owns | Role |
+|----------|------|------|
+| Architecture doc (system arch doc + component SADs) | *Contract & intent* — what the interface SHOULD be, why modules are cut this way | Controlled DHF design-output artifact; what auditors read |
+| Skeleton code in `src/` | *Realized structure* — what actually RUNS | Design output that traces TO the architecture doc |
+| Consistency check | Divergence between the two | Gate; divergence routes to `rd-lead` agent (its existing charter: "gap between architectural intent and implementation reality") |
+
+This is fractal with the Spec/Dev split — the doc is "spec for the architecture," the code is "the build." Implication: the architecture doc **grows iteratively too** — bootstrap captures only enough modules + interfaces for the pilot slice; each feature turn extends doc AND skeleton together, gated by the consistency check.
+
+**Task 046 overlap:** the bootstrap's "top-level system architecture doc" is the same artifact task 046 flagged as missing (per-DHF `*-system-sad.md` docs are mislabeled component software SADs; no true system arch doc exists). Bootstrap of this task and the architecture gap of task 046 are the same upstream work — coordinate, don't duplicate.
+
+OPEN QUESTION (next turn): the consistency check between architecture doc and skeleton — is it a new skill action, an `rd-lead` agent responsibility, or a hook/gate? And what does "consistent" mean precisely (interface-signature parity? module-set parity? trace-completeness?).
+-->
+
+**In discussion** — bootstrap = iterative (option 1). Skeleton is "interface-complete, behavior-empty" (device-scale TDD red state). Architecture doc and skeleton code are different-jurisdiction projections of one design: doc owns contract+intent (controlled DHF artifact), code owns realized structure (traces to doc), a consistency check gates divergence (routes to `rd-lead`). Architecture doc grows iteratively alongside the skeleton. Overlaps task 046's missing system-architecture doc.
+
+##### Chunk 5 addendum 2 — Consistency check = rd-lead agent responsibility (decided 2026-05-14)
+
+<!-- STRATEGY CONTENT: architecture, development
+Topic: rd-lead agent owns the architecture-doc ↔ skeleton consistency check; the four consistency dimensions; soft gate hardened by checkpoint-protocol inclusion
+
+Decision: the architecture-doc ↔ skeleton consistency check is a **`rd-lead` agent responsibility**, not a separate deterministic skill. Reuses an existing agent whose charter already names this exact gap ("gap between architectural intent and implementation reality"); judgment-based, handles nuance a structural diff cannot.
+
+**What "consistent" means — the four dimensions rd-lead checks** (this set should be written into the rd-lead agent charter so the review is repeatable):
+
+1. **Module-set parity** — every module in the architecture doc exists as a (stub or implemented) module in the skeleton, and vice versa. No orphan modules in either direction.
+2. **Interface-signature parity** — every interface declared in the doc has a matching signature in the skeleton: method names, parameter lists, types, error/exception contracts.
+3. **Intent alignment** — does the realized module decomposition still honor the architectural rationale? (The judgment dimension — the reason this is an agent, not a script.)
+4. **Trace-completeness** — every skeleton module/interface traces to a requirement node; no untraced code; no requirement left without a skeleton home.
+
+**Gate semantics.** Because this is agent-based, not a hard hook, it is a *soft* gate — it relies on being invoked. It is **hardened by being a REQUIRED step in the orchestrator's (Tier-2) per-feature-turn checkpoint protocol** — the orchestrator must invoke rd-lead's consistency review before a feature turn can close. Soft mechanism, hard protocol placement.
+
+**Findings routing.** rd-lead reports divergence; findings route back to the Dev group (skeleton wrong) or to Spec/architecture authoring (doc wrong) per the V-shape back-edges. Unresolvable divergence escalates to a human.
+
+**Child-task candidate:** extend the `rd-lead` agent charter to (a) name the four consistency dimensions explicitly and (b) define the consistency-review output format. Likely also a child task to give rd-lead the tool surface it needs — today rd-lead is Read/Glob/Grep/WebFetch/Agent, which is sufficient for *reading* both projections and reporting, so no Edit/Write needed for the check itself. Confirmed: no tool-surface change required for the consistency check.
+
+**Numbering note:** the original Phase-1 discussion plan's "Chunk 5 — current-structure fit (Reuse/Extend/Create-new)" is renumbered **Chunk 6**; this bootstrap discussion took the Chunk-5 slot as it emerged from the user's 2026-05-14 question.
+-->
+
+**Decided** — consistency check is owned by the **`rd-lead` agent** (reuses its existing charter; judgment-based). Four consistency dimensions: module-set parity, interface-signature parity, intent alignment, trace-completeness — to be written into the rd-lead charter. Soft gate hardened by being a **required step in the orchestrator's per-feature-turn checkpoint protocol**. Findings route via V-shape back-edges; unresolvable divergence escalates to human. No rd-lead tool-surface change needed. Child task: extend rd-lead charter with the four dimensions + output format.
+
 _(Strategy content gets filled in-flight as Phase 1 / Phase 2 produce decisions. Tag each decision with the appropriate `<!-- STRATEGY CONTENT: domain, topic -->` block so `/strategy` can harvest it.)_
+
+### Phase 1 — Human Checkpoints on the V-shape (mapped 2026-05-14)
+
+<!-- STRATEGY CONTENT: regulatory, risk, testing, operations
+Topic: Non-negotiable human checkpoints mapped onto the V-shape — the "agents produce, humans accept" principle
+
+Organizing principle: **agents produce and review; humans accept.** Every non-negotiable human checkpoint is a *decision of record* — an approval / acceptance / authorization carrying personal or organizational accountability. Agents do all work up to the decision (author artifacts, run analysis, run the review panels, assemble the evidence package); the human reviews the assembled package and signs. Human checkpoints are therefore THIN — decision points, not work points. This is the agentic-first efficiency thesis: humans spend their time on decisions of record, not on production.
+
+The eight non-negotiable checkpoints:
+
+| # | Checkpoint | Standard | V-shape location | Agents prepare | Human decides |
+|---|-----------|----------|------------------|----------------|---------------|
+| 1 | **Design input baseline approval** | ISO 13485 §7.3.3 | Spec → (Dev, V&V) edges; also bootstrap (architecture interface contracts) | Spec agents author UN/DI/SW/TC; systems-engineering + regulatory-affairs review for completeness/consistency | Approve the design-input baseline before any build/test edge fires |
+| 2 | **Design change approval** | ISO 13485 §7.3.9 | Entry gate to every per-feature turn | `change-control` + content-hash drift audit flag the change; impact analysis assembled by the orchestrator | Approve the change before the V-shape spins (depth risk-tiered — see open question) |
+| 3 | **Risk control + residual risk acceptance** | ISO 14971 | Risk node; fires when a feature touches a hazard | risk-management agent analyzes, proposes controls, computes residual + benefit-risk | Accept or reject residual risk |
+| 4 | **Formal design review** | ISO 13485 §7.3.5 | Maturity milestones (bootstrap-complete, pilot-complete, pre-transfer) | design-review-panel + core-team-panel run the review, surface concerns | Sign the design review record |
+| 5 | **Verification results approval** | ISO 13485 §7.3.6 / IEC 62304 §5.7 | VER node (DT results contribute) | vnv-lead assembles the design-verification record from VER + DT results | Approve the verification record |
+| 6 | **Validation results approval** (incl. usability summative) | ISO 13485 §7.3.7 / IEC 62366 | Top-right V closure back to UN; simulated use environment | clinical-affairs + human-factors assemble validation evidence + summative usability | Approve validation; sign usability summative |
+| 7 | **Design transfer authorization** | ISO 13485 §7.3.8 | Terminal gate | program-manager + quality-engineering assemble transfer-readiness package | Authorize transfer |
+| 8 | **Software release** | IEC 62304 §5.8 | Terminal, after transfer | rd-lead + quality-engineering evaluate known anomalies, assemble release record | Authorize release |
+
+**Grouped by where they fire:**
+
+- **Bootstrap gates** — #1 (design-input baseline, incl. architecture interface contracts the skeleton is built against) and a #4 design review at "bootstrap complete."
+- **Per-feature-turn gates** — #2 (change approval, entry gate) and #3 (risk acceptance, only when the feature touches a hazard). #5 verification results accumulate per-feature but the *record* is approved at a milestone/terminal point.
+- **Milestone gates** — #4 (formal design review at defined maturity milestones — §7.3.5's "suitable stages").
+- **Terminal gates** — #5 verification record, #6 validation, #7 transfer, #8 release.
+
+**The agentic preparation layer for the human gates.** The existing Tier-3 panel agents (`design-review-panel`, `core-team-panel`) are the agentic *preparation* for checkpoint #4 — they run the cross-functional review and surface concerns so the human signs a review record they can trust quickly. The panels do not replace the human gate; they make it fast. Same pattern for every gate: a Tier-3 reviewer agent (or set) assembles and pre-reviews; the human accepts.
+
+**Iterative-model tension.** In classic waterfall, design reviews sit at clean phase boundaries. In our iterative feature-by-feature model, if every feature turn required a full human design review, the human becomes the bottleneck and the agentic-first win is lost. Resolution differs per gate:
+- #2 change approval — must be per-change (§7.3.9 admits no exception) but can be *lightweight* for low-risk changes vs *full* for high-risk. Risk-tiered DEPTH, not risk-tiered existence.
+- #3 risk acceptance — naturally per-feature, but only fires for hazard-touching features.
+- #4 design review — milestone-batched by nature (§7.3.5 "suitable stages") — not per-feature.
+- #5–#8 — terminal/milestone by nature.
+
+So only #2 (and the depth of #3) is the real tuning knob.
+
+OPEN QUESTION (next turn): should task 011's criticality tags (CtS / CtF / CtC / CtP) drive the DEPTH of the per-feature human gate #2 — i.e., a CtS-tagged feature gets a full human change-review while a commercial-only feature gets a lightweight human ack?
+-->
+
+#### Gate Maturity Ladder — selectable oversight policy (decided 2026-05-14)
+
+<!-- STRATEGY CONTENT: operations, regulatory, risk
+Topic: Multi-stage gate maturity ladder — agentic process validation expressed as an evidence-gated oversight-reduction path
+
+User's insight (2026-05-14): gate depth must be SELECTABLE, and the default selection must EVOLVE — early on the program needs more human review to validate the agentic approach itself; only after the approach is proven does it migrate to a risk-based posture. This is not a convenience knob — it is **agentic process validation**: the "review everything" phase is the evidence-collection phase for the agentic process, and the migration to lighter oversight is the documented outcome of that validation. A regulator/auditor will ask "how do you know the agent team is reliable enough to lighten review?" — the ladder + its transition evidence IS the answer.
+
+Decision: a **4-stage maturity ladder**, each transition evidence-gated and change-controlled.
+
+| Stage | Name | Human review posture |
+|-------|------|----------------------|
+| **0** | Full Oversight | Human reviews every artifact at every gate, full depth, regardless of criticality. Bootstrap + earliest features. Purpose: collect baseline evidence on agent reliability. |
+| **1** | Full Coverage, Tiered Depth | Human still reviews 100% of changes/artifacts, but review *depth* scales by criticality (CtS/CtF deep; commercial-only lighter but still human). Nothing unreviewed; human time allocated by risk. |
+| **2** | Risk-Tiered | Low-risk changes → lightweight human ack or batched review; high-risk (CtS/CtF, hazard-touching) → full review. This is the "risk-based approach" the program migrates toward. |
+| **3** | Sampling | Lowest criticality tier only → sampling / audit-after-the-fact. Flagged "maybe never for a Class II device" — included for completeness; adoption would itself need strong justification. |
+
+**Scope of the ladder — what it governs vs. what it never touches:**
+- **Governed by the ladder**: per-feature change-approval depth (#2), design-review preparation/batching (#4), verification-review depth (#5) — the recurring *review burden*.
+- **NEVER loosens, ladder-exempt**: #3 residual-risk acceptance (the canonical irreducible human decision), and the terminal authorization decisions #6 validation / #7 transfer / #8 release (low-frequency, high-stakes — loosening buys nothing). The ladder governs *review burden*, not *who holds accountability for acceptance*.
+
+**Transition mechanism:**
+- Each rung transition requires **documented, measurable evidence** — e.g., N consecutive low-risk features where human review found nothing the agent missed; an agent-output ↔ human-approved-final concordance rate above a defined threshold. The content-hash audit + trace-matrix already produce this data.
+- A transition is a **change-controlled decision** — dated, evidence-cited, approved, logged. Moving from Stage 0 → 1 is itself an entry in the change-control record.
+
+**Selector location**: `project.yml` — declared, auditable policy of record (e.g., an `agentic:` block with `gate_policy_stage: 0`). The Tier-2 orchestrator reads it to decide gate depth per feature turn.
+
+**New deliverable surfaced**: "Agentic Process Validation" — the ladder definition + the transition evidence criteria + the per-transition evidence records together form the validation story for the agentic process itself. Open question whether this is its own doc or folds into operations-strategy.md / a quality artifact.
+
+**Child-task candidates from this decision**:
+- Define the transition evidence criteria precisely (which metrics, which thresholds, measured how).
+- `gate_policy_stage` selector in `project.yml` + orchestrator logic that reads it.
+- "Agentic Process Validation" record/doc — home TBD.
+-->
+
+**Gate Maturity Ladder — decided**:
+- **4-stage ladder**: Stage 0 Full Oversight → Stage 1 Full Coverage Tiered Depth → Stage 2 Risk-Tiered → Stage 3 Sampling. Default starts at Stage 0; migrates upward as the agentic approach proves out.
+- **Ladder governs review burden** (#2 change-approval depth, #4 design-review prep/batching, #5 verification-review depth). **Ladder-exempt** (never loosens): #3 residual-risk acceptance + terminal authorizations #6/#7/#8.
+- **Transitions are evidence-gated AND change-controlled** — measurable criteria (concordance rate, consecutive-clean-review counts from the content-hash audit + trace-matrix), each transition dated/evidence-cited/logged.
+- **Selector**: `project.yml` `agentic.gate_policy_stage` — policy of record; orchestrator reads it.
+- **Reframe**: the ladder + transition evidence IS the "agentic process validation" story — the answer to "how do you know the agent team is trustworthy enough to lighten review?" New deliverable surfaced (home TBD).
+
+**Human-checkpoint map summary** (full table + reasoning in the Strategy block above):
+
+- **Principle**: agents produce and review; humans *accept*. Every non-negotiable gate is a decision of record; agents do everything up to the decision.
+- **8 checkpoints**: design-input approval, change approval, residual-risk acceptance, formal design review, verification approval, validation approval, transfer authorization, software release — each mapped to a V-shape location, a standard, an agent-preparation step, and a human decision.
+- **Grouped**: bootstrap gates (input baseline + bootstrap-complete review), per-feature gates (change approval, risk acceptance), milestone gate (design review), terminal gates (verification record, validation, transfer, release).
+- **Tier-3 panels** (`design-review-panel`, `core-team-panel`) are the agentic *preparation* for the human design-review gate — they make the gate fast, they don't replace it.
+- **Iterative tension**: only the per-feature change-approval gate (#2) is a real tuning knob — open question on whether task-011 criticality tags drive its depth.
 
 ## Open Questions
 
@@ -517,8 +700,11 @@ _(Updated at every checkpoint. On a fresh session, read this section first.)_
   - TC = form-neutral testable-claim atom with project-pluggable adapter; 1:N test cardinality, 1:1 floor.
   - Content-hash audit on the linked requirement node (semantic text only, light normalization); hash stored in the test artifact.
   - Trace anchor = a test node at author-chosen depth (case or procedure); mixed anchoring within a file allowed; carve-out + coverage-dedup rules defined.
-- **Next step**: Chunk 5 — current-structure fit (mark each skill/agent Reuse / Extend / Create-new), OR walk one end-to-end agent flow for a sample PP3500 requirement. User to choose.
-- **Child-task candidates surfaced so far**: (a) trace-matrix new TC layer; (b) trace-matrix new DT layer; (c) trace-matrix content-hash drift-audit action; (d) `/strategy` skill — add `tooling` + `technology` harvest domains; (e) author `tooling-strategy.md` + `technology-strategy.md`; (f) refactor `architecture-strategy.md` into per-group sections.
+  - Bootstrap vs. steady-state: iterative device bootstrap (minimal skeleton grown by the V-shape); architecture doc + skeleton are different-jurisdiction projections; `rd-lead` owns the consistency check (4 dimensions).
+  - 8 human checkpoints mapped to the V-shape ("agents produce, humans accept"); Gate Maturity Ladder (4 stages, evidence-gated transitions, `project.yml` selector) governs review burden; #3 risk acceptance + terminal authorizations are ladder-exempt.
+- **Next step**: Phase 1 work PAUSED 2026-05-14 — project is being migrated from `~/Documents/demos/pdlc_demo` to `~/projects/pdlc_demo` (escaping macOS `Icon\r` / `.DS_Store` interference with Python tooling). On resume, continue with Chunk 6 — current-structure fit (mark each skill/agent Reuse / Extend / Create-new), OR walk one end-to-end agent flow for a sample PP3500 requirement.
+- **Resume note**: after migration, the `/task` activation command's session ID will differ; re-derive from `printenv CLAUDE_SESSION_ID` in the new location.
+- **Child-task candidates surfaced so far**: (a) trace-matrix new TC layer; (b) trace-matrix new DT layer; (c) trace-matrix content-hash drift-audit action; (d) `/strategy` skill — add `tooling` + `technology` harvest domains; (e) author `tooling-strategy.md` + `technology-strategy.md`; (f) refactor `architecture-strategy.md` into per-group sections; (g) extend `rd-lead` agent charter with the 4 consistency dimensions + output format; (h) define gate-maturity-ladder transition evidence criteria; (i) `project.yml` `agentic.gate_policy_stage` selector + orchestrator logic; (j) "Agentic Process Validation" record/doc — home TBD.
 - **Activation command**:
   ```bash
   bash .claude/hooks/task-activate.sh add 8ea04f14-b3fc-4049-9dac-8da0c59bbac7 054
@@ -535,3 +721,5 @@ _(Tag with `<!-- LESSONS LEARNED: category -->` blocks in-flight.)_
 - **2026-05-13** — Phase 1 chunks 1–3 decided in discussion: (1) THREE peer groups Spec/Dev/V&V (V&V is peer, not method, because it has independent tooling+architecture); (2) V-shape edge topology, two test universes (Dev Tests white-box IEC 62304 §5.5–§5.6 + V&V Tests black-box §5.7, both contribute to verification evidence), independence by agent charter; (3) per-axis cross-group constraint docs — Architecture / Tooling / Technology, each with Spec/Dev/V&V sections. Two new strategy docs needed (tooling, technology); `/strategy` skill needs two new harvest domains. Trace-matrix needs new DT layer. Agent charters carry an explicit constraint-reading contract.
 - **2026-05-13** — Phase 1 chunk 4 decided: form-neutral **Testable Claim (TC)** atom with project-pluggable adapter (Gherkin / UML use-case / discrete shall / user-story / decision-table / state-machine / custom). 1:N test cardinality with 1:1 V&V-test floor; agents have authoring discretion above the floor. Dev Tests are additive, not floor-satisfying. Trace-matrix gains a TC layer (in addition to DT from chunk 2) — two child-task candidates against `/trace-matrix`. Adapter contract lives in `project.yml` mirroring trace-matrix's adapter pattern.
 - **2026-05-13** — Phase 1 chunk 4 fully closed via 4 addenda: (1) content-hash audit — hash semantic claim text + AC + load-bearing constants, exclude title/version/metadata/rationale, light whitespace normalization, hash stored inside the test artifact; (2) test-side structure — test case + procedures, aggregate by AND; (3) corrected: trace anchor is a *test node* at author-chosen depth (case OR procedure), ID/hash/traces live only where a trace is anchored; (4) mixed anchoring within a file allowed → carve-out rule (independently-anchored procedures leave the enclosing case's aggregate) + coverage-dedup rule (edges never deduped, metrics dedup by target node). Phase 1 todos updated to reflect the chunked-discussion pivot. Six child-task candidates now tracked in Resume-ready Summary.
+- **2026-05-14** — Phase 1 chunk 5 decided (bootstrap vs. steady-state): named the bootstrap-vs-steady-state distinction; bootstrap mode = iterative (option 1 — minimal skeleton grown by the V-shape, the device build IS the demo); skeleton is "interface-complete, behavior-empty" (device-scale TDD red state); architecture doc + skeleton code are different-jurisdiction projections of one design (doc owns contract/intent, code owns realized structure, code traces to doc); consistency check owned by `rd-lead` agent with four named dimensions (module-set parity, interface-signature parity, intent alignment, trace-completeness), hardened as a required step in the orchestrator's per-feature-turn checkpoint protocol. Test tools/frameworks are defined in the Tooling Strategy axis doc (Chunk 3). Bootstrap overlaps task 046's missing system-architecture doc — flagged for coordination. Original plan's "Chunk 5 current-structure fit" renumbered to Chunk 6.
+- **2026-05-14** — Phase 1 human-checkpoint mapping done: 8 non-negotiable human checkpoints tabled against V-shape locations + standards + agent-prep steps; organizing principle "agents produce and review, humans accept" (every gate is a decision of record). Gate Maturity Ladder decided — 4 stages (Full Oversight → Full Coverage Tiered Depth → Risk-Tiered → Sampling), each transition evidence-gated + change-controlled, selector in `project.yml` `agentic.gate_policy_stage`. Ladder governs review *burden* (#2/#4/#5); ladder-exempt = #3 residual-risk acceptance + terminal authorizations #6/#7/#8. Reframe: the ladder + transition evidence IS the agentic-process-validation story. 4 more child-task candidates surfaced (g–j). Phase 1 nearly complete — remaining: Chunk 6 current-structure fit + end-to-end flow walk.
