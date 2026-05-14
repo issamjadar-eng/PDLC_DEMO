@@ -2,7 +2,7 @@
 
 **ID**: 056
 **Created**: 2026-05-13
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben (with Claude)
 **Owner**: Ben
 **Priority**: Medium
@@ -54,7 +54,7 @@ This is "skip until there is a method" implemented gracefully: drop the `// fals
 - [x] Added `## Changelog` v8 entry in `README.md`; flagged the missing v6/v7 entries inline (not fixed — out of scope)
 - [x] Re-ran `/secops check` on PDLC_DEMO: check #1 now **SKIP** ("2FA status not exposed by this token..."). Critical failures 3 → 2. Overall still FAIL (remaining: #3 email domain, #12 roster — both pre-existing/other-task).
 - [x] Sister-project validation ([[feedback_sister_project_compat]]): applied v8 hook to `../../projects/arthrex/pccp/`, busted its SECOPS.md cache, ran — check #1 → SKIP with the new note, no errors, no regression (sister still FAILs on its own unrelated 2 criticals). **Backed up + restored BOTH the hook and the sister's `SECOPS.md`** (the hook run rewrites SECOPS.md — learned from the [[task-051]] discovery-JSON revert mistake).
-- [ ] Commit; decide on `/sync-skills push` with user
+- [x] Committed locally as `771f262`. Pushed upstream via `/sync-skills push --merge` — hitachi PR [#162](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/162), squash-merged as `255eed8`. Local hitachi checkout fast-forwarded. Recorded in `.claude/sync-log.md`. **Task complete.**
 
 ## Open Questions
 
@@ -79,3 +79,4 @@ bash .claude/hooks/task-activate.sh add <SESSION_UUID> 056
 |---|---|---|
 | 2026-05-13 | Ben (with Claude) | Task created. Surfaced from ben/055's `/secops check`: check #1 FAILs on `two_factor_authentication: null` because `// false` collapses the undeterminable state into `false`. Plan: drop `// false`, add `null` → SKIP branch with manual-verify note, bump v7 → v8. |
 | 2026-05-13 | Ben (with Claude) | **Implemented + validated (secops v7 → v8).** `hooks/security-assert.sh` check #1 now branches on three states: `true` → PASS, `false` → FAIL, `null`/empty → SKIP ("verify manually at github.com/settings/security"), error → SKIP. SKILL.md version bumped, README.md v8 changelog added (+ flagged stale missing v6/v7). PDLC_DEMO re-check: #1 SKIPs, criticals 3 → 2. Sister project (arthrex/pccp) validated clean — both sister hook + SECOPS.md backed up and restored. Not yet committed; `/sync-skills push` decision pending user. |
+| 2026-05-13 | Ben (with Claude) | **Complete.** Local commit `771f262`. Pushed via `/sync-skills push --merge` — hitachi PR #162, squash-merged `255eed8`, local hitachi fast-forwarded, sync-log recorded. |

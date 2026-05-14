@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-13 — push (secops 2FA check v7→v8 — null-handling fix)
+
+- Files: `skills/secops/SKILL.md`, `skills/secops/README.md`, `skills/secops/hooks/security-assert.sh`
+- Branch: `sync/pdlc-demo-secops-2fa-check-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/162
+- Commit: "secops v7→v8: 2FA check — distinguish undeterminable from disabled"
+- Status: merged (--merge requested)
+- Merge commit: `255eed8d608dedbbcbcf3eb75135c7d2d1144b21`
+- Hitachi HEAD after sync: `255eed8`
+- Origin: pdlc_demo task ben/056 (surfaced during ben/055 roster reconciliation). Check #1 FAILed on `two_factor_authentication: null` because the `// false` jq fallback collapsed undeterminable→false. Fix: tri-state branching, null/empty→SKIP. Validated on PDLC_DEMO + sister project arthrex/pccp.
+
+---
+
 ## 2026-05-13 — push (dhf-manifest canonical-roles resolution improvements v9→v12)
 
 - Files: `skills/dhf-manifest/README.md`, `skills/dhf-manifest/SKILL.md`, `skills/dhf-manifest/actions/discovery-index.md`, `skills/dhf-manifest/data/canonical-roles.yaml`, `skills/dhf-manifest/scripts/discovery-index.py`, `skills/dhf-manifest/tests/test_discovery_index.sh`
