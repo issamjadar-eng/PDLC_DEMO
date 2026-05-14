@@ -172,6 +172,24 @@ team:
     role: Demo Owner
     email: ben.xavier@globallogic.com
     added: 2026-04-12
+  - name: Vladyslav Yanovych
+    github: vyanovych
+    task_folder: vladyslav
+    role: Associate Vice President, Quality Assurance
+    email: vladyslav.yanovych@globallogic.com
+    added: 2026-05-13
+  - name: Mykhailo Chaus
+    github: mykhailochaus-GLO
+    task_folder: mykhailo
+    role: Lead Software Engineer
+    email: mykhailo.chaus@globallogic.com
+    added: 2026-05-13
+  - name: Orest Danchak
+    github: orestdanchak-gl
+    task_folder: orest
+    role: Senior Manager, Engineering
+    email: orest.danchak@globallogic.com
+    added: 2026-05-13
   inactive: []
 registries:
 - name: anthropic
