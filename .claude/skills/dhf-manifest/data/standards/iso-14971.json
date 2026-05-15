@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "standards",
   "source_file": "iso-14971.md",
   "obligation_count": 16,
@@ -14,8 +14,13 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management Plan"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall document a risk management plan for the device.\nThe plan shall be part of the risk management file.\"\n",
       "extracted_requirements": [
@@ -34,8 +39,13 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management Plan"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        }
       ],
       "verbatim": "\"The risk management plan shall include at minimum: (a) the scope of the risk\nmanagement activities; (b) assignment of responsibilities and authorities;\n(c) requirements for review of risk management activities; (d) criteria for\nrisk acceptability, including the criteria used to decide when further risk\nreduction is required; (e) method for evaluating overall residual risk;\n(f) verification activities; (g) activities related to collection and review\nof production and post-production information.\"\n",
       "extracted_requirements": [
@@ -57,9 +67,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management Plan",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall define the criteria for risk acceptability, including\nthe criteria to be used to decide when further risk reduction is required and\nwhether the residual risk is acceptable.\"\n",
       "extracted_requirements": [
@@ -79,8 +97,13 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall maintain a risk management file. For each hazard\nidentified, the risk management file shall allow traceability to: the hazard,\nthe hazardous situation(s), the estimated risk(s), the risk control measures,\nand the residual risk(s) after implementation of the controls.\"\n",
       "extracted_requirements": [
@@ -99,10 +122,21 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Intended Use Statement",
-        "Risk Analysis",
-        "Risk Management Plan"
+        {
+          "role": "user-needs",
+          "file_pattern": "*intended-use*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-analysis*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall document the intended use and the reasonably foreseeable\nmisuse. The manufacturer shall identify the characteristics of the device that\ncould affect safety, taking into account the intended use and reasonably\nforeseeable misuse.\"\n",
       "extracted_requirements": [
@@ -121,9 +155,17 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Analysis",
-        "Safety-Related Characteristics Checklist"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-analysis*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*safety-related-characteristics*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall identify and document qualitative and quantitative\ncharacteristics of the device that could affect its safety, and where\nappropriate, define limits for these characteristics.\"\n",
       "extracted_requirements": [
@@ -142,10 +184,21 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Preliminary Hazard Analysis",
-        "Hazard Analysis",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*preliminary-hazard-analysis*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*hazard-analysis*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall identify hazards and hazardous situations. For each\nidentified hazardous situation, the manufacturer shall estimate the associated\nrisk using available information or data.\"\n",
       "extracted_requirements": [
@@ -165,9 +218,17 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Assessment / FMEA",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-assessment-fmea*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"For each identified hazardous situation, the manufacturer shall estimate the\nassociated risk. The estimation shall consider the probability of occurrence of\nharm and the severity of that harm.\"\n",
       "extracted_requirements": [
@@ -187,9 +248,17 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Assessment / FMEA",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-assessment-fmea*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall evaluate each identified risk using the risk acceptability\ncriteria in the risk management plan. This evaluation determines whether risk\nreduction is required.\"\n",
       "extracted_requirements": [
@@ -208,9 +277,17 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Control Measures",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-control-measures*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall identify risk control measures, using one or more of the\nfollowing, in priority order: (a) inherent safety by design; (b) protective\nmeasures in the device itself or manufacturing process; (c) information for\nsafety.\"\n",
       "extracted_requirements": [
@@ -229,10 +306,21 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Control Measures",
-        "Verification Records",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-control-measures*.md"
+        },
+        {
+          "role": "vnv",
+          "file_pattern": "*verification-records*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall implement the risk control measures and verify their\nimplementation. After implementation, the manufacturer shall evaluate the\nresidual risk.\"\n",
       "extracted_requirements": [
@@ -252,9 +340,17 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Benefit-Risk Analysis",
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*benefit-risk-analysis*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"If the residual risk is not acceptable, the manufacturer shall use the criteria\ndefined in the risk management plan to determine whether the medical benefit\nof the intended use outweighs the residual risk.\"\n",
       "extracted_requirements": [
@@ -273,8 +369,13 @@
       "artifact_type": "record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management File"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall evaluate whether the risk control measures introduce\nnew hazards or hazardous situations. The manufacturer shall verify that all\nidentified hazardous situations have been considered.\"\n",
       "extracted_requirements": [
@@ -293,9 +394,17 @@
       "artifact_type": "record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Overall Residual Risk Evaluation",
-        "Risk Management Report"
+        {
+          "role": "risk-management",
+          "file_pattern": "*overall-residual-risk-evaluation*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-report*.md"
+        }
       ],
       "verbatim": "\"After all risk control measures have been implemented, the manufacturer shall\nevaluate the overall residual risk of the device using the criteria established\nin the risk management plan. If the overall residual risk is not acceptable,\nthe manufacturer shall gather and review information to determine whether the\nmedical benefit outweighs the overall residual risk.\"\n",
       "extracted_requirements": [
@@ -315,8 +424,13 @@
       "artifact_type": "report",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "risk-management",
+      "criticality": "must-have",
       "applies_to": [
-        "Risk Management Report"
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-report*.md"
+        }
       ],
       "verbatim": "\"Before commercial distribution, the manufacturer shall review the risk management\nprocess to ensure: the risk management plan has been implemented; the overall\nresidual risk is acceptable; appropriate methods are in place to obtain relevant\ninformation in the post-production phase.\"\n",
       "extracted_requirements": [
@@ -338,9 +452,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "postmarket",
+      "criticality": "must-have",
       "applies_to": [
-        "Post-Market Surveillance Plan",
-        "Risk Management Plan"
+        {
+          "role": "postmarket",
+          "file_pattern": "*post-market-surveillance-plan*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        }
       ],
       "verbatim": "\"The manufacturer shall establish a system to collect and review information\ngenerated during production and post-production phases. If previously unrecognized\nhazards or risks that are no longer acceptable are identified, the manufacturer\nshall feed this information back into the risk management process.\"\n",
       "extracted_requirements": [

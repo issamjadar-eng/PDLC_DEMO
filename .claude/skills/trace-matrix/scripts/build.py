@@ -134,7 +134,10 @@ def _run_layer(
     Returns (nodes, warnings, extras, adapter_label, source_files).
     """
     sources = _sources(layer_cfg)
-    parse_fn, adapter_label = load_adapter(layer_key, repo_root, SKILL_DIR)
+    adapter_name = (layer_cfg or {}).get("adapter")
+    parse_fn, adapter_label = load_adapter(
+        layer_key, repo_root, SKILL_DIR, adapter_name=adapter_name
+    )
 
     all_nodes: list[dict] = []
     all_warnings: list[str] = []
@@ -177,12 +180,16 @@ def build_dhf(repo_root: Path, dhf_cfg: dict) -> tuple[str, dict, dict]:
     layers_cfg = dhf_cfg.get("layers", {}) or {}
     risk_cfg = dhf_cfg.get("risk")
 
+    # Layer order matches graph.LAYER_ORDER. The software layer is optional —
+    # DHFs that don't declare it get an empty layer rendered with
+    # missing_reason=source_missing, which the emit/console layers handle.
     layer_specs = [
         ("user_needs", layers_cfg.get("user_needs", {}) or {}),
         ("design_inputs", layers_cfg.get("design_inputs", {}) or {}),
+        ("software", layers_cfg.get("software", {}) or {}),
         ("architecture", layers_cfg.get("architecture", {}) or {}),
         ("vnv", layers_cfg.get("vnv", {}) or {}),
-        ("risk", risk_cfg or {}),
+        ("risk", risk_cfg or layers_cfg.get("risk", {}) or {}),
     ]
 
     adapters_used: dict[str, str] = {}
@@ -261,7 +268,7 @@ def main() -> int:
         name, sidecar, adapters = build_dhf(repo, dhf_cfg)
         out_dir = repo / dhf_cfg.get(
             "output_dir",
-            f"docs/project/dhfs/{name}/design-controls/trace-matrix",
+            f"docs/project/console/{name}",
         )
 
         stats = sidecar["stats"]
@@ -271,7 +278,7 @@ def main() -> int:
             any_gap = True
 
         print(f"  {name}")
-        for layer_key in ["user_needs", "design_inputs", "architecture", "vnv", "risk"]:
+        for layer_key in ["user_needs", "design_inputs", "software", "architecture", "vnv", "risk"]:
             s = stats.get(layer_key, {})
             extra = ""
             if "missing_reason" in s:
@@ -279,7 +286,12 @@ def main() -> int:
             elif layer_key == "architecture" and not s.get("edges_known", True):
                 extra = "  [edges unknown]"
             adapter_label = adapters.get(layer_key, "?")
-            adapter_tag = "proj" if adapter_label.startswith("project:") else "deflt"
+            if adapter_label.startswith("shared:"):
+                adapter_tag = adapter_label.split(":", 1)[1].strip() or "shared"
+            elif adapter_label.startswith("project:"):
+                adapter_tag = "proj"
+            else:
+                adapter_tag = "deflt"
             print(
                 f"    {layer_key:14} count={s.get('count', 0):3}  "
                 f"fwd={s.get('with_forward', 0):3}  orphan={s.get('orphan', 0):3}"
@@ -287,12 +299,12 @@ def main() -> int:
             )
         if gaps["broken_refs"]:
             print(f"    broken refs: {len(gaps['broken_refs'])}")
-        print(f"    → {out_dir}/trace-matrix.{{md,json}}")
+        print(f"    → {out_dir}/console_trace_matrix.{{md,json}}")
         print()
 
         if not args.check:
-            write_json(out_dir / "trace-matrix.json", sidecar)
-            write_markdown(out_dir / "trace-matrix.md", sidecar)
+            write_json(out_dir / "console_trace_matrix.json", sidecar)
+            write_markdown(out_dir / "console_trace_matrix.md", sidecar)
 
     if args.check and any_gap:
         return 1

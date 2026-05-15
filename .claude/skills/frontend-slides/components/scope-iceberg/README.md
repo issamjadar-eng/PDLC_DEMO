@@ -17,15 +17,17 @@ When the title or content corpus contains scope-keywords: "filing scope", "carve
 ## Source shape
 
 ```markdown
-### 1.2 Filing scope at a glance
+### 1.2 Launch scope at a glance
 
-We are filing one 510(k) for the SP6500 hardware…
+We are shipping one v1.0 release for the Atlas product line…
 
-- **Filing scope = SP6500 pump + DLM.** PAM is out of scope…
-- **Critical-requirement carve-out (CtS / CtF / CtP).**
-- **PCCP envelope.** ...
-- **PAM filing posture.** PAM is **outside** the SP6500 filing.
+- **In scope = Atlas core + dashboards.** The reporting add-on is out of scope for v1.0…
+- **Critical-path carve-out (security, billing, telemetry).** Every requirement and design input is tagged.
+- **Roadmap envelope.** ...
+- **Reporting add-on posture.** Reporting ships **after** the v1.0 release.
 ```
+
+(The pattern is bipolar scope splits — what's IN vs what's OUT. Substitute your own domain: a feature cut for a SaaS launch, a deal terms split in an investor memo, a plant-cell scope vs deferred lines for a manufacturing rollout, a regulatory filing scope vs out-of-scope modules in a regulated-industry briefing.)
 
 ## Gotchas
 

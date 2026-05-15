@@ -1,18 +1,76 @@
 # Generic dark theme — skill default.
+#
+# Slate + sky palette matching the embedded `:root` in the tracker dashboard
+# renderer (`tracker/scripts/render.py`) so the console and dashboards stay
+# visually unified out of the box. Project theme packs may override any
+# subset of these by setting matching keys in their own `theme.yaml`
+# (resolved at runtime by `console/themes.py`); the project pack typically
+# only needs to override `brand_name`, `tagline`, `logo_filter`, and any
+# brand-specific accent — everything else can inherit from this default.
+#
+# Tailwind palette references for traceability:
+#   slate-950 = #0f172a (body bg)
+#   slate-800 = #1e293b (surface — cards, panels, drawers)
+#   slate-700 = #334155 (surface-2 — table headers, hover states)
+#   slate-900 = #0b1220 (recessed wells: code, footer)
+#   slate-600 = #475569 (border)
+#   slate-400 = #94a3b8 (text-muted)
+#   slate-300 = #cbd5e1 (footer text)
+#   slate-200 = #e2e8f0 (text)
+#   slate-100 = #f1f5f9 (footer heading)
+#   sky-400   = #38bdf8 (primary)
+#   sky-600   = #0284c7 (primary hover)
+#   sky-900   = #075985 (primary tint)
+#   indigo-400= #818cf8 (accent — info badges)
+#   amber-400 = #fbbf24 (warning text)
+
 name: Dark
 brand_name: Project Console
 
-primary: "#60a5fa"
-primary_dark: "#3b82f6"
-primary_tint: "#1e3a8a"
-accent: "#22d3ee"
+primary: "#38bdf8"
+primary_dark: "#0284c7"
+primary_tint: "#075985"
+accent: "#818cf8"
 
-topnav_bg: "#0f172a"
-topnav_text: "#f1f5f9"
-body_bg: "#1e293b"
+topnav_bg: "#1e293b"
+topnav_text: "#e2e8f0"
+body_bg: "#0f172a"
 text: "#e2e8f0"
 text_muted: "#94a3b8"
-border: "#334155"
+border: "#475569"
+
+# Semantic surfaces — primary card/panel fill, slightly lifted secondary
+# (toolbars, hover, table headers), recessed well (code blocks, inputs).
+surface: "#1e293b"
+surface_2: "#334155"
+surface_muted: "#0b1220"
+
+# Inline-code / pre block — recessed below the surface so the well reads
+# clearly; light slate text.
+code_bg: "#0b1220"
+code_text: "#e2e8f0"
+
+# Warning banners — dark amber well with warm-yellow text. Distinct from
+# the slate palette without screaming.
+banner_warning_bg: "#3a2e0a"
+banner_warning_text: "#fbbf24"
+
+# Footer pill — slate-900 (between body slate-950 and surface slate-800)
+# so it reads as a grounded zone.
+footer_bg: "#0b1220"
+footer_text: "#cbd5e1"
+footer_heading: "#f1f5f9"
+footer_muted: "#94a3b8"
+footer_divider: "rgba(148, 163, 184, 0.15)"
+
+# Folder icon — amber-400 for high contrast against slate surfaces.
+icon_folder: "#fbbf24"
+
+# Badge pill (Panels list, similar) — sky-900 well with sky-400 text gives
+# ~6:1 contrast ratio (WCAG AA). The default light-theme pair is sky-100
+# tint + dark navy text, which doesn't translate to dark.
+badge_bg: "#075985"
+badge_text: "#7dd3fc"
 
 font_body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
 font_heading: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"

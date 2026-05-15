@@ -169,6 +169,20 @@ def _obl_href_from_dimension(record: dict) -> str | None:
     return f"../{rel}" if rel else None
 
 
+def _applies_to_display(entries):
+    """Polymorphic renderer: handles legacy free-text entries and structured
+    `[{role, file_pattern}]` entries (task ben/158 Phase 2b)."""
+    out = []
+    for e in entries or []:
+        if isinstance(e, dict):
+            role = e.get("role") or ""
+            pat = e.get("file_pattern") or e.get("artifact_pattern") or ""
+            out.append(f"{role}:{pat}" if role and pat else (pat or role))
+        else:
+            out.append(str(e))
+    return ", ".join(out)
+
+
 def render_master_table(records: list[dict]) -> str:
     """Render reference-dhf.md — one row per obligation.
 
@@ -185,7 +199,7 @@ def render_master_table(records: list[dict]) -> str:
         "|----|-------|--------|-------|--------------|-----------|--------------|------------|",
     ]
     for r in records:
-        applies = ", ".join(r.get("applies_to", []))
+        applies = _applies_to_display(r.get("applies_to", []))
         oid = r.get("id", "")
         title = r.get("title", "") or ""
         href = _obl_href_from_reference(r)
@@ -230,7 +244,7 @@ def render_dimension_doc(dimension: str, records: list[dict]) -> str:
             "|----|-------|-------|--------|------------|",
         ]
         for r in dim_records:
-            applies = ", ".join(r.get("applies_to", []))
+            applies = _applies_to_display(r.get("applies_to", []))
             oid = r.get("id", "")
             title = r.get("title", "") or ""
             href = _obl_href_from_dimension(r)

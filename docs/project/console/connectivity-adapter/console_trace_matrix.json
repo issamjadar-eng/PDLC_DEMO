@@ -1,0 +1,3768 @@
+{
+  "version": "1.1",
+  "dhf": "connectivity-adapter",
+  "generated_at": "2026-05-12T19:12:53Z",
+  "layers": [
+    {
+      "key": "user_needs",
+      "title": "User Needs",
+      "id_prefix": "UN",
+      "source_files": [
+        "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs.md"
+      ],
+      "items": [
+        {
+          "id": "UN-001",
+          "summary": "The Adapter must accept incoming telemetry from every pump in a hospital's fleet of up to…",
+          "full_text": "The Adapter must accept incoming telemetry from every pump in a hospital's fleet of up to 500 PainEase PCA Advanced devices over a single mutual-TLS endpoint without imposing per-pump per-hospital configuration.",
+          "category": "INTR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": "Biomed Engineer, Pump Fleet Admin",
+          "priority": "High",
+          "source_ref": "Biomed KOL interview (KOL-0011); PP3500 SAD §6 connectivity assumptions",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-002",
+          "summary": "The Adapter must not lose pump-originated alarm or therapy-event records during transient…",
+          "full_text": "The Adapter must not lose pump-originated alarm or therapy-event records during transient network outages between the pump and the Adapter, since these records are evidentiary for downstream PMS and CAPA.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": "Patient (indirect), Anesthesiologist",
+          "priority": "High",
+          "source_ref": "ISO 14971 hazard analysis HZ-CA-002 (data loss); CAPA-2023-001 traceability requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-002",
+              "summary": "The Adapter shall durably persist every pump-originated alarm and therapy event to local…"
+            },
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-003",
+          "summary": "The Adapter must persist incoming pump events durably enough that a 24-hour Adapter…",
+          "full_text": "The Adapter must persist incoming pump events durably enough that a 24-hour Adapter outage produces no permanent loss of pump-originated records once the Adapter returns to service.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": "Biomed Engineer",
+          "priority": "High",
+          "source_ref": "Biomed KOL interview (KOL-0011); hospital SLA expectations",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-004",
+          "summary": "The Adapter must emit therapy-administration events to the hospital EHR via HL7v2.5…",
+          "full_text": "The Adapter must emit therapy-administration events to the hospital EHR via HL7v2.5 ADT/RDE messages conformant to the IHE Pharmacy profile so that PCA therapy is automatically recorded in the patient chart.",
+          "category": "INTR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": "Hospital IT, Pharmacist",
+          "priority": "High",
+          "source_ref": "IHE Pharmacy profile §3.2; hospital integration KOL-0012",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-004",
+              "summary": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-005",
+          "summary": "The Adapter must support a parallel FHIR R4 MedicationAdministration outbound channel for…",
+          "full_text": "The Adapter must support a parallel FHIR R4 MedicationAdministration outbound channel for hospitals migrating off HL7 v2 so a single Adapter deployment serves both legacy and modern EHR estates.",
+          "category": "INTR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": "Pharmacist",
+          "priority": "Medium",
+          "source_ref": "FHIR R4 §MedicationAdministration; CIO advisory board feedback",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-005",
+              "summary": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-006",
+          "summary": "The Adapter must allow IT to configure outbound endpoints (host, port, certificates,…",
+          "full_text": "The Adapter must allow IT to configure outbound endpoints (host, port, certificates, OBR/OBX mapping) per upstream system without restarting the Adapter or interrupting inbound pump connections.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": "Hospital IT",
+          "priority": "Medium",
+          "source_ref": "Hospital integration KOL-0012; deployment retrospective",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-006",
+              "summary": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-007",
+          "summary": "The Adapter must distribute drug-library payloads to the pump fleet without modifying,…",
+          "full_text": "The Adapter must distribute drug-library payloads to the pump fleet without modifying, re-signing, or transforming their clinical content, so the Adapter remains classified MDDS rather than becoming an accessory-of-device.",
+          "category": "REGU",
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": "Regulatory Affairs, Pharmacy & Therapeutics",
+          "priority": "High",
+          "source_ref": "Regulatory strategy §Component classification; FDA MDDS guidance 2017",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-008",
+              "summary": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-008",
+          "summary": "The Adapter must refuse to distribute any drug-library payload whose digital signature…",
+          "full_text": "The Adapter must refuse to distribute any drug-library payload whose digital signature does not verify against the GlobalLogic-managed signing trust anchor.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": "Pharmacist, Anesthesiologist",
+          "priority": "High",
+          "source_ref": "ISO 14971 hazard analysis HZ-CA-003 (wrong library); IEC 81001-5-1 §7.2",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-007",
+              "summary": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-009",
+          "summary": "The Adapter must let a pharmacy administrator schedule a drug-library rollout to a…",
+          "full_text": "The Adapter must let a pharmacy administrator schedule a drug-library rollout to a defined cohort of pumps and observe per-pump rollout status (queued / delivered / activated / failed).",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": "Pharmacist",
+          "priority": "Medium",
+          "source_ref": "Pharmacy KOL-0013; predicate workflow gap",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-009",
+              "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-010",
+          "summary": "The Adapter must refuse to relay any firmware bundle whose digital signature does not…",
+          "full_text": "The Adapter must refuse to relay any firmware bundle whose digital signature does not verify against the GlobalLogic-managed signing trust anchor, even if the bundle is locally uploaded by an administrator.",
+          "category": "SAFE",
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": "Patient (indirect), Biomed Engineer",
+          "priority": "High",
+          "source_ref": "IEC 81001-5-1 §7.2; FDA cyber guidance §V signed-updates",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-010",
+              "summary": "The Adapter shall verify the digital signature of every firmware bundle before queuing it…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-011",
+          "summary": "The Adapter must allow biomed to stage a firmware rollout to a defined cohort of pumps,…",
+          "full_text": "The Adapter must allow biomed to stage a firmware rollout to a defined cohort of pumps, with per-pump status visibility and the ability to pause / resume / abort the rollout.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": "Biomed Engineer",
+          "priority": "High",
+          "source_ref": "Biomed KOL-0011; hospital change-control SOP",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-011",
+              "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-012",
+          "summary": "Biomed staff must be able to see real-time fleet health (pumps connected, last heartbeat,…",
+          "full_text": "Biomed staff must be able to see real-time fleet health (pumps connected, last heartbeat, firmware revision, library revision, certificate expiry) from the Adapter's operator console without leaving the hospital network.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": "Biomed Engineer",
+          "priority": "High",
+          "source_ref": "Biomed KOL-0011; post-market complaint trend review",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-012",
+              "summary": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-013",
+          "summary": "IT staff must be able to search the Adapter's audit log by pump serial, user identity,…",
+          "full_text": "IT staff must be able to search the Adapter's audit log by pump serial, user identity, timestamp range, and event class, and export the resulting set as CSV for forensic review.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": "Hospital IT",
+          "priority": "Medium",
+          "source_ref": "Hospital IT audit-log SOP; HIPAA audit requirements",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-013",
+              "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-014",
+          "summary": "The operator console must surface a clear \"needs attention\" list (pumps offline > 24 h,…",
+          "full_text": "The operator console must surface a clear \"needs attention\" list (pumps offline > 24 h, certs expiring < 30 days, failed library rollouts, failed firmware rollouts) so biomed has one daily landing place.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": "Biomed Engineer",
+          "priority": "Medium",
+          "source_ref": "Biomed KOL-0011; usability evaluation prototype feedback",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-014",
+              "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-015",
+          "summary": "The Adapter must authenticate human users (biomed, pharmacy, IT) via the hospital's…",
+          "full_text": "The Adapter must authenticate human users (biomed, pharmacy, IT) via the hospital's enterprise IdP (SAML 2.0 or OIDC), not via Adapter-local accounts, so credential lifecycle stays under hospital control.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": "Hospital CISO",
+          "priority": "High",
+          "source_ref": "Hospital CISO interview KOL-0014; NIST SP 800-63B",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-015",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-016",
+          "summary": "The Adapter must export its security audit log in real time to the hospital SIEM via…",
+          "full_text": "The Adapter must export its security audit log in real time to the hospital SIEM via syslog over TLS, formatted to a recognized event schema (CEF or LEEF).",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": "Hospital CISO",
+          "priority": "High",
+          "source_ref": "Hospital CISO interview KOL-0014; SOC operational requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-016",
+              "summary": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-017",
+          "summary": "The Adapter must enforce mutual-TLS authentication on every pump↔Adapter session so a…",
+          "full_text": "The Adapter must enforce mutual-TLS authentication on every pump↔Adapter session so a rogue or impersonated pump cannot inject therapy events.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": "Hospital CISO, Patient (indirect)",
+          "priority": "High",
+          "source_ref": "IEC 81001-5-1 §7.4; FDA cyber pre-market guidance §IV",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-018",
+          "summary": "The Adapter must publish an SBOM (SPDX or CycloneDX) for each released version,…",
+          "full_text": "The Adapter must publish an SBOM (SPDX or CycloneDX) for each released version, accessible to the hospital security team without contacting GlobalLogic support.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": "Hospital CISO",
+          "priority": "Medium",
+          "source_ref": "FDA cyber pre-market guidance §VIII SBOM; hospital VPAT/SBOM procurement requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-018",
+              "summary": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-019",
+          "summary": "The Adapter must be installable as a single signed package on customer-provided RHEL- or…",
+          "full_text": "The Adapter must be installable as a single signed package on customer-provided RHEL- or Ubuntu-LTS hardware without requiring a GlobalLogic engineer on-site.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": "Hospital IT",
+          "priority": "High",
+          "source_ref": "Hospital IT KOL-0012; commercial deployment scaling target",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-019",
+              "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-020",
+          "summary": "The Adapter must support a non-disruptive upgrade path from version N to N+1 that does…",
+          "full_text": "The Adapter must support a non-disruptive upgrade path from version N to N+1 that does not interrupt active pump↔Adapter sessions for more than 60 seconds.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": "Biomed Engineer, Hospital IT",
+          "priority": "Medium",
+          "source_ref": "Hospital change-control SOP; SLA negotiation feedback",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-020",
+              "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-021",
+          "summary": "The Adapter must produce machine-parsable health metrics (Prometheus exposition format)…",
+          "full_text": "The Adapter must produce machine-parsable health metrics (Prometheus exposition format) so hospital IT can integrate the Adapter into existing monitoring stacks.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": "Hospital IT",
+          "priority": "Low",
+          "source_ref": "Hospital IT KOL-0012; observability standardization across customers",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-021",
+              "summary": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or…"
+            }
+          ],
+          "traces_reverse": []
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "design_inputs",
+      "title": "Design Inputs",
+      "id_prefix": "DI",
+      "source_files": [
+        "docs/project/dhfs/connectivity-adapter/design-controls/requirements/design-inputs.md"
+      ],
+      "items": [
+        {
+          "id": "DI-001",
+          "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…",
+          "full_text": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps on a single ingest endpoint with steady-state per-pump telemetry intervals of ≤ 5 s.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Load test: 500 simulated pumps, 5-second heartbeats, 1-hour soak; ≤ 0.1% sessions dropped; p99 ingest latency ≤ 250 ms.",
+          "verification_method": "Bench load test (VER-CA-LT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-001",
+              "summary": "The mutual-TLS ingest listener shall accept ≥500 concurrent pump sessions on a single…"
+            },
+            {
+              "id": "SW-004",
+              "summary": "The per-pump session state tracker shall maintain a live registry of connected pumps…"
+            },
+            {
+              "id": "SW-023",
+              "summary": "The pump-session keepalive watchdog shall detect pump-side disconnects within 15 s (3×…"
+            },
+            {
+              "id": "VER-CA-LT-001",
+              "summary": "Bench load test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-001",
+              "summary": "The Adapter must accept incoming telemetry from every pump in a hospital's fleet of up to…"
+            }
+          ]
+        },
+        {
+          "id": "DI-002",
+          "summary": "The Adapter shall durably persist every pump-originated alarm and therapy event to local…",
+          "full_text": "The Adapter shall durably persist every pump-originated alarm and therapy event to local non-volatile storage before acknowledging the event to the originating pump.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Fault-injection test: kill Adapter process after pump send and before ACK reply; verify no event is acknowledged that is not on disk.",
+          "verification_method": "Fault-injection test (VER-CA-FI-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-002",
+              "summary": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event…"
+            },
+            {
+              "id": "VER-CA-FI-001",
+              "summary": "Fault-injection test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-002",
+              "summary": "The Adapter must not lose pump-originated alarm or therapy-event records during transient…"
+            }
+          ]
+        },
+        {
+          "id": "DI-003",
+          "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…",
+          "full_text": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR / FHIR / SIEM) once consumer connectivity is restored, in original chronological order, after consumer outages of up to 24 hours.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak test: disable EHR consumer for 24 h with active pump telemetry; restore consumer; verify all events delivered in order; no duplicates.",
+          "verification_method": "Integration test (VER-CA-IT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-003",
+              "summary": "The replay engine shall hold queued events for downstream consumers up to 24 hours of…"
+            },
+            {
+              "id": "SW-030",
+              "summary": "The event de-duplication index shall maintain pump-assigned event IDs for 72 hours and…"
+            },
+            {
+              "id": "VER-CA-IT-002",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-002",
+              "summary": "The Adapter must not lose pump-originated alarm or therapy-event records during transient…"
+            },
+            {
+              "id": "UN-003",
+              "summary": "The Adapter must persist incoming pump events durably enough that a 24-hour Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "DI-004",
+          "summary": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration…",
+          "full_text": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration events, conformant to the IHE Pharmacy profile transaction PHARM-1 / PHARM-2.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "IHE Gazelle conformance test suite: PHARM-1 and PHARM-2 pass with 0 errors.",
+          "verification_method": "Conformance test (VER-CA-CT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-005",
+              "summary": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and…"
+            },
+            {
+              "id": "VER-CA-CT-001",
+              "summary": "Conformance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-004",
+              "summary": "The Adapter must emit therapy-administration events to the hospital EHR via HL7v2.5…"
+            }
+          ]
+        },
+        {
+          "id": "DI-005",
+          "summary": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a…",
+          "full_text": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a configurable endpoint, validating against the US Core 6.0 profile.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Validate sample output against US Core 6.0 MedicationAdministration profile via fhir-validator; 0 errors.",
+          "verification_method": "Conformance test (VER-CA-CT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-006",
+              "summary": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable…"
+            },
+            {
+              "id": "VER-CA-CT-002",
+              "summary": "Conformance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-005",
+              "summary": "The Adapter must support a parallel FHIR R4 MedicationAdministration outbound channel for…"
+            }
+          ]
+        },
+        {
+          "id": "DI-006",
+          "summary": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7…",
+          "full_text": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7 and FHIR endpoints (including TLS certs and field mappings) without restarting the Adapter process.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: add a new HL7 endpoint while pump traffic flows; observe events delivered to new endpoint within 30 s; pump sessions uninterrupted.",
+          "verification_method": "Integration test (VER-CA-IT-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-007",
+              "summary": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and…"
+            },
+            {
+              "id": "VER-CA-IT-003",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-006",
+              "summary": "The Adapter must allow IT to configure outbound endpoints (host, port, certificates,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-007",
+          "summary": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or…",
+          "full_text": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or higher, chain to GlobalLogic signing root) before queuing the payload for pump distribution, and shall refuse any payload that fails verification.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: submit (a) valid payload, (b) payload with corrupted signature, (c) payload signed by a non-trust-anchor key; verify only (a) is queued; refusals are logged.",
+          "verification_method": "Security test (VER-CA-ST-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-008",
+              "summary": "The drug-library signature verifier shall validate every library payload (RSA-3072+,…"
+            },
+            {
+              "id": "VER-CA-ST-001",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-008",
+              "summary": "The Adapter must refuse to distribute any drug-library payload whose digital signature…"
+            }
+          ]
+        },
+        {
+          "id": "DI-008",
+          "summary": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library…",
+          "full_text": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library payload between receipt and pump distribution, so the payload's signature remains valid end-to-end.",
+          "category": "SAFE",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: take a signed payload byte-fingerprint at ingress; capture the payload byte-fingerprint at egress to a pump; verify SHA-256 hashes match.",
+          "verification_method": "Bench test (VER-CA-BT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-009",
+              "summary": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress…"
+            },
+            {
+              "id": "VER-CA-BT-001",
+              "summary": "Bench test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-007",
+              "summary": "The Adapter must distribute drug-library payloads to the pump fleet without modifying,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-009",
+          "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…",
+          "full_text": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable cohort of pumps (by serial set, by ward, or by all-fleet) with per-pump status (queued / delivered / activated / failed).",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: schedule rollout to a cohort of 20 simulated pumps; verify per-pump status transitions are reported in the operator console and via the rollout API.",
+          "verification_method": "Integration test (VER-CA-IT-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-010",
+              "summary": "The rollout scheduler shall accept a cohort spec (serial set / ward / all-fleet),…"
+            },
+            {
+              "id": "SW-024",
+              "summary": "The drug-library rollback handler shall, on operator command, restore the previous…"
+            },
+            {
+              "id": "VER-CA-IT-004",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-009",
+              "summary": "The Adapter must let a pharmacy administrator schedule a drug-library rollout to a…"
+            }
+          ]
+        },
+        {
+          "id": "DI-010",
+          "summary": "The Adapter shall verify the digital signature of every firmware bundle before queuing it…",
+          "full_text": "The Adapter shall verify the digital signature of every firmware bundle before queuing it for pump distribution and shall refuse any bundle that fails verification, regardless of whether the bundle was received from Cloud Suite or locally uploaded.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: try to upload (a) valid signed bundle, (b) unsigned bundle, (c) bundle signed by a non-trust-anchor key; verify only (a) is queued; refusals are logged with operator identity.",
+          "verification_method": "Security test (VER-CA-ST-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-011",
+              "summary": "The firmware signature verifier shall validate every firmware bundle before queuing it…"
+            },
+            {
+              "id": "VER-CA-ST-002",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-010",
+              "summary": "The Adapter must refuse to relay any firmware bundle whose digital signature does not…"
+            }
+          ]
+        },
+        {
+          "id": "DI-011",
+          "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…",
+          "full_text": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume / abort, per-pump status, and configurable concurrency (default ≤ 5 concurrent pump upgrades).",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: schedule rollout to 20 simulated pumps; pause at 5/20; resume; abort at 12/20; verify state transitions and that no pump exceeds the concurrency limit.",
+          "verification_method": "Integration test (VER-CA-IT-005)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-012",
+              "summary": "The staged-rollout state machine shall support operator-controlled pause, resume, and…"
+            },
+            {
+              "id": "SW-025",
+              "summary": "The firmware rollback handler shall revert pumps in a cohort to their pre-rollout…"
+            },
+            {
+              "id": "VER-CA-IT-005",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-011",
+              "summary": "The Adapter must allow biomed to stage a firmware rollout to a defined cohort of pumps,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-012",
+          "summary": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware…",
+          "full_text": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware revision, library revision, certificate expiry) with end-to-end refresh latency ≤ 30 s under steady-state load of 500 connected pumps.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: 500 simulated pumps reporting on 5-s intervals; measure UI refresh latency from pump-state change to console reflection; p95 ≤ 30 s.",
+          "verification_method": "System test (VER-CA-SY-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-013",
+              "summary": "The fleet-health view-model shall aggregate pump session state (connected, last…"
+            },
+            {
+              "id": "VER-CA-SY-001",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-012",
+              "summary": "Biomed staff must be able to see real-time fleet health (pumps connected, last heartbeat,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-013",
+          "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…",
+          "full_text": "The audit-log search interface shall support filtering by pump serial, user identity, ISO-8601 timestamp range, and event class, returning results in ≤ 5 s for queries spanning ≤ 30 days against a 1M-event log.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: seed a 1M-event audit log; execute representative queries; measure response time; p95 ≤ 5 s.",
+          "verification_method": "Performance test (VER-CA-PT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-014",
+              "summary": "The audit-log search service shall support filtering by pump serial, user identity,…"
+            },
+            {
+              "id": "SW-026",
+              "summary": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit…"
+            },
+            {
+              "id": "VER-CA-PT-001",
+              "summary": "Performance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-013",
+              "summary": "IT staff must be able to search the Adapter's audit log by pump serial, user identity,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-014",
+          "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…",
+          "full_text": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (> 24 h), certificates expiring within 30 days, and failed library / firmware rollouts within the past 7 days, refreshed at least every 5 minutes.",
+          "category": "USAB",
+          "criticality": "Supporting",
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Usability prototype validation: ≥ 4 of 5 biomed participants complete the task \"show me what needs attention today\" in ≤ 60 s without prompting.",
+          "verification_method": "Usability test (VER-CA-UT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-015",
+              "summary": "The \"Needs Attention\" landing-page composer shall aggregate offline pumps (>24 h), certs…"
+            },
+            {
+              "id": "SW-029",
+              "summary": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint…"
+            },
+            {
+              "id": "VER-CA-UT-001",
+              "summary": "Usability test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The operator console must surface a clear \"needs attention\" list (pumps offline > 24 h,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-015",
+          "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…",
+          "full_text": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a hospital-configured IdP; the Adapter shall maintain no locally provisioned interactive user accounts.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Penetration test: attempt password / token-based authentication directly against the Adapter (bypassing IdP); verify rejection. Inspect codebase for any local-account code paths; verify none reachable in shipped build.",
+          "verification_method": "Security test (VER-CA-ST-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-016",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            },
+            {
+              "id": "SW-026",
+              "summary": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit…"
+            },
+            {
+              "id": "VER-CA-ST-003",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-015",
+              "summary": "The Adapter must authenticate human users (biomed, pharmacy, IT) via the hospital's…"
+            }
+          ]
+        },
+        {
+          "id": "DI-016",
+          "summary": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS…",
+          "full_text": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS endpoint, formatted in CEF (Common Event Format) with end-to-end emission latency ≤ 5 s from event occurrence to syslog receipt.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: configure syslog endpoint; trigger 1000 representative events; verify CEF-conformant lines received within p95 ≤ 5 s; 0 dropped.",
+          "verification_method": "Integration test (VER-CA-IT-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-017",
+              "summary": "The CEF audit-log streamer shall emit every security audit event in Common Event Format…"
+            },
+            {
+              "id": "VER-CA-IT-006",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-016",
+              "summary": "The Adapter must export its security audit log in real time to the hospital SIEM via…"
+            }
+          ]
+        },
+        {
+          "id": "DI-017",
+          "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…",
+          "full_text": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-certificate validation; sessions with invalid, expired, or untrusted client certificates shall be rejected at TLS handshake and the rejection logged.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: attempt connection with (a) no client cert, (b) expired client cert, (c) self-signed client cert; verify TLS handshake failure; verify audit log entries.",
+          "verification_method": "Security test (VER-CA-ST-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-018",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-cert…"
+            },
+            {
+              "id": "SW-029",
+              "summary": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint…"
+            },
+            {
+              "id": "VER-CA-ST-004",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-017",
+              "summary": "The Adapter must enforce mutual-TLS authentication on every pump↔Adapter session so a…"
+            }
+          ]
+        },
+        {
+          "id": "DI-018",
+          "summary": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to…",
+          "full_text": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to authenticated hospital security users via the operator console and via an unauthenticated download URL on the GlobalLogic public site for that version.",
+          "category": "SEC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspect release artifacts: SBOM file present, valid SPDX-2.3 or CycloneDX-1.4 schema; ≥ one runtime dependency listed; SBOM URL returns 200 from public site.",
+          "verification_method": "Document review (VER-CA-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-019",
+              "summary": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter…"
+            },
+            {
+              "id": "VER-CA-DR-001",
+              "summary": "Document review"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-018",
+              "summary": "The Adapter must publish an SBOM (SPDX or CycloneDX) for each released version,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-019",
+          "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…",
+          "full_text": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single signed package, with installation completing in ≤ 30 minutes on a baseline host (8 vCPU, 32 GiB RAM, 500 GB SSD) and requiring no manual library / dependency steps.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Install rehearsal on each target OS; measure end-to-end time; verify Adapter passes self-test post-install.",
+          "verification_method": "System test (VER-CA-SY-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-020",
+              "summary": "The installer package shall install the Adapter on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu…"
+            },
+            {
+              "id": "SW-028",
+              "summary": "The Adapter self-test routine shall, at every process start, validate disk-write…"
+            },
+            {
+              "id": "VER-CA-SY-002",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-019",
+              "summary": "The Adapter must be installable as a single signed package on customer-provided RHEL- or…"
+            }
+          ]
+        },
+        {
+          "id": "DI-020",
+          "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…",
+          "full_text": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter session disconnect exceeding 60 s in p99, and zero loss of in-flight pump-originated events.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak: 500 simulated pumps active; trigger upgrade; measure max session-disconnect duration; verify event count pre/post matches expected.",
+          "verification_method": "System test (VER-CA-SY-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-021",
+              "summary": "The in-place upgrade orchestrator shall execute version N→N+1 upgrades with no…"
+            },
+            {
+              "id": "SW-027",
+              "summary": "The configuration migration tool shall translate the operator's previous-version…"
+            },
+            {
+              "id": "VER-CA-SY-003",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-020",
+              "summary": "The Adapter must support a non-disruptive upgrade path from version N to N+1 that does…"
+            }
+          ]
+        },
+        {
+          "id": "DI-021",
+          "summary": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or…",
+          "full_text": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or OpenMetrics), with at minimum: connected-pump count, ingest event rate, queue depth per downstream, audit-log emission rate, certificate-expiry countdown.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: scrape `/metrics`; validate format with promtool; verify required metrics present.",
+          "verification_method": "Integration test (VER-CA-IT-007)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-022",
+              "summary": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum:…"
+            },
+            {
+              "id": "VER-CA-IT-007",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-021",
+              "summary": "The Adapter must produce machine-parsable health metrics (Prometheus exposition format)…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "software",
+      "title": "SW Reqs",
+      "id_prefix": "SW",
+      "source_files": [
+        "docs/project/dhfs/connectivity-adapter/design-controls/requirements/software-requirements.md"
+      ],
+      "items": [
+        {
+          "id": "SW-001",
+          "summary": "The mutual-TLS ingest listener shall accept ≥500 concurrent pump sessions on a single…",
+          "full_text": "The mutual-TLS ingest listener shall accept ≥500 concurrent pump sessions on a single endpoint with steady-state 5 s telemetry intervals at p99 ingest latency ≤250 ms.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Load test: 500 simulated pumps, 5 s heartbeats, 1-hour soak; ≤0.1% sessions dropped; p99 ≤250 ms.",
+          "verification_method": "Software / load test (VER-CA-LT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-LT-001",
+              "summary": "Bench load test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            }
+          ]
+        },
+        {
+          "id": "SW-002",
+          "summary": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event…",
+          "full_text": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event to local non-volatile storage **before** transmitting the ACK back to the originating pump.",
+          "category": "SAFE",
+          "criticality": "CtS",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Fault-injection: kill the writer process between fsync-call and ACK-send; verify no event is ACK'd that is not on disk.",
+          "verification_method": "Fault-injection test (VER-CA-FI-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-FI-001",
+              "summary": "Fault-injection test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "The Adapter shall durably persist every pump-originated alarm and therapy event to local…"
+            }
+          ]
+        },
+        {
+          "id": "SW-003",
+          "summary": "The replay engine shall hold queued events for downstream consumers up to 24 hours of…",
+          "full_text": "The replay engine shall hold queued events for downstream consumers up to 24 hours of consumer outage, replay them in original chronological order on consumer-availability restoration, with zero duplicates emitted.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak: disable EHR consumer for 24 h with active pump telemetry; restore; verify all events delivered in order; verify dedup.",
+          "verification_method": "Integration test (VER-CA-IT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-002",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            }
+          ]
+        },
+        {
+          "id": "SW-004",
+          "summary": "The per-pump session state tracker shall maintain a live registry of connected pumps…",
+          "full_text": "The per-pump session state tracker shall maintain a live registry of connected pumps (serial, cert thumbprint, last heartbeat, firmware rev, library rev) updated within 1 s of each ingest event, queryable by the operator console and the alerting subsystem.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: 500 simulated pumps; sample registry state; verify accuracy and update latency.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            }
+          ]
+        },
+        {
+          "id": "SW-023",
+          "summary": "The pump-session keepalive watchdog shall detect pump-side disconnects within 15 s (3×…",
+          "full_text": "The pump-session keepalive watchdog shall detect pump-side disconnects within 15 s (3× the 5-s heartbeat window), update session state to `offline`, and emit a \"pump went offline\" event onto the internal bus.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: drop 100 pump sessions at randomized intervals; measure detection latency; verify state transition.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            }
+          ]
+        },
+        {
+          "id": "SW-030",
+          "summary": "The event de-duplication index shall maintain pump-assigned event IDs for 72 hours and…",
+          "full_text": "The event de-duplication index shall maintain pump-assigned event IDs for 72 hours and shall suppress any replay event whose ID is already in the index, preserving the original order.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A1",
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: replay a 10,000-event burst twice; verify only 10,000 unique events delivered downstream.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            }
+          ]
+        },
+        {
+          "id": "SW-005",
+          "summary": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and…",
+          "full_text": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and RDE^O11 messages conformant to IHE Pharmacy profile transactions PHARM-1 and PHARM-2.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "A2",
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "IHE Gazelle conformance test: PHARM-1 and PHARM-2 pass with 0 errors.",
+          "verification_method": "Conformance test (VER-CA-CT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-CT-001",
+              "summary": "Conformance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration…"
+            }
+          ]
+        },
+        {
+          "id": "SW-006",
+          "summary": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable…",
+          "full_text": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable REST endpoint, validating against the US Core 6.0 MedicationAdministration profile.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "A2",
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "fhir-validator pass against US Core 6.0; 0 errors on 100 sample resources.",
+          "verification_method": "Conformance test (VER-CA-CT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-CT-002",
+              "summary": "Conformance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-007",
+          "summary": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and…",
+          "full_text": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and FHIR downstream endpoints (URL, TLS cert, field mappings) and shall apply changes without restarting the Adapter process or interrupting pump sessions.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "A2",
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: add a new HL7 endpoint while 500 pumps stream; verify events flow to new endpoint within 30 s; verify zero session drops.",
+          "verification_method": "Integration test (VER-CA-IT-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-003",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7…"
+            }
+          ]
+        },
+        {
+          "id": "SW-008",
+          "summary": "The drug-library signature verifier shall validate every library payload (RSA-3072+,…",
+          "full_text": "The drug-library signature verifier shall validate every library payload (RSA-3072+, chain to the GlobalLogic signing root) before queuing it for pump distribution, refusing any payload that fails.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "A3",
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: present (a) valid, (b) corrupted-signature, (c) non-trust-anchor; verify only (a) is queued; refusals logged.",
+          "verification_method": "Security test (VER-CA-ST-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-001",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or…"
+            }
+          ]
+        },
+        {
+          "id": "SW-009",
+          "summary": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress…",
+          "full_text": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress and at egress to each pump, and shall block egress and log a critical event if the hashes diverge.",
+          "category": "SAFE",
+          "criticality": "CtC",
+          "group": "A3",
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: 1000 library distributions; verify ingress/egress hashes match for all; inject corruption; verify block + log.",
+          "verification_method": "Software test (VER-CA-BT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-BT-001",
+              "summary": "Bench test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library…"
+            }
+          ]
+        },
+        {
+          "id": "SW-010",
+          "summary": "The rollout scheduler shall accept a cohort spec (serial set / ward / all-fleet),…",
+          "full_text": "The rollout scheduler shall accept a cohort spec (serial set / ward / all-fleet), schedule library distribution to the cohort's pumps, and expose per-pump status (queued / delivered / activated / failed) via API and operator console.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A3",
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: schedule rollout to a 20-pump cohort; verify status transitions reported in console + API.",
+          "verification_method": "Integration test (VER-CA-IT-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-004",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…"
+            }
+          ]
+        },
+        {
+          "id": "SW-024",
+          "summary": "The drug-library rollback handler shall, on operator command, restore the previous…",
+          "full_text": "The drug-library rollback handler shall, on operator command, restore the previous library version to a cohort of pumps and shall block any new rollout for that cohort while a rollback is in progress.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A3",
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: rollback a 20-pump cohort mid-rollout; verify per-pump previous-version active; verify new rollouts blocked.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…"
+            }
+          ]
+        },
+        {
+          "id": "SW-011",
+          "summary": "The firmware signature verifier shall validate every firmware bundle before queuing it…",
+          "full_text": "The firmware signature verifier shall validate every firmware bundle before queuing it for pump distribution, refusing any unsigned or non-trust-anchor bundle and logging the rejection with operator identity.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "A4",
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: present valid / unsigned / non-trust-anchor bundles; verify only valid queues; refusals logged.",
+          "verification_method": "Security test (VER-CA-ST-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-002",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The Adapter shall verify the digital signature of every firmware bundle before queuing it…"
+            }
+          ]
+        },
+        {
+          "id": "SW-012",
+          "summary": "The staged-rollout state machine shall support operator-controlled pause, resume, and…",
+          "full_text": "The staged-rollout state machine shall support operator-controlled pause, resume, and abort across a configurable cohort, with per-pump status and a concurrency cap (default ≤5 concurrent pump upgrades).",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A4",
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: schedule 20-pump rollout; pause at 5; resume; abort at 12; verify state transitions and no pump exceeds concurrency.",
+          "verification_method": "Integration test (VER-CA-IT-005)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-005",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…"
+            }
+          ]
+        },
+        {
+          "id": "SW-025",
+          "summary": "The firmware rollback handler shall revert pumps in a cohort to their pre-rollout…",
+          "full_text": "The firmware rollback handler shall revert pumps in a cohort to their pre-rollout firmware revision on operator command, suspending the in-flight rollout and emitting a rollback-complete event per pump.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A4",
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: rollback a 20-pump cohort mid-rollout; verify each pump back at pre-rollout rev; verify event emission.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…"
+            }
+          ]
+        },
+        {
+          "id": "SW-013",
+          "summary": "The fleet-health view-model shall aggregate pump session state (connected, last…",
+          "full_text": "The fleet-health view-model shall aggregate pump session state (connected, last heartbeat, firmware rev, library rev, certificate expiry) into a UI feed refreshed end-to-end ≤30 s under 500-pump load.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A5",
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: 500 simulated pumps on 5-s intervals; measure UI refresh latency; p95 ≤30 s.",
+          "verification_method": "System test (VER-CA-SY-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-001",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware…"
+            }
+          ]
+        },
+        {
+          "id": "SW-014",
+          "summary": "The audit-log search service shall support filtering by pump serial, user identity,…",
+          "full_text": "The audit-log search service shall support filtering by pump serial, user identity, ISO-8601 timestamp range, and event class, returning paginated results in p95 ≤5 s for queries spanning ≤30 days against a 1M-event log.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "A5",
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: seed 1M-event audit log; run representative queries; measure response time.",
+          "verification_method": "Performance test (VER-CA-PT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-PT-001",
+              "summary": "Performance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…"
+            }
+          ]
+        },
+        {
+          "id": "SW-015",
+          "summary": "The \"Needs Attention\" landing-page composer shall aggregate offline pumps (>24 h), certs…",
+          "full_text": "The \"Needs Attention\" landing-page composer shall aggregate offline pumps (>24 h), certs expiring within 30 days, and failed rollouts within the past 7 days, refreshed at least every 5 minutes.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "A5",
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Usability prototype validation: ≥4/5 biomed participants complete the \"needs attention today\" task in ≤60 s.",
+          "verification_method": "Usability test (VER-CA-UT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-UT-001",
+              "summary": "Usability test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            }
+          ]
+        },
+        {
+          "id": "SW-026",
+          "summary": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit…",
+          "full_text": "The console RBAC enforcement layer shall scope every console operation (view fleet, edit endpoint, run rollback, export audit log) to the operator's IdP-asserted role, with no operation reachable by an unauthenticated session.",
+          "category": "SEC",
+          "criticality": "CtF",
+          "group": "A5",
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Code review + penetration test: enumerate console operations; verify each has RBAC enforcement; attempt bypass; verify rejection.",
+          "verification_method": "Security test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…"
+            },
+            {
+              "id": "DI-015",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-016",
+          "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…",
+          "full_text": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a hospital-configured IdP, with no local-account code path reachable in shipped builds.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "A6",
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Penetration test: attempt password / token-based local auth; verify rejection. Code review: verify no local-account paths reachable in release builds.",
+          "verification_method": "Security test (VER-CA-ST-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-003",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-017",
+          "summary": "The CEF audit-log streamer shall emit every security audit event in Common Event Format…",
+          "full_text": "The CEF audit-log streamer shall emit every security audit event in Common Event Format to a configured syslog-TLS endpoint with end-to-end latency p95 ≤5 s and zero drops.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "A6",
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: configure syslog-TLS; trigger 1000 events; verify CEF-conformant receipt within p95 ≤5 s; 0 drops.",
+          "verification_method": "Integration test (VER-CA-IT-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-006",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS…"
+            }
+          ]
+        },
+        {
+          "id": "SW-018",
+          "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-cert…",
+          "full_text": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-cert validation, rejecting sessions with invalid / expired / untrusted client certificates at TLS handshake and logging the rejection.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "A6",
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: attempt connection with no cert, expired cert, self-signed cert; verify TLS handshake failure; verify audit-log entries.",
+          "verification_method": "Security test (VER-CA-ST-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-ST-004",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
+            }
+          ]
+        },
+        {
+          "id": "SW-019",
+          "summary": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter…",
+          "full_text": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter release, publish it via the operator console to authenticated hospital security users, and publish it via an unauthenticated download URL on the GlobalLogic public site for that version.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "A6",
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspect release artifacts: SBOM file present, valid schema, ≥1 runtime dependency listed; SBOM URL returns 200 from public site.",
+          "verification_method": "Document review (VER-CA-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-DR-001",
+              "summary": "Document review"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-018",
+              "summary": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to…"
+            }
+          ]
+        },
+        {
+          "id": "SW-029",
+          "summary": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint…",
+          "full_text": "The certificate-expiry monitor shall scan pump client-cert and downstream-endpoint server-cert expirations daily, raise console alerts for any cert expiring within 30 days, and surface the affected pumps / endpoints on the \"Needs Attention\" page.",
+          "category": "INTE",
+          "criticality": "CtF",
+          "group": "A6",
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: seed 5 certs with expiries at -7 / 0 / 7 / 30 / 60 days; verify daily scan flags appropriate certs; verify console + landing-page surfacing.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            },
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
+            }
+          ]
+        },
+        {
+          "id": "SW-020",
+          "summary": "The installer package shall install the Adapter on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu…",
+          "full_text": "The installer package shall install the Adapter on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single signed package, completing installation in ≤30 minutes on a baseline host (8 vCPU, 32 GiB, 500 GB SSD) with zero manual library / dependency steps.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A7",
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Install rehearsal on each OS; measure end-to-end time; verify Adapter passes self-test post-install.",
+          "verification_method": "System test (VER-CA-SY-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-002",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…"
+            }
+          ]
+        },
+        {
+          "id": "SW-021",
+          "summary": "The in-place upgrade orchestrator shall execute version N→N+1 upgrades with no…",
+          "full_text": "The in-place upgrade orchestrator shall execute version N→N+1 upgrades with no pump↔Adapter session disconnect exceeding 60 s in p99 and zero loss of in-flight pump-originated events.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": "A7",
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak: 500 active pumps; trigger upgrade; measure max disconnect; verify pre/post event counts match.",
+          "verification_method": "System test (VER-CA-SY-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-SY-003",
+              "summary": "System test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "SW-022",
+          "summary": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum:…",
+          "full_text": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum: connected-pump count, ingest event rate, queue depth per downstream, audit-log emission rate, certificate-expiry countdown.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "A7",
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: scrape `/metrics`; validate with promtool; verify required metrics present.",
+          "verification_method": "Integration test (VER-CA-IT-007)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CA-IT-007",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or…"
+            }
+          ]
+        },
+        {
+          "id": "SW-027",
+          "summary": "The configuration migration tool shall translate the operator's previous-version…",
+          "full_text": "The configuration migration tool shall translate the operator's previous-version configuration (endpoints, RBAC, retention policies) into the new-version schema during in-place upgrade, with a manual review-and-approve step before activation.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "A7",
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: 5 representative configs across upgrade paths N→N+1; verify migration output and review-gate enforcement.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "SW-028",
+          "summary": "The Adapter self-test routine shall, at every process start, validate disk-write…",
+          "full_text": "The Adapter self-test routine shall, at every process start, validate disk-write permissions, certificate-trust-store readability, downstream-endpoint reachability, and IdP configuration, refusing to accept pump traffic on any failure with a structured-log error code.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": "A7",
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Software test: inject each failure class; verify process refuses traffic and logs the correct error code.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "architecture",
+      "title": "Architecture",
+      "id_prefix": "M",
+      "source_files": [
+        "docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md"
+      ],
+      "items": [],
+      "missing_reason": "no_items_parsed",
+      "edges_known": false,
+      "warnings": []
+    },
+    {
+      "key": "vnv",
+      "title": "VnV",
+      "id_prefix": "VER",
+      "source_files": [],
+      "items": [
+        {
+          "id": "VER-CA-LT-001",
+          "summary": "Bench load test",
+          "full_text": "Bench load test (VER-CA-LT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-001",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The Adapter shall accept concurrent mutual-TLS sessions from at least 500 distinct pumps…"
+            },
+            {
+              "id": "SW-001",
+              "summary": "The mutual-TLS ingest listener shall accept ≥500 concurrent pump sessions on a single…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-FI-001",
+          "summary": "Fault-injection test",
+          "full_text": "Fault-injection test (VER-CA-FI-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-002",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "The Adapter shall durably persist every pump-originated alarm and therapy event to local…"
+            },
+            {
+              "id": "SW-002",
+              "summary": "The durable event-queue writer shall fsync every pump-originated alarm and therapy event…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-002",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A1 — Device Ingest",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-003",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The Adapter shall replay queued pump-originated events to downstream consumers (EHR /…"
+            },
+            {
+              "id": "SW-003",
+              "summary": "The replay engine shall hold queued events for downstream consumers up to 24 hours of…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-CT-001",
+          "summary": "Conformance test",
+          "full_text": "Conformance test (VER-CA-CT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-004",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "The Adapter shall emit HL7v2.5 ADT^A08 and RDE^O11 messages for therapy administration…"
+            },
+            {
+              "id": "SW-005",
+              "summary": "The HL7 v2.5 message builder shall encode therapy administration events as ADT^A08 and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-CT-002",
+          "summary": "Conformance test",
+          "full_text": "Conformance test (VER-CA-CT-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-005",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The Adapter shall emit FHIR R4 MedicationAdministration resources via REST POST to a…"
+            },
+            {
+              "id": "SW-006",
+              "summary": "The FHIR R4 publisher shall emit MedicationAdministration resources to a configurable…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-003",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A2 — EHR / Pharmacy Bridge",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-006",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The Adapter shall expose a configuration API to add, modify, and remove downstream HL7…"
+            },
+            {
+              "id": "SW-007",
+              "summary": "The endpoint configuration API shall accept add / modify / remove operations for HL7 and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-001",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-007",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The Adapter shall verify the digital signature of every drug-library payload (RSA-3072 or…"
+            },
+            {
+              "id": "SW-008",
+              "summary": "The drug-library signature verifier shall validate every library payload (RSA-3072+,…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-BT-001",
+          "summary": "Bench test",
+          "full_text": "Bench test (VER-CA-BT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-008",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "The Adapter shall not modify the byte content, structure, or metadata of any drug-library…"
+            },
+            {
+              "id": "SW-009",
+              "summary": "The byte-fidelity store shall capture a SHA-256 hash of every library payload at ingress…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-004",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A3 — Drug Library Distributor",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-009",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "The Adapter shall support scheduled rollout of a drug-library payload to a configurable…"
+            },
+            {
+              "id": "SW-010",
+              "summary": "The rollout scheduler shall accept a cohort spec (serial set / ward / all-fleet),…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-002",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-010",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The Adapter shall verify the digital signature of every firmware bundle before queuing it…"
+            },
+            {
+              "id": "SW-011",
+              "summary": "The firmware signature verifier shall validate every firmware bundle before queuing it…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-005",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-005)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A4 — Firmware Update Relay",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-011",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "The Adapter shall support staged firmware rollout with operator-controlled pause / resume…"
+            },
+            {
+              "id": "SW-012",
+              "summary": "The staged-rollout state machine shall support operator-controlled pause, resume, and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-001",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-012",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "The operator console shall render fleet health (pumps connected, last heartbeat, firmware…"
+            },
+            {
+              "id": "SW-013",
+              "summary": "The fleet-health view-model shall aggregate pump session state (connected, last…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-PT-001",
+          "summary": "Performance test",
+          "full_text": "Performance test (VER-CA-PT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-013",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "The audit-log search interface shall support filtering by pump serial, user identity,…"
+            },
+            {
+              "id": "SW-014",
+              "summary": "The audit-log search service shall support filtering by pump serial, user identity,…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-UT-001",
+          "summary": "Usability test",
+          "full_text": "Usability test (VER-CA-UT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A5 — Operator Console",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-014",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The console shall present a \"Needs Attention\" landing page summarizing offline pumps (>…"
+            },
+            {
+              "id": "SW-015",
+              "summary": "The \"Needs Attention\" landing-page composer shall aggregate offline pumps (>24 h), certs…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-003",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-015",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            },
+            {
+              "id": "SW-016",
+              "summary": "The Adapter shall authenticate human users exclusively via SAML 2.0 or OIDC against a…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-006",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-006)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-016",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The Adapter shall stream its security audit log in real time to a configurable syslog-TLS…"
+            },
+            {
+              "id": "SW-017",
+              "summary": "The CEF audit-log streamer shall emit every security audit event in Common Event Format…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-ST-004",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CA-ST-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-017",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509…"
+            },
+            {
+              "id": "SW-018",
+              "summary": "The pump↔Adapter ingest endpoint shall enforce mutual TLS 1.3 with X.509 client-cert…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-DR-001",
+          "summary": "Document review",
+          "full_text": "Document review (VER-CA-DR-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A6 — Cybersecurity & Identity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-018",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-018",
+              "summary": "Each released Adapter version shall include a CycloneDX or SPDX SBOM accessible to…"
+            },
+            {
+              "id": "SW-019",
+              "summary": "The release pipeline shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for each Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-002",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-019",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single…"
+            },
+            {
+              "id": "SW-020",
+              "summary": "The installer package shall install the Adapter on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-SY-003",
+          "summary": "System test",
+          "full_text": "System test (VER-CA-SY-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-020",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter…"
+            },
+            {
+              "id": "SW-021",
+              "summary": "The in-place upgrade orchestrator shall execute version N→N+1 upgrades with no…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CA-IT-007",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CA-IT-007)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "A7 — Platform & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-021",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or…"
+            },
+            {
+              "id": "SW-022",
+              "summary": "The `/metrics` endpoint shall expose Prometheus-format metrics with at minimum:…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": [
+        "v1 default: V&V nodes derived from DI verification column"
+      ]
+    },
+    {
+      "key": "risk",
+      "title": "Risk",
+      "id_prefix": "HZ",
+      "source_files": [
+        "docs/project/dhfs/connectivity-adapter/risk-management/risk-strategy.md"
+      ],
+      "items": [],
+      "missing_reason": "no_items_parsed",
+      "edges_known": true,
+      "warnings": [
+        "source missing"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "DI-001",
+      "to": "SW-001",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-004",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "SW-023",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "VER-CA-LT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-002",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "VER-CA-FI-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-003",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-030",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "VER-CA-IT-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-004",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-004",
+      "to": "VER-CA-CT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-005",
+      "to": "SW-006",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-005",
+      "to": "VER-CA-CT-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-006",
+      "to": "SW-007",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-006",
+      "to": "VER-CA-IT-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-007",
+      "to": "SW-008",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-007",
+      "to": "VER-CA-ST-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-008",
+      "to": "SW-009",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-008",
+      "to": "VER-CA-BT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-010",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-024",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "VER-CA-IT-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-010",
+      "to": "SW-011",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-010",
+      "to": "VER-CA-ST-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-012",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-025",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "VER-CA-IT-005",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-012",
+      "to": "SW-013",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-012",
+      "to": "VER-CA-SY-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-014",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "VER-CA-PT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-015",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "VER-CA-UT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-016",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "VER-CA-ST-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-016",
+      "to": "SW-017",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "VER-CA-IT-006",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-018",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "VER-CA-ST-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-018",
+      "to": "SW-019",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-018",
+      "to": "VER-CA-DR-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-020",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-028",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "VER-CA-SY-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-021",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-027",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "VER-CA-SY-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-022",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "VER-CA-IT-007",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "SW-001",
+      "to": "VER-CA-LT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-002",
+      "to": "VER-CA-FI-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-003",
+      "to": "VER-CA-IT-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-005",
+      "to": "VER-CA-CT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-006",
+      "to": "VER-CA-CT-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-007",
+      "to": "VER-CA-IT-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-008",
+      "to": "VER-CA-ST-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-009",
+      "to": "VER-CA-BT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-010",
+      "to": "VER-CA-IT-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-011",
+      "to": "VER-CA-ST-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-012",
+      "to": "VER-CA-IT-005",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-013",
+      "to": "VER-CA-SY-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-014",
+      "to": "VER-CA-PT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-015",
+      "to": "VER-CA-UT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-016",
+      "to": "VER-CA-ST-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-017",
+      "to": "VER-CA-IT-006",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-018",
+      "to": "VER-CA-ST-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-019",
+      "to": "VER-CA-DR-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-020",
+      "to": "VER-CA-SY-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-021",
+      "to": "VER-CA-SY-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-022",
+      "to": "VER-CA-IT-007",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-002",
+      "to": "DI-002",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-002",
+      "to": "DI-003",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-003",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-006",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-008",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-008",
+      "to": "DI-007",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-010",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-011",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-012",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-014",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-015",
+      "to": "DI-015",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-016",
+      "to": "DI-016",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-017",
+      "to": "DI-017",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-018",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-019",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-020",
+      "to": "DI-020",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-021",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    }
+  ],
+  "gaps": {
+    "orphans": {
+      "user_needs": [],
+      "design_inputs": [],
+      "software": [
+        "SW-004",
+        "SW-023",
+        "SW-030",
+        "SW-024",
+        "SW-025",
+        "SW-026",
+        "SW-029",
+        "SW-027",
+        "SW-028"
+      ],
+      "architecture": [],
+      "vnv": [],
+      "risk": []
+    },
+    "broken_refs": [],
+    "empty_layers": [
+      "architecture",
+      "risk"
+    ]
+  },
+  "stats": {
+    "user_needs": {
+      "count": 21,
+      "with_forward": 21,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "design_inputs": {
+      "count": 21,
+      "with_forward": 21,
+      "with_reverse": 21,
+      "orphan": 0
+    },
+    "software": {
+      "count": 30,
+      "with_forward": 21,
+      "with_reverse": 30,
+      "orphan": 9
+    },
+    "architecture": {
+      "count": 0,
+      "missing_reason": "no_items_parsed",
+      "edges_known": false,
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "vnv": {
+      "count": 21,
+      "with_forward": 0,
+      "with_reverse": 21,
+      "orphan": 0
+    },
+    "risk": {
+      "count": 0,
+      "missing_reason": "no_items_parsed",
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    }
+  }
+}

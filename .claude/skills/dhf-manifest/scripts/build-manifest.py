@@ -19,6 +19,7 @@ import sys
 import json
 import yaml
 import argparse
+import hashlib
 from pathlib import Path
 from datetime import date
 from collections import defaultdict
@@ -302,6 +303,56 @@ def safe_cell(text: str, max_len: int | None = None) -> str:
     return str(text).replace("|", "\\|")
 
 
+def _applies_to_display(applies_to) -> str:
+    """Render `applies_to` for human-readable tables. Tolerates both legacy
+    free-text strings and the structured `[{role, scope, artifact_pattern}]`
+    form (Phase 2+). Empty / missing → '—'."""
+    if not applies_to:
+        return "—"
+    parts: list[str] = []
+    for entry in applies_to:
+        if isinstance(entry, dict):
+            role = entry.get("role", "") or ""
+            scope = entry.get("scope", "") or ""
+            pat = entry.get("artifact_pattern", "") or ""
+            label = " · ".join(p for p in (role, scope, pat) if p)
+            parts.append(label or str(entry))
+        else:
+            parts.append(str(entry))
+    return "; ".join(parts) if parts else "—"
+
+
+def _normalize_applies_to(applies_to) -> list:
+    """Pass-through normalization. Phase 2 distillation will emit structured
+    dicts; Phase 1 sources still emit strings. Keep both shapes — consumers
+    branch on item type. Always return a list."""
+    if not applies_to:
+        return []
+    return list(applies_to)
+
+
+def _obligation_set_hash(catalog_entries: list[dict]) -> str:
+    """Stable sha256 over the catalog's content-determining fields. Tracker
+    uses this as a cache-invalidation key for `/tracker assess` runs."""
+    canonical = sorted(
+        [
+            {
+                "id": e.get("id"),
+                "canonical_role": e.get("canonical_role"),
+                "criticality": e.get("criticality"),
+                "applies_to": e.get("applies_to"),
+                "extracted_requirements": e.get("extracted_requirements"),
+                "reg_source": (e.get("reg_source") or {}).get("citation"),
+                "qms_grounding_direct": (e.get("qms_grounding") or {}).get("direct"),
+            }
+            for e in catalog_entries
+        ],
+        key=lambda x: x["id"] or "",
+    )
+    payload = json.dumps(canonical, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
 def render_reg_source_cell(obl: dict, tier1_anchors: dict) -> str:
     """Render the Reg Source column: deep link to Tier 1 distillation anchor.
 
@@ -406,8 +457,8 @@ def render_dhf_section(
         lines += [
             f"### {topic_label} ({len(topic_obls)})",
             "",
-            "| ID | Obligation | Artifact Type | Required Deliverable(s) | Reg Source | QMS Grounding | Status |",
-            "|----|-----------|---------------|------------------------|-----------|---------------|:------:|",
+            "| ID | Obligation | Artifact Type | Required Deliverable(s) | Reg Source | QMS Grounding |",
+            "|----|-----------|---------------|------------------------|-----------|---------------|",
         ]
         for obl in topic_obls:
             oid = obl.get("id", "—")
@@ -419,12 +470,12 @@ def render_dhf_section(
             id_cell = render_obl_link(oid, title, href)
             short = safe_cell(obligation_short(obl))
             atype = obl.get("artifact_type", "—")
-            applies = safe_cell("; ".join(obl.get("applies_to", ["—"])))
+            applies = safe_cell(_applies_to_display(obl.get("applies_to", [])))
             reg_src = render_reg_source_cell(obl, tier1_anchors)
             qms_cell = render_qms_grounding_cell(obl, qms_map)
             lines.append(
                 f"| {id_cell} | {short} | {atype} | {applies} "
-                f"| {reg_src} | {qms_cell} | GAP |"
+                f"| {reg_src} | {qms_cell} |"
             )
         lines.append("")
 
@@ -452,10 +503,9 @@ def render_manifest(
         "",
         f"**Generated**: {today}  ",
         "**Tier**: 4 — Project DHF Manifests (Tier 3 Reference DHF → scope-projected)  ",
-        "**Status**: Initial — all obligations at `GAP` (no location binding yet)  ",
         "**Sections**: 1 per DHF (system suite + 3 item DHFs), obligations grouped by topic  ",
         "",
-        "> Run `/dhf-manifest reproject` to scan the DHF tree and bind obligations to actual file paths.",
+        "> This manifest is a purely declarative **catalog** of obligations — what should exist per DHF under the current project scope vector. Coverage / lifecycle / evidence-binding live in the tracker agent sidecar (`/tracker assess`), not in this catalog.",
         "",
         "---",
         "",
@@ -504,10 +554,10 @@ def render_manifest(
 
     # Summary
     lines += [
-        "## Summary — Gap Analysis",
+        "## Summary — Catalog Counts",
         "",
-        "| DHF | Role | Obligations | GAP | FOUND |",
-        "|-----|------|------------|-----|-------|",
+        "| DHF | Role | Obligations |",
+        "|-----|------|------------|",
     ]
     grand_total = 0
     for dhf in all_dhfs:
@@ -515,12 +565,11 @@ def render_manifest(
         role = dhf.get("role", "item")
         count = len(dhf_obligations.get(leaf, []))
         grand_total += count
-        lines.append(f"| `{leaf}` | {role} | {count} | {count} | 0 |")
+        lines.append(f"| `{leaf}` | {role} | {count} |")
     lines += [
-        f"| **Total** | | **{grand_total}** | **{grand_total}** | **0** |",
+        f"| **Total** | | **{grand_total}** |",
         "",
-        "_All statuses are `GAP` at initial generation. Run `/dhf-manifest reproject` after "
-        "authoring DHF artifacts to update `FOUND` counts._",
+        "_Coverage / lifecycle / evidence-binding counts live in the tracker agent sidecar — run `/tracker assess` to populate._",
         "",
     ]
 
@@ -584,8 +633,8 @@ def render_by_section_view(
             lines += [
                 f"### `{leaf}` — {len(topic_obls)} obligation{'s' if len(topic_obls)!=1 else ''}",
                 "",
-                "| ID | Obligation | Artifact Type | Required Deliverable(s) | Reg Source | QMS Grounding | Status |",
-                "|----|-----------|---------------|------------------------|-----------|---------------|:------:|",
+                "| ID | Obligation | Artifact Type | Required Deliverable(s) | Reg Source | QMS Grounding |",
+                "|----|-----------|---------------|------------------------|-----------|---------------|",
             ]
             for obl in topic_obls:
                 oid = obl.get("id", "—")
@@ -597,12 +646,12 @@ def render_by_section_view(
                 id_cell = render_obl_link(oid, title, href)
                 short = safe_cell(obligation_short(obl))
                 atype = obl.get("artifact_type", "—")
-                applies = safe_cell("; ".join(obl.get("applies_to", ["—"])))
+                applies = safe_cell(_applies_to_display(obl.get("applies_to", [])))
                 reg_src = render_reg_source_cell(obl, tier1_anchors)
                 qms_cell = render_qms_grounding_cell(obl, qms_map)
                 lines.append(
                     f"| {id_cell} | {short} | {atype} | {applies} "
-                    f"| {reg_src} | {qms_cell} | GAP |"
+                    f"| {reg_src} | {qms_cell} |"
                 )
             lines.append("")
         lines += ["---", ""]
@@ -636,8 +685,6 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Build Tier 4 DHF Project Manifest")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print manifest to stdout, do not write files")
-    parser.add_argument("--delta", action="store_true",
-                        help="Diff new output against existing manifest JSON and report added/dropped/changed IDs")
     parser.add_argument("--scope", action="append", default=[], metavar="FLAG=VALUE",
                         help="Override a scope flag for this run (e.g. --scope hardware=true). "
                              "Implies --dry-run when used without --output.")
@@ -715,7 +762,10 @@ def main() -> int:
             "title": o.get("title", "") or a_info.get("title", ""),
             "topic": topic,
             "artifact_type": o.get("artifact_type"),
-            "applies_to": o.get("applies_to", []),
+            "canonical_role": o.get("canonical_role"),
+            "criticality": o.get("criticality"),
+            "applies_to": _normalize_applies_to(o.get("applies_to")),
+            "extracted_requirements": o.get("extracted_requirements", []) or [],
             "dhf_owner": o.get("dhf_owner"),
             "source": o.get("source"),
             "reg_source": {
@@ -731,19 +781,22 @@ def main() -> int:
                 "direct": list(direct_qms),
                 "topic_fallback": {"topic": topic, "qms_count": len(topic_qms)} if not direct_qms else None,
             },
-            "status": "GAP",
-            "location": None,
         }
+
+    catalog = {
+        leaf: [_entry_json(o) for o in obls]
+        for leaf, obls in dhf_obligations.items()
+    }
+    flat_entries: list[dict] = [e for entries in catalog.values() for e in entries]
 
     json_content = json.dumps(
         {
+            "schema_version": "1.0",
             "generated": date.today().isoformat(),
             "source_obligations": len(obligations),
             "skipped_out_of_scope": skipped,
-            "dhf_manifest": {
-                leaf: [_entry_json(o) for o in obls]
-                for leaf, obls in dhf_obligations.items()
-            },
+            "obligation_set_hash": _obligation_set_hash(flat_entries),
+            "dhf_manifest": catalog,
         },
         indent=2,
     )
@@ -751,28 +804,6 @@ def main() -> int:
     if args.dry_run or args.scope:
         print(md_content)
         return 0
-
-    # --delta: diff new IDs against previously written manifest
-    if args.delta and (OUTPUT_DIR / MANIFEST_JSON_NAME).exists():
-        try:
-            old = json.loads((OUTPUT_DIR / MANIFEST_JSON_NAME).read_text())
-            old_ids: set[str] = set()
-            for entries in old.get("dhf_manifest", {}).values():
-                old_ids.update(e["id"] for e in entries)
-            new_ids: set[str] = set()
-            new_manifest_data = json.loads(json_content)
-            for entries in new_manifest_data.get("dhf_manifest", {}).values():
-                new_ids.update(e["id"] for e in entries)
-
-            added = new_ids - old_ids
-            dropped = old_ids - new_ids
-            print(f"Reproject delta:")
-            print(f"  Added  : {len(added)}" + (f" — {', '.join(sorted(added))}" if added else ""))
-            print(f"  Dropped: {len(dropped)}" + (f" — {', '.join(sorted(dropped))}" if dropped else ""))
-            if not added and not dropped:
-                print("  No change.")
-        except (json.JSONDecodeError, KeyError):
-            pass  # Delta comparison failed — proceed with write
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUTPUT_DIR / MANIFEST_MD_NAME).write_text(md_content)

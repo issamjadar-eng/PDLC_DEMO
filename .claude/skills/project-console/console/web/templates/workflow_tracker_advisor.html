@@ -1,0 +1,283 @@
+{% extends "_base.html" %}
+{% block title %}Ask the Tracker Advisor · PDLC Console{% endblock %}
+{% block body_class %}workflow-tracker-advisor-page{% endblock %}
+{% block content %}
+<section class="workflow-tracker-wrap" style="display:grid;grid-template-columns:1fr 320px;gap:16px;height:calc(100vh - 80px);">
+  <div style="display:flex;flex-direction:column;min-height:0;">
+    <header style="padding:8px 12px;border-bottom:1px solid #1e293b;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div>
+        <h1 style="font-size:1.1rem;margin:0;">B5 — Ask the Tracker Advisor</h1>
+        <p class="muted" style="font-size:.75rem;margin:2px 0 0;">Conversation grounded in the full submission-tracker.md plus the advisor's own sources.</p>
+      </div>
+      <div id="session-banner" style="font-size:.78rem;color:#94a3b8;">No active session — pick an advisor and ask a question to start.</div>
+    </header>
+
+    <div style="padding:8px 12px;border-bottom:1px solid #1e293b;display:flex;align-items:center;gap:8px;">
+      <label for="advisor-pick" style="font-size:.78rem;color:#94a3b8;">Advisor:</label>
+      <select id="advisor-pick" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:4px;padding:6px;font-size:.85rem;flex:1;max-width:380px;">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+
+    <div id="transcript" style="flex:1;overflow-y:auto;padding:12px;font-size:.85rem;line-height:1.5;color:#e2e8f0;">
+      <p class="muted">Pick an advisor above and ask your question below. The advisor sees the entire submission tracker as context and can answer row-specific questions (cite IDs like PA1, PP3, ENG7).</p>
+    </div>
+
+    <div style="border-top:1px solid #1e293b;padding:10px 12px;display:flex;gap:8px;align-items:flex-end;">
+      <textarea id="user-msg" rows="2" placeholder="Ask a question — e.g. &quot;What's blocking PCCP-Release readiness?&quot; or &quot;Summarize the cybersecurity gaps.&quot;" style="flex:1;background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:4px;padding:8px;font-family:inherit;font-size:.85rem;resize:vertical;"></textarea>
+      <button id="send-btn" disabled style="background:rgba(56,189,248,.2);border:1px solid rgba(56,189,248,.6);color:#38bdf8;padding:10px 16px;border-radius:4px;cursor:pointer;font-weight:600;">Ask</button>
+    </div>
+  </div>
+
+  <aside style="border-left:1px solid #1e293b;display:flex;flex-direction:column;min-height:0;">
+    <div style="padding:10px 12px;border-bottom:1px solid #1e293b;">
+      <h2 style="font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px;color:#94a3b8;">Conversation turns</h2>
+      <div id="turn-count" style="font-size:1.4rem;font-weight:700;color:#e2e8f0;">0</div>
+    </div>
+    <div id="turn-list" style="flex:1;overflow-y:auto;padding:8px 12px;font-size:.78rem;color:#cbd5e1;">
+      <p class="muted">Persisted Q&A turns appear here — they land in the session task doc on Save & Close.</p>
+    </div>
+    <div style="padding:10px 12px;border-top:1px solid #1e293b;display:flex;flex-direction:column;gap:6px;">
+      <input id="commit-msg" type="text" placeholder="Save message (optional)" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:4px;padding:6px;font-size:.78rem;">
+      <button id="save-btn" disabled style="background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.6);color:#86efac;padding:8px;border-radius:4px;cursor:pointer;font-weight:600;">Save & Close</button>
+      <button id="cancel-btn" disabled style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:6px;border-radius:4px;cursor:pointer;">Cancel session</button>
+    </div>
+  </aside>
+</section>
+
+<script>
+(function() {
+  const banner = document.getElementById('session-banner');
+  const advisorPick = document.getElementById('advisor-pick');
+  const transcript = document.getElementById('transcript');
+  const userMsg = document.getElementById('user-msg');
+  const sendBtn = document.getElementById('send-btn');
+  const turnCountEl = document.getElementById('turn-count');
+  const turnListEl = document.getElementById('turn-list');
+  const saveBtn = document.getElementById('save-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const commitMsgEl = document.getElementById('commit-msg');
+
+  const history = [];   // [{role: 'user'|'assistant', content: '...'}]
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadAgents() {
+    try {
+      const r = await fetch('/workflows/tracker/advisor/agents');
+      const data = await r.json();
+      if (!data.agents || !data.agents.length) {
+        advisorPick.innerHTML = '<option value="">(no advisors enabled in project.yml)</option>';
+        return;
+      }
+      advisorPick.innerHTML = '<option value="">— pick an advisor —</option>' +
+        data.agents.map(a =>
+          '<option value="' + escapeHtml(a.name) + '" title="' + escapeHtml(a.description || '') + '">' +
+          escapeHtml(a.title) + '</option>'
+        ).join('');
+    } catch (e) {
+      advisorPick.innerHTML = '<option value="">(failed to load advisors)</option>';
+    }
+  }
+
+  function refreshSendButton() {
+    sendBtn.disabled = !advisorPick.value || !userMsg.value.trim();
+  }
+  advisorPick.addEventListener('change', refreshSendButton);
+  userMsg.addEventListener('input', refreshSendButton);
+
+  async function refreshSession() {
+    try {
+      const r = await fetch('/workflows/tracker/advisor/session');
+      if (!r.ok) return;
+      const data = await r.json();
+      const session = data.session;
+      const pending = data.pending || [];  // for advisor kind, parse_pending_changes returns []
+      cancelBtn.disabled = !session;
+      saveBtn.disabled = !session;
+      if (session) {
+        banner.textContent = 'Session: task ' + session.task_id + ' · branch ' + session.branch;
+        banner.style.color = '#86efac';
+      } else {
+        banner.textContent = 'No active session — pick an advisor and ask a question to start.';
+        banner.style.color = '#94a3b8';
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function appendTurn(role, content) {
+    const div = document.createElement('div');
+    div.style.marginBottom = '14px';
+    div.style.padding = '10px 12px';
+    div.style.borderRadius = '6px';
+    if (role === 'user') {
+      div.style.background = 'rgba(56,189,248,.08)';
+      div.style.borderLeft = '3px solid rgba(56,189,248,.6)';
+      div.innerHTML = '<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#38bdf8;margin-bottom:4px;">You</div>' +
+                      '<div>' + escapeHtml(content) + '</div>';
+    } else {
+      div.style.background = 'rgba(167,139,250,.06)';
+      div.style.borderLeft = '3px solid rgba(167,139,250,.5)';
+      div.innerHTML = '<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#a78bfa;margin-bottom:4px;" class="speaker-label">Advisor</div>' +
+                      '<div class="advisor-body" style="white-space:pre-wrap;"></div>';
+    }
+    transcript.appendChild(div);
+    transcript.scrollTop = transcript.scrollHeight;
+    return div;
+  }
+
+  function bumpTurnCount() {
+    // Each user→advisor exchange counts as 1 turn (after the assistant
+    // response lands).
+    const userTurns = history.filter(m => m.role === 'user').length;
+    const aTurns = history.filter(m => m.role === 'assistant').length;
+    const completed = Math.min(userTurns, aTurns);
+    turnCountEl.textContent = completed;
+    if (completed > 0) {
+      turnListEl.innerHTML = history.reduce((acc, m, i) => {
+        if (m.role !== 'assistant') return acc;
+        const userTurn = history[i - 1];
+        if (!userTurn) return acc;
+        const turnNum = (acc.match(/data-t/g) || []).length + 1;
+        return acc + '<div data-t style="padding:6px 0;border-bottom:1px solid #1e293b;">' +
+          '<div style="color:#94a3b8;">#' + turnNum + '</div>' +
+          '<div><strong>Q:</strong> ' + escapeHtml(userTurn.content.slice(0, 120)) + (userTurn.content.length > 120 ? '…' : '') + '</div>' +
+          '<div><strong>A:</strong> ' + escapeHtml(m.content.slice(0, 200)) + (m.content.length > 200 ? '…' : '') + '</div>' +
+          '</div>';
+      }, '');
+    }
+  }
+
+  async function send() {
+    const agentName = advisorPick.value;
+    const message = userMsg.value.trim();
+    if (!agentName || !message) return;
+    sendBtn.disabled = true;
+    userMsg.disabled = true;
+    advisorPick.disabled = true;
+
+    appendTurn('user', message);
+    history.push({ role: 'user', content: message });
+    const assistantDiv = appendTurn('assistant', '');
+    const speakerEl = assistantDiv.querySelector('.speaker-label');
+    const bodyEl = assistantDiv.querySelector('.advisor-body');
+    let captured = '';
+
+    try {
+      const r = await fetch('/workflows/tracker/advisor/stream/' + encodeURIComponent(agentName), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ history: history.slice(0, -1), message }),
+      });
+      if (!r.ok || !r.body) {
+        const txt = await r.text();
+        bodyEl.textContent = '(error: ' + txt.slice(0, 240) + ')';
+        bodyEl.style.color = '#fca5a5';
+        return;
+      }
+      const reader = r.body.getReader();
+      const dec = new TextDecoder('utf-8');
+      let buffer = '';
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += dec.decode(value, { stream: true });
+        const events = buffer.split('\n\n');
+        buffer = events.pop() || '';
+        for (const evt of events) {
+          if (!evt.startsWith('data:')) continue;
+          let payload;
+          try { payload = JSON.parse(evt.slice(5).trim()); } catch (e) { continue; }
+          if (payload.type === 'speaker') {
+            speakerEl.textContent = payload.title || payload.name || 'Advisor';
+          } else if (payload.type === 'token') {
+            captured += payload.text || '';
+            bodyEl.textContent = captured;
+            transcript.scrollTop = transcript.scrollHeight;
+          } else if (payload.type === 'error') {
+            bodyEl.textContent += '\n(stream error: ' + payload.message + ')';
+            bodyEl.style.color = '#fca5a5';
+          } else if (payload.type === 'persisted') {
+            // Q&A appended to task-doc changelog
+          } else if (payload.type === 'session') {
+            await refreshSession();
+          }
+        }
+      }
+      history.push({ role: 'assistant', content: captured });
+      bumpTurnCount();
+      userMsg.value = '';
+    } catch (e) {
+      bodyEl.textContent = '(network error: ' + e.message + ')';
+      bodyEl.style.color = '#fca5a5';
+    } finally {
+      userMsg.disabled = false;
+      advisorPick.disabled = false;
+      refreshSendButton();
+      userMsg.focus();
+    }
+  }
+
+  sendBtn.addEventListener('click', send);
+  userMsg.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    try {
+      const r = await fetch('/workflows/tracker/advisor/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: commitMsgEl.value.trim() || null }),
+      });
+      const data = await r.json();
+      if (r.ok && data.saved) {
+        alert('Saved! Commit: ' + (data.result.commit_sha || '(none)') +
+              '\nPushed: ' + data.result.pushed +
+              '\nMerged branch: ' + data.result.branch_merged);
+        commitMsgEl.value = '';
+        history.length = 0;
+        transcript.innerHTML = '<p class="muted">Conversation saved. Pick an advisor to start a new one.</p>';
+        bumpTurnCount();
+        await refreshSession();
+      } else {
+        alert('Save failed: ' + JSON.stringify(data));
+        saveBtn.disabled = false;
+      }
+    } catch (e) {
+      alert('Network error: ' + e.message);
+      saveBtn.disabled = false;
+    } finally {
+      saveBtn.textContent = 'Save & Close';
+    }
+  });
+
+  cancelBtn.addEventListener('click', async () => {
+    if (!confirm('Discard the conversation and tear down the session?')) return;
+    cancelBtn.disabled = true;
+    try {
+      const r = await fetch('/workflows/tracker/advisor/cancel', { method: 'POST' });
+      const data = await r.json();
+      alert('Cancelled: ' + JSON.stringify(data.result));
+      history.length = 0;
+      transcript.innerHTML = '<p class="muted">Session cancelled. Pick an advisor to start a new one.</p>';
+      bumpTurnCount();
+      await refreshSession();
+    } catch (e) {
+      alert('Network error: ' + e.message);
+      cancelBtn.disabled = false;
+    }
+  });
+
+  loadAgents();
+  refreshSession();
+})();
+</script>
+{% endblock %}

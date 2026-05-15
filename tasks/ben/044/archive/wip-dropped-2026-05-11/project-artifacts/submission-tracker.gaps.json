@@ -1,0 +1,207 @@
+{
+  "schema_version": "0.1",
+  "generated": "2026-05-05T21:12:38.395330",
+  "generated_by": "/tracker assess-phases (regulatory-affairs agent + merger)",
+  "milestones": {
+    "pccp-release": [
+      {
+        "obligation_id": "OBL-MFD-002",
+        "title": "MFD Impact Assessment",
+        "expected_role": "architecture",
+        "rationale": "FDA MFD Guidance \u00a7IV requires a standalone Multiple Function Device impact assessment showing how the PP3500's non-device or other-device functions could affect the device function under review; the SAD references the MFD topic but no dedicated MFD Impact Analysis file is present in this batch.",
+        "_source_bundle": "01__architecture"
+      },
+      {
+        "obligation_id": "OBL-CYBER-002",
+        "title": "Security Risk Management Report",
+        "expected_role": "cybersecurity",
+        "rationale": "FDA 2023 \u00a7III requires a standalone Security Risk Assessment / Report tying threats to controls and residual risk; the threat-model file is present but a formal SRA report is not in this batch.",
+        "_source_bundle": "03__cybersecurity"
+      },
+      {
+        "obligation_id": "OBL-CYBER-001",
+        "title": "Post-Market Cybersecurity Plan (\u00a7524B)",
+        "expected_role": "cybersecurity",
+        "rationale": "\u00a7524B requires a documented post-market cyber plan covering monitoring, disclosure, and patching; the vulnerability management plan partially overlaps but a dedicated post-market cyber plan deliverable for the 510(k) cybersecurity section is not separately present.",
+        "_source_bundle": "03__cybersecurity"
+      },
+      {
+        "obligation_id": "OBL-81001-001",
+        "title": "Security Risk Management Plan",
+        "expected_role": "cybersecurity",
+        "rationale": "IEC 81001-5-1 \u00a74.2 requires a Security Risk Management Plan (planning artifact) distinct from the threat model and SRA; not present in the cybersecurity batch.",
+        "_source_bundle": "03__cybersecurity"
+      },
+      {
+        "obligation_id": "OBL-82304-007",
+        "title": "Post-Market Problem Resolution",
+        "expected_role": "labeling",
+        "rationale": "The current IFU file is a v0.1 placeholder stub (per task ben/023 frontmatter) and does not yet contain the post-market problem-resolution pointers required by IEC 82304-1 \u00a79.2 for the K210345 filing version of labeling.",
+        "_source_bundle": "04__labeling"
+      },
+      {
+        "obligation_id": "OBL-CYBER-006",
+        "title": "Cybersecurity Management Plan",
+        "expected_role": "cybersecurity",
+        "rationale": "FDA 2023 \u00a7VII requires a Cybersecurity Management Plan covering the post-market lifecycle; flagged for cross-batch reconciliation with cybersecurity batch.",
+        "_source_bundle": "06__postmarket"
+      },
+      {
+        "obligation_id": "OBL-62304-019",
+        "title": "Problem Resolution Process",
+        "expected_role": "software-lifecycle",
+        "rationale": "IEC 62304 \u00a79.1 problem-resolution procedure not present; gap to be reconciled with software-lifecycle batch.",
+        "_source_bundle": "06__postmarket"
+      },
+      {
+        "obligation_id": "OBL-82304-008",
+        "title": "Decommissioning Plan",
+        "expected_role": "lifecycle",
+        "rationale": "IEC 82304-1 \u00a711 expects a Product Lifecycle / Decommissioning Plan covering end-of-support for PP3500 SaMD components; not present.",
+        "_source_bundle": "06__postmarket"
+      },
+      {
+        "obligation_id": "POSTMARKET-PMS-PLAN",
+        "title": "Post-Market Surveillance Plan",
+        "expected_role": "postmarket",
+        "rationale": "A formal PMS Plan referenced by every catalog obligation in this batch under applies_to is required as submission content per FDA expectations for Class II devices; PMCF study records alone do not constitute the PMS Plan.",
+        "_source_bundle": "07__postmarket"
+      },
+      {
+        "obligation_id": "OBL-81001-003",
+        "title": "Security Requirements",
+        "expected_role": "requirements",
+        "rationale": "Catalog requires a dedicated Security Requirements specification per IEC 81001-5-1 \u00a75.2; the two files in this batch are general DIS placeholders/design-inputs and do not yet include an itemized security-requirements section discoverable in their frontmatter for the K210345 filing.",
+        "_source_bundle": "08__requirements"
+      },
+      {
+        "obligation_id": "OBL-14971-012",
+        "title": "Benefit-Risk Analysis",
+        "expected_role": "risk-management",
+        "rationale": "ISO 14971 \u00a77.4 requires a documented benefit-risk analysis when residual risk is judged using benefit considerations; no standalone BRA file in this batch \u2014 content may be embedded in the RM Report but a discrete artifact is preferable.",
+        "_source_bundle": "09__risk-management"
+      },
+      {
+        "obligation_id": "OBL-14971-006",
+        "title": "Safety-Related Characteristics Checklist",
+        "expected_role": "risk-management",
+        "rationale": "ISO 14971 \u00a75.3 calls for identification of qualitative safety characteristics; no dedicated checklist file is present.",
+        "_source_bundle": "09__risk-management"
+      },
+      {
+        "obligation_id": "trace-matrix-software-iec62304",
+        "title": "Software Requirements Trace Matrix (IEC 62304)",
+        "expected_role": "trace-matrix",
+        "rationale": "No dedicated software-unit-level trace matrix linking SaMD/SiMD software requirements to architecture, units, and software V&V exists in the batch; IEC 62304 \u00a75.1.1 and the FDA June 2023 Premarket Software guidance require this distinct from the system UN\u2192DI trace for the K210345 filing.",
+        "_source_bundle": "11__trace-matrix"
+      },
+      {
+        "obligation_id": "trace-matrix-hazard-iso14971",
+        "title": "Hazard / Risk-Control Trace Matrix (ISO 14971)",
+        "expected_role": "trace-matrix",
+        "rationale": "The auto-generated trace shows zero risk items parsed and no risk-control-to-DI linkage; ISO 14971:2019 \u00a77.4 and \u00a79 require traceability from each identified hazard through its risk control measure to verification evidence \u2014 required for the 510(k) risk file and PCCP risk-impact analysis.",
+        "_source_bundle": "11__trace-matrix"
+      },
+      {
+        "obligation_id": "trace-matrix-pccp-envelope-scope",
+        "title": "PCCP Envelope Scope Trace (Filing Scope Column)",
+        "expected_role": "trace-matrix",
+        "rationale": "Per the regulatory strategy, every UN/DI must carry Ct* tags driving a 'Filing Scope' column (In 510(k) / In PCCP envelope / Commercial-only); this scope column is not yet visible in the current trace artifacts and is required for the PCCP modification protocol to be reviewable.",
+        "_source_bundle": "11__trace-matrix"
+      },
+      {
+        "obligation_id": "vnv-software-test-plan",
+        "title": "Software Test Plan (STP) \u2014 IEC 62304",
+        "expected_role": "vnv",
+        "rationale": "PP3500 is a SaMD-plus-SiMD pump and the IEC 62304 V&V triplet (STP/STC/STR) is a distinct sign-off from device-level verification; no STP file appears in this V&V batch \u2014 needed for K210345 software documentation.",
+        "_source_bundle": "14__vnv"
+      },
+      {
+        "obligation_id": "vnv-software-test-cases",
+        "title": "Software Test Cases (STC) \u2014 IEC 62304",
+        "expected_role": "vnv",
+        "rationale": "Per IEC 62304 \u00a75.5/\u00a75.6/\u00a75.7 the executed software test cases are a distinct deliverable from the plan and from device verification \u2014 not present.",
+        "_source_bundle": "14__vnv"
+      },
+      {
+        "obligation_id": "vnv-software-test-results",
+        "title": "Software Test Results (STR) \u2014 IEC 62304",
+        "expected_role": "vnv",
+        "rationale": "The executed software test results / system test report under IEC 62304 is a distinct sign-off and a required attachment to the 510(k) software documentation.",
+        "_source_bundle": "14__vnv"
+      }
+    ],
+    "qsub-release": [
+      {
+        "obligation_id": "QSUB-COVER-LETTER",
+        "title": "Q-Sub Cover Letter",
+        "expected_role": "submission-letters",
+        "rationale": "Every Q-Sub package must include a formal Cover Letter identifying the submitter, device, and purpose per FDA Q-Submission Program guidance; no such file exists in the architecture batch and none is identified upstream.",
+        "_source_bundle": "01__architecture"
+      },
+      {
+        "obligation_id": "QSUB-PRESUB-QUESTIONS",
+        "title": "Pre-Submission Questions to FDA",
+        "expected_role": "submission-content",
+        "rationale": "A Pre-Submission must enumerate specific questions the sponsor wants FDA feedback on (e.g., predicate adequacy of PP3000, PCCP envelope acceptability, MFD scoping); this formal piece is required for any Q-Sub package and is not satisfied by the SAD.",
+        "_source_bundle": "01__architecture"
+      },
+      {
+        "obligation_id": "QSUB-MEETING-AGENDA",
+        "title": "Q-Sub Meeting Agenda",
+        "expected_role": "submission-content",
+        "rationale": "If a meeting is requested with FDA as part of the Q-Sub, a proposed agenda with attendees, timing, and discussion topics is a required formal package piece per FDA Q-Submission Program guidance.",
+        "_source_bundle": "01__architecture"
+      },
+      {
+        "obligation_id": "qsub-cover-letter",
+        "title": "Q-Sub Cover Letter",
+        "expected_role": "submissions",
+        "rationale": "Required for any Q-Sub package per FDA Q-Submission Program guidance; no clinical-batch file satisfies it and it must be authored as a phase-only artifact for QSub.",
+        "_source_bundle": "02__clinical"
+      },
+      {
+        "obligation_id": "qsub-presub-questions",
+        "title": "Pre-Submission Specific Questions for FDA",
+        "expected_role": "submissions",
+        "rationale": "FDA Q-Sub Program requires explicit, numbered questions to focus the meeting; no file in the clinical batch contains the PP3500 clinical-evidence questions for FDA (e.g., literature-only sufficiency vs. predicate PP3000).",
+        "_source_bundle": "02__clinical"
+      },
+      {
+        "obligation_id": "qsub-meeting-agenda",
+        "title": "Q-Sub Meeting Agenda",
+        "expected_role": "submissions",
+        "rationale": "FDA Q-Sub Program guidance requires a proposed agenda for the pre-submission meeting; not present in any clinical-batch file and must be drafted as a phase-only QSub artifact.",
+        "_source_bundle": "02__clinical"
+      },
+      {
+        "obligation_id": "QSUB-FORMAL-COVER",
+        "title": "Q-Sub Cover Letter",
+        "expected_role": "submission-formal",
+        "rationale": "FDA Q-Sub Program guidance requires a Cover Letter identifying the submission type, device, and sponsor for the PP3500 pre-submission package; not present in the labeling batch and must be sourced from a submission-formal artifact.",
+        "_source_bundle": "04__labeling"
+      },
+      {
+        "obligation_id": "QSUB-FORMAL-QUESTIONS",
+        "title": "Pre-Submission Questions",
+        "expected_role": "submission-formal",
+        "rationale": "Q-Sub packages must include the specific questions the sponsor wants FDA to answer (e.g., predicate adequacy of PP3000, PCCP envelope scope, criticality carve-out acceptance); no labeling artifact carries this content.",
+        "_source_bundle": "04__labeling"
+      },
+      {
+        "obligation_id": "QSUB-FORMAL-AGENDA",
+        "title": "Pre-Submission Meeting Agenda",
+        "expected_role": "submission-formal",
+        "rationale": "FDA Q-Sub guidance expects a proposed meeting agenda when an interactive meeting is requested; this is a formal package element not satisfied by any labeling file.",
+        "_source_bundle": "04__labeling"
+      },
+      {
+        "obligation_id": "trace-matrix-architecture-mapping",
+        "title": "Architecture \u2194 Design Input Mapping",
+        "expected_role": "trace-matrix",
+        "rationale": "Current trace summary reports architecture items with zero forward or reverse trace; without this mapping the QSub package cannot anchor an FDA conversation about how the SaMD / SiMD / hardware split implements the Ct*-tagged DIs.",
+        "_source_bundle": "11__trace-matrix"
+      }
+    ]
+  }
+}

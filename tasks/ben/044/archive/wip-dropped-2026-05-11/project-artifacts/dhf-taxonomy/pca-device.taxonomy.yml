@@ -1,0 +1,279 @@
+schema_version: '0.4'
+source_authority: project-layout
+description: Auto-scaffolded by /tracker init-taxonomy. Review the mappings below — files that the heuristic
+  scanner couldn't classify with high confidence are listed under `pending:` for manual triage. Folders
+  matching the numbered-series pattern that may warrant aggregation are flagged in `aggregation_candidates:`
+  — Tier 1 never auto-aggregates; run /tracker classify-folders for an LLM verdict, or hand-edit the mapping
+  to a folder-aggregate.
+discovery_root: .
+mappings:
+  postmarket/GL-SOP-PM-001-psur.md:
+    canonical_role: postmarket
+    title: Periodic Safety Update Report (PSUR) — pca-device
+    primary: true
+  postmarket/GL-TMP-PM-001-pms-plan.md:
+    canonical_role: postmarket
+    title: Post-Market Surveillance Plan (DHF copy) — pca-device
+  cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md:
+    canonical_role: cybersecurity
+    title: Vulnerability Management Plan — pca-device
+    primary: true
+  cybersecurity/GL-TMP-SW-002-threat-model.md:
+    canonical_role: cybersecurity
+    title: Threat Model — pca-device
+  cybersecurity/GL-WI-SW-002-sbom.md:
+    canonical_role: cybersecurity
+    title: Software Bill of Materials (SBOM) — pca-device
+  risk-management/GL-TMP-RM-002-risk-management-report.md:
+    canonical_role: risk-management
+    title: Risk Management Report — pca-device
+    primary: true
+  risk-management/GL-TMP-RM-003-hazard-analysis.md:
+    canonical_role: risk-management
+    title: Hazard Analysis — pca-device
+  risk-management/GL-TMP-RM-004-design-fmea.md:
+    canonical_role: risk-management
+    title: Design FMEA (dFMEA) — pca-device
+  risk-management/GL-TMP-RM-004-process-fmea.md:
+    canonical_role: risk-management
+    title: Process FMEA (pFMEA) — pca-device
+  risk-management/risk-strategy.md:
+    canonical_role: risk-management
+    title: Risk Strategy
+  design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md:
+    canonical_role: tool-validation
+    title: Tool Validation Record — pca-device
+  design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md:
+    canonical_role: plans
+    title: Design and Development Plan — pca-device
+    primary: true
+  design-controls/plans/GL-TMP-PM-001-pms-plan.md:
+    canonical_role: plans
+    title: Post-Market Surveillance Plan — pca-device
+  design-controls/plans/GL-TMP-SW-001-software-development-plan.md:
+    canonical_role: plans
+    title: Software Development Plan — pca-device
+  design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md:
+    canonical_role: plans
+    title: Cybersecurity Plan — pca-device
+  design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md:
+    canonical_role: plans
+    title: Clinical Evaluation Plan — pca-device
+  design-controls/plans/GL-TMP-RM-001-risk-management-plan.md:
+    canonical_role: risk-management
+    title: Risk Management Plan — pca-device
+  design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md:
+    canonical_role: trace-matrix
+    title: Trace Matrix Overview — pca-device
+    primary: true
+  design-controls/trace-matrix/trace-matrix.md:
+    canonical_role: trace-matrix
+    title: Trace Matrix
+  design-controls/trace-matrix/un-to-di-trace-matrix.md:
+    canonical_role: trace-matrix
+    title: Un To Di Trace Matrix
+  design-controls/labeling/GL-SOP-DC-004-ifu-and-labeling.md:
+    canonical_role: labeling
+    title: Instructions for Use and Labeling — pca-device
+  design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md:
+    canonical_role: vnv
+    title: Design Verification Protocol & Report — pca-device
+    primary: true
+  design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md:
+    canonical_role: vnv
+    title: Design Validation Protocol & Report — pca-device
+  design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md:
+    canonical_role: vnv
+    title: Summative Usability Evaluation Protocol & Report — pca-device
+  design-controls/vnv/testing-strategy.md:
+    canonical_role: vnv
+    title: Testing Strategy
+  design-controls/user-needs/GL-TMP-UC-001-use-specification.md:
+    canonical_role: user-needs
+    title: Use Specification — pca-device
+    primary: true
+  design-controls/user-needs/user-needs-register.md:
+    canonical_role: user-needs
+    title: User Needs Register — pca-device
+  design-controls/user-needs/user-needs.md:
+    canonical_role: user-needs
+    title: User Needs
+  design-controls/requirements/GL-TMP-DC-002-design-input-specification.md:
+    canonical_role: requirements
+    title: Design Input Specification — pca-device
+    primary: true
+  design-controls/requirements/design-inputs.md:
+    canonical_role: requirements
+    title: Design Inputs
+  design-controls/architecture/pca-device-system-sad.md:
+    canonical_role: architecture
+    title: Pca Device System Sad
+  design-controls/usability/GL-TMP-UC-002-usability-engineering-file.md:
+    canonical_role: usability
+    title: Usability Engineering File — pca-device
+  clinical/benefit-risk/:
+    canonical_role: clinical
+    aggregate: folder
+    primary_member: clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md
+    members:
+    - clinical/benefit-risk/BRA-1001.md
+    - clinical/benefit-risk/BRA-1002.md
+    - clinical/benefit-risk/BRA-1003.md
+    - clinical/benefit-risk/BRA-1004.md
+    - clinical/benefit-risk/BRA-1005.md
+    - clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md
+    confidence: high
+    rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `BRA` rolled up by
+      aggregator-named `GL-TMP-UC-005-clinical-evaluation-report.md`, all role `clinical`. Pattern: rows
+      of one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail
+      panel.'
+    title: Clinical Evaluation Report (CER) — pca-device
+  clinical/literature-search/:
+    canonical_role: clinical
+    aggregate: folder
+    primary_member: clinical/literature-search/GL-SOP-UC-002-literature-search-report.md
+    members:
+    - clinical/literature-search/GL-SOP-UC-002-literature-search-report.md
+    - clinical/literature-search/LSS-1001.md
+    - clinical/literature-search/LSS-1002.md
+    - clinical/literature-search/LSS-1003.md
+    - clinical/literature-search/LSS-1004.md
+    - clinical/literature-search/LSS-1005.md
+    confidence: high
+    rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `LSS` rolled up by
+      aggregator-named `GL-SOP-UC-002-literature-search-report.md`, all role `clinical`. Pattern: rows
+      of one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail
+      panel.'
+    title: Literature Search Report — pca-device
+  clinical/evaluation-plans/:
+    canonical_role: clinical
+    aggregate: folder
+    primary_member: clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md
+    members:
+    - clinical/evaluation-plans/CEP-1001.md
+    - clinical/evaluation-plans/CEP-1002.md
+    - clinical/evaluation-plans/CEP-1003.md
+    - clinical/evaluation-plans/CEP-1004.md
+    - clinical/evaluation-plans/CEP-1005.md
+    - clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md
+    confidence: high
+    rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `CEP` rolled up by
+      aggregator-named `GL-TMP-UC-004-clinical-evaluation-plan.md`, all role `clinical`. Pattern: rows
+      of one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail
+      panel.'
+    title: Clinical Evaluation Plan — pca-device
+  postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md:
+    canonical_role: postmarket
+    title: Complaint Intake Template (per device) — pca-device
+    primary: true
+  postmarket/complaints/complaints-ledger.md:
+    canonical_role: postmarket
+    title: Complaints Ledger — complaints-ledger
+  postmarket/pmcf-plans/:
+    canonical_role: postmarket
+    aggregate: folder
+    primary_member: postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md
+    members:
+    - postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md
+    - postmarket/pmcf-plans/PMCF-1001.md
+    - postmarket/pmcf-plans/PMCF-1002.md
+    - postmarket/pmcf-plans/PMCF-1003.md
+    - postmarket/pmcf-plans/PMCF-1004.md
+    - postmarket/pmcf-plans/PMCF-1005.md
+    confidence: high
+    rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `PMCF` rolled up
+      by aggregator-named `GL-SOP-UC-002-pmcf-plan-template.md`, all role `postmarket`. Pattern: rows
+      of one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail
+      panel.'
+    title: PMCF Plan Template — pca-device
+  postmarket/capa/CAPA-2023-001.md:
+    canonical_role: postmarket
+    title: Capa — CAPA-2023-001
+    primary: true
+  postmarket/capa/GL-FORM-QM-001-capa-form-template.md:
+    canonical_role: postmarket
+    title: CAPA Form (per device) — pca-device
+  postmarket/pmcf-studies/STUDY-0001.md:
+    canonical_role: postmarket
+    title: PMCF Study — STUDY-0001
+    primary: true
+  postmarket/pmcf-studies/STUDY-0003.md:
+    canonical_role: postmarket
+    title: PMCF Study — STUDY-0003
+  postmarket/pmcf-studies/STUDY-0005.md:
+    canonical_role: postmarket
+    title: PMCF Study — STUDY-0005
+  postmarket/pmcf-studies/STUDY-0007.md:
+    canonical_role: postmarket
+    title: PMCF Study — STUDY-0007
+  postmarket/pmcf-studies/STUDY-0009.md:
+    canonical_role: postmarket
+    title: PMCF Study — STUDY-0009
+pending:
+- path: design-controls/GL-FORM-DC-001-design-review-log.md
+  first_seen: '2026-05-05'
+- path: design-controls/pccp/pccp-predetermined-change-control-plan.md
+  first_seen: '2026-05-05'
+  candidate_roles:
+  - plans
+aggregation_candidates:
+- folder: clinical/benefit-risk
+  verdict_kind: aggregate
+  signals:
+    file_count: 6
+    single_role: true
+    record_count: 5
+    record_prefixes:
+    - BRA
+    aggregator_named_file: GL-TMP-UC-005-clinical-evaluation-report.md
+  rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `BRA` rolled up by
+    aggregator-named `GL-TMP-UC-005-clinical-evaluation-report.md`, all role `clinical`. Pattern: rows
+    of one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail panel.'
+- folder: clinical/literature-search
+  verdict_kind: aggregate
+  signals:
+    file_count: 6
+    single_role: true
+    record_count: 5
+    record_prefixes:
+    - LSS
+    aggregator_named_file: GL-SOP-UC-002-literature-search-report.md
+  rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `LSS` rolled up by
+    aggregator-named `GL-SOP-UC-002-literature-search-report.md`, all role `clinical`. Pattern: rows of
+    one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail panel.'
+- folder: clinical/evaluation-plans
+  verdict_kind: aggregate
+  signals:
+    file_count: 6
+    single_role: true
+    record_count: 5
+    record_prefixes:
+    - CEP
+    aggregator_named_file: GL-TMP-UC-004-clinical-evaluation-plan.md
+  rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `CEP` rolled up by
+    aggregator-named `GL-TMP-UC-004-clinical-evaluation-plan.md`, all role `clinical`. Pattern: rows of
+    one document. Primary deliverable = the aggregator; records are surfaced in the row''s detail panel.'
+- folder: postmarket/pmcf-plans
+  verdict_kind: aggregate
+  signals:
+    file_count: 6
+    single_role: true
+    record_count: 5
+    record_prefixes:
+    - PMCF
+    aggregator_named_file: GL-SOP-UC-002-pmcf-plan-template.md
+  rationale: 'Auto-aggregated (high confidence): 5 record-shaped file(s) in series `PMCF` rolled up by
+    aggregator-named `GL-SOP-UC-002-pmcf-plan-template.md`, all role `postmarket`. Pattern: rows of one
+    document. Primary deliverable = the aggregator; records are surfaced in the row''s detail panel.'
+- folder: postmarket/pmcf-studies
+  verdict_kind: independent
+  signals:
+    file_count: 5
+    single_role: true
+    record_count: 5
+    record_prefixes:
+    - STUDY
+    aggregator_named_file: null
+  rationale: 'Independent by default; aggregation-candidate flag set: 5 record-shaped files (`STUDY`),
+    all role `postmarket`, no aggregator-named summary in this folder. Aggregator may live in parent folder;
+    run /tracker classify-folders for an LLM verdict.'

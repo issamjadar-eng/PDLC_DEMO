@@ -1,0 +1,132 @@
+# taxonomy.yml schema — v0.3
+#
+# A `.taxonomy.yml` describes "for files under this root, what role does each
+# file play." Roots can be DHFs, predicate-analysis folders, submission folders,
+# strategy docs — anywhere with structured evidence.
+#
+# v0.3 is additive over Arthrex's v0.2 (no breaking changes). New top-level
+# fields: vocabulary_source, pending, broken_refs. Existing fields preserved.
+#
+# Per-mapping `unmapped:` retains v0.2 semantics (explicit non-evidence opt-out
+# with a category like informational/navigation/assets/metadata). DO NOT confuse
+# with top-level `pending:` (newly discovered files awaiting classification).
+#
+# Registration: a taxonomy file is bound to one or more roots via
+# `project.yml.taxonomies[]` or the legacy `dhfs[].taxonomy_path:` field.
+# The taxonomy file itself does NOT declare which roots it serves —
+# project.yml is the registry.
+
+schema_version: 0.4                     # Required. Bump when schema changes.
+
+# v0.4 (2026-05-05) — adds folder aggregation. New per-mapping fields:
+#   aggregate, primary_member, members, confidence, rationale.
+# Backward compat: defaults reproduce v0.3 behavior. v0.2/v0.3 files load
+# unchanged; emit one row per mapping (aggregate defaults to "none").
+
+# ─── Optional metadata ─────────────────────────────────────────────────────
+
+source_authority: <string>              # Optional. Where the structure comes
+                                        # from: confluence-product-overview,
+                                        # project-layout, manual, etc.
+
+description: |                          # Optional. Free-form rationale.
+  Human-readable description of what this taxonomy represents.
+
+discovery_root: <relative-path>         # Optional. Subfolder under root to walk.
+                                        # Default: "." (walk from root).
+
+# ─── Vocabulary grounding (NEW v0.3) ───────────────────────────────────────
+# Where canonical role names come from. The skill's default vocabulary is
+# the medtech-docs canonical set; projects can override via `inline`.
+
+vocabulary_source:                      # Optional. Defaults to medtech-docs.
+  kind: medtech-docs | inline | none    # Required when block present.
+  roles: [<role>, ...]                  # Required for kind=inline.
+
+# Default medtech-docs canonical roles (when vocabulary_source omitted):
+#   architecture, requirements, design, vnv, risk-management, cybersecurity,
+#   privacy, clinical, human-factors, postmarket, plans, user-needs,
+#   trace-matrix, tool-validation, sbom, labeling, usability
+
+# ─── Mappings (v0.2 schema preserved + v0.3 additions) ─────────────────────
+
+mappings:                               # Required. file/folder → role mapping.
+  <path-or-name>:
+    canonical_role: <role>              # Required unless `unmapped:` set.
+    subkind: <string>                   # Optional. Finer classification.
+    secondary_roles: [<role>, ...]      # Optional v0.2. Multi-role binding
+                                        #   (e.g., HTM is trace-matrix AND
+                                        #   risk-management).
+    primary: true|false                 # Optional v0.3. Disambiguator when
+                                        #   multiple files in same folder map
+                                        #   to the same role. Default false.
+                                        #   Exactly one primary per (role,
+                                        #   subkind) per folder is recommended.
+    enumerate: true|false               # Optional v0.3. When the path is a
+                                        #   folder: walk children and emit one
+                                        #   row per child. Default false.
+    aggregate: folder|none              # Optional v0.4. When the mapping key
+                                        #   is a folder (trailing slash): set
+                                        #   to `folder` to emit ONE row for
+                                        #   the collective deliverable instead
+                                        #   of per-member rows. Member files
+                                        #   are surfaced in the row's detail
+                                        #   panel. Default: none.
+    primary_member: <relative-path>     # Optional v0.4. When aggregate=folder:
+                                        #   path to the summarizing/aggregating
+                                        #   document within the folder (e.g.,
+                                        #   the clinical-evaluation-report.md
+                                        #   that summarizes BRA-1001..1005
+                                        #   instances). Used as the row's
+                                        #   path. If omitted, the folder path
+                                        #   itself becomes the row path.
+    members: [<relative-path>, ...]     # Optional v0.4. Auto-populated by
+                                        #   classifier; lists files contained
+                                        #   in the aggregate. Surfaced in
+                                        #   click-row expansion.
+    confidence: high|medium|low         # Optional v0.4. Classifier confidence
+                                        #   when aggregate decision was made
+                                        #   automatically. low entries belong
+                                        #   in pending: instead of mappings:.
+    rationale: <text>                   # Optional v0.4. Why the classifier
+                                        #   (heuristic or agent) chose this
+                                        #   aggregation. Reviewable.
+    unmapped: <category>                # Optional v0.2. Explicit non-evidence
+                                        #   opt-out. Categories in use:
+                                        #   informational, navigation, assets,
+                                        #   metadata. Mutually exclusive with
+                                        #   canonical_role.
+    note: <text>                        # Optional. Human-readable rationale.
+
+# ─── Pending classification (NEW v0.3) ─────────────────────────────────────
+# Files discovered on disk that the heuristic scanner couldn't classify with
+# high confidence. NOT silenced — surfaced here so reconcile re-finds them.
+# Resolution: user moves entry into `mappings:` (classify) or `excluded:`
+# (intentionally drop). Generator skips `pending:` rows; only mapped entries
+# become tracker rows.
+
+pending:                                # Optional v0.3. Empty/absent = clean.
+  - path: <relative-path>               # Required. Path under discovery_root.
+    first_seen: <iso-date>              # Required. When reconcile first found it.
+    candidate_roles: [<role>, ...]      # Optional. Heuristic-ranked guesses.
+    note: <text>                        # Optional.
+
+# ─── Broken references (NEW v0.3) ──────────────────────────────────────────
+# Paths in `mappings:` that no longer exist on disk. Surfaced by reconcile
+# without auto-removing — the user decides whether the file moved (update
+# the mapping path) or was deleted (remove the mapping).
+
+broken_refs:                            # Optional v0.3. Empty/absent = clean.
+  - path: <relative-path>
+    last_seen: <iso-date>
+    note: <text>
+
+# ─── Excluded (NEW v0.3) ───────────────────────────────────────────────────
+# Glob patterns the user explicitly opts out of discovery. Reconcile skips
+# matching files — they don't appear in pending: or as orphans. Use for
+# drafts, archives, generator-emitted artifacts.
+
+excluded:                               # Optional v0.3.
+  - "**/*.draft.md"
+  - "**/_archive/**"
+  - "**/.candidate.md"

@@ -1,11 +1,25 @@
 ---
 name: frontend-slides
-description: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.
+description: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files — for any domain (product launches, board materials, investor pitches, town-halls, conference talks, internal training, regulated-industry briefings). Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk / pitch / report. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.
+version: 0.4.0
+updated: 2026-05-02
 ---
 
 # Frontend Slides
 
 Create zero-dependency, animation-rich HTML presentations that run entirely in the browser.
+
+## Origin & Modifications
+
+This skill is a **fork** of the original [`frontend-slides`](https://github.com/zarazhangrui/frontend-slides) skill by **Zara Zhang** (Copyright © 2025), licensed under the MIT License. The original skill's full MIT terms are preserved verbatim in [`LICENSE`](LICENSE); the pinned upstream commit at fork time is recorded in [`.pinned-sha`](.pinned-sha).
+
+The fork is maintained by the medtech-docs registry contributors and is licensed under the same MIT terms (see the "Modifications" block in `LICENSE`). Notable changes from upstream:
+
+- **Cross-domain neutralization** — example READMEs and design-language references rotated across multiple domains (SaaS, finance, manufacturing, healthcare, education, …) so the skill teaches by pattern rather than by single-domain idiom
+- **Vocabulary-pack architecture in the sibling `md-deck` skill** — domain-specific keyword routing moved out of trunk into opt-in packs
+- **Registry integration** — added attribution surfaces, sync-skills compatibility, MIT modifications block
+
+Substantive improvements should flow back upstream where compatible; project-specific embellishments do not.
 
 ## Used by `md-deck` (sibling skill)
 

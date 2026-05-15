@@ -1,0 +1,3834 @@
+{
+  "version": "1.1",
+  "dhf": "cloud-suite",
+  "generated_at": "2026-05-12T19:12:53Z",
+  "layers": [
+    {
+      "key": "user_needs",
+      "title": "User Needs",
+      "id_prefix": "UN",
+      "source_files": [
+        "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md"
+      ],
+      "items": [
+        {
+          "id": "UN-001",
+          "summary": "Hospital staff using any Cloud Suite module must authenticate exclusively via the…",
+          "full_text": "Hospital staff using any Cloud Suite module must authenticate exclusively via the hospital's enterprise IdP (SAML 2.0 or OIDC); the platform must not provision local hospital user accounts.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": "Hospital CISO",
+          "priority": "High",
+          "source_ref": "Hospital CISO interview KOL-0014; ISO 27001 Annex A.9.2",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-001",
+              "summary": "The platform shall authenticate hospital end users exclusively via federation to a…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-002",
+          "summary": "A user authorized in Hospital A must under no circumstance be able to read, modify, or…",
+          "full_text": "A user authorized in Hospital A must under no circumstance be able to read, modify, or even enumerate data belonging to Hospital B, even via direct API calls or token replay.",
+          "category": "TENT",
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": "Hospital Administrator",
+          "priority": "High",
+          "source_ref": "Onboarding retrospective; ISO 27001 Annex A.9.4; HIPAA §164.312(a)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-002",
+              "summary": "Every authenticated API call shall be authorized against a tenant claim asserted by the…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-003",
+          "summary": "Hospital administrators must be able to define module-level role assignments (e.g., who…",
+          "full_text": "Hospital administrators must be able to define module-level role assignments (e.g., who can author drug libraries, who can view audit logs) without GlobalLogic involvement.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": "Hospital Administrator",
+          "priority": "Medium",
+          "source_ref": "Customer success retrospective; admin workflow analysis",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-003",
+              "summary": "Hospital administrators shall be able to manage per-module role assignments through a…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-004",
+          "summary": "Every GlobalLogic-internal service-to-service call must use short-lived (≤ 1 h) workload…",
+          "full_text": "Every GlobalLogic-internal service-to-service call must use short-lived (≤ 1 h) workload identity credentials; long-lived service-account secrets must not exist in the platform.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": "GlobalLogic Security",
+          "priority": "High",
+          "source_ref": "Internal security review; NIST SP 800-204 §4",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-004",
+              "summary": "Every internal service-to-service call shall use a short-lived workload-identity…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-005",
+          "summary": "Therapy events forwarded from a hospital's Connectivity Adapter must arrive in the Cloud…",
+          "full_text": "Therapy events forwarded from a hospital's Connectivity Adapter must arrive in the Cloud Suite labeled with the originating hospital tenant and must be routable only to that tenant's storage and modules.",
+          "category": "TENT",
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": "Hospital IT, Pharmacist",
+          "priority": "High",
+          "source_ref": "Connectivity Adapter SAD §6; onboarding retrospective",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-005",
+              "summary": "Every ingested event from a hospital's Connectivity Adapter shall carry a hospital tenant…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-006",
+          "summary": "A Cloud Suite ingestion outage of up to 4 hours must not cause permanent loss of…",
+          "full_text": "A Cloud Suite ingestion outage of up to 4 hours must not cause permanent loss of pump-originated events — events buffered at the Connectivity Adapter must be acceptable to the Cloud Suite upon recovery.",
+          "category": "RELY",
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": "Hospital IT",
+          "priority": "High",
+          "source_ref": "Operational SLA negotiation; CAPA-2023-001 evidentiary requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-006",
+              "summary": "The platform shall accept buffered event submissions from the Connectivity Adapter…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-007",
+          "summary": "The platform must provide per-tenant ingestion back-pressure so a single hospital…",
+          "full_text": "The platform must provide per-tenant ingestion back-pressure so a single hospital generating an unexpected event burst cannot degrade ingestion latency for other hospitals.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": "GlobalLogic Operations",
+          "priority": "Medium",
+          "source_ref": "Multi-tenant SaaS design retrospective; load-test learnings",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-007",
+              "summary": "The ingestion path shall enforce per-tenant back-pressure such that no single hospital's…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-008",
+          "summary": "EU customers' PHI must remain in EU-based infrastructure (storage, compute, backup, log…",
+          "full_text": "EU customers' PHI must remain in EU-based infrastructure (storage, compute, backup, log replicas) end-to-end; no cross-region replication into US regions for EU-tenant data.",
+          "category": "PRIV",
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": "Hospital DPO, EU Customer",
+          "priority": "High",
+          "source_ref": "GDPR Art. 44–49 (data transfer); EU customer procurement requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-008",
+              "summary": "For tenants designated as \"EU residency\", the platform shall store, process, back up, and…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-009",
+          "summary": "All persistent storage of PHI and authentication artifacts must be encrypted at rest with…",
+          "full_text": "All persistent storage of PHI and authentication artifacts must be encrypted at rest with hospital-rotatable keys (BYOK or HYOK), and the platform must support per-tenant key rotation without operational disruption.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": "Hospital CISO",
+          "priority": "High",
+          "source_ref": "Hospital CISO procurement requirement; NIST SP 800-57",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-009",
+              "summary": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-010",
+          "summary": "A hospital must be able to request restoration of its own tenant data to a point-in-time…",
+          "full_text": "A hospital must be able to request restoration of its own tenant data to a point-in-time within the past 35 days, and the platform must complete the restore in ≤ 24 hours.",
+          "category": "RELY",
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": "Hospital Administrator",
+          "priority": "Medium",
+          "source_ref": "Operational SLA negotiation; HIPAA contingency plan §164.308(a)(7)",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-010",
+              "summary": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-011",
+          "summary": "Every read, write, and administrative action against a hospital's data must produce a…",
+          "full_text": "Every read, write, and administrative action against a hospital's data must produce a tamper-evident audit log entry retained for ≥ 7 years and accessible to the hospital for forensic review.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": "Hospital CISO",
+          "priority": "High",
+          "source_ref": "HIPAA §164.312(b); hospital CISO procurement requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-011",
+              "summary": "Every read, write, and administrative API action against a hospital's data shall produce…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-012",
+          "summary": "Hospitals must be able to stream their tenant's audit log to their own SIEM in near-real…",
+          "full_text": "Hospitals must be able to stream their tenant's audit log to their own SIEM in near-real time (p95 latency ≤ 5 min) without GlobalLogic-side filtering or summarization.",
+          "category": "CYBR",
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": "Hospital CISO",
+          "priority": "Medium",
+          "source_ref": "Hospital CISO interview KOL-0014; SOC integration requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-012",
+              "summary": "Hospitals shall be able to stream their tenant's audit log to a customer-configured…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-013",
+          "summary": "Each module on the platform must emit structured telemetry (request rate, error rate,…",
+          "full_text": "Each module on the platform must emit structured telemetry (request rate, error rate, latency percentiles, business KPIs) to a shared observability stack so operations can detect and triage cross-module incidents.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": "GlobalLogic Operations, Module Owner",
+          "priority": "Medium",
+          "source_ref": "Internal SRE practice; on-call retrospective",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-013",
+              "summary": "Each module shall emit a standard telemetry envelope (request rate, error rate,…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-014",
+          "summary": "The Cloud Suite must achieve ≥ 99.9% monthly availability for read-paths used by clinical…",
+          "full_text": "The Cloud Suite must achieve ≥ 99.9% monthly availability for read-paths used by clinical workflows (drug-library distribution, alarm review, dashboard read) and ≥ 99.5% for write-paths.",
+          "category": "RELY",
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": "Hospital Administrator, Pharmacist",
+          "priority": "High",
+          "source_ref": "Operational SLA negotiation; commercial commitments",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-014",
+              "summary": "The platform shall achieve a measured monthly availability of ≥ 99.9% for…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-015",
+          "summary": "A complete loss of the primary cloud region must not result in customer data loss beyond…",
+          "full_text": "A complete loss of the primary cloud region must not result in customer data loss beyond a 15-minute RPO and must be recoverable within an 8-hour RTO, with regional failover exercised on a documented cadence.",
+          "category": "RELY",
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": "Hospital Administrator",
+          "priority": "High",
+          "source_ref": "Operational continuity plan; HIPAA §164.308(a)(7); HITRUST CSF",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-015",
+              "summary": "The platform shall sustain a complete loss of any single cloud region with RPO ≤ 15 min…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-016",
+          "summary": "The platform must continuously validate its failover and recovery paths via scheduled…",
+          "full_text": "The platform must continuously validate its failover and recovery paths via scheduled chaos exercises (≥ quarterly) so disaster-recovery readiness does not silently regress between real incidents.",
+          "category": "RELY",
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": "GlobalLogic Operations",
+          "priority": "Medium",
+          "source_ref": "Internal SRE chaos engineering practice",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-016",
+              "summary": "The platform shall execute a chaos exercise covering at least one failure class (region…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-017",
+          "summary": "Every module on the platform must inherit a shared change-control workflow (design…",
+          "full_text": "Every module on the platform must inherit a shared change-control workflow (design change, risk assessment, V&V trace, release approval) so design controls (21 CFR 820.30 / ISO 13485 §7.3) hold consistently across the portfolio.",
+          "category": "REGU",
+          "criticality": null,
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": "Regulatory Affairs, QA",
+          "priority": "High",
+          "source_ref": "QMS shared-strategy brief; ISO 13485 §7.3.9",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-017",
+              "summary": "Every change to any module's production deployment shall pass through a shared…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-018",
+          "summary": "Every released module version must publish a versioned SBOM (CycloneDX or SPDX)…",
+          "full_text": "Every released module version must publish a versioned SBOM (CycloneDX or SPDX) accessible to hospital security teams and to FDA submissions without per-customer NDAs.",
+          "category": "REGU",
+          "criticality": null,
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": "Hospital CISO, Regulatory Affairs",
+          "priority": "High",
+          "source_ref": "FDA cyber pre-market guidance §VIII; hospital procurement; cross-module strategy",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-018",
+              "summary": "Every released module version shall publish a versioned SBOM (CycloneDX 1.4 or SPDX 2.3)…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-019",
+          "summary": "The platform must support staged, per-tenant rollout of module updates (canary → small…",
+          "full_text": "The platform must support staged, per-tenant rollout of module updates (canary → small cohort → broad) with operator-controlled pause / rollback, so a defective release cannot reach the full customer base before detection.",
+          "category": "OPS",
+          "criticality": null,
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": "GlobalLogic Operations",
+          "priority": "High",
+          "source_ref": "SRE rollout practice; CAPA-2024-007 lesson",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-019",
+              "summary": "Module releases shall use a staged rollout pipeline (canary cohort ≤ 5% → small cohort ≤…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-020",
+          "summary": "The platform must support fulfillment of GDPR Art. 15 (right of access), Art. 16…",
+          "full_text": "The platform must support fulfillment of GDPR Art. 15 (right of access), Art. 16 (rectification), and Art. 17 (erasure) requests on a per-data-subject basis within statutory timelines (1 month default, extendable to 3).",
+          "category": "PRIV",
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": "Hospital DPO, EU Customer",
+          "priority": "High",
+          "source_ref": "GDPR Arts. 15–17; EU customer procurement requirement",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-020",
+              "summary": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access),…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-021",
+          "summary": "The platform must enforce per-tenant configurable retention policies for PHI and audit…",
+          "full_text": "The platform must enforce per-tenant configurable retention policies for PHI and audit logs (default: 7 years per HIPAA, customer-extendable) and must purge data deterministically at end-of-retention with cryptographic evidence of purge.",
+          "category": "PRIV",
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": "Hospital DPO",
+          "priority": "Medium",
+          "source_ref": "HIPAA §164.530(j); GDPR Art. 5(1)(e); customer retention policy variability",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-021",
+              "summary": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default…"
+            }
+          ],
+          "traces_reverse": []
+        },
+        {
+          "id": "UN-022",
+          "summary": "The platform must minimize PHI in non-production environments — production data must not…",
+          "full_text": "The platform must minimize PHI in non-production environments — production data must not appear in development, staging, or analytic sandbox environments without explicit data-subject-level controls.",
+          "category": "PRIV",
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": "Hospital DPO, GlobalLogic Privacy",
+          "priority": "Medium",
+          "source_ref": "GDPR Art. 25 (data minimization); internal privacy engineering policy",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "DI-022",
+              "summary": "Non-production environments (development, staging, analytic sandbox) shall not contain…"
+            }
+          ],
+          "traces_reverse": []
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "design_inputs",
+      "title": "Design Inputs",
+      "id_prefix": "DI",
+      "source_files": [
+        "docs/project/dhfs/cloud-suite/design-controls/requirements/design-inputs.md"
+      ],
+      "items": [
+        {
+          "id": "DI-001",
+          "summary": "The platform shall authenticate hospital end users exclusively via federation to a…",
+          "full_text": "The platform shall authenticate hospital end users exclusively via federation to a hospital-configured IdP (SAML 2.0 or OIDC) and shall provision no platform-local interactive end-user accounts.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Code review: no local-account creation code path is reachable in shipped build. Penetration test: attempt to create or use a local interactive account; verify rejection.",
+          "verification_method": "Security test (VER-CLOUD-ST-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-001",
+              "summary": "The federated authentication module shall authenticate hospital end users exclusively via…"
+            },
+            {
+              "id": "VER-CLOUD-ST-001",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-001",
+              "summary": "Hospital staff using any Cloud Suite module must authenticate exclusively via the…"
+            }
+          ]
+        },
+        {
+          "id": "DI-002",
+          "summary": "Every authenticated API call shall be authorized against a tenant claim asserted by the…",
+          "full_text": "Every authenticated API call shall be authorized against a tenant claim asserted by the federated IdP, and shall be rejected unless the requested resource belongs to that tenant. Cross-tenant resource enumeration shall not be possible at any API.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Penetration test: with Hospital A credentials, attempt 100+ tenant-crossing operations against Hospital B resources (read, write, list); verify 0 succeed.",
+          "verification_method": "Security test (VER-CLOUD-ST-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-002",
+              "summary": "The tenant-claim authorization middleware shall validate the tenant claim on every…"
+            },
+            {
+              "id": "SW-024",
+              "summary": "The cross-tenant probe harness shall run a continuous-integration security test that…"
+            },
+            {
+              "id": "VER-CLOUD-ST-002",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-002",
+              "summary": "A user authorized in Hospital A must under no circumstance be able to read, modify, or…"
+            }
+          ]
+        },
+        {
+          "id": "DI-003",
+          "summary": "Hospital administrators shall be able to manage per-module role assignments through a…",
+          "full_text": "Hospital administrators shall be able to manage per-module role assignments through a self-service admin interface without GlobalLogic-side ticketing, with changes effective in ≤ 5 minutes.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: as a hospital admin, assign / revoke a module role to a user; measure time to effect; verify audit log entry.",
+          "verification_method": "Integration test (VER-CLOUD-IT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-003",
+              "summary": "The self-service role-management UI + API shall allow hospital admins to assign / revoke…"
+            },
+            {
+              "id": "VER-CLOUD-IT-001",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-003",
+              "summary": "Hospital administrators must be able to define module-level role assignments (e.g., who…"
+            }
+          ]
+        },
+        {
+          "id": "DI-004",
+          "summary": "Every internal service-to-service call shall use a short-lived workload-identity…",
+          "full_text": "Every internal service-to-service call shall use a short-lived workload-identity credential (≤ 1 hour TTL) issued by the platform's workload-identity service; long-lived service-account secrets shall not exist in the platform deployment manifest or secret store.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Static scan: deployment manifests, secret-store inventory, and codebase grepped for long-lived credential patterns; verify 0 hits.",
+          "verification_method": "Security audit (VER-CLOUD-SA-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-004",
+              "summary": "The workload-identity issuer shall mint short-lived (≤1 hour TTL) credentials for every…"
+            },
+            {
+              "id": "SW-025",
+              "summary": "The workload-credential rotation watcher shall scan active workload credentials, alert on…"
+            },
+            {
+              "id": "VER-CLOUD-SA-001",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-004",
+              "summary": "Every GlobalLogic-internal service-to-service call must use short-lived (≤ 1 h) workload…"
+            }
+          ]
+        },
+        {
+          "id": "DI-005",
+          "summary": "Every ingested event from a hospital's Connectivity Adapter shall carry a hospital tenant…",
+          "full_text": "Every ingested event from a hospital's Connectivity Adapter shall carry a hospital tenant identifier validated by mutual-TLS client-certificate identity; events with missing, malformed, or untrusted tenant claims shall be rejected and the rejection logged.",
+          "category": "FUNC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: submit events with (a) valid tenant cert, (b) revoked cert, (c) cert claiming a different tenant; verify only (a) succeeds; audit log entries for refusals.",
+          "verification_method": "Security test (VER-CLOUD-ST-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-005",
+              "summary": "The ingestion mTLS endpoint shall validate the Connectivity Adapter's tenant identity via…"
+            },
+            {
+              "id": "VER-CLOUD-ST-003",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-005",
+              "summary": "Therapy events forwarded from a hospital's Connectivity Adapter must arrive in the Cloud…"
+            }
+          ]
+        },
+        {
+          "id": "DI-006",
+          "summary": "The platform shall accept buffered event submissions from the Connectivity Adapter…",
+          "full_text": "The platform shall accept buffered event submissions from the Connectivity Adapter spanning up to 4 hours of pump activity per hospital without rejection or loss, and shall deduplicate replayed events idempotently by their pump-assigned event ID.",
+          "category": "RELY",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak: Connectivity Adapter simulator buffers 4 h of telemetry for a 500-pump fleet then drains; verify zero unique events lost; verify zero duplicates persisted.",
+          "verification_method": "Integration test (VER-CLOUD-IT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-006",
+              "summary": "The idempotent event-store shall accept buffered submissions spanning up to 4 hours of…"
+            },
+            {
+              "id": "VER-CLOUD-IT-002",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-006",
+              "summary": "A Cloud Suite ingestion outage of up to 4 hours must not cause permanent loss of…"
+            }
+          ]
+        },
+        {
+          "id": "DI-007",
+          "summary": "The ingestion path shall enforce per-tenant back-pressure such that no single hospital's…",
+          "full_text": "The ingestion path shall enforce per-tenant back-pressure such that no single hospital's event burst can cause cross-tenant ingestion p95 latency to exceed 1 second sustained.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Burst test: drive a single hospital to 10× steady-state rate; measure other-hospital p95 latency; verify ≤ 1 s sustained.",
+          "verification_method": "Performance test (VER-CLOUD-PT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-007",
+              "summary": "The per-tenant token-bucket back-pressure controller shall isolate ingestion rate per…"
+            },
+            {
+              "id": "VER-CLOUD-PT-001",
+              "summary": "Performance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-007",
+              "summary": "The platform must provide per-tenant ingestion back-pressure so a single hospital…"
+            }
+          ]
+        },
+        {
+          "id": "DI-008",
+          "summary": "For tenants designated as \"EU residency\", the platform shall store, process, back up, and…",
+          "full_text": "For tenants designated as \"EU residency\", the platform shall store, process, back up, and replicate PHI exclusively within EU-based infrastructure regions (default eu-west-1); cross-region replication into non-EU regions shall be technically blocked, not just policy-controlled.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Infrastructure-as-code review: confirm replication topology for EU tenants does not include non-EU regions. Penetration test: attempt to read EU-tenant PHI from non-EU region buckets; verify access-denied at the storage layer.",
+          "verification_method": "Security audit (VER-CLOUD-SA-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-008",
+              "summary": "The EU-residency replication enforcer shall confine storage, processing, backup, and…"
+            },
+            {
+              "id": "VER-CLOUD-SA-002",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-008",
+              "summary": "EU customers' PHI must remain in EU-based infrastructure (storage, compute, backup, log…"
+            }
+          ]
+        },
+        {
+          "id": "DI-009",
+          "summary": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest…",
+          "full_text": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest using AES-256-GCM with hospital-rotatable keys (BYOK via KMS), with per-tenant key rotation completing in ≤ 24 h with no operational disruption.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: trigger BYOK rotation on a test tenant; measure completion time; verify reads / writes continue uninterrupted.",
+          "verification_method": "Integration test (VER-CLOUD-IT-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-009",
+              "summary": "The encryption layer shall encrypt all persistent PHI and authentication artifacts with…"
+            },
+            {
+              "id": "SW-029",
+              "summary": "The key-rotation operator dashboard shall surface per-tenant BYOK rotation state (last…"
+            },
+            {
+              "id": "VER-CLOUD-IT-003",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-009",
+              "summary": "All persistent storage of PHI and authentication artifacts must be encrypted at rest with…"
+            }
+          ]
+        },
+        {
+          "id": "DI-010",
+          "summary": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any…",
+          "full_text": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any timestamp within the prior 35 days, completing the restore in ≤ 24 h with the restored data isolated from other tenants.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Disaster recovery rehearsal: perform a PITR for a synthetic tenant at a random T within the 35-day window; measure restore time; verify isolation.",
+          "verification_method": "DR test (VER-CLOUD-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-010",
+              "summary": "The point-in-time restore service shall restore a single tenant's PHI dataset to any…"
+            },
+            {
+              "id": "SW-026",
+              "summary": "The tenant-scoped backup/restore CLI + admin UI shall expose backup-status, list…"
+            },
+            {
+              "id": "VER-CLOUD-DR-001",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-010",
+              "summary": "A hospital must be able to request restoration of its own tenant data to a point-in-time…"
+            }
+          ]
+        },
+        {
+          "id": "DI-011",
+          "summary": "Every read, write, and administrative API action against a hospital's data shall produce…",
+          "full_text": "Every read, write, and administrative API action against a hospital's data shall produce a tamper-evident audit log entry (append-only with hash-chain integrity), retained for at least 7 years, and accessible to that hospital via a forensic-query API.",
+          "category": "SEC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Generate 1M events; verify hash-chain integrity intact; attempt log mutation; verify detection.",
+          "verification_method": "Security test (VER-CLOUD-ST-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-011",
+              "summary": "The audit-log writer shall append every read, write, and admin API action to a…"
+            },
+            {
+              "id": "SW-023",
+              "summary": "The forensic audit-query API shall allow hospital DPOs to query their tenant's audit log…"
+            },
+            {
+              "id": "VER-CLOUD-ST-004",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-011",
+              "summary": "Every read, write, and administrative action against a hospital's data must produce a…"
+            }
+          ]
+        },
+        {
+          "id": "DI-012",
+          "summary": "Hospitals shall be able to stream their tenant's audit log to a customer-configured…",
+          "full_text": "Hospitals shall be able to stream their tenant's audit log to a customer-configured destination (syslog-TLS, Kafka, S3 sink) with p95 emission latency ≤ 5 minutes from event occurrence to customer-side receipt.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: configure each destination type; trigger representative events; measure customer-side receipt timestamp; verify p95 ≤ 5 min.",
+          "verification_method": "Integration test (VER-CLOUD-IT-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-012",
+              "summary": "The customer audit-log streaming sink layer shall deliver each tenant's audit log to a…"
+            },
+            {
+              "id": "SW-027",
+              "summary": "The SIEM integration manager shall expose a per-tenant configuration interface for…"
+            },
+            {
+              "id": "VER-CLOUD-IT-004",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-012",
+              "summary": "Hospitals must be able to stream their tenant's audit log to their own SIEM in near-real…"
+            }
+          ]
+        },
+        {
+          "id": "DI-013",
+          "summary": "Each module shall emit a standard telemetry envelope (request rate, error rate,…",
+          "full_text": "Each module shall emit a standard telemetry envelope (request rate, error rate, p50/p95/p99 latency, business KPIs) to the shared observability stack; modules that do not emit conformant telemetry shall fail release-readiness gating.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspect each module's release pipeline: telemetry-schema conformance check is mandatory; verify a non-conformant build is blocked.",
+          "verification_method": "Process verification (VER-CLOUD-PV-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-013",
+              "summary": "The telemetry envelope schema + release-gate validator shall require every module's…"
+            },
+            {
+              "id": "SW-028",
+              "summary": "The telemetry-conformance linter shall run at CI time against each module's…"
+            },
+            {
+              "id": "VER-CLOUD-PV-001",
+              "summary": "Process verification"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-013",
+              "summary": "Each module on the platform must emit structured telemetry (request rate, error rate,…"
+            }
+          ]
+        },
+        {
+          "id": "DI-014",
+          "summary": "The platform shall achieve a measured monthly availability of ≥ 99.9% for…",
+          "full_text": "The platform shall achieve a measured monthly availability of ≥ 99.9% for clinical-workflow read APIs and ≥ 99.5% for write APIs, computed by external blackbox probes.",
+          "category": "RELY",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Quarterly SLA report: aggregate measured availability per API class; verify thresholds met.",
+          "verification_method": "Operational measurement (VER-CLOUD-OM-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-014",
+              "summary": "The blackbox SLA-probe collector shall measure external availability of clinical-workflow…"
+            },
+            {
+              "id": "VER-CLOUD-OM-001",
+              "summary": "Operational measurement"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-014",
+              "summary": "The Cloud Suite must achieve ≥ 99.9% monthly availability for read-paths used by clinical…"
+            }
+          ]
+        },
+        {
+          "id": "DI-015",
+          "summary": "The platform shall sustain a complete loss of any single cloud region with RPO ≤ 15 min…",
+          "full_text": "The platform shall sustain a complete loss of any single cloud region with RPO ≤ 15 min and RTO ≤ 8 h for the failed region's tenants, demonstrated via a documented regional-failover runbook.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "DR exercise: simulate primary-region loss; measure RPO (data delta) and RTO (time to customer-visible restoration); verify within targets.",
+          "verification_method": "DR test (VER-CLOUD-DR-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-015",
+              "summary": "The regional-failover automation shall execute a documented runbook on primary-region…"
+            },
+            {
+              "id": "VER-CLOUD-DR-002",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-015",
+              "summary": "A complete loss of the primary cloud region must not result in customer data loss beyond…"
+            }
+          ]
+        },
+        {
+          "id": "DI-016",
+          "summary": "The platform shall execute a chaos exercise covering at least one failure class (region…",
+          "full_text": "The platform shall execute a chaos exercise covering at least one failure class (region loss, dependency outage, certificate expiry, identity provider outage) on at least a quarterly cadence, with documented outcomes and follow-up actions.",
+          "category": "RELY",
+          "criticality": "Supporting",
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Chaos exercise log: ≥ 4 exercises per calendar year; each with documented hypothesis, outcome, and CAPA where applicable.",
+          "verification_method": "Process verification (VER-CLOUD-PV-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-016",
+              "summary": "The chaos exercise harness shall execute one chaos exercise per quarter across at least…"
+            },
+            {
+              "id": "VER-CLOUD-PV-002",
+              "summary": "Process verification"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-016",
+              "summary": "The platform must continuously validate its failover and recovery paths via scheduled…"
+            }
+          ]
+        },
+        {
+          "id": "DI-017",
+          "summary": "Every change to any module's production deployment shall pass through a shared…",
+          "full_text": "Every change to any module's production deployment shall pass through a shared change-control workflow that records design change, risk-assessment delta, V&V trace, and release approval, retrievable per release.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Process audit: sample 30 releases across modules; verify each has the four required artifacts attached.",
+          "verification_method": "Process audit (VER-CLOUD-PA-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-017",
+              "summary": "The change-control workflow integration shall require every production module release to…"
+            },
+            {
+              "id": "VER-CLOUD-PA-001",
+              "summary": "Process audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-017",
+              "summary": "Every module on the platform must inherit a shared change-control workflow (design…"
+            }
+          ]
+        },
+        {
+          "id": "DI-018",
+          "summary": "Every released module version shall publish a versioned SBOM (CycloneDX 1.4 or SPDX 2.3)…",
+          "full_text": "Every released module version shall publish a versioned SBOM (CycloneDX 1.4 or SPDX 2.3) accessible without per-customer NDA from a documented GlobalLogic public URL pattern.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Release artifact review: pick latest 10 module releases; verify SBOM file present, valid schema, fetchable from public URL.",
+          "verification_method": "Document review (VER-CLOUD-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-018",
+              "summary": "The SBOM release publisher shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for every…"
+            },
+            {
+              "id": "VER-CLOUD-DR-001",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-018",
+              "summary": "Every released module version must publish a versioned SBOM (CycloneDX or SPDX)…"
+            }
+          ]
+        },
+        {
+          "id": "DI-019",
+          "summary": "Module releases shall use a staged rollout pipeline (canary cohort ≤ 5% → small cohort ≤…",
+          "full_text": "Module releases shall use a staged rollout pipeline (canary cohort ≤ 5% → small cohort ≤ 25% → broad) with operator-controlled pause and rollback at each stage, and with health gates that auto-pause on anomaly detection.",
+          "category": "FUNC",
+          "criticality": "CtS",
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Release rehearsal: trigger a rollout with deliberately injected anomaly; verify auto-pause; verify operator-initiated rollback.",
+          "verification_method": "Integration test (VER-CLOUD-IT-005)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-019",
+              "summary": "The staged-rollout pipeline shall execute canary (≤5%) → small (≤25%) → broad sequencing…"
+            },
+            {
+              "id": "VER-CLOUD-IT-005",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-019",
+              "summary": "The platform must support staged, per-tenant rollout of module updates (canary → small…"
+            }
+          ]
+        },
+        {
+          "id": "DI-020",
+          "summary": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access),…",
+          "full_text": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access), Art. 16 (rectification), and Art. 17 (erasure) operations on a per-data-subject basis, executable by a hospital DPO under their tenant scope, with statutory-timeline tracking and audit trail.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: against a test tenant, execute access, rectification, and erasure for a synthetic data subject; measure end-to-end time; verify audit-trail entries.",
+          "verification_method": "Integration test (VER-CLOUD-IT-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-020",
+              "summary": "The data-subject-rights (DSR) API shall support GDPR Art. 15 (access), Art. 16…"
+            },
+            {
+              "id": "SW-023",
+              "summary": "The forensic audit-query API shall allow hospital DPOs to query their tenant's audit log…"
+            },
+            {
+              "id": "VER-CLOUD-IT-006",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-020",
+              "summary": "The platform must support fulfillment of GDPR Art. 15 (right of access), Art. 16…"
+            }
+          ]
+        },
+        {
+          "id": "DI-021",
+          "summary": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default…",
+          "full_text": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default 7 years; customer-extendable; minimum 6 years for HIPAA-covered records), and shall purge end-of-retention data deterministically with cryptographic evidence of purge.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Synthetic record at past EOL boundary: trigger purge; verify storage / index / backup all purged; verify cryptographic evidence record retained.",
+          "verification_method": "Integration test (VER-CLOUD-IT-007)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-021",
+              "summary": "The per-tenant retention manager shall enforce retention policies (default 7 years;…"
+            },
+            {
+              "id": "SW-030",
+              "summary": "The retention-policy editor UI shall allow tenant DPOs to set per-record-class retention…"
+            },
+            {
+              "id": "VER-CLOUD-IT-007",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-021",
+              "summary": "The platform must enforce per-tenant configurable retention policies for PHI and audit…"
+            }
+          ]
+        },
+        {
+          "id": "DI-022",
+          "summary": "Non-production environments (development, staging, analytic sandbox) shall not contain…",
+          "full_text": "Non-production environments (development, staging, analytic sandbox) shall not contain production PHI; any test data derived from production shall be cryptographically de-identified prior to environment crossover, and the de-identification gate shall be enforced at the data-pipeline layer.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Data-pipeline audit: verify de-identification gate active; sample non-production datasets; scan for direct PHI identifiers; verify 0 hits.",
+          "verification_method": "Security audit (VER-CLOUD-SA-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "SW-022",
+              "summary": "The non-production de-identification gate shall block any production-derived dataset from…"
+            },
+            {
+              "id": "VER-CLOUD-SA-003",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "UN-022",
+              "summary": "The platform must minimize PHI in non-production environments — production data must not…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "software",
+      "title": "SW Reqs",
+      "id_prefix": "SW",
+      "source_files": [
+        "docs/project/dhfs/cloud-suite/design-controls/requirements/software-requirements.md"
+      ],
+      "items": [
+        {
+          "id": "SW-001",
+          "summary": "The federated authentication module shall authenticate hospital end users exclusively via…",
+          "full_text": "The federated authentication module shall authenticate hospital end users exclusively via SAML 2.0 or OIDC against a hospital-configured IdP and shall provision no platform-local interactive end-user accounts.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Code review: no local-account creation code path reachable in shipped build. Penetration test: attempt local-account use; verify rejection.",
+          "verification_method": "Security test (VER-CLOUD-ST-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-ST-001",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The platform shall authenticate hospital end users exclusively via federation to a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-002",
+          "summary": "The tenant-claim authorization middleware shall validate the tenant claim on every…",
+          "full_text": "The tenant-claim authorization middleware shall validate the tenant claim on every authenticated API call against the requested resource's tenant ownership, rejecting any cross-tenant access regardless of role.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Penetration test: with Hospital A credentials, attempt 100+ cross-tenant operations against Hospital B; verify 0 succeed.",
+          "verification_method": "Security test (VER-CLOUD-ST-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-ST-002",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "Every authenticated API call shall be authorized against a tenant claim asserted by the…"
+            }
+          ]
+        },
+        {
+          "id": "SW-003",
+          "summary": "The self-service role-management UI + API shall allow hospital admins to assign / revoke…",
+          "full_text": "The self-service role-management UI + API shall allow hospital admins to assign / revoke per-module roles for users in their tenant, with changes effective in ≤5 minutes and recorded in the audit log.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: as a hospital admin, assign / revoke a module role; measure time to effect; verify audit entries.",
+          "verification_method": "Integration test (VER-CLOUD-IT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-001",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "Hospital administrators shall be able to manage per-module role assignments through a…"
+            }
+          ]
+        },
+        {
+          "id": "SW-004",
+          "summary": "The workload-identity issuer shall mint short-lived (≤1 hour TTL) credentials for every…",
+          "full_text": "The workload-identity issuer shall mint short-lived (≤1 hour TTL) credentials for every internal service-to-service call, with no long-lived service-account secrets present in deployment manifests or secret stores.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Static scan: grep manifests, secret-store inventory, codebase for long-lived credential patterns; verify 0 hits.",
+          "verification_method": "Security audit (VER-CLOUD-SA-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-SA-001",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "Every internal service-to-service call shall use a short-lived workload-identity…"
+            }
+          ]
+        },
+        {
+          "id": "SW-024",
+          "summary": "The cross-tenant probe harness shall run a continuous-integration security test that…",
+          "full_text": "The cross-tenant probe harness shall run a continuous-integration security test that attempts 100+ cross-tenant enumeration operations against a synthetic two-tenant environment, failing the build on any successful crossover.",
+          "category": "SEC",
+          "criticality": "CtF",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "CI run on every commit; verify probe executes and that injected vulnerabilities fail the build.",
+          "verification_method": "Security test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "Every authenticated API call shall be authorized against a tenant claim asserted by the…"
+            }
+          ]
+        },
+        {
+          "id": "SW-025",
+          "summary": "The workload-credential rotation watcher shall scan active workload credentials, alert on…",
+          "full_text": "The workload-credential rotation watcher shall scan active workload credentials, alert on any credential within 5 minutes of expiry that has not been rotated, and surface stale credentials on the operations dashboard.",
+          "category": "SEC",
+          "criticality": "CtF",
+          "group": "P1",
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: seed credentials at -1 / 0 / 5 / 60 min expiry; verify alerting behavior.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "Every internal service-to-service call shall use a short-lived workload-identity…"
+            }
+          ]
+        },
+        {
+          "id": "SW-005",
+          "summary": "The ingestion mTLS endpoint shall validate the Connectivity Adapter's tenant identity via…",
+          "full_text": "The ingestion mTLS endpoint shall validate the Connectivity Adapter's tenant identity via X.509 client-certificate, rejecting events with missing / malformed / untrusted tenant claims and logging the rejection.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "P2",
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Negative test: events with (a) valid cert, (b) revoked cert, (c) cert claiming wrong tenant; verify only (a) succeeds; rejections logged.",
+          "verification_method": "Security test (VER-CLOUD-ST-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-ST-003",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "Every ingested event from a hospital's Connectivity Adapter shall carry a hospital tenant…"
+            }
+          ]
+        },
+        {
+          "id": "SW-006",
+          "summary": "The idempotent event-store shall accept buffered submissions spanning up to 4 hours of…",
+          "full_text": "The idempotent event-store shall accept buffered submissions spanning up to 4 hours of pump activity per hospital, deduplicating by pump-assigned event ID with no unique-event loss and no duplicates persisted.",
+          "category": "RELY",
+          "criticality": "CtS",
+          "group": "P2",
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Soak: simulator buffers 4 h of telemetry for a 500-pump fleet then drains; verify 0 loss + 0 duplicates.",
+          "verification_method": "Integration test (VER-CLOUD-IT-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-002",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The platform shall accept buffered event submissions from the Connectivity Adapter…"
+            }
+          ]
+        },
+        {
+          "id": "SW-007",
+          "summary": "The per-tenant token-bucket back-pressure controller shall isolate ingestion rate per…",
+          "full_text": "The per-tenant token-bucket back-pressure controller shall isolate ingestion rate per tenant such that a single hospital's 10× burst does not push cross-tenant ingest p95 latency above 1 s sustained.",
+          "category": "PERF",
+          "criticality": "CtF",
+          "group": "P2",
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Burst test: drive one hospital to 10× steady-state; measure other-hospital p95 latency.",
+          "verification_method": "Performance test (VER-CLOUD-PT-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-PT-001",
+              "summary": "Performance test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The ingestion path shall enforce per-tenant back-pressure such that no single hospital's…"
+            }
+          ]
+        },
+        {
+          "id": "SW-008",
+          "summary": "The EU-residency replication enforcer shall confine storage, processing, backup, and…",
+          "full_text": "The EU-residency replication enforcer shall confine storage, processing, backup, and replication of EU-tenant PHI to EU-based infrastructure regions, with cross-region replication into non-EU regions blocked at the storage-layer policy (not just IaC review).",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": "P3",
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "IaC review + penetration test: attempt reading EU-tenant PHI from non-EU regions; verify access-denied at the storage layer.",
+          "verification_method": "Security audit (VER-CLOUD-SA-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-SA-002",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "For tenants designated as \"EU residency\", the platform shall store, process, back up, and…"
+            }
+          ]
+        },
+        {
+          "id": "SW-009",
+          "summary": "The encryption layer shall encrypt all persistent PHI and authentication artifacts with…",
+          "full_text": "The encryption layer shall encrypt all persistent PHI and authentication artifacts with AES-256-GCM under hospital-rotatable (BYOK) keys, with per-tenant key rotation completing in ≤24 h and zero operational disruption.",
+          "category": "SEC",
+          "criticality": "CtS",
+          "group": "P3",
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: trigger BYOK rotation on a test tenant; measure completion; verify reads / writes uninterrupted.",
+          "verification_method": "Integration test (VER-CLOUD-IT-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-003",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest…"
+            }
+          ]
+        },
+        {
+          "id": "SW-010",
+          "summary": "The point-in-time restore service shall restore a single tenant's PHI dataset to any…",
+          "full_text": "The point-in-time restore service shall restore a single tenant's PHI dataset to any timestamp within the prior 35 days in ≤24 h, with restored data isolated from other tenants.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": "P3",
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "DR rehearsal: PITR for a synthetic tenant at random T within the 35-day window; verify time + isolation.",
+          "verification_method": "DR test (VER-CLOUD-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-DR-001",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any…"
+            }
+          ]
+        },
+        {
+          "id": "SW-026",
+          "summary": "The tenant-scoped backup/restore CLI + admin UI shall expose backup-status, list…",
+          "full_text": "The tenant-scoped backup/restore CLI + admin UI shall expose backup-status, list available restore points, initiate restore, and report progress, with all actions gated by tenant-scoped RBAC and audit-logged.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "P3",
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: drive every CLI + UI operation as a tenant admin; verify access control + audit entries.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any…"
+            }
+          ]
+        },
+        {
+          "id": "SW-029",
+          "summary": "The key-rotation operator dashboard shall surface per-tenant BYOK rotation state (last…",
+          "full_text": "The key-rotation operator dashboard shall surface per-tenant BYOK rotation state (last rotation, next scheduled, key version, KMS region) and expose a per-tenant rotation status API for the customer's own dashboards.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "P3",
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: run 5 rotations across 3 tenants; verify dashboard + API reflect state.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest…"
+            }
+          ]
+        },
+        {
+          "id": "SW-011",
+          "summary": "The audit-log writer shall append every read, write, and admin API action to a…",
+          "full_text": "The audit-log writer shall append every read, write, and admin API action to a tamper-evident hash-chained log retained for ≥7 years, with attempted mutation detected on the next-entry append.",
+          "category": "SEC",
+          "criticality": "CtC",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Generate 1M events; verify hash-chain intact; attempt mutation; verify detection.",
+          "verification_method": "Security test (VER-CLOUD-ST-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-ST-004",
+              "summary": "Security test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "Every read, write, and administrative API action against a hospital's data shall produce…"
+            }
+          ]
+        },
+        {
+          "id": "SW-012",
+          "summary": "The customer audit-log streaming sink layer shall deliver each tenant's audit log to a…",
+          "full_text": "The customer audit-log streaming sink layer shall deliver each tenant's audit log to a customer-configured destination (syslog-TLS, Kafka, S3) with p95 emission latency ≤5 minutes.",
+          "category": "INTE",
+          "criticality": "CtC",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: each destination type; trigger 10,000 events; measure customer-side receipt; verify p95 ≤5 min.",
+          "verification_method": "Integration test (VER-CLOUD-IT-004)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-004",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "Hospitals shall be able to stream their tenant's audit log to a customer-configured…"
+            }
+          ]
+        },
+        {
+          "id": "SW-013",
+          "summary": "The telemetry envelope schema + release-gate validator shall require every module's…",
+          "full_text": "The telemetry envelope schema + release-gate validator shall require every module's release pipeline to emit conformant request-rate, error-rate, p50/p95/p99 latency, and KPI metrics, with non-conformant builds blocked from release.",
+          "category": "FUNC",
+          "criticality": "CtF",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Inspect each module's pipeline: schema validator present; force a non-conformant build; verify gate blocks release.",
+          "verification_method": "Process verification (VER-CLOUD-PV-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-PV-001",
+              "summary": "Process verification"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "Each module shall emit a standard telemetry envelope (request rate, error rate,…"
+            }
+          ]
+        },
+        {
+          "id": "SW-023",
+          "summary": "The forensic audit-query API shall allow hospital DPOs to query their tenant's audit log…",
+          "full_text": "The forensic audit-query API shall allow hospital DPOs to query their tenant's audit log by user identity, ISO-8601 timestamp range, and event class, returning structured results with cryptographic integrity proof.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: query the audit log of a synthetic tenant; verify result correctness and integrity proof.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "Every read, write, and administrative API action against a hospital's data shall produce…"
+            },
+            {
+              "id": "DI-020",
+              "summary": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access),…"
+            }
+          ]
+        },
+        {
+          "id": "SW-027",
+          "summary": "The SIEM integration manager shall expose a per-tenant configuration interface for…",
+          "full_text": "The SIEM integration manager shall expose a per-tenant configuration interface for streaming destinations (sink type, endpoint, credentials, retention) and shall surface delivery-health (success rate, lag, last error) on the operator console.",
+          "category": "INTE",
+          "criticality": "Supporting",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: configure 3 destinations per tenant; verify config persistence; inject failures; verify health UI reflects.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "Hospitals shall be able to stream their tenant's audit log to a customer-configured…"
+            }
+          ]
+        },
+        {
+          "id": "SW-028",
+          "summary": "The telemetry-conformance linter shall run at CI time against each module's…",
+          "full_text": "The telemetry-conformance linter shall run at CI time against each module's instrumentation, failing the build if the module emits a metric that diverges from the envelope schema.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "P4",
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "CI run on each module; deliberately diverge instrumentation; verify build failure.",
+          "verification_method": "Process verification",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "Each module shall emit a standard telemetry envelope (request rate, error rate,…"
+            }
+          ]
+        },
+        {
+          "id": "SW-014",
+          "summary": "The blackbox SLA-probe collector shall measure external availability of clinical-workflow…",
+          "full_text": "The blackbox SLA-probe collector shall measure external availability of clinical-workflow read APIs (target ≥99.9%) and write APIs (target ≥99.5%) and publish a monthly SLA report aggregating per-API-class availability.",
+          "category": "RELY",
+          "criticality": "CtS",
+          "group": "P5",
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Operate the collector for 90 days; aggregate the report; verify thresholds met.",
+          "verification_method": "Operational measurement (VER-CLOUD-OM-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-OM-001",
+              "summary": "Operational measurement"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The platform shall achieve a measured monthly availability of ≥ 99.9% for…"
+            }
+          ]
+        },
+        {
+          "id": "SW-015",
+          "summary": "The regional-failover automation shall execute a documented runbook on primary-region…",
+          "full_text": "The regional-failover automation shall execute a documented runbook on primary-region loss, achieving RPO ≤15 min and RTO ≤8 h for the failed region's tenants, with progress visible on an operator dashboard.",
+          "category": "RELY",
+          "criticality": "CtF",
+          "group": "P5",
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "DR exercise: simulate primary-region loss; measure RPO (data delta) + RTO (time to customer-visible restoration).",
+          "verification_method": "DR test (VER-CLOUD-DR-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-DR-002",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The platform shall sustain a complete loss of any single cloud region with RPO ≤ 15 min…"
+            }
+          ]
+        },
+        {
+          "id": "SW-016",
+          "summary": "The chaos exercise harness shall execute one chaos exercise per quarter across at least…",
+          "full_text": "The chaos exercise harness shall execute one chaos exercise per quarter across at least one failure class (region loss, dependency outage, certificate expiry, IdP outage), with hypothesis, outcome, and CAPA recorded.",
+          "category": "RELY",
+          "criticality": "Supporting",
+          "group": "P5",
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Chaos exercise log: ≥4 exercises per calendar year; each with hypothesis / outcome / CAPA where applicable.",
+          "verification_method": "Process verification (VER-CLOUD-PV-002)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-PV-002",
+              "summary": "Process verification"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The platform shall execute a chaos exercise covering at least one failure class (region…"
+            }
+          ]
+        },
+        {
+          "id": "SW-017",
+          "summary": "The change-control workflow integration shall require every production module release to…",
+          "full_text": "The change-control workflow integration shall require every production module release to bundle four artifacts (design change, risk-assessment delta, V&V trace, release approval) and shall record the bundle retrievably per release.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "P6",
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Process audit: sample 30 releases; verify each has all four artifacts attached.",
+          "verification_method": "Process audit (VER-CLOUD-PA-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-PA-001",
+              "summary": "Process audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "Every change to any module's production deployment shall pass through a shared…"
+            }
+          ]
+        },
+        {
+          "id": "SW-018",
+          "summary": "The SBOM release publisher shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for every…",
+          "full_text": "The SBOM release publisher shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for every released module version and shall publish it via a documented GlobalLogic public URL pattern without per-customer NDA.",
+          "category": "FUNC",
+          "criticality": "CtC",
+          "group": "P6",
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Release artifact review: pick 10 module releases; verify SBOM file, schema validity, fetchable via public URL.",
+          "verification_method": "Document review (VER-CLOUD-DR-001)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-DR-001",
+              "summary": "DR test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-018",
+              "summary": "Every released module version shall publish a versioned SBOM (CycloneDX 1.4 or SPDX 2.3)…"
+            }
+          ]
+        },
+        {
+          "id": "SW-019",
+          "summary": "The staged-rollout pipeline shall execute canary (≤5%) → small (≤25%) → broad sequencing…",
+          "full_text": "The staged-rollout pipeline shall execute canary (≤5%) → small (≤25%) → broad sequencing with operator pause / rollback at each stage and auto-pause health gates triggered by anomaly detection.",
+          "category": "FUNC",
+          "criticality": "CtS",
+          "group": "P6",
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Release rehearsal: inject anomaly during rollout; verify auto-pause + operator-initiated rollback.",
+          "verification_method": "Integration test (VER-CLOUD-IT-005)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-005",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "Module releases shall use a staged rollout pipeline (canary cohort ≤ 5% → small cohort ≤…"
+            }
+          ]
+        },
+        {
+          "id": "SW-020",
+          "summary": "The data-subject-rights (DSR) API shall support GDPR Art. 15 (access), Art. 16…",
+          "full_text": "The data-subject-rights (DSR) API shall support GDPR Art. 15 (access), Art. 16 (rectification), and Art. 17 (erasure) operations on a per-data-subject basis, executable by a tenant DPO, with statutory-timeline tracking and audit trail.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": "P7",
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: execute access, rectification, erasure for a synthetic data subject in a test tenant; measure end-to-end time; verify audit-trail entries.",
+          "verification_method": "Integration test (VER-CLOUD-IT-006)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-006",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access),…"
+            }
+          ]
+        },
+        {
+          "id": "SW-021",
+          "summary": "The per-tenant retention manager shall enforce retention policies (default 7 years;…",
+          "full_text": "The per-tenant retention manager shall enforce retention policies (default 7 years; customer-extendable; minimum 6 years for HIPAA-covered records), purging end-of-retention data deterministically with cryptographic evidence of purge retained.",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": "P7",
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Synthetic record at past EOL boundary: trigger purge; verify storage / index / backup all purged; cryptographic evidence retained.",
+          "verification_method": "Integration test (VER-CLOUD-IT-007)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-IT-007",
+              "summary": "Integration test"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default…"
+            }
+          ]
+        },
+        {
+          "id": "SW-022",
+          "summary": "The non-production de-identification gate shall block any production-derived dataset from…",
+          "full_text": "The non-production de-identification gate shall block any production-derived dataset from crossing into development, staging, or analytic-sandbox environments unless it has been cryptographically de-identified, with the gate enforced at the data-pipeline layer (not policy alone).",
+          "category": "PRIV",
+          "criticality": "CtC",
+          "group": "P7",
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Data-pipeline audit: verify gate active; sample non-prod datasets; scan for direct PHI identifiers; verify 0 hits.",
+          "verification_method": "Security audit (VER-CLOUD-SA-003)",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [
+            {
+              "id": "VER-CLOUD-SA-003",
+              "summary": "Security audit"
+            }
+          ],
+          "traces_reverse": [
+            {
+              "id": "DI-022",
+              "summary": "Non-production environments (development, staging, analytic sandbox) shall not contain…"
+            }
+          ]
+        },
+        {
+          "id": "SW-030",
+          "summary": "The retention-policy editor UI shall allow tenant DPOs to set per-record-class retention…",
+          "full_text": "The retention-policy editor UI shall allow tenant DPOs to set per-record-class retention (within statutory minimums), with all changes audit-logged and effective at the next scheduled retention sweep.",
+          "category": "PRIV",
+          "criticality": "Supporting",
+          "group": "P7",
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": "Bench: set / modify retention policies as a DPO; verify audit entries; verify next-sweep behavior.",
+          "verification_method": "Software test",
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": []
+    },
+    {
+      "key": "architecture",
+      "title": "Architecture",
+      "id_prefix": "M",
+      "source_files": [
+        "docs/project/dhfs/cloud-suite/design-controls/architecture/cloud-suite-system-sad.md"
+      ],
+      "items": [],
+      "missing_reason": "no_items_parsed",
+      "edges_known": false,
+      "warnings": [
+        "source missing: /Users/ben.xavier/Documents/demos/pdlc_demo/docs/project/dhfs/cloud-suite/design-controls/architecture/cloud-suite-system-sad.md"
+      ]
+    },
+    {
+      "key": "vnv",
+      "title": "VnV",
+      "id_prefix": "VER",
+      "source_files": [],
+      "items": [
+        {
+          "id": "VER-CLOUD-ST-001",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CLOUD-ST-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-001",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The platform shall authenticate hospital end users exclusively via federation to a…"
+            },
+            {
+              "id": "SW-001",
+              "summary": "The federated authentication module shall authenticate hospital end users exclusively via…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-ST-002",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CLOUD-ST-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-002",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-002",
+              "summary": "Every authenticated API call shall be authorized against a tenant claim asserted by the…"
+            },
+            {
+              "id": "SW-002",
+              "summary": "The tenant-claim authorization middleware shall validate the tenant claim on every…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-001",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-003",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "Hospital administrators shall be able to manage per-module role assignments through a…"
+            },
+            {
+              "id": "SW-003",
+              "summary": "The self-service role-management UI + API shall allow hospital admins to assign / revoke…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-SA-001",
+          "summary": "Security audit",
+          "full_text": "Security audit (VER-CLOUD-SA-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P1 — Identity & Access",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-004",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "Every internal service-to-service call shall use a short-lived workload-identity…"
+            },
+            {
+              "id": "SW-004",
+              "summary": "The workload-identity issuer shall mint short-lived (≤1 hour TTL) credentials for every…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-ST-003",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CLOUD-ST-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-005",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "Every ingested event from a hospital's Connectivity Adapter shall carry a hospital tenant…"
+            },
+            {
+              "id": "SW-005",
+              "summary": "The ingestion mTLS endpoint shall validate the Connectivity Adapter's tenant identity via…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-002",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-006",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The platform shall accept buffered event submissions from the Connectivity Adapter…"
+            },
+            {
+              "id": "SW-006",
+              "summary": "The idempotent event-store shall accept buffered submissions spanning up to 4 hours of…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-PT-001",
+          "summary": "Performance test",
+          "full_text": "Performance test (VER-CLOUD-PT-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P2 — Data Ingestion",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-007",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The ingestion path shall enforce per-tenant back-pressure such that no single hospital's…"
+            },
+            {
+              "id": "SW-007",
+              "summary": "The per-tenant token-bucket back-pressure controller shall isolate ingestion rate per…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-SA-002",
+          "summary": "Security audit",
+          "full_text": "Security audit (VER-CLOUD-SA-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-008",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "For tenants designated as \"EU residency\", the platform shall store, process, back up, and…"
+            },
+            {
+              "id": "SW-008",
+              "summary": "The EU-residency replication enforcer shall confine storage, processing, backup, and…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-003",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-009",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-009",
+              "summary": "All persistent storage of PHI and authentication artifacts shall be encrypted at rest…"
+            },
+            {
+              "id": "SW-009",
+              "summary": "The encryption layer shall encrypt all persistent PHI and authentication artifacts with…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-DR-001",
+          "summary": "DR test",
+          "full_text": "DR test (VER-CLOUD-DR-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P3 — Storage & Tenancy",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-010",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The platform shall provide point-in-time restore of a single tenant's PHI dataset to any…"
+            },
+            {
+              "id": "DI-018",
+              "summary": "Every released module version shall publish a versioned SBOM (CycloneDX 1.4 or SPDX 2.3)…"
+            },
+            {
+              "id": "SW-010",
+              "summary": "The point-in-time restore service shall restore a single tenant's PHI dataset to any…"
+            },
+            {
+              "id": "SW-018",
+              "summary": "The SBOM release publisher shall generate a CycloneDX 1.4 or SPDX 2.3 SBOM for every…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-ST-004",
+          "summary": "Security test",
+          "full_text": "Security test (VER-CLOUD-ST-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-011",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "Every read, write, and administrative API action against a hospital's data shall produce…"
+            },
+            {
+              "id": "SW-011",
+              "summary": "The audit-log writer shall append every read, write, and admin API action to a…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-004",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-004)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-012",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "Hospitals shall be able to stream their tenant's audit log to a customer-configured…"
+            },
+            {
+              "id": "SW-012",
+              "summary": "The customer audit-log streaming sink layer shall deliver each tenant's audit log to a…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-PV-001",
+          "summary": "Process verification",
+          "full_text": "Process verification (VER-CLOUD-PV-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P4 — Observability & Audit",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-013",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-013",
+              "summary": "Each module shall emit a standard telemetry envelope (request rate, error rate,…"
+            },
+            {
+              "id": "SW-013",
+              "summary": "The telemetry envelope schema + release-gate validator shall require every module's…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-OM-001",
+          "summary": "Operational measurement",
+          "full_text": "Operational measurement (VER-CLOUD-OM-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-014",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-014",
+              "summary": "The platform shall achieve a measured monthly availability of ≥ 99.9% for…"
+            },
+            {
+              "id": "SW-014",
+              "summary": "The blackbox SLA-probe collector shall measure external availability of clinical-workflow…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-DR-002",
+          "summary": "DR test",
+          "full_text": "DR test (VER-CLOUD-DR-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-015",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-015",
+              "summary": "The platform shall sustain a complete loss of any single cloud region with RPO ≤ 15 min…"
+            },
+            {
+              "id": "SW-015",
+              "summary": "The regional-failover automation shall execute a documented runbook on primary-region…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-PV-002",
+          "summary": "Process verification",
+          "full_text": "Process verification (VER-CLOUD-PV-002)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P5 — Reliability & Continuity",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-016",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-016",
+              "summary": "The platform shall execute a chaos exercise covering at least one failure class (region…"
+            },
+            {
+              "id": "SW-016",
+              "summary": "The chaos exercise harness shall execute one chaos exercise per quarter across at least…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-PA-001",
+          "summary": "Process audit",
+          "full_text": "Process audit (VER-CLOUD-PA-001)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-017",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "Every change to any module's production deployment shall pass through a shared…"
+            },
+            {
+              "id": "SW-017",
+              "summary": "The change-control workflow integration shall require every production module release to…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-005",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-005)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P6 — Compliance & Lifecycle",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-019",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-019",
+              "summary": "Module releases shall use a staged rollout pipeline (canary cohort ≤ 5% → small cohort ≤…"
+            },
+            {
+              "id": "SW-019",
+              "summary": "The staged-rollout pipeline shall execute canary (≤5%) → small (≤25%) → broad sequencing…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-006",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-006)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-020",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-020",
+              "summary": "The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access),…"
+            },
+            {
+              "id": "SW-020",
+              "summary": "The data-subject-rights (DSR) API shall support GDPR Art. 15 (access), Art. 16…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-IT-007",
+          "summary": "Integration test",
+          "full_text": "Integration test (VER-CLOUD-IT-007)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-021",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-021",
+              "summary": "The platform shall enforce per-tenant retention policies for PHI and audit logs (default…"
+            },
+            {
+              "id": "SW-021",
+              "summary": "The per-tenant retention manager shall enforce retention policies (default 7 years;…"
+            }
+          ]
+        },
+        {
+          "id": "VER-CLOUD-SA-003",
+          "summary": "Security audit",
+          "full_text": "Security audit (VER-CLOUD-SA-003)",
+          "category": null,
+          "criticality": null,
+          "group": null,
+          "group_label": "P7 — Privacy & Data-Subject Rights",
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": "derived from DI-022",
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-022",
+              "summary": "Non-production environments (development, staging, analytic sandbox) shall not contain…"
+            },
+            {
+              "id": "SW-022",
+              "summary": "The non-production de-identification gate shall block any production-derived dataset from…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
+      "edges_known": true,
+      "warnings": [
+        "v1 default: V&V nodes derived from DI verification column"
+      ]
+    },
+    {
+      "key": "risk",
+      "title": "Risk",
+      "id_prefix": "HZ",
+      "source_files": [
+        "docs/project/dhfs/cloud-suite/risk-management/risk-strategy.md"
+      ],
+      "items": [],
+      "missing_reason": "no_items_parsed",
+      "edges_known": true,
+      "warnings": [
+        "source missing"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "DI-001",
+      "to": "SW-001",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-001",
+      "to": "VER-CLOUD-ST-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-002",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "SW-024",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-002",
+      "to": "VER-CLOUD-ST-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-003",
+      "to": "SW-003",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-003",
+      "to": "VER-CLOUD-IT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-004",
+      "to": "SW-004",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-004",
+      "to": "SW-025",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-004",
+      "to": "VER-CLOUD-SA-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-005",
+      "to": "SW-005",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-005",
+      "to": "VER-CLOUD-ST-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-006",
+      "to": "SW-006",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-006",
+      "to": "VER-CLOUD-IT-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-007",
+      "to": "SW-007",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-007",
+      "to": "VER-CLOUD-PT-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-008",
+      "to": "SW-008",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-008",
+      "to": "VER-CLOUD-SA-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-009",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "SW-029",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "VER-CLOUD-IT-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-010",
+      "to": "SW-010",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-010",
+      "to": "SW-026",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-010",
+      "to": "VER-CLOUD-DR-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-011",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "SW-023",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "VER-CLOUD-ST-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-012",
+      "to": "SW-012",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-012",
+      "to": "SW-027",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-012",
+      "to": "VER-CLOUD-IT-004",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-013",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "SW-028",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-013",
+      "to": "VER-CLOUD-PV-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-014",
+      "to": "SW-014",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-014",
+      "to": "VER-CLOUD-OM-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-015",
+      "to": "SW-015",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-015",
+      "to": "VER-CLOUD-DR-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-016",
+      "to": "SW-016",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "VER-CLOUD-PV-002",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-017",
+      "to": "SW-017",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-017",
+      "to": "VER-CLOUD-PA-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-018",
+      "to": "SW-018",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-018",
+      "to": "VER-CLOUD-DR-001",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-019",
+      "to": "SW-019",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-019",
+      "to": "VER-CLOUD-IT-005",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-020",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "SW-023",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-020",
+      "to": "VER-CLOUD-IT-006",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-021",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "SW-030",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "VER-CLOUD-IT-007",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-022",
+      "to": "SW-022",
+      "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-022",
+      "to": "VER-CLOUD-SA-003",
+      "kind": "di_to_vnv"
+    },
+    {
+      "from": "SW-001",
+      "to": "VER-CLOUD-ST-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-002",
+      "to": "VER-CLOUD-ST-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-003",
+      "to": "VER-CLOUD-IT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-004",
+      "to": "VER-CLOUD-SA-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-005",
+      "to": "VER-CLOUD-ST-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-006",
+      "to": "VER-CLOUD-IT-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-007",
+      "to": "VER-CLOUD-PT-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-008",
+      "to": "VER-CLOUD-SA-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-009",
+      "to": "VER-CLOUD-IT-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-010",
+      "to": "VER-CLOUD-DR-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-011",
+      "to": "VER-CLOUD-ST-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-012",
+      "to": "VER-CLOUD-IT-004",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-013",
+      "to": "VER-CLOUD-PV-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-014",
+      "to": "VER-CLOUD-OM-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-015",
+      "to": "VER-CLOUD-DR-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-016",
+      "to": "VER-CLOUD-PV-002",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-017",
+      "to": "VER-CLOUD-PA-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-018",
+      "to": "VER-CLOUD-DR-001",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-019",
+      "to": "VER-CLOUD-IT-005",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-020",
+      "to": "VER-CLOUD-IT-006",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-021",
+      "to": "VER-CLOUD-IT-007",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "SW-022",
+      "to": "VER-CLOUD-SA-003",
+      "kind": "sw_to_vnv"
+    },
+    {
+      "from": "UN-001",
+      "to": "DI-001",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-002",
+      "to": "DI-002",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-003",
+      "to": "DI-003",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-004",
+      "to": "DI-004",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-005",
+      "to": "DI-005",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-006",
+      "to": "DI-006",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-007",
+      "to": "DI-007",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-008",
+      "to": "DI-008",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-009",
+      "to": "DI-009",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-010",
+      "to": "DI-010",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-011",
+      "to": "DI-011",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-012",
+      "to": "DI-012",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-013",
+      "to": "DI-013",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-014",
+      "to": "DI-014",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-015",
+      "to": "DI-015",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-016",
+      "to": "DI-016",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-017",
+      "to": "DI-017",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-018",
+      "to": "DI-018",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-019",
+      "to": "DI-019",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-020",
+      "to": "DI-020",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-021",
+      "to": "DI-021",
+      "kind": "un_to_di"
+    },
+    {
+      "from": "UN-022",
+      "to": "DI-022",
+      "kind": "un_to_di"
+    }
+  ],
+  "gaps": {
+    "orphans": {
+      "user_needs": [],
+      "design_inputs": [],
+      "software": [
+        "SW-024",
+        "SW-025",
+        "SW-026",
+        "SW-029",
+        "SW-023",
+        "SW-027",
+        "SW-028",
+        "SW-030"
+      ],
+      "architecture": [],
+      "vnv": [],
+      "risk": []
+    },
+    "broken_refs": [],
+    "empty_layers": [
+      "architecture",
+      "risk"
+    ]
+  },
+  "stats": {
+    "user_needs": {
+      "count": 22,
+      "with_forward": 22,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "design_inputs": {
+      "count": 22,
+      "with_forward": 22,
+      "with_reverse": 22,
+      "orphan": 0
+    },
+    "software": {
+      "count": 30,
+      "with_forward": 22,
+      "with_reverse": 30,
+      "orphan": 8
+    },
+    "architecture": {
+      "count": 0,
+      "missing_reason": "no_items_parsed",
+      "edges_known": false,
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    },
+    "vnv": {
+      "count": 21,
+      "with_forward": 0,
+      "with_reverse": 21,
+      "orphan": 0
+    },
+    "risk": {
+      "count": 0,
+      "missing_reason": "no_items_parsed",
+      "with_forward": 0,
+      "with_reverse": 0,
+      "orphan": 0
+    }
+  }
+}

@@ -24,7 +24,15 @@ topic: cybersecurity
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Cybersecurity Documentation, Post-Market Cyber Plan, SBOM]
+canonical_role: cybersecurity
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: postmarket
+    file_pattern: "*post-market-cybersecurity-plan*.md"
+  - role: sbom
+    file_pattern: "*sbom*.md"
 verbatim: "Sponsors must provide: (1) post-market cybersecurity plan to monitor, identify, and address post-market vulnerabilities and exploits, including coordinated vulnerability disclosure; (2) process documentation for design, development, and maintenance providing reasonable assurance the device is cybersecure; (3) update/patch capability for post-market updates and patches for known unacceptable vulnerabilities; (4) Software Bill of Materials (SBOM) including commercial, open-source, and off-the-shelf software components."
 extracted_requirements:
   - SBOM is a STATUTORY requirement for cyber device premarket submissions (FD&C Act §524B) — not optional
@@ -50,7 +58,15 @@ topic: cybersecurity
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Security Risk Management Report, Threat Model, 510(k) Submission]
+canonical_role: cybersecurity
+criticality: must-have
+applies_to:
+  - role: cybersecurity
+    file_pattern: "*security-risk-management-report*.md"
+  - role: cybersecurity
+    file_pattern: "*threat-model*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "Security Risk Management Report (e.g., per AAMI TIR57). Threat Modeling Documentation — full system and lifecycle scope. Cybersecurity Risk Assessment — use exploitability (not probability) to assess risks. Third-Party Software Component Assessment — SBOM, support/end-of-support info, vulnerability assessment."
 extracted_requirements:
   - Include a Security Risk Management Report in the premarket submission (per AAMI TIR57 or equivalent)
@@ -76,7 +92,13 @@ topic: cybersecurity
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [SBOM, 510(k) Submission — Cybersecurity Section]
+canonical_role: cybersecurity
+criticality: must-have
+applies_to:
+  - role: sbom
+    file_pattern: "*sbom*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "SBOM must be machine-readable. Consistent with NTIA minimum elements (October 2021, second edition). Must be complete — all transitive dependencies included. If transitive dependencies unknown, justify the gap. Accompanying information: software level of support, software component end-of-support date, safety and security risk assessment for each known vulnerability, details of applicable risk controls."
 extracted_requirements:
   - SBOM must be machine-readable (SPDX or CycloneDX format)
@@ -103,7 +125,15 @@ topic: architecture
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Security Architecture Document, 510(k) Submission — Cybersecurity Section, SAD]
+canonical_role: architecture
+criticality: should-have
+applies_to:
+  - role: architecture
+    file_pattern: "*security-architecture-document*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: architecture
+    file_pattern: "*software-architecture-document*.md"
 verbatim: "Four security architecture view categories: (1) global system view; (2) multi-patient harm view — how a cybersecurity event could affect multiple patients; (3) updateability and patchability view — how patches are delivered; (4) security use case views — all use cases for operational states and clinical scenarios."
 extracted_requirements:
   - Include all four security architecture view categories in the premarket submission
@@ -130,7 +160,13 @@ topic: verification
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Security Test Report, 510(k) Submission — Cybersecurity Section]
+canonical_role: vnv
+criticality: should-have
+applies_to:
+  - role: vnv
+    file_pattern: "*security-test-report*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "Four types recommended: (1) security requirement testing — verifying security requirements are met; (2) threat mitigation testing — verifying mitigations are effective; (3) vulnerability testing — identifying vulnerabilities; (4) penetration testing — attempting to exploit vulnerabilities. Testing should be system-level, including all system elements and the use environment."
 extracted_requirements:
   - Conduct all four types of cybersecurity testing before submission
@@ -158,7 +194,15 @@ topic: post-market
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Cybersecurity Management Plan, Post-Market Surveillance Plan, 510(k) Submission]
+canonical_role: postmarket
+criticality: must-have
+applies_to:
+  - role: cybersecurity
+    file_pattern: "*cybersecurity-management-plan*.md"
+  - role: postmarket
+    file_pattern: "*post-market-surveillance-plan*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "Required for cyber device submissions. Should include: how the manufacturer will manage cybersecurity throughout the device lifecycle, response to vulnerabilities and incidents, coordinated vulnerability disclosure processes, periodic security testing, timeline to develop and release patches, patching capability (rate at which updates can be delivered)."
 extracted_requirements:
   - Cybersecurity Management Plan is REQUIRED for cyber device 510(k) submissions under §524B

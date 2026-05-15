@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 22
-updated: 2026-04-23
+version: 23
+updated: 2026-05-04
 ---
 
 # MedTech Docs
@@ -40,6 +40,7 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/`:
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
 | `rule-sentinel-blocks.md` | `init` (Step 2c Check 4) | Source for `.claude/rules/sentinel-blocks.md` — AUTO:STRUCTURE sentinel convention spec. Copied verbatim into adopting projects. |
 | `claude-md-task-discipline.md` | `init` (Step 2c Check 5) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
+| `claude-md-config-audit.md` | `init` (Step 2c Check 6) | Source for the "Audit existing wiring before adding pointers (HARD RULE)" block inserted into CLAUDE.md. Tells Claude to grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -97,21 +98,49 @@ project:
 # Add more DHFs over time with `/medtech-docs add-dhf <name>`.
 #
 # Fields:
-#   leaf           — required; unique short name (kebab-case)
-#   path           — required; folder path relative to project root
-#   role           — required; "system" (device-level) or "item" (software-item)
-#   composes       — system only; ordered list of item DHF leaf names
-#   classification — item only; regulatory classification metadata
-#     samd         — bool; true if the item is SaMD
-#     class        — FDA device class (I, II, III, exempt, non-device)
-#     iec62304     — IEC 62304 safety class (A, B, C)
-#     ai_enabled   — bool; true if the item implements AI/ML models
-#   regulatory     — required; concept | in-development | cleared | mixed
-#   filing         — optional; which submission folder this DHF rolls up into
-#   description    — optional; human-readable description
+#   leaf              — required; unique short name (kebab-case)
+#   architecture_name — recommended; technical/internal name (e.g., "Suite", "PreOp", "Mgmt Services")
+#   marketed_name     — recommended; commercial name shown in submissions/labeling (e.g., "<Brand> Planning")
+#   path              — required; folder path relative to project root
+#   role              — required; "system" (device-level) or "item" (software-item)
+#   composes          — system only; ordered list of item DHF leaf names
+#   classification    — item only; regulatory classification metadata
+#     samd            — bool; true if the item is SaMD
+#     class           — FDA device class (I, II, III, exempt, non-device)
+#     iec62304        — IEC 62304 safety class (A, B, C)
+#     ai_enabled      — bool; true if the item implements AI/ML models
+#   regulatory        — required; concept | in-development | cleared | mixed
+#   filing            — optional; which submission folder this DHF rolls up into
+#   description       — optional; human-readable description
+#   jira              — optional; per-DHF Jira system-of-record binding
+#     project_key     — Jira project key (must appear in change_control.jira.project_keys)
+#     versions        — list of {id, fix_version, fix_version_id} per release
+#     story_filter    — {labels[], statuses[]} used by SRS-tier pulls
+#   confluence        — optional; per-DHF Confluence binding
+#     space_key       — Confluence space (must appear in change_control.spaces[].key)
+#     root_page_id    — id of the DHF's root Confluence page
+#     root_page_title — display title of that page
+#   evidence          — optional; per-DHF map of regulated-artifact paths
+#                       (DTM xlsx, HTM, uFMEA, threat model, etc.). See top-level
+#                       `evidence_layout:` for folder-convention defaults.
+#                       Consumed by drift-detection / trace-matrix tooling.
 #
 # The role + composes fields express the IEC 62304 § 5 software system /
 # software item hierarchy. Leaf-name uniqueness is enforced by `add-dhf`.
+#
+# System DHFs typically have only architecture_name + marketed_name + composes
+# (no jira:/confluence:/evidence: when the system synthesizes from item DHFs).
+# Item DHFs typically have all of architecture_name, marketed_name, jira,
+# confluence, evidence — though every block is OPTIONAL by design so projects
+# can adopt them incrementally.
+#
+# Top-level peers to dhfs[]:
+#   change_control    — bridge config to systems-of-record (Confluence spaces,
+#                       Jira project_keys + cache, Windchill — future). Per-DHF
+#                       jira:/confluence: blocks reference this by key.
+#   evidence_layout   — convention defaults for evidence-bearing folder structure
+#                       under each DHF's path. Per-DHF evidence: blocks override
+#                       where convention diverges (e.g., differing DTM locations).
 
 dhfs:
   - leaf: {{PRIMARY_DHF}}
@@ -205,7 +234,7 @@ Substitute the `{{...}}` placeholders using the user's answers:
 - `{{REPO_OWNER/REPO_NAME}}` — ask the user for their GitHub repo path (e.g., `org/repo-name`)
 - `{{regulatory_pathway}}` — from question 2 (lowercase: `510k`, `denovo`, `pma`, or `tbd`)
 - `{{device_class}}` — infer from pathway if possible (510(k) → II, PMA → III, De Novo → I or II), or ask
-- `{{DEVICE_FAMILY}}` — ask the user for the device family slug (lowercase, no spaces — used in filenames like `<device-family>-system-sad.md`). Examples: `hiplink`, `synergy`, `vip`
+- `{{DEVICE_FAMILY}}` — ask the user for the device family slug (lowercase, no spaces — used in filenames like `<device-family>-system-sad.md`). Choose a short slug that distinguishes this device's documentation from other devices the same project might cover.
 - `{{PRIMARY_SUB_DHF}}` — from question 9. Lowercase slug, hyphenated (e.g., `pca-device`, `ecg-monitor`). This is the folder name that appears under `docs/project/dhfs/`, so it must be filesystem-safe. Validate: `^[a-z][a-z0-9-]*[a-z0-9]$`. If the user's answer contains uppercase or underscores, prompt to confirm a normalized form.
 - `{{company-domain.com}}` — ask the user for their corporate email domain
 - `{{APPROVED_SKILLS}}` — **do not ask the user**. Auto-generate by collecting all skill names from the `registries:` section's `skills:` lists, sorted alphabetically, one `- name` per line. This ensures every skill listed in a registry is pre-approved at init time.
@@ -301,7 +330,13 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 
 Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-task-discipline.md` and insert it. The template is the single source of truth for the task-discipline language — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block defines the "update active task doc as you go" hard rule, which is the recovery contract for dropped/compacted/interrupted sessions.
 
-This ensures every project initialized by `/medtech-docs init` gets the full README convention AND the task-discipline rule from day one — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
+**Check 6**: Search CLAUDE.md for the string `Audit existing wiring before adding pointers`. If found, skip — config-audit discipline is already seeded.
+
+**Insert config-audit section** (place inside the existing "For Claude" section, alongside the task-discipline block — order them as siblings):
+
+Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-config-audit.md` and insert it. The template is the single source of truth for the config-audit rule — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block tells Claude to grep `project.yml` and sibling configs (milestone yamls, taxonomy yamls, `evidence_layout`) before adding new metadata fields, schema entries, or structural prose — preventing duplication of structural facts already encoded in the wiring layer.
+
+This ensures every project initialized by `/medtech-docs init` gets the full README convention, the task-discipline rule, AND the config-audit rule from day one — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
 
 **Step 3 — Create the folder structure and READMEs**
 
@@ -579,17 +614,21 @@ Show the user:
 - Skills installed and setup actions run
 - Next steps: populate FDA guidance, begin design controls, run `/medtech-docs dashboard` to see status
 
-### `add-dhf <name> [--role <role>] [--composes <leaf,...>] [--classification <yaml>] [--regulatory <status>] [--filing <filing>]`
+### `add-dhf <name> [--architecture <name>] [--marketed <name>] [--role <role>] [--composes <leaf,...>] [--classification <yaml>] [--regulatory <status>] [--filing <filing>]`
 
 Add a new DHF to an existing project. Scaffolds the per-DHF folder layout, adds a new entry to `project.dhfs[]`, and creates the DHF README.
 
 **Arguments**:
-- `<name>` — short slug for the new DHF (e.g., `connectivity-adapter`, `hiplink-pre-op`). Must match `^[a-z][a-z0-9-]*[a-z0-9]$`. Used as the folder name under `dhfs/` and as the `leaf` value.
+- `<name>` — short slug for the new DHF (e.g., `connectivity-adapter`, `<device>-pre-op`). Must match `^[a-z][a-z0-9-]*[a-z0-9]$`. Used as the folder name under `dhfs/` and as the `leaf` value.
+- `--architecture <name>` — optional but recommended. Technical/internal name for this component (e.g., `Suite`, `PreOp`, `Mgmt Services`). Populates `dhfs[].architecture_name`. Used by internal-facing docs, architecture diagrams, and trace tooling. If omitted, leave blank — operator can add later.
+- `--marketed <name>` — optional but recommended. Commercial name shown in submissions, labeling, and customer-facing materials. Populates `dhfs[].marketed_name`. May differ from architecture name (e.g., architecture "Mgmt Services" might be marketed as "<Brand> Web"). If omitted, leave blank.
 - `--role <role>` — optional. One of `system | item`. Default: `item`. A `system` DHF holds device-level design records (system DDP, system SAD, integrated device risk file); an `item` DHF holds software-item-level records (item SRS, SDS, V&V, SOUP). Maps to IEC 62304 § 5 software system / software item hierarchy.
 - `--composes <leaf,...>` — optional, **system role only**. Comma-separated list of item DHF leaf names this system DHF composes. Validates that each listed leaf exists in `project.dhfs[]` (or warn if not yet created). Ignored for item role.
 - `--classification <yaml>` — optional, **item role only**. Inline YAML block with regulatory classification: `samd` (bool), `class` (I/II/III/exempt/non-device), `iec62304` (A/B/C), `ai_enabled` (bool). Ignored for system role. If omitted for an item, classification fields are left as `tbd`.
 - `--regulatory <status>` — optional. One of `concept | in-development | cleared | mixed`. Default: `in-development`.
 - `--filing <filing>` — optional. Name of the submission folder this DHF rolls up into (e.g., `510k+pccp`). Default: `null` (not yet scoped into a filing).
+
+**Not set by add-dhf** (populated separately as the project matures): `dhfs[].jira` (Jira system-of-record binding — fix_versions per release, story_filter), `dhfs[].confluence` (space_key + root_page_id), `dhfs[].evidence` (regulated-artifact xlsx/page paths). These optional blocks are documented in the field reference at the top of `project.yml`. Adding them later is a manual edit; add-dhf does not prompt for them because they require external-system identifiers that aren't always known at DHF-creation time.
 
 **Step 1 — Validate the name**:
 1. Check that `<name>` matches the slug regex. If not, reject with the error `"invalid DHF name '<name>' — must match ^[a-z][a-z0-9-]*[a-z0-9]$"`.
@@ -623,6 +662,8 @@ Parse `project.yml`, find the `dhfs:` list, and append a new entry:
 dhfs:
   # For a system DHF:
   - leaf: <name>
+    architecture_name: <arch>           # from --architecture; omit field entirely if not provided
+    marketed_name: <marketed>           # from --marketed; omit field entirely if not provided
     path: docs/project/dhfs/<name>
     role: system
     composes: [<leaf1>, <leaf2>, ...]  # item DHF leaf names
@@ -631,6 +672,8 @@ dhfs:
 
   # For an item DHF:
   - leaf: <name>
+    architecture_name: <arch>           # from --architecture; omit if not provided
+    marketed_name: <marketed>           # from --marketed; omit if not provided
     path: docs/project/dhfs/<name>
     role: item
     classification:
@@ -661,18 +704,18 @@ Show the user:
 - The updated `project.yml` `dhfs[]` entry.
 - Next-step suggestions: author the DHF README purpose paragraph, add user needs under `design-controls/user-needs/`, update the composition manifest of any filing that should reference this DHF.
 
-**Flat vs. nested**: The flat multi-DHF model (all DHFs at the same folder level, relationships expressed via `role` + `composes` metadata) is the recommended approach. The `--parent` flag is retained for backward compatibility but is deprecated in favor of the flat model. For new projects, use `--role system` for the device-level DHF and `--role item` for software-item DHFs, with `--composes` on the system DHF listing the items. See task 056 in the Arthrex PCCP project for the decision rationale and IEC 62304 § 5 mapping.
+**Flat vs. nested**: The flat multi-DHF model (all DHFs at the same folder level, relationships expressed via `role` + `composes` metadata) is the recommended approach. The `--parent` flag is retained for backward compatibility but is deprecated in favor of the flat model. For new projects, use `--role system` for the device-level DHF and `--role item` for software-item DHFs, with `--composes` on the system DHF listing the items. The mapping to IEC 62304 § 5 software system / software item hierarchy is documented in the field reference at the top of this file.
 
 **Examples**:
 ```
 # System DHF — device-level design records
-/medtech-docs add-dhf hiplink-suite --role system --composes hiplink-pre-op,hiplink-intra-op,hiplink-mgmt-services --filing 510k+pccp
+/medtech-docs add-dhf <device>-suite --role system --architecture "Suite" --marketed "<Brand> Suite" --composes <device>-component-a,<device>-component-b --filing 510k+pccp
 
 # Item DHF — SaMD software item (Class II, Class C, AI-enabled)
-/medtech-docs add-dhf hiplink-pre-op --role item --classification "samd: true, class: II, iec62304: C, ai_enabled: true" --filing 510k+pccp
+/medtech-docs add-dhf <device>-component-a --role item --architecture "Component A" --marketed "<Brand> Component A" --classification "samd: true, class: II, iec62304: C, ai_enabled: true" --filing 510k+pccp
 
 # Item DHF — non-SaMD software item
-/medtech-docs add-dhf hiplink-mgmt-services --role item --classification "samd: false, class: non-device, iec62304: B, ai_enabled: false" --filing 510k+pccp
+/medtech-docs add-dhf <device>-services --role item --architecture "Services" --marketed "<Brand> Services" --classification "samd: false, class: non-device, iec62304: B, ai_enabled: false" --filing 510k+pccp
 
 # Simple single-component project (one system DHF, no items)
 /medtech-docs add-dhf my-device --role system --regulatory in-development
@@ -788,7 +831,7 @@ Wait for the user to resolve every conflict before proceeding to Step 3. Apply t
 - **(b) KEEP EXCLUDED** → drop the file from the applicable set, do NOT copy it, and prompt the user for a refined rationale + Scope Qualifier text to update the exclusion row in Step 4.
 - **(c) DEFER** → drop the file from the applicable set, leave both tables untouched, append a `TODO: resolve conflict — <filename>` line to the Step 5 report so it is visible in every subsequent run.
 
-The principle: when the action's heuristic disagrees with a captured human decision, **the action's job is to surface the disagreement, not to pick a side.** Both the rubric and the captured decision can be wrong — only the user has the context to decide. Silencing the conflict in either direction loses signal. (See PDLC_DEMO `tasks/ben/012` for the originating IHE Profiles case.)
+The principle: when the action's heuristic disagrees with a captured human decision, **the action's job is to surface the disagreement, not to pick a side.** Both the rubric and the captured decision can be wrong — only the user has the context to decide. Silencing the conflict in either direction loses signal.
 
 **Step 3 — Copy applicable files**
 

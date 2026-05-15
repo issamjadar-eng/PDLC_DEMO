@@ -22,9 +22,9 @@ A short paragraph or quote where one number dominates:
 ```markdown
 ### 4.2 What we measured
 
-> The 12 weeks of SP6500 design-input authoring with the agentic console produced
-> equivalent IEC 62304 documentation in 38% of the calendar time of SP6000's
-> equivalent phase.
+> The 12 weeks of structured authoring with the agentic console produced
+> equivalent compliance documentation in 38% of the calendar time of the
+> previous baseline.
 ```
 
 ## Gotchas

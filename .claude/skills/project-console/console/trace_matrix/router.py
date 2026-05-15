@@ -37,12 +37,135 @@ from pydantic import BaseModel
 
 from console.chat.sdk_client import stream_response
 from console.config import get_config
-from console.trace_matrix.loader import list_dhfs, load_sidecar, skill_build_script
+from console.trace_matrix.loader import (
+    list_dhfs,
+    load_drift_overlay,
+    load_sidecar,
+    skill_build_script,
+)
 
 router = APIRouter()
 templates = Jinja2Templates(
     directory=str(Path(__file__).parent.parent / "web" / "templates")
 )
+
+
+# Per-layer trace-column model. Each layer projects its trace neighbours into
+# typed columns rather than a single forward/reverse split — readers expect to
+# see "DI's V&V" not "DI's downstream traces". Missing neighbour layers (e.g.
+# no `software` layer in the system DHF) collapse to a `—` cell automatically.
+#
+# `target_layer` controls click-through navigation — the chip jumps to that
+# tab and scrolls to the target row.
+LAYER_TRACE_COLUMNS: dict[str, list[dict]] = {
+    "user_needs": [
+        {"key": "down_di", "label": "→ DI", "target_layer": "design_inputs"},
+    ],
+    "design_inputs": [
+        {"key": "up_un", "label": "← UN", "target_layer": "user_needs"},
+        {"key": "down_sw", "label": "→ SW", "target_layer": "software"},
+        {"key": "down_vnv", "label": "→ V&V", "target_layer": "vnv"},
+        {"key": "ovr_risk", "label": "↔ Risk", "target_layer": "risk", "is_overlay": True},
+    ],
+    "software": [
+        {"key": "up_di", "label": "← DI", "target_layer": "design_inputs"},
+        {"key": "down_vnv", "label": "→ V&V", "target_layer": "vnv"},
+        {"key": "ovr_risk", "label": "↔ Risk", "target_layer": "risk", "is_overlay": True},
+    ],
+    "architecture": [
+        {"key": "ovr_di", "label": "↔ DI", "target_layer": "design_inputs", "is_overlay": True},
+    ],
+    "vnv": [
+        {"key": "up_di", "label": "← DI", "target_layer": "design_inputs"},
+        {"key": "up_sw", "label": "← SW", "target_layer": "software"},
+        {"key": "ovr_risk", "label": "↔ Risk", "target_layer": "risk", "is_overlay": True},
+    ],
+    "risk": [
+        {"key": "ovr_di", "label": "↔ DI", "target_layer": "design_inputs", "is_overlay": True},
+        {"key": "ovr_sw", "label": "↔ SW", "target_layer": "software", "is_overlay": True},
+        {"key": "ovr_vnv", "label": "↔ V&V", "target_layer": "vnv", "is_overlay": True},
+    ],
+}
+
+
+def _layer_of_index(sidecar: dict) -> dict[str, str]:
+    """Map every item id → its layer key. Used to bucket per-row trace
+    neighbours by target-layer column."""
+    out: dict[str, str] = {}
+    for layer in sidecar.get("layers", []) or []:
+        for item in layer.get("items") or []:
+            out[item["id"]] = layer["key"]
+    return out
+
+
+def _decorate_trace_columns(sidecar: dict) -> None:
+    """For each item, compute `trace_cells` — one entry per trace column
+    declared for the item's layer, each containing the neighbours that fall
+    into that column. Mutates the sidecar in place."""
+    layer_of = _layer_of_index(sidecar)
+    for layer in sidecar.get("layers", []) or []:
+        cols = LAYER_TRACE_COLUMNS.get(layer["key"], [])
+        for item in layer.get("items") or []:
+            buckets: dict[str, list[dict]] = {c["key"]: [] for c in cols}
+            for ref in item.get("traces_forward", []):
+                target_layer = layer_of.get(ref["id"])
+                for c in cols:
+                    if c["target_layer"] == target_layer:
+                        buckets[c["key"]].append(ref)
+            for ref in item.get("traces_reverse", []):
+                target_layer = layer_of.get(ref["id"])
+                for c in cols:
+                    if c["target_layer"] == target_layer:
+                        # avoid double-listing if both forward + reverse
+                        # populated the same edge
+                        if not any(r["id"] == ref["id"] for r in buckets[c["key"]]):
+                            buckets[c["key"]].append(ref)
+            item["trace_cells"] = [
+                {
+                    "col_key": c["key"],
+                    "label": c["label"],
+                    "target_layer": c["target_layer"],
+                    "is_overlay": c.get("is_overlay", False),
+                    # Same Jinja-attribute-vs-dict-method gotcha as in
+                    # `_build_groups`: name the list `refs`, not `items`.
+                    "refs": buckets[c["key"]],
+                }
+                for c in cols
+            ]
+
+
+def _build_groups(layer: dict) -> list[dict]:
+    """Bucket layer items into ordered groups keyed by `group_label`. Items
+    that share the first-seen group_label coalesce into one group; items with
+    no group_label coalesce into a single trailing "(ungrouped)" group.
+    Group order matches first-seen item order — preserves the layer's
+    deterministic sort.
+    """
+    out: list[dict] = []
+    by_label: dict[str, dict] = {}
+    for item in layer.get("items") or []:
+        label = item.get("group_label") or "(ungrouped)"
+        bucket = by_label.get(label)
+        if bucket is None:
+            bucket = {
+                "label": label,
+                "key": item.get("group") or "",
+                # The bucket's row list is named `rows` (not `items`) so
+                # Jinja's attribute lookup `grp.rows` doesn't collide with
+                # Python dict's `.items()` method — `grp.items` would resolve
+                # to the bound method, not the value.
+                "rows": [],
+                "drift_count": 0,
+                "orphan_count": 0,
+            }
+            by_label[label] = bucket
+            out.append(bucket)
+        bucket["rows"].append(item)
+        if item.get("violations"):
+            bucket["drift_count"] += 1
+        if item.get("_is_orphan"):
+            bucket["orphan_count"] += 1
+    return out
 
 
 def _doc_view_url(source_files: list[str], item_id: str) -> str:
@@ -113,6 +236,133 @@ async def trace_matrix_view(request: Request, dhf: str, build_error: str | None 
         for item in layer["items"]:
             item["source_url"] = _doc_view_url(layer_sources, item["id"])
 
+    # Load any sibling drift.json files (project-agnostic — works for any
+    # project that emits drift data colocated with trace sources).
+    drift = load_drift_overlay(cfg.repo_root, sidecar)
+
+    # Pre-decorate every row with its violations + worst severity. Violations
+    # are looked up against multiple candidate ids per node — the row's own
+    # `id` and any auxiliary identifier the adapter recorded (e.g. `jira_key`
+    # when the row's primary id is a derived DI prefix). This is what makes
+    # the badge/drawer fire on rows whose item.id is a domain-canonical id
+    # while the drift's `item_id` is the underlying Jira key.
+    severity_rank = {"error": 3, "warning": 2, "info": 1}
+    if drift:
+        vbi = drift["violations_by_item"]
+        for layer in sidecar["layers"]:
+            for item in layer["items"]:
+                lookup_keys = [item.get("id")]
+                aux = item.get("jira_key")
+                if aux and aux not in lookup_keys:
+                    lookup_keys.append(aux)
+                vs: list[dict] = []
+                seen_ids: set[int] = set()
+                for k in lookup_keys:
+                    for v in vbi.get(k, []):
+                        if id(v) in seen_ids:
+                            continue
+                        seen_ids.add(id(v))
+                        vs.append(v)
+                item["violations"] = vs
+                item["worst_severity"] = (
+                    max((v.get("severity") for v in vs), key=lambda s: severity_rank.get(s, 0))
+                    if vs
+                    else None
+                )
+
+    # Tag orphan items so groupers can count them. Orphan ids are stored in
+    # the sidecar's gaps section; flatten into a per-item flag for cheap
+    # access during template rendering and group-bucket aggregation.
+    for layer in sidecar["layers"]:
+        orphan_ids = set(sidecar.get("gaps", {}).get("orphans", {}).get(layer["key"], []))
+        for item in layer.get("items", []):
+            item["_is_orphan"] = item["id"] in orphan_ids
+
+    # Decorate items with typed trace columns (one entry per layer-relation),
+    # then bucket items into collapsible groups keyed by `group_label`.
+    _decorate_trace_columns(sidecar)
+    for layer in sidecar["layers"]:
+        layer["groups"] = _build_groups(layer)
+
+    # Compact id → [violation, ...] map sent to the browser as JSON. The
+    # drift-popover JS pulls from this on demand instead of rendering every
+    # violation drawer into the hidden DOM (the canary intra-op DHF has 16
+    # violations across 13 items today; sparing 13 hidden drawer-trees per
+    # row is cheap, but for projects with hundreds of drift entries it adds
+    # up).
+    violations_by_id: dict[str, list[dict]] = {}
+    for layer in sidecar["layers"]:
+        for item in layer.get("items", []):
+            if item.get("violations"):
+                violations_by_id[item["id"]] = item["violations"]
+
+    # Collect per-source-file mtimes for the help-hover panel. Sources are
+    # the per-layer `source_files` plus any sibling drift.json files that
+    # were merged in. Keep one row per unique path; tag with the layer keys
+    # that referenced it so the reader can see which trace lane the file
+    # feeds.
+    from datetime import datetime, timezone
+
+    source_meta: list[dict] = []
+    seen_paths: dict[str, dict] = {}
+    repo_root = Path(cfg.repo_root)
+    for layer in sidecar["layers"]:
+        for src in layer.get("source_files") or []:
+            entry = seen_paths.get(src)
+            if entry is None:
+                fp = repo_root / src
+                mtime_iso: str | None = None
+                size: int | None = None
+                exists = fp.exists()
+                if exists:
+                    try:
+                        st = fp.stat()
+                        mtime_iso = datetime.fromtimestamp(
+                            st.st_mtime, tz=timezone.utc
+                        ).strftime("%Y-%m-%d %H:%M UTC")
+                        size = st.st_size
+                    except OSError:
+                        pass
+                entry = {
+                    "path": src,
+                    "exists": exists,
+                    "mtime": mtime_iso,
+                    "size": size,
+                    "layers": [],
+                    "kind": "trace",
+                }
+                seen_paths[src] = entry
+                source_meta.append(entry)
+            if layer["key"] not in entry["layers"]:
+                entry["layers"].append(layer["key"])
+    if drift:
+        for ds in drift.get("sources") or []:
+            if ds in seen_paths:
+                continue
+            fp = repo_root / ds
+            mtime_iso = None
+            size = None
+            exists = fp.exists()
+            if exists:
+                try:
+                    st = fp.stat()
+                    mtime_iso = datetime.fromtimestamp(
+                        st.st_mtime, tz=timezone.utc
+                    ).strftime("%Y-%m-%d %H:%M UTC")
+                    size = st.st_size
+                except OSError:
+                    pass
+            entry = {
+                "path": ds,
+                "exists": exists,
+                "mtime": mtime_iso,
+                "size": size,
+                "layers": [],
+                "kind": "drift",
+            }
+            seen_paths[ds] = entry
+            source_meta.append(entry)
+
     return templates.TemplateResponse(
         request,
         "trace_matrix_view.html",
@@ -120,6 +370,9 @@ async def trace_matrix_view(request: Request, dhf: str, build_error: str | None 
             "config": cfg,
             "dhf": dhf,
             "sidecar": sidecar,
+            "drift": drift,
+            "violations_by_id": violations_by_id,
+            "source_meta": source_meta,
             "has_skill": has_skill,
             "build_error": build_error,
         },

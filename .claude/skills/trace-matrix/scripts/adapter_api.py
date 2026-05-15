@@ -178,6 +178,15 @@ def default_adapter_path(skill_dir: Path, layer_key: str) -> Path:
     return skill_dir / "scripts" / "parsers" / "defaults" / f"{layer_key}.py"
 
 
+def shared_adapter_path(skill_dir: Path, adapter_name: str) -> Path:
+    """Resolve a named cross-layer adapter (e.g. `jira-mirror`) to its
+    Python file. Hyphens are normalised to underscores so `adapter:
+    jira-mirror` maps to `parsers/jira_mirror.py`.
+    """
+    fname = adapter_name.replace("-", "_")
+    return skill_dir / "scripts" / "parsers" / f"{fname}.py"
+
+
 def _load_python_file(path: Path, module_name: str) -> ModuleType:
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
@@ -192,13 +201,32 @@ def load_adapter(
     layer_key: str,
     repo_root: Path,
     skill_dir: Path,
+    adapter_name: str | None = None,
 ) -> tuple[Callable, str]:
     """Resolve the parse() function for a layer.
 
+    Resolution order:
+      1. Explicit `adapter_name` (from layer_cfg `adapter:` field) →
+         `scripts/parsers/<name>.py` shared cross-layer adapter.
+      2. Project override at `tools/project-console/trace-matrix/adapters/<layer>.py`.
+      3. Skill-shipped default at `scripts/parsers/defaults/<layer>.py`.
+
     Returns (parse_callable, source_label) where source_label is one of:
-      - "project: <path>"  if a project adapter exists
-      - "default: <path>"  if falling back to the skill default
+      - "shared: <name>"  when adapter_name resolved
+      - "project: <path>" when a project override exists
+      - "default: <path>" when falling back to the skill default
     """
+    if adapter_name:
+        shared = shared_adapter_path(skill_dir, adapter_name)
+        if shared.is_file():
+            mod = _load_python_file(
+                shared, f"tm_shared_adapter_{adapter_name.replace('-', '_')}"
+            )
+            return mod.parse, f"shared: {adapter_name}"
+        raise FileNotFoundError(
+            f"adapter '{adapter_name}' configured but not found at {shared}"
+        )
+
     proj = project_adapter_path(repo_root, layer_key)
     if proj.is_file():
         mod = _load_python_file(proj, f"tm_project_adapter_{layer_key}")

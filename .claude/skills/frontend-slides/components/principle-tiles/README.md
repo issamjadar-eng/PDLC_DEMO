@@ -19,13 +19,15 @@ When a card-grid has ≥4 dense bullets, this variant strips most of the body te
 Same source as `card-grid` (bold-led bullets) — emitted as a sibling visual variant, especially when the labels are short and self-explanatory.
 
 ```markdown
-### 3.2 Quality system anchors
+### 3.2 Engineering principles
 
-- **ISO 13485 design controls** govern every input → output → V&V → risk trace.
-- **IEC 62304 enhanced documentation** required for Class C SaMD.
-- **ISO 14971 risk management file** integrated into the trace matrix.
-- **21 CFR 820 compliance** carries the QMS evidence chain end-to-end.
+- **Strong defaults, escape hatches second.** The shipped path solves 80%; advanced flags exist but are quiet.
+- **One source of truth per concern.** No config sprawl across env, files, and CLI for the same setting.
+- **Observability is product.** Every user-visible action emits a structured event.
+- **Reversible deploys.** Anything we ship today must be safe to roll back tomorrow.
 ```
+
+(Principle-tiles render as a 4–6-tile icon grid, one per principle. Examples in other domains: design tenets for a product team, investment theses for a fund deck, lean-manufacturing pillars, brand pillars for a marketing review, regulated-industry quality-system anchors.)
 
 ## Gotchas
 

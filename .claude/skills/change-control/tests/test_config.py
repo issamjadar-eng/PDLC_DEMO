@@ -27,14 +27,14 @@ change_control:
   cloud_id: 9829416d-7e21-4f52-9f71-c88d5b2c05ad
   base_url: https://example.atlassian.net
   spaces:
-    - key: AFAI
-      name: ADI FAI
+    - key: TSPACE
+      name: Test Space
       staging_target_root: docs/project/_confluence
       title_prefixes_to_strip:
-        - "HipLink IntraOp - "
-        - "HipLink Planning "
+        - "Module One - "
+        - "Module Two "
   test_target:
-    space_key: AFAI
+    space_key: TSPACE
     parent_page_id: "6768394270"
     parent_title: AI_PDLC_INT_TEST
     title_prefix: "ROUNDTRIP TEST"
@@ -57,11 +57,11 @@ def test_parse_full_block():
     assert len(cfg.spaces) == 1
     s = cfg.spaces[0]
     assert isinstance(s, SpaceConfig)
-    assert s.key == "AFAI"
-    assert s.name == "ADI FAI"
+    assert s.key == "TSPACE"
+    assert s.name == "Test Space"
     assert s.staging_target_root == "docs/project/_confluence"
-    assert s.title_prefixes_to_strip == ["HipLink IntraOp - ", "HipLink Planning "]
-    assert cfg.space_by_key("AFAI") is s
+    assert s.title_prefixes_to_strip == ["Module One - ", "Module Two "]
+    assert cfg.space_by_key("TSPACE") is s
     assert cfg.space_by_key("MISSING") is None
     assert isinstance(cfg.test_target, TestTarget)
     assert cfg.test_target.parent_page_id == "6768394270"
@@ -138,7 +138,7 @@ def test_read_from_disk_loads_real_yaml():
         cfg = read_change_control_config(root)
         assert cfg.cloud_id == "9829416d-7e21-4f52-9f71-c88d5b2c05ad"
         assert cfg.test_target is not None
-        assert cfg.test_target.space_key == "AFAI"
+        assert cfg.test_target.space_key == "TSPACE"
     print("PASS  test_read_from_disk_loads_real_yaml")
 
 
@@ -164,7 +164,7 @@ def test_find_project_root_walks_up():
 
 def test_repo_project_yml_loads():
     """Smoke test: the actual project.yml in this repo loads cleanly and
-    has the expected v0.12.0 shape (cloud_id, AFAI space, test_target).
+    has the expected v0.12.0 shape (cloud_id, at least one space, test_target).
     """
     here = Path(__file__).resolve()
     # Walk up to find a project.yml — the repo root.

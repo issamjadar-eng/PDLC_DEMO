@@ -1,0 +1,107 @@
+# User-injected tracker rows
+#
+# Rows that don't derive from the milestone catalog × composition manifest ×
+# DHF evidence pipeline. Managed via /tracker add-row, /tracker update-row,
+# /tracker remove-row, /tracker list-user-rows. Direct hand-edit is OK for
+# bootstrapping; subsequent changes should go through the skill so validation
+# runs and the canonical markdown stays in sync.
+#
+# IDs use the user-row prefix convention (Q1, Q2 for QSub-formal items;
+# PA/PC for filing-package admin/cover items per the canonical tracker)
+# to avoid colliding with generator-derived IDs (Q-PCN, PCN, L1-PCN, L2-PCN).
+
+rows:
+  # ── QSub formal package — required by FDA Q-Sub Program guidance ──
+  # These are package-level items that don't have a corresponding file on
+  # disk yet. They appear as Not Started rows in the QSub phase so the team
+  # can track Q-Sub readiness explicitly.
+
+  - id: Q1
+    name: Q-Sub Cover Letter
+    scope: "(submission)"
+    phase: QSub
+    status: Not Started
+    ref: FDA Q-Submission Program Guidance §V.A
+    effort: Low
+    path: docs/project/submissions/qsub/cover-letter.md
+    reason: |
+      FDA Q-Submission Program guidance requires a cover letter identifying
+      submission type (Pre-Submission), sponsor, device, and primary contact
+      for any Q-Sub package. Not derivable from the catalog (catalog is
+      510(k)-shaped); user-injected so QSub readiness is visible.
+    _meta:
+      created_by: ben.xavier@globallogic.com
+      created_at: 2026-05-05T22:00:00Z
+      last_updated_at: 2026-05-05T22:00:00Z
+
+  - id: Q2
+    name: Pre-Submission Questions for FDA
+    scope: "(submission)"
+    phase: QSub
+    status: Not Started
+    ref: FDA Q-Submission Program Guidance §V.B
+    effort: Medium
+    path: docs/project/submissions/qsub/presub-questions.md
+    reason: |
+      The substantive payload of a Q-Sub — explicit numbered questions for
+      FDA on PP3500 predicate adequacy (PP3000/K190567), PCCP envelope
+      acceptability, criticality (Ct*) carve-out approach, and MFD scoping
+      for the SaMD/SiMD/hardware combination. Required FDA Q-Sub Program
+      guidance content; not in the catalog.
+    _meta:
+      created_by: ben.xavier@globallogic.com
+      created_at: 2026-05-05T22:00:00Z
+      last_updated_at: 2026-05-05T22:00:00Z
+
+  - id: Q3
+    name: Pre-Submission Meeting Agenda
+    scope: "(submission)"
+    phase: QSub
+    status: Not Started
+    ref: FDA Q-Submission Program Guidance §V.C
+    effort: Low
+    path: docs/project/submissions/qsub/meeting-agenda.md
+    reason: |
+      Required when an interactive meeting (teleconference or written-feedback
+      request) is requested with the Pre-Submission. Lists proposed attendees,
+      timing, topic ownership, and pacing for FDA discussion. Not in catalog.
+    _meta:
+      created_by: ben.xavier@globallogic.com
+      created_at: 2026-05-05T22:00:00Z
+      last_updated_at: 2026-05-05T22:00:00Z
+
+  - id: Q4
+    name: Device Description (Q-Sub level)
+    scope: "(submission)"
+    phase: QSub
+    status: Not Started
+    ref: FDA Q-Submission Program Guidance §V.D
+    effort: Medium
+    path: docs/project/submissions/qsub/device-description.md
+    reason: |
+      Sufficient device description to ground the Pre-Submission questions —
+      intended use, indications, technological characteristics, comparison
+      framing vs PP3000 predicate. Lighter than the 510(k) device-description
+      section but anchors FDA's understanding before the meeting. Not in catalog.
+    _meta:
+      created_by: ben.xavier@globallogic.com
+      created_at: 2026-05-05T22:00:00Z
+      last_updated_at: 2026-05-05T22:00:00Z
+
+  - id: Q5
+    name: Predicate Identification (PP3000 / K190567)
+    scope: "(submission)"
+    phase: QSub
+    status: Not Started
+    ref: FDA 510(k) SE Guidance (2014) §IV Predicate Selection
+    effort: Low
+    path: docs/project/submissions/qsub/predicate-identification.md
+    reason: |
+      Identifies PP3000 (K190567) as the predicate device with rationale for
+      the choice — required to ground any Q-Sub question on substantial-
+      equivalence approach or PCCP envelope. Lighter than the full 510(k)
+      Predicate Comparison Table; that lives at PCCP filing time.
+    _meta:
+      created_by: ben.xavier@globallogic.com
+      created_at: 2026-05-05T22:00:00Z
+      last_updated_at: 2026-05-05T22:00:00Z

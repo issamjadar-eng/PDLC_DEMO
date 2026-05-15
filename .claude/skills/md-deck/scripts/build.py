@@ -35,9 +35,53 @@ from icons import (  # noqa: E402
     pick_strict as _pick_icon_strict,
     detect_group as _detect_group,
     pick_group as _pick_group_icon,
+    configure_vocabularies as _configure_vocabularies,
 )
 
-VERSION = "0.5.0"
+
+def _resolve_vocabulary_packs(cli_packs: list[str] | None) -> list[str]:
+    """Resolve which icon vocabulary packs to load.
+
+    Resolution order (first non-empty wins):
+      1. --vocabulary CLI flag (comma-separated list, may be passed multiple times)
+      2. project.yml `md_deck.vocabulary_packs` (list)
+      3. Empty (trunk-only / domain-neutral)
+
+    Returns a list of pack names. An empty list means trunk-only behavior.
+    """
+    # CLI flag — accumulated across all --vocabulary invocations
+    if cli_packs:
+        flat: list[str] = []
+        for entry in cli_packs:
+            for name in entry.split(","):
+                name = name.strip()
+                if name and name not in flat:
+                    flat.append(name)
+        if flat:
+            return flat
+
+    # project.yml fallback — walk up from cwd
+    cur = Path.cwd().resolve()
+    for parent in [cur, *cur.parents]:
+        candidate = parent / "project.yml"
+        if candidate.is_file():
+            try:
+                import yaml  # type: ignore[import-untyped]
+            except ImportError:
+                return []
+            try:
+                data = yaml.safe_load(candidate.read_text()) or {}
+            except Exception:
+                return []
+            md_deck_cfg = (data.get("md_deck") or {}) if isinstance(data, dict) else {}
+            packs = md_deck_cfg.get("vocabulary_packs") or []
+            if isinstance(packs, list):
+                return [str(p) for p in packs if p]
+            break
+
+    return []
+
+VERSION = "0.6.1"
 SKILL_DIR = Path(__file__).resolve().parent.parent  # .claude/skills/md-deck/
 SKILLS_ROOT = SKILL_DIR.parent  # .claude/skills/
 FRONTEND_SLIDES_DIR = SKILLS_ROOT / "frontend-slides"
@@ -189,8 +233,56 @@ def _slugify(s: str) -> str:
     return s.strip("-") or "deck"
 
 
+def slugify_heading(section_num: str | None, title: str) -> str:
+    """Mint a stable slug from a `### N.M Heading Title` heading.
+
+    Examples:
+        slugify_heading("8.5", "Rules — project conventions")
+            → "s8-5-rules-project-conventions"
+        slugify_heading("3", "Architecture overview")
+            → "s3-architecture-overview"
+        slugify_heading(None, "Untitled")
+            → "s-untitled"
+
+    Section identity is `(section_num, title)`; line numbers play no part.
+    Callers wanting reserved slugs (`_title`, `_agenda`, `_divider-N`) bypass
+    this helper and assemble the literal directly.
+    """
+    title_slug = _slugify(title or "section")
+    if not section_num:
+        return f"s-{title_slug}"
+    num_slug = re.sub(r"[^0-9a-z]+", "-", str(section_num).lower()).strip("-")
+    return f"s{num_slug}-{title_slug}"
+
+
+def compute_section_sha256(source_text: str, lo: int, hi: int) -> str:
+    """SHA-256 of source lines [lo..hi] inclusive (1-indexed) — section validity key.
+
+    Hashes the *exact slice of source text* the section covers, so any content
+    edit (heading retitle, body change, list reorder) flips the digest. Cache
+    entries keyed by this digest become stale on edit; orphan sweep retires
+    them on the next build.
+    """
+    lines = source_text.splitlines()
+    lo = max(1, int(lo))
+    hi = max(lo, int(hi))
+    block = "\n".join(lines[lo - 1: hi])
+    return hashlib.sha256(block.encode("utf-8")).hexdigest()
+
+
 def _esc(s: str) -> str:
     return html_mod.escape(s, quote=True)
+
+
+def _slide_slug(s: dict) -> str:
+    """Resolve a slide's identity for emission/cache/picks lookups.
+
+    Returns the slug minted at synthesize_slides time; falls back to the
+    legacy `anchor` field for slides predating Phase 1 of ben/163. The
+    fallback keeps any in-flight third-party slide dicts (e.g. fixtures
+    from older tests) addressable.
+    """
+    return s.get("slug") or s.get("anchor", "")
 
 
 def _shorten(text: str, n_words: int) -> str:
@@ -429,9 +521,34 @@ def parse_markdown(text: str) -> list[dict]:
 # Slide synthesis — block sequence → slide list
 # ---------------------------------------------------------------------------
 
-def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
-    """Walk the block stream and synthesize the slide list."""
+def synthesize_slides(blocks: list[dict], source_path: Path,
+                      source_text: str = "") -> list[dict]:
+    """Walk the block stream and synthesize the slide list.
+
+    Each slide carries two parallel identity fields during the slug-migration
+    shadow window:
+      - `anchor`           — legacy `L<lo>-L<hi>` form, still drives cache/picks.
+      - `slug`             — stable identity derived from heading text. Reserved
+                             slugs `_title`, `_agenda`, `_divider-<N>` for slides
+                             without a content heading. Deduped per build via a
+                             counter suffix (`-2`, `-3`, …) when collisions occur.
+      - `source_sha256`    — SHA-256 of the source slice (validity key for caches).
+      - `source_lines`     — informational `L<lo>-L<hi>` for diagnostics.
+
+    `source_text` is the raw markdown source, needed to compute the SHA. When
+    omitted (legacy callers), SHA fields are left empty and slug minting still
+    works.
+    """
     slides: list[dict] = []
+    used_slugs: dict[str, int] = {}
+
+    def _mint(slug: str) -> str:
+        n = used_slugs.get(slug, 0)
+        used_slugs[slug] = n + 1
+        return slug if n == 0 else f"{slug}-{n + 1}"
+
+    def _sha(lo: int, hi: int) -> str:
+        return compute_section_sha256(source_text, lo, hi) if source_text else ""
 
     # 1. Title slide — first H1 + lead paragraph + any **Foo:** bar meta lines
     title_text = ""
@@ -458,13 +575,17 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
             cursor += 1
 
     if title_text:
+        title_line = blocks[0].get("line", 1)
         slides.append({
             "type": "title",
             "title": title_text,
             "lead": lead,
             "meta": meta_pairs,
-            "anchor": f"L{blocks[0].get('line', 1)}",
+            "anchor": f"L{title_line}",
             "section": None,
+            "slug": _mint("_title"),
+            "source_lines": f"L{title_line}",
+            "source_sha256": _sha(title_line, title_line),
         })
 
     # 2. Agenda — computed from H2 sections (auto-injected after title)
@@ -481,6 +602,9 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
             "items": agenda_items,
             "anchor": "computed",
             "section": None,
+            "slug": _mint("_agenda"),
+            "source_lines": "computed",
+            "source_sha256": "",
         })
 
     # 3. Walk remaining blocks, building one slide per H2/H3/H4 section
@@ -499,6 +623,9 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
                     "title": m.group(2),
                     "section": m.group(1),
                     "anchor": f"L{b['line']}",
+                    "slug": _mint(f"_divider-{m.group(1)}"),
+                    "source_lines": f"L{b['line']}",
+                    "source_sha256": _sha(b["line"], b["line"]),
                 })
                 # If the H2 has body content directly under it (no H3 child
                 # before the next H2), emit a content slide for that body.
@@ -522,6 +649,11 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
                         anchor=f"L{b['line']}-L{body_anchor_end}",
                     )
                     if body_slide is not None:
+                        body_slide["slug"] = _mint(
+                            slugify_heading(current_section, current_section_title)
+                        )
+                        body_slide["source_lines"] = f"L{b['line']}-L{body_anchor_end}"
+                        body_slide["source_sha256"] = _sha(b["line"], body_anchor_end)
                         slides.append(body_slide)
                     i = peek
                     continue
@@ -555,6 +687,9 @@ def synthesize_slides(blocks: list[dict], source_path: Path) -> list[dict]:
                 anchor=f"L{anchor_start}-L{anchor_end}",
             )
             if slide is not None:
+                slide["slug"] = _mint(slugify_heading(section_num, slide_title))
+                slide["source_lines"] = f"L{anchor_start}-L{anchor_end}"
+                slide["source_sha256"] = _sha(anchor_start, anchor_end)
                 slides.append(slide)
             i = j
             continue
@@ -996,7 +1131,7 @@ def render_title_slide(s: dict) -> str:
         )
         meta_html = f'<div class="t-meta-block reveal">{rows}</div>'
     return f'''
-<section class="slide title-slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide title-slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="signal-block"></div>
     <div class="slide-content">
@@ -1015,7 +1150,7 @@ def render_agenda_slide(s: dict) -> str:
         for num, text in s["items"]
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1028,7 +1163,7 @@ def render_agenda_slide(s: dict) -> str:
 def render_divider_slide(s: dict) -> str:
     section = s.get("section", "")
     return f'''
-<section class="slide divider-slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide divider-slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content divider-content">
         <div class="divider-num reveal">{_esc(section)}</div>
@@ -1053,7 +1188,7 @@ def render_table_slide(s: dict) -> str:
         if s.get("lead") else ""
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1087,7 +1222,7 @@ def render_card_grid(s: dict) -> str:
         for i, t in enumerate(s.get("tiles", []))
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1108,7 +1243,7 @@ def render_list_slide(s: dict) -> str:
         for it in s.get("items", [])
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1121,7 +1256,7 @@ def render_list_slide(s: dict) -> str:
 
 def render_quote_slide(s: dict) -> str:
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1136,7 +1271,7 @@ def render_prose_slide(s: dict) -> str:
         f'<p class="reveal">{render_inline(p)}</p>' for p in s.get("paragraphs", [])
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1159,7 +1294,7 @@ def render_image_feature(s: dict) -> str:
             f'<li class="reveal">{render_inline(b)}</li>' for b in s["bullets"]
         ) + '</ul>'
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s)}
     <div class="slide-content">
         <h2 class="reveal">{render_inline(s["title"])}</h2>
@@ -1184,7 +1319,7 @@ def render_principle_tiles(s: dict) -> str:
         for i, t in enumerate(s.get("tiles", [])[:6])
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant A — principle tiles")}
     <div class="slide-content">
         <div class="eyebrow reveal">Variation A · Principle Tiles</div>
@@ -1215,7 +1350,7 @@ def render_catalog_mosaic(s: dict) -> str:
     page_idx = s.get("page_idx", 0)
     eyebrow = "Variation A · Catalog Mosaic" if page_idx == 0 else f"Variation A · Catalog Mosaic — page {page_idx + 1}"
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant A — catalog mosaic")}
     <div class="slide-content">
         <div class="eyebrow reveal">{_esc(eyebrow)}</div>
@@ -1248,7 +1383,7 @@ def render_catalog_featured(s: dict) -> str:
         '</div>'
     ) if chips else ""
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant B — featured")}
     <div class="slide-content">
         <div class="eyebrow reveal">Variation B · Featured</div>
@@ -1268,7 +1403,7 @@ def render_scope_iceberg(s: dict) -> str:
     lead = (f'<p class="lead reveal">{render_inline(s["lead"])}</p>'
             if s.get("lead") else "")
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant A — scope iceberg")}
     <div class="slide-content">
         <div class="eyebrow reveal">Variation A · Scope Iceberg</div>
@@ -1299,7 +1434,7 @@ def render_concept_canvas(s: dict) -> str:
     lead = (f'<p class="lead reveal">{render_inline(s["lead"])}</p>'
             if s.get("lead") else "")
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant A — concept canvas")}
     <div class="slide-content">
         <div class="eyebrow reveal">Variation A · Concept Canvas</div>
@@ -1330,7 +1465,7 @@ def render_handoff_relay(s: dict) -> str:
         if s.get("summary") else ""
     )
     return f'''
-<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">
+<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">
     {_chrome(s, variant_label="variant A — handoff relay")}
     <div class="slide-content">
         <div class="eyebrow reveal">Variation A · Handoff Relay</div>
@@ -1409,7 +1544,7 @@ def render_big_stat(s: dict) -> str:
     support = _esc(_shorten(text_pool, 36)) if text_pool else ""
     section_label = f'<div class="eyebrow reveal">§{section} · KEY METRIC</div>' if section else '<div class="eyebrow reveal">KEY METRIC</div>'
     return (
-        f'<section class="slide big-stat" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide big-stat" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'{section_label}'
@@ -1427,7 +1562,7 @@ def render_mic_drop(s: dict) -> str:
     text_pool = s.get("quote") or s.get("lead") or " ".join(s.get("paragraphs") or []) or title
     line = _shortest_sentence(text_pool)
     return (
-        f'<section class="slide mic-drop" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide mic-drop" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<div class="punchline reveal">{render_inline(line)}</div>'
@@ -1460,7 +1595,7 @@ def render_timeline_horizontal(s: dict) -> str:
         )
     n = len(items) or 1
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
@@ -1494,7 +1629,7 @@ def render_phase_stack(s: dict) -> str:
         )
     cols = len(items) or 1
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
@@ -1522,18 +1657,26 @@ def render_before_after(s: dict) -> str:
     after_num = _extract_first_number(after_text)
     delta_match = _RATIO_PHRASE_RE.search(pool)
     delta_html = f'<div class="delta reveal">{_esc(delta_match.group(0))}</div>' if delta_match else ''
+    before_stat_html = (
+        f'<div class="ba-stat">{_esc(before_num[0])}<span style="font-size:0.5em">{_esc(before_num[1])}</span></div>'
+        if before_num else ''
+    )
+    after_stat_html = (
+        f'<div class="ba-stat">{_esc(after_num[0])}<span style="font-size:0.5em">{_esc(after_num[1])}</span></div>'
+        if after_num else ''
+    )
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(title)}</h2>'
         f'<div class="before-after reveal">'
         f'<div class="ba-card before"><div class="ba-tag">BEFORE</div>'
-        f'{f"<div class=\"ba-stat\">{_esc(before_num[0])}<span style=\"font-size:0.5em\">{_esc(before_num[1])}</span></div>" if before_num else ""}'
+        f'{before_stat_html}'
         f'<div class="ba-text">{render_inline(_shorten(before_text, 28))}</div></div>'
         f'<div class="arrow">→</div>'
         f'<div class="ba-card after"><div class="ba-tag">AFTER</div>'
-        f'{f"<div class=\"ba-stat\">{_esc(after_num[0])}<span style=\"font-size:0.5em\">{_esc(after_num[1])}</span></div>" if after_num else ""}'
+        f'{after_stat_html}'
         f'<div class="ba-text">{render_inline(_shorten(after_text, 28))}</div></div>'
         f'{delta_html}'
         f'</div></div></section>'
@@ -1575,7 +1718,7 @@ def render_versus_split(s: dict) -> str:
         return "".join(f'<li>{render_inline(_shorten(i, 22))}</li>' for i in items)
 
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
@@ -1630,7 +1773,7 @@ def render_bar_chart(s: dict) -> str:
             f'</div>'
         )
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
@@ -1664,7 +1807,7 @@ def render_roster_cards(s: dict) -> str:
             f'</div></div>'
         )
     return (
-        f'<section class="slide" data-source-anchor="{_esc(s.get("anchor", ""))}">'
+        f'<section class="slide" data-source-anchor="{_esc(_slide_slug(s))}">'
         f'{_chrome(s)}'
         f'<div class="slide-content">'
         f'<h2 class="reveal">{render_inline(s.get("title",""))}</h2>'
@@ -1808,7 +1951,7 @@ def wrap_document(*, body: str, source_path: Path, source_sha: str,
 def write_manifest(*, out_dir: Path, source_path: Path, source_sha: str,
                    built_at: str, style: str, slides: list[dict]) -> Path:
     manifest = {
-        "schema": "md-deck/manifest@1",
+        "schema": "md-deck/manifest@2",
         "generator": f"md-deck v{VERSION}",
         "source": {
             "path": str(source_path.name),
@@ -1827,6 +1970,9 @@ def write_manifest(*, out_dir: Path, source_path: Path, source_sha: str,
                 "title": s.get("title"),
                 "section": s.get("section"),
                 "anchor": s.get("anchor"),
+                "slug": s.get("slug"),
+                "source_lines": s.get("source_lines"),
+                "source_sha256": s.get("source_sha256"),
             }
             for i, s in enumerate(slides)
         ],
@@ -2074,6 +2220,12 @@ def expand_with_variants(slides: list[dict]) -> list[dict]:
     for s in slides:
         out.append(s)
         for v in _inject_variants(s):
+            # Variant builders only carry section/title/anchor — propagate the
+            # slug-era identity fields from the parent so the manifest covers
+            # variant slides too.
+            for k in ("slug", "source_lines", "source_sha256"):
+                if s.get(k) and not v.get(k):
+                    v[k] = s[k]
             out.append(v)
     return out
 
@@ -2165,7 +2317,9 @@ def _emit_candidates_html(
     parts.append('</header>')
 
     for section in section_candidates:
-        anchor = section["anchor"]
+        # `anchor` here is the slug — the var name is kept for parity with the
+        # baked JS, which treats this as an opaque pick key.
+        anchor = section["slug"]
         title = section["title"] or "(untitled)"
         parts.append(f'<div class="candidate-section" data-anchor="{_esc(anchor)}">')
         parts.append(f'<h2>{_esc(title)} <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>')
@@ -2293,13 +2447,90 @@ document.addEventListener('DOMContentLoaded', () => {
     )
 
 
-def _save_creative_cache(out_dir: Path, source_sha: str, source_name: str, cache: dict) -> None:
-    """Persist creative-slot HTML cache so subsequent builds skip re-calling the agent.
+def _cache_dir(out_dir: Path) -> Path:
+    """Per-deck successful-creative cache root. Committed (unlike `.debug/`)."""
+    return out_dir / ".creative-cache"
 
-    Stored as a top-level `creative_cache` block in picks.json so picks and
-    cache live in one file. Schema:
-      creative_cache[anchor][slot_name] = {html, generated_at, source_sha}
+
+_CACHE_HEADER_RE = re.compile(
+    r"<!--\s*md-deck/cache@1\s+(.*?)\s*-->",
+    re.DOTALL,
+)
+
+
+def _parse_cache_header(text: str) -> tuple[dict, str] | None:
+    """Parse `<!-- md-deck/cache@1 k=v k=v -->` header → (meta, body) or None.
+
+    Body is the HTML after the header (and a single newline). Values are bare
+    tokens — no quoting, no equals signs, no whitespace inside values.
     """
+    m = _CACHE_HEADER_RE.match(text)
+    if not m:
+        return None
+    meta: dict = {}
+    for tok in m.group(1).split():
+        if "=" in tok:
+            k, _, v = tok.partition("=")
+            meta[k] = v
+    body = text[m.end():].lstrip("\n")
+    return meta, body
+
+
+_CACHE_SLUG_BYTE_CAP = 180
+
+
+def _cache_file_path(out_dir: Path, slug: str, sha7: str, slot: str) -> Path:
+    name_slug = slug
+    if len(name_slug.encode("utf-8")) > _CACHE_SLUG_BYTE_CAP:
+        digest = hashlib.sha1(slug.encode("utf-8")).hexdigest()[:8]
+        prefix = slug.encode("utf-8")[: _CACHE_SLUG_BYTE_CAP - 9].decode("utf-8", errors="ignore")
+        name_slug = f"{prefix.rstrip('-')}-{digest}"
+    return _cache_dir(out_dir) / f"{name_slug}__{sha7}-{slot}.html"
+
+
+def _save_creative_cache(out_dir: Path, source_sha: str, source_name: str, cache: dict) -> None:
+    """Persist creative-slot HTML cache.
+
+    On disk: one file per (slug, sha, slot) at `.creative-cache/<slug>__<sha7>-<slot>.html`.
+    Each file carries a `<!-- md-deck/cache@1 ... -->` header naming the source
+    SHA, personality, and generation timestamp; the body is the agent's HTML.
+
+    Picks.json is rewritten alongside (schema bumped to `md-deck/picks@3`) and
+    has its legacy `creative_cache` block stripped — cache lives in files now.
+    """
+    cache_dir = _cache_dir(out_dir)
+    cache_dir.mkdir(exist_ok=True)
+
+    # Track files we're writing this run; sweep stale `<slug>__<sha7>-<slot>.html`
+    # entries for the same (slug, slot) at different SHAs lives in `--sweep-cache`
+    # (sub-task 1.11), not here.
+    written: set[Path] = set()
+    for slug, slot_map in (cache or {}).items():
+        if not slug or not isinstance(slot_map, dict):
+            continue
+        for slot, entry in slot_map.items():
+            if not isinstance(entry, dict):
+                continue
+            html_frag = entry.get("html")
+            entry_sha = entry.get("source_sha")
+            if not html_frag or not entry_sha:
+                continue
+            full_sha = str(entry_sha)
+            sha7 = full_sha[:7]
+            personality = str(entry.get("personality") or "")
+            generated_at = str(entry.get("generated_at") or "")
+            # `source_sha` carries the full digest (load-bearing for staleness);
+            # `sha7` is mirrored in the filename for human-readable listing.
+            header = (
+                f"<!-- md-deck/cache@1 slug={slug} slot={slot} "
+                f"source_sha={full_sha} personality={personality} "
+                f"generated_at={generated_at} -->"
+            )
+            path = _cache_file_path(out_dir, slug, sha7, slot)
+            path.write_text(header + "\n" + html_frag, encoding="utf-8")
+            written.add(path)
+
+    # Rewrite picks.json: bump schema, strip creative_cache block.
     p = _picks_path(out_dir)
     if p.exists():
         try:
@@ -2308,15 +2539,161 @@ def _save_creative_cache(out_dir: Path, source_sha: str, source_name: str, cache
             data = {}
     else:
         data = {}
-    data.setdefault("schema", "md-deck/picks@2")
+    data["schema"] = "md-deck/picks@3"
     data["source"] = source_name
     data["source_sha256"] = source_sha
     data.setdefault("picks", {})
-    data["creative_cache"] = cache
+    data.pop("creative_cache", None)
     p.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
+def sweep_creative_cache(out_dir: Path, current_slugs: set[str],
+                          current_sha: str | dict[str, str],
+                          *, dry_run: bool = False) -> tuple[list[Path], list[Path]]:
+    """Remove orphan + stale-SHA files from `.creative-cache/`.
+
+    A cache file is **orphan** when its slug is not in `current_slugs` (the
+    section was renamed or deleted in the source). A cache file is **stale**
+    when its slug is current but its `source_sha` header does not match the
+    expected SHA. Both go.
+
+    `current_sha` accepts two shapes for compatibility with how the cache is
+    keyed: a `dict[slug, source_sha256]` (preferred — validates each entry
+    against its own section's content SHA, which is what `_save_creative_cache`
+    writes today), or a single deck-wide SHA string (legacy fallback used by
+    older deck folders that stamped every entry with the deck-wide SHA).
+
+    Returns (orphan_paths, stale_paths) — the files that were removed (or
+    would be removed if `dry_run=True`).
+    """
+    cache_dir = _cache_dir(out_dir)
+    if not cache_dir.is_dir():
+        return [], []
+    orphan: list[Path] = []
+    stale: list[Path] = []
+    for path in cache_dir.glob("*.html"):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        parsed = _parse_cache_header(text)
+        if not parsed:
+            # Unparseable header — treat as orphan; the file is unreadable
+            # by the cache layer regardless.
+            orphan.append(path)
+            continue
+        meta, _body = parsed
+        slug = meta.get("slug")
+        sha = meta.get("source_sha", "")
+        if not slug or slug not in current_slugs:
+            orphan.append(path)
+            continue
+        if isinstance(current_sha, dict):
+            expected = current_sha.get(slug, "")
+        else:
+            expected = current_sha
+        if sha != expected:
+            stale.append(path)
+    if not dry_run:
+        for p in (*orphan, *stale):
+            try:
+                p.unlink()
+            except OSError:
+                pass
+    return orphan, stale
+
+
+def _write_deck_readme(out_dir: Path, source_path: Path, *, force: bool = False) -> bool:
+    """Auto-generate `assets/<slug>/README.md` so every deck folder ships
+    with the project-required README. Idempotent — does not overwrite an
+    existing README unless `force=True`.
+
+    Returns True when a file was written, False when one already existed
+    (so the caller can leave user-authored notes in place).
+    """
+    readme = out_dir / "README.md"
+    if readme.exists() and not force:
+        return False
+    slug = out_dir.name
+    src_rel: str
+    try:
+        src_rel = str(source_path.resolve().relative_to(out_dir.resolve().parent.parent))
+    except ValueError:
+        src_rel = source_path.name
+    body = f"""# {slug} — md-deck output
+
+Auto-generated deck folder. Source: `{src_rel}`.
+
+## Structure
+
+| File | Owner | Purpose |
+|---|---|---|
+| `index.html` | md-deck | Final single-file slide deck — open in a browser. |
+| `candidates.html` | md-deck | 4-up review UI; emitted on first build or with `--review`. |
+| `picks.json` | user (curated) | Per-section pick selection. Keyed by section **slug**. |
+| `distillation.yml` | md-deck | Deck-wide brief + per-section dossiers. Sections keyed by slug. |
+| `manifest.json` | md-deck | Build provenance (slug, source_lines, source_sha256 per slide). |
+| `.creative-cache/` | md-deck (committed) | Per-(slug, sha, slot) successful agent HTML. Survives across builds; stale entries swept by `--sweep-cache`. |
+| `.debug/` | md-deck (gitignored) | Failure dumps from the creative fan-out. Safe to delete. |
+
+## Iterate
+
+- Refresh one section's creatives only:
+  `python3 .claude/skills/md-deck/scripts/build.py {src_rel} --creative --re-roll-creative <slug>`
+- Re-distill + re-roll one section in one step:
+  `... --re-roll-section <slug>`
+- Retire orphan / stale cache:
+  `... --sweep-cache`
+- Forensic / cache-bypass:
+  `... --creative --no-cache`
+
+## Identity model
+
+Sections are identified by **slug** (derived from `### N.M Heading`),
+not by source line range. Cache validity is keyed on the section's
+content-SHA. Inserting / deleting unrelated sections does not invalidate
+this section's cache. See task ben/163 for design notes.
+"""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    readme.write_text(body, encoding="utf-8")
+    return True
+
+
 def _load_creative_cache(out_dir: Path) -> dict:
+    """Load the creative-slot HTML cache.
+
+    Walks `.creative-cache/<slug>__<sha7>-<slot>.html` and rebuilds the dict
+    shape `{slug: {slot: {html, source_sha, personality, generated_at}}}`.
+    Falls back to the legacy `picks.json:creative_cache` block when no cache
+    files are present yet — one-time migration window so picks/caches built
+    under the previous schema continue to work without manual intervention.
+    """
+    out: dict[str, dict] = {}
+    cache_dir = _cache_dir(out_dir)
+    if cache_dir.is_dir():
+        for path in cache_dir.glob("*.html"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            parsed = _parse_cache_header(text)
+            if not parsed:
+                continue
+            meta, body = parsed
+            slug = meta.get("slug")
+            slot = meta.get("slot")
+            if not slug or not slot:
+                continue
+            out.setdefault(slug, {})[slot] = {
+                "html": body,
+                "source_sha": meta.get("source_sha", ""),
+                "personality": meta.get("personality", ""),
+                "generated_at": meta.get("generated_at", ""),
+            }
+        if out:
+            return out
+
+    # Legacy fallback — picks@2 stored cache inside picks.json.
     p = _picks_path(out_dir)
     if not p.exists():
         return {}
@@ -2340,13 +2717,15 @@ def build(
     creative_parallelism: int = 5,
     template_slots: int = 1,
     agent_slots: int = 3,
+    disable_cache: bool = False,
+    auto_re_roll_on_lint: bool = False,
 ) -> dict:
     text = source_path.read_text(encoding="utf-8")
     sha = hashlib.sha256(text.encode()).hexdigest()
     built_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     blocks = parse_markdown(text)
-    base_slides = synthesize_slides(blocks, source_path)
+    base_slides = synthesize_slides(blocks, source_path, source_text=text)
     base_slides = apply_density_splits(base_slides)
 
     # Resolve the output directory first — picks.json now lives inside it
@@ -2367,8 +2746,54 @@ def build(
     # v0.4 PR 4 — load picks from the assets folder + load component registry
     picks = load_picks(out_dir)
     registry = load_component_registry()
-    creative_cache = _load_creative_cache(out_dir) if creative_mode else {}
+    # ben/163 1.12 — `--no-cache` forensic bypass: load nothing, persist nothing.
+    # Distinct from `--re-roll-creative` (which still persists fresh cache).
+    if disable_cache and creative_mode:
+        creative_cache = {}
+    else:
+        creative_cache = _load_creative_cache(out_dir) if creative_mode else {}
     re_roll_set = set(re_roll_creative or [])
+
+    # ben/163 1.13 — drop a per-deck README on first build so every assets/<slug>/
+    # folder satisfies the project "every folder has a README" rule. Does not
+    # overwrite user-authored notes once they exist.
+    _write_deck_readme(out_dir, source_path)
+
+    # ben/163 — auto-migrate legacy `L<lo>-L<hi>` keys in picks + creative_cache
+    # to slug keys. Keys are remapped via the source_lines → slug index built
+    # from this build's slides; un-resolvable legacy keys pass through (orphan
+    # sweep retires them in sub-task 1.11). Re-saving picks.json / cache after
+    # the build persists the migration.
+    legacy_to_slug: dict[str, str] = {}
+    for s in base_slides:
+        sl = s.get("source_lines")
+        sg = s.get("slug")
+        if sl and sg and sl not in legacy_to_slug:
+            legacy_to_slug[sl] = sg
+
+    def _remap_legacy_keys(d: dict) -> tuple[dict, int]:
+        out: dict = {}
+        migrated = 0
+        for k, v in d.items():
+            if k in legacy_to_slug:
+                out[legacy_to_slug[k]] = v
+                migrated += 1
+            else:
+                out[k] = v
+        return out, migrated
+
+    picks, picks_migrated = _remap_legacy_keys(picks)
+    creative_cache, cache_migrated = _remap_legacy_keys(creative_cache)
+    if picks_migrated or cache_migrated:
+        print(
+            f"  · auto-migrated legacy line-range keys: "
+            f"{picks_migrated} picks, {cache_migrated} cache entries → slug",
+            file=sys.stderr,
+        )
+
+    # Re-roll set may carry either form; normalize to slugs so the comparison
+    # in the loop works regardless of how the user typed the flag.
+    re_roll_set = {legacy_to_slug.get(k, k) for k in re_roll_set}
 
     # v0.5 — when --creative is on, run the deck-wide distillation pass first.
     # Cached at out_dir/distillation.yml, source-SHA-tagged. Slot briefs ingest
@@ -2376,10 +2801,25 @@ def build(
     distillation: dict = {}
     if creative_mode:
         from distill import distill_source
+        # ben/163 1.8 — build the slug_index from synthesized slides so distill.py
+        # can rewrite per-section identity to slug form on load. Each entry maps
+        # the agent-emitted `L<lo>-L<hi>` legacy anchor → its slug + content-SHA.
+        slug_index_for_distill: dict[str, dict] = {}
+        for s in base_slides:
+            sl = s.get("source_lines")
+            sg = s.get("slug")
+            if not sl or not sg or sl in slug_index_for_distill:
+                continue
+            slug_index_for_distill[sl] = {
+                "slug": sg,
+                "source_sha256": s.get("source_sha256", ""),
+                "title": s.get("title", ""),
+            }
         try:
             distillation = distill_source(
                 source_path, out_dir, source_sha=sha,
                 force=bool(re_roll_distillation),
+                slug_index=slug_index_for_distill,
             )
         except Exception as e:
             print(f"  ⚠ distillation failed: {e}; creative slots will fall back to raw markdown only", file=sys.stderr)
@@ -2413,11 +2853,11 @@ def build(
         if not cands:
             slide_plan.append({"kind": "passthrough", "base": base})
             continue
+        slug = _slide_slug(base)
         # Eligible — record the position; chosen slide materializes after fan-out.
-        slide_plan.append({"kind": "chosen", "anchor": base.get("anchor", "")})
+        slide_plan.append({"kind": "chosen", "slug": slug})
 
-        anchor = base.get("anchor", "")
-        pick_entries = picks.get(anchor) or []  # list of {component, html?}
+        pick_entries = picks.get(slug) or []  # list of {component, html?}
         # First pick's component drives the candidate's "is locked" state
         # (used to highlight in candidates.html); the full list drives how
         # many final slides this section emits.
@@ -2452,13 +2892,21 @@ def build(
         # fan-out below. We need template_rendered for ref_a/ref_b in the brief,
         # so cached entries materialize here and pending entries are placeholders.
         creative_rendered: list[dict] = []
-        if creative_mode and (creative_section is None or creative_section == anchor):
-            anchor_cache = creative_cache.get(anchor) or {}
+        # `creative_section` may be either slug or legacy line-range; auto-migrate.
+        target_section = legacy_to_slug.get(creative_section, creative_section) if creative_section else None
+        if creative_mode and (target_section is None or target_section == slug):
+            section_cache = creative_cache.get(slug) or {}
+            # ben/166 — cache is keyed on the per-section content SHA. The
+            # deck-wide `sha` was the wrong validity key (it changes whenever
+            # any line in the source moves, invalidating sections that didn't
+            # actually change). Section-level SHA matches `_save_creative_cache`
+            # and the seeded migration.
+            section_sha = base.get("source_sha256", sha)
             for slot, personality in _slot_plan_creative:
-                cached = anchor_cache.get(slot) or {}
+                cached = section_cache.get(slot) or {}
                 cached_html = cached.get("html")
-                stale = cached.get("source_sha") != sha
-                if cached_html and not stale and anchor not in re_roll_set:
+                stale = cached.get("source_sha") != section_sha
+                if cached_html and not stale and slug not in re_roll_set:
                     creative_rendered.append({
                         "component": slot,
                         "score": 0.95 if slot == "creative-c" else 0.92,
@@ -2470,14 +2918,46 @@ def build(
                 else:
                     # Queue this slot for parallel generation. The placeholder
                     # carries the metadata needed to fill in the html later.
+                    # ben/167 v2 — when this is a manual `--re-roll-creative
+                    # <slug>` and a previous cached entry for this (slug, slot)
+                    # exists, attach previous HTML + lint critique so the agent
+                    # iterates against feedback rather than rolling blind.
+                    prev_html_for_iter = ""
+                    prev_critique_for_iter = ""
+                    if slug in re_roll_set:
+                        prev_entry = (creative_cache.get(slug) or {}).get(slot) or {}
+                        prev_html_candidate = prev_entry.get("html") or ""
+                        if prev_html_candidate:
+                            try:
+                                from importlib.util import spec_from_file_location, module_from_spec
+                                lint_path = Path(__file__).resolve().parent / "lint-creative.py"
+                                spec = spec_from_file_location("lint_creative", lint_path)
+                                lc = module_from_spec(spec); spec.loader.exec_module(lc)  # type: ignore
+                                # Synthesize a "single-file" lint by writing a temp file
+                                # is overkill — just call the per-file linter directly.
+                                import tempfile
+                                with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False) as tf:
+                                    tf.write(prev_html_candidate); tmp_path = Path(tf.name)
+                                prev_warnings = lc.lint_file(tmp_path)
+                                tmp_path.unlink(missing_ok=True)
+                                if prev_warnings:
+                                    prev_html_for_iter = prev_html_candidate
+                                    prev_critique_for_iter = lc.format_critique(prev_warnings)
+                            except Exception:
+                                pass
                     creative_pending.append({
-                        "anchor": anchor,
+                        "slug": slug,
+                        "source_lines": base.get("source_lines", ""),
+                        "section_sha": section_sha,
                         "slot": slot,
                         "personality": personality,
                         "section_title": base.get("title", ""),
                         "section_number": base.get("section"),
                         "ref_a": template_rendered[0]["html"] if template_rendered else "",
                         "ref_b": template_rendered[1]["html"] if len(template_rendered) > 1 else "",
+                        "previous_html": prev_html_for_iter,
+                        "previous_critique": prev_critique_for_iter,
+                        "pass": 1,  # iteration counter; auto-re-roll bumps to 2
                     })
                     creative_rendered.append({
                         "component": slot,
@@ -2488,14 +2968,14 @@ def build(
                         "html": "",  # filled in after parallel fan-out
                         "_pending": True,
                     })
-            creative_cache[anchor] = anchor_cache
+            creative_cache[slug] = section_cache
 
         all_candidates = template_rendered + creative_rendered
 
         # Stash for the finalize-pass below. Final chosen-slide computation
         # happens AFTER the parallel creative fan-out so pending HTML is filled.
         section_candidates.append({
-            "anchor": anchor,
+            "slug": slug,
             "section": base.get("section"),
             "title": base.get("title", ""),
             "candidates": all_candidates,
@@ -2503,8 +2983,8 @@ def build(
             "_locked_html": locked_html,
             "_pick_entries": pick_entries,  # list — emit one slide per entry
         })
-        base_slide_by_anchor[anchor] = base
-        cands_by_anchor[anchor] = cands
+        base_slide_by_anchor[slug] = base
+        cands_by_anchor[slug] = cands
 
     # ── Parallel fan-out: generate all pending creative slots concurrently ──
     if creative_pending:
@@ -2523,20 +3003,24 @@ def build(
         )
 
         def _generate(task: dict) -> tuple[dict, str | None, str]:
-            section_md = _slice_source_markdown(text, task["anchor"])
-            dossier = section_dossier(distillation, task["anchor"])
+            # Slice on source_lines (still `L<lo>-L<hi>`); slug is for identity,
+            # not for line lookup.
+            section_md = _slice_source_markdown(text, task["source_lines"])
+            dossier = section_dossier(distillation, task["slug"])
             section_block = section_brief_block(dossier)
             try:
                 html_frag, raw = generate_creative_slide(
                     section_markdown=section_md,
                     section_title=task["section_title"],
-                    section_anchor=task["anchor"],
+                    section_anchor=task["slug"],
                     section_number=task["section_number"],
                     slot_personality=task["personality"],
                     reference_html_a=task["ref_a"],
                     reference_html_b=task["ref_b"],
                     deck_brief=deck_block,
                     section_brief=section_block,
+                    previous_html=task.get("previous_html", ""),
+                    previous_critique=task.get("previous_critique", ""),
                 )
                 return task, html_frag, raw
             except Exception as e:
@@ -2546,35 +3030,42 @@ def build(
             futures = [pool.submit(_generate, t) for t in creative_pending]
             for fut in as_completed(futures):
                 task, html_frag, raw = fut.result()
-                anchor = task["anchor"]
+                slug = task["slug"]
                 slot = task["slot"]
                 personality = task["personality"]
                 creative_calls += 1
                 # Thread-safe read-modify-write on creative_cache. Without the
-                # lock, two threads writing slots for the same anchor (or even
-                # different anchors via dict-rehash races) could clobber the
+                # lock, two threads writing slots for the same section (or even
+                # different sections via dict-rehash races) could clobber the
                 # other's entry, leading to a partially-populated picks.json
                 # at the end of the run.
                 with cache_lock:
-                    anchor_cache = creative_cache.get(anchor) or {}
+                    section_cache = creative_cache.get(slug) or {}
                     if html_frag:
-                        anchor_cache[slot] = {
+                        section_cache[slot] = {
                             "html": html_frag,
                             "personality": personality,
-                            "source_sha": sha,
+                            # ben/166 — stamp with per-section content SHA, not
+                            # deck-wide. Matches the cache validity check at
+                            # load time (line ~2891) and the seeded migration.
+                            "source_sha": task.get("section_sha", sha),
                             "generated_at": built_at,
                         }
-                    creative_cache[anchor] = anchor_cache
+                    creative_cache[slug] = section_cache
                 if html_frag:
-                    print(f"    ✓ {slot} for {anchor} ({personality})", file=sys.stderr)
+                    print(f"    ✓ {slot} for {slug} ({personality})", file=sys.stderr)
                 else:
-                    debug_path = out_dir / f"creative-debug-{anchor}-{slot}.txt"
+                    # Failure dump → assets/<deck>/.debug/ (gitignored). Filename
+                    # keys on slug + slot; sweep on next build per ben/163.
+                    debug_dir = out_dir / ".debug"
+                    debug_dir.mkdir(exist_ok=True)
+                    debug_path = debug_dir / f"{slug}-{slot}.txt"
                     debug_path.write_text(raw or "(empty response)", encoding="utf-8")
-                    print(f"    ⚠ {slot} for {anchor} ({personality}) — extraction failed; raw saved to {debug_path.name}", file=sys.stderr)
+                    print(f"    ⚠ {slot} for {slug} ({personality}) — extraction failed; raw saved to {debug_path.relative_to(out_dir)}", file=sys.stderr)
 
                 # Splice the generated html into the placeholder candidate card
                 for sec in section_candidates:
-                    if sec["anchor"] != anchor:
+                    if sec["slug"] != slug:
                         continue
                     for c in sec["candidates"]:
                         if c.get("component") == slot and c.get("_pending"):
@@ -2589,11 +3080,80 @@ def build(
                                 # Drop the score so a working candidate wins
                                 c["score"] = 0.0
 
+        # ben/167 v2 — auto-re-roll-on-lint pass.
+        # After the initial fan-out, lint each newly-rolled slot's HTML; for any
+        # whose weighted score ≥ threshold AND whose pass count is still 1,
+        # queue a second pass with previous HTML + critique attached. Hard cap
+        # at 2 passes total per (slug, slot). Off by default — opt-in via
+        # --auto-re-roll-on-lint.
+        if auto_re_roll_on_lint:
+            try:
+                from importlib.util import spec_from_file_location, module_from_spec
+                lint_path = Path(__file__).resolve().parent / "lint-creative.py"
+                spec = spec_from_file_location("lint_creative", lint_path)
+                lc = module_from_spec(spec); spec.loader.exec_module(lc)  # type: ignore
+                import tempfile
+                second_pass: list[dict] = []
+                for t in creative_pending:
+                    if t.get("pass", 1) >= 2:
+                        continue  # already a second pass; cap reached
+                    section_cache = creative_cache.get(t["slug"]) or {}
+                    entry = section_cache.get(t["slot"]) or {}
+                    html_frag = entry.get("html") or ""
+                    if not html_frag:
+                        continue
+                    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False) as tf:
+                        tf.write(html_frag); tmp_path = Path(tf.name)
+                    warnings = lc.lint_file(tmp_path)
+                    tmp_path.unlink(missing_ok=True)
+                    score = lc.slide_score(warnings)
+                    if score < lc.RE_ROLL_THRESHOLD:
+                        continue
+                    new_task = dict(t)
+                    new_task["previous_html"] = html_frag
+                    new_task["previous_critique"] = lc.format_critique(warnings)
+                    new_task["pass"] = 2
+                    second_pass.append(new_task)
+                if second_pass:
+                    print(
+                        f"  · auto-re-roll-on-lint: queueing {len(second_pass)} slot(s) "
+                        f"(weighted score ≥ {lc.RE_ROLL_THRESHOLD}, max 2 passes)",
+                        file=sys.stderr,
+                    )
+                    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                        futures = [pool.submit(_generate, t) for t in second_pass]
+                        for fut in as_completed(futures):
+                            task, html_frag, raw = fut.result()
+                            slug = task["slug"]; slot = task["slot"]
+                            personality = task["personality"]
+                            creative_calls += 1
+                            with cache_lock:
+                                section_cache = creative_cache.get(slug) or {}
+                                if html_frag:
+                                    section_cache[slot] = {
+                                        "html": html_frag,
+                                        "personality": personality,
+                                        "source_sha": task.get("section_sha", sha),
+                                        "generated_at": built_at,
+                                    }
+                                creative_cache[slug] = section_cache
+                            if html_frag:
+                                print(f"    ✓ pass-2 {slot} for {slug} ({personality})", file=sys.stderr)
+                                # Splice into the candidate card
+                                for sec in section_candidates:
+                                    if sec["slug"] != slug:
+                                        continue
+                                    for c in sec["candidates"]:
+                                        if c.get("component") == slot:
+                                            c["html"] = html_frag
+                                            c["rationale"] = f"agent-authored ({personality}) · pass-2 critique"
+            except Exception as exc:
+                print(f"  · auto-re-roll-on-lint skipped — {exc}", file=sys.stderr)
+
     # ── Finalize pass: walk slide_plan in source order; choose per eligible section now that all html exists ──
-    sec_by_anchor = {sec["anchor"]: sec for sec in section_candidates}
+    sec_by_slug = {sec["slug"]: sec for sec in section_candidates}
 
     def _choose(sec: dict, base: dict, cands_list: list) -> dict | None:
-        anchor = sec["anchor"]
         all_candidates = sec["candidates"]
         locked_name = sec.pop("_locked_name", None)
         locked_html = sec.pop("_locked_html", None)
@@ -2626,16 +3186,31 @@ def build(
             chosen_idx = all_candidates.index(chosen)
         return all_candidates[chosen_idx]
 
-    def _emit_chosen(chosen: dict, base: dict, cands_list: list, anchor: str) -> None:
+    def _emit_chosen(chosen: dict, base: dict, cands_list: list, slug: str) -> None:
         """Append the right kind of final slide for `chosen` candidate dict."""
         components_used.add(chosen["component"])
         if chosen.get("kind") == "creative":
+            # Cached creative HTML may carry a stale `data-source-anchor` attribute
+            # (the agent baked the legacy line-range form into the HTML when the
+            # cache entry was rolled). Rewrite to the slug so the rendered deck
+            # is consistent with picks/cache identity.
+            raw_html = chosen.get("html", "")
+            if raw_html and slug:
+                raw_html = re.sub(
+                    r'data-source-anchor="[^"]*"',
+                    f'data-source-anchor="{_esc(slug)}"',
+                    raw_html,
+                    count=1,
+                )
             final_slides.append({
                 "type": "raw-html",
                 "title": base.get("title", ""),
                 "section": base.get("section"),
-                "anchor": anchor,
-                "raw_html": chosen.get("html", ""),
+                "anchor": base.get("anchor", slug),
+                "slug": slug,
+                "source_lines": base.get("source_lines"),
+                "source_sha256": base.get("source_sha256"),
+                "raw_html": raw_html,
             })
         else:
             for adapted, cs in cands_list:
@@ -2648,10 +3223,10 @@ def build(
         if entry["kind"] == "passthrough":
             final_slides.append(entry["base"])
             continue
-        anchor = entry["anchor"]
-        sec = sec_by_anchor.get(anchor)
-        base = base_slide_by_anchor.get(anchor)
-        cands_list = cands_by_anchor.get(anchor) or []
+        slug = entry["slug"]
+        sec = sec_by_slug.get(slug)
+        base = base_slide_by_anchor.get(slug)
+        cands_list = cands_by_anchor.get(slug) or []
         if sec is None or base is None:
             if base is not None:
                 final_slides.append(base)
@@ -2677,14 +3252,16 @@ def build(
                     }
                 if match is None:
                     continue  # picked component not present in current candidates AND no cached html
-                _emit_chosen(match, base, cands_list, anchor)
+                _emit_chosen(match, base, cands_list, slug)
         else:
             # No picks → fall back to the top-scoring candidate
             chosen = _choose(sec, base, cands_list)
-            _emit_chosen(chosen, base, cands_list, anchor)
+            _emit_chosen(chosen, base, cands_list, slug)
 
-    # Persist the creative cache (and create empty picks.json scaffolding if absent)
-    if creative_mode:
+    # Persist the creative cache (and create empty picks.json scaffolding if absent).
+    # `--no-cache` (1.12) suppresses persistence so a forensic run leaves the
+    # on-disk cache untouched.
+    if creative_mode and not disable_cache:
         _save_creative_cache(out_dir, source_sha=sha, source_name=source_path.name, cache=creative_cache)
 
     # Variant injection (v0.2 multi-emit) runs on the locked slide list
@@ -2751,15 +3328,52 @@ def main() -> int:
                              "latency per build (cached after first run).")
     parser.add_argument("--creative-section", default=None,
                         help="When set, only generate creative slots for the section "
-                             "with this anchor (e.g., L116-L120). Other sections still "
-                             "render template slots A and B but skip creative slots.")
+                             "with this slug (e.g., s8-5-rules-conventions). Other "
+                             "sections still render template slots but skip creative "
+                             "slots. Legacy `L<lo>-L<hi>` form is auto-migrated.")
     parser.add_argument("--re-roll-creative", action="append", default=[],
-                        help="Force re-generation of creative slots for an anchor, "
+                        help="Force re-generation of creative slots for a section, "
                              "ignoring the cache. Can be passed multiple times. "
-                             "Example: --re-roll-creative L116-L120 --re-roll-creative L40-L65")
+                             "Argument is the section slug (e.g., s8-5-rules-conventions); "
+                             "legacy `L<lo>-L<hi>` form is auto-migrated. "
+                             "Example: --re-roll-creative s8-5-rules-conventions")
+    parser.add_argument("--re-roll-section", action="append", default=[],
+                        help="Stronger than --re-roll-creative: also forces the "
+                             "deck-wide distillation to regenerate, so the named "
+                             "section's dossier is fresh before the agent rolls. "
+                             "Use when you've edited the source markdown for a "
+                             "section and want both the dossier + creatives "
+                             "refreshed in one step. Implies --re-roll-creative "
+                             "<slug> + --re-roll-distillation.")
     parser.add_argument("--re-roll-distillation", action="store_true",
                         help="Force the deck-wide distillation to regenerate "
                              "even if the cached distillation.yml is current.")
+    parser.add_argument("--sweep-cache", action="store_true",
+                        help="Remove orphan and stale-SHA files from the deck's "
+                             ".creative-cache/ before building. Orphan = slug no "
+                             "longer in source. Stale = slug present but the "
+                             "section's source_sha changed. No agent calls; "
+                             "exits after the sweep when no other build flags "
+                             "trigger downstream work.")
+    parser.add_argument("--sweep-cache-dry-run", action="store_true",
+                        help="Report what --sweep-cache would remove without "
+                             "deleting. Implies --sweep-cache.")
+    parser.add_argument("--no-cache", action="store_true",
+                        help="Forensic / debug bypass: load no creative cache, "
+                             "persist no creative cache. Every creative slot is "
+                             "rolled fresh and the result is discarded after "
+                             "rendering. Implies --creative when paired with "
+                             "agent slots; otherwise no-op.")
+    parser.add_argument("--auto-re-roll-on-lint", action="store_true",
+                        help="After the initial creative fan-out, lint each "
+                             "newly-rolled slot and queue a critique-aware "
+                             "second pass for any whose weighted lint score "
+                             "meets the threshold. Hard-capped at 2 passes "
+                             "per slot. Off by default — opt-in because the "
+                             "linter is heuristic and re-rolls cost agent "
+                             "calls. Manual `--re-roll-creative <slug>` is "
+                             "always critique-aware when previous cache "
+                             "exists, regardless of this flag.")
     parser.add_argument("--creative-parallelism", type=int, default=5,
                         help="Max concurrent `claude -p` calls during the creative "
                              "fan-out (default: 5). Higher values speed up the "
@@ -2767,6 +3381,15 @@ def main() -> int:
     parser.add_argument("--dump-distillation", action="store_true",
                         help="Print the loaded distillation YAML to stdout after build "
                              "(implies --creative — runs distillation if needed).")
+    parser.add_argument("--vocabulary", action="append", default=[],
+                        help="Activate one or more icon vocabulary packs for "
+                             "domain-specific keyword routing. Comma-separated "
+                             "or repeated. Example: '--vocabulary medtech' or "
+                             "'--vocabulary medtech,finance'. Available packs: "
+                             "medtech, finance, manufacturing (and project-"
+                             "supplied packs). When omitted, falls back to "
+                             "project.yml `md_deck.vocabulary_packs`, then to "
+                             "trunk-only (domain-neutral) behavior.")
     parser.add_argument("--candidate-mix", default="1,3",
                         help="Mix of candidate slots: '<templates>,<agents>'. Default '1,3' "
                              "(1 template + 3 agents: bold-metaphor / structured-diagram / "
@@ -2775,6 +3398,16 @@ def main() -> int:
                              "agents-only (the 4th slot is a second independent free-creative "
                              "roll for divergent options). Sum must be ≥ 1 and ≤ 4.")
     args = parser.parse_args()
+
+    # Resolve + activate icon vocabulary packs (CLI flag → project.yml → none).
+    # Configure once for the duration of the build; later imports / calls of
+    # icons.pick / icons.detect_group consult the loaded packs automatically.
+    _vocab_packs = _resolve_vocabulary_packs(args.vocabulary)
+    if _vocab_packs:
+        try:
+            _configure_vocabularies(_vocab_packs)
+        except ImportError as exc:
+            print(f"warning: vocabulary pack load failed: {exc}", file=sys.stderr)
 
     source_path = Path(args.source)
     if not source_path.exists():
@@ -2792,16 +3425,64 @@ def main() -> int:
     if ts < 0 or ags < 0 or (ts + ags) < 1 or (ts + ags) > 4:
         print(f"error: --candidate-mix sum must be 1..4 with both ≥ 0 (got: {ts},{ags})", file=sys.stderr)
         return 2
+
+    # --sweep-cache (and dry-run variant) — short-circuit before the build pipeline
+    if args.sweep_cache or args.sweep_cache_dry_run:
+        text = source_path.read_text(encoding="utf-8")
+        blocks = parse_markdown(text)
+        slides = synthesize_slides(blocks, source_path, source_text=text)
+        current_slugs = {s["slug"] for s in slides if s.get("slug")}
+        # Per-section SHA index — sweep validates each cache entry against its
+        # own section's content SHA (matches what _save_creative_cache writes).
+        slug_to_sha: dict[str, str] = {}
+        for s in slides:
+            sg = s.get("slug")
+            sha = s.get("source_sha256", "")
+            if sg and sha and sg not in slug_to_sha:
+                slug_to_sha[sg] = sha
+        # Resolve out_dir the same way build() does
+        if out_dir is None:
+            cur = source_path.resolve().parent
+            root = cur
+            while root != root.parent:
+                if (root / ".claude").exists() or (root / "project.yml").exists():
+                    break
+                root = root.parent
+            sweep_dir = root / "assets" / _slugify(source_path.stem)
+        else:
+            sweep_dir = out_dir.resolve()
+        orphan, stale = sweep_creative_cache(
+            sweep_dir, current_slugs, slug_to_sha,
+            dry_run=args.sweep_cache_dry_run,
+        )
+        verb = "would remove" if args.sweep_cache_dry_run else "removed"
+        print(f"✓ md-deck sweep: {verb} {len(orphan)} orphan + {len(stale)} stale cache files")
+        for p in orphan[:10]:
+            print(f"   orphan: {p.name}")
+        if len(orphan) > 10:
+            print(f"   … and {len(orphan) - 10} more orphans")
+        for p in stale[:10]:
+            print(f"   stale:  {p.name}")
+        if len(stale) > 10:
+            print(f"   … and {len(stale) - 10} more stale")
+        return 0
+
+    # --re-roll-section <slug> = --re-roll-creative <slug> + --re-roll-distillation
+    re_roll_creative_combined = list(args.re_roll_creative or []) + list(args.re_roll_section or [])
+    re_roll_distillation_combined = bool(args.re_roll_distillation) or bool(args.re_roll_section)
+
     result = build(
         source_path, out_dir, args.style,
         review=args.review,
         creative_mode=creative_mode,
         creative_section=args.creative_section,
-        re_roll_creative=args.re_roll_creative,
-        re_roll_distillation=args.re_roll_distillation,
+        re_roll_creative=re_roll_creative_combined,
+        re_roll_distillation=re_roll_distillation_combined,
         creative_parallelism=args.creative_parallelism,
         template_slots=ts,
         agent_slots=ags,
+        disable_cache=args.no_cache,
+        auto_re_roll_on_lint=args.auto_re_roll_on_lint,
     )
 
     size_kb = result["size_bytes"] // 1024
@@ -2815,6 +3496,25 @@ def main() -> int:
     print(f"  sha256:   {result['sha'][:16]}…")
     if result.get("candidates_html"):
         print(f"  review:   {result['candidates_html'].relative_to(Path.cwd()) if Path.cwd() in result['candidates_html'].parents else result['candidates_html']}")
+
+    # ben/167 — soft layout-risk lint over the cache. Warnings only, never
+    # blocks the build. Suppressed when no lint script is present.
+    try:
+        from importlib.util import spec_from_file_location, module_from_spec
+        lint_path = Path(__file__).resolve().parent / "lint-creative.py"
+        if lint_path.exists():
+            spec = spec_from_file_location("lint_creative", lint_path)
+            mod = module_from_spec(spec); spec.loader.exec_module(mod)  # type: ignore
+            lint = mod.lint_deck(result["html"].parent)
+            if lint["warnings"] > 0:
+                print(f"  lint:     {lint['warnings']} warning(s) across {len(lint['by_file'])} slide(s) — see `lint-creative.py`")
+                for cls in sorted(lint["by_class"]):
+                    label = {"A": "edge-bleed", "B": "half-empty-grid",
+                             "C": "under-constrained-absolute", "D": "tiny-font"}.get(cls, cls)
+                    print(f"            · {cls} {label:32s} {lint['by_class'][cls]:4d}")
+    except Exception as exc:
+        print(f"  lint:     (skipped — {exc})", file=sys.stderr)
+
     return 0
 
 

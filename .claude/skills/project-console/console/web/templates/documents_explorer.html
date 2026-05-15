@@ -26,13 +26,13 @@
   </section>
 </div>
 
-{# Floating "Ask about this doc" action button — enabled once a file is
-   selected. Opens the generic Assistant drawer via window.pcAssistantOpen(). #}
-<button type="button"
-        id="docs-assistant-fab"
-        class="docs-assistant-fab"
-        title="Ask about the selected document"
-        disabled>💬 Ask about this doc</button>
+{# Shared floating launcher (bottom-right). Disabled until a file is
+   selected — `docs-assistant-glue.js` toggles the `disabled` attribute. #}
+{% set launcher = {
+  "button_id": "docs-assistant-fab",
+  "disabled_initially": true
+} %}
+{% include "_assistant_launcher.html" %}
 
 {% set assistant = {
   "scope": "docs",

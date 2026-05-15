@@ -16,14 +16,16 @@ The first slide of a deck. md-deck always emits this for the first H1 + paragrap
 ## Source shape
 
 ```markdown
-# SP6500 — Smart Pump Program Overview
+# Atlas — Platform Overview
 
-**Program:** PainEase Smart Pump SP6500 — large-volume IV infusion pump
-**Regulatory path:** 510(k) traditional — predicate SP6000 (K200111)
+**Program:** Atlas Platform v1.0 — multi-tenant data platform for analytics teams
+**Reference release:** Atlas v0.9 (internal preview, 2025-Q4)
 **Last updated:** 2026-05-01
 
-This document is the program-level view of SP6500…
+This document is the program-level view of the Atlas v1.0 launch…
 ```
+
+(Title-cover renders your H1 + a small key-value strip + a leading paragraph. Use it for product launches, program kickoffs, board briefings, conference talks, internal training intros — anywhere a deck needs a strong first slide with framing metadata.)
 
 ## Gotchas
 

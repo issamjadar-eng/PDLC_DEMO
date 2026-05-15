@@ -18,9 +18,9 @@ When a `### N.M Subsection` body is dominated by a `> blockquote`. Restrained ty
 ```markdown
 ### 4.2 What we measured
 
-> The 12 weeks of SP6500 design-input authoring with the agentic console produced
-> equivalent IEC 62304 documentation in 38% of the calendar time of SP6000's
-> equivalent phase, with reviewer-flagged clinical-correctness defects down 21%.
+> The 12 weeks of structured authoring with the agentic console produced
+> equivalent compliance documentation in 38% of the calendar time of the
+> previous baseline, with reviewer-flagged correctness defects down 21%.
 
 We attribute the speed gain to template execution…
 ```

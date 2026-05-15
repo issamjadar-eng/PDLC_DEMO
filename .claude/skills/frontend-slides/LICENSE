@@ -19,3 +19,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+----------------------------------------------------------------------
+
+Modifications
+
+Copyright (c) 2026 GlobalLogic Hitachi (medtech-docs registry contributors)
+
+This work is a fork of the original `frontend-slides` skill by Zara Zhang
+(https://github.com/zarazhangrui/frontend-slides). Pinned upstream commit at
+fork time is recorded in `.pinned-sha`.
+
+Modifications to the original Software made by the medtech-docs registry
+contributors are licensed under the same MIT terms shown above. The original
+copyright notice and license text above MUST be retained in all copies and
+substantial portions of this work, including any further derivatives.
+
+A summary of the changes made in this fork (cross-domain trunk neutralization,
+vocabulary-pack architecture, registry integration, attribution surfacing) is
+maintained in README.md.

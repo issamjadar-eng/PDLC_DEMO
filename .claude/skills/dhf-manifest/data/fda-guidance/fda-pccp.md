@@ -24,7 +24,15 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document, 510(k) Submission Cover Letter, Device Description]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: submission-authored
+    file_pattern: "*510k-cover-letter*.md"
+  - role: submission-authored
+    file_pattern: "*device-description*.md"
 verbatim: "A PCCP is part of the device marketing authorization. The manufacturer is required to implement modifications consistent with the authorized PCCP. A PCCP must include specific modifications the manufacturer intends to make — not any/all possible modifications. PCCPs work alongside the existing Device Modifications guidances, which still apply for modifications not covered by or not consistent with the PCCP."
 extracted_requirements:
   - A PCCP must be filed as part of the 510(k) marketing submission — it is NOT a separate post-market document
@@ -50,7 +58,11 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Description of Modifications section]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-modification-description*.md"
 verbatim: "Enumerate each individual proposed modification. Provide specific rationale for each change. Reference labeling sections anticipated to be impacted. Present at detail level permitting understanding of specific modifications. Link each modification to a specific performance evaluation activity. Keep to a limited number of specific, verifiable/validatable modifications."
 extracted_requirements:
   - For each planned modification: enumerate it individually with specific rationale
@@ -76,7 +88,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Modification Protocol section, V&V Plan]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-modification-protocol*.md"
+  - role: vnv-plan
+    file_pattern: "*vnv-plan*.md"
 verbatim: "Plans to V&V the modified device meets specifications for each modification. Plans to verify unmodified specifications are not impacted. Plans for V&V of entire device following each individual modification AND in aggregate. Study design, performance metrics, pre-defined acceptance criteria, and statistical tests. Affirmative statement: unresolvable performance failures prevent implementation."
 extracted_requirements:
   - Define V&V methods and pre-specified acceptance criteria for each modification before implementing it
@@ -104,7 +122,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Impact Assessment section, Risk Management File]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-impact-assessment*.md"
+  - role: risk-management
+    file_pattern: "*risk-management-file*.md"
 verbatim: "Compare the version with each modification to the version without any modifications. Discuss benefits and risks (including risks of harm per ISO 14971) of each individual modification. Discuss how V&V activities continue to ensure safety and effectiveness. Discuss interactions — how implementation of one modification impacts another. Describe cumulative impact of implementing all modifications together."
 extracted_requirements:
   - For each modification: compare modified vs. unmodified device version (benefit-risk analysis)
@@ -131,7 +155,13 @@ topic: regulatory-submission
 artifact_type: analysis
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Scope Determination, Change Impact Analysis]
+canonical_role: submission-authored
+criticality: should-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-scope-determination*.md"
+  - role: submission-authored
+    file_pattern: "*pccp-change-impact-analysis*.md"
 verbatim: "Could the modification be a major change to the intended use? If YES: generally NOT appropriate for PCCP. Could the modification introduce a NEW risk? If YES: generally NOT appropriate for PCCP. Could the modification significantly MODIFY an existing risk? If YES and risks adequately mitigated: generally MAY be appropriate."
 extracted_requirements:
   - Conduct a risk-based assessment for each proposed modification to confirm PCCP appropriateness
@@ -157,7 +187,15 @@ topic: configuration-change
 artifact_type: process-record
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document, Design Change Records, UDI Records]
+canonical_role: plans
+criticality: should-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: plans
+    file_pattern: "*design-change-records*.md"
+  - "UDI Records"
+  # TODO restructure-pending: UDI records are a post-market QMS artifact with no clear canonical_role mapping in the current vocabulary; revisit when UDI/labeling role is added.
 verbatim: "Only one version of an authorized PCCP should exist per device at any time. A PCCP can evolve over time through future marketing submissions. FDA does not intend to re-review adequacy of modifications already implemented consistent with an authorized PCCP. For 510(k) devices: Predicate comparison is to the version pre-PCCP changes."
 extracted_requirements:
   - Maintain only one version of the authorized PCCP per device at any time

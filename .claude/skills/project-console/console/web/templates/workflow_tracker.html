@@ -1,0 +1,141 @@
+{% extends "_base.html" %}
+{% block title %}Tracker Status Update · PDLC Console{% endblock %}
+{% block body_class %}workflow-tracker-page{% endblock %}
+{% block content %}
+<section class="workflow-tracker-wrap" style="display:grid;grid-template-columns:1fr 320px;gap:16px;height:calc(100vh - 80px);">
+  <div style="display:flex;flex-direction:column;min-height:0;">
+    <div style="padding:8px 12px;border-bottom:1px solid #1e293b;display:flex;align-items:center;justify-content:space-between;">
+      <h1 style="font-size:1.1rem;margin:0;">B4 — Tracker Status Update</h1>
+      <div id="session-banner" style="font-size:.78rem;color:#94a3b8;">No active session — click any badge to start.</div>
+    </div>
+    <iframe id="tracker-frame" src="/workflows/tracker/embed" title="Submission Tracker (interactive)"
+            style="border:0;flex:1;width:100%;background:#0f172a;"></iframe>
+  </div>
+
+  <aside style="border-left:1px solid #1e293b;display:flex;flex-direction:column;min-height:0;">
+    <div style="padding:10px 12px;border-bottom:1px solid #1e293b;">
+      <h2 style="font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px;color:#94a3b8;">Pending changes</h2>
+      <div id="pending-count" style="font-size:1.4rem;font-weight:700;color:#e2e8f0;">0</div>
+    </div>
+    <div id="pending-list" style="flex:1;overflow-y:auto;padding:8px 12px;font-size:.78rem;color:#cbd5e1;">
+      <p class="muted">Pending status changes will appear here as you click status badges.</p>
+    </div>
+    <div style="padding:10px 12px;border-top:1px solid #1e293b;display:flex;flex-direction:column;gap:6px;">
+      <input id="commit-msg" type="text" placeholder="Commit message (optional)" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:4px;padding:6px;font-size:.78rem;">
+      <button id="save-btn" class="btn-small" disabled style="background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.6);color:#86efac;padding:8px;border-radius:4px;cursor:pointer;font-weight:600;">Save & Commit</button>
+      <button id="cancel-btn" class="btn-small" disabled style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:6px;border-radius:4px;cursor:pointer;">Cancel session</button>
+    </div>
+  </aside>
+</section>
+
+<script>
+(function() {
+  const banner = document.getElementById('session-banner');
+  const pendingCountEl = document.getElementById('pending-count');
+  const pendingListEl = document.getElementById('pending-list');
+  const saveBtn = document.getElementById('save-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const commitMsgEl = document.getElementById('commit-msg');
+  const frame = document.getElementById('tracker-frame');
+
+  async function refreshSession() {
+    try {
+      const r = await fetch('/workflows/tracker/status/session');
+      if (!r.ok) return;
+      const data = await r.json();
+      const session = data.session;
+      const pending = data.pending || [];
+      pendingCountEl.textContent = pending.length;
+      saveBtn.disabled = pending.length === 0;
+      cancelBtn.disabled = !session;
+      if (session) {
+        banner.textContent = 'Session: task ' + session.task_id + ' · branch ' + session.branch;
+        banner.style.color = '#86efac';
+      } else {
+        banner.textContent = 'No active session — click any badge to start.';
+        banner.style.color = '#94a3b8';
+      }
+      if (pending.length === 0) {
+        pendingListEl.innerHTML = '<p class="muted">Pending status changes will appear here as you click status badges.</p>';
+      } else {
+        pendingListEl.innerHTML = pending.map(p =>
+          '<div style="padding:6px 0;border-bottom:1px solid #1e293b;">' +
+          '<div style="font-family:monospace;color:#94a3b8;">' + p.row_id + '</div>' +
+          '<div><strong>' + p.old_status + '</strong> → <strong style="color:#86efac;">' + p.new_status + '</strong></div>' +
+          (p.rationale ? '<div style="color:#94a3b8;font-style:italic;">' + escapeHtml(p.rationale) + '</div>' : '') +
+          '<div style="color:#64748b;font-size:.7rem;">' + p.date + ' by ' + p.actor + '</div>' +
+          '</div>'
+        ).join('');
+        // Notify the iframe to mark these row IDs as pending
+        try {
+          frame.contentWindow.postMessage({
+            tracker: { type: 'mark-pending', payload: { row_ids: pending.map(p => p.row_id) } }
+          }, '*');
+        } catch (e) {}
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    try {
+      const r = await fetch('/workflows/tracker/status/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: commitMsgEl.value.trim() || null }),
+      });
+      const data = await r.json();
+      if (r.ok && data.saved) {
+        alert('Saved! Commit: ' + (data.result.commit_sha || '(none)') +
+              '\nPushed: ' + data.result.pushed +
+              '\nMerged branch: ' + data.result.branch_merged);
+        commitMsgEl.value = '';
+        await refreshSession();
+        // Reload the iframe to show the now-canonical state
+        frame.src = frame.src;
+      } else {
+        alert('Save failed: ' + JSON.stringify(data));
+        saveBtn.disabled = false;
+      }
+    } catch (e) {
+      alert('Network error: ' + e.message);
+      saveBtn.disabled = false;
+    } finally {
+      saveBtn.textContent = 'Save & Commit';
+    }
+  });
+
+  cancelBtn.addEventListener('click', async () => {
+    if (!confirm('Discard all pending changes and tear down the session?')) return;
+    cancelBtn.disabled = true;
+    try {
+      const r = await fetch('/workflows/tracker/status/cancel', { method: 'POST' });
+      const data = await r.json();
+      alert('Cancelled: ' + JSON.stringify(data.result));
+      await refreshSession();
+      frame.src = frame.src;
+    } catch (e) {
+      alert('Network error: ' + e.message);
+      cancelBtn.disabled = false;
+    }
+  });
+
+  // Listen for messages from the iframe (badge applies)
+  window.addEventListener('message', (e) => {
+    if (!e.data || !e.data.tracker) return;
+    if (e.data.tracker.type === 'apply' || e.data.tracker.type === 'ready') {
+      refreshSession();
+    }
+  });
+
+  refreshSession();
+  // Periodic refresh in case of out-of-band changes
+  setInterval(refreshSession, 10000);
+})();
+</script>
+{% endblock %}

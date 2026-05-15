@@ -19,8 +19,8 @@ When the section's bullets each contain a numeric value (`%`, `$N`, `Nx`). Inspi
 ```markdown
 ### 4.2 What we measured
 
-- SP6000 baseline · 100%
-- SP6500 with agents · 38%
+- v1 baseline · 100%
+- v2 with agents · 38%
 - Defect rate · 79% (down 21%)
 ```
 

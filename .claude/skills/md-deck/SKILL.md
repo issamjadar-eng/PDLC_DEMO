@@ -1,6 +1,8 @@
 ---
 name: md-deck
-description: Build a beautiful single-file HTML slide deck from any structured markdown source (whitepaper, project overview, strategy doc). Non-interactive markdown → HTML pipeline; the builder sibling to the `frontend-slides` stylist. v0.3 — consumes the canonical viewport contract and preset registry from `frontend-slides` (no duplication); content-split rules replace shrink-to-fit density modifiers; handles title, agenda, dividers, table-slides, card-grids, list-slides, quote-slides, prose-slides, image-feature slides; injects scope-iceberg / concept-canvas / handoff-relay / principle-tiles / catalog-mosaic / catalog-featured variants; detects homogeneous groups (KOLs, test cases, rules, sites, …) and gives them a shared kind-icon. Output lands at `<root>/assets/<source-slug>/` with full provenance metadata.
+description: Build a beautiful single-file HTML slide deck from any structured markdown source (whitepaper, project overview, strategy doc, board briefing, investor memo, ops report). Non-interactive markdown → HTML pipeline; the builder sibling to the `frontend-slides` stylist. v0.6 — domain-neutral trunk + opt-in icon vocabulary packs (medtech / finance / manufacturing / …) loaded via project.yml `md_deck.vocabulary_packs` or the `--vocabulary` flag. Consumes the canonical viewport contract and preset registry from `frontend-slides` (no duplication); content-split rules replace shrink-to-fit density modifiers; handles title, agenda, dividers, table-slides, card-grids, list-slides, quote-slides, prose-slides, image-feature slides; injects scope-iceberg / concept-canvas / handoff-relay / principle-tiles / catalog-mosaic / catalog-featured variants; detects homogeneous groups (cohorts, teams, deliverables, milestones, metrics, plus pack-specific groups) and gives them a shared kind-icon. Output lands at `<root>/assets/<source-slug>/` with full provenance metadata.
+version: 0.6.0
+updated: 2026-05-02
 ---
 
 # md-deck

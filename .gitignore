@@ -18,3 +18,22 @@ build/
 .worktrees/
 .tmp/
 docs/internal/source-md/.staging/
+
+# Google Drive for Desktop sync metadata — this project tree may live inside
+# a Drive-synced folder; these are transient sync artifacts, not project files.
+.tmp.driveupload/
+.tmp.drivedownload/
+.driveupload
+.drivedownload
+desktop.ini
+Icon?
+*.gdoc
+*.gsheet
+*.gslides
+*.gdraw
+*.gform
+*.gtable
+*.gmap
+*.gjam
+*.gsite
+*.glink

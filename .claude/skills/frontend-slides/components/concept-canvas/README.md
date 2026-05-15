@@ -16,15 +16,17 @@ When the title contains teach-keywords: "what an", "what is", "what are", "where
 ## Source shape
 
 ```markdown
-### 1.1 What SP6500 actually is
+### 1.1 What Atlas actually is
 
-SP6500 is a large-volume single-channel IV infusion pump…
+Atlas is a multi-tenant data platform for analytics teams…
 
-- 7" capacitive touchscreen
-- 5,000-entry on-pump drug library
-- Predictive-alarm SaMD module
-- Dose-error reduction software
+- Self-service warehouse with row-level access policies
+- Connectors for 40+ SaaS sources, ingest tier with at-least-once semantics
+- Notebook + dashboard surface, sharable with row-level filters
+- Lineage and audit log across every transformation
 ```
+
+(Concept-canvas is a 2x2 quadrant layout with the lead paragraph + 4 supporting facets. Use it to define a product, a methodology, a strategy, a research finding — anywhere a single concept benefits from "here's the headline + four supporting properties.")
 
 ## Gotchas
 

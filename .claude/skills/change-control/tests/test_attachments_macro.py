@@ -162,7 +162,7 @@ def test_expand_attachment_macros_splices_rendered_table():
     splices a rendered file-list table between them and returns
     synthetic image refs for download."""
     atts = [
-        _att_record("FAI Intraop PHA.docx", ["actual"]),
+        _att_record("Module One PHA.docx", ["actual"]),
         _att_record("FORM-285130 PHASE1.docx", ["actual"]),
         _att_record("OLD VERSION.docx", ["outdated"]),
     ]
@@ -208,19 +208,19 @@ def test_expand_attachment_macros_splices_rendered_table():
     )
     assert warnings == [], warnings
     # Each rendered table appears between its open/close sentinels
-    assert "FAI Intraop PHA.docx" in new_md
+    assert "Module One PHA.docx" in new_md
     assert "FORM-285130 PHASE1.docx" in new_md
     assert "OLD VERSION.docx" in new_md
     # Filename links to the local images path. URL slot is percent-encoded
     # so spaces / parens / etc. don't break CommonMark parsing (task 129).
     # Bracketed text (link label) stays human-readable.
-    assert "[FAI Intraop PHA.docx](images/FAI%20Intraop%20PHA.docx)" in new_md
+    assert "[Module One PHA.docx](images/Module%20One%20PHA.docx)" in new_md
     assert "[OLD VERSION.docx](images/OLD%20VERSION.docx)" in new_md
     # Synthetic image refs were generated for each unique title
     syn_titles = sorted(s["filename"] for s in synthetic)
     assert syn_titles == [
-        "FAI Intraop PHA.docx",
         "FORM-285130 PHASE1.docx",
+        "Module One PHA.docx",
         "OLD VERSION.docx",
     ]
     # Sentinels still wrap the rendered tables (round-trip preserved)
@@ -242,7 +242,7 @@ def test_publish_md_to_adf_emits_attachments_extension_node():
         "<!-- confluence-side: attachments labels=actual position=0 -->\n\n"
         "| Filename | Size | Modified | Labels |\n"
         "| --- | --- | --- | --- |\n"
-        "| [FAI Intraop PHA.docx](images/FAI Intraop PHA.docx) | 12.1 KB | 2026-01-15 | actual |\n\n"
+        "| [Module One PHA.docx](images/Module One PHA.docx) | 12.1 KB | 2026-01-15 | actual |\n\n"
         "<!-- /confluence-side: attachments position=0 -->\n\n"
         "Some text after.\n"
     )

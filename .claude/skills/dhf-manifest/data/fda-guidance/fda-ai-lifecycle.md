@@ -23,7 +23,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Device Description, Software Description]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-device-description*.md"
+  - role: design
+    file_pattern: "*software-description*.md"
 verbatim: "Statement that AI is used. Inputs, outputs, intended users, use environment, workflow integration. Automation level and configurable elements. Hardware platform description."
 extracted_requirements:
   - 510(k) device description must explicitly state that the device includes AI
@@ -49,7 +55,15 @@ topic: labeling-ifu
 artifact_type: labeling
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Instructions for Use, User Documentation, 510(k) Submission — Labeling]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*instructions-for-use*.md"
+  - role: submission-authored
+    file_pattern: "*user-documentation*.md"
+  - role: submission-authored
+    file_pattern: "*510k-labeling*.md"
 verbatim: "Labeling must include: AI inclusion statement, model I/O, automation level, architecture description, development data description, performance data with confidence intervals, subgroup performance, performance monitoring tools, known limitations, installation/integration instructions."
 extracted_requirements:
   - IFU must state that AI is included and describe its role in the device
@@ -78,7 +92,13 @@ topic: validation
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Performance Testing, Data Management Plan]
+canonical_role: vnv
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-performance-testing*.md"
+  - role: vnv
+    file_pattern: "*data-management-plan*.md"
 verbatim: "Data collection protocols, cleaning/processing, reference standard, annotation. Data storage/version control. Development/test data independence. Representativeness analysis (demographics, sites, equipment). Subgroup analysis. OUS data justification (if applicable). Synthetic data justification (if applicable)."
 extracted_requirements:
   - Document data collection protocols for training and testing datasets: inclusion/exclusion criteria, demographics, imaging equipment, sites
@@ -105,7 +125,13 @@ topic: validation
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [510(k) Submission — Performance Testing, Clinical/Non-Clinical Study Protocol]
+canonical_role: vnv
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-performance-testing*.md"
+  - role: vnv-plan
+    file_pattern: "*clinical-non-clinical-study-protocol*.md"
 verbatim: "Pre-specified study protocols and statistical analysis plans. Sample size justification with adequate power. Primary/secondary endpoints with pre-specified acceptance criteria. Statistical hypotheses (null and alternative) with multiplicity corrections. Subgroup analyses (statistically powered when subgroup claims are made). Repeatability/reproducibility evaluation. Human-device team performance (when human is in the loop). 95% two-sided confidence intervals standard for primary endpoints."
 extracted_requirements:
   - Pre-specify all study protocols and statistical analysis plans BEFORE conducting performance validation — post-hoc modifications require FDA concurrence
@@ -134,7 +160,13 @@ topic: post-market
 artifact_type: plan
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Post-Market Surveillance Plan, Device Performance Monitoring Plan]
+canonical_role: postmarket
+criticality: must-have
+applies_to:
+  - role: postmarket
+    file_pattern: "*post-market-surveillance-plan*.md"
+  - role: postmarket
+    file_pattern: "*device-performance-monitoring-plan*.md"
 verbatim: "Data collection methods for postmarket monitoring. Drift detection (data drift, concept drift). Input monitoring. User behavior monitoring. Update deployment plan. Communication procedures for performance changes."
 extracted_requirements:
   - Define a post-market AI performance monitoring plan as part of the submission
@@ -161,7 +193,15 @@ topic: cybersecurity
 artifact_type: submission-content
 dhf_owner: both
 min_iec62304_class: A
-applies_to: [Threat Model, Security Risk Assessment, 510(k) Submission — Cybersecurity]
+canonical_role: cybersecurity
+criticality: must-have
+applies_to:
+  - role: cybersecurity
+    file_pattern: "*threat-model*.md"
+  - role: cybersecurity
+    file_pattern: "*security-risk-assessment*.md"
+  - role: submission-authored
+    file_pattern: "*510k-cybersecurity*.md"
 verbatim: "AI-specific threat model: data poisoning, model inversion, evasion attacks, data leakage, overfitting exploitation, bias manipulation, performance drift. Fuzz testing, penetration testing. Access controls, encryption, de-identification."
 extracted_requirements:
   - Threat model must include AI-specific attacks in addition to standard cybersecurity threats

@@ -210,7 +210,7 @@ On dispatch error, return the same shape with an empty `findings` array and a `d
 - PASS for checks that pass
 - INFO for checks that are intentionally skipped (per-dhf in a project with empty `dhfs[]`, `mixed` regulatory DHFs skipping certain checks, external skills exempt from versioning, etc.)
 
-**Cost envelope**: A PDLC_DEMO-sized project has 10 DHFs and a handful of filings. A single audit run spawns ~10–15 subagents (one per DHF + one per composition manifest). Each subagent reads a bounded slice of the tree and executes a known list of checks. Rough envelope: each subagent ~5–15k input tokens, ~1–3k output tokens; per-audit ~100–200k total tokens. This is a deliberate action, not a hot path — operators run it before commits or PR, not on every save. Knobs to control cost: `--dhf=<name>` narrows the per-dhf pool; per-submission pool is naturally bounded by manifest count.
+**Cost envelope**: A medium-sized project (≈10 DHFs and a handful of filings). A single audit run spawns ~10–15 subagents (one per DHF + one per composition manifest). Each subagent reads a bounded slice of the tree and executes a known list of checks. Rough envelope: each subagent ~5–15k input tokens, ~1–3k output tokens; per-audit ~100–200k total tokens. This is a deliberate action, not a hot path — operators run it before commits or PR, not on every save. Knobs to control cost: `--dhf=<name>` narrows the per-dhf pool; per-submission pool is naturally bounded by manifest count.
 
 **Backward compatibility**: In single-dhf mode (N=1) or zero-dhf mode (N=0), no subagents are spawned. The serial path is byte-identical to v8 behavior. This preserves deterministic audit output for simple projects.
 

@@ -25,4 +25,5 @@
 
 | Date | Result | Failures | Notes |
 |------|--------|----------|-------|
+| 2026-05-13 | FAIL | GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main), Collaborators in roster (Unauthorized: dmytro-savenkov-gl WojtekTGL) | Automated check |
 | 2026-05-15 | FAIL | SSH key exists (No SSH key found), GitHub 2FA (2FA not enabled on GitHub), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main), Collaborators in roster (Unauthorized: vyanovych afurdylo mykhailochaus-GLO josco-design tarasrlytvyn-stack orestdanchak-gl dmytro-savenkov-gl WojtekTGL) | Automated check |

@@ -42,6 +42,12 @@ def to_sidecar(dhf: str, graph: TraceGraph) -> dict:
                     "verification_method": it.get("verification_method"),
                     "iec_class": it.get("iec_class"),
                     "module_name": it.get("module_name"),
+                    "jira_key": it.get("jira_key"),
+                    "status": it.get("status"),
+                    "assignee": it.get("assignee"),
+                    "reporter": it.get("reporter"),
+                    "resolution": it.get("resolution"),
+                    "duedate": it.get("duedate"),
                     "traces_forward": it.get("traces_forward", []),
                     "traces_reverse": it.get("traces_reverse", []),
                 }

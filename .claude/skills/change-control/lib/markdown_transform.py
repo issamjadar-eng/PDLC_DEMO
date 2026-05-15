@@ -93,6 +93,24 @@ class TransformReport:
     missed: list[dict] = field(default_factory=list)  # {anchor, target_md, policy_applied}
     fence_swaps: int = 0
     frontmatter_stripped: bool = False
+    internal_blocks_stripped: list[dict] = field(default_factory=list)  # {kind, line_count}
+
+
+# Kinds of HTML-comment blocks that are project-internal tooling-only and
+# MUST NOT round-trip to Confluence. Distinct from `AUTO:*` and
+# `confluence-side:*` (which are tooling-owned but round-trip-safe — the
+# adopt path re-renders them on inbound). Anything in this list is stripped
+# during the publish transform.
+#
+# Adding a kind here is a contract: it is invisible on the published page,
+# but the source-of-truth for that metadata must live somewhere ELSE that
+# the round-trip cannot see (e.g., under tools/project-console/...).
+#
+# History:
+#   - TRACE: trace-matrix schema-map pointers (task ben/152). External
+#     projection lives under tools/project-console/trace-matrix/; the
+#     in-source comment is a discoverability + refresh-contract pointer.
+INTERNAL_ONLY_BLOCK_KINDS: tuple[str, ...] = ("TRACE",)
 
 
 @dataclass
@@ -132,6 +150,9 @@ def transform_markdown(
 
     text, did_strip = strip_leading_html_comment(source)
     rep.frontmatter_stripped = did_strip
+
+    text, stripped_blocks = strip_internal_only_blocks(text)
+    rep.internal_blocks_stripped = stripped_blocks
 
     text, swap_count = swap_html_fence_to_text(text)
     rep.fence_swaps = swap_count
@@ -182,6 +203,60 @@ def strip_leading_html_comment(source: str) -> tuple[str, bool]:
     if head.startswith("confluence-side:") or head.startswith("/confluence-side:"):
         return source, False
     return source[m.end():], True
+
+
+# ---- Step 1b: internal-only block strip ----
+
+
+def _build_internal_block_re(kinds: tuple[str, ...]) -> re.Pattern[str]:
+    """Compile the regex that matches any HTML comment whose first token
+    is one of `kinds:` (with optional leading `/` for paired-closing form).
+    """
+    if not kinds:
+        # Match nothing.
+        return re.compile(r"(?!.*)")
+    alt = "|".join(re.escape(k) for k in kinds)
+    return re.compile(
+        rf"<!--\s*/?(?P<kind>{alt}):[A-Z][A-Z0-9-]*\b.*?-->[ \t]*\n?",
+        re.DOTALL,
+    )
+
+
+_INTERNAL_BLOCK_RE = _build_internal_block_re(INTERNAL_ONLY_BLOCK_KINDS)
+
+
+def strip_internal_only_blocks(
+    source: str,
+    kinds: tuple[str, ...] | None = None,
+) -> tuple[str, list[dict]]:
+    """Remove every HTML-comment block whose first token is one of
+    `INTERNAL_ONLY_BLOCK_KINDS` (or the explicit `kinds` override).
+    Returns `(stripped, blocks)` where each block is a dict with
+    `kind` and `line_count` (1 for single-line, >1 for multi-line).
+
+    Designed to run AFTER `strip_leading_html_comment` so the doc's
+    leading frontmatter (which is also a multi-line HTML comment but
+    contains `key: value` lines, not `KIND:SUBKIND` first-tokens) is not
+    re-evaluated. Idempotent — running on already-stripped output is a
+    no-op.
+    """
+    pattern = (
+        _INTERNAL_BLOCK_RE
+        if kinds is None
+        else _build_internal_block_re(kinds)
+    )
+    blocks: list[dict] = []
+
+    def _capture(m: re.Match) -> str:
+        body = m.group(0)
+        blocks.append({
+            "kind": m.group("kind"),
+            "line_count": body.count("\n") + (0 if body.endswith("\n") else 1),
+        })
+        return ""
+
+    out = pattern.sub(_capture, source)
+    return out, blocks
 
 
 # ---- Step 2: code-fence language swap ----

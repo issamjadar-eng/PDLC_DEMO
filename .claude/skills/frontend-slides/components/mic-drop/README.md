@@ -19,9 +19,9 @@ When the section's content is a short, punchy claim — the joke that lands stro
 A single short paragraph or quote, ≤25 words:
 
 ```markdown
-### 1.1 What SP6500 actually is
+### 1.1 What Atlas actually is
 
-SP6500 has dose-error reduction software, but the prescriber loop remains open.
+Atlas has streaming connectors, but the materialization tier is still batch.
 ```
 
 ## Gotchas

@@ -1,0 +1,317 @@
+# Engineering milestones — engineering capabilities required for filing readiness.
+#
+# Plan-side artifact: declares which engineering capabilities must be ready for
+# which regulatory milestone. Drives the submission tracker's Engineering
+# Prerequisites section (ENG-prefixed rows emitted by `/tracker generate`).
+#
+# Sibling artifact: docs/project/milestones/regulatory.yml — bindings here use
+# `prerequisites:` to declare which regulatory milestone they support; the
+# generator uses the first prerequisite as each ENG row's Phase label.
+#
+# Owned by: /tracker (consumes engineering bindings to emit ENG-prefixed rows).
+# Authored: 2026-05-12, task ben/047 Stage 2 (recovered from the
+#           submission-tracker.md.backup-2026-05-05 Part 4 — Engineering
+#           Prerequisites section archived at
+#           tasks/ben/044/archive/wip-dropped-2026-05-11/project-artifacts/).
+#
+# Schema (per upstream tracker v11 `read_engineering_milestones()`):
+#   milestones[]:
+#     - id: engineering-<regulatory-milestone-id>
+#       name: <human label>
+#       type: engineering-readiness
+#       posture: full-package | readiness-check
+#       target_date: <ISO date | TBD>
+#       purpose: |
+#         <free text>
+#       prerequisites:                 # generator uses first one for Phase label
+#         - milestone: <regulatory-milestone-id>
+#           condition: ready
+#       bindings[]:
+#         - id: ENG<n>                 # generator uses this verbatim as row ID
+#           capability: <free text>    # Deliverable / Prerequisite name
+#           scope: Suite | <module>    # architecture name; defaults Suite
+#           effort: V.High|High|Med|Low|V.Low
+#           unblocks: [<row_id>, ...]  # downstream row IDs this prereq gates
+#           status: <vocab>            # Not Started | Drafting | Drafted | ...
+#           notes: <free text>         # optional, surfaces in detail panel
+
+schema_version: 0.1
+domain: engineering
+project: PDLC_DEMO
+owned_by_skill: tracker
+
+milestones:
+
+  # ── Engineering Prereqs for 510(k)+PCCP filing ──
+  - id: engineering-pccp-release
+    name: Engineering Prereqs — 510(k)+PCCP Release
+    type: engineering-readiness
+    posture: full-package
+    target_date: TBD
+    purpose: |
+      Engineering capabilities required for the PP3500 510(k)+PCCP filing
+      (K210345) to be ready. Each binding represents a cross-cutting
+      engineering workstream (hardware design freeze, RTOS/platform baseline,
+      drug library, crypto stack, cyber comms, test infra) that one or more
+      design-control deliverables depend on. Status here flows into the
+      tracker's Engineering Prerequisites section.
+
+    prerequisites:
+      - milestone: pccp-release
+        condition: ready
+
+    bindings:
+
+      # ── 4.1 Requirements & Architecture ──
+
+      - id: ENG1
+        capability: Hardware Design Freeze (pump mechanism, sensors, enclosure)
+        scope: Suite
+        effort: V.High
+        unblocks: [RM2a, RM3a, SW6a, CL2]
+        status: Not Started
+        notes: |
+          Locks the physical PCA pump architecture (mechanism, occlusion/AIL
+          sensors, enclosure). Gates risk + clinical + system V&V — they need
+          a stable hardware target before pre-clinical / IEC 60601 testing.
+
+      - id: ENG2
+        capability: RTOS + Device Platform Baseline (M7)
+        scope: Suite
+        effort: High
+        unblocks: [SW3a, SW4a, SW5a, SW6a, SW11, CY2a, CY7a]
+        status: Not Started
+        notes: |
+          Establishes the M7 platform stack (RTOS, BSP, boot chain) on top of
+          which all device software is built. Gates the Enhanced-level
+          software documentation set + cybersecurity controls anchored on the
+          platform.
+
+      - id: ENG3
+        capability: Drug Library Payload Format Finalized
+        scope: Suite
+        effort: Med
+        unblocks: [SW2a, SW2b, RM2a, RM2b, PS1, PS2, PS3]
+        status: Not Started
+        notes: |
+          Schema + serialization for the drug library payload exchanged
+          between drug-library-manager (D-series modules) and the pump's M2
+          ingest path. Gates SRS rows on both sides + PCCP support docs that
+          describe the drug-library change envelope.
+
+      # ── 4.5 User Research & Cybersecurity ──
+
+      - id: ENG4
+        capability: Crypto / Signing Stack (KMS, cert store, HSM)
+        scope: Suite
+        effort: High
+        unblocks: [CY2a, CY2b, CY4a, CY4b, PS1, PS4]
+        status: Not Started
+        notes: |
+          Production crypto stack — key management, certificate store, HSM
+          integration on M7 and D4. Gates cybersecurity controls (CY2/CY4
+          series) on both the device and the drug-library-manager.
+
+      - id: ENG5
+        capability: Cyber Comms Stack (TLS 1.3, mutual auth, cert provisioning)
+        scope: Suite
+        effort: High
+        unblocks: [CY5, CY7a, CY7c, MS5]
+        status: Not Started
+        notes: |
+          TLS-1.3 mutual-auth communications stack across device ↔ adapter ↔
+          management services. Gates the architecture cybersecurity row
+          (CY5), pump+adapter secure-comms posture (CY7a/c), and Mgmt
+          Services interface (MS5).
+
+      # ── 4.3 Software Development ──
+
+      - id: ENG6
+        capability: Drug Library Authoring Workflow (D1–D3)
+        scope: Suite
+        effort: High
+        unblocks: [SW2b, HF2b, HF3b, HF4b]
+        status: Not Started
+        notes: |
+          End-to-end drug library authoring application (D1 UI, D2 storage,
+          D3 validation). Gates drug-library-manager SRS + HF evaluations on
+          the authoring side.
+
+      - id: ENG7
+        capability: Drug Library Signing Service (D4)
+        scope: Suite
+        effort: Med
+        unblocks: [CY2b, PS1, PS2]
+        status: Not Started
+        notes: |
+          D4 signing service issues authenticated drug library payloads.
+          Gates CY2b (drug-library cybersecurity controls) + PCCP support
+          docs on payload integrity.
+
+      - id: ENG8
+        capability: Audit Log Infrastructure (D6, 21 CFR Part 11)
+        scope: Suite
+        effort: Med
+        unblocks: [SW2b, SW6b]
+        status: Not Started
+        notes: |
+          D6 audit-log infrastructure providing 21 CFR Part 11–conformant
+          event logging for drug-library actions. Gates drug-library SRS +
+          system V&V on the audit side.
+
+      - id: ENG9
+        capability: 21 CFR Part 11 Conformance (D2 + D6)
+        scope: Suite
+        effort: Med
+        unblocks: [SW2b, LB3]
+        status: Not Started
+        notes: |
+          End-to-end Part 11 conformance (electronic records + electronic
+          signatures) for the drug-library-manager. Gates drug-library SRS
+          + labeling row covering Part 11 user-facing claims.
+
+      - id: ENG10
+        capability: Adapter Pass-Through Architecture (A3, A4)
+        scope: Suite
+        effort: Med
+        unblocks: [MS5, CY7c]
+        status: Not Started
+        notes: |
+          connectivity-adapter modules A3 (pass-through routing) + A4
+          (session control). Gates MS5 (Mgmt Services connection) + CY7c
+          (adapter cybersecurity).
+
+      - id: ENG16
+        capability: Drug Library Validation Rule Engine (D3)
+        scope: Suite
+        effort: Med
+        unblocks: [SW2b, RM2b, PS1]
+        status: Not Started
+        notes: |
+          Rule engine in D3 validates drug library entries against
+          clinical-safety constraints before publish. Gates drug-library SRS
+          + risk row for invalid payloads + PCCP support row covering
+          validation envelope.
+
+      - id: ENG17
+        capability: Firmware Update Verifier (M6/M7 secure boot)
+        scope: Suite
+        effort: Med
+        unblocks: [CY2a, CY7a, PS4, PS5]
+        status: Not Started
+        notes: |
+          Secure-boot firmware update verifier on M6/M7. Gates pump
+          cybersecurity controls (CY2a, CY7a) + PCCP support rows on
+          firmware-update envelope.
+
+      - id: ENG18
+        capability: Time Sync / Trusted Time Source (M7)
+        scope: Suite
+        effort: Low
+        unblocks: [RM2a, CY7a]
+        status: Not Started
+        notes: |
+          Trusted time source on M7. Gates pump risk row (timestamp integrity
+          on events) + cybersecurity row (replay protection).
+
+      # ── 4.4 Testing & Tooling ──
+
+      - id: ENG13
+        capability: HIL Test Rig + System V&V Harness
+        scope: Suite
+        effort: V.High
+        unblocks: [SW6a, SW6b, CY7a]
+        status: Not Started
+        notes: |
+          Hardware-in-the-loop test rig and system V&V harness exercising
+          end-to-end pump scenarios. Gates system V&V rows (SW6) + the pump
+          cyber posture.
+
+      - id: ENG15
+        capability: SBOM Generation Pipeline
+        scope: Suite
+        effort: Low
+        unblocks: [CY4a, CY4b, CY4c, MS7]
+        status: Not Started
+        notes: |
+          CI pipeline generating Software Bill of Materials per FDA Cyber
+          guidance. Gates all CY4 (SBOM) rows across device / drug-library /
+          adapter + MS7 (Mgmt Services SBOM).
+
+      # ── 4.5 User Research (continued) + Sensor / Alarm Compliance ──
+
+      - id: ENG11
+        capability: Occlusion / Air-in-Line Sensor Calibration
+        scope: Suite
+        effort: High
+        unblocks: [RM2a, CL2, SW6a]
+        status: Not Started
+        notes: |
+          Sensor calibration protocols + traceable references for occlusion
+          and air-in-line detection. Gates pump risk + pre-clinical + system
+          V&V on alarm performance.
+
+      - id: ENG12
+        capability: Alarm System IEC 60601-1-8 Conformance
+        scope: Suite
+        effort: High
+        unblocks: [RM2a, HF3a, SW6a]
+        status: Not Started
+        notes: |
+          IEC 60601-1-8 alarm conformance — categorization, priority, signal
+          characteristics, user response. Gates pump risk + HF formative
+          (alarm-recognition tasks) + system V&V (alarm scenarios).
+
+      - id: ENG14
+        capability: Usability Test Cohort Recruitment
+        scope: Suite
+        effort: Med
+        unblocks: [HF4a, HF4b]
+        status: Not Started
+        notes: |
+          Recruit a representative user cohort (RNs, anesthesiologists,
+          biomeds) for formative + summative HF evaluations. Gates the HF4
+          summative validation rows on both pump and drug-library-manager.
+
+  # ── Engineering Prereqs for LMR2 (AI/ML PCCP envelope) ──
+  - id: engineering-lmr2-release
+    name: Engineering Prereqs — LMR2 Release (AI/ML envelope)
+    type: engineering-readiness
+    posture: full-package
+    target_date: TBD
+    purpose: |
+      Engineering capabilities required for the LMR2 commercial release —
+      specifically the AI/ML PCCP envelope (predictive alarms + drift
+      monitoring). These don't gate the initial K210345 filing but must be
+      ready before LMR2 ships with the PCCP-authorized AI features.
+
+    prerequisites:
+      - milestone: lmr2-release
+        condition: ready
+
+    bindings:
+
+      # ── 4.2 AI/ML Development ──
+
+      - id: ENG19
+        capability: AI/ML Training Infrastructure (predictive alarms)
+        scope: Suite
+        effort: V.High
+        unblocks: [AI1, AI2, AI3, AI4]
+        status: Not Started
+        notes: |
+          Training infra (data pipeline, model dev, validation suite) for the
+          predictive-alarm models — backbone of the LMR2 PCCP envelope.
+          Gates AI/ML PCCP support rows AI1-AI4 (model description,
+          performance, training process, validation).
+
+      - id: ENG20
+        capability: AI/ML Drift Monitoring Pipeline
+        scope: Suite
+        effort: High
+        unblocks: [AI5, AI6]
+        status: Not Started
+        notes: |
+          Production drift-monitoring telemetry + thresholds + retraining
+          triggers per FDA AI/ML PCCP guidance. Gates AI5 (monitoring plan)
+          + AI6 (re-validation criteria).

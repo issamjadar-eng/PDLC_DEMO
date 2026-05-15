@@ -9,9 +9,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — SE Argument
-  - Predicate Device Analysis
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: submission-authored
+    file_pattern: '*predicate-device-analysis*.md'
   verbatim: A device is substantially equivalent if it has the same intended use as
     the predicate device AND either the same technological characteristics, or different
     technological characteristics that do not raise different questions of safety
@@ -39,9 +43,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - Predicate Device Analysis
-  - 510(k) Submission — Device Description
+  - role: submission-authored
+    file_pattern: '*predicate-device-analysis*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: Only one predicate is required; FDA encourages identifying a single predicate
     to simplify review. A split predicate (comparing intended use to Device A while
     comparing technological characteristics to Device B with a different intended
@@ -71,9 +79,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: should-have
   applies_to:
-  - 510(k) Submission — Performance Testing
-  - V&V Plan
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: 'FDA follows a stepwise approach: (1) descriptive information about technological
     characteristics; (2) non-clinical bench performance testing/analytical studies;
     (3) non-clinical animal and/or biocompatibility studies; (4) clinical performance
@@ -101,9 +113,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — 510(k) Summary
-  - SE Narrative
+  - role: submission-authored
+    file_pattern: '*510k-summary*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: Required per 21 CFR 807.92. Must be in sufficient detail to explain the
     basis for SE determination. FDA encourages 510(k) Summary (rather than 510(k)
     Statement) for transparency.
@@ -126,9 +142,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Device Description
-  - Software Description
+  - role: submission-authored
+    file_pattern: '*510k-device-description*.md'
+  - role: design
+    file_pattern: '*software-description*.md'
   verbatim: Statement that AI is used. Inputs, outputs, intended users, use environment,
     workflow integration. Automation level and configurable elements. Hardware platform
     description.
@@ -154,10 +174,15 @@ obligations:
   artifact_type: labeling
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - Instructions for Use
-  - User Documentation
-  - 510(k) Submission — Labeling
+  - role: submission-authored
+    file_pattern: '*instructions-for-use*.md'
+  - role: submission-authored
+    file_pattern: '*user-documentation*.md'
+  - role: submission-authored
+    file_pattern: '*510k-labeling*.md'
   verbatim: 'Labeling must include: AI inclusion statement, model I/O, automation
     level, architecture description, development data description, performance data
     with confidence intervals, subgroup performance, performance monitoring tools,
@@ -190,9 +215,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Performance Testing
-  - Data Management Plan
+  - role: submission-authored
+    file_pattern: '*510k-performance-testing*.md'
+  - role: vnv
+    file_pattern: '*data-management-plan*.md'
   verbatim: Data collection protocols, cleaning/processing, reference standard, annotation.
     Data storage/version control. Development/test data independence. Representativeness
     analysis (demographics, sites, equipment). Subgroup analysis. OUS data justification
@@ -221,9 +250,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Performance Testing
-  - Clinical/Non-Clinical Study Protocol
+  - role: submission-authored
+    file_pattern: '*510k-performance-testing*.md'
+  - role: vnv-plan
+    file_pattern: '*clinical-non-clinical-study-protocol*.md'
   verbatim: Pre-specified study protocols and statistical analysis plans. Sample size
     justification with adequate power. Primary/secondary endpoints with pre-specified
     acceptance criteria. Statistical hypotheses (null and alternative) with multiplicity
@@ -260,9 +293,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Post-Market Surveillance Plan
-  - Device Performance Monitoring Plan
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
+  - role: postmarket
+    file_pattern: '*device-performance-monitoring-plan*.md'
   verbatim: Data collection methods for postmarket monitoring. Drift detection (data
     drift, concept drift). Input monitoring. User behavior monitoring. Update deployment
     plan. Communication procedures for performance changes.
@@ -292,10 +329,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - Threat Model
-  - Security Risk Assessment
-  - 510(k) Submission — Cybersecurity
+  - role: cybersecurity
+    file_pattern: '*threat-model*.md'
+  - role: cybersecurity
+    file_pattern: '*security-risk-assessment*.md'
+  - role: submission-authored
+    file_pattern: '*510k-cybersecurity*.md'
   verbatim: 'AI-specific threat model: data poisoning, model inversion, evasion attacks,
     data leakage, overfitting exploitation, bias manipulation, performance drift.
     Fuzz testing, penetration testing. Access controls, encryption, de-identification.'
@@ -327,8 +369,11 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Description of Modifications section
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
   verbatim: 'Statement whether modifications are implemented automatically, manually,
     or combination. Statement whether modifications are global (uniform across all
     devices) or local (site/patient-specific). For local adaptations: description
@@ -358,9 +403,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Modification Protocol
-  - Data Management Plan
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: plans
+    file_pattern: '*data-management-plan*.md'
   verbatim: Collection protocols (inclusion/exclusion criteria, intended data distribution
     across covariates including sex, age, race, disease conditions, acquisition conditions,
     prospective vs. retrospective, enrichment/stratified sampling, number and geographic
@@ -392,9 +441,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Modification Protocol
-  - V&V Protocol Templates
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-protocol-template*.md'
   verbatim: 'Assessment metrics (specific metrics, how they demonstrate safe use,
     comprehensive performance assessment, challenging cases). Statistical analysis
     plans (equivalent/improved performance vs. previous versions, high-risk subpopulations,
@@ -428,10 +481,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Modification Protocol
-  - Post-Market Surveillance Plan
-  - Labeling Update Process
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
+  - role: plans
+    file_pattern: '*labeling-update-process*.md'
   verbatim: Software V&V (whether plan differs from original, integrated environment
     testing, impact on other device functions). When and how updates deploy (decision
     criteria, expected timeline, frequency, mechanism, verification of critical safety
@@ -466,9 +524,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Impact Assessment
-  - Risk Management File
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: Discussion of benefits and risks of each modification, including risks
     of harm and unintended bias. How V&V activities in the Modification Protocol ensure
     continued safety and effectiveness. How implementation of one modification impacts
@@ -496,10 +558,15 @@ obligations:
   artifact_type: process-record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Design Change Records
-  - PCCP Implementation Records
-  - CAPA Records
+  - role: plans
+    file_pattern: '*design-change-records*.md'
+  - role: plans
+    file_pattern: '*pccp-implementation-records*.md'
+  - role: plans
+    file_pattern: '*capa-records*.md'
   verbatim: QMS compliance with 21 CFR Part 820 / ISO 13485:2016. Design control procedures
     for PCCP modifications (21 CFR 820.30). Change management processes for PCCP implementation.
     Document and record retention (minimum 2 years from commercial release). CAPA
@@ -527,10 +594,15 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - Device Classification Determination
-  - 510(k) Submission — Device Description
-  - CDS Exemption Analysis
+  - role: submission-authored
+    file_pattern: '*device-classification-determination*.md'
+  - role: submission-authored
+    file_pattern: '*510k-device-description*.md'
+  - role: submission-authored
+    file_pattern: '*cds-exemption-analysis*.md'
   verbatim: 'The software function must not acquire, process, or analyze: medical
     images, signals from an IVD, or patterns or signals from a signal acquisition
     system. Any software that directly analyzes X-rays, CT scans, MRI, ultrasound,
@@ -560,10 +632,15 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - Device Classification Determination
-  - 510(k) Submission — Indications for Use
-  - Labeling
+  - role: submission-authored
+    file_pattern: '*device-classification-determination*.md'
+  - role: submission-authored
+    file_pattern: '*510k-indications-for-use*.md'
+  - role: submission-authored
+    file_pattern: '*labeling*.md'
   verbatim: 'Criterion 3: Does not provide a specific preventive, diagnostic, or treatment
     output or directive; is not intended to replace the HCP''s judgment. Criterion
     4: The software enables an HCP to independently review the basis for recommendations
@@ -592,9 +669,13 @@ obligations:
   artifact_type: process-record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: should-have
   applies_to:
-  - Q-Sub Package
-  - Device Classification Documentation
+  - role: submission-authored
+    file_pattern: '*qsub-package*.md'
+  - role: submission-authored
+    file_pattern: '*device-classification-documentation*.md'
   verbatim: For software where CDS status is uncertain, FDA recommends submitting
     a 513(g) request for device determination, or using a Q-Submission to discuss
     with FDA.
@@ -619,10 +700,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Cybersecurity Documentation
-  - Post-Market Cyber Plan
-  - SBOM
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: postmarket
+    file_pattern: '*post-market-cybersecurity-plan*.md'
+  - role: sbom
+    file_pattern: '*sbom*.md'
   verbatim: 'Sponsors must provide: (1) post-market cybersecurity plan to monitor,
     identify, and address post-market vulnerabilities and exploits, including coordinated
     vulnerability disclosure; (2) process documentation for design, development, and
@@ -653,10 +739,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - Security Risk Management Report
-  - Threat Model
-  - 510(k) Submission
+  - role: cybersecurity
+    file_pattern: '*security-risk-management-report*.md'
+  - role: cybersecurity
+    file_pattern: '*threat-model*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: Security Risk Management Report (e.g., per AAMI TIR57). Threat Modeling
     Documentation — full system and lifecycle scope. Cybersecurity Risk Assessment
     — use exploitability (not probability) to assess risks. Third-Party Software Component
@@ -684,9 +775,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - SBOM
-  - 510(k) Submission — Cybersecurity Section
+  - role: sbom
+    file_pattern: '*sbom*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: 'SBOM must be machine-readable. Consistent with NTIA minimum elements
     (October 2021, second edition). Must be complete — all transitive dependencies
     included. If transitive dependencies unknown, justify the gap. Accompanying information:
@@ -716,10 +811,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: should-have
   applies_to:
-  - Security Architecture Document
-  - 510(k) Submission — Cybersecurity Section
-  - SAD
+  - role: architecture
+    file_pattern: '*security-architecture-document*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
   verbatim: 'Four security architecture view categories: (1) global system view; (2)
     multi-patient harm view — how a cybersecurity event could affect multiple patients;
     (3) updateability and patchability view — how patches are delivered; (4) security
@@ -747,9 +847,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: should-have
   applies_to:
-  - Security Test Report
-  - 510(k) Submission — Cybersecurity Section
+  - role: vnv
+    file_pattern: '*security-test-report*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: 'Four types recommended: (1) security requirement testing — verifying
     security requirements are met; (2) threat mitigation testing — verifying mitigations
     are effective; (3) vulnerability testing — identifying vulnerabilities; (4) penetration
@@ -779,10 +883,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Cybersecurity Management Plan
-  - Post-Market Surveillance Plan
-  - 510(k) Submission
+  - role: cybersecurity
+    file_pattern: '*cybersecurity-management-plan*.md'
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
   verbatim: 'Required for cyber device submissions. Should include: how the manufacturer
     will manage cybersecurity throughout the device lifecycle, response to vulnerabilities
     and incidents, coordinated vulnerability disclosure processes, periodic security
@@ -812,9 +921,13 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Device Description
-  - MFD Impact Analysis
+  - role: submission-authored
+    file_pattern: '*510k-submission*device-description*.md'
+  - role: submission-authored
+    file_pattern: '*mfd-impact-analysis*.md'
   verbatim: FDA shall not regulate non-device software functions as devices. However,
     FDA may assess the impact that non-device functions have on device functions when
     evaluating safety and effectiveness. Non-device and other functions are reviewed
@@ -841,10 +954,15 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: should-have
   applies_to:
-  - MFD Impact Analysis
-  - System Hazard Analysis
-  - Architecture Document
+  - role: architecture
+    file_pattern: '*mfd-impact-analysis*.md'
+  - role: risk-management
+    file_pattern: '*system-hazard-analysis*.md'
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
   verbatim: 'Consider whether the functions share: computational resources, data dependencies
     (input data from other function used in critical calculations), code necessary
     for proper execution, memory or storage, output screen or GUI, programming pointers.
@@ -875,10 +993,15 @@ obligations:
   artifact_type: design-document
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - System Architecture Document
-  - 510(k) Submission — Architecture
-  - Hazard Analysis
+  - role: architecture
+    file_pattern: '*system-architecture-document*.md'
+  - role: submission-authored
+    file_pattern: '*510k-submission*architecture*.md'
+  - role: risk-management
+    file_pattern: '*hazard-analysis*.md'
   verbatim: Architectural separation strongly recommended. Logical separation, architectural
     separation, code and data partitioning should be used to the extent possible.
     Higher separation leads to easier independent review of safety and effectiveness.
@@ -908,10 +1031,15 @@ obligations:
   artifact_type: process-record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Design Change Records
-  - PCCP Change Records
-  - Change Impact Analysis
+  - role: plans
+    file_pattern: '*design-change-records*.md'
+  - role: submission-authored
+    file_pattern: '*pccp-change-records*.md'
+  - role: plans
+    file_pattern: '*change-impact-analysis*.md'
   verbatim: 'When an other function is modified: assess whether the modification could
     significantly impact safety or effectiveness of the device function. If adverse
     impact (or labeled positive impact): reference applicable guidance to determine
@@ -939,10 +1067,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document
-  - 510(k) Submission Cover Letter
-  - Device Description
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: submission-authored
+    file_pattern: '*510k-cover-letter*.md'
+  - role: submission-authored
+    file_pattern: '*device-description*.md'
   verbatim: A PCCP is part of the device marketing authorization. The manufacturer
     is required to implement modifications consistent with the authorized PCCP. A
     PCCP must include specific modifications the manufacturer intends to make — not
@@ -971,8 +1104,11 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Description of Modifications section
+  - role: submission-authored
+    file_pattern: '*pccp-modification-description*.md'
   verbatim: Enumerate each individual proposed modification. Provide specific rationale
     for each change. Reference labeling sections anticipated to be impacted. Present
     at detail level permitting understanding of specific modifications. Link each
@@ -999,9 +1135,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Modification Protocol section
-  - V&V Plan
+  - role: submission-authored
+    file_pattern: '*pccp-modification-protocol*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: 'Plans to V&V the modified device meets specifications for each modification.
     Plans to verify unmodified specifications are not impacted. Plans for V&V of entire
     device following each individual modification AND in aggregate. Study design,
@@ -1032,9 +1172,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - PCCP Document — Impact Assessment section
-  - Risk Management File
+  - role: submission-authored
+    file_pattern: '*pccp-impact-assessment*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: Compare the version with each modification to the version without any
     modifications. Discuss benefits and risks (including risks of harm per ISO 14971)
     of each individual modification. Discuss how V&V activities continue to ensure
@@ -1065,9 +1209,13 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: should-have
   applies_to:
-  - PCCP Scope Determination
-  - Change Impact Analysis
+  - role: submission-authored
+    file_pattern: '*pccp-scope-determination*.md'
+  - role: submission-authored
+    file_pattern: '*pccp-change-impact-analysis*.md'
   verbatim: 'Could the modification be a major change to the intended use? If YES:
     generally NOT appropriate for PCCP. Could the modification introduce a NEW risk?
     If YES: generally NOT appropriate for PCCP. Could the modification significantly
@@ -1096,9 +1244,13 @@ obligations:
   artifact_type: process-record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: should-have
   applies_to:
-  - PCCP Document
-  - Design Change Records
+  - role: submission-authored
+    file_pattern: '*pccp-document*.md'
+  - role: plans
+    file_pattern: '*design-change-records*.md'
   - UDI Records
   verbatim: 'Only one version of an authorized PCCP should exist per device at any
     time. A PCCP can evolve over time through future marketing submissions. FDA does
@@ -1127,9 +1279,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Documentation
-  - Documentation Level Statement
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: plans-doc-level
+    file_pattern: '*documentation-level-statement*.md'
   verbatim: Enhanced documentation required when failure or latent flaw of ANY device
     software function could present a hazardous situation with a probable risk of
     death or serious injury to a patient, user, or others, assessed prior to implementing
@@ -1159,10 +1315,15 @@ obligations:
   artifact_type: submission-content
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Documentation
-  - SRS
-  - Architecture Document
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
   verbatim: 'Comprehensive overview: significant features, analyses, inputs, outputs,
     hardware platforms. Software requirements specification — complete documentation
     of software requirements, organized format with traceability to other documentation
@@ -1193,9 +1354,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Documentation (Enhanced)
-  - Software Design Document
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: design
+    file_pattern: '*software-design-document*.md'
   verbatim: 'Enhanced: Include SDS showing technical design details, how design implements
     SRS, and traceability from SDS to SRS. Basic: Not required in submission (document
     in Design History File).'
@@ -1219,9 +1384,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Documentation
-  - IEC 62304 Declaration of Conformity
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: submission-authored
+    file_pattern: '*iec-62304-declaration-of-conformity*.md'
   verbatim: 'Option 1: Declaration of Conformity to FDA-recognized IEC 62304 (specific
     sections for basic vs. enhanced). Option 2 Without IEC 62304 conformity (Enhanced):
     Complete configuration management and maintenance plan + summary documentation.'
@@ -1246,9 +1415,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Testing
-  - Test Protocols and Reports
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: vnv
+    file_pattern: '*test-protocols-and-reports*.md'
   verbatim: 'Enhanced: Summary of unit, integration, and system-level testing + complete
     system-level test protocols and reports + full unit and integration level test
     protocols and reports. Basic: Summary of unit, integration, and system-level testing
@@ -1274,9 +1447,13 @@ obligations:
   artifact_type: submission-content
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - 510(k) Submission — Software Documentation
-  - Unresolved Anomalies List
+  - role: submission-authored
+    file_pattern: '*510k-submission*.md'
+  - role: submission-authored
+    file_pattern: '*unresolved-anomalies-list*.md'
   verbatim: 'History of tested software revisions: date, version number, brief description
     of changes. Last entry = final released version, including differences from tested
     version and safety/effectiveness assessment. List of remaining unresolved anomalies
@@ -1302,9 +1479,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Safety Classification Record
-  - Software Development Plan
+  - role: plans-sdp
+    file_pattern: '*safety-classification*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: '"The MANUFACTURER shall assign a software safety class (Class A, B, or
     C) to
 
@@ -1330,9 +1511,13 @@ obligations:
   artifact_type: plan
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Software Development Plan
-  - Design and Development Plan
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
+  - role: plans
+    file_pattern: '*design-and-development-plan*.md'
   verbatim: '"The MANUFACTURER shall establish a SOFTWARE DEVELOPMENT PLAN for conducting
 
     the activities of the software development process."
@@ -1352,8 +1537,11 @@ obligations:
   artifact_type: plan
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Software Development Plan
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: '"The SOFTWARE DEVELOPMENT PLAN shall address: (a) the software development
     life cycle
 
@@ -1386,8 +1574,11 @@ obligations:
   artifact_type: spec
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Software Requirements Specification
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
   verbatim: '"The MANUFACTURER shall define and document the SOFTWARE REQUIREMENTS
     from the
 
@@ -1409,8 +1600,11 @@ obligations:
   artifact_type: spec
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Software Requirements Specification
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
   verbatim: '"The software requirements shall include: functional and capability requirements;
 
     software system inputs and outputs; interfaces between the software system and
@@ -1438,9 +1632,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Software Requirements Specification
-  - Risk Management File
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The MANUFACTURER shall re-evaluate the RISK associated with the software
 
     after establishing the SOFTWARE REQUIREMENTS and update the RISK MANAGEMENT
@@ -1461,8 +1659,11 @@ obligations:
   artifact_type: spec
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - Software Architecture Document
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
   verbatim: '"The MANUFACTURER shall transform the SOFTWARE REQUIREMENTS into a documented
 
     architecture that describes the structure of the software and identifies the
@@ -1487,9 +1688,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - SOUP List
-  - Software Architecture Document
+  - role: sbom
+    file_pattern: '*soup-list*.md'
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
   verbatim: '"The MANUFACTURER shall identify SOUP items including: (a) the title,
     manufacturer,
 
@@ -1512,9 +1717,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - Software Architecture Document
-  - Architecture Verification Record
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
+  - role: vnv
+    file_pattern: '*architecture-verification*.md'
   verbatim: '"The MANUFACTURER shall verify that the software architecture implements
     all
 
@@ -1538,9 +1747,13 @@ obligations:
   artifact_type: spec
   dhf_owner: item
   min_iec62304_class: C
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - Software Design Document
-  - Software Detailed Design
+  - role: design
+    file_pattern: '*software-design-document*.md'
+  - role: design
+    file_pattern: '*software-detailed-design*.md'
   verbatim: '"The MANUFACTURER shall refine the software architecture until it is
     represented
 
@@ -1564,9 +1777,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Unit Verification Records
-  - Code Review Records
+  - role: vnv
+    file_pattern: '*unit-verification*.md'
+  - role: vnv
+    file_pattern: '*code-review*.md'
   verbatim: '"The MANUFACTURER shall verify SOFTWARE UNITS. The verification shall
     confirm that
 
@@ -1588,9 +1805,13 @@ obligations:
   artifact_type: protocol
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Integration Test Plan
-  - Integration Test Report
+  - role: vnv-plan
+    file_pattern: '*integration-test-plan*.md'
+  - role: vnv-results
+    file_pattern: '*integration-test-report*.md'
   verbatim: '"The MANUFACTURER shall integrate the SOFTWARE ITEMS and verify that
     the
 
@@ -1615,9 +1836,13 @@ obligations:
   artifact_type: protocol
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Software System Test Plan
-  - Software System Test Report
+  - role: vnv-plan
+    file_pattern: '*software-system-test-plan*.md'
+  - role: vnv-results
+    file_pattern: '*software-system-test-report*.md'
   verbatim: '"The MANUFACTURER shall test the SOFTWARE SYSTEM for conformance to the
     SOFTWARE
 
@@ -1643,9 +1868,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: plans-release
+  criticality: must-have
   applies_to:
-  - Software Release Package
-  - Release Checklist
+  - role: plans-release
+    file_pattern: '*software-release-package*.md'
+  - role: plans-release
+    file_pattern: '*release-checklist*.md'
   verbatim: '"The MANUFACTURER shall ensure that the software is released only when:
     all
 
@@ -1674,9 +1903,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Software Maintenance Plan
-  - Software Development Plan
+  - role: postmarket
+    file_pattern: '*software-maintenance-plan*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: '"The MANUFACTURER shall establish and document a SOFTWARE MAINTENANCE
     PLAN.
 
@@ -1701,10 +1934,15 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management File
-  - Software FMEA
-  - Hazard Analysis
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
+  - role: risk-management
+    file_pattern: '*software-fmea*.md'
+  - role: risk-management
+    file_pattern: '*hazard-analysis*.md'
   verbatim: '"The MANUFACTURER shall identify SOFTWARE ITEMS that could contribute
     to a
 
@@ -1729,9 +1967,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management File
-  - SOUP Risk Evaluation
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
+  - role: risk-management
+    file_pattern: '*soup-risk-evaluation*.md'
   verbatim: '"The MANUFACTURER shall evaluate the ANOMALY LISTS and reported PROBLEMS
     for
 
@@ -1756,9 +1998,13 @@ obligations:
   artifact_type: plan
   dhf_owner: item
   min_iec62304_class: B
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Configuration Management Plan
-  - Software Development Plan
+  - role: plans
+    file_pattern: '*configuration-management-plan*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: '"The MANUFACTURER shall establish and document a SOFTWARE CONFIGURATION
 
     MANAGEMENT PLAN that includes: identification of configuration items;
@@ -1782,9 +2028,13 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: B
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Problem Resolution Process
-  - Software Maintenance Plan
+  - role: postmarket
+    file_pattern: '*problem-resolution*.md'
+  - role: postmarket
+    file_pattern: '*software-maintenance-plan*.md'
   verbatim: '"The MANUFACTURER shall establish and document a SOFTWARE PROBLEM RESOLUTION
 
     PROCESS that includes: problem reporting, analysis, resolution and verification,
@@ -1811,9 +2061,13 @@ obligations:
   artifact_type: record
   dhf_owner: item
   min_iec62304_class: A
+  canonical_role: trace-matrix
+  criticality: must-have
   applies_to:
-  - Trace Matrix
-  - Software Development Plan
+  - role: trace-matrix
+    file_pattern: '*trace-matrix*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: '"The SOFTWARE DEVELOPMENT PLAN shall address traceability between: software
 
     requirements and system requirements; software requirements and software system
@@ -1840,9 +2094,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - Usability Engineering Plan
-  - Design and Development Plan
+  - role: human-factors
+    file_pattern: '*usability-engineering-plan*.md'
+  - role: plans
+    file_pattern: '*design-and-development-plan*.md'
   verbatim: Establish and maintain a usability engineering process. The process must
     be integrated with the overall design and development process. Usability engineering
     activities must be traceable to the risk management process (ISO 14971).
@@ -1864,9 +2122,13 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - Use Specification
-  - Usability Engineering File
+  - role: human-factors
+    file_pattern: '*use-specification*.md'
+  - role: human-factors
+    file_pattern: '*usability-engineering-file*.md'
   verbatim: 'Identify and characterize intended users. Consider: clinical role, training
     level, experience, physical capabilities.'
   extracted_requirements:
@@ -1885,9 +2147,13 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - Use Specification
-  - Usability Engineering File
+  - role: human-factors
+    file_pattern: '*use-specification*.md'
+  - role: human-factors
+    file_pattern: '*usability-engineering-file*.md'
   verbatim: 'Document the use environment for each use scenario. Consider: lighting,
     noise, sterility, time pressure, distractions, PPE.'
   extracted_requirements:
@@ -1907,10 +2173,15 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - Use-Related Risk Analysis
-  - Usability Engineering File
-  - Risk Management File
+  - role: human-factors
+    file_pattern: '*use-related-risk-analysis*.md'
+  - role: human-factors
+    file_pattern: '*usability-engineering-file*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: Identify hazards and hazardous situations related to use. Identify potential
     use errors and their causes. Evaluate the severity and probability of harm from
     use errors. Feed use-related risks into the ISO 14971 risk management process.
@@ -1934,9 +2205,13 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - User Interface Specification
-  - Software Requirements Specification
+  - role: human-factors
+    file_pattern: '*user-interface-specification*.md'
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
   verbatim: 'Establish the user interface specification from use specification and
     risk analysis. Specify: information presentation, controls, navigation, feedback,
     error prevention. Include measurable acceptance criteria for critical use scenarios.'
@@ -1959,9 +2234,13 @@ obligations:
   artifact_type: test-report
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - UI Verification Report
-  - V&V Plan
+  - role: vnv
+    file_pattern: '*ui-verification*.md'
+  - role: vnv
+    file_pattern: '*vnv-plan*.md'
   verbatim: Verify the user interface meets the user interface specification. Include
     inspection, analysis, and testing methods. Verify risk control measures related
     to usability are implemented.
@@ -1981,9 +2260,13 @@ obligations:
   artifact_type: test-report
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Formative Evaluation Reports
-  - Usability Engineering File
+  - role: vnv
+    file_pattern: '*formative-evaluation*.md'
+  - role: human-factors
+    file_pattern: '*usability-engineering-file*.md'
   verbatim: 'Evaluate the user interface with representative users in representative
     environments (formative phase). Methods: cognitive walkthrough, heuristic evaluation,
     usability testing with think-aloud. Can be done with simulated environments and
@@ -2007,9 +2290,13 @@ obligations:
   artifact_type: test-report
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Summative Usability Evaluation Report
-  - 510(k) Submission
+  - role: vnv
+    file_pattern: '*summative-usability*.md'
+  - role: submission-authored
+    file_pattern: '*510k*summative*.md'
   verbatim: 'Evaluate the user interface with representative users in representative
     environments (summative phase). Must use production-equivalent device in representative
     use environment. Must include statistical evidence that critical tasks can be
@@ -2038,9 +2325,13 @@ obligations:
   artifact_type: analysis
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: human-factors
+  criticality: must-have
   applies_to:
-  - UOUP Evaluation
-  - Usability Engineering File
+  - role: human-factors
+    file_pattern: '*uoup-evaluation*.md'
+  - role: human-factors
+    file_pattern: '*usability-engineering-file*.md'
   verbatim: If reusing an existing user interface or UI components, evaluate them
     using this process. Applicable when using third-party UI frameworks or pre-built
     components in the clinical interface.
@@ -2063,10 +2354,15 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - Security Risk Assessment
-  - Risk Management Plan
-  - Software Development Plan
+  - role: cybersecurity
+    file_pattern: '*security-risk-assessment*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: 'Integrate security risk management into the overall risk management process
     (ISO 14971). Security risk management must consider: confidentiality, integrity,
     availability. Apply throughout the entire lifecycle.'
@@ -2089,9 +2385,13 @@ obligations:
   artifact_type: plan
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Software Development Plan
-  - Cybersecurity Plan
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
+  - role: cybersecurity
+    file_pattern: '*cybersecurity-plan*.md'
   verbatim: 'Include security activities in the software development plan. Plan must
     address: threat modeling, secure design principles, security testing, vulnerability
     management. Define security requirements sources (regulatory, standards, organizational
@@ -2114,9 +2414,13 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Software Requirements Specification
-  - Security Requirements
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
+  - role: cybersecurity
+    file_pattern: '*security-requirements*.md'
   verbatim: 'Derive security requirements from: security risk assessment, regulatory
     requirements, intended use environment threat landscape, data protection requirements
     (PHI/PII if applicable). Security requirements must cover: authentication and
@@ -2146,9 +2450,13 @@ obligations:
   artifact_type: design-document
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - Software Architecture Document
-  - Security Architecture
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
+  - role: cybersecurity
+    file_pattern: '*security-architecture*.md'
   verbatim: 'Apply secure design principles: defense in depth, least privilege, secure
     defaults, fail secure, separation of duties, minimize attack surface. Document
     security architecture decisions. Identify trust boundaries between components.'
@@ -2172,10 +2480,15 @@ obligations:
   artifact_type: process-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Secure Coding Standard
-  - SOUP List
-  - Software Development Process Records
+  - role: cybersecurity
+    file_pattern: '*secure-coding-standard*.md'
+  - role: sbom
+    file_pattern: '*soup-list*.md'
+  - role: plans
+    file_pattern: '*software-development-process-records*.md'
   verbatim: Follow secure coding standards. Use static analysis tools to detect vulnerabilities.
     Perform code reviews with security focus. Manage third-party components (SOUP)
     for known vulnerabilities.
@@ -2197,9 +2510,13 @@ obligations:
   artifact_type: test-report
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv-results
+  criticality: must-have
   applies_to:
-  - Security Test Report
-  - V&V Plan
+  - role: vnv-results
+    file_pattern: '*security-test-report*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: 'Conduct security testing of the complete system: vulnerability scanning,
     penetration testing, fuzz testing, security regression testing. Test against known
     vulnerability databases (CVE, NVD).'
@@ -2224,10 +2541,15 @@ obligations:
   artifact_type: release-record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: plans-release
+  criticality: must-have
   applies_to:
-  - SBOM
-  - Security Release Notes
-  - Software Release Package
+  - role: sbom
+    file_pattern: '*sbom*.md'
+  - role: plans-release
+    file_pattern: '*security-release-notes*.md'
+  - role: plans-release
+    file_pattern: '*software-release-package*.md'
   verbatim: 'Document known security vulnerabilities and mitigations at release. Provide
     security guidance for deployment. Generate Software Bill of Materials (SBOM).
     SBOM must include: component name, version, supplier, dependency relationship,
@@ -2253,9 +2575,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Vulnerability Management Plan
-  - Post-Market Surveillance Plan
+  - role: postmarket
+    file_pattern: '*vulnerability-management-plan*.md'
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
   verbatim: Continuously monitor for new vulnerabilities affecting the software and
     its components. Monitor vulnerability databases and SOUP vendor advisories. Establish
     a coordinated vulnerability disclosure process.
@@ -2279,9 +2605,13 @@ obligations:
   artifact_type: analysis
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: cybersecurity
+  criticality: must-have
   applies_to:
-  - Threat Model
-  - Security Risk Assessment
+  - role: cybersecurity
+    file_pattern: '*threat-model*.md'
+  - role: cybersecurity
+    file_pattern: '*security-risk-assessment*.md'
   verbatim: Identify assets (data, functions, interfaces). Identify threat agents
     (malicious users, malware, insider threats, network attackers). Identify threats
     using a systematic method (STRIDE, attack trees, etc.). Identify vulnerabilities
@@ -2305,9 +2635,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Security Incident Response Plan
-  - Post-Market Surveillance Plan
+  - role: postmarket
+    file_pattern: '*security-incident-response-plan*.md'
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
   verbatim: Establish a security incident response process. Define severity classification
     for security issues. Track security problems to resolution. Report security incidents
     per regulatory requirements.
@@ -2331,9 +2665,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management Plan
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: 'Apply risk management per ISO 14971 to the health software product. Risk
     management must cover the full product lifecycle. Include risks from: intended
     use environment, interoperability, data migration, IT security.'
@@ -2355,9 +2693,13 @@ obligations:
   artifact_type: process-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Software Development Plan
-  - IEC 62304 Conformance Records
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
+  - role: plans
+    file_pattern: '*iec-62304-conformance*.md'
   verbatim: Software development must conform to IEC 62304. This is where the two
     standards connect — IEC 82304-1 requires IEC 62304 compliance.
   extracted_requirements:
@@ -2377,10 +2719,15 @@ obligations:
   artifact_type: specification
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Device Description
-  - Intended Use Statement
-  - Software Requirements Specification
+  - role: submission-authored
+    file_pattern: '*device-description*.md'
+  - role: submission-authored
+    file_pattern: '*intended-use-statement*.md'
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
   verbatim: Define the intended use of the health software product. Define the intended
     operating environment (hardware, OS, network, interfacing systems). Define the
     intended user profile.
@@ -2401,9 +2748,13 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Software Requirements Specification
-  - Risk Control Requirements
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
+  - role: risk-management
+    file_pattern: '*risk-control-requirements*.md'
   verbatim: 'Derive safety requirements from risk management activities. Include requirements
     for: data integrity, access control, confidentiality, audit trails. Address requirements
     for IT-network integration. Consider degraded performance modes.'
@@ -2428,9 +2779,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Software Development Plan
-  - Product Lifecycle Plan
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
+  - role: plans
+    file_pattern: '*product-lifecycle-plan*.md'
   verbatim: 'Plan must cover the entire product lifecycle. Include provisions for:
     product deployment, operation, maintenance, and decommissioning.'
   extracted_requirements:
@@ -2451,10 +2806,15 @@ obligations:
   artifact_type: test-report
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Validation Report
-  - Clinical Evaluation
-  - V&V Plan
+  - role: vnv-results
+    file_pattern: '*validation-report*.md'
+  - role: clinical
+    file_pattern: '*clinical-evaluation*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: Validate the health software product in the intended operating environment.
     Validation must demonstrate the product meets user needs and intended uses.
   extracted_requirements:
@@ -2475,10 +2835,15 @@ obligations:
   artifact_type: labeling
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: submission-authored
+  criticality: must-have
   applies_to:
-  - Instructions for Use
-  - User Documentation
-  - Labeling
+  - role: submission-authored
+    file_pattern: '*instructions-for-use*.md'
+  - role: submission-authored
+    file_pattern: '*user-documentation*.md'
+  - role: submission-authored
+    file_pattern: '*labeling*.md'
   verbatim: 'User documentation must include: intended use, operating environment
     requirements, installation instructions, user instructions, known limitations,
     security guidance.'
@@ -2501,9 +2866,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Product Lifecycle Plan
-  - Post-Market Surveillance Plan
+  - role: plans
+    file_pattern: '*product-lifecycle-plan*.md'
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
   verbatim: Plan for orderly decommissioning of the software product. Address data
     migration, archival, and patient safety during transition. Notify users of decommissioning
     timeline and alternatives.
@@ -2526,9 +2895,13 @@ obligations:
   artifact_type: plan
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans-sdp
+  criticality: must-have
   applies_to:
-  - Design and Development Plan
-  - Software Development Plan
+  - role: plans
+    file_pattern: '*design-and-development-plan*.md'
+  - role: plans-sdp
+    file_pattern: '*software-development-plan*.md'
   verbatim: How does the organization plan and control the design and development
     of product? Is there evidence that the organization documents the following? (a)
     Stages of design and development; (b) Reviews needed at these stages; (c) Appropriate
@@ -2554,10 +2927,15 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: requirements
+  criticality: must-have
   applies_to:
-  - Design Inputs Record
-  - Software Requirements Specification
-  - User Needs Document
+  - role: requirements
+    file_pattern: '*design-inputs-record*.md'
+  - role: requirements
+    file_pattern: '*software-requirements-specification*.md'
+  - role: user-needs
+    file_pattern: '*user-needs*.md'
   verbatim: Are design inputs identified and documented, including the following?
     (a) Functional, performance and safety requirements; are usability requirements
     documented; are these requirements in accordance with the intended use? (b) Applicable
@@ -2589,10 +2967,15 @@ obligations:
   artifact_type: specification
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: architecture
+  criticality: must-have
   applies_to:
-  - Design Outputs Record
-  - Software Architecture Document
-  - Software Design Document
+  - role: architecture
+    file_pattern: '*design-outputs-record*.md'
+  - role: architecture
+    file_pattern: '*software-architecture-document*.md'
+  - role: design
+    file_pattern: '*software-design-document*.md'
   verbatim: Do the outputs (a) meet the input requirements? (b) Provide information
     for purchasing, production and service provision? (c) Reference or contain product
     acceptance criteria? (d) Specify the characteristics for safe and proper use of
@@ -2618,9 +3001,13 @@ obligations:
   artifact_type: review-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Design Review Records
-  - Phase Gate Records
+  - role: plans
+    file_pattern: '*design-review-records*.md'
+  - role: plans
+    file_pattern: '*phase-gate-records*.md'
   verbatim: Is there evidence of planned arrangements for design review stages? Do
     the arrangements (a) Evaluate the design and development process to meet the identified
     requirements? (b) Identify and propose necessary actions? Who participates in
@@ -2649,10 +3036,15 @@ obligations:
   artifact_type: test-report
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Verification Plan
-  - Verification Reports
-  - V&V Plan
+  - role: vnv-plan
+    file_pattern: '*verification-plan*.md'
+  - role: vnv-results
+    file_pattern: '*verification-report*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: 'Is there evidence of planned arrangements for design verification? Do
     the verification plans include: Methods, acceptance criteria, and, if appropriate,
     statistical justification for sampling? Does the device intended use require it
@@ -2679,10 +3071,15 @@ obligations:
   artifact_type: test-report
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: vnv
+  criticality: must-have
   applies_to:
-  - Validation Plan
-  - Clinical Validation Report
-  - V&V Plan
+  - role: vnv-plan
+    file_pattern: '*validation-plan*.md'
+  - role: vnv-results
+    file_pattern: '*clinical-validation-report*.md'
+  - role: vnv-plan
+    file_pattern: '*vnv-plan*.md'
   verbatim: 'Is there evidence of planned arrangements for design validation? Do the
     validation plans include: Methods, acceptance criteria, and, if appropriate, statistical
     justification for sampling? Has the validation been conducted on representative
@@ -2710,10 +3107,15 @@ obligations:
   artifact_type: process-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Design Transfer Record
-  - Release Package
-  - Configuration Baseline
+  - role: plans
+    file_pattern: '*design-transfer-record*.md'
+  - role: plans-release
+    file_pattern: '*release-package*.md'
+  - role: plans
+    file_pattern: '*configuration-baseline*.md'
   verbatim: Are there documented procedures for design transfer? Are the results and
     conclusions of the transfer recorded?
   extracted_requirements:
@@ -2735,10 +3137,15 @@ obligations:
   artifact_type: change-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - Design Change Records
-  - PCCP Change Records
-  - ECO Records
+  - role: plans
+    file_pattern: '*design-change-records*.md'
+  - role: plans
+    file_pattern: '*pccp-change-records*.md'
+  - role: plans
+    file_pattern: '*eco-records*.md'
   verbatim: Are the changes reviewed, verified, validated (as appropriate) and approved
     prior to implementation? Are the changes evaluated for the effect on inputs or
     outputs of the risk management process? On the product realization process? On
@@ -2764,10 +3171,15 @@ obligations:
   artifact_type: dhf-file
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: trace-matrix
+  criticality: must-have
   applies_to:
-  - Design History File
-  - DHF README
-  - DHF Manifest
+  - role: trace-matrix
+    file_pattern: '*design-history-file*.md'
+  - role: trace-matrix
+    file_pattern: '*dhf-readme*.md'
+  - role: trace-matrix
+    file_pattern: '*dhf-manifest*.md'
   verbatim: 'Does the organization have a file for each type or family of devices?
     The file shall include or reference: records for design and development changes;
     records that demonstrate conformity to the design and development requirements.'
@@ -2790,10 +3202,15 @@ obligations:
   artifact_type: process-record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: plans
+  criticality: must-have
   applies_to:
-  - SOUP List
-  - Supplier Qualification Records
-  - Approved Supplier List
+  - role: plans
+    file_pattern: '*soup-list*.md'
+  - role: plans
+    file_pattern: '*supplier-qualification-records*.md'
+  - role: plans
+    file_pattern: '*approved-supplier-list*.md'
   verbatim: This clause is intended to ensure supplier capability meets the organization's
     requirements. Are suppliers evaluated and selected based on their ability to supply
     product in accordance with organization's requirements? Are criteria for selection,
@@ -2818,8 +3235,11 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management Plan
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
   verbatim: '"The manufacturer shall document a risk management plan for the device.
 
     The plan shall be part of the risk management file."
@@ -2839,8 +3259,11 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management Plan
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
   verbatim: '"The risk management plan shall include at minimum: (a) the scope of
     the risk
 
@@ -2876,9 +3299,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management Plan
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall define the criteria for risk acceptability, including
 
     the criteria to be used to decide when further risk reduction is required and
@@ -2903,8 +3330,11 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall maintain a risk management file. For each hazard
 
     identified, the risk management file shall allow traceability to: the hazard,
@@ -2931,10 +3361,15 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Intended Use Statement
-  - Risk Analysis
-  - Risk Management Plan
+  - role: user-needs
+    file_pattern: '*intended-use*.md'
+  - role: risk-management
+    file_pattern: '*risk-analysis*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
   verbatim: '"The manufacturer shall document the intended use and the reasonably
     foreseeable
 
@@ -2962,9 +3397,13 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Analysis
-  - Safety-Related Characteristics Checklist
+  - role: risk-management
+    file_pattern: '*risk-analysis*.md'
+  - role: risk-management
+    file_pattern: '*safety-related-characteristics*.md'
   verbatim: '"The manufacturer shall identify and document qualitative and quantitative
 
     characteristics of the device that could affect its safety, and where
@@ -2988,10 +3427,15 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Preliminary Hazard Analysis
-  - Hazard Analysis
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*preliminary-hazard-analysis*.md'
+  - role: risk-management
+    file_pattern: '*hazard-analysis*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall identify hazards and hazardous situations. For
     each
 
@@ -3019,9 +3463,13 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Assessment / FMEA
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-assessment-fmea*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"For each identified hazardous situation, the manufacturer shall estimate
     the
 
@@ -3048,9 +3496,13 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Assessment / FMEA
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-assessment-fmea*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall evaluate each identified risk using the risk
     acceptability
 
@@ -3076,9 +3528,13 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Control Measures
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-control-measures*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall identify risk control measures, using one or
     more of the
 
@@ -3107,10 +3563,15 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Control Measures
-  - Verification Records
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-control-measures*.md'
+  - role: vnv
+    file_pattern: '*verification-records*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall implement the risk control measures and verify
     their
 
@@ -3137,9 +3598,13 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Benefit-Risk Analysis
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*benefit-risk-analysis*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"If the residual risk is not acceptable, the manufacturer shall use the
     criteria
 
@@ -3165,8 +3630,11 @@ obligations:
   artifact_type: record
   dhf_owner: both
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management File
+  - role: risk-management
+    file_pattern: '*risk-management-file*.md'
   verbatim: '"The manufacturer shall evaluate whether the risk control measures introduce
 
     new hazards or hazardous situations. The manufacturer shall verify that all
@@ -3190,9 +3658,13 @@ obligations:
   artifact_type: record
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Overall Residual Risk Evaluation
-  - Risk Management Report
+  - role: risk-management
+    file_pattern: '*overall-residual-risk-evaluation*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-report*.md'
   verbatim: '"After all risk control measures have been implemented, the manufacturer
     shall
 
@@ -3224,8 +3696,11 @@ obligations:
   artifact_type: report
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: risk-management
+  criticality: must-have
   applies_to:
-  - Risk Management Report
+  - role: risk-management
+    file_pattern: '*risk-management-report*.md'
   verbatim: '"Before commercial distribution, the manufacturer shall review the risk
     management
 
@@ -3255,9 +3730,13 @@ obligations:
   artifact_type: plan
   dhf_owner: system
   min_iec62304_class: A
+  canonical_role: postmarket
+  criticality: must-have
   applies_to:
-  - Post-Market Surveillance Plan
-  - Risk Management Plan
+  - role: postmarket
+    file_pattern: '*post-market-surveillance-plan*.md'
+  - role: risk-management
+    file_pattern: '*risk-management-plan*.md'
   verbatim: '"The manufacturer shall establish a system to collect and review information
 
     generated during production and post-production phases. If previously unrecognized
