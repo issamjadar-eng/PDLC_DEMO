@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-16 — pull (sentinel-blocks rule — v23 backfill)
+
+- Hitachi HEAD after sync: `cda0eaa`
+- Pulled: 1 file
+  - `skills/medtech-docs/rules/sentinel-blocks.md` — hitachi PR #168 (`cda0eaa`) backfilled the v23 renderer capabilities into the rule: `depth=<N>` attribute, `dhf-table` variants section, updated `exclude=` (adds `assets`) + `preserve-column` defaults. `UPSTREAM_ADVANCE` — local matched the `b0beab3` blob, upstream advanced 1 commit.
+- Skipped (`LOCAL_AHEAD` / `LOCAL_ONLY` — ben/058 advisors work, push candidates not pull): `skills/advisors/{README.md,SKILL.md,VERSION,.gitignore,tests/run.sh}`
+- project.yml: no changes
+- Follow-ups: none — `render-sentinels.py` is already v23 here; this is a rule-text-only sync (doc caught up to existing code). The `.claude/rules/sentinel-blocks.md` symlink resolves unchanged.
+- Originating task: ben/064
+
 ## 2026-05-16 — push (sync-skills v8.2 — auto-clean merged branches + `prune` action)
 
 - Files: `skills/sync-skills/SKILL.md`, `skills/sync-skills/README.md`, `skills/sync-skills/scripts/sync.sh`, `skills/sync-skills/tests/test_prune.sh` (new)

@@ -52,10 +52,32 @@ Where the renderer reads its data from. Defined sources:
 
 | Attribute | Meaning |
 |-----------|---------|
-| `path=<relpath>` | Only for `kind=folder-tree-subset`. Path relative to project root to render. |
-| `exclude=<glob,glob,...>` | Comma-separated glob patterns to omit from the scan. Defaults to `formal,.git,.venv,__pycache__,node_modules,images,.staging`. |
-| `preserve-column=<column-name>` | For table kinds: when regenerating, preserve the values in the named column from the old table's rows (matched by primary key — first column). Default: preserve `Purpose` for `subfolder-table`. This prevents the renderer from clobbering human-authored purpose strings. |
-| `variant=<name>` | For `kind=strategy-domains` only. Selects which table shape to render (see below). Defaults to `registry` if omitted. |
+| `path=<relpath>` | For `kind=folder-tree-subset` (and `kind=folder-tree` if scoping to a subdirectory). Path relative to project root. |
+| `depth=<N>` | For `kind=folder-tree` and `kind=folder-tree-subset`. Levels to recurse. Default: `1` for `folder-tree` (top-level only), `2` for `folder-tree-subset` (one level into subtree). Hard-capped at `4` to prevent runaway output. |
+| `exclude=<glob,glob,...>` | Comma-separated glob patterns to omit from the scan. Defaults to `formal,.git,.venv,__pycache__,node_modules,images,.staging,assets`. Applied at every depth for recursive trees. |
+| `preserve-column=<column-name>` | For table kinds: when regenerating, preserve the values in the named column from the old table's rows (matched by primary key — first column). Default: `Purpose` for `subfolder-table`; `Marketed Name` for `dhf-table` (or `Purpose` for `dhf-table variant=flat-multi`). Applied as the *last* fallback after reading the project.yml field. |
+| `variant=<name>` | For `kind=strategy-domains` and `kind=dhf-table`. Selects which table shape to render (see variant sections below). |
+
+## `dhf-table` variants
+
+The `dhf-table` kind reads `project.yml:dhfs[]` and supports three variants, selected by the `variant=<name>` attribute. All three read `architecture_name`, `marketed_name`, `role`, `classification.{samd,class,iec62304,ai_enabled}`, `filing`, and (for `flat-multi` only) `dhf_purpose` from each entry.
+
+| Variant | Columns | Where it's used |
+|---------|---------|-----------------|
+| `default` (no variant attr) | Architecture Name \| Marketed Name \| Role \| Classification \| IEC 62304 \| Filing | General-purpose DHF roster |
+| `naming` | Architecture Name \| Marketed Name \| Classification \| IEC 62304 | `CLAUDE.md` → Module Naming table — concise device-naming card |
+| `flat-multi` | DHF \| `role` \| Classification \| Purpose | `CLAUDE.md` → Flat Multi-DHF Shape table — emphasizes the DHF leaf + role + a one-line purpose |
+
+**Column derivation:**
+
+- `Architecture Name`: backtick-bold `**{architecture_name}**`, falling back to `**{leaf}**` if `architecture_name` is missing.
+- `Marketed Name`: `marketed_name` from project.yml, falling back to preserve-column lookup, then `TODO`.
+- `Role`: `role` verbatim (`system`, `item`).
+- `Classification`: `device-level` for system DHFs; `{SaMD|non-SaMD}, Class {class}, AI-enabled` for item DHFs (AI suffix only when `ai_enabled: true`).
+- `IEC 62304`: `n/a` for system DHFs; `Class {iec62304}` for item DHFs.
+- `Filing`: `filing` verbatim, e.g. `510k+pccp`.
+- `DHF` (flat-multi only): backticked `` `{leaf}` ``.
+- `Purpose` (flat-multi only): `dhf_purpose` from project.yml, falling back to preserve-column lookup, then `TODO`.
 
 ## `strategy-domains` variants
 
