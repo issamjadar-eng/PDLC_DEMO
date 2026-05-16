@@ -1,7 +1,7 @@
 ---
 name: post-market
 description: Use for post-market surveillance questions — surveillance strategy, complaint handling, trend analysis, periodic safety reports (PSUR/PMSR), field safety corrective actions, and the feedback loop from field data back into risk management and design change. Delegate here for questions about when field signals warrant risk file updates or corrective action.
-tools: Read, Glob, Grep, WebFetch, Agent
+tools: Read, Glob, Grep, WebFetch, Agent, mcp__file-locator__locate
 console:
   title: Post-Market Surveillance Assistant
   kind: solo
@@ -134,6 +134,33 @@ For each role in your Tier 2 declaration:
 If Tier 2 triage is still ambiguous, use `Grep` against the role's folder
 with 2–4 concept terms from the question (domain terms, identifiers,
 standards clause numbers) — not literal verbs from the user's wording.
+
+### Semantic file locator (Tier 2 accelerator / Tier 3 fast path)
+
+If `mcp__file-locator__locate` is available in your tool set, you have a
+fourth retrieval mode alongside the discovery index (structural lookup),
+`Grep` (literal token), and `Glob` (everything-of-a-kind): **semantic
+file search** over the project's indexed docs. Call `locate(query,
+k=10)` with a natural-language description of what you're looking for
+when (a) Tier 2 index triage doesn't surface an obvious file, or (b) the
+question references a topic, argument, or term you can't map to a
+canonical role — reach for this *before* spinning up the heavier
+`advisor-researcher` subagent. The locator returns ranked `(path, summary,
+heading_anchor?, score)` hits grouped by confidence band, with a
+`reasoning_hint`. It is a discovery aid, not a substitute for Tier 1
+required reads.
+
+**Read-count rubric for locator results.** Read the **top-ranked hit in
+full**. If it answers the question, stop. If it partially answers, read
+the next hit whose summary covers the missing angle. **Stop at 3 reads
+unless the question is inherently multi-source** (e.g., "compare X
+across all DHFs", "every place we argue Y") — the response's
+`reasoning_hint` flags the multi-source case. After 3 reads without a
+confident answer, fall through to the `advisor-researcher` subagent or surface
+the gap to the user rather than reading further down a low-confidence
+list. If `mcp__file-locator__locate` is not in your tool set, skip this
+— the project hasn't installed the locator, and Tier 2 + Tier 3 cover
+the same ground.
 
 ### Tier 3 — Independent search via researcher subagent
 

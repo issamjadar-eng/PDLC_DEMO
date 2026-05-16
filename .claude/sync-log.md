@@ -4,6 +4,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-15 — pull (advisors file-locator integration + new file-locator skill)
+
+- Hitachi HEAD after sync: `9d7d6e6` (local hitachi checkout fast-forwarded 25 commits)
+- Pulled: 28 files
+  - `skills/advisors/SKILL.md`, `scripts/render-grounding.py`, 13× `skills/advisors/agents/*.md`, `tests/test_file_locator_wiring.py` — advisors update: adds the `mcp__file-locator__locate` semantic-search retrieval mode (degrades gracefully when MCP absent)
+  - `skills/manifest.md` — registry version listing refresh
+  - `skills/file-locator/**` (11 files) — NEW skill: local semantic file-search MCP (fastembed + SQLite FTS5)
+- Auto-resolved: 13 top-level `.claude/agents/*.md` symlinks (point into `skills/advisors/agents/`) updated transitively — no separate pull
+- project.yml: pending — add `file-locator` to `approved_skills` and `approved_mcps`
+- Follow-ups: run `/file-locator setup` (new skill ships a `setup` action: writes `.mcp.json`, `project.yml`, `.github/workflows/`)
+
 ## 2026-05-13 — push (secops 2FA check v7→v8 — null-handling fix)
 
 - Files: `skills/secops/SKILL.md`, `skills/secops/README.md`, `skills/secops/hooks/security-assert.sh`

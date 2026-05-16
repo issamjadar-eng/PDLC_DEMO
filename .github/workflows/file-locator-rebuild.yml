@@ -1,0 +1,70 @@
+# file-locator index rebuild — CI-owned refresh of the committed index.db.
+#
+# Installed by `/file-locator setup` to `.github/workflows/file-locator-rebuild.yml`.
+# Project-agnostic: every install puts the tool + skill at the same fixed paths,
+# so this file needs no per-project edits.
+#
+# Trigger model: on push to the default branch touching indexed content, rebuild
+# incrementally and commit the refreshed index. Incremental rebuilds are
+# content-addressable — an unrelated change produces a genuine no-op (no commit),
+# so the `paths:` filter can be broad without causing churn.
+name: file-locator index rebuild
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'project.yml'
+      - '.claude/skills/**'
+      - '*.md'
+  workflow_dispatch: {}
+
+# Serialize rebuilds — concurrent runs would race on the committed index.db.
+concurrency:
+  group: file-locator-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      # The BGE-small ONNX model (~130 MB) downloads here on first rebuild.
+      - name: Cache fastembed model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/fastembed
+          key: fastembed-bge-small-en-v1.5
+
+      - name: Create venv + install deps
+        run: |
+          uv venv --python 3.12 tools/file-locator-mcp/.venv
+          uv pip install --python tools/file-locator-mcp/.venv/bin/python \
+            -r tools/file-locator-mcp/requirements.txt
+
+      - name: Rebuild index
+        run: bash tools/file-locator-mcp/rebuild.sh
+
+      - name: Commit refreshed index
+        run: |
+          if git diff --quiet -- tools/file-locator-mcp/index.db; then
+            echo "index unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/file-locator-mcp/index.db
+          git commit -m "file-locator: CI rebuild index.db [skip ci]"
+          git push
