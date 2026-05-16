@@ -4,6 +4,18 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-16 — push (sync-skills v8.2 — auto-clean merged branches + `prune` action)
+
+- Files: `skills/sync-skills/SKILL.md`, `skills/sync-skills/README.md`, `skills/sync-skills/scripts/sync.sh`, `skills/sync-skills/tests/test_prune.sh` (new)
+- Branch: `sync/pdlc-demo-sync-skills-v8.2-prune-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/167
+- Commit: "sync-skills v8.2: auto-clean merged branches + prune action"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `cc9add3`
+- Hitachi HEAD after sync: `cc9add3`
+- Note: dogfooded the new `prune` action immediately after — it found and removed this push's own leftover local `sync/*` branch in the hitachi checkout.
+- Originating task: ben/063
+
 ## 2026-05-16 — push (medtech-docs v25 — claude-md-references + audit-wiring rules, dedup)
 
 - Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/audit-wiring-before-adding-fields.md` (new), `skills/medtech-docs/rules/claude-md-references.md` (new); deleted `skills/medtech-docs/templates/claude-md-config-audit.md`
