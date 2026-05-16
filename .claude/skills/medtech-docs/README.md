@@ -79,18 +79,22 @@ After installing skills, `init` runs each skill's `setup` action (if it has one)
 
 ### Auto-Loaded Rules — Skill-Owned and Symlinked
 
-medtech-docs owns two **auto-loaded rules** — markdown files under `.claude/rules/` that Claude Code loads into every session:
+medtech-docs owns four **auto-loaded rules** — markdown files under `.claude/rules/` that Claude Code loads into every session:
 
 | Rule | What it governs |
 |------|-----------------|
 | `readme-before-write.md` | Before any write under `docs/`, read the target folder's README **and** its parent's. Parent READMEs carry cross-cutting conventions; leaf READMEs carry folder-specific naming/content rules. Misplaced files are a compliance risk in a regulated project. |
 | `sentinel-blocks.md` | The `<!-- AUTO:STRUCTURE -->` sentinel convention — the contract for `scripts/render-sentinels.py` and `/best-practices fix`: a fenced, tool-owned region inside an otherwise human-owned doc, so structural tables (folder trees, DHF rosters) can be regenerated without clobbering narrative. |
+| `audit-wiring-before-adding-fields.md` | Before adding a metadata field, schema entry, or structural prose, grep `project.yml` and sibling configs first — reference the wiring layer, don't redeclare facts already encoded in it. Redeclared facts silently rot when structure moves. |
+| `claude-md-references.md` | Persistent docs (CLAUDE.md, `project.yml`, READMEs, strategy/architecture docs) must reference durable project artifacts, never transient task documents. |
 
-**Why medtech-docs owns them.** Both rules govern the `docs/` tree and the README scaffolding that *this skill* creates — and the sentinel renderer is this skill's own code (`scripts/render-sentinels.py`). The rule that documents a script's contract belongs with the script. (`/best-practices fix` merely *calls* the renderer — it's a consumer, not the owner.)
+**Why medtech-docs owns them.** All four govern the `docs/` tree, the `project.yml` wiring layer, and the README scaffolding that *this skill* creates — and the sentinel renderer is this skill's own code (`scripts/render-sentinels.py`). The rule that documents a script's contract belongs with the script. (`/best-practices fix` merely *calls* the renderer — it's a consumer, not the owner.)
 
-**Why symlink, not copy.** `init` Step 2c Checks 3 & 4 install each rule as a **symlink** — `.claude/rules/<rule>.md` → `../skills/medtech-docs/rules/<rule>.md` — not a copy. The canonical text lives once, inside the skill at `rules/`. A `/sync-skills pull` that updates medtech-docs then auto-updates the installed rule, with no drift and no stale duplicate to audit. This is the same self-contained install pattern the registry uses for hooks and agents (see skill-creator's "Self-Contained Skills & Symlink Pattern"). A project that needs to diverge **forks** the symlink into a regular file; `/sync-skills` leaves forks alone.
+**Why symlink, not copy.** `init` Step 2c Checks 3–6 install each rule as a **symlink** — `.claude/rules/<rule>.md` → `../skills/medtech-docs/rules/<rule>.md` — not a copy. The canonical text lives once, inside the skill at `rules/`. A `/sync-skills pull` that updates medtech-docs then auto-updates the installed rule, with no drift and no stale duplicate to audit. This is the same self-contained install pattern the registry uses for hooks and agents (see skill-creator's "Self-Contained Skills & Symlink Pattern"). A project that needs to diverge **forks** the symlink into a regular file; `/sync-skills` leaves forks alone.
 
-**How they're used.** `.claude/rules/` files are auto-loaded every session — no CLAUDE.md insertion needed. `readme-before-write` gates every `docs/` write; `sentinel-blocks` is the spec the renderer and audit-fix consult. The rule sources version *with the skill*: any new sentinel `kind` is a simultaneous edit to `rules/sentinel-blocks.md` and `scripts/render-sentinels.py`.
+**One canonical form per rule.** Earlier medtech-docs versions seeded `audit-wiring` as a *CLAUDE.md block* (an `init` check that inserted text from a `claude-md-config-audit.md` template) **and** the rule also existed as a `.claude/rules/` file — the same rule in two places, which is exactly the duplication `audit-wiring` itself forbids. v25 removed the CLAUDE.md block and the template: the auto-loaded `.claude/rules/` file is the single source of truth.
+
+**How they're used.** `.claude/rules/` files are auto-loaded every session — no CLAUDE.md insertion needed. `readme-before-write` gates every `docs/` write; `sentinel-blocks` is the spec the renderer and audit-fix consult; `audit-wiring` and `claude-md-references` govern how facts and references are written across the project. The rule sources version *with the skill*: e.g. any new sentinel `kind` is a simultaneous edit to `rules/sentinel-blocks.md` and `scripts/render-sentinels.py`.
 
 ## Templates
 
@@ -99,7 +103,7 @@ Scaffold content lives in `templates/`; auto-loaded rule sources live in `rules/
 - 1 standard file template
 - 1 dashboard HTML template
 - 1 register-hook.sh helper
-- 2 rule sources in `rules/` — `readme-before-write.md`, `sentinel-blocks.md` (symlinked into `.claude/rules/` by `init`)
+- 4 rule sources in `rules/` — `readme-before-write.md`, `sentinel-blocks.md`, `audit-wiring-before-adding-fields.md`, `claude-md-references.md` (symlinked into `.claude/rules/` by `init`)
 
 Templates use `{{PLACEHOLDER}}` substitution for leaf folder READMEs and `${CLAUDE_SKILL_DIR}` for file paths.
 
@@ -111,6 +115,7 @@ Major version milestones:
 - v5: README meta-model with strict section ordering
 - v7: Formal/ subfolder pattern for controlled documents
 - v8: Synced templates with actual docs/ state, added project infrastructure creation
+- v25 (2026-05-15): Two more rules brought under skill ownership — `audit-wiring-before-adding-fields` and `claude-md-references` now ship as `rules/` sources, symlinked into `.claude/rules/` by `init` Step 2c Checks 5 & 6. **Deduplication:** `audit-wiring` was previously *also* seeded as a CLAUDE.md block (`init` Check 6, from `templates/claude-md-config-audit.md`) — that check and template were removed; the auto-loaded rule file is now the single canonical form. The `audit-wiring` rule text was tightened and gained a concrete ✅/❌ Examples section. Task-discipline CLAUDE.md-block check renumbered 5 → 7. medtech-docs now owns four auto-loaded rules.
 - v24 (2026-05-15): Rule ownership moved to the symlink-install pattern. The `readme-before-write` and `sentinel-blocks` rules now ship as canonical sources under `rules/` (sentinel rule relocated from `templates/rule-sentinel-blocks.md`; readme-before-write previously inlined in `init` Check 3 with no bundled file). `init` Step 2c Checks 3 & 4 now **symlink** them into `.claude/rules/` instead of copying — so `/sync-skills pull` auto-updates installed rules, matching the hooks/agents pattern. New README design section "Auto-Loaded Rules — Skill-Owned and Symlinked". Project-task reference removed from the sentinel rule (skill files stay project-agnostic).
 - v23 (2026-05-04): `render-sentinels.py` enhancements — `dhf-table` now reads `architecture_name`/`marketed_name`/`dhf_purpose` from `project.yml dhfs[]` (fallback to preserve-column then `TODO`); new `variant=` dispatcher for `dhf-table` with `default`/`naming`/`flat-multi` schemas; `folder-tree` and `folder-tree-subset` now support `depth=N` recursion (defaults 1 and 2 respectively, hard-capped at 4) with proper `├── │   └──` connectors. Graceful handling of `class: non-device` (drops "Class X" prefix). New `tests/test_render_sentinels.py` — 11 assertions cover variants, depth, idempotence, fallback chains, and error paths.
 

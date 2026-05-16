@@ -1,7 +1,7 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 24
+version: 25
 updated: 2026-05-15
 ---
 
@@ -40,8 +40,9 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
 | `rules/readme-before-write.md` | `init` (Step 2c Check 3) | Canonical source for `.claude/rules/readme-before-write.md` — the "read parent + target README before writing under `docs/`" rule. `init` symlinks it into `.claude/rules/`. |
 | `rules/sentinel-blocks.md` | `init` (Step 2c Check 4) | Canonical source for `.claude/rules/sentinel-blocks.md` — the `AUTO:STRUCTURE` sentinel convention spec that `scripts/render-sentinels.py` and `/best-practices fix` depend on. `init` symlinks it into `.claude/rules/`. |
-| `claude-md-task-discipline.md` | `init` (Step 2c Check 5) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
-| `claude-md-config-audit.md` | `init` (Step 2c Check 6) | Source for the "Audit existing wiring before adding pointers (HARD RULE)" block inserted into CLAUDE.md. Tells Claude to grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose. Single source of truth — edits here, then re-seed downstream. |
+| `rules/audit-wiring-before-adding-fields.md` | `init` (Step 2c Check 5) | Canonical source for `.claude/rules/audit-wiring-before-adding-fields.md` — grep `project.yml` + sibling configs before adding metadata/schema/structural prose; reference the wiring, don't redeclare it. `init` symlinks it into `.claude/rules/`. |
+| `rules/claude-md-references.md` | `init` (Step 2c Check 6) | Canonical source for `.claude/rules/claude-md-references.md` — persistent docs reference durable artifacts, never task documents. `init` symlinks it into `.claude/rules/`. |
+| `claude-md-task-discipline.md` | `init` (Step 2c Check 7) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -325,19 +326,17 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 
 **Check 4 — `sentinel-blocks` rule**: symlink `.claude/rules/sentinel-blocks.md` → `../skills/medtech-docs/rules/sentinel-blocks.md` (same skip / repoint / leave-fork idempotency as Check 3). This is the `<!-- AUTO:STRUCTURE -->` sentinel convention spec that the medtech-docs renderer (`scripts/render-sentinels.py`) and `/best-practices fix` action depend on. No CLAUDE.md insertion is needed — sentinels are invoked by skills (`/medtech-docs init`, `/medtech-docs add-dhf`, `/best-practices fix`), not by direct human action, so the auto-loaded rule file alone is sufficient as a convention reference for Claude.
 
-**Check 5**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
+**Check 5 — `audit-wiring-before-adding-fields` rule**: symlink `.claude/rules/audit-wiring-before-adding-fields.md` → `../skills/medtech-docs/rules/audit-wiring-before-adding-fields.md` (same skip / repoint / leave-fork idempotency as Check 3). This HARD RULE tells Claude to grep `project.yml` and sibling configs before adding metadata fields, schema entries, or structural prose — reference the wiring layer, don't redeclare facts already encoded in it. It is an auto-loaded `.claude/rules/` file; **no CLAUDE.md insertion is needed.** (Prior medtech-docs versions seeded this rule as a CLAUDE.md block from a `claude-md-config-audit.md` template — that block and template were removed in v25 to eliminate the duplication: the auto-loaded rule file is the single canonical form.)
+
+**Check 6 — `claude-md-references` rule**: symlink `.claude/rules/claude-md-references.md` → `../skills/medtech-docs/rules/claude-md-references.md` (same idempotency). This rule keeps persistent docs (CLAUDE.md, `project.yml`, READMEs, strategy/architecture docs) referencing durable project artifacts rather than transient task documents.
+
+**Check 7**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
 
 **Insert task discipline section** (place inside the existing "For Claude" section, after the "Task-First Workflow" subsection if present; otherwise append to "For Claude"):
 
 Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-task-discipline.md` and insert it. The template is the single source of truth for the task-discipline language — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block defines the "update active task doc as you go" hard rule, which is the recovery contract for dropped/compacted/interrupted sessions.
 
-**Check 6**: Search CLAUDE.md for the string `Audit existing wiring before adding pointers`. If found, skip — config-audit discipline is already seeded.
-
-**Insert config-audit section** (place inside the existing "For Claude" section, alongside the task-discipline block — order them as siblings):
-
-Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-config-audit.md` and insert it. The template is the single source of truth for the config-audit rule — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block tells Claude to grep `project.yml` and sibling configs (milestone yamls, taxonomy yamls, `evidence_layout`) before adding new metadata fields, schema entries, or structural prose — preventing duplication of structural facts already encoded in the wiring layer.
-
-This ensures every project initialized by `/medtech-docs init` gets the full README convention, the task-discipline rule, AND the config-audit rule from day one — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
+This ensures every project initialized by `/medtech-docs init` gets, from day one, the README convention, the four medtech-docs-owned auto-loaded rules (`readme-before-write`, `sentinel-blocks`, `audit-wiring-before-adding-fields`, `claude-md-references`), and the task-discipline rule — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
 
 **Step 3 — Create the folder structure and READMEs**
 
