@@ -105,3 +105,9 @@ This is a **demonstration**, not a regulatory submission. Fabricated clinical da
 - **READMEs have `## Conventions` and `## Changelog` sections.** When editing a README under `docs/`, append a changelog row describing the rationale (AI sessions collapse many edits into one commit; the changelog captures context git alone doesn't).
 - **Do not mark demo content as real DHF evidence.** Every fabricated clinical datum, placeholder predicate, or illustrative analysis carries the `_Demo sample data — not for clinical use._` banner near the top.
 - **Read the skill before synthesizing a plan around it.** When a question involves a skill — debugging, recovering, tracing backwards from a goal through the build chain, planning a rebuild, or proposing edits to artifacts a skill produces — open the skill's `SKILL.md` end-to-end **before** writing any plan. Do not infer the skill's behavior from filenames, output paths, code skim, or prior conversation memory. Skills here use IoC patterns (e.g., `trace-matrix` prescribes how the LLM generates project adapters at `init` time) that are invisible from output inspection but explicit in `SKILL.md`. A plan that bypasses the skill's prescribed action (e.g., "hand-edit the yml" instead of `/trace-matrix init`) is a tell that the skill wasn't read. **Default action when a skill is in scope:** `Read .claude/skills/<name>/SKILL.md` first; only then design the plan around the skill's documented actions, contracts, and tier model.
+
+## Auto-loaded rules
+
+Files under `.claude/rules/` are auto-loaded into every session — see those files, not this one, for the canonical text:
+
+- `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.

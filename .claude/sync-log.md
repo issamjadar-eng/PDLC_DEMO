@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-15 — push (task v25 scratch/tmp convention + skill-creator v7 rules/ pattern)
+
+- Files: `skills/task/SKILL.md`, `skills/task/README.md`, `skills/task/rules/scratch-and-tmp.md` (new), `skills/skill-creator/SKILL.md`, `skills/skill-creator/README.md`
+- Branch: `sync/pdlc-demo-scratch-tmp-convention-2026-05-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/164
+- Commit: "Add scratch/tmp convention install to task skill setup"
+- Status: awaiting review
+- Note: `check` initially mislabeled the 4 modified files `BOTH_DIVERGED`; verified false positive (committed HEAD was byte-identical to upstream) — caused by the blob-probe keying recency off commit timestamps while hashing uncommitted working-tree edits. Committing the work locally (project commit `3d552b8`) reclassified them to `LOCAL_AHEAD`, then pushed cleanly.
+- Originating task: ben/059
+
 ## 2026-05-15 — pull (advisors file-locator integration + new file-locator skill)
 
 - Hitachi HEAD after sync: `9d7d6e6` (local hitachi checkout fast-forwarded 25 commits)

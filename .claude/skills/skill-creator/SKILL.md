@@ -13,8 +13,8 @@ description: |
   Actions: `setup`, `audit-triggers <skill>`, `improve-description <skill>`, `package <skill>`, plus the iterative create/eval/improve flow described below.
 
   A PreToolUse hook (installed by `setup`) emits a one-line reminder when a SKILL.md frontmatter or § Actions section is edited — armed once per skill per session, auto-cleared when `audit-triggers` runs or the session ends, body-only edits skipped.
-version: 6
-updated: 2026-04-28
+version: 7
+updated: 2026-05-15
 ---
 
 # Skill Creator
@@ -118,7 +118,8 @@ skill-name/
 ├── SKILL.md          # Required — skill instructions with YAML frontmatter
 ├── README.md         # Required — design document (not loaded during operation)
 ├── hooks/            # Optional — shell hooks (source of truth; .claude/hooks/ symlinks here)
-├── agents/           # Optional — subagent prompt files
+├── agents/           # Optional — subagent prompt files (.claude/agents/ symlinks here)
+├── rules/            # Optional — auto-loaded rule files (.claude/rules/ symlinks here)
 ├── templates/        # Optional — output templates, scaffolding templates
 ├── references/       # Optional — docs loaded into context as needed
 ├── scripts/          # Optional — executable code for deterministic/repetitive tasks
@@ -227,23 +228,26 @@ Project-specific values belong in:
 
 ### Self-Contained Skills & Symlink Pattern
 
-Skills are self-contained — all hooks, agents, templates, and scripts live inside the skill directory. Claude Code only discovers hooks from `.claude/hooks/` and subagents from `.claude/agents/`, so skills that ship either must populate those directories with **symlinks** back to the skill-owned source. Never copy.
+Skills are self-contained — all hooks, agents, rules, templates, and scripts live inside the skill directory. Claude Code only discovers hooks from `.claude/hooks/`, subagents from `.claude/agents/`, and auto-loaded rules from `.claude/rules/`, so a skill that ships any of these must populate those directories with **symlinks** back to the skill-owned source. Never copy.
 
-**Why symlinks:** When a skill is updated (via `/sync-skills pull`), the installed hooks and agents update automatically. No separate copy step, no drift, no stale duplicates to audit.
+**Why symlinks:** When a skill is updated (via `/sync-skills pull`), the installed hooks, agents, and rules update automatically. No separate copy step, no drift, no stale duplicates to audit.
 
-**Setup action pattern** — every skill that ships hooks or agents must have a `setup` action that:
+**Setup action pattern** — every skill that ships hooks, agents, or rules must have a `setup` action that:
 
-1. Creates `.claude/hooks/`, `.claude/agents/`, and `.state/` (at project root) directories as needed.
+1. Creates `.claude/hooks/`, `.claude/agents/`, `.claude/rules/`, and `.state/` (at project root) directories as needed.
 2. For each hook script in the skill's `hooks/`, creates a symlink:
    `.claude/hooks/my-hook.sh` → `../skills/my-skill/hooks/my-hook.sh`
 3. For each agent file in the skill's `agents/`, creates a symlink:
    `.claude/agents/my-agent.md` → `../skills/my-skill/agents/my-agent.md`
-4. For each hook, registers it via the shared helper:
+4. For each rule file in the skill's `rules/`, creates a symlink:
+   `.claude/rules/my-rule.md` → `../skills/my-skill/rules/my-rule.md`
+   Rules under `.claude/rules/` are auto-loaded into every session. Symlinking (not copying) is what lets a `/sync-skills pull` that updates the skill auto-update the rule. A project customizes a rule by forking the symlink into a regular file — `/sync-skills` leaves forks alone, exactly as it does for agents. Because the canonical source lives under `skills/<name>/rules/` (a normal file), `/sync-skills` diffs that real file and never sees the `.claude/rules/` symlink — so there is no symlink-vs-content false positive for rules.
+5. For each hook, registers it via the shared helper:
    ```bash
    .claude/hooks/register-hook.sh <Event> "<matcher>" command \
      '"$CLAUDE_PROJECT_DIR"/.claude/hooks/my-hook.sh'
    ```
-5. Reports what was done.
+6. Reports what was done.
 
 The setup action must be **idempotent** — safe to re-run. Skip symlinks that already exist and point at the right target; replace (don't silently keep) symlinks whose target has moved. The register helper already checks for duplicates.
 

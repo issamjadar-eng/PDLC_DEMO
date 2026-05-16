@@ -262,11 +262,12 @@ See `tasks/ben/024-security-posture-automation.md` and `tasks/ben/027-task-gate-
 
 | Version | Date | Change |
 |---------|------|--------|
+| v25 | 2026-05-15 | **`setup` installs the scratch/tmp convention.** New step 13 idempotently installs three pieces: the auto-loaded rule `.claude/rules/scratch-and-tmp.md` (a **symlink** to the skill-owned source `rules/scratch-and-tmp.md` — same install pattern as hooks/agents, so `/sync-skills pull` auto-updates it), the `_scratch/` + `**/_scratch/` `.gitignore` patterns, and a CLAUDE.md "Auto-loaded rules" pointer section. The `create` action already provisions `tasks/{person}/_scratch/`; this closes the gap where that folder existed but was neither gitignored nor documented. The task skill owns this convention because the `_scratch/` sandbox exists only because tasks exist. Projects customize by forking the symlink into a regular file. |
 | v24 | 2026-04-27 | **Default-to-action two-branch rubric.** `find` action no longer asks before activating: high-confidence match → reuse + announce in one line; anything else → create + announce in one line. The one-line announcement is the user's escape hatch. Hook denial recovery uses the same rubric and adds a "trust the denial-message UUID over `printenv`" rule for compaction/restart cases. Project-wide effect: removes the most common 2–3 message stall that was blocking team members on every fresh topic. Ported from spec-gaming task v27. (See task ben/119.) |
 | v23 | 2026-04-23 | Capture redesign — retired flow-killing hooks, strategy-doc-centric conflict flow. (Task ben/100.) |
 | earlier | — | See git log for prior version history. |
 
-**Post-update:** No setup re-run required. The change is documentation/behavioral only — no new hooks, no new files. Existing sessions pick up the new rubric on next SKILL.md read.
+**Post-update (v25):** Re-run `/task setup` once. Step 13 installs the scratch/tmp convention (rule file + gitignore patterns + CLAUDE.md pointer); it is idempotent, so re-running is safe. Behavioral changes alone (e.g. v24's rubric) need no re-run.
 
 ## Best Practices
 

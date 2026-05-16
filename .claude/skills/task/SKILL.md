@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 24
-updated: 2026-04-27
+version: 25
+updated: 2026-05-15
 ---
 
 # Task Management
@@ -50,6 +50,7 @@ When any action encounters a missing dependency, it should report:
 | `hooks/session-cleanup.sh` | SessionEnd hook — removes `.state/active-tasks-{session_id}.txt` when a session ends, so completed sessions don't leave orphan state files. Symlinked from `.claude/hooks/` by `setup`. |
 | `hooks/register-hook.sh` | Shared hook registration helper — installed to `.claude/hooks/` by `setup` action if not already present |
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
+| `rules/scratch-and-tmp.md` | The scratch/tmp convention — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
 
 ## Actions
@@ -102,7 +103,25 @@ Wire up the task gate hook and activation script for this project. Self-containe
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/session-cleanup.sh'
     ```
     The helper safely appends to `settings.json` without overwriting other skills' hooks. It checks for duplicates (idempotent).
-13. Report what was done — including whether step 9 uninstalled any legacy capture hooks.
+13. **Install the scratch/tmp convention.** The `_scratch/` sandbox the `create` action provisions only holds up if the project also gitignores it and the convention is discoverable. The task skill owns this convention because `_scratch/` exists only because tasks exist. Install all three pieces idempotently:
+    - **Rule file** — create `.claude/rules/` if missing, then symlink `.claude/rules/scratch-and-tmp.md` → `../skills/task/rules/scratch-and-tmp.md` (skip if it already points there; repoint if the target moved; if the project has forked the rule into a regular file, leave the fork alone). Files under `.claude/rules/` are auto-loaded into every session by Claude Code; the symlink — not a copy — is what makes a `/sync-skills pull` that updates the task skill auto-update the rule, with no drift and no stale copy to audit. This is the same install pattern the skill uses for its hooks.
+    - **Gitignore** — ensure `.gitignore` contains both the `_scratch/` and `**/_scratch/` patterns. If `.gitignore` exists and has neither, append this commented block; if `.gitignore` does not exist, create it with this block:
+      ```
+      # Personal scratch — per-person sandbox under tasks/{person}/_scratch/.
+      # User-managed, never committed. See .claude/rules/scratch-and-tmp.md.
+      _scratch/
+      **/_scratch/
+      ```
+    - **CLAUDE.md pointer** — if a `CLAUDE.md` exists at the project root and does not already reference `.claude/rules/`, append this section so readers know the rule is auto-loaded and must not be restated inline:
+      ```
+      ## Auto-loaded rules
+
+      Files under `.claude/rules/` are auto-loaded into every session — see those files, not this one, for the canonical text:
+
+      - `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.
+      ```
+      If CLAUDE.md already has an auto-loaded-rules section but no `scratch-and-tmp.md` line, add just that line.
+14. Report what was done — including whether step 9 uninstalled any legacy capture hooks, and which of the three step-13 convention pieces were installed vs already present.
 
 ### `find <description>`
 Search for active tasks that relate to a topic or description. This is the entry point for the task-first workflow.
@@ -127,7 +146,7 @@ Create a new task for a team member.
 
 1. Look in `tasks/<person>/` to find the highest existing task number
 2. Increment by 1 (zero-padded to 3 digits) for the new task ID
-3. **Ensure the person's `_scratch/` folder exists** — if `tasks/<person>/_scratch/` does not exist, `mkdir -p tasks/<person>/_scratch/`. This is a personal sandbox folder, gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`), for ideas, drafts, and exploratory artifacts the person wants to keep around locally during a task. The directory is local-only — it will not appear in git, and nothing inside it will ever be committed. The folder existing as an empty local directory is the signal to the user that this is where their personal scratch goes. See `tasks/README.md` § "Personal `_scratch/` Folder" and CLAUDE.md § "Personal Scratch & System tmp" for the full convention. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
+3. **Ensure the person's `_scratch/` folder exists** — if `tasks/<person>/_scratch/` does not exist, `mkdir -p tasks/<person>/_scratch/`. This is a personal sandbox folder, gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`), for ideas, drafts, and exploratory artifacts the person wants to keep around locally during a task. The directory is local-only — it will not appear in git, and nothing inside it will ever be committed. The folder existing as an empty local directory is the signal to the user that this is where their personal scratch goes. See `.claude/rules/scratch-and-tmp.md` for the full convention — the auto-loaded rule file installed by the `setup` action. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
 4. Create the task file `tasks/<person>/NNN-<short-name>.md` using this structure:
 
 ```markdown
