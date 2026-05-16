@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 23
-updated: 2026-05-04
+version: 24
+updated: 2026-05-15
 ---
 
 # MedTech Docs
@@ -11,7 +11,7 @@ Scaffold and manage documentation for regulated medical device projects. Usage: 
 
 ## Supporting Files
 
-This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/`:
+This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-loaded rule sources in `${CLAUDE_SKILL_DIR}/rules/`:
 
 | File | Used By | Purpose |
 |------|---------|---------|
@@ -38,7 +38,8 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/`:
 | `readme-source-md.md` | `init` | `docs/internal/source-md/README.md` |
 | `readme-formal.md` | `init`, `add-dhf` | Template for `formal/` subfolder READMEs (substitute `{{PARENT}}`) |
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
-| `rule-sentinel-blocks.md` | `init` (Step 2c Check 4) | Source for `.claude/rules/sentinel-blocks.md` — AUTO:STRUCTURE sentinel convention spec. Copied verbatim into adopting projects. |
+| `rules/readme-before-write.md` | `init` (Step 2c Check 3) | Canonical source for `.claude/rules/readme-before-write.md` — the "read parent + target README before writing under `docs/`" rule. `init` symlinks it into `.claude/rules/`. |
+| `rules/sentinel-blocks.md` | `init` (Step 2c Check 4) | Canonical source for `.claude/rules/sentinel-blocks.md` — the `AUTO:STRUCTURE` sentinel convention spec that `scripts/render-sentinels.py` and `/best-practices fix` depend on. `init` symlinks it into `.claude/rules/`. |
 | `claude-md-task-discipline.md` | `init` (Step 2c Check 5) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `claude-md-config-audit.md` | `init` (Step 2c Check 6) | Source for the "Audit existing wiring before adding pointers (HARD RULE)" block inserted into CLAUDE.md. Tells Claude to grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
@@ -320,9 +321,9 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 **Before writing any file into a folder under `docs/`**, read both the **target folder's `README.md`** and its **parent folder's `README.md`**. Parent READMEs define cross-cutting conventions (document workflow, information flow); leaf READMEs define folder-specific rules (naming, expected content, "For Claude" instructions). **If a folder is missing its README.md, stop and create one before proceeding** — see the README Convention section above. See `.claude/rules/readme-before-write.md` for full details.
 ```
 
-**Check 3**: Check if `.claude/rules/readme-before-write.md` exists. If not, create it with the standard rule content (read parent + target README, handle missing READMEs by creating them first).
+**Check 3 — `readme-before-write` rule**: ensure `.claude/rules/` exists, then symlink `.claude/rules/readme-before-write.md` → `../skills/medtech-docs/rules/readme-before-write.md` (skip if it already points there; repoint if the target moved; if the project has forked the rule into a regular file, leave the fork alone). The canonical rule text lives in the skill at `rules/readme-before-write.md`; symlinking — rather than copying — means a `/sync-skills pull` that updates medtech-docs auto-updates the installed rule, with no drift. Files under `.claude/rules/` are auto-loaded into every session by Claude Code. This is the same self-contained install pattern the registry uses for hooks and agents.
 
-**Check 4**: Check if `.claude/rules/sentinel-blocks.md` exists. If not, copy verbatim from `${CLAUDE_SKILL_DIR}/templates/rule-sentinel-blocks.md` to `.claude/rules/sentinel-blocks.md`. This seeds the `<!-- AUTO:STRUCTURE -->` sentinel convention that the medtech-docs renderer + `/best-practices fix` action depend on. No CLAUDE.md insertion is needed — sentinels are invoked by skills (`/medtech-docs init`, `/medtech-docs add-dhf`, `/best-practices fix`), not by direct human action, so the rule file alone is sufficient as a convention reference for Claude.
+**Check 4 — `sentinel-blocks` rule**: symlink `.claude/rules/sentinel-blocks.md` → `../skills/medtech-docs/rules/sentinel-blocks.md` (same skip / repoint / leave-fork idempotency as Check 3). This is the `<!-- AUTO:STRUCTURE -->` sentinel convention spec that the medtech-docs renderer (`scripts/render-sentinels.py`) and `/best-practices fix` action depend on. No CLAUDE.md insertion is needed — sentinels are invoked by skills (`/medtech-docs init`, `/medtech-docs add-dhf`, `/best-practices fix`), not by direct human action, so the auto-loaded rule file alone is sufficient as a convention reference for Claude.
 
 **Check 5**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
 

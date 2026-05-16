@@ -102,7 +102,7 @@ The `strategy-domains` kind supports three variants, selected by the `variant=<n
 
 ## Where sentinels are used in this repo
 
-Canonical locations (Phase 2 of task 072 wraps these):
+Canonical locations:
 
 | Doc | Sentinel kinds |
 |-----|----------------|

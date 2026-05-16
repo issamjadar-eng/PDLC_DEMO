@@ -1,0 +1,1 @@
+../skills/medtech-docs/rules/readme-before-write.md
