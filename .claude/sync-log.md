@@ -4,13 +4,28 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-15 — push (medtech-docs v24 — rules/ dir + symlink-install)
+
+- Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/readme-before-write.md` (new), `skills/medtech-docs/rules/sentinel-blocks.md` (relocated from `templates/rule-sentinel-blocks.md`)
+- Branch: `sync/pdlc-demo-medtech-docs-rules-symlink-2026-05-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/165
+- Commit: "Migrate readme-before-write + sentinel-blocks rules to symlink install (medtech-docs v24)"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `b0beab3`
+- Hitachi HEAD after sync: `b0beab3`
+- Note: this push includes a file **rename** — `templates/rule-sentinel-blocks.md` → `rules/sentinel-blocks.md`. `sync.sh push-stage` only copies; the old path was removed with a manual `git -C <hitachi> rm` before `push-finalize`, which git recorded as a 99% rename.
+- Originating task: ben/060
+
+
 ## 2026-05-15 — push (task v25 scratch/tmp convention + skill-creator v7 rules/ pattern)
 
 - Files: `skills/task/SKILL.md`, `skills/task/README.md`, `skills/task/rules/scratch-and-tmp.md` (new), `skills/skill-creator/SKILL.md`, `skills/skill-creator/README.md`
 - Branch: `sync/pdlc-demo-scratch-tmp-convention-2026-05-15`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/164
 - Commit: "Add scratch/tmp convention install to task skill setup"
-- Status: awaiting review
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `eb8a9f2`
+- Hitachi HEAD after sync: `b0beab3` (after PR #165 also merged)
 - Note: `check` initially mislabeled the 4 modified files `BOTH_DIVERGED`; verified false positive (committed HEAD was byte-identical to upstream) — caused by the blob-probe keying recency off commit timestamps while hashing uncommitted working-tree edits. Committing the work locally (project commit `3d552b8`) reclassified them to `LOCAL_AHEAD`, then pushed cleanly.
 - Originating task: ben/059
 
