@@ -4,6 +4,18 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-16 — push (advisors v1.3.1 — pytest test runner + build-artifact gitignore)
+
+- Files: `skills/advisors/SKILL.md`, `skills/advisors/README.md`, `skills/advisors/VERSION`, `skills/advisors/.gitignore` (new), `skills/advisors/tests/run.sh` (new)
+- Branch: `sync/pdlc-demo-advisors-v1.3.1-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/169
+- Commit: "advisors v1.2.0 → v1.3.1: pytest test runner + build-artifact gitignore"
+- Status: merged 2026-05-16 (squash, branch deleted; local sync branch also cleaned up per v8.2)
+- Merge commit: `95dde22`
+- Hitachi HEAD after sync: `95dde22`
+- Note: `check` flagged the 3 modified advisors files `UPSTREAM_NEWER`, but `--analyzed` refined to `LOCAL_AHEAD` — local advisors (v1.3.1) was *ahead* of hitachi (v1.2.0). Verified by diff (local = hitachi `9d7d6e6` + ben/058's v1.3.1 work). This push lands that work upstream — a push, not a pull.
+- Originating task: ben/058
+
 ## 2026-05-16 — pull (sentinel-blocks rule — v23 backfill)
 
 - Hitachi HEAD after sync: `cda0eaa`
