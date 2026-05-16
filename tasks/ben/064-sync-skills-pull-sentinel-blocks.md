@@ -2,7 +2,7 @@
 
 **ID**: 064
 **Created**: 2026-05-16
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Low
@@ -33,7 +33,11 @@ Session-recovery point. Keep current in-flight.
 - [x] `pull-file skills/medtech-docs/rules/sentinel-blocks.md` — applied (hitachi `cda0eaa`)
 - [x] Verify the `.claude/rules/sentinel-blocks.md` symlink still resolves — resolves
 - [x] Record the pull in `.claude/sync-log.md`
-- [ ] Land (commit via git-workflow PR cycle)
+- [x] Land (commit via git-workflow PR cycle) — PR #4, merged `a9a1646`
+
+## Outcome
+
+Complete. `skills/medtech-docs/rules/sentinel-blocks.md` pulled (hitachi PR #168 backfill — v23 renderer-capability docs); rule-text-only, no project impact. Landed via project PR #4.
 
 ## Changelog
 

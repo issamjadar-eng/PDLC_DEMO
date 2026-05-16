@@ -2,7 +2,7 @@
 
 **ID**: 058
 **Created**: 2026-05-15
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -48,8 +48,8 @@ _Keep the project's installed skills/agents aligned with the `hitachi` registry,
 - [x] **Functional check** — `locate()` called for "where do we argue MDDS classification" and "PP3500 benefit-risk analysis"; both returned sensibly banded ranked hits (831-file corpus).
 - [x] **Advisors integration review** — advisors test suite (`uv run --with pytest python -m pytest .claude/skills/advisors/tests/`) all green: **85 passed**, incl. **45** in `test_file_locator_wiring.py` covering 13 advisors + 2 panels (locator tool granted + "Semantic file locator" section rendered). Live spot-check: `regulatory-affairs` advisor invoked on an MDDS-classification question called `mcp__file-locator__locate` first, then resolved paths and read 4 files — applied the read-count rubric correctly. Confirmed 13/13 installed `.claude/agents/*.md` advisor files carry the tool grant + section.
 - [x] **`advisor-researcher` interplay** — confirmed: in the live spot-check the `regulatory-affairs` advisor preferred `locate()` and explicitly did **not** spin up `advisor-researcher` because the locator + Tier-1 strategy doc covered the question — the intended ordering.
-- [ ] **CI workflow sanity** — `.github/workflows/file-locator-rebuild.yml` triggers on default-branch pushes touching indexed content and commits a refreshed `index.db`. Watch the first post-merge run to confirm it rebuilds incrementally and doesn't churn.
-- [ ] **`/best-practices`** — re-run after restart to confirm the new `file-locator` skill + MCP don't raise unexpected audit findings.
+- [x] **CI workflow sanity** — watched: `file-locator-rebuild.yml` **FAILS on every post-merge run** (`sqlite3.IntegrityError: UNIQUE constraint failed: summaries.path, summaries.heading_anchor` — incremental indexer bug). Real defect — captured + spun out as **ben/065** to fix.
+- [x] **`/best-practices`** — re-run: `file-locator` skill is clean — versioned (`v1` + README Changelog), self-contained, in `approved_skills`, MCP in `approved_mcps`. No unexpected audit findings from file-locator. (Minor upstream nit: file-locator README has no `## Best Practices` table — not a project issue.)
 
 ## Changelog
 
@@ -62,6 +62,7 @@ _Keep the project's installed skills/agents aligned with the `hitachi` registry,
 - **2026-05-15** — `advisors` skill v1.3.1: added `tests/run.sh` (pytest runner — pulls `pytest`+`PyYAML` ephemerally via `uv run --no-project`, no repo-installed dev deps) + skill-local `.gitignore` for `__pycache__/`/`*.pyc`/`.pytest_cache/`; added `.pytest_cache/` to root `.gitignore`; bumped `VERSION` 1.2.0→1.3.1 (was stale, 1.3.0 shipped without a bump). Suite green via runner — 85 passed. All test-run cache dirs confirmed git-ignored.
 - **2026-05-15** — Post-restart verification: `file-locator` MCP loaded (`mcp__file-locator__locate` present); functional check on 2 NL queries returned well-banded hits. Advisors suite green — 85 passed (45 in `test_file_locator_wiring.py`). Live `regulatory-affairs` advisor spot-check confirmed locator-first grounding and correct `advisor-researcher` deferral. Remaining: CI workflow sanity (first post-merge run) + `/best-practices` re-run.
 - **2026-05-16** — Pushed the local advisors v1.3.1 work upstream. `/sync-skills check` flagged `advisors/{SKILL.md,README.md,VERSION}` `UPSTREAM_NEWER`; `--analyzed` refined to `LOCAL_AHEAD` (local v1.3.1 ahead of hitachi v1.2.0 — diff confirmed local = hitachi `9d7d6e6` + the local v1.3.1 additions). Pushed 5 files to hitachi PR #169, squash-merged `95dde22`. hitachi advisors now matches local.
+- **2026-05-16** — Closed out the two post-restart checklist items. `/best-practices`: `file-locator` skill clean (versioned, self-contained, in both allowlists) — no unexpected findings. CI sanity: `file-locator-rebuild.yml` **fails every run** — incremental-indexer `UNIQUE constraint` bug; captured as **ben/065**. The registry-sync task itself is complete (advisors + file-locator integrated, verified, pushed); the CI bug is a separate file-locator-skill defect tracked under ben/065. **Task complete.**
 
 ## Notes
 
