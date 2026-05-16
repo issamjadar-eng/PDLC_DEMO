@@ -2,7 +2,7 @@
 
 **ID**: 063
 **Created**: 2026-05-16
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -37,9 +37,10 @@ Stop `/sync-skills` push branches from accumulating as stale debris (111 had pil
 - [x] Part 3: `status` stale-branch count
 - [x] Test the `prune` subcommand
 - [x] Version bump + README + Best Practices
-- [ ] Push to hitachi (via `/sync-skills push`) + merge
+- [x] Push to hitachi (via `/sync-skills push`) + merge — hitachi PR #167, merged `cc9add3`
 
 ## Changelog
 
 - 2026-05-16: Task created. Follows the manual cleanup of 111 stale `sync/*` branches.
-- 2026-05-16: **sync-skills v8.1 → v8.2.** Part 1 — `push` Step 5b (`--merge` path) now `git branch -D`s the local sync branch after the ff-pull (the `--delete-branch` only removed the remote). Part 2 — new `prune` action + `sync.sh prune [--apply]` subcommand: classifies `sync/*` branches MERGED/UNMERGED via `git cherry`, dry-run by default, `--apply` deletes merged ones local+remote, never touches unmerged. Part 3 — `status` block 5 notes a stale-branch count (hygiene only). New `tests/test_prune.sh` — 15 assertions, all pass; `test_status.sh` (11) + `test_three_way_pull.sh` (10) still green. README Changelog + Best Practices row added. Pending: push to hitachi.
+- 2026-05-16: **sync-skills v8.1 → v8.2.** Part 1 — `push` Step 5b (`--merge` path) now `git branch -D`s the local sync branch after the ff-pull (the `--delete-branch` only removed the remote). Part 2 — new `prune` action + `sync.sh prune [--apply]` subcommand: classifies `sync/*` branches MERGED/UNMERGED via `git cherry`, dry-run by default, `--apply` deletes merged ones local+remote, never touches unmerged. Part 3 — `status` block 5 notes a stale-branch count (hygiene only). New `tests/test_prune.sh` — 15 assertions, all pass; `test_status.sh` (11) + `test_three_way_pull.sh` (10) still green. README Changelog + Best Practices row added.
+- 2026-05-16: Project repo landed via PR #2 (`6ebd4b5`); hitachi PR #167 merged (`cc9add3`). Dogfooded `prune` on the live hitachi checkout — it removed this push's own leftover `sync/*` branch. **Task complete.**
