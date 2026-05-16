@@ -14,6 +14,9 @@
 #   push-prep <branch>             Reset hitachi checkout to origin/main, checkout new branch.
 #   push-stage <relpath>           Copy one file from local → hitachi.
 #   push-finalize <commit-msg>     git add + commit in hitachi, push the current branch.
+#   prune [--apply]                Classify hitachi sync/* branches as MERGED / UNMERGED
+#                                  (via `git cherry` against main). Dry-run by default;
+#                                  --apply deletes the merged ones (local + remote).
 #   hitachi-path                   Print the resolved hitachi path (from project.yml local_path, else ../hitachi).
 #   hitachi-head                   Print the current hitachi HEAD commit hash (short).
 #   skill-version <skill-path>     Print the `version:` value from a SKILL.md's frontmatter.
@@ -714,6 +717,12 @@ _status_drift_block() {
     return 1
   fi
 
+  local stale
+  stale=$(git -C "$HITACHI" for-each-ref --format='x' 'refs/heads/sync/*' 2>/dev/null | wc -l | tr -d ' ')
+  if [[ "$stale" -gt 0 ]]; then
+    echo "  Stale sync/* branches: $stale (run \`/sync-skills prune\` to clear — hygiene only, not drift)"
+  fi
+
   local drift_lines drift_count
   # cmd_check prints a header + per-file STATUS<TAB>PATH lines. Filter to just
   # the data lines (UPSTREAM_ONLY / LOCAL_ONLY / UPSTREAM_NEWER prefix).
@@ -735,6 +744,97 @@ _status_drift_block() {
   return 1
 }
 
+# ─── prune ───────────────────────────────────────────────────────────────────
+#
+# Remove merged sync/* branches (local + remote) from the hitachi checkout.
+# `push-prep` creates a `sync/<branch>` branch for every push and nothing else
+# deletes the local copy, so they accumulate. `prune` clears the merged ones.
+#
+# Dry-run by default — prints a MERGED / UNMERGED classification and deletes
+# nothing. Pass --apply to delete the verified-merged branches (local + origin).
+# A branch is "merged" only when `git cherry main <ref>` reports zero unmerged
+# ('+') commits; anything else (genuinely unmerged, or superseded/reworked) is
+# reported and KEPT — prune never force-deletes unmerged work.
+#
+# Exit 0 on success; emits TAB-separated MERGED/UNMERGED lines for the caller.
+cmd_prune() {
+  local apply=0
+  [[ "${1:-}" == "--apply" ]] && apply=1
+
+  if [[ ! -d "$HITACHI/.git" ]]; then
+    echo "ERROR: hitachi checkout not found at $HITACHI" >&2
+    exit 1
+  fi
+  if ! _hitachi_clean; then
+    echo "ERROR: hitachi working tree is dirty — commit or reset before prune" >&2
+    git -C "$HITACHI" status --short >&2
+    exit 3
+  fi
+  # Never operate while a sync/* branch is checked out.
+  git -C "$HITACHI" checkout main --quiet
+  git -C "$HITACHI" fetch --prune origin --quiet 2>/dev/null || true
+
+  local branches
+  branches="$( {
+    git -C "$HITACHI" for-each-ref --format='%(refname:short)' 'refs/heads/sync/*'
+    git -C "$HITACHI" for-each-ref --format='%(refname:short)' 'refs/remotes/origin/sync/*' | sed 's#^origin/##'
+  } | sed '/^$/d' | sort -u )"
+
+  if [[ -z "$branches" ]]; then
+    echo "prune: no sync/* branches — nothing to do"
+    return 0
+  fi
+
+  local merged=() unmerged=0
+  while IFS= read -r b; do
+    [[ -z "$b" ]] && continue
+    local has_local=0 has_remote=0 ref loc=""
+    git -C "$HITACHI" rev-parse --verify --quiet "refs/heads/$b" >/dev/null && has_local=1
+    git -C "$HITACHI" rev-parse --verify --quiet "refs/remotes/origin/$b" >/dev/null && has_remote=1
+    if [[ "$has_remote" -eq 1 ]]; then ref="origin/$b"; else ref="$b"; fi
+    [[ "$has_local" -eq 1 ]] && loc="local"
+    [[ "$has_remote" -eq 1 ]] && loc="${loc:+$loc+}remote"
+    local uniq
+    uniq=$(git -C "$HITACHI" cherry main "$ref" 2>/dev/null | grep -c '^+' || true)
+    if [[ "$uniq" -eq 0 ]]; then
+      merged+=("$b")
+      printf 'MERGED\t%s\t%s\n' "$b" "$loc"
+    else
+      unmerged=$((unmerged + 1))
+      printf 'UNMERGED\t%s\t%s — %s commit(s) not in main (kept)\n' "$b" "$loc" "$uniq"
+    fi
+  done <<< "$branches"
+
+  echo "---"
+  echo "prune: ${#merged[@]} merged, $unmerged unmerged/superseded"
+
+  if [[ "$apply" -eq 0 ]]; then
+    [[ ${#merged[@]} -gt 0 ]] && \
+      echo "(dry-run — pass --apply to delete the ${#merged[@]} merged branch(es))"
+    return 0
+  fi
+  if [[ ${#merged[@]} -eq 0 ]]; then
+    echo "prune: nothing to delete"
+    return 0
+  fi
+
+  local remotes_to_delete=()
+  for b in "${merged[@]}"; do
+    if git -C "$HITACHI" rev-parse --verify --quiet "refs/heads/$b" >/dev/null; then
+      git -C "$HITACHI" branch -D "$b" >/dev/null && echo "deleted local:  $b"
+    fi
+    if git -C "$HITACHI" rev-parse --verify --quiet "refs/remotes/origin/$b" >/dev/null; then
+      remotes_to_delete+=("$b")
+    fi
+  done
+  if [[ ${#remotes_to_delete[@]} -gt 0 ]]; then
+    git -C "$HITACHI" push origin --delete "${remotes_to_delete[@]}" 2>&1 \
+      | grep -E '\[deleted\]|error' | sed 's/^/  /' || true
+    git -C "$HITACHI" fetch --prune origin --quiet 2>/dev/null || true
+  fi
+  echo "prune: done — removed ${#merged[@]} merged branch(es)"
+}
+
 # ─── Dispatch ──────────────────────────────────────────────────────────────
 
 case "${1:-}" in
@@ -745,6 +845,7 @@ case "${1:-}" in
   push-prep)            shift; cmd_push_prep "$@" ;;
   push-stage)           shift; cmd_push_stage "$@" ;;
   push-finalize)        shift; cmd_push_finalize "$@" ;;
+  prune)                shift; cmd_prune "$@" ;;
   hitachi-path)         shift; cmd_hitachi_path ;;
   hitachi-head)         shift; cmd_hitachi_head ;;
   skill-version)        shift; cmd_skill_version "$@" ;;
@@ -768,6 +869,9 @@ Commands:
   push-prep <branch>             Reset hitachi to origin/main, create new branch.
   push-stage <relpath>           Copy one file local → hitachi (on the prepped branch).
   push-finalize <commit-msg>     Commit staged changes in hitachi, push branch.
+  prune [--apply]                Classify hitachi sync/* branches MERGED / UNMERGED
+                                 against main. Dry-run unless --apply, which deletes
+                                 the merged ones (local + remote). Unmerged kept.
   hitachi-path                   Print resolved hitachi path.
   hitachi-head                   Print short HEAD hash of hitachi working checkout.
   skill-version <skill-path>     Print version number from a local SKILL.md frontmatter.
