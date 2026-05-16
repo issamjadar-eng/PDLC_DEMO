@@ -1,8 +1,8 @@
 ---
 name: sync-skills
-description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge). `pull` performs a three-way merge analysis on every UPSTREAM_NEWER file via git blob-history probing — bucketing each into UPSTREAM_ADVANCE / LOCAL_AHEAD / BOTH_DIVERGED before any auto-apply, so locally-newer files are surfaced as push candidates instead of being clobbered. `status` action gives an at-a-glance \"are all four places in lockstep?\" health check before switching machines."
-version: 8.1
-updated: 2026-05-02
+description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge). `pull` performs a three-way merge analysis on every UPSTREAM_NEWER file via git blob-history probing — bucketing each into UPSTREAM_ADVANCE / LOCAL_AHEAD / BOTH_DIVERGED before any auto-apply, so locally-newer files are surfaced as push candidates instead of being clobbered. `status` action gives an at-a-glance \"are all four places in lockstep?\" health check before switching machines. `prune` action removes merged `sync/*` push branches that accumulate in the registry checkout."
+version: 8.2
+updated: 2026-05-16
 ---
 
 # Sync Skills
@@ -16,6 +16,7 @@ Keeps the project's installed skills and agents aligned with the `hitachi` regis
 | `scripts/sync.sh` | Mechanical primitives: fetch, diff, copy, branch, commit, push, status, three-way analyze. Never opens PRs — that's the skill's job via `gh`. |
 | `tests/test_status.sh` | Self-contained smoke tests for the `status` action. Builds a fake project + registry world, exercises 4 cases (all-synced, dirty, ahead, drift). |
 | `tests/test_three_way_pull.sh` | Self-contained smoke tests for `analyze` + `check --analyzed`. Four cases (UPSTREAM_ADVANCE, LOCAL_AHEAD, BOTH_DIVERGED, mixed batch with UPSTREAM_ONLY). |
+| `tests/test_prune.sh` | Self-contained smoke tests for the `prune` action — builds a hitachi world with merged + unmerged `sync/*` branches; 15 assertions over dry-run classification, `--apply` deletion (local + remote), idempotence, and the empty case. |
 
 ## Configuration
 
@@ -70,7 +71,7 @@ Reports five labeled blocks:
 2. **Project local HEAD ⇄ origin** — SYNCED / AHEAD / BEHIND / DIVERGED / NO UPSTREAM
 3. **Registry repo working tree** — clean / DIRTY (or MISSING if the hitachi clone isn't present)
 4. **Registry local HEAD ⇄ origin** — SYNCED / AHEAD / BEHIND / DIVERGED
-5. **Skill drift** — count of files in `LOCAL_ONLY` / `UPSTREAM_ONLY` / `UPSTREAM_NEWER` (reuses the `check` primitive)
+5. **Skill drift** — count of files in `LOCAL_ONLY` / `UPSTREAM_ONLY` / `UPSTREAM_NEWER` (reuses the `check` primitive). Also notes a stale-`sync/*`-branch count when any exist — hygiene only, does **not** affect the SYNCED verdict (see the `prune` action).
 
 Final line is `Overall: SYNCED — safe to switch machines` or `Overall: NOT SYNCED — see <which block> above`.
 
@@ -194,9 +195,10 @@ Arguments:
 **Step 5b — (only if `--merge` was passed) — Auto-merge the PR.**
 1. Run `gh pr merge <pr-number> --repo GlobalLogic-a-Hitachi-Company/hitachi --squash --delete-branch`.
 2. Verify the merge: `gh pr view <pr-number> --json state,mergedAt` should show `MERGED`.
-3. Fast-forward the local hitachi checkout so it stays in sync with the merged state:
+3. Fast-forward the local hitachi checkout so it stays in sync with the merged state, then delete the now-merged local branch:
    - `git -C <hitachi> checkout main`
    - `git -C <hitachi> pull --ff-only`
+   - `git -C <hitachi> branch -D <branch>` — `--squash --delete-branch` above removed the *remote* sync branch; this removes the leftover *local* one. Without this step every `--merge` push leaves a stale `sync/*` branch in the hitachi checkout (they accumulate — see the `prune` action).
 4. Record the merge commit hash in the sync log entry.
 5. If the merge fails (merge conflicts, branch protection, failing checks), stop and report the error to the user — do **not** retry or force. The PR stays open for human attention.
 
@@ -219,6 +221,21 @@ If `--merge` was not passed, `Status` is `awaiting review` and the `Merge commit
 ### `sync`
 
 Convenience wrapper: runs `pull` first (apply upstream changes), then shows any remaining `LOCAL_ONLY`/`UPSTREAM_NEWER` entries as push candidates and asks whether to continue into a `push` flow. Equivalent to `check` → `pull` → `push` in one invocation.
+
+### `prune`
+
+Delete merged `sync/*` push branches that have accumulated in the hitachi checkout. Every `push` runs `push-prep`, which creates a `sync/<topic>-<date>` branch. The `--merge` path deletes that branch automatically (Step 5b, since v8.2); but **PR-only pushes** — where the PR is merged later, outside the skill — leave both the local and the remote branch behind. Over many pushes these accumulate (one cleanup cleared 111 of them). `prune` clears the residue safely.
+
+1. Run `.claude/skills/sync-skills/scripts/sync.sh prune` — **dry-run, deletes nothing.**
+2. The script checks out `main`, fetches + prunes `origin`, then classifies every `sync/*` branch (local ∪ remote) against `main` via `git cherry`, emitting tab-separated lines:
+   - `MERGED<TAB><branch><TAB><locality>` — the branch's content is in `main`; safe to delete.
+   - `UNMERGED<TAB><branch><TAB><locality> — N commit(s) not in main (kept)` — genuinely unmerged or superseded work; **never auto-deleted.**
+   It closes with a `prune: <M> merged, <U> unmerged/superseded` summary.
+3. Present the result to the user: how many MERGED branches will be deleted, and — by name — any UNMERGED branches being kept (a UNMERGED branch may be a harmless superseded iteration or genuinely abandoned work; that judgment is the user's, not the skill's).
+4. On user approval, run `.claude/skills/sync-skills/scripts/sync.sh prune --apply` — deletes every MERGED branch on **both** sides (`git branch -D` locally, `git push origin --delete` remotely). Idempotent — safe to re-run.
+5. Report what was removed. **Do not** write a `.claude/sync-log.md` entry — `prune` is branch hygiene, not a pull/push sync action.
+
+`prune` only ever touches the `sync/*` namespace — never `main`, never feature branches, never `agents/` or `skills/`. It refuses to run if the hitachi working tree is dirty. The conservative default (dry-run; UNMERGED kept; explicit `--apply` to delete) means a stray branch is never lost without the user seeing it first.
 
 ## Notes
 
