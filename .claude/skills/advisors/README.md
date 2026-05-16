@@ -84,10 +84,13 @@ Created by `/advisors setup`. The console's `domain_agents.py` imports from `adv
 ## Running Tests
 
 ```bash
-uv run --with pyyaml --with pytest pytest .claude/skills/advisors/tests/ -v
+.claude/skills/advisors/tests/run.sh                  # whole suite
+.claude/skills/advisors/tests/run.sh -k locator -v    # extra args pass through to pytest
 ```
 
-40 tests cover the loader (15) and render-grounding (25, including 13 canonical-role-mode cases and helper-skip behavior).
+`run.sh` pulls `pytest` + `PyYAML` ephemerally via `uv run --no-project`, so no dev dependencies are installed into the repo and no build artifacts are committed (`__pycache__/`, `.pytest_cache/` are covered by the skill-local `.gitignore`).
+
+85 tests cover the loader (16), render-grounding (24, including canonical-role-mode cases and helper-skip behavior), and file-locator wiring (45 — one renderer-level group plus per-agent structural checks across the bundled advisors and panels).
 
 ## Key Decisions
 
