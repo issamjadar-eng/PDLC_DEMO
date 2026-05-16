@@ -111,3 +111,8 @@ This is a **demonstration**, not a regulatory submission. Fabricated clinical da
 Files under `.claude/rules/` are auto-loaded into every session — see those files, not this one, for the canonical text:
 
 - `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.
+- `readme-before-write.md` — read the target folder's README **and** its parent's before writing any file under `docs/`.
+- `sentinel-blocks.md` — the `<!-- AUTO:STRUCTURE -->` convention for auto-rendered structural content in READMEs / CLAUDE.md.
+- `audit-wiring-before-adding-fields.md` — grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose; reference the wiring, don't redeclare facts.
+- `claude-md-references.md` — persistent docs reference durable project artifacts, never transient task documents.
+- `git-workflow.md` — "commit" is local-only; "push" / "merge" / "save to repo" means commit → branch → PR → auto-merge → delete branch.
