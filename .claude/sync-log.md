@@ -4,6 +4,18 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-16 — push (medtech-docs v25 — claude-md-references + audit-wiring rules, dedup)
+
+- Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/audit-wiring-before-adding-fields.md` (new), `skills/medtech-docs/rules/claude-md-references.md` (new); deleted `skills/medtech-docs/templates/claude-md-config-audit.md`
+- Branch: `sync/pdlc-demo-medtech-docs-rules-batch3-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/166
+- Commit: "medtech-docs v25: own claude-md-references + audit-wiring rules; remove duplication"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `69fb6cc`
+- Hitachi HEAD after sync: `69fb6cc`
+- Note: push included a template **deletion** (`templates/claude-md-config-audit.md`) — removed via manual `git -C <hitachi> rm` before `push-finalize`, since `push-stage` only copies.
+- Originating task: ben/061
+
 ## 2026-05-15 — push (medtech-docs v24 — rules/ dir + symlink-install)
 
 - Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/readme-before-write.md` (new), `skills/medtech-docs/rules/sentinel-blocks.md` (relocated from `templates/rule-sentinel-blocks.md`)

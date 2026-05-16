@@ -44,7 +44,7 @@ Third rule-disposition batch (after [[059]] task→scratch-and-tmp, [[060]] medt
 - [x] Update SKILL.md Supporting Files + bump version
 - [x] Update medtech-docs README design docs (Auto-Loaded Rules section — now 4 rules)
 - [x] Install in PDLC-DEMO: symlink both rules into `.claude/rules/`
-- [ ] Push upstream to hitachi
+- [x] Push upstream to hitachi — hitachi PR #166, merged `69fb6cc`
 
 ## Changelog
 
