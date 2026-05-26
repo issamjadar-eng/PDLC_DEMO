@@ -23,3 +23,9 @@ This project is primarily configured for **Claude Code**. To ensure consistency 
 ## Workspace Safety
 
 - Respect the task gate logic. Although Gemini CLI does not have the same `PreToolUse` hook enforcement as Claude Code, you are mandated to self-enforce the "No active task = No edits" rule for all files except those listed as exempt in `CLAUDE.md`.
+
+## Git Operations & Troubleshooting
+
+- **Symlink "File name too long" Error**: On macOS, Gemini's sandboxed environment may occasionally fail to create symlinks, throwing a false-positive `File name too long` error during `git pull` or `git checkout`.
+  - **Resolution**: If this occurs, perform the operation with symlinks temporarily disabled: `git -c core.symlinks=false <command>`.
+  - **Cleanup**: Immediately after a successful fallback operation, ensure the local config remains `core.symlinks=true` to maintain compatibility with Claude Code.
