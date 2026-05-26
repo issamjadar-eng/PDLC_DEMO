@@ -2,7 +2,7 @@
 
 A reproducible walkthrough for starting a new regulated-device project using the Hitachi skill registry, `medtech-docs`, and the task/strategy skills. Every step is copy-pasteable; decisions that require human judgment are called out explicitly.
 
-> **Status**: Skeleton / outline. Each step will be filled in as part of task 002. See `tasks/ben/002-how-to-guide-project-setup.md` for the authoring plan and open questions.
+> **Companion doc**: `setup.md` (repo root) onboards a contributor onto *this* repo (clone, security posture, team registration). **This** guide is the inverse: it stands up a *new* program from scratch. Read `setup.md` if you're joining PDLC_DEMO; read this if you're starting your own device project with the same skills.
 
 ---
 
@@ -17,6 +17,7 @@ Phase 0 — Prerequisites
 Phase 1 — Clone hitachi + install skills into .claude/
 Phase 2 — Initialize the repo (git, gitignore, remote)
 Phase 3 — Run /medtech-docs init  (scaffolds docs/, project.yml, CLAUDE.md, hooks)
+          → verify the scaffold (docs/ tree, project.yml, hook wiring, dashboard)
 Phase 4 — Personalize CLAUDE.md   (device identity, goals, scope, conventions)
 Phase 5 — Create the first task   (001 project-init — captures the setup itself)
 Phase 6 — Architecture & component strategy task
@@ -42,30 +43,107 @@ Phase 10 — Troubleshooting
 
 ## Phase 1 — Clone hitachi and install skills
 
-_TODO: exact commands — clone hitachi as sibling, copy `skills/` and `agents/` into the new project's `.claude/`._
+The `hitachi` registry is the source of truth for skills and agents. A skill is a **directory** (`skills/<name>/SKILL.md` + supporting files) — not a single file. Installing a skill means copying its directory into your project's `.claude/skills/`. (The hitachi `README.md` still shows an older `curl` single-file install under `.claude/commands/` — ignore it; the directory model in `skills/manifest.md` is current.)
+
+Clone hitachi **as a sibling** of where your new project will live — `/sync-skills` later resolves the registry via `project.yml` → `registries[hitachi].local_path`, which defaults to `../hitachi`:
+
+```bash
+cd ~/projects                 # the parent that will hold both repos
+git clone git@github.com:GlobalLogic-a-Hitachi-Company/hitachi.git
+mkdir my-device && cd my-device
+```
+
+Install the skills and agents you want. The simplest first pass is to take everything — `/sync-skills` and `/best-practices` reconcile the set afterward:
+
+```bash
+mkdir -p .claude/skills .claude/agents
+cp -R ../hitachi/skills/*/ .claude/skills/      # each <name>/ directory
+cp    ../hitachi/agents/*.md .claude/agents/     # agent prompt files
+```
+
+> **Don't copy `skills/manifest.md` or `skills/shared/` blindly** — `manifest.md` is the registry index (not an installed skill), and `shared/` holds cross-skill helpers some skills import. Copy `shared/` only if a skill you installed references it; `/best-practices` will flag a missing dependency.
+
+At minimum you need `medtech-docs`, `task`, and `best-practices` to follow this guide. The rest (`trace-matrix`, `dhf-manifest`, `tracker`, `strategy`, `docflow`, `sync-skills`, …) can be installed now or pulled later with `/sync-skills`.
 
 ## Phase 2 — Initialize the repo
 
-_TODO: `git init`, add remote, seed `.gitignore`. No skill runs yet — the task hooks are not wired._
+No skill runs yet — the task-gate hooks aren't wired until Phase 3's `init`. Set up the bare git repo and a starter `.gitignore`:
+
+```bash
+git init
+git branch -M main
+# Seed .gitignore with the patterns init expects (it also adds its own):
+cat > .gitignore <<'EOF'
+_scratch/
+**/_scratch/
+.state/
+**/PHI/**
+.env
+.venv/
+__pycache__/
+*.pyc
+EOF
+git add .gitignore && git commit -m "chore: init repo with starter gitignore"
+```
+
+Add the GitHub remote when you have one (needed later for `/sync-skills push` and any `gh` operations):
+
+```bash
+git remote add origin git@github.com:<your-org>/<your-repo>.git
+```
+
+You don't need to push yet. `/medtech-docs init` in Phase 3 generates `project.yml`, `CLAUDE.md`, and the `docs/` tree, which is your first real commit.
 
 ## Phase 3 — Run `/medtech-docs init`
 
 Run this **before** any `/task` command. Init is what installs and wires the `task` skill's hooks; running `task` first will fail the active-task gate.
 
-`/medtech-docs init` asks ~8 project-context questions. Each answer shapes the scaffold:
+`/medtech-docs init` asks **9** project-context questions (it presents them all at once — answer in one block). Each answer shapes the scaffold. The canonical list lives in `.claude/skills/medtech-docs/SKILL.md` → `### init` → Step 1:
 
-| Question | What it controls |
-|---|---|
-| Device type (SaMD / SiMD / hardware / combination) | Which design-controls subfolders get created |
-| Regulatory pathway (510(k) / De Novo / PMA / etc.) | Submissions scaffold and standards shortlist |
-| Device class | Risk-management and V&V rigor defaults |
-| AI/ML component? | Adds GMLP / PCCP folders and checklists |
-| EHR integration? | Adds interop + HL7/FHIR standards stubs |
-| Imaging? | Adds DICOM-related standards |
-| Navigation/robotic? | Adds motion-safety standards |
-| Existing docs to import? | Controls whether `docs/internal/source/` is pre-seeded |
+| # | Question | What it controls |
+|---|---|---|
+| 1 | Device type — SaMD / SiMD / combination / other | Which design-controls subfolders get created |
+| 2 | Regulatory pathway — 510(k) / De Novo / PMA / not yet | Submissions scaffold and standards shortlist |
+| 3 | **Modules/functions** the device has (e.g. planning, navigation, monitoring) | Seeds the module/component vocabulary used across design-controls |
+| 4 | AI/ML in any module? | Adds GMLP / PCCP folders and checklists |
+| 5 | Medical imaging (DICOM)? | Adds DICOM-related standards stubs |
+| 6 | EHR integration (HL7 FHIR)? | Adds interop + HL7/FHIR standards stubs |
+| 7 | Surgical navigation / real-time guidance? | Adds motion-safety standards |
+| 8 | Existing docs to import? | Controls whether `docs/internal/source/` is pre-seeded |
+| 9 | **Primary DHF name** (e.g. `pca-device`) — **required, no default** | Becomes the first `project.dhfs[]` entry and the `docs/project/dhfs/<name>/` folder |
 
-_TODO: transcript of the prompts; link to `medtech-docs` SKILL.md._
+> Q3 and Q9 are easy to miss but load-bearing: Q9 has no default and is what gives every project at least one DHF from day one (single-component projects are just N=1). Additional DHFs come later via `/medtech-docs add-dhf` (Phase 7).
+
+After the questions, `init` creates `project.yml`, the `docs/` tree (external / internal / project tiers), per-folder READMEs (with `<!-- AUTO:STRUCTURE -->` sentinels rendered), a starter `CLAUDE.md`, and — critically — **wires the task-gate hooks**. That hook wiring is why `init` must precede any `/task` command (Phase 5).
+
+### Verify the scaffold
+
+Before building on the scaffold, confirm `init` landed everything. Five quick checks — all read-only:
+
+```bash
+# 1. The three-tier docs/ tree exists with READMEs at each level
+find docs -maxdepth 2 -name README.md | sort
+ls docs/external docs/internal docs/project
+
+# 2. project.yml parses and has your primary DHF from Q9
+jq -e '.dhfs[0].path' project.yml        # prints the DHF root, exits non-zero if absent
+#   (project.yml is YAML, but the medtech-docs scripts also keep it jq-readable;
+#    if jq errors, open it and confirm the project:, team:, and dhfs: blocks by eye)
+
+# 3. The task-gate hook is wired into settings.json
+jq '.hooks.PreToolUse' .claude/settings.json   # should reference check-active-task.sh
+
+# 4. Sentinel blocks rendered (not left as empty AUTO:STRUCTURE stubs)
+grep -rl 'AUTO:STRUCTURE' docs --include=README.md | head
+```
+
+Then run the dashboard for the first time — it's the fastest end-to-end confirmation that the scaffold is coherent:
+
+```
+/medtech-docs dashboard
+```
+
+It tallies per-folder document status and per-standard verification coverage. On a fresh scaffold everything reads as empty/`[VERIFY]` — that's expected; you're confirming the dashboard *runs* and sees the tree, not that content exists yet. If the dashboard errors on a missing folder or `project.yml` field, the scaffold is incomplete — re-run `/medtech-docs init` rather than hand-patching.
 
 ## Phase 4 — Personalize `CLAUDE.md`
 
@@ -117,15 +195,17 @@ PDLC_DEMO's current topology is the worked example.
 
 **Gate**: do not run this phase until the **architecture** and **regulatory** strategy docs are populated (at minimum). Those docs are what identify *which* standards, FDA guidances, and industry frameworks actually apply to this program — importing references before they exist leads to a pile of untargeted boilerplate in `docs/external/`.
 
-Once the gate is met, use the `medtech-docs` skill to import each reference called out by the strategy docs:
+Once the gate is met, the `medtech-docs` skill imports references three ways — pick per source:
 
-- **Standards** named in the regulatory strategy (e.g., IEC 62304, ISO 14971, IEC 62366-1): `/medtech-docs add-standard <standard>`
-- **FDA guidances** called out in the regulatory strategy (premarket, cybersecurity, SaMD, PCCP, etc.): `/medtech-docs import-guidance <title>`
-- **Industry frameworks** named in the architecture strategy (e.g., NIST, OWASP ASVS, HL7/FHIR profiles): import via the same skill
+- **Bundled FDA guidance + standards + frameworks** — run `/medtech-docs update-external-references` (aliases: "import fda guidance", "pull reference guidances"). This reads your `project.yml`, `CLAUDE.md`, and strategy docs, applies an applicability rubric (pathway, device class, software/AI/imaging/EHR signals), and copies the matching **bundled distilled files** from the skill's `references/` into `docs/external/{fda-guidance,standards,industry-frameworks}/`. It is idempotent and never overwrites existing project files. This is the bulk first pass.
+- **A specific standard not in the bundle** — `/medtech-docs add-standard <name>`. Prompts for title, the FDA guidance/regulation that references it, why it's required, and which modules it applies to; creates a distilled starter file and adds it to the folder README table.
+- **A standard you considered but ruled out** — `/medtech-docs evaluate <name> not-required "<rationale>"`. Records the decision trail in the README's "Evaluated — Not Required" table without creating a file, so every standard you weighed has an auditable disposition.
 
-Each import should land under `docs/external/` as a distilled markdown summary with `[VERIFY]` flags on anything that wasn't mechanically extractable. Do not fabricate clause text. Run `/medtech-docs dashboard` afterwards to confirm the imports registered.
+> ⚠️ There is **no** `import-guidance` action — use `update-external-references` for FDA guidance. (Older drafts of this guide named a command that the skill doesn't recognize.)
 
-> **Why this is a dedicated phase, not part of Phase 3**: `init` installs a *default* standards shortlist based on the 8 project-context answers. The strategy-driven import in this phase is narrower and higher-fidelity — it only pulls what the architecture and regulatory decisions actually require.
+Each import lands under `docs/external/` as a distilled markdown summary with `[VERIFY]` flags on anything not mechanically extractable. Do not fabricate clause text. Run `/medtech-docs dashboard` afterwards to confirm the imports registered (it tallies per-standard `## Verification Checks` coverage).
+
+> **Why this is a dedicated phase, not part of Phase 3**: `init` seeds a *default* standards shortlist from the 9 project-context answers. The strategy-driven import here is narrower and higher-fidelity — it only pulls what the architecture and regulatory decisions actually require.
 
 ## Phase 7 — Scaffold DHFs
 
@@ -133,21 +213,66 @@ With the topology decided, run `/medtech-docs add-dhf <name>` for each additiona
 
 ## Phase 8 — Populate standards, frameworks, and sample inputs
 
-_TODO: pulling standards into `docs/external/`, mapping sample docs via `docflow`, seeding first design inputs._
+With references imported (Phase 6.5) and DHFs scaffolded (Phase 7), start filling content:
+
+- **Convert any source documents you brought in** — if Phase 3 Q8 pre-seeded `docs/internal/source/` with corporate SOPs/templates (DOCX/PDF), run `/docflow adopt <path>` to produce reviewable markdown under `docs/internal/source-md/`. `docflow` owns the pandoc/soffice pipeline (direct calls are blocked by a hook), handles image extraction, frontmatter, and cross-refs.
+- **Seed the first design inputs** — under each DHF's `design-controls/user-needs/` and `requirements/`, author the initial user needs and design inputs. Read the leaf folder's `README.md` first (naming + content rules are enforced there).
+- **Stand up traceability early** — once a DHF has even a few inputs/requirements/tests, run `/trace-matrix init` for that DHF. `trace-matrix` generates project-adaptive parsers at init time (an IoC pattern — don't hand-edit the yml), then `/trace-matrix build` emits the controlled matrix + JSON sidecar.
+- **Check completeness against obligations** — `/dhf-manifest` projects regulatory + QMS obligations into a per-DHF deliverable catalog with a gap report ("are the right documents present?"), complementing trace-matrix's intra-DHF edge checks.
+- **Watch progress** — `/medtech-docs dashboard` for doc-status, `/tracker` for milestone/submission readiness, `/best-practices` for the shared-registry audit.
+
+Everything above is incremental — there's no "all at once." A new project typically lands its first user needs and one DHF's trace matrix, then grows.
 
 ## Phase 9 — Ongoing registry sync with `/sync-skills`
 
-Covers `check`, `pull` (must analyze pulled changelogs for project impact — no silent pulls), `push` (PR-only default), `push --merge` (opt-in auto-merge), `sync`, and how to read `.claude/sync-log.md`. Safety properties: path guard, self-exclusion, branch-from-fresh-main, no direct pushes to main.
+`/sync-skills` keeps your installed `.claude/skills` + `.claude/agents` aligned with hitachi, **bidirectionally**. It resolves the registry from `project.yml` → `registries[hitachi].local_path` (default `../hitachi`), and only ever touches `skills/` and `agents/` — never `project.yml`, `.git/`, or anything else. (Current skill version: **v8.2**.)
 
-_TODO: flesh out with the full command reference currently in task 002 step 9._
+**`/sync-skills status`** — start here. A read-only, four-surface health check ("are we synced?"): project working tree, project HEAD⇄origin, registry working tree, registry HEAD⇄origin, plus skill-drift counts. Ends in `Overall: SYNCED` or `NOT SYNCED — see <block>`. Run it before switching machines.
+
+**`/sync-skills check`** — read-only diff in both directions. Classifies each file: `UPSTREAM_ONLY` (pull candidate), `LOCAL_ONLY` (push candidate), or `UPSTREAM_NEWER` — and for the last, a three-way recommendation: `UPSTREAM_ADVANCE` (safe to pull), `LOCAL_AHEAD` (your copy is newer — push it), or `BOTH_DIVERGED` (manual diff review).
+
+**`/sync-skills pull`** — apply upstream changes, interactively. The key safety property (added in v8 after a bulk-approve clobbered 1131 lines of un-pushed work): `pull` runs mandatory three-way blob-history bucketing and **never auto-applies** `LOCAL_AHEAD` or `BOTH_DIVERGED` files. The default action is "approve the auto-pull bucket only." After applying, it runs a **mandatory Project Impact analysis** — reads every pulled file's changelog + `**Post-update:**` notes and tells you what your project must do (re-run a `setup` action, regenerate a template-derived file, run `/best-practices` for new checks, grep for a renamed term). No silent pulls — if nothing is needed, it says so explicitly.
+
+**`/sync-skills push [--merge] <files…>`** — contribute local fixes upstream. **PR-only by default**: branches from fresh `origin/main`, commits, pushes, opens a PR via `gh`, and stops. Pass `--merge` (or say "push and merge") to opt into `gh pr merge --squash --delete-branch` + fast-forward of the local hitachi checkout. Use `--merge` only for changes you're confident in (your own skill authoring, trivial fixes) — it bypasses human review.
+
+**`/sync-skills sync`** — convenience wrapper: `pull` first, then offer the remaining push candidates.
+
+**`/sync-skills prune`** — branch hygiene. PR-only pushes leave merged `sync/*` branches behind on both sides (they accumulate — one cleanup cleared 111). `prune` dry-runs first, classifies each `sync/*` branch MERGED/UNMERGED against `main`, deletes only MERGED on `--apply`, and never touches `main` or unmerged work.
+
+**Reading `.claude/sync-log.md`** — every `pull` and `push` appends a dated entry (hitachi HEAD, files moved, PR URL, merge status, follow-ups). It's the audit trail for "where did this skill version come from." `prune` deliberately writes **no** entry — it's hygiene, not a sync.
+
+**Safety properties to trust**: path guard (only `skills/`/`agents/`), `sync-skills` self-excluded from its own diffs, `push-prep` always branches from fresh `origin/main`, the script refuses to push directly to `main`, and `push` refuses if the hitachi working tree is dirty.
 
 ## Phase 10 — Troubleshooting
 
-_TODO: `jq` missing, SSH auth failure, hook registration conflicts, `gh` not authenticated, dirty hitachi working tree, task-gate hook firing before init completes._
+| Symptom | Cause / Fix |
+|---|---|
+| Skill scripts error on missing `jq` | `jq` isn't on PATH. `brew install jq` (macOS) / `apt install jq`. |
+| `git clone` of hitachi fails with auth error | SSH key not registered with GitHub, or no access to `GlobalLogic-a-Hitachi-Company/hitachi`. Test with `ssh -T git@github.com`; request repo access if you get a 403. |
+| Task-gate hook denies an edit right after `init` | Expected — you have no active task yet. The denial prints the exact `bash .claude/hooks/task-activate.sh add <session> <task>` command. Do Phase 5 (create task 001) first; never bypass the gate. |
+| `/task` fails before `init` was run | Ordering violation — `init` installs the task hooks. Run `/medtech-docs init` first (Phase 3). |
+| `/medtech-docs import-guidance …` "unknown action" | That action doesn't exist. Use `/medtech-docs update-external-references` (Phase 6.5). |
+| `/sync-skills push` fails at PR creation | `gh` not authenticated. `gh auth login`, then re-run `push` — the commit is already on the branch, so it reuses it. |
+| `/sync-skills push` refuses to start | hitachi working tree is dirty. `git -C ../hitachi status`, then commit/stash/clean it. `pull` still works on a dirty tree (reads `origin/main`). |
+| Pulled a skill but `/best-practices` flags a missing dependency | The skill imports something under `skills/shared/` you didn't copy. `cp -R ../hitachi/skills/shared/ .claude/skills/shared/`. |
+| `<!-- AUTO:STRUCTURE -->` tables look stale after adding folders | Re-render: `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py <README>`. `add-dhf` and `best-practices fix` do this for you. |
 
 ---
 
-## Open questions (to resolve while authoring)
+## Resolved decisions & open questions
 
-- Final home for this doc: root `how-to-guide.md` (current), `docs/internal/`, or split into per-phase pages?
-- How much of Phase 4 (CLAUDE.md personalization) can the init skill itself prompt for, reducing manual edits?
+**Resolved (2026-05-21):**
+
+- **Doc home** — stays at repo root as `how-to-guide.md`, a sibling of `setup.md`. The two are peer entry points for different audiences (new-program bootstrap vs. join-this-repo onboarding). Neither belongs under `docs/`, which is the *output* of the process this guide describes.
+
+**Still open:**
+
+- Should Phase 6 (architecture → component list → DHF topology) become its own skill rather than prose? Deferred until the prose flow has been exercised on a second project — flagged inline as a future capability.
+- How much of Phase 4 (CLAUDE.md personalization) can `init` prompt for directly, reducing manual edits?
+
+## Changelog
+
+| Date | Author | Summary |
+|------|--------|---------|
+| 2026-05-21 | Ben Xavier | Filled all skeleton TODOs (Phases 1, 2, 8, 9, 10) under task 002. Corrected three drift findings verified against the live SKILLs: init asks **9** questions not "~8" (added Modules/functions + Primary DHF name to the table); replaced the non-existent `/medtech-docs import-guidance` with `update-external-references`/`add-standard`/`evaluate`; expanded Phase 9 to sync-skills **v8.2** (`status`, `prune`, three-way pull bucketing). Resolved doc-home open question (stays at root, sibling of `setup.md`). Added companion-doc cross-reference. |
+| 2026-04-13 | Ben Xavier | Initial skeleton — 10-phase outline created under task 002. |
