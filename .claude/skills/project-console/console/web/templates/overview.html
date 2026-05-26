@@ -7,48 +7,70 @@
   <div class="overview-hero-text">
     <h1>Project Overview</h1>
     <p class="overview-sub">
-      Guided tour of the program — what we're building, how we're filing it, how the project
-      is structured, and how day-to-day work runs through Claude Code and this console.
+      Select a resource to view — project overview slides, asset decks, and reference materials.
     </p>
-  </div>
-  <div class="overview-actions">
-    {% if found.pptx %}
-      <a class="btn-primary" href="/overview/download.pptx" download>
-        Download .pptx
-      </a>
-    {% endif %}
-    {% if found.md %}
-      <a class="btn-secondary" href="/documents#path=project-overview.md">
-        Open markdown
-      </a>
-    {% endif %}
-    {% if found.pdf %}
-      <a class="btn-secondary" href="/overview/raw.pdf" target="_blank" rel="noopener">
-        Open PDF in new tab
-      </a>
-    {% endif %}
   </div>
 </section>
 
-{% if found.has_viewer %}
-<div class="overview-viewer">
-  <iframe
-    src="/overview/raw.pdf#view=FitH"
-    title="Project Overview — PDF"
-    loading="lazy">
-  </iframe>
+{% if items %}
+<div class="cards overview-cards" id="item-card-list">
+  {% for item in items %}
+  <button class="card overview-card" data-url="{{ item.url }}" data-type="{{ item.type }}" onclick="selectItem(this)">
+    <h3>{{ item.title }}</h3>
+    <p class="muted">{{ item.name }}</p>
+  </button>
+  {% endfor %}
 </div>
+
+<div id="item-viewer" class="item-viewer" hidden>
+  <iframe id="item-frame" src="" title="Item viewer" class="item-frame"></iframe>
+</div>
+
+<script>
+function selectItem(btn) {
+  document.querySelectorAll('.overview-card').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const url = btn.dataset.url;
+  const viewer = document.getElementById('item-viewer');
+  document.getElementById('item-frame').src = url;
+  document.getElementById('item-viewer-newtab').href = url;
+  document.getElementById('item-viewer-newtab').hidden = false;
+  document.getElementById('item-viewer-close').hidden = false;
+  viewer.hidden = false;
+  viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function closeItem() {
+  document.getElementById('item-viewer').hidden = true;
+  document.getElementById('item-frame').src = '';
+  document.getElementById('item-viewer-newtab').hidden = true;
+  document.getElementById('item-viewer-close').hidden = true;
+  document.querySelectorAll('.overview-card').forEach(c => c.classList.remove('active'));
+}
+</script>
 {% else %}
 <div class="overview-noviewer">
-  <p>
-    A rendered PDF is not available. To enable the inline viewer, build
-    <code>project-overview.pdf</code> from the pptx (for example, via
-    <code>soffice --headless --convert-to pdf project-overview.pptx</code>) and
-    refresh this page.
-  </p>
-  {% if found.pptx %}
-    <p><a class="btn-primary" href="/overview/download.pptx" download>Download the .pptx instead</a></p>
-  {% endif %}
+  <p>No overview items available.</p>
 </div>
 {% endif %}
+
+<div class="overview-actions">
+  {% if found.pptx %}
+    <a class="btn-secondary" href="/overview/download.pptx" download>
+      Download .pptx
+    </a>
+  {% endif %}
+  {% if found.md %}
+    <a class="btn-secondary" href="/documents#path=project-overview.md">
+      Open markdown
+    </a>
+  {% endif %}
+  {% if items %}
+    <a id="item-viewer-newtab" href="#" target="_blank" class="btn-secondary" hidden>
+      Open in tab ↗
+    </a>
+    <button id="item-viewer-close" class="btn-secondary" onclick="closeItem()" hidden>
+      ✕ Close
+    </button>
+  {% endif %}
+</div>
 {% endblock %}

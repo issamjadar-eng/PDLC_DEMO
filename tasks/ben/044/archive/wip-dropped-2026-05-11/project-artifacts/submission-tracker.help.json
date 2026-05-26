@@ -1,0 +1,1968 @@
+{
+  "schema_version": "0.2",
+  "generated": "2026-05-05T21:12:38.395317",
+  "generated_by": "/tracker assess-phases (regulatory-affairs agent + merger)",
+  "key": "file_path",
+  "rows": {
+    "design-controls/architecture/pca-device-system-sad.md": {
+      "title": "PCA Device \u2014 System Software Architecture Description (SAD)",
+      "description": "The System Software Architecture Description (SAD) defines the on-device software architecture of the PP3500 PCA pump \u2014 SaMD clinician/patient UI, SiMD pump firmware (RTOS), and the electromechanical hardware boundary \u2014 including trust boundaries with the off-device Connectivity Adapter and Cloud Suite.",
+      "why_important_in_project": "The SAD is the structural anchor for the PP3500's K210345 510(k)+PCCP filing: it locks the 'PCA Device Alone' filing scope, defines the Adapter trust boundary that scopes cybersecurity claims, and underpins substantial-equivalence argumentation against predicate PP3000 (K190567) by showing where PP3500 architecturally deviates and where it inherits.",
+      "main_topics": [
+        {
+          "name": "Composition & filing scope",
+          "summary": "SaMD + SiMD + custom medical electrical hardware combination; PCA-Device-Alone scope per regulatory strategy."
+        },
+        {
+          "name": "Trust boundary & cybersecurity architecture",
+          "summary": "Adapter treated as untrusted; TLS 1.3 mutual auth, local authentication of inbound payloads \u2014 supports FDA Cybersecurity Guidance \u00a7V."
+        },
+        {
+          "name": "MFD impact",
+          "summary": "Multiple-Function Device decomposition and impact analysis for SaMD UI vs SiMD pump-control functions per FDA MFD Guidance."
+        },
+        {
+          "name": "IEC 62304 software item decomposition",
+          "summary": "Class B/C SaMD modules and Class C pump firmware items mapped to architectural elements."
+        },
+        {
+          "name": "Predicate architectural delta",
+          "summary": "Architectural differences vs PP3000 (K190567) that drive substantial-equivalence and PCCP envelope definition."
+        },
+        {
+          "name": "Secure development lifecycle alignment",
+          "summary": "Architecture artifacts that satisfy IEC 81001-5-1 \u00a75.3 secure-by-design requirements."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7V Security Architecture",
+        "FDA Multiple Function Device Guidance (2020) \u00a7IV\u2013V",
+        "IEC 81001-5-1:2021 \u00a75.3 Software architecture",
+        "IEC 62304:2006+A1:2015 \u00a75.3 Software architectural design",
+        "21 CFR 807.87 \u2014 510(k) content requirements"
+      ],
+      "_source_bundle": "01__architecture"
+    },
+    "clinical/benefit-risk/": {
+      "title": "Clinical Evaluation Report (CER) \u2014 pca-device",
+      "description": "Synthesizes clinical evidence \u2014 published literature, predicate clinical history, and any in-house data \u2014 into a benefit-risk conclusion for the PCA infusion pump.",
+      "why_important_in_project": "PP3500 is filed as a 510(k) with PCCP under the critical-requirement carve-out; the CER is how the team demonstrates that the Ct*-tagged clinical claims (analgesia delivery, dose-limit safety, alarm efficacy) remain substantially equivalent to predicate PP3000 (K190567) without requiring a new clinical study.",
+      "main_topics": [
+        {
+          "name": "Substantial-equivalence clinical argument",
+          "summary": "Aligns PP3500 indications and clinical risk profile with predicate PP3000 (K190567)."
+        },
+        {
+          "name": "Benefit-risk synthesis",
+          "summary": "Weighs analgesic benefit against infusion-pump hazards (overdose, occlusion, air-in-line, alarm fatigue)."
+        },
+        {
+          "name": "Literature-derived evidence",
+          "summary": "Pulls from the Literature Search Report to support each clinical claim."
+        },
+        {
+          "name": "PCCP envelope clinical bounds",
+          "summary": "Establishes which post-clearance changes (drug library, predictive alarms) stay within the cleared clinical risk profile."
+        },
+        {
+          "name": "Residual clinical risk",
+          "summary": "Flags risks not closed by design controls and feeds them to PMS/PSUR."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA 510(k) Substantial Equivalence guidance (clinical performance section)",
+        "MDCG 2020-13 (CER assessment template)",
+        "EU MDR Article 61 + Annex XIV Part A",
+        "ISO 14971 (benefit-risk integration)",
+        "GL-TMP-UC-005 (parent QMS template)"
+      ],
+      "_source_bundle": "02__clinical"
+    },
+    "clinical/literature-search/": {
+      "title": "Literature Search Report \u2014 pca-device",
+      "description": "Documents the systematic literature search \u2014 protocol, databases, search strings, screening, and appraisal \u2014 that supplies clinical evidence to the CER.",
+      "why_important_in_project": "Because the PP3500 filing strategy avoids a new clinical study and leans on predicate PP3000's clinical history plus published PCA-pump literature, this report is the auditable trail FDA will use to test whether the team's clinical claims are evidence-backed rather than asserted.",
+      "main_topics": [
+        {
+          "name": "PRISMA-aligned search protocol",
+          "summary": "Databases, date range, search strings, inclusion/exclusion criteria."
+        },
+        {
+          "name": "Predicate-relevant evidence",
+          "summary": "Captures PP3000-class PCA pump literature for the SE argument."
+        },
+        {
+          "name": "Hazard literature",
+          "summary": "PCA-related opioid safety, alarm fatigue, occlusion/air-in-line clinical data."
+        },
+        {
+          "name": "Appraisal and weighting",
+          "summary": "Quality grading of each included source."
+        },
+        {
+          "name": "Update cadence",
+          "summary": "Defines the refresh frequency tied to LMR releases and PMS cycles."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part A (clinical evaluation)",
+        "MDCG 2020-6 (sufficient clinical evidence for legacy devices)",
+        "PRISMA 2020 reporting checklist",
+        "FDA 510(k) clinical performance expectations",
+        "GL-SOP-UC-002 (parent QMS template)"
+      ],
+      "_source_bundle": "02__clinical"
+    },
+    "clinical/evaluation-plans/": {
+      "title": "Clinical Evaluation Plan \u2014 pca-device",
+      "description": "Defines the scope, methodology, evidence sources, and acceptance criteria for the clinical evaluation that culminates in the CER.",
+      "why_important_in_project": "Sets the rules of the game for PP3500's clinical evidence strategy \u2014 given the critical-requirement carve-out and reliance on predicate PP3000, the CEP is where the team locks in why a new clinical study is or is not needed and what evidence threshold the CER must hit for the 510(k)+PCCP filing.",
+      "main_topics": [
+        {
+          "name": "Clinical evidence strategy",
+          "summary": "Literature-only vs. clinical investigation justification for PP3500."
+        },
+        {
+          "name": "Predicate-equivalence framing",
+          "summary": "How the plan uses PP3000 (K190567) clinical history as a baseline."
+        },
+        {
+          "name": "Evidence acceptance criteria",
+          "summary": "Quality, quantity, and currency thresholds the CER must meet."
+        },
+        {
+          "name": "Risk-based clinical scope",
+          "summary": "Ties evaluation depth to Ct*-tagged clinical hazards (overdose, occlusion, alarm efficacy)."
+        },
+        {
+          "name": "PMS linkage",
+          "summary": "How post-market clinical follow-up feeds back into CEP revisions for LMR1/LMR2."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part A (clinical evaluation plan)",
+        "MDCG 2020-6 (clinical evidence sufficiency)",
+        "FDA 510(k) Decision-Making Framework (clinical-data triggers)",
+        "ISO 14155 (where clinical investigation is involved)",
+        "GL-TMP-UC-004 (parent QMS template)"
+      ],
+      "_source_bundle": "02__clinical"
+    },
+    "cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md": {
+      "title": "Vulnerability Management Plan \u2014 pca-device",
+      "description": "Procedure governing how the PP3500 program monitors, triages, and remediates security vulnerabilities (CVEs, coordinated disclosures, supplier advisories) across the device's market life.",
+      "why_important_in_project": "PP3500 is a Class II infusion pump combining SaMD, SiMD pump firmware, and connected components \u2014 \u00a7524B makes a documented vulnerability management process a statutory pre-condition for 510(k) acceptance under K210345, and the PCCP envelope expressly anticipates firmware patches against a fixed risk profile that this plan must enable.",
+      "main_topics": [
+        {
+          "name": "CVE intake & monitoring",
+          "summary": "Sources monitored (NVD, ICS-CERT, supplier feeds) and cadence for SBOM-component watchlists."
+        },
+        {
+          "name": "Triage & exploitability assessment",
+          "summary": "Scoring (CVSS + device-context) and the bridge into the security risk model."
+        },
+        {
+          "name": "Coordinated vulnerability disclosure",
+          "summary": "Intake channel, acknowledgement timing, and researcher coordination per \u00a7524B."
+        },
+        {
+          "name": "Patch deployment & PCCP linkage",
+          "summary": "How qualifying patches flow through the PCCP envelope vs. requiring a new submission."
+        },
+        {
+          "name": "Customer communication",
+          "summary": "Field notice, advisory, and SBOM update cadence to operators."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7524B Statutory Requirements",
+        "IEC 81001-5-1:2021 \u00a79 (Software problem resolution / post-market)",
+        "IEC 81001-5-1:2021 \u00a77.1 (Post-market security maintenance)",
+        "GL-SOP-SW-004 (parent QMS template)"
+      ],
+      "_source_bundle": "03__cybersecurity"
+    },
+    "cybersecurity/GL-TMP-SW-002-threat-model.md": {
+      "title": "Threat Model \u2014 pca-device",
+      "description": "Structured analysis of the PP3500's attack surfaces, threats, vulnerabilities, and mitigating security controls \u2014 the central artifact tying the security risk assessment to the device architecture.",
+      "why_important_in_project": "FDA 2023 cybersecurity guidance treats the threat model as the analytical backbone of any 510(k) cybersecurity section; for PP3500 the model must cover the PCA-specific attack surfaces (drug library updates, service/maintenance ports, any connectivity envisioned within the PCCP) and provide the fixed risk profile against which PCCP-permitted firmware patches will be evaluated.",
+      "main_topics": [
+        {
+          "name": "Asset & data-flow inventory",
+          "summary": "PP3500 components, trust boundaries, and patient/clinical data flows."
+        },
+        {
+          "name": "Threat enumeration (STRIDE or equivalent)",
+          "summary": "Per-interface threats including drug library tampering, dose-command spoofing, service-port abuse."
+        },
+        {
+          "name": "Mitigations & traceability",
+          "summary": "Mapping each threat to a security requirement and to verification evidence."
+        },
+        {
+          "name": "Residual risk",
+          "summary": "Acceptance under the security risk management process and linkage to ISO 14971 risk file."
+        },
+        {
+          "name": "PCCP risk-profile baseline",
+          "summary": "The fixed threat baseline against which post-clearance firmware patches are bounded."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7III Security Risk Management",
+        "FDA Cybersecurity Guidance (2023) \u00a7524B",
+        "IEC 81001-5-1:2021 \u00a76\u2013\u00a77 (Threat modeling / risk management)",
+        "AAMI TIR57 (referenced industry framework)"
+      ],
+      "_source_bundle": "03__cybersecurity"
+    },
+    "cybersecurity/GL-WI-SW-002-sbom.md": {
+      "title": "Software Bill of Materials (SBOM) \u2014 pca-device",
+      "description": "Machine-readable inventory (CycloneDX or SPDX) of every software component shipped in the PP3500 \u2014 first-party, third-party, OSS, and firmware dependencies \u2014 with version and supplier metadata.",
+      "why_important_in_project": "PP3500 ships a multi-stack software payload (SaMD, SiMD pump firmware, embedded RTOS components) and \u00a7524B makes the SBOM a statutory pre-condition for 510(k) acceptance; it also drives the vulnerability management plan's CVE-monitoring scope and underwrites the PCCP firmware-patch process.",
+      "main_topics": [
+        {
+          "name": "Component inventory",
+          "summary": "All first/third-party components with name, version, supplier, license."
+        },
+        {
+          "name": "Format & exchange",
+          "summary": "CycloneDX or SPDX, machine-readable, per FDA 2023 \u00a7IV expectations."
+        },
+        {
+          "name": "Supplier provenance",
+          "summary": "Upstream supplier SBOM ingestion and gap handling for opaque components."
+        },
+        {
+          "name": "Build-to-SBOM linkage",
+          "summary": "Reproducible mapping from a released build artifact to its SBOM record."
+        },
+        {
+          "name": "Customer distribution",
+          "summary": "How operators obtain the SBOM and update notifications post-clearance."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7IV SBOM Requirements",
+        "FDA Cybersecurity Guidance (2023) \u00a7524B",
+        "NTIA Minimum Elements for an SBOM",
+        "CycloneDX / SPDX specifications",
+        "IEC 81001-5-1:2021 \u00a78 (Configuration management)"
+      ],
+      "_source_bundle": "03__cybersecurity"
+    },
+    "design-controls/labeling/GL-SOP-DC-004-ifu-and-labeling.md": {
+      "title": "Instructions for Use and Labeling \u2014 pca-device",
+      "description": "The Instructions for Use (IFU) and labeling package for the PP3500 PCA pump \u2014 user-facing documentation covering indications, contraindications, warnings, operating instructions, alarm response, and symbols required on device labels and accompanying documents.",
+      "why_important_in_project": "For PP3500 (Class II PCA infusion pump cleared under K210345 with PP3000 as predicate), the IFU is the primary risk-control vehicle for residual risks that cannot be designed out (e.g., drug-library programming, bolus-lockout interpretation, alarm prioritization). Substantial-equivalence argumentation against PP3000 turns in part on labeling parity for indications-for-use and warnings; the PCCP envelope also defines which labeling changes can be made post-clearance without a new 510(k).",
+      "main_topics": [
+        {
+          "name": "Indications for Use",
+          "summary": "Patient population, care setting, and therapy claims must align with PP3000 predicate scope to support substantial equivalence."
+        },
+        {
+          "name": "Warnings, Precautions, Contraindications",
+          "summary": "Risk-control communications tied to hazards in the risk file, including occlusion, air-in-line, dose-limit, and CtS-tagged alarm conditions."
+        },
+        {
+          "name": "Operating Instructions and Alarm Response",
+          "summary": "Step-by-step user tasks validated through human factors / usability engineering per IEC 62366-1."
+        },
+        {
+          "name": "Symbols and Label Content",
+          "summary": "Device labels, packaging labels, and symbols per ISO 15223-1 and 21 CFR 801."
+        },
+        {
+          "name": "Post-Market Problem Resolution Pointers",
+          "summary": "User-facing pathways for reporting issues, aligned with IEC 82304-1 \u00a79.2 obligations."
+        },
+        {
+          "name": "PCCP-Scoped Labeling Changes",
+          "summary": "Identifies which labeling elements (e.g., drug library entries) may be updated under the PCCP envelope without a new 510(k)."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 807.87(e) \u2014 510(k) labeling content",
+        "21 CFR 801 \u2014 Device labeling",
+        "IEC 82304-1:2016 \u00a79.2 \u2014 Post-market problem resolution",
+        "EU MDR Annex I \u00a723 \u2014 Information supplied by the manufacturer",
+        "ISO 15223-1 \u2014 Symbols for medical device labels",
+        "IEC 62366-1 \u2014 Usability engineering for medical devices",
+        "GL-SOP-DC-004 \u2014 Parent QMS labeling SOP"
+      ],
+      "_source_bundle": "04__labeling"
+    },
+    "design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md": {
+      "title": "Design and Development Plan \u2014 pca-device",
+      "description": "Master plan that defines design-controls activities, deliverables, responsibilities, and review/verification/validation milestones for the PP3500 PCA pump program.",
+      "why_important_in_project": "PP3500 is a multi-discipline combination (SaMD + SiMD pump firmware + custom medical-electrical hardware) with a critical-requirement carve-out filing strategy; the DDP is what binds those disciplines into one coherent design-controls timeline anchored to the K210345 filing and the LMR1/LMR2 commercial releases.",
+      "main_topics": [
+        {
+          "name": "Design phases & deliverables",
+          "summary": "Maps inputs, outputs, reviews, V&V, and transfer activities across PP3500's pump/firmware/SaMD streams."
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "Names accountable owners (RA, SW, HW, QA, Clinical) for each design-controls deliverable."
+        },
+        {
+          "name": "Filing-scope vs commercial-scope split",
+          "summary": "Identifies which activities support the 510(k)+PCCP critical subset vs LMR commercial track."
+        },
+        {
+          "name": "Review & approval cadence",
+          "summary": "Defines design review gates (DR1..DRn) tied to QSub, filing, LMR1, LMR2."
+        },
+        {
+          "name": "Interfaces to subordinate plans",
+          "summary": "Hooks to SDP, Cybersecurity Plan, Risk Mgmt Plan, V&V Plan, CEP, and PMS Plan."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(b)",
+        "ISO 13485:2016 \u00a77.3.2",
+        "FDA Design Control Guidance for Medical Device Manufacturers (1997)"
+      ],
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-PM-001-pms-plan.md": {
+      "title": "Post-Market Surveillance Plan \u2014 pca-device",
+      "description": "Plan describing how complaint, adverse-event, trend, and field-performance data are collected, analyzed, and fed back into design and risk for the PP3500 PCA pump.",
+      "why_important_in_project": "PP3500's PCCP-permitted updates (drug-library refreshes, firmware patches against a fixed risk profile) depend on a credible PMS signal to trigger and bound them; without an active PMS Plan, the PCCP envelope cannot be defended at the next periodic report.",
+      "main_topics": [
+        {
+          "name": "Data sources",
+          "summary": "Complaints, MDRs, service records, drug-library telemetry, and predicate (PP3000) field history."
+        },
+        {
+          "name": "Trending & signal detection",
+          "summary": "Statistical thresholds, periodic review cadence, escalation to CAPA/risk."
+        },
+        {
+          "name": "PCCP linkage",
+          "summary": "How PMS findings trigger PCCP-permitted change protocols vs new filings."
+        },
+        {
+          "name": "Reporting cadence",
+          "summary": "PSUR/PMSR cycles for EU; LMR cadence for US post-clearance lifecycle."
+        },
+        {
+          "name": "Roles & responsibilities",
+          "summary": "PMS lead, RA, Clinical, Risk owners across the pump/firmware/SaMD scope."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Article 83-86 & Annex III \u00a71.1",
+        "21 CFR 803 (MDR)",
+        "21 CFR 820.198 (Complaint Files)",
+        "FDA PCCP for AI/ML-Enabled Devices (2024) \u2014 surveillance commitments"
+      ],
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-SW-001-software-development-plan.md": {
+      "title": "Software Development Plan \u2014 pca-device",
+      "description": "Plan defining the software development life-cycle activities \u2014 planning, requirements, architecture, implementation, integration, V&V, release, and maintenance \u2014 for PP3500's SaMD components and SiMD pump firmware.",
+      "why_important_in_project": "PP3500 combines safety-critical SiMD pump firmware (occlusion detection, dose limiting, alarm priorities) with SaMD components; the SDP scopes the IEC 62304 process to the highest applicable software safety class and is foundational evidence for the K210345 software submission.",
+      "main_topics": [
+        {
+          "name": "Software safety classification",
+          "summary": "Per-item Class A/B/C assignment driving the rigor of subsequent activities."
+        },
+        {
+          "name": "SDLC model & deliverables",
+          "summary": "Lifecycle phases, deliverables, and review gates aligned to IEC 62304."
+        },
+        {
+          "name": "Configuration & change management",
+          "summary": "Versioning, branching, baseline control across pump firmware and SaMD streams."
+        },
+        {
+          "name": "Problem resolution",
+          "summary": "Defect handling, anomaly tracking, post-release maintenance loop."
+        },
+        {
+          "name": "SOUP / OTS software",
+          "summary": "Identification and risk control of Software of Unknown Provenance and OTS components."
+        },
+        {
+          "name": "PCCP linkage",
+          "summary": "How permitted software changes (e.g., drug library, firmware patches) execute under the PCCP change protocols."
+        }
+      ],
+      "regulatory_anchors": [
+        "IEC 62304:2006/A1:2015 \u00a75.1",
+        "FDA Guidance: Content of Premarket Submissions for Device Software Functions (June 2023)",
+        "21 CFR 820.30(d)",
+        "ISO 13485 \u00a77.3.2"
+      ],
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md": {
+      "title": "Cybersecurity Plan \u2014 pca-device",
+      "description": "Plan governing the secure-development activities, threat modeling, SBOM management, vulnerability disclosure, and post-market vulnerability response for the PP3500 PCA pump.",
+      "why_important_in_project": "PP3500 is a connected infusion pump and therefore a 'cyber device' under FD&C \u00a7524B \u2014 without a cybersecurity plan, SBOM, and vulnerability-response commitment, the 510(k) is refuse-to-accept; this also differentiates PP3500 from the PP3000 predicate, which pre-dated 524B obligations.",
+      "main_topics": [
+        {
+          "name": "Secure development lifecycle",
+          "summary": "IEC 81001-5-1 SDL activities mapped onto the SDP."
+        },
+        {
+          "name": "Threat modeling & risk assessment",
+          "summary": "STRIDE / equivalent on the pump/wireless/cloud attack surfaces."
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Generation, format, refresh cadence, and submission with the 510(k)."
+        },
+        {
+          "name": "Vulnerability handling & coordinated disclosure",
+          "summary": "Intake, triage, patching SLAs, and stakeholder communication."
+        },
+        {
+          "name": "Post-market monitoring & PCCP linkage",
+          "summary": "How patch releases flow through the PCCP envelope and FDA reporting."
+        }
+      ],
+      "regulatory_anchors": [
+        "FD&C Act \u00a7524B (Cyber Device requirements)",
+        "FDA Guidance: Cybersecurity in Medical Devices \u2014 Quality System Considerations and Premarket Submissions (Sept 2023)",
+        "IEC 81001-5-1:2021 \u00a75",
+        "AAMI TIR57",
+        "21 CFR 820.30"
+      ],
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md": {
+      "title": "Clinical Evaluation Plan \u2014 pca-device",
+      "description": "Plan defining the clinical-evidence strategy, literature-search scope, equivalence rationale, and any clinical-investigation needs for the PP3500 PCA pump.",
+      "why_important_in_project": "PP3500's substantial-equivalence argument anchors on PP3000 (K190567); the CEP scopes how that equivalence is demonstrated clinically, what predicate field history is leveraged, and where (if anywhere) a clinical or human-factors study is needed to close gaps versus the predicate.",
+      "main_topics": [
+        {
+          "name": "Equivalence strategy",
+          "summary": "How clinical, technical, and biological equivalence to PP3000 is structured."
+        },
+        {
+          "name": "Literature search & appraisal",
+          "summary": "Scope, databases, inclusion/exclusion criteria, and appraisal method."
+        },
+        {
+          "name": "Clinical data sources",
+          "summary": "Predicate field data, PP3000 PMS, published PCA literature, internal investigations."
+        },
+        {
+          "name": "Gap analysis & investigation triggers",
+          "summary": "Where additional clinical or human-factors evidence is required."
+        },
+        {
+          "name": "PMCF linkage",
+          "summary": "How post-market clinical follow-up plans roll back into CEP updates."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part A",
+        "MDCG 2020-6 (Clinical evidence for legacy devices)",
+        "MDCG 2020-13 (CER template)",
+        "FDA Guidance: 510(k) \u2014 Format for Traditional and Abbreviated 510(k)s",
+        "ISO 14155:2020 (when investigations are needed)"
+      ],
+      "_source_bundle": "05__plans"
+    },
+    "postmarket/GL-SOP-PM-001-psur.md": {
+      "title": "Periodic Safety Update Report (PSUR) \u2014 pca-device",
+      "description": "Periodic aggregate report summarizing safety, complaints, CAPAs, and post-market signals for PP3500 over a defined reporting window.",
+      "why_important_in_project": "Because PP3500 is filed as 510(k)+PCCP (K210345), the PSUR is the central evidence vehicle for FDA's post-market expectations \u2014 it links field complaints, cybersecurity vulnerabilities, and PCCP-permitted change monitoring back into the modifications protocol and cybersecurity management plan.",
+      "main_topics": [
+        {
+          "name": "Aggregate complaint and CAPA trends",
+          "summary": "Summarize PP3500 complaint themes and CAPA closure status."
+        },
+        {
+          "name": "Cybersecurity post-market signals",
+          "summary": "Aggregate vulnerabilities, SBOM updates, and incident-response actions per FDA 2023 cybersecurity guidance \u00a7VII."
+        },
+        {
+          "name": "PCCP envelope monitoring",
+          "summary": "Confirm modifications stayed inside pre-specified bounds for drug library, firmware, and predictive-alarm SaMD changes."
+        },
+        {
+          "name": "Benefit-risk re-assessment",
+          "summary": "Re-affirm PP3500 substantial-equivalence claims vs PP3000 (K190567) hold given field experience."
+        },
+        {
+          "name": "Reporting cadence",
+          "summary": "Document interval, scope, distribution, and integration with EU MDR Art. 86 if applicable."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7VII Cybersecurity Management Plan",
+        "EU MDR Art. 86; MDCG 2022-21",
+        "IEC 81001-5-1:2021 \u00a79 Security Records & SBOM",
+        "21 CFR 820.198 Complaint files"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/GL-TMP-PM-001-pms-plan.md": {
+      "title": "Post-Market Surveillance Plan (DHF copy) \u2014 pca-device",
+      "description": "The standing plan that defines how PP3500 post-market data (complaints, CAPAs, PMCF, cybersecurity signals) is collected, analyzed, and fed back into design controls and the PCCP envelope.",
+      "why_important_in_project": "PP3500's 510(k)+PCCP filing (K210345) commits to monitoring a pre-specified change envelope \u2014 the PMS Plan is the operational instrument that proves to FDA those changes stay inside their pre-cleared bounds without a new submission.",
+      "main_topics": [
+        {
+          "name": "Surveillance methods",
+          "summary": "Complaint intake, field service signals, PMCF studies, drug-library telemetry, SBOM/CVE monitoring."
+        },
+        {
+          "name": "PCCP-envelope monitoring",
+          "summary": "Specific KPIs proving each modifications-protocol change stayed inside pre-cleared acceptance criteria."
+        },
+        {
+          "name": "Cybersecurity surveillance",
+          "summary": "Vulnerability disclosure intake, SBOM refresh cadence, secure-release signals per IEC 81001-5-1."
+        },
+        {
+          "name": "Reporting outputs",
+          "summary": "PSUR cadence, MDR/MIR triggers, trend analysis to risk management and CAPA."
+        },
+        {
+          "name": "Roles & escalation",
+          "summary": "QMS roles per ISO 13485 \u00a78.2.1 and 21 CFR 820.198 routing."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Cybersecurity Guidance (2023) \u00a7VII Cybersecurity Management Plan",
+        "EU MDR Annex III \u00a71.1",
+        "IEC 81001-5-1:2021 \u00a76.1 Secure Release; \u00a79 Security Records & SBOM",
+        "ISO 13485 \u00a78.2.1; 21 CFR 820.198"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md": {
+      "title": "Complaint Intake Template (per device) \u2014 pca-device",
+      "description": "Per-device template used to intake and triage PP3500 complaints into the QMS.",
+      "why_important_in_project": "Underpins PP3500 post-market data feeding the PSUR and PMS Plan \u2014 but is operational QMS infrastructure, not filed evidence.",
+      "main_topics": [
+        {
+          "name": "Complainant capture",
+          "summary": "Reporter, date, device serial, lot, software version."
+        },
+        {
+          "name": "Event classification",
+          "summary": "Use error vs device failure vs medication error vs adverse event."
+        },
+        {
+          "name": "Triage routing",
+          "summary": "Risk-management linkage and CAPA escalation criteria."
+        },
+        {
+          "name": "MDR/MIR decision",
+          "summary": "Whether the complaint triggers regulatory reporting under 21 CFR 803."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.198 Complaint files",
+        "ISO 13485 \u00a78.2.2",
+        "21 CFR 803 Medical Device Reporting"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/complaints/complaints-ledger.md": {
+      "title": "Complaints Ledger \u2014 complaints-ledger",
+      "description": "Active register of PP3500 complaints (2022-2025) maintained by GlobalLogic Post-Market Surveillance for the PainEase PCA Advanced (DEV-PP3500).",
+      "why_important_in_project": "The ledger is the source-of-truth feeding PP3500's PSUR, CAPA backlog (e.g., CAPA-2023-001 decimal-entry legibility), and risk-control re-evaluation \u2014 but it is QMS-internal, not filed with FDA.",
+      "main_topics": [
+        {
+          "name": "Use errors",
+          "summary": "Decimal entry, drug library bypass attempts, alarm misinterpretation."
+        },
+        {
+          "name": "Medication errors",
+          "summary": "Wrong-drug, wrong-dose, wrong-route incidents tied to PP3500."
+        },
+        {
+          "name": "Device failures",
+          "summary": "Pump motor, occlusion sensor, air-in-line, battery anomalies."
+        },
+        {
+          "name": "Alarm rate trends",
+          "summary": "Nuisance-alarm counts and silencing patterns."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.198 Complaint files",
+        "ISO 13485 \u00a78.2.2",
+        "21 CFR 803 Medical Device Reporting"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-plans/": {
+      "title": "PMCF Plan Template \u2014 pca-device",
+      "description": "Folder of PMCF Plan templates and instantiations defining EU MDR post-market clinical follow-up activities for PP3500.",
+      "why_important_in_project": "If PP3500 ever pursues CE-marking, PMCF activities become mandatory under EU MDR Annex XIV Part B; today they are operational planning artifacts that may also inform US PMS and PSUR if useful clinical signals emerge.",
+      "main_topics": [
+        {
+          "name": "Clinical-evidence gaps",
+          "summary": "What residual clinical questions PMCF is intended to answer for PP3500."
+        },
+        {
+          "name": "Study designs",
+          "summary": "Registries, observational cohorts, surveys, comparative-effectiveness studies."
+        },
+        {
+          "name": "Endpoints",
+          "summary": "Adverse events, device failures, patient satisfaction, use errors."
+        },
+        {
+          "name": "Reporting cadence",
+          "summary": "How PMCF outputs feed PSUR and risk-management review cycles."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part B",
+        "MDCG 2020-7 PMCF Plan template",
+        "MDCG 2020-8 PMCF Evaluation Report template"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/capa/CAPA-2023-001.md": {
+      "title": "Capa \u2014 CAPA-2023-001",
+      "description": "Closed CAPA addressing PP3500 decimal-point entry legibility (UN-007 / DI-013); opened 2023-01-10, closed 2023-05-15.",
+      "why_important_in_project": "Concrete example of the human-factors signal feeding back into PP3500 design inputs and labeling \u2014 relevant context for FDA reviewers if the complaint theme recurs, but the record itself is QMS evidence, not filed material.",
+      "main_topics": [
+        {
+          "name": "Root cause",
+          "summary": "Decimal-point entry and display legibility on PP3500 keypad/screen."
+        },
+        {
+          "name": "Containment",
+          "summary": "Field actions or labeling changes pending resolution."
+        },
+        {
+          "name": "Permanent corrective action",
+          "summary": "Design or labeling change implemented."
+        },
+        {
+          "name": "Effectiveness verification",
+          "summary": "Evidence the corrective action eliminated recurrence."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.100 Corrective and preventive action",
+        "ISO 13485 \u00a78.5.2 / \u00a78.5.3",
+        "ISO 14971 \u00a710.1 Production and post-production information"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/capa/GL-FORM-QM-001-capa-form-template.md": {
+      "title": "CAPA Form (per device) \u2014 pca-device",
+      "description": "Per-device CAPA form template used to instantiate corrective/preventive actions in the QMS for PP3500.",
+      "why_important_in_project": "Provides the structured shape into which PP3500 CAPAs are written; ensures consistent capture of root-cause, containment, corrective action, and effectiveness verification \u2014 but it's operational, not filed.",
+      "main_topics": [
+        {
+          "name": "Problem statement",
+          "summary": "Issue, source, scope, affected lots/SW versions."
+        },
+        {
+          "name": "Root-cause analysis",
+          "summary": "5-Whys, fishbone, FTA references."
+        },
+        {
+          "name": "Action plan",
+          "summary": "Containment, correction, preventive actions, owners, due dates."
+        },
+        {
+          "name": "Effectiveness verification",
+          "summary": "Acceptance criteria and evidence of closure."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.100 Corrective and preventive action",
+        "ISO 13485 \u00a78.5"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0001.md": {
+      "title": "PMCF Study \u2014 STUDY-0001",
+      "description": "Completed observational cohort study (Comparative Effectiveness) referenced under PMCF-0001 for PP3500.",
+      "why_important_in_project": "Generates real-world signal on PP3500 adverse events, device failures, and patient satisfaction that feeds the PSUR and PMS Plan \u2014 but the study report itself is operational evidence, not filed with FDA.",
+      "main_topics": [
+        {
+          "name": "Study design",
+          "summary": "Observational cohort, sponsor-CRO governance."
+        },
+        {
+          "name": "Population & setting",
+          "summary": "Adult/geriatric post-surgical, hospital acute-care."
+        },
+        {
+          "name": "Endpoints",
+          "summary": "Adverse events, device failures, patient satisfaction."
+        },
+        {
+          "name": "Findings & implications",
+          "summary": "How results inform PP3500 risk-benefit and labeling."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part B",
+        "MDCG 2020-8 PMCF Evaluation Report",
+        "ISO 14155 Clinical investigation of medical devices"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0003.md": {
+      "title": "PMCF Study \u2014 STUDY-0003",
+      "description": "Active prospective observational study on PP3500 real-world clinical outcomes, NCT05823570.",
+      "why_important_in_project": "Manufacturer-sponsored real-world evidence on PP3500 adverse events and device failures that supports PSUR narratives and PCCP-envelope confidence \u2014 but is operational, not part of the FDA filing.",
+      "main_topics": [
+        {
+          "name": "Prospective design",
+          "summary": "Manufacturer-sponsored observational cohort, registered on ClinicalTrials.gov."
+        },
+        {
+          "name": "Population & setting",
+          "summary": "Adult/geriatric post-surgical, hospital acute-care."
+        },
+        {
+          "name": "Endpoints",
+          "summary": "Adverse events, device failures."
+        },
+        {
+          "name": "Follow-up & analysis plan",
+          "summary": "Ongoing follow-up cadence and interim review."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part B",
+        "MDCG 2020-8 PMCF Evaluation Report",
+        "ISO 14155 Clinical investigation of medical devices"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0005.md": {
+      "title": "PMCF Study \u2014 STUDY-0005",
+      "description": "Active patient registry for long-term outcomes on PP3500, sponsored by an academic medical center.",
+      "why_important_in_project": "Long-horizon real-world signal on PP3500 in adult/geriatric post-surgical PCA and general infusion settings \u2014 feeds PSUR but not part of the FDA filing.",
+      "main_topics": [
+        {
+          "name": "Registry design",
+          "summary": "Patient registry, academic-led, long-term follow-up."
+        },
+        {
+          "name": "Population & setting",
+          "summary": "Adult/geriatric post-surgical, hospital acute-care."
+        },
+        {
+          "name": "Endpoints",
+          "summary": "Adverse events, device failures, patient satisfaction."
+        },
+        {
+          "name": "Long-term follow-up",
+          "summary": "Multi-year cohort tracking informing PCCP-envelope confidence."
+        }
+      ],
+      "regulatory_anchors": [
+        "EU MDR Annex XIV Part B",
+        "MDCG 2020-8 PMCF Evaluation Report",
+        "ISO 14155 Clinical investigation of medical devices"
+      ],
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0007.md": {
+      "title": "PMCF Study \u2014 STUDY-0007 (Real-World Performance Registry)",
+      "description": "A Post-Market Clinical Follow-up (PMCF) study record describing a real-world performance registry collecting device-failure, adverse-event, and patient-satisfaction data on the cleared device.",
+      "why_important_in_project": "For PP3500 (PainEase PCA Advanced), real-world registry data is critical for demonstrating ongoing safety/performance of the PCA infusion pump in adult post-surgical hospital settings, which is the population claimed in the K210345 indications and inherited from the PP3000 (K190567) predicate. Registry signals also feed the PCCP envelope decisions on whether drug-library updates and firmware patches stay within pre-specified change bounds.",
+      "main_topics": [
+        {
+          "name": "Study design and population",
+          "summary": "Adult post-surgical hospital/acute-care patients receiving PCA therapy on PP3500."
+        },
+        {
+          "name": "Endpoints",
+          "summary": "Device failures, adverse events, and patient satisfaction tracked across registry sites."
+        },
+        {
+          "name": "Data feed into PMS/PSUR",
+          "summary": "Registry outputs are aggregated into the Post-Market Surveillance Plan and periodic safety reporting."
+        },
+        {
+          "name": "PCCP envelope feedback",
+          "summary": "Real-world signals inform whether modifications stay within the K210345 PCCP-permitted change bounds."
+        },
+        {
+          "name": "Governance",
+          "summary": "Sponsor, principal investigator, and study-team accountability for protocol execution."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 822 (Postmarket Surveillance)",
+        "FDA Guidance \u2014 Postmarket Surveillance Under Section 522",
+        "ISO 14155 (Clinical investigation of medical devices for human subjects)",
+        "21 CFR 803 (Medical Device Reporting) \u2014 adverse-event signal pathway"
+      ],
+      "_source_bundle": "07__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0009.md": {
+      "title": "PMCF Study \u2014 STUDY-0009 (Prospective Multi-Center Observational)",
+      "description": "A prospective multi-center observational PMCF study collecting adverse-event, device-failure, and VAS pain-score data on the cleared device in real-world clinical use.",
+      "why_important_in_project": "For PP3500 PCA pump, prospective observational data on VAS pain scores closes the loop on the PainEase therapy claim and supports defending the indications inherited from the PP3000 (K190567) predicate. Adverse-event signals feed MDR decisions and the PCCP-envelope assessment for K210345.",
+      "main_topics": [
+        {
+          "name": "Prospective observational design",
+          "summary": "Multi-center, non-interventional follow-up of adult post-surgical PCA patients."
+        },
+        {
+          "name": "Pain-score endpoint (VAS)",
+          "summary": "Patient-reported pain outcomes supporting the analgesia performance claim."
+        },
+        {
+          "name": "Adverse-event capture",
+          "summary": "Structured AE collection feeding MDR (21 CFR 803) and PSUR streams."
+        },
+        {
+          "name": "Device-failure tracking",
+          "summary": "Real-world failure modes inform risk-file updates and CAPA triggers."
+        },
+        {
+          "name": "Regulatory registration",
+          "summary": "ClinicalTrials.gov registration supports transparency and audit trail."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 822 (Postmarket Surveillance)",
+        "FDA Guidance \u2014 Postmarket Surveillance Under Section 522",
+        "ISO 14155 (Clinical investigation of medical devices for human subjects)",
+        "21 CFR 803 (Medical Device Reporting)",
+        "ClinicalTrials.gov registration requirements (FDAAA 801)"
+      ],
+      "_source_bundle": "07__postmarket"
+    },
+    "design-controls/requirements/GL-TMP-DC-002-design-input-specification.md": {
+      "title": "Design Input Specification \u2014 pca-device",
+      "description": "QMS-template-instantiated Design Input Specification capturing PP3500 system requirements derived from validated user needs, with traceability and acceptance criteria.",
+      "why_important_in_project": "For PP3500's 510(k)+PCCP filing under K210345, the DIS is the Ct*-tagging vehicle that operationalizes the critical-requirement carve-out \u2014 it determines which requirements are 'In 510(k)', 'In PCCP envelope', or 'Commercial-only' and therefore drives the V&V split and predicate-comparison narrative against PP3000 (K190567).",
+      "main_topics": [
+        {
+          "name": "Design input documentation",
+          "summary": "Captures system requirements traceable to user needs per ISO 13485 \u00a77.3.3."
+        },
+        {
+          "name": "Software requirements",
+          "summary": "Articulates SaMD/SiMD requirements feeding the IEC 62304 SDLC for pump firmware and connected components."
+        },
+        {
+          "name": "Security requirements",
+          "summary": "Cybersecurity requirements per IEC 81001-5-1 \u00a75.2 supporting the 524B submission posture."
+        },
+        {
+          "name": "Validation planning hooks",
+          "summary": "Inputs structured to support IEC 82304-1 product validation planning and execution."
+        },
+        {
+          "name": "Ct* criticality tagging",
+          "summary": "Each requirement tagged CtS/CtF/CtC/CtP to drive filing-scope vs commercial-only V&V tracks."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 13485:2016 \u00a77.3.3",
+        "21 CFR 820.30(c)",
+        "IEC 62304:2006+A1:2015 \u00a75.2",
+        "IEC 81001-5-1:2021 \u00a75.2",
+        "IEC 82304-1:2016 \u00a75.1"
+      ],
+      "_source_bundle": "08__requirements"
+    },
+    "design-controls/requirements/design-inputs.md": {
+      "title": "Design Inputs \u2014 PainEase PCA Advanced (PP3500)",
+      "description": "The substantive design-inputs (system requirements) document for PP3500 \u2014 translates validated user needs into testable system requirements with Ct* criticality tags, acceptance criteria, and verification methods.",
+      "why_important_in_project": "Anchors PP3500's substantial-equivalence story against PP3000 (K190567): each design input maps to a predicate analog or to a delta the 510(k) must justify, and the Ct* tagging determines which requirements live inside the K210345 filing scope vs the LMR1/LMR2 commercial track.",
+      "main_topics": [
+        {
+          "name": "Intended use & indications",
+          "summary": "Adult/adolescent IV PCA for analgesics in supervised acute-care settings; contraindications enumerated."
+        },
+        {
+          "name": "Functional requirements",
+          "summary": "Continuous basal + patient-activated bolus delivery within prescriber-defined limits."
+        },
+        {
+          "name": "Safety requirements (CtS)",
+          "summary": "Occlusion detection, air-in-line, dose limits, alarm priorities per IEC 60601-1-8 and IEC 60601-2-24."
+        },
+        {
+          "name": "Software & cybersecurity requirements",
+          "summary": "Per IEC 62304 SDLC and IEC 81001-5-1 \u00a75.2 security requirements supporting 524B."
+        },
+        {
+          "name": "User-need traceability",
+          "summary": "Each requirement traces upstream to DHF-PP3500-UN-001 user needs and downstream to verification."
+        },
+        {
+          "name": "Standards conformance hooks",
+          "summary": "Maps to IEC 60601-1, 60601-1-2 EMC, 60601-2-24, IEC 62366-1 usability, ISO 14971 risk, ISO 10993-1 biocompat."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(c)",
+        "ISO 13485:2016 \u00a77.3.3",
+        "IEC 60601-2-24:2012",
+        "IEC 62304:2006+A1:2015 \u00a75.2",
+        "IEC 81001-5-1:2021 \u00a75.2",
+        "IEC 82304-1:2016 \u00a75.1 / \u00a75.2"
+      ],
+      "_source_bundle": "08__requirements"
+    },
+    "design-controls/plans/GL-TMP-RM-001-risk-management-plan.md": {
+      "title": "Risk Management Plan \u2014 pca-device",
+      "description": "The Risk Management Plan defines how PP3500 risks will be identified, analyzed, evaluated, controlled, and reviewed across the device lifecycle.",
+      "why_important_in_project": "PP3500 is a Class II infusion pump combining SaMD, SiMD pump firmware, and custom medical electrical hardware \u2014 the RM Plan must scope risk activities across all three layers and bound the PCCP change envelope.",
+      "main_topics": [
+        {
+          "name": "Scope and lifecycle phases",
+          "summary": "Which PP3500 components, intended uses, and lifecycle phases the RM activities cover."
+        },
+        {
+          "name": "Risk acceptability criteria",
+          "summary": "Severity/probability scales and threshold matrix used to judge residual risk."
+        },
+        {
+          "name": "Roles and responsibilities",
+          "summary": "Who owns risk identification, control, verification, and the RM Review."
+        },
+        {
+          "name": "Risk control verification approach",
+          "summary": "How implementation and effectiveness of risk controls will be verified."
+        },
+        {
+          "name": "Production and post-production information",
+          "summary": "Feedback loop from complaints, CAPA, and PMS into the Risk Management File."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 14971:2019 \u00a74.4 (a)\u2013(g)",
+        "ISO 14971:2019 \u00a74.5 (Risk Management File)",
+        "IEC 82304-1:2016 \u00a74.2",
+        "FDA Q-Sub Program Guidance"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-002-risk-management-report.md": {
+      "title": "Risk Management Report \u2014 pca-device",
+      "description": "The Risk Management Report records that the Risk Management Plan was executed, all identified risks have been evaluated and controlled, and overall residual risk is acceptable.",
+      "why_important_in_project": "FDA reviewers expect an explicit, signed conclusion on overall residual risk acceptability \u2014 particularly for high-severity hazards like over-infusion, occlusion, and air-in-line.",
+      "main_topics": [
+        {
+          "name": "RM Plan execution conformance",
+          "summary": "Confirmation that all planned risk activities were performed."
+        },
+        {
+          "name": "Overall residual risk acceptability",
+          "summary": "Aggregate judgment that residual risk is acceptable considering clinical benefits and predicate comparison."
+        },
+        {
+          "name": "Benefit-risk conclusion",
+          "summary": "Summary benefit-risk position supporting substantial-equivalence argumentation versus PP3000."
+        },
+        {
+          "name": "Production/post-production feedback method",
+          "summary": "How post-market data will be reviewed against the conclusions."
+        },
+        {
+          "name": "Approval signatures",
+          "summary": "Sign-off by responsible person establishing the Report as authoritative."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 14971:2019 \u00a78 (Overall Residual Risk)",
+        "ISO 14971:2019 \u00a79 (Risk Management Review)",
+        "21 CFR 820.30(g)",
+        "FDA Infusion Pump Premarket Notification Guidance"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-003-hazard-analysis.md": {
+      "title": "Hazard Analysis \u2014 pca-device",
+      "description": "Enumerates each hazard, the foreseeable sequence of events leading to a hazardous situation, the resulting harm, and an initial risk estimate prior to risk controls.",
+      "why_important_in_project": "PP3500 carries the same family of high-severity hazards as the PP3000 predicate (over-infusion, under-infusion, air embolism, occlusion-related delay, alarm failure) plus any new hazards from added SaMD/connectivity features \u2014 FDA will compare hazard coverage directly against the predicate.",
+      "main_topics": [
+        {
+          "name": "Intended use and reasonably foreseeable misuse",
+          "summary": "Use scenarios and misuse patterns that drive hazard identification."
+        },
+        {
+          "name": "Safety characteristics",
+          "summary": "Qualitative safety characteristics of the PP3500."
+        },
+        {
+          "name": "Hazard inventory",
+          "summary": "Comprehensive list of identified hazards including legacy PP3000 hazards plus PP3500 deltas."
+        },
+        {
+          "name": "Hazardous situation traceability",
+          "summary": "Mapping of hazards to sequences of events and resulting harms with initial severity/probability estimates."
+        },
+        {
+          "name": "Coverage versus predicate",
+          "summary": "Confirmation that all PP3000 hazards are addressed and any new hazards are explicitly flagged."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 14971:2019 \u00a75.2 (Intended Use & Misuse)",
+        "ISO 14971:2019 \u00a75.3 (Safety Characteristics)",
+        "ISO 14971:2019 \u00a75.4 (Hazard Identification)",
+        "ISO 14971:2019 \u00a75.5 (Risk Estimation)",
+        "FDA Infusion Pump Premarket Notification Guidance"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-004-design-fmea.md": {
+      "title": "Design FMEA (dFMEA) \u2014 pca-device",
+      "description": "Analyzes potential design-level failure modes for each PP3500 component, their effects, causes, and current controls.",
+      "why_important_in_project": "For an infusion pump where motor control, sensor fusion (occlusion/air-in-line), drug-library enforcement, and alarm logic are all safety-critical, the dFMEA gives FDA reviewers component-level confidence that single-point design failures have been considered.",
+      "main_topics": [
+        {
+          "name": "Component decomposition",
+          "summary": "Breakdown of PP3500 into pump firmware, sensors, motor drive, UI, connectivity, and drug-library modules."
+        },
+        {
+          "name": "Failure modes and effects",
+          "summary": "Per-component failure modes mapped to system-level effects relevant to patient harm."
+        },
+        {
+          "name": "Severity / occurrence / detection scoring",
+          "summary": "RPN methodology consistent with the RM Plan acceptability criteria."
+        },
+        {
+          "name": "Risk control linkage",
+          "summary": "Each unacceptable RPN linked to a design or protective measure."
+        },
+        {
+          "name": "Predicate delta focus",
+          "summary": "Explicit treatment of design elements that differ from the PP3000 predicate."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 14971:2019 \u00a75.5 (Risk Estimation)",
+        "ISO 14971:2019 \u00a76 (Risk Evaluation)",
+        "ISO 14971:2019 \u00a77.1 (Risk Control Options)",
+        "IEC 60812 (FMEA methodology)"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-004-process-fmea.md": {
+      "title": "Process FMEA (pFMEA) \u2014 pca-device",
+      "description": "Identifies potential failure modes in PP3500 manufacturing processes, their effects on the finished device, and the controls (in-process checks, validation, training) that mitigate them.",
+      "why_important_in_project": "PP3500 is a custom medical-electrical assembly with embedded firmware and calibrated mechanical/sensor elements \u2014 manufacturing variation in motor calibration, sensor assembly, or firmware loading directly affects flow accuracy and alarm reliability.",
+      "main_topics": [
+        {
+          "name": "Process step decomposition",
+          "summary": "Identification of each manufacturing step with potential failure impact."
+        },
+        {
+          "name": "Process failure modes and effects",
+          "summary": "Per-step failure modes traced to device-level consequences."
+        },
+        {
+          "name": "Process controls and validation",
+          "summary": "In-process inspections, calibration checks, and validated processes."
+        },
+        {
+          "name": "Special-process identification",
+          "summary": "Flagging of processes whose output cannot be fully verified by inspection."
+        },
+        {
+          "name": "Linkage to dFMEA and Hazard Analysis",
+          "summary": "Cross-reference so that process risks feed the overall residual-risk picture."
+        }
+      ],
+      "regulatory_anchors": [
+        "IEC 60812 (FMEA methodology)",
+        "21 CFR 820.75 (Process Validation)",
+        "ISO 14971:2019 \u00a77.1 (Risk Control Options)",
+        "ISO 13485:2016 \u00a77.5.6"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/risk-strategy.md": {
+      "title": "Risk Strategy",
+      "description": "Internal, auto-assembled record of risk-domain strategy decisions captured from task documents \u2014 risk-benefit framing, acceptability thresholds, FMEA methodology choices, and cross-module risk interactions for PP3500.",
+      "why_important_in_project": "PP3500 spans SaMD, SiMD pump firmware, and custom medical electrical hardware, and the criticality carve-out drives which risks are in the 510(k)+PCCP scope versus deferred to commercial-only V&V \u2014 capturing those decisions here ensures the formal RM Plan and FMEAs stay aligned with the filing strategy.",
+      "main_topics": [
+        {
+          "name": "Risk-benefit framing",
+          "summary": "Acceptable-risk thresholds and benefit narrative supporting the SE argument."
+        },
+        {
+          "name": "FMEA methodology decisions",
+          "summary": "Scoring scales, RPN thresholds, and team composition decisions."
+        },
+        {
+          "name": "Risk-driven architecture decisions",
+          "summary": "Where risk drove architectural choices (e.g., redundant occlusion sensing, dose-limit enforcement layer)."
+        },
+        {
+          "name": "Cross-module risk interactions",
+          "summary": "Inter-module hazard propagation across pump firmware, SaMD, and connectivity adapter."
+        },
+        {
+          "name": "Post-market risk monitoring",
+          "summary": "How post-market data will be funnelled back to update the Risk Management File."
+        }
+      ],
+      "regulatory_anchors": [
+        "ISO 14971:2019 \u00a74.4",
+        "Internal \u2014 /strategy skill output",
+        "PP3500 Regulatory Strategy (criticality carve-out)"
+      ],
+      "_source_bundle": "09__risk-management"
+    },
+    "design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md": {
+      "title": "Tool Validation Record \u2014 pca-device",
+      "description": "The Tool Validation Record logs validation of software tools used to produce or test the PP3500 PCA pump or to operate the quality system itself (e.g., compilers, test rigs, label printers, eQMS workflows).",
+      "why_important_in_project": "PP3500 is a combination of SaMD modules, SiMD pump firmware, and custom medical electrical hardware \u2014 its build and test toolchain (firmware compilers, automated test harnesses, drug-library editors, label-print verification) directly affects the safety and accuracy of a Class II infusion pump. FDA and notified-body inspectors expect documented validation for any tool whose output is not independently verified before use in production or QMS processes; gaps here can undermine confidence in the K210345 V&V evidence even though the record itself does not ship in the submission.",
+      "main_topics": [
+        {
+          "name": "Tool inventory",
+          "summary": "List of production and QMS software tools in scope, with intended use and risk classification."
+        },
+        {
+          "name": "Validation rationale",
+          "summary": "For each tool: whether output is independently verified (no validation needed) or validation is required, with justification."
+        },
+        {
+          "name": "Validation evidence",
+          "summary": "Test protocol, results, acceptance criteria, and approval signatures for each tool requiring validation."
+        },
+        {
+          "name": "Revalidation triggers",
+          "summary": "Conditions (tool upgrade, OS change, configuration change) that re-open the validation record."
+        },
+        {
+          "name": "Change control linkage",
+          "summary": "How tool changes flow through the QMS change-control SOP and back into this record."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.70(i) \u2014 Automated processes",
+        "ISO 13485:2016 \u00a74.1.6 \u2014 Validation of QMS software",
+        "ISO 13485:2016 \u00a77.5.6 \u2014 Validation of processes for production",
+        "GL-TMP-DC-003 \u2014 Parent QMS template"
+      ],
+      "_source_bundle": "10__tool-validation"
+    },
+    "design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md": {
+      "title": "Trace Matrix Overview \u2014 pca-device",
+      "description": "QMS-template overview describing how the PP3500 DHF traces User Needs through Design Inputs, Design Outputs, and V&V evidence. Sets the rules-of-engagement for the actual trace exhibits.",
+      "why_important_in_project": "PP3500's filing strategy hinges on a Ct*-tagged carve-out (CtS/CtF/CtC/CtP) \u2014 reviewers cannot interpret the trace tables without this overview explaining the tagging convention, the 'Filing Scope' column, and how PCCP-envelope items are flagged separately from commercial-only items.",
+      "main_topics": [
+        {
+          "name": "Trace layer model",
+          "summary": "UN \u2192 DI \u2192 DO \u2192 V&V \u2192 Risk linkage rules across the PP3500 DHF."
+        },
+        {
+          "name": "Filing-scope tagging",
+          "summary": "How CtS/CtF/CtC/CtP tags drive inclusion in 510(k) vs PCCP envelope vs commercial-only."
+        },
+        {
+          "name": "Trace integrity rules",
+          "summary": "Forward/reverse coverage thresholds, orphan handling, and review cadence."
+        },
+        {
+          "name": "Tooling and regeneration",
+          "summary": "Sidecar generation by the trace-matrix skill and hand-edit prohibitions."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(j) \u2014 Design History File",
+        "FDA Design Control Guidance for Medical Device Manufacturers (1997) \u00a7F",
+        "GL-SOP-DC-003 (parent QMS template)",
+        "ISO 13485:2016 \u00a77.3.10"
+      ],
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/trace-matrix/trace-matrix.md": {
+      "title": "Trace Matrix (auto-generated sidecar)",
+      "description": "Skill-generated bidirectional trace sidecar covering all five layers (User Needs, Design Inputs, Architecture, V&V, Risk) for the PP3500 DHF, with forward/reverse coverage and orphan counts per layer.",
+      "why_important_in_project": "This is the live coverage report for PP3500 \u2014 its current state is the primary readiness signal for whether the K210345 filing is closeable. Architecture\u2194DI mapping and risk-control linkage must be filled in before the 510(k)+PCCP package is submission-ready.",
+      "main_topics": [
+        {
+          "name": "Coverage by layer",
+          "summary": "Counts of items with forward/reverse traces and orphans per UN/DI/Arch/V&V/Risk layer."
+        },
+        {
+          "name": "Orphan resolution",
+          "summary": "Identification of DIs and architecture modules with no upstream/downstream linkage."
+        },
+        {
+          "name": "Risk control trace",
+          "summary": "ISO 14971 risk-control measure linkage to design inputs and verification evidence."
+        },
+        {
+          "name": "V&V evidence linkage",
+          "summary": "Mapping each DI to its verification protocol and validation activity."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(g)\u2013(j)",
+        "ISO 14971:2019 \u00a77.4 (risk control implementation)",
+        "IEC 62304:2006/A1:2015 \u00a75.1.1, \u00a75.5 (software requirements traceability)",
+        "FDA Content of Premarket Submissions for Device Software Functions (June 2023) \u2014 Documentation Level"
+      ],
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/trace-matrix/un-to-di-trace-matrix.md": {
+      "title": "UN-to-DI Trace Matrix \u2014 PP3500",
+      "description": "The bidirectional User-Needs-to-Design-Inputs trace matrix (DHF-PP3500-TM-001), organized by the 9 PP3500 functional groups (G1 Therapy Delivery, G2 Drug Library, etc.), showing every UN\u2192DI forward trace and reverse coverage.",
+      "why_important_in_project": "This is the trace artifact that proves PP3500's design inputs cover every clinical user need from PCA bolus delivery through occlusion/air-in-line detection \u2014 the foundation for the 510(k) substantial-equivalence argument against PP3000 (K190567). The Ct* tagging applied here drives which UN/DI pairs land inside the PCCP envelope versus commercial-only deferral.",
+      "main_topics": [
+        {
+          "name": "Forward trace UN \u2192 DI",
+          "summary": "Every user need mapped to one or more design inputs across all 9 functional groups."
+        },
+        {
+          "name": "Reverse trace DI \u2192 UN",
+          "summary": "Every design input justified by at least one user need; orphan DIs flagged."
+        },
+        {
+          "name": "Functional group coverage",
+          "summary": "G1 Therapy Delivery through G9 grouping aligns trace with the upstream UN/DI documents."
+        },
+        {
+          "name": "Ct* filing-scope tagging",
+          "summary": "CtS/CtF/CtC/CtP tags determine 510(k) vs PCCP-envelope vs commercial-only inclusion."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(c)\u2013(d)",
+        "FDA Design Control Guidance (1997) \u00a7F.3 (traceability)",
+        "ISO 13485:2016 \u00a77.3.3, \u00a77.3.10",
+        "FDA Format for Traditional and Abbreviated 510(k)s \u2014 Section 16"
+      ],
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/usability/GL-TMP-UC-002-usability-engineering-file.md": {
+      "title": "Usability Engineering File \u2014 pca-device",
+      "description": "The Usability Engineering File is the consolidated record of use-specification, user-interface analysis, use-related risk analysis, formative evaluations, and summative validation for the PP3500 PCA pump per IEC 62366-1.",
+      "why_important_in_project": "PP3500 is a Class II infusion pump where dose-entry errors, programming mistakes, and missed alarms are top use-related hazards \u2014 FDA treats infusion pumps as a high-priority device category for human factors review and expects a complete summative HF validation report referencing the predicate PP3000 (K190567) UI continuity and any new UI elements introduced in PP3500. Under the criticality carve-out, all CtS- and CtP-tagged tasks (dose programming, bolus delivery, alarm acknowledgement) must be validated for the 510(k)+PCCP filing.",
+      "main_topics": [
+        {
+          "name": "Use specification",
+          "summary": "Intended users (RN, anesthesiologist, patient), use environments (hospital ward, PACU, ambulatory), and operating principles for PP3500."
+        },
+        {
+          "name": "Use-related risk analysis (URRA)",
+          "summary": "Identification of hazardous-use scenarios and critical tasks linked to the PP3500 risk file (occlusion, air-in-line, dose limit, programming errors)."
+        },
+        {
+          "name": "Formative evaluations",
+          "summary": "Iterative usability studies on PP3500 UI changes vs PP3000 baseline to refine the design before summative."
+        },
+        {
+          "name": "Summative HF validation",
+          "summary": "Final validation study against critical tasks with representative users, evidence basis for the 510(k) HFE/UE Report."
+        },
+        {
+          "name": "UI of unknown provenance (UOUP)",
+          "summary": "Evaluation of any PP3000-inherited UI elements per IEC 62366-1 \u00a74.2 to justify continued use without re-validation."
+        },
+        {
+          "name": "Training and labeling implications",
+          "summary": "Mitigations that route through IFU, on-screen guidance, or training rather than design changes."
+        }
+      ],
+      "regulatory_anchors": [
+        "IEC 62366-1:2015 + A1:2020 \u00a75 (Usability Engineering Process)",
+        "FDA Guidance: Applying Human Factors and Usability Engineering to Medical Devices (2016)",
+        "FDA List of Highest Priority Devices for Human Factors Review (infusion pumps included)",
+        "FDA Infusion Pumps \u2014 Total Product Life Cycle Guidance (2014)",
+        "GL-TMP-UC-002 (parent QMS template)"
+      ],
+      "_source_bundle": "12__usability"
+    },
+    "design-controls/user-needs/GL-TMP-UC-001-use-specification.md": {
+      "title": "Use Specification \u2014 pca-device",
+      "description": "The Use Specification defines the intended users, use environments, patient population, and intended-use scenarios \u2014 the upstream usability-engineering input under IEC 62366-1 \u00a75.1.",
+      "why_important_in_project": "For PP3500, the Use Specification scopes acute-care PCA use by trained clinicians plus patient-activated bolus self-administration in adults/adolescents \u226512y/\u226540kg, explicitly excluding intrathecal/epidural/arterial routes \u2014 these boundaries directly drive the 510(k) Indications for Use statement, the human-factors validation protocol, and the PCCP envelope for UX changes.",
+      "main_topics": [
+        {
+          "name": "Intended users",
+          "summary": "Clinician (RN, anesthesiologist, pharmacist) and patient self-administrator profiles."
+        },
+        {
+          "name": "Use environments",
+          "summary": "Hospital, ambulatory surgical center, and supervised acute-care facilities."
+        },
+        {
+          "name": "Patient population",
+          "summary": "Adult and adolescent patients \u226512 years and \u226540 kg requiring opioid or non-opioid IV analgesia."
+        },
+        {
+          "name": "Use scenarios",
+          "summary": "Programming basal + bolus, drug-library load, bedside barcode verification, alarm response."
+        },
+        {
+          "name": "Use-related hazards anchored to PCA history",
+          "summary": "Wrong-drug, wrong-concentration, over-sedation, free-flow, lockout-bypass scenarios."
+        }
+      ],
+      "regulatory_anchors": [
+        "IEC 62366-1 \u00a75.1",
+        "FDA Applying Human Factors and Usability Engineering to Medical Devices (2016)",
+        "21 CFR 820.30(c)",
+        "IEC 60601-1-6"
+      ],
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/user-needs/user-needs-register.md": {
+      "title": "User Needs Register \u2014 pca-device",
+      "description": "Controlled register listing every validated user need with ID, stakeholder, source, priority, and category \u2014 the upstream input to design inputs and the trace matrix.",
+      "why_important_in_project": "For PP3500, the register is where the filing-strategy criticality carve-out (CtS / CtF / CtC / CtP) is operationalized \u2014 every UN is tagged so the trace matrix can derive the 'In 510(k)' / 'In PCCP envelope' / 'Commercial-only' Filing Scope column.",
+      "main_topics": [
+        {
+          "name": "Need identification and traceability",
+          "summary": "Stable UN-IDs that thread through design inputs, V&V protocols, and the trace matrix."
+        },
+        {
+          "name": "Stakeholder + source attribution",
+          "summary": "KOL interviews, predicate post-market data, ISMP guidance, IEC clauses traced to each need."
+        },
+        {
+          "name": "Categorization",
+          "summary": "Clinical, User/Workflow, Safety, Regulatory, Market \u2014 drives the type of evidence required."
+        },
+        {
+          "name": "Criticality tagging (CtS/CtF/CtC/CtP)",
+          "summary": "Filing-scope decision per the regulatory strategy carve-out."
+        },
+        {
+          "name": "Priority and review status",
+          "summary": "Approval state and revision history under design-controls."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(c)",
+        "ISO 13485 \u00a77.3.3",
+        "GL-SOP-DC-003 (Parent QMS template)",
+        "IEC 62366-1 \u00a75.1",
+        "ISO 14971 \u00a75.2"
+      ],
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/user-needs/user-needs.md": {
+      "title": "User Needs \u2014 PainEase PCA Advanced (DEV-PP3500)",
+      "description": "Full controlled User Needs document for the PainEase PCA Advanced \u2014 Intended Use, Indications for Use, and 9 functional-group user needs (Therapy Delivery, Drug Library, Alarms, Hazard Controls, UI/Usability, Power/Portability, Connectivity, Cybersecurity, Regulatory/Lifecycle).",
+      "why_important_in_project": "Upstream anchor of the entire PP3500 design-controls record \u2014 the Indications for Use statement here drives the K210345 submission text and substantial-equivalence comparison to PP3000 (K190567); the 9 functional groups partition the device (SaMD + SiMD pump firmware + custom medical electrical hardware) into reviewable evidence packages; CAPA-2023-001 from the predicate is explicitly traced into UN-004 (drug-library hard limits).",
+      "main_topics": [
+        {
+          "name": "Intended Use and Indications for Use",
+          "summary": "Acute-care PCA delivery for opioid/non-opioid analgesics, adults/adolescents \u226512y/\u226540kg, IV route only."
+        },
+        {
+          "name": "Functional-group decomposition (G1\u2013G9)",
+          "summary": "Therapy Delivery, Drug Library, Alarms, Hazard Controls, UI, Power/Portability, Connectivity, Cybersecurity, Regulatory/Lifecycle."
+        },
+        {
+          "name": "Predicate-informed safety needs",
+          "summary": "Free-flow protection, occlusion/air-in-line detection, hard-limit enforcement traced to predicate field history."
+        },
+        {
+          "name": "Standards alignment",
+          "summary": "IEC 60601-1, -1-2, -2-24, -1-8; IEC 62304 Class C; ISO 14971; IEC 62366-1; IEC 81001-5-1."
+        },
+        {
+          "name": "Stakeholder traceability",
+          "summary": "KOL interviews, ISMP guidance, P&T committee input attributed per UN."
+        },
+        {
+          "name": "Connectivity and cybersecurity needs",
+          "summary": "Wi-Fi/Bluetooth, HL7 v2.5, FHIR R4, signed firmware, SBOM, audit log \u2014 anchors 524B cyber requirements."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(c)",
+        "ISO 13485 \u00a77.3.3",
+        "IEC 62366-1 \u00a75.1",
+        "ISO 14971 \u00a75.2",
+        "FDA Infusion Pumps \u2014 Total Product Life Cycle Guidance (2014)",
+        "IEC 60601-2-24"
+      ],
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md": {
+      "title": "Design Verification Protocol & Report \u2014 pca-device",
+      "description": "Combined plan + report that defines how each PP3500 design input (occlusion detection, dose limits, flow accuracy, alarm timing, etc.) is verified against its specification, and records the executed test results.",
+      "why_important_in_project": "PP3500 must demonstrate equivalent-or-better performance to the PP3000 predicate (K190567) on the bench \u2014 flow accuracy, occlusion detection, alarm response time, and battery/electrical safety are the SE pivots, and the verification report is the evidence FDA will compare line-by-line to the predicate's published performance.",
+      "main_topics": [
+        {
+          "name": "Test articles & build configuration",
+          "summary": "Identifies the PP3500 build under test and traceability to the submitted device design."
+        },
+        {
+          "name": "Requirements coverage",
+          "summary": "Maps each Ct*-tagged design input to one or more verification test cases."
+        },
+        {
+          "name": "Bench performance vs. predicate",
+          "summary": "Flow accuracy, occlusion detection thresholds, alarm latency, and bolus timing measured against PP3000 published claims."
+        },
+        {
+          "name": "Electrical & EMC safety",
+          "summary": "IEC 60601-1 / 60601-1-2 verification including leakage, dielectric strength, and EM immunity."
+        },
+        {
+          "name": "Software-system verification",
+          "summary": "Integration- and system-level software tests bridging IEC 62304 STP/STC/STR into device-level verification."
+        },
+        {
+          "name": "Pass/fail acceptance and deviations",
+          "summary": "Acceptance criteria, executed results, and any deviation dispositions."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(f)",
+        "ISO 13485 \u00a77.3.6",
+        "IEC 60601-1 (general MEE safety)",
+        "IEC 60601-2-24 (infusion pumps)",
+        "FDA Infusion Pumps \u2014 Total Product Life Cycle (2014)"
+      ],
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md": {
+      "title": "Design Validation Protocol & Report \u2014 pca-device",
+      "description": "Combined plan + report that defines and records how PP3500 was validated against user needs in the intended PCA use environment (post-op floor, ICU, ambulatory).",
+      "why_important_in_project": "PP3500 is a patient-controlled analgesia pump where the user is a recovering patient pressing a bolus button \u2014 validation must show that the device meets clinical user needs across the same therapy contexts the PP3000 predicate covers, including the lockout, dose-limit, and alarm behaviors that anchor the SE argument.",
+      "main_topics": [
+        {
+          "name": "Use environments and user groups",
+          "summary": "Acute-care nurse, prescribing clinician, biomed, and patient end-user roles."
+        },
+        {
+          "name": "Simulated-use scenarios",
+          "summary": "Programming, priming, bolus delivery, alarm response, and shift-handoff scenarios."
+        },
+        {
+          "name": "User-needs traceability",
+          "summary": "Each validated scenario maps back to a UN in the user-needs DHF."
+        },
+        {
+          "name": "Linkage to summative usability",
+          "summary": "Cross-references HFE/UE summative results for safety-related use tasks."
+        },
+        {
+          "name": "Acceptance criteria and clinical realism",
+          "summary": "Pass/fail thresholds and rationale for representativeness."
+        },
+        {
+          "name": "Deviations and dispositions",
+          "summary": "Any deviations reviewed and resolved with design-team approval."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(g)",
+        "ISO 13485 \u00a77.3.7",
+        "FDA Design Control Guidance for Medical Device Manufacturers (1997)",
+        "FDA Infusion Pumps \u2014 Total Product Life Cycle (2014)"
+      ],
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md": {
+      "title": "Summative Usability Evaluation Protocol & Report \u2014 pca-device",
+      "description": "Final human-factors validation study evaluating whether representative PP3500 users can perform safety-critical tasks (programming dose, responding to alarms, priming, handling occlusion) without dangerous use error.",
+      "why_important_in_project": "Patient-controlled analgesia pumps have a long FDA history of use-error harm \u2014 the summative usability evaluation is the central piece of evidence FDA expects for any infusion-pump 510(k), and it directly supports SE to PP3000 by showing the PP3500 UI changes do not introduce new risk patterns.",
+      "main_topics": [
+        {
+          "name": "Critical-task list",
+          "summary": "Derived from URRA/use-related risk analysis; each task tied to a CtS-tagged user need."
+        },
+        {
+          "name": "Participant groups and recruiting",
+          "summary": "Nurses, prescribers, biomed, and patient end-users with PCA-relevant experience profiles."
+        },
+        {
+          "name": "Test environment and simulation",
+          "summary": "Realistic post-op / ICU / ambulatory simulations with clinically plausible distractors."
+        },
+        {
+          "name": "Use-error coding and root-cause",
+          "summary": "Each observed use error categorized and traced to UI design, labeling, or training."
+        },
+        {
+          "name": "Residual-risk acceptability",
+          "summary": "Acceptability arguments for any residual use-related risk after design mitigations."
+        }
+      ],
+      "regulatory_anchors": [
+        "FDA Applying Human Factors and Usability Engineering to Medical Devices (2016)",
+        "IEC 62366-1 \u00a75.9",
+        "FDA List of Highest-Priority Devices for HFE Review (infusion pumps)",
+        "FDA Infusion Pumps \u2014 Total Product Life Cycle (2014)"
+      ],
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/testing-strategy.md": {
+      "title": "Testing Strategy",
+      "description": "Internal strategy memo that captures decisions about how PP3500 will be tested \u2014 the bench/clinical split, acceptance-criteria philosophy, formative vs summative usability cadence, and regression approach across releases.",
+      "why_important_in_project": "Anchors the team's testing approach to the filing-scope carve-out (only Ct*-tagged requirements get full design-controls V&V rigor for the K210345 filing; commercial-only requirements run on a lighter QMS track), which is the core regulatory-strategy decision driving how V&V resources are spent across QSub, PCCP filing, and LMR releases.",
+      "main_topics": [
+        {
+          "name": "Bench vs. clinical evidence split",
+          "summary": "Which claims rest on bench testing vs simulated-use vs clinical observation."
+        },
+        {
+          "name": "Acceptance-criteria philosophy",
+          "summary": "How thresholds are set relative to PP3000 predicate performance and standards minimums."
+        },
+        {
+          "name": "Formative vs summative usability cadence",
+          "summary": "When formative cycles inform design changes and when summative locks in evidence."
+        },
+        {
+          "name": "Regression strategy across releases",
+          "summary": "Risk-based regression scope for LMR1 and LMR2 deltas vs full re-baseline."
+        },
+        {
+          "name": "Filing-scope vs commercial-track V&V",
+          "summary": "Two-track plan tied to Ct* tagging \u2014 full DC rigor for filing, QMS-only for commercial-only items."
+        }
+      ],
+      "regulatory_anchors": [
+        "21 CFR 820.30(f)-(g)",
+        "ISO 13485 \u00a77.3.6-7.3.7",
+        "IEC 62366-1 \u00a75.6 (formative) / \u00a75.9 (summative)",
+        "Internal regulatory-strategy.md \u2014 Critical-Requirement Carve-out"
+      ],
+      "_source_bundle": "14__vnv"
+    },
+    "Q-PC1": {
+      "title": "PCA Device \u2014 System Software Architecture Description (SAD)",
+      "description": "The System Software Architecture Description (SAD) defines the on-device software architecture of the PP3500 PCA pump \u2014 SaMD clinician/patient UI, SiMD pump firmware (RTOS), and the electromechanical hardware boundary \u2014 including trust boundaries with the off-device Connectivity Adapter and Cloud Suite.",
+      "why_important_in_project": "The SAD is the structural anchor for the PP3500's K210345 510(k)+PCCP filing: it locks the 'PCA Device Alone' filing scope, defines the Adapter trust boundary that scopes cybersecurity claims, and underpins substantial-equivalence argumentation against predicate PP3000 (K190567) by showing where PP3500 architecturally deviates and where it inherits.",
+      "main_topics": [
+        {
+          "name": "Composition & filing scope",
+          "summary": "SaMD + SiMD + custom medical electrical hardware combination; PCA-Device-Alone scope per regulatory strategy."
+        },
+        {
+          "name": "Trust boundary & cybersecurity architecture",
+          "summary": "Adapter treated as untrusted; TLS 1.3 mutual auth, local authentication of inbound payloads \u2014 supports FDA Cybersecurity Guidance \u00a7V."
+        },
+        {
+          "name": "MFD impact",
+          "summary": "Multiple-Function Device decomposition and impact analysis for SaMD UI vs SiMD pump-control functions per FDA MFD Guidance."
+        },
+        {
+          "name": "IEC 62304 software item decomposition",
+          "summary": "Class B/C SaMD modules and Class C pump firmware items mapped to architectural elements."
+        },
+        {
+          "name": "Predicate architectural delta",
+          "summary": "Architectural differences vs PP3000 (K190567) that drive substantial-equivalence and PCCP envelope definition."
+        },
+        {
+          "name": "Secure development lifecycle alignment",
+          "summary": "Architecture artifacts that satisfy IEC 81001-5-1 \u00a75.3 secure-by-design requirements."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Cybersecurity Guidance (2023) \u00a7V Security Architecture",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Multiple Function Device Guidance (2020) \u00a7IV\u2013V",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.3 Software architecture",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.3 Software architectural design",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 807.87 \u2014 510(k) content requirements",
+          "role": "primary"
+        }
+      ]
+    },
+    "Q-PC2": {
+      "title": "Design Inputs \u2014 PainEase PCA Advanced (PP3500)",
+      "description": "The substantive design-inputs (system requirements) document for PP3500 \u2014 translates validated user needs into testable system requirements with Ct* criticality tags, acceptance criteria, and verification methods.",
+      "why_important_in_project": "Anchors PP3500's substantial-equivalence story against PP3000 (K190567): each design input maps to a predicate analog or to a delta the 510(k) must justify, and the Ct* tagging determines which requirements live inside the K210345 filing scope vs the LMR1/LMR2 commercial track.",
+      "main_topics": [
+        {
+          "name": "Intended use & indications",
+          "summary": "Adult/adolescent IV PCA for analgesics in supervised acute-care settings; contraindications enumerated."
+        },
+        {
+          "name": "Functional requirements",
+          "summary": "Continuous basal + patient-activated bolus delivery within prescriber-defined limits."
+        },
+        {
+          "name": "Safety requirements (CtS)",
+          "summary": "Occlusion detection, air-in-line, dose limits, alarm priorities per IEC 60601-1-8 and IEC 60601-2-24."
+        },
+        {
+          "name": "Software & cybersecurity requirements",
+          "summary": "Per IEC 62304 SDLC and IEC 81001-5-1 \u00a75.2 security requirements supporting 524B."
+        },
+        {
+          "name": "User-need traceability",
+          "summary": "Each requirement traces upstream to DHF-PP3500-UN-001 user needs and downstream to verification."
+        },
+        {
+          "name": "Standards conformance hooks",
+          "summary": "Maps to IEC 60601-1, 60601-1-2 EMC, 60601-2-24, IEC 62366-1 usability, ISO 14971 risk, ISO 10993-1 biocompat."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "21 CFR 820.30(c)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 13485:2016 \u00a77.3.3",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 60601-2-24:2012",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 62304:2006+A1:2015 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75.2",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 82304-1:2016 \u00a75.1 / \u00a75.2",
+          "role": "primary"
+        }
+      ]
+    },
+    "Q-PC23": {
+      "title": "Clinical Evaluation Plan \u2014 pca-device",
+      "description": "Defines the scope, methodology, evidence sources, and acceptance criteria for the clinical evaluation that culminates in the CER.",
+      "why_important_in_project": "Sets the rules of the game for PP3500's clinical evidence strategy \u2014 given the critical-requirement carve-out and reliance on predicate PP3000, the CEP is where the team locks in why a new clinical study is or is not needed and what evidence threshold the CER must hit for the 510(k)+PCCP filing.",
+      "main_topics": [
+        {
+          "name": "Clinical evidence strategy",
+          "summary": "Literature-only vs. clinical investigation justification for PP3500."
+        },
+        {
+          "name": "Predicate-equivalence framing",
+          "summary": "How the plan uses PP3000 (K190567) clinical history as a baseline."
+        },
+        {
+          "name": "Evidence acceptance criteria",
+          "summary": "Quality, quantity, and currency thresholds the CER must meet."
+        },
+        {
+          "name": "Risk-based clinical scope",
+          "summary": "Ties evaluation depth to Ct*-tagged clinical hazards (overdose, occlusion, alarm efficacy)."
+        },
+        {
+          "name": "PMS linkage",
+          "summary": "How post-market clinical follow-up feeds back into CEP revisions for LMR1/LMR2."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "EU MDR Annex XIV Part A (clinical evaluation plan)",
+          "role": "primary"
+        },
+        {
+          "citation": "MDCG 2020-6 (clinical evidence sufficiency)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA 510(k) Decision-Making Framework (clinical-data triggers)",
+          "role": "primary"
+        },
+        {
+          "citation": "ISO 14155 (where clinical investigation is involved)",
+          "role": "primary"
+        },
+        {
+          "citation": "GL-TMP-UC-004 (parent QMS template)",
+          "role": "primary"
+        }
+      ]
+    },
+    "Q-PC26": {
+      "title": "Cybersecurity Plan \u2014 pca-device",
+      "description": "Plan governing the secure-development activities, threat modeling, SBOM management, vulnerability disclosure, and post-market vulnerability response for the PP3500 PCA pump.",
+      "why_important_in_project": "PP3500 is a connected infusion pump and therefore a 'cyber device' under FD&C \u00a7524B \u2014 without a cybersecurity plan, SBOM, and vulnerability-response commitment, the 510(k) is refuse-to-accept; this also differentiates PP3500 from the PP3000 predicate, which pre-dated 524B obligations.",
+      "main_topics": [
+        {
+          "name": "Secure development lifecycle",
+          "summary": "IEC 81001-5-1 SDL activities mapped onto the SDP."
+        },
+        {
+          "name": "Threat modeling & risk assessment",
+          "summary": "STRIDE / equivalent on the pump/wireless/cloud attack surfaces."
+        },
+        {
+          "name": "SBOM management",
+          "summary": "Generation, format, refresh cadence, and submission with the 510(k)."
+        },
+        {
+          "name": "Vulnerability handling & coordinated disclosure",
+          "summary": "Intake, triage, patching SLAs, and stakeholder communication."
+        },
+        {
+          "name": "Post-market monitoring & PCCP linkage",
+          "summary": "How patch releases flow through the PCCP envelope and FDA reporting."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FD&C Act \u00a7524B (Cyber Device requirements)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Guidance: Cybersecurity in Medical Devices \u2014 Quality System Considerations and Premarket Submissions (Sept 2023)",
+          "role": "primary"
+        },
+        {
+          "citation": "IEC 81001-5-1:2021 \u00a75",
+          "role": "primary"
+        },
+        {
+          "citation": "AAMI TIR57",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 820.30",
+          "role": "primary"
+        }
+      ]
+    },
+    "Q1": {
+      "title": "Q-Sub Cover Letter",
+      "description": "Formal cover letter that opens the PP3500 Pre-Submission package. Identifies the submission type (Pre-Submission), sponsor (GlobalLogic), the device (PainEase PCA Advanced / PP3500), the primary regulatory contact, and the purpose of the Q-Sub. Frames the document set FDA reviewers will encounter and signposts where the specific questions live.",
+      "why_important_in_project": "PP3500 is filed as a 510(k) with PCCP (target K210345) using PP3000 (K190567) as predicate. The Q-Sub is the team's first formal interaction with FDA on this program \u2014 a clean cover letter is what makes the package look like a credible Q-Sub rather than a half-formed 510(k). The letter also tells FDA whether a meeting is requested (we should request one given the criticality carve-out + PCCP scope are novel) so reviewers know which staff to assign before opening the questions document.",
+      "main_topics": [
+        {
+          "name": "Submission type and program track",
+          "summary": "Explicit Pre-Submission designation; references FDA Q-Submission Program guidance \u00a7V.A."
+        },
+        {
+          "name": "Sponsor and device identification",
+          "summary": "GlobalLogic, contact name + email + phone, PP3500 device name, intended product code (LZH for PCA pump), classification (Class II)."
+        },
+        {
+          "name": "Predicate and pathway framing",
+          "summary": "Predicate PP3000 (K190567), pathway 510(k) + PCCP, expected K-number K210345."
+        },
+        {
+          "name": "Purpose statement",
+          "summary": "One paragraph: validate predicate adequacy, PCCP envelope, criticality carve-out, MFD scoping with FDA before formal filing."
+        },
+        {
+          "name": "Meeting request and format",
+          "summary": "Whether teleconference, in-person, or written-feedback-only is requested; proposed timing window."
+        },
+        {
+          "name": "Document inventory",
+          "summary": "Brief list of what FDA will find in the package (Questions, Agenda, Device Description, Predicate Identification, supporting drafts)."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Guidance \u2014 Requests for Feedback and Meetings for Medical Device Submissions: The Q-Submission Program (2023) \u00a7V.A",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 807.81 \u2014 510(k) general procedures (program context)",
+          "role": "supporting"
+        }
+      ]
+    },
+    "Q2": {
+      "title": "Pre-Submission Questions for FDA",
+      "description": "The substantive payload of the Q-Sub. Contains explicit, numbered questions the team wants FDA to answer before formal 510(k) filing \u2014 targeted, focused, and directly answerable rather than open-ended discussion prompts. Each question is scoped to a single decision and references the supporting materials elsewhere in the package.",
+      "why_important_in_project": "For PP3500, the Q-Sub questions are the team's opportunity to de-risk the four highest-stakes regulatory decisions before filing K210345: (1) is PP3000 (K190567) an adequate predicate given the SaMD additions and connectivity expansion; (2) is the proposed PCCP envelope (drug library updates, firmware patches, predictive alarms within fixed risk profile) acceptable as scoped; (3) does the criticality carve-out (Ct*-tagged requirement subset for filing scope, deferred non-Ct* items for commercial-only V&V) align with FDA expectations for a Class II infusion pump; (4) how should the SaMD/SiMD/hardware combination be scoped under the Multiple Function Device guidance. Sharp questions here save weeks of post-filing back-and-forth.",
+      "main_topics": [
+        {
+          "name": "Predicate adequacy (Q-1)",
+          "summary": "Is PP3000 (K190567) an adequate predicate given the new SaMD components, connectivity adapter, and AI-assisted predictive alarms in PP3500?"
+        },
+        {
+          "name": "PCCP envelope acceptability (Q-2)",
+          "summary": "Does the proposed change protocol scope (drug library updates, firmware patches, predictive-alarm SaMD changes within the cleared risk profile) qualify under the FDA PCCP final guidance?"
+        },
+        {
+          "name": "Criticality carve-out approach (Q-3)",
+          "summary": "Is the Ct*-tagged design-input subset (CtS/CtF/CtC/CtP) an acceptable basis for splitting the 510(k)+PCCP filing scope from the commercial-only V&V track?"
+        },
+        {
+          "name": "MFD scoping (Q-4)",
+          "summary": "How should the SaMD UI / SiMD pump firmware / custom medical electrical hardware combination be analyzed under FDA Multiple Function Device guidance (2020)?"
+        },
+        {
+          "name": "Cybersecurity expectations (Q-5)",
+          "summary": "Confirm the team's \u00a7524B compliance approach (SBOM, threat model, vulnerability management, secure release) is aligned with FDA 2023 cybersecurity guidance for a connected infusion pump."
+        },
+        {
+          "name": "Software documentation level (Q-6)",
+          "summary": "Confirm Enhanced Documentation Level per FDA Software Premarket Submissions guidance (June 2023) given Class C SiMD pump firmware and Class B/C SaMD components."
+        },
+        {
+          "name": "Cross-reference index",
+          "summary": "Each question cites the supporting draft material in the Q-Sub package (System SAD, Design Inputs, Cybersecurity Plan, Clinical Evaluation Plan)."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Guidance \u2014 Requests for Feedback and Meetings for Medical Device Submissions: The Q-Submission Program (2023) \u00a7V.B",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Guidance \u2014 Predetermined Change Control Plans for Medical Device Software (Final, Sept 2023; FD&C \u00a7515C)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Guidance \u2014 The 510(k) Program: Evaluating Substantial Equivalence (2014)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Guidance \u2014 Multiple Function Device Products (2020)",
+          "role": "primary"
+        },
+        {
+          "citation": "FDA Guidance \u2014 Cybersecurity in Medical Devices: Quality System Considerations and Premarket Submissions (Sept 2023; \u00a7524B)",
+          "role": "supporting"
+        },
+        {
+          "citation": "FDA Guidance \u2014 Content of Premarket Submissions for Device Software Functions (June 2023)",
+          "role": "supporting"
+        }
+      ]
+    },
+    "Q3": {
+      "title": "Pre-Submission Meeting Agenda",
+      "description": "Proposed agenda for the Pre-Submission meeting (teleconference or in-person). Lists the topics the sponsor wants to walk through with FDA, the proposed time allocation per topic, the sponsor attendees with their roles, and the order of discussion. Sent in advance so FDA reviewers can prepare and bring the right specialists.",
+      "why_important_in_project": "For the PP3500 Q-Sub, an interactive meeting is the highest-leverage outcome \u2014 the questions span four distinct domains (predicate, PCCP, carve-out, MFD) and each pulls in a different FDA reviewer specialty (510(k) reviewer, software reviewer, cybersecurity reviewer, AI/ML CDRH staff). A clear agenda gets the right people in the room. Without it, the meeting devolves into one reviewer answering all questions with reduced confidence on the cross-domain topics.",
+      "main_topics": [
+        {
+          "name": "Meeting logistics",
+          "summary": "Date/time window, format (teleconference / in-person / hybrid), expected duration (typical Pre-Sub: 60\u201390 min)."
+        },
+        {
+          "name": "Sponsor attendees + roles",
+          "summary": "RA lead, R&D lead, Software lead, Cybersecurity lead, Clinical lead \u2014 names + titles."
+        },
+        {
+          "name": "Topic-by-topic time allocation",
+          "summary": "Per Q-Sub question (Q-1 predicate, Q-2 PCCP, Q-3 carve-out, Q-4 MFD, Q-5 cyber, Q-6 software docs) with proposed minutes."
+        },
+        {
+          "name": "Order of discussion",
+          "summary": "Sequenced so foundational topics (predicate) precede dependent topics (PCCP envelope assumes predicate is settled)."
+        },
+        {
+          "name": "Pre-read pointers",
+          "summary": "For each topic: which supporting draft in the package the discussion will reference (System SAD, Cybersecurity Plan, etc.)."
+        },
+        {
+          "name": "Out-of-scope / parking-lot",
+          "summary": "Topics the sponsor explicitly does NOT want to discuss in this Q-Sub (defer to filing-time review)."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Guidance \u2014 Requests for Feedback and Meetings for Medical Device Submissions: The Q-Submission Program (2023) \u00a7V.C",
+          "role": "primary"
+        }
+      ]
+    },
+    "Q4": {
+      "title": "Device Description (Q-Sub level)",
+      "description": "Concise device description sufficient to ground the Pre-Submission questions. Lighter than the 510(k) Section 5/6 device description \u2014 covers intended use, indications for use, principal technological characteristics, and a high-level comparison framing vs the predicate. The goal is to give FDA reviewers enough context to engage substantively with the questions without expecting filing-level depth.",
+      "why_important_in_project": "The Q-Sub questions for PP3500 (predicate adequacy, PCCP envelope, MFD scoping) are unanswerable without FDA understanding the device \u2014 but a full 510(k) device description is overkill for a pre-submission. This Q-Sub-level version focuses on what makes PP3500 different from PP3000 (the predicate): (a) the addition of SaMD components and connectivity adapter, (b) AI-assisted predictive alarms within the PCCP envelope, (c) \u00a7524B cybersecurity posture (PP3000 pre-dates \u00a7524B), (d) the Ct*-tagged criticality carve-out approach. These deltas are the reason the questions matter.",
+      "main_topics": [
+        {
+          "name": "Intended use",
+          "summary": "IV PCA delivery for opioid/non-opioid analgesics in supervised acute-care settings, adults/adolescents \u226512y/\u226540kg."
+        },
+        {
+          "name": "Indications for use",
+          "summary": "Hospital ward, PACU, ambulatory; explicit exclusions (intrathecal, epidural, arterial, MRI environments, unsupervised home use)."
+        },
+        {
+          "name": "Principal technological characteristics",
+          "summary": "SaMD UI + SiMD pump firmware + custom medical electrical hardware combination; connectivity adapter; drug-library architecture; alarm system."
+        },
+        {
+          "name": "Predicate framing \u2014 PP3000 (K190567)",
+          "summary": "Same intended use and primary indications; deltas in SaMD scope, AI-assisted alarms, cybersecurity posture, MFD profile."
+        },
+        {
+          "name": "PCCP-relevant features",
+          "summary": "Drug library content updates, firmware patches against fixed risk profile, predictive-alarm SaMD changes \u2014 features the PCCP envelope is designed to govern."
+        },
+        {
+          "name": "High-level architecture diagram pointer",
+          "summary": "References the draft System SAD elsewhere in the package for architectural detail; this section stays at description level."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Guidance \u2014 Requests for Feedback and Meetings for Medical Device Submissions: The Q-Submission Program (2023) \u00a7V.D",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 807.92(a)(4)\u2013(5) \u2014 510(k) Summary device description (analog reference)",
+          "role": "supporting"
+        }
+      ]
+    },
+    "Q5": {
+      "title": "Predicate Identification (PP3000 / K190567)",
+      "description": "Identifies PP3000 (K190567) as the predicate device for the planned PP3500 510(k) with rationale for the predicate selection. Lighter than the full 510(k) Section 12 predicate comparison \u2014 establishes that PP3000 is the right anchor, but defers the detailed feature-by-feature comparison table to filing time. This Q-Sub-level version provides enough basis for FDA to engage on Q-1 (predicate adequacy).",
+      "why_important_in_project": "Predicate selection is the single highest-stakes decision in a 510(k) substantial-equivalence pathway. If FDA disagrees with the choice of PP3000 at filing time, the team has wasted months. Validating PP3000 as predicate at the Q-Sub stage \u2014 specifically getting FDA comfortable that PP3500's SaMD / connectivity / AI-alarm additions don't disqualify PP3000 \u2014 is the most valuable Q-Sub outcome. This document tees up that question with sufficient predicate context (clearance number, product code, indications, key technological characteristics) without bogging down in the full SE table.",
+      "main_topics": [
+        {
+          "name": "Predicate device identification",
+          "summary": "PP3000 (K190567) \u2014 sponsor, clearance date, product code (LZH PCA pump, Class II)."
+        },
+        {
+          "name": "Predicate intended use and indications",
+          "summary": "Verbatim statements as cleared, used as the SE anchor for PP3500."
+        },
+        {
+          "name": "Principal technological characteristics \u2014 predicate",
+          "summary": "PP3000's pump mechanism, alarm system, drug-library approach, UI architecture as cleared."
+        },
+        {
+          "name": "Subject device deltas (preview)",
+          "summary": "High-level enumeration of how PP3500 differs from PP3000 (pointer to detailed comparison at filing time)."
+        },
+        {
+          "name": "Predicate-selection rationale",
+          "summary": "Why PP3000 vs other PCA pumps (B Braun Outlook, ICU Medical LifeCare, etc.) \u2014 same product code, same intended use, closest technological match, manufacturer continuity."
+        },
+        {
+          "name": "Reference devices (if any)",
+          "summary": "Any reference devices being cited for technological precedent (e.g., for the AI-assisted alarm pattern, the connectivity adapter approach)."
+        }
+      ],
+      "regulatory_anchors": [
+        {
+          "citation": "FDA Guidance \u2014 The 510(k) Program: Evaluating Substantial Equivalence (2014) \u00a7IV Predicate Selection",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 807.87(g) \u2014 Predicate device information requirement",
+          "role": "primary"
+        },
+        {
+          "citation": "21 CFR 807.92(a)(3) \u2014 Predicate identification in 510(k) Summary",
+          "role": "supporting"
+        }
+      ]
+    }
+  }
+}

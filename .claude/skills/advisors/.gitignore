@@ -1,0 +1,6 @@
+# Build artifacts from running the test suite (tests/run.sh) — never committed.
+# The runner installs no dev dependencies into the repo; these are only the
+# Python / pytest caches written during a test run.
+__pycache__/
+*.pyc
+.pytest_cache/

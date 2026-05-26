@@ -23,7 +23,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — SE Argument, Predicate Device Analysis]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: submission-authored
+    file_pattern: "*predicate-device-analysis*.md"
 verbatim: "A device is substantially equivalent if it has the same intended use as the predicate device AND either the same technological characteristics, or different technological characteristics that do not raise different questions of safety and effectiveness and the device is shown to be as safe and effective as a legally marketed device."
 extracted_requirements:
   - Demonstrate same intended use as the predicate device — intended use is the general purpose/function, encompassing indications for use
@@ -49,7 +55,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Predicate Device Analysis, 510(k) Submission — Device Description]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*predicate-device-analysis*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "Only one predicate is required; FDA encourages identifying a single predicate to simplify review. A split predicate (comparing intended use to Device A while comparing technological characteristics to Device B with a different intended use) is prohibited. Multiple predicates are permitted when combining features from predicates with the same intended use."
 extracted_requirements:
   - Select a primary predicate with intended use and technological characteristics most similar to MedTech Project
@@ -60,7 +72,7 @@ extracted_requirements:
   - Document predicate search rationale: how the predicate was identified and why it is the most similar legally marketed device
 ```
 
-**Context**: MedTech Company does not have an existing cleared digital surgical tool — the predicate will be a competitor device. Finding an appropriate predicate is the highest-priority open question for the MedTech Project 510(k). The predicate search must be systematic (documented search of FDA 510(k) database, De Novo, PMA databases) and the selected predicate must have substantially similar intended use (FAI surgical planning and/or guidance) and technological characteristics. AI-enabled predicates (e.g., competitors using AI for anatomy segmentation) would simplify the SE argument.
+**Context**: When a sponsor does not have an existing cleared device in the relevant category, the predicate will be a competitor device. Finding an appropriate predicate is typically the highest-priority open question for a 510(k). The predicate search must be systematic (documented search of FDA 510(k) database, De Novo, PMA databases) and the selected predicate must have substantially similar intended use and technological characteristics to the subject device. For AI-enabled subject devices, AI-enabled predicates (e.g., competitors using AI for the same clinical task) simplify the SE argument.
 
 ---
 
@@ -76,7 +88,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — Performance Testing, V&V Plan]
+canonical_role: submission-authored
+criticality: should-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
+  - role: vnv-plan
+    file_pattern: "*vnv-plan*.md"
 verbatim: "FDA follows a stepwise approach: (1) descriptive information about technological characteristics; (2) non-clinical bench performance testing/analytical studies; (3) non-clinical animal and/or biocompatibility studies; (4) clinical performance data. Clinical data may be requested when: new/modified indications need verification; technological differences are significant; non-clinical testing methods are limited or inappropriate."
 extracted_requirements:
   - Apply the least-burdensome principle: provide the minimum data necessary to demonstrate SE
@@ -102,7 +120,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [510(k) Submission — 510(k) Summary, SE Narrative]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*510k-summary*.md"
+  - role: submission-authored
+    file_pattern: "*510k-submission*.md"
 verbatim: "Required per 21 CFR 807.92. Must be in sufficient detail to explain the basis for SE determination. FDA encourages 510(k) Summary (rather than 510(k) Statement) for transparency."
 extracted_requirements:
   - Include a 510(k) Summary per 21 CFR 807.92 — required, not optional

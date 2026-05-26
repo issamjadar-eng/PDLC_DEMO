@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "fda-guidance",
   "source_file": "fda-510k.md",
   "obligation_count": 4,
@@ -16,9 +16,17 @@
       "artifact_type": "submission-content",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "must-have",
       "applies_to": [
-        "510(k) Submission — SE Argument",
-        "Predicate Device Analysis"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-submission*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*predicate-device-analysis*.md"
+        }
       ],
       "verbatim": "A device is substantially equivalent if it has the same intended use as the predicate device AND either the same technological characteristics, or different technological characteristics that do not raise different questions of safety and effectiveness and the device is shown to be as safe and effective as a legally marketed device.",
       "extracted_requirements": [
@@ -45,9 +53,17 @@
       "artifact_type": "submission-content",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "must-have",
       "applies_to": [
-        "Predicate Device Analysis",
-        "510(k) Submission — Device Description"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*predicate-device-analysis*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-submission*.md"
+        }
       ],
       "verbatim": "Only one predicate is required; FDA encourages identifying a single predicate to simplify review. A split predicate (comparing intended use to Device A while comparing technological characteristics to Device B with a different intended use) is prohibited. Multiple predicates are permitted when combining features from predicates with the same intended use.",
       "extracted_requirements": [
@@ -79,9 +95,17 @@
       "artifact_type": "submission-content",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "should-have",
       "applies_to": [
-        "510(k) Submission — Performance Testing",
-        "V&V Plan"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-submission*.md"
+        },
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*vnv-plan*.md"
+        }
       ],
       "verbatim": "FDA follows a stepwise approach: (1) descriptive information about technological characteristics; (2) non-clinical bench performance testing/analytical studies; (3) non-clinical animal and/or biocompatibility studies; (4) clinical performance data. Clinical data may be requested when: new/modified indications need verification; technological differences are significant; non-clinical testing methods are limited or inappropriate.",
       "extracted_requirements": [
@@ -108,9 +132,17 @@
       "artifact_type": "submission-content",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "must-have",
       "applies_to": [
-        "510(k) Submission — 510(k) Summary",
-        "SE Narrative"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-summary*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-submission*.md"
+        }
       ],
       "verbatim": "Required per 21 CFR 807.92. Must be in sufficient detail to explain the basis for SE determination. FDA encourages 510(k) Summary (rather than 510(k) Statement) for transparency.",
       "extracted_requirements": [

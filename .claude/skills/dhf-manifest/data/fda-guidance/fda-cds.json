@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "fda-guidance",
   "source_file": "fda-cds.md",
   "obligation_count": 3,
@@ -17,10 +17,21 @@
       "artifact_type": "analysis",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "must-have",
       "applies_to": [
-        "Device Classification Determination",
-        "510(k) Submission — Device Description",
-        "CDS Exemption Analysis"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*device-classification-determination*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-device-description*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*cds-exemption-analysis*.md"
+        }
       ],
       "verbatim": "The software function must not acquire, process, or analyze: medical images, signals from an IVD, or patterns or signals from a signal acquisition system. Any software that directly analyzes X-rays, CT scans, MRI, ultrasound, or similar data is a device regardless of whether it meets criteria 2-4.",
       "extracted_requirements": [
@@ -50,10 +61,21 @@
       "artifact_type": "analysis",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "must-have",
       "applies_to": [
-        "Device Classification Determination",
-        "510(k) Submission — Indications for Use",
-        "Labeling"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*device-classification-determination*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k-indications-for-use*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*labeling*.md"
+        }
       ],
       "verbatim": "Criterion 3: Does not provide a specific preventive, diagnostic, or treatment output or directive; is not intended to replace the HCP's judgment. Criterion 4: The software enables an HCP to independently review the basis for recommendations so the HCP does not rely primarily on such recommendations. Higher automation increases risk of automation bias; time-critical nature moves from criterion 3 to criterion 4.",
       "extracted_requirements": [
@@ -79,9 +101,17 @@
       "artifact_type": "process-record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "submission-authored",
+      "criticality": "should-have",
       "applies_to": [
-        "Q-Sub Package",
-        "Device Classification Documentation"
+        {
+          "role": "submission-authored",
+          "file_pattern": "*qsub-package*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*device-classification-documentation*.md"
+        }
       ],
       "verbatim": "For software where CDS status is uncertain, FDA recommends submitting a 513(g) request for device determination, or using a Q-Submission to discuss with FDA.",
       "extracted_requirements": [

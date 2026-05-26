@@ -35,11 +35,24 @@ _H2_RE = re.compile(r"^##\s+(.+?)\s*$")
 # Matches an assembly history entry header (level 3 under ## Assembly History).
 _HISTORY_ENTRY_RE = re.compile(r"^###\s+(\d{4}-\d{2}-\d{2})\s*(?:—|-)\s*(.+?)\s*$")
 
-# Parse the header tail into structured fields. The convention from the
-# assembler is: `<task_folder>/NNN ("Heading", Author, YYYY-MM-DD)` (v14+),
-# with legacy `task NNN (...)` also accepted for older strategy docs.
+# Parse the header tail into structured fields. Supported forms:
+#   • `<task_folder>/NNN ("Heading", Author, YYYY-MM-DD)`     ← canonical (v14+)
+#   • `[<task_folder>/NNN](path) ("Heading", Author, YYYY-MM-DD)` ← markdown-link form (v15+)
+#   • `task NNN ("Heading", Author, YYYY-MM-DD)`              ← legacy
 _PROPOSAL_TAIL_RE = re.compile(
-    r'(?:task\s+|(?=\w+/\d))(?P<task>[\w./-]+?)\s*\(\s*"(?P<heading>[^"]+)"\s*,\s*(?P<author>[^,]+?)\s*,\s*(?P<date>\d{4}-\d{2}-\d{2})\s*\)',
+    r'(?:task\s+|\[(?=\w+/\d)|(?=\w+/\d))(?P<task>[\w./-]+?)\](?:\([^)]*\))?'  # task id + optional ](path)
+    r'|task\s+(?P<task2>\d+)'  # legacy bare-number form
+    r'|(?P<task3>\w+/\d+)',
+    re.VERBOSE,
+)
+# Re-implemented as two passes for clarity (above is too fragile).
+_PROPOSAL_TAIL_RE = re.compile(
+    r'(?:'
+    r'\[(?P<linktask>\w+/\d+)\]\([^)]*\)'             # [ben/136](path)
+    r'|task\s+(?P<legacytask>\d+)'                    # legacy: task NNN
+    r'|(?<!\w)(?P<plaintask>\w+/\d+)(?!\w)'           # plain ben/136
+    r')'
+    r'\s*\(\s*"(?P<heading>[^"]+)"\s*,\s*(?P<author>[^,]+?)\s*,\s*(?P<date>\d{4}-\d{2}-\d{2})\s*\)'
 )
 
 
@@ -183,10 +196,24 @@ def _parse_proposals(text: str) -> list[Proposal]:
             end = j
             raw = "\n".join(block_lines).rstrip()
             tail_m = _PROPOSAL_TAIL_RE.search(header_tail + " " + raw)
-            task_id = tail_m.group("task") if tail_m else ""
-            heading = tail_m.group("heading") if tail_m else ""
-            author = tail_m.group("author") if tail_m else ""
-            date = tail_m.group("date") if tail_m else ""
+            if tail_m:
+                task_id = (tail_m.group("linktask") or tail_m.group("plaintask")
+                           or tail_m.group("legacytask") or "")
+                heading = tail_m.group("heading") or ""
+                author = tail_m.group("author") or ""
+                date = tail_m.group("date") or ""
+            else:
+                task_id = heading = author = date = ""
+            # If the header didn't carry a heading (e.g. assembler omitted the
+            # "(...)" tuple but DID embed a `### N.NEW Title` line inside the
+            # callout body), pull the heading from the first H3 inside the body.
+            if not heading:
+                for ln in block_lines:
+                    inner = ln[2:] if ln.startswith("> ") else (ln[1:] if ln.startswith(">") else ln)
+                    h3_m = re.match(r"^###\s+\d+\.(?:NEW|\d+)\s+(.+?)\s*$", inner)
+                    if h3_m:
+                        heading = h3_m.group(1).strip()
+                        break
             proposals.append(
                 Proposal(
                     idx=idx,
@@ -604,6 +631,28 @@ _PROPOSED_MARKER_RE = re.compile(
     re.IGNORECASE,
 )
 
+# `<!-- STRATEGY PROPOSED: new addition, section "X" -->` — emitted by the
+# non-interactive assembler for decisions that have no existing equivalent
+# in the strategy doc (vs. clashes which use the `vs <older>` marker above).
+_PROPOSED_NEW_ADDITION_MARKER_RE = re.compile(
+    r"<!--\s*STRATEGY\s+PROPOSED:\s*new\s+addition\s*"
+    r'(?:,\s*section\s+"(?P<section>[^"]+)")?\s*-->',
+    re.IGNORECASE,
+)
+
+
+def is_new_addition_proposal(text: str, proposal: "Proposal") -> bool:
+    """True iff the callout is a `STRATEGY PROPOSED: new addition` marker
+    (not a `vs <older>` clash). Detected by scanning the first non-blank
+    line after the callout, mirroring `_find_proposed_marker` for clashes."""
+    lines = text.splitlines()
+    i = proposal.end_line
+    while i < len(lines) and lines[i].strip() == "":
+        i += 1
+    if i >= len(lines):
+        return False
+    return bool(_PROPOSED_NEW_ADDITION_MARKER_RE.search(lines[i]))
+
 
 def _find_proposed_marker(text: str, proposal_end_line: int) -> tuple[str, str] | None:
     """Look for the `<!-- STRATEGY PROPOSED: vs <older>, section "X" -->`
@@ -782,6 +831,31 @@ def perform_accept(
     start = target.start_line - 1
     end = target.end_line - 1
     promoted = _dedent_callout_body(target.raw)
+
+    # New-addition callouts carry placeholder ids (`id=NEW`) and placeholder
+    # heading prefixes (`### N.NEW`). At Accept time we allocate a real id
+    # and substitute both. This is what makes per-proposal Accept work for
+    # NEW decisions, not just clashes.
+    if "id=NEW" in promoted or re.search(r"^###\s+\d+\.NEW\b", promoted, re.MULTILINE):
+        section_label = target.section or ""
+        try:
+            new_id = _next_decision_id(repo_root, doc, section_label)
+        except RuntimeError:
+            new_id = ""
+        if new_id:
+            # `D-OPS-3.4` → `3.4`
+            heading_idx_m = re.match(r"^D-[A-Z]+-(\d+\.\d+)$", new_id)
+            heading_idx = heading_idx_m.group(1) if heading_idx_m else ""
+            promoted = re.sub(
+                r"\bid=NEW\b", f"id={new_id}", promoted
+            )
+            if heading_idx:
+                promoted = re.sub(
+                    r"^(###\s+)\d+\.NEW(\b)",
+                    rf"\g<1>{heading_idx}\g<2>",
+                    promoted,
+                    flags=re.MULTILINE,
+                )
 
     # Assemble the rewrite: keep everything before the callout, insert the
     # promoted body, then pick up AFTER the callout — optionally consuming
@@ -1258,6 +1332,166 @@ def perform_decision_edit(
         "history_line": history_line,
         "actor": actor,
         "active_task_ids": list(active_task_ids_),
+    }
+
+
+def _wrap_as_proposal_callout(
+    body: str, task_id: str, heading: str, actor: str, marker_kind: str, marker_target: str, section: str
+) -> tuple[str, str]:
+    """Build a `> **Proposed change**` callout block + the paired
+    `<!-- STRATEGY PROPOSED -->` marker line. Returns (callout_block, marker_line).
+
+    `marker_kind` is "vs" (CONFLICT — newer block supersedes an older
+    decision/source) or "new addition" (NEW — no clash). For edit-via-chat
+    flows we always use "vs <decision_id>".
+    """
+    header = (
+        f"> **Proposed change** — {task_id} "
+        f'("{heading or "(no heading)"}", {actor}, {_today()})'
+    )
+    body_lines = (body or "").splitlines() or [""]
+    quoted = [f"> {line}" if line else ">" for line in body_lines]
+    callout = "\n".join([header, ">", *quoted])
+    if marker_kind == "vs":
+        marker = f'<!-- STRATEGY PROPOSED: vs {marker_target}, section "{section}" -->'
+    else:
+        marker = f'<!-- STRATEGY PROPOSED: new addition, section "{section}" -->'
+    return callout, marker
+
+
+def perform_decision_edit_as_proposal(
+    repo_root: Path,
+    doc: StrategyDoc,
+    decision_id: str,
+    new_body: str,
+    actor: str,
+    active_task_ids_: list[str],
+    heading_hint: str = "",
+) -> dict:
+    """LIVE: queue a decision edit as a `> **Proposed change**` callout
+    placed immediately after the existing decision — DOES NOT replace the
+    decision body in place. The user reviews the callout in 📝 Awaiting your
+    review, alongside any assembler-generated proposals, and ships them all
+    atomically via Save & Publish in the tab bar.
+
+    Use this in place of `perform_decision_edit` whenever there is an active
+    review session — keeps decision-edit consistent with the rest of the
+    proposal-review workflow.
+    """
+    if not actor or not active_task_ids_:
+        raise RuntimeError("actor + active task required")
+    if not new_body or not new_body.strip():
+        raise RuntimeError("new_body cannot be empty")
+    abs_path = repo_root / doc.virtual_path
+    text = abs_path.read_text(encoding="utf-8")
+    bounds = _find_decision_block(text, decision_id)
+    if bounds is None:
+        raise RuntimeError(f"decision {decision_id} not found in {doc.virtual_path}")
+    s, e = bounds
+    lines = text.splitlines()
+
+    # Resolve heading + section from the decision's own structure for the callout.
+    decisions = parse_decisions(text)
+    target_dec = next((d for d in decisions if d.id == decision_id), None)
+    heading = (target_dec.heading if target_dec else "") or heading_hint
+    section = (target_dec.section_label if target_dec else "") or "Strategy Decisions"
+
+    # Use the actor's active task as the "source" of this proposed change.
+    actor_folder = active_task_ids_[0] if active_task_ids_ else ""
+    # Translate bare task id ("042") into "<folder>/042" if a folder lookup
+    # can be inferred. Fallback: use the bare id with a note.
+    task_label = active_task_ids_[0]
+    if "/" not in task_label:
+        # Best-effort: scan tasks/*/<id>-*.md for a single match.
+        cands = list((repo_root / "tasks").glob(f"*/{task_label}-*.md"))
+        if len(cands) == 1:
+            task_label = f"{cands[0].parent.name}/{task_label}"
+
+    callout, marker = _wrap_as_proposal_callout(
+        body=new_body, task_id=task_label, heading=heading, actor=actor,
+        marker_kind="vs", marker_target=decision_id, section=section,
+    )
+
+    # Insert the callout + marker immediately AFTER the closing DECISION:end
+    # sentinel line (e). Add blank-line padding for readability.
+    insert_lines = ["", callout, "", marker, ""]
+    out = lines[:e + 1] + insert_lines + lines[e + 1:]
+    history_line = (
+        f"- {_hhmm()} · **Edit decision via chat** · {decision_id} · "
+        f"queued as proposal · by {actor} · under task {active_task_ids_[0]}"
+    )
+    new_text = _append_history_line("\n".join(out), actor, history_line)
+    tmp = abs_path.with_suffix(abs_path.suffix + ".tmp")
+    tmp.write_text(new_text, encoding="utf-8")
+    tmp.replace(abs_path)
+    return {
+        "decision_id": decision_id,
+        "virtual_path": doc.virtual_path,
+        "history_line": history_line,
+        "actor": actor,
+        "active_task_ids": list(active_task_ids_),
+        "queued_as_proposal": True,
+    }
+
+
+def perform_section_edit_as_proposal(
+    repo_root: Path,
+    doc: StrategyDoc,
+    section_idx: int,
+    new_section_md: str,
+    actor: str,
+    active_task_ids_: list[str],
+) -> dict:
+    """Queue a section edit as a `> **Proposed change**` callout appended to
+    the existing section — DOES NOT replace the section content in place.
+    Reviewed alongside assembler proposals via 📝 Awaiting your review."""
+    if not actor or not active_task_ids_:
+        raise RuntimeError("actor + active task required")
+    if not new_section_md or not new_section_md.strip():
+        raise RuntimeError("new_section_md cannot be empty")
+    abs_path = repo_root / doc.virtual_path
+    text = abs_path.read_text(encoding="utf-8")
+    bounds = section_block(text, section_idx)
+    if bounds is None:
+        raise RuntimeError(f"section {section_idx} not found")
+    s, e, label = bounds
+    lines = text.splitlines()
+
+    task_label = active_task_ids_[0]
+    if "/" not in task_label:
+        cands = list((repo_root / "tasks").glob(f"*/{task_label}-*.md"))
+        if len(cands) == 1:
+            task_label = f"{cands[0].parent.name}/{task_label}"
+
+    callout, marker = _wrap_as_proposal_callout(
+        body=new_section_md.strip(), task_id=task_label,
+        heading=f"Section edit — {label}", actor=actor,
+        marker_kind="vs", marker_target=f"section/{section_idx}", section=label,
+    )
+
+    # Insert at the END of the section block (before line e, which is the
+    # boundary just after the last line of the section).
+    insert_lines = ["", callout, "", marker, ""]
+    out = lines[:e] + insert_lines + lines[e:]
+    history_line = (
+        f"- {_hhmm()} · **Edit section via chat** · section {section_idx} ({label}) · "
+        f"queued as proposal · by {actor} · under task {active_task_ids_[0]}"
+    )
+    new_text = _append_history_line("\n".join(out), actor, history_line)
+    tmp = abs_path.with_suffix(abs_path.suffix + ".tmp")
+    tmp.write_text(new_text, encoding="utf-8")
+    tmp.replace(abs_path)
+    return {
+        "section_idx": section_idx,
+        "section_label": label,
+        "virtual_path": doc.virtual_path,
+        "history_line": history_line,
+        "actor": actor,
+        "active_task_ids": list(active_task_ids_),
+        "added_ids": [],
+        "edited_ids": [],
+        "removed_ids": [],
+        "queued_as_proposal": True,
     }
 
 

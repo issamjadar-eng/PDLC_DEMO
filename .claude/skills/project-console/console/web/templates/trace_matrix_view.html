@@ -9,7 +9,7 @@
   <p class="muted">No trace matrix has been built for this DHF yet.</p>
 
   {% if build_error %}
-  <div style="background:#fff3cd;border:1px solid #e0c066;border-radius:6px;padding:0.75rem 1rem;margin:1rem 0;">
+  <div style="background:var(--banner-warning-bg);color:var(--banner-warning-text);border:1px solid var(--border);border-radius:6px;padding:0.75rem 1rem;margin:1rem 0;">
     <p style="margin:0 0 0.5rem"><strong>Last build failed.</strong></p>
     <pre style="white-space:pre-wrap;margin:0;font-size:0.85em;max-height:320px;overflow:auto;">{{ build_error }}</pre>
   </div>
@@ -27,7 +27,7 @@
     <strong>Build this DHF now</strong> runs the deterministic <code>build.py</code> only — fast, no LLM, but requires <code>trace-matrix.yml</code> to already exist.
   </p>
 
-  <section id="tm-init-panel" hidden style="margin:1.5rem 0;border:1px solid #dce0e8;border-radius:6px;background:#f7f8fa;">
+  <section id="tm-init-panel" hidden style="margin:1.5rem 0;border:1px solid var(--border);border-radius:6px;background:var(--surface-2);">
     <header style="padding:0.6rem 0.9rem;border-bottom:1px solid #dce0e8;display:flex;justify-content:space-between;align-items:center;">
       <strong id="tm-init-status">Initializing…</strong>
       <span class="muted small" id="tm-init-elapsed">0s</span>
@@ -129,7 +129,7 @@
 {% else %}
 <section class="trace-matrix-view">
   {% if build_error %}
-  <div style="background:#fff3cd;border:1px solid #e0c066;border-radius:6px;padding:0.75rem 1rem;margin:0 0 1rem 0;">
+  <div style="background:var(--banner-warning-bg);color:var(--banner-warning-text);border:1px solid var(--border);border-radius:6px;padding:0.75rem 1rem;margin:0 0 1rem 0;">
     <p style="margin:0 0 0.5rem"><strong>Last build failed — showing previous sidecar.</strong></p>
     <pre style="white-space:pre-wrap;margin:0;font-size:0.85em;max-height:200px;overflow:auto;">{{ build_error }}</pre>
   </div>
@@ -138,10 +138,34 @@
     <div class="tm-header-left">
       <a href="/trace-matrix" class="tm-back">← All DHFs</a>
       <h1>Trace Matrix — {{ dhf }}</h1>
-      <span class="muted small">skill v{{ sidecar.version }} · {{ sidecar.generated_at }}</span>
+      <span class="tm-assembled muted small">
+        Assembled {{ sidecar.generated_at }}
+        <span class="tm-help" tabindex="0" aria-label="Source files and timestamps">
+          <span class="tm-help-trigger">?</span>
+          <span class="tm-help-panel" role="tooltip">
+            <span class="tm-help-title">Sources used to assemble this trace matrix</span>
+            <span class="tm-help-meta muted small">Sidecar v{{ sidecar.version }} · generated {{ sidecar.generated_at }}</span>
+            {% if source_meta %}
+            <table class="tm-help-table">
+              <thead><tr><th>File</th><th>Generated</th><th>Layers</th></tr></thead>
+              <tbody>
+              {% for s in source_meta %}
+                <tr class="{% if not s.exists %}tm-help-missing{% endif %}{% if s.kind == 'drift' %} tm-help-drift{% endif %}">
+                  <td><code title="{{ s.path }}">{{ s.path.split('/')[-1] }}</code></td>
+                  <td>{% if s.mtime %}{{ s.mtime }}{% elif not s.exists %}<span class="muted">missing</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+                  <td>{% if s.kind == 'drift' %}<span class="muted small">drift</span>{% else %}{{ s.layers | join(', ') }}{% endif %}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <span class="muted small">No source files declared in the sidecar.</span>
+            {% endif %}
+          </span>
+        </span>
+      </span>
     </div>
     <div class="tm-header-right">
-      <button type="button" class="btn-secondary" id="tm-assistant-open">🧠 SE Assistant</button>
       {% if has_skill %}
       <form method="post" action="/trace-matrix/{{ dhf }}/build" style="display:inline">
         <button type="submit" class="btn-primary">Rebuild</button>
@@ -149,6 +173,32 @@
       {% endif %}
     </div>
   </header>
+
+  {# Drift KPI bar — only renders when a sibling drift.json was discovered
+     alongside any of this DHF's trace-matrix source files. Project-agnostic;
+     any project that emits drift.json next to trace data picks this up. #}
+  {% if drift %}
+  {% set ds = drift.summary %}
+  <section class="tm-drift-kpis" aria-label="Drift summary">
+    <div class="tm-drift-total">
+      <span class="tm-drift-num">{{ ds.violations_total }}</span>
+      <span class="tm-drift-lbl">drift findings</span>
+    </div>
+    <div class="tm-drift-sevs">
+      {% if ds.by_severity.error %}<span class="tm-drift-sev tm-sev-error">! {{ ds.by_severity.error }} Attention!</span>{% endif %}
+      {% if ds.by_severity.warning %}<span class="tm-drift-sev tm-sev-warning">⚠ {{ ds.by_severity.warning }} warning</span>{% endif %}
+      {% if ds.by_severity.info %}<span class="tm-drift-sev tm-sev-info">ℹ {{ ds.by_severity.info }} info</span>{% endif %}
+    </div>
+    {% if ds.by_category %}
+    <div class="tm-drift-cats">
+      {% for cat, n in ds.by_category.items() if n %}<span class="tm-drift-cat">{{ cat }}: {{ n }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    <div class="tm-drift-sources muted small">
+      Drift sources: {% for s in drift.sources %}<code>{{ s }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
 
   {# Generic Assistant drawer — grounded in this DHF's compact sidecar text.
      The compact rendition is fetched from /trace-matrix/{{ dhf }}/grounding
@@ -168,6 +218,10 @@
   } %}
   {% include "_assistant_drawer.html" %}
 
+  {# Shared floating launcher (bottom-right). #}
+  {% set launcher = {"button_id": "tm-assistant-open"} %}
+  {% include "_assistant_launcher.html" %}
+
   {# Tabs — one per layer. Counts + flags live in the tab label itself. #}
   <div class="tm-tabs" role="tablist">
     {% for layer in sidecar.layers %}
@@ -180,9 +234,21 @@
             role="tab">
       {{ layer.title }}
       <span class="tm-tab-count">{{ count }}</span>
-      {% if orphan %}<span class="tm-tab-flag tm-tab-flag-orphan">{{ orphan }} orphan</span>{% endif %}
-      {% if layer.missing_reason %}<span class="tm-tab-flag tm-tab-flag-warn">{{ layer.missing_reason }}</span>{% endif %}
-      {% if layer.key == "architecture" and not layer.edges_known %}<span class="tm-tab-flag tm-tab-flag-warn">edges unknown</span>{% endif %}
+      {% if orphan %}
+        <span class="tm-tab-flag tm-tab-flag-orphan"
+              title="{{ orphan }} orphan{{ '' if orphan == 1 else 's' }} — items with no trace links to or from another layer"
+              aria-label="{{ orphan }} orphan{{ '' if orphan == 1 else 's' }}">⚲ {{ orphan }}</span>
+      {% endif %}
+      {% if layer.missing_reason %}
+        <span class="tm-tab-flag tm-tab-flag-warn"
+              title="Source not loaded — {{ layer.missing_reason }}"
+              aria-label="Source not loaded">?</span>
+      {% endif %}
+      {% if layer.key == "architecture" and not layer.edges_known %}
+        <span class="tm-tab-flag tm-tab-flag-warn"
+              title="Architecture trace edges not known — module-to-requirement links not yet wired"
+              aria-label="Edges not known">~</span>
+      {% endif %}
     </button>
     {% endfor %}
   </div>
@@ -200,9 +266,12 @@
     <span class="tm-filter-sep"></span>
     <button class="tm-chip is-active" data-filter="gap" data-value="all">All rows</button>
     <button class="tm-chip" data-filter="gap" data-value="orphan">Orphans only</button>
+    {% if drift %}
+    <button class="tm-chip" data-filter="gap" data-value="drift">Drift only</button>
+    {% endif %}
     <span class="tm-filter-sep"></span>
-    <button id="tm-expand-all" class="tm-chip">Expand all</button>
-    <button id="tm-collapse-all" class="tm-chip">Collapse all</button>
+    <button id="tm-groups-expand-all" class="tm-chip">Expand all groups</button>
+    <button id="tm-groups-collapse-all" class="tm-chip">Collapse all groups</button>
   </div>
 
   {# Layer panels — one per layer, only the active one is visible. #}
@@ -219,48 +288,144 @@
     {% endif %}
 
     {% if layer["items"] %}
+    {% set first_item = layer["items"][0] %}
+    {% set trace_cols = first_item.trace_cells or [] %}
+    {% set total_cols = 4 + (trace_cols | length) %}
     <table class="tm-table">
       <thead>
         <tr>
           <th class="col-id">ID</th>
           <th class="col-req">Requirement</th>
+          <th class="col-status">Status</th>
           <th class="col-crit">Crit</th>
-          <th class="col-group">Group</th>
-          <th class="col-fwd">→ Forward</th>
-          <th class="col-rev">← Reverse</th>
+          {% for col in trace_cols %}
+          <th class="col-trace col-trace-{{ col.col_key }}">
+            {{ col.label }}
+            {% if col.target_layer == "risk" %}
+            <span class="tm-fmea-caveat" title="FMEA source not configured for this DHF — showing HA (hazard) entries only. To wire FMEA, add an `fmeas.md` mirror under _jira/&lt;arch&gt;/&lt;version&gt;/.">ⓘ</span>
+            {% endif %}
+          </th>
+          {% endfor %}
         </tr>
       </thead>
       <tbody>
-        {% set orphan_ids = sidecar.gaps.orphans.get(layer.key, []) %}
-        {% for item in layer["items"] %}
-        {% set is_orphan = item.id in orphan_ids %}
-        <tr class="tm-row {% if is_orphan %}tm-row-orphan{% endif %}"
+        {% for grp in layer.groups %}
+        {# Group header row — collapsible. Clicking toggles data-collapsed
+           on this <tr>; CSS hides every following item-row whose
+           data-group-label matches until the next header. #}
+        <tr class="tm-group-header" data-group-label="{{ grp.label }}" data-collapsed="0">
+          <td colspan="{{ total_cols }}">
+            <span class="tm-group-caret" aria-hidden="true">▾</span>
+            <span class="tm-group-label">{{ grp.label }}</span>
+            <span class="tm-group-count">{{ grp.rows | length }} item{% if grp.rows | length != 1 %}s{% endif %}</span>
+            {% if grp.drift_count %}<span class="tm-group-stat tm-group-stat-drift">{{ grp.drift_count }} with drift</span>{% endif %}
+            {% if grp.orphan_count %}<span class="tm-group-stat tm-group-stat-orphan">{{ grp.orphan_count }} orphan{% if grp.orphan_count != 1 %}s{% endif %}</span>{% endif %}
+          </td>
+        </tr>
+        {% for item in grp.rows %}
+        {% set item_violations = item.violations or [] %}
+        {% set worst_sev = item.worst_severity %}
+        {% set has_drift = item_violations | length > 0 %}
+        {% set is_orphan = item._is_orphan %}
+        <tr class="tm-row {% if is_orphan %}tm-row-orphan{% endif %}{% if has_drift %} tm-row-drift tm-row-drift-{{ worst_sev }}{% endif %}"
+            data-row-id="{{ item.id }}"
+            data-group-label="{{ grp.label }}"
             data-criticality="{{ item.criticality or 'untagged' }}"
             data-orphan="{{ '1' if is_orphan else '0' }}"
+            data-drift="{{ '1' if has_drift else '0' }}"
+            data-drift-severity="{{ worst_sev or '' }}"
             data-expanded="0">
 
-          {# ID column — caret + identifier + orphan pill. Clicking the row
-             toggles metadata in every expandable column at once. #}
+          {# ID column — line 1 = caret + identifier; line 2 = stacked badges
+             (orphan pill, drift badge). Vertical stack saves horizontal width
+             so trace columns get more breathing room. The drift badge is a
+             real button — clicking it opens the drift popover, anchored to
+             the badge, independent of the row expansion gesture. #}
           <td class="col-id">
-            <span class="tm-caret" aria-hidden="true">▸</span>
-            <code>{{ item.id }}</code>
-            {% if is_orphan %}<span class="tm-orphan-pill">orphan</span>{% endif %}
+            <div class="tm-id-line">
+              <span class="tm-caret" aria-hidden="true">▸</span>
+              <code class="tm-id-code">{{ item.id }}</code>
+            </div>
+            {% if is_orphan or has_drift %}
+            <div class="tm-id-badges">
+              {% if is_orphan %}<span class="tm-orphan-pill">orphan</span>{% endif %}
+              {% if has_drift %}
+              {% set badge_glyph = {'error':'!','warning':'⚠','info':'ℹ'}.get(worst_sev,'ℹ') %}
+              <button type="button"
+                      class="tm-drift-badge tm-drift-badge-{{ worst_sev }}"
+                      data-drift-trigger
+                      data-row-id="{{ item.id }}"
+                      title="{{ item_violations | length }} drift finding(s) — click for detail"
+                      aria-haspopup="dialog"
+                      aria-expanded="false"
+                      aria-label="{{ item_violations | length }} drift findings, severity {{ worst_sev }}">
+                {{ badge_glyph }} {{ item_violations | length }}
+              </button>
+              {% endif %}
+            </div>
+            {% endif %}
           </td>
 
-          {# Requirement column — full text with a hidden detail panel #}
+          {# Requirement column — line 1 shows the short summary; clicking the
+             cell expands a scrollable subsection panel (Full Text, Acceptance
+             Criteria, Verification Method, More metadata, footer links). #}
           <td class="col-req">
-            <div class="tm-req-text">{{ item.full_text or item.summary }}</div>
-            <div class="tm-detail" hidden>
-              {% if item.category %}<p class="tm-detail-aux"><strong>Category:</strong> {{ item.category }}</p>{% endif %}
-              {% if item.stakeholder %}<p class="tm-detail-aux"><strong>Stakeholder:</strong> {{ item.stakeholder }}</p>{% endif %}
-              {% if item.priority %}<p class="tm-detail-aux"><strong>Priority:</strong> {{ item.priority }}</p>{% endif %}
-              {% if item.source_ref %}<p class="tm-detail-aux"><strong>Source:</strong> {{ item.source_ref }}</p>{% endif %}
-              {% if item.acceptance_criteria %}<p class="tm-detail-aux"><strong>Acceptance:</strong> {{ item.acceptance_criteria }}</p>{% endif %}
-              {% if item.verification_method %}<p class="tm-detail-aux"><strong>Verification:</strong> {{ item.verification_method }}</p>{% endif %}
-              {% if item.iec_class %}<p class="tm-detail-aux"><strong>IEC 62304 Class:</strong> {{ item.iec_class }}</p>{% endif %}
-              {% if item.module_name %}<p class="tm-detail-aux"><strong>Module:</strong> {{ item.module_name }}</p>{% endif %}
-              {% if item.source_url %}<p class="tm-detail-aux"><a href="{{ item.source_url }}" class="tm-source-link">↗ View in source document</a></p>{% endif %}
+            <div class="tm-req-summary">{{ item.summary or item.full_text }}</div>
+            <div class="tm-detail-requirement" hidden>
+              {% set _full = item.full_text or item.summary %}
+              {% if _full %}
+              <section class="tm-detail-section">
+                <h4 class="tm-detail-section-title">Full Text</h4>
+                <div class="tm-detail-section-body">{{ _full }}</div>
+              </section>
+              {% endif %}
+              {% if item.acceptance_criteria %}
+              <section class="tm-detail-section">
+                <h4 class="tm-detail-section-title">Acceptance Criteria</h4>
+                <div class="tm-detail-section-body">{{ item.acceptance_criteria }}</div>
+              </section>
+              {% endif %}
+              {% if item.verification_method %}
+              <section class="tm-detail-section">
+                <h4 class="tm-detail-section-title">Verification Method</h4>
+                <div class="tm-detail-section-body">{{ item.verification_method }}</div>
+              </section>
+              {% endif %}
+              {% set has_more_meta = item.category or item.stakeholder or item.priority or item.iec_class or item.module_name or item.labels or item.assignee or item.reporter or item.duedate or item.resolution %}
+              {% if has_more_meta %}
+              <details class="tm-detail-more">
+                <summary>More metadata</summary>
+                <dl class="tm-detail-meta">
+                  {% if item.assignee %}<dt>Assignee</dt><dd>{{ item.assignee }}</dd>{% endif %}
+                  {% if item.reporter %}<dt>Reporter</dt><dd>{{ item.reporter }}</dd>{% endif %}
+                  {% if item.duedate %}<dt>Due</dt><dd>{{ item.duedate }}</dd>{% endif %}
+                  {% if item.resolution %}<dt>Resolution</dt><dd>{{ item.resolution }}</dd>{% endif %}
+                  {% if item.priority %}<dt>Priority</dt><dd>{{ item.priority }}</dd>{% endif %}
+                  {% if item.category %}<dt>Category</dt><dd>{{ item.category }}</dd>{% endif %}
+                  {% if item.stakeholder %}<dt>Stakeholder</dt><dd>{{ item.stakeholder }}</dd>{% endif %}
+                  {% if item.labels %}<dt>Labels</dt><dd>{{ item.labels }}</dd>{% endif %}
+                  {% if item.iec_class %}<dt>IEC 62304 Class</dt><dd>{{ item.iec_class }}</dd>{% endif %}
+                  {% if item.module_name %}<dt>Module</dt><dd>{{ item.module_name }}</dd>{% endif %}
+                </dl>
+              </details>
+              {% endif %}
+              <footer class="tm-detail-footer">
+                {% if item.source_url %}<a href="{{ item.source_url }}" class="tm-source-link">↗ Open in source document</a>{% endif %}
+                {% if item.source_ref and item.source_ref.startswith('http') %}<a href="{{ item.source_ref }}" target="_blank" rel="noopener" class="tm-source-link">↗ Jira{% if item.jira_key %}: {{ item.jira_key }}{% endif %}</a>{% endif %}
+              </footer>
             </div>
+          </td>
+
+          {# Status pill — slug-cased so CSS can color-key common states.
+             When the issue is resolved AND a Jira `resolution` value is
+             present (e.g. "Done" vs "Won't Do"), append it to the pill
+             label so reviewers can see the disposition at a glance. Falls
+             back to em-dash when the upstream source carries no status. #}
+          <td class="col-status">
+            {% if item.status %}
+            {% set sslug = item.status | lower | replace(' ', '-') | replace('/', '-') %}
+            <span class="tm-status tm-status-{{ sslug }}">{{ item.status }}{% if item.resolution and item.status | lower in ['closed', 'done', 'resolved'] %} <span class="tm-status-resolution">({{ item.resolution }})</span>{% endif %}</span>
+            {% else %}<span class="muted">—</span>{% endif %}
           </td>
 
           {# Criticality pill #}
@@ -270,39 +435,48 @@
             {% else %}<span class="muted">—</span>{% endif %}
           </td>
 
-          {# Group #}
-          <td class="col-group">
-            {% if item.group %}<span class="muted small">{{ item.group }}</span>{% else %}<span class="muted">—</span>{% endif %}
-          </td>
-
-          {# Forward column — chip list + hidden labeled detail #}
-          <td class="col-fwd">
-            {% if item.traces_forward %}
-              <div class="tm-chip-list">
-                {% for t in item.traces_forward %}<code class="tm-id">{{ t.id }}</code>{% if not loop.last %} {% endif %}{% endfor %}
-              </div>
-              <ul class="tm-trace-list" hidden>
-                {% for t in item.traces_forward %}
-                <li><code>{{ t.id }}</code> — {{ t.summary }}</li>
+          {# Per-layer trace columns — one cell per typed relation. Each
+             neighbour renders as a clickable chip; click jumps to the target
+             tab + scrolls to the target row + pulses a highlight. The first
+             5 chips render inline; the rest collapse into a "+N" overflow
+             chip that opens a popover. #}
+          {% for cell in item.trace_cells %}
+          <td class="col-trace col-trace-{{ cell.col_key }}">
+            {% if cell.refs %}
+            {% set max_inline = 5 %}
+            <div class="tm-chip-list">
+              {% for t in cell.refs[:max_inline] %}
+              <button type="button"
+                      class="tm-trace-chip"
+                      data-trace-chip
+                      data-target-layer="{{ cell.target_layer }}"
+                      data-target-id="{{ t.id }}"
+                      data-target-summary="{{ t.summary | e }}"
+                      title="{{ t.id }} — {{ t.summary }}"
+                      aria-label="Jump to {{ t.id }} in {{ cell.target_layer }}">{{ t.id }}</button>
+              {% endfor %}
+              {% if cell.refs | length > max_inline %}
+              <button type="button"
+                      class="tm-trace-chip tm-trace-chip-more"
+                      data-chip-overflow
+                      aria-haspopup="dialog">+{{ cell.refs | length - max_inline }}</button>
+              <template class="tm-chip-overflow-source">
+                {% for t in cell.refs[max_inline:] %}<button type="button"
+                        class="tm-trace-chip"
+                        data-trace-chip
+                        data-target-layer="{{ cell.target_layer }}"
+                        data-target-id="{{ t.id }}"
+                        data-target-summary="{{ t.summary | e }}"
+                        title="{{ t.id }} — {{ t.summary }}">{{ t.id }}</button>
                 {% endfor %}
-              </ul>
+              </template>
+              {% endif %}
+            </div>
             {% else %}<span class="muted">—</span>{% endif %}
           </td>
-
-          {# Reverse column — chip list + hidden labeled detail #}
-          <td class="col-rev">
-            {% if item.traces_reverse %}
-              <div class="tm-chip-list">
-                {% for t in item.traces_reverse %}<code class="tm-id">{{ t.id }}</code>{% if not loop.last %} {% endif %}{% endfor %}
-              </div>
-              <ul class="tm-trace-list" hidden>
-                {% for t in item.traces_reverse %}
-                <li><code>{{ t.id }}</code> — {{ t.summary }}</li>
-                {% endfor %}
-              </ul>
-            {% else %}<span class="muted">—</span>{% endif %}
-          </td>
+          {% endfor %}
         </tr>
+        {% endfor %}
         {% endfor %}
       </tbody>
     </table>
@@ -320,6 +494,43 @@
     </ul>
   </section>
   {% endif %}
+
+  {# Singleton popovers — instantiated once, repositioned and refilled on each
+     trigger. Drift popover is anchored to a drift badge; trace-overflow
+     popover is anchored to a "+N" chip. Both use the same close-on-outside-
+     click + ESC handlers. #}
+  {# Unified detail drawer — right-side, resizable. Used for both the
+     row-requirement detail (replaces the old in-row expansion) and the
+     drift detail (replaces the old drift popover). Width has three
+     presets (narrow / wide / full) cycled by the ⤢ button, plus a
+     drag-handle on the left edge for fine-tune. #}
+  <aside id="tm-detail-drawer" class="tm-drawer" data-width="narrow" data-kind="" hidden role="dialog" aria-label="Detail">
+    <div class="tm-drawer-resize" data-drawer-resize aria-hidden="true"></div>
+    <header class="tm-drawer-head">
+      <div class="tm-drawer-title-wrap">
+        <span class="tm-drawer-eyebrow" id="tm-drawer-eyebrow"></span>
+        <h3 class="tm-drawer-title" id="tm-drawer-title"></h3>
+      </div>
+      <div class="tm-drawer-actions">
+        <button type="button" class="tm-drawer-btn" data-drawer-width-cycle aria-label="Cycle drawer width" title="Cycle width (narrow / wide / full)">⤢</button>
+        <button type="button" class="tm-drawer-btn" data-drawer-close aria-label="Close drawer" title="Close (Esc)">×</button>
+      </div>
+    </header>
+    <div class="tm-drawer-body" id="tm-drawer-body"></div>
+  </aside>
+  <div class="tm-popover" id="tm-overflow-popover" hidden role="dialog" aria-label="More traces">
+    <header class="tm-popover-head">
+      <span class="tm-popover-title" id="tm-overflow-popover-title">More traces</span>
+      <button class="tm-popover-close" type="button" aria-label="Close">×</button>
+    </header>
+    <div class="tm-popover-body" id="tm-overflow-popover-body"></div>
+  </div>
+
+  {# Per-row violations payload — JSON island read by the drift popover JS so
+     we don't render every drift drawer into hidden DOM. Keyed by item id;
+     values are arrays of {rule, severity, message, resolution_hint,
+     references{}}. JS renders the popover body from this on demand. #}
+  <script type="application/json" id="tm-violations-data">{{ violations_by_id | tojson }}</script>
 </section>
 {% endif %}
 
@@ -340,58 +551,56 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
 .tm-header h1 { font-size: 1.15rem; margin: 0; font-weight: 600; }
 .tm-header-right { margin: 0; }
 
-/* Tabs — classic folder-tab look: each tab is a bordered card that
-   "docks" to the panel below when active. Inactive tabs have a filled
-   grey background and a visible gap between them so they read as
-   distinct clickable elements. */
+/* Tabs — clean pill-style segmented control. Inactive tabs are subtle
+   surface-2 chips; active tab is a solid brand-primary pill. The whole
+   strip sits on a thin border that anchors visually to the panel below. */
 .tm-tabs {
   display: flex; gap: 0.35rem; flex-wrap: wrap;
-  border-bottom: 2px solid var(--brand, #2a5db0);
-  padding: 0 0.25rem;
-  margin-bottom: 0; /* flush with panel */
+  border-bottom: 1px solid var(--border);
+  padding: 0 0.25rem 0.4rem;
+  margin-bottom: 0;
 }
 .tm-tab {
-  background: var(--surface-2, #f0f2f5);
-  border: 1px solid var(--border, #d0d4d8);
-  border-bottom: none;
-  border-top-left-radius: 6px; border-top-right-radius: 6px;
-  margin-bottom: -2px; /* overlap the container's bottom border */
-  padding: 0.5rem 0.95rem 0.55rem;
-  font-size: 0.85rem; color: var(--muted, #657079);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.85rem; color: var(--body-text-muted);
   cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem;
   font-weight: 500; position: relative;
-  transition: background-color 0.12s, color 0.12s;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s;
 }
 .tm-tab:hover {
-  background: var(--surface-3, #e6e9ee);
-  color: #1f2937;
+  background: var(--surface-2);
+  color: var(--body-text);
 }
 .tm-tab.is-active {
-  background: white;
-  color: var(--brand, #2a5db0);
-  border-color: var(--brand, #2a5db0);
-  border-bottom: 2px solid white;
+  background: var(--brand-primary);
+  color: #ffffff;
+  border-color: var(--brand-primary);
   font-weight: 600;
-  z-index: 2;
 }
-.tm-tab.is-active::after {
-  /* subtle glow bar along the top of the active tab */
-  content: ""; position: absolute; top: -1px; left: -1px; right: -1px; height: 3px;
-  background: var(--brand, #2a5db0);
-  border-top-left-radius: 6px; border-top-right-radius: 6px;
+.tm-tab.is-active .tm-tab-flag-warn,
+.tm-tab.is-active .tm-tab-flag-orphan {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 .tm-tab-count {
-  display: inline-block; background: rgba(0,0,0,0.08); color: inherit;
+  display: inline-block; background: var(--surface-2); color: var(--body-text-muted);
   padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600;
   min-width: 1.2rem; text-align: center;
 }
-.tm-tab.is-active .tm-tab-count { background: var(--brand, #2a5db0); color: white; }
+.tm-tab.is-active .tm-tab-count { background: var(--brand-primary); color: var(--surface); }
 .tm-tab-flag {
-  font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 3px; text-transform: uppercase;
-  letter-spacing: 0.03em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.18rem;
+  min-width: 1.1rem; height: 1.1rem;
+  padding: 0 0.32rem; border-radius: 3px;
+  font-size: 0.72rem; font-weight: 600; line-height: 1;
+  cursor: help;
 }
-.tm-tab-flag-orphan { background: #d97706; color: white; }
-.tm-tab-flag-warn { background: #fef3c7; color: #92400e; }
+.tm-tab-flag-orphan { background: rgba(217, 119, 6, 0.20); color: #f59e0b; border: 1px solid rgba(217, 119, 6, 0.4); }
+.tm-tab-flag-warn   { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
 
 /* Compact single-line filter bar */
 .tm-filters {
@@ -406,28 +615,29 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
 .tm-filter-sep { display: inline-block; width: 1px; height: 14px; background: var(--border, #d0d4d8); margin: 0 0.3rem; }
 .tm-chip {
   font-size: 0.72rem; padding: 0.18rem 0.55rem;
-  border: 1px solid var(--border, #cfd3d8); background: white;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--body-text);
   border-radius: 999px; cursor: pointer; line-height: 1.3;
 }
-.tm-chip:hover { background: var(--surface-3, #eef0f3); }
-.tm-chip.is-active { background: var(--brand, #2a5db0); color: white; border-color: var(--brand, #2a5db0); }
+.tm-chip:hover { background: var(--surface-2); }
+.tm-chip.is-active { background: var(--brand-primary); color: #ffffff; border-color: var(--brand-primary); }
 
 /* Panels — only active one is shown. Framed to match the active tab
    so the tab visually "docks" into the panel. */
 .tm-panel { display: none; }
 .tm-panel.is-active {
   display: block;
-  background: white;
-  border: 1px solid var(--brand, #2a5db0);
-  border-top: none;
-  border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
   padding: 0.75rem 0.75rem 1rem;
+  margin-top: 0.5rem;
   margin-bottom: 0.75rem;
 }
 
 /* Banner */
 .tm-banner { padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.85rem; margin: 0.5rem 0; }
-.tm-banner-warn { background: #fff7e6; border: 1px solid #ffd591; }
+.tm-banner-warn { background: var(--banner-warning-bg); color: var(--banner-warning-text); border: 1px solid var(--border); }
 
 /* Full-width table */
 .tm-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: auto; }
@@ -448,12 +658,12 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
 .col-req { line-height: 1.4; }
 
 .tm-row { cursor: pointer; }
-.tm-row:hover td { background: #f7f9fc; }
-.tm-row[data-expanded="1"] td { background: #f0f5fc; }
-.tm-row[data-expanded="1"]:hover td { background: #e9f0fa; }
-.tm-row-orphan td { background: #fff7f0; }
-.tm-row-orphan:hover td { background: #fdedd9; }
-.tm-row-orphan[data-expanded="1"] td { background: #ffe8cc; }
+.tm-row:hover td { background: var(--surface-2); }
+.tm-row[data-expanded="1"] td { background: var(--brand-primary-tint); }
+.tm-row[data-expanded="1"]:hover td { background: var(--brand-primary-tint); filter: brightness(1.08); }
+.tm-row-orphan td { background: rgba(217, 119, 6, 0.08); }
+.tm-row-orphan:hover td { background: rgba(217, 119, 6, 0.16); }
+.tm-row-orphan[data-expanded="1"] td { background: rgba(217, 119, 6, 0.22); }
 .tm-row-orphan td.col-id { border-left: 3px solid #d97706; }
 
 /* Caret in the ID column — marks every row as togglable */
@@ -462,24 +672,86 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
   font-size: 0.7rem; transition: transform 0.12s ease;
   user-select: none;
 }
-.tm-row[data-expanded="1"] .tm-caret { transform: rotate(90deg); color: var(--brand, #2a5db0); }
+.tm-row[data-expanded="1"] .tm-caret { transform: rotate(90deg); color: var(--brand-primary); }
 .col-id { white-space: nowrap; }
 
 /* Chips / pills */
 .tm-orphan-pill {
   display: inline-block; padding: 0.05rem 0.4rem; font-size: 0.65rem;
-  background: #d97706; color: white; border-radius: 999px; vertical-align: middle; margin-left: 0.25rem;
+  background: rgba(217, 119, 6, 0.20); color: #f59e0b;
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  border-radius: 999px; vertical-align: middle; margin-left: 0.25rem;
 }
-.tm-id { font-size: 0.72rem; padding: 0.05rem 0.3rem; background: #eef2ff; border-radius: 3px; }
+.tm-id { font-size: 0.72rem; padding: 0.05rem 0.3rem; background: var(--surface-2); color: var(--body-text); border-radius: 3px; }
 .tm-crit {
   display: inline-block; padding: 0.1rem 0.4rem; font-size: 0.68rem;
   font-weight: 600; border-radius: 3px;
 }
-.tm-crit-CtS { background: #fee2e2; color: #991b1b; }
-.tm-crit-CtF { background: #fef3c7; color: #92400e; }
-.tm-crit-CtC { background: #dbeafe; color: #1e40af; }
-.tm-crit-CtP { background: #e0e7ff; color: #3730a3; }
-.tm-crit-Supporting { background: #f3f4f6; color: #374151; }
+.tm-crit-CtS { background: rgba(239, 68, 68, 0.16); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+.tm-crit-CtF { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.tm-crit-CtC { background: rgba(56, 189, 248, 0.14); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+.tm-crit-CtP { background: rgba(129, 140, 248, 0.14); color: #a5b4fc; border: 1px solid rgba(129, 140, 248, 0.4); }
+.tm-crit-Supporting { background: var(--surface-2); color: var(--body-text-muted); border: 1px solid var(--border); }
+
+/* Drift overlay — KPI bar, per-row badges, and drawer styles. Activates only
+   when a sibling drift.json is present alongside the trace-matrix sources. */
+.tm-drift-kpis {
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+  margin: 0.5rem 0 1rem; padding: 0.6rem 0.9rem;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+}
+.tm-drift-total { display: flex; flex-direction: column; align-items: flex-start; }
+.tm-drift-num { font-size: 1.4rem; font-weight: 700; color: var(--body-text); line-height: 1; }
+.tm-drift-lbl { font-size: 0.7rem; color: var(--body-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.tm-drift-sevs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tm-drift-cats { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tm-drift-cat {
+  display: inline-block; padding: 0.1rem 0.4rem; font-size: 0.68rem;
+  background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 3px; font-weight: 600;
+}
+.tm-drift-sources { margin-left: auto; }
+.tm-drift-sources code { font-size: 0.72rem; background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px; }
+
+.tm-drift-sev {
+  display: inline-block; padding: 0.1rem 0.45rem; font-size: 0.7rem;
+  font-weight: 600; border-radius: 3px;
+}
+.tm-sev-error   { background: rgba(239, 68, 68, 0.16); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+.tm-sev-warning { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.tm-sev-info    { background: rgba(56, 189, 248, 0.14); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+.tm-drift-badge {
+  display: inline-block; margin-left: 0.3rem; padding: 0.05rem 0.4rem;
+  font-size: 0.65rem; font-weight: 600; border-radius: 999px;
+  vertical-align: middle;
+}
+.tm-drift-badge-error   { background: rgba(239, 68, 68, 0.20); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45); }
+.tm-drift-badge-warning { background: rgba(245, 158, 11, 0.20); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); }
+.tm-drift-badge-info    { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); }
+
+.tm-row-drift-error   td.col-id { border-left: 3px solid #dc2626; }
+.tm-row-drift-warning td.col-id { border-left: 3px solid #d97706; }
+.tm-row-drift-info    td.col-id { border-left: 3px solid #2563eb; }
+
+.tm-drift-drawer {
+  margin-top: 0.5rem; padding: 0.5rem 0.7rem;
+  background: var(--surface-2); border-left: 3px solid var(--body-text-muted); border-radius: 0 3px 3px 0;
+}
+.tm-drift-list { list-style: none; padding: 0; margin: 0.3rem 0 0; }
+.tm-drift-item {
+  margin: 0.4rem 0; padding: 0.4rem 0.5rem;
+  background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 3px;
+}
+.tm-drift-item-error   { border-left: 3px solid #dc2626; }
+.tm-drift-item-warning { border-left: 3px solid #d97706; }
+.tm-drift-item-info    { border-left: 3px solid #2563eb; }
+.tm-drift-rule { font-size: 0.72rem; background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px; margin-right: 0.4rem; }
+.tm-drift-msg  { margin-top: 0.3rem; font-size: 0.78rem; line-height: 1.4; color: var(--body-text); }
+.tm-drift-hint { margin-top: 0.25rem; }
+.tm-drift-refs { margin-top: 0.35rem; }
+.tm-drift-refs dl { margin: 0.3rem 0 0; font-size: 0.72rem; }
+.tm-drift-refs dt { font-weight: 600; color: var(--body-text-muted); }
+.tm-drift-refs dd { margin: 0 0 0.3rem 0; color: var(--body-text); word-break: break-word; }
 
 /* Row expansion: JS-driven, row-level. Clicking any cell toggles the row
    and every expandable column opens together. Row state is
@@ -489,68 +761,447 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
 .tm-chip-list { line-height: 1.5; }
 .tm-detail {
   margin-top: 0.5rem; padding: 0.45rem 0.6rem;
-  background: #fafbfc; border-left: 2px solid var(--brand, #2a5db0);
+  background: var(--surface-2); color: var(--body-text); border-left: 2px solid var(--brand-primary);
   border-radius: 0 3px 3px 0;
 }
-.tm-detail-aux { margin: 0.2rem 0; font-size: 0.78rem; color: #444; line-height: 1.4; }
+.tm-detail-aux { margin: 0.2rem 0; font-size: 0.78rem; color: var(--body-text-muted); line-height: 1.4; }
 .tm-trace-list {
   margin: 0.4rem 0 0; padding: 0.35rem 0 0.1rem 0.6rem; font-size: 0.78rem;
   list-style: none; border-top: 1px dashed var(--border-light, #ececec);
 }
 .tm-trace-list li { margin: 0.2rem 0; padding-left: 0.5rem; border-left: 1px solid var(--border-light, #ececec); }
-.tm-source-link { color: var(--brand, #2a5db0); text-decoration: none; }
+.tm-source-link { color: var(--brand-primary); text-decoration: none; }
 .tm-source-link:hover { text-decoration: underline; }
 
-.btn-primary {
-  background: var(--brand, #2a5db0); color: white; border: none;
-  padding: 0.35rem 0.85rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
-}
-.btn-primary:hover { opacity: 0.9; }
-
-.tm-broken { margin-top: 2rem; padding: 1rem; background: #fff7e6; border: 1px solid #ffd591; border-radius: 4px; }
+.tm-broken { margin-top: 2rem; padding: 1rem; background: var(--banner-warning-bg); color: var(--banner-warning-text); border: 1px solid var(--border); border-radius: 4px; }
 .tm-broken h2 { margin-top: 0; font-size: 0.95rem; }
 
 /* Header right group */
 .tm-header-right { display: flex; gap: 0.4rem; align-items: center; }
-.btn-secondary {
-  background: white; color: var(--brand, #2a5db0);
-  border: 1px solid var(--brand, #2a5db0);
-  padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+
+/* ═══ v1.12.0 trace-matrix UX overhaul ═══════════════════════════════════ */
+
+/* ID column — stack id on line 1 and badges on line 2 to free horizontal
+   width for the new typed trace columns. The badge row only renders when at
+   least one badge is present, so plain rows stay compact. */
+.tm-table td.col-id { vertical-align: top; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.tm-id-line { display: flex; align-items: center; gap: 0.3rem; }
+.tm-id-code { font-size: 0.78rem; }
+.tm-id-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.2rem; }
+
+/* Drift badge becomes a button (clickable, focusable). Reset native styles. */
+button.tm-drift-badge {
+  border: none; cursor: pointer; font: inherit;
+  padding: 0.05rem 0.4rem; font-size: 0.65rem; font-weight: 600;
+  border-radius: 999px; line-height: 1.4;
 }
-.btn-secondary:hover { background: #f0f5fc; }
+button.tm-drift-badge:hover { filter: brightness(1.08); }
+button.tm-drift-badge:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
+
+/* Group header row — full-width banner spanning all columns, click to
+   toggle. Items in collapsed groups get .tm-row-group-collapsed (hidden). */
+tr.tm-group-header { background: var(--surface-2); cursor: pointer; user-select: none; }
+tr.tm-group-header:hover { background: var(--surface-2); filter: brightness(1.1); }
+tr.tm-group-header td { padding: 0.5rem 0.85rem; font-size: 0.78rem; }
+.tm-group-caret { display: inline-block; width: 0.85rem; color: var(--body-text-muted); }
+.tm-group-label { font-weight: 600; color: var(--body-text); margin-right: 0.5rem; }
+.tm-group-count { font-size: 0.7rem; color: var(--body-text-muted); margin-right: 0.5rem; }
+.tm-group-stat {
+  display: inline-block; padding: 0.05rem 0.4rem; font-size: 0.65rem;
+  border-radius: 3px; margin-right: 0.3rem; font-weight: 500;
+}
+.tm-group-stat-drift   { background: rgba(245, 158, 11, 0.14); color: #fbbf24; }
+.tm-group-stat-orphan  { background: rgba(217, 119, 6, 0.16); color: #f59e0b; border: 1px solid rgba(217, 119, 6, 0.35); }
+tr.tm-row-group-collapsed { display: none !important; }
+tr.tm-row-filtered-out { display: none !important; }
+
+/* Trace chip — clickable, jumps to target tab + row. Compact, rounded. */
+.tm-trace-chip {
+  display: inline-block; padding: 0.1rem 0.5rem; margin: 0.1rem 0.15rem 0.1rem 0;
+  font-size: 0.72rem; font-family: ui-monospace, monospace;
+  background: rgba(56, 189, 248, 0.10); color: var(--brand-primary);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  border-radius: 4px; cursor: pointer; line-height: 1.4;
+  transition: background-color 0.12s, border-color 0.12s;
+}
+.tm-trace-chip:hover { background: rgba(56, 189, 248, 0.20); border-color: var(--brand-primary); }
+.tm-trace-chip:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 1px; }
+.tm-trace-chip-more {
+  background: var(--surface-2); color: var(--body-text-muted); border-color: var(--border); font-weight: 600;
+}
+.tm-trace-chip-more:hover { background: var(--surface); color: var(--body-text); }
+.tm-table th.col-trace, .tm-table td.col-trace {
+  font-size: 0.78rem; padding: 0.4rem 0.5rem; min-width: 90px;
+}
+.tm-fmea-caveat {
+  display: inline-block; margin-left: 0.25rem; cursor: help;
+  font-size: 0.7rem; color: var(--body-text-muted); opacity: 0.7;
+}
+.tm-fmea-caveat:hover { opacity: 1; }
+
+/* Status pill — color-keyed for the common Jira workflow states. Unknown
+   slugs fall through to the default style. */
+.tm-table th.col-status, .tm-table td.col-status {
+  font-size: 0.75rem; min-width: 70px; padding: 0.4rem 0.5rem;
+}
+.tm-status {
+  display: inline-block; padding: 0.1rem 0.45rem; font-size: 0.68rem;
+  font-weight: 600; border-radius: 3px; line-height: 1.4;
+  background: var(--surface-2); color: var(--body-text-muted);
+  border: 1px solid var(--border);
+}
+.tm-status-working     { background: rgba(56, 189, 248, 0.14); color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); }
+.tm-status-closed      { background: rgba(34, 197, 94, 0.14); color: #4ade80; border-color: rgba(34, 197, 94, 0.35); }
+.tm-status-done        { background: rgba(34, 197, 94, 0.14); color: #4ade80; border-color: rgba(34, 197, 94, 0.35); }
+.tm-status-resolved    { background: rgba(34, 197, 94, 0.14); color: #4ade80; border-color: rgba(34, 197, 94, 0.35); }
+.tm-status-open        { background: rgba(245, 158, 11, 0.14); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35); }
+.tm-status-blocked     { background: rgba(239, 68, 68, 0.14); color: #f87171; border-color: rgba(239, 68, 68, 0.35); }
+.tm-status-in-progress { background: rgba(129, 140, 248, 0.14); color: #a5b4fc; border-color: rgba(129, 140, 248, 0.35); }
+.tm-status-resolution {
+  margin-left: 0.2rem; font-weight: 500; opacity: 0.8;
+  font-size: 0.62rem;
+}
+
+/* Requirement detail panel — scrollable, structured by subsection cards. */
+.tm-detail-requirement {
+  margin-top: 0.5rem; padding: 0.5rem 0.7rem;
+  background: var(--surface-2); color: var(--body-text);
+  border-left: 3px solid var(--brand-primary);
+  border-radius: 0 3px 3px 0;
+  max-height: 240px; overflow-y: auto;
+}
+.tm-detail-section {
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 0.4rem 0.6rem; margin: 0.4rem 0;
+  background: var(--surface);
+}
+.tm-detail-section-title {
+  margin: 0 0 0.25rem 0; font-size: 0.7rem; font-weight: 600;
+  color: var(--body-text-muted); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.tm-detail-section-body { font-size: 0.82rem; line-height: 1.45; color: var(--body-text); white-space: pre-wrap; }
+.tm-detail-more { margin: 0.4rem 0; font-size: 0.78rem; }
+.tm-detail-more summary { cursor: pointer; color: var(--body-text-muted); font-weight: 500; }
+.tm-detail-meta { margin: 0.4rem 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 0.75rem; font-size: 0.78rem; }
+.tm-detail-meta dt { font-weight: 600; color: var(--body-text-muted); }
+.tm-detail-meta dd { margin: 0; color: var(--body-text); }
+.tm-detail-footer { margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); display: flex; gap: 0.85rem; flex-wrap: wrap; font-size: 0.78rem; }
+
+/* Popover — singleton, anchored to a button. Shared shell for drift +
+   trace-overflow popovers. */
+.tm-popover {
+  position: absolute; z-index: 1000;
+  background: var(--surface); color: var(--body-text);
+  border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  max-width: 380px; max-height: 320px; overflow-y: auto;
+  font-size: 0.82rem; line-height: 1.4;
+}
+.tm-popover-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.4rem 0.65rem; border-bottom: 1px solid var(--border);
+  background: var(--surface-2); border-top-left-radius: 6px; border-top-right-radius: 6px;
+}
+.tm-popover-title { font-size: 0.78rem; font-weight: 600; color: var(--body-text); }
+.tm-popover-close {
+  background: none; border: none; font-size: 1.1rem; line-height: 1; cursor: pointer;
+  color: var(--body-text-muted); padding: 0.1rem 0.3rem;
+}
+.tm-popover-close:hover { color: var(--body-text); }
+.tm-popover-body { padding: 0.5rem 0.65rem; }
+
+/* Unified detail drawer — right-side panel, used for both row-requirement
+   and drift-violations content. Resizable via the ⤢ width-cycle button or
+   the left-edge drag handle. */
+.tm-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 420px; max-width: 100vw;
+  background: var(--surface); color: var(--body-text);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.4);
+  display: flex; flex-direction: column;
+  z-index: 200;
+  transition: width 0.18s ease;
+}
+.tm-drawer[hidden] { display: none; }
+.tm-drawer[data-width="wide"] { width: 720px; }
+.tm-drawer[data-width="full"] { width: calc(100vw - 24px); }
+.tm-drawer-resize {
+  position: absolute; left: -3px; top: 0; bottom: 0; width: 6px;
+  cursor: ew-resize; background: transparent; z-index: 1;
+}
+.tm-drawer-resize:hover { background: rgba(99, 102, 241, 0.25); }
+.tm-drawer-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 0.75rem; padding: 0.85rem 1rem 0.65rem;
+  border-bottom: 1px solid var(--border); background: var(--surface-2);
+  flex-shrink: 0;
+}
+.tm-drawer-title-wrap { min-width: 0; flex: 1; }
+.tm-drawer-eyebrow {
+  display: block;
+  font-size: 0.62rem; font-weight: 600; color: var(--body-text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.tm-drawer-title {
+  margin: 0.2rem 0 0; font-size: 0.95rem; line-height: 1.35; color: var(--body-text);
+  word-break: break-word;
+}
+.tm-drawer-title code {
+  background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px;
+  font-size: 0.85em;
+}
+.tm-drawer-actions { display: flex; gap: 0.25rem; flex-shrink: 0; }
+.tm-drawer-btn {
+  background: transparent; border: 1px solid transparent; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 4px;
+  font-size: 1rem; line-height: 1; color: var(--body-text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.tm-drawer-btn:hover { background: var(--surface-2); border-color: var(--border); color: var(--body-text); }
+.tm-drawer-body { flex: 1; overflow-y: auto; padding: 0.85rem 1.1rem 1.5rem; }
+.tm-drawer-body .tm-detail-section { background: var(--surface-2); }
+.tm-drawer-body .tm-drift-list { margin: 0; padding: 0; list-style: none; }
+.tm-detail-drift-caveat { margin: 0 0 0.4rem 0; font-style: italic; }
+@keyframes tm-drift-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.55); }
+  40%  { box-shadow: 0 0 0 6px rgba(217, 119, 6, 0.18); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+}
+.tm-detail-drift-flash { animation: tm-drift-flash 1.6s ease-out; }
+
+/* Active row marker — paired with drawer to show which row the drawer is
+   showing detail for. Persists while drawer is open. */
+tr.tm-row.tm-row-active td {
+  background: rgba(99, 102, 241, 0.07);
+  box-shadow: inset 3px 0 0 var(--brand, #2a5db0);
+}
+
+/* Pulse highlight after click-through navigation */
+@keyframes tm-pulse {
+  0%, 100% { background-color: transparent; }
+  20%      { background-color: #fef3c7; }
+  60%      { background-color: #fde68a; }
+}
+tr.tm-row-pulse td { animation: tm-pulse 1.5s ease-out; }
+
+/* Assembled-at line + ?-help hover panel — surfaces source files and
+   their generated-at timestamps so reviewers can audit how stale the
+   trace picture is without leaving the page. */
+.tm-assembled { display: inline-flex; align-items: center; gap: 0.35rem; }
+.tm-help { position: relative; display: inline-block; }
+.tm-help-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.05rem; height: 1.05rem;
+  font-size: 0.72rem; font-weight: 700; line-height: 1;
+  color: var(--body-text-muted); background: var(--surface-2); border-radius: 999px;
+  cursor: help; user-select: none;
+}
+.tm-help:hover .tm-help-trigger,
+.tm-help:focus-within .tm-help-trigger { background: var(--brand-primary); color: #ffffff; }
+.tm-help-panel {
+  display: none; position: absolute; top: calc(100% + 6px); left: 0;
+  z-index: 250;
+  min-width: 360px; max-width: 560px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 0.65rem 0.75rem;
+  font-size: 0.78rem; line-height: 1.4; color: var(--body-text);
+}
+.tm-help:hover .tm-help-panel,
+.tm-help:focus-within .tm-help-panel { display: block; }
+.tm-help-title { display: block; font-weight: 600; color: var(--body-text); margin-bottom: 0.1rem; }
+.tm-help-meta  { display: block; margin-bottom: 0.4rem; color: var(--body-text-muted); }
+.tm-help-table { width: 100%; border-collapse: collapse; }
+.tm-help-table th,
+.tm-help-table td {
+  padding: 0.2rem 0.4rem; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--border); font-size: 0.74rem;
+}
+.tm-help-table th { color: var(--body-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.65rem; }
+.tm-help-table code { font-family: ui-monospace, monospace; background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px; }
+.tm-help-missing td { background: var(--banner-warning-bg); color: var(--banner-warning-text); }
+.tm-help-drift td:last-child { color: var(--banner-warning-text); font-style: italic; }
 
 </style>
 
 <script>
 (function() {
+  // ─── State ─────────────────────────────────────────────────────────────
   const filters = { criticality: 'all', gap: 'all' };
+  // Drift payload — id → [violation, ...]
+  let driftViolations = {};
+  try {
+    driftViolations = JSON.parse(document.getElementById('tm-violations-data')?.textContent || '{}');
+  } catch (e) { driftViolations = {}; }
 
-  function setRowExpanded(row, open) {
-    row.dataset.expanded = open ? '1' : '0';
-    row.querySelectorAll('.tm-detail, .tm-trace-list').forEach(el => {
-      el.hidden = !open;
+  // ─── Unified detail drawer ────────────────────────────────────────────
+  // Replaces the prior in-row requirement expansion + the drift popover.
+  // Both row-detail and drift-detail render into the same drawer skeleton.
+  const drawerEl = document.getElementById('tm-detail-drawer');
+  const drawerBody = document.getElementById('tm-drawer-body');
+  const drawerTitle = document.getElementById('tm-drawer-title');
+  const drawerEyebrow = document.getElementById('tm-drawer-eyebrow');
+  const DRAWER_WIDTHS = ['narrow', 'wide', 'full'];
+  let drawerAnchor = null;
+  let drawerActiveRow = null;
+
+  function openDrawer(opts) {
+    drawerEyebrow.textContent = opts.eyebrow || '';
+    drawerTitle.innerHTML = opts.title || '';
+    drawerBody.innerHTML = opts.html || '';
+    drawerEl.dataset.kind = opts.kind || '';
+    drawerEl.hidden = false;
+    drawerEl.style.removeProperty('width');  // clear any prior drag-set width on reopen
+    drawerBody.scrollTop = 0;
+    if (drawerActiveRow && drawerActiveRow !== opts.row) {
+      drawerActiveRow.classList.remove('tm-row-active');
+    }
+    drawerActiveRow = opts.row || null;
+    if (drawerActiveRow) {
+      drawerActiveRow.classList.add('tm-row-active');
+      drawerActiveRow.classList.add('tm-row-pulse');
+      setTimeout(() => drawerActiveRow && drawerActiveRow.classList.remove('tm-row-pulse'), 1500);
+    }
+    if (drawerAnchor && drawerAnchor !== opts.anchor && drawerAnchor.setAttribute) {
+      drawerAnchor.setAttribute('aria-expanded', 'false');
+    }
+    drawerAnchor = opts.anchor || null;
+    if (drawerAnchor && drawerAnchor.setAttribute) {
+      drawerAnchor.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeDrawer() {
+    drawerEl.hidden = true;
+    drawerEl.style.removeProperty('width');
+    if (drawerActiveRow) { drawerActiveRow.classList.remove('tm-row-active'); drawerActiveRow = null; }
+    if (drawerAnchor && drawerAnchor.setAttribute) drawerAnchor.setAttribute('aria-expanded', 'false');
+    drawerAnchor = null;
+  }
+
+  document.querySelectorAll('[data-drawer-close]').forEach(b => b.addEventListener('click', closeDrawer));
+  document.querySelectorAll('[data-drawer-width-cycle]').forEach(b => b.addEventListener('click', () => {
+    drawerEl.style.removeProperty('width');
+    const cur = drawerEl.dataset.width || 'narrow';
+    const idx = DRAWER_WIDTHS.indexOf(cur);
+    drawerEl.dataset.width = DRAWER_WIDTHS[(idx + 1) % DRAWER_WIDTHS.length];
+  }));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !drawerEl.hidden) closeDrawer(); });
+
+  // Drag-resize on left handle.
+  (() => {
+    const handle = drawerEl.querySelector('[data-drawer-resize]');
+    if (!handle) return;
+    let dragging = false, startX = 0, startW = 0;
+    handle.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      startX = e.clientX;
+      startW = drawerEl.getBoundingClientRect().width;
+      try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+      document.body.style.cursor = 'ew-resize';
+      e.preventDefault();
     });
+    handle.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const delta = startX - e.clientX;
+      const next = Math.max(320, Math.min(window.innerWidth - 16, startW + delta));
+      drawerEl.style.width = next + 'px';
+    });
+    const stop = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+      document.body.style.cursor = '';
+    };
+    handle.addEventListener('pointerup', stop);
+    handle.addEventListener('pointercancel', stop);
+  })();
+
+  function buildDriftSection(rowId) {
+    const findings = driftViolations[rowId] || [];
+    if (!findings.length) return '';
+    const count = findings.length;
+    return `<section class="tm-detail-section tm-detail-drift" id="tm-drawer-drift-section">
+      <h4 class="tm-detail-section-title">Drift findings (${count})</h4>
+      <p class="tm-detail-drift-caveat muted small">
+        Comparison between the Jira mirror and the DTM. Either source can be the stale one — review before treating as a gap.
+      </p>
+      <ul class="tm-drift-list">${renderDriftFindings(rowId)}</ul>
+    </section>`;
   }
 
-  function toggleRow(row) {
-    setRowExpanded(row, row.dataset.expanded !== '1');
+  function focusDriftSection() {
+    const sec = drawerBody.querySelector('#tm-drawer-drift-section');
+    if (!sec) return;
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sec.classList.add('tm-detail-drift-flash');
+    setTimeout(() => sec.classList.remove('tm-detail-drift-flash'), 1600);
   }
 
+  function openRequirementDrawer(row, opts) {
+    opts = opts || {};
+    const detail = row.querySelector('.tm-detail-requirement');
+    const summary = (row.querySelector('.tm-req-summary')?.textContent || '').trim();
+    const rowId = row.dataset.rowId || '';
+    const layerKey = row.closest('.tm-panel')?.dataset.panel || '';
+    const tabBtn = document.querySelector(`.tm-tab[data-tab="${cssEscape(layerKey)}"]`);
+    const layerLabel = (tabBtn?.textContent || layerKey).trim();
+    const detailHtml = (detail && detail.innerHTML.trim())
+      ? detail.innerHTML
+      : '<p class="muted">No additional requirement detail available.</p>';
+    const driftHtml = buildDriftSection(rowId);
+    openDrawer({
+      kind: 'requirement',
+      eyebrow: layerLabel,
+      title: `<code>${escapeHtml(rowId)}</code>${summary ? ' &mdash; ' + escapeHtml(summary) : ''}`,
+      html: detailHtml + driftHtml,
+      anchor: opts.anchor || null,
+      row,
+    });
+    if (opts.focusFindings) requestAnimationFrame(focusDriftSection);
+  }
+
+  // ─── Group collapsing ─────────────────────────────────────────────────
+  function setGroupCollapsed(headerRow, collapsed) {
+    headerRow.dataset.collapsed = collapsed ? '1' : '0';
+    const caret = headerRow.querySelector('.tm-group-caret');
+    if (caret) caret.textContent = collapsed ? '▸' : '▾';
+    const label = headerRow.dataset.groupLabel;
+    let next = headerRow.nextElementSibling;
+    while (next && !next.classList.contains('tm-group-header')) {
+      if (next.dataset && next.dataset.groupLabel === label) {
+        // Use a dedicated class so it composes with filter-driven hiding.
+        next.classList.toggle('tm-row-group-collapsed', collapsed);
+      }
+      next = next.nextElementSibling;
+    }
+  }
+  function toggleGroup(headerRow) {
+    setGroupCollapsed(headerRow, headerRow.dataset.collapsed !== '1');
+  }
+
+  // ─── Filters ──────────────────────────────────────────────────────────
   function applyFilters() {
     document.querySelectorAll('.tm-panel').forEach(panel => {
       if (!panel.classList.contains('is-active')) return;
       panel.querySelectorAll('tr.tm-row').forEach(row => {
         const crit = row.dataset.criticality;
         const isOrphan = row.dataset.orphan === '1';
+        const hasDrift = row.dataset.drift === '1';
         const critOk = filters.criticality === 'all'
           || (filters.criticality === 'untagged' && crit === 'untagged')
           || crit === filters.criticality;
-        const gapOk = filters.gap === 'all' || (filters.gap === 'orphan' && isOrphan);
-        row.style.display = (critOk && gapOk) ? '' : 'none';
+        const gapOk = filters.gap === 'all'
+          || (filters.gap === 'orphan' && isOrphan)
+          || (filters.gap === 'drift' && hasDrift);
+        // Filter visibility composes with group-collapse via independent classes.
+        row.classList.toggle('tm-row-filtered-out', !(critOk && gapOk));
       });
     });
   }
 
+  // ─── Tabs ─────────────────────────────────────────────────────────────
   function switchTab(key) {
     document.querySelectorAll('.tm-tab').forEach(btn => {
       btn.classList.toggle('is-active', btn.dataset.tab === key);
@@ -561,20 +1212,166 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
     applyFilters();
   }
 
-  // Row-level click toggle — clicking any cell in a row expands/collapses
-  // every expandable column in that row. Clicks on links (e.g. "View in
-  // source document") bubble through without toggling.
-  document.querySelectorAll('tr.tm-row').forEach(row => {
-    row.addEventListener('click', (e) => {
-      if (e.target.closest('a')) return;
-      toggleRow(row);
+  // ─── Click-through navigation: scroll + pulse target row ──────────────
+  function focusRow(layerKey, rowId, opts) {
+    opts = opts || {};
+    switchTab(layerKey);
+    // Wait for the panel switch to settle before scrolling.
+    requestAnimationFrame(() => {
+      const panel = document.querySelector(`.tm-panel[data-panel="${layerKey}"]`);
+      if (!panel) return;
+      const row = panel.querySelector(`tr.tm-row[data-row-id="${cssEscape(rowId)}"]`);
+      if (!row) return;
+      // If the row is in a collapsed group, expand its group so the row is reachable.
+      const groupLabel = row.dataset.groupLabel;
+      if (groupLabel) {
+        const groupHeader = panel.querySelector(`tr.tm-group-header[data-group-label="${cssEscape(groupLabel)}"]`);
+        if (groupHeader && groupHeader.dataset.collapsed === '1') {
+          setGroupCollapsed(groupHeader, false);
+        }
+      }
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.classList.add('tm-row-pulse');
+      setTimeout(() => row.classList.remove('tm-row-pulse'), 1500);
+      if (opts.updateHash !== false) {
+        history.pushState({ tab: layerKey, row: rowId }, '', `#tab=${encodeURIComponent(layerKey)}&row=${encodeURIComponent(rowId)}`);
+      }
     });
+  }
+  function cssEscape(s) {
+    return (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/["\\]/g, '\\$&');
+  }
+
+  // ─── Trace chip click-through ─────────────────────────────────────────
+  document.addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-trace-chip]');
+    if (!chip) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const tab = chip.dataset.targetLayer;
+    const id = chip.dataset.targetId;
+    focusRow(tab, id);
+    closePopover('overflow');
   });
 
+  // ─── Trace overflow ("+N") chip ───────────────────────────────────────
+  document.addEventListener('click', (e) => {
+    const more = e.target.closest('[data-chip-overflow]');
+    if (!more) return;
+    e.stopPropagation();
+    const tmpl = more.parentElement.querySelector('.tm-chip-overflow-source');
+    if (!tmpl) return;
+    const body = document.getElementById('tm-overflow-popover-body');
+    body.innerHTML = '';
+    body.appendChild(tmpl.content.cloneNode(true));
+    document.getElementById('tm-overflow-popover-title').textContent =
+      'More traces (' + body.querySelectorAll('[data-trace-chip]').length + ')';
+    openPopover('overflow', more);
+  });
+
+  // ─── Drift badge → row drawer (focused on findings section) ──────────
+  // Severity vocabulary: data field stays `error`/`warning`/`info` (keeps
+  // JSON contract with /jira-pull stable); user-facing label is mapped to
+  // the softer `Attention!` / `warning` / `info` palette.
+  const SEV_GLYPH = { error: '!', warning: '⚠', info: 'ℹ' };
+  const SEV_LABEL = { error: 'Attention!', warning: 'warning', info: 'info' };
+  function renderDriftFindings(rowId) {
+    const findings = driftViolations[rowId] || [];
+    if (findings.length === 0) return '<li class="muted">No findings.</li>';
+    return findings.map(v => {
+      const refs = v.references || {};
+      const refRows = Object.keys(refs).map(k => {
+        const val = refs[k];
+        const isUrl = typeof val === 'string' && /^https?:\/\//.test(val);
+        const valHtml = isUrl
+          ? `<a href="${escapeHtml(val)}" target="_blank" rel="noopener">${escapeHtml(val)}</a>`
+          : `<code>${escapeHtml(String(val))}</code>`;
+        return `<dt><code>${escapeHtml(k)}</code></dt><dd>${valHtml}</dd>`;
+      }).join('');
+      const refsBlock = refRows
+        ? `<details class="tm-drift-refs"><summary class="muted small">References</summary><dl>${refRows}</dl></details>`
+        : '';
+      const hint = v.resolution_hint
+        ? `<div class="tm-drift-hint muted small"><em>Hint:</em> ${escapeHtml(v.resolution_hint)}</div>`
+        : '';
+      return `<li class="tm-drift-item tm-drift-item-${v.severity}">
+        <code class="tm-drift-rule">${escapeHtml(v.rule || '')}</code>
+        <span class="tm-drift-sev tm-sev-${v.severity}">${SEV_GLYPH[v.severity] || ''} ${escapeHtml(SEV_LABEL[v.severity] || v.severity || '')}</span>
+        <div class="tm-drift-msg">${escapeHtml(v.message || '')}</div>
+        ${hint}${refsBlock}
+      </li>`;
+    }).join('');
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  }
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-drift-trigger]');
+    if (!trigger) return;
+    e.stopPropagation();
+    const row = trigger.closest('tr.tm-row');
+    if (row) openRequirementDrawer(row, { anchor: trigger, focusFindings: true });
+  });
+
+  // ─── Popover positioning + close handlers ─────────────────────────────
+  let openPopoverEl = null;
+  let openPopoverAnchor = null;
+  function openPopover(kind, anchor) {
+    closePopover();
+    const el = document.getElementById(kind === 'drift' ? 'tm-drift-popover' : 'tm-overflow-popover');
+    if (!el) return;
+    el.hidden = false;
+    el.style.position = 'absolute';
+    // Position below the anchor; clamp horizontally to viewport.
+    const r = anchor.getBoundingClientRect();
+    const popW = 380;
+    const left = Math.min(window.innerWidth - popW - 12, Math.max(8, r.left + window.scrollX));
+    el.style.left = left + 'px';
+    el.style.top = (r.bottom + window.scrollY + 6) + 'px';
+    el.style.maxWidth = popW + 'px';
+    if (anchor.setAttribute) anchor.setAttribute('aria-expanded', 'true');
+    openPopoverEl = el;
+    openPopoverAnchor = anchor;
+  }
+  function closePopover(kind) {
+    if (kind) {
+      const target = document.getElementById(kind === 'drift' ? 'tm-drift-popover' : 'tm-overflow-popover');
+      if (target) target.hidden = true;
+      if (openPopoverEl === target) { openPopoverEl = null; openPopoverAnchor = null; }
+      return;
+    }
+    if (!openPopoverEl) return;
+    openPopoverEl.hidden = true;
+    if (openPopoverAnchor && openPopoverAnchor.setAttribute) openPopoverAnchor.setAttribute('aria-expanded', 'false');
+    openPopoverEl = null;
+    openPopoverAnchor = null;
+  }
+  document.addEventListener('click', (e) => {
+    if (!openPopoverEl) return;
+    if (e.target.closest('.tm-popover')) return;  // click inside popover
+    if (openPopoverAnchor && openPopoverAnchor.contains(e.target)) return;  // click on anchor
+    closePopover();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopover(); });
+  document.querySelectorAll('.tm-popover-close').forEach(b => b.addEventListener('click', () => closePopover()));
+
+  // ─── Wire row + header clicks ─────────────────────────────────────────
+  // Row click → toggle requirement detail. Skip when click was inside an
+  // interactive child (button, link) so chips/badges don't double-fire.
+  document.querySelectorAll('tr.tm-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('button, a, details, summary, [data-trace-chip], [data-drift-trigger], [data-chip-overflow]')) return;
+      openRequirementDrawer(row);
+    });
+  });
+  document.querySelectorAll('tr.tm-group-header').forEach(headerRow => {
+    headerRow.addEventListener('click', () => toggleGroup(headerRow));
+  });
+
+  // ─── Tab + filter chip wiring ─────────────────────────────────────────
   document.querySelectorAll('.tm-tab').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
-
   document.querySelectorAll('.tm-chip[data-filter]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -586,17 +1383,29 @@ body.tm-body main { max-width: none !important; padding: 0 !important; }
       applyFilters();
     });
   });
+  document.getElementById('tm-groups-expand-all')?.addEventListener('click', () => {
+    const panel = document.querySelector('.tm-panel.is-active');
+    panel?.querySelectorAll('tr.tm-group-header').forEach(h => setGroupCollapsed(h, false));
+  });
+  document.getElementById('tm-groups-collapse-all')?.addEventListener('click', () => {
+    const panel = document.querySelector('.tm-panel.is-active');
+    panel?.querySelectorAll('tr.tm-group-header').forEach(h => setGroupCollapsed(h, true));
+  });
 
-  document.getElementById('tm-expand-all')?.addEventListener('click', () => {
-    const activePanel = document.querySelector('.tm-panel.is-active');
-    if (!activePanel) return;
-    activePanel.querySelectorAll('tr.tm-row').forEach(row => setRowExpanded(row, true));
-  });
-  document.getElementById('tm-collapse-all')?.addEventListener('click', () => {
-    const activePanel = document.querySelector('.tm-panel.is-active');
-    if (!activePanel) return;
-    activePanel.querySelectorAll('tr.tm-row').forEach(row => setRowExpanded(row, false));
-  });
+  // ─── URL hash on load ─────────────────────────────────────────────────
+  function applyHash() {
+    const h = window.location.hash.replace(/^#/, '');
+    if (!h) return;
+    const params = new URLSearchParams(h);
+    const tab = params.get('tab');
+    const row = params.get('row');
+    if (tab) {
+      switchTab(tab);
+      if (row) requestAnimationFrame(() => focusRow(tab, row, { updateHash: false }));
+    }
+  }
+  window.addEventListener('popstate', applyHash);
+  applyHash();
 })();
 </script>
 

@@ -1,0 +1,10 @@
+# file-locator MCP server — pinned deps (Python 3.10+).
+#
+# fastembed: local ONNX embedding runtime (BGE-small by default).
+# mcp:       Model Context Protocol Python SDK (stdio transport).
+# pyyaml:    project.yml + frontmatter parsing.
+#
+# No Anthropic SDK — the locator never calls an LLM during indexing or query.
+fastembed>=0.4.0,<0.6.0
+mcp>=1.0.0,<2.0.0
+PyYAML>=6.0,<7.0

@@ -24,7 +24,7 @@ _CANDIDATE_ROOTS = (
 @dataclass(frozen=True)
 class Candidate:
     virtual_path: str      # repo-relative posix path
-    dhf: str               # dhf leaf name or "" (e.g. hiplink-pre-op, "submissions")
+    dhf: str               # dhf leaf name or "" (e.g. <device>-pre-op, "submissions")
     size_bytes: int
     proposed_docx: str     # where /docflow export would land the formal doc
 

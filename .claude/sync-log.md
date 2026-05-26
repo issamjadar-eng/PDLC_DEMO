@@ -4,6 +4,278 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-05-16 — push (advisors v1.3.1 — pytest test runner + build-artifact gitignore)
+
+- Files: `skills/advisors/SKILL.md`, `skills/advisors/README.md`, `skills/advisors/VERSION`, `skills/advisors/.gitignore` (new), `skills/advisors/tests/run.sh` (new)
+- Branch: `sync/pdlc-demo-advisors-v1.3.1-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/169
+- Commit: "advisors v1.2.0 → v1.3.1: pytest test runner + build-artifact gitignore"
+- Status: merged 2026-05-16 (squash, branch deleted; local sync branch also cleaned up per v8.2)
+- Merge commit: `95dde22`
+- Hitachi HEAD after sync: `95dde22`
+- Note: `check` flagged the 3 modified advisors files `UPSTREAM_NEWER`, but `--analyzed` refined to `LOCAL_AHEAD` — local advisors (v1.3.1) was *ahead* of hitachi (v1.2.0). Verified by diff (local = hitachi `9d7d6e6` + ben/058's v1.3.1 work). This push lands that work upstream — a push, not a pull.
+- Originating task: ben/058
+
+## 2026-05-16 — pull (sentinel-blocks rule — v23 backfill)
+
+- Hitachi HEAD after sync: `cda0eaa`
+- Pulled: 1 file
+  - `skills/medtech-docs/rules/sentinel-blocks.md` — hitachi PR #168 (`cda0eaa`) backfilled the v23 renderer capabilities into the rule: `depth=<N>` attribute, `dhf-table` variants section, updated `exclude=` (adds `assets`) + `preserve-column` defaults. `UPSTREAM_ADVANCE` — local matched the `b0beab3` blob, upstream advanced 1 commit.
+- Skipped (`LOCAL_AHEAD` / `LOCAL_ONLY` — ben/058 advisors work, push candidates not pull): `skills/advisors/{README.md,SKILL.md,VERSION,.gitignore,tests/run.sh}`
+- project.yml: no changes
+- Follow-ups: none — `render-sentinels.py` is already v23 here; this is a rule-text-only sync (doc caught up to existing code). The `.claude/rules/sentinel-blocks.md` symlink resolves unchanged.
+- Originating task: ben/064
+
+## 2026-05-16 — push (sync-skills v8.2 — auto-clean merged branches + `prune` action)
+
+- Files: `skills/sync-skills/SKILL.md`, `skills/sync-skills/README.md`, `skills/sync-skills/scripts/sync.sh`, `skills/sync-skills/tests/test_prune.sh` (new)
+- Branch: `sync/pdlc-demo-sync-skills-v8.2-prune-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/167
+- Commit: "sync-skills v8.2: auto-clean merged branches + prune action"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `cc9add3`
+- Hitachi HEAD after sync: `cc9add3`
+- Note: dogfooded the new `prune` action immediately after — it found and removed this push's own leftover local `sync/*` branch in the hitachi checkout.
+- Originating task: ben/063
+
+## 2026-05-16 — push (medtech-docs v25 — claude-md-references + audit-wiring rules, dedup)
+
+- Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/audit-wiring-before-adding-fields.md` (new), `skills/medtech-docs/rules/claude-md-references.md` (new); deleted `skills/medtech-docs/templates/claude-md-config-audit.md`
+- Branch: `sync/pdlc-demo-medtech-docs-rules-batch3-2026-05-16`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/166
+- Commit: "medtech-docs v25: own claude-md-references + audit-wiring rules; remove duplication"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `69fb6cc`
+- Hitachi HEAD after sync: `69fb6cc`
+- Note: push included a template **deletion** (`templates/claude-md-config-audit.md`) — removed via manual `git -C <hitachi> rm` before `push-finalize`, since `push-stage` only copies.
+- Originating task: ben/061
+
+## 2026-05-15 — push (medtech-docs v24 — rules/ dir + symlink-install)
+
+- Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/README.md`, `skills/medtech-docs/rules/readme-before-write.md` (new), `skills/medtech-docs/rules/sentinel-blocks.md` (relocated from `templates/rule-sentinel-blocks.md`)
+- Branch: `sync/pdlc-demo-medtech-docs-rules-symlink-2026-05-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/165
+- Commit: "Migrate readme-before-write + sentinel-blocks rules to symlink install (medtech-docs v24)"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `b0beab3`
+- Hitachi HEAD after sync: `b0beab3`
+- Note: this push includes a file **rename** — `templates/rule-sentinel-blocks.md` → `rules/sentinel-blocks.md`. `sync.sh push-stage` only copies; the old path was removed with a manual `git -C <hitachi> rm` before `push-finalize`, which git recorded as a 99% rename.
+- Originating task: ben/060
+
+
+## 2026-05-15 — push (task v25 scratch/tmp convention + skill-creator v7 rules/ pattern)
+
+- Files: `skills/task/SKILL.md`, `skills/task/README.md`, `skills/task/rules/scratch-and-tmp.md` (new), `skills/skill-creator/SKILL.md`, `skills/skill-creator/README.md`
+- Branch: `sync/pdlc-demo-scratch-tmp-convention-2026-05-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/164
+- Commit: "Add scratch/tmp convention install to task skill setup"
+- Status: merged 2026-05-16 (squash, branch deleted)
+- Merge commit: `eb8a9f2`
+- Hitachi HEAD after sync: `b0beab3` (after PR #165 also merged)
+- Note: `check` initially mislabeled the 4 modified files `BOTH_DIVERGED`; verified false positive (committed HEAD was byte-identical to upstream) — caused by the blob-probe keying recency off commit timestamps while hashing uncommitted working-tree edits. Committing the work locally (project commit `3d552b8`) reclassified them to `LOCAL_AHEAD`, then pushed cleanly.
+- Originating task: ben/059
+
+## 2026-05-15 — pull (advisors file-locator integration + new file-locator skill)
+
+- Hitachi HEAD after sync: `9d7d6e6` (local hitachi checkout fast-forwarded 25 commits)
+- Pulled: 28 files
+  - `skills/advisors/SKILL.md`, `scripts/render-grounding.py`, 13× `skills/advisors/agents/*.md`, `tests/test_file_locator_wiring.py` — advisors update: adds the `mcp__file-locator__locate` semantic-search retrieval mode (degrades gracefully when MCP absent)
+  - `skills/manifest.md` — registry version listing refresh
+  - `skills/file-locator/**` (11 files) — NEW skill: local semantic file-search MCP (fastembed + SQLite FTS5)
+- Auto-resolved: 13 top-level `.claude/agents/*.md` symlinks (point into `skills/advisors/agents/`) updated transitively — no separate pull
+- project.yml: pending — add `file-locator` to `approved_skills` and `approved_mcps`
+- Follow-ups: run `/file-locator setup` (new skill ships a `setup` action: writes `.mcp.json`, `project.yml`, `.github/workflows/`)
+
+## 2026-05-13 — push (secops 2FA check v7→v8 — null-handling fix)
+
+- Files: `skills/secops/SKILL.md`, `skills/secops/README.md`, `skills/secops/hooks/security-assert.sh`
+- Branch: `sync/pdlc-demo-secops-2fa-check-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/162
+- Commit: "secops v7→v8: 2FA check — distinguish undeterminable from disabled"
+- Status: merged (--merge requested)
+- Merge commit: `255eed8d608dedbbcbcf3eb75135c7d2d1144b21`
+- Hitachi HEAD after sync: `255eed8`
+- Origin: pdlc_demo task ben/056 (surfaced during ben/055 roster reconciliation). Check #1 FAILed on `two_factor_authentication: null` because the `// false` jq fallback collapsed undeterminable→false. Fix: tri-state branching, null/empty→SKIP. Validated on PDLC_DEMO + sister project arthrex/pccp.
+
+---
+
+## 2026-05-13 — push (dhf-manifest canonical-roles resolution improvements v9→v12)
+
+- Files: `skills/dhf-manifest/README.md`, `skills/dhf-manifest/SKILL.md`, `skills/dhf-manifest/actions/discovery-index.md`, `skills/dhf-manifest/data/canonical-roles.yaml`, `skills/dhf-manifest/scripts/discovery-index.py`, `skills/dhf-manifest/tests/test_discovery_index.sh`
+- Branch: `sync/pdlc-demo-dhf-manifest-canonical-roles-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/161
+- Commit: "dhf-manifest: canonical-roles resolution improvements (v9→v12)"
+- Status: merged (--merge requested)
+- Merge commit: `a85260dc3b93664abafea18d02ed733c6290d605`
+- Hitachi HEAD after sync: `a85260d`
+- Origin: pdlc_demo task ben/051. Three discovery-index follow-ups — v10 multi-match no-winner bug fix (ambiguity_notes + paired gap), v11 lowercase-hyphen pattern variants for user_needs/software_requirements, v12 frontmatter `canonical_role:` author opt-in. Test suite 36 → 43. Sister project arthrex/pccp validated with zero functional regression.
+
+---
+
+## 2026-05-12 — pull (advisors v1.2.0 + dhf-manifest v9, post-trace-matrix-push sync)
+
+- Source: hitachi HEAD `d3c3429` (post my own #159 merge)
+- Pulled: 27 files
+  - `skills/advisors/*` (19 files) — v1.2.0: canonical-role grounding model now default; literal-glob retained as legacy fallback. Rollout to all 11 advisor agents (clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, regulatory-affairs, risk-management, systems-engineering, vnv-lead). New `advisor-researcher` helper agent. (hitachi PRs #156 / #158)
+  - `skills/dhf-manifest/*` (2 SKILL + 4 new) — v9 catalog expansion (43 roles total) + `multi_file: true` flag; v8 new `discovery-index` action with `data/canonical-roles.yaml`, `scripts/discovery-index.py`, `tests/test_discovery_index.sh`. (hitachi PRs from arthrex-pccp ben/191)
+  - `agents/advisor-researcher.md` — new agent at registry-root path (project pulls because it didn't exist locally).
+- Post-update actions required:
+  - **Run `/dhf-manifest discovery-index`** to bootstrap the per-project discovery index at `docs/project/dhf-manifest/pdlc-demo-dhf-discovery.json`. Without this, advisor agents fall back to literal-glob mode (still works, lower fidelity grounding).
+  - No other actions surfaced — no new approved_skills / approved_agents entries required; no setup re-runs.
+- Skipped:
+  - `agents/<name>.md` registry-root copies (13 files) reported as BOTH_DIVERGED — expected drift: the project installs advisor agents as symlinks `.claude/agents/<n>.md` → `.claude/skills/advisors/agents/<n>.md` (skill-internal source of truth), while hitachi keeps a parallel registry-root `agents/<n>.md` copy with different content. This is the project's design choice, not real divergence.
+  - `skills/project-console/console/web/static/console.overrides.css` — LOCAL_AHEAD push candidate (Manrope font fix from prior session); deferred for a later push.
+
+---
+
+## 2026-05-12 — push (trace-matrix v7→v8: bidirectional edge engine)
+
+- Files: `skills/trace-matrix/SKILL.md`, `skills/trace-matrix/README.md`, `skills/trace-matrix/scripts/graph.py`, `skills/trace-matrix/scripts/analyze.py`, `skills/trace-matrix/tests/test_graph_bidirectional.py`
+- Branch: `sync/pdlc-demo-trace-matrix-v8-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/159
+- Commit subject: `trace-matrix v7→v8: bidirectional edge engine + scope-filter refinement`
+- Status: merged (--merge requested)
+- Merge commit: `d3c3429`
+- Hitachi HEAD after sync: `d3c3429`
+- Source: ben/050 — surfaced by ben/049 SRS authoring; v7 V&V scope filter dropped DI-derived VER nodes when SW was added. Refactor introduces bidirectional canonical-edge model, adds SW→VER edges, refines scope filter to run only when V&V has independent source and accept any-requirement reciprocation. Sister-project (Arthrex/PCCP) validated zero regression before push.
+
+---
+
+## 2026-05-12 — push (tracker: unified overlay sidecar — supersedes #153)
+
+- Files: `skills/tracker/scripts/generate.py`, `skills/tracker/scripts/render.py`
+- Branch: `sync/pdlc-demo-tracker-unified-overlay-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/154
+- Commit subject: `tracker: unified overlay sidecar (supersedes deliverable-names.yml + human.json)`
+- Status: merged (--merge requested; atomic supersede of #153)
+- Merge commit: `735fc17`
+- Hitachi HEAD after sync: `735fc17`
+- Context: task `ben/047` Stage 5c — consolidates `deliverable-names.yml` (#153) + legacy `human.json` into one `submission-tracker.overlay.yml` with `defaults.by_dhf_role` + `rows.<id>` sections. Closes the `effort` + `path` override gaps that neither prior overlay supported. Per-row `name` flexibility enables milestone-distinct titles ("System SAD — Draft (Q-Sub Review)" vs "System SAD — LMR1 Release"). `render.py::load_human_overlay()` falls back to legacy `human.json` for back-compat (no project has adopted the JSON format yet anyway). Atomic supersede valid because #153 was merged 30 min prior with no downstream adopters.
+
+---
+
+## 2026-05-12 — push (tracker: deliverable-names sidecar)
+
+- Files: `skills/tracker/scripts/generate.py`
+- Branch: `sync/pdlc-demo-tracker-deliverable-names-sidecar-2026-05-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/153
+- Commit subject: `tracker: deliverable-names sidecar — persistent friendly per-DHF row names`
+- Status: merged (--merge requested)
+- Merge commit: `faae97e`
+- Hitachi HEAD after sync: `faae97e`
+- Context: task `ben/047` Stage 5b — adds optional `docs/project/submissions/submission-tracker.deliverable-names.yml` sidecar with v0.1 schema (per-DHF × canonical-role mapping; "*" wildcard supported; precedence: specific > wildcard > folder.name fallback). 3 hunks / ~60 lines added / zero removed. Backward-compatible: projects without sidecar fall back to current behavior. Local PDLC_DEMO now renders friendly names ("System Software Architecture Document (SAD)", "Risk Management Report (ISO 14971)", etc.) across all 11 canonical roles × 4 phases.
+
+---
+
+## 2026-05-11 — push (sync-skills SKILL.md genericization)
+
+- Files: `skills/sync-skills/SKILL.md`
+- Branch: `sync/pdlc-demo-sync-skills-leak-fix-2026-05-11`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/148
+- Commit subject: `sync-skills: genericize project-name examples in SKILL.md`
+- Status: merged (--merge requested)
+- Merge commit: `bd753b0`
+- Hitachi HEAD after sync: `bd753b0`
+- Context: task `ben/048` #1 — adopted from arthrex/pccp sister (they had it locally; never pushed upstream). 3 example-string substitutions in §Step-2 and §"2026-04-12 push" example block. No behavior change.
+
+---
+
+## 2026-05-11 — pull (visual polish + regulatory-affairs grounding)
+
+- Hitachi origin/main: `f17e3bc` (was `4751abd` earlier today)
+- Pulled (14 files, all clean — no local mods on any):
+  - **`tracker` v12** (PR #145): `skills/tracker/README.md` only (changelog backfill for color-coded legend + readable disabled action buttons; the `render.py` changes shipped earlier with #143 are already local)
+  - **`project-console` v1.17.0 → v1.21.1** (PR #146): `SKILL.md`, `README.md`, `VERSION`, `console/themes.py`, `console/web/static/{console.css, explorer.js}`, `console/web/templates/{_assistant_drawer.html, trace_matrix_index.html, trace_matrix_view.html, workflow_b3_index.html}`, `themes/dark/theme.yaml` — theme-token system, B6 workflow polish, asset-card CSS merge, full hardcoded-color sweep on B3 strategy-reassembly modals + chat textarea + diff buttons (no white-bg elements left on dark theme)
+  - **`regulatory-affairs` agent** (PR #147): `agents/regulatory-affairs.md` + `skills/advisors/agents/regulatory-affairs.md` — grounding glob aligned to flat-strategies layout
+- Post-update actions required: none (no `**Post-update:**` blocks in any changelog)
+- project-console scaffold: synced 1.17.0 → 1.21.1
+- Console restarted, all endpoints 200 (`/`, `/dashboards/submission-tracker`, `/trace-matrix`, `/workflows`, `/workflows/tracker-draft/Q1`)
+
+---
+
+## 2026-05-11 — pull (reset-to-upstream)
+
+- Hitachi origin/main: `4751abd` (md-deck/build.py py3.9 fix, on top of `7fbaa3b` B6 Create Draft v1)
+- Pulled (15 files):
+  - **New B6 Create Draft workflow** — `skills/project-console/console/workflows/{draft_session.py,draft_writer.py}`, `skills/project-console/console/web/templates/workflow_tracker_draft.html`, `skills/project-console/tests/test_draft_workflow_e2e.py`, `skills/tracker/agents/draft-author.md`, `skills/tracker/scripts/build-draft-context.py`, `skills/tracker/tests/test_create_draft_wiring.py`
+  - **B6 wiring updates** — `skills/project-console/console/workflows/router.py`, `skills/project-console/console/web/static/{assistant.js,tracker_interactive.js}`, `skills/tracker/scripts/render.py`
+  - **md-deck py3.9 compat** — `skills/md-deck/scripts/build.py`
+  - **Tracker baseline reset** — `skills/tracker/{SKILL.md,README.md,scripts/generate.py}` overwriting local v16/v17 WIP (init-taxonomy, classify-folders, assess-phases, reconcile-taxonomy actions; folder-classifier + phase-mapper agents; taxonomy.py + 6 helper scripts; schemas/taxonomy.schema.yml). Local WIP archived to `tasks/ben/044/archive/wip-dropped-2026-05-11/skill/`.
+- project.yml: no changes
+- project-console scaffold: synced 1.7.6 → 1.17.0
+- Submission tracker regenerated from upstream v11 generator: `submission-tracker.md` (5.8KB / 52 table rows) + `submission-tracker.html` (24.7KB / 44 item rows / 6 Create Draft buttons). Project-side sidecars + candidate from the dropped WIP also archived under the same task-044 archive folder.
+- Follow-ups: ben/047 captures the project-data + small upstream-pushable improvements to reach 118-row demo depth.
+
+---
+
+## 2026-05-05 — push + merge (project-console asset card selector)
+
+- Files: 5
+  - `skills/project-console/console/app.py` (mount `/assets` static dir)
+  - `skills/project-console/console/overview/router.py` (asset discovery + context)
+  - `skills/project-console/console/web/templates/overview.html` (card grid + viewer)
+  - `skills/project-console/console/web/static/console.css` (card + viewer styles)
+  - `skills/project-console/console/web/templates/index.html` (Workflows navigation)
+- Branch: `sync/pdlc-demo-project-console-asset-cards-2026-05-05`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/142
+- Commit: "project-console: Add asset card selector to /overview"
+- Status: merged (`--merge` requested)
+- Merge commit: `980e14f634a2f599c115b997a7a013559455cd4a`
+- Hitachi HEAD after sync: `980e14f`
+- Feature: Asset discovery via `assets/*/index.html` scan, card-based selector, inline iframe viewer, consolidated bottom button bar. Company-agnostic, portable across projects.
+
+---
+
+## 2026-05-01 — pull + push (3 PRs) + 1 cleanup PR
+
+**Hitachi HEAD before sync**: `222ddf1` (project-console v1.7.8 → v1.9.0 PR #112)
+
+### Pull (committed locally)
+
+- **skill-creator v5 → v6** (5 files): non-blocking PreToolUse `skill-md-watch` hook + `audit-triggers` action. Hook will need `/skill-creator setup` re-run to register in `settings.json`.
+- **project-console v1.5.0 → v1.9.0** (10 files): workflow B3 strategy reassembly + assistant.js / console.css updates.
+- **change-control major expansion** (61 files): new INBOUND triggers (`adopt`, `adopt-tree`, `pull`, `promote`) for Confluence → repo, plus formal-review and internal-review action sets, lib/ rewrite, ~10 new test files.
+
+### Skipped on pull
+
+- 3 `.pyc` files leaked into `hitachi/skills/shared/scripts/office/__pycache__/` — flagged for upstream cleanup (PR #115 below).
+
+### Push (PR-only, no `--merge`)
+
+- **md-deck (PR #113)** — new skill from PDLC_DEMO task ben/039. 5 files. Note: README.md not yet authored (Best Practices follow-up).
+- **secops audit (PR #114)** — bumps secops v6 → v7. Adds `audit` action + `audit_artifacts.py` static-analysis scanner from task ben/041.
+
+### Cleanup (separate PR against hitachi)
+
+- **gitignore + pyc removal (PR #115)** — hitachi had no `.gitignore`; added one and `git rm --cached` removed the three leaked `.pyc` files.
+
+### project.yml change
+
+- Added third registry entry `community-zarazhangrui` recording the upstream provenance and pinned SHA (`8dca834`) for `frontend-slides`. `sync_policy: pull-only` — never push to third-party upstream.
+
+### Held from upstream push
+
+- `frontend-slides/*` (11 files) — third-party MIT skill from `zarazhangrui/frontend-slides`. Not GlobalLogic-authored; belongs in our project as a local install only.
+
+### Merged 2026-05-02
+
+- **PR #115 merged** (squash) — commit `21bd076`. Hitachi `.gitignore` added; 3 leaked `.pyc` files removed.
+- **PR #114 merged** (squash) — commit `e0c7422`. secops v6 → v7 with `audit` action + `audit_artifacts.py`.
+- **PR #113 merged** (squash) — commit `0b64361`. md-deck skill added to registry.
+
+**Hitachi HEAD after sync**: `0b64361` (fast-forwarded local clone).
+
+### Final state
+
+`check` after merges: only the 11 expected `frontend-slides/*` entries remain `LOCAL_ONLY` (held from push by design — third-party MIT skill recorded under registry `community-zarazhangrui` with `sync_policy: pull-only`). Zero `UPSTREAM_NEWER`, zero `UPSTREAM_ONLY`.
+
+### Local follow-ups (done)
+
+- `/skill-creator setup` re-run — `skill-md-watch` PreToolUse + `cleanup` SessionEnd hooks registered, smoke-tested.
+- `/secops setup` re-run — agent + `security-assert.sh` already in place; permissions merged (71 → 71 unique); git identity already aligned.
+
+---
+
 ## 2026-04-28 — push + merge (sync-skills v6 → v7 → v8: closes task ben/029 Bug A + Bug B)
 
 - Three sequential PRs in the same session, each squash-merged immediately to validate the next:
@@ -509,3 +781,41 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Follow-ups optional:
   - `/dhf-manifest init` to bootstrap the new sibling-of-/trace-matrix manifest skill
   - `/web-control setup` if/when a consumer skill needs Chrome automation
+
+## 2026-05-02 — push (md-deck v0.5 + frontend-slides registration)
+
+- Files: 43
+  - md-deck (5): SKILL.md, scripts/build.py, scripts/classify.py, scripts/creative.py, scripts/distill.py
+  - frontend-slides (38): SKILL.md, STYLE_PRESETS.md, viewport-base.css, animation-patterns.md, html-template.md, README.md, LICENSE, .pinned-sha, components/ (16 READMEs + _v04-components.css), presets/bold-signal.css, creative-palette.md, scripts/{deploy.sh, export-pdf.sh, extract-pptx.py}
+- Branch: `sync/pdlc-demo-md-deck-v0.5-creative-agents-2026-05-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/116
+- Commit: "md-deck v0.5 + frontend-slides shared layer + creative agent slots"
+- Status: merged
+- Merge commit: `58738c1`
+- Hitachi HEAD after sync: `58738c1`
+- Provenance: PDLC_DEMO task ben/042; local commits 946e710 → e9e5386 → 57298c8 → a185bfb
+
+## 2026-05-13 — pull
+
+- Hitachi HEAD: `d3c3429` (checkout 0 behind / 0 ahead of origin/main)
+- Pulled: 0 files — nothing in the auto-pull bucket.
+- `check --analyzed` found 18 UPSTREAM_NEWER files, all cases where **local is the newer/better version**:
+  - **12 agents** (`agents/*.md` — clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, risk-management, systems-engineering, vnv-lead) → `BOTH_DIVERGED`. Local has the **three-tier `canonical_roles:` grounding** refactor (committed `620e15e`, 2026-04-20); hitachi's `3393bab` (2026-04-23) *added* these agents to the registry for the first time but sourced the **older `context:`/`sources:` glob-list format** from the Arthrex PCCP project. Pulling would regress the local refactor → not pulled; surfaced as push candidates.
+  - **5 dhf-manifest files** (`README.md`, `SKILL.md`, `actions/discovery-index.md`, `scripts/discovery-index.py`, `tests/test_discovery_index.sh`) → `LOCAL_AHEAD`. **Uncommitted WIP** in the working tree (task ben/051, status Not Started) — not pull-eligible and not push-ready.
+  - **1 file** `skills/project-console/console/web/static/console.overrides.css` → `LOCAL_AHEAD`, committed locally, clean push candidate.
+- project.yml: no changes
+- Follow-ups: push decision pending user — see push candidates above.
+
+## 2026-05-13 — push (12 advisor agents → three-tier canonical-role grounding)
+
+- Files: 13
+  - agents (12): clinical-affairs, core-team-panel, cybersecurity, design-review-panel, human-factors, post-market, program-manager, quality-engineering, rd-lead, risk-management, systems-engineering, vnv-lead — refactored from `context:`/`sources:` glob-list grounding to three-tier `canonical_roles:` grounding (tier_1 / tier_2 / tier_3 advisor-researcher) + `Agent` tool
+  - skills/project-console/console/web/static/console.overrides.css (local-ahead styling override)
+- Branch: `sync/pdlc-demo-agent-canonical-roles-2026-05-13`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/160
+- Commit: "Refactor 12 advisor agents to three-tier canonical-role grounding"
+- Status: merged (--merge requested)
+- Merge commit: `4b43fff`
+- Hitachi HEAD after sync: `4b43fff`
+- Provenance: PDLC_DEMO — local agent refactor committed `620e15e` (2026-04-20). These agents had entered the registry via hitachi #63 (`3393bab`) in the pre-refactor Arthrex-sourced format.
+- Not pushed: 5 dhf-manifest files (uncommitted WIP, task ben/051 — Not Started).

@@ -18,7 +18,7 @@ deployment:
 # ---------------------------------------------------------------------------
 confluence:
   base_url: https://example.atlassian.net
-  space_key: PROJECT
+  space_key: PP3500
   parent_page_id: null  # optional — root for published pages
   publisher: mark       # mark (kovetskiy/mark) — only supported v1
 
@@ -34,7 +34,7 @@ review_plugin:
 # ---------------------------------------------------------------------------
 jira:
   base_url: https://example.atlassian.net
-  project_key: PROJECT
+  project_key: PP3500
   ecr_issue_type: "Task"  # or a custom "ECR" issue type if the client has one
   required: at_freeze     # always | at_freeze | conditional | never
   # `at_freeze` means the ECR is required at freeze time, but only for doc
@@ -56,15 +56,15 @@ doc_classes:
   design-input:
     requires_part11_signature: true
     requires_jira_ecr: true
-    target_space: PROJECT
+    target_space: PP3500
   vv-protocol:
     requires_part11_signature: true
     requires_jira_ecr: true
-    target_space: PROJECT
+    target_space: PP3500
   risk-file:
     requires_part11_signature: true
     requires_jira_ecr: true
-    target_space: PROJECT
+    target_space: PP3500
   working-analysis:
     requires_part11_signature: false
     requires_jira_ecr: false   # never frozen — drafts only

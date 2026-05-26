@@ -9,6 +9,7 @@ credentials*
 node_modules/
 __pycache__/
 *.pyc
+.pytest_cache/
 .venv/
 dist/
 build/
@@ -16,4 +17,29 @@ build/
 .claude/state/
 .claude/scheduled_tasks.lock
 .worktrees/
+.tmp/
 docs/internal/source-md/.staging/
+
+# Google Drive for Desktop sync metadata — this project tree may live inside
+# a Drive-synced folder; these are transient sync artifacts, not project files.
+.tmp.driveupload/
+.tmp.drivedownload/
+.driveupload
+.drivedownload
+desktop.ini
+Icon?
+*.gdoc
+*.gsheet
+*.gslides
+*.gdraw
+*.gform
+*.gtable
+*.gmap
+*.gjam
+*.gsite
+*.glink
+
+# Personal scratch — per-person sandbox under tasks/{person}/_scratch/.
+# User-managed, never committed. See .claude/rules/scratch-and-tmp.md.
+_scratch/
+**/_scratch/

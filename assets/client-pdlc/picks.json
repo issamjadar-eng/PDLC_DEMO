@@ -1,0 +1,641 @@
+{
+  "schema": "client-pdlc/picks@1",
+  "_build_id": "agentic-delivery:47:105511|project-overview:52:35508|project-overview-2:27:58114",
+  "sources": {
+    "agentic-delivery": "../agentic-delivery/index.html",
+    "project-overview": "../project-overview/index.html",
+    "project-overview-2": "../project-overview-2/index.html"
+  },
+  "order": [
+    {
+      "src": "project-overview",
+      "idx": 1,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 6,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 13,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 14,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 11,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 5,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 8,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 9,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 15,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 16,
+      "keep": true
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 17,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 2,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 3,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 4,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 6,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 8,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 9,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 12,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 14,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 15,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 18,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 19,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 21,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 25,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 29,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 30,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 33,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 36,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 38,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 40,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 42,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 43,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 51,
+      "keep": true
+    },
+    {
+      "src": "project-overview",
+      "idx": 44,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 45,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 47,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 48,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 49,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 50,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 13,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 20,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 23,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 0,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 1,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 2,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 3,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 4,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 7,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 10,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 12,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 18,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 19,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 20,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 21,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 22,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 23,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 24,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 25,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 26,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 27,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 28,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 29,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 30,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 31,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 32,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 33,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 34,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 35,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 36,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 37,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 38,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 39,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 40,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 41,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 42,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 43,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 44,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 45,
+      "keep": false
+    },
+    {
+      "src": "agentic-delivery",
+      "idx": 46,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 0,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 5,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 7,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 10,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 11,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 13,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 16,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 17,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 20,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 22,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 23,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 24,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 26,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 27,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 28,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 31,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 32,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 34,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 35,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 37,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 39,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 41,
+      "keep": false
+    },
+    {
+      "src": "project-overview",
+      "idx": 46,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 0,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 1,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 2,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 3,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 4,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 5,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 6,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 7,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 8,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 9,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 10,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 11,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 12,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 14,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 15,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 16,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 17,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 18,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 19,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 21,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 22,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 24,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 25,
+      "keep": false
+    },
+    {
+      "src": "project-overview-2",
+      "idx": 26,
+      "keep": false
+    }
+  ]
+}

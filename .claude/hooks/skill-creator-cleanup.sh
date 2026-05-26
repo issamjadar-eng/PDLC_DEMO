@@ -1,0 +1,1 @@
+../skills/skill-creator/hooks/skill-md-watch-cleanup.sh

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "standards",
   "source_file": "iec-62366.md",
   "obligation_count": 9,
@@ -16,9 +16,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "Usability Engineering Plan",
-        "Design and Development Plan"
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-plan*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*design-and-development-plan*.md"
+        }
       ],
       "verbatim": "Establish and maintain a usability engineering process. The process must be integrated with the overall design and development process. Usability engineering activities must be traceable to the risk management process (ISO 14971).",
       "extracted_requirements": [
@@ -39,9 +47,17 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "Use Specification",
-        "Usability Engineering File"
+        {
+          "role": "human-factors",
+          "file_pattern": "*use-specification*.md"
+        },
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-file*.md"
+        }
       ],
       "verbatim": "Identify and characterize intended users. Consider: clinical role, training level, experience, physical capabilities.",
       "extracted_requirements": [
@@ -62,9 +78,17 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "Use Specification",
-        "Usability Engineering File"
+        {
+          "role": "human-factors",
+          "file_pattern": "*use-specification*.md"
+        },
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-file*.md"
+        }
       ],
       "verbatim": "Document the use environment for each use scenario. Consider: lighting, noise, sterility, time pressure, distractions, PPE.",
       "extracted_requirements": [
@@ -87,10 +111,21 @@
       "artifact_type": "analysis",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "Use-Related Risk Analysis",
-        "Usability Engineering File",
-        "Risk Management File"
+        {
+          "role": "human-factors",
+          "file_pattern": "*use-related-risk-analysis*.md"
+        },
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-file*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-file*.md"
+        }
       ],
       "verbatim": "Identify hazards and hazardous situations related to use. Identify potential use errors and their causes. Evaluate the severity and probability of harm from use errors. Feed use-related risks into the ISO 14971 risk management process.",
       "extracted_requirements": [
@@ -115,9 +150,17 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "User Interface Specification",
-        "Software Requirements Specification"
+        {
+          "role": "human-factors",
+          "file_pattern": "*user-interface-specification*.md"
+        },
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        }
       ],
       "verbatim": "Establish the user interface specification from use specification and risk analysis. Specify: information presentation, controls, navigation, feedback, error prevention. Include measurable acceptance criteria for critical use scenarios.",
       "extracted_requirements": [
@@ -141,9 +184,17 @@
       "artifact_type": "test-report",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "UI Verification Report",
-        "V&V Plan"
+        {
+          "role": "vnv",
+          "file_pattern": "*ui-verification*.md"
+        },
+        {
+          "role": "vnv",
+          "file_pattern": "*vnv-plan*.md"
+        }
       ],
       "verbatim": "Verify the user interface meets the user interface specification. Include inspection, analysis, and testing methods. Verify risk control measures related to usability are implemented.",
       "extracted_requirements": [
@@ -164,9 +215,17 @@
       "artifact_type": "test-report",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Formative Evaluation Reports",
-        "Usability Engineering File"
+        {
+          "role": "vnv",
+          "file_pattern": "*formative-evaluation*.md"
+        },
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-file*.md"
+        }
       ],
       "verbatim": "Evaluate the user interface with representative users in representative environments (formative phase). Methods: cognitive walkthrough, heuristic evaluation, usability testing with think-aloud. Can be done with simulated environments and prototype interfaces. Multiple rounds expected.",
       "extracted_requirements": [
@@ -191,9 +250,17 @@
       "artifact_type": "test-report",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv",
+      "criticality": "must-have",
       "applies_to": [
-        "Summative Usability Evaluation Report",
-        "510(k) Submission"
+        {
+          "role": "vnv",
+          "file_pattern": "*summative-usability*.md"
+        },
+        {
+          "role": "submission-authored",
+          "file_pattern": "*510k*summative*.md"
+        }
       ],
       "verbatim": "Evaluate the user interface with representative users in representative environments (summative phase). Must use production-equivalent device in representative use environment. Must include statistical evidence that critical tasks can be completed safely. Deliverable: Summative Usability Evaluation Report.",
       "extracted_requirements": [
@@ -220,9 +287,17 @@
       "artifact_type": "analysis",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "human-factors",
+      "criticality": "must-have",
       "applies_to": [
-        "UOUP Evaluation",
-        "Usability Engineering File"
+        {
+          "role": "human-factors",
+          "file_pattern": "*uoup-evaluation*.md"
+        },
+        {
+          "role": "human-factors",
+          "file_pattern": "*usability-engineering-file*.md"
+        }
       ],
       "verbatim": "If reusing an existing user interface or UI components, evaluate them using this process. Applicable when using third-party UI frameworks or pre-built components in the clinical interface.",
       "extracted_requirements": [

@@ -184,7 +184,7 @@ Mark all fillable elements:
 This applies to **every** doc-type, not just requirements docs:
 
 - Confluence cross-references in product overviews, architecture docs, and SOPs
-- Jira/AFAI URLs on requirement keys, tickets, epic links
+- Jira URLs on requirement keys, tickets, epic links
 - Design Input cross-references (`[DI-0003](<url>)`)
 - External references (standards documents, FDA guidance, vendor manuals, RFCs)
 - Confluence same-page anchors (`#SoftwareRiskAssessment(SRA)-SecurityAnalysis`) — preserved as-is for round-trip back to Confluence

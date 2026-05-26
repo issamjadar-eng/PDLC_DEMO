@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  md-deck v0.2.0 — DO NOT HAND-EDIT
+  Source: project-overview.md
+  SHA-256: 69e976d891e709f2a1afdb0d164cc2958b0a8909739a8538f2ebf48fbb2557c8
+  Built:  2026-05-02T05:28:51Z by benxavier
+  Update: python .claude/skills/md-deck/scripts/build.py project-overview.md
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="md-deck v0.2.0">
+<meta name="md-deck:source" content="project-overview.md">
+<meta name="md-deck:source-sha256" content="69e976d891e709f2a1afdb0d164cc2958b0a8909739a8538f2ebf48fbb2557c8">
+<meta name="md-deck:built-at" content="2026-05-02T05:28:51Z">
+<meta name="md-deck:built-by" content="benxavier">
+<meta name="md-deck:style" content="bold-signal">
+<meta name="md-deck:slide-count" content="52">
+<title>project-overview</title>
+<style>
+
+:root {
+    --bg-primary: #0e0e10;
+    --bg-secondary: #181820;
+    --bg-gradient: radial-gradient(circle at 20% 30%, #2a1810 0%, #181820 40%, #0e0e10 100%);
+    --grid-color: rgba(255, 255, 255, 0.04);
+    --card-orange: #FF5722;
+    --card-amber: #FFB400;
+    --card-coral: #FF7043;
+    --text-primary: #ffffff;
+    --text-secondary: #a8a8b3;
+    --text-muted: #6b6b7d;
+    --text-on-card: #14140a;
+    --rule: rgba(255, 255, 255, 0.08);
+
+    --font-display: "Archivo Black", "Helvetica Neue", sans-serif;
+    --font-body: "Space Grotesk", "Helvetica Neue", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+
+    --title-size: clamp(1.5rem, 5vw, 4rem);
+    --display-size: clamp(2rem, 7vw, 6rem);
+    --h2-size: clamp(1.25rem, 3.2vw, 2.4rem);
+    --h3-size: clamp(1rem, 2.2vw, 1.5rem);
+    --body-size: clamp(0.75rem, 1.4vw, 1.1rem);
+    --small-size: clamp(0.65rem, 1vw, 0.85rem);
+    --eyebrow-size: clamp(0.6rem, 0.9vw, 0.75rem);
+
+    --slide-padding: clamp(1.25rem, 4vw, 4rem);
+    --content-gap: clamp(0.6rem, 1.6vw, 1.5rem);
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-normal: 0.7s;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.45;
+}
+.slide {
+    width: 100vw; height: 100vh; height: 100dvh;
+    overflow: hidden; scroll-snap-align: start;
+    display: flex; flex-direction: column; position: relative;
+    background: var(--bg-gradient);
+}
+.slide-content {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    max-height: 100%; overflow: hidden; padding: var(--slide-padding);
+    position: relative; z-index: 2;
+}
+.slide::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: clamp(40px, 5vw, 80px) clamp(40px, 5vw, 80px);
+    pointer-events: none; z-index: 0;
+}
+
+.chrome {
+    position: absolute; top: clamp(0.75rem, 2vh, 1.25rem);
+    left: var(--slide-padding); right: var(--slide-padding);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: var(--eyebrow-size); font-family: var(--font-mono);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted); z-index: 5;
+}
+.chrome .chrome-num { color: var(--card-orange); font-weight: 500; }
+.chrome .brand { color: var(--text-secondary); }
+.chrome .crumb { color: var(--text-muted); }
+
+.progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--card-orange), var(--card-amber));
+    z-index: 100; transition: width 0.2s ease-out; width: 0%;
+}
+.nav-dots {
+    position: fixed; right: clamp(0.5rem, 1.5vw, 1.25rem); top: 50%;
+    transform: translateY(-50%); display: flex; flex-direction: column;
+    gap: clamp(0.4rem, 0.9vh, 0.7rem); z-index: 50;
+}
+.nav-dots .dot {
+    width: clamp(6px, 0.7vw, 9px); height: clamp(6px, 0.7vw, 9px);
+    border-radius: 50%; background: rgba(255,255,255,0.18);
+    cursor: pointer; transition: background 0.25s, transform 0.25s; border: 0;
+}
+.nav-dots .dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.15); }
+.nav-dots .dot.active { background: var(--card-orange); transform: scale(1.4); }
+
+.reveal { opacity: 0; transform: translateY(28px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.22s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.34s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.46s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: 0.58s; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.01em; line-height: 1.05; }
+h1 { font-size: var(--display-size); }
+h2 { font-size: var(--title-size); margin-bottom: var(--content-gap); }
+p, li, td, th { font-size: var(--body-size); }
+
+.eyebrow {
+    font-family: var(--font-mono); font-size: var(--eyebrow-size);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--card-orange); font-weight: 500;
+    margin-bottom: clamp(0.6rem, 1.4vh, 1rem);
+}
+.lead { font-size: clamp(0.95rem, 1.7vw, 1.35rem); color: var(--text-secondary); line-height: 1.5; max-width: 80ch; }
+.muted { color: var(--text-secondary); }
+.dim { color: var(--text-muted); }
+.mono { font-family: var(--font-mono); }
+strong { color: var(--card-orange); font-weight: 600; }
+em { color: var(--text-primary); font-style: italic; }
+code.mono { background: rgba(255,255,255,0.04); padding: 0.1em 0.4em; border-radius: 3px; font-size: 0.92em; }
+
+table.compact-table {
+    width: 100%; border-collapse: collapse;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    table-layout: auto;
+    font-size: clamp(0.7rem, 1.15vw, 0.95rem);
+}
+.compact-table th, .compact-table td {
+    padding: clamp(0.4rem, 0.9vw, 0.7rem) clamp(0.55rem, 1.1vw, 0.95rem);
+    text-align: left; border-bottom: 1px solid var(--rule);
+    vertical-align: top; line-height: 1.35;
+}
+.compact-table th {
+    color: var(--card-orange); font-family: var(--font-mono);
+    font-weight: 500; font-size: var(--small-size);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-bottom-color: var(--card-orange);
+}
+.compact-table tr:last-child td { border-bottom: none; }
+
+.card-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1.2vw, 1rem);
+}
+@media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .card-grid { grid-template-columns: 1fr; } }
+.mini-card {
+    position: relative;
+    padding: clamp(0.6rem, 1.3vw, 1rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid var(--rule); border-radius: 4px;
+    /* Resting cells stay put. Hover reveals .mc-full popup overlay
+       (absolutely positioned), so neighbors don't shift. */
+    transition: border-color 0.25s, box-shadow 0.25s, z-index 0s;
+    min-height: clamp(110px, 18vh, 170px);
+    z-index: 1;
+}
+.mini-card:hover {
+    border-color: var(--card-orange);
+    z-index: 50;
+}
+.mini-card.accent-orange { border-top: 3px solid var(--card-orange); }
+.mini-card.accent-amber  { border-top: 3px solid var(--card-amber); }
+.mini-card.accent-coral  { border-top: 3px solid var(--card-coral); }
+.mini-card.accent-orange:hover { box-shadow: 0 12px 32px -8px rgba(255,87,34,0.40); }
+.mini-card.accent-amber:hover  { box-shadow: 0 12px 32px -8px rgba(255,180,0,0.40); }
+.mini-card.accent-coral:hover  { box-shadow: 0 12px 32px -8px rgba(255,112,67,0.40); }
+.mini-card .mc-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem); line-height: 1.15;
+    margin-bottom: clamp(0.25rem, 0.55vh, 0.45rem);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.mini-card .mc-sub {
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    color: var(--text-secondary); line-height: 1.4;
+    /* Truncate the resting-state subtitle to ~5 lines so cards stay
+       evenly-sized; the full text lives in .mc-full popup. */
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* Hover popup — absolutely positioned overlay that paints OVER the
+   card on hover. No neighbor displacement; matches the cat-cell pattern. */
+.mini-card .mc-full {
+    position: absolute;
+    top: -4px; left: -4px; right: -4px;
+    min-height: calc(100% + 8px);
+    height: max-content;
+    padding: clamp(0.7rem, 1.4vw, 1.1rem);
+    border-radius: 4px;
+    background: linear-gradient(160deg, rgba(28,28,32,0.98) 0%, rgba(20,20,24,0.98) 100%);
+    border: 1px solid currentColor;
+    box-shadow: 0 16px 40px -8px rgba(0,0,0,0.55), 0 0 0 1px currentColor;
+    color: var(--text-primary);
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    line-height: 1.5;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-3px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 5;
+    overflow: visible;
+}
+.mini-card .mc-full .mc-full-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    font-weight: 600;
+    margin-bottom: clamp(0.25rem, 0.55vh, 0.45rem);
+    color: var(--text-primary);
+}
+.mini-card .mc-full .mc-full-body {
+    color: var(--text-secondary);
+}
+.mini-card.accent-orange .mc-full { color: var(--card-orange); }
+.mini-card.accent-amber  .mc-full { color: var(--card-amber); }
+.mini-card.accent-coral  .mc-full { color: var(--card-coral); }
+.mini-card:hover .mc-full {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.bullets { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.9rem); }
+.bullets li {
+    position: relative; padding-left: clamp(1.1rem, 1.6vw, 1.5rem);
+    color: var(--text-secondary); line-height: 1.45;
+}
+.bullets li::before {
+    content: ""; position: absolute; left: 0;
+    top: clamp(0.55rem, 1.1vh, 0.7rem);
+    width: clamp(0.55rem, 0.9vw, 0.75rem); height: 2px;
+    background: var(--card-orange);
+}
+.bullets li strong { color: var(--text-primary); font-weight: 600; }
+
+.prose { display: flex; flex-direction: column; gap: clamp(0.6rem, 1.4vh, 1rem); max-width: 80ch; }
+.prose p { color: var(--text-secondary); line-height: 1.55; font-size: clamp(0.85rem, 1.4vw, 1.1rem); }
+
+/* Title slide — content max-width keeps the meta block / lead from
+   bleeding into the orange signal block on the right. The signal
+   block lives in the bottom-right ~28vw zone; safe content width is
+   ~70vw minus the slide padding. */
+.title-slide .slide-content {
+    justify-content: center; align-items: flex-start;
+    gap: clamp(1.2rem, 3vh, 2rem);
+}
+.title-slide .num-block {
+    font-family: var(--font-display); color: var(--card-orange);
+    font-size: clamp(0.9rem, 1.4vw, 1.1rem); letter-spacing: 0.18em;
+}
+.title-slide h1 {
+    font-size: clamp(2.5rem, 8vw, 7rem); line-height: 0.92;
+    max-width: min(18ch, calc(100vw - 28vw - 4rem));
+}
+.title-slide .lead {
+    max-width: min(60ch, calc(100vw - 28vw - 4rem));
+}
+.title-slide .signal-block {
+    position: absolute; bottom: 0; right: 0;
+    width: clamp(180px, 28vw, 360px); height: clamp(180px, 28vw, 360px);
+    background: linear-gradient(135deg, #FF7A45 0%, var(--card-orange) 50%, #c43a14 100%);
+    /* No rotation — keep the block as a clean offset rectangle */
+    transform: translate(15%, 15%);
+    border-radius: 6px;
+    box-shadow: -30px -30px 80px -10px rgba(255, 87, 34, 0.35); z-index: 1;
+}
+.t-meta-block {
+    display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.4rem);
+    font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem);
+    color: var(--text-secondary);
+    /* Stop well clear of the signal block on the right */
+    max-width: min(60ch, calc(100vw - 28vw - 4rem));
+    z-index: 2; position: relative;
+}
+.t-meta-row {
+    display: grid;
+    grid-template-columns: clamp(7rem, 12vw, 10rem) 1fr;
+    gap: clamp(0.5rem, 1.2vw, 1rem);
+    align-items: baseline;
+}
+.t-meta-row .k { color: var(--card-orange); font-weight: 500; }
+.t-meta-row .v {
+    color: var(--text-secondary);
+    word-wrap: break-word; overflow-wrap: break-word;
+    line-height: 1.45;
+}
+
+/* === Image-feature slide ============================== */
+.image-feature-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(0.8rem, 2vw, 1.6rem);
+    align-items: center;
+    margin-top: clamp(0.4rem, 1vh, 0.7rem);
+    width: 100%;
+    max-width: min(95vw, 1300px);
+}
+@media (max-width: 800px) { .image-feature-grid { grid-template-columns: 1fr; } }
+.image-feature-grid .image-hero {
+    position: relative;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px -16px rgba(255,87,34,0.25);
+    transition: box-shadow 0.4s, border-color 0.4s;
+}
+.slide.visible .image-feature-grid .image-hero {
+    border-color: rgba(255,87,34,0.35);
+    box-shadow: 0 16px 60px -8px rgba(255,87,34,0.45);
+}
+.image-feature-grid .image-hero img {
+    display: block;
+    width: 100%;
+    max-height: clamp(280px, 60vh, 600px);
+    object-fit: contain;
+    background: rgba(0,0,0,0.2);
+}
+.image-feature-grid .image-side {
+    display: flex; flex-direction: column;
+    gap: clamp(0.4rem, 1vh, 0.7rem);
+    min-width: 0;
+}
+.image-feature-grid .image-side .bullets li { font-size: clamp(0.7rem, 1.15vw, 0.92rem); line-height: 1.4; }
+
+/* Divider slide */
+.divider .slide-content { justify-content: center; align-items: flex-start; gap: clamp(0.7rem, 2vh, 1.4rem); }
+.divider .section-num {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 18vw, 18rem); line-height: 0.85;
+    color: var(--card-orange); margin-left: -0.05em;
+}
+.divider h2 { font-size: clamp(1.5rem, 5vw, 4rem); line-height: 1; max-width: 18ch; margin-bottom: 0; }
+
+/* Agenda */
+.agenda-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1.3vw, 1rem); margin-top: clamp(0.5rem, 1.3vh, 1rem);
+}
+@media (max-width: 900px) { .agenda-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .agenda-grid { grid-template-columns: 1fr; } }
+.agenda-card {
+    border: 1px solid var(--rule); border-left: 3px solid var(--card-orange);
+    padding: clamp(0.55rem, 1.3vw, 0.95rem);
+    background: linear-gradient(120deg, rgba(255,87,34,0.07) 0%, rgba(255,255,255,0.015) 70%);
+    display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.4rem);
+}
+.agenda-card .a-num {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+    color: var(--card-orange); line-height: 1;
+}
+.agenda-card .a-name {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+    line-height: 1.1;
+}
+
+/* Quote slide */
+.quote-slide blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 3.5rem); line-height: 1.1;
+    max-width: 22ch; color: var(--text-primary);
+    border-left: 4px solid var(--card-orange);
+    padding-left: clamp(1rem, 2vw, 1.6rem);
+}
+
+/* keyboard hint */
+.keyboard-hint {
+    position: fixed; bottom: clamp(0.6rem, 1.5vh, 1rem);
+    left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 0.85vw, 0.7rem);
+    color: var(--text-muted); letter-spacing: 0.08em; z-index: 30;
+    text-transform: uppercase; opacity: 0.6; pointer-events: none;
+}
+
+/* Provenance modal */
+.provenance-modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.72); backdrop-filter: blur(8px);
+    z-index: 200; align-items: center; justify-content: center;
+}
+.provenance-card {
+    background: linear-gradient(160deg, rgba(255,87,34,0.12) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid var(--card-orange); border-radius: 6px;
+    padding: clamp(1.2rem, 2.5vw, 2rem);
+    max-width: min(92vw, 540px);
+    box-shadow: 0 30px 80px -20px rgba(255,87,34,0.5);
+}
+.provenance-card h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    color: var(--card-orange); margin-bottom: clamp(0.7rem, 1.5vh, 1rem);
+}
+.provenance-card dl {
+    display: grid;
+    grid-template-columns: clamp(5rem, 10vw, 7rem) 1fr;
+    gap: clamp(0.4rem, 1vh, 0.6rem) clamp(0.7rem, 1.5vw, 1.2rem);
+    font-size: clamp(0.7rem, 1.1vw, 0.92rem);
+}
+.provenance-card dt {
+    font-family: var(--font-mono); color: var(--card-orange);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    font-size: 0.85em;
+}
+.provenance-card dd { color: var(--text-secondary); word-break: break-all; }
+.provenance-card .hint {
+    margin-top: clamp(0.7rem, 1.5vh, 1.1rem);
+    font-family: var(--font-mono); font-size: var(--small-size);
+    color: var(--text-muted); text-align: center;
+}
+
+/* === Table density tiers (auto-applied per column/row count) === */
+.table-wrap { overflow: visible; max-width: 100%; }
+.compact-table.density-compact { font-size: clamp(0.7rem, 1.15vw, 0.92rem); }
+.compact-table.density-tight th, .compact-table.density-tight td {
+    padding: clamp(0.3rem, 0.7vw, 0.55rem) clamp(0.4rem, 0.85vw, 0.7rem);
+    font-size: clamp(0.62rem, 1vw, 0.82rem);
+    line-height: 1.3;
+}
+.compact-table.density-very-compact th, .compact-table.density-very-compact td {
+    padding: clamp(0.22rem, 0.55vw, 0.42rem) clamp(0.3rem, 0.7vw, 0.55rem);
+    font-size: clamp(0.55rem, 0.9vw, 0.74rem);
+    line-height: 1.25;
+}
+.compact-table.density-very-compact th { letter-spacing: 0.04em; }
+
+/* === Iceberg metaphor === */
+.iceberg-svg {
+    width: 100%; max-width: min(95vw, 1200px);
+    max-height: clamp(280px, 56vh, 500px);
+    margin: 0 auto; overflow: visible; display: block;
+}
+/* Waterline shimmer + iceberg bob — subtle, never-distracting */
+.iceberg-svg line[stroke-dasharray] {
+    animation: waterlineShimmer 4s ease-in-out infinite;
+}
+@keyframes waterlineShimmer {
+    0%, 100% { stroke-opacity: 0.55; stroke-dashoffset: 0; }
+    50%      { stroke-opacity: 0.95; stroke-dashoffset: 10; }
+}
+.iceberg-svg polygon { animation: icebergBob 8s ease-in-out infinite; transform-origin: center; }
+@keyframes icebergBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+}
+
+/* === Concept canvas === */
+.canvas-svg-wrap svg { width: 100%; max-width: clamp(220px, 40vw, 420px); height: auto; }
+.canvas-metaphor-svg .ring-outer { fill: none; stroke: var(--card-orange); stroke-width: 2; }
+.canvas-metaphor-svg .ring-inner { fill: rgba(255,87,34,0.15); stroke: var(--card-orange); stroke-width: 1.5; }
+.canvas-metaphor-svg text { fill: var(--card-orange); font-family: var(--font-display); text-anchor: middle; }
+/* Outer dashed ring rotates slowly; inner hub pulses gently */
+.canvas-metaphor-svg circle.ring-outer:nth-of-type(2) {
+    transform-origin: center; transform-box: fill-box;
+    animation: canvasRingRotate 60s linear infinite;
+}
+@keyframes canvasRingRotate { to { transform: rotate(360deg); } }
+.canvas-metaphor-svg circle.ring-inner {
+    transform-origin: center; transform-box: fill-box;
+    animation: canvasHubPulse 3.5s ease-in-out infinite;
+}
+@keyframes canvasHubPulse {
+    0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 6px rgba(255,87,34,0.35)); }
+    50%      { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(255,87,34,0.65)); }
+}
+
+/* === Principle tiles — low-text variant for dense card-grids === */
+.principle-tile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.6rem, 1.4vw, 1.1rem);
+    width: 100%;
+    max-width: min(95vw, 1300px);
+    margin: clamp(0.4rem, 1vh, 0.7rem) auto 0;
+}
+@media (max-width: 800px) { .principle-tile-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .principle-tile-grid { grid-template-columns: 1fr; } }
+.principle-tile {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: clamp(0.8rem, 1.7vw, 1.3rem) clamp(0.7rem, 1.5vw, 1.1rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 0.9vh, 0.65rem);
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+}
+.principle-tile:hover { transform: translateY(-3px); }
+.principle-tile.accent-orange { border-top: 3px solid var(--card-orange); }
+.principle-tile.accent-orange:hover { box-shadow: 0 12px 32px -8px rgba(255,87,34,0.40); }
+.principle-tile.accent-amber  { border-top: 3px solid var(--card-amber); }
+.principle-tile.accent-amber:hover  { box-shadow: 0 12px 32px -8px rgba(255,180,0,0.40); }
+.principle-tile.accent-coral  { border-top: 3px solid var(--card-coral); }
+.principle-tile.accent-coral:hover  { box-shadow: 0 12px 32px -8px rgba(255,112,67,0.40); }
+.principle-tile .p-icon {
+    width: clamp(34px, 4.5vw, 50px);
+    height: clamp(34px, 4.5vw, 50px);
+    flex-shrink: 0;
+}
+.principle-tile.accent-orange .p-icon { color: var(--card-orange); }
+.principle-tile.accent-amber  .p-icon { color: var(--card-amber); }
+.principle-tile.accent-coral  .p-icon { color: var(--card-coral); }
+.principle-tile .p-icon svg { width: 100%; height: 100%; }
+.principle-tile .p-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+    line-height: 1.1;
+    color: var(--text-primary);
+}
+.principle-tile .p-sub {
+    font-family: var(--font-body);
+    font-size: clamp(0.7rem, 1.15vw, 0.92rem);
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+/* Subtle icon wiggle on slide-visible to draw the eye */
+.slide.visible .principle-tile .p-icon { animation: tileIconWobble 5s ease-in-out infinite; }
+@keyframes tileIconWobble {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50%      { transform: rotate(-3deg) scale(1.06); }
+}
+
+/* === Catalog mosaic — colored grid of compact cells (Variant A for catalog tables) === */
+.cat-mosaic {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(0.4rem, 0.9vw, 0.7rem);
+    width: 100%;
+    max-width: min(95vw, 1300px);
+    margin: clamp(0.4rem, 1vh, 0.7rem) auto 0;
+}
+@media (max-width: 1100px) { .cat-mosaic { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 800px)  { .cat-mosaic { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 540px)  { .cat-mosaic { grid-template-columns: repeat(2, 1fr); } }
+.cat-cell {
+    position: relative;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: clamp(0.5rem, 1.1vw, 0.8rem);
+    display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.35rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s, z-index 0s;
+    /* Resting cells now slightly taller so the bumped 8-word tagline
+       has room to breathe without spilling. */
+    min-height: clamp(95px, 14vh, 130px);
+    z-index: 1;
+}
+.cat-cell:hover {
+    /* No scale / no displacement — neighbors stay put. The hover state
+       reveals a popup overlay (.cc-full) that paints above the cell. */
+    z-index: 50;
+}
+.cat-cell .cc-icon {
+    width: clamp(22px, 2.6vw, 30px);
+    height: clamp(22px, 2.6vw, 30px);
+}
+.cat-cell .cc-icon svg { width: 100%; height: 100%; }
+.cat-cell .cc-name {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 1.1vw, 0.9rem);
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.1;
+    word-break: break-word;
+}
+.cat-cell .cc-tag {
+    font-size: clamp(0.6rem, 0.95vw, 0.78rem);
+    color: var(--text-secondary);
+    line-height: 1.4;
+    /* Allow up to 4 lines of tagline to accommodate the 8-word bump */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: opacity 0.25s, max-height 0.3s;
+}
+/* Hover-expand POPUP: a floating overlay that appears OVER the cell on
+   hover. Absolutely positioned so it doesn't push neighbors. The
+   resting cell stays exactly where it is; the popup paints on top. */
+.cat-cell .cc-full {
+    position: absolute;
+    top: -4px; left: -4px; right: -4px;
+    min-height: calc(100% + 8px);
+    height: max-content;
+    padding: clamp(0.55rem, 1.2vw, 0.85rem);
+    border-radius: 4px;
+    background: linear-gradient(160deg, rgba(28,28,32,0.98) 0%, rgba(20,20,24,0.98) 100%);
+    border: 1px solid currentColor;
+    box-shadow: 0 16px 40px -8px rgba(0,0,0,0.55), 0 0 0 1px currentColor;
+    color: var(--text-primary);
+    font-size: clamp(0.65rem, 1.05vw, 0.85rem);
+    line-height: 1.5;
+    font-weight: 400;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-3px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 5;
+    overflow: visible;
+}
+/* Reset color back to text-primary inside the popup body — the
+   `currentColor` on border picks up the cell's category color. */
+.cat-cell .cc-full::before {
+    /* Echo the cell name + icon at the top of the popup so the user
+       still has context. Implemented via a CSS-generated mini-header. */
+    content: "";
+}
+.cat-cell:hover .cc-full {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+/* The cell stays exactly the same size when hovering — the resting
+   tagline/icon/name are visible underneath the popup edges (since the
+   popup overflows the cell by 4px on each side, the resting content is
+   subtly visible at the very borders). */
+.cat-process  { border-top: 3px solid var(--card-orange); }
+.cat-process  .cc-icon, .cat-process  .ch-icon, .cat-process  .cp-icon { color: var(--card-orange); }
+.cat-process:hover  { border-color: var(--card-orange); box-shadow: 0 8px 24px -8px rgba(255,87,34,0.30); }
+.cat-docs     { border-top: 3px solid var(--card-amber); }
+.cat-docs     .cc-icon, .cat-docs     .ch-icon, .cat-docs     .cp-icon { color: var(--card-amber); }
+.cat-docs:hover     { border-color: var(--card-amber); box-shadow: 0 8px 24px -8px rgba(255,180,0,0.30); }
+.cat-strategy { border-top: 3px solid var(--card-coral); }
+.cat-strategy .cc-icon, .cat-strategy .ch-icon, .cat-strategy .cp-icon { color: var(--card-coral); }
+.cat-strategy:hover { border-color: var(--card-coral); box-shadow: 0 8px 24px -8px rgba(255,112,67,0.30); }
+.cat-quality  { border-top: 3px solid #5fd97c; }
+.cat-quality  .cc-icon, .cat-quality  .ch-icon, .cat-quality  .cp-icon { color: #5fd97c; }
+.cat-quality:hover  { border-color: #5fd97c; box-shadow: 0 8px 24px -8px rgba(95,217,124,0.30); }
+.cat-ops      { border-top: 3px solid #6aa3ff; }
+.cat-ops      .cc-icon, .cat-ops      .ch-icon, .cat-ops      .cp-icon { color: #6aa3ff; }
+.cat-ops:hover      { border-color: #6aa3ff; box-shadow: 0 8px 24px -8px rgba(106,163,255,0.30); }
+.cat-default  { border-top: 3px solid var(--text-muted); }
+.cat-default  .cc-icon, .cat-default  .ch-icon, .cat-default  .cp-icon { color: var(--text-secondary); }
+
+/* Legend pills under the mosaic */
+.lg {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.15em 0.45em;
+    border-radius: 999px;
+    margin: 0 0.15em;
+    border: 1px solid currentColor;
+}
+.lg.cat-process { color: var(--card-orange); }
+.lg.cat-docs    { color: var(--card-amber); }
+.lg.cat-strategy{ color: var(--card-coral); }
+.lg.cat-quality { color: #5fd97c; }
+.lg.cat-ops     { color: #6aa3ff; }
+
+/* Cascade entry animation for mosaic */
+.slide.visible .cat-cell {
+    animation: catCellEnter 0.6s var(--ease-out-expo) backwards;
+}
+.slide.visible .cat-cell:nth-child(1)  { animation-delay: 0.05s; }
+.slide.visible .cat-cell:nth-child(2)  { animation-delay: 0.10s; }
+.slide.visible .cat-cell:nth-child(3)  { animation-delay: 0.15s; }
+.slide.visible .cat-cell:nth-child(4)  { animation-delay: 0.20s; }
+.slide.visible .cat-cell:nth-child(5)  { animation-delay: 0.25s; }
+.slide.visible .cat-cell:nth-child(6)  { animation-delay: 0.30s; }
+.slide.visible .cat-cell:nth-child(7)  { animation-delay: 0.35s; }
+.slide.visible .cat-cell:nth-child(8)  { animation-delay: 0.40s; }
+.slide.visible .cat-cell:nth-child(9)  { animation-delay: 0.45s; }
+.slide.visible .cat-cell:nth-child(n+10) { animation-delay: 0.5s; }
+@keyframes catCellEnter {
+    from { opacity: 0; transform: translateY(8px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* === Catalog featured + index — 3 hero cards + chips for the rest === */
+.cat-hero-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.6rem, 1.4vw, 1.1rem);
+    width: 100%;
+    max-width: min(95vw, 1200px);
+    margin: clamp(0.4rem, 1vh, 0.7rem) auto 0;
+}
+@media (max-width: 800px) { .cat-hero-row { grid-template-columns: 1fr; } }
+.cat-hero {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: clamp(0.7rem, 1.5vw, 1.1rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.55rem);
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.cat-hero:hover { transform: translateY(-3px); }
+.cat-hero .ch-icon { width: clamp(36px, 4.5vw, 50px); height: clamp(36px, 4.5vw, 50px); }
+.cat-hero .ch-icon svg { width: 100%; height: 100%; }
+.cat-hero .ch-name {
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+.cat-hero .ch-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 0.85vw, 0.72rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.cat-hero.cat-process  .ch-tag { color: var(--card-orange); }
+.cat-hero.cat-docs     .ch-tag { color: var(--card-amber); }
+.cat-hero.cat-strategy .ch-tag { color: var(--card-coral); }
+.cat-hero.cat-quality  .ch-tag { color: #5fd97c; }
+.cat-hero.cat-ops      .ch-tag { color: #6aa3ff; }
+.cat-hero .ch-desc {
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.cat-chip-row {
+    width: 100%; max-width: min(95vw, 1200px);
+    margin: clamp(0.6rem, 1.4vh, 1rem) auto 0;
+}
+.cat-chip-row .chip-eyebrow {
+    font-family: var(--font-mono);
+    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: clamp(0.3rem, 0.7vh, 0.5rem);
+}
+.cat-chip-row .chip-grid {
+    display: flex; flex-wrap: wrap;
+    gap: clamp(0.3rem, 0.7vw, 0.55rem);
+}
+.cat-chip {
+    display: inline-flex; align-items: center; gap: clamp(0.3rem, 0.6vw, 0.45rem);
+    padding: clamp(0.3rem, 0.6vh, 0.4rem) clamp(0.45rem, 0.95vw, 0.7rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: clamp(0.6rem, 0.95vw, 0.8rem);
+    color: var(--text-primary);
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: default;
+}
+.cat-chip:hover { transform: translateY(-1px); }
+.cat-chip.cat-process  { border-color: rgba(255,87,34,0.4); }
+.cat-chip.cat-docs     { border-color: rgba(255,180,0,0.4); }
+.cat-chip.cat-strategy { border-color: rgba(255,112,67,0.4); }
+.cat-chip.cat-quality  { border-color: rgba(95,217,124,0.4); }
+.cat-chip.cat-ops      { border-color: rgba(106,163,255,0.4); }
+.cat-chip .cp-icon { width: clamp(13px, 1.5vw, 17px); height: clamp(13px, 1.5vw, 17px); }
+.cat-chip .cp-icon svg { width: 100%; height: 100%; }
+
+/* === Handoff relay === */
+.relay-track {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+    gap: clamp(0.5rem, 1.2vw, 1rem);
+    margin: clamp(0.5rem, 1.2vh, 0.9rem) auto 0;
+    width: 100%; max-width: min(95vw, 1200px);
+}
+.relay-box {
+    border: 1px solid var(--rule); border-radius: 4px;
+    padding: clamp(0.6rem, 1.3vw, 1rem);
+    background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    display: flex; flex-direction: column; gap: clamp(0.25rem, 0.6vh, 0.4rem);
+}
+.relay-box.human { border-top: 3px solid var(--card-orange); background: linear-gradient(160deg, rgba(255,87,34,0.10) 0%, rgba(255,87,34,0.02) 100%); }
+.relay-box.agent { border-top: 3px solid var(--card-amber); background: linear-gradient(160deg, rgba(255,180,0,0.10) 0%, rgba(255,180,0,0.02) 100%); }
+.relay-box.either { border-top: 3px solid var(--card-coral); background: linear-gradient(160deg, rgba(255,112,67,0.10) 0%, rgba(255,112,67,0.02) 100%); }
+.relay-box .r-step {
+    font-family: var(--font-display); font-size: clamp(1.2rem, 2vw, 1.6rem);
+    line-height: 1; color: var(--card-orange);
+}
+.relay-box.agent .r-step { color: var(--card-amber); }
+.relay-box.either .r-step { color: var(--card-coral); }
+.relay-box .r-actor {
+    font-family: var(--font-mono); font-size: var(--small-size);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-secondary); font-weight: 600;
+}
+.relay-box .r-label {
+    font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+    color: var(--text-primary); line-height: 1.35;
+}
+/* Handoff cascade — boxes pulse in sequence to reinforce the "relay" metaphor */
+.slide.visible .relay-box { animation: relayHandoff 4.5s ease-in-out infinite; }
+.slide.visible .relay-box:nth-child(1) { animation-delay: 0.0s; }
+.slide.visible .relay-box:nth-child(2) { animation-delay: 0.4s; }
+.slide.visible .relay-box:nth-child(3) { animation-delay: 0.8s; }
+.slide.visible .relay-box:nth-child(4) { animation-delay: 1.2s; }
+.slide.visible .relay-box:nth-child(5) { animation-delay: 1.6s; }
+.slide.visible .relay-box:nth-child(6) { animation-delay: 2.0s; }
+@keyframes relayHandoff {
+    0%, 70%, 100% { box-shadow: 0 0 0 transparent; transform: translateY(0); }
+    8%, 16%       { box-shadow: 0 0 24px -4px rgba(255,87,34,0.45); transform: translateY(-3px); }
+}
+
+/* Title slide — orange offset block: gentle entrance (no rotation) */
+.title-slide .signal-block {
+    animation: signalBlockSlide 1.2s var(--ease-out-expo) 0.3s both;
+}
+@keyframes signalBlockSlide {
+    from { transform: translate(60%, 60%); opacity: 0; }
+    to   { transform: translate(15%, 15%); opacity: 1; }
+}
+
+/* Progress bar pulse on slide change (subtle) */
+.progress-bar { animation: progressGlow 3s ease-in-out infinite; }
+@keyframes progressGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,87,34,0.5); }
+    50%      { box-shadow: 0 0 16px rgba(255,87,34,0.85); }
+}
+
+/* Active nav-dot soft pulse */
+.nav-dots .dot.active { animation: navDotPulse 2.4s ease-in-out infinite; }
+@keyframes navDotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,87,34,0.6); }
+    50%      { box-shadow: 0 0 0 4px rgba(255,87,34,0); }
+}
+
+/* Divider section number — slow breathing scale */
+.divider .section-num { animation: dividerBreath 5s ease-in-out infinite; transform-origin: left center; }
+@keyframes dividerBreath {
+    0%, 100% { opacity: 0.92; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.015); }
+}
+
+/* Mini-card hover already animates; add a baseline sheen on the active slide */
+.slide.visible .mini-card { animation: miniCardSheen 6s ease-in-out infinite; }
+@keyframes miniCardSheen {
+    0%, 100% { border-color: var(--rule); }
+    50%      { border-color: rgba(255,87,34,0.35); }
+}
+
+/* Variant tag in chrome */
+.chrome .crumb { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+    html { scroll-behavior: auto; }
+}
+
+
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-source-anchor="L1">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">Cover</span></div>
+    <div class="signal-block"></div>
+    <div class="slide-content">
+        <h1 class="reveal">PDLC_DEMO — Project Overview</h1>
+        <p class="lead reveal"></p>
+        <div class="t-meta-block reveal"><div class="t-meta-row"><span class="t-meta-key">Program</span><span class="t-meta-val">PainEase PCA Advanced (PP3500) — patient-controlled analgesia infusion pump, with a surrounding connectivity adapter and Cloud Suite</span></div><div class="t-meta-row"><span class="t-meta-key">Regulatory path</span><span class="t-meta-val">510(k) with a Predetermined Change Control Plan (PCCP)</span></div><div class="t-meta-row"><span class="t-meta-key">Last updated</span><span class="t-meta-val">2026-04-21</span></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="computed">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">Agenda</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Agenda</h2>
+        <div class="agenda-grid reveal"><div class="agenda-card"><div class="a-num">1</div><div class="a-title">Project Overview &amp; Strategy</div></div><div class="agenda-card"><div class="a-num">2</div><div class="a-title">Agentic Approach — Project Shape, Structure &amp; Capabilities</div></div><div class="agenda-card"><div class="a-num">3</div><div class="a-title">Quality &amp; Process — How the Guardrails Work</div></div><div class="agenda-card"><div class="a-num">4</div><div class="a-title">Agentic Approach — Solving Complex Problems with Humans in Charge</div></div><div class="agenda-card"><div class="a-num">5</div><div class="a-title">The Project Console</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide divider-slide" data-source-anchor="L13">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1</span></div>
+    <div class="slide-content divider-content">
+        <div class="divider-num reveal">1</div>
+        <h2 class="divider-title reveal">Project Overview &amp; Strategy</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L15-L37">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.1 · What PP3500 is</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">What PP3500 is</h2>
+        <p class="lead reveal">PP3500 — <strong>PainEase PCA Advanced</strong> — is a patient-controlled analgesia infusion pump. The program as modeled in this repo is a <strong>single composite system</strong> of SaMD + SiMD + custom medical-electrical hardware, with adjacent infrastructure around it:</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>DHF (architecture name)</th><th>Classification</th><th>Composition</th><th>What it does</th></tr></thead>
+                <tbody><tr><td><strong>PCA Device</strong> (<code>pca-device</code>)</td><td>Class II medical device</td><td>SiMD pump firmware + SaMD modules + hardware</td><td>On-pump delivery, dose-limit enforcement, alarms, UI, self-test</td></tr><tr><td><strong>Connectivity Adapter</strong> (<code>connectivity-adapter</code>)</td><td><strong>MDDS</strong> (non-device post-2015 FDA)</td><td>SaMD</td><td>On-prem bridge that carries PCA telemetry + drug-library pushes to/from the Cloud Suite</td></tr><tr><td><strong>Cloud Suite</strong> (<code>cloud-suite</code>)</td><td>Mixed — see children</td><td>SaMD + non-device software</td><td>Platform DHF. Seven child DHFs carry the regulatory weight individually</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L39-L49">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.2 · Regulatory strategy at a glance</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Regulatory strategy at a glance</h2>
+        <p class="lead reveal">We are filing <strong>one 510(k)</strong> for the PCA device itself, <strong>with an integrated PCCP</strong> that pre-authorizes two classes of post-market change: drug-library updates and bounded firmware updates.</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Filing scope = PCA device alone.</div><div class="mc-sub">The Connectivity Adapter (MDDS) and all Cloud Suite components except the Drug Library Manager are <strong>out of the PP3500 filing</strong>. Each is analyzed and filed (or not filed) on its own regulatory merits. See <code>docs/project/strategies/regulatory-strategy.md</code> §1 <em>Filing Scope: PCA Device Alone</em>.</div><div class="mc-full"><div class="mc-full-label">Filing scope = PCA device alone.</div><div class="mc-full-body">The Connectivity Adapter (MDDS) and all Cloud Suite components except the Drug Library Manager are <strong>out of the PP3500 filing</strong>. Each is analyzed and filed (or not filed) on its own regulatory merits. See <code>docs/project/strategies/regulatory-strategy.md</code> §1 <em>Filing Scope: PCA Device Alone</em>.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Critical-requirement carve-out (CtS / CtF / CtC / CtP).</div><div class="mc-sub">Every user need and design input is tagged with one or more of <strong>Critical to Safety / Function / Compliance / Performance</strong>. Only Ct\<em>-tagged requirements are in scope for the 510(k) + PCCP; everything else ships post-clearance on the commercial track. This keeps the submission minimum and the V&amp;V burden tractable. See regulatory-strategy.md §1 </em>Filing Strategy — Critical-Requirement Carve-out*.</div><div class="mc-full"><div class="mc-full-label">Critical-requirement carve-out (CtS / CtF / CtC / CtP).</div><div class="mc-full-body">Every user need and design input is tagged with one or more of <strong>Critical to Safety / Function / Compliance / Performance</strong>. Only Ct\<em>-tagged requirements are in scope for the 510(k) + PCCP; everything else ships post-clearance on the commercial track. This keeps the submission minimum and the V&amp;V burden tractable. See regulatory-strategy.md §1 </em>Filing Strategy — Critical-Requirement Carve-out*.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP envelope.</div><div class="mc-sub">The PCCP pre-authorizes changes to Ct\*-tagged requirements that stay within pre-specified bounds — drug-library updates, firmware patches against a fixed risk profile, and predictive-alarm SaMD updates that meet the PCCP change-protocol acceptance criteria.</div><div class="mc-full"><div class="mc-full-label">PCCP envelope.</div><div class="mc-full-body">The PCCP pre-authorizes changes to Ct\*-tagged requirements that stay within pre-specified bounds — drug-library updates, firmware patches against a fixed risk profile, and predictive-alarm SaMD updates that meet the PCCP change-protocol acceptance criteria.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Predicate.</div><div class="mc-sub">PP3000 (K190567) — a prior PainEase PCA pump in the same family. The PCCP envelope is the substantive delta vs. the predicate.</div><div class="mc-full"><div class="mc-full-label">Predicate.</div><div class="mc-full-body">PP3000 (K190567) — a prior PainEase PCA pump in the same family. The PCCP envelope is the substantive delta vs. the predicate.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Drug Library Manager</div><div class="mc-sub">, classified as Class II SaMD accessory, is either bundled into the PP3500 filing or filed separately (posture TBD in submission planning — see <code>docs/project/submissions/510k/composition-manifest.md</code>).</div><div class="mc-full"><div class="mc-full-label">Drug Library Manager</div><div class="mc-full-body">, classified as Class II SaMD accessory, is either bundled into the PP3500 filing or filed separately (posture TBD in submission planning — see <code>docs/project/submissions/510k/composition-manifest.md</code>).</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L39-L49">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.2 · Regulatory strategy at a glance · variant A — scope iceberg</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Scope Iceberg</div>
+        <h2 class="reveal">Regulatory strategy at a glance</h2>
+        <p class="lead reveal">We are filing <strong>one 510(k)</strong> for the PCA device itself, <strong>with an integrated PCCP</strong> that pre-authorizes two classes of post-market change: drug-library updates and bounded firmware updates.</p>
+        <div class="iceberg-grid reveal">
+            <div class="iceberg-side iceberg-in">
+                <div class="iside-label">FILING SCOPE — IN</div>
+                <ul><li>PCCP envelope.</li><li>Predicate.</li><li>Drug Library Manager</li></ul>
+            </div>
+            <div class="iceberg-side iceberg-out">
+                <div class="iside-label">OUT OF SCOPE</div>
+                <ul><li>Filing scope = PCA device alone.</li><li>Critical-requirement carve-out (CtS / CtF / CtC / CtP).</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L39-L49">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.2 · Regulatory strategy at a glance · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Regulatory strategy at a glance</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="6" y1="21" x2="18" y2="21"/><line x1="4" y1="6" x2="20" y2="6"/><path d="M5 6l-3 6h6zM19 6l-3 6h6z"/></svg></div><div class="p-label">Filing scope = PCA device alone.</div><div class="p-sub">The Connectivity Adapter (MDDS) and all Cloud Suite components except the Drug Library Manager…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">Critical-requirement carve-out (CtS / CtF / CtC / CtP).</div><div class="p-sub">Every user need and design input is tagged with one or more of **Critical…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">PCCP envelope.</div><div class="p-sub">The PCCP pre-authorizes changes to Ct\*-tagged requirements that stay within pre-specified bounds — drug-library…</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-30 12 12)"/><line x1="9.5" y1="6" x2="14.5" y2="18"/></svg></div><div class="p-label">Predicate.</div><div class="p-sub">PP3000 (K190567) — a prior PainEase PCA pump in the same family. The PCCP…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-30 12 12)"/><line x1="9.5" y1="6" x2="14.5" y2="18"/></svg></div><div class="p-label">Drug Library Manager</div><div class="p-sub">, classified as Class II SaMD accessory, is either bundled into the PP3500 filing…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L51-L58">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.3 · Key deliverables</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Key deliverables</h2>
+        
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Q-Sub package</div><div class="mc-sub">(<code>docs/project/submissions/qsub/</code>) — cover letter, device description, classification validation, PCCP scope questions.</div><div class="mc-full"><div class="mc-full-label">Q-Sub package</div><div class="mc-full-body">(<code>docs/project/submissions/qsub/</code>) — cover letter, device description, classification validation, PCCP scope questions.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">510(k) submission</div><div class="mc-sub">(<code>docs/project/submissions/510k/</code>) — substantial-equivalence argument to PP3000, software docs, performance and validation data, risk analysis, labeling. Composition driven by <code>composition-manifest.md</code>.</div><div class="mc-full"><div class="mc-full-label">510(k) submission</div><div class="mc-full-body">(<code>docs/project/submissions/510k/</code>) — substantial-equivalence argument to PP3000, software docs, performance and validation data, risk analysis, labeling. Composition driven by <code>composition-manifest.md</code>.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">PCCP document</div><div class="mc-sub">(<code>docs/project/submissions/pccp/</code>) — change categories, modification protocols, performance criteria, reporting plan.</div><div class="mc-full"><div class="mc-full-label">PCCP document</div><div class="mc-full-body">(<code>docs/project/submissions/pccp/</code>) — change categories, modification protocols, performance criteria, reporting plan.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Trace matrix</div><div class="mc-sub">per DHF (<code>docs/project/dhfs/&lt;dhf&gt;/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags.</div><div class="mc-full"><div class="mc-full-label">Trace matrix</div><div class="mc-full-body">per DHF (<code>docs/project/dhfs/&lt;dhf&gt;/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔ Risk, with a <strong>Filing Scope</strong> column derived from Ct\* tags.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L51-L58">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§1.3 · Key deliverables · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Key deliverables</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4"/><rect x="4" y="8" width="16" height="13"/><line x1="9" y1="12" x2="15" y2="12"/></svg></div><div class="p-label">Q-Sub package</div><div class="p-sub">(<code>docs/project/submissions/qsub/</code>) — cover letter, device description, classification validation, PCCP scope questions.</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">510(k) submission</div><div class="p-sub">(<code>docs/project/submissions/510k/</code>) — substantial-equivalence argument to PP3000, software docs, performance and validation data, risk analysis…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">PCCP document</div><div class="p-sub">(<code>docs/project/submissions/pccp/</code>) — change categories, modification protocols, performance criteria, reporting plan.</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><line x1="6" y1="7" x2="6" y2="17"/><path d="M6 12h6c2 0 4-2 4-5"/></svg></div><div class="p-label">Trace matrix</div><div class="p-sub">per DHF (<code>docs/project/dhfs/&lt;dhf&gt;/design-controls/trace-matrix/</code>) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&amp;V ↔…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide divider-slide" data-source-anchor="L60">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2</span></div>
+    <div class="slide-content divider-content">
+        <div class="divider-num reveal">2</div>
+        <h2 class="divider-title reveal">Agentic Approach — Project Shape, Structure &amp; Capabilities</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L64-L105">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.1 · Project shape &amp; structure</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Project shape &amp; structure</h2>
+        <div class="prose"><p class="reveal">Flat multi-DHF layout mapped to IEC 62304 § 5 (one software system composed of software items), with Cloud Suite as a parent DHF whose children are independently classified:</p><p class="reveal"><strong>Ten DHFs total</strong> (three top-level, seven nested under Cloud Suite). A composition manifest per submission lists which DHF pieces roll into that filing — filings are not 1:1 with DHFs. The PP3500 510(k) uses only <code>pca-device</code> (lead) + <code>connectivity-adapter</code> (cybersecurity-only pull) + optionally <code>drug-library-manager</code> (bundled-vs-standalone TBD).</p></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L107-L109">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · Operating rules baked into the project</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Operating rules baked into the project</h2>
+        
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Task-first workflow (hard gate).</div><div class="mc-sub">A PreToolUse hook (<code>.claude/hooks/check-active-task.sh</code>) denies any Edit/Write/NotebookEdit unless the session has an active task. Every substantive change in the repo traces back to a task document under <code>tasks/&lt;person&gt;/NNN-*.md</code>.</div><div class="mc-full"><div class="mc-full-label">Task-first workflow (hard gate).</div><div class="mc-full-body">A PreToolUse hook (<code>.claude/hooks/check-active-task.sh</code>) denies any Edit/Write/NotebookEdit unless the session has an active task. Every substantive change in the repo traces back to a task document under <code>tasks/&lt;person&gt;/NNN-*.md</code>.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">One task, one file.</div><div class="mc-sub">All design work, analysis, drafts, and phase deliverables produced under a task belong inside that task&#x27;s numbered markdown file — never as sibling <code>NNN-task-p1.md</code> files. If a deliverable genuinely lives elsewhere (a new doc in <code>docs/</code>), the task still records what was produced and links to it.</div><div class="mc-full"><div class="mc-full-label">One task, one file.</div><div class="mc-full-body">All design work, analysis, drafts, and phase deliverables produced under a task belong inside that task&#x27;s numbered markdown file — never as sibling <code>NNN-task-p1.md</code> files. If a deliverable genuinely lives elsewhere (a new doc in <code>docs/</code>), the task still records what was produced and links to it.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Strategy / Lessons capture backstops.</div><div class="mc-sub">UserPromptSubmit + Stop hooks detect strategic-intent signals and block ending a session that generated strategy/lessons content without capturing it into the active task doc using <code>&lt;!-- STRATEGY CONTENT: domain, topics --&gt;</code> or <code>&lt;!-- LESSONS LEARNED: category --&gt;</code> blocks. <code>/strategy</code> and <code>/lessons</code> harvest from those blocks.</div><div class="mc-full"><div class="mc-full-label">Strategy / Lessons capture backstops.</div><div class="mc-full-body">UserPromptSubmit + Stop hooks detect strategic-intent signals and block ending a session that generated strategy/lessons content without capturing it into the active task doc using <code>&lt;!-- STRATEGY CONTENT: domain, topics --&gt;</code> or <code>&lt;!-- LESSONS LEARNED: category --&gt;</code> blocks. <code>/strategy</code> and <code>/lessons</code> harvest from those blocks.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Session-start security check.</div><div class="mc-sub">The <code>project-secops</code> agent runs <code>security-assert.sh</code> on every session against the <code>security.*</code> allowlists in <code>project.yml</code>. Results cached to <code>tasks/&lt;person&gt;/SECOPS.md</code> with a 7-day TTL. High-severity drift triggers guided remediation.</div><div class="mc-full"><div class="mc-full-label">Session-start security check.</div><div class="mc-full-body">The <code>project-secops</code> agent runs <code>security-assert.sh</code> on every session against the <code>security.*</code> allowlists in <code>project.yml</code>. Results cached to <code>tasks/&lt;person&gt;/SECOPS.md</code> with a 7-day TTL. High-severity drift triggers guided remediation.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Docflow entry enforcement.</div><div class="mc-sub">A PreToolUse Bash hook (<code>block-direct-conversion.sh</code>) refuses direct <code>pandoc</code> / <code>unzip</code> / <code>soffice</code> / <code>pdftotext</code> calls so all PDF/DOCX/XLSX conversions round-trip through the audited <code>/docflow</code> pipeline.</div><div class="mc-full"><div class="mc-full-label">Docflow entry enforcement.</div><div class="mc-full-body">A PreToolUse Bash hook (<code>block-direct-conversion.sh</code>) refuses direct <code>pandoc</code> / <code>unzip</code> / <code>soffice</code> / <code>pdftotext</code> calls so all PDF/DOCX/XLSX conversions round-trip through the audited <code>/docflow</code> pipeline.</div></div></div><div class="mini-card accent-coral"><div class="mc-label"><code>project.yml</code> as single source of truth.</div><div class="mc-sub">Identity, device family, portfolio context, DHF topology (with <code>regulatory</code> + <code>filing</code> + <code>parent</code> per DHF), team roster, skill registries, secops allowlists, and <code>advisors.enabled</code> curation all live in one manifest.</div><div class="mc-full"><div class="mc-full-label"><code>project.yml</code> as single source of truth.</div><div class="mc-full-body">Identity, device family, portfolio context, DHF topology (with <code>regulatory</code> + <code>filing</code> + <code>parent</code> per DHF), team roster, skill registries, secops allowlists, and <code>advisors.enabled</code> curation all live in one manifest.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L107-L109">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · Operating rules baked into the project · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Operating rules baked into the project</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="15.5" r="1.5" fill="currentColor"/></svg></div><div class="p-label">Task-first workflow (hard gate).</div><div class="p-sub">A PreToolUse hook (<code>.claude/hooks/check-active-task.sh</code>) denies any Edit/Write/NotebookEdit unless the session has an active task.…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="6" width="11" height="14" rx="1"/><rect x="8" y="3" width="11" height="14" rx="1"/><line x1="11" y1="8" x2="16" y2="8"/><line x1="11" y1="11" x2="16" y2="11"/></svg></div><div class="p-label">One task, one file.</div><div class="p-sub">All design work, analysis, drafts, and phase deliverables produced under a task belong inside…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 14,10 21,12 14,14 12,21 10,14 3,12 10,10"/></svg></div><div class="p-label">Strategy / Lessons capture backstops.</div><div class="p-sub">UserPromptSubmit + Stop hooks detect strategic-intent signals and block ending a session that generated…</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/></svg></div><div class="p-label">Session-start security check.</div><div class="p-sub">The <code>project-secops</code> agent runs <code>security-assert.sh</code> on every session against the <code>security.*</code> allowlists in <code>project.yml</code>.…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14L14 4 M20 16H6L10 20"/></svg></div><div class="p-label">Docflow entry enforcement.</div><div class="p-sub">A PreToolUse Bash hook (<code>block-direct-conversion.sh</code>) refuses direct <code>pandoc</code> / <code>unzip</code> / <code>soffice</code> / <code>pdftotext</code>…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,5 3,12 8,19"/><polyline points="16,5 21,12 16,19"/></svg></div><div class="p-label"><code>project.yml</code> as single source of truth.</div><div class="p-sub">Identity, device family, portfolio context, DHF topology (with <code>regulatory</code> + <code>filing</code> + <code>parent</code> per…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L116-L120">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Skills (project-level)</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Skills (project-level)</h2>
+        <p class="lead reveal">15 skills are installed under <code>.claude/skills/</code> and allow-listed in <code>project.yml</code> under <code>security.approved_skills</code>, plus four document-format skills (<code>docx</code>, <code>pptx</code>, <code>xlsx</code>, <code>pdf</code>) from the <code>anthropic</code> builtin registry. The project-specific and highest-leverage ones:</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table density-compact">
+                <thead><tr><th>Skill</th><th>What it does</th></tr></thead>
+                <tbody><tr><td><code>task</code></td><td>Task lifecycle: create / find / list / update / show. Owns the task-first gate and Strategy/Lessons capture hooks.</td></tr><tr><td><code>medtech-docs</code></td><td>Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks, generates compliance dashboard.</td></tr><tr><td><code>docflow</code></td><td>Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image fidelity, cross-reference resolution, and metadata tracking. Entry enforced by hook.</td></tr><tr><td><code>strategy</code></td><td>Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks from tasks into unified shared strategy docs across eight domains (regulatory, commercial, architecture, development, testing, risk, postmarket, operations).</td></tr><tr><td><code>tracker</code></td><td>Builds the submission-package tracker from architecture + regulatory strategy + composition manifests; renders HTML dashboard.</td></tr><tr><td><code>trace-matrix</code></td><td>Bidirectional design-controls trace (UN ↔ DI ↔ Architecture ↔ V&amp;V ↔ Risk) per DHF with project-adaptive parsers. Emits <code>.md</code> deliverable + <code>.json</code> sidecar consumed by the console.</td></tr><tr><td><code>advisors</code></td><td>Installs and curates the 11 Core Team Assistant personas + 2 advisory panels + KOL personas. Same definitions feed Claude Code and the console chat.</td></tr><tr><td><code>project-console</code></td><td>Scaffolds and maintains the local FastAPI console (see §5).</td></tr><tr><td><code>lessons</code></td><td>Harvests <code>&lt;!-- LESSONS LEARNED --&gt;</code> blocks into the ledger; promotes mature lessons to their permanent home (skill / CLAUDE.md / agent / rule / glossary).</td></tr><tr><td><code>best-practices</code></td><td>Audits project setup against checks from the shared hitachi registry and each skill&#x27;s <code>## Best Practices</code> table.</td></tr><tr><td><code>secops</code></td><td>Session-start security posture check, attestations, allowlists.</td></tr><tr><td><code>change-control</code></td><td><strong>(Scaffold only.)</strong> Bridge to Confluence + Comala/SoftComply for Part 11 review, and Windchill for release vault. Hybrid freeze-point lifecycle (draft → frozen → released).</td></tr><tr><td><code>sync-skills</code></td><td>Bidirectional sync with the shared <strong>hitachi</strong> registry (<code>../hitachi</code> local checkout).</td></tr><tr><td><code>skill-creator</code></td><td>Authors new skills, runs evals.</td></tr><tr><td><code>digest</code></td><td>Morning briefing + on-demand append to <code>CHANGELOG.md</code>.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L116-L120">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Skills (project-level) · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic</div>
+        <h2 class="reveal">Skills (project-level)</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="cc-name">task</div><div class="cc-tag">Task lifecycle: create / find / list /…</div><div class="cc-full"><div class="cc-full-name">task</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Task lifecycle: create / find / list / update / show. Owns the task-first gate and Strategy/Lessons capture hooks.</div></div></div><div class="cat-cell cat-docs"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="cc-name">medtech-docs</div><div class="cc-tag">Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance…</div><div class="cc-full"><div class="cc-full-name">medtech-docs</div><div class="cc-full-cat">Docs · format</div><div class="cc-full-desc">Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks, generates compliance dashboard.</div></div></div><div class="cat-cell cat-docs"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14L14 4 M20 16H6L10 20"/></svg></div><div class="cc-name">docflow</div><div class="cc-tag">Round-trip conversion between markdown and DOCX / DOC…</div><div class="cc-full"><div class="cc-full-name">docflow</div><div class="cc-full-cat">Docs · format</div><div class="cc-full-desc">Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image fidelity, cross-reference resolution, and metadata tracking. Entry enforced by hook.</div></div></div><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 14,10 21,12 14,14 12,21 10,14 3,12 10,10"/></svg></div><div class="cc-name">strategy</div><div class="cc-tag">Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks from…</div><div class="cc-full"><div class="cc-full-name">strategy</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks from tasks into unified shared strategy docs across eight domains (regulatory, commercial, architecture, development, testing, risk, postmarket, operations).</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,17 9,11 13,15 21,5"/><polyline points="15,5 21,5 21,11"/></svg></div><div class="cc-name">tracker</div><div class="cc-tag">Builds the submission-package tracker from architecture + regulatory…</div><div class="cc-full"><div class="cc-full-name">tracker</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Builds the submission-package tracker from architecture + regulatory strategy + composition manifests; renders HTML dashboard.</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><line x1="6" y1="7" x2="6" y2="17"/><path d="M6 12h6c2 0 4-2 4-5"/></svg></div><div class="cc-name">trace-matrix</div><div class="cc-tag">Bidirectional design-controls trace (UN ↔ DI ↔ Architecture…</div><div class="cc-full"><div class="cc-full-name">trace-matrix</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Bidirectional design-controls trace (UN ↔ DI ↔ Architecture ↔ V&amp;V ↔ Risk) per DHF with project-adaptive parsers. Emits <code>.md</code> deliverable + <code>.json</code> sidecar consumed by the console.</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 21c0-3.5 3-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 21c0-2.5 2-4.5 4-4.5s2 1 2 1"/></svg></div><div class="cc-name">advisors</div><div class="cc-tag">Installs and curates the 11 Core Team Assistant…</div><div class="cc-full"><div class="cc-full-name">advisors</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Installs and curates the 11 Core Team Assistant personas + 2 advisory panels + KOL personas. Same definitions feed Claude Code and the console chat.</div></div></div><div class="cat-cell cat-ops"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9" rx="0.5"/><rect x="13" y="3" width="8" height="5" rx="0.5"/><rect x="13" y="10" width="8" height="11" rx="0.5"/><rect x="3" y="14" width="8" height="7" rx="0.5"/></svg></div><div class="cc-name">project-console</div><div class="cc-tag">Scaffolds and maintains the local FastAPI console (see…</div><div class="cc-full"><div class="cc-full-name">project-console</div><div class="cc-full-cat">Ops · infra</div><div class="cc-full-desc">Scaffolds and maintains the local FastAPI console (see §5).</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L116-L120">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Skills (project-level) (continued · 2/2) · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic — page 2</div>
+        <h2 class="reveal">Skills (project-level) (continued · 2/2)</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 14,10 21,12 14,14 12,21 10,14 3,12 10,10"/></svg></div><div class="cc-name">lessons</div><div class="cc-tag">Harvests <code>&lt;!-- LESSONS LEARNED --&gt;</code> blocks into the…</div><div class="cc-full"><div class="cc-full-name">lessons</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Harvests <code>&lt;!-- LESSONS LEARNED --&gt;</code> blocks into the ledger; promotes mature lessons to their permanent home (skill / CLAUDE.md / agent / rule / glossary).</div></div></div><div class="cat-cell cat-quality"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></div><div class="cc-name">best-practices</div><div class="cc-tag">Audits project setup against checks from the shared…</div><div class="cc-full"><div class="cc-full-name">best-practices</div><div class="cc-full-cat">Quality · governance</div><div class="cc-full-desc">Audits project setup against checks from the shared hitachi registry and each skill&#x27;s <code>## Best Practices</code> table.</div></div></div><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/></svg></div><div class="cc-name">secops</div><div class="cc-tag">Session-start security posture check, attestations, allowlists.</div><div class="cc-full"><div class="cc-full-name">secops</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Session-start security posture check, attestations, allowlists.</div></div></div><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg></div><div class="cc-name">change-control</div><div class="cc-tag"><strong>(Scaffold only.)</strong> Bridge to Confluence + Comala/SoftComply for…</div><div class="cc-full"><div class="cc-full-name">change-control</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc"><strong>(Scaffold only.)</strong> Bridge to Confluence + Comala/SoftComply for Part 11 review, and Windchill for release vault. Hybrid freeze-point lifecycle (draft → frozen → released).</div></div></div><div class="cat-cell cat-ops"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9a8 8 0 0 1 13-3"/><polyline points="18,3 18,8 13,8"/><path d="M19 15a8 8 0 0 1-13 3"/><polyline points="6,21 6,16 11,16"/></svg></div><div class="cc-name">sync-skills</div><div class="cc-tag">Bidirectional sync with the shared <strong>hitachi</strong> registry (<code>../hitachi</code>…</div><div class="cc-full"><div class="cc-full-name">sync-skills</div><div class="cc-full-cat">Ops · infra</div><div class="cc-full-desc">Bidirectional sync with the shared <strong>hitachi</strong> registry (<code>../hitachi</code> local checkout).</div></div></div><div class="cat-cell cat-quality"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg></div><div class="cc-name">skill-creator</div><div class="cc-tag">Authors new skills, runs evals.</div><div class="cc-full"><div class="cc-full-name">skill-creator</div><div class="cc-full-cat">Quality · governance</div><div class="cc-full-desc">Authors new skills, runs evals.</div></div></div><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg></div><div class="cc-name">digest</div><div class="cc-tag">Morning briefing + on-demand append to <code>CHANGELOG.md</code>.</div><div class="cc-full"><div class="cc-full-name">digest</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Morning briefing + on-demand append to <code>CHANGELOG.md</code>.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L116-L120">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Skills (project-level) · variant B — featured</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation B · Featured</div>
+        <h2 class="reveal">Skills (project-level)</h2>
+        <div class="cat-hero-row reveal"><div class="cat-hero cat-process"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="ch-name">task</div><div class="ch-tag">Process · lifecycle</div><div class="ch-desc">Task lifecycle: create / find / list / update / show. Owns the task-first…</div></div><div class="cat-hero cat-docs"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="ch-name">medtech-docs</div><div class="ch-tag">Docs · format</div><div class="ch-desc">Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks…</div></div><div class="cat-hero cat-docs"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14L14 4 M20 16H6L10 20"/></svg></div><div class="ch-name">docflow</div><div class="ch-tag">Docs · format</div><div class="ch-desc">Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image…</div></div></div>
+        <div class="cat-chip-row"><div class="chip-eyebrow">↓ The rest of the catalog</div><div class="chip-grid"><span class="cat-chip cat-process">strategy</span><span class="cat-chip cat-strategy">tracker</span><span class="cat-chip cat-strategy">trace-matrix</span><span class="cat-chip cat-strategy">advisors</span><span class="cat-chip cat-ops">project-console</span><span class="cat-chip cat-process">lessons</span><span class="cat-chip cat-quality">best-practices</span><span class="cat-chip cat-process">secops</span><span class="cat-chip cat-process">change-control</span><span class="cat-chip cat-ops">sync-skills</span><span class="cat-chip cat-quality">skill-creator</span><span class="cat-chip cat-process">digest</span></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L138-L178">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.4 · Agents (persona advisors)</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Agents (persona advisors)</h2>
+        <p class="lead reveal"><strong>23 domain agents</strong> total — a mix of <strong>Core Team Assistants</strong> and <strong>Key Opinion Leaders</strong> — plus <code>project-secops</code> on the security side. All live under <code>.claude/agents/</code> (Core Team) and <code>tools/project-console/agents/</code> (KOLs, project-specific). Each is exposed identically to (a) Claude Code via <code>Agent(subagent_type=...)</code> and (b) the project console as chat advisors. <code>project.yml</code> under <code>advisors.enabled</code> curates which Core Team assistants are on for a given session (today: <code>regulatory-affairs</code>, <code>clinical-affairs</code>, <code>risk-management</code>).</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table density-tight">
+                <thead><tr><th>Agent</th><th>Role focus</th></tr></thead>
+                <tbody><tr><td><code>regulatory-affairs</code></td><td>510(k) pathway, substantial-equivalence argument, predicate selection, PCCP scoping, standards mapping</td></tr><tr><td><code>clinical-affairs</code></td><td>Clinical evidence strategy, KOL engagement, user-needs validation</td></tr><tr><td><code>systems-engineering</code></td><td>Architecture, requirements decomposition, trace integrity across DHFs</td></tr><tr><td><code>rd-lead</code></td><td>Engineering execution, design-output quality, feasibility</td></tr><tr><td><code>vnv-lead</code></td><td>V&amp;V strategy, test protocol authoring, evidence sufficiency</td></tr><tr><td><code>risk-management</code></td><td>ISO 14971 risk analysis, benefit-risk, risk controls</td></tr><tr><td><code>human-factors</code></td><td>IEC 62366 use-related risk, summative usability</td></tr><tr><td><code>quality-engineering</code></td><td>ISO 13485, design controls compliance, audit readiness (FDA + Notified Body)</td></tr><tr><td><code>cybersecurity</code></td><td>Threat model, SBOM, IEC 81001-5-1, FDA §524B pre/post-market controls</td></tr><tr><td><code>post-market</code></td><td>Surveillance, complaint handling, PSUR/PMSR, CAPA feedback loop</td></tr><tr><td><code>program-manager</code></td><td>Schedule, scope, stakeholder alignment</td></tr><tr><td><code>core-team-panel</code></td><td>PM + RA + Clinical + QE + R&amp;D — program-level decisions</td></tr><tr><td><code>design-review-panel</code></td><td>Systems + R&amp;D + V&amp;V + HFE + Risk + QE — technical gate reviews</td></tr><tr><td><code>project-secops</code></td><td>Session-start security posture audit against <code>project.yml</code></td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L138-L178">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.4 · Agents (persona advisors) · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic</div>
+        <h2 class="reveal">Agents (persona advisors)</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">regulatory-affairs</div><div class="cc-tag">510(k) pathway, substantial-equivalence argument, predicate selection, PCCP scoping…</div><div class="cc-full"><div class="cc-full-name">regulatory-affairs</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">510(k) pathway, substantial-equivalence argument, predicate selection, PCCP scoping, standards mapping</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">clinical-affairs</div><div class="cc-tag">Clinical evidence strategy, KOL engagement, user-needs validation</div><div class="cc-full"><div class="cc-full-name">clinical-affairs</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Clinical evidence strategy, KOL engagement, user-needs validation</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">systems-engineering</div><div class="cc-tag">Architecture, requirements decomposition, trace integrity across DHFs</div><div class="cc-full"><div class="cc-full-name">systems-engineering</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Architecture, requirements decomposition, trace integrity across DHFs</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">rd-lead</div><div class="cc-tag">Engineering execution, design-output quality, feasibility</div><div class="cc-full"><div class="cc-full-name">rd-lead</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Engineering execution, design-output quality, feasibility</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">vnv-lead</div><div class="cc-tag">V&amp;V strategy, test protocol authoring, evidence sufficiency</div><div class="cc-full"><div class="cc-full-name">vnv-lead</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">V&amp;V strategy, test protocol authoring, evidence sufficiency</div></div></div><div class="cat-cell cat-quality"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">risk-management</div><div class="cc-tag">ISO 14971 risk analysis, benefit-risk, risk controls</div><div class="cc-full"><div class="cc-full-name">risk-management</div><div class="cc-full-cat">Quality · governance</div><div class="cc-full-desc">ISO 14971 risk analysis, benefit-risk, risk controls</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">human-factors</div><div class="cc-tag">IEC 62366 use-related risk, summative usability</div><div class="cc-full"><div class="cc-full-name">human-factors</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">IEC 62366 use-related risk, summative usability</div></div></div><div class="cat-cell cat-quality"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">quality-engineering</div><div class="cc-tag">ISO 13485, design controls compliance, audit readiness (FDA…</div><div class="cc-full"><div class="cc-full-name">quality-engineering</div><div class="cc-full-cat">Quality · governance</div><div class="cc-full-desc">ISO 13485, design controls compliance, audit readiness (FDA + Notified Body)</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L138-L178">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.4 · Agents (persona advisors) (continued · 2/2) · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic — page 2</div>
+        <h2 class="reveal">Agents (persona advisors) (continued · 2/2)</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">cybersecurity</div><div class="cc-tag">Threat model, SBOM, IEC 81001-5-1, FDA §524B pre/post-market…</div><div class="cc-full"><div class="cc-full-name">cybersecurity</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Threat model, SBOM, IEC 81001-5-1, FDA §524B pre/post-market controls</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">post-market</div><div class="cc-tag">Surveillance, complaint handling, PSUR/PMSR, CAPA feedback loop</div><div class="cc-full"><div class="cc-full-name">post-market</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Surveillance, complaint handling, PSUR/PMSR, CAPA feedback loop</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">program-manager</div><div class="cc-tag">Schedule, scope, stakeholder alignment</div><div class="cc-full"><div class="cc-full-name">program-manager</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Schedule, scope, stakeholder alignment</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">core-team-panel</div><div class="cc-tag">PM + RA + Clinical + QE +…</div><div class="cc-full"><div class="cc-full-name">core-team-panel</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">PM + RA + Clinical + QE + R&amp;D — program-level decisions</div></div></div><div class="cat-cell cat-default"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">design-review-panel</div><div class="cc-tag">Systems + R&amp;D + V&amp;V + HFE +…</div><div class="cc-full"><div class="cc-full-name">design-review-panel</div><div class="cc-full-cat">Capability</div><div class="cc-full-desc">Systems + R&amp;D + V&amp;V + HFE + Risk + QE — technical gate reviews</div></div></div><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="cc-name">project-secops</div><div class="cc-tag">Session-start security posture audit against <code>project.yml</code></div><div class="cc-full"><div class="cc-full-name">project-secops</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Session-start security posture audit against <code>project.yml</code></div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L138-L178">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.4 · Agents (persona advisors) · variant B — featured</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation B · Featured</div>
+        <h2 class="reveal">Agents (persona advisors)</h2>
+        <div class="cat-hero-row reveal"><div class="cat-hero cat-strategy"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">regulatory-affairs</div><div class="ch-tag">Strategy · planning</div><div class="ch-desc">510(k) pathway, substantial-equivalence argument, predicate selection, PCCP scoping, standards mapping</div></div><div class="cat-hero cat-strategy"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">clinical-affairs</div><div class="ch-tag">Strategy · planning</div><div class="ch-desc">Clinical evidence strategy, KOL engagement, user-needs validation</div></div><div class="cat-hero cat-default"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="ch-name">systems-engineering</div><div class="ch-tag">Capability</div><div class="ch-desc">Architecture, requirements decomposition, trace integrity across DHFs</div></div></div>
+        <div class="cat-chip-row"><div class="chip-eyebrow">↓ The rest of the catalog</div><div class="chip-grid"><span class="cat-chip cat-default">rd-lead</span><span class="cat-chip cat-strategy">vnv-lead</span><span class="cat-chip cat-quality">risk-management</span><span class="cat-chip cat-default">human-factors</span><span class="cat-chip cat-quality">quality-engineering</span><span class="cat-chip cat-default">cybersecurity</span><span class="cat-chip cat-default">post-market</span><span class="cat-chip cat-default">program-manager</span><span class="cat-chip cat-default">core-team-panel</span><span class="cat-chip cat-default">design-review-panel</span><span class="cat-chip cat-process">project-secops</span></div></div>
+    </div>
+</section>
+
+
+<section class="slide divider-slide" data-source-anchor="L180">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3</span></div>
+    <div class="slide-content divider-content">
+        <div class="divider-num reveal">3</div>
+        <h2 class="divider-title reveal">Quality &amp; Process — How the Guardrails Work</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L186-L194">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.1 · Skills — reusable, expert-grade playbooks</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Skills — reusable, expert-grade playbooks</h2>
+        <p class="lead reveal">A <strong>skill</strong> is a packaged, named way to do a recurring, complex job. Think of it as a senior-engineer checklist turned into a one-command action, so every team member does the job the same way every time. Instead of each person inventing their own approach to &quot;create a new design history file&quot; or &quot;convert a QMS SOP from DOCX to markdown,&quot; they run <code>/medtech-docs add-dhf</code> or <code>/docflow import</code> and the skill handles the details — folder layout, naming conventions, image extraction, metadata capture.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>Skill</th><th>What it automates</th></tr></thead>
+                <tbody><tr><td><code>/task</code></td><td>Every change the team makes must be tied to a named task document. This skill creates it, tracks it, closes it out.</td></tr><tr><td><code>/medtech-docs</code></td><td>Scaffolds the documentation tree per FDA and IEC 62304 expectations — so no one has to guess where a file goes.</td></tr><tr><td><code>/docflow</code></td><td>Converts formal documents (DOCX/PDF/XLSX) to markdown and back, preserving images, cross-references, and metadata. Round-trips are reproducible.</td></tr><tr><td><code>/tracker</code></td><td>Builds the 510(k) + PCCP submission checklist automatically from design files and strategy documents — eliminates the &quot;lost spreadsheet&quot; problem.</td></tr><tr><td><code>/trace-matrix</code></td><td>Rebuilds the User-Needs → Design-Inputs → Architecture → V&amp;V → Risk trace on demand — the backbone of any design-controls audit.</td></tr><tr><td><code>/best-practices</code></td><td>Runs a standing audit of the project and raises flags when something drifts.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L186-L194">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.1 · Skills — reusable, expert-grade playbooks · variant A — catalog mosaic</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Catalog Mosaic</div>
+        <h2 class="reveal">Skills — reusable, expert-grade playbooks</h2>
+        <div class="cat-mosaic reveal"><div class="cat-cell cat-process"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="cc-name">/task</div><div class="cc-tag">Every change the team makes must be tied…</div><div class="cc-full"><div class="cc-full-name">/task</div><div class="cc-full-cat">Process · lifecycle</div><div class="cc-full-desc">Every change the team makes must be tied to a named task document. This skill creates it, tracks it, closes it out.</div></div></div><div class="cat-cell cat-docs"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="cc-name">/medtech-docs</div><div class="cc-tag">Scaffolds the documentation tree per FDA and IEC…</div><div class="cc-full"><div class="cc-full-name">/medtech-docs</div><div class="cc-full-cat">Docs · format</div><div class="cc-full-desc">Scaffolds the documentation tree per FDA and IEC 62304 expectations — so no one has to guess where a file goes.</div></div></div><div class="cat-cell cat-docs"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14L14 4 M20 16H6L10 20"/></svg></div><div class="cc-name">/docflow</div><div class="cc-tag">Converts formal documents (DOCX/PDF/XLSX) to markdown and back…</div><div class="cc-full"><div class="cc-full-name">/docflow</div><div class="cc-full-cat">Docs · format</div><div class="cc-full-desc">Converts formal documents (DOCX/PDF/XLSX) to markdown and back, preserving images, cross-references, and metadata. Round-trips are reproducible.</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,17 9,11 13,15 21,5"/><polyline points="15,5 21,5 21,11"/></svg></div><div class="cc-name">/tracker</div><div class="cc-tag">Builds the 510(k) + PCCP submission checklist automatically…</div><div class="cc-full"><div class="cc-full-name">/tracker</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Builds the 510(k) + PCCP submission checklist automatically from design files and strategy documents — eliminates the &quot;lost spreadsheet&quot; problem.</div></div></div><div class="cat-cell cat-strategy"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><line x1="6" y1="7" x2="6" y2="17"/><path d="M6 12h6c2 0 4-2 4-5"/></svg></div><div class="cc-name">/trace-matrix</div><div class="cc-tag">Rebuilds the User-Needs → Design-Inputs → Architecture →…</div><div class="cc-full"><div class="cc-full-name">/trace-matrix</div><div class="cc-full-cat">Strategy · planning</div><div class="cc-full-desc">Rebuilds the User-Needs → Design-Inputs → Architecture → V&amp;V → Risk trace on demand — the backbone of any design-controls audit.</div></div></div><div class="cat-cell cat-quality"><div class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,12 12,21 3,12"/></svg></div><div class="cc-name">/best-practices</div><div class="cc-tag">Runs a standing audit of the project and…</div><div class="cc-full"><div class="cc-full-name">/best-practices</div><div class="cc-full-cat">Quality · governance</div><div class="cc-full-desc">Runs a standing audit of the project and raises flags when something drifts.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L186-L194">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.1 · Skills — reusable, expert-grade playbooks · variant B — featured</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation B · Featured</div>
+        <h2 class="reveal">Skills — reusable, expert-grade playbooks</h2>
+        <div class="cat-hero-row reveal"><div class="cat-hero cat-process"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="ch-name">/task</div><div class="ch-tag">Process · lifecycle</div><div class="ch-desc">Every change the team makes must be tied to a named task document. This…</div></div><div class="cat-hero cat-docs"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="ch-name">/medtech-docs</div><div class="ch-tag">Docs · format</div><div class="ch-desc">Scaffolds the documentation tree per FDA and IEC 62304 expectations — so no one…</div></div><div class="cat-hero cat-docs"><div class="ch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14L14 4 M20 16H6L10 20"/></svg></div><div class="ch-name">/docflow</div><div class="ch-tag">Docs · format</div><div class="ch-desc">Converts formal documents (DOCX/PDF/XLSX) to markdown and back, preserving images, cross-references, and metadata. Round-trips…</div></div></div>
+        <div class="cat-chip-row"><div class="chip-eyebrow">↓ The rest of the catalog</div><div class="chip-grid"><span class="cat-chip cat-strategy">/tracker</span><span class="cat-chip cat-strategy">/trace-matrix</span><span class="cat-chip cat-quality">/best-practices</span></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L203-L220">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.2 · Hooks — automatic tripwires you can&#x27;t forget to run</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Hooks — automatic tripwires you can&#x27;t forget to run</h2>
+        <p class="lead reveal">A <strong>hook</strong> is a small automation that fires at a specific moment — when a session starts, when a file is about to be edited, when work is about to end — and either allows, blocks, or adds context to the action. Hooks are invisible until one trips. When one trips, it means the system caught an issue before it became a problem.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table density-tight">
+                <thead><tr><th>Hook</th><th>When it fires</th><th>What it prevents</th></tr></thead>
+                <tbody><tr><td><strong>Task-first gate</strong> (<code>check-active-task.sh</code>)</td><td>Before any file edit</td><td>Refuses to edit a file unless there&#x27;s an active task document that owns the change. No orphan edits, ever.</td></tr><tr><td><strong>Session security check</strong> (<code>security-assert.sh</code>)</td><td>When a session opens</td><td>Runs the <code>project-secops</code> audit against <code>project.yml</code> allowlists. High-severity drift triggers guided remediation.</td></tr><tr><td><strong>Session env</strong> (<code>session-env.sh</code>)</td><td>When a session opens</td><td>Exports <code>CLAUDE_SESSION_ID</code> so the task gate can key per-session state.</td></tr><tr><td><strong>Strategy/lessons capture</strong> (<code>capture-signals.sh</code> + <code>capture-check.sh</code>)</td><td>UserPromptSubmit + Stop</td><td>Arms when a prompt shows strategic-intent signals; blocks session end if the armed task didn&#x27;t capture the decision into a <code>&lt;!-- STRATEGY CONTENT --&gt;</code> / <code>&lt;!-- LESSONS LEARNED --&gt;</code> block.</td></tr><tr><td><strong>Docflow entry</strong> (<code>block-direct-conversion.sh</code>)</td><td>Before raw <code>pandoc</code> / <code>unzip</code> / <code>soffice</code> / <code>pdftotext</code> Bash calls</td><td>Refuses direct conversion commands that would bypass the audited <code>/docflow</code> pipeline.</td></tr><tr><td><strong>Session cleanup</strong> (<code>session-cleanup.sh</code>)</td><td>When a session ends</td><td>Removes per-session state files so completed sessions don&#x27;t leave orphans.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L222-L230">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.3 · Rules — project conventions the tool reads and obeys</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Rules — project conventions the tool reads and obeys</h2>
+        <p class="lead reveal">A <strong>rule</strong> is a short written convention stored in <code>CLAUDE.md</code> or <code>.claude/rules/</code> that the AI assistant reads before acting. Rules are how we encode agreements like &quot;every folder under <code>docs/</code> must have a README&quot; or &quot;every README has a <code>## Conventions</code> and a <code>## Changelog</code> section&quot; — and then the assistant actually follows them, every time, without being reminded.</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">One task, one file.</div><div class="mc-sub">All design work, analysis, and drafts produced under a task live inside the task&#x27;s numbered markdown file — never as ad-hoc sibling files. Keeps the trail auditable.</div><div class="mc-full"><div class="mc-full-label">One task, one file.</div><div class="mc-full-body">All design work, analysis, and drafts produced under a task live inside the task&#x27;s numbered markdown file — never as ad-hoc sibling files. Keeps the trail auditable.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">READMEs have <code>## Conventions</code> and <code>## Changelog</code> sections.</div><div class="mc-sub">When Claude edits a README, it appends a changelog row explaining the rationale — AI sessions collapse many edits into one commit, and the changelog captures context git alone doesn&#x27;t.</div><div class="mc-full"><div class="mc-full-label">READMEs have <code>## Conventions</code> and <code>## Changelog</code> sections.</div><div class="mc-full-body">When Claude edits a README, it appends a changelog row explaining the rationale — AI sessions collapse many edits into one commit, and the changelog captures context git alone doesn&#x27;t.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Capture strategy and lessons in real time.</div><div class="mc-sub">Strategic decisions go into the active task as <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks in the same turn they were made — not as a deferred cleanup pass. Same rule for lessons.</div><div class="mc-full"><div class="mc-full-label">Capture strategy and lessons in real time.</div><div class="mc-full-body">Strategic decisions go into the active task as <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks in the same turn they were made — not as a deferred cleanup pass. Same rule for lessons.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Never fabricate standard, clinical, or regulatory content.</div><div class="mc-sub">Anything not derivable from a distilled source under <code>docs/external/</code> or <code>docs/internal/source-md/</code> is flagged <code>[VERIFY]</code> inline.</div><div class="mc-full"><div class="mc-full-label">Never fabricate standard, clinical, or regulatory content.</div><div class="mc-full-body">Anything not derivable from a distilled source under <code>docs/external/</code> or <code>docs/internal/source-md/</code> is flagged <code>[VERIFY]</code> inline.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Demo banner on every fabricated datum.</div><div class="mc-sub">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div><div class="mc-full"><div class="mc-full-label">Demo banner on every fabricated datum.</div><div class="mc-full-body">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L222-L230">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.3 · Rules — project conventions the tool reads and obeys · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Rules — project conventions the tool reads and obeys</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="6" width="11" height="14" rx="1"/><rect x="8" y="3" width="11" height="14" rx="1"/><line x1="11" y1="8" x2="16" y2="8"/><line x1="11" y1="11" x2="16" y2="11"/></svg></div><div class="p-label">One task, one file.</div><div class="p-sub">All design work, analysis, and drafts produced under a task live inside the task&#x27;s…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="6" width="11" height="14" rx="1"/><rect x="8" y="3" width="11" height="14" rx="1"/><line x1="11" y1="8" x2="16" y2="8"/><line x1="11" y1="11" x2="16" y2="11"/></svg></div><div class="p-label">READMEs have <code>## Conventions</code> and <code>## Changelog</code> sections.</div><div class="p-sub">When Claude edits a README, it appends a changelog row explaining the rationale —…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 14,10 21,12 14,14 12,21 10,14 3,12 10,10"/></svg></div><div class="p-label">Capture strategy and lessons in real time.</div><div class="p-sub">Strategic decisions go into the active task as <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks…</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a4 4 0 0 0 8 0V3"/><circle cx="18" cy="14" r="2.5"/><path d="M9 13v3a5 5 0 0 0 9 3"/></svg></div><div class="p-label">Never fabricate standard, clinical, or regulatory content.</div><div class="p-sub">Anything not derivable from a distilled source under <code>docs/external/</code> or <code>docs/internal/source-md/</code> is flagged <code>[VERIFY]</code>…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><line x1="15.5" y1="15.5" x2="20" y2="20" stroke-linecap="round" stroke-width="2.5"/></svg></div><div class="p-label">Demo banner on every fabricated datum.</div><div class="p-sub">Every illustrative clinical figure, placeholder predicate, or sample analysis carries `_Demo sample data —…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L236-L249">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.4 · What this adds up to</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">What this adds up to</h2>
+        <p class="lead reveal">Every substantive change in this repository is, by construction:</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Owned</div><div class="mc-sub">by a named, dated task document (task gate).</div><div class="mc-full"><div class="mc-full-label">Owned</div><div class="mc-full-body">by a named, dated task document (task gate).</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Located</div><div class="mc-sub">in a folder whose rules were read before the write (README-before-write).</div><div class="mc-full"><div class="mc-full-label">Located</div><div class="mc-full-body">in a folder whose rules were read before the write (README-before-write).</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Traced</div><div class="mc-sub">to a design input, architecture node, V&amp;V item, and risk control (trace matrix).</div><div class="mc-full"><div class="mc-full-label">Traced</div><div class="mc-full-body">to a design input, architecture node, V&amp;V item, and risk control (trace matrix).</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Audited</div><div class="mc-sub">against a standing best-practices registry (<code>/best-practices</code>).</div><div class="mc-full"><div class="mc-full-label">Audited</div><div class="mc-full-body">against a standing best-practices registry (<code>/best-practices</code>).</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Security-checked</div><div class="mc-sub">at session start (secops hook).</div><div class="mc-full"><div class="mc-full-label">Security-checked</div><div class="mc-full-body">at session start (secops hook).</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Captured</div><div class="mc-sub">for strategic/lessons content before any session ends (capture hooks).</div><div class="mc-full"><div class="mc-full-label">Captured</div><div class="mc-full-body">for strategic/lessons content before any session ends (capture hooks).</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L236-L249">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.4 · What this adds up to · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">What this adds up to</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="p-label">Owned</div><div class="p-sub">by a named, dated task document (task gate).</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg></div><div class="p-label">Located</div><div class="p-sub">in a folder whose rules were read before the write (README-before-write).</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="5" y1="3" x2="5" y2="21" stroke-linecap="round"/><rect x="5" y="4" width="14" height="8"/><line x1="9" y1="4" x2="9" y2="12"/><line x1="13" y1="4" x2="13" y2="12"/><line x1="17" y1="4" x2="17" y2="12"/><line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="10" x2="19" y2="10"/></svg></div><div class="p-label">Traced</div><div class="p-sub">to a design input, architecture node, V&amp;V item, and risk control (trace matrix).</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><circle cx="12" cy="11" r="3"/><path d="M10 14l-1 6 3-2 3 2-1-6"/></svg></div><div class="p-label">Audited</div><div class="p-sub">against a standing best-practices registry (<code>/best-practices</code>).</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/></svg></div><div class="p-label">Security-checked</div><div class="p-sub">at session start (secops hook).</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 14,10 21,12 14,14 12,21 10,14 3,12 10,10"/></svg></div><div class="p-label">Captured</div><div class="p-sub">for strategic/lessons content before any session ends (capture hooks).</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide divider-slide" data-source-anchor="L251">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4</span></div>
+    <div class="slide-content divider-content">
+        <div class="divider-num reveal">4</div>
+        <h2 class="divider-title reveal">Agentic Approach — Solving Complex Problems with Humans in Charge</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L255-L264">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · What an &quot;agent&quot; actually is here</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">What an &quot;agent&quot; actually is here</h2>
+        <p class="lead reveal">An agent (or &quot;advisor&quot;) is a persona — Regulatory Affairs, Clinical Affairs, Systems Engineering, V&amp;V Lead, Risk Management, Human Factors, Quality Engineering, Cybersecurity, Post-Market Surveillance, R&amp;D Lead, Program Manager — configured to:</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Read only the documents a real person in that role would read</div><div class="mc-sub">FDA guidance, ISO/IEC standards, the project&#x27;s own design controls, the predicate analysis, the relevant DHF.</div><div class="mc-full"><div class="mc-full-label">Read only the documents a real person in that role would read</div><div class="mc-full-body">FDA guidance, ISO/IEC standards, the project&#x27;s own design controls, the predicate analysis, the relevant DHF.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Answer within the scope of that role</div><div class="mc-sub">and say &quot;that&#x27;s outside my lane — ask the XX advisor&quot; when a question crosses a boundary.</div><div class="mc-full"><div class="mc-full-label">Answer within the scope of that role</div><div class="mc-full-body">and say &quot;that&#x27;s outside my lane — ask the XX advisor&quot; when a question crosses a boundary.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Cite the sources</div><div class="mc-sub">for every claim, so the human reviewer can verify.</div><div class="mc-full"><div class="mc-full-label">Cite the sources</div><div class="mc-full-body">for every claim, so the human reviewer can verify.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Flag disagreement</div><div class="mc-sub">with a draft rather than rubber-stamp it.</div><div class="mc-full"><div class="mc-full-label">Flag disagreement</div><div class="mc-full-body">with a draft rather than rubber-stamp it.</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L255-L264">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · What an &quot;agent&quot; actually is here · variant A — concept canvas</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Concept Canvas</div>
+        <h2 class="reveal">What an &quot;agent&quot; actually is here</h2>
+        <p class="lead reveal">An agent (or &quot;advisor&quot;) is a persona — Regulatory Affairs, Clinical Affairs, Systems Engineering, V&amp;V Lead, Risk Management, Human Factors, Quality Engineering, Cybersecurity, Post-Market Surveillance, R&amp;D Lead, Program Manager — configured to:</p>
+        <div class="concept-canvas-grid reveal"><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Read only the documents a real person in that role would read</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Answer within the scope of that role</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Cite the sources</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Flag disagreement</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L255-L264">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.1 · What an &quot;agent&quot; actually is here · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">What an &quot;agent&quot; actually is here</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="p-label">Read only the documents a real person in that role would read</div><div class="p-sub">FDA guidance, ISO/IEC standards, the project&#x27;s own design controls, the predicate analysis, the relevant…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 21c0-3.5 3-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 21c0-2.5 2-4.5 4-4.5s2 1 2 1"/></svg></div><div class="p-label">Answer within the scope of that role</div><div class="p-sub">and say &quot;that&#x27;s outside my lane — ask the XX advisor&quot; when a question…</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,5 3,12 8,19"/><polyline points="16,5 21,12 16,19"/></svg></div><div class="p-label">Cite the sources</div><div class="p-sub">for every claim, so the human reviewer can verify.</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="5" y1="3" x2="5" y2="21" stroke-linecap="round"/><path d="M5 4h12l-3 4 3 4H5"/></svg></div><div class="p-label">Flag disagreement</div><div class="p-sub">with a draft rather than rubber-stamp it.</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L266-L279">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.2 · How it helps with complex problems</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">How it helps with complex problems</h2>
+        <p class="lead reveal">Regulated medical device work is not a single-discipline problem. A single design decision — say, &quot;should the Connectivity Adapter push drug-library deltas over mTLS, or should the pump pull signed bundles on demand?&quot; — simultaneously touches:</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Cybersecurity</div><div class="mc-sub">(IEC 81001-5-1, signing-trust model, FDA §524B)</div><div class="mc-full"><div class="mc-full-label">Cybersecurity</div><div class="mc-full-body">(IEC 81001-5-1, signing-trust model, FDA §524B)</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Risk management</div><div class="mc-sub">(what happens if the push fails mid-update? ISO 14971 hazard analysis)</div><div class="mc-full"><div class="mc-full-label">Risk management</div><div class="mc-full-body">(what happens if the push fails mid-update? ISO 14971 hazard analysis)</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Systems engineering</div><div class="mc-sub">(where the SaMD / MDDS boundary sits; impact on composition manifest)</div><div class="mc-full"><div class="mc-full-label">Systems engineering</div><div class="mc-full-body">(where the SaMD / MDDS boundary sits; impact on composition manifest)</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Regulatory</div><div class="mc-sub">(does this change PCCP envelope scope? Does it alter the MDDS classification of the adapter?)</div><div class="mc-full"><div class="mc-full-label">Regulatory</div><div class="mc-full-body">(does this change PCCP envelope scope? Does it alter the MDDS classification of the adapter?)</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Clinical</div><div class="mc-sub">(does it introduce dose-limit latency a clinician must account for?)</div><div class="mc-full"><div class="mc-full-label">Clinical</div><div class="mc-full-body">(does it introduce dose-limit latency a clinician must account for?)</div></div></div><div class="mini-card accent-coral"><div class="mc-label">V&amp;V</div><div class="mc-sub">(what new test cases does it require? Do they belong in filing-scope or commercial V&amp;V?)</div><div class="mc-full"><div class="mc-full-label">V&amp;V</div><div class="mc-full-body">(what new test cases does it require? Do they belong in filing-scope or commercial V&amp;V?)</div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L266-L279">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.2 · How it helps with complex problems · variant A — concept canvas</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Concept Canvas</div>
+        <h2 class="reveal">How it helps with complex problems</h2>
+        <p class="lead reveal">Regulated medical device work is not a single-discipline problem. A single design decision — say, &quot;should the Connectivity Adapter push drug-library deltas over mTLS, or should the pump pull signed bundles on demand?&quot; — simultaneously touches:</p>
+        <div class="concept-canvas-grid reveal"><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Cybersecurity</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Risk management</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Systems engineering</div></div><div class="cc-facet"><div class="cc-bullet"></div><div class="cc-text">Regulatory</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L266-L279">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.2 · How it helps with complex problems · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">How it helps with complex problems</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/></svg></div><div class="p-label">Cybersecurity</div><div class="p-sub">(IEC 81001-5-1, signing-trust model, FDA §524B)</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><circle cx="12" cy="11" r="3"/><path d="M10 14l-1 6 3-2 3 2-1-6"/></svg></div><div class="p-label">Risk management</div><div class="p-sub">(what happens if the push fails mid-update? ISO 14971 hazard analysis)</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="8" width="14" height="9" rx="1"/><path d="M16 11h3l2 3v3h-5z"/><circle cx="6.5" cy="18.5" r="1.5"/><circle cx="17.5" cy="18.5" r="1.5"/><line x1="9" y1="11" x2="9" y2="14"/><line x1="7.5" y1="12.5" x2="10.5" y2="12.5"/></svg></div><div class="p-label">Systems engineering</div><div class="p-sub">(where the SaMD / MDDS boundary sits; impact on composition manifest)</div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">Regulatory</div><div class="p-sub">(does this change PCCP envelope scope? Does it alter the MDDS classification of the…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a4 4 0 0 0 8 0V3"/><circle cx="18" cy="14" r="2.5"/><path d="M9 13v3a5 5 0 0 0 9 3"/></svg></div><div class="p-label">Clinical</div><div class="p-sub">(does it introduce dose-limit latency a clinician must account for?)</div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,8 21,16 12,21 3,16 3,8"/></svg></div><div class="p-label">V&amp;V</div><div class="p-sub">(what new test cases does it require? Do they belong in filing-scope or commercial…</div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L281-L297">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.3 · Humans decide. Agents advise.</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Humans decide. Agents advise.</h2>
+        <p class="lead reveal">Every regulatory decision on this program — pathway choice, predicate selection, classification, risk acceptability, design-input approval, V&amp;V sufficiency, release readiness — is made by a named human and recorded in a named task document. The agent&#x27;s role is to:</p>
+        <ul class="bullets"><li class="reveal">Reviews the analysis.</li><li class="reveal">Chooses the answer (the agent may have given three).</li><li class="reveal">Writes the decision into the task document.</li><li class="reveal">Signs off in the QMS of record when the decision moves to a controlled artifact.</li></ul>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L281-L297">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.3 · Humans decide. Agents advise. · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Humans decide. Agents advise.</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9" rx="0.5"/><rect x="13" y="3" width="8" height="5" rx="0.5"/><rect x="13" y="10" width="8" height="11" rx="0.5"/><rect x="3" y="14" width="8" height="7" rx="0.5"/></svg></div><div class="p-label">Reviews the analysis.</div><div class="p-sub"></div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3h6"/><line x1="12" y1="3" x2="12" y2="7"/><path d="M8 7h8l-1 6H9z"/><line x1="12" y1="13" x2="12" y2="20"/><circle cx="12" cy="20.5" r="0.8" fill="currentColor"/></svg></div><div class="p-label">Chooses the answer (the agent may have given three).</div><div class="p-sub"></div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="p-label">Writes the decision into the task document.</div><div class="p-sub"></div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17c2 0 3-2 5-6s4-7 6-7 1 4 1 7 0 6 3 6"/><line x1="3" y1="21" x2="21" y2="21"/></svg></div><div class="p-label">Signs off in the QMS of record when the decision moves to a </div><div class="p-sub"></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L299-L310">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.4 · Where the handoff happens</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Where the handoff happens</h2>
+        <p class="lead reveal">The AI never occupies step 3 or step 6. That is not a limitation — that is the design.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table density-tight">
+                <thead><tr><th>Step</th><th>Who</th><th>What</th></tr></thead>
+                <tbody><tr><td>1. Draft analysis</td><td>Agent</td><td>Reads grounded sources, drafts structured answer with citations and counterpoints.</td></tr><tr><td>2. Review &amp; redirect</td><td>Human</td><td>Reviews the analysis, asks follow-ups, rejects or redirects.</td></tr><tr><td>3. Decision</td><td>Human</td><td>Chooses the path forward and writes it into the task document.</td></tr><tr><td>4. Implementation</td><td>Human + agent</td><td>Human directs; agent drafts changes; task-first gate ensures every edit is owned and traced.</td></tr><tr><td>5. Verification</td><td>Human (or panel)</td><td>Independent panel agent reviews before the change is finalized.</td></tr><tr><td>6. Sign-off in QMS of record</td><td>Human only</td><td>Controlled artifact is promoted; signatures applied by named humans in the system of record.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L299-L310">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.4 · Where the handoff happens · variant A — handoff relay</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Handoff Relay</div>
+        <h2 class="reveal">Where the handoff happens</h2>
+        <div class="relay-track reveal"><div class="relay-box either"><div class="r-step">01</div><div class="r-actor">1. Draft analysis</div><div class="r-label">Agent</div></div><div class="relay-box either"><div class="r-step">02</div><div class="r-actor">2. Review &amp; redirect</div><div class="r-label">Human</div></div><div class="relay-box either"><div class="r-step">03</div><div class="r-actor">3. Decision</div><div class="r-label">Human</div></div><div class="relay-box either"><div class="r-step">04</div><div class="r-actor">4. Implementation</div><div class="r-label">Human + agent</div></div><div class="relay-box either"><div class="r-step">05</div><div class="r-actor">5. Verification</div><div class="r-label">Human (or panel)</div></div><div class="relay-box either"><div class="r-step">06</div><div class="r-actor">6. Sign-off in QMS of record</div><div class="r-label">Human only</div></div></div>
+        <p class="muted reveal" style="text-align:center;margin-top:1rem;">The AI never occupies step 3 or step 6. That is not a limitation — that is the design.</p>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L312-L325">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.5 · Why this works for regulated work</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Why this works for regulated work</h2>
+        <p class="lead reveal">Traditional AI skepticism in regulated environments boils down to: &quot;I can&#x27;t put an AI decision in front of a Notified Body or the FDA.&quot; Correct. We don&#x27;t. What we put in front of the regulator is:</p>
+        <ul class="bullets"><li class="reveal">A human-signed decision.</li><li class="reveal">In a task document owned by a named person.</li><li class="reveal">Backed by a trace matrix rebuilt from source.</li><li class="reveal">Supported by a structured analysis with cited sources.</li><li class="reveal">Vetted by multiple specialist perspectives.</li><li class="reveal">Produced inside a toolchain whose compliance properties are enforced by hooks, not hope.</li></ul>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L312-L325">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§4.5 · Why this works for regulated work · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Why this works for regulated work</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17c2 0 3-2 5-6s4-7 6-7 1 4 1 7 0 6 3 6"/><line x1="3" y1="21" x2="21" y2="21"/></svg></div><div class="p-label">A human-signed decision.</div><div class="p-sub"></div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><div class="p-label">In a task document owned by a named person.</div><div class="p-sub"></div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,5 3,12 8,19"/><polyline points="16,5 21,12 16,19"/></svg></div><div class="p-label">Backed by a trace matrix rebuilt from source.</div><div class="p-sub"></div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,5 3,12 8,19"/><polyline points="16,5 21,12 16,19"/></svg></div><div class="p-label">Supported by a structured analysis with cited sources.</div><div class="p-sub"></div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3h6"/><line x1="12" y1="3" x2="12" y2="7"/><path d="M8 7h8l-1 6H9z"/><line x1="12" y1="13" x2="12" y2="20"/><circle cx="12" cy="20.5" r="0.8" fill="currentColor"/></svg></div><div class="p-label">Vetted by multiple specialist perspectives.</div><div class="p-sub"></div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div><div class="p-label">Produced inside a toolchain whose compliance properties are </div><div class="p-sub"></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide divider-slide" data-source-anchor="L327">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5</span></div>
+    <div class="slide-content divider-content">
+        <div class="divider-num reveal">5</div>
+        <h2 class="divider-title reveal">The Project Console</h2>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L334-L338">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.1 · Landing page</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Landing page</h2>
+        <div class="prose"><p class="reveal">![Landing](http://127.0.0.1:8765/)</p><p class="reveal">Branded with the <strong>GlobalLogic</strong> theme pack (scraped and materialized by <code>/project-console theme</code>). Top-level tiles for <strong>Agents</strong> (23 domain agents), <strong>Documents</strong>, <strong>Dashboards</strong>, and <strong>Trace Matrix</strong>. Workflows tile marked &quot;Coming soon.&quot; <strong>[http://127.0.0.1:8765/](http://127.0.0.1:8765/)</strong></p></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L341-L354">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.2 · Agents (persona advisors)</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Agents (persona advisors)</h2>
+        <p class="lead reveal">![Agents](http://127.0.0.1:8765/agents)</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">23 agents total</div><div class="mc-sub">11 Core Team Assistants + 8 KOLs + 4 panels (2 Core Team + 2 KOL). A filter toggle switches between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, and <strong>Core Team Assistants</strong>.</div><div class="mc-full"><div class="mc-full-label">23 agents total</div><div class="mc-full-body">11 Core Team Assistants + 8 KOLs + 4 panels (2 Core Team + 2 KOL). A filter toggle switches between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, and <strong>Core Team Assistants</strong>.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Each card links to a full threaded chat UI with grounding so</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Each card links to a full threaded chat UI with grounding so</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-coral"><div class="mc-label">Core Team curation is driven by `project.yml → advisors.enab</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Core Team curation is driven by `project.yml → advisors.enab</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-orange"><div class="mc-label">http://127.0.0.1:8765/agents</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">http://127.0.0.1:8765/agents</div><div class="mc-full-body"></div></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L341-L354">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.2 · Agents (persona advisors) · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Agents (persona advisors)</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="p-label">23 agents total</div><div class="p-sub">11 Core Team Assistants + 8 KOLs + 4 panels (2 Core Team +…</div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14l4-4"/><path d="M9 7l3-3a4 4 0 0 1 6 6l-3 3"/><path d="M15 17l-3 3a4 4 0 0 1-6-6l3-3"/></svg></div><div class="p-label">Each card links to a full threaded chat UI with grounding so</div><div class="p-sub"></div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3h6"/><line x1="12" y1="3" x2="12" y2="7"/><path d="M8 7h8l-1 6H9z"/><line x1="12" y1="13" x2="12" y2="20"/><circle cx="12" cy="20.5" r="0.8" fill="currentColor"/></svg></div><div class="p-label">Core Team curation is driven by `project.yml → advisors.enab</div><div class="p-sub"></div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div><div class="p-label">http://127.0.0.1:8765/agents</div><div class="p-sub"></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L357-L361">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.3 · Documents explorer</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Documents explorer</h2>
+        <p class="lead reveal">![Documents](http://127.0.0.1:8765/documents)</p>
+        <ul class="bullets"><li class="reveal">File tree over the entire project with markdown rendering in the right pane.</li><li class="reveal">Surfaces DHFs, submissions, standards, FDA guidance, tasks, and strategies side by side.</li><li class="reveal">A <strong>unified Assistant drawer</strong> (task ben/024) mounts on this page: the user picks an advisor, the drawer grounds on the document currently open, and thread history persists per-scope in browser localStorage.</li><li class="reveal">Junk-filtered (macOS <code>Icon\r</code>, <code>._*</code>, Windows <code>Thumbs.db</code> hidden).</li><li class="reveal"><strong>[http://127.0.0.1:8765/documents](http://127.0.0.1:8765/documents)</strong></li></ul>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L357-L361">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.3 · Documents explorer · variant A — principle tiles</span></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal">Variation A · Principle Tiles</div>
+        <h2 class="reveal">Documents explorer</h2>
+        <div class="principle-tile-grid reveal"><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="p-label">File tree over the entire project with markdown rendering in</div><div class="p-sub"></div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v7c0 5-3.5 7.5-8 8.5-4.5-1-8-3.5-8-8.5V6z"/><polyline points="9,12 11,14 15,10"/></svg></div><div class="p-label">Surfaces DHFs, submissions, standards, FDA guidance, tasks, </div><div class="p-sub"></div></div><div class="principle-tile accent-coral"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/><rect x="11" y="11" width="6" height="4"/></svg></div><div class="p-label">A <strong>unified Assistant drawer</strong> (task ben/024) mounts on this</div><div class="p-sub"></div></div><div class="principle-tile accent-orange"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 4h18l-7 8v8l-4-2v-6z"/></svg></div><div class="p-label">Junk-filtered (macOS <code>Icon\r</code>, <code>._*</code>, Windows <code>Thumbs.db</code> hi</div><div class="p-sub"></div></div><div class="principle-tile accent-amber"><div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><polyline points="15,3 15,7 19,7"/></svg></div><div class="p-label">http://127.0.0.1:8765/documents</div><div class="p-sub"></div></div></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L367-L383">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.4 · Dashboards</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Dashboards</h2>
+        <p class="lead reveal">![Dashboards](http://127.0.0.1:8765/dashboards)</p>
+        <ul class="bullets"><li class="reveal"><strong>Submission Package Tracker</strong> — <code>docs/project/submissions/submission-tracker.html</code> (510(k) + PCCP deliverable tracker)</li></ul>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L386-L398">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.5 · Trace Matrix</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Trace Matrix</h2>
+        <div class="prose"><p class="reveal">![Trace matrix](http://127.0.0.1:8765/trace-matrix)</p><p class="reveal">Each DHF gets a bidirectional trace sidecar driven by <code>trace-matrix.yml</code> at repo root. The index shows which DHFs have a built matrix (today: <strong>pca-device</strong>) and which are empty-state (today: the other nine). Empty-state rows offer a <strong>Build this DHF</strong> button; once adapters exist the deterministic <code>build.py</code> runs; otherwise <code>/trace-matrix init</code> authors them via the Claude Agent SDK.</p><p class="reveal"><strong>[http://127.0.0.1:8765/trace-matrix](http://127.0.0.1:8765/trace-matrix)</strong></p><p class="reveal">![Trace matrix detail](http://127.0.0.1:8765/trace-matrix/pca-device)</p><p class="reveal">Per-DHF view with tabs for <strong>User Needs (22) / Design Inputs (34) / Architecture (7) / V&amp;V (3) / Risk</strong>, criticality filters (CtS / CtF / CtC / CtP / Supp / Untagged), orphan-only toggle, and a unified Assistant drawer defaulted to <code>systems-engineering</code>. The current PP3500 build surfaces <strong>30 Design-Input orphans</strong> (DIs without a verification target) as the headline gap — exactly what the trace matrix is for. <strong>[http://127.0.0.1:8765/trace-matrix/pca-device](http://127.0.0.1:8765/trace-matrix/pca-device)</strong></p></div>
+    </div>
+</section>
+
+
+<section class="slide" data-source-anchor="L401-L410">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.6 · How the console relates to Claude Code</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">How the console relates to Claude Code</h2>
+        <p class="lead reveal"><strong>Same agents. Same grounding. Two runtimes.</strong> Updating an agent (<code>.claude/agents/regulatory-affairs.md</code>) updates both surfaces simultaneously — no drift between what Claude Code sees and what the console exposes.</p>
+        <div class="table-wrap reveal">
+            <table class="compact-table ">
+                <thead><tr><th>Surface</th><th>Runtime</th><th>Grounding</th><th>Auth</th></tr></thead>
+                <tbody><tr><td>Claude Code main thread</td><td>CLI, developer workstation</td><td>Direct filesystem access</td><td>Local</td></tr><tr><td>project-console chat</td><td>Browser, FastAPI + Claude Agent SDK</td><td>Same agent files under <code>.claude/agents/</code> via shared <code>advisors_lib</code> symlink</td><td>OAuth to Claude CLI; domain-restricted per <code>project.yml → security.approved_email_domains</code></td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="nav-dots"></div>
+<div class="keyboard-hint">← → space · ? for provenance</div>
+<div class="provenance-modal" hidden>
+  <div class="provenance-card">
+    <h3>Deck provenance</h3>
+    <dl>
+      <dt>Source</dt><dd><code>project-overview.md</code></dd>
+      <dt>SHA-256</dt><dd><code>69e976d891e709f2a1afdb0d164cc2958b0a8909739a8538f2ebf48fbb2557c8</code></dd>
+      <dt>Built</dt><dd>2026-05-02T05:28:51Z</dd>
+      <dt>By</dt><dd>benxavier</dd>
+      <dt>Generator</dt><dd>md-deck v0.2.0 · style=bold-signal</dd>
+      <dt>Slides</dt><dd>52</dd>
+    </dl>
+    <p class="dim">Update by re-running the source-of-truth build:<br>
+    <code>python .claude/skills/md-deck/scripts/build.py project-overview.md</code></p>
+    <button class="provenance-close">Close (Esc)</button>
+  </div>
+</div>
+<script>
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll(".slide"));
+        this.currentSlide = 0;
+        this.progressBar = document.querySelector(".progress-bar");
+        this.navDotsContainer = document.querySelector(".nav-dots");
+        this.assignChromeNumbers();
+        this.setupNavDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupProgress();
+        this.setupProvenanceModal();
+    }
+    assignChromeNumbers() {
+        // Auto-number every chrome block by DOM position. Title slide skipped.
+        let n = 1;
+        this.slides.forEach((s) => {
+            const chromeNum = s.querySelector(".chrome .chrome-num");
+            if (chromeNum) {
+                n += 1;
+                chromeNum.textContent = String(n).padStart(2, "0");
+            }
+        });
+    }
+    setupNavDots() {
+        this.navDotsContainer.innerHTML = "";
+        this.slides.forEach((_, i) => {
+            const b = document.createElement("button");
+            b.className = "dot";
+            b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+            if (i === 0) b.classList.add("active");
+            b.addEventListener("click", () => this.goTo(i));
+            this.navDotsContainer.appendChild(b);
+        });
+        this.dots = Array.from(this.navDotsContainer.querySelectorAll(".dot"));
+    }
+    setupIntersectionObserver() {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting && e.intersectionRatio > 0.5) {
+                    e.target.classList.add("visible");
+                    const idx = this.slides.indexOf(e.target);
+                    if (idx >= 0) {
+                        this.currentSlide = idx;
+                        this.updateChrome();
+                    }
+                }
+            });
+        }, { threshold: [0.5] });
+        this.slides.forEach((s) => obs.observe(s));
+    }
+    setupKeyboardNav() {
+        document.addEventListener("keydown", (e) => {
+            if (["ArrowDown", "ArrowRight", "PageDown", " "].includes(e.key)) {
+                e.preventDefault();
+                this.next();
+            } else if (["ArrowUp", "ArrowLeft", "PageUp"].includes(e.key)) {
+                e.preventDefault();
+                this.prev();
+            } else if (e.key === "Home") { e.preventDefault(); this.goTo(0); }
+            else if (e.key === "End") { e.preventDefault(); this.goTo(this.slides.length - 1); }
+            else if (e.key === "?") { e.preventDefault(); this.toggleProvenance(); }
+        });
+    }
+    setupTouchNav() {
+        let touchStartY = 0;
+        document.addEventListener("touchstart", (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener("touchend", (e) => {
+            const dy = touchStartY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) > 50) { dy > 0 ? this.next() : this.prev(); }
+        });
+    }
+    setupProgress() {
+        document.addEventListener("scroll", () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+            this.progressBar.style.width = pct + "%";
+        }, { passive: true });
+    }
+    setupProvenanceModal() {
+        const modal = document.createElement("div");
+        modal.className = "provenance-modal";
+        modal.innerHTML = `
+            <div class="provenance-card" role="dialog" aria-label="Deck provenance">
+                <h3>Deck provenance</h3>
+                <dl>
+                    <dt>Source</dt><dd>${document.querySelector('meta[name="md-deck:source"]')?.content || ""}</dd>
+                    <dt>SHA-256</dt><dd>${document.querySelector('meta[name="md-deck:source-sha256"]')?.content?.slice(0, 16) || ""}…</dd>
+                    <dt>Built at</dt><dd>${document.querySelector('meta[name="md-deck:built-at"]')?.content || ""}</dd>
+                    <dt>Built by</dt><dd>${document.querySelector('meta[name="md-deck:built-by"]')?.content || ""}</dd>
+                    <dt>Style</dt><dd>${document.querySelector('meta[name="md-deck:style"]')?.content || ""}</dd>
+                    <dt>Generator</dt><dd>${document.querySelector('meta[name="generator"]')?.content || ""}</dd>
+                </dl>
+                <p class="hint">Press ? to toggle · Esc to close</p>
+            </div>`;
+        modal.style.display = "none";
+        document.body.appendChild(modal);
+        modal.addEventListener("click", (e) => { if (e.target === modal) this.toggleProvenance(); });
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.style.display = "none"; });
+        this.provenanceModal = modal;
+    }
+    toggleProvenance() {
+        this.provenanceModal.style.display = this.provenanceModal.style.display === "none" ? "flex" : "none";
+    }
+    next() { if (this.currentSlide < this.slides.length - 1) this.goTo(this.currentSlide + 1); }
+    prev() { if (this.currentSlide > 0) this.goTo(this.currentSlide - 1); }
+    goTo(i) {
+        this.currentSlide = i;
+        this.slides[i].scrollIntoView({ behavior: "smooth" });
+        this.updateChrome();
+    }
+    updateChrome() {
+        this.dots.forEach((d, i) => d.classList.toggle("active", i === this.currentSlide));
+    }
+}
+document.addEventListener("DOMContentLoaded", () => new SlidePresentation());
+
+</script>
+</body>
+</html>

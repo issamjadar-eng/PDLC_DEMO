@@ -91,9 +91,9 @@ echo
 # ------------------------------------------------------------
 echo "[1] skill structure"
 for f in SKILL.md README.md VERSION \
-         actions/setup.py actions/launch.py actions/status.py actions/stop.py \
+         actions/setup.py actions/launch.py actions/status.py actions/stop.py actions/cookies.py \
          lib/__init__.py lib/errors.py lib/platform.py lib/lifecycle.py \
-         lib/connect.py lib/input.py lib/a11y.py \
+         lib/connect.py lib/input.py lib/a11y.py lib/cookies.py \
          scripts/launch-debug-chrome.sh scripts/install-chrome-wsl.sh \
          templates/mcp-attach-block.json; do
     assert "structure: $f exists" "[ -f '$SKILL_DIR/$f' ]"
@@ -271,6 +271,66 @@ sys.exit(0 if len(pids) == 0 else 1)
 \""
     fi
 fi
+
+# ------------------------------------------------------------
+# 12. cookies action — structural + lib unit tests (no live Chrome)
+# ------------------------------------------------------------
+echo
+echo "[12] cookies — lib unit tests"
+
+assert "lib.cookies importable" \
+    "cd '$SKILL_DIR' && PYTHONPATH='$SKILL_DIR' '$PY' -c 'from lib.cookies import extract_cookies, cookies_to_header, cookies_for_domain'"
+
+assert_output "cookies_to_header renders 'name=val' pairs joined with '; '" \
+    "cd '$SKILL_DIR' && PYTHONPATH='$SKILL_DIR' '$PY' -c '
+from lib.cookies import cookies_to_header
+out = cookies_to_header([
+    {\"name\": \"sid\",   \"value\": \"abc\"},
+    {\"name\": \"token\", \"value\": \"xyz\"},
+])
+print(\"OK\" if out == \"sid=abc; token=xyz\" else f\"FAIL got: {out!r}\")
+'" 'OK'
+
+assert_output "cookies_to_header skips entries with empty name" \
+    "cd '$SKILL_DIR' && PYTHONPATH='$SKILL_DIR' '$PY' -c '
+from lib.cookies import cookies_to_header
+out = cookies_to_header([
+    {\"name\": \"\",    \"value\": \"x\"},
+    {\"name\": \"sid\", \"value\": \"a\"},
+])
+print(\"OK\" if out == \"sid=a\" else f\"FAIL got: {out!r}\")
+'" 'OK'
+
+assert_output "_normalize_url accepts bare domain, path, fully-qualified URL" \
+    "cd '$SKILL_DIR' && PYTHONPATH='$SKILL_DIR' '$PY' -c '
+from lib.cookies import _normalize_url
+cases = [
+    (\"example.atlassian.net\",         \"https://example.atlassian.net\"),
+    (\"example.atlassian.net/wiki\",    \"https://example.atlassian.net/wiki\"),
+    (\"https://example.com/path\",      \"https://example.com/path\"),
+    (\"http://example.com\",            \"http://example.com\"),
+]
+ok = all(_normalize_url(i) == o for i, o in cases)
+print(\"OK\" if ok else f\"FAIL: {[(i, _normalize_url(i)) for i, _ in cases]}\")
+'" 'OK'
+
+assert_output "_normalize_url raises on empty input" \
+    "cd '$SKILL_DIR' && PYTHONPATH='$SKILL_DIR' '$PY' -c '
+from lib.cookies import _normalize_url
+from lib.errors import WebControlError
+try:
+    _normalize_url(\"   \")
+    print(\"FAIL: should have raised\")
+except WebControlError:
+    print(\"OK\")
+'" 'OK'
+
+assert "cookies action --help runs cleanly" \
+    "WEB_CONTROL_PROFILE_DIR='$TEST_PROFILE' '$PY' '$SKILL_DIR/actions/cookies.py' --help >/dev/null 2>&1"
+
+assert_output "cookies action emits ChromeNotRunning recovery hint when port unreachable" \
+    "WEB_CONTROL_PROFILE_DIR='$TEST_PROFILE' WEB_CONTROL_PORT='65530' '$PY' '$SKILL_DIR/actions/cookies.py' example.atlassian.net 2>&1 || true" \
+    'web-control launch'
 
 # ------------------------------------------------------------
 # Summary

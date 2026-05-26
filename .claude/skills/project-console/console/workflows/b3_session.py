@@ -39,11 +39,61 @@ def _run(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
 
 # ── Worktree management ──────────────────────────────────────────────────
 
-def worktree_branch(domain: str) -> str:
+def _existing_worktree_dir(repo_root: Path, domain: str) -> Path | None:
+    """Discover an existing per-domain worktree dir under `.worktrees/`,
+    regardless of the date suffix on its name. Returns the most recently
+    modified match, or None if no worktree for this domain exists. Solves
+    the date-rollover bug where a session created at 23:50 UTC silently
+    breaks once `today()` ticks over to the next day."""
+    base = repo_root / ".worktrees"
+    if not base.is_dir():
+        return None
+    candidates = sorted(
+        (p for p in base.glob(f"workflow-strategy-{domain}-*") if p.is_dir() and (p / ".git").exists()),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    return candidates[0] if candidates else None
+
+
+def _existing_worktree_branch(repo_root: Path, wt: Path) -> str | None:
+    """Return the branch name checked out in `wt`, by reading
+    `git -C <wt> rev-parse --abbrev-ref HEAD`. Returns None on miss."""
+    r = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=wt)
+    if r.returncode != 0:
+        return None
+    name = (r.stdout or "").strip()
+    return name or None
+
+
+def worktree_branch(repo_root: Path | None = None, domain: str | None = None) -> str:
+    """Return the branch name for the per-domain worktree. If a session
+    already exists, return THAT branch (so we don't fight date-rollover);
+    otherwise return today's freshly-named branch.
+
+    Backward-compat: if called with a single positional `domain` (legacy
+    one-arg form), behave like the old function and return today's name.
+    """
+    # Legacy one-arg signature: `worktree_branch("operations")`
+    if isinstance(repo_root, str) and domain is None:
+        return f"workflow/strategy-{repo_root}-{today()}"
+    if repo_root is None or domain is None:
+        raise TypeError("worktree_branch requires (repo_root, domain) or legacy (domain)")
+    wt = _existing_worktree_dir(repo_root, domain)
+    if wt is not None:
+        existing = _existing_worktree_branch(repo_root, wt)
+        if existing:
+            return existing
     return f"workflow/strategy-{domain}-{today()}"
 
 
 def worktree_path(repo_root: Path, domain: str) -> Path:
+    """Return the path to the per-domain worktree. Prefers an already-
+    existing worktree (any date suffix); falls back to today's freshly-
+    named path for new sessions."""
+    existing = _existing_worktree_dir(repo_root, domain)
+    if existing is not None:
+        return existing
     return repo_root / ".worktrees" / f"workflow-strategy-{domain}-{today()}"
 
 
@@ -57,7 +107,7 @@ def ensure_worktree(repo_root: Path, domain: str) -> Path:
     only see the last committed version and per-decision lookups (by
     `D-DOMAIN-N.M` id) would fail."""
     wt = worktree_path(repo_root, domain)
-    branch = worktree_branch(domain)
+    branch = worktree_branch(repo_root, domain)
     if not (wt.is_dir() and (wt / ".git").exists()):
         wt.parent.mkdir(parents=True, exist_ok=True)
         r = _run(["git", "worktree", "add", "-B", branch, str(wt)], cwd=repo_root)
@@ -195,6 +245,94 @@ def friendly_file_diff_html(wt: Path, rel_path: str) -> str:
     return summary + "".join(parts)
 
 
+def worktree_strategy_doc_dirty(wt: Path, domain: str) -> bool:
+    """True iff the strategy doc for `domain` has uncommitted changes
+    inside the worktree. Used as a precondition for Run Assembler so the
+    new run cannot silently overwrite a prior unresolved diff."""
+    rel = f"docs/project/strategies/{domain}-strategy.md"
+    r = _run(["git", "status", "--porcelain", "--", rel], cwd=wt)
+    return bool((r.stdout or "").strip())
+
+
+def worktree_discard_all(wt: Path) -> dict:
+    """Discard ALL pending changes in the worktree at once — the whole-doc
+    Throw Away. Equivalent to `git checkout HEAD -- .` for tracked changes
+    plus `git clean -fd` for untracked files. Worktree, branch, and backing
+    task are LEFT IN PLACE so the user can Run Assembler again. Use
+    `cancel_workflow()` to tear those down."""
+    co = _run(["git", "checkout", "HEAD", "--", "."], cwd=wt)
+    cl = _run(["git", "clean", "-fd"], cwd=wt)
+    if co.returncode != 0 and cl.returncode != 0:
+        return {
+            "status": "error",
+            "checkout_err": co.stderr.strip(),
+            "clean_err": cl.stderr.strip(),
+        }
+    return {"status": "discarded_all", "checkout_rc": co.returncode, "clean_rc": cl.returncode}
+
+
+def cancel_workflow(repo_root: Path, actor_folder: str, domain: str) -> dict:
+    """Tear down the entire workflow session for `(actor, domain)`:
+    discard any pending diff, remove the worktree, delete the branch, and
+    flip the backing session task to Abandoned. The opposite of Save &
+    Publish (`commit_and_merge`). Idempotent — returns a noop status if no
+    session exists."""
+    wt = worktree_path(repo_root, domain)
+    branch = worktree_branch(repo_root, domain)
+    if not (wt.is_dir() and (wt / ".git").exists()):
+        return {"status": "noop", "reason": "no open worktree"}
+    # 1. Discard pending diff (best-effort — ignore errors so teardown
+    #    still runs).
+    _run(["git", "checkout", "HEAD", "--", "."], cwd=wt)
+    _run(["git", "clean", "-fd"], cwd=wt)
+    # 2. Tear down worktree + branch.
+    teardown = _teardown(repo_root, wt, branch)
+    # 3. Mark the backing task Abandoned (we do NOT use mark_task_complete
+    #    since the work was rejected, not finished).
+    task_id = find_compatible_active_task(repo_root, actor_folder, domain) or ""
+    if task_id:
+        _mark_task_abandoned(repo_root, actor_folder, task_id)
+    return {"status": "cancelled", "task_id": task_id, **teardown}
+
+
+def _mark_task_abandoned(repo_root: Path, actor_folder: str, task_id: str) -> None:
+    """Flip task doc Status to `Abandoned` and move its index row from
+    Active to Completed (under the same Completed table — task lifecycle
+    treats Abandoned as terminal). Best-effort."""
+    task_folder = repo_root / "tasks" / actor_folder
+    for p in task_folder.glob(f"{task_id}-*.md"):
+        t = p.read_text(encoding="utf-8")
+        t = re.sub(
+            r"^\*\*Status\*\*:\s*.*$",
+            "**Status**: Abandoned",
+            t,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        p.write_text(t, encoding="utf-8")
+    idx = task_folder / "000-index.md"
+    if not idx.is_file():
+        return
+    text = idx.read_text(encoding="utf-8")
+    row_re = re.compile(
+        rf"^\|\s*{task_id}\s*\|.*\|\s*In Progress\s*\|.*$\n",
+        re.MULTILINE,
+    )
+    m = row_re.search(text)
+    if not m:
+        return
+    row = m.group(0).replace("In Progress", "Abandoned")
+    text = row_re.sub("", text, count=1)
+    compl_m = re.search(r"^##\s+Completed\s*$", text, re.MULTILINE)
+    if compl_m:
+        after_header = text[compl_m.end():]
+        div_m = re.search(r"^\|-[-|\s]+$\n", after_header, re.MULTILINE)
+        if div_m:
+            insert_at = compl_m.end() + div_m.end()
+            text = text[:insert_at] + row + text[insert_at:]
+    idx.write_text(text, encoding="utf-8")
+
+
 def worktree_discard(wt: Path, rel_path: str) -> dict:
     """Discard a single file's changes in the worktree (`git checkout --
     <path>` for tracked files; `rm` for untracked). Returns a small
@@ -247,17 +385,22 @@ def find_compatible_active_task(
     if not m:
         return None
     body = m.group("body")
-    # Heuristic match: title OR summary contains "strategy" AND ("reassembly"
-    # OR "re-assembly" OR "re-assemble") AND the domain slug. Status != Complete.
-    patt = re.compile(
-        rf"(?i)\bstrategy\b.*(?:re-?assembl|workflow).*\b{re.escape(domain)}\b"
-        rf"|\b{re.escape(domain)}\b.*(?:re-?assembl|workflow).*\bstrategy\b"
+    # Strict: only auto-created session tasks (titled exactly
+    # `Console strategy re-assembly — <domain> (...)`) qualify. Earlier
+    # versions used a fuzzy heuristic ("strategy" + "workflow" + "<domain>"
+    # anywhere in title/summary), which incorrectly bound to unrelated
+    # planning tasks that *describe* the workflow without *being* the
+    # session task. The session task's title is owned by
+    # `create_session_task` so an exact-prefix match is reliable.
+    title_re = re.compile(
+        rf"^Console strategy re-assembly\s+(?:—|-{{1,2}})\s+{re.escape(domain)}\b",
+        re.IGNORECASE,
     )
     for row in _INDEX_ROW_RE.finditer(body):
         if row.group("status").strip().lower() == "complete":
             continue
-        hay = f"{row.group('title')} {row.group('summary')}"
-        if patt.search(hay):
+        title = row.group("title").strip()
+        if title_re.match(title):
             return row.group("id")
     return None
 
@@ -444,7 +587,7 @@ def snapshot(repo_root: Path, actor_folder: str, domain: str) -> Session | None:
         task_id=existing,
         task_path=str(task_path.relative_to(repo_root)),
         worktree_path=str(wt),
-        branch=worktree_branch(domain),
+        branch=worktree_branch(repo_root, domain),
         has_diff=bool(diff),
         diff_summary=diff,
     )
@@ -462,7 +605,7 @@ def commit_and_merge(
     wt = worktree_path(repo_root, domain)
     if not wt.is_dir():
         raise RuntimeError(f"no worktree to commit at {wt}")
-    branch = worktree_branch(domain)
+    branch = worktree_branch(repo_root, domain)
 
     # 1. Stage + commit anything uncommitted in the worktree.
     _run(["git", "add", "-A"], cwd=wt)

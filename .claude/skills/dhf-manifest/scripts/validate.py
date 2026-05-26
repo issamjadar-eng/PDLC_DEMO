@@ -283,6 +283,33 @@ def run_checks(quiet: bool) -> int:
         results.add("Tier 4 obligation count matches Tier 3", "PASS",
                     f"{len(obligations)} obligations")
 
+    # ── Check 12: Tier 4 catalog shape (boundary contract) ───────────────────
+    # Catalog is purely declarative — it must NOT carry per-obligation runtime
+    # project-state fields (status, location). Those moved to the tracker
+    # agent sidecar in task ben/158 Phase 1.
+    leaked: list[str] = []
+    for dhf_leaf, entries in dhf_manifest.items():
+        for e in entries:
+            for forbidden in ("status", "location"):
+                if forbidden in e:
+                    leaked.append(f"{dhf_leaf}/{e.get('id')}.{forbidden}")
+    if leaked:
+        sample = leaked[:5]
+        more = len(leaked) - len(sample)
+        detail = "; ".join(sample) + (f" (+{more} more)" if more else "")
+        results.add("Catalog has no runtime project-state fields", "FAIL",
+                    f"Found forbidden status/location fields: {detail}")
+    else:
+        results.add("Catalog has no runtime project-state fields", "PASS",
+                    "no status/location leakage")
+
+    # ── Check 13: Top-level obligation_set_hash present ──────────────────────
+    if not tier4.get("obligation_set_hash", "").startswith("sha256:"):
+        results.add("obligation_set_hash present", "FAIL",
+                    "Missing or malformed top-level obligation_set_hash — re-run build-manifest.py")
+    else:
+        results.add("obligation_set_hash present", "PASS")
+
     # ── Print and exit ─────────────────────────────────────────────────────────
     results.print_report(quiet)
     return 1 if results.failures() > 0 else 0

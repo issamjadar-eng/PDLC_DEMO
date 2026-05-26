@@ -24,7 +24,11 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Description of Modifications section]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
 verbatim: "Statement whether modifications are implemented automatically, manually, or combination. Statement whether modifications are global (uniform across all devices) or local (site/patient-specific). For local adaptations: description of what local factors warrant the change. Expected frequency of updates. Modifications must maintain the device within its intended use and indications for use."
 extracted_requirements:
   - For each AI-DSF modification: state whether implementation is automatic, manual, or combined
@@ -50,7 +54,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Modification Protocol, Data Management Plan]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: plans
+    file_pattern: "*data-management-plan*.md"
 verbatim: "Collection protocols (inclusion/exclusion criteria, intended data distribution across covariates including sex, age, race, disease conditions, acquisition conditions, prospective vs. retrospective, enrichment/stratified sampling, number and geographic distribution of sites). Data quality assurance (consistency, completeness, authenticity, missing data handling, traceability). Test data sequestration (strategies to shield test data from development)."
 extracted_requirements:
   - Define data collection protocols for PCCP re-training: inclusion/exclusion criteria, covariate distribution requirements (sex, age, race, disease conditions, imaging acquisition conditions)
@@ -77,7 +87,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Modification Protocol, V&V Protocol Templates]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: vnv-plan
+    file_pattern: "*vnv-protocol-template*.md"
 verbatim: "Assessment metrics (specific metrics, how they demonstrate safe use, comprehensive performance assessment, challenging cases). Statistical analysis plans (equivalent/improved performance vs. previous versions, high-risk subpopulations, sensitivity/specificity trade-offs, sample size determination). Performance targets (acceptance criteria, comparison to authorized version criteria, clinical justification). Failure handling: unresolvable failures must be recorded and specific modifications must NOT be implemented."
 extracted_requirements:
   - Pre-specify performance metrics for each modification: sensitivity, specificity, AUC, measurement accuracy, etc.
@@ -104,7 +120,15 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Modification Protocol, Post-Market Surveillance Plan, Labeling Update Process]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: postmarket
+    file_pattern: "*post-market-surveillance-plan*.md"
+  - role: plans
+    file_pattern: "*labeling-update-process*.md"
 verbatim: "Software V&V (whether plan differs from original, integrated environment testing, impact on other device functions). When and how updates deploy (decision criteria, expected timeline, frequency, mechanism, verification of critical safety features post-update). Communication and transparency (PCCP description in public summary/labeling, update communication to users, version information, option to review labeling before update). Device monitoring plan (adverse event tracking, real-world performance monitoring, subpopulation performance changes, rollback criteria)."
 extracted_requirements:
   - Define software V&V procedures for each update: integration testing, regression testing, impact on non-modified device functions
@@ -131,7 +155,13 @@ topic: regulatory-submission
 artifact_type: submission-content
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [PCCP Document — Impact Assessment, Risk Management File]
+canonical_role: submission-authored
+criticality: must-have
+applies_to:
+  - role: submission-authored
+    file_pattern: "*pccp-document*.md"
+  - role: risk-management
+    file_pattern: "*risk-management-file*.md"
 verbatim: "Discussion of benefits and risks of each modification, including risks of harm and unintended bias. How V&V activities in the Modification Protocol ensure continued safety and effectiveness. How implementation of one modification impacts another. Cumulative impact of implementing all modifications."
 extracted_requirements:
   - For each AI-DSF modification: assess risks of harm AND risks of unintended bias (demographic bias, site-specific bias, data drift bias)
@@ -157,7 +187,15 @@ topic: configuration-change
 artifact_type: process-record
 dhf_owner: system
 min_iec62304_class: A
-applies_to: [Design Change Records, PCCP Implementation Records, CAPA Records]
+canonical_role: plans
+criticality: must-have
+applies_to:
+  - role: plans
+    file_pattern: "*design-change-records*.md"
+  - role: plans
+    file_pattern: "*pccp-implementation-records*.md"
+  - role: plans
+    file_pattern: "*capa-records*.md"
 verbatim: "QMS compliance with 21 CFR Part 820 / ISO 13485:2016. Design control procedures for PCCP modifications (21 CFR 820.30). Change management processes for PCCP implementation. Document and record retention (minimum 2 years from commercial release). CAPA procedures applicable to PCCP deviations."
 extracted_requirements:
   - Each PCCP modification implementation is a design change under ISO 13485 §7.3.9 — must be reviewed, V&V'd per the Modification Protocol, and approved before release

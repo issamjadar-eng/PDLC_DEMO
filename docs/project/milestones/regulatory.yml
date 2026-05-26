@@ -1,0 +1,118 @@
+# Regulatory Milestones — PP3500 (K210345) 510(k)+PCCP Strategy
+#
+# Strategy (in order):
+#   1. QSub          — validate approach + key questions with FDA (pre-submission)
+#   2. 510(k)+PCCP   — filing event; secures market authorization
+#   3. LMR1          — first commercial release (full feature set + UX) built in
+#                      parallel with the 510(k) review window; this — not the
+#                      as-filed version — is the version that goes to market
+#   4. LMR2          — second commercial release; further PCCP envelope
+#                      expansion + commercial enhancements
+#
+# Consumed by:
+#   - /tracker generate (walks milestones[].bindings[] to emit per-Phase rows)
+#   - /tracker render   (per-Phase summary cards + progress bars)
+#   - /strategy         (regulatory pathway grounding)
+#
+# Generator prefix map (hardcoded in scripts/generate.py):
+#   qsub-release  → Q   (e.g., Q1, Q2)
+#   pccp-release  → ""  (baseline; PS1, PI1, PM1)
+#   lmr1-release  → L1  (e.g., L1-PS1, L1-PI1)
+#   lmr2-release  → L2  (e.g., L2-PS1, L2-PI1)
+
+milestones:
+  - id: qsub-release
+    name: QSub Release
+    short_label: QSub
+    description: >
+      Pre-submission package to validate the regulatory approach, predicate
+      strategy, and key questions with FDA before formal 510(k) filing.
+    posture: readiness-check
+    bindings:
+      - dhf: pca-device
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      # MDDS — trimmed scope, see project.yml dhfs[].connectivity-adapter.
+      # All 11 canonical roles will emit since the upstream generator walks the
+      # full system-DHF role map; non-applicable roles are marked status: N/A
+      # in submission-tracker.overlay.yml.
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      # Non-medical dependency platform — trimmed scope, see project.yml
+      # dhfs[].cloud-suite. Same N/A-overlay trim pattern as connectivity-adapter.
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
+
+  - id: pccp-release
+    name: 510k+PCCP Release
+    short_label: 510k+PCCP
+    description: >
+      Filing event — full 510(k) submission with PCCP envelope (K210345).
+      Secures FDA market authorization. This is NOT the version that ships
+      to customers; commercial releases LMR1/LMR2 carry the final UX + features.
+    posture: full-package
+    bindings:
+      - dhf: pca-device
+        doc_pattern: '**/*'
+        # Until per-milestone version evidence trees exist on disk
+        # (`docs/project/dhfs/pca-device/_versions/v1.0/...`), all milestone
+        # bindings resolve against `current`. Re-pin to vN.M when version
+        # tagging lands. See ben/047 Phase-3 backlog.
+        version: current
+        required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
+
+  - id: lmr1-release
+    name: LMR1 Release
+    short_label: LMR1
+    description: >
+      First commercial release — full feature set + UX improvements built
+      in parallel with the FDA review window. This is the version that
+      goes to market post-clearance.
+    posture: planning
+    bindings:
+      - dhf: pca-device
+        doc_pattern: '**/*'
+        version: current   # see pccp-release note above re version pinning
+        required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false
+
+  - id: lmr2-release
+    name: LMR2 Release
+    short_label: LMR2
+    description: >
+      Second commercial release — further PCCP envelope expansion and
+      commercial enhancements following LMR1 field experience.
+    posture: planning
+    bindings:
+      - dhf: pca-device
+        doc_pattern: '**/*'
+        version: current   # see pccp-release note above re version pinning
+        required: true
+      - dhf: connectivity-adapter
+        doc_pattern: '**/*'
+        version: current
+        required: true
+      - dhf: cloud-suite
+        doc_pattern: '**/*'
+        version: current
+        required: false

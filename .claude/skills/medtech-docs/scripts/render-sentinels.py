@@ -125,41 +125,111 @@ def render_subfolder_table(target_file, attrs, old_block_content):
     return '\n'.join(lines) + '\n'
 
 
+def _dhf_classification(dhf):
+    """Return (classification_str, iec_str) for a DHF row."""
+    role = dhf.get('role', 'unknown')
+    if role == 'system':
+        return 'device-level', 'n/a'
+    c = dhf.get('classification') or {}
+    samd = 'SaMD' if c.get('samd') else 'non-SaMD'
+    cls = c.get('class', 'tbd')
+    ai = 'AI-enabled' if c.get('ai_enabled') else ''
+    # Skip "Class X" prefix when class isn't a Roman/Arabic numeral
+    # (e.g., "non-device" for non-SaMD entries doesn't read well as "Class non-device")
+    if str(cls).strip().lower().startswith('non-'):
+        classification = samd + (f', {ai}' if ai else '')
+    else:
+        classification = f'{samd}, Class {cls}' + (f', {ai}' if ai else '')
+    iec = f"Class {c.get('iec62304', 'tbd')}"
+    return classification, iec
+
+
 def render_dhf_table(target_file, attrs, old_block_content, project_yml):
-    """Render kind=dhf-table from project.yml dhfs[]."""
+    """Render kind=dhf-table from project.yml dhfs[].
+
+    Three variants controlled by attrs['variant']:
+      - default (no variant or variant=default):
+          Architecture Name | Marketed Name | Role | Classification | IEC 62304 | Filing
+      - naming:
+          Architecture Name | Marketed Name | Classification | IEC 62304
+      - flat-multi:
+          DHF | role | Classification | Purpose
+
+    Reads `architecture_name` and `marketed_name` from each dhfs[] entry.
+    Falls back to `leaf` for architecture name; preserve-column lookup, then
+    'TODO', for marketed name. The `flat-multi` variant reads `dhf_purpose`
+    from each dhfs[] entry, falling back to preserve-column lookup.
+    """
     if project_yml is None:
         raise RuntimeError("project.yml missing — required for dhf-table kind")
 
     dhfs = project_yml.get('dhfs', [])
-    preserve_col = attrs.get('preserve-column', 'Marketed Name')
+    variant = attrs.get('variant', 'default')
+
+    if variant == 'flat-multi':
+        preserve_col = attrs.get('preserve-column', 'Purpose')
+    else:
+        preserve_col = attrs.get('preserve-column', 'Marketed Name')
 
     preserved = {}
     if old_block_content.strip():
         preserved = _parse_table_preserve(old_block_content, preserve_col)
 
-    # Header
-    lines = [
-        '| Architecture Name | Marketed Name | Role | Classification | IEC 62304 | Filing |',
-        '|-------------------|---------------|------|----------------|-----------|--------|',
-    ]
-    for dhf in dhfs:
-        leaf = dhf.get('leaf', 'unknown')
-        role = dhf.get('role', 'unknown')
-        filing = dhf.get('filing') or 'tbd'
-        if role == 'system':
-            classification = 'device-level'
-            iec = 'n/a'
-        else:
-            c = dhf.get('classification') or {}
-            samd = 'SaMD' if c.get('samd') else 'non-SaMD'
-            cls = c.get('class', 'tbd')
-            ai = 'AI' if c.get('ai_enabled') else ''
-            classification = f'{samd}, Class {cls}' + (f', {ai}' if ai else '')
-            iec = f"Class {c.get('iec62304', 'tbd')}"
-        marketed = preserved.get(f'`{leaf}`', preserved.get(leaf, 'TODO'))
-        lines.append(f'| `{leaf}` | {marketed} | {role} | {classification} | {iec} | {filing} |')
+    if variant == 'naming':
+        lines = [
+            '| Architecture Name | Marketed Name | Classification | IEC 62304 |',
+            '|-------------------|---------------|----------------|-----------|',
+        ]
+        for dhf in dhfs:
+            leaf = dhf.get('leaf', 'unknown')
+            arch = dhf.get('architecture_name') or leaf
+            classification, iec = _dhf_classification(dhf)
+            marketed = (
+                dhf.get('marketed_name')
+                or preserved.get(arch, preserved.get(f'**{arch}**', 'TODO'))
+            )
+            lines.append(f'| **{arch}** | {marketed} | {classification} | {iec} |')
+        return '\n'.join(lines) + '\n'
 
-    return '\n'.join(lines) + '\n'
+    if variant == 'flat-multi':
+        lines = [
+            '| DHF | `role` | Classification | Purpose |',
+            '|-----|--------|----------------|---------|',
+        ]
+        for dhf in dhfs:
+            leaf = dhf.get('leaf', 'unknown')
+            role = dhf.get('role', 'unknown')
+            classification, iec = _dhf_classification(dhf)
+            cls_full = (
+                f'{classification}, IEC 62304 {iec}'
+                if iec != 'n/a' else classification.capitalize()
+            )
+            purpose = (
+                dhf.get('dhf_purpose')
+                or preserved.get(f'`{leaf}`', preserved.get(leaf, 'TODO'))
+            )
+            lines.append(f'| `{leaf}` | `{role}` | {cls_full} | {purpose} |')
+        return '\n'.join(lines) + '\n'
+
+    if variant in ('default', None):
+        lines = [
+            '| Architecture Name | Marketed Name | Role | Classification | IEC 62304 | Filing |',
+            '|-------------------|---------------|------|----------------|-----------|--------|',
+        ]
+        for dhf in dhfs:
+            leaf = dhf.get('leaf', 'unknown')
+            arch = dhf.get('architecture_name') or leaf
+            role = dhf.get('role', 'unknown')
+            filing = dhf.get('filing') or 'tbd'
+            classification, iec = _dhf_classification(dhf)
+            marketed = (
+                dhf.get('marketed_name')
+                or preserved.get(f'**{arch}**', preserved.get(arch, 'TODO'))
+            )
+            lines.append(f'| **{arch}** | {marketed} | {role} | {classification} | {iec} | {filing} |')
+        return '\n'.join(lines) + '\n'
+
+    raise RuntimeError(f"unknown variant for dhf-table: {variant!r}")
 
 
 def render_team_table(target_file, attrs, old_block_content, project_yml):
@@ -182,8 +252,29 @@ def render_team_table(target_file, attrs, old_block_content, project_yml):
     return '\n'.join(lines) + '\n'
 
 
-def render_folder_tree(target_file, attrs, old_block_content, project_root):
-    """Render kind=folder-tree — top-level directories of the project."""
+DEPTH_CAP = 4  # Hard ceiling to prevent runaway output on deep trees.
+
+
+def _walk_tree(folder, depth_remaining, prefix, excludes, lines):
+    """Recursively append tree lines for `folder` into `lines`."""
+    children = []
+    for child in sorted(folder.iterdir()):
+        if child.name in excludes or child.name.startswith('.'):
+            continue
+        children.append(child)
+
+    for i, child in enumerate(children):
+        is_last = (i == len(children) - 1)
+        connector = '└──' if is_last else '├──'
+        name = f'{child.name}/' if child.is_dir() else child.name
+        lines.append(f'{prefix}{connector} {name}')
+        if child.is_dir() and depth_remaining > 1:
+            child_prefix = prefix + ('    ' if is_last else '│   ')
+            _walk_tree(child, depth_remaining - 1, child_prefix, excludes, lines)
+
+
+def _render_tree(target_file, attrs, old_block_content, project_root, default_depth):
+    """Shared implementation for folder-tree and folder-tree-subset."""
     path = attrs.get('path', '.')
     base = (project_root / path).resolve()
     if not base.exists():
@@ -193,28 +284,29 @@ def render_folder_tree(target_file, attrs, old_block_content, project_root):
     if 'exclude' in attrs:
         excludes |= set(g.strip() for g in attrs['exclude'].split(','))
 
-    entries = []
-    for child in sorted(base.iterdir()):
-        name = child.name
-        if name in excludes or name.startswith('.'):
-            continue
-        if child.is_dir():
-            entries.append(f'{name}/')
-        else:
-            entries.append(name)
+    try:
+        depth = int(attrs.get('depth', default_depth))
+    except (TypeError, ValueError):
+        raise RuntimeError(f"folder-tree depth must be an integer, got {attrs.get('depth')!r}")
+    if depth < 1:
+        raise RuntimeError(f"folder-tree depth must be >= 1, got {depth}")
+    depth = min(depth, DEPTH_CAP)
 
     lines = ['```']
     lines.append(f'{base.name}/' if path == '.' else f'{path}/')
-    for i, entry in enumerate(entries):
-        connector = '└──' if i == len(entries) - 1 else '├──'
-        lines.append(f'{connector} {entry}')
+    _walk_tree(base, depth, '', excludes, lines)
     lines.append('```')
     return '\n'.join(lines) + '\n'
 
 
+def render_folder_tree(target_file, attrs, old_block_content, project_root):
+    """Render kind=folder-tree. Default depth=1 (top-level only)."""
+    return _render_tree(target_file, attrs, old_block_content, project_root, default_depth=1)
+
+
 def render_folder_tree_subset(target_file, attrs, old_block_content, project_root):
-    """Render kind=folder-tree-subset — subtree under a specific path."""
-    return render_folder_tree(target_file, attrs, old_block_content, project_root)
+    """Render kind=folder-tree-subset. Default depth=2 (one level into subtree)."""
+    return _render_tree(target_file, attrs, old_block_content, project_root, default_depth=2)
 
 
 def render_strategy_domains(target_file, attrs, old_block_content, project_yml):

@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "generated_by": "/tracker generate (v0.4 aggregates sidecar)",
+  "rows": {
+    "Q-PC23": {
+      "aggregate": "folder",
+      "members": [
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1001.md",
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1002.md",
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1003.md",
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1004.md",
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1005.md",
+        "docs/project/dhfs/pca-device/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md"
+      ],
+      "count": 6,
+      "rationale": "Auto-aggregated (high confidence): 5 record-shaped file(s) in series `CEP` rolled up by aggregator-named `GL-TMP-UC-004-clinical-evaluation-plan.md`, all role `clinical`. Pattern: rows of one document. Primary deliverable = the aggregator; records are surfaced in the row's detail panel."
+    },
+    "PC23": {
+      "aggregate": "folder",
+      "members": [
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1001.md",
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1002.md",
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1003.md",
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1004.md",
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1005.md",
+        "docs/project/dhfs/pca-device/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md"
+      ],
+      "count": 6,
+      "rationale": "Auto-aggregated (high confidence): 5 record-shaped file(s) in series `BRA` rolled up by aggregator-named `GL-TMP-UC-005-clinical-evaluation-report.md`, all role `clinical`. Pattern: rows of one document. Primary deliverable = the aggregator; records are surfaced in the row's detail panel."
+    },
+    "PC23-2": {
+      "aggregate": "folder",
+      "members": [
+        "docs/project/dhfs/pca-device/clinical/literature-search/GL-SOP-UC-002-literature-search-report.md",
+        "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1001.md",
+        "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1002.md",
+        "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1003.md",
+        "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1004.md",
+        "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1005.md"
+      ],
+      "count": 6,
+      "rationale": "Auto-aggregated (high confidence): 5 record-shaped file(s) in series `LSS` rolled up by aggregator-named `GL-SOP-UC-002-literature-search-report.md`, all role `clinical`. Pattern: rows of one document. Primary deliverable = the aggregator; records are surfaced in the row's detail panel."
+    }
+  }
+}

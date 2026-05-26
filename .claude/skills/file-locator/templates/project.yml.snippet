@@ -1,0 +1,59 @@
+
+# ─── file-locator MCP ──────────────────────────────────────────────────────
+# Semantic file-locator over project docs + curated medtech-functional skill
+# content. Returns ranked (path, summary, heading_anchor?, score) tuples for
+# natural-language queries. Index lives at `tools/file-locator-mcp/index.db`
+# and is COMMITTED (one canonical artifact for the team; CI-owned rebuild on
+# PR merge keeps it fresh).
+#
+# Edit `corpus_includes` to add project-specific paths; do not replace the
+# defaults — the curated 8-skill registry below is intentional.
+# ───────────────────────────────────────────────────────────────────────────
+file_locator:
+  index_path: tools/file-locator-mcp/index.db
+  embedding:
+    provider: local                       # only valid value in v1
+    model: BAAI/bge-small-en-v1.5
+    dimension: 384
+  ranking:
+    embedding_weight: 0.6
+    bm25_weight: 0.4
+    banding:
+      high_confidence: 0.70
+      partial_match: 0.40
+  granularity:
+    sub_summary_when_lines_gt: 500
+    sub_summary_when_h2_gt: 5
+    decision_block_pattern: '^#{2,3}\s+DECISION'
+  corpus_includes:
+    # Project-root narrative (universal across medtech-docs projects)
+    - "*.md"
+    - "project.yml"
+    # Project documentation tree (initialized by /medtech-docs init)
+    - "docs/**/*.md"
+    # Curated 8-skill registry — registry-distributed medtech-functional knowledge
+    - ".claude/skills/dhf-manifest/**/*.md"
+    - ".claude/skills/dhf-manifest/**/*.yml"
+    - ".claude/skills/medtech-docs/**/*.md"
+    - ".claude/skills/trace-matrix/**/*.md"
+    - ".claude/skills/change-control/**/*.md"
+    - ".claude/skills/tracker/**/*.md"
+    - ".claude/skills/secops/**/*.md"
+    - ".claude/skills/jira-pull/**/*.md"
+    - ".claude/skills/docflow/**/*.md"
+  corpus_excludes:
+    # Universal artifacts
+    - "**/_scratch/**"
+    - "**/.staging/**"
+    - "**/.worktrees/**"
+    - "**/node_modules/**"
+    - "**/__pycache__/**"
+    - "**/.git/**"
+    - "**/*.lock"
+    - "**/assets/**"
+    - "**/formal/**"               # docflow-controlled drafts
+    - "**/Icon"                    # macOS Finder 0-byte artifact
+    - "**/index.db"
+    # Owned by other registry skills — universal if those skills are installed
+    - "docs/.change-control/**"    # change-control snapshot state cache
+    - "docs/confluence-staging/**" # change-control pre-canonical staging

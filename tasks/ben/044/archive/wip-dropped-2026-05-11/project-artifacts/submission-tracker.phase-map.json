@@ -1,0 +1,1315 @@
+{
+  "schema_version": "0.1",
+  "generated": "2026-05-05T21:12:38.395299",
+  "generated_by": "/tracker assess-phases (regulatory-affairs agent + merger)",
+  "rows": {
+    "design-controls/architecture/pca-device-system-sad.md": {
+      "title": "PCA Device \u2014 System Software Architecture Description (SAD)",
+      "canonical_role": "architecture",
+      "scope": "submission",
+      "scope_rationale": "The SAD is the on-device software architecture document for the PP3500 PCA pump and is a required submission-content artifact for the K210345 510(k)+PCCP filing, anchoring cybersecurity, MFD, and IEC 81001-5-1 obligations.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "draft-readiness",
+          "version_label": "v0.1-draft",
+          "rationale": "Draft SAD is used at QSub to anchor FDA discussion of the PP3500 architecture, trust boundaries with the Connectivity Adapter, and the PCA-Device-Alone filing scope before the formal 510(k) is assembled."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "01__architecture"
+    },
+    "clinical/benefit-risk/": {
+      "title": "Clinical Evaluation Report (CER) \u2014 pca-device",
+      "canonical_role": "clinical",
+      "scope": "submission",
+      "scope_rationale": "The CER summarizes clinical evidence supporting safety/effectiveness and substantial equivalence to predicate PP3000 (K190567); it is referenced in the 510(k) clinical/performance section and updated across LMR releases as new clinical data accrues.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Final signed CER is filed with the 510(k)+PCCP submission to support substantial-equivalence to PP3000 and bound the PCCP envelope's clinical risk profile."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "02__clinical"
+    },
+    "clinical/literature-search/": {
+      "title": "Literature Search Report \u2014 pca-device",
+      "canonical_role": "clinical",
+      "scope": "submission",
+      "scope_rationale": "The Literature Search Report is the documented evidence base feeding the CER and the substantial-equivalence rationale; it accompanies the 510(k) submission and is refreshed for each LMR cycle.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Fully executed PRISMA-style search with screening, appraisal, and synthesis is filed in the 510(k) clinical evidence section to support the CER's predicate-equivalence claims."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "02__clinical"
+    },
+    "clinical/evaluation-plans/": {
+      "title": "Clinical Evaluation Plan \u2014 pca-device",
+      "canonical_role": "clinical",
+      "scope": "submission",
+      "scope_rationale": "The CEP is the planning document that scopes and authorizes the CER; it is part of the clinical evidence dossier referenced in the 510(k) and revised across LMR cycles.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "draft-readiness",
+          "version_label": "v0.1-draft",
+          "rationale": "At QSub the CEP is shared in draft so FDA can react to the planned clinical-evidence approach (literature-only vs. real-world data vs. clinical study) for PP3500 before the team commits resources."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "02__clinical"
+    },
+    "cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md": {
+      "title": "Vulnerability Management Plan \u2014 pca-device",
+      "canonical_role": "cybersecurity",
+      "scope": "submission",
+      "scope_rationale": "Post-market vulnerability management is a \u00a7524B statutory requirement that must be evidenced in the PP3500 510(k) cybersecurity section and maintained across LMR releases.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Final VM plan is required content in the K210345 510(k) cybersecurity section per FDA 2023 guidance \u00a7524B."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "03__cybersecurity"
+    },
+    "cybersecurity/GL-TMP-SW-002-threat-model.md": {
+      "title": "Threat Model \u2014 pca-device",
+      "canonical_role": "cybersecurity",
+      "scope": "submission",
+      "scope_rationale": "Threat model is explicit FDA 2023 cybersecurity guidance content for the 510(k) security risk management section and is referenced by the PCCP risk-bounded change envelope.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Signed threat model is required content in the K210345 cybersecurity submission and underwrites the PCCP envelope's fixed risk profile."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "03__cybersecurity"
+    },
+    "cybersecurity/GL-WI-SW-002-sbom.md": {
+      "title": "Software Bill of Materials (SBOM) \u2014 pca-device",
+      "canonical_role": "cybersecurity",
+      "scope": "submission",
+      "scope_rationale": "SBOM is an explicit \u00a7524B/FDA 2023 guidance \u00a7IV submission requirement for the K210345 cybersecurity section and must be maintained for each released build (LMR1, LMR2).",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Build-accurate SBOM for the cleared PP3500 software baseline is mandatory FDA 2023 guidance \u00a7IV content in the K210345 submission."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "03__cybersecurity"
+    },
+    "design-controls/labeling/GL-SOP-DC-004-ifu-and-labeling.md": {
+      "title": "Instructions for Use and Labeling \u2014 pca-device",
+      "canonical_role": "labeling",
+      "scope": "submission",
+      "scope_rationale": "Labeling and IFU are required content in the 510(k) submission per 21 CFR 807.87(e) and ship with every commercial release of the PP3500 PCA pump.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Final, signed IFU and labeling are required content of the K210345 510(k) submission per 21 CFR 807.87(e), with PCCP-permitted change boundaries reflected in the labeling envelope."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "04__labeling"
+    },
+    "design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md": {
+      "title": "Design and Development Plan \u2014 pca-device",
+      "canonical_role": "plans",
+      "scope": "submission",
+      "scope_rationale": "The Design and Development Plan is the master design-controls planning artifact for PP3500 and is referenced (and often summarized) in 510(k) submissions and Q-Sub packages to demonstrate 21 CFR 820.30(b) compliance; it is also revised across LMR cycles as the design baseline evolves.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "The 510(k)+PCCP filing (K210345) requires the authoritative DDP locking design-controls scope for the critical-requirement subset and identifying which activities are PCCP-permitted post-clearance."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-PM-001-pms-plan.md": {
+      "title": "Post-Market Surveillance Plan \u2014 pca-device",
+      "canonical_role": "plans",
+      "scope": "submission",
+      "scope_rationale": "The PMS Plan is operational post-market in nature but is referenced/summarized in LMR submissions and informs the post-clearance change-monitoring strategy supporting the PCCP envelope; for an EU MDR pathway it is part of the technical documentation, and for the LMR cycle it anchors complaint-trend feedback into design changes.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "A draft PMS Plan supports the 510(k)+PCCP filing by demonstrating the post-market signal-detection mechanism that backs the PCCP change-monitoring commitments; not strictly required for 510(k) but evidentially valuable."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-SW-001-software-development-plan.md": {
+      "title": "Software Development Plan \u2014 pca-device",
+      "canonical_role": "plans",
+      "scope": "submission",
+      "scope_rationale": "The Software Development Plan is an explicit FDA premarket-software submission deliverable per the 2023 Guidance on Software in Premarket Submissions and IEC 62304 \u00a75.1 \u2014 it must accompany the 510(k) and is updated across LMR cycles as the SaMD/SiMD baseline evolves.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing requires the authoritative SDP per FDA's Software Premarket Submission guidance and IEC 62304 \u00a75.1; it must lock the SDLC, configuration management, and problem-resolution processes for the filed software baseline."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md": {
+      "title": "Cybersecurity Plan \u2014 pca-device",
+      "canonical_role": "plans",
+      "scope": "submission",
+      "scope_rationale": "Cybersecurity planning is a mandatory premarket-submission element under FD&C Act \u00a7524B for cyber devices and aligns with FDA's 2023 Cybersecurity Guidance and IEC 81001-5-1 \u2014 required content of the 510(k) for any networked PCA pump.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "draft-readiness",
+          "version_label": "v0.1-draft",
+          "rationale": "Draft Cybersecurity Plan at QSub allows FDA to validate the SBOM approach, threat model scope, and 524B compliance posture before filing \u2014 a high-value Q-Sub topic for any networked infusion pump."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "05__plans"
+    },
+    "design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md": {
+      "title": "Clinical Evaluation Plan \u2014 pca-device",
+      "canonical_role": "plans",
+      "scope": "submission",
+      "scope_rationale": "Clinical Evaluation Plan supports the 510(k) substantial-equivalence narrative and is part of EU MDR technical documentation; remains a controlled DHF artifact across LMR cycles.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Authoritative CEP supports the 510(k) substantial-equivalence narrative and locks the clinical-evidence basis used in K210345; required for parallel/future EU MDR technical documentation."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "05__plans"
+    },
+    "postmarket/GL-SOP-PM-001-psur.md": {
+      "title": "Periodic Safety Update Report (PSUR) \u2014 pca-device",
+      "canonical_role": "postmarket",
+      "scope": "submission",
+      "scope_rationale": "PSUR is post-market surveillance content that is submission-relevant \u2014 for the PP3500 510(k)+PCCP program it underpins the cybersecurity post-market plan and PCCP change-justification narrative, and any LMR cycle references PSUR aggregates of complaints/CAPAs/field signals.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing for K210345 must reference a finalized PSUR procedure as part of the cybersecurity post-market commitments and PCCP change-monitoring evidence framework."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/GL-TMP-PM-001-pms-plan.md": {
+      "title": "Post-Market Surveillance Plan (DHF copy) \u2014 pca-device",
+      "canonical_role": "postmarket",
+      "scope": "submission",
+      "scope_rationale": "Per FDA 2023 cybersecurity guidance and the PP3500 PCCP strategy, the PMS plan is submission content \u2014 it is referenced by the cybersecurity management plan and the PCCP modifications protocol as the surveillance backbone supporting the change envelope.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing K210345 requires a finalized PMS Plan as the surveillance counterpart to the modifications protocol and cybersecurity management plan."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md": {
+      "title": "Complaint Intake Template (per device) \u2014 pca-device",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Operational QMS form per 21 CFR 820.198; complaint intake templates are evidence that a complaint-handling process exists but the template itself is not included in 510(k), Q-Sub, or LMR submission packages \u2014 it is referenced by procedure, not filed.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational QMS form, not part of the Q-Sub package for PP3500."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing references the complaint-handling SOP, not the intake form template itself."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "QMS form lives in the quality system; LMR submission cites the procedure, not the form."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1 \u2014 operational QMS form not in the submission package."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/complaints/complaints-ledger.md": {
+      "title": "Complaints Ledger \u2014 complaints-ledger",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Operational complaint records (2022-2025) maintained per 21 CFR 820.198; individual complaint records are not submitted in 510(k), Q-Sub, or LMR packages \u2014 they are aggregated through PSUR and CAPA which are submission-adjacent, but the ledger itself stays in the QMS.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational complaint records do not appear in Q-Sub packages; if PP3500 field experience is referenced at all it would be summarized in narrative, not the raw ledger."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include the raw complaint ledger; relevant signals flow into the PSUR and risk-management updates."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Raw ledger remains a QMS artifact; LMR references aggregate trends, not the ledger itself."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-plans/": {
+      "title": "PMCF Plan Template \u2014 pca-device",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "PMCF (Post-Market Clinical Follow-up) is an EU MDR construct (Annex XIV Part B; MDCG 2020-7); the PP3500 program is a US 510(k)+PCCP filing (K210345), so PMCF plans are operational rather than submission content for this project \u2014 they may inform PSUR but are not part of the FDA submission packages.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "PMCF is EU MDR scope; not part of the FDA Q-Sub package for PP3500."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include EU MDR PMCF plans; analogous post-market evidence flows through the PMS Plan and PSUR."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "LMR is a US lifecycle reporting cadence; PMCF plans remain EU-side operational artifacts unless the program later expands EU scope."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/capa/CAPA-2023-001.md": {
+      "title": "Capa \u2014 CAPA-2023-001",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Individual CAPA record (closed 2023-05-15) per 21 CFR 820.100 / ISO 13485 \u00a78.5; specific CAPA records are operational QMS evidence and are not included in 510(k), Q-Sub, or LMR submission packages \u2014 though their existence and trends may be summarized in PSUR.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Closed CAPA record is QMS-internal; not part of the PP3500 Q-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include individual CAPA records; relevant findings would appear as narrative in risk management or labeling rationale."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Individual CAPA records stay in the QMS; LMR cites trends, not specific CAPAs."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/capa/GL-FORM-QM-001-capa-form-template.md": {
+      "title": "CAPA Form (per device) \u2014 pca-device",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Operational QMS form template per 21 CFR 820.100 / ISO 13485 \u00a78.5; CAPA form templates are referenced by procedure but are not included in 510(k), Q-Sub, or LMR submission packages.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational QMS template, not part of the PP3500 Q-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing references the CAPA SOP, not the form template."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "QMS form template stays in the quality system."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0001.md": {
+      "title": "PMCF Study \u2014 STUDY-0001",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Individual PMCF study record (EU MDR construct); the PP3500 program is a US 510(k)+PCCP filing (K210345), so individual study records are operational post-market evidence rather than US submission content \u2014 they may inform PSUR but are not part of the FDA package.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Individual PMCF study record is EU-scope operational evidence; not part of the PP3500 Q-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include EU MDR PMCF study records."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "LMR is US lifecycle reporting; PMCF study record stays operational."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0003.md": {
+      "title": "PMCF Study \u2014 STUDY-0003",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Individual PMCF study record (NCT05823570 prospective observational); operational post-market evidence for the PP3500 US 510(k)+PCCP program rather than US submission content.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational PMCF evidence; not in the PP3500 Q-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include individual PMCF study records."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational evidence; stays in QMS / EU technical file."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0005.md": {
+      "title": "PMCF Study \u2014 STUDY-0005",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "Active patient registry (PMCF construct); operational post-market evidence for the PP3500 US 510(k)+PCCP program rather than US submission content.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational registry record; not in the PP3500 Q-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 does not include individual registry records."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational evidence; stays outside the LMR package."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1."
+        }
+      },
+      "_source_bundle": "06__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0007.md": {
+      "title": "PMCF Study \u2014 STUDY-0007 (Real-World Performance Registry)",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "PMCF studies are operational post-clearance evidence-gathering activities \u2014 the study record itself is a QMS/clinical-operations artifact and is not packaged inside the 510(k)+PCCP filing or the LMR submissions; its outputs feed Post-Market Surveillance Plans and PSURs which ARE submission content, but the study record is not.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "PMCF studies post-date clearance; the QSub package for PP3500 is focused on predicate strategy and pre-filing FDA alignment, not post-market study records."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Individual PMCF study protocols are not part of the K210345 510(k)+PCCP filing package; only the Post-Market Surveillance Plan referencing planned PMCF activities would be in scope, not the study record itself."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "LMR1 reports design changes since clearance; PMCF study STUDY-0007 is operational evidence collection, not a design-history artifact carried in the LMR package."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "LMR2 carries further PCCP-envelope expansion artifacts; PMCF registry records remain operational and outside the LMR submission scope."
+        }
+      },
+      "_source_bundle": "07__postmarket"
+    },
+    "postmarket/pmcf-studies/STUDY-0009.md": {
+      "title": "PMCF Study \u2014 STUDY-0009 (Prospective Multi-Center Observational)",
+      "canonical_role": "postmarket",
+      "scope": "other",
+      "scope_rationale": "PMCF observational study records are operational post-clearance clinical activities; the study record itself does not enter the 510(k)+PCCP filing or LMR packages \u2014 only the upstream Post-Market Surveillance Plan and downstream PSUR/MDR outputs would be in submission scope.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Prospective post-market studies are not relevant to the pre-submission package, which is scoped to predicate alignment and questions for FDA before filing."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "STUDY-0009 protocol is not part of the K210345 filing; the PMS Plan referenced in the 510(k) may cite planned PMCF activity at a high level, but individual study protocols stay in the QMS."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Operational clinical-study record; LMR1 carries design-change history, not PMCF study protocols."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1 \u2014 PMCF study records remain in QMS/clinical operations and are outside the LMR submission package."
+        }
+      },
+      "_source_bundle": "07__postmarket"
+    },
+    "design-controls/requirements/GL-TMP-DC-002-design-input-specification.md": {
+      "title": "Design Input Specification \u2014 pca-device",
+      "canonical_role": "requirements",
+      "scope": "submission",
+      "scope_rationale": "Design Input Specification is a core design-controls deliverable required in the PP3500 510(k) submission and inherited/updated through LMR releases per ISO 13485 \u00a77.3.3 and 21 CFR 820.30(c).",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing requires the final, signed Design Input Specification covering all Ct* (CtS/CtF/CtC/CtP) requirements in the carve-out scope for K210345."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "08__requirements"
+    },
+    "design-controls/requirements/design-inputs.md": {
+      "title": "Design Inputs \u2014 PainEase PCA Advanced (PP3500)",
+      "canonical_role": "requirements",
+      "scope": "submission",
+      "scope_rationale": "Design Inputs document (DHF-PP3500-DI-001) is the substantive system-requirements baseline cited in the 510(k) submission for K210345 and required across all LMR cycles per 21 CFR 820.30(c) and ISO 13485 \u00a77.3.3.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "draft-readiness",
+          "version_label": "v0.1-draft",
+          "rationale": "Document is currently Revision B Draft; at QSub it supports FDA discussion of intended use, indications for use, and Ct* scoping vs the PP3000 predicate but is not yet baselined."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "08__requirements"
+    },
+    "design-controls/plans/GL-TMP-RM-001-risk-management-plan.md": {
+      "title": "Risk Management Plan \u2014 pca-device",
+      "canonical_role": "risk-management",
+      "scope": "submission",
+      "scope_rationale": "The Risk Management Plan is the foundational ISO 14971 \u00a74.4 deliverable that anchors the Risk Management File submitted with the 510(k)+PCCP and is referenced by FDA in any Q-Sub discussion of the PP3500 risk approach.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing requires a signed, authoritative RM Plan covering the Ct*-tagged scope and the PCCP change-control risk methodology for K210345."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-002-risk-management-report.md": {
+      "title": "Risk Management Report \u2014 pca-device",
+      "canonical_role": "risk-management",
+      "scope": "submission",
+      "scope_rationale": "ISO 14971 \u00a79 capstone deliverable summarizing whether the RM Plan was executed and whether overall residual risk is acceptable \u2014 required content in the 510(k) Risk Management File.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Filing requires a signed RM Report concluding overall residual risk acceptability for the Ct*-tagged scope for K210345."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-003-hazard-analysis.md": {
+      "title": "Hazard Analysis \u2014 pca-device",
+      "canonical_role": "risk-management",
+      "scope": "submission",
+      "scope_rationale": "Core ISO 14971 \u00a75 record identifying hazards, hazardous situations, and harms \u2014 part of the Risk Management File submitted to FDA and among the most heavily scrutinized for an infusion pump 510(k).",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing requires a complete Hazard Analysis covering all Ct*-tagged requirements with traceability into risk controls and V&V."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-004-design-fmea.md": {
+      "title": "Design FMEA (dFMEA) \u2014 pca-device",
+      "canonical_role": "risk-management",
+      "scope": "submission",
+      "scope_rationale": "Bottom-up complement to the Hazard Analysis supporting ISO 14971 \u00a75.5/\u00a76/\u00a77 risk estimation, evaluation, and control selection \u2014 part of the Risk Management File for K210345.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Filing requires a baselined dFMEA covering all Ct*-tagged design elements with risk priority numbers, controls, and verification linkage."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/GL-TMP-RM-004-process-fmea.md": {
+      "title": "Process FMEA (pFMEA) \u2014 pca-device",
+      "canonical_role": "risk-management",
+      "scope": "submission",
+      "scope_rationale": "Addresses manufacturing-process failure modes that can compromise device safety/effectiveness; supports 21 CFR 820.75 process validation and feeds the Risk Management File referenced in the 510(k).",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k) filing references the production processes producing the device, and the pFMEA must be baselined to support process validation evidence."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "risk-management/risk-strategy.md": {
+      "title": "Risk Strategy",
+      "canonical_role": "risk-management",
+      "scope": "other",
+      "scope_rationale": "Internal strategy/decision-capture document assembled by the /strategy skill from task-doc tags; informs the formal Risk Management Plan and FMEAs but is itself never included in any 510(k), QSub, or LMR submission package.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal strategy artifact \u2014 not a Q-Sub package deliverable."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal strategy artifact \u2014 its decisions flow into the formal RM Plan and FMEAs which ARE filed."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal strategy artifact \u2014 not part of any LMR package."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal strategy artifact \u2014 not part of any LMR package."
+        }
+      },
+      "_source_bundle": "09__risk-management"
+    },
+    "design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md": {
+      "title": "Tool Validation Record \u2014 pca-device",
+      "canonical_role": "tool-validation",
+      "scope": "other",
+      "scope_rationale": "Tool Validation Records under 21 CFR 820.70(i) are internal QMS process artifacts evidencing validation of software used in production and the quality system; they are not part of the 510(k), PCCP, or LMR submission packages, though they are inspectable QMS evidence.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "QSub for PP3500 focuses on predicate strategy, PCCP envelope, and FDA questions; production/QMS tool validation records are not requested in a Pre-Sub package."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "510(k)+PCCP filing K210345 carries device design, V&V, and PCCP modification protocols \u2014 production/QMS tool validation evidence stays in the QMS and is not submitted with the 510(k)."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "LMR1 commercial release reports post-clearance design changes against the PCCP envelope; QMS tool validation records remain inspection-ready in the QMS, not in the LMR package."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same as LMR1 \u2014 tool validation records continue to live in the QMS and are not part of the LMR2 PCCP-expansion submission."
+        }
+      },
+      "_source_bundle": "10__tool-validation"
+    },
+    "design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md": {
+      "title": "Trace Matrix Overview \u2014 pca-device",
+      "canonical_role": "trace-matrix",
+      "scope": "submission",
+      "scope_rationale": "QMS-template overview document framing how UN\u2192DI\u2192DO\u2192V&V trace is constructed for PP3500; the methodology narrative is referenced by the 510(k) Section 16/Substantial Equivalence package and is needed to interpret the trace matrix exhibits.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "Methodology overview must be finalized for the K210345 510(k)+PCCP filing so reviewers can interpret the Ct*-tagged trace columns underpinning the critical-requirement carve-out."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/trace-matrix/trace-matrix.md": {
+      "title": "Trace Matrix (auto-generated sidecar)",
+      "canonical_role": "trace-matrix",
+      "scope": "submission",
+      "scope_rationale": "Auto-generated bidirectional trace artifact spanning UN/DI/Architecture/V&V/Risk for PP3500; this is the working evidence object the 510(k) Section 16 traceability exhibit is rendered from.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "K210345 filing requires complete bidirectional trace with zero unjustified orphans across UN/DI/Arch/V&V/Risk for all Ct*-tagged requirements; this is the authoritative submission artifact."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/trace-matrix/un-to-di-trace-matrix.md": {
+      "title": "UN-to-DI Trace Matrix \u2014 PP3500",
+      "canonical_role": "trace-matrix",
+      "scope": "submission",
+      "scope_rationale": "Authored DHF-PP3500-TM-001 trace matrix linking every User Need to its Design Inputs across the 9 PP3500 functional groups; this is a controlled DHF deliverable explicitly cited in the 510(k) traceability exhibit.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "DHF-PP3500-TM-001 must be fully populated, reviewed, and approved for the K210345 510(k)+PCCP filing to demonstrate UN\u2192DI completeness against the PP3000 (K190567) predicate's requirement set."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "11__trace-matrix"
+    },
+    "design-controls/usability/GL-TMP-UC-002-usability-engineering-file.md": {
+      "title": "Usability Engineering File \u2014 pca-device",
+      "canonical_role": "usability",
+      "scope": "submission",
+      "scope_rationale": "The Usability Engineering File (UEF) per IEC 62366-1 is a required element of the 510(k) submission for a Class II infusion pump and is explicitly called out in FDA's 'Applying Human Factors and Usability Engineering to Medical Devices' guidance for high-risk infusion devices.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing requires the final, signed UEF including completed summative human factors validation against PP3500 critical tasks (CtS-tagged dose entry, bolus, alarm response) before K210345 clearance."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "12__usability"
+    },
+    "design-controls/user-needs/GL-TMP-UC-001-use-specification.md": {
+      "title": "Use Specification \u2014 pca-device",
+      "canonical_role": "user-needs",
+      "scope": "submission",
+      "scope_rationale": "The Use Specification per IEC 62366-1 \u00a75.1 is the upstream usability-engineering input required for the PP3500 510(k) human factors file and is referenced in the PCCP usability-impact analysis.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "The 510(k)+PCCP filing K210345 requires the final, signed Use Specification as the IEC 62366-1 \u00a75.1 anchor."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/user-needs/user-needs-register.md": {
+      "title": "User Needs Register \u2014 pca-device",
+      "canonical_role": "user-needs",
+      "scope": "submission",
+      "scope_rationale": "The User Needs Register is the controlled list of validated user needs that feeds the design-inputs trace matrix per 21 CFR 820.30(c) and ISO 13485 \u00a77.3.3; part of the DHF submitted/referenced in the 510(k).",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing K210345 requires the baselined User Needs Register as the upstream anchor of the User Needs \u2194 Design Inputs trace matrix."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/user-needs/user-needs.md": {
+      "title": "User Needs \u2014 PainEase PCA Advanced (DEV-PP3500)",
+      "canonical_role": "user-needs",
+      "scope": "submission",
+      "scope_rationale": "User Needs document DHF-PP3500-UN-001 is the controlled record of validated user needs that establishes design controls Phase 4 inputs for the K210345 510(k) and is updated across LMR releases.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "510(k)+PCCP filing K210345 carries the signed User Needs document as the upstream input to the Design Inputs and the trace matrix."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "13__user-needs"
+    },
+    "design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md": {
+      "title": "Design Verification Protocol & Report \u2014 pca-device",
+      "canonical_role": "vnv",
+      "scope": "submission",
+      "scope_rationale": "Design verification evidence is a core attachment to the PP3500 510(k) submission and underpins substantial-equivalence claims against the PP3000 predicate (K190567); re-baselined for each commercial release.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "The 510(k)+PCCP filing (K210345) requires the executed verification protocol and report covering all CtS/CtF/CtP-tagged design inputs that fall inside the filing-scope carve-out."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md": {
+      "title": "Design Validation Protocol & Report \u2014 pca-device",
+      "canonical_role": "vnv",
+      "scope": "submission",
+      "scope_rationale": "Design validation demonstrates that PP3500 meets defined user needs in the intended PCA use environment and is a required attachment to the 510(k); re-executed for material changes in commercial releases.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "The K210345 filing requires the executed validation report demonstrating PP3500 meets clinician/patient user needs in simulated-use."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md": {
+      "title": "Summative Usability Evaluation Protocol & Report \u2014 pca-device",
+      "canonical_role": "vnv",
+      "scope": "submission",
+      "scope_rationale": "Summative HFE/UE evidence is required for an infusion pump 510(k) and is explicitly called out in the FDA infusion-pump TPLC guidance.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "pccp-release": {
+          "posture": "full-package",
+          "version_label": "v1.0",
+          "rationale": "The 510(k) HFE submission requires the executed summative report with use-error analysis for safety-related critical tasks per the FDA 2016 HFE/UE guidance."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Not assigned to this milestone in current phase-map. User can promote from primary milestone via /tracker promote-to-phase (future)."
+        }
+      },
+      "_source_bundle": "14__vnv"
+    },
+    "design-controls/vnv/testing-strategy.md": {
+      "title": "Testing Strategy",
+      "canonical_role": "vnv",
+      "scope": "other",
+      "scope_rationale": "Internal strategy/planning document that orients the team on bench-vs-clinical split, formative-vs-summative usability, and regression approach \u2014 informs the V&V deliverables but is not itself an attachment to QSub, 510(k)+PCCP, or LMR packages.",
+      "phase_map": {
+        "qsub-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal strategy artifact; not submitted to FDA, though its content shapes the verification/validation protocol drafts that are."
+        },
+        "pccp-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Strategy documents are not 510(k) attachments; the executed protocols and reports it informs are submitted instead."
+        },
+        "lmr1-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Internal QMS-side document; LMR1 packages contain executed test evidence, not the planning rationale behind it."
+        },
+        "lmr2-release": {
+          "posture": "n/a",
+          "version_label": "n/a",
+          "rationale": "Same rationale as LMR1."
+        }
+      },
+      "_source_bundle": "14__vnv"
+    }
+  },
+  "_hand_curated": true,
+  "_hand_curated_at": "2026-05-05",
+  "_hand_curated_note": "Each file assigned to ONE primary milestone (no cross-phase duplication). User promotes items to subsequent milestones manually via the (future) user-override layer."
+}

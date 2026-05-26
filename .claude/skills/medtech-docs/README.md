@@ -77,13 +77,33 @@ After installing skills, `init` runs each skill's `setup` action (if it has one)
 - **GitHub** registries: fetch manifest.md, parse Published Skills table
 - Auto-detect MCPs and plugins from environment
 
+### Auto-Loaded Rules — Skill-Owned and Symlinked
+
+medtech-docs owns four **auto-loaded rules** — markdown files under `.claude/rules/` that Claude Code loads into every session:
+
+| Rule | What it governs |
+|------|-----------------|
+| `readme-before-write.md` | Before any write under `docs/`, read the target folder's README **and** its parent's. Parent READMEs carry cross-cutting conventions; leaf READMEs carry folder-specific naming/content rules. Misplaced files are a compliance risk in a regulated project. |
+| `sentinel-blocks.md` | The `<!-- AUTO:STRUCTURE -->` sentinel convention — the contract for `scripts/render-sentinels.py` and `/best-practices fix`: a fenced, tool-owned region inside an otherwise human-owned doc, so structural tables (folder trees, DHF rosters) can be regenerated without clobbering narrative. |
+| `audit-wiring-before-adding-fields.md` | Before adding a metadata field, schema entry, or structural prose, grep `project.yml` and sibling configs first — reference the wiring layer, don't redeclare facts already encoded in it. Redeclared facts silently rot when structure moves. |
+| `claude-md-references.md` | Persistent docs (CLAUDE.md, `project.yml`, READMEs, strategy/architecture docs) must reference durable project artifacts, never transient task documents. |
+
+**Why medtech-docs owns them.** All four govern the `docs/` tree, the `project.yml` wiring layer, and the README scaffolding that *this skill* creates — and the sentinel renderer is this skill's own code (`scripts/render-sentinels.py`). The rule that documents a script's contract belongs with the script. (`/best-practices fix` merely *calls* the renderer — it's a consumer, not the owner.)
+
+**Why symlink, not copy.** `init` Step 2c Checks 3–6 install each rule as a **symlink** — `.claude/rules/<rule>.md` → `../skills/medtech-docs/rules/<rule>.md` — not a copy. The canonical text lives once, inside the skill at `rules/`. A `/sync-skills pull` that updates medtech-docs then auto-updates the installed rule, with no drift and no stale duplicate to audit. This is the same self-contained install pattern the registry uses for hooks and agents (see skill-creator's "Self-Contained Skills & Symlink Pattern"). A project that needs to diverge **forks** the symlink into a regular file; `/sync-skills` leaves forks alone.
+
+**One canonical form per rule.** Earlier medtech-docs versions seeded `audit-wiring` as a *CLAUDE.md block* (an `init` check that inserted text from a `claude-md-config-audit.md` template) **and** the rule also existed as a `.claude/rules/` file — the same rule in two places, which is exactly the duplication `audit-wiring` itself forbids. v25 removed the CLAUDE.md block and the template: the auto-loaded `.claude/rules/` file is the single source of truth.
+
+**How they're used.** `.claude/rules/` files are auto-loaded every session — no CLAUDE.md insertion needed. `readme-before-write` gates every `docs/` write; `sentinel-blocks` is the spec the renderer and audit-fix consult; `audit-wiring` and `claude-md-references` govern how facts and references are written across the project. The rule sources version *with the skill*: e.g. any new sentinel `kind` is a simultaneous edit to `rules/sentinel-blocks.md` and `scripts/render-sentinels.py`.
+
 ## Templates
 
-All scaffold content lives in `templates/`:
+Scaffold content lives in `templates/`; auto-loaded rule sources live in `rules/`:
 - 11 README templates for the docs/ hierarchy
 - 1 standard file template
 - 1 dashboard HTML template
 - 1 register-hook.sh helper
+- 4 rule sources in `rules/` — `readme-before-write.md`, `sentinel-blocks.md`, `audit-wiring-before-adding-fields.md`, `claude-md-references.md` (symlinked into `.claude/rules/` by `init`)
 
 Templates use `{{PLACEHOLDER}}` substitution for leaf folder READMEs and `${CLAUDE_SKILL_DIR}` for file paths.
 
@@ -95,6 +115,9 @@ Major version milestones:
 - v5: README meta-model with strict section ordering
 - v7: Formal/ subfolder pattern for controlled documents
 - v8: Synced templates with actual docs/ state, added project infrastructure creation
+- v25 (2026-05-15): Two more rules brought under skill ownership — `audit-wiring-before-adding-fields` and `claude-md-references` now ship as `rules/` sources, symlinked into `.claude/rules/` by `init` Step 2c Checks 5 & 6. **Deduplication:** `audit-wiring` was previously *also* seeded as a CLAUDE.md block (`init` Check 6, from `templates/claude-md-config-audit.md`) — that check and template were removed; the auto-loaded rule file is now the single canonical form. The `audit-wiring` rule text was tightened and gained a concrete ✅/❌ Examples section. Task-discipline CLAUDE.md-block check renumbered 5 → 7. medtech-docs now owns four auto-loaded rules.
+- v24 (2026-05-15): Rule ownership moved to the symlink-install pattern. The `readme-before-write` and `sentinel-blocks` rules now ship as canonical sources under `rules/` (sentinel rule relocated from `templates/rule-sentinel-blocks.md`; readme-before-write previously inlined in `init` Check 3 with no bundled file). `init` Step 2c Checks 3 & 4 now **symlink** them into `.claude/rules/` instead of copying — so `/sync-skills pull` auto-updates installed rules, matching the hooks/agents pattern. New README design section "Auto-Loaded Rules — Skill-Owned and Symlinked". Project-task reference removed from the sentinel rule (skill files stay project-agnostic).
+- v23 (2026-05-04): `render-sentinels.py` enhancements — `dhf-table` now reads `architecture_name`/`marketed_name`/`dhf_purpose` from `project.yml dhfs[]` (fallback to preserve-column then `TODO`); new `variant=` dispatcher for `dhf-table` with `default`/`naming`/`flat-multi` schemas; `folder-tree` and `folder-tree-subset` now support `depth=N` recursion (defaults 1 and 2 respectively, hard-capped at 4) with proper `├── │   └──` connectors. Graceful handling of `class: non-device` (drops "Class X" prefix). New `tests/test_render_sentinels.py` — 11 assertions cover variants, depth, idempotence, fallback chains, and error paths.
 
 ## Best Practices
 
@@ -113,6 +136,11 @@ Omitted Scope defaults to `shared` (per task 007 ambiguity #1 sign-off).
 | Project manifest exists | `project.yml` exists in project root with `project:`, `dhfs:`, `team:`, `registries:`, and `security:` sections | Required | shared |
 | Project has at least one DHF | `project.yml` `dhfs[]` list is non-empty, and every entry's `path` resolves to an existing folder under `docs/project/dhfs/` | Required | cross-cutting |
 | DHF leaf names are unique | For every entry in `project.yml` `dhfs[]`, the last segment of `path` is unique across the list (case-sensitive). | Required | cross-cutting |
+| DHF identity names present | Every entry in `project.yml` `dhfs[]` carries both `architecture_name` (technical/internal name) and `marketed_name` (commercial/customer-facing name). Both are strings; either may differ from the `leaf` slug. WARN if either is missing on any entry — downstream tools (submissions, dashboards, trace tooling) need both to render context-appropriate names. | Recommended | cross-cutting |
+| Per-DHF Jira binding references valid project | If `change_control.jira.project_keys` is set in `project.yml`, every `dhfs[]` entry that includes a `jira:` block must have its `jira.project_key` appear in that list. FAIL on any reference to an unknown project key. INFO if a DHF has no `jira:` block at all (DHFs without a Jira binding are valid; system DHFs in particular often have none). | Required | cross-cutting |
+| Per-DHF Confluence binding references valid space | If `change_control.spaces[]` is set in `project.yml`, every `dhfs[]` entry that includes a `confluence:` block must have its `confluence.space_key` appear in some entry's `key` field. FAIL on any reference to an unknown space key. INFO if a DHF has no `confluence:` block at all. | Required | cross-cutting |
+| Per-DHF evidence file paths exist | For every `dhfs[]` entry that has an `evidence:` block, every leaf path inside it (`xlsx`, `page`, paths inside `xlsx_variants[]`) must resolve to an existing file or folder on disk. FAIL on broken references — these are stale pointers to artifacts that have been moved or removed. | Required | cross-cutting |
+| Item DHFs declare classification | Every `dhfs[]` entry with `role: item` carries a `classification:` block with at least `samd` (bool) and `class`. WARN if missing or contains `tbd`. | Recommended | cross-cutting |
 | Docs folder exists | `docs/` directory exists with `README.md` | Required | shared |
 | Three-tier structure | `docs/external/`, `docs/internal/`, `docs/project/` all exist | Required | shared |
 | Strategies folder exists | `docs/project/strategies/` directory exists with `README.md` | Required | shared |

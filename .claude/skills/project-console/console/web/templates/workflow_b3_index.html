@@ -7,11 +7,11 @@
      Each row activates a domain pane below on click; hash-routing preserved. */
   .domain-summary {
     width: 100%; border-collapse: collapse; margin: 1rem 0 0;
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
     overflow: hidden; font-size: 0.95rem;
   }
   .domain-summary thead th {
-    background: rgba(0,0,0,0.04); text-align: left; padding: 0.55rem 0.85rem;
+    background: var(--surface-2); text-align: left; padding: 0.55rem 0.85rem;
     font-weight: 600; border-bottom: 1px solid var(--border, #e0e0e0);
     font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em;
     color: var(--muted, #555);
@@ -21,7 +21,7 @@
     transition: background 120ms ease;
   }
   .domain-summary tbody tr:last-child { border-bottom: none; }
-  .domain-summary tbody tr:hover { background: rgba(0,0,0,0.03); }
+  .domain-summary tbody tr:hover { background: var(--surface-2); }
   .domain-summary tbody tr.active {
     background: rgba(4,88,161,0.08);
     box-shadow: inset 4px 0 0 var(--brand-primary, #0458a1);
@@ -30,57 +30,80 @@
   .domain-summary .col-domain { font-weight: 600; }
   .domain-summary .col-num { text-align: right; font-variant-numeric: tabular-nums; }
   .domain-summary .col-status code {
-    background: rgba(0,0,0,0.06); padding: 0.05rem 0.4rem; border-radius: 3px;
+    background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.4rem; border-radius: 3px;
     font-size: 0.85em;
   }
   .domain-summary .count-pill {
     display: inline-block; min-width: 1.6em; padding: 0.05rem 0.45rem;
     border-radius: 10px; font-size: 0.82em; font-weight: 600; text-align: center;
   }
-  .domain-summary .count-pill.has { background: #f9a825; color: #000; }
-  .domain-summary .count-pill.zero { background: rgba(0,0,0,0.08); color: var(--muted, #888); font-weight: 400; }
+  .domain-summary .count-pill.has { background: rgba(245, 158, 11, 0.20); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); }
+  .domain-summary .count-pill.zero { background: var(--surface-2); color: var(--body-text-muted); font-weight: 400; }
 
   .domain-pane { display: none; padding: 1.5rem 0 0; }
   .domain-pane.active { display: block; }
 
   /* Inner (section) tabs */
-  .section-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border, #e0e0e0); margin: 0.25rem 0 0; padding: 0; list-style: none; }
+  .section-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border, #e0e0e0); margin: 0.25rem 0 0; padding: 0; list-style: none; align-items: stretch; }
   .section-tabs li { margin: 0; }
+  .section-tabs li.spacer { flex: 1; }
+  .section-tabs li.action {
+    display: flex; align-items: center;
+    padding: 0 0 0.4rem 0.45rem; /* nudges buttons up to baseline-align with tab text */
+  }
+  .section-tabs li.action button {
+    padding: 0.4rem 0.85rem !important;
+    border: 1px solid currentColor; border-radius: 3px !important; cursor: pointer;
+    font-weight: 600; font-size: 0.88rem;
+    border-bottom-color: currentColor !important; margin-bottom: 0 !important;
+  }
+  .section-tabs li.action button.discard-btn { background: var(--surface); color: #ef4444; }
+  .section-tabs li.action button.discard-btn:hover { background: #ef4444; color: #ffffff; }
+  .section-tabs li.action button.end-btn { background: var(--surface); color: var(--body-text-muted); border-color: var(--border); font-weight: 500; }
+  .section-tabs li.action button.end-btn:hover { background: var(--body-text-muted); color: var(--surface); }
+  .section-tabs li.action button.publish-btn { background: rgba(34, 197, 94, 0.20); color: #4ade80; border-color: rgba(34, 197, 94, 0.45); }
+  .section-tabs li.action button.publish-btn:hover { background: rgba(34, 197, 94, 0.32); color: #86efac; }
+  .section-tabs li.action.divider {
+    width: 1px; background: var(--border, #ddd); margin: 0.4rem 0.45rem 0.6rem;
+    padding: 0;
+  }
   .section-tabs button {
     background: transparent; border: none; border-bottom: 2px solid transparent;
     padding: 0.4rem 0.85rem; cursor: pointer; font-size: 0.9rem;
     color: inherit; margin-bottom: -1px; font-family: inherit;
   }
-  .section-tabs button:hover { background: rgba(0,0,0,0.04); }
+  .section-tabs button:hover { background: var(--surface-2); color: var(--body-text); }
   .section-tabs button.active { border-bottom-color: var(--brand-primary, #0458a1); font-weight: 600; }
   .section-pane { display: none; padding: 0.75rem 0; }
   .section-pane.active { display: block; }
 
   .tab-badge {
-    display: inline-block; background: #f9a825; color: #000; font-weight: 700;
+    display: inline-block; background: rgba(245, 158, 11, 0.20); color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    font-weight: 700;
     border-radius: 10px; padding: 0.05rem 0.45rem; font-size: 0.72em;
     margin-left: 0.3rem; vertical-align: middle;
   }
-  .tab-badge.dim { background: rgba(0,0,0,0.12); color: inherit; }
+  .tab-badge.dim { background: var(--surface-2); color: var(--body-text-muted); }
 
   /* Rendered markdown viewer — full document flow; outer page handles scroll. */
   .md-view {
     padding: 1rem 1.25rem;
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
   }
   .md-view h1 { font-size: 1.6rem; margin-top: 0; }
   .md-view h2 { font-size: 1.3rem; margin-top: 1.25rem; border-bottom: 1px solid var(--border, #eee); padding-bottom: 0.2rem; }
   .md-view h3 { font-size: 1.1rem; margin-top: 1rem; }
   .md-view h4 { font-size: 1rem; margin-top: 0.8rem; }
-  .md-view code { background: rgba(0,0,0,0.06); padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.88em; }
-  .md-view pre { background: rgba(0,0,0,0.04); padding: 0.6rem; border-radius: 4px; overflow-x: auto; }
+  .md-view code { background: var(--code-bg); color: var(--code-text); padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.88em; }
+  .md-view pre { background: var(--code-bg); color: var(--code-text); padding: 0.6rem; border-radius: 4px; overflow-x: auto; }
   .md-view pre code { background: transparent; padding: 0; }
   .md-view table { border-collapse: collapse; margin: 0.6rem 0; }
   .md-view th, .md-view td { border: 1px solid var(--border, #ddd); padding: 0.3rem 0.6rem; text-align: left; }
-  .md-view th { background: rgba(0,0,0,0.04); }
+  .md-view th { background: var(--surface-2); }
   .md-view blockquote {
     border-left: 3px solid var(--border, #ccc); margin: 0.5rem 0; padding: 0.1rem 0.8rem;
-    background: rgba(0,0,0,0.02); color: inherit;
+    background: var(--surface-muted); color: var(--body-text-muted);
   }
   .md-view ul, .md-view ol { padding-left: 1.5rem; }
 
@@ -97,13 +120,15 @@
   }
   .b3-summary-pill {
     display: inline-block; padding: 0.3rem 0.85rem; border-radius: 999px;
-    background: rgba(4,88,161,0.08); color: var(--brand-primary, #0458a1);
+    background: rgba(56, 189, 248, 0.12); color: var(--brand-primary);
+    border: 1px solid rgba(56, 189, 248, 0.35);
     font-weight: 600; font-size: 0.95rem;
   }
   .b3-action-drawer {
     display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
     padding: 0.75rem 1rem; margin: 0.5rem 0 1rem;
-    background: rgba(46,125,50,0.05); border: 1px solid rgba(46,125,50,0.2);
+    background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.30);
+    color: var(--body-text);
     border-radius: 4px;
   }
   .b3-action-drawer .b3-action-info { flex: 1; min-width: 200px; font-size: 0.9rem; }
@@ -118,8 +143,9 @@
 
   /* Proposal cards */
   .proposal {
-    border: 1px solid var(--border, #ddd); border-left: 4px solid #f9a825;
-    background: rgba(249,168,37,0.05); border-radius: 4px;
+    border: 1px solid var(--border); border-left: 4px solid #fbbf24;
+    background: rgba(245, 158, 11, 0.06); color: var(--body-text);
+    border-radius: 4px;
     padding: 0.75rem 1rem; margin: 0.75rem 0;
   }
   /* Side-by-side comparison: what's currently in the strategy vs the proposed change */
@@ -129,19 +155,20 @@
   }
   @media (max-width: 900px) { .prop-comparison { grid-template-columns: 1fr; } }
   .prop-comparison > div {
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border); border-radius: 4px;
     padding: 0.5rem 0.75rem;
   }
-  .prop-comparison > .prop-existing { border-left: 3px solid #888; }
-  .prop-comparison > .prop-incoming { border-left: 3px solid #ef6c00; background: rgba(239,108,0,0.04); }
+  .prop-comparison > .prop-existing { border-left: 3px solid var(--body-text-muted); }
+  .prop-comparison > .prop-incoming { border-left: 3px solid #fbbf24; background: rgba(245, 158, 11, 0.07); }
   .prop-comparison .pane-label {
     font-size: 0.78em; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; color: var(--muted, #555);
+    letter-spacing: 0.04em; color: var(--body-text-muted);
     margin-bottom: 0.4rem; display: block;
   }
-  .prop-incoming .pane-label { color: #ef6c00; }
+  .prop-incoming .pane-label { color: #fbbf24; }
   .prop-new-note {
-    background: rgba(46,125,50,0.08); border-left: 3px solid #2e7d32;
+    background: rgba(34, 197, 94, 0.10); color: var(--body-text);
+    border-left: 3px solid #4ade80;
     padding: 0.5rem 0.85rem; margin: 0.5rem 0; border-radius: 3px;
     font-size: 0.92em;
   }
@@ -149,40 +176,41 @@
   /* Friendly file-diff viewer (regulator-readable) */
   .friendly-diff {
     width: 100%; border-collapse: collapse; font-size: 0.85em;
-    background: #fff; border: 1px solid var(--border, #e0e0e0);
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border);
     border-radius: 4px; overflow: hidden;
   }
   .friendly-diff thead th {
-    background: rgba(0,0,0,0.04); padding: 0.4rem 0.6rem; text-align: left;
-    font-weight: 600; font-size: 0.78em; color: var(--muted, #555);
+    background: var(--surface-2); padding: 0.4rem 0.6rem; text-align: left;
+    font-weight: 600; font-size: 0.78em; color: var(--body-text-muted);
     text-transform: uppercase; letter-spacing: 0.04em;
   }
   .friendly-diff td {
     padding: 0.25rem 0.5rem; vertical-align: top;
-    border-top: 1px solid var(--border, #f3f3f3);
+    border-top: 1px solid var(--border);
   }
   .friendly-diff td.ln {
-    text-align: right; color: var(--muted, #aaa); font-family: var(--font-mono, monospace);
+    text-align: right; color: var(--body-text-muted); font-family: var(--font-mono, monospace);
     width: 3rem; min-width: 3rem; user-select: none;
-    background: rgba(0,0,0,0.02);
+    background: var(--surface-muted);
   }
   .friendly-diff th.ln-col { width: 3rem; min-width: 3rem; }
   .friendly-diff td.content {
     font-family: var(--font-mono, monospace);
     white-space: pre-wrap; word-break: break-word;
   }
-  .friendly-diff tr.diff-context td.content { color: #555; }
-  .friendly-diff tr.diff-added td { background: rgba(46,125,50,0.08); }
-  .friendly-diff tr.diff-added td.content { color: #1b5e20; }
-  .friendly-diff tr.diff-removed td { background: rgba(198,40,40,0.08); }
-  .friendly-diff tr.diff-removed td.content { color: #b71c1c; text-decoration: line-through; text-decoration-color: rgba(183,28,28,0.45); }
+  .friendly-diff tr.diff-context td.content { color: var(--body-text-muted); }
+  .friendly-diff tr.diff-added td { background: rgba(34, 197, 94, 0.12); }
+  .friendly-diff tr.diff-added td.content { color: #86efac; }
+  .friendly-diff tr.diff-removed td { background: rgba(239, 68, 68, 0.12); }
+  .friendly-diff tr.diff-removed td.content { color: #fca5a5; text-decoration: line-through; text-decoration-color: rgba(252, 165, 165, 0.55); }
   .friendly-diff .badge-add, .friendly-diff .badge-rm {
-    display: inline-block; font-size: 0.75em; font-weight: 700; color: #fff;
+    display: inline-block; font-size: 0.75em; font-weight: 700;
     padding: 0.05rem 0.45rem; border-radius: 2px; margin-right: 0.4rem;
     vertical-align: middle; text-decoration: none;
   }
-  .friendly-diff .badge-add { background: #2e7d32; }
-  .friendly-diff .badge-rm  { background: #c62828; }
+  .friendly-diff .badge-add { background: rgba(34, 197, 94, 0.30); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.5); }
+  .friendly-diff .badge-rm  { background: rgba(239, 68, 68, 0.30); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
   .diff-summary {
     margin: 0.4rem 0 0.5rem; font-size: 0.88em; color: var(--muted, #555);
   }
@@ -192,7 +220,7 @@
   }
   .diff-raw-pane {
     display: none; margin-top: 0.4rem; max-height: 30vh; overflow: auto;
-    background: rgba(0,0,0,0.04); padding: 0.5rem 0.75rem; border-radius: 3px;
+    background: var(--surface-2); padding: 0.5rem 0.75rem; border-radius: 3px;
     font-family: var(--font-mono, monospace); font-size: 0.78em;
     white-space: pre-wrap;
   }
@@ -208,14 +236,14 @@
   .b3-decision-actions button {
     padding: 0.1rem 0.5rem; font-size: 0.72rem; font-weight: 600;
     border: 1px solid var(--border, #ccc); border-radius: 3px;
-    background: #fff; cursor: pointer;
+    background: var(--surface); cursor: pointer;
   }
-  .b3-decision-actions button.act-edit { color: #ef6c00; }
-  .b3-decision-actions button.act-remove { color: #c62828; }
+  .b3-decision-actions button.act-edit { color: #f59e0b; }
+  .b3-decision-actions button.act-remove { color: #ef4444; }
   .b3-decision-id-badge {
     display: inline-block; font-family: var(--font-mono, monospace);
     font-size: 0.7rem; color: var(--muted, #888);
-    padding: 0.1rem 0.45rem; background: rgba(0,0,0,0.04);
+    padding: 0.1rem 0.45rem; background: var(--surface-2);
     border-radius: 3px; margin-left: 0.5rem; vertical-align: middle;
   }
   .b3-md-with-decisions h3.decision-withdrawn,
@@ -234,63 +262,84 @@
   .b3-section-actions button {
     padding: 0.15rem 0.6rem; font-size: 0.74rem; font-weight: 600;
     border: 1px solid #0458a1; border-radius: 3px;
-    background: #fff; color: #0458a1; cursor: pointer;
+    background: var(--surface); color: var(--brand-primary); cursor: pointer;
   }
-  .b3-section-actions button:hover { background: #0458a1; color: #fff; }
+  .b3-section-actions button:hover { background: var(--brand-primary); color: #ffffff; }
 
   .b3-add-decision-bar {
     margin: 0.85rem 0; padding: 0.6rem 0.85rem;
-    background: rgba(46,125,50,0.05); border: 1px dashed rgba(46,125,50,0.4);
+    background: rgba(34, 197, 94, 0.06); border: 1px dashed rgba(34, 197, 94, 0.4);
+    color: var(--body-text);
     border-radius: 4px; display: flex; gap: 0.6rem; align-items: center;
     flex-wrap: wrap; font-size: 0.92rem;
   }
-  .b3-add-decision-bar select { padding: 0.3rem 0.4rem; }
-  .b3-add-decision-bar button {
-    padding: 0.4rem 0.85rem; cursor: pointer; background: #2e7d32; color: #fff;
-    border: 1px solid #2e7d32; border-radius: 3px; font-weight: 600;
+  .b3-add-decision-bar select {
+    padding: 0.3rem 0.4rem;
+    background: var(--surface); color: var(--body-text); border: 1px solid var(--border);
+    border-radius: 3px;
   }
+  .b3-add-decision-bar button {
+    padding: 0.4rem 0.85rem; cursor: pointer;
+    background: rgba(34, 197, 94, 0.20); color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.45); border-radius: 3px; font-weight: 600;
+  }
+  .b3-add-decision-bar button:hover { background: rgba(34, 197, 94, 0.32); }
   .b3-add-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000;
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 1000;
     display: flex; align-items: center; justify-content: center;
   }
   .b3-add-modal-inner {
-    background: #fff; padding: 1.25rem 1.5rem; border-radius: 6px;
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem; border-radius: 6px;
     width: min(640px, 90vw); max-height: 86vh; overflow: auto;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   }
-  .b3-add-modal-inner h4 { margin: 0 0 0.6rem; font-size: 1.1rem; }
+  .b3-add-modal-inner h4 { margin: 0 0 0.6rem; font-size: 1.1rem; color: var(--body-text); }
   .b3-edit-textarea {
     width: 100%; min-height: 8rem; padding: 0.45rem;
     font-family: var(--font-mono, monospace); font-size: 0.9rem;
-    border: 1px solid var(--border, #ccc); border-radius: 3px;
+    border: 1px solid var(--border); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
   }
-  .proposal h4 { margin: 0 0 0.35rem; font-size: 1rem; }
-  .proposal .prop-meta { font-size: 0.85em; color: var(--muted, #666); margin-bottom: 0.5rem; }
+  .proposal h4 { margin: 0 0 0.35rem; font-size: 1rem; color: var(--body-text); }
+  .proposal .prop-meta { font-size: 0.85em; color: var(--body-text-muted); margin-bottom: 0.5rem; }
   .proposal .prop-body {
-    background: #fff; border: 1px solid var(--border, #e0e0e0); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
+    border: 1px solid var(--border); border-radius: 3px;
     padding: 0.5rem 0.75rem; margin-bottom: 0.5rem;
   }
   .proposal .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .proposal .actions button {
-    padding: 0.35rem 0.85rem; cursor: pointer; border: 1px solid var(--border, #ccc);
-    border-radius: 3px; background: #fff; font-family: inherit; font-size: 0.88rem;
+    padding: 0.35rem 0.85rem; cursor: pointer; border: 1px solid var(--border);
+    border-radius: 3px; background: var(--surface); color: var(--body-text);
+    font-family: inherit; font-size: 0.88rem;
   }
-  .proposal .actions button.accept { background: #2e7d32; color: #fff; border-color: #2e7d32; }
-  .proposal .actions button.reject { background: #c62828; color: #fff; border-color: #c62828; }
-  .proposal .actions button.modify { background: #ef6c00; color: #fff; border-color: #ef6c00; }
-  .proposal .actions button.recat { background: #6a1b9a; color: #fff; border-color: #6a1b9a; }
+  .proposal .actions button.accept { background: rgba(34, 197, 94, 0.18); color: #4ade80; border-color: rgba(34, 197, 94, 0.45); }
+  .proposal .actions button.accept:hover  { background: rgba(34, 197, 94, 0.30); }
+  .proposal .actions button.reject { background: rgba(239, 68, 68, 0.18); color: #f87171; border-color: rgba(239, 68, 68, 0.45); }
+  .proposal .actions button.reject:hover  { background: rgba(239, 68, 68, 0.30); }
+  .proposal .actions button.modify { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border-color: rgba(245, 158, 11, 0.45); }
+  .proposal .actions button.modify:hover  { background: rgba(245, 158, 11, 0.30); }
+  .proposal .actions button.recat  { background: rgba(168, 85, 247, 0.18); color: #c084fc; border-color: rgba(168, 85, 247, 0.45); }
+  .proposal .actions button.recat:hover   { background: rgba(168, 85, 247, 0.30); }
   .proposal .recat-box { display: none; margin-top: 0.5rem; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-  .proposal .recat-box select { padding: 0.3rem 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 3px; font-family: inherit; font-size: 0.88rem; }
+  .proposal .recat-box select {
+    padding: 0.3rem 0.5rem; border: 1px solid var(--border); border-radius: 3px;
+    font-family: inherit; font-size: 0.88rem;
+    background: var(--surface); color: var(--body-text);
+  }
   .proposal .modify-box { display: none; margin-top: 0.5rem; }
   .proposal .modify-box textarea {
     width: 100%; min-height: 6rem; font-family: var(--font-mono, monospace);
-    font-size: 0.85rem; padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 3px;
+    font-size: 0.85rem; padding: 0.5rem; border: 1px solid var(--border); border-radius: 3px;
+    background: var(--surface); color: var(--body-text);
   }
   .proposal .modify-box .modify-actions { margin-top: 0.4rem; display: flex; gap: 0.4rem; }
 
   .plan-out {
     margin-top: 0.75rem; font-family: var(--font-mono, monospace); font-size: 0.85em;
-    background: rgba(0,0,0,0.04); border-radius: 4px; padding: 0.5rem 0.75rem;
+    background: var(--surface-2); border-radius: 4px; padding: 0.5rem 0.75rem;
     display: none; white-space: pre-wrap;
   }
   .plan-out.show { display: block; }
@@ -301,6 +350,61 @@
     border-radius: 4px; margin-bottom: 1rem;
   }
   .reassemble-bar button { padding: 0.45rem 1rem; font-weight: 600; cursor: pointer; }
+
+  .diff-action-bar {
+    display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+    padding: 0.65rem 0.9rem;
+    background: rgba(239,108,0,0.08);
+    border: 1px solid rgba(239,108,0,0.3);
+    border-radius: 4px; margin-bottom: 0.85rem;
+  }
+  .diff-action-bar .label {
+    flex: 1; font-weight: 500;
+  }
+  .diff-action-bar button.publish {
+    background: rgba(34, 197, 94, 0.20); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.45);
+    padding: 0.45rem 1rem; border-radius: 3px; cursor: pointer; font-weight: 600;
+  }
+  .diff-action-bar button.publish:hover { background: rgba(34, 197, 94, 0.32); color: #86efac; }
+  .diff-action-bar button.throw-away {
+    background: var(--surface); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45);
+    padding: 0.45rem 1rem; border-radius: 3px; cursor: pointer; font-weight: 600;
+  }
+  .diff-action-bar button.throw-away:hover { background: rgba(239, 68, 68, 0.18); color: #fca5a5; }
+
+  /* Friendly diff table — shared with per-file diff view but owns its
+     own scoping at the doc level. */
+  .doc-diff-pane .friendly-diff {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--font-mono, monospace); font-size: 0.85rem;
+  }
+  .doc-diff-pane .friendly-diff th {
+    text-align: left; padding: 0.35rem 0.5rem;
+    background: var(--surface-2); border-bottom: 1px solid var(--border, #ddd);
+    font-weight: 600;
+  }
+  .doc-diff-pane .friendly-diff td {
+    padding: 0.2rem 0.5rem; vertical-align: top; border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .doc-diff-pane .friendly-diff td.ln {
+    width: 3rem; text-align: right; color: var(--muted, #888);
+    user-select: none;
+  }
+  .doc-diff-pane .friendly-diff td.content { white-space: pre-wrap; word-break: break-word; }
+  .doc-diff-pane .friendly-diff tr.diff-context td.content { color: var(--muted, #555); }
+  .doc-diff-pane .friendly-diff tr.diff-added td { background: rgba(46,125,50,0.10); }
+  .doc-diff-pane .friendly-diff tr.diff-removed td { background: rgba(198,40,40,0.08); }
+  .doc-diff-pane .friendly-diff .badge-add,
+  .doc-diff-pane .friendly-diff .badge-rm {
+    display: inline-block; font-size: 0.72em; font-weight: 700;
+    border-radius: 2px; padding: 0 0.35rem; margin-right: 0.35rem;
+    vertical-align: middle;
+  }
+  .doc-diff-pane .friendly-diff .badge-add { background: #2e7d32; color: #fff; }
+  .doc-diff-pane .friendly-diff .badge-rm { background: #c62828; color: #fff; }
+  .doc-diff-pane .diff-summary {
+    margin: 0.4rem 0 0.6rem; font-size: 0.92em;
+  }
 
   .hist-entry {
     border-left: 3px solid var(--border, #ccc); padding: 0.4rem 0.9rem;
@@ -343,7 +447,7 @@
   }
   .b3-asm-running .b3-asm-clock {
     font-family: var(--font-mono, monospace);
-    background: rgba(0,0,0,0.06);
+    background: var(--code-bg); color: var(--code-text);
     padding: 0.1rem 0.45rem;
     border-radius: 3px;
     font-size: 0.85em;
@@ -369,13 +473,13 @@
   </h1>
   <p class="sub">{{ workflow.one_liner }}</p>
 
-  <div style="padding: 0.55rem 1rem; background: rgba(46,125,50,0.08); border-left: 4px solid #2e7d32; margin: 0.75rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-    <div>
-      🟢 <strong>Live.</strong> Pick a strategy on the left, review pending proposals, and take action. Every Accept / Reject / Modify / Re-categorize updates the strategy and adds a History note. Re-categorize also saves and publishes automatically. We need to know who's making the change, so make sure your project task is active.
-    </div>
-    <button type="button" id="b3-assistant-fab" class="docs-assistant-fab"
-            title="Ask the domain advisor about this strategy">💬 Ask the advisor</button>
+  <div style="padding: 0.55rem 1rem; background: rgba(46,125,50,0.08); border-left: 4px solid #2e7d32; margin: 0.75rem 0;">
+    🟢 <strong>Live.</strong> Pick a strategy on the left, review pending proposals, and take action. Every Accept / Reject / Modify / Re-categorize updates the strategy and adds a History note. Re-categorize also saves and publishes automatically. We need to know who's making the change, so make sure your project task is active.
   </div>
+
+  {# Shared floating launcher (bottom-right). #}
+  {% set launcher = {"button_id": "b3-assistant-fab"} %}
+  {% include "_assistant_launcher.html" %}
 
   {# ── Domain summary table — one row per strategy domain ─────── #}
   <table class="domain-summary">
@@ -421,33 +525,18 @@
       {% if dv.doc.sources %} &middot; sources: {% for s in dv.doc.sources %}<code>task {{ s }}</code>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
     </p>
 
-    <ul class="section-tabs" role="tablist">
-      <li><button class="section-tab-btn active" data-section="main" data-domain="{{ dv.doc.slug }}">
-        Main View
-        {% if dv.proposals %}<span class="tab-badge">{{ dv.proposals|length }}</span>{% endif %}
-      </button></li>
-      <li><button class="section-tab-btn" data-section="history" data-domain="{{ dv.doc.slug }}">
-        History View
-        {% if dv.history %}<span class="tab-badge dim">{{ dv.history|length }}</span>{% endif %}
-      </button></li>
-    </ul>
-
-    {# Main View — Session bar + Re-Assemble bar + pending proposals + rendered doc #}
-    <div class="section-pane active" data-section-pane="main" data-domain="{{ dv.doc.slug }}">
+    {# Top-of-pane content (no longer behind a tab): session bar + Run Assembler
+       + Awaiting your review. The Preview / History tabs sit further down,
+       scoped to the markdown Preview vs. assembly History entries. #}
       {% if dv.session %}
       <div class="session-bar" data-session-domain="{{ dv.doc.slug }}"
-           style="padding: 0.6rem 1rem; background: rgba(239,108,0,0.08); border-left: 4px solid #ef6c00; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+           style="padding: 0.55rem 1rem; background: rgba(239,108,0,0.08); border-left: 4px solid #ef6c00; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
         <div style="flex: 1;">
           📋 <strong>Review in progress</strong> · task <code>{{ dv.session.task_id }}</code>
           {% if dv.session.has_diff %} · <span style="color:#ef6c00;font-weight:600;">{{ dv.session.diff_count }} pending change(s)</span>{% else %} · <span class="muted">no pending changes</span>{% endif %}
           <span class="muted" style="font-size:0.8em;" title="Working branch (technical detail)">&middot; {{ dv.session.branch }}</span>
+          <span class="muted" style="font-size:0.85em; margin-left: 0.4rem;">— Discard run / End review / Save &amp; Publish in the tab bar below.</span>
         </div>
-        {% if dv.session.has_diff %}
-        <button onclick="b3Commit('{{ dv.doc.slug }}', this)"
-                style="background:#2e7d32;color:#fff;border:1px solid #2e7d32;padding:0.45rem 1rem;border-radius:3px;cursor:pointer;font-weight:600;">
-          Save & Publish →
-        </button>
-        {% endif %}
       </div>
       {% if dv.session.pending_files %}
       <details style="margin: 0 0 1rem; border: 1px solid var(--border, #e0e0e0); border-radius: 4px;">
@@ -462,7 +551,7 @@
             <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
               <code style="flex: 1; font-size: 0.85em;">{{ f.path }}</code>
               <button onclick="b3ToggleDiff('{{ dv.doc.slug }}', '{{ f.path }}', this)"
-                      style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border, #ccc); border-radius: 3px; background: #fff;">View what changed</button>
+                      style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); color: var(--body-text);">View what changed</button>
               <button onclick="b3DiscardFile('{{ dv.doc.slug }}', '{{ f.path }}', this)"
                       style="padding: 0.25rem 0.65rem; font-size: 0.85rem; cursor: pointer; border: 1px solid #c62828; border-radius: 3px; background: #c62828; color: #fff;">Throw away</button>
             </div>
@@ -483,25 +572,33 @@
       </div>
 
       {# ── 🤖 Run the AI assembler ─────────────────────────────── #}
-      <h3 class="b3-section-h">🤖 Run AI assembler
-        <span class="b3-section-hint">Scans your task docs, merges new strategy content, surfaces conflicts here as proposals.</span>
+      <h3 class="b3-section-h">🤖 Run assembler
+        <span class="b3-section-hint">Scans your task docs for new <code>STRATEGY CONTENT</code> blocks, merges them in, and surfaces conflicts here as proposals.</span>
       </h3>
       <div class="reassemble-bar">
-        <button onclick="b3Reassemble('{{ dv.doc.slug }}', this)">Preview re-assembly →</button>
         <button onclick="b3RunAssembler('{{ dv.doc.slug }}', this)"
-                style="background:#0458a1;color:#fff;border:1px solid #0458a1;padding:0.45rem 1rem;border-radius:3px;cursor:pointer;font-weight:600;">
-          Run AI strategy assembler →
+                data-domain="{{ dv.doc.slug }}"
+                {% if dv.session and dv.session.strategy_doc_dirty %}disabled title="Save & Publish or Cancel the pending diff first"{% endif %}
+                style="background:#0458a1;color:#fff;border:1px solid #0458a1;padding:0.5rem 1.25rem;border-radius:3px;cursor:pointer;font-weight:600;font-size:0.95rem;">
+          Run Assembler →
         </button>
-        <span class="muted">Preview is fast (no merge). The AI assembler does the full merge — <strong>takes a few minutes; uses AI credits.</strong></span>
+        <span class="muted">{% if dv.session and dv.session.strategy_doc_dirty %}<strong style="color:#ef6c00;">Pending diff —</strong> Save &amp; Publish or Cancel it (Preview section below) before running again.{% else %}Takes a few minutes; uses AI credits. The result lands as a diff you can review, then Save &amp; Publish or Cancel to revert.{% endif %}</span>
       </div>
-      <div class="plan-out" id="reassemble-plan-{{ dv.doc.slug }}"></div>
       <div class="plan-out" id="assembler-stream-{{ dv.doc.slug }}"></div>
 
       {# ── 📝 Awaiting your review ──────────────────────────────── #}
       <h3 class="b3-section-h">📝 Awaiting your review
-        {% if dv.proposals %}<span class="tab-badge">{{ dv.proposals|length }}</span>{% endif %}
-        <span class="b3-section-hint">Each proposal needs an Accept / Reject / Modify / Re-categorize decision before saving.</span>
+        {% set _review_count = (dv.proposals|length) + (1 if dv.strategy_doc_dirty else 0) %}
+        {% if _review_count %}<span class="tab-badge">{{ _review_count }}</span>{% endif %}
+        <span class="b3-section-hint">Pending changes from the assembler land here. Save &amp; Publish to ship, Cancel to revert. Per-proposal cards (when present) need Accept / Reject / Modify / Re-categorize before saving.</span>
       </h3>
+
+      {% if dv.strategy_doc_dirty %}
+      <p class="muted" style="margin-top: 0.5rem;">
+        📋 <strong>Pending assembler diff</strong> — {{ dv.session.diff_count }} file(s) modified.
+        Review it under the <strong>Diff</strong> tab below, then <strong>Cancel</strong> or <strong>Save &amp; Publish</strong> from the tab bar.
+      </p>
+      {% endif %}
 
       {% if dv.proposals %}
       {% for p in dv.proposals %}
@@ -556,15 +653,59 @@
         <div class="plan-out" data-plan-for="{{ p.idx }}-{{ dv.doc.slug }}"></div>
       </div>
       {% endfor %}
-      {% else %}
-      <p class="muted" style="margin-top: 1rem;">No <code>&gt; **Proposed change**</code> callouts found. Click <strong>Re-Assemble</strong> above to scan for newly tagged content.</p>
+      {% elif not dv.strategy_doc_dirty %}
+      <p class="muted" style="margin-top: 1rem;">Nothing awaiting review. Click <strong>Run Assembler</strong> above to merge tagged content from your task docs.</p>
       {% endif %}
 
-      {# ── 📄 Preview ─────────────────────────────────────────── #}
-      <h3 class="b3-section-h">📄 Preview — strategy as it will look after Save & Publish
-        <span class="b3-section-hint">Each decision has its own Edit / Remove / Replace action bar. Hover or focus a heading to reveal it. New decisions can be added at the end of any numbered section.</span>
-      </h3>
-      <div class="md-view b3-md-with-decisions" data-domain="{{ dv.doc.slug }}">{{ dv.body_html | safe }}</div>
+      {# ── Strategy view — Preview | Diff | History tabs ──────────
+         Tabs left-aligned. Cancel + Save & Publish right-aligned on
+         the same row, inside the tab bar (only when a diff is pending). #}
+      <ul class="section-tabs" role="tablist" style="margin-top: 1rem;">
+        <li><button class="section-tab-btn {% if not dv.strategy_doc_dirty %}active{% endif %}" data-section="main" data-domain="{{ dv.doc.slug }}">
+          📄 Preview
+        </button></li>
+        {% if dv.strategy_doc_dirty %}
+        <li><button class="section-tab-btn active" data-section="diff" data-domain="{{ dv.doc.slug }}">
+          📋 Diff <span class="tab-badge" style="background:#ef6c00;color:#fff;">pending</span>
+        </button></li>
+        {% endif %}
+        <li><button class="section-tab-btn" data-section="history" data-domain="{{ dv.doc.slug }}">
+          📜 History
+          {% if dv.history %}<span class="tab-badge dim">{{ dv.history|length }}</span>{% endif %}
+        </button></li>
+        <li class="spacer"></li>
+        {% if dv.strategy_doc_dirty %}
+        <li class="action">
+          <button class="discard-btn" onclick="b3ThrowAwayAll('{{ dv.doc.slug }}', this)"
+                  title="Revert the strategy back to baseline (this assembler run only). Review session stays open — you can Run Assembler again immediately. Use this when you don't like the result and want to retry.">
+            Discard run
+          </button>
+        </li>
+        {% endif %}
+        {% if dv.session %}
+        <li class="action">
+          <button class="end-btn" onclick="b3CancelWorkflow('{{ dv.doc.slug }}', this)"
+                  title="End this review session entirely — reverts any pending diff, removes the worktree + branch, marks task {{ dv.session.task_id }} Abandoned. Use this when you're done with this domain (whether you keep the changes or not).">
+            End review
+          </button>
+        </li>
+        {% endif %}
+        {% if dv.strategy_doc_dirty %}
+        <li class="action">
+          <button class="publish-btn" onclick="b3SaveAndPublishStrategy('{{ dv.doc.slug }}', this)"
+                  title="Commit the diff, fast-forward merge to main, push, close the session task.">
+            Save &amp; Publish →
+          </button>
+        </li>
+        {% endif %}
+      </ul>
+
+      <div class="section-pane {% if not dv.strategy_doc_dirty %}active{% endif %}" data-section-pane="main" data-domain="{{ dv.doc.slug }}">
+        <p class="b3-section-hint" style="margin: 0.4rem 0 0.6rem;">
+          Strategy as it will look {% if dv.strategy_doc_dirty %}with the pending diff applied{% else %}after Save &amp; Publish{% endif %}.
+          Each decision has its own Edit / Remove / Replace action bar — hover or focus a heading to reveal it.
+        </p>
+        <div class="md-view b3-md-with-decisions" data-domain="{{ dv.doc.slug }}">{{ dv.body_html | safe }}</div>
       {% if dv.section_labels %}
       <div class="b3-add-decision-bar">
         <label class="muted" for="b3-add-section-{{ dv.doc.slug }}">Add a new decision under section:</label>
@@ -592,22 +733,37 @@
       {% endif %}
       <script type="application/json" data-decisions-for="{{ dv.doc.slug }}">{{ dv.decisions | tojson }}</script>
       <script type="application/json" data-sections-for="{{ dv.doc.slug }}">{{ dv.sections | tojson }}</script>
-    </div>
+      </div>{# /.section-pane[data-section-pane=main] — Preview pane #}
 
-    {# History View — parsed assembly history entries, rendered as markdown #}
-    <div class="section-pane" data-section-pane="history" data-domain="{{ dv.doc.slug }}">
-      {% if dv.history %}
-      <p class="muted">{{ dv.history|length }} assembly run{{ 's' if dv.history|length != 1 else '' }} recorded.</p>
-      {% for h in dv.history %}
-      <div class="hist-entry">
-        <div><span class="hist-date">{{ h.date }}</span> — {{ h.label }}</div>
-        {% if h.body_html %}<div class="md-view" style="margin-top: 0.4rem;">{{ h.body_html | safe }}</div>{% endif %}
+      {% if dv.strategy_doc_dirty %}
+      {# Diff pane — shows the line-by-line diff against the saved baseline.
+         Cancel + Save & Publish live in the tab bar above, not inside this
+         pane (so they stay visible without scrolling). #}
+      <div class="section-pane doc-diff-pane active" data-section-pane="diff" data-domain="{{ dv.doc.slug }}">
+        <p class="b3-section-hint" style="margin: 0.4rem 0 0.6rem;">
+          Line-by-line difference between the saved strategy and the assembler's draft. Pick from the tab bar above:
+          <strong>Discard run</strong> (revert this run, keep session open to retry) ·
+          <strong>End review</strong> (revert + close session) ·
+          <strong>Save &amp; Publish →</strong> (commit + merge to main).
+        </p>
+        <div class="doc-diff-content">{{ dv.strategy_doc_diff_html | safe }}</div>
       </div>
-      {% endfor %}
-      {% else %}
-      <p class="muted">No <code>## Assembly History</code> section found. The next <code>/strategy assemble {{ dv.doc.domain }}</code> run will create it.</p>
       {% endif %}
-    </div>
+
+      {# History pane — assembly history entries, rendered as markdown #}
+      <div class="section-pane" data-section-pane="history" data-domain="{{ dv.doc.slug }}">
+        {% if dv.history %}
+        <p class="muted">{{ dv.history|length }} assembly run{{ 's' if dv.history|length != 1 else '' }} recorded.</p>
+        {% for h in dv.history %}
+        <div class="hist-entry">
+          <div><span class="hist-date">{{ h.date }}</span> — {{ h.label }}</div>
+          {% if h.body_html %}<div class="md-view" style="margin-top: 0.4rem;">{{ h.body_html | safe }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="muted">No <code>## Assembly History</code> section found. The next <code>/strategy assemble {{ dv.doc.domain }}</code> run will create it.</p>
+        {% endif %}
+      </div>
   </div>
   {% endfor %}
 </section>
@@ -772,10 +928,105 @@ async function b3SubmitRecat(domain, idx, btn) {
   }
 }
 
+// ── Modify a proposal via the assistant drawer ─────────────────────
+// Mirrors the decision-edit-via-chat pattern from the rendered MD view:
+// open the drawer, pre-inject proposal context, let the agent and user
+// discuss, then run an Opus synthesis pass to produce the revised body
+// for explicit confirmation. The existing /execute action=modify
+// endpoint commits the new body — this swaps the textarea-direct-edit
+// UX for the conversational pattern users get on regular decisions.
 function b3ShowModify(domain, idx, btn) {
-  const key = idx + '-' + domain;
-  const box = document.querySelector('.modify-box[data-modify-for="' + key + '"]');
-  if (box) box.style.display = 'block';
+  // Pull the proposal's current body, heading, and source from the
+  // rendered card so the drawer + synthesis pass have full context.
+  const card = btn.closest('.proposal');
+  if (!card) { alert('Could not find proposal card.'); return; }
+  const headingNode = card.querySelector('h4');
+  const headingText = headingNode ? headingNode.textContent.trim() : '';
+  const metaNode = card.querySelector('.prop-meta');
+  const metaText = metaNode ? metaNode.textContent.trim().replace(/\s+/g, ' ') : '';
+  const taskMatch = metaText.match(/source:\s*(\S+)/);
+  const taskId = taskMatch ? taskMatch[1] : '';
+  const ta = card.querySelector('textarea[data-modify-textarea]');
+  const body = ta ? ta.value : '';
+  if (!body.trim()) { alert('Proposal body is empty — nothing to modify.'); return; }
+  b3OpenProposalEditDrawer(domain, {idx, heading: headingText, taskId, body});
+}
+
+function b3OpenProposalEditDrawer(domain, prop) {
+  const drawer = document.getElementById('pc-assistant');
+  if (!drawer) { alert('Assistant drawer not available on this page.'); return; }
+  drawer.dataset.editMode = 'proposal';
+  drawer.dataset.editDomain = domain;
+  drawer.dataset.editProposalIdx = String(prop.idx);
+  drawer.dataset.editProposalHeading = prop.heading || '';
+  drawer.dataset.editProposalTaskId = prop.taskId || '';
+  drawer.dataset.editOriginalBody = prop.body || '';
+  // Show the edit-mode banner with proposal scope. Relabel the Save button
+  // because proposal modify only updates the proposed body — it does NOT
+  // publish to main. The user still ships via Save & Publish in the tab bar
+  // after reviewing the modified proposal alongside the others.
+  const bar = document.getElementById('pc-edit-mode-bar');
+  if (bar) {
+    bar.hidden = false;
+    const idEl = document.getElementById('pc-edit-decision-id');
+    const headingEl = document.getElementById('pc-edit-decision-heading');
+    if (idEl) idEl.textContent = `proposal #${prop.idx}` + (prop.taskId ? ` (${prop.taskId})` : '');
+    if (headingEl) {
+      const h = (prop.heading || '').trim();
+      headingEl.textContent = h;
+      headingEl.hidden = !h;
+    }
+    const saveBtn = document.getElementById('pc-edit-save');
+    if (saveBtn) {
+      saveBtn.textContent = '💾 Save proposal edit';
+      saveBtn.title = 'Update the proposed text only — proposal stays pending; ship via Save & Publish in the tab bar.';
+    }
+  }
+  // Override grounding to focus on the proposal being modified + the
+  // surrounding strategy doc context. Same discussion-only guard as the
+  // decision-edit flow — agent must NOT touch files; the synthesis pass
+  // (triggered by the drawer's Save button) is what actually mutates.
+  const stratNode = document.querySelector(`script[type="text/markdown"][data-strategy-md="${domain}"]`);
+  const stratMd = stratNode ? stratNode.textContent : '';
+  window.pcAssistantGetGrounding = function () {
+    return (
+      `# PROPOSAL MODIFY MODE — DISCUSSION ONLY\n\n` +
+      `You are in DISCUSSION-ONLY mode. Critical rules:\n` +
+      `\n` +
+      `• DO NOT attempt to edit, write, or modify any files.\n` +
+      `• DO NOT call Read / Write / Edit / Bash / NotebookEdit tools.\n` +
+      `• DO NOT mention the assembler, source-task tags, or running /strategy.\n` +
+      `• DO NOT ask for paths or permissions.\n` +
+      `\n` +
+      `The user is reviewing an UNACCEPTED proposed change to the strategy doc and wants to refine it BEFORE accepting. Discuss what they want to change. Ask clarifying questions, suggest alternatives, summarize agreed edits. When the user is ready, they click "💾 Save proposal edit" in the drawer header — that triggers a SEPARATE Opus synthesis pass that reads our conversation and produces the revised proposal body for their final confirmation. You don't write the change yourself. Note: this saves changes to the PROPOSAL only — it does NOT publish to main. The user still has to click "Save & Publish" in the tab bar afterward to merge.\n` +
+      `\n` +
+      `If the user asks you to "save" or "publish", reply: "I'm in discussion mode. To save your edits to the proposal, click '💾 Save proposal edit' in the drawer header. The proposal will stay pending — you'll still need to click 'Save & Publish' in the tab bar to merge it into the strategy."\n` +
+      `\n` +
+      `# Proposal Context\n\n` +
+      `Modifying proposal #${prop.idx} from task ${prop.taskId || '(unknown)'} — heading: "${prop.heading || ''}".\n\n` +
+      `## Current proposed body\n\n${prop.body || '(empty)'}\n\n` +
+      `## Full strategy doc (${domain}) — for context\n\n${stratMd}`
+    );
+  };
+  if (typeof window.pcAssistantOpen === 'function') window.pcAssistantOpen();
+  else document.getElementById('b3-assistant-fab')?.click();
+  // Auto-prime with a first user turn so the agent has the proposal in its
+  // working memory and the input box stays empty for the user's actual ask.
+  setTimeout(() => {
+    const input = document.getElementById('pc-input');
+    const form = document.getElementById('pc-input-form');
+    if (!input || !form || drawer.dataset.b3PrimerSent === '1') return;
+    drawer.dataset.b3PrimerSent = '1';
+    input.value =
+      `Loading context for proposal #${prop.idx}` + (prop.taskId ? ` from task ${prop.taskId}` : '') + `.\n\n` +
+      `Current proposed body:\n\n${(prop.body || '').slice(0, 4000)}\n\n` +
+      `(I'll tell you what I want changed in my next message. Acknowledge briefly that you've read the proposal, then wait for my ask.)`;
+    form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
+    setTimeout(() => {
+      const inp = document.getElementById('pc-input');
+      if (inp) { inp.value = ''; inp.focus(); }
+    }, 80);
+  }, 400);
 }
 function b3CancelModify(key) {
   const box = document.querySelector('.modify-box[data-modify-for="' + key + '"]');
@@ -818,26 +1069,6 @@ async function b3SubmitModify(domain, idx, btn) {
   }
 }
 
-async function b3Reassemble(domain, btn) {
-  const box = document.getElementById('reassemble-plan-' + domain);
-  box.classList.add('show');
-  box.innerHTML = '<span class="muted">Running dry-run…</span>';
-  btn.disabled = true;
-  try {
-    const res = await fetch('/workflows/strategy-reassembly/' + encodeURIComponent(domain) + '/dry-run', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action: 're-assemble'}),
-    });
-    const data = await res.json();
-    box.innerHTML = b3RenderPlan(data);
-  } catch (e) {
-    box.innerHTML = '<span style="color:#c00;">Error: ' + escapeHtml(String(e)) + '</span>';
-  } finally {
-    btn.disabled = false;
-  }
-}
-
 function b3RenderPlan(data) {
   let html = '<div><strong>DRY RUN</strong> — backend_status=<code>' + escapeHtml(data.backend_status) + '</code>; action=<code>' + escapeHtml(data.action) + '</code></div>';
   if (data.commands && data.commands.length) {
@@ -865,7 +1096,7 @@ function b3RenderPlan(data) {
           `<strong>Audit:</strong> ${actorLine} &middot; ${taskLine}</div>`;
   if (data.history_entry_preview) {
     html += `<div style="margin-top:0.4rem;"><em>Would append to <code>## History</code>:</em></div>`;
-    html += `<pre style="background:#fff;border:1px solid var(--border,#ddd);padding:0.4rem 0.6rem;margin:0.25rem 0 0;border-radius:3px;white-space:pre-wrap;">${escapeHtml(data.history_entry_preview)}</pre>`;
+    html += `<pre style="background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);padding:0.4rem 0.6rem;margin:0.25rem 0 0;border-radius:3px;white-space:pre-wrap;">${escapeHtml(data.history_entry_preview)}</pre>`;
   }
   if (data.can_execute_live) {
     if (data.action === 're-assemble') {
@@ -960,7 +1191,87 @@ async function b3Commit(domain, btn) {
   }
 }
 
+// ── Discard run — revert pending diff, keep session open ─────────
+// Reverts all assembler-introduced changes in the worktree. Worktree,
+// branch, and backing session task are kept open — user can Run
+// Assembler again immediately. Use End Review to also close the session.
+async function b3ThrowAwayAll(domain, btn) {
+  if (!confirm(
+    'Discard this assembler run for "' + domain + '"?\n\n' +
+    'The strategy goes back to the last saved version. Your review session stays open — you can Run Assembler again right after to try a different result.\n\n' +
+    'This cannot be undone.'
+  )) return;
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = 'Discarding…';
+  try {
+    const res = await fetch('/workflows/strategy-reassembly/' + encodeURIComponent(domain) + '/throw-away-all', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: '{}',
+    });
+    const data = await res.json();
+    if (!res.ok || data.status === 'error') {
+      alert('Throw away failed: ' + (data.detail || data.checkout_err || data.clean_err || JSON.stringify(data)));
+      btn.disabled = false;
+      btn.textContent = original;
+      return;
+    }
+    b3ScheduleReload(domain, 400);
+  } catch (e) {
+    alert('Error: ' + String(e));
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+// ── Save & Publish the entire pending diff (strategy-doc level) ──
+// Thin wrapper over b3Commit so the Diff-tab control reads naturally.
+async function b3SaveAndPublishStrategy(domain, btn) {
+  return b3Commit(domain, btn);
+}
+
+// ── End the whole review session ─────────────────────────────────
+// Discards any pending diff, removes the worktree + branch, marks the
+// backing session task Abandoned. Distinct from Cancel — "End review"
+// is the "I'm done with this domain entirely" exit.
+async function b3CancelWorkflow(domain, btn) {
+  if (!confirm(
+    'End the review session for "' + domain + '"?\n\n' +
+    'This will:\n' +
+    '  • Revert any pending diff (cannot be undone).\n' +
+    '  • Remove the working branch and worktree.\n' +
+    '  • Mark the session task Abandoned.\n\n' +
+    'Use only if you are done with this domain entirely. To just revert one assembler run while staying in the session (so you can retry), use Discard run instead.'
+  )) return;
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = 'Cancelling…';
+  try {
+    const res = await fetch('/workflows/strategy-reassembly/' + encodeURIComponent(domain) + '/cancel-workflow', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: '{}',
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert('Cancel failed: ' + (data.detail || JSON.stringify(data)));
+      btn.disabled = false;
+      btn.textContent = original;
+      return;
+    }
+    b3ScheduleReload(domain, 400);
+  } catch (e) {
+    alert('Error: ' + String(e));
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
 async function b3RunAssembler(domain, btn) {
+  // Concurrent-run guard: if the doc is dirty, the button is disabled
+  // server-side; this is the second-line client-side check.
+  if (btn.disabled) return;
   if (!confirm('Run the AI strategy assembler for "' + domain + '"?\n\nIt scans your task documents for tagged strategy content, merges what is new, and surfaces any conflicts here as proposals you can review.\n\n⏱ Takes a few minutes. Uses AI credits.')) return;
   const out = document.getElementById('assembler-stream-' + domain);
   out.classList.add('show', 'b3-asm-running');
@@ -1014,7 +1325,17 @@ async function b3RunAssembler(domain, btn) {
       headers: {'Content-Type': 'application/json', 'Accept': 'text/event-stream'},
     });
     if (!res.ok || !res.body) {
-      finish('error', 'Stream failed: HTTP ' + res.status);
+      // Parse JSON detail when available (e.g. 409 concurrent-run guard,
+      // 403 actor unresolved). Fall back to status code if not JSON.
+      let detail = '';
+      try {
+        const j = await res.json();
+        detail = j.detail || JSON.stringify(j);
+      } catch {
+        detail = '';
+      }
+      const userMsg = detail ? detail : 'HTTP ' + res.status;
+      finish('error', userMsg);
       btn.disabled = false;
       return;
     }
@@ -1279,7 +1600,11 @@ function b3OpenSectionEditDrawer(domain, sec) {
     const idEl = document.getElementById('pc-edit-decision-id');
     const hdEl = document.getElementById('pc-edit-decision-heading');
     if (idEl) idEl.textContent = 'Section ' + sec.idx;
-    if (hdEl) hdEl.textContent = sec.label || '(no label)';
+    if (hdEl) {
+      const lbl = (sec.label || '').trim();
+      hdEl.textContent = lbl;
+      hdEl.hidden = !lbl;
+    }
   }
   // Override grounding: full section + full strategy doc + discussion-only guard.
   const stratNode = document.querySelector(`script[type="text/markdown"][data-strategy-md="${domain}"]`);
@@ -1351,7 +1676,12 @@ function b3OpenDecisionEditDrawer(domain, dec) {
   if (bar) {
     bar.hidden = false;
     document.getElementById('pc-edit-decision-id').textContent = dec.id;
-    document.getElementById('pc-edit-decision-heading').textContent = dec.heading || '(no heading)';
+    const hdEl2 = document.getElementById('pc-edit-decision-heading');
+    if (hdEl2) {
+      const h = (dec.heading || '').trim();
+      hdEl2.textContent = h;
+      hdEl2.hidden = !h;
+    }
   }
   // Override grounding to focus on the decision being edited + full strategy doc.
   // The leading guard tells the agent to discuss only — never to call file
@@ -1431,6 +1761,61 @@ function b3InstallEditModeSaveHandler() {
     });
     if (conversation.length === 0) {
       alert('No conversation to synthesize. Have a discussion with the advisor first.');
+      return;
+    }
+
+    if (mode === 'proposal') {
+      const proposalIdx = parseInt(drawer?.dataset.editProposalIdx || '', 10);
+      const heading = drawer?.dataset.editProposalHeading || '';
+      const taskId = drawer?.dataset.editProposalTaskId || '';
+      const originalBody = drawer?.dataset.editOriginalBody || '';
+      if (Number.isNaN(proposalIdx)) { alert('No proposal is being edited.'); return; }
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Synthesizing recommended change…';
+      let synthData;
+      try {
+        // Reuse the decision-synthesis endpoint — it's pure text-in / text-out
+        // (chat + original body → revised body). The "decision_id" path
+        // segment is just an identifier for the prompt, doesn't need to
+        // exist as a real decision; we pass `proposal-<idx>`.
+        const r = await fetch(
+          '/workflows/strategy-reassembly/' + encodeURIComponent(domain) +
+          '/decision/' + encodeURIComponent('proposal-' + proposalIdx) + '/synthesize-edit',
+          {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              conversation,
+              original_body: originalBody,
+              heading: `Proposal #${proposalIdx} from ${taskId || '(unknown)'} — ${heading}`,
+            }),
+          }
+        );
+        synthData = await r.json();
+        if (!r.ok) {
+          alert('Synthesis failed: ' + (synthData.detail || JSON.stringify(synthData)));
+          saveBtn.disabled = false;
+          saveBtn.textContent = '💾 Save edit & publish';
+          return;
+        }
+      } catch (e) {
+        alert('Synthesis error: ' + String(e));
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save edit & publish';
+        return;
+      }
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 Save edit & publish';
+      b3ShowProposalSynthesisPreview({
+        domain, proposalIdx, heading, taskId,
+        originalBody,
+        originalBodyHtml: synthData.original_body_html || '',
+        proposedBody: synthData.proposed_body || '',
+        proposedBodyHtml: synthData.proposed_body_html || '',
+        unchanged: !!synthData.unchanged,
+        model: synthData.model,
+        conversation,
+      });
       return;
     }
 
@@ -1540,10 +1925,26 @@ function b3InstallEditModeSaveHandler() {
         drawer.dataset.editSectionIdx = '';
         drawer.dataset.editSectionLabel = '';
         drawer.dataset.editSectionMd = '';
+        drawer.dataset.editProposalIdx = '';
+        drawer.dataset.editProposalHeading = '';
+        drawer.dataset.editProposalTaskId = '';
+        drawer.dataset.editOriginalBody = '';
         drawer.dataset.b3PrimerSent = '';
       }
       const bar = document.getElementById('pc-edit-mode-bar');
-      if (bar) bar.hidden = true;
+      if (bar) {
+        bar.hidden = true;
+        // Reset the Save button label in case the bar reopens next in a
+        // non-proposal mode (decision / section).
+        const saveBtn = document.getElementById('pc-edit-save');
+        if (saveBtn) {
+          saveBtn.textContent = '💾 Save edit & publish';
+          saveBtn.title = '';
+        }
+        // Reset the heading row so the next opener starts clean.
+        const hdEl = document.getElementById('pc-edit-decision-heading');
+        if (hdEl) { hdEl.textContent = ''; hdEl.hidden = true; }
+      }
       if (typeof window.pcAssistantClose === 'function') window.pcAssistantClose();
     });
   }
@@ -1565,14 +1966,14 @@ function b3ShowSynthesisPreview(ctx) {
   modal.id = 'b3-synth-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
       <h3 style="margin:0 0 0.4rem;">Recommended change for ${b3EscHtml(ctx.decisionId)}</h3>
       <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
         Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. Fidelity of the existing content is preserved; only what you explicitly approved was changed.
       </p>
       ${ctx.unchanged ? '<div style="padding:0.55rem 0.85rem;background:rgba(239,108,0,0.1);border-left:4px solid #ef6c00;margin:0.4rem 0;font-size:0.92rem;">⚠ The synthesis pass produced an <strong>unchanged</strong> body — your conversation didn\'t result in any approved revisions. Refining the discussion or canceling are both fine.</div>' : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:0.6rem 0;flex:1;min-height:0;">
-        <div style="background:#fff;border:1px solid var(--border,#e0e0e0);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid #888;display:flex;flex-direction:column;min-height:0;">
+        <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid var(--body-text-muted);display:flex;flex-direction:column;min-height:0;">
           <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#555);margin-bottom:0.4rem;">Currently in this section</div>
           <div class="md-view" style="flex:1;overflow:auto;">${ctx.originalBodyHtml || ''}</div>
         </div>
@@ -1580,7 +1981,7 @@ function b3ShowSynthesisPreview(ctx) {
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
             <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
             <button id="b3-synth-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
-            <button id="b3-synth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border,#ccc);background:#fff;color:#333;border-radius:3px;cursor:pointer;">Edit</button>
+            <button id="b3-synth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
           </div>
           <div id="b3-synth-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedBodyHtml || ''}</div>
           <textarea id="b3-synth-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedBody)}</textarea>
@@ -1684,6 +2085,128 @@ function b3EscHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// ── Proposal synthesis preview modal ────────────────────────────────
+// Same shape as b3ShowSynthesisPreview but the publish step routes through
+// /execute action=modify (proposal-callout body replacement) instead of
+// /decision/<id>/edit-via-chat (committed-decision body replacement). The
+// proposal stays pending after modify — user can still Accept / Reject /
+// Re-categorize the modified text.
+function b3ShowProposalSynthesisPreview(ctx) {
+  let modal = document.getElementById('b3-synth-modal');
+  if (modal) modal.remove();
+  modal = document.createElement('div');
+  modal.id = 'b3-synth-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
+  const headingLabel = `Proposal #${ctx.proposalIdx}` + (ctx.taskId ? ` from ${ctx.taskId}` : '');
+  modal.innerHTML = `
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
+      <h3 style="margin:0 0 0.4rem;">Recommended change for ${b3EscHtml(headingLabel)}</h3>
+      <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
+        Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. The proposal stays <strong>pending</strong> after publish — you can still Accept / Reject / Re-categorize it.
+      </p>
+      <div style="display:flex;gap:1rem;flex:1;min-height:0;">
+        <div style="flex:1;display:flex;flex-direction:column;border:1px solid var(--border,#ddd);border-radius:4px;padding:0.6rem;background:rgba(0,0,0,0.02);">
+          <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#777;margin-bottom:0.3rem;">Original proposal</div>
+          <div class="md-view" style="flex:1;overflow:auto;">${ctx.originalBodyHtml || ''}</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;border:1px solid #ef6c00;border-radius:4px;padding:0.6rem;background:rgba(239,108,0,0.04);">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+            <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
+            <button id="b3-psynth-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
+            <button id="b3-psynth-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
+          </div>
+          <div id="b3-psynth-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedBodyHtml || ''}</div>
+          <textarea id="b3-psynth-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedBody)}</textarea>
+          <p class="muted" style="margin:0.3rem 0 0;font-size:0.78em;">Click Edit to hand-tweak the markdown before publishing. Preview shows the rendered result.</p>
+        </div>
+      </div>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        <button id="b3-psynth-cancel" type="button" style="padding:0.4rem 1rem;">Cancel</button>
+        <button id="b3-psynth-refine" type="button" style="padding:0.4rem 1rem;background:#0458a1;color:#fff;border:1px solid #0458a1;border-radius:3px;cursor:pointer;">↩ Refine more (back to chat)</button>
+        <button id="b3-psynth-publish" type="button" style="padding:0.4rem 1rem;background:#2e7d32;color:#fff;border:1px solid #2e7d32;border-radius:3px;cursor:pointer;font-weight:600;${ctx.unchanged ? 'opacity:0.5;cursor:not-allowed;' : ''}">${ctx.unchanged ? 'Nothing to publish' : '💾 Save proposal edit'}</button>
+      </div>
+      <div id="b3-psynth-status" class="muted" style="margin-top:0.4rem;font-size:0.85em;"></div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  document.getElementById('b3-psynth-cancel').addEventListener('click', () => modal.remove());
+  document.getElementById('b3-psynth-refine').addEventListener('click', () => modal.remove());
+
+  const tabPreview = document.getElementById('b3-psynth-tab-preview');
+  const tabEdit = document.getElementById('b3-psynth-tab-edit');
+  const previewPane = document.getElementById('b3-psynth-preview');
+  const editPane = document.getElementById('b3-psynth-body');
+  function activeTabStyles(activeBtn, otherBtn) {
+    activeBtn.style.background = '#ef6c00'; activeBtn.style.color = '#fff';
+    activeBtn.style.borderColor = '#ef6c00';
+    otherBtn.style.background = '#fff'; otherBtn.style.color = '#333';
+    otherBtn.style.borderColor = 'var(--border, #ccc)';
+  }
+  tabPreview.addEventListener('click', async () => {
+    activeTabStyles(tabPreview, tabEdit);
+    const current = editPane.value;
+    if (current && current !== ctx.proposedBody) {
+      try {
+        const r = await fetch('/workflows/strategy-reassembly/render-md', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({markdown: current}),
+        });
+        if (r.ok) {
+          const data = await r.json();
+          previewPane.innerHTML = data.html || '';
+        }
+      } catch (e) { /* leave previous rendered HTML */ }
+    }
+    previewPane.style.display = 'block';
+    editPane.style.display = 'none';
+  });
+  tabEdit.addEventListener('click', () => {
+    activeTabStyles(tabEdit, tabPreview);
+    previewPane.style.display = 'none';
+    editPane.style.display = 'block';
+  });
+  document.getElementById('b3-psynth-publish').addEventListener('click', async () => {
+    if (ctx.unchanged) return;
+    const finalBody = (editPane.value || '').trim();
+    if (!finalBody) { alert('The body is empty — nothing to publish.'); return; }
+    const status = document.getElementById('b3-psynth-status');
+    status.textContent = 'Publishing…';
+    const pubBtn = document.getElementById('b3-psynth-publish');
+    pubBtn.disabled = true;
+    try {
+      const res = await fetch(
+        '/workflows/strategy-reassembly/' + encodeURIComponent(ctx.domain) + '/execute',
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'modify', proposal_idx: ctx.proposalIdx, new_body: finalBody}),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        status.innerHTML = '<span style="color:#c00;">Publish failed: ' + b3EscHtml(data.detail || JSON.stringify(data)) + '</span>';
+        pubBtn.disabled = false;
+        return;
+      }
+      status.innerHTML = '<strong style="color:#2e7d32;">✓ Saved.</strong> Proposal body updated. The proposal is still pending — Accept / Reject / Re-categorize from the card. Reloading…';
+      const drawer = document.getElementById('pc-assistant');
+      if (drawer) {
+        drawer.dataset.editMode = '';
+        drawer.dataset.editDomain = '';
+        drawer.dataset.editProposalIdx = '';
+        drawer.dataset.editProposalHeading = '';
+        drawer.dataset.editProposalTaskId = '';
+        drawer.dataset.editOriginalBody = '';
+        drawer.dataset.b3PrimerSent = '';
+      }
+      setTimeout(() => location.reload(), 1100);
+    } catch (e) {
+      status.innerHTML = '<span style="color:#c00;">Error: ' + b3EscHtml(String(e)) + '</span>';
+      pubBtn.disabled = false;
+    }
+  });
+}
+
 // ── Section synthesis preview modal ─────────────────────────────────
 // Same shape as b3ShowSynthesisPreview but operates on a whole H2 section.
 // On confirm, POSTs to /section/<idx>/edit-via-chat (allocates real IDs
@@ -1695,14 +2218,14 @@ function b3ShowSectionSynthesisPreview(ctx) {
   modal.id = 'b3-synth-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:center;justify-content:center;';
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);display:flex;flex-direction:column;">
+    <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;width:90vw;height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
       <h3 style="margin:0 0 0.4rem;">Recommended revision for section ${b3EscHtml(ctx.sectionIdx)} — ${b3EscHtml(ctx.sectionLabel || '')}</h3>
       <p class="muted" style="margin:0 0 0.6rem;font-size:0.88rem;">
         Synthesized by <code>${b3EscHtml(ctx.model || 'opus')}</code> from your discussion. Existing decision IDs are preserved; new decisions are written as <code>id=NEW</code> placeholders and will be assigned real IDs (D-&lt;DOMAIN&gt;-${b3EscHtml(ctx.sectionIdx)}.&lt;n&gt;) on publish.
       </p>
       ${ctx.unchanged ? '<div style="padding:0.55rem 0.85rem;background:rgba(239,108,0,0.1);border-left:4px solid #ef6c00;margin:0.4rem 0;font-size:0.92rem;">⚠ The synthesis pass produced an <strong>unchanged</strong> section — your conversation didn\'t result in any approved revisions. Refining the discussion or canceling are both fine.</div>' : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:0.6rem 0;flex:1;min-height:0;">
-        <div style="background:#fff;border:1px solid var(--border,#e0e0e0);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid #888;display:flex;flex-direction:column;min-height:0;">
+        <div style="background:var(--surface);color:var(--body-text);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.75rem;border-left:3px solid var(--body-text-muted);display:flex;flex-direction:column;min-height:0;">
           <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#555);margin-bottom:0.4rem;">Currently in this section</div>
           <div class="md-view" style="flex:1;overflow:auto;">${ctx.originalSectionHtml || ''}</div>
         </div>
@@ -1710,7 +2233,7 @@ function b3ShowSectionSynthesisPreview(ctx) {
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
             <div style="font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#ef6c00;flex:1;">Recommended revision</div>
             <button id="b3-sect-tab-preview" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid #ef6c00;background:#ef6c00;color:#fff;border-radius:3px;cursor:pointer;">Preview</button>
-            <button id="b3-sect-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border,#ccc);background:#fff;color:#333;border-radius:3px;cursor:pointer;">Edit</button>
+            <button id="b3-sect-tab-edit" type="button" style="padding:0.15rem 0.55rem;font-size:0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--body-text);border-radius:3px;cursor:pointer;">Edit</button>
           </div>
           <div id="b3-sect-preview" class="md-view" style="flex:1;overflow:auto;">${ctx.proposedSectionHtml || ''}</div>
           <textarea id="b3-sect-body" style="display:none;flex:1;width:100%;font-family:var(--font-mono,monospace);font-size:0.82em;padding:0.5rem;border:1px solid var(--border,#ccc);border-radius:3px;resize:none;">${b3EscHtml(ctx.proposedSectionMd)}</textarea>

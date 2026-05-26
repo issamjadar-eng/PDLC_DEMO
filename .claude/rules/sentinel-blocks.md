@@ -1,0 +1,1 @@
+../skills/medtech-docs/rules/sentinel-blocks.md

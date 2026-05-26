@@ -29,9 +29,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from adapter_api import ParserResult, load_adapter, rational_check  # noqa: E402
 from build import _load_yaml, _sources  # noqa: E402
-
-
-LAYER_KEYS = ["user_needs", "design_inputs", "architecture", "vnv", "risk"]
+from graph import LAYER_ORDER as LAYER_KEYS  # noqa: E402 — single source of truth for layer enumeration
 
 
 def analyze_layer(

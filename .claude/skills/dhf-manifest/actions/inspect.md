@@ -1,4 +1,4 @@
-# Actions: `dashboard`, `validate`, `reproject`, `scope diff`
+# Actions: `dashboard`, `validate`, `scope diff`
 
 Read-only inspection actions — none mutate the skill-owned caches or project-side hand-authored files.
 
@@ -46,16 +46,6 @@ Exit 0 only if all checks pass.
 
 ---
 
-## `reproject`
-
-Delta view — diff the current routed-obligation set against the previously written manifest.
-
-**Script**: `scripts/build-manifest.py --delta`
-
-Reads the old `<project>-dhf-manifest.json`, recomputes the routing, and reports added/dropped OBL IDs per DHF. Used after editing `project.yml` scope or Tier 1 content to confirm the blast radius.
-
----
-
 ## `scope diff`
 
 Hypothetical scope override — preview the routing impact without writing.
@@ -68,12 +58,12 @@ Runs a full projection with the given flag override applied to the in-memory sco
 
 ## PCCP change-reasoning workflow
 
-`reproject` and `scope diff` are the primary tools for PCCP change-impact analysis.
+`scope diff` is the primary tool for PCCP change-impact analysis.
 
 1. A planned device modification changes the scope — e.g., adding a new imaging modality, extending to EU, enabling hardware sensing.
-2. Use `scope diff` to preview impact *before* committing: `/dhf-manifest scope diff geography=[us,eu]` → prints added/dropped obligations.
-3. If approved, update `project.yml scope:` and run `reproject` to get the committed delta.
-4. The delta report becomes PCCP modification-protocol evidence: "Change X adds obligations Y1–Y12; no obligations dropped; these obligations bind to deliverables A, B, C."
+2. Use `scope diff` to preview impact *before* committing: `/dhf-manifest scope diff geography=[us,eu]` → prints the projected manifest with the override applied.
+3. If approved, update `project.yml scope:` and run `build-manifest` to commit the new catalog. The new top-level `obligation_set_hash` will differ from the previous one — `/tracker assess` picks up the change automatically.
+4. Use `git diff` against the prior `<project>-dhf-manifest.json` to see which obligations were added/dropped — that diff is the PCCP modification-protocol evidence.
 
 | PCCP Change Type | Scope flag(s) affected | Expected delta |
 |-----------------|----------------------|----------------|

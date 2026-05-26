@@ -87,7 +87,7 @@ _GENERIC_H1_PATTERNS = re.compile(
 # Filesystem-forbidden characters
 _FS_FORBIDDEN = re.compile(r'[\\/:*?<>|"]')
 
-# Trailing " - Confluence" / " - ADI FAI - Confluence" suffix that Confluence adds
+# Trailing " - Confluence" / " - <Space Name> - Confluence" suffix that Confluence adds
 # to PDF /Title metadata when exporting via headless Chrome
 _CONFLUENCE_SUFFIX = re.compile(
     r"\s*-\s*[A-Z][A-Za-z0-9 &]+-\s*Confluence\s*$|\s*-\s*Confluence\s*$"

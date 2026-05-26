@@ -1,8 +1,8 @@
 ---
 name: secops
-description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, and `attest` actions.
-version: 6
-updated: 2026-04-23
+description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, `audit`, and `attest` actions.
+version: 8
+updated: 2026-05-13
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -31,6 +31,7 @@ Designed to be invoked automatically by `/medtech-docs init` (Step 5 — auto-di
 | `hooks/security-assert.sh` | SessionStart hook — runs 16 security checks against `project.yml` (identity, access, infrastructure, supply chain). Results cached in `tasks/{person}/SECOPS.md` with a 7-day TTL. Symlinked into `.claude/hooks/` by `setup`. |
 | `agents/project-secops.md` | Remediation agent — invoked when `security-assert.sh` reports Critical/High failures. Walks the user through fixes. Copied into `.claude/agents/` by `setup` (Claude Code only discovers agents in that location). |
 | `templates/permissions.json` | Canonical `permissions` block (allow list of Bash/Read/Edit/Write patterns). Merged into `settings.json` by `setup` — **union** with existing entries, never clobbers. |
+| `scripts/audit_artifacts.py` | Static-analysis scanner used by the `audit` action. Walks `.claude/skills/`, `.claude/agents/`, `.claude/hooks/`, plus `settings.json` / `settings.local.json`, and reports trojan-style red flags (outbound execution, filesystem escape, config tamper, credential reads, obfuscated execution, persistence, symlink escape). |
 | `README.md` | Design documentation for humans. |
 
 ## Actions
@@ -115,6 +116,43 @@ echo '{}' | bash .claude/hooks/security-assert.sh
 ```
 
 Report whether the check passed, failed, or used cached results. Show the path to the relevant `SECOPS.md`.
+
+### `audit`
+
+Static-analysis pass over the artifacts that actually run inside the harness — installed skills (`.claude/skills/`), agents (`.claude/agents/`), hooks (`.claude/hooks/`), and the merged `settings.json` / `settings.local.json`. Closes the gap left by `check`, which only verifies *which* skills are approved (allowlist), not *what those skills do*.
+
+The 16 SessionStart checks assume the contents of approved skills are benign. A registry compromise, a careless contributor, or a copy-pasted snippet that does the wrong thing would all pass `check` today as long as the skill name is on the allowlist. `audit` reads the source code of every installed skill/agent/hook and looks for trojan-style red flags:
+
+| Category | Examples |
+|----------|----------|
+| External execution | `curl ... \| sh`, `wget ... \| bash`, base64-decoded payload piped to a shell |
+| Outbound network | Raw-IP curl/wget, `nc <host> <port>` |
+| Filesystem escape | `rm -rf $HOME`, writes into `/etc /usr /var`, world-writable chmod, setuid/setgid bits |
+| Privilege | `sudo` from skill scripts, `chmod +s` |
+| Config tamper | Edits to `project.yml`, `CLAUDE.md`, `.gitignore`, `git config --global/--system` |
+| Credential access | Reads of `~/.ssh/id_*`, `~/.aws/credentials`, `~/.gnupg`, `.env`, secret env vars (`GITHUB_TOKEN`, `ANTHROPIC_API_KEY`, …) |
+| Obfuscated execution | `base64 -d \| sh`, `eval $(...)`, Python `exec()` over decoded payloads |
+| Persistence | Writes to `~/.bashrc`, `~/.zshrc`, `crontab -`, `~/Library/LaunchAgents/`, systemd unit dirs |
+| Symlink escape | Any symlink under `.claude/` whose target resolves outside the project tree |
+| Hook escape | A hook command in `settings.json` whose path resolves outside the project |
+| MCP review | Any local MCP server command (surfaced for confirmation) |
+
+**Run:**
+
+```bash
+python3 "${CLAUDE_SKILL_DIR}/scripts/audit_artifacts.py" --project-dir "$PWD"
+```
+
+The scanner is pure-stdlib — no `pip install`, no network calls. Use `--json` for machine-readable output (consumed by the project-secops agent or downstream tooling).
+
+**Reporting back to the user.** Print the human summary as-is, then for each finding: classify it as a *true positive* (real concern — flag for triage) or an *expected behavior* (legitimate skill operation that happens to match a rule). Don't silently ignore matches; explain why each is benign or why it warrants action. Append nontrivial true-positive findings to the current user's `tasks/{person}/SECOPS.md` under a new `## Skill Audit Findings` section — keep the existing 16-check ledger separate.
+
+**When to run.** On demand, and especially:
+- After every `/sync-skills` pull from the registry (new code just landed).
+- Before bumping `approved_skills` in `project.yml` (you're about to authorize a new skill).
+- When the `project-secops` agent is asked to investigate a SecOps anomaly.
+
+**Exit code.** `0` for clean / Medium-and-below findings, `1` if any Critical or High finding is present — suitable for use in a CI gate or a future SessionStart hook (deferred — `check` already runs there; running both on every session is too chatty).
 
 ### `attest <attestation-name>`
 

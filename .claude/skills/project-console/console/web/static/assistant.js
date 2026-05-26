@@ -392,7 +392,11 @@
       const html = renderMarkdown(body);
       el.innerHTML = wrapInlineCitations(html, citations) + renderSourcesBlock(citations);
     } else {
-      el.textContent = content;
+      // User-authored content. Render as markdown too so prompts that paste
+      // markdown (proposal bodies, code blocks, lists, headings, etc.)
+      // display formatted instead of as raw text. Safe-ish: the user is
+      // typing their own input — at worst they HTML-inject themselves.
+      el.innerHTML = renderMarkdown(content);
     }
   }
 
@@ -559,6 +563,37 @@
   // Allow pages to update the subtitle live (e.g. selected file path).
   window.pcAssistantSetSubtitle = (text) => {
     if (subtitleEl) subtitleEl.textContent = text || '';
+  };
+  // pcAssistantPrefill — used by B6 Create Draft (and any future workflow
+  // that needs to seed the drawer with intent before the user starts
+  // typing). Sets the agent dropdown if value is in the list, seeds the
+  // input box (does NOT auto-send), and optionally updates the subtitle.
+  window.pcAssistantPrefill = (opts) => {
+    opts = opts || {};
+    if (opts.subtitle) {
+      window.pcAssistantSetSubtitle(opts.subtitle);
+    }
+    if (opts.agent && agentSel) {
+      // Wait for agentSel to be populated; loadAgents may still be in flight
+      const trySet = () => {
+        const found = Array.from(agentSel.options).some(o => o.value === opts.agent);
+        if (found) {
+          agentSel.value = opts.agent;
+          return true;
+        }
+        return false;
+      };
+      if (!trySet()) {
+        setTimeout(() => trySet(), 600);
+      }
+    }
+    if (opts.opening_message && input) {
+      // Only seed if the input box is empty (don't clobber user typing)
+      if (!input.value) input.value = opts.opening_message;
+    }
+    if (opts.open !== false) {
+      openDrawer();
+    }
   };
 
   if (openBtn) openBtn.addEventListener('click', openDrawer);

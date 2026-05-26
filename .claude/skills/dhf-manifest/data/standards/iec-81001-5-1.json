@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27",
+  "generated": "2026-05-03",
   "category": "standards",
   "source_file": "iec-81001-5-1.md",
   "obligation_count": 10,
@@ -17,10 +17,21 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "cybersecurity",
+      "criticality": "must-have",
       "applies_to": [
-        "Security Risk Assessment",
-        "Risk Management Plan",
-        "Software Development Plan"
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*security-risk-assessment*.md"
+        },
+        {
+          "role": "risk-management",
+          "file_pattern": "*risk-management-plan*.md"
+        },
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        }
       ],
       "verbatim": "Integrate security risk management into the overall risk management process (ISO 14971). Security risk management must consider: confidentiality, integrity, availability. Apply throughout the entire lifecycle.",
       "extracted_requirements": [
@@ -44,9 +55,17 @@
       "artifact_type": "plan",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-sdp",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Development Plan",
-        "Cybersecurity Plan"
+        {
+          "role": "plans-sdp",
+          "file_pattern": "*software-development-plan*.md"
+        },
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*cybersecurity-plan*.md"
+        }
       ],
       "verbatim": "Include security activities in the software development plan. Plan must address: threat modeling, secure design principles, security testing, vulnerability management. Define security requirements sources (regulatory, standards, organizational policies).",
       "extracted_requirements": [
@@ -72,9 +91,17 @@
       "artifact_type": "specification",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "requirements",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Requirements Specification",
-        "Security Requirements"
+        {
+          "role": "requirements",
+          "file_pattern": "*software-requirements-specification*.md"
+        },
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*security-requirements*.md"
+        }
       ],
       "verbatim": "Derive security requirements from: security risk assessment, regulatory requirements, intended use environment threat landscape, data protection requirements (PHI/PII if applicable). Security requirements must cover: authentication and access control, authorization and privilege management, audit logging and accountability, data confidentiality (at rest and in transit), data integrity, secure communication, software update/patch mechanisms, cryptographic controls.",
       "extracted_requirements": [
@@ -106,9 +133,17 @@
       "artifact_type": "design-document",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "architecture",
+      "criticality": "must-have",
       "applies_to": [
-        "Software Architecture Document",
-        "Security Architecture"
+        {
+          "role": "architecture",
+          "file_pattern": "*software-architecture-document*.md"
+        },
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*security-architecture*.md"
+        }
       ],
       "verbatim": "Apply secure design principles: defense in depth, least privilege, secure defaults, fail secure, separation of duties, minimize attack surface. Document security architecture decisions. Identify trust boundaries between components.",
       "extracted_requirements": [
@@ -133,10 +168,21 @@
       "artifact_type": "process-record",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "plans",
+      "criticality": "must-have",
       "applies_to": [
-        "Secure Coding Standard",
-        "SOUP List",
-        "Software Development Process Records"
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*secure-coding-standard*.md"
+        },
+        {
+          "role": "sbom",
+          "file_pattern": "*soup-list*.md"
+        },
+        {
+          "role": "plans",
+          "file_pattern": "*software-development-process-records*.md"
+        }
       ],
       "verbatim": "Follow secure coding standards. Use static analysis tools to detect vulnerabilities. Perform code reviews with security focus. Manage third-party components (SOUP) for known vulnerabilities.",
       "extracted_requirements": [
@@ -159,9 +205,17 @@
       "artifact_type": "test-report",
       "dhf_owner": "both",
       "min_iec62304_class": "A",
+      "canonical_role": "vnv-results",
+      "criticality": "must-have",
       "applies_to": [
-        "Security Test Report",
-        "V&V Plan"
+        {
+          "role": "vnv-results",
+          "file_pattern": "*security-test-report*.md"
+        },
+        {
+          "role": "vnv-plan",
+          "file_pattern": "*vnv-plan*.md"
+        }
       ],
       "verbatim": "Conduct security testing of the complete system: vulnerability scanning, penetration testing, fuzz testing, security regression testing. Test against known vulnerability databases (CVE, NVD).",
       "extracted_requirements": [
@@ -186,10 +240,21 @@
       "artifact_type": "release-record",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "plans-release",
+      "criticality": "must-have",
       "applies_to": [
-        "SBOM",
-        "Security Release Notes",
-        "Software Release Package"
+        {
+          "role": "sbom",
+          "file_pattern": "*sbom*.md"
+        },
+        {
+          "role": "plans-release",
+          "file_pattern": "*security-release-notes*.md"
+        },
+        {
+          "role": "plans-release",
+          "file_pattern": "*software-release-package*.md"
+        }
       ],
       "verbatim": "Document known security vulnerabilities and mitigations at release. Provide security guidance for deployment. Generate Software Bill of Materials (SBOM). SBOM must include: component name, version, supplier, dependency relationship, author, timestamp. Machine-readable format required (SPDX or CycloneDX).",
       "extracted_requirements": [
@@ -215,9 +280,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "postmarket",
+      "criticality": "must-have",
       "applies_to": [
-        "Vulnerability Management Plan",
-        "Post-Market Surveillance Plan"
+        {
+          "role": "postmarket",
+          "file_pattern": "*vulnerability-management-plan*.md"
+        },
+        {
+          "role": "postmarket",
+          "file_pattern": "*post-market-surveillance-plan*.md"
+        }
       ],
       "verbatim": "Continuously monitor for new vulnerabilities affecting the software and its components. Monitor vulnerability databases and SOUP vendor advisories. Establish a coordinated vulnerability disclosure process.",
       "extracted_requirements": [
@@ -240,9 +313,17 @@
       "artifact_type": "analysis",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "cybersecurity",
+      "criticality": "must-have",
       "applies_to": [
-        "Threat Model",
-        "Security Risk Assessment"
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*threat-model*.md"
+        },
+        {
+          "role": "cybersecurity",
+          "file_pattern": "*security-risk-assessment*.md"
+        }
       ],
       "verbatim": "Identify assets (data, functions, interfaces). Identify threat agents (malicious users, malware, insider threats, network attackers). Identify threats using a systematic method (STRIDE, attack trees, etc.). Identify vulnerabilities that could be exploited.",
       "extracted_requirements": [
@@ -269,9 +350,17 @@
       "artifact_type": "plan",
       "dhf_owner": "system",
       "min_iec62304_class": "A",
+      "canonical_role": "postmarket",
+      "criticality": "must-have",
       "applies_to": [
-        "Security Incident Response Plan",
-        "Post-Market Surveillance Plan"
+        {
+          "role": "postmarket",
+          "file_pattern": "*security-incident-response-plan*.md"
+        },
+        {
+          "role": "postmarket",
+          "file_pattern": "*post-market-surveillance-plan*.md"
+        }
       ],
       "verbatim": "Establish a security incident response process. Define severity classification for security issues. Track security problems to resolution. Report security incidents per regulatory requirements.",
       "extracted_requirements": [

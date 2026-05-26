@@ -1,0 +1,576 @@
+schema_version: "1.2"
+
+# Canonical roles for advisor-agent grounding.
+#
+# Three-level model:
+#   L1 (canonical role names + scope semantics) — this file
+#   L2 (ranked alternative patterns library)    — this file
+#   L3 (project-resolved bindings)              — generated
+#                                                  <project>-dhf-discovery.json
+#                                                  + optional overrides in
+#                                                  project.yml evidence_layout.layers[role]
+#
+# Two organizational modes per DHF, declared via `project.yml dhfs[].dhf_organization`:
+#   internal (default) — internal medtech-docs folder convention
+#                        (design-controls/architecture/, risk-management/, …)
+#   external           — externally-organized DHF whose folder layout is dictated by
+#                        an upstream system (Confluence, Windchill, etc.). The DHF
+#                        entry declares `taxonomy_path:` pointing at a `.taxonomy.yml`
+#                        that maps folder names → canonical_role labels.
+#
+# Each role here can declare per-mode `folder` + `patterns`. The resolver branches
+# on the DHF's `dhf_organization` and uses the matching block. A role without an
+# entry for a mode is "not applicable" in that mode — emitted as an informational
+# gap, not a resolver failure.
+#
+# Resolution algorithm (per role, per DHF):
+#   1. Pick mode block based on DHF's `dhf_organization`.
+#   2. Resolve folder:
+#        internal:  <project_root> / <dhf.path> / <folder>
+#        external:  <project_root> / <dhf.path> / <taxonomy.discovery_root> /
+#                   <folder named by taxonomy mapping for this role's taxonomy_folder>
+#   3. Compute effective patterns = L3 patterns_extra + L2 patterns − L3 excludes.
+#   4. For each pattern in order, glob inside the resolved folder.
+#   5. Single-file roles: first pattern with exactly one match wins. Multi-match →
+#      ambiguity_notes[]. Zero-match → gaps[].
+#      Multi-file roles (multi_file: true): enumerate ALL matches across ALL patterns,
+#      emit folder-pointer entry {folder, exists, file_count, patterns_used}. No
+#      "winner" concept; downstream consumers (advisor researchers, etc.) Glob the
+#      folder when they need per-file specifics. Empty folder is a 0-count entry,
+#      not a gap.
+#
+# Scope semantics:
+#   project        — exactly one file project-wide (no per-DHF resolution).
+#                    OR a project-scoped folder pointer when multi_file: true.
+#   per-dhf        — one file per DHF entry. Mode-aware (see above).
+#                    OR a per-DHF folder pointer when multi_file: true.
+#   per-submission — one file per submission entry.
+#   external_data  — registry-relative; always triage_only. Always a folder pointer
+#                    (file_count + folder). Multi-file by nature.
+#
+# Multi-file mode (multi_file: true):
+#   Designed for artifact families where one role logically maps to many files
+#   (customer complaints, CAPA records, literature search citations, KOL interview
+#   reports). Output is a folder-pointer entry — the same shape as external_data
+#   resolutions — so advisor researchers can be told "look here, N files" rather
+#   than enumerating every file in the index.
+#   - Available on `project` and `per-dhf` scopes.
+#   - In `per-dhf` scope, currently supported in `internal` mode only. External-mode
+#     multi-file artifact families (e.g., Confluence-mirrored complaint pages) are
+#     deferred — the taxonomy hasn't surfaced this convention yet.
+#
+# Authoring note:
+#   Patterns within a mode are append-mostly (ranked, most-specific first). When
+#   a new project surfaces a previously-unseen convention, append AFTER existing
+#   entries so existing projects' resolutions don't shift.
+#
+# Consumer-advisor labels used in `consumers:` (informational only; not enforced):
+#   regulatory-affairs, clinical-affairs, risk-management, vnv-lead, post-market,
+#   cybersecurity, human-factors, systems-engineering, quality-engineering,
+#   rd-lead, program-manager.
+
+roles:
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Project-scoped roles
+  # ──────────────────────────────────────────────────────────────────────
+
+  regulatory_strategy:
+    scope: project
+    description: Regulatory pathway, predicate posture, PCCP scope, FDA interactions plan.
+    consumers: [regulatory-affairs]
+    patterns:
+      - docs/project/strategies/regulatory-strategy.md
+      - docs/project/strategies/regulatory.md
+
+  architecture_strategy:
+    scope: project
+    description: System-level architectural strategy and design philosophy.
+    consumers: [regulatory-affairs, systems-engineering, rd-lead]
+    patterns:
+      - docs/project/strategies/architecture-strategy.md
+      - docs/project/strategies/architecture.md
+
+  development_strategy:
+    scope: project
+    description: Software development approach and lifecycle conventions.
+    consumers: [rd-lead, vnv-lead]
+    patterns:
+      - docs/project/strategies/development-strategy.md
+
+  operations_strategy:
+    scope: project
+    description: Operational concerns — deployment, support, monitoring, on-call.
+    consumers: [rd-lead, post-market]
+    patterns:
+      - docs/project/strategies/operations-strategy.md
+
+  postmarket_strategy:
+    scope: project
+    description: Post-market surveillance, complaint handling, periodic safety reports.
+    consumers: [post-market, regulatory-affairs, risk-management]
+    patterns:
+      - docs/project/strategies/postmarket-strategy.md
+
+  predicate_analysis:
+    scope: project
+    description: Predicate landscape, substantial-equivalence argument, comparison tables.
+    consumers: [regulatory-affairs]
+    folder: docs/project/input-analysis/predicate-analysis
+    patterns:
+      - "**/predicate-landscape.md"
+      - "**/se-argument.md"
+      - "**/qsub-summary.md"
+      - "**/README.md"
+
+  # ── Project-scoped multi-file folder pointers (input-analysis subtree) ──
+
+  kol_feedback:
+    scope: project
+    multi_file: true
+    description: KOL / SME interview reports, clinical needs synthesis, voice-of-surgeon evidence.
+    consumers: [clinical-affairs, regulatory-affairs, program-manager, human-factors]
+    folder: docs/project/input-analysis/kol-feedback
+    patterns:
+      - "**/*.md"
+
+  market_research:
+    scope: project
+    multi_file: true
+    description: Market sizing, commercial landscape, customer-segment analysis.
+    consumers: [program-manager, clinical-affairs, regulatory-affairs]
+    folder: docs/project/input-analysis/market-research
+    patterns:
+      - "**/*.md"
+
+  competitive_landscape:
+    scope: project
+    multi_file: true
+    description: Competitor device analyses (non-predicate context for positioning).
+    consumers: [regulatory-affairs, program-manager]
+    folder: docs/project/input-analysis/competitive-landscape
+    patterns:
+      - "**/*.md"
+
+  filing_strategy:
+    scope: project
+    multi_file: true
+    description: Filing-strategy decision artifacts, scope-split rationale, multi-DHF justifications.
+    consumers: [regulatory-affairs, program-manager]
+    folder: docs/project/input-analysis/filing-strategy
+    patterns:
+      - "**/*.md"
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Per-DHF roles — declare per-mode resolution
+  # ──────────────────────────────────────────────────────────────────────
+
+  system_architecture:
+    scope: per-dhf
+    description: The DHF's Software Architecture Document.
+    consumers: [regulatory-affairs, systems-engineering, vnv-lead, rd-lead]
+    internal:
+      folder: design-controls/architecture
+      patterns:
+        - "*-system-sad.md"
+        - "*Software Architecture Document*.md"
+        - "*-sad.md"
+    external:
+      taxonomy_folder: software-architecture-document-sad
+      patterns:
+        - "v*.md"        # versioned content (preferred — substantive)
+        - "index.md"     # Confluence index page (small)
+
+  module_design:
+    scope: per-dhf
+    description: Per-module Software Detailed Design.
+    consumers: [systems-engineering, rd-lead]
+    triage_only: true
+    internal:
+      folder: design-controls/architecture
+      patterns:
+        - "*Software Detailed Design*.md"
+        - "*-sdd.md"
+    external:
+      taxonomy_folder: software-detailed-design-sdd
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  user_needs:
+    scope: per-dhf
+    description: User-needs document — the upstream of design inputs per design controls.
+    consumers: [systems-engineering, clinical-affairs, regulatory-affairs, human-factors, vnv-lead]
+    internal:
+      folder: design-controls/user-needs
+      patterns:
+        - "user-needs.md"        # exact medtech-docs convention (most-specific — outranks the broad wildcard below)
+        - "*user-needs*.md"
+        - "*User Needs*.md"
+        - "*-un.md"
+    external:
+      taxonomy_folder: user-needs
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  software_requirements:
+    scope: per-dhf
+    description: Software Requirements Specification (SRS) — design inputs per IEC 62304.
+    consumers: [systems-engineering, rd-lead, vnv-lead, regulatory-affairs]
+    internal:
+      folder: design-controls/requirements
+      patterns:
+        - "software-requirements.md"   # exact medtech-docs convention (most-specific)
+        - "*software-requirements*.md" # lowercase-hyphen variant (e.g. pca-software-requirements.md)
+        - "*Software Requirements*.md"
+        - "*-srs.md"
+    external:
+      taxonomy_folder: software-requirements-specification-srs
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  software_design_specification:
+    scope: per-dhf
+    description: Software Design Specification (SDS) — top-level design outputs per IEC 62304.
+    consumers: [rd-lead, vnv-lead, systems-engineering]
+    triage_only: true
+    internal:
+      folder: design-controls/architecture
+      patterns:
+        - "*Software Design Specification*.md"
+        - "*-sds.md"
+    external:
+      taxonomy_folder: software-design-specification-sds
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  verification_plan:
+    scope: per-dhf
+    description: V&V plan — verification + validation strategy per IEC 62304 §5.6 / §5.7.
+    consumers: [vnv-lead, quality-engineering, regulatory-affairs]
+    internal:
+      folder: design-controls/vnv
+      patterns:
+        - "*Verification*Plan*.md"
+        - "*V&V Plan*.md"
+        - "*verification-plan*.md"
+        - "*vnv-plan*.md"
+        - "testing-strategy.md"
+    external:
+      taxonomy_folder: software-verification-plan
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  verification_protocols:
+    scope: per-dhf
+    multi_file: true
+    description: V&V test protocols (per IEC 62304 verification + integration test specs).
+    consumers: [vnv-lead, rd-lead]
+    internal:
+      folder: design-controls/vnv/protocols
+      patterns:
+        - "**/*.md"
+    # External-mode multi-file deferred until taxonomy convention is identified.
+
+  verification_reports:
+    scope: per-dhf
+    multi_file: true
+    description: V&V test execution reports and verification records.
+    consumers: [vnv-lead, regulatory-affairs, quality-engineering]
+    internal:
+      folder: design-controls/vnv/reports
+      patterns:
+        - "**/*.md"
+
+  risk_management_plan:
+    scope: per-dhf
+    description: Risk Management Plan per ISO 14971.
+    consumers: [risk-management, regulatory-affairs, quality-engineering]
+    internal:
+      folder: risk-management
+      patterns:
+        - "* - Risk Management Plan.md"
+        - "*-risk-management-plan.md"
+        - "*-rmp.md"
+    # No external-mode entry — item DHFs in Confluence template don't have a
+    # separate RMP document; risk evidence lives in SRA + HTM there.
+
+  software_risk_assessment:
+    scope: per-dhf
+    description: Software Risk Assessment (SRA).
+    consumers: [risk-management, vnv-lead]
+    internal:
+      folder: risk-management
+      patterns:
+        - "*Software Risk Assessment*.md"
+        - "*-sra.md"
+    external:
+      taxonomy_folder: software-risk-assessment-sra
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  hazard_analysis:
+    scope: per-dhf
+    description: Preliminary or detailed Hazard Analysis.
+    consumers: [risk-management, regulatory-affairs]
+    internal:
+      folder: risk-management
+      patterns:
+        - "*Preliminary Hazard Analysis*.md"
+        - "*Hazard Analysis*.md"
+        - "*-pha.md"
+    # No external-mode entry — PHA content typically rolled into SRA in external template.
+
+  hazard_traceability_matrix:
+    scope: per-dhf
+    description: Hazard Traceability Matrix (HTM) — hazards traced to risk controls.
+    consumers: [risk-management, vnv-lead]
+    internal:
+      folder: risk-management
+      patterns:
+        - "*Hazard Traceability Matrix*.md"
+        - "*-htm.md"
+    external:
+      taxonomy_folder: hazard-traceability-matrix-htm
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  fmea:
+    scope: per-dhf
+    description: Failure Mode and Effects Analysis — design FMEA, use-FMEA, or software FMEA.
+    consumers: [risk-management, rd-lead, vnv-lead, human-factors]
+    internal:
+      folder: risk-management
+      patterns:
+        - "*FMEA*.md"
+        - "*-fmea.md"
+        - "*Failure Mode*.md"
+    external:
+      taxonomy_folder: fmea
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  risk_management_report:
+    scope: per-dhf
+    description: Risk Management Report — ISO 14971 § 9 summative risk file conclusion.
+    consumers: [risk-management, regulatory-affairs, quality-engineering]
+    internal:
+      folder: risk-management
+      patterns:
+        - "*Risk Management Report*.md"
+        - "*-rmr.md"
+    external:
+      taxonomy_folder: risk-management-report
+      patterns:
+        - "v*.md"
+        - "index.md"
+
+  # ── Per-DHF — clinical evaluation + post-market clinical follow-up ──
+
+  clinical_evaluation_plan:
+    scope: per-dhf
+    description: Clinical Evaluation Plan per MEDDEV 2.7/1 rev 4 / MDR Annex XIV.
+    consumers: [clinical-affairs, regulatory-affairs]
+    internal:
+      folder: clinical/evaluation-plans
+      patterns:
+        - "*Clinical Evaluation Plan*.md"
+        - "*-cep.md"
+
+  clinical_evaluation_report:
+    scope: per-dhf
+    description: Clinical Evaluation Report per MEDDEV 2.7/1 rev 4 / MDR Annex XIV.
+    consumers: [clinical-affairs, regulatory-affairs]
+    internal:
+      folder: clinical
+      patterns:
+        - "*Clinical Evaluation Report*.md"
+        - "*-cer.md"
+
+  benefit_risk_analysis:
+    scope: per-dhf
+    description: Benefit-risk analysis per ISO 14971 § 8 + MDR Annex I.
+    consumers: [clinical-affairs, regulatory-affairs, risk-management]
+    internal:
+      folder: clinical/benefit-risk
+      patterns:
+        - "*Benefit*Risk*.md"
+        - "*-bra.md"
+
+  literature_search:
+    scope: per-dhf
+    multi_file: true
+    description: Literature search results, citations, and synthesis supporting clinical evaluation.
+    consumers: [clinical-affairs]
+    internal:
+      folder: clinical/literature-search
+      patterns:
+        - "**/*.md"
+
+  pmcf_plan:
+    scope: per-dhf
+    description: Post-Market Clinical Follow-up Plan per MDR Annex XIV Part B.
+    consumers: [clinical-affairs, post-market, regulatory-affairs]
+    internal:
+      folder: postmarket/pmcf-plans
+      patterns:
+        - "*PMCF Plan*.md"
+        - "*pmcf-plan*.md"
+
+  pmcf_studies:
+    scope: per-dhf
+    multi_file: true
+    description: PMCF study reports and field-data study artifacts.
+    consumers: [clinical-affairs, post-market]
+    internal:
+      folder: postmarket/pmcf-studies
+      patterns:
+        - "**/*.md"
+
+  # ── Per-DHF — post-market (multi-file folder pointers + summative single-file roles) ──
+
+  complaints:
+    scope: per-dhf
+    multi_file: true
+    description: Customer complaint records and related correspondence per ISO 13485 § 8.2.2.
+    consumers: [post-market, regulatory-affairs, risk-management, quality-engineering]
+    internal:
+      folder: postmarket/complaints
+      patterns:
+        - "**/*.md"
+
+  capa:
+    scope: per-dhf
+    multi_file: true
+    description: Corrective and preventive action records per ISO 13485 § 8.5.
+    consumers: [post-market, quality-engineering, risk-management]
+    internal:
+      folder: postmarket/capa
+      patterns:
+        - "**/*.md"
+
+  adverse_events:
+    scope: per-dhf
+    multi_file: true
+    description: Adverse-event / MDR / MIR reports and vigilance correspondence.
+    consumers: [post-market, regulatory-affairs, risk-management]
+    internal:
+      folder: postmarket/adverse-events
+      patterns:
+        - "**/*.md"
+
+  field_safety_corrective_actions:
+    scope: per-dhf
+    multi_file: true
+    description: FSCA (Field Safety Corrective Action) records and FSN (Field Safety Notice) artifacts.
+    consumers: [post-market, regulatory-affairs, quality-engineering]
+    internal:
+      folder: postmarket/fsca
+      patterns:
+        - "**/*.md"
+
+  psur:
+    scope: per-dhf
+    description: Periodic Safety Update Report (PSUR / PMSR) per MDR Article 86 / ISO 13485 § 8.2.1.
+    consumers: [post-market, regulatory-affairs]
+    internal:
+      folder: postmarket
+      patterns:
+        - "*PSUR*.md"
+        - "*PMSR*.md"
+        - "*Periodic Safety*.md"
+
+  # ── Per-DHF — cybersecurity ──
+
+  threat_model:
+    scope: per-dhf
+    description: Cybersecurity threat model (STRIDE, attack trees) per FDA pre-market cybersecurity guidance.
+    consumers: [cybersecurity, regulatory-affairs, risk-management]
+    internal:
+      folder: cybersecurity
+      patterns:
+        - "*Threat Model*.md"
+        - "*threat-model*.md"
+        - "*-tm.md"
+
+  sbom:
+    scope: per-dhf
+    description: Software Bill of Materials per IEC 81001-5-1 / FDA SBOM guidance.
+    consumers: [cybersecurity, rd-lead, regulatory-affairs]
+    internal:
+      folder: cybersecurity
+      patterns:
+        - "*SBOM*.md"
+        - "*sbom*.md"
+        - "*Software Bill of Materials*.md"
+
+  cybersecurity_plan:
+    scope: per-dhf
+    description: Cybersecurity Management Plan per IEC 81001-5-1 + FDA pre-market guidance.
+    consumers: [cybersecurity, regulatory-affairs, quality-engineering]
+    internal:
+      folder: cybersecurity
+      patterns:
+        - "*Cybersecurity*Plan*.md"
+        - "*cybersecurity-plan*.md"
+        - "*-csp.md"
+
+  vulnerability_management:
+    scope: per-dhf
+    multi_file: true
+    description: Vulnerability tracking records and disclosure correspondence (post-market security).
+    consumers: [cybersecurity, post-market]
+    internal:
+      folder: cybersecurity/vulnerabilities
+      patterns:
+        - "**/*.md"
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Per-submission roles
+  # ──────────────────────────────────────────────────────────────────────
+
+  submission_package:
+    scope: per-submission
+    description: Composition manifest assembling the submission package.
+    consumers: [regulatory-affairs, program-manager]
+    folder: docs/project/submissions/{submission_id}
+    patterns:
+      - composition-manifest.md
+
+  # ──────────────────────────────────────────────────────────────────────
+  # External-data (registry-relative) roles
+  # ──────────────────────────────────────────────────────────────────────
+
+  fda_guidance:
+    scope: external_data
+    description: FDA guidance documents (510(k), De Novo, PCCP, SaMD, AI/ML).
+    consumers: [regulatory-affairs]
+    folder: docs/external/fda-guidance
+    triage_only: true
+    patterns:
+      - "**/*.md"
+
+  standards:
+    scope: external_data
+    description: International standards references (IEC 62304, ISO 14971, ISO 13485, IEC 62366).
+    consumers: [regulatory-affairs, quality-engineering, risk-management, human-factors]
+    folder: docs/external/standards
+    triage_only: true
+    patterns:
+      - "**/*.md"
+
+  industry_frameworks:
+    scope: external_data
+    description: Industry framework notes (IMDRF SaMD, AAMI TIR, GMLP).
+    consumers: [regulatory-affairs, rd-lead]
+    folder: docs/external/industry-frameworks
+    triage_only: true
+    patterns:
+      - "**/*.md"
