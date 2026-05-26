@@ -22,6 +22,8 @@ docs/internal/source-md/.staging/
 
 # Google Drive for Desktop sync metadata — this project tree may live inside
 # a Drive-synced folder; these are transient sync artifacts, not project files.
+# Excel temporary files
+~$*
 .tmp.driveupload/
 .tmp.drivedownload/
 .driveupload

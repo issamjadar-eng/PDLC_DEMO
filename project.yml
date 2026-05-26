@@ -233,6 +233,7 @@ security:
   attestation_ttl_days: 30
   required_gitignore_patterns:
   - .env
+  - ~$*
   - '*.pem'
   - '*.key'
   - '*.p12'
