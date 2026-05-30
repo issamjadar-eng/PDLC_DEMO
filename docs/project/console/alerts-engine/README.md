@@ -13,6 +13,10 @@ See [`../README.md`](../README.md) for the producer/consumer contract, file conv
 
 Additional `console_*.{json,md}` files may appear here as other skills register sidecars for this DHF.
 
+## Expected Content
+
+Generated sidecar files following the `console_<topic>.{json,md}` naming convention (see the Structure table above for the current producer set). New sidecars added by other skills must use the same prefix to be discoverable by the project-console UI.
+
 ## Conventions
 
 Inherits the conventions of [`docs/project/console/`](../README.md):
