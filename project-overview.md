@@ -70,8 +70,10 @@ PDLC_DEMO/
 ├── CLAUDE.md                # Project operating rules (always loaded)
 ├── project.yml              # Single source of truth: identity, DHFs, team, registries, secops policy
 ├── glossary.md
-├── how-to-guide.md          # Reproducible setup for new teams
-├── setup.md
+├── setup.md                 # New contributor onboarding (admin → installs → repo → security)
+├── setup.sh                 # Idempotent installer for setup.md (mac / WSL / linux)
+├── how-to-guide.md          # Day-to-day usage after setup (open VS Code, Claude Code, project tour)
+├── new-project-bootstrap.md # How to stand up a brand-new MedTech project from scratch
 ├── project-overview.md      # ← this document
 ├── CHANGELOG.md             # Project changelog (produced by /digest)
 ├── tasks/<person>/          # Per-person task folders; every edit is task-gated
@@ -417,7 +419,9 @@ Per-DHF view with tabs for **User Needs (22) / Design Inputs (34) / Architecture
 | Project manifest | [`project.yml`](project.yml) |
 | Companion deck | [`project-overview.pptx`](project-overview.pptx) |
 | Glossary | [`glossary.md`](glossary.md) |
-| How to set up this project | [`how-to-guide.md`](how-to-guide.md) |
+| Onboard a new contributor (machine setup) | [`setup.md`](setup.md) · [`setup.sh`](setup.sh) |
+| Day-to-day usage after setup | [`how-to-guide.md`](how-to-guide.md) |
+| Bootstrap a brand-new MedTech project from scratch | [`new-project-bootstrap.md`](new-project-bootstrap.md) |
 | Quality & process guardrails | [§3](#3-quality--process--how-the-guardrails-work) in this document |
 | Agentic approach — humans in charge | [§4](#4-agentic-approach--solving-complex-problems-with-humans-in-charge) in this document |
 | Regulatory strategy | [`docs/project/strategies/regulatory-strategy.md`](docs/project/strategies/regulatory-strategy.md) |
