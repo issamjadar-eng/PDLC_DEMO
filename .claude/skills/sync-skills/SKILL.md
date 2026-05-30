@@ -1,8 +1,8 @@
 ---
 name: sync-skills
 description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge). `pull` performs a three-way merge analysis on every UPSTREAM_NEWER file via git blob-history probing — bucketing each into UPSTREAM_ADVANCE / LOCAL_AHEAD / BOTH_DIVERGED before any auto-apply, so locally-newer files are surfaced as push candidates instead of being clobbered. `status` action gives an at-a-glance \"are all four places in lockstep?\" health check before switching machines. `prune` action removes merged `sync/*` push branches that accumulate in the registry checkout."
-version: 8.2
-updated: 2026-05-16
+version: 8.3
+updated: 2026-05-30
 ---
 
 # Sync Skills
@@ -17,6 +17,7 @@ Keeps the project's installed skills and agents aligned with the `hitachi` regis
 | `tests/test_status.sh` | Self-contained smoke tests for the `status` action. Builds a fake project + registry world, exercises 4 cases (all-synced, dirty, ahead, drift). |
 | `tests/test_three_way_pull.sh` | Self-contained smoke tests for `analyze` + `check --analyzed`. Four cases (UPSTREAM_ADVANCE, LOCAL_AHEAD, BOTH_DIVERGED, mixed batch with UPSTREAM_ONLY). |
 | `tests/test_prune.sh` | Self-contained smoke tests for the `prune` action — builds a hitachi world with merged + unmerged `sync/*` branches; 15 assertions over dry-run classification, `--apply` deletion (local + remote), idempotence, and the empty case. |
+| `tests/test_windows_symlink_guard.sh` | Regression tests for the Windows-clone symlink corruption vector (v8.3). 4 cases: clean Windows-style symlink reports no false drift; corrupted-target push-stage refused with exit 8 (oversized + multi-line variants); real Linux symlink still stages cleanly. |
 
 ## Configuration
 
