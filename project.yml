@@ -190,6 +190,12 @@ team:
     role: Senior Manager, Engineering
     email: orest.danchak@globallogic.com
     added: 2026-05-13
+  - name: Dmytro Savenkov
+    github: dmytro-savenkov-gl
+    task_folder: dmytro
+    role: Senior AI Architect
+    email: dmytro.a.savenkov@globallogic.com
+    added: 2026-05-29
   inactive: []
 registries:
 - name: anthropic
@@ -233,6 +239,7 @@ security:
   attestation_ttl_days: 30
   required_gitignore_patterns:
   - .env
+  - ~$*
   - '*.pem'
   - '*.key'
   - '*.p12'
