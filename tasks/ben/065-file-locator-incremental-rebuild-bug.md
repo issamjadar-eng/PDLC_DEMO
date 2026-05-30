@@ -2,7 +2,7 @@
 
 **ID**: 065
 **Created**: 2026-05-16
-**Status**: Not Started
+**Status**: Complete (2026-05-30 — fix landed via ben/067 bulk pull)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -65,3 +65,4 @@ sqlite3.IntegrityError: UNIQUE constraint failed: summaries.path, summaries.head
 ## Changelog
 
 - 2026-05-16: Task created. Defect found by ben/058's CI-sanity check — `file-locator-rebuild.yml` fails every run on `sqlite3.IntegrityError: UNIQUE constraint failed: summaries.path, summaries.heading_anchor`.
+- 2026-05-30: **Closed.** Fix landed upstream as hitachi commit `1ba65ae` ("file-locator: fix incremental rebuild crash (FK cascade never fires)") and pulled into PDLC_DEMO today via ben/067 PR #13. Root-cause matched the diagnosis: `_write_batch` was doing plain INSERTs on re-indexed files; SQLite disables foreign keys per-connection by default so the schema's `ON DELETE CASCADE` on the `summaries → indexed_files` FK was inert; orphan `summaries` rows collided on re-insert. Fix is two layers: (1) `init_db` now runs `PRAGMA foreign_keys = ON` after connecting; (2) `_write_batch` explicitly `DELETE FROM summaries WHERE path = ?` before `DELETE FROM indexed_files` as belt-and-suspenders. FTS sidecar stays consistent via the existing `summaries_ad` AFTER DELETE trigger. **CI verification**: GitHub Actions run `26679868135` (post-PR-#13 merge, 2026-05-30T09:00:58Z) succeeded in 43s — first green incremental-rebuild run after 6+ consecutive failures. No further action needed; the Todos above were all addressed at the registry by the hitachi commit author.

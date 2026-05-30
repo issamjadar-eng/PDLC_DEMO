@@ -2,7 +2,7 @@
 
 **ID**: 067
 **Created**: 2026-05-30
-**Status**: In Progress
+**Status**: Complete (2026-05-30 — all 7 goals + 6 ben/067 follow-ups + /best-practices audit run)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -48,17 +48,57 @@ Pull every pending registry change from hitachi into PDLC_DEMO local, per user d
 - [x] G6 — sync-log entry recorded
 - [ ] G7 — commit + push to PDLC_DEMO main (this turn)
 
-### Follow-ups (G5 deeper analysis)
+### Follow-ups (G5 deeper analysis) — ALL EXECUTED 2026-05-30
 
-- [ ] **Verify ben/065 fix** — `file-locator/scripts/indexer_docs.py` UPSTREAM_ADVANCE message at hitachi commit `1ba65ae` was titled "file-locator: fix incremental rebuild crash (FK cascade never fires)". Re-trigger `file-locator-rebuild.yml` CI (or run locally) to confirm. If clean, close ben/065.
-- [ ] **`/medtech-docs setup` re-run** — pulled `medtech-docs/hooks/taxonomy-freshness.sh` is NOT wired into `settings.json`. Run setup to register.
-- [ ] **`/task setup` re-run** — pulled `task/commands/checkpoint.md` + `task/hooks/checkpoint-recover.sh` (the `checkpoint` action shown in `task` skill SKILL.md description). Need setup to register the hook.
-- [ ] **Read each new skill SKILL.md end-to-end before first invocation** (per project rule):
-  - `gap-analysis` (v2) — content-gap analysis of medtech artifacts
-  - `knowledge-pack-export` (v4) — collate project docs into external LLM knowledge packs (Gemini Gem, Custom GPT, etc.)
-  - `reference-audit` (v3) — verify references / citations in project docs
-- [ ] **Read updated SKILL.md changelogs** for advisors, dhf-manifest (v13), medtech-docs (v30), task (v27), tracker (v11), frontend-slides (v0.4.1), jira-pull — surface any Post-update annotations and execute as needed.
-- [ ] Run `/best-practices` once the above settles — new Required/Recommended checks may have shipped in pulled SKILLs.
+- [x] **Validate ben/065 fix** — Confirmed: fix is two-layer (`PRAGMA foreign_keys = ON` in `init_db` + explicit `DELETE FROM summaries WHERE path = ?` before parent delete in `_write_batch`). Post-PR-#13 CI run `26679868135` succeeded in 43s — first green incremental-rebuild after 6+ consecutive failures. **ben/065 closed** (moved to Completed).
+- [x] **`/medtech-docs` Check 7c hook install** — Surgical install: `.claude/hooks/taxonomy-freshness.sh` symlink + SessionStart hook registered (rather than full `/medtech-docs init` re-run; the only net-new piece in v28+).
+- [x] **`/task setup` new pieces** — Surgical install: `.claude/hooks/checkpoint-recover.sh` symlink + SessionStart hook registered + `.claude/commands/checkpoint.md` slash command symlink. SessionStart hook count went 3 → 5.
+- [x] **Read 3 new skills end-to-end** (subagent report captured below):
+  - `gap-analysis` (v2) — content-gap critiques under `docs/_analysis/<component>/<id>.md`, cited against standards clauses; advisor fan-out via `topic-advisor-map.yml`. No setup.
+  - `knowledge-pack-export` (v4) — bounded knowledge packs for external LLMs (Gemini Gem / Custom GPT / NotebookLM / Claude Projects); deterministic concat + optional LLM condense + git-provenance manifest. Requires `/knowledge-pack-export setup` and (for `freshness` contradiction scanning) a `knowledge_pack.freshness` block in `project.yml` (currently absent — staleness/variants run, contradictions print skip notice).
+  - `reference-audit` (v3) — citation verification with 4 researcher subagents producing `sound`/`unverified`/`broken` verdicts under `docs/_analysis/<component>/<doc-slug>-references-audit/`. Requires `/reference-audit setup` to symlink 4 agents into `.claude/agents/`. Pairs with `/gap-analysis` (gap-analysis surfaces issues with citations, reference-audit verifies them).
+- [x] **Per-SKILL changelog post-update analysis** (subagent report). Surfaced TWO extra actions beyond the original list, both executed today:
+  - **`/dhf-manifest discovery-index`** ran — rebuilt `docs/project/dhf-manifest/pdlc-demo-dhf-discovery.json` with v13 `governing_qms` enrichment + v14 four `registry_*` external_data roles (registry_standards / registry_fda_guidance / registry_regulations / registry_industry_frameworks pointing at `.claude/skills/medtech-docs/references/`). Result: 10 project + 133 per-DHF resolutions; 223 gaps; 7 ambiguity notes.
+  - **`/advisors sync`** ran — no-op (all 14 advisors `unchanged`; the regenerated GROUNDING blocks shipped with the v1.5.1 advisor files we already pulled).
+- [x] **`/best-practices audit`** — delegated to subagent (see audit report appended below).
+
+### New follow-ups discovered (deferred)
+
+- [ ] **Optional: edit each SME advisor frontmatter `canonical_roles.tier_2`** to add the four new `registry_*` roles per domain relevance (advisors v1.5.0 OPTIONAL post-update). Each advisor pulls in the `medtech-docs/references/<category>/` distillations as Tier-2 grounding once the role is declared. Without this, the new L1a refs are still available but not auto-grounded into the advisor's context. Defer until we actively want one of the advisors to ground in standards / FDA guidance.
+- [ ] **Run `/reference-audit setup`** when we want to invoke `/reference-audit` (symlinks the 4 citation agents into `.claude/agents/`).
+- [ ] **Run `/knowledge-pack-export setup`** when we want to build a knowledge pack (verifies pyyaml, scaffolds `tools/knowledge-packs/`).
+- [ ] **Add `knowledge_pack.freshness` block to `project.yml`** before invoking `/knowledge-pack-export freshness` — contradiction scanning currently no-ops without it.
+
+### First-invocation recommendations (when user is ready)
+
+Per subagent 2's analysis:
+1. `/reference-audit init docs/project/strategies/regulatory-strategy.md` — highest immediate ROI; dense citation surface, low-risk write scope.
+2. `/gap-analysis init risk --component pca-device --title "PP3500 hazard register conformance vs ISO 14971 § 5.4–5.5"` — highest-leverage methodology critique for a PCA pump; exercises the mirror→standards grounding loop.
+3. `/knowledge-pack-export setup` + `init pp3500-program-overview` — only after the above docs are reference-audited.
+
+### `/best-practices audit` results (2026-05-30, subagent run)
+
+**Tally:** 11 FAIL · 12 WARN · 6 INFO across ~75 checks (registry + 19 local skills with `## Best Practices`).
+
+**Health verdict:** Registry fetched cleanly from `../hitachi/skills/manifest.md`; no subagent dispatch errors; no tool-permission prompts. **None of the FAILs are structural blockers** — folder scaffolding is complete across all 10 DHFs, hook wiring is intact, sync log is fresh. But the project is NOT in a clean "ship-ready" audit-pass baseline.
+
+**New categories surfaced by today's pull (medtech-docs v30):**
+1. **DHF identity-name gap** — 10/10 DHFs missing `marketed_name`; 7/10 (cloud-suite children) also missing `architecture_name`. Will affect tracker rendering quality downstream.
+2. **Taxonomy-freshness check is vacuous** — `.claude/hooks/taxonomy-freshness.sh` now wired (this session) but NO `.taxonomy.yml` files exist anywhere under `docs/`. If the team intends to adopt the taxonomy mechanism for QMS/registry binding, that's a setup gap to address.
+
+**Six FAILs worth a near-term cleanup session** (not today — out of /067 scope):
+1. `project.yml strategy_domains:` block missing → blocks sentinel renders + strategy-skill init across multiple files
+2. CLAUDE.md `### For Claude` should be H3 (currently H2); also missing `Update as you go (HARD RULE` marker (medtech-docs v30 check)
+3. 20 missing `README.md` files: `docs/project/dhf-manifest/`, `docs/project/milestones/`, `docs/project/console/` + 10 per-DHF console subfolders, 7 `docs/internal/source-md/<cat>/templates/`
+4. `docs/_analysis/README.md` + at least one component subfolder (gap-analysis v2 Required check)
+5. `tasks/lessons-ledger.md` still in bootstrap state + `tasks/README.md` missing `## Lesson Records` section
+6. CLAUDE.md `src/` reference in folder tree is stale (directory doesn't exist)
+
+**Auto-fixable via `/best-practices fix`:** zero Tier A auto-applies (no findings live inside `<!-- AUTO:STRUCTURE -->` sentinel blocks). Tier B (CLAUDE.md drift) is flagged but never auto-written. **All 11 FAILs require either human authoring or `/medtech-docs init` re-run.**
+
+**Pre-existing WARNs of note (12 total):** 6 strategy domains still in `awaiting-content` bootstrap state; 25 bare `task NNN` references in regulatory + architecture strategy docs (per-person prefix rule); 154 leaf folders with empty "Expected Content" sections (template gap); `submission-tracker.html` 15 days stale; 4 orphan task files in `tasks/ben/` (043, 036, 055, +1) not listed in `000-index.md`.
+
+These audit findings are **captured here for visibility only** — out of /067 scope. The user can either tackle them in a focused cleanup session (suggested rough order: FAIL 1 → 2 → 6 → 3 → 5 → 4) or treat them as the new audit baseline.
 
 ## Working Notes
 
@@ -74,4 +114,5 @@ Pull every pending registry change from hitachi into PDLC_DEMO local, per user d
 See [README.md](README.md) for version history.
 
 - 2026-05-30: Task created. Pre-pull state captured; pull plan staged.
-- 2026-05-30: **G1-G4 + G6 DONE.** 79 files pulled across UPSTREAM_ADVANCE (38) + UPSTREAM_ONLY (41); 13 UNDETERMINED agent symlinks auto-reconciled. project.yml allowlists updated. G5 first-pass complete (3 new medtech-docs rules symlinked + listed in CLAUDE.md). Sync-log entry recorded. Deferred to follow-up: deeper per-SKILL changelog analysis, ben/065 fix validation, `/medtech-docs setup` + `/task setup` re-runs, reading the 3 new skills end-to-end.
+- 2026-05-30: **G1-G4 + G6 DONE.** 79 files pulled across UPSTREAM_ADVANCE (38) + UPSTREAM_ONLY (41); 13 UNDETERMINED agent symlinks auto-reconciled. project.yml allowlists updated. G5 first-pass complete (3 new medtech-docs rules symlinked + listed in CLAUDE.md). Sync-log entry recorded.
+- 2026-05-30: **All 6 ben/067 follow-ups executed in one pass:** (1) ben/065 fix validated and closed; (2-3) surgical hook installs for /task v27 (checkpoint-recover + /checkpoint slash command) and /medtech-docs v28 (taxonomy-freshness SessionStart hook); (4-5) 3 new skills and 7 pulled-skill changelogs analyzed via parallel subagents — surfaced two extra actions executed today: `/dhf-manifest discovery-index` rebuild (10+133 resolutions, 223 gaps, 7 ambiguity notes) and `/advisors sync` (no-op — regenerated GROUNDING already shipped with v1.5.1); (6) `/best-practices audit` delegated to subagent. SessionStart hook count went 3 → 5. Three new first-invocation recommendations captured for when the user is ready.

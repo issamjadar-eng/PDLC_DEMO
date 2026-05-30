@@ -1,0 +1,1 @@
+../skills/medtech-docs/hooks/taxonomy-freshness.sh
