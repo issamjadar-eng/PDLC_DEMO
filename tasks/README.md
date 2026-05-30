@@ -39,6 +39,32 @@ tasks/
 
 `lessons-ledger.md` is a team-shared staging area populated by `/lessons assemble` from `<!-- LESSONS LEARNED -->` blocks in task docs. Only the `## Staged` section is loaded at session start. See the `lessons` skill for the Task → Staged → Promoted lifecycle.
 
+## Lesson Records
+
+When a lesson from the ledger gets **applied** in a task (you took the lesson's guidance and acted on it) or **excepted** (you deliberately did the opposite for a reason), record that event inside the task doc where it happened. The records become the evidence trail the `lessons` skill rolls up by lesson ID; mature lessons promote out of the ledger only after their record table shows enough real-world application to justify formalizing.
+
+**Format inside the task doc** (typically near the bottom, before `## Changelog`):
+
+```markdown
+## Lesson Records
+
+<!-- LESSON RECORDS -->
+
+### [L-ben-033-01] applied — 2026-05-15
+Brief prose describing the context: what the lesson said, how it shaped a decision in this task, and the concrete artifact (commit / file / decision) that resulted. This body is the **evidence** that `/lessons promote` will show when deciding whether the lesson is ready for its permanent home.
+
+### [L-ben-028-02] exception — 2026-05-20
+When the lesson doesn't fit, note that too — explain why and what was done instead. Exceptions are first-class records; they refine the lesson's scope.
+```
+
+**Rules:**
+
+- Section heading must be `## Lesson Records` (H2). The `<!-- LESSON RECORDS -->` sentinel is recommended but optional.
+- Each record is a `### [LESSON-ID] <outcome> — YYYY-MM-DD` heading. Outcome is one of `applied`, `exception`, `superseded`, `discarded`.
+- Records are **immutable history**: once written, they stay — even after the lesson is promoted out of the ledger or archived. They're the audit trail for *why* a lesson became canonical.
+- `/lessons record <lesson-id> <outcome>` writes the block for you and appends a Changelog line.
+- `/lessons assemble` reads these records (Pass 2) and rolls them up by lesson ID into the per-lesson Record table in `tasks/lessons-ledger.md`.
+
 ## Conventions
 
 - Task IDs are three-digit zero-padded (`001`, `012`, `107`). Per-person folders have their own numbering — they do not share a global counter.
@@ -54,3 +80,4 @@ tasks/
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-04-20 | Ben Xavier | Initial version — created under task 018 sync-skills to close the `tasks/README.md` best-practices FAIL. |
+| 2026-05-30 | Ben Xavier | Added `## Lesson Records` section documenting the per-task record convention. Closes the lessons-skill audit FAIL for the missing section. (ben/068) |
