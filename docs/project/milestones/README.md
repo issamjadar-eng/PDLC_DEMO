@@ -9,6 +9,10 @@ YAML catalog of program milestones consumed by `/tracker` (`engineering.yml`, `r
 | `engineering.yml` | Engineering milestones (sprint/release cuts, V&V dry-runs, design-transfer checkpoints). |
 | `regulatory.yml` | Regulatory milestones (Q-Sub, 510(k), PCCP cuts, LMR cycles, jurisdictional submissions). |
 
+## Expected Content
+
+Per-category YAML catalogs (`engineering.yml`, `regulatory.yml`, etc.) — one file per milestone category, each containing a list of milestone documents. New categories (clinical, business, etc.) get their own `*.yml` file alongside the existing two; `/tracker generate` enumerates every `*.yml` here.
+
 ## Conventions
 
 - One YAML doc per milestone. Required fields: `id`, `name`, `target_date`, `composition` (list of DHFs in scope), `status`, `description`.
