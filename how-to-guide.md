@@ -1,278 +1,645 @@
-# How-To: Stand Up a New MedTech PDLC Project
+# How-To Guide — PDLC_DEMO Day-to-Day
 
-A reproducible walkthrough for starting a new regulated-device project using the Hitachi skill registry, `medtech-docs`, and the task/strategy skills. Every step is copy-pasteable; decisions that require human judgment are called out explicitly.
+You've finished setup — everything is installed. This guide is how to actually use PDLC_DEMO day-to-day: opening the project, staying current, launching Claude Code, navigating the file tree, using skills, and the key files to read first.
 
-> **Companion doc**: `setup.md` (repo root) onboards a contributor onto *this* repo (clone, security posture, team registration). **This** guide is the inverse: it stands up a *new* program from scratch. Read `setup.md` if you're joining PDLC_DEMO; read this if you're starting your own device project with the same skills.
-
----
-
-## Audience
-
-A team lead or engineer who has been given a new device program and needs to turn an empty directory into a working DHF repository with design controls, standards, tasks, and an architecture-aligned DHF layout — the same shape PDLC_DEMO is in today. DHFs live under `docs/project/dhfs/<name>/` and can be top-level or arranged as parent→child (e.g., a `cloud-suite/` parent with per-service children).
-
-## Flow at a glance
-
-```
-Phase 0 — Prerequisites
-Phase 1 — Clone hitachi + install skills into .claude/
-Phase 2 — Initialize the repo (git, gitignore, remote)
-Phase 3 — Run /medtech-docs init  (scaffolds docs/, project.yml, CLAUDE.md, hooks)
-          → verify the scaffold (docs/ tree, project.yml, hook wiring, dashboard)
-Phase 4 — Personalize CLAUDE.md   (device identity, goals, scope, conventions)
-Phase 5 — Create the first task   (001 project-init — captures the setup itself)
-Phase 6 — Architecture & component strategy task
-          → derive deployable components
-          → decide DHF topology (top-level vs parent→child)
-Phase 6.5 — Import applicable references (standards + FDA guidances)
-            gated on: architecture + regulatory strategy docs populated
-Phase 7 — Scaffold DHFs           (/medtech-docs add-dhf per component)
-Phase 8 — Populate standards, frameworks, and sample inputs
-Phase 9 — Ongoing registry sync with /sync-skills
-Phase 10 — Troubleshooting
-```
+> **Companion docs**:
+> - `setup.md` — new-contributor machine setup (admin → installs → repo → security posture). Read that first if you skipped here directly.
+> - `new-project-bootstrap.md` — for team leads standing up a *brand-new* MedTech project from scratch (different audience).
 
 ---
 
-## Phase 0 — Prerequisites
+## 1. Opening the Project
 
-- Claude Code installed and running
-- `git` with SSH access to `GlobalLogic-a-Hitachi-Company/hitachi`
-- `gh` CLI authenticated (needed later for `/sync-skills push`)
-- `jq` on PATH (used by several skill scripts)
-- A parent directory that will hold both your new project and the hitachi checkout as siblings — the default `local_path` in `project.yml` is `../hitachi`
+### First time
 
-## Phase 1 — Clone hitachi and install skills
+You already opened the project from the terminal during setup. VS Code remembers this.
 
-The `hitachi` registry is the source of truth for skills and agents. A skill is a **directory** (`skills/<name>/SKILL.md` + supporting files) — not a single file. Installing a skill means copying its directory into your project's `.claude/skills/`. (The hitachi `README.md` still shows an older `curl` single-file install under `.claude/commands/` — ignore it; the directory model in `skills/manifest.md` is current.)
+### Every time after that
 
-Clone hitachi **as a sibling** of where your new project will live — `/sync-skills` later resolves the registry via `project.yml` → `registries[hitachi].local_path`, which defaults to `../hitachi`:
+You don't need the terminal anymore — just open VS Code like any other app:
 
-```bash
-cd ~/projects                 # the parent that will hold both repos
-git clone git@github.com:GlobalLogic-a-Hitachi-Company/hitachi.git
-mkdir my-device && cd my-device
-```
+- **Mac**: Press `Cmd+Space`, type **Visual Studio Code**, press Enter. Or click it in your Dock.
+- **Windows**: Click the **Start button**, type **Visual Studio Code**, press Enter.
 
-Install the skills and agents you want. The simplest first pass is to take everything — `/sync-skills` and `/best-practices` reconcile the set afterward:
+VS Code reopens whatever project you had open last. You should see the project files on the left.
 
-```bash
-mkdir -p .claude/skills .claude/agents
-cp -R ../hitachi/skills/*/ .claude/skills/      # each <name>/ directory
-cp    ../hitachi/agents/*.md .claude/agents/     # agent prompt files
-```
+> **Windows users**: Check the **bottom-left corner** of VS Code — you should see **"WSL: Ubuntu"**. This means VS Code is connected to your Linux environment where the tools are installed. If you don't see it, press `Ctrl+Shift+P`, run **"Reopen Folder in WSL"**.
 
-> **Don't copy `skills/manifest.md` or `skills/shared/` blindly** — `manifest.md` is the registry index (not an installed skill), and `shared/` holds cross-skill helpers some skills import. Copy `shared/` only if a skill you installed references it; `/best-practices` will flag a missing dependency.
+If VS Code opens but doesn't show the project, go to **File → Open Recent** and click the `PDLC_DEMO` entry. On Windows, look for the one that says **[WSL: Ubuntu]** next to it.
 
-At minimum you need `medtech-docs`, `task`, and `best-practices` to follow this guide. The rest (`trace-matrix`, `dhf-manifest`, `tracker`, `strategy`, `docflow`, `sync-skills`, …) can be installed now or pulled later with `/sync-skills`.
+---
 
-## Phase 2 — Initialize the repo
+## 2. Staying Up to Date
 
-No skill runs yet — the task-gate hooks aren't wired until Phase 3's `init`. Set up the bare git repo and a starter `.gitignore`:
+The project files are shared through GitHub. When someone on the team makes changes — new documents, updated guides, task updates — those changes get pushed to GitHub. To see them on your computer, you **pull** the latest version.
 
-```bash
-git init
-git branch -M main
-# Seed .gitignore with the patterns init expects (it also adds its own):
-cat > .gitignore <<'EOF'
-_scratch/
-**/_scratch/
-.state/
-**/PHI/**
-.env
-.venv/
-__pycache__/
-*.pyc
-EOF
-git add .gitignore && git commit -m "chore: init repo with starter gitignore"
-```
+**Make this a habit**: every time you sit down to work on the project, get the latest updates first.
 
-Add the GitHub remote when you have one (needed later for `/sync-skills push` and any `gh` operations):
+### The easy way (ask Claude)
 
-```bash
-git remote add origin git@github.com:<your-org>/<your-repo>.git
-```
+Launch Claude Code in your VS Code terminal (§5 below) and ask:
 
-You don't need to push yet. `/medtech-docs init` in Phase 3 generates `project.yml`, `CLAUDE.md`, and the `docs/` tree, which is your first real commit.
+- *"Pull the latest changes from GitHub"*
+- *"Get the latest updates"*
+- *"Sync the project"*
 
-## Phase 3 — Run `/medtech-docs init`
+Claude runs the right commands and tells you what changed.
 
-Run this **before** any `/task` command. Init is what installs and wires the `task` skill's hooks; running `task` first will fail the active-task gate.
+### The manual way (terminal command)
 
-`/medtech-docs init` asks **9** project-context questions (it presents them all at once — answer in one block). Each answer shapes the scaffold. The canonical list lives in `.claude/skills/medtech-docs/SKILL.md` → `### init` → Step 1:
-
-| # | Question | What it controls |
-|---|---|---|
-| 1 | Device type — SaMD / SiMD / combination / other | Which design-controls subfolders get created |
-| 2 | Regulatory pathway — 510(k) / De Novo / PMA / not yet | Submissions scaffold and standards shortlist |
-| 3 | **Modules/functions** the device has (e.g. planning, navigation, monitoring) | Seeds the module/component vocabulary used across design-controls |
-| 4 | AI/ML in any module? | Adds GMLP / PCCP folders and checklists |
-| 5 | Medical imaging (DICOM)? | Adds DICOM-related standards stubs |
-| 6 | EHR integration (HL7 FHIR)? | Adds interop + HL7/FHIR standards stubs |
-| 7 | Surgical navigation / real-time guidance? | Adds motion-safety standards |
-| 8 | Existing docs to import? | Controls whether `docs/internal/source/` is pre-seeded |
-| 9 | **Primary DHF name** (e.g. `pca-device`) — **required, no default** | Becomes the first `project.dhfs[]` entry and the `docs/project/dhfs/<name>/` folder |
-
-> Q3 and Q9 are easy to miss but load-bearing: Q9 has no default and is what gives every project at least one DHF from day one (single-component projects are just N=1). Additional DHFs come later via `/medtech-docs add-dhf` (Phase 7).
-
-After the questions, `init` creates `project.yml`, the `docs/` tree (external / internal / project tiers), per-folder READMEs (with `<!-- AUTO:STRUCTURE -->` sentinels rendered), a starter `CLAUDE.md`, and — critically — **wires the task-gate hooks**. That hook wiring is why `init` must precede any `/task` command (Phase 5).
-
-### Verify the scaffold
-
-Before building on the scaffold, confirm `init` landed everything. Five quick checks — all read-only:
-
-```bash
-# 1. The three-tier docs/ tree exists with READMEs at each level
-find docs -maxdepth 2 -name README.md | sort
-ls docs/external docs/internal docs/project
-
-# 2. project.yml parses and has your primary DHF from Q9
-jq -e '.dhfs[0].path' project.yml        # prints the DHF root, exits non-zero if absent
-#   (project.yml is YAML, but the medtech-docs scripts also keep it jq-readable;
-#    if jq errors, open it and confirm the project:, team:, and dhfs: blocks by eye)
-
-# 3. The task-gate hook is wired into settings.json
-jq '.hooks.PreToolUse' .claude/settings.json   # should reference check-active-task.sh
-
-# 4. Sentinel blocks rendered (not left as empty AUTO:STRUCTURE stubs)
-grep -rl 'AUTO:STRUCTURE' docs --include=README.md | head
-```
-
-Then run the dashboard for the first time — it's the fastest end-to-end confirmation that the scaffold is coherent:
+If you're not in Claude Code, in the VS Code terminal:
 
 ```
-/medtech-docs dashboard
+git pull
 ```
 
-It tallies per-folder document status and per-standard verification coverage. On a fresh scaffold everything reads as empty/`[VERIFY]` — that's expected; you're confirming the dashboard *runs* and sees the tree, not that content exists yet. If the dashboard errors on a missing folder or `project.yml` field, the scaffold is incomplete — re-run `/medtech-docs init` rather than hand-patching.
+This downloads the latest changes and updates your local files. If you see a list of changed files, your project is now up to date. If it says `Already up to date.`, you already have everything.
 
-## Phase 4 — Personalize `CLAUDE.md`
+> **When to pull**: at the start of each work session, or any time someone tells you they've pushed updates.
 
-The init-generated `CLAUDE.md` is a template. Before any task work, replace the placeholders with:
+---
 
-- **Project identity** — device name, model number, predicate (if any), pathway
-- **Scope statement** — what this repo is (DHF? portfolio? demo?) and what it is not
-- **Working conventions** — carry over or adapt the conventions section (docs live in `docs/`, one task = one file, strategy/lessons captured in real time, etc.)
-- **Demo vs. real disclaimers** — if this is a demo, say so explicitly so readers don't mistake fabricated data for real DHF evidence
+## 3. Finding Your Way Around VS Code
 
-Use this repo's `CLAUDE.md` as the reference shape.
+VS Code has a few main areas:
 
-## Phase 5 — Create the first task (`001-project-init`)
+### The Sidebar (left side)
 
-Now that init has wired the task hooks, create:
+The sidebar shows different panels. Switch between them using the icons at the very top:
 
-- `tasks/<person>/000-index.md`
-- `tasks/<person>/001-project-init.md`
+| Icon | Name | What it does |
+|------|------|-------------|
+| 📄 (two pages) | **Explorer** | Shows all project files and folders — where you browse |
+| 🔍 (magnifying glass) | **Search** | Search for text across all files |
+| 🧩 (square blocks) | **Extensions** | Manage add-ons (you installed several during setup) |
 
-Task 001 records the setup work you just performed — prerequisites installed, skills copied, init answers, scaffold verified. This gives the task-gate hook an active task to gate against and makes the setup auditable. Use `tasks/ben/001-project-init.md` in this repo as the template.
+**Explorer** is where you'll spend most of your time.
 
-## Phase 6 — Architecture & component strategy task
+### Opening files
 
-Before scaffolding DHFs, you need to know **what the deployable components are**. Open a new task (e.g., `002-architecture-strategy.md`) whose job is to:
+- **Single-click** a file to **preview** it — opens in a tab, but single-clicking another file replaces it. Good for quick browsing.
+- **Double-click** to **open** it — gets its own tab, stays open.
 
-1. Sketch the system as if you were deploying it today — users, external systems, data flows, trust boundaries.
-2. Identify the deployable components. A component is anything that ships, updates, or gets regulated as a unit: a SaMD app, a pump firmware binary, a cloud service, a connectivity adapter, etc.
-3. For each component, note: owner discipline (SaMD / SiMD / HW / cloud), regulatory status (in-scope / out-of-scope / supporting), and rough interface contract.
-4. Decide the **DHF topology**: every project has at least one DHF (created by `init`). Most real programs have several. The rule of thumb is one DHF per independently-regulated or independently-deliverable component. DHFs can be top-level or nested parent→child (e.g., a `cloud-suite/` parent DHF with per-service child DHFs underneath).
-5. Capture decisions as tagged strategy blocks (`<!-- STRATEGY CONTENT: architecture, ... -->`) so the `strategy` skill can harvest them into the shared strategy doc later.
+> **Tip**: A file in preview mode shows its tab name in *italics*. Double-click the tab to keep it open permanently.
 
-The output of this task is a concrete list like:
+### Viewing Markdown files
+
+Most project files are **Markdown** (`.md`) — plain text with simple formatting (headings, bullets, tables). They look nicer in preview mode:
+
+1. Right-click any `.md` file in the Explorer
+2. Select **"Open Preview"** (or **"Markdown Preview Enhanced: Open Preview"** if you see that option)
+3. A formatted version appears
+
+You can have the raw text and preview open side by side: open the file normally (double-click), then right-click the tab → **"Open Preview to the Side"**.
+
+---
+
+## 4. Using the Terminal Inside VS Code
+
+The **terminal** is a text-based command line built into VS Code. You'll use it to launch Claude Code and occasionally run shell commands.
+
+### Opening the terminal
+
+- **Keyboard shortcut**: Press `` Ctrl+` `` (backtick — next to the `1` key)
+- **Menu**: **Terminal → New Terminal**
+
+A panel appears at the bottom of VS Code. On Mac it's your regular shell; on Windows it's your Ubuntu/WSL environment.
+
+### What the terminal looks like
+
+- **Mac**: `yourname@MacBook PDLC_DEMO %`
+- **Windows (WSL)**: `yourname@COMPUTER:~/projects/PDLC_DEMO$`
+
+The blinking cursor after the `%` or `$` is where you type commands.
+
+### Closing and reopening the terminal
+
+- **Hide** the panel (without closing): `` Ctrl+` `` again
+- **New terminal**: click **+** in the terminal panel's top-right corner
+- **Switch between terminals**: click the dropdown next to **+**
+
+---
+
+## 5. Launching Claude Code
+
+Claude Code is an AI assistant that lives in your terminal. It can read and edit project files, answer questions about the project, and help you draft documents.
+
+### Step by step
+
+1. **Open the terminal** in VS Code (§4 above)
+2. Type:
 
 ```
-dhfs/
-  pca-device/           (primary — pump firmware + on-device UI)
-  connectivity-adapter/ (BLE/WiFi gateway)
-  cloud-suite/          (parent)
-    ingest/
-    clinician-portal/
-    ...
+claude
 ```
 
-PDLC_DEMO's current topology is the worked example.
+3. Press **Enter**
 
-> **Future capability**: this phase is prose-only today. A dedicated skill (e.g., `/medtech-docs plan-topology` or a standalone `architecture` skill) that walks the user through system sketch → component list → DHF topology as a reproducible flow is a likely follow-up once the prose version has been exercised on a second project.
+### First time — login prompts
 
-## Phase 6.5 — Import applicable references
+The first launch will ask you to log in:
 
-**Gate**: do not run this phase until the **architecture** and **regulatory** strategy docs are populated (at minimum). Those docs are what identify *which* standards, FDA guidances, and industry frameworks actually apply to this program — importing references before they exist leads to a pile of untargeted boilerplate in `docs/external/`.
+- A browser opens (or a URL prints) to authenticate with your Claude account
+- Sign in with the account you created during setup
+- Come back to VS Code — the terminal will show you're logged in
+- **One-time** setup — Claude Code remembers you after.
 
-Once the gate is met, the `medtech-docs` skill imports references three ways — pick per source:
+### What you'll see
 
-- **Bundled FDA guidance + standards + frameworks** — run `/medtech-docs update-external-references` (aliases: "import fda guidance", "pull reference guidances"). This reads your `project.yml`, `CLAUDE.md`, and strategy docs, applies an applicability rubric (pathway, device class, software/AI/imaging/EHR signals), and copies the matching **bundled distilled files** from the skill's `references/` into `docs/external/{fda-guidance,standards,industry-frameworks}/`. It is idempotent and never overwrites existing project files. This is the bulk first pass.
-- **A specific standard not in the bundle** — `/medtech-docs add-standard <name>`. Prompts for title, the FDA guidance/regulation that references it, why it's required, and which modules it applies to; creates a distilled starter file and adds it to the folder README table.
-- **A standard you considered but ruled out** — `/medtech-docs evaluate <name> not-required "<rationale>"`. Records the decision trail in the README's "Evaluated — Not Required" table without creating a file, so every standard you weighed has an auditable disposition.
+The terminal changes from a shell prompt to Claude Code's interface — a welcome message and a text input area.
 
-> ⚠️ There is **no** `import-guidance` action — use `update-external-references` for FDA guidance. (Older drafts of this guide named a command that the skill doesn't recognize.)
+**This is now a conversation with Claude** — not a regular terminal. Type questions or requests in plain English; Claude responds.
 
-Each import lands under `docs/external/` as a distilled markdown summary with `[VERIFY]` flags on anything not mechanically extractable. Do not fabricate clause text. Run `/medtech-docs dashboard` afterwards to confirm the imports registered (it tallies per-standard `## Verification Checks` coverage).
+### Talking to Claude Code
 
-> **Why this is a dedicated phase, not part of Phase 3**: `init` seeds a *default* standards shortlist from the 9 project-context answers. The strategy-driven import here is narrower and higher-fidelity — it only pulls what the architecture and regulatory decisions actually require.
+Just type naturally:
 
-## Phase 7 — Scaffold DHFs
+- `What is this project about?`
+- `Show me the active tasks`
+- `Help me understand the folder structure`
+- `What's in the PCA device DHF?`
 
-With the topology decided, run `/medtech-docs add-dhf <name>` for each additional component. The primary DHF already exists from Phase 3. For nested topologies, add child DHFs under their parent. Verify with `/medtech-docs dashboard` and `/best-practices` (the latter dispatches per-DHF subagents).
+Claude reads project files and responds with context-aware answers.
 
-## Phase 8 — Populate standards, frameworks, and sample inputs
+### Exiting Claude Code
 
-With references imported (Phase 6.5) and DHFs scaffolded (Phase 7), start filling content:
+- Type `/exit` and press Enter
+- Or press `Ctrl+C`
 
-- **Convert any source documents you brought in** — if Phase 3 Q8 pre-seeded `docs/internal/source/` with corporate SOPs/templates (DOCX/PDF), run `/docflow adopt <path>` to produce reviewable markdown under `docs/internal/source-md/`. `docflow` owns the pandoc/soffice pipeline (direct calls are blocked by a hook), handles image extraction, frontmatter, and cross-refs.
-- **Seed the first design inputs** — under each DHF's `design-controls/user-needs/` and `requirements/`, author the initial user needs and design inputs. Read the leaf folder's `README.md` first (naming + content rules are enforced there).
-- **Stand up traceability early** — once a DHF has even a few inputs/requirements/tests, run `/trace-matrix init` for that DHF. `trace-matrix` generates project-adaptive parsers at init time (an IoC pattern — don't hand-edit the yml), then `/trace-matrix build` emits the controlled matrix + JSON sidecar.
-- **Check completeness against obligations** — `/dhf-manifest` projects regulatory + QMS obligations into a per-DHF deliverable catalog with a gap report ("are the right documents present?"), complementing trace-matrix's intra-DHF edge checks.
-- **Watch progress** — `/medtech-docs dashboard` for doc-status, `/tracker` for milestone/submission readiness, `/best-practices` for the shared-registry audit.
+You'll see your normal command prompt again.
 
-Everything above is incremental — there's no "all at once." A new project typically lands its first user needs and one DHF's trace matrix, then grows.
+> **Important**: While Claude Code is running, the terminal is in conversation mode — it's not a regular command line. If you need to run a shell command (like `git status`), either exit Claude Code first, or open a **second terminal** (the **+** icon).
 
-## Phase 9 — Ongoing registry sync with `/sync-skills`
+---
 
-`/sync-skills` keeps your installed `.claude/skills` + `.claude/agents` aligned with hitachi, **bidirectionally**. It resolves the registry from `project.yml` → `registries[hitachi].local_path` (default `../hitachi`), and only ever touches `skills/` and `agents/` — never `project.yml`, `.git/`, or anything else. (Current skill version: **v8.2**.)
+## 6. Project Structure — Quick Reference
 
-**`/sync-skills status`** — start here. A read-only, four-surface health check ("are we synced?"): project working tree, project HEAD⇄origin, registry working tree, registry HEAD⇄origin, plus skill-drift counts. Ends in `Overall: SYNCED` or `NOT SYNCED — see <block>`. Run it before switching machines.
+You don't need to memorize this. You can always ask Claude *"Where does this go?"* or *"What's in the docs folder?"*. Here's a quick map:
 
-**`/sync-skills check`** — read-only diff in both directions. Classifies each file: `UPSTREAM_ONLY` (pull candidate), `LOCAL_ONLY` (push candidate), or `UPSTREAM_NEWER` — and for the last, a three-way recommendation: `UPSTREAM_ADVANCE` (safe to pull), `LOCAL_AHEAD` (your copy is newer — push it), or `BOTH_DIVERGED` (manual diff review).
-
-**`/sync-skills pull`** — apply upstream changes, interactively. The key safety property (added in v8 after a bulk-approve clobbered 1131 lines of un-pushed work): `pull` runs mandatory three-way blob-history bucketing and **never auto-applies** `LOCAL_AHEAD` or `BOTH_DIVERGED` files. The default action is "approve the auto-pull bucket only." After applying, it runs a **mandatory Project Impact analysis** — reads every pulled file's changelog + `**Post-update:**` notes and tells you what your project must do (re-run a `setup` action, regenerate a template-derived file, run `/best-practices` for new checks, grep for a renamed term). No silent pulls — if nothing is needed, it says so explicitly.
-
-**`/sync-skills push [--merge] <files…>`** — contribute local fixes upstream. **PR-only by default**: branches from fresh `origin/main`, commits, pushes, opens a PR via `gh`, and stops. Pass `--merge` (or say "push and merge") to opt into `gh pr merge --squash --delete-branch` + fast-forward of the local hitachi checkout. Use `--merge` only for changes you're confident in (your own skill authoring, trivial fixes) — it bypasses human review.
-
-**`/sync-skills sync`** — convenience wrapper: `pull` first, then offer the remaining push candidates.
-
-**`/sync-skills prune`** — branch hygiene. PR-only pushes leave merged `sync/*` branches behind on both sides (they accumulate — one cleanup cleared 111). `prune` dry-runs first, classifies each `sync/*` branch MERGED/UNMERGED against `main`, deletes only MERGED on `--apply`, and never touches `main` or unmerged work.
-
-**Reading `.claude/sync-log.md`** — every `pull` and `push` appends a dated entry (hitachi HEAD, files moved, PR URL, merge status, follow-ups). It's the audit trail for "where did this skill version come from." `prune` deliberately writes **no** entry — it's hygiene, not a sync.
-
-**Safety properties to trust**: path guard (only `skills/`/`agents/`), `sync-skills` self-excluded from its own diffs, `push-prep` always branches from fresh `origin/main`, the script refuses to push directly to `main`, and `push` refuses if the hitachi working tree is dirty.
-
-## Phase 10 — Troubleshooting
-
-| Symptom | Cause / Fix |
+| Folder / file | What's in it |
 |---|---|
-| Skill scripts error on missing `jq` | `jq` isn't on PATH. `brew install jq` (macOS) / `apt install jq`. |
-| `git clone` of hitachi fails with auth error | SSH key not registered with GitHub, or no access to `GlobalLogic-a-Hitachi-Company/hitachi`. Test with `ssh -T git@github.com`; request repo access if you get a 403. |
-| Task-gate hook denies an edit right after `init` | Expected — you have no active task yet. The denial prints the exact `bash .claude/hooks/task-activate.sh add <session> <task>` command. Do Phase 5 (create task 001) first; never bypass the gate. |
-| `/task` fails before `init` was run | Ordering violation — `init` installs the task hooks. Run `/medtech-docs init` first (Phase 3). |
-| `/medtech-docs import-guidance …` "unknown action" | That action doesn't exist. Use `/medtech-docs update-external-references` (Phase 6.5). |
-| `/sync-skills push` fails at PR creation | `gh` not authenticated. `gh auth login`, then re-run `push` — the commit is already on the branch, so it reuses it. |
-| `/sync-skills push` refuses to start | hitachi working tree is dirty. `git -C ../hitachi status`, then commit/stash/clean it. `pull` still works on a dirty tree (reads `origin/main`). |
-| Pulled a skill but `/best-practices` flags a missing dependency | The skill imports something under `skills/shared/` you didn't copy. `cp -R ../hitachi/skills/shared/ .claude/skills/shared/`. |
-| `<!-- AUTO:STRUCTURE -->` tables look stale after adding folders | Re-render: `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py <README>`. `add-dhf` and `best-practices fix` do this for you. |
+| `docs/external/` | Reference material — FDA guidance, ISO/IEC standards, industry frameworks |
+| `docs/internal/` | Corporate procedures we own — SOPs, work instructions, templates (source → markdown) |
+| `docs/project/` | What we're building — input analysis, strategies, per-DHF design controls, submissions |
+| `tasks/` | Per-person task documents (`tasks/<person>/NNN-*.md`) + the lessons ledger |
+| `tools/project-console/` | Local FastAPI console (agents, documents, dashboards) — start with `./tools/project-console/start.sh` |
+| `tools/file-locator-mcp/` | Local semantic-search MCP backing `file-locator` |
+| `.claude/` | Skills, agents, hooks, settings (shared via git, applies to every session) |
+| `CLAUDE.md` | Project operating rules — Claude reads this at the start of every session |
+| `project.yml` | Single source of truth — project identity, DHFs, team roster, security allowlists |
+| `glossary.md` | Project-wide term definitions (PCA, PCCP, SaMD, SiMD, 510(k), DHF, …) |
+| `setup.md` / `setup.sh` | New-contributor onboarding (you just finished) |
+| `how-to-guide.md` | This document |
+| `new-project-bootstrap.md` | How to start a brand-new MedTech project from scratch |
+| `project-overview.md` | One-page project overview anchor doc |
 
 ---
 
-## Resolved decisions & open questions
+## 7. Things to Try Right Now
 
-**Resolved (2026-05-21):**
+A few things to confirm everything works and to get comfortable.
 
-- **Doc home** — stays at repo root as `how-to-guide.md`, a sibling of `setup.md`. The two are peer entry points for different audiences (new-program bootstrap vs. join-this-repo onboarding). Neither belongs under `docs/`, which is the *output* of the process this guide describes.
+### Preview a document
 
-**Still open:**
+1. In the VS Code Explorer, open `docs/project/strategies/`
+2. Double-click `regulatory-strategy.md`
+3. Right-click the file tab → **"Open Preview to the Side"**
+4. You see the formatted version alongside the raw text
 
-- Should Phase 6 (architecture → component list → DHF topology) become its own skill rather than prose? Deferred until the prose flow has been exercised on a second project — flagged inline as a future capability.
-- How much of Phase 4 (CLAUDE.md personalization) can `init` prompt for directly, reducing manual edits?
+### Launch Claude Code and ask a question
+
+1. Open the VS Code terminal (`` Ctrl+` ``)
+2. Type `claude` and press Enter
+3. Type: `What are the active tasks in this project?`
+4. Claude reads the task indexes and lists what's in progress
+5. Type `/exit` to return to the terminal
+
+### Check the task list
+
+1. In Explorer, go to `tasks/` → your folder (e.g., `tasks/ben/`)
+2. Open `000-index.md` — your personal task dashboard
+3. Preview it to see the formatted tables
+
+---
+
+## 8. Next Step: Claude Desktop
+
+Once you're comfortable with Claude Code, explore **Claude Desktop** — the standalone app you installed during setup. Visual chat interface that some people find easier than the terminal.
+
+### Why try Claude Desktop?
+
+- **Visual interface** — feels like a messaging app rather than a terminal
+- **Integrations** — Gmail, Calendar, GitHub built in
+- **Project access (Mac only)** — if you create a project, Claude Desktop can read/edit project files like Claude Code
+
+### Opening Claude Desktop
+
+- **Mac**: `Cmd+Space`, type **Claude**, press Enter
+- **Windows**: Start button, type **Claude**, press Enter
+
+### Starting a project conversation (Mac)
+
+1. Open Claude Desktop → **Projects** in the left sidebar
+2. **Create Project** (or **+**)
+3. Name: **PDLC_DEMO**
+4. **Add folder** / **Connect folder** → navigate to `~/projects/PDLC_DEMO/`
+   - If the picker opens elsewhere, use `Cmd+Shift+G` → type `~/projects/PDLC_DEMO` → Enter
+5. Select the `PDLC_DEMO` folder (not a file inside it)
+6. When prompted, select the **Cowork** mode — lets Claude read and edit project files
+
+Once created, **start new conversations from within the project** (not from the main chat) and make sure **Cowork** is selected.
+
+### Windows users
+
+Claude Desktop's Cowork mode **does not work with WSL-hosted files**. Use **Claude Code in VS Code** (§5) for all project file work on Windows.
+
+You can still use Claude Desktop on Windows for:
+- General conversations with Claude
+- Integrations (Gmail, Calendar, GitHub)
+- Anything that doesn't require reading/editing project files
+
+### Using integrations
+
+Your integrations were set up during installation. Claude Desktop uses them automatically when relevant:
+
+- *"What meetings do I have tomorrow?"* — Google Calendar
+- *"Summarize my unread emails"* — Gmail
+- *"What are the open issues on our repo?"* — GitHub
+
+---
+
+## 9. Key Files to Read
+
+Before diving deeper, open and read these. They give a solid understanding of the project, its terminology, and current status.
+
+### Submission tracker — `docs/project/submissions/submission-tracker.html`
+
+The best place to start — visual dashboard showing every deliverable in the submission package, organized by part (510(k), PCCP, supporting documents). Each item shows status, owner, and readiness.
+
+**How to view it**: In Explorer, navigate to `docs/project/submissions/`. Right-click `submission-tracker.html` → **"Preview in Default Browser"** (Open Browser Preview extension). Opens the full interactive dashboard with collapsible sections.
+
+> **Use your browser, not VS Code preview.** The dashboard has expandable sections and interactive features that don't work in VS Code's built-in HTML viewer.
+
+> The HTML is generated from `submission-tracker.md`. Markdown is the source of truth; Claude updates it and the `/tracker` skill regenerates the HTML. Don't edit the HTML directly.
+
+### Project operating rules — `CLAUDE.md`
+
+The most important file in the repository. Describes:
+- Project scope (PDLC_DEMO is a demo project anchored on the PainEase PCA Advanced PP3500)
+- Three-tier docs hierarchy and information flow
+- Working conventions (one task = one file, capture strategy/lessons inline, etc.)
+- Task-first workflow and the task gate
+- Auto-loaded rules under `.claude/rules/`
+
+**How to open**: double-click `CLAUDE.md` in the project root. Right-click the tab → **"Open Preview to the Side"** for a formatted view.
+
+> You don't need to memorize it — Claude reads it at the start of every session. But skimming once gives you context.
+
+### Terminology — `glossary.md`
+
+Lots of regulatory and medical-device terminology — PCCP, SaMD, SiMD, 510(k), DHF, PCA, etc. The glossary defines them in plain language.
+
+### Project overview — `project-overview.md`
+
+Single-page anchor doc explaining what PDLC_DEMO is, what the PainEase PP3500 device is, and how the agentic workflows are structured. Includes a "Where things live" table that points to every other key artifact.
+
+### Per-DHF design controls
+
+Three DHFs live under `docs/project/dhfs/`:
+
+| DHF | What it is |
+|---|---|
+| `pca-device/` | Primary — PainEase PP3500 pump firmware + on-device UI (SaMD + SiMD combination) |
+| `connectivity-adapter/` | BLE / Wi-Fi gateway between the pump and the cloud |
+| `cloud-suite/` | Cloud services (ingest, clinician portal, drug-library manager) |
+
+Inside each DHF you'll find `design-controls/` (user needs, design inputs, architecture, V&V), `risk-management/`, `cybersecurity/`, and `postmarket/`.
+
+### Your task index — `tasks/<yourname>/000-index.md`
+
+Your personal task dashboard. Active and completed tasks. If you don't have a folder under `tasks/` yet, ask the team lead.
+
+---
+
+## 10. Navigating the Project
+
+PDLC_DEMO has a lot of folders. Here's the tour.
+
+### The three tiers
+
+All documentation lives under `docs/` and is organized into three tiers:
+
+| Tier | Folder | What's in it |
+|------|--------|-------------|
+| **External** | `docs/external/` | Reference material we consume but don't author — FDA guidance, ISO/IEC standards, industry frameworks, clinical literature |
+| **Internal** | `docs/internal/` | Corporate procedures we own — SOPs, work instructions, templates (sourced from the company quality management system) |
+| **Project** | `docs/project/` | What we're building — the actual deliverables, design controls, submissions, and input analysis |
+
+You'll spend most of your time in `docs/project/`. The other two tiers are reference material.
+
+### External documents (`docs/external/`)
+
+FDA guidance, ISO/IEC standards, industry frameworks — **distilled summaries**, not raw copies. We can't include full copyrighted standards or 200-page FDA guidance PDFs in the repo. Instead, Claude reads the originals and produces focused summaries extracting requirements, decision criteria, and key sections relevant to our project.
+
+- **`docs/external/fda-guidance/`** — distilled summaries of FDA guidance documents
+- **`docs/external/standards/`** — distilled summaries of ISO/IEC standards (IEC 62304, ISO 14971, IEC 62366, IEC 60601-x, etc.)
+- **`docs/external/industry-frameworks/`** — IMDRF, AAMI, GMLP frameworks
+- **`docs/external/clinical-literature/`** — published studies and clinical evidence
+
+### Internal documents (`docs/internal/`)
+
+Corporate SOPs, work instructions, forms, and templates start as Word files (`.docx`) or PDFs from the QMS. They go through a conversion so Claude can work with them:
+
+```
+source/              →    source-md/
+Original files            Markdown conversions
+(.docx, .pdf)             (faithful, full-content)
+```
+
+- **`docs/internal/source/`** — original files exactly as received. Don't edit them.
+- **`docs/internal/source-md/`** — markdown conversions, created via the `/docflow` skill. Faithful — same content, different format.
+
+> `docs/internal/source/INDEX.md` lists every internal document by category.
+
+### The `formal/` folders
+
+Deliverables (submission documents, design control records) exist in two forms:
+
+- **Working markdown** — file at the folder root (e.g., `docs/project/submissions/qsub/cover-letter.md`). Where Claude writes and edits. Easy to review and diff.
+- **Formal document** — exported Word/PDF in the `formal/` subfolder (e.g., `…/formal/cover-letter.docx`). Submission-ready version with proper formatting, headers, page numbers.
+
+`/docflow export` converts working markdown into formal documents. Claude handles it when a document is ready for formal review.
+
+> **Rule of thumb**: edit the markdown, not the formal document. The formal version is generated output.
+
+### Quick folder map
+
+| Looking for… | Go to… |
+|---|---|
+| Submission tracker (project status) | `docs/project/submissions/submission-tracker.html` |
+| Q-Sub package (pre-submission to FDA) | `docs/project/submissions/qsub/` |
+| PCCP document | `docs/project/submissions/pccp/` |
+| 510(k) submission package | `docs/project/submissions/510k/` |
+| PCA device DHF (primary) | `docs/project/dhfs/pca-device/` |
+| Connectivity Adapter DHF | `docs/project/dhfs/connectivity-adapter/` |
+| Cloud Suite DHF | `docs/project/dhfs/cloud-suite/` |
+| System architecture | inside each DHF: `design-controls/architecture/` |
+| Risk management | inside each DHF: `risk-management/` |
+| Predicate device research | `docs/project/input-analysis/predicate-analysis/` |
+| FDA guidance summaries | `docs/external/fda-guidance/` |
+| Corporate SOPs | `docs/internal/source-md/` |
+| Your tasks | `tasks/<yourname>/000-index.md` |
+
+### Viewing different file types in VS Code
+
+| File type | How to view |
+|---|---|
+| `.md` (Markdown) | Double-click. For formatted view: right-click the tab → **"Open Preview to the Side"** |
+| `.html` (Dashboards) | Right-click in Explorer → **"Preview in Default Browser"**. Don't use VS Code's built-in viewer — interactive features won't work. |
+| `.docx` (Word) | Double-click — opens with the Document Viewer extension |
+| `.pdf` | Double-click — opens with the vscode-pdf extension |
+| `.xlsx` (Excel) | Double-click — opens with the Document Viewer extension |
+
+### Strategy documents
+
+PDLC_DEMO uses **shared cross-component strategy documents** — one file per domain under `docs/project/strategies/`. Per-component nuance is captured as callout subsections inside each strategy doc.
+
+| Strategy | File |
+|---|---|
+| **Regulatory** | `docs/project/strategies/regulatory-strategy.md` |
+| **Architecture** | `docs/project/strategies/architecture-strategy.md` |
+| **Commercial** | `docs/project/strategies/commercial-strategy.md` |
+| **Development** | `docs/project/strategies/development-strategy.md` |
+| **Testing** | `docs/project/strategies/testing-strategy.md` |
+| **Risk** | `docs/project/strategies/risk-strategy.md` |
+| **Post-Market** | `docs/project/strategies/postmarket-strategy.md` |
+| **Operations** | `docs/project/strategies/operations-strategy.md` |
+
+**Start with `regulatory-strategy.md`** — it covers the filing pathway, module classification, predicate strategy, PCCP scope, and Q-Sub approach. After reading, ask Claude follow-ups to deepen understanding:
+
+- *"Does the PCCP add additional regulatory burdens compared to a standard 510(k)?"*
+- *"Why did we choose a single 510(k) submission instead of filing each module separately?"*
+- *"What if a competitor gets clearance before us — does that help or hurt our predicate strategy?"*
+
+Claude has access to all strategies, FDA guidance summaries, and full project context — so answers are detailed and project-specific, not generic.
+
+> Decisions made during task work get harvested into these strategy docs by the `/strategy` skill (it reads `<!-- STRATEGY CONTENT: ... -->` blocks from task docs).
+
+---
+
+## 11. Advanced: Skills
+
+Once comfortable with Claude Code, you can use **skills** — custom commands built into the project that teach Claude how to do specific tasks the way our team does them.
+
+### What are skills?
+
+Skills are project-specific. They live in `.claude/skills/`. When you use a skill, Claude reads its instructions and follows a defined process — output is consistent across the team, not dependent on how you phrase your request.
+
+### How to use a skill
+
+In Claude Code, type a **slash command** + skill name:
+
+```
+/task list
+```
+
+That's it.
+
+### Available skills
+
+| Skill | Command | What it does |
+|---|---|---|
+| **Task Management** | `/task` | Create, find, list, update, and show tasks. How all work is tracked. |
+| **Checkpoint** | `/checkpoint` | Refresh the active task doc to a resume-ready state before `/clear`, session end, or hand-off |
+| **MedTech Docs** | `/medtech-docs` | Manage the `docs/` structure, file naming, README conventions, generate compliance dashboard |
+| **Strategy** | `/strategy` | Scan task docs for strategy decisions and assemble them into unified strategy documents |
+| **Lessons** | `/lessons` | Capture and promote lessons learned from task work to their permanent home |
+| **Tracker** | `/tracker` | Build/update the submission tracker, render the HTML dashboard, assess readiness |
+| **Trace Matrix** | `/trace-matrix` | Build per-DHF trace matrices (user needs → requirements → architecture → V&V → risk) |
+| **DHF Manifest** | `/dhf-manifest` | Check whether each DHF has the documents regulation + QMS require, with gap reports |
+| **Jira Pull** | `/jira-pull` | Mirror Jira issues locally and detect drift between Jira and the trace matrix (pull-only) |
+| **Best Practices** | `/best-practices` | Audit project setup against the shared skill registry |
+| **Gap Analysis** | `/gap-analysis` | Critique the *content* of artifacts against standards (e.g., "is the hazard register per ISO 14971?") |
+| **Reference Audit** | `/reference-audit` | Verify references and citations in a document — broken links, stale standards clauses, mismatched anchors |
+| **Docflow** | `/docflow` | Convert documents between markdown and formal formats (DOCX, PDF, XLSX) |
+| **Docx / Pptx / Xlsx / Pdf** | `/docx` `/pptx` `/xlsx` `/pdf` | Create, read, edit the matching file type |
+| **Frontend Slides / md-deck** | `/frontend-slides` `/md-deck` | Build polished HTML slide decks from markdown |
+| **File Locator** | `/file-locator` | Semantic file search ("where do we argue MDDS classification?"). Also a background MCP Claude uses automatically. |
+| **Change Control** | `/change-control` | Round-trip docs to/from Google Docs (internal review), Confluence (formal review), Windchill, Jira |
+| **Knowledge Pack Export** | `/knowledge-pack-export` | Package curated project docs into a shareable knowledge pack for an external assistant (Gemini Gem, custom GPT, NotebookLM) |
+| **Web Control** | `/web-control` | Browser-automation infrastructure used by change-control's internal-review tier |
+| **Project Console** | `/project-console` | Scaffold and run the local FastAPI project console |
+| **Digest** | `/digest` | Daily project briefing and CHANGELOG updates — "what changed since yesterday" |
+| **Sync Skills** | `/sync-skills` | Sync this project's skills + agents with the shared registry (Hitachi) — bidirectional |
+| **SecOps** | `/secops` | Security posture — session hooks, permissions allow-list, attestations |
+| **Skill Creator** | `/skill-creator` | Create, modify, audit, and measure skills (meta-skill) |
+
+### You don't need to memorize commands
+
+The slash commands are how skills work under the hood, but **you don't need to use them directly**. Just talk to Claude naturally and it will figure out the right skill. Examples:
+
+**Everyday workflow**
+- *"Let's start a new task on updating the risk analysis for the PCA device"* — Claude uses `/task`
+- *"What tasks are we working on right now?"* — pulls up the active task list
+- *"Show me the submission tracker"* — uses `/tracker`
+- *"Assemble the regulatory strategy from our task docs"* — uses `/strategy`
+- *"I'm about to stop for the day — save where we are so I can pick up later"* — uses `/checkpoint`
+- *"What changed on the project since yesterday?"* — uses `/digest`
+
+**Documents & conversion**
+- *"Convert this markdown to a Word document"* — uses `/docflow`
+- *"Can you create a Word document from the predicate analysis?"* — uses `/docx`
+- *"I need a PowerPoint summarizing our regulatory strategy"* — uses `/pptx`
+- *"Put this data into a spreadsheet"* / *"Merge these PDFs into one"* — uses `/xlsx` / `/pdf`
+
+**Analysis & quality**
+- *"Run a project health check"* — `/best-practices`
+- *"Is our hazard register actually compliant with ISO 14971?"* — `/gap-analysis`
+- *"Check the references in the regulatory strategy doc for broken links"* — `/reference-audit`
+- *"What documents are still missing from the connectivity adapter DHF?"* — `/dhf-manifest`
+- *"Build the traceability matrix"* / *"Does our trace matrix match Jira?"* — `/trace-matrix` / `/jira-pull`
+
+**Finding things & sharing**
+- *"Where do we argue MDDS classification?"* — `/file-locator`
+- *"I need this draft reviewed internally before it goes to the customer"* — `/change-control`
+- *"Package our strategy docs into a shareable assistant for the external team"* — `/knowledge-pack-export`
+
+The slash commands are there if you want a shortcut, but plain English works just as well.
+
+---
+
+## 12. Task-First Workflow
+
+All non-trivial work in PDLC_DEMO starts with an **active task**. The `/task` skill manages task documents under `tasks/<person>/NNN-<name>.md`. A `PreToolUse` hook denies file edits when no task is active for the current session.
+
+This isn't bureaucracy — it's the recovery point if your session drops or gets compacted. Every change has somewhere the team can find it.
+
+### Starting work
+
+1. In Claude Code, just say what you're doing: *"Let's start updating the predicate analysis"*
+2. Claude runs `/task find` to look for a matching active task; if no clear match, it creates a new one and activates it
+3. Claude proceeds with the work, updating the task doc as it goes
+
+### If a file edit is denied
+
+The denial message tells you the exact recovery command — the active task hook prints it. Just say "go ahead" and Claude will activate a task and retry. Never bypass the gate.
+
+### Strategy and Lessons Learned
+
+When a non-obvious decision or insight surfaces during task work, Claude adds a tagged block to the active task **in the same turn**:
+
+```markdown
+<!-- STRATEGY CONTENT: regulatory, predicate -->
+We're picking K190567 as the predicate because...
+<!-- /STRATEGY CONTENT -->
+```
+
+```markdown
+<!-- LESSONS LEARNED: testing -->
+The trace-matrix init action prescribes a project adapter — don't hand-edit the yml.
+<!-- /LESSONS LEARNED -->
+```
+
+The `/strategy` and `/lessons` skills harvest these blocks later — they only surface what was written.
+
+---
+
+## 13. Optional: Internal Review via Google Docs (`change-control`)
+
+Before a doc goes to **formal customer review** (Confluence with Part 11 sign-off), you'll typically want **internal review** by your own team. The `change-control` skill automates the round-trip between your local markdown/docx and a Google Doc reviewers comment on.
+
+This requires the `web-control` browser-automation infrastructure (set up via `setup.sh` if `web-control` is present).
+
+### Pre-flight: `web-control` must be running
+
+```
+bash .claude/skills/web-control/scripts/launch-debug-chrome.sh
+```
+
+A small (~800×700) Chrome window appears. Sign in once with your corporate Google account on first use; session persists across launches.
+
+### The end-to-end flow
+
+```
+You write draft locally
+        │
+        ▼
+You: "I need internal review on this doc"
+        │
+        ▼   /change-control review-start <path>
+        │   ├─ Creates a gdoc in Drive
+        │   ├─ Pastes content (markdown auto-format)
+        │   └─ Adds "## Internal Review — <doc>" section to your task doc
+        ▼
+[Reviewers comment / suggest / edit in the gdoc]
+        │
+        ▼ (next day)
+You: "Anything I need to address?"
+        │
+        ▼   /change-control review-status <path>
+        │   └─ Refreshes the task-doc section with current open items
+        ▼
+You + Claude work through each item in chat
+        │
+        ▼
+You: "Update internal review"
+        │
+        ▼   /change-control review-update <path>
+        │   ├─ Posts replies to addressed comments + resolves them
+        │   └─ Wholesale-pushes new md to the gdoc body
+        ▼
+[Loop until "no new feedback since last sync"]
+```
+
+### Get help inline
+
+```
+python3 .claude/skills/change-control/actions/help.py
+python3 .claude/skills/change-control/actions/help.py review-start
+```
+
+Lists every action with one-line descriptions; per-action gives full usage.
+
+---
+
+## 14. WSL ↔ Windows Networking
+
+> **Mac users**: skip this section.
+
+If you're on Windows + WSL, here's what you need to know about reaching Linux-hosted services (like `project-console`) from a Windows browser.
+
+### The default just works
+
+Modern WSL2 auto-forwards Windows-side `localhost` to the WSL VM. When a Linux service binds to `0.0.0.0:8000` or `127.0.0.1:8000` on a recent WSL build, you can open `http://localhost:8000` in Edge / Chrome / Firefox on Windows and it just works. No `wsl.conf` edits, no port-proxy commands, no firewall rules.
+
+Verify with `cat /etc/wsl.conf` — if no `[network]` block, you're on the default (NAT + auto-forward).
+
+### Troubleshooting matrix — when the default breaks
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Service is up in WSL (`curl localhost:<port>` works inside Ubuntu) but Windows browser shows "can't be reached" | Service is bound to `127.0.0.1` only on a WSL build that doesn't loopback-forward 127.0.0.1 | Bind the service to `0.0.0.0` instead. For project-console: `/project-console run --host 0.0.0.0` |
+| Worked yesterday, doesn't work today, no config changes | WSL VM lost its forwarding state (sleep / hibernation edge case) | In Windows PowerShell: `wsl --shutdown`, then reopen Ubuntu |
+| `cat /etc/wsl.conf` shows `[network]` with `networkingMode=mirrored` | Mirrored mode is enabled and may not have forwarded this port | Either revert to default by removing the `[network]` block + `wsl --shutdown`, or keep mirrored mode and bind to `0.0.0.0` |
+| `%UserProfile%\.wslconfig` shows `localhostForwarding=false` | Someone explicitly disabled the auto-forward | Set `localhostForwarding=true` (or remove the line) and `wsl --shutdown` |
+| Corporate laptop, nothing about config looks wrong | Hyper-V / Defender / corporate firewall blocking the WSL virtual adapter | IT-territory. Workaround: `wsl hostname -I` to get the WSL VM IP, then `http://<that-ip>:<port>` from Windows |
+
+This is about **inbound from Windows → Linux services**. The `web-control` / `change-control` workflow runs entirely Linux-side, so no Windows-to-WSL networking is involved — the only Windows touchpoint is the WSLg display surface.
+
+---
+
+## 15. Getting Help
+
+- **Ask Claude Code** (in VS Code) — your primary tool. Knows the project structure, conventions, and regulatory context. Start here for project work.
+- **Ask Claude Desktop** — great for email, calendar, GitHub integrations. On Mac, also useful for project file work if you set up a Cowork project.
+- **Ask a team member** — if stuck on something Claude can't help with, reach out.
+- **Check `setup.md`** — if a tool stops working or you need to reinstall something, the setup guide has the steps.
+- **Check `new-project-bootstrap.md`** — if you're thinking about how to apply this stack to a *different* device program from scratch.
+
+---
 
 ## Changelog
 
 | Date | Author | Summary |
 |------|--------|---------|
-| 2026-05-21 | Ben Xavier | Filled all skeleton TODOs (Phases 1, 2, 8, 9, 10) under task 002. Corrected three drift findings verified against the live SKILLs: init asks **9** questions not "~8" (added Modules/functions + Primary DHF name to the table); replaced the non-existent `/medtech-docs import-guidance` with `update-external-references`/`add-standard`/`evaluate`; expanded Phase 9 to sync-skills **v8.2** (`status`, `prune`, three-way pull bucketing). Resolved doc-home open question (stays at root, sibling of `setup.md`). Added companion-doc cross-reference. |
-| 2026-04-13 | Ben Xavier | Initial skeleton — 10-phase outline created under task 002. |
+| 2026-05-30 | Ben Xavier | Rewrote how-to-guide.md as a day-to-day usage guide modeled on the arthrex-pccp sister project's `getting-started.md` (task ben/069). New audience: post-setup contributor learning to use the project. 15-section structure: opening the project → `git pull` habit → VS Code basics → terminal → launching Claude Code → project structure → things to try → Claude Desktop → key files to read → navigation tour → skills overview → task-first workflow → optional change-control internal review → WSL networking → getting help. Replaces prior content (new-MedTech-project bootstrap) which moved to `new-project-bootstrap.md`. |

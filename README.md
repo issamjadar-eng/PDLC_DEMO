@@ -37,7 +37,10 @@ This is a working **demo**, not a regulatory submission. Fabricated clinical dat
 ├── tools/project-console/  # Local FastAPI console (agents, documents, dashboards)
 ├── .claude/                # Skills, agents, hooks, settings
 ├── glossary.md             # Project-wide term definitions
-├── how-to-guide.md         # Setup and walkthrough guide
+├── setup.md                # New contributor onboarding — admin → installs → repo → security
+├── setup.sh                # Idempotent installer (mac / WSL / linux; --check mode)
+├── how-to-guide.md         # Day-to-day usage for contributors (after setup)
+├── new-project-bootstrap.md # How to stand up a brand-new MedTech project from scratch
 └── CHANGELOG.md            # Project-wide change log
 ```
 
