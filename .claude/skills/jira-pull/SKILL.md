@@ -74,8 +74,9 @@ No Atlassian site, project, or device names live in the skill source. Forking-by
 docs/project/_jira/
 ├── README.md                       ← purpose + pull-only HARD RULE (authored separately)
 ├── _meta.json                      ← top-level last-refresh metadata
-├── _global/
-│   └── user-needs.json             ← (future) UN extraction once external source identified
+├── _global/                        ← layers with project-wide scope (no per-version routing)
+│   ├── user-needs.json             ← (future) UN extraction once external source identified
+│   └── <layer>-untagged.{json,md}  ← layer items with no fixVersion (see "Untagged items" below)
 ├── <arch-name-lowercased>/         ← e.g. pre-op, intra-op, mgmt-services
 │   ├── _meta.json                  ← per-DHF available versions
 │   └── <version-id>/               ← e.g. v1.0.0, v2.0.0
@@ -90,6 +91,28 @@ docs/project/_jira/
 │       └── drift.md                ← human-readable drift report (count by severity, by rule)
 └── _cache/                         ← request cache (gitignored), TTL = change_control.jira.cache.max_age_hours
 ```
+
+### Untagged items (`_global/<layer>-untagged.{json,md}`)
+
+Some Jira layers will have issues that legitimately carry no `fixVersion`:
+
+- **Sub-tasks** rarely inherit a parent's `fixVersion`. The sub-task issuetypes a project mirrors (e.g., Hazard Cause as a child of Hazard, or Story Defect as a child of Story) often have a mix of fixVersion-tagged and untagged items — even when the parent is tagged.
+- **Project-wide registries** (e.g., a single rolling Risk Register that spans releases) may be authored without fixVersion as a matter of process.
+
+Per-version JQL (`AND fixVersion = "<X>"`) silently drops these items. Without
+a per-layer countermeasure, the per-version mirrors look complete while a
+material slice of the universe is invisible.
+
+The countermeasure is a parallel pull with `... AND fixVersion is EMPTY`,
+written to `_global/<layer>-untagged.{json,md}`. The per-version mirror
+remains the authoritative "what's in this release"; the global untagged
+snapshot captures "what's project-wide but unrouted." Drift rules in
+`lib/drift_rules.py` know to treat `_global/<layer>-untagged/` items as
+intentionally-unversioned — they are NOT flagged as A-category item drift.
+
+A layer is routed to `_global/<layer>-untagged/` when the project declares
+`include_untagged: true` for that layer in `change_control.jira` (see the
+project-agnostic configuration section).
 
 **Folder naming uses architecture names, not Jira's legacy fixVersion strings.** A DHF's mirror folder is `dhfs[].architecture_name` lowercased and hyphenated — e.g. an architecture name `Management Services` becomes `mgmt-services/`. The mapping from Jira's fixVersion strings to architecture/marketed names lives in `project.yml`.
 

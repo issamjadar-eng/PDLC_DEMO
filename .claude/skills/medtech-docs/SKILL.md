@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 25
-updated: 2026-05-15
+version: 30
+updated: 2026-05-29
 ---
 
 # MedTech Docs
@@ -42,7 +42,10 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `rules/sentinel-blocks.md` | `init` (Step 2c Check 4) | Canonical source for `.claude/rules/sentinel-blocks.md` — the `AUTO:STRUCTURE` sentinel convention spec that `scripts/render-sentinels.py` and `/best-practices fix` depend on. `init` symlinks it into `.claude/rules/`. |
 | `rules/audit-wiring-before-adding-fields.md` | `init` (Step 2c Check 5) | Canonical source for `.claude/rules/audit-wiring-before-adding-fields.md` — grep `project.yml` + sibling configs before adding metadata/schema/structural prose; reference the wiring, don't redeclare it. `init` symlinks it into `.claude/rules/`. |
 | `rules/claude-md-references.md` | `init` (Step 2c Check 6) | Canonical source for `.claude/rules/claude-md-references.md` — persistent docs reference durable artifacts, never task documents. `init` symlinks it into `.claude/rules/`. |
-| `claude-md-task-discipline.md` | `init` (Step 2c Check 7) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
+| `rules/ground-in-contracts-not-assumptions.md` | `init` (Step 2c Check 7) | Canonical source for `.claude/rules/ground-in-contracts-not-assumptions.md` — when reasoning about how another component (sibling skill, agent, schema, script) behaves, read its contract first and cite specific lines; do not invent behavior from pattern memory. Design-time sibling to `audit-wiring-before-adding-fields` (authoring-time). `init` symlinks it into `.claude/rules/`. |
+| `rules/doctype-governance.md` | `init` (Step 2c Check 7b) | Canonical source for `.claude/rules/doctype-governance.md` — before editing a document under a `.taxonomy.yml`-governed folder, walk up to find the nearest taxonomy, look up the parent-folder slug in `mappings[]`, and read the listed `governing_qms.{forms[], sops[], work_instructions[]}` from the QMS registry before authoring changes. Project-agnostic — no FORM/SOP IDs, no DHF names. `init` symlinks it into `.claude/rules/`. |
+| `hooks/taxonomy-freshness.sh` | `init` (Step 2c Check 7c) | SessionStart hook that warns when any project `.taxonomy.yml` is past its `last_updated + review_cadence_days` threshold. Throttled to one notification per 24h per project via `.state/taxonomy-freshness-reminded` marker. Symlinked into `.claude/hooks/` and registered via `register-hook.sh` (SessionStart, no matcher). |
+| `claude-md-task-discipline.md` | `init` (Step 2c Check 8) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -330,13 +333,26 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 
 **Check 6 — `claude-md-references` rule**: symlink `.claude/rules/claude-md-references.md` → `../skills/medtech-docs/rules/claude-md-references.md` (same idempotency). This rule keeps persistent docs (CLAUDE.md, `project.yml`, READMEs, strategy/architecture docs) referencing durable project artifacts rather than transient task documents.
 
-**Check 7**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
+**Check 7 — `ground-in-contracts-not-assumptions` rule**: symlink `.claude/rules/ground-in-contracts-not-assumptions.md` → `../skills/medtech-docs/rules/ground-in-contracts-not-assumptions.md` (same skip / repoint / leave-fork idempotency as Check 3). This HARD RULE tells Claude to read a component's contract (SKILL.md / agent prompt / schema / source / README / frontmatter) before reasoning about how it behaves — and to cite specific lines when describing behavior. Design-time sibling of `audit-wiring-before-adding-fields` (which is the authoring-time counterpart). It is an auto-loaded `.claude/rules/` file; no CLAUDE.md insertion is needed.
+
+**Check 7b — `doctype-governance` rule**: symlink `.claude/rules/doctype-governance.md` → `../skills/medtech-docs/rules/doctype-governance.md` (same skip / repoint / leave-fork idempotency as Check 3). Tells Claude that mirrored regulated docs (per-DHF `.taxonomy.yml`-governed folders) have a QMS form/SOP/WI authoring contract; read those before editing. It is an auto-loaded `.claude/rules/` file; **also append a one-line pointer to the Auto-loaded rules section of CLAUDE.md** (the line `- doctype-governance.md — …`) so readers of CLAUDE.md learn the rule exists without needing to enumerate `.claude/rules/`.
+
+**Check 7c — `taxonomy-freshness` SessionStart hook**: ensure `.claude/hooks/` exists, then symlink `.claude/hooks/taxonomy-freshness.sh` → `../skills/medtech-docs/hooks/taxonomy-freshness.sh` (skip if it already points there; repoint if the target moved; leave forks alone). Then register the hook via the shared helper:
+
+```bash
+.claude/hooks/register-hook.sh SessionStart "" command \
+  '"$CLAUDE_PROJECT_DIR"/.claude/hooks/taxonomy-freshness.sh'
+```
+
+The helper is idempotent (no duplicate entries on re-run). The hook silently no-ops on projects with no `.taxonomy.yml` files; on projects that have one, it emits a single throttled SessionStart system reminder if the file's `last_updated + review_cadence_days < today`. Pairs with the five new audit rows in this skill's README "Best Practices" table (taxonomy freshness, filesystem coverage, ID resolvability) so on-demand `/best-practices audit` and automatic SessionStart together cover both push and pull notification modes.
+
+**Check 8**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
 
 **Insert task discipline section** (place inside the existing "For Claude" section, after the "Task-First Workflow" subsection if present; otherwise append to "For Claude"):
 
 Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-task-discipline.md` and insert it. The template is the single source of truth for the task-discipline language — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block defines the "update active task doc as you go" hard rule, which is the recovery contract for dropped/compacted/interrupted sessions.
 
-This ensures every project initialized by `/medtech-docs init` gets, from day one, the README convention, the four medtech-docs-owned auto-loaded rules (`readme-before-write`, `sentinel-blocks`, `audit-wiring-before-adding-fields`, `claude-md-references`), and the task-discipline rule — not just the scaffolded README files, but the rules telling Claude how to use and maintain them.
+This ensures every project initialized by `/medtech-docs init` gets, from day one, the README convention, the six medtech-docs-owned auto-loaded rules (`readme-before-write`, `sentinel-blocks`, `audit-wiring-before-adding-fields`, `claude-md-references`, `ground-in-contracts-not-assumptions`, `doctype-governance`), the SessionStart taxonomy-freshness hook, and the task-discipline rule — not just the scaffolded README files, but the rules + hook telling Claude how to use and maintain them.
 
 **Step 3 — Create the folder structure and READMEs**
 
@@ -770,13 +786,13 @@ For each bundled distilled file in `${CLAUDE_SKILL_DIR}/references/{fda-guidance
 | Distilled file | Triggers when |
 |---|---|
 | `qsub-distilled.md` | always (any active FDA engagement) |
-| `510k-se-distilled.md` | `regulatory_pathway == 510k` |
+| `510k-se-distilled.md` | `regulatory_pathway` starts with `510k` (covers `510k` and `510k+pccp`) |
 | `sw-functions-distilled.md` | any software content (SaMD, SiMD, or device with software) |
 | `sw-changes-distilled.md` | 510(k) pathway AND existing predicate / cleared device with software changes |
 | `cybersecurity-distilled.md` | any device containing software |
 | `mfd-distilled.md` | device has multiple functions and at least one is non-device (per MFD guidance criteria) |
 | `cds-distilled.md` | any clinical decision support functionality |
-| `pccp-general-distilled.md` | strategy docs mention a PCCP, OR `regulatory_pathway == 510k` and project is planning iterative changes |
+| `pccp-general-distilled.md` | strategy docs mention a PCCP, OR `regulatory_pathway` starts with `510k` and project is planning iterative changes |
 | `pccp-aiml-distilled.md` | PCCP applicable AND AI/ML capability present |
 | `ai-dsf-lifecycle-distilled.md` | any AI/ML capability |
 

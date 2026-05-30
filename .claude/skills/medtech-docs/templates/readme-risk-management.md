@@ -19,6 +19,20 @@ Working markdown files live at the folder root. Controlled deliverables (DOCX fo
 
 The upstream **risk strategy brief** (approach to ISO 14971, platform-level hazard chains, cross-component risk controls) lives at `docs/project/strategies/risk-strategy.md` — shared across the whole project, with per-component callouts. The files in this folder are the formal outputs that the strategy informs.
 
+## Related mirrors (system-of-record sources)
+
+When the project maintains a system-of-record mirror under `docs/project/_jira/` (Jira) or `docs/project/_confluence/` (Confluence), the files there are **upstream** of the formal deliverables in this folder — the xlsx / docx in `formal/` are typically exports of structured data that lives in the system-of-record. Treat the mirror as the canonical source when grounding hazard or FMEA analysis; the deliverable folder holds the controlled snapshot for filing.
+
+| Mirror | Where to look | What it contains |
+|---|---|---|
+| Jira | `docs/project/_jira/<arch>/<version>/` | Per-layer sidecars (`hazards.{json,md}`, `hazard-causes.{json,md}`, etc.) — set declared by `change_control.jira` in `project.yml`. `_global/<layer>-untagged.{json,md}` holds items with project-wide scope (e.g., sub-tasks that don't carry a fixVersion). |
+| Confluence | `docs/project/_confluence/<space>/<area>/` | Adopted Confluence pages and their attachments — SRA / HTM / PHA / dFMEA pages in their as-authored form. |
+
+If a refresh-time gap appears (mirror missing the layer you expected, or the
+formal deliverable diverges from the mirror), surface it as drift — don't
+patch the mirror by hand. The mirror is regenerated, the deliverable is
+exported.
+
 ## Relationship to other folders
 
 ```

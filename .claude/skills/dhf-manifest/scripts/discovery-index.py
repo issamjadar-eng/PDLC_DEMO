@@ -98,6 +98,18 @@ def external_folder_exists(taxonomy: dict, folder_name: str) -> bool:
     return folder_name in (taxonomy.get("mappings") or {})
 
 
+def taxonomy_governing_qms(taxonomy: dict, folder_name: str) -> dict | None:
+    """Look up `governing_qms` for a taxonomy folder. Returns the dict (with
+    forms/sops/work_instructions/upstream_inputs/note fields) or None if the
+    mapping does not declare governance (the field is OPTIONAL per the
+    taxonomy.yml schema v0.3). Consumers downstream (advisor agents, doc
+    renderers) treat absence as 'unverified, no claim' rather than 'no
+    governance' — different semantics from `forms: []` + `note:`."""
+    mapping = (taxonomy.get("mappings") or {}).get(folder_name) or {}
+    gov = mapping.get("governing_qms")
+    return gov if isinstance(gov, dict) else None
+
+
 def glob_pattern(pattern: str, search_root: Path) -> list[Path]:
     """Glob a single pattern under search_root. Patterns containing '/' are
     treated as project-relative; others are matched against immediate children."""
@@ -396,13 +408,27 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
             nested_root = dhf_path / discovery_root / taxonomy_folder
             flat_file = dhf_path / discovery_root / f"{taxonomy_folder}.md"
 
+            # Look up taxonomy-declared QMS governance for this folder. Attached
+            # to the resolved entry below so downstream consumers (advisor
+            # agents reading the discovery index, /medtech-docs sentinel
+            # renderer) can surface which FORM/SOP/WI govern this doctype
+            # without re-reading the taxonomy file. (schema v0.3+)
+            gov_qms = taxonomy_governing_qms(taxonomy, taxonomy_folder)
+
             # Sub-convention A: nested folder layout — <discovery_root>/<folder>/v*.md
             if nested_root.is_dir():
                 _bind_per_dhf(role_name, dhf_id, nested_root, patterns, project_root, output,
                               f"{discovery_root}/{taxonomy_folder}" if discovery_root else taxonomy_folder)
+                entry = output["dhf_roles"][dhf_id].get(role_name)
+                if isinstance(entry, dict) and gov_qms:
+                    entry["governing_qms"] = gov_qms
+                    entry["taxonomy_folder"] = taxonomy_folder
             # Sub-convention B: flat file layout — <discovery_root>/<folder>.md
             elif flat_file.is_file():
                 entry = build_entry(flat_file, project_root, f"{taxonomy_folder}.md (flat-file)")
+                if gov_qms:
+                    entry["governing_qms"] = gov_qms
+                    entry["taxonomy_folder"] = taxonomy_folder
                 output["dhf_roles"][dhf_id][role_name] = entry
             else:
                 output["dhf_roles"][dhf_id][role_name] = None
@@ -561,7 +587,7 @@ def main() -> int:
     slug = project_slug(project_yml)
 
     output = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "generated": datetime.now(timezone.utc).isoformat(),
         "project": slug,
         "project_roles": {},
@@ -571,6 +597,11 @@ def main() -> int:
         "gaps": [],
         "ambiguity_notes": [],
     }
+    # schema 1.1 vs 1.0: external-mode per-DHF entries may carry
+    # `governing_qms` (dict) + `taxonomy_folder` (str) when the project's
+    # `.taxonomy.yml` declares `governing_qms` for that folder. Absence means
+    # the taxonomy does not declare governance — different from forms:[] which
+    # means intentionally no QMS form. See `taxonomy_governing_qms()`.
 
     for role_name, role_def in (registry.get("roles") or {}).items():
         override = overrides.get(role_name) or {}

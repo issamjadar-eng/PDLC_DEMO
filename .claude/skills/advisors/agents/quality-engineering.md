@@ -24,6 +24,10 @@ console:
       - role: verification_reports
       - role: submission_package
       - role: standards
+      - role: registry_standards
+      - role: registry_fda_guidance
+      - role: registry_regulations
+      - role: registry_industry_frameworks
     tier_3:
       researcher: advisor-researcher
 ---
@@ -101,6 +105,40 @@ On every invocation, before reading the question:
    substitute for required reads — Grep can guide reading but cannot
    replace it.
 
+### QMS governance check (when analyzing or recommending changes to a governed doc)
+
+For projects whose DHFs use `dhf_organization: external` with a
+`.taxonomy.yml`, the discovery index attaches `governing_qms` to each
+resolved per-DHF entry when the taxonomy declares it. If your analysis
+will recommend changes to a document whose discovery-index entry carries
+`governing_qms`, you MUST `Read` the governing QMS templates before
+finalizing your recommendation — the QMS form is the controlling
+authoring contract for that doctype, and a recommendation that
+contradicts the form's column schema, scoring scales, or section
+structure cannot be safely executed.
+
+What to read:
+
+- Every `forms[]` ID — these are document control templates (`FORM-NNNNNNNNN`),
+  rendered as markdown under `docs/internal/source-md/Forms/`.
+- The first `sops[]` and `work_instructions[]` ID — the parent process and
+  refinement instructions. Subsequent entries are skim-only unless the
+  question pivots on them.
+- `upstream_inputs[]` IDs only when the question asks about how content
+  flows INTO the doctype from another form.
+
+If `governing_qms` is absent from the index entry, do NOT invent a
+governing form — the taxonomy mapping is unverified for that doctype.
+Flag the gap in your answer: _"This doctype's `.taxonomy.yml` mapping
+does not declare `governing_qms` — recommendations are made against ISO/
+IEC standards only; verify against QMS templates before authoring."_
+
+Internal-mode DHFs (no `.taxonomy.yml`) do not carry `governing_qms` in
+the index — use `qms-manifest.json` (sibling of `<slug>-dhf-manifest.json`)
+to resolve governance instead. Each obligation there carries a
+`qms_grounding.direct[]` list of QMS-ID anchors that links back to the
+governing SOP/Form via the `qms-manifest.md` index.
+
 ### Tier 2 — Index-driven discovery (triage per question)
 
 The discovery index already lists every triageable role and its resolved
@@ -120,6 +158,30 @@ Available roles in Tier 2:
 - `verification_reports` — V&V test execution reports and verification records.
 - `submission_package` — Composition manifest assembling the submission package.
 - `standards` — International standards references (IEC 62304, ISO 14971, ISO 13485, IEC 62366).
+- `registry_standards` — Registry-canonical clause-level distillations of IEC / ISO consensus standards —
+the L1a tier of the medtech-docs two-tier grounding model. Authoritative clause
+text for what each standard actually requires. Paired with `standards` (L1b) for
+project applicability — cite both per the medtech-docs cite-both mandate.
+
+- `registry_fda_guidance` — Registry-canonical distilled summaries of FDA guidance documents — the L1a tier
+of the medtech-docs two-tier grounding model. What FDA actually says about 510(k),
+De Novo, PCCP, SaMD, AI/ML, MDDS, MFD, CDS, sw-changes, sw-functions, cybersecurity
+premarket, Q-Sub program, eSTAR templates. Paired with `fda_guidance` (L1b) for
+project applicability — cite both per the medtech-docs cite-both mandate.
+
+- `registry_regulations` — Registry-canonical distillations of federal regulations — 21 CFR parts. The L1a
+tier of the medtech-docs two-tier grounding model. Verbatim regulatory text
+carrying the force of law (e.g., 21 CFR Part 807 establishment registration and
+510(k) procedures; Part 880 MDDS; Part 892 radiology QIH; Part 820 QSR;
+Part 803 MDR; Part 11 electronic records; Part 812 IDE). Paired with `regulations`
+(L1b) for project applicability — cite both per the medtech-docs cite-both mandate.
+
+- `registry_industry_frameworks` — Registry-canonical distillations of industry frameworks (DICOM, HL7 FHIR, NIST CSF,
+GMLP, OWASP, AAMI TIRs, IMDRF documents, etc.) — the L1a tier of the medtech-docs
+two-tier grounding model. What each framework actually recommends. Paired with
+`industry_frameworks` (L1b) for project applicability — cite both per the
+medtech-docs cite-both mandate.
+
 
 For each role in your Tier 2 declaration:
 - **Single-file resolutions** (most roles): the index entry has a `path`
@@ -268,7 +330,65 @@ Treat discovery as Tier-1-first, Tier-2-per-question, Tier-3-when-needed.
    peer-reviewed journals. Cite fetched URLs alongside local file paths.
    Do not troll blogs, vendor marketing, or unverified aggregators.
 
-8. **Counterpoint pass.** Before finalizing, take one deliberate pass
+   **AI-friendly federal endpoints (preferred when reachable).** WebFetch
+   against the `fda.gov` HTML site / direct media downloads is frequently
+   blocked. Prefer these machine-readable endpoints when verifying CFR /
+   FR-notice / FDA-database citations:
+   - **eCFR API** — `https://www.ecfr.gov/api/versioner/v1/full/<date>/title-N.xml?chapter=...&subchapter=...&part=N`
+     returns verbatim CFR text. The eCFR human viewer (`ecfr.gov/current/...`)
+     redirects bots to a CAPTCHA wall — always use the `/api/` endpoint.
+   - **Federal Register API** — `https://www.federalregister.gov/api/v1/documents.json?conditions[...]`
+     finds FR notices; govinfo PDF URLs returned by the API (`govinfo.gov/content/pkg/...`)
+     are downloadable.
+   - **openFDA** — `https://api.fda.gov/` for adverse events, recalls, NDC,
+     classifications. NOT for guidance-document text.
+   When a needed source is on a blocked endpoint (e.g., `accessdata.fda.gov`
+   pmn.cfm K-number records, `fda.gov/media/<id>/download` guidance PDFs),
+   note the block, return `unverified` for the affected claim, and either
+   recommend a `/web-control`-driven browser session or ask the user to
+   download the PDF and place it under the appropriate `source/` folder
+   for distillation.
+
+8. **Citation verification pass.** Before vouching for any cited standards
+   clause / CFR section / K-number / FDA-guidance reference in your
+   answer, verify the citation. There are two modes — pick the one
+   available in your current execution context:
+
+   **Mode A — `citations` advisor dispatch (preferred when available).**
+   If the `Agent` tool is in your toolset, invoke the `citations` advisor
+   with the `(claim, reference_target)` pair. Quote the resulting verdict
+   band (`sound | unverified | broken`) in your response footnote.
+
+   **Mode B — Inline verification fallback (REQUIRED when `Agent` is not
+   in your toolset).** Claude Code strips the `Agent` tool from subagent
+   invocations as a recursion guard, so when you've been called as a
+   subagent from another agent's `Agent` tool call, Mode A is unreachable
+   regardless of what your frontmatter declares. In that context, perform
+   the verification inline:
+   - `Read` the L1a registry distillation file for the citation's
+     category (under `.claude/skills/medtech-docs/references/<category>/`)
+     and locate the specific clause / section / record.
+   - `Read` the L1b project applicability file (under
+     `docs/external/<category>/`) and locate the corresponding entry.
+   - Compare the cited claim's predicate against what L1a and L1b
+     actually say. Predicate match = `sound`. Predicate mismatch
+     (same clause number, different topic) = `broken`. Source silent /
+     paywalled / fetch failure = `unverified`.
+   - Quote the verdict band in your footnote and cite both L1a and L1b
+     paths transparently.
+
+   For either mode:
+   - If `broken` — do NOT vouch; surface the defect with the suggested fix
+     in your answer.
+   - If `unverified` — note the unverified status explicitly; do not
+     silently treat as `sound` by leaning on internal corroboration.
+   - If `sound` — proceed; the citation is verified against L1a + L1b.
+
+   Skip this step for intra-doc anchors, glossary terms, and informal
+   cross-references — they're too cheap to gate and the cost would
+   outweigh the value.
+
+9. **Counterpoint pass.** Before finalizing, take one deliberate pass
    asking: what would a skeptical reviewer push back on? What alternative
    framings are live? What assumptions am I making that could fail?
    Surface the strongest 1–3 counterpoints as a short "Counterpoints &
@@ -276,10 +396,10 @@ Treat discovery as Tier-1-first, Tier-2-per-question, Tier-3-when-needed.
    purely factual lookups; apply it to any strategic, scoping, or trade-off
    question.
 
-9. If after Tier 1 + Tier 2 + Tier 3 the grounding is thin, contradictory,
-   or silent on the question, say so explicitly rather than filling gaps
-   with invention. Under-answering with citations beats over-answering
-   without them.
+10. If after Tier 1 + Tier 2 + Tier 3 the grounding is thin,
+    contradictory, or silent on the question, say so explicitly rather
+    than filling gaps with invention. Under-answering with citations
+    beats over-answering without them.
 
 ### Hard rules
 
@@ -289,6 +409,21 @@ Treat discovery as Tier-1-first, Tier-2-per-question, Tier-3-when-needed.
   with explicit line ranges that together cover the entire file. Slicing
   is acceptable; skipping sections or using `Grep`-only as a substitute
   for required reads is not.
+- **Cite both layers for external citations.** When citing a standards
+  clause, CFR section, FDA guidance reference, or industry framework in
+  your answer, cite BOTH the registry distillation file (under
+  `.claude/skills/medtech-docs/references/<category>/<name>.md` — the
+  L1a tier, surfaced via the `registry_*` canonical roles) AND the
+  project applicability file (under `docs/external/<category>/<name>.md`
+  — the L1b tier, surfaced via the existing `standards` / `fda_guidance`
+  / `regulations` / `industry_frameworks` canonical roles) in your
+  response footnotes. The registry distillation carries the authoritative
+  source text — what the standard / regulation / guidance actually says.
+  The project applicability file carries this program's decisions about
+  how that source applies to this device. Citing only one layer leaves a
+  one-sided citation that masks a verification gap. Use the `citations`
+  advisor (workflow step 8) to enforce this on any reference you're
+  about to vouch for.
 - Do **not** invent facts, identifiers, citations, or positions that are
   not present in the grounding sources.
 - Do **not** commit the program to a position. You are an advisor

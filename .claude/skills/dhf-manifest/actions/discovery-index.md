@@ -137,6 +137,45 @@ the paired gap.
 so the reviewer can confirm the resolver picked correctly — or, in the
 no-winner case, add a more specific pattern.
 
+## External-mode governance enrichment (schema 1.1+)
+
+In external mode (`dhf_organization: external`, where folder→role mapping is
+mediated by a `.taxonomy.yml` file), each resolved entry MAY carry two
+additional fields when the taxonomy declares them for the matching folder:
+
+| Field | Type | Source | Meaning |
+|-------|------|--------|---------|
+| `governing_qms` | dict | `mappings[<folder>].governing_qms` in `.taxonomy.yml` | Dict with `forms[]`, `sops[]`, `work_instructions[]`, `upstream_inputs[]`, and `note` keys — IDs of QMS documents that govern producing this doctype |
+| `taxonomy_folder` | str | the matched folder slug | The folder basename used in the `.taxonomy.yml` lookup, exposed for downstream tooling (e.g., `/medtech-docs render-sentinels`) to round-trip back into the taxonomy |
+
+Semantics:
+
+- **Absent `governing_qms`** = the taxonomy mapping does not declare governance for this folder. Downstream consumers should treat this as "unverified" rather than "no governance" — the form/SOP may exist but hasn't been authored into the taxonomy yet.
+- **`governing_qms.forms: []` with `note:`** = the taxonomy explicitly declares no QMS form backs this doctype (an intentional null — team convention rather than QMS-controlled artifact). Distinct from absence.
+- Internal-mode entries do NOT carry `governing_qms` — internal mode has no taxonomy file to read from. Governance for internal-mode artifacts is sourced through `qms-manifest.json` (by `topic` + `canonical_role`).
+
+Example resolved entry (external mode, generic doctype):
+
+```json
+"hazard_analysis": {
+  "path": "docs/project/<dhf>/<discovery-root>/<doctype-slug>/v1.0.0.md",
+  "exists": true,
+  "size_bytes": 19483,
+  "tokens_estimate": 4870,
+  "matched_pattern": "v*.md",
+  "taxonomy_folder": "<doctype-slug>",
+  "governing_qms": {
+    "forms": ["FORM-NNNNNNNNN"],
+    "sops": ["SOP-NNNNNNNNN"],
+    "work_instructions": ["WI-NNNNNNNNN"],
+    "upstream_inputs": ["FORM-NNNNNNNNN", "FORM-NNNNNNNNN"],
+    "note": "..."
+  }
+}
+```
+
+Consumers (advisor agents, sentinel renderer, /best-practices governance check) read these fields to know which FORM/SOP/WI govern producing or modifying the resolved evidence.
+
 ## Cadence
 
 | When | Action | Why |

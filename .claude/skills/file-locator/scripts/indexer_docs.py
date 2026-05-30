@@ -87,6 +87,9 @@ class IndexStats:
 def init_db(db_path: Path, cfg: LocatorConfig) -> sqlite3.Connection:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(db_path)
+    # SQLite disables foreign keys per-connection by default, so the schema's
+    # ON DELETE CASCADE on summaries(path) is inert unless we opt in here.
+    conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SCHEMA)
     # Record metadata for status / version skew detection
     conn.execute(
@@ -228,7 +231,11 @@ def _write_batch(
         stat = abs_path.stat()
         summary = file_summaries[rel_str]
 
-        # Delete prior rows for this path (CASCADE removes summaries)
+        # Delete prior rows for this path. We delete summaries explicitly rather
+        # than relying solely on the ON DELETE CASCADE — a re-index of a CHANGED
+        # file must not leave stale summary rows that collide with the re-inserts
+        # below on the (path, heading_anchor) primary key.
+        conn.execute("DELETE FROM summaries WHERE path = ?", (rel_str,))
         conn.execute("DELETE FROM indexed_files WHERE path = ?", (rel_str,))
 
         conn.execute(

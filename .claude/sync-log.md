@@ -835,3 +835,25 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Hitachi HEAD after sync: `8ebe1f2`
 - Provenance: PDLC_DEMO task ben/066. Bug surfaced when upstream commit `07574e9` overwrote 14 `.claude/agents/*.md` symlinks with full markdown content under preserved 120000 mode, blocking `git pull --ff-only` on Linux/macOS. Root cause: pre-v8.3 `[[ -L ]]` filesystem check returns false on Windows clones where `core.symlinks=false` materializes tracked symlinks as plain text files. Repair PR for the corrupted project state: PDLC_DEMO PR #11 (commit `bc2f698`) — git-plumbing restoration of the 14 entries to pre-vlad blobs.
 - Local sync: not needed — fix was authored against the local copy first, then pushed; local is already at v8.3.
+
+## 2026-05-30 — pull (bulk registry sync; ben/067)
+
+- Hitachi HEAD after sync: `8ebe1f2`
+- Pulled: 79 files in two passes
+  - **38 UPSTREAM_ADVANCE** (clean fast-forwards): `advisors/` (16 incl. SKILL/VERSION/13 agents/render-grounding.py); `dhf-manifest/` (5: README/SKILL/discovery-index.{md,py}/canonical-roles.yaml); `file-locator/scripts/indexer_docs.py`; `frontend-slides/SKILL.md`; `jira-pull/SKILL.md`; `medtech-docs/` (10: README/SKILL/4 references/sentinel-blocks rule/render-sentinels.py/readme-risk-management template); `task/` (3: README/SKILL/session-cleanup.sh); `tracker/scripts/render.py`
+  - **41 UPSTREAM_ONLY** (new content):
+    - **3 new skills** added to `project.yml` `approved_skills`: `gap-analysis` (8 files), `knowledge-pack-export` (7), `reference-audit` (7)
+    - **4 new agents** from `reference-audit` added to `approved_agents`: citations + citations-{external,informal,internal}-researcher
+    - **3 new auto-loaded medtech-docs rules** symlinked into `.claude/rules/` + listed in `CLAUDE.md` Auto-loaded Rules section: `doctype-governance.md`, `ground-in-contracts-not-assumptions.md`, `internal-vs-external-scope-labels.md`
+    - **New medtech-docs hook**: `taxonomy-freshness.sh` (NOT yet wired — see follow-up)
+    - **FDA guidance pack**: MDDS (distilled + source PDF + FR notice), qSub eSTAR draft, qSub FR 2025-09615
+    - **3 new 21 CFR regulation refs**: parts 807, 880, 892
+    - **New task tooling**: `task/commands/checkpoint.md` + `task/hooks/checkpoint-recover.sh` (NOT yet wired)
+  - **13 UNDETERMINED `agents/*.md`** auto-reconciled (transitive — they're symlinks to `skills/advisors/agents/*.md` which were pulled)
+- project.yml: `approved_skills` +3 (gap-analysis, knowledge-pack-export, reference-audit); `approved_agents` +4 (reference-audit citations agents)
+- Follow-ups (captured as todos in `tasks/ben/067-bulk-registry-sync-2026-05-30.md`):
+  - Per Step 5b Project Impact Analysis: verify each pulled SKILL.md's changelog for required post-update actions (setup re-runs, hook installs, schema changes); current commit installs the 3 medtech-docs rule symlinks but does not run `/medtech-docs init` end-to-end.
+  - `file-locator/scripts/indexer_docs.py` change is likely the registry-side fix for ben/065 (CI `UNIQUE constraint failed: summaries.path, summaries.heading_anchor`) — validate post-pull and close ben/065 if confirmed.
+  - `medtech-docs/hooks/taxonomy-freshness.sh` pulled but not wired into `settings.json` — needs `/medtech-docs setup` re-run to register.
+  - `task/commands/checkpoint.md` + `task/hooks/checkpoint-recover.sh` pulled but checkpoint command/hook not wired — needs `/task setup` re-run.
+  - Read each of the 3 new skills' SKILL.md end-to-end (per the project's "read the skill before planning" rule) before invoking.

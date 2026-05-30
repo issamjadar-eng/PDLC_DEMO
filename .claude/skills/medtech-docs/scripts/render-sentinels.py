@@ -403,6 +403,117 @@ def _parse_table_preserve(block_content, preserve_col):
     return preserved
 
 
+def _find_taxonomy_file(target_file, project_root):
+    """Walk up from target_file's parent to project_root looking for the nearest
+    `.taxonomy.yml`. Returns the Path or None. Project-agnostic — does not
+    assume any particular containing folder (e.g., `_confluence/`)."""
+    cur = Path(target_file).resolve().parent
+    root = Path(project_root).resolve()
+    while True:
+        candidate = cur / '.taxonomy.yml'
+        if candidate.is_file():
+            return candidate
+        if cur == root or cur == cur.parent:
+            return None
+        cur = cur.parent
+
+
+def render_doc_governance(target_file, attrs, old_block_content, project_root):
+    """Render kind=doc-governance source=taxonomy[:<slug>].
+
+    Surfaces the QMS forms / SOPs / WIs / upstream-input forms that govern
+    producing this document, by looking up the document's folder slug in the
+    nearest ancestor `.taxonomy.yml` `mappings[]` block.
+
+    Slug resolution order:
+      1. `attrs['slug']` if provided  (`source=taxonomy:<slug>` syntax sugar:
+         the renderer parses `<slug>` off the source attribute and stuffs it
+         into attrs as `slug` before calling — see find_blocks / dispatch).
+      2. The target file's parent folder name (the convention — file lives
+         in `<slug>/v<n>.md` or `<slug>/index.md`).
+
+    Output: a short markdown block listing the governing IDs with links to
+    the source-md form/sop file when available. Absent mapping or absent
+    `governing_qms` block emits a single line: _Governance: not declared in
+    .taxonomy.yml_ — a discoverable signal to add the mapping rather than a
+    rendering error."""
+    target = Path(target_file).resolve()
+
+    taxonomy_path = _find_taxonomy_file(target, project_root)
+    if not taxonomy_path:
+        return ('_Governance: no `.taxonomy.yml` found between this file and the project root._\n')
+
+    try:
+        import yaml
+    except ImportError:
+        raise RuntimeError("doc-governance kind requires pyyaml; install with `pip install pyyaml`")
+
+    try:
+        taxonomy = yaml.safe_load(taxonomy_path.read_text())
+    except Exception as e:
+        raise RuntimeError(f"failed to parse taxonomy {taxonomy_path}: {e}")
+
+    slug = attrs.get('slug') or target.parent.name
+    mappings = (taxonomy or {}).get('mappings') or {}
+    mapping = mappings.get(slug)
+
+    if not mapping:
+        return (f'_Governance: slug `{slug}` not declared in `{relpath(taxonomy_path, project_root)}` `mappings[]`._\n')
+
+    gov = (mapping or {}).get('governing_qms')
+    if not isinstance(gov, dict):
+        return (f'_Governance: `{slug}` has no `governing_qms` block in `{relpath(taxonomy_path, project_root)}` — TBD authoring._\n')
+
+    lines = ['**Governance** _(auto-rendered from `.taxonomy.yml`; edit there to change)_']
+    lines.append('')
+
+    def _id_list(label, ids):
+        if not ids:
+            return None
+        # Render IDs as plain inline code — readers can grep the source-md
+        # tree for the linked artifact.
+        items = ', '.join(f'`{i}`' for i in ids)
+        return f'- **{label}**: {items}'
+
+    forms = gov.get('forms') or []
+    sops = gov.get('sops') or []
+    wis = gov.get('work_instructions') or []
+    upstream = gov.get('upstream_inputs') or []
+    note = gov.get('note')
+
+    for row in (
+        _id_list('Form(s)', forms),
+        _id_list('Parent SOP(s)', sops),
+        _id_list('Work Instruction(s)', wis),
+        _id_list('Upstream input form(s)', upstream),
+    ):
+        if row:
+            lines.append(row)
+
+    # Bare-mapping case: governing_qms block exists but every list is empty
+    # AND there's no note → display 'no QMS form (team-internal convention)'.
+    if not (forms or sops or wis or upstream):
+        if note:
+            lines.append(f'- **Note**: {note.strip().splitlines()[0]}')
+        else:
+            lines.append('- _No QMS form declared — team-internal convention. See `.taxonomy.yml` for context._')
+    elif note:
+        # Only include the first line of the note to keep the banner tight.
+        first_line = note.strip().splitlines()[0]
+        lines.append('')
+        lines.append(f'> {first_line}')
+
+    return '\n'.join(lines) + '\n'
+
+
+def relpath(path, project_root):
+    """Path → project-relative string. Helper for the doc-governance renderer."""
+    try:
+        return str(Path(path).resolve().relative_to(Path(project_root).resolve()))
+    except (ValueError, AttributeError):
+        return str(path)
+
+
 RENDERERS = {
     'subfolder-table': ('fs', render_subfolder_table),
     'dhf-table': ('project.yml:dhfs', render_dhf_table),
@@ -410,6 +521,7 @@ RENDERERS = {
     'folder-tree': ('fs', render_folder_tree),
     'folder-tree-subset': ('fs', render_folder_tree_subset),
     'strategy-domains': ('project.yml:strategy_domains', render_strategy_domains),
+    'doc-governance': ('taxonomy', render_doc_governance),
 }
 
 
@@ -475,12 +587,20 @@ def render_file(target_path, dry_run=False, verbose=False):
 
         old_block_content = '\n'.join(new_lines[open_idx+1:close_idx])
 
+        # For source=taxonomy[:<slug>], lift the optional `<slug>` arg into
+        # attrs so render functions don't have to re-parse the source string.
+        if isinstance(source, str) and source.startswith('taxonomy'):
+            if ':' in source:
+                _, slug_arg = source.split(':', 1)
+                if slug_arg and 'slug' not in attrs:
+                    attrs['slug'] = slug_arg
+
         try:
             if kind in ('subfolder-table',):
                 new_block = renderer(target, attrs, old_block_content)
             elif kind in ('dhf-table', 'team-table', 'strategy-domains'):
                 new_block = renderer(target, attrs, old_block_content, project_yml)
-            elif kind in ('folder-tree', 'folder-tree-subset'):
+            elif kind in ('folder-tree', 'folder-tree-subset', 'doc-governance'):
                 new_block = renderer(target, attrs, old_block_content, PROJECT_ROOT)
             else:
                 raise ValueError(f"dispatch error for kind={kind}")

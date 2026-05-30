@@ -1,0 +1,1 @@
+../skills/medtech-docs/rules/ground-in-contracts-not-assumptions.md
