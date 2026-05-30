@@ -1,0 +1,1 @@
+../skills/medtech-docs/rules/internal-vs-external-scope-labels.md

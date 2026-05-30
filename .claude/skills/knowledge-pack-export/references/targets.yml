@@ -1,0 +1,63 @@
+# targets.yml — external LLM-assistant platform registry for knowledge-pack-export.
+#
+# Each target defines the ingestion constraints the build engine enforces. The
+# binding constraint for most platforms is the FILE COUNT (how many knowledge
+# files you may attach), not per-file size — modern platforms accept large files
+# but retrieval quality degrades when knowledge is bloated, so packs are merged
+# into a small number of thematic bundles regardless of byte room.
+#
+# Fields:
+#   key              — stable identifier used by `build --target <key>` and manifest pack.targets[]
+#   name             — human label
+#   max_files        — hard cap on knowledge files (null = effectively unlimited, e.g. zip)
+#   knowledge_format — accepted bundle format(s) for knowledge files
+#   system_prompt    — where the generated system-instructions text goes on this platform
+#   publish          — how a pack reaches this platform (manual paste, /web-control, API, n/a)
+#   notes            — operator guidance
+#
+# Verified 2026-05: Gemini Gem knowledge cap is 10 files; per-file size is generous
+# (inline-file API raised to ~100 MB on 2026-01-12). Keep system instructions tight —
+# Gems may ignore attached files when instructions get too long.
+
+targets:
+  - key: gemini-gem
+    name: Google Gemini Gem
+    max_files: 10
+    knowledge_format: [md, pdf]
+    system_prompt: "Gem 'Instructions' field — paste system-instructions.md"
+    publish: "manual paste (v1); /web-control browser automation under corporate Google identity (v2)"
+    notes: >
+      10-file cap is the binding constraint. Lead instructions with
+      "always consult the attached files before answering" so the Gem uses knowledge.
+
+  - key: openai-gpt
+    name: OpenAI Custom GPT
+    max_files: 20
+    knowledge_format: [md, pdf, txt]
+    system_prompt: "GPT 'Instructions' field"
+    publish: "manual paste; Assistants API (future)"
+    notes: "20-file cap; otherwise same pipeline as gemini-gem."
+
+  - key: notebooklm
+    name: Google NotebookLM
+    max_files: 50
+    knowledge_format: [md, pdf, gdoc, txt]
+    system_prompt: "n/a — NotebookLM has no persistent system prompt; persona goes in a pinned note"
+    publish: "manual source upload"
+    notes: "Source-count cap is high; merging is optional but still improves grounding."
+
+  - key: claude-project
+    name: Claude Project
+    max_files: null
+    knowledge_format: [md, pdf, txt]
+    system_prompt: "Project 'custom instructions'"
+    publish: "manual upload"
+    notes: "Large knowledge budget; merging mainly for tidiness, not a hard cap."
+
+  - key: zip
+    name: Portable zip handoff
+    max_files: null
+    knowledge_format: [md, pdf]
+    system_prompt: "system-instructions.md at the pack root"
+    publish: "n/a — hand the folder/zip to the recipient"
+    notes: "Platform-neutral fallback. No cap; preserves all bundles as authored."

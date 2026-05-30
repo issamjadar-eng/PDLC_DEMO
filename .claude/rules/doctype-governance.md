@@ -1,0 +1,1 @@
+../skills/medtech-docs/rules/doctype-governance.md

@@ -116,3 +116,6 @@ Files under `.claude/rules/` are auto-loaded into every session — see those fi
 - `audit-wiring-before-adding-fields.md` — grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose; reference the wiring, don't redeclare facts.
 - `claude-md-references.md` — persistent docs reference durable project artifacts, never transient task documents.
 - `git-workflow.md` — "commit" is local-only; "push" / "merge" / "save to repo" means commit → branch → PR → auto-merge → delete branch.
+- `doctype-governance.md` — read the governing QMS templates before editing any mirrored regulated doc.
+- `ground-in-contracts-not-assumptions.md` — read the contract (SKILL.md, schema, project.yml) before reasoning about behavior; don't infer from filenames or output inspection.
+- `internal-vs-external-scope-labels.md` — internal-review docs use 📤 / 📝 / ⏸️ / 📖 scope labels to mark formal-out vs draft vs paused vs read-only.

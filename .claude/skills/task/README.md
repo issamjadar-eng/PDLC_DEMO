@@ -41,24 +41,66 @@ This means the task skill works standalone in any project — you just need `tas
 
 ```
 .claude/skills/task/
-  SKILL.md                          # Skill instructions (loaded by Claude)
-  README.md                         # This file (design docs, not loaded)
+  SKILL.md                            # Skill instructions (loaded by Claude)
+  README.md                           # This file (design docs, not loaded)
   hooks/
-    check-active-task.sh            # PreToolUse hook script (source)
-    task-activate.sh                # State management script (source)
-    register-hook.sh                # Shared hook registration helper (source)
+    check-active-task.sh              # PreToolUse — task gate (source)
+    task-activate.sh                  # State management script (source)
+    session-env.sh                    # SessionStart — exports CLAUDE_SESSION_ID
+    session-cleanup.sh                # SessionEnd — purges gate file, writes uncheckpointed markers
+    checkpoint-recover.sh             # SessionStart — surfaces uncheckpointed markers as additionalContext
+    register-hook.sh                  # Shared hook registration helper (source)
+  commands/
+    checkpoint.md                     # Slash command alias for `/task checkpoint`
+  rules/
+    scratch-and-tmp.md                # Auto-loaded rule (source)
   tests/
-    test-task-gate.sh               # Automated test suite (51 tests)
+    test-task-gate.sh                 # Automated test suite (51 tests)
 .claude/hooks/
-  check-active-task.sh -> ../skills/task/hooks/check-active-task.sh  (symlink)
-  task-activate.sh                  # Installed by /task setup (manages state files)
-  register-hook.sh                  # Shared hook registration helper
-.state/                      # Gitignored — per-session state files
-  active-tasks-{session_id}.txt     # One per session, one task ID per line
-.claude/settings.json               # Hook wiring (PreToolUse matcher)
+  check-active-task.sh -> ../skills/task/hooks/check-active-task.sh    (symlink)
+  session-env.sh -> ../skills/task/hooks/session-env.sh                (symlink)
+  session-cleanup.sh -> ../skills/task/hooks/session-cleanup.sh        (symlink)
+  checkpoint-recover.sh -> ../skills/task/hooks/checkpoint-recover.sh  (symlink)
+  task-activate.sh                    # Installed by /task setup (copied, not symlinked)
+  register-hook.sh                    # Shared hook registration helper (copied)
+.claude/commands/
+  checkpoint.md -> ../skills/task/commands/checkpoint.md               (symlink)
+.claude/rules/
+  scratch-and-tmp.md -> ../skills/task/rules/scratch-and-tmp.md        (symlink)
+.state/                                # Gitignored — runtime state
+  active-tasks-{session_id}.txt        # Gate state — one task ID per line
+  last-checkpoint-{person}-{NNN}.txt   # Touched by checkpoint action — staleness signal
+  uncheckpointed-{person}-{NNN}-{date}.txt  # Written by SessionEnd; consumed by SessionStart
+.claude/settings.json                 # Hook wiring (PreToolUse/SessionStart/SessionEnd matchers)
 ```
 
-The hook source lives inside the skill package so it ships as a unit. The symlink at `.claude/hooks/` allows `settings.json` to reference it at a stable path. The activation script is copied (not symlinked) to `.claude/hooks/` by `/task setup`. State files live in `.state/` (gitignored).
+The skill follows a single install pattern across hooks, agents, rules, and slash commands: **source of truth lives inside the skill; symlinks under `.claude/` connect it to Claude Code's discovery paths.** A `/sync-skills pull` that updates the skill auto-updates everything downstream — no separate copy step, no stale duplicates to audit. `task-activate.sh` and `register-hook.sh` are the two exceptions (copied, not symlinked) because they're written to by other tooling.
+
+### Why a slash command at all?
+
+The primary trigger for `checkpoint` is the skill's frontmatter description, which fires on natural-language phrases like "wrap up", "sign off", "before /clear", "make sure the task doc is updated". The slash command is a **muscle-memory alias** for users who'd rather type `/checkpoint` than express the intent in prose. Both routes invoke the same action body in SKILL.md.
+
+### Why `/checkpoint` deliberately shadows the built-in
+
+Claude Code ships `/checkpoint` as an alias for `/rewind` — an opaque, ephemeral snapshot of conversation+files for undo. This skill reclaims the name for a different concept: a deliberate, written refresh of the task doc to **resume-ready** state, committed to git, auditable.
+
+The override is intentional because:
+- **Audit visibility is the value prop.** In regulated workloads, "checkpoint" means a signed-off milestone, not an undo point. Auto-snapshots are useless to a reviewer; a task doc is not.
+- **Forcing function.** Reinforces that the source of truth lives in committed artifacts, not Claude's hidden state.
+- **The built-in is still reachable** via `/rewind`, `/undo`, or `Esc + Esc` — only one of three aliases is shadowed, and auto-snapshotting itself is untouched.
+
+Trade-off: one-time surprise for users who learned `/checkpoint` elsewhere. Mitigated by this note and the skill's own description.
+
+### Checkpoint-recovery hook pair
+
+`session-cleanup.sh` (SessionEnd) and `checkpoint-recover.sh` (SessionStart) coordinate via marker files in `.state/`:
+
+1. **During work**: each `/checkpoint` invocation `touch`es `.state/last-checkpoint-<person>-<NNN>.txt` — the mtime is the recency signal.
+2. **On SessionEnd**: for each active task, if the `last-checkpoint-*` marker is missing or older than 30 minutes, write `.state/uncheckpointed-<person>-<NNN>-<date>.txt` with the session ID and task path. (Then purge the gate file as before.)
+3. **On the next SessionStart**: scan for `uncheckpointed-*` markers. If any exist, emit a SessionStart `additionalContext` block telling Claude to offer retroactive `/checkpoint` recovery from `git log` + `git diff` since the task doc's last mtime. The conversation transcript is lost, but the commit/edit history isn't — usually enough.
+4. **On `/checkpoint` completion**: delete any matching `uncheckpointed-*` markers so they don't resurface.
+
+This addresses the failure mode where a user hits `/clear` or `/quit` without saying anything that would trigger description-based recovery. Hooks can't auto-invoke Claude actions, but they can persist enough breadcrumbs for the next session to recover.
 
 ## Installation
 
@@ -262,10 +304,17 @@ See `tasks/ben/024-security-posture-automation.md` and `tasks/ben/027-task-gate-
 
 | Version | Date | Change |
 |---------|------|--------|
+| v28 | 2026-05-17 | **Document why `/checkpoint` shadows Claude Code's built-in alias.** v27 added the slash command but didn't explain that it deliberately overrides Claude Code's built-in `/checkpoint` alias for `/rewind`. README gains a "Why `/checkpoint` deliberately shadows the built-in" subsection under "Why a slash command at all?" — covers the rationale (audit visibility is the value prop in regulated workloads, "checkpoint" means a signed-off milestone, the built-in stays reachable via `/rewind`/`/undo`/`Esc+Esc`) and the trade-off (one-time surprise for users who learned `/checkpoint` elsewhere). SKILL.md gains a one-paragraph note inside the `checkpoint` action spec so Claude sees it at trigger time (README isn't loaded into context). Pure documentation — no behavioral change, no setup re-run required. |
+| v27 | 2026-05-17 | **`checkpoint` action + slash command + recovery hook pair.** New `checkpoint` action refreshes the active task doc to **resume-ready** state per the doc's own PERMANENT RULE 4 — what was completed this session with concrete artifacts, in-flight state, next-step priorities, open questions, activation command. Frontmatter description expanded with natural-language triggers ("wrap up", "sign off", "before /clear", "make sure the task doc is updated", etc.) so the skill fires on conversational session-end signals; action ends by emitting `✅ Resume-ready — safe to /clear or /quit.` as the user's signal that the doc is fully prepped. The skill now ships a slash command (`commands/checkpoint.md`) as a muscle-memory alias, installed via symlink by `setup` — same source-of-truth-in-skill pattern as hooks/rules. To handle the "user just hit /clear without warning" case, added a **hook pair**: `session-cleanup.sh` (SessionEnd) writes `.state/uncheckpointed-<person>-<NNN>-<date>.txt` markers for any active task whose `last-checkpoint-*` marker is stale (>30min) or missing; new `checkpoint-recover.sh` (SessionStart) scans for those markers and injects `additionalContext` so the next session proactively offers retroactive checkpoint from `git log` + diff. The checkpoint action `touch`es the staleness marker on completion and deletes the matching uncheckpointed marker. Also dropped `list` and `show` from the frontmatter description (frontmatter-promised-but-missing since v26; no point listing actions that aren't implemented). |
+| v26 | 2026-05-17 | **Index maintenance moved into SKILL.md.** The `find` action has always read `tasks/<person>/000-index.md` to match user descriptions, but the `create` and `update` action specs lived in README.md (not loaded into Claude's context) so indexes silently drifted: rows for new tasks were never written, completed rows were never moved, and folders without an index just had `find` degrade to a no-op. This version (a) adds an explicit "## Index file format" section to SKILL.md defining the file shape, (b) extends `create` with explicit index-write steps (5–7), (c) adds a `update <person> <NNN> <status>` action that rewires the row on status change and moves it between Active/Completed tables, (d) adds a `setup` step that backfills missing indexes by parsing existing task files. Also closes a markdown rendering bug: the task-file template's opening ```` ```markdown ```` fence was never closed, so everything from the template through "## Task Gate State File" rendered as one giant code block on GitHub. |
 | v25 | 2026-05-15 | **`setup` installs the scratch/tmp convention.** New step 13 idempotently installs three pieces: the auto-loaded rule `.claude/rules/scratch-and-tmp.md` (a **symlink** to the skill-owned source `rules/scratch-and-tmp.md` — same install pattern as hooks/agents, so `/sync-skills pull` auto-updates it), the `_scratch/` + `**/_scratch/` `.gitignore` patterns, and a CLAUDE.md "Auto-loaded rules" pointer section. The `create` action already provisions `tasks/{person}/_scratch/`; this closes the gap where that folder existed but was neither gitignored nor documented. The task skill owns this convention because the `_scratch/` sandbox exists only because tasks exist. Projects customize by forking the symlink into a regular file. |
 | v24 | 2026-04-27 | **Default-to-action two-branch rubric.** `find` action no longer asks before activating: high-confidence match → reuse + announce in one line; anything else → create + announce in one line. The one-line announcement is the user's escape hatch. Hook denial recovery uses the same rubric and adds a "trust the denial-message UUID over `printenv`" rule for compaction/restart cases. Project-wide effect: removes the most common 2–3 message stall that was blocking team members on every fresh topic. Ported from spec-gaming task v27. (See task ben/119.) |
 | v23 | 2026-04-23 | Capture redesign — retired flow-killing hooks, strategy-doc-centric conflict flow. (Task ben/100.) |
 | earlier | — | See git log for prior version history. |
+
+**Post-update (v27):** Re-run `/task setup` once. Steps 8 (symlink `checkpoint-recover.sh`), 14 (register the SessionStart hook), and 17 (symlink the slash command) are new; existing projects need them installed. Idempotent — safe to re-run.
+
+**Post-update (v26):** Re-run `/task setup` once. The new step 14 backfills missing `000-index.md` files for every person folder that contains task files but lacks rows for them. It is idempotent — folders whose indexes already cover every task file are skipped.
 
 **Post-update (v25):** Re-run `/task setup` once. Step 13 installs the scratch/tmp convention (rule file + gitignore patterns + CLAUDE.md pointer); it is idempotent, so re-running is safe. Behavioral changes alone (e.g. v24's rubric) need no re-run.
 
@@ -307,37 +356,6 @@ Optional sections — add when the task needs them:
 2. No per-session nag — the UserPromptSubmit + Stop capture hooks were retired in task skill v23 (see task ben/100). Teams review captured content at monthly cadence via `/strategy assemble` and `/lessons assemble`; the `/best-practices` audit flags when assembly is > 30 days stale.
 3. This is a judgment call — a bug fix or routine reorg is not strategy. A conversation about *why* we chose one approach over another is. When in doubt, draft it and let the user decide.
 
-When creating, populate:
-   - Set **ID** to the new NNN
-   - Set **Created** to today's date
-   - Set **Status** to "Not Started"
-   - Set **Created By** and **Owner** to `<person>` (use their full name — check existing tasks in their folder for the convention)
-   - Set **Priority** to "Medium" (unless the user specifies otherwise)
-   - Initialize the **Changelog** with `- YYYY-MM-DD: Task created`
-4. Add the task to the Active table in `tasks/<person>/000-index.md` — include a **Summary** column with a one-line description of the task's goals/scope (not just the task name). This summary must be descriptive enough for `/task find` to match by topic without opening the task file.
-5. If `tasks/<person>/` doesn't exist yet, create the folder and a new `000-index.md` with empty Active and Completed tables
-6. Show the user the created file path and task ID
+### Action specs
 
-### `list [person]`
-List tasks, with optional filtering.
-
-- `list` — Show all active tasks across all team members
-- `list <person>` — Show all tasks (active and completed) for that person
-- `list all` — Show all tasks across all team members (active and completed)
-
-Read each person's `000-index.md` and display the results.
-
-### `update <person> <NNN> <status>`
-Update a task's status.
-
-1. Read the task file `tasks/<person>/NNN-*.md` (glob to find it by number)
-2. Update the **Status** field in the header to the new status
-3. If status is "Complete":
-   - Move the entry from Active to Completed in `tasks/<person>/000-index.md`
-   - Remove the Status column (completed tasks don't need it)
-4. If status changes from "Complete" back to something else, move it back to Active
-5. Add a changelog entry: `- YYYY-MM-DD: Status changed to <status>`
-6. Confirm the change to the user
-
-### `show <person> <NNN>`
-Display a task's contents. Read and show the file `tasks/<person>/NNN-*.md`.
+Action specs live in [SKILL.md](SKILL.md) (`create`, `find`, `update`, `setup`) — that's the file Claude loads when the skill triggers. The frontmatter also advertises `list` and `show` actions, but those are not yet implemented in SKILL.md; track as a follow-up.

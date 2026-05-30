@@ -33,6 +33,7 @@ What content gets rendered inside the block. Defined kinds:
 | `folder-tree` | Fenced code block showing the top-level folder tree of the project root. |
 | `folder-tree-subset` | Fenced code block showing the folder tree under a specific path (used for deep-nested sections of CLAUDE.md). |
 | `strategy-domains` | Markdown table listing strategy domains from `project.yml` `strategy_domains[]`. Shape depends on `variant=<name>` attribute (see below). |
+| `doc-governance` | Short markdown banner listing the QMS forms / parent SOPs / work instructions / upstream-input forms that govern producing this document. Sourced from the nearest ancestor `.taxonomy.yml` `mappings[<slug>].governing_qms` block. See variant section below. |
 
 Adding a new kind is a convention change — update this rule file and the renderer simultaneously.
 
@@ -47,6 +48,8 @@ Where the renderer reads its data from. Defined sources:
 | `project.yml:team.active` | Reads `team.active[]` from `project.yml`. |
 | `project.yml:strategy_domains` | Reads `strategy_domains[]` from `project.yml`. |
 | `project.yml:<path>` | Generic source form — reads a specific YAML path. |
+| `taxonomy` | Reads the nearest ancestor `.taxonomy.yml` (walking up from the target file). Used by `kind=doc-governance`. |
+| `taxonomy:<slug>` | Same source as `taxonomy` but with an explicit `<slug>` override for the `mappings[]` key. Default slug is the target file's parent folder name (the doctype-folder convention). |
 
 ### Optional attributes
 
@@ -106,6 +109,43 @@ The `strategy-domains` kind supports three variants, selected by the `variant=<n
   - `What Belongs Here` = `what_belongs_here[]` joined with `; ` (no trailing period)
   - `Plans Table Rows` = `plans_table[]` rendered as `{name} \| {description}; ...` (escaped pipes)
 
+## `doc-governance` source layout
+
+The `doc-governance` kind reads `<nearest-ancestor>/.taxonomy.yml` and looks up `mappings[<slug>].governing_qms`. The taxonomy schema for `governing_qms` is documented in the taxonomy file's own header comment block (schema v0.3+); the shape is:
+
+```yaml
+governing_qms:
+  forms: [FORM-NNNNNNNNN, ...]          # Templates the doc instantiates
+  sops: [SOP-NNNNNNNNN, ...]            # Parent SOP(s) governing process
+  work_instructions: [WI-NNNNNNNNN, ...] # WI(s) refining the SOP for this doctype
+  upstream_inputs: [FORM-NNNNNNNNN, ...] # Forms whose output feeds this doctype
+  note: |
+    Free-text — used as the first line of the rendered banner's blockquote.
+```
+
+**Banner shape rendered:**
+
+```markdown
+**Governance** _(auto-rendered from `.taxonomy.yml`; edit there to change)_
+
+- **Form(s)**: `FORM-NNNNNNNNN`
+- **Parent SOP(s)**: `SOP-NNNNNNNNN`
+- **Work Instruction(s)**: `WI-NNNNNNNNN`
+- **Upstream input form(s)**: `FORM-NNNNNNNNN`, `FORM-NNNNNNNNN`
+
+> First line of the taxonomy's `note:` field.
+```
+
+**Three null cases (each renders a discoverable italic line, not an error):**
+
+1. `.taxonomy.yml` not found → _"no .taxonomy.yml found between this file and the project root."_
+2. Slug not in `mappings[]` → _"slug `<slug>` not declared in `<path>/.taxonomy.yml` `mappings[]`."_
+3. Mapping present but no `governing_qms` block → _"has no `governing_qms` block — TBD authoring."_
+
+These render as visible markdown so authors notice the gap on re-render; they do not abort the render.
+
+**Bare mapping case** (mapping exists with `governing_qms` but every list is empty): the banner renders the `note:` first line OR a default "No QMS form declared — team-internal convention." line. Distinguishes "intentionally no form" from "TBD" — both stay discoverable in the rendered doc.
+
 ## Rendering rules
 
 1. **Idempotent**: running the renderer N times with no source change produces the same byte sequence.
@@ -138,6 +178,7 @@ Canonical locations:
 | `.claude/skills/medtech-docs/templates/readme-strategies.md` → Expected Content table | `strategy-domains variant=expected-content` |
 | `.claude/skills/strategy/SKILL.md` → Domain Registry table | `strategy-domains variant=registry` |
 | `.claude/skills/strategy/SKILL.md` → Domain brief content table (init action) | `strategy-domains variant=init-briefs` |
+| Per-doctype Confluence page (e.g., `_confluence/.../<slug>/v1.0.0.md`, `_confluence/.../<slug>/index.md`) → Governance banner above page body | `doc-governance source=taxonomy` (slug auto-derived from parent folder name) or `doc-governance source=taxonomy:<slug>` for explicit overrides |
 
 New docs with structural tables should wrap those tables in sentinels from the start.
 

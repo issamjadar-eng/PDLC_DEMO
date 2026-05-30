@@ -14,8 +14,9 @@ Agents grounded against a project should consult **both layers** when citing a s
 | Folder | Content | Example |
 |--------|---------|---------|
 | [`standards/`](standards/) | IEC / ISO consensus standards | IEC 62304 Software Lifecycle, ISO 14971 Risk Management |
-| [`fda-guidance/`](fda-guidance/) | FDA guidance documents — distilled summaries + full-text | 510(k), PCCP, SaMD, CDS, Cybersecurity Premarket |
+| [`fda-guidance/`](fda-guidance/) | FDA guidance documents — distilled summaries + full-text | 510(k), PCCP, SaMD, CDS, Cybersecurity Premarket, MDDS |
 | [`industry-frameworks/`](industry-frameworks/) | Non-standard interoperability & best-practice frameworks | DICOM, HL7 FHIR, NIST CSF, GMLP, OWASP |
+| [`regulations/`](regulations/) | US federal regulations (21 CFR) — verbatim text + distilled cross-references | 21 CFR Part 807 (Establishment Registration / 510(k) when required), Part 880 (MDDS), Part 892 (Radiology Devices / QIH) |
 
 ## Scope
 

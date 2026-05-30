@@ -1,0 +1,59 @@
+# <pack-slug>.pack.yml — knowledge-pack manifest (template).
+#
+# This file is the AUTHORED INPUT (created by `init`, then you edit it): it declares
+# exactly which project docs an external assistant receives, how they merge into the
+# target's bounded file budget, and which slots are verbatim vs. LLM-condensed. In a
+# regulated project, this explicit authored choice — not a heuristic guess — is what
+# makes the export defensible.
+#
+# Lives at:  tools/knowledge-packs/<pack-slug>/<pack-slug>.pack.yml
+# Build with: /knowledge-pack-export build <pack-slug>     → tools/knowledge-packs/<slug>/pack/
+# Dry-run:    /knowledge-pack-export validate <pack-slug>
+#
+# All paths are REPO-RELATIVE globs (recursive ** supported). Slots are ordered;
+# the number of slots must not exceed the target's max_files (see references/targets.yml).
+
+pack:
+  slug: example-knowledge        # kebab-case; names the dir tools/knowledge-packs/<slug>/
+  title: Example Knowledge Pack
+  targets: [gemini-gem]          # one or more keys from references/targets.yml
+  confidentiality: "Controlled — approved end users only. Full content; access-controlled at distribution."
+  audience: "Approved stakeholders outside Claude Code / Claude."
+  persona: |                     # seeds system-instructions.md (LLM expands in build)
+    You are the <project> program assistant. Answer strictly from the attached
+    knowledge files; always consult them before answering and name the source
+    bundle you used. Do not invent facts, citations, or identifiers.
+
+slots:
+  # ── verbatim slot: concatenated exactly, with provenance headers ──
+  - file: 00-overview.md
+    title: Program Overview & Scope
+    sources:
+      - project-overview.md
+      - CLAUDE.md
+    mode: verbatim
+
+  - file: 01-strategy.md
+    title: Strategy
+    sources:
+      # NOTE: `*.md` also matches README.md (folder-navigation noise for an external
+      # assistant). Prefer listing the specific docs you want, or keep globs narrow.
+      - docs/project/strategies/*.md
+    mode: verbatim
+
+  # ── condense slot: raw concatenation is staged, then the LLM curates it to fit
+  #    (output is flagged `derived` in manifest.json so reviewers know it isn't verbatim) ──
+  - file: 02-architecture.md
+    title: System & Module Architecture
+    sources:
+      - docs/project/dhfs/*/design-controls/architecture/*SAD*.md
+    mode: condense
+    condense_brief: >
+      Keep the system-level architecture document verbatim; summarize the per-module
+      architecture documents down to their interfaces, classification, and data flow.
+
+  - file: 03-glossary.md
+    title: Glossary
+    sources:
+      - glossary.md
+    mode: verbatim

@@ -1,8 +1,8 @@
 ---
 name: frontend-slides
 description: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files — for any domain (product launches, board materials, investor pitches, town-halls, conference talks, internal training, regulated-industry briefings). Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk / pitch / report. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.
-version: 0.4.0
-updated: 2026-05-02
+version: 0.4.1
+updated: 2026-05-17
 ---
 
 # Frontend Slides
@@ -186,9 +186,11 @@ Based on mood, generate 3 distinct single-slide HTML previews showing typography
 | Calm/Focused        | Notebook Tabs, Paper & Ink, Swiss Modern           |
 | Inspired/Moved      | Dark Botanical, Vintage Editorial, Pastel Geometry |
 
-Save previews to `.claude-design/slide-previews/` (style-a.html, style-b.html, style-c.html). Each should be self-contained, ~50-100 lines, showing one animated title slide.
+Save previews to a per-build temp directory under the OS `/tmp/` — **never** to a project-root location like `.claude-design/`. Create the dir with `mktemp -d -t frontend-slides-previews` (or equivalent) and remember the path for the Phase 5 cleanup step. Files inside: `style-a.html`, `style-b.html`, `style-c.html`. Each should be self-contained, ~50–100 lines, showing one animated title slide.
 
-Open each preview automatically for the user.
+**Why `/tmp/`, not the project tree:** previews are transient intermediates consumed within this single activity. Writing them to the project root pollutes the working tree and risks accidental commits if they aren't gitignored. Some consumer projects enforce this via a scratch-and-tmp rule (e.g., `.claude/rules/scratch-and-tmp.md` reserves `tasks/{person}/_scratch/` for personal sandboxes and the OS `/tmp/` for activity-scoped intermediates). Even in projects without that rule, the same principle applies — keep transient build artifacts outside the source tree.
+
+Open each preview automatically for the user (the absolute `/tmp/...` path works fine with `open` on macOS / `xdg-open` on Linux).
 
 ### Step 2.3: User Picks
 
@@ -234,7 +236,7 @@ When converting PowerPoint files:
 
 ## Phase 5: Delivery
 
-1. **Clean up** — Delete `.claude-design/slide-previews/` if it exists
+1. **Clean up** — Delete the per-build preview temp directory created in Phase 2.2 (the `mktemp -d` path under `/tmp/`). For backward compatibility, also remove a legacy `.claude-design/slide-previews/` directory if one exists at the project root from an older build.
 2. **Open** — Use `open [filename].html` to launch in browser
 3. **Summarize** — Tell the user:
    - File location, style name, slide count
@@ -348,3 +350,10 @@ This captures each slide as a screenshot and combines them into a PDF. Perfect f
 | [scripts/extract-pptx.py](scripts/extract-pptx.py) | Python script for PPT content extraction                             | Phase 4 (conversion)      |
 | [scripts/deploy.sh](scripts/deploy.sh)             | Deploy slides to Vercel for instant sharing                          | Phase 6 (sharing)         |
 | [scripts/export-pdf.sh](scripts/export-pdf.sh)     | Export slides to PDF                                                 | Phase 6 (sharing)         |
+
+---
+
+## Changelog
+
+- **0.4.1** (2026-05-17) — Phase 2.2 style previews now write to a per-build `mktemp -d` directory under the OS `/tmp/` instead of `.claude-design/slide-previews/` at the project root. Phase 5.1 cleanup updated accordingly (with backward-compatible removal of the legacy path). Fixes drift against consumer-project scratch-and-tmp rules and prevents accidental commits of transient preview files.
+- **0.4.0** (2026-05-02) — Fork baseline (see "Origin & Modifications").

@@ -261,13 +261,16 @@ security:
   - docx
   - file-locator
   - frontend-slides
+  - gap-analysis
   - jira-pull
+  - knowledge-pack-export
   - lessons
   - md-deck
   - medtech-docs
   - pdf
   - pptx
   - project-console
+  - reference-audit
   - secops
   - skill-creator
   - strategy
@@ -285,6 +288,10 @@ security:
   - dhf-manifest/agents/tier1-enricher
   - dhf-manifest/agents/tier1-restructure
   - project-secops
+  - reference-audit/agents/citations
+  - reference-audit/agents/citations-external-researcher
+  - reference-audit/agents/citations-informal-researcher
+  - reference-audit/agents/citations-internal-researcher
 
 # ─── Tracker skill — project-local config ───
 # Consumed by `/tracker generate` and `/tracker render` for per-project tuning.

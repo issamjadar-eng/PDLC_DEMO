@@ -10,10 +10,12 @@ Distilled summaries of every FDA guidance document medtech projects commonly rel
 | AI/DSF Lifecycle | [`ai-dsf-lifecycle-distilled.md`](ai-dsf-lifecycle-distilled.md) | FDA expectations across the AI Device Software Function lifecycle |
 | CDS (Clinical Decision Support) | [`cds-distilled.md`](cds-distilled.md) | Criteria for device vs non-device CDS software |
 | Cybersecurity Premarket | [`cybersecurity-distilled.md`](cybersecurity-distilled.md) | FDA's premarket cybersecurity submission expectations |
+| MDDS (Medical Device Data Systems) | [`mdds-distilled.md`](mdds-distilled.md) | Transfer / store / convert / display of medical device data — Non-Device-MDDS (software, statutorily not a device per Cures Act § 3060) vs Device-MDDS (hardware, enforcement discretion); 2022 update to original 2015 guidance |
 | MFD (Multiple Function Device) | [`mfd-distilled.md`](mfd-distilled.md) | Impact analysis across device / non-device functions in one product |
 | PCCP — General | [`pccp-general-distilled.md`](pccp-general-distilled.md) | Predetermined Change Control Plan — general guidance |
 | PCCP — AI/ML | [`pccp-aiml-distilled.md`](pccp-aiml-distilled.md) · [`pccp-aiml-full.md`](pccp-aiml-full.md) | AI/ML-specific PCCP guidance + full-text reference |
-| Q-Submission | [`qsub-distilled.md`](qsub-distilled.md) | Pre-Sub meeting mechanics and package expectations |
+| Q-Submission | [`qsub-distilled.md`](qsub-distilled.md) | The 5 Q-Sub types (Pre-Sub, SIR, Study Risk Determination, Informational Meeting, PMA Day 100), MDUFA timelines, Pre-Sub content checklist — May 29, 2025 final guidance (GUI00001677, supersedes June 2023 + Feb 1998 PMA Day 100) |
+| Q-Submission eSTAR (Draft) | [`qsub-estar-draft-distilled.md`](qsub-estar-draft-distilled.md) | Electronic submission template (eSTAR) for Q-Subs — currently Pre-Subs only; future required format per FD&C § 745A(b)(3). Draft May 29, 2025 (GUI00007041); FR Doc 2025-09615 announced availability; comment deadline Jul 28, 2025 |
 | Software Changes | [`sw-changes-distilled.md`](sw-changes-distilled.md) | When a software change requires a new 510(k) |
 | Software Functions | [`sw-functions-distilled.md`](sw-functions-distilled.md) | Software-functions-scoping across the Cures Act categories |
 

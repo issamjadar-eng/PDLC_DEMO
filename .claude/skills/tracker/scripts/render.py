@@ -46,7 +46,7 @@ def project_subtitle(project_dir):
         pathway_m = re.search(r'^\s{2}regulatory_pathway:\s*(.+?)\s*$', text, re.MULTILINE)
         name = name_m.group(1).strip() if name_m else 'Project'
         pathway = (pathway_m.group(1).strip() if pathway_m else '510k').lower()
-        pathway_label = {'510k': '510(k)', 'denovo': 'De Novo', 'pma': 'PMA',
+        pathway_label = {'510k': '510(k)', '510k+pccp': '510(k) + PCCP', 'denovo': 'De Novo', 'pma': 'PMA',
                          'mdr': 'EU MDR', 'ind': 'IND', 'nda': 'NDA',
                          'ivd': 'IVD', 'ce': 'CE Mark'}.get(pathway, pathway.upper())
         return f'{name} — {pathway_label} milestone-driven readiness'

@@ -1,8 +1,8 @@
 ---
 name: task
-description: "Task management for regulated projects — create, find, list, update, and show tasks organized by team member with index tracking"
-version: 25
-updated: 2026-05-15
+description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `setup` tasks organized by team member with index tracking. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
+version: 27
+updated: 2026-05-17
 ---
 
 # Task Management
@@ -47,8 +47,10 @@ When any action encounters a missing dependency, it should report:
 | `hooks/check-active-task.sh` | PreToolUse hook — denies Edit/Write/NotebookEdit when no active task is set. Symlinked from `.claude/hooks/`. |
 | `hooks/task-activate.sh` | Activation script source — installed to `.claude/hooks/` by `setup` action (writes per-session state files into `.state/` at project root). |
 | `hooks/session-env.sh` | SessionStart hook — reads `session_id` from hook JSON and exports `CLAUDE_SESSION_ID` via `CLAUDE_ENV_FILE`, making the ID available to all Bash tool calls. Required by `check-active-task.sh`. Symlinked from `.claude/hooks/` by `setup`. |
-| `hooks/session-cleanup.sh` | SessionEnd hook — removes `.state/active-tasks-{session_id}.txt` when a session ends, so completed sessions don't leave orphan state files. Symlinked from `.claude/hooks/` by `setup`. |
+| `hooks/session-cleanup.sh` | SessionEnd hook — removes `.state/active-tasks-{session_id}.txt` when a session ends, AND writes `.state/uncheckpointed-<person>-<NNN>-<date>.txt` markers for any active task whose `last-checkpoint-*.txt` marker is older than 30 minutes (or missing). Symlinked from `.claude/hooks/` by `setup`. |
+| `hooks/checkpoint-recover.sh` | SessionStart hook — scans `.state/` for any `uncheckpointed-*.txt` markers from previous sessions; if found, injects a SessionStart `additionalContext` block prompting Claude to offer retroactive `/checkpoint` recovery from `git log` + diff. Symlinked from `.claude/hooks/` by `setup`. Pairs with `session-cleanup.sh` and the `checkpoint` action. |
 | `hooks/register-hook.sh` | Shared hook registration helper — installed to `.claude/hooks/` by `setup` action if not already present |
+| `commands/checkpoint.md` | Slash command alias — thin wrapper that invokes the `checkpoint` action by name. Symlinked from `.claude/commands/` by `setup` so the user can type `/checkpoint` directly. Source of truth lives inside the skill so `/sync-skills pull` propagates updates. |
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
 | `rules/scratch-and-tmp.md` | The scratch/tmp convention — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
@@ -66,9 +68,10 @@ Wire up the task gate hook and activation script for this project. Self-containe
 4. If `.claude/hooks/register-hook.sh` does not exist, install it from `${CLAUDE_SKILL_DIR}/hooks/register-hook.sh` and make it executable. This is shared infrastructure — any skill can use it to register hooks safely.
 5. Create symlink `.claude/hooks/check-active-task.sh` → `../skills/task/hooks/check-active-task.sh` (skip if already exists)
 6. Create symlink `.claude/hooks/session-env.sh` → `../skills/task/hooks/session-env.sh` (skip if already exists). This hook makes `CLAUDE_SESSION_ID` available to all Bash tool calls — the task gate relies on it.
-7. Create symlink `.claude/hooks/session-cleanup.sh` → `../skills/task/hooks/session-cleanup.sh` (skip if already exists). This hook purges the task-gate state file on SessionEnd.
-8. Install `task-activate.sh` into `.claude/hooks/` — copy from `${CLAUDE_SKILL_DIR}/hooks/task-activate.sh` and make executable. (Skip if already exists and content matches.)
-9. **Migration — uninstall deprecated capture hooks (v13 → v23)**. The Strategy/Lessons capture-nag hooks (v12–v22) have been retired; they fired on every user prompt and every response turn with a 25% hit rate and high flow cost (see task ben/100). If a project was previously set up, clean up the now-orphaned artifacts:
+7. Create symlink `.claude/hooks/session-cleanup.sh` → `../skills/task/hooks/session-cleanup.sh` (skip if already exists). This hook fires on SessionEnd and (a) purges the task-gate state file for the ending session, (b) writes an `uncheckpointed-<person>-<NNN>-<date>.txt` marker into `.state/` for any active task whose `last-checkpoint-*.txt` marker is older than 30 minutes (or missing). The marker is the SessionStart hook's signal to offer retroactive `/checkpoint` recovery in the next session.
+8. Create symlink `.claude/hooks/checkpoint-recover.sh` → `../skills/task/hooks/checkpoint-recover.sh` (skip if already exists). This hook fires on SessionStart and scans `.state/` for any `uncheckpointed-*` markers left by previous sessions; if any exist, it injects an `additionalContext` block into Claude's startup context so the new session proactively offers to recover the lost state from `git log` + diff.
+9. Install `task-activate.sh` into `.claude/hooks/` — copy from `${CLAUDE_SKILL_DIR}/hooks/task-activate.sh` and make executable. (Skip if already exists and content matches.)
+10. **Migration — uninstall deprecated capture hooks (v13 → v23)**. The Strategy/Lessons capture-nag hooks (v12–v22) have been retired; they fired on every user prompt and every response turn with a 25% hit rate and high flow cost (see task ben/100). If a project was previously set up, clean up the now-orphaned artifacts:
     - Remove dangling symlinks: `rm -f .claude/hooks/capture-signals.sh .claude/hooks/capture-check.sh`
     - Remove `UserPromptSubmit` entries whose command path ends with `capture-signals.sh`, and `Stop` entries whose command path ends with `capture-check.sh`. If either event array becomes empty after filtering, drop the array entirely. Do this with a single idempotent jq pass over `settings.json`:
       ```bash
@@ -87,23 +90,28 @@ Wire up the task gate hook and activation script for this project. Self-containe
         | if (.hooks.Stop | length) == 0 then del(.hooks.Stop) else . end
       ' .claude/settings.json > .claude/settings.json.tmp && mv .claude/settings.json.tmp .claude/settings.json
       ```
-10. Register the task gate hook using the shared helper:
+11. Register the task gate hook using the shared helper:
     ```bash
     .claude/hooks/register-hook.sh PreToolUse "Edit|Write|NotebookEdit" command \
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/check-active-task.sh'
     ```
-11. Register the session-env hook (no matcher — fires for all SessionStart events):
+12. Register the session-env hook (no matcher — fires for all SessionStart events):
     ```bash
     .claude/hooks/register-hook.sh SessionStart "" command \
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/session-env.sh'
     ```
-12. Register the session-cleanup hook:
+13. Register the session-cleanup hook:
     ```bash
     .claude/hooks/register-hook.sh SessionEnd "" command \
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/session-cleanup.sh'
     ```
+14. Register the checkpoint-recover hook (no matcher — fires for all SessionStart events; chains after session-env in registration order, which is fine since they're independent):
+    ```bash
+    .claude/hooks/register-hook.sh SessionStart "" command \
+      '"$CLAUDE_PROJECT_DIR"/.claude/hooks/checkpoint-recover.sh'
+    ```
     The helper safely appends to `settings.json` without overwriting other skills' hooks. It checks for duplicates (idempotent).
-13. **Install the scratch/tmp convention.** The `_scratch/` sandbox the `create` action provisions only holds up if the project also gitignores it and the convention is discoverable. The task skill owns this convention because `_scratch/` exists only because tasks exist. Install all three pieces idempotently:
+15. **Install the scratch/tmp convention.** The `_scratch/` sandbox the `create` action provisions only holds up if the project also gitignores it and the convention is discoverable. The task skill owns this convention because `_scratch/` exists only because tasks exist. Install all three pieces idempotently:
     - **Rule file** — create `.claude/rules/` if missing, then symlink `.claude/rules/scratch-and-tmp.md` → `../skills/task/rules/scratch-and-tmp.md` (skip if it already points there; repoint if the target moved; if the project has forked the rule into a regular file, leave the fork alone). Files under `.claude/rules/` are auto-loaded into every session by Claude Code; the symlink — not a copy — is what makes a `/sync-skills pull` that updates the task skill auto-update the rule, with no drift and no stale copy to audit. This is the same install pattern the skill uses for its hooks.
     - **Gitignore** — ensure `.gitignore` contains both the `_scratch/` and `**/_scratch/` patterns. If `.gitignore` exists and has neither, append this commented block; if `.gitignore` does not exist, create it with this block:
       ```
@@ -121,7 +129,50 @@ Wire up the task gate hook and activation script for this project. Self-containe
       - `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.
       ```
       If CLAUDE.md already has an auto-loaded-rules section but no `scratch-and-tmp.md` line, add just that line.
-14. Report what was done — including whether step 9 uninstalled any legacy capture hooks, and which of the three step-13 convention pieces were installed vs already present.
+16. **Backfill missing index files.** For each `tasks/<person>/` folder that contains task files (`NNN-*.md`) but either has no `000-index.md` or has one missing rows for some task files:
+    - Parse each task file for: `**ID**: NNN`, the title from the `# NNN — Title` H1 line, `**Status**: <status>`, `**Priority**: <priority>`.
+    - Categorize by status: rows with `Status == Complete` go in the Completed table (ID | Task | Summary); all others go in Active (ID | Task | Status | Priority | Summary). Use the task title as the Summary placeholder.
+    - Write `000-index.md` using the template in "## Index file format" below, with the parsed rows populating the tables. Preserve any existing Changelog entries; append `- YYYY-MM-DD: Index backfilled from existing task files (skill v26 install).`
+    - Skip folders whose index already has rows for every task file (idempotent). The check: every `NNN-*.md` filename has a matching `| NNN |` row in either table.
+17. **Install the slash command alias.** The task skill ships a `checkpoint` slash command at `commands/checkpoint.md` — a thin wrapper that invokes the `checkpoint` action by name. Create `.claude/commands/` if missing, then symlink `.claude/commands/checkpoint.md` → `../skills/task/commands/checkpoint.md` (skip if it already points there; repoint if the target moved; leave a project fork alone). This is the same install pattern the skill uses for its hooks and rules: source-of-truth lives inside the skill so `/sync-skills pull` updates it automatically; the symlink — not a copy — is what eliminates drift. Note: Claude Code does not currently sync `.claude/commands/` via the `sync-skills` registry; the slash command is installed per-project from the skill's `commands/` directory.
+18. Report what was done — including whether step 10 uninstalled any legacy capture hooks, which of the three step-15 convention pieces were installed vs already present, whether the slash command symlink was created or already present, and how many person folders had indexes backfilled.
+
+## Index file format
+
+Each team member has an index file at `tasks/<person>/000-index.md` — a per-person table of contents that the `find` action scans **without opening individual task files**. The `create`, `update`, and `setup` actions are responsible for keeping it current; if any of them stops maintaining it, `find` silently degrades.
+
+**Template** (used by `create` when a person folder is new, and by `setup` backfill):
+
+```markdown
+# Task Index — <Full Name>
+
+## Active
+
+| ID | Task | Status | Priority | Summary |
+|----|------|--------|----------|---------|
+| — | — | — | — | No active tasks |
+
+## Completed
+
+| ID | Task | Summary |
+|----|------|---------|
+| — | — | No completed tasks |
+
+## Changelog
+
+- YYYY-MM-DD: Folder created.
+```
+
+**Columns:**
+- **ID** — zero-padded `NNN`, matches the task filename prefix.
+- **Task** — task title (the part after `NNN — ` in the file's H1 line).
+- **Status** (Active table only) — one of: Not Started, In Progress, Blocked.
+- **Priority** (Active table only) — Low, Medium, High, Critical.
+- **Summary** — one sentence describing the task's goals/scope. Substantive enough for `find` to match a user description against it without opening the task file. At create time, set to the task title as a placeholder; refine as Goals solidify.
+
+**Placeholder rows** (`| — | — | … | No active tasks |`) preserve the markdown table when a section is empty. Keep them; replace when the first real row is added.
+
+When moving a row from Active → Completed, drop the Status and Priority cells. The Completed table is intentionally narrower because completed tasks don't need triage data.
 
 ### `find <description>`
 Search for active tasks that relate to a topic or description. This is the entry point for the task-first workflow.
@@ -144,10 +195,17 @@ Search for active tasks that relate to a topic or description. This is the entry
 ### `create <person> <short-name>`
 Create a new task for a team member.
 
-1. Look in `tasks/<person>/` to find the highest existing task number
-2. Increment by 1 (zero-padded to 3 digits) for the new task ID
-3. **Ensure the person's `_scratch/` folder exists** — if `tasks/<person>/_scratch/` does not exist, `mkdir -p tasks/<person>/_scratch/`. This is a personal sandbox folder, gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`), for ideas, drafts, and exploratory artifacts the person wants to keep around locally during a task. The directory is local-only — it will not appear in git, and nothing inside it will ever be committed. The folder existing as an empty local directory is the signal to the user that this is where their personal scratch goes. See `.claude/rules/scratch-and-tmp.md` for the full convention — the auto-loaded rule file installed by the `setup` action. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
-4. Create the task file `tasks/<person>/NNN-<short-name>.md` using this structure:
+1. Look in `tasks/<person>/` to find the highest existing task number. Increment by 1 (zero-padded to 3 digits) for the new task ID. If the folder doesn't exist yet, start at `001` and `mkdir -p` the folder.
+2. **Ensure the person's `_scratch/` folder exists** — if `tasks/<person>/_scratch/` does not exist, `mkdir -p tasks/<person>/_scratch/`. This is a personal sandbox folder, gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`), for ideas, drafts, and exploratory artifacts the person wants to keep around locally during a task. The directory is local-only — it will not appear in git, and nothing inside it will ever be committed. The folder existing as an empty local directory is the signal to the user that this is where their personal scratch goes. See `.claude/rules/scratch-and-tmp.md` for the full convention — the auto-loaded rule file installed by the `setup` action. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
+3. Create the task file `tasks/<person>/NNN-<short-name>.md` using the template below. Populate the header fields as follows:
+   - **Title** (`# NNN — Task Title`): generate from `<short-name>` with title-case (e.g., `project-bootstrap` → `Project Bootstrap`). The user may override.
+   - `**ID**`: the new NNN.
+   - `**Created**`: today's ISO date.
+   - `**Status**`: `Not Started`.
+   - `**Created By**` and `**Owner**`: the `<person>` arg expanded to full name. Check existing tasks in the folder for the naming convention; fall back to `project.yml` `team.active[].name` where `task_folder == <person>`.
+   - `**Priority**`: `Medium` unless the user specified one.
+   - Initialize the inner **Changelog** with `- YYYY-MM-DD: Task created`.
+4. The task file uses this structure:
 
 ```markdown
 # NNN — Task Title
@@ -192,6 +250,63 @@ _Actionable work items. Check off as completed._
 
 ## Changelog
 See [README.md](README.md) for version history.
+```
+
+5. **Update `tasks/<person>/000-index.md`** — see "## Index file format" above. If the index file doesn't exist, create it from the empty template (substituting `<Full Name>` from `project.yml`). Then append a new row to the Active table:
+   ```
+   | NNN | <Task Title> | Not Started | <Priority> | <Task Title — refine as scope solidifies> |
+   ```
+   If the Active table still has only the placeholder row (`| — | — | — | — | No active tasks |`), remove the placeholder before appending. Add an index changelog line: `- YYYY-MM-DD: Task NNN created.`
+6. **Activate the new task** for the current session — see "## Task Gate State File" below for the activation command and session-ID handling.
+7. Show the user the created task file path, the task ID, and the Summary placeholder in the index (so they can refine it once the scope is clearer).
+
+### `update <person> <NNN> <status>`
+Change a task's status. Also rewires the corresponding row in `tasks/<person>/000-index.md` — the index and the task file must agree.
+
+`<status>` is one of: `Not Started`, `In Progress`, `Blocked`, `Complete`.
+
+1. Find the task file via glob `tasks/<person>/NNN-*.md`. If 0 matches, fail; if >1, list them and fail.
+2. Update the `**Status**: ...` line in the task file's header to `<status>`. Add an entry to the task file's inner Changelog: `- YYYY-MM-DD: Status changed to <status>.`
+3. **Update `tasks/<person>/000-index.md`** — find the row whose ID column matches `NNN` (in either Active or Completed table):
+   - If new `<status>` is anything other than `Complete`:
+     - If the row is in **Active**: rewrite the Status cell to `<status>`. Leave other columns alone.
+     - If the row is in **Completed**: move it back to Active. Re-read `**Priority**` from the task file to populate the Priority cell. The Summary cell carries over.
+   - If new `<status>` is `Complete`:
+     - If the row is in **Active**: remove it from Active, append it to Completed using only the ID | Task | Summary columns (drop Status + Priority).
+     - If already in **Completed**: no-op.
+   - In either case, add an index changelog line: `- YYYY-MM-DD: Task NNN status → <status>.`
+   - If a table empties out, restore its placeholder row (`| — | — | … | No active tasks |` / `| — | — | No completed tasks |`).
+4. If new `<status>` is `Complete`, deactivate the task in the session state file — see "## Task Gate State File" below.
+5. Confirm the change to the user: task file path, new status, and which index table the row now lives in.
+
+### `checkpoint [<person> <NNN>]`
+Refresh the active task doc to **resume-ready** state before a session boundary. The doc is the session-recovery point for the work — a fresh Claude session given only the file must be able to re-enter without asking "what were we doing?" This action enforces that.
+
+Use this when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, or any time the user signals an upcoming boundary.
+
+**Note on `/checkpoint`:** in projects that install this skill, the `/checkpoint` slash command deliberately shadows Claude Code's built-in `/checkpoint` alias for `/rewind` — this skill's auditable, written task-doc refresh is the intended meaning here. The built-in conversation/file snapshot is still reachable via `/rewind`, `/undo`, or `Esc + Esc`. See README.md for rationale.
+
+Args are optional. With no args, use the currently-active task. Pass `<person> <NNN>` to checkpoint a specific task explicitly.
+
+1. **Identify the target task doc.** If args were omitted: run `printenv CLAUDE_SESSION_ID` (use the **literal UUID** in subsequent calls — see the warning in "## Task Gate State File" below), then read `.state/active-tasks-{session_id}.txt`. Use the first task ID listed; if multiple are active, prefer the most recently activated. Find the file via `tasks/*/NNN-*.md`. If no task is active and no args were given, fail with: `"No active task to checkpoint. Pass <person> <NNN> or activate a task first."`
+2. **Audit the doc** against the PERMANENT RULE 4 success criteria — a fresh session must be able to recover: (a) what was completed this session with concrete artifacts (commit SHAs, PR URLs, file paths), (b) status of any in-flight work and outstanding temp artifacts, (c) priority-ordered next steps with file paths, (d) open questions blocking progress, (e) the exact `/task` activation command to resume.
+3. **Refresh the Todos section.** Tick off items completed this session. Rewrite the remaining list in priority order with concrete file paths. Promote completed Todos into the Goals checklist if they were structural milestones (not just one-off chores).
+4. **Refresh the Open Questions section.** Resolve any questions answered this session — strike them through or move to a "Resolved this session" subsection. Trim the list. Open Questions should never accumulate stale entries across multiple sessions; if the same question survived two checkpoints, surface that explicitly.
+5. **Refresh the Resume → In-flight artifacts subsection.** List every file you (Claude) generated or modified this session that's expected to be reviewed/edited externally (browsers, IDEs). Note the current state of relevant external systems: git HEADs of any repos touched, merged PR URLs, deployed URLs, outstanding temp files. **Explicitly state whether anything has been committed by Claude** (it usually has not — the user controls commits).
+6. **Refresh the Resume → First action on resume subsection.** List the priority-ordered first steps for the next session. Include anti-patterns to avoid: work that already shipped this session (so it isn't redone), commits not to make unless explicitly asked, sub-sessions or branches already cleaned up.
+7. **Refresh the Changelog.** Add a dated entry naming what shipped this session: commit SHAs, merged PR URLs, files changed, decisions captured, lessons saved to memory.
+8. **Verify the index entry** in `tasks/<person>/000-index.md` — the Status column must match the task file's `**Status**:` header. The Summary cell should reflect current scope, not the original-creation summary; update if it has drifted. If the index file is missing or doesn't have a row for this task, create/append it.
+9. **Do not commit anything to git.** The user controls commits explicitly; do not assume that checkpointing implies a commit. If the project has uncommitted changes, state that clearly in the In-flight artifacts subsection so the next session knows.
+10. **Write checkpoint markers.** Two state files coordinate with the SessionEnd / SessionStart hooks:
+    - Write `.state/last-checkpoint-<person>-<NNN>.txt` (just `touch` it — content doesn't matter; the mtime is the signal). The SessionEnd hook (`hooks/session-cleanup.sh`) compares this mtime against a 30-minute staleness threshold to decide whether to write an `uncheckpointed-*` marker.
+    - Delete any matching `.state/uncheckpointed-<person>-<NNN>-*.txt` markers — this checkpoint just made them obsolete. If the current session was triggered by a recovery markers from a previous session, this is where they get cleared.
+11. **Output the resume marker.** Once all refreshes are complete, output the EXACT text on its own line as the final response:
+
+    ```
+    ✅ Resume-ready — safe to /clear or /quit.
+    ```
+
+    Nothing else after that line. This is the user's signal that the doc is fully prepped and they can safely end the session.
 
 ## Task Gate State File
 
@@ -207,9 +322,9 @@ One task ID per line. Per-session files ensure each terminal/session has indepen
 
 | After this action | Do this |
 |-------------------|---------|
-| `create` (after step 6) | Activate the new task ID |
-| `find` → user selects a task to work under | Activate the selected task ID |
-| `update` to "Complete" (after step 3) | Deactivate the completed task ID |
+| `create` (step 6) | Activate the new task ID |
+| `find` → high-confidence match selected | Activate the matched task ID |
+| `update` setting status to `Complete` (step 4) | Deactivate the completed task ID |
 
 **Implementation** — use the activation script:
 ```bash

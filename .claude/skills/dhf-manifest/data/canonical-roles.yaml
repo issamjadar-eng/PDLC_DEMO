@@ -161,6 +161,31 @@ roles:
     patterns:
       - "**/*.md"
 
+  jira_mirror:
+    scope: project
+    multi_file: true
+    description: |
+      System-of-record mirror of the project's Jira tracker, written by
+      `/jira-pull refresh`. Per-architecture × per-version snapshots live
+      under `<arch>/<version>/` and contain one rendered Markdown sidecar
+      per Jira layer (Epics, Stories, Hazards, Hazard Causes, Test
+      Executions, etc.) alongside the raw JSON. A `_global/` subfolder
+      captures layers with project-wide scope (e.g., sub-tasks that carry
+      no fixVersion in Jira and therefore can't be routed to a per-version
+      snapshot).
+
+      Advisors grounding cross-functional questions (risk, V&V, design
+      controls) should look here for the canonical Jira state — the legacy
+      xlsx exports under each DHF's `formal/` folder are derived from this
+      mirror, not the other way around. Layer set is project-declared via
+      `change_control.jira` in `project.yml`; the catalog only declares the
+      mirror root so different projects' layer vocabularies all resolve here
+      uniformly.
+    consumers: [risk-management, regulatory-affairs, vnv-lead, rd-lead, systems-engineering, quality-engineering, cybersecurity, program-manager]
+    folder: docs/project/_jira
+    patterns:
+      - "**/*.md"
+
   # ──────────────────────────────────────────────────────────────────────
   # Per-DHF roles — declare per-mode resolution
   # ──────────────────────────────────────────────────────────────────────
@@ -574,3 +599,89 @@ roles:
     triage_only: true
     patterns:
       - "**/*.md"
+
+  regulations:
+    scope: external_data
+    description: Federal regulation applicability files (21 CFR parts — classification, registration/listing, 510(k) required/exempt, significant-change). Carry the force of law (distinct from interpretive FDA guidance).
+    consumers: [regulatory-affairs]
+    folder: docs/external/regulations
+    triage_only: true
+    patterns:
+      - "**/*.md"
+
+  # ──────────────────────────────────────────────────────────────────────
+  # L1a registry-canonical reference roles (medtech-docs reference layer)
+  # ──────────────────────────────────────────────────────────────────────
+  #
+  # The medtech-docs skill defines a TWO-TIER regulatory-content architecture:
+  #   L1a — Registry distillation (here):  .claude/skills/medtech-docs/references/<cat>/
+  #         Project-agnostic, shipped via /sync-skills. Authoritative clause / section /
+  #         regulation text. THIS layer.
+  #   L1b — Project applicability:         docs/external/<cat>/ (above)
+  #         Per-project applicability analysis (which clauses apply to which modules,
+  #         [VERIFY] markers, QMS deferrals, classification decisions).
+  #
+  # Per the medtech-docs README "For Claude" section, agents grounded against a project
+  # MUST consult BOTH layers when citing a standard / guidance / regulation / framework:
+  # cite the project applicability file for "what this program has decided" AND the
+  # registry distillation file for "what the standard/guidance/regulation actually says."
+  #
+  # Patterns use top-level `*.md` (not `**/*.md`) to deliberately exclude `source/` PDFs
+  # and `source-md/` raw extractions — those are L1c (upstream raw, NOT authority) per
+  # the medtech-docs `references/<cat>/README.md` Scope sections.
+
+  registry_standards:
+    scope: external_data
+    description: |
+      Registry-canonical clause-level distillations of IEC / ISO consensus standards —
+      the L1a tier of the medtech-docs two-tier grounding model. Authoritative clause
+      text for what each standard actually requires. Paired with `standards` (L1b) for
+      project applicability — cite both per the medtech-docs cite-both mandate.
+    consumers: [regulatory-affairs, quality-engineering, risk-management, human-factors, vnv-lead, systems-engineering, rd-lead, cybersecurity]
+    folder: .claude/skills/medtech-docs/references/standards
+    triage_only: true
+    patterns:
+      - "*.md"
+
+  registry_fda_guidance:
+    scope: external_data
+    description: |
+      Registry-canonical distilled summaries of FDA guidance documents — the L1a tier
+      of the medtech-docs two-tier grounding model. What FDA actually says about 510(k),
+      De Novo, PCCP, SaMD, AI/ML, MDDS, MFD, CDS, sw-changes, sw-functions, cybersecurity
+      premarket, Q-Sub program, eSTAR templates. Paired with `fda_guidance` (L1b) for
+      project applicability — cite both per the medtech-docs cite-both mandate.
+    consumers: [regulatory-affairs, quality-engineering, risk-management, cybersecurity, clinical-affairs, post-market, rd-lead, vnv-lead]
+    folder: .claude/skills/medtech-docs/references/fda-guidance
+    triage_only: true
+    patterns:
+      - "*.md"
+
+  registry_regulations:
+    scope: external_data
+    description: |
+      Registry-canonical distillations of federal regulations — 21 CFR parts. The L1a
+      tier of the medtech-docs two-tier grounding model. Verbatim regulatory text
+      carrying the force of law (e.g., 21 CFR Part 807 establishment registration and
+      510(k) procedures; Part 880 MDDS; Part 892 radiology QIH; Part 820 QSR;
+      Part 803 MDR; Part 11 electronic records; Part 812 IDE). Paired with `regulations`
+      (L1b) for project applicability — cite both per the medtech-docs cite-both mandate.
+    consumers: [regulatory-affairs, quality-engineering, risk-management, clinical-affairs, post-market, cybersecurity]
+    folder: .claude/skills/medtech-docs/references/regulations
+    triage_only: true
+    patterns:
+      - "*.md"
+
+  registry_industry_frameworks:
+    scope: external_data
+    description: |
+      Registry-canonical distillations of industry frameworks (DICOM, HL7 FHIR, NIST CSF,
+      GMLP, OWASP, AAMI TIRs, IMDRF documents, etc.) — the L1a tier of the medtech-docs
+      two-tier grounding model. What each framework actually recommends. Paired with
+      `industry_frameworks` (L1b) for project applicability — cite both per the
+      medtech-docs cite-both mandate.
+    consumers: [regulatory-affairs, rd-lead, cybersecurity, vnv-lead, risk-management, clinical-affairs]
+    folder: .claude/skills/medtech-docs/references/industry-frameworks
+    triage_only: true
+    patterns:
+      - "*.md"

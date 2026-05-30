@@ -1,0 +1,192 @@
+# Topic → Recommended Advisor Map
+#
+# Soft routing for the /gap-analysis skill. When a user invokes
+# `/gap-analysis init <topic> --component <slug>`, the skill reads this file
+# to pre-populate `recommended_agents:` in the new analysis's frontmatter.
+#
+# Topic vocabulary is medtech-generic (ISO 14971, IEC 62304, IEC 62366,
+# IEC 81001-5-1, ISO 13485, FDA 510(k) / De Novo / PMA / predetermined
+# change-control framework, MDR).
+# Advisor names match the project-agnostic advisor-agent names in the registry.
+#
+# Routing is ADVISORY — the user / agent can override `recommended_agents:`
+# in the file's frontmatter at any time. Project-specific topics can be added
+# in project.yml `gap_analysis.topics_extra` (planned wiring; the skill source
+# stays project-agnostic).
+
+schema_version: "1.0"
+
+topics:
+
+  risk:
+    description: >-
+      ISO 14971 hazard identification, risk estimation, risk control, residual
+      risk evaluation, benefit-risk analysis. Includes hazard register critique,
+      FMEA scoring consistency, Hazardous Situation taxonomy, mitigation
+      requirement trace.
+    primary: [risk-management]
+    consulting: [regulatory-affairs, clinical-affairs]
+    typical_sources:
+      - PHA / Preliminary Hazard Analysis
+      - SRA / Software Risk Assessment
+      - HTM / Hazard Traceability Matrix
+      - dFMEA, uFMEA
+      - Jira Hazard + Hazard Cause issuetypes
+
+  regulatory:
+    description: >-
+      Filing pathway (510(k), De Novo, PMA, predetermined change-control
+      frameworks), substantial equivalence,
+      predicate device argumentation, indications for use scope, classification
+      (Class I / II / III, SaMD vs MDDS vs non-device), CDS / SaMD framework,
+      Q-Sub questions, modification protocol scope.
+    primary: [regulatory-affairs]
+    consulting: [systems-engineering, program-manager]
+    typical_sources:
+      - Regulatory strategy brief
+      - Predicate device analysis
+      - Q-Sub composition manifest
+      - 510(k) cover letter / device description
+      - Pre-authorized modification protocol(s)
+
+  vnv:
+    description: >-
+      Verification & validation strategy, test protocol authoring, trace from
+      tests back to design inputs and user needs, V&V evidence sufficiency,
+      IEC 62304 § 5.7 software testing, design transfer readiness, V&V
+      coverage gaps.
+    primary: [vnv-lead]
+    consulting: [risk-management, rd-lead]
+    typical_sources:
+      - V&V plan
+      - STC / Software Test Cases
+      - STR / Software Test Results
+      - STM / Software Trace Matrix
+      - Jira Test Execution issuetype
+
+  cybersecurity:
+    description: >-
+      IEC 81001-5-1, FDA pre-market cybersecurity guidance, threat modeling,
+      SBOM management, vulnerability handling, network architecture security,
+      cybersecurity / safety risk interaction.
+    primary: [cybersecurity]
+    consulting: [risk-management, regulatory-affairs]
+    typical_sources:
+      - Threat model
+      - Cybersecurity risk assessment
+      - Cybersecurity management plan
+      - SBOM
+
+  clinical:
+    description: >-
+      Clinical evaluation plan / report, KOL engagement, user-needs validation
+      from a clinical perspective, clinical risk framing, benefit-risk analysis
+      (clinical side), literature search, PMCF.
+    primary: [clinical-affairs]
+    consulting: [risk-management, regulatory-affairs, human-factors]
+    typical_sources:
+      - Clinical evaluation plan / report
+      - KOL feedback synthesis
+      - Literature search
+      - PMCF plan
+      - Benefit-risk analysis (clinical sections)
+
+  human-factors:
+    description: >-
+      IEC 62366 usability engineering, use-related risk analysis, task
+      analysis, formative / summative usability evaluation, user profiles,
+      use scenarios, use-error risk control.
+    primary: [human-factors]
+    consulting: [clinical-affairs, regulatory-affairs]
+    typical_sources:
+      - Use specification
+      - uFMEA
+      - Use scenarios / task analysis
+      - Formative / summative evaluation reports
+
+  filing:
+    description: >-
+      Submission package composition, readiness assessment, FDA-question
+      sharpness, traceability across the filing, cross-component arguments
+      that span multiple architectural components.
+    primary: [regulatory-affairs, program-manager]
+    consulting: [systems-engineering, risk-management, vnv-lead]
+    typical_sources:
+      - Submission composition manifest
+      - Cover letter
+      - Device description / IFU
+      - FDA questions / Q-Sub correspondence
+
+  postmarket:
+    description: >-
+      Post-market surveillance strategy, complaint handling, trend analysis,
+      periodic safety reports, field safety corrective actions, feedback loop
+      back into risk management and design change.
+    primary: [post-market]
+    consulting: [risk-management, regulatory-affairs, quality-engineering]
+    typical_sources:
+      - PMS plan
+      - Complaint analysis
+      - PSUR / PMSR
+      - CAPA
+
+  quality:
+    description: >-
+      ISO 13485 conformance, design controls process adherence, traceability
+      matrices (process angle), document control, deviation / CAPA, audit
+      readiness, whether an artifact meets the QMS bar.
+    primary: [quality-engineering]
+    consulting: [regulatory-affairs, systems-engineering]
+    typical_sources:
+      - Quality plan
+      - Design history file index
+      - Audit findings
+      - SOPs / WIs / FORMs
+
+  software-architecture:
+    description: >-
+      IEC 62304 § 5.3 architectural design, system / item decomposition,
+      interface management, module boundaries, architectural separation
+      arguments, MFD framework framing.
+    primary: [systems-engineering, rd-lead]
+    consulting: [regulatory-affairs, cybersecurity, vnv-lead]
+    typical_sources:
+      - System SAD / Software Architecture Document
+      - Software Detailed Design (SDD)
+      - Interface specifications
+      - Module-to-DHF mapping
+
+  systems-engineering:
+    description: >-
+      Requirements decomposition, design input → design output trace, system
+      vs item DHF boundaries, requirement coverage, integration plans.
+    primary: [systems-engineering]
+    consulting: [rd-lead, vnv-lead, regulatory-affairs]
+    typical_sources:
+      - User needs document
+      - SRS / Software Requirements Specification
+      - DTM / Design Trace Matrix
+      - System DDP / Design and Development Plan
+
+# Aliases — alternate names that route to the same primary advisor set.
+# Keep aliases minimal; the canonical topics above are preferred.
+aliases:
+  fmea: risk
+  hazard-analysis: risk
+  iso-14971: risk
+  iec-62304: software-architecture
+  iec-62366: human-factors
+  iec-81001-5-1: cybersecurity
+  iso-13485: quality
+  pccp: filing
+  qsub: filing
+  510k: filing
+  substantial-equivalence: regulatory
+  predicate-analysis: regulatory
+  threat-model: cybersecurity
+  usability: human-factors
+  use-error: human-factors
+  cep: clinical
+  cer: clinical
+  pms: postmarket
+  capa: postmarket
