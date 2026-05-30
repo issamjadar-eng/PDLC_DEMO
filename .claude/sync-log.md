@@ -819,3 +819,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Hitachi HEAD after sync: `4b43fff`
 - Provenance: PDLC_DEMO — local agent refactor committed `620e15e` (2026-04-20). These agents had entered the registry via hitachi #63 (`3393bab`) in the pre-refactor Arthrex-sourced format.
 - Not pushed: 5 dhf-manifest files (uncommitted WIP, task ben/051 — Not Started).
+
+## 2026-05-30 — push (sync-skills v8.3 — Windows symlink corruption guard)
+
+- Files: 4
+  - `skills/sync-skills/SKILL.md` (version 8.2 → 8.3, +new test in Supporting Files)
+  - `skills/sync-skills/README.md` (v8.3 changelog entry)
+  - `skills/sync-skills/scripts/sync.sh` (+`_is_tracked_symlink`, `_read_symlink_target`, `_smart_content_hash`, `_sha1_stdin` helpers; `cmd_analyze` symlink branch via index instead of `-L`; `_walk_registry_tree` uses `_smart_content_hash`; `cmd_push_stage` hard guard refuses corrupt-symlink content with exit 8)
+  - `skills/sync-skills/tests/test_windows_symlink_guard.sh` (new, 4 cases)
+- Branch: `sync/sync-skills-v8.3-windows-symlink-guard-2026-05-30`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/185
+- Commit: "sync-skills v8.3 — Windows-clone symlink corruption guard"
+- Status: merged (squash)
+- Merge commit: `8ebe1f2`
+- Hitachi HEAD after sync: `8ebe1f2`
+- Provenance: PDLC_DEMO task ben/066. Bug surfaced when upstream commit `07574e9` overwrote 14 `.claude/agents/*.md` symlinks with full markdown content under preserved 120000 mode, blocking `git pull --ff-only` on Linux/macOS. Root cause: pre-v8.3 `[[ -L ]]` filesystem check returns false on Windows clones where `core.symlinks=false` materializes tracked symlinks as plain text files. Repair PR for the corrupted project state: PDLC_DEMO PR #11 (commit `bc2f698`) — git-plumbing restoration of the 14 entries to pre-vlad blobs.
+- Local sync: not needed — fix was authored against the local copy first, then pushed; local is already at v8.3.

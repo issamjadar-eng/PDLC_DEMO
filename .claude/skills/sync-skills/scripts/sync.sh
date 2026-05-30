@@ -79,6 +79,135 @@ _hitachi_clean() {
   [[ -z "$(git -C "$HITACHI" status --porcelain)" ]]
 }
 
+# Returns 0 (true) if the given path is tracked with mode 120000 (symlink) in
+# the given repo. Authoritative regardless of OS or `core.symlinks` setting —
+# uses git's index rather than the filesystem's `-L` test, so it correctly
+# identifies "tracked symlinks materialized as plain text files" on Windows
+# clones where `core.symlinks=false` is the default. Without this, sync flows
+# treat such files as regular text, overwrite them on pull, and (worst case)
+# push the resulting non-path content under the preserved 120000 mode —
+# producing symlinks whose target string is arbitrary content that no
+# filesystem can check out (PATH_MAX ~4096; agent markdown is ~5 KB).
+#
+# Args: $1 = repo path (absolute), $2 = path relative to repo root
+_is_tracked_symlink() {
+  local repo="$1" rel="$2"
+  local mode
+  mode="$(git -C "$repo" ls-files -s --full-name -- "$rel" 2>/dev/null | awk 'NR==1{print $1}')"
+  [[ "$mode" == "120000" ]]
+}
+
+# Read a "symlink target string" from a path. If the path is a real symlink,
+# returns readlink output. If it's a plain file (Windows-style symlink
+# materialization), returns its content with a single trailing newline stripped
+# — matching how git stores symlink blob content.
+#
+# Returns non-zero with no stdout when the content is implausible as a symlink
+# target: empty, multiline, or > 4096 bytes (PATH_MAX). These are the markers
+# of a corrupted "symlink" — typically an editor or sync tool that, on a
+# Windows clone, treated a tracked symlink as a text file and wrote arbitrary
+# content into it.
+#
+# Args: $1 = absolute filesystem path
+_read_symlink_target() {
+  local path="$1"
+  if [[ -L "$path" ]]; then
+    readlink "$path"
+    return 0
+  fi
+  if [[ ! -f "$path" ]]; then
+    return 1
+  fi
+  local size
+  size="$(wc -c < "$path" 2>/dev/null || echo 0)"
+  if (( size == 0 )); then
+    return 1
+  fi
+  if (( size > 4096 )); then
+    return 2  # corrupted: too large to be a plausible symlink target
+  fi
+  local line_count
+  line_count="$(wc -l < "$path" 2>/dev/null || echo 0)"
+  # wc -l counts newlines, so a single-line file with a trailing newline reports
+  # 1; a single-line file without trailing newline reports 0. Multiline content
+  # (>1 newline) is corruption.
+  if (( line_count > 1 )); then
+    return 3  # corrupted: multiline target
+  fi
+  # Strip single trailing newline if present (editors often add one).
+  local content
+  IFS= read -r content < "$path" || content="$(cat "$path")"
+  printf '%s' "$content"
+}
+
+# Portable SHA-1: prefer sha1sum (GNU coreutils, always on Linux); fall back
+# to shasum -a 1 (Perl, default on macOS and Debian/Ubuntu). Reads stdin only.
+_sha1_stdin() {
+  if command -v sha1sum >/dev/null 2>&1; then
+    sha1sum | cut -d' ' -f1
+  else
+    shasum -a 1 | cut -d' ' -f1
+  fi
+}
+
+# Content-equivalence hash for a path, accounting for all storage layouts that
+# `sha1sum < file` alone gets wrong on Windows clones.
+#
+# Args: $1 = repo root (absolute), $2 = path relative to repo root
+#
+# Three branches:
+#   1. Real symlink in WT — `sha1sum < $path` follows the link and hashes the
+#      resolved file (v8.1 semantics).
+#   2. Regular file that is NOT tracked as a symlink — just hash its bytes.
+#   3. Regular file that IS tracked as a symlink (mode 120000 in index). This
+#      is the Windows-clone materialization. Resolve the path-string content
+#      as a relative symlink target manually, then hash the resolved file.
+#      When the content is corrupt (multiline, > 4096 bytes) or the target
+#      can't be resolved, return a unique sentinel hash so drift is always
+#      reported — pushing one of these is also blocked by cmd_push_stage's
+#      guard, so the user can't silently propagate corruption.
+_smart_content_hash() {
+  local repo_root="$1" rel="$2"
+  local fs_path="$repo_root/$rel"
+
+  if [[ ! -e "$fs_path" && ! -L "$fs_path" ]]; then
+    printf 'MISSING:%s' "$fs_path" | _sha1_stdin
+    return 0
+  fi
+
+  if [[ -L "$fs_path" || ! -f "$fs_path" ]]; then
+    # Real symlink or non-regular — `< file` follows symlinks transparently.
+    _sha1_stdin < "$fs_path"
+    return 0
+  fi
+
+  # Regular file. If git's index says it's a symlink, this is Windows-style
+  # materialization; resolve manually.
+  if _is_tracked_symlink "$repo_root" "$rel"; then
+    local target
+    if ! target="$(_read_symlink_target "$fs_path")"; then
+      printf 'CORRUPT_TRACKED_SYMLINK:%s' "$fs_path" | _sha1_stdin
+      return 0
+    fi
+    local dir resolved
+    dir="$(dirname "$fs_path")"
+    # Resolve target relative to the symlink's directory. We deliberately do
+    # NOT use `realpath` here — that would canonicalize through other
+    # symlinks and complicate cross-repo comparison; relative-string
+    # resolution one level deep is enough for the typical
+    # `.claude/agents/X.md → ../skills/Y/agents/X.md` pattern.
+    resolved="$dir/$target"
+    if [[ -e "$resolved" ]]; then
+      _sha1_stdin < "$resolved"
+      return 0
+    fi
+    printf 'UNRESOLVABLE_TARGET:%s->%s' "$fs_path" "$target" | _sha1_stdin
+    return 0
+  fi
+
+  _sha1_stdin < "$fs_path"
+}
+
 # ─── Subcommands ───────────────────────────────────────────────────────────
 
 cmd_hitachi_path() { echo "$HITACHI"; }
@@ -288,9 +417,29 @@ cmd_analyze() {
   # the link and hash the resolved file, producing a SHA that never matches a
   # symlink blob in hitachi history. For symlinks, hash the readlink output via
   # --stdin instead.
+  #
+  # IMPORTANT: detect "symlink" via the git index (`_is_tracked_symlink`),
+  # NOT the filesystem (`[[ -L ]]`). On Windows clones with core.symlinks=false
+  # (git's default on Windows), tracked symlinks materialize as plain text
+  # files containing the target path string — `-L` returns false and the
+  # script would take the regular-file branch, hash the path-string text as
+  # arbitrary file content, mismatch every upstream symlink blob, and report
+  # false UPSTREAM_NEWER drift. `_is_tracked_symlink` consults the index mode
+  # directly (`120000`), which is authoritative across OS / core.symlinks
+  # settings. `_read_symlink_target` then handles both real symlinks
+  # (readlink) and Windows-style file-as-target-string (cat + strip newline);
+  # it returns non-zero for corrupted content (multiline / > 4096 bytes) so
+  # we can surface that as UNDETERMINED instead of silently hashing garbage.
   local local_blob
-  if [[ -L "$local_path" ]]; then
-    local_blob="$(printf '%s' "$(readlink "$local_path")" | git -C "$PROJECT_DIR" hash-object --stdin 2>/dev/null || true)"
+  if _is_tracked_symlink "$PROJECT_DIR" ".claude/$rel"; then
+    local target
+    if target="$(_read_symlink_target "$local_path")"; then
+      local_blob="$(printf '%s' "$target" | git -C "$PROJECT_DIR" hash-object --stdin 2>/dev/null || true)"
+    else
+      printf '%s\t%s\t%s\t%s\n' "$status" "$rel" "UNDETERMINED" \
+        "local file tracked as symlink (mode 120000) but content is not a plausible target (multiline or >4096 bytes) — likely Windows-clone corruption from core.symlinks=false; do NOT push"
+      return 0
+    fi
   else
     local_blob="$(git -C "$PROJECT_DIR" hash-object "$local_path" 2>/dev/null || true)"
   fi
@@ -463,20 +612,27 @@ _walk_registry_tree() {
     case "$f" in
       skills/sync-skills/*) continue ;;
     esac
+
+    # Compute effective content hash for each side. Preserves v8.1 semantics
+    # (compare RESOLVED content regardless of storage layout: regular file vs
+    # symlink) while extending to Windows-clone materializations where a
+    # tracked symlink (mode 120000) appears as a plain text file containing
+    # the target path. `_smart_content_hash` handles all three storage cases:
+    #   1. Real symlink in WT          → sha1sum < file (cat follows the link)
+    #   2. Regular file, NOT tracked   → sha1sum < file (just the bytes)
+    #     as symlink
+    #   3. Regular file BUT tracked    → read the target string, resolve it
+    #     as symlink (Windows materi-     manually, then sha1sum the resolved
+    #     alization)                      file. Falls back to a unique sentinel
+    #                                     hash (always reports drift) when the
+    #                                     content is corrupt or unresolvable —
+    #                                     this is what flags the vlad scenario
+    #                                     for the user's attention while the
+    #                                     cmd_push_stage guard refuses any
+    #                                     attempt to ship it.
     local upstream_hash local_hash
-    # Portable SHA-1: sha1sum (GNU coreutils, always on Linux) preferred over
-    # shasum (Perl script, default on macOS and Debian/Ubuntu but not on minimal
-    # images like Alpine). Either works for content-equality comparisons.
-    # `< file` redirection follows symlinks; `sha1sum file` would too but emits
-    # the path on stdout, complicating the cut. The redirection form keeps the
-    # output to just the hash.
-    if command -v sha1sum >/dev/null 2>&1; then
-      upstream_hash="$(sha1sum < "$HITACHI/$f" 2>/dev/null | cut -d' ' -f1)"
-      local_hash="$(sha1sum < "$LOCAL_BASE/$f" 2>/dev/null | cut -d' ' -f1)"
-    else
-      upstream_hash="$(shasum -a 1 < "$HITACHI/$f" 2>/dev/null | cut -d' ' -f1)"
-      local_hash="$(shasum -a 1 < "$LOCAL_BASE/$f" 2>/dev/null | cut -d' ' -f1)"
-    fi
+    upstream_hash="$(_smart_content_hash "$HITACHI" "$f")"
+    local_hash="$(_smart_content_hash "$PROJECT_DIR" ".claude/$f")"
     if [[ "$upstream_hash" != "$local_hash" ]]; then
       printf 'UPSTREAM_NEWER\t%s\n' "$f"
     fi
@@ -531,6 +687,59 @@ cmd_push_stage() {
     echo "ERROR: local file not found: $rel" >&2
     exit 4
   fi
+
+  # Symlink corruption guard. If the local source is tracked as a symlink in
+  # the project (mode 120000 in the index), validate that its current content
+  # is a plausible symlink target string before copying upstream. The exact
+  # bug class this catches: a Windows clone with `core.symlinks=false` (the
+  # git default on Windows) materializes tracked symlinks as plain text files
+  # containing the target path string. An editor — or this script's own pre-
+  # v8.3 cmd_pull_file — may then overwrite the path-string content with
+  # arbitrary content (e.g., the resolved markdown that the symlink pointed
+  # to). git records the new content under the preserved 120000 mode,
+  # producing a "symlink" whose target is 5 KB of agent markdown that no
+  # filesystem can check out (PATH_MAX ~4096). Pushing this propagates the
+  # corruption registry-wide. Real incident: PDLC_DEMO commit 07574e9
+  # corrupted 14 .claude/agents/*.md paths this way; downstream Linux/macOS
+  # pulls then failed with `unable to create symlink: File name too long`.
+  #
+  # Refuse upfront with a clear remediation message rather than letting the
+  # bad blob land in a sync PR.
+  if _is_tracked_symlink "$PROJECT_DIR" ".claude/$rel"; then
+    local target
+    if ! target="$(_read_symlink_target "$src")"; then
+      cat >&2 <<EOF
+ERROR: refusing to stage corrupted symlink: $rel
+
+  This file is tracked in the project index as a symlink (mode 120000) but
+  its on-disk content is not a plausible symlink target (multiline or
+  > 4096 bytes). Pushing it would propagate the corruption to the registry
+  and break checkout on Linux/macOS for every consumer of this skill.
+
+  Most likely cause: this project was edited from a Windows clone with
+  \`core.symlinks=false\` (the git default on Windows). On such clones,
+  tracked symlinks appear as plain text files containing the target path,
+  and tools that read+rewrite the file (editors, prior versions of this
+  script) overwrite the target string with arbitrary content. git records
+  the new content under the preserved 120000 mode.
+
+  Fix (on the Windows clone that produced the bad content):
+    1. git config --global core.symlinks true
+    2. cd <repo> && git checkout -- $rel    # restore the real symlink
+    3. Re-run your change against the dereferenced target file instead.
+
+  Fix (anywhere):
+    Restore the correct symlink target via git plumbing, e.g.:
+      blob=\$(git hash-object --stdin <<< '../skills/<owner>/agents/<name>.md')
+      git update-index --cacheinfo 120000,\$blob,$rel
+      git checkout -- $rel
+EOF
+      exit 8
+    fi
+    # Content validated. Copy as-is — git will preserve mode 120000 in the
+    # registry index since the destination path was also a symlink there.
+  fi
+
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"
   echo "staged: $rel"
