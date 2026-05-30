@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0",
-  "generated": "2026-05-14T05:28:58.359334+00:00",
+  "schema_version": "1.1",
+  "generated": "2026-05-30T09:07:04.925342+00:00",
   "project": "pdlc-demo",
   "project_roles": {
     "regulatory_strategy": {
@@ -64,6 +64,14 @@
     },
     "filing_strategy": {
       "folder": "docs/project/input-analysis/filing-strategy",
+      "exists": false,
+      "file_count": 0,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "jira_mirror": {
+      "folder": "docs/project/_jira",
       "exists": false,
       "file_count": 0,
       "patterns_used": [
@@ -1272,6 +1280,46 @@
       "patterns_used": [
         "**/*.md"
       ]
+    },
+    "regulations": {
+      "folder": "docs/external/regulations",
+      "exists": false,
+      "file_count": 0,
+      "patterns_used": [
+        "**/*.md"
+      ]
+    },
+    "registry_standards": {
+      "folder": ".claude/skills/medtech-docs/references/standards",
+      "exists": true,
+      "file_count": 6,
+      "patterns_used": [
+        "*.md"
+      ]
+    },
+    "registry_fda_guidance": {
+      "folder": ".claude/skills/medtech-docs/references/fda-guidance",
+      "exists": true,
+      "file_count": 14,
+      "patterns_used": [
+        "*.md"
+      ]
+    },
+    "registry_regulations": {
+      "folder": ".claude/skills/medtech-docs/references/regulations",
+      "exists": true,
+      "file_count": 4,
+      "patterns_used": [
+        "*.md"
+      ]
+    },
+    "registry_industry_frameworks": {
+      "folder": ".claude/skills/medtech-docs/references/industry-frameworks",
+      "exists": true,
+      "file_count": 9,
+      "patterns_used": [
+        "*.md"
+      ]
     }
   },
   "gaps": [
@@ -1290,6 +1338,14 @@
       "scope": "project",
       "role": "filing_strategy",
       "reason": "folder does not exist: docs/project/input-analysis/filing-strategy",
+      "patterns_tried": [
+        "**/*.md"
+      ]
+    },
+    {
+      "scope": "project",
+      "role": "jira_mirror",
+      "reason": "folder does not exist: docs/project/_jira",
       "patterns_tried": [
         "**/*.md"
       ]
@@ -3542,6 +3598,14 @@
       "reason": "no file matched any pattern in docs/project/submissions/qsub",
       "patterns_tried": [
         "composition-manifest.md"
+      ]
+    },
+    {
+      "scope": "external",
+      "role": "regulations",
+      "reason": "folder does not exist: docs/external/regulations",
+      "patterns_tried": [
+        "**/*.md"
       ]
     }
   ],
