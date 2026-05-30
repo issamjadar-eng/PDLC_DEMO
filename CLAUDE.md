@@ -14,10 +14,12 @@ The demo exercises a full MedTech project footprint: Design History File (DHF) a
 .
 ├── project.yml             # Project manifest (see below)
 ├── docs/                   # MedTech documentation (three-tier: external / internal / project)
-├── src/                    # Demo device code (SaMD + pump firmware placeholders)
+├── tasks/                  # Per-person task docs + lessons ledger (gated by the task skill)
 ├── .claude/
 │   ├── skills/             # Installed skills (medtech-docs, task, docflow, ...)
 │   ├── agents/             # Installed agents (project-secops, ...)
+│   ├── commands/           # Slash command aliases (e.g. /checkpoint)
+│   ├── rules/              # Auto-loaded session rules (symlinks to skill-owned sources)
 │   └── hooks/              # Shared hook infrastructure
 └── CLAUDE.md               # This file
 ```
@@ -96,7 +98,9 @@ Team-shared lessons staging lives at `tasks/lessons-ledger.md`. The `/lessons` s
 
 This is a **demonstration**, not a regulatory submission. Fabricated clinical data, placeholder predicates, and non-binding analyses are acceptable — but all such content must be marked clearly (e.g., `_Demo sample data — not for clinical use._`) so readers never mistake the demo for real DHF evidence.
 
-## For Claude
+## Operating Notes
+
+### For Claude
 
 - **Respect the task gate.** If a tool call is denied because no active task is set, follow the exact recovery command printed in the denial. Never try to bypass the gate.
 - **Never fabricate standard, clinical, or regulatory content.** Anything not derivable from a distilled source in `docs/external/` or `docs/internal/source-md/` must be flagged `[VERIFY]` inline.
@@ -105,6 +109,16 @@ This is a **demonstration**, not a regulatory submission. Fabricated clinical da
 - **READMEs have `## Conventions` and `## Changelog` sections.** When editing a README under `docs/`, append a changelog row describing the rationale (AI sessions collapse many edits into one commit; the changelog captures context git alone doesn't).
 - **Do not mark demo content as real DHF evidence.** Every fabricated clinical datum, placeholder predicate, or illustrative analysis carries the `_Demo sample data — not for clinical use._` banner near the top.
 - **Read the skill before synthesizing a plan around it.** When a question involves a skill — debugging, recovering, tracing backwards from a goal through the build chain, planning a rebuild, or proposing edits to artifacts a skill produces — open the skill's `SKILL.md` end-to-end **before** writing any plan. Do not infer the skill's behavior from filenames, output paths, code skim, or prior conversation memory. Skills here use IoC patterns (e.g., `trace-matrix` prescribes how the LLM generates project adapters at `init` time) that are invisible from output inspection but explicit in `SKILL.md`. A plan that bypasses the skill's prescribed action (e.g., "hand-edit the yml" instead of `/trace-matrix init`) is a tell that the skill wasn't read. **Default action when a skill is in scope:** `Read .claude/skills/<name>/SKILL.md` first; only then design the plan around the skill's documented actions, contracts, and tier model.
+
+#### Ongoing task discipline
+- **Update as you go (HARD RULE — no exceptions)**: The active task doc is the recovery point if a session drops, gets compacted, or is interrupted. If it doesn't reflect what was done, the next session can't pick up. Therefore:
+  - **After each meaningful unit of work** (a converted document, a launched batch, a committed/pushed change, a decision, a discovered blocker), **immediately** update the task doc. Check off the relevant todo, add a one-line changelog entry with today's date and the concrete artifact (commit SHA, file path, decision, blocker), and update any progress counts/tables in the Goals section.
+  - **Do not batch updates** waiting for "the end of the batch" or "after the push" — by then a crash, context-trim, or interrupt has lost the state.
+  - **Do not wait to be reminded.** If the user has to remind you to update the task doc, that is a process failure, not a courtesy ask.
+  - **A commit + push is not a substitute** for the task-doc update. Git history is for code; the task doc is for the project narrative — what was done, why, what's left, and what surprised us.
+  - **Before ending a session or marking a task Complete**, confirm the task doc reflects: every commit/push from this session, every batch launched (incl. failures + retries), and the current progress count vs. total scope.
+- **Keep indexes current**: Each person's `tasks/{person}/000-index.md` must reflect the true state of their tasks.
+- **Find current project status**: Check each team member's `000-index.md` under `tasks/` to understand what's active, blocked, or completed.
 
 ## Auto-loaded rules
 

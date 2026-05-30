@@ -293,6 +293,222 @@ security:
   - reference-audit/agents/citations-informal-researcher
   - reference-audit/agents/citations-internal-researcher
 
+# ─── Strategy domains ───
+# Canonical 8-domain registry. Consumed by:
+#   - /strategy assemble — per-domain rollups
+#   - /medtech-docs render-sentinels — Domain Registry / init-briefs /
+#     Expected Content tables in .claude/skills/strategy/SKILL.md and
+#     docs/project/strategies/README.md
+# Source-of-truth for the entries below: the sentinel-rendered tables in
+# .claude/skills/strategy/SKILL.md (Domain Registry + Domain brief content).
+strategy_domains:
+- key: regulatory
+  name: Regulatory
+  scope: shared
+  scope_description: Filing pathway, predicate lineage, PCCP scope, jurisdictional roadmap, Q-Sub questions — cross-filing story across all DHFs
+  output_path: docs/project/strategies/regulatory-strategy.md
+  template: regulatory-strategy.md
+  plans_informed:
+  - 510(k)
+  - PCCP
+  - Q-Sub
+  - LMR
+  what_belongs_here:
+  - Filing pathway and classification decisions
+  - Multi-jurisdiction strategy (US, EU, Canada)
+  - Predicate device selection rationale
+  - PCCP scope decisions
+  - Q-Sub questions and FDA feedback
+  plans_table:
+  - name: 510(k) Submission
+    description: Filing pathway, submission structure
+  - name: PCCP
+    description: Change categories, module scope
+  - name: Q-Sub
+    description: Questions for FDA
+  - name: LMR
+    description: Post-clearance tracking
+- key: commercial
+  name: Commercial
+  scope: shared
+  scope_description: Pricing, reimbursement, channel, launch sequencing, customer targeting
+  output_path: docs/project/strategies/commercial-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - Go-to-market plan
+  - Business case
+  - Market expansion
+  what_belongs_here:
+  - Market entry sequence and timing
+  - Launch phasing (which modules ship first)
+  - Pricing and reimbursement strategy
+  - Competitive positioning
+  - Customer segmentation
+  - Geographic expansion plans
+  plans_table:
+  - name: Go-to-market plan
+    description: Market entry, launch timing
+  - name: Business case
+    description: Revenue model, pricing
+  - name: Market expansion
+    description: New indications, geographies
+- key: architecture
+  name: Architecture
+  scope: shared
+  scope_description: Platform boundaries, SaMD/SiMD/HW split, interoperability, cybersecurity approach, shared platform choices
+  output_path: docs/project/strategies/architecture-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - SAD (per DHF)
+  - SRS
+  - cybersecurity plan
+  what_belongs_here:
+  - Module boundaries and SaMD/non-SaMD split
+  - Technology and vendor selection rationale
+  - Platform decisions
+  - Data architecture and flow design
+  - Cybersecurity architecture approach (until promoted to own domain)
+  plans_table:
+  - name: SAD
+    description: Module boundaries, interfaces
+  - name: SRS
+    description: Requirements-driven architecture decisions
+  - name: Cybersecurity plan
+    description: Security architecture approach
+- key: development
+  name: Development
+  scope: shared
+  scope_description: SDLC, configuration management, tool chain, branching model, review gates — one process, all components
+  output_path: docs/project/strategies/development-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - SDP
+  - Config Mgmt Plan
+  what_belongs_here:
+  - Development methodology (agile within design controls)
+  - Branching and release strategy
+  - Environment management
+  - SOUP/third-party component strategy
+  - CI/CD approach
+  - Coding standards decisions
+  plans_table:
+  - name: SDP
+    description: Development process, lifecycle
+  - name: Config Mgmt Plan
+    description: Branching, versioning, environments
+- key: testing
+  name: Testing & Validation
+  scope: shared
+  scope_description: V&V approach, integration test architecture, usability engineering, shared test infrastructure
+  output_path: docs/project/strategies/testing-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - V&V Plan
+  - test protocols
+  - usability plan
+  what_belongs_here:
+  - Test strategy (bench vs. clinical)
+  - Acceptance criteria philosophy
+  - AI/ML validation approach
+  - Usability testing strategy (formative vs. summative)
+  - Test infrastructure and dataset management
+  - Regression testing approach
+  plans_table:
+  - name: V&V Plan
+    description: Test strategy, protocols
+  - name: Test protocols
+    description: Acceptance criteria
+  - name: Usability plan
+    description: Formative/summative approach
+- key: risk
+  name: Risk
+  scope: shared
+  scope_description: Risk management approach per ISO 14971, platform-level hazard chains, cross-component risk controls
+  output_path: docs/project/strategies/risk-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - Risk Mgmt Plan (per DHF)
+  - FMEA
+  - risk-benefit analysis
+  what_belongs_here:
+  - Risk-benefit framing and acceptable risk thresholds
+  - FMEA methodology decisions
+  - Risk-driven architecture decisions
+  - Cross-module risk interactions
+  - Post-market risk monitoring approach
+  plans_table:
+  - name: Risk Mgmt Plan
+    description: Risk methodology, thresholds
+  - name: FMEA
+    description: Hazard analysis approach
+  - name: Risk-benefit analysis
+    description: Framing for submission
+- key: postmarket
+  name: Post-Market
+  scope: shared
+  scope_description: Post-market surveillance, maintenance plan, LMR cadence, PCCP change tracking — one PMS program
+  output_path: docs/project/strategies/postmarket-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - Maintenance Plan
+  - PMS Plan (per DHF)
+  - LMR
+  - PCCP tracking
+  what_belongs_here:
+  - Post-market surveillance strategy
+  - Complaint handling approach
+  - Field safety and corrective action
+  - Maintenance cadence and update strategy
+  - LMR structure and reporting cadence
+  - PCCP change tracking process
+  plans_table:
+  - name: Maintenance Plan
+    description: Update cadence, process
+  - name: PMS Plan
+    description: Surveillance approach
+  - name: LMR
+    description: Change tracking
+  - name: PCCP tracking
+    description: Modification reporting
+- key: operations
+  name: Operations & Tooling
+  scope: shared
+  scope_description: Build/release pipeline, SBOM/SOUP supply chain, cloud infrastructure, QMS operational posture, project management, tooling & agentic infrastructure, team workflow & onboarding
+  output_path: docs/project/strategies/operations-strategy.md
+  template: default-strategy.md
+  plans_informed:
+  - CI/CD & release pipeline
+  - SBOM/SOUP supply chain
+  - cloud infrastructure
+  - QMS operational posture
+  - PM plan
+  - tooling & agentic-infra roadmap
+  - team onboarding
+  what_belongs_here:
+  - Build, release, and CI/CD pipeline decisions
+  - Supply chain and SOUP/SBOM management
+  - Cloud infrastructure and hosting posture
+  - QMS operational readiness
+  - Project management approach
+  - Tooling and agentic infrastructure decisions
+  - Skill and automation roadmap
+  - Team workflow, onboarding, and knowledge management
+  plans_table:
+  - name: CI/CD & release plan
+    description: Build, release, signing
+  - name: SBOM/SOUP register
+    description: Supply chain posture
+  - name: Cloud ops runbook
+    description: Hosting, facility equivalent
+  - name: QMS operational plan
+    description: Design-controls readiness
+  - name: PM plan
+    description: Ways of working
+  - name: Tooling roadmap
+    description: Agentic infra, automation
+  - name: Team onboarding
+    description: Knowledge transfer
+
 # ─── Tracker skill — project-local config ───
 # Consumed by `/tracker generate` and `/tracker render` for per-project tuning.
 # All fields optional; skill ships sensible defaults.
