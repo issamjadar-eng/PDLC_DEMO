@@ -2,7 +2,7 @@
 
 **ID**: 070
 **Created**: 2026-05-30
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Low
@@ -81,8 +81,8 @@ User asked to "remove claude-capabilities.xlsx, then review what generates and d
 - [x] **Bug fix in CHANGELOG sentinel**: the original sentinel text read "inserts new sections **above** this line", but the algorithm that gives reverse-chronological newest-first ordering requires insertion **below** the sentinel (so the sentinel stays put right after the preamble and new sections push prior sections down). Reworded the sentinel to match. Repositioned the sentinel to its canonical location right after the preamble `---` separator.
 - [x] **Note**: today's ben/069 + ben/070 work is intentionally NOT in the new CHANGELOG section. The significance filter at `build_changelog.py:58` only matches commits whose subject says `task NNN` or whose files touch trigger paths (CLAUDE.md, project.yml, SKILL.md version bumps, new DHFs, etc.). Recent commits used `ben/NNN:` subjects and touched setup.md / how-to-guide.md / README.md — root-level contributor-onboarding docs, intentionally outside the regulatory-reviewer audience's CHANGELOG scope. The work is preserved in task docs + PRs + git history.
 
-- [ ] **Phase 13** — Commit + push the Phase 12 changes
-- [ ] **Phase 14** — Mark task 070 Complete after Phase 13 lands
+- [x] **Phase 13** — Phase 12 changes shipped via PR #25 (commit a9553a9 → merge a74d6cd).
+- [x] **Phase 14** — Marked Complete. Status → Complete; row moved Active → Completed in `tasks/ben/000-index.md`.
 
 ## Strategy Content
 
@@ -102,4 +102,6 @@ User asked to "remove claude-capabilities.xlsx, then review what generates and d
 ## Changelog
 
 - 2026-05-30: Task created. User raised cleanup need after the setup-onboarding overhaul (ben/069) surfaced the project-overview naming confusion. Three design decisions pinned via AskUserQuestion: delete .pptx/.pdf/script + rename project-overview-2 → project-overview-sp6500 + update companion deck reference. Lessons captured as a sibling-program-naming strategy block. PR #23 merged.
-- 2026-05-30: User questioned the deck's provenance after the rename ("though this project demonstrates a different device, so i am not sure the providence"). Traced via git log to task ben/039 origin commit — file was authored as a md-deck test fixture, not as a real portfolio program doc. User picked Option 3 from AskUserQuestion (delete sp6500, keep client-pdlc by re-pointing). Discovery during execution: zero kept slides from sp6500 in the final composite (all 27 candidates had been curated out during selection), so final `index.html` is unaffected by the removal — only the candidate pool shrinks from 126 → 99. Phase 9 changes ready for commit + push.
+- 2026-05-30: User questioned the deck's provenance after the rename ("though this project demonstrates a different device, so i am not sure the providence"). Traced via git log to task ben/039 origin commit — file was authored as a md-deck test fixture, not as a real portfolio program doc. User picked Option 3 from AskUserQuestion (delete sp6500, keep client-pdlc by re-pointing). Discovery during execution: zero kept slides from sp6500 in the final composite (all 27 candidates had been curated out during selection), so final `index.html` is unaffected by the removal — only the candidate pool shrinks from 126 → 99. PR #24 merged (commit 3ca5952 → merge 016b123).
+- 2026-05-31: User requested follow-up cleanup ("remove claude-capabilities.xlsx, then review what generates and depends on the CHANGELOG.md and trace-matrix.yml*"). Investigated all four artifacts → claude-capabilities.xlsx + trace-matrix.yml.backup-2026-05-05 are orphans; CHANGELOG.md owned by /digest skill (stale ~40 days); trace-matrix.yml is load-bearing (consumed by /trace-matrix + project-console SRS adapter). User picked Option 1: delete both orphans + regenerate CHANGELOG with --llm polish. Phase 12 work: deleted the two orphans; ran `/digest log` with --llm to produce 163-line polished section (39 significant commits across 4 themes); inserted between preamble divider and sentinel marker; drive-by fixed the CHANGELOG sentinel comment (text said "above" but algorithm requires "below"). PR #25 merged (commit a9553a9 → merge a74d6cd).
+- 2026-05-31: **Status changed to Complete.** All four PRs (#23 project-overview cleanup + #24 SP6500 retirement + #25 xlsx + backup + CHANGELOG regen) shipped to main. Task scope fully delivered across Phases 1–14.
