@@ -13,6 +13,27 @@ Onboarding for a new contributor joining the PDLC_DEMO repository. Walks from a 
 
 ---
 
+## 🤖 You don't have to do this alone — let Claude help
+
+Many steps below have an **"✨ Or just ask Claude"** callout. Once you have Claude Code installed (step 13) — or already have it from another project — you can do most of the manual work in plain English instead of copying commands.
+
+**Examples of things you can just ask:**
+
+- *"Set up my Git identity. My name is Jane Smith and my email is jane.smith@globallogic.com."*
+- *"Generate an SSH key for me and add it to my GitHub account."*
+- *"Install all the VS Code extensions this project needs."*
+- *"Add me to the team roster — I'm Jane Smith, GitHub username `jsmith`, email `jane.smith@globallogic.com`, role 'Regulatory Affairs'."*
+- *"Record my training opt-out and 2FA attestations."*
+- *"Run the security posture check and the project audit."*
+
+You don't need to know the underlying commands. Claude reads the project conventions, runs the right tools, edits the right files, and tells you what changed. **This is the recommended path for non-engineer roles** (regulatory affairs, clinical, QE).
+
+The manual commands are still in the doc — you'll see exactly what Claude is doing under the hood — but you only need to type them yourself if you prefer to.
+
+**Bootstrap caveat**: steps 1–12 happen *before* Claude Code is installed (step 13), so you can't ask Claude for those yet — they need to happen manually, OR via the automated `setup.sh` path. After step 13, every remaining step has an "ask Claude" option.
+
+---
+
 ## Before You Start: Admin Privileges
 
 Installing development tools requires admin privileges on your computer.
@@ -219,8 +240,9 @@ Now that you have your accounts, native apps, and a terminal (plus WSL if on Win
 
 | Path | Best for | What it does |
 |------|----------|--------------|
-| **Automated** (`setup.sh`) | Comfortable with terminals, or repeat setup | Installs Homebrew, Node.js, Git, gh, jq, document tools (pandoc / poppler / qpdf / LibreOffice headless-tested / Python 3 / uv / pip packages), Claude Code CLI, VS Code extensions, SSH key, optional web-control browser automation, optional file-locator MCP venv — in one run. Skips anything already installed. Opens VS Code when done. |
-| **Manual** (continue step-by-step) | First-time setup, want to understand each tool | Walk through each tool one at a time with full explanations. |
+| **Automated** (`setup.sh`) | Most people, including non-engineers | One script installs Homebrew, Node.js, Git, gh, jq, document tools (pandoc / poppler / qpdf / LibreOffice headless-tested / Python 3 / uv / pip packages), Claude Code CLI, VS Code extensions, SSH key, optional web-control browser automation, optional file-locator MCP venv. Skips anything already installed. Opens VS Code when done. |
+| **Claude-assisted** (already have Claude Code from another project?) | Non-engineers who already have Claude Code | Open Claude Code in another project and say *"Help me set up PDLC_DEMO. Clone it, run setup.sh, register me on the team, and walk me through the security posture."* Claude handles the whole thing in one conversation — you only sign in to browsers when prompted. |
+| **Manual** (continue step-by-step) | Engineers who want to understand each tool | Walk through each tool one at a time with full explanations. |
 
 ### Automated Path
 
@@ -408,6 +430,8 @@ The `--break-system-packages` flag is needed on Ubuntu 24.04 to bypass PEP 668; 
 ## 11. Configure Git and SSH
 
 > **Automated path**: Skip — the setup script handles this.
+>
+> **✨ Or just ask Claude (if you already have Claude Code from another project)**: *"Set up Git and SSH for me. My name is Jane Smith and my email is jane.smith@globallogic.com."* Claude will configure your Git identity, generate an SSH key if you don't already have one, upload it to GitHub via the `gh` CLI, and verify SSH access — without you typing any commands.
 
 ### Configure your identity
 
@@ -482,6 +506,8 @@ First time you'll see "The authenticity of host 'github.com (...)' can't be esta
 ## 12. Install VS Code Extensions
 
 > **Automated path**: Skip — the setup script handles this.
+>
+> **✨ Or just ask Claude (if you already have Claude Code from another project)**: *"Install the VS Code extensions this project needs."* Claude will run `code --install-extension` for each extension below and confirm what's installed.
 
 Open VS Code → Extensions (`Ctrl+Shift+X` / `Cmd+Shift+X`) → search for each, click **Install**:
 
@@ -528,6 +554,8 @@ Follow the prompts to authenticate with your Anthropic account. One-time login �
 ## 14. Clone the Repository
 
 > **Automated path**: Skip — you already cloned the repo before running `setup.sh`.
+>
+> **✨ Or just ask Claude (in another project's Claude Code session)**: *"Clone the PDLC_DEMO repo for me into `~/projects/`."* Claude will run the `git clone` for you and open the folder.
 
 ```
 mkdir -p ~/projects
@@ -560,6 +588,13 @@ VS Code opens with the project's files visible. First time, click **"Yes, I trus
 PDLC_DEMO includes a security-posture check (`/secops`) that audits training opt-outs, 2FA attestations, repo collaborator drift, and the security allowlist in `project.yml`. **Every contributor must complete this section** before they begin editing project files.
 
 This section folds in what used to live in a separate `setup.md` security checklist — it's part of contributor onboarding, not a separate concern.
+
+> **✨ Easiest path — let Claude run all of §15 for you**: open Claude Code in the project and say:
+> *"Walk me through the security posture setup. I'm Jane Smith, my GitHub is `jsmith`, my email is `jane.smith@globallogic.com`, and my role is 'Regulatory Affairs'. I've already turned off the 'Help improve Claude' toggle and confirmed 2FA via Google SSO."*
+>
+> Claude will: (1) add you to `project.yml` `team.active`, (2) create your `tasks/<you>/SECOPS.md` file, (3) record your training-opt-out and 2FA attestations, (4) run `/secops check` to confirm. You only need to do the browser toggles yourself (15a step 1–2, 15b/c if not on SSO). Then you're done.
+>
+> The subsections below explain what Claude is doing under the hood if you want to follow along — or do it manually.
 
 ### 15a. Claude training opt-out
 
@@ -626,6 +661,10 @@ Before adding a new MCP server, plugin, or agent:
 
 ### 15f. Register as a team member
 
+> **✨ Or just ask Claude**: *"Add me to the team roster. I'm Jane Smith, GitHub username `jsmith`, email `jane.smith@globallogic.com`, role 'Regulatory Affairs'."* Claude edits `project.yml`, creates `tasks/jsmith/000-index.md` for you (lowercase first name as the task folder), and runs `/secops check` to confirm your entry is wired correctly. You do **not** need to know YAML or hand-edit `project.yml`.
+
+The manual steps (what Claude does under the hood):
+
 1. Open `project.yml`.
 2. Add yourself to `team.active` — name, GitHub username, task folder (lowercase first name), role, email on an approved domain (see `security.approved_email_domains`), and `added: <YYYY-MM-DD>`.
 3. Open a Claude Code session and run `/secops check` (or just start a new session — the SessionStart hook runs it automatically). The hook writes your `tasks/<person>/SECOPS.md` file with a 7-day freshness cycle and a 30-day attestation cycle.
@@ -635,6 +674,8 @@ Before adding a new MCP server, plugin, or agent:
 ## 16. Browser Automation Setup (`web-control`) — Optional
 
 > **This step is optional**. Only relevant if a skill in this project leans on the **`web-control`** shared infrastructure (e.g., `change-control`'s internal-review tier driving Google Docs under your corporate identity).
+>
+> **✨ Or just ask Claude**: *"Set up web-control for me."* / *"Walk me through signing in to the debug Chrome."* Claude runs the install, the smoke test, and the first-launch sign-in flow — you only sign into Google in the browser window that pops up.
 >
 > Background: when org policy denies the Workspace API scopes that would let us automate Google Docs / Drive directly, `web-control` drives a dedicated Chrome browser running under your already-authenticated corporate identity. See `.claude/skills/web-control/README.md` for the full design rationale.
 
@@ -698,6 +739,8 @@ bash setup.sh
 
 > **This step is handled automatically by `setup.sh`**. Only relevant because the project ships the **`file-locator`** skill — a local MCP server giving Claude Code agents semantic file search over the project corpus.
 >
+> **✨ Or just ask Claude**: *"The file-locator MCP is failing to connect."* / *"Set up file-locator for me."* Claude diagnoses the venv state and recreates it via `uv` — no Python knowledge required.
+>
 > Background: `file-locator` answers natural-language queries ("where do we argue MDDS classification?") with ranked `(path, summary, score)` tuples, so agents pick which whole files to read instead of blindly globbing. Fully local — `fastembed` BGE-small ONNX + SQLite FTS5; no API calls during indexing.
 
 ### What gets installed
@@ -744,7 +787,9 @@ bash tools/file-locator-mcp/rebuild.sh --full   # from scratch
 
 ## 18. Confirm Everything Is Wired Up
 
-Open a Claude Code session in the project and run:
+> **✨ Just ask Claude**: *"Run the security posture check and the best-practices audit, then tell me if I need to fix anything."* Claude runs both, summarizes the results, and walks you through any failures (often by fixing them for you).
+
+The underlying commands, if you prefer to run them yourself:
 
 ```
 /secops check         # security posture check
@@ -767,5 +812,6 @@ If you're a *team lead* starting a new MedTech project (not just joining this on
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite: added an **"ask Claude"** layer for non-engineer users. New top-banner explaining the pattern. "✨ Or just ask Claude" callouts added at steps 11 (Git + SSH), 12 (VS Code extensions), 14 (repo clone), 15 banner (security posture overview), 15f (team registration), 16 (web-control), 17 (file-locator), 18 (confirmation). Added a third row to the "Choose Your Path" table: "Claude-assisted" — for users who already have Claude Code from another project. Under-the-hood manual commands still present so engineers can see what Claude is doing. |
 | 2026-05-30 | Ben Xavier | Rewrote setup.md as a full new-contributor onboarding guide modeled on the arthrex-pccp sister project (task ben/069). Adopted 18-section structure: admin → terminal → VS Code → WSL → GitHub account → Claude account → Google Drive → Claude Desktop → automated/manual install paths → Homebrew → Node + core utils → document tools → Git + SSH → VS Code extensions → Claude Code CLI → repo clone → security posture (training opt-out, 2FA, conversation hygiene, integration awareness, team registration) → web-control (optional) → file-locator (optional) → confirmation. Companion `setup.sh` introduced for the automated path. Folded prior security-posture content (training opt-out, 2FA, `/secops attest`) into §15 rather than keeping it as a separate doc. |
 | 2026-04-20 | Ben Xavier | Initial version (now superseded) — created under task ben/018 sync-skills to close the four security-posture best-practices FAILs (training opt-out, GitHub 2FA, conversation hygiene, integration awareness). Content folded into §15 of the rewrite. |
