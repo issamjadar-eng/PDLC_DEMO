@@ -52,20 +52,13 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = [
     ("agentic-delivery",  "../agentic-delivery/index.html"),
     ("project-overview",  "../project-overview/index.html"),
-    ("project-overview-sp6500","../project-overview-sp6500/index.html"),
 ]
 
-IMG_REWRITES = {
-    "project-overview-sp6500": {
-        "assets/project-overview/console-01-landing.png":
-            "../project-overview/console-01-landing.png",
-    },
-}
+IMG_REWRITES: dict[str, dict[str, str]] = {}
 
 BADGE_CLASS = {
     "agentic-delivery":   "agentic",
     "project-overview":   "overview",
-    "project-overview-sp6500": "overview-2",
 }
 
 
@@ -318,7 +311,6 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
 }
 .cp-controls .badge.agentic    { color: #fb923c; }
 .cp-controls .badge.overview   { color: #60a5fa; }
-.cp-controls .badge.overview-2 { color: #c084fc; }
 .cp-controls .pos {
   background: var(--panel-2); color: var(--ink);
   padding: 2px 6px; border-radius: 3px;
@@ -1032,10 +1024,10 @@ SLIDE_APPENDS = {
 # Replace the original "Agenda" slide (project-overview #1) with our generated agenda.
 AGENDA_REPLACES = ("project-overview", 1)
 
-# Move the KOL slide into Project Console → Agents subsection (rendered right after PO#45).
-SLIDE_MOVES = {
-    ("project-overview-sp6500", 13): {"after": ("project-overview", 45)},
-}
+# Slide moves (anchor-relative reordering) — none active after the sp6500
+# source deck was retired in task ben/070 (the only move was a KOL slide
+# from sp6500). Keep the structure so future moves drop in cleanly.
+SLIDE_MOVES: dict = {}
 
 
 # Per-slide text-level rewrites — client-facing language scrub. Each entry maps

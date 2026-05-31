@@ -1,12 +1,13 @@
 # client-pdlc — composite deck
 
-Single-file composite presentation built mechanically from the three sibling decks:
+Single-file composite presentation built mechanically from two sibling decks:
 
 - `../agentic-delivery/index.html` — 47 slides
 - `../project-overview/index.html` — 52 slides
-- `../project-overview-sp6500/index.html` — 27 slides
 
-Total candidate pool: **126 slides**. Each source slide is harvested verbatim (`<section class="slide ...">`) and re-rendered inside a `<div class="src-{deck}">` wrapper with that deck's CSS scoped to the wrapper.
+Total candidate pool: **99 slides**. Each source slide is harvested verbatim (`<section class="slide ...">`) and re-rendered inside a `<div class="src-{deck}">` wrapper with that deck's CSS scoped to the wrapper.
+
+> **History note**: a third source deck, `project-overview-sp6500` (27 slides), was retired in task ben/070 (2026-05-30). It originated as a md-deck test fixture (task ben/039 — "structurally diverse second source") rather than as a real portfolio program doc. All 27 of its candidates had been curated out during selection (zero kept slides in the final composite), so removing it does not change `index.html` content — only shrinks the candidate pool. The historical final-deck snapshots (`index.html`, `client-pdlc-presentation-v1.html`, `GlobalLogic_Agentic_PDLC.pdf`) are unaffected.
 
 ## Workflow — two passes
 
@@ -26,7 +27,7 @@ Selection and ordering are separated into two passes so each one is a focused to
 python build.py --candidate
 ```
 
-`candidate.html` shows all **126** slides in **source order** (agentic-delivery → project-overview → project-overview-sp6500). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
+`candidate.html` shows all **99** slides in **source order** (agentic-delivery → project-overview). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
 
 - Click **KEEP / REMOVE** per slide. Default = all KEEP.
 - **Keep all** / **Remove all** sweep toggles.
@@ -47,7 +48,7 @@ python build.py --reorder
 - **Reset order** reverts to the picks.json sequence.
 - When done, click **Export picks.json**. Save over `assets/client-pdlc/picks.json`.
 
-Removed slides stay in `picks.json` (appended at the tail with `keep:false`) so a return trip to Pass 1 still sees the full 126-slide catalog with your keep state intact.
+Removed slides stay in `picks.json` (appended at the tail with `keep:false`) so a return trip to Pass 1 still sees the full 99-slide catalog with your keep state intact.
 
 ### Final
 
@@ -62,7 +63,7 @@ Reads `picks.json`, emits `index.html` containing only `keep:true` slides in `or
 You can move back and forth between the two passes freely:
 
 - **Pass 1 → Pass 2**: SELECT export preserves the kept-order if a prior `picks.json` already had one (i.e., Pass 2's earlier ordering survives a Pass 1 visit). Only the `keep` field is updated.
-- **Pass 2 → Pass 1**: REORDER export writes the kept slides in your chosen order, then appends removed slides at the tail with `keep:false`. On the next `--candidate` build, all 126 slides reappear in source order with the correct keep state.
+- **Pass 2 → Pass 1**: REORDER export writes the kept slides in your chosen order, then appends removed slides at the tail with `keep:false`. On the next `--candidate` build, all 99 slides reappear in source order with the correct keep state.
 - **Resetting**: delete `picks.json` to start from scratch (all keep, source order).
 
 Both `picks.json` and `index.html` are git-committable. The final deck is fully regenerable from `picks.json` + the source decks.
@@ -72,7 +73,7 @@ Both `picks.json` and `index.html` are git-committable. The final deck is fully 
 | File | Generator | Committable | Notes |
 |---|---|---|---|
 | `build.py` | hand-authored | ✓ | Single Python script; stdlib-only. |
-| `candidate.html` | `build.py --candidate` (Pass 1) or `build.py --reorder` (Pass 2) | ✓ | Same path; the two passes overwrite it in place. ~640 KB in SELECT mode (126 slides), shrinks in REORDER mode (kept slides only). |
+| `candidate.html` | `build.py --candidate` (Pass 1) or `build.py --reorder` (Pass 2) | ✓ | Same path; the two passes overwrite it in place. ~500 KB in SELECT mode (99 slides), shrinks in REORDER mode (kept slides only). |
 | `picks.json` | exported from `candidate.html` | ✓ | Curation state — schema `client-pdlc/picks@1`. |
 | `index.html` | `build.py --final` | ✓ | The final deliverable. Contains only kept slides, no curation chrome. |
 
@@ -82,14 +83,12 @@ Both `picks.json` and `index.html` are git-committable. The final deck is fully 
 {
   "schema": "client-pdlc/picks@1",
   "sources": {
-    "agentic-delivery":   "../agentic-delivery/index.html",
-    "project-overview":   "../project-overview/index.html",
-    "project-overview-sp6500": "../project-overview-sp6500/index.html"
+    "agentic-delivery": "../agentic-delivery/index.html",
+    "project-overview": "../project-overview/index.html"
   },
   "order": [
-    {"src": "project-overview",   "idx":  0, "keep": true },
-    {"src": "agentic-delivery",   "idx": 12, "keep": false},
-    {"src": "project-overview-sp6500", "idx": 26, "keep": true }
+    {"src": "project-overview", "idx":  0, "keep": true },
+    {"src": "agentic-delivery", "idx": 12, "keep": false}
   ]
 }
 ```
@@ -102,10 +101,10 @@ The `order` array is the source of truth — sequence == final slide sequence; r
 - **Drops** each source's inline `<script>` (per-deck nav handlers conflict if combined) and body-level chrome (`.progress-bar`, `.nav-dots`, `.keyboard-hint`).
 - **CSS-scopes** every source rule: `.foo { ... }` → `.src-{deck} .foo { ... }`. Top-level `body`/`html`/`:root` selectors are remapped to `.src-{deck}` so the scope wrapper plays the role of the page root. `@media` / `@supports` recurse; `@keyframes` / `@font-face` left intact.
 - **Stamps `visible`** on every `<section class="slide ...">` — source decks gate `.reveal` animations on `.slide.visible`, normally added by IntersectionObserver. Static stamping lands every element at its post-animation state without needing the deck's runtime JS.
-- **Rewrites** image src paths that point into a sibling asset folder (currently just `project-overview-sp6500`'s one screenshot).
+- **Rewrites** image src paths that point into a sibling asset folder (no active rewrites since the sp6500 source was retired in ben/070; the `IMG_REWRITES` dict in `build.py` remains as the extension point).
 
 ## Limitations
 
-- No thumbnail / grid view in `candidate.html` — slides render at native size in a vertical scroll. 126 × ~900px ≈ 115k px of scroll. Use browser zoom-out for an overview.
+- No thumbnail / grid view in `candidate.html` — slides render at native size in a vertical scroll. 99 × ~900px ≈ 90k px of scroll. Use browser zoom-out for an overview.
 - The candidate page is single-user single-browser. Curation state lives in `localStorage` until you Export.
 - This pipeline is HTML-to-HTML only. It is **not** a `/md-deck` action — there's no markdown source, no `data-source-anchor` round-trip, no theme harmonization between source decks. Each slide carries forward exactly the look it had in its source deck.
