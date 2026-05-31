@@ -1,13 +1,23 @@
 # Setup — PDLC_DEMO
 
+> ## 📍 You are here: **`setup.md`** — getting *your laptop* ready to work on *this* repo
+>
+> Pick the doc that matches what you're trying to do:
+>
+> | If you… | Read |
+> |---|---|
+> | **Are joining PDLC_DEMO and need to set up your laptop** (admin → installs → repo → security posture) | **`setup.md`** ← you are here |
+> | Have finished setup and want to learn how to use the project day-to-day | [`how-to-guide.md`](how-to-guide.md) |
+> | Want to start a **brand-new, different MedTech project** using the same skill stack (you are NOT joining PDLC_DEMO — you're spinning up your own program) | [`new-project-bootstrap.md`](new-project-bootstrap.md) — but do *this* doc first to get Claude Code + git + gh installed |
+>
+> The third row is the easy one to get wrong: **`new-project-bootstrap.md` is for people *replicating* the PDLC_DEMO pattern in a new repo for a different device**. If you are a contributor joining PDLC_DEMO, ignore that doc — it's not for you.
+
 Onboarding for a new contributor joining the PDLC_DEMO repository. Walks from a blank machine through admin privileges, terminal, accounts, installs, repo clone, and security posture. Follow each step in order — later steps depend on earlier ones.
 
 > **About PDLC_DEMO**: this is a *demonstration* project for agentic workflows across the Product Development Life Cycle (PDLC) in MedTech. The DHF, design controls, V&V, and submission artifacts anchor on the **PainEase PCA Advanced (PP3500)** — a patient-controlled analgesia infusion pump (combination SaMD / SiMD / hardware device). Fabricated clinical data and placeholder predicates are clearly flagged — read `CLAUDE.md` and `project-overview.md` for the full scope.
 >
-> **Companion docs**:
+> **Companion files**:
 > - `setup.sh` — automated installer for everything in steps 8–14 below (works on macOS, WSL, Linux).
-> - `how-to-guide.md` — day-to-day usage once setup is complete (opening VS Code, `git pull`, launching Claude Code, project tour, skills).
-> - `new-project-bootstrap.md` — different audience: how to stand up a *brand-new* MedTech project from scratch using the same skill stack.
 
 > **Windows users**: This project uses Unix-based tools for document processing, automation, and AI workflows. To keep the team consistent, Windows users run these tools inside **WSL** (Windows Subsystem for Linux). Step 3 walks you through it.
 
@@ -812,6 +822,7 @@ If you're a *team lead* starting a new MedTech project (not just joining this on
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Added "📍 You are here" decision banner at the top — three-row table that tells the reader at a glance which of the three onboarding docs (setup.md / how-to-guide.md / new-project-bootstrap.md) they should be reading and explicitly flags `new-project-bootstrap.md` as "the easy one to get wrong" (it's for replicators starting their own project, NOT for contributors joining PDLC_DEMO). Removed redundant Companion-docs bullet list (now folded into the banner). Same banner applied to the other two docs for consistency. |
 | 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite: added an **"ask Claude"** layer for non-engineer users. New top-banner explaining the pattern. "✨ Or just ask Claude" callouts added at steps 11 (Git + SSH), 12 (VS Code extensions), 14 (repo clone), 15 banner (security posture overview), 15f (team registration), 16 (web-control), 17 (file-locator), 18 (confirmation). Added a third row to the "Choose Your Path" table: "Claude-assisted" — for users who already have Claude Code from another project. Under-the-hood manual commands still present so engineers can see what Claude is doing. |
 | 2026-05-30 | Ben Xavier | Rewrote setup.md as a full new-contributor onboarding guide modeled on the arthrex-pccp sister project (task ben/069). Adopted 18-section structure: admin → terminal → VS Code → WSL → GitHub account → Claude account → Google Drive → Claude Desktop → automated/manual install paths → Homebrew → Node + core utils → document tools → Git + SSH → VS Code extensions → Claude Code CLI → repo clone → security posture (training opt-out, 2FA, conversation hygiene, integration awareness, team registration) → web-control (optional) → file-locator (optional) → confirmation. Companion `setup.sh` introduced for the automated path. Folded prior security-posture content (training opt-out, 2FA, `/secops attest`) into §15 rather than keeping it as a separate doc. |
 | 2026-04-20 | Ben Xavier | Initial version (now superseded) — created under task ben/018 sync-skills to close the four security-posture best-practices FAILs (training opt-out, GitHub 2FA, conversation hygiene, integration awareness). Content folded into §15 of the rewrite. |

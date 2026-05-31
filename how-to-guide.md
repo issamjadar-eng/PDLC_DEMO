@@ -1,10 +1,16 @@
 # How-To Guide — PDLC_DEMO Day-to-Day
 
-You've finished setup — everything is installed. This guide is how to actually use PDLC_DEMO day-to-day: opening the project, staying current, launching Claude Code, navigating the file tree, using skills, and the key files to read first.
+> ## 📍 You are here: **`how-to-guide.md`** — *using* PDLC_DEMO day-to-day
+>
+> Pick the doc that matches what you're trying to do:
+>
+> | If you… | Read |
+> |---|---|
+> | Are joining PDLC_DEMO and need to set up your laptop | [`setup.md`](setup.md) |
+> | **Have finished setup and want to learn how to use the project day-to-day** (open VS Code, `git pull`, launch Claude Code, navigate the project, use skills) | **`how-to-guide.md`** ← you are here |
+> | Want to start a **brand-new, different MedTech project** using the same skill stack | [`new-project-bootstrap.md`](new-project-bootstrap.md) |
 
-> **Companion docs**:
-> - `setup.md` — new-contributor machine setup (admin → installs → repo → security posture). Read that first if you skipped here directly.
-> - `new-project-bootstrap.md` — for team leads standing up a *brand-new* MedTech project from scratch (different audience).
+You've finished setup — everything is installed. This guide is how to actually use PDLC_DEMO day-to-day: opening the project, staying current, launching Claude Code, navigating the file tree, using skills, and the key files to read first.
 
 ---
 
@@ -668,5 +674,6 @@ This is about **inbound from Windows → Linux services**. The `web-control` / `
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Added "📍 You are here" decision banner at the top — three-row table consistent across all three root onboarding docs (setup.md / how-to-guide.md / new-project-bootstrap.md). Lets any reader confirm at a glance they're on the right doc. |
 | 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite — added a top-banner "🤖 Default to plain English with Claude" section reinforcing that slash commands are shown so readers can recognize what Claude is doing, not for them to memorize. Added inline "✨ Just ask Claude" callouts at §13 (change-control pre-flight + inline help) and §14 (WSL networking troubleshooting). Same non-engineer-first pattern as the setup.md follow-up (see [[feedback_setup_docs_ask_claude_callouts]]). |
 | 2026-05-30 | Ben Xavier | Rewrote how-to-guide.md as a day-to-day usage guide modeled on the arthrex-pccp sister project's `getting-started.md` (task ben/069). New audience: post-setup contributor learning to use the project. 15-section structure: opening the project → `git pull` habit → VS Code basics → terminal → launching Claude Code → project structure → things to try → Claude Desktop → key files to read → navigation tour → skills overview → task-first workflow → optional change-control internal review → WSL networking → getting help. Replaces prior content (new-MedTech-project bootstrap) which moved to `new-project-bootstrap.md`. |

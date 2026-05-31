@@ -1,10 +1,24 @@
 # Bootstrap a New MedTech PDLC Project
 
+> ## 📍 You are here: **`new-project-bootstrap.md`** — creating *a NEW, DIFFERENT* MedTech project (not joining PDLC_DEMO)
+>
+> ⚠️ **This is the doc most often read by mistake.** If you were given access to PDLC_DEMO and just want to start working on PainEase PP3500 with the team, **this is NOT your doc**. Close it and read `setup.md` instead.
+>
+> Pick the doc that matches what you're trying to do:
+>
+> | If you… | Read |
+> |---|---|
+> | Are joining PDLC_DEMO and need to set up your laptop | [`setup.md`](setup.md) |
+> | Have finished setup and want to learn how to use the project day-to-day | [`how-to-guide.md`](how-to-guide.md) |
+> | **Want to start a brand-new, different MedTech project using the same skill stack** — clone the hitachi registry, run `/medtech-docs init`, scaffold your own DHFs for a different device, etc. You are NOT joining PDLC_DEMO; you are *replicating the pattern* for your own program. | **`new-project-bootstrap.md`** ← you are here |
+>
+> **Concrete example.** If GlobalLogic wins a new engagement to do regulatory work for, say, a hip-implant company, the team lead reads *this* doc to spin up `hip-implant-DHF/`. The four contributors who join that engagement each read `hip-implant-DHF/setup.md` (not this doc) to onboard onto their new repo.
+>
+> **Prerequisite**: this doc assumes your laptop is already set up — Claude Code installed, git + SSH + gh + jq working. If those aren't done yet, do `setup.md` first (the *PDLC_DEMO* one or your prior project's equivalent), *then* come back here to spin up the new repo.
+
 A reproducible walkthrough for starting a new regulated-device project using the Hitachi skill registry, `medtech-docs`, and the task/strategy skills. Every step is copy-pasteable; decisions that require human judgment are called out explicitly.
 
-> **Audience**: a team lead starting a brand-new device program from scratch. **Not** the doc you want if you're joining PDLC_DEMO — for that, see `setup.md` (machine setup) and `how-to-guide.md` (day-to-day use).
->
-> This file was previously named `how-to-guide.md` at the repo root. It was renamed in task ben/069 (2026-05-30) when the contributor onboarding was overhauled to the arthrex three-file model (`setup.md` + `setup.sh` + `how-to-guide.md`). The Phase 0–10 bootstrap content here is unchanged from that rename.
+> **History note**: this file was previously named `how-to-guide.md` at the repo root. It was renamed in task ben/069 (2026-05-30) when the contributor onboarding was overhauled to the arthrex three-file model (`setup.md` + `setup.sh` + `how-to-guide.md`). The Phase 0–10 bootstrap content here is unchanged from that rename.
 
 ---
 
@@ -53,6 +67,8 @@ Phase 10 — Troubleshooting
 ---
 
 ## Phase 0 — Prerequisites
+
+> ⚠️ **Phase 0 is the output of `setup.md`.** If you can already open Claude Code, run `git`, run `gh auth status` without error, and `which jq` finds it on your PATH — you're done with Phase 0. If any of those fail, do `setup.md` (PDLC_DEMO's, or your prior project's equivalent) first, *then* come back here.
 
 - Claude Code installed and running
 - `git` with SSH access to `GlobalLogic-a-Hitachi-Company/hitachi`
@@ -301,6 +317,7 @@ Everything above is incremental — there's no "all at once." A new project typi
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Added "📍 You are here" decision banner at the top + explicit warning that this is "the doc most often read by mistake" (it's for replicators of the PDLC_DEMO pattern, NOT for contributors joining PDLC_DEMO). Strengthened Phase 0 with an explicit dependency callout: Phase 0 is the *output* of setup.md — if the four prerequisites (Claude Code / git / gh / jq) work, you're done with Phase 0; if any fail, do setup.md first. Triggered by user feedback that setup.md vs new-project-bootstrap.md was confusing. |
 | 2026-05-30 | Ben Xavier | Follow-up to the rename — added "🤖 You can drive most of this bootstrap by talking to Claude" top banner + inline "✨ Or just ask Claude" callouts at Phase 1 (clone hitachi + install skills), Phase 2 (git init + gitignore), and Phase 4 (personalize CLAUDE.md). Same non-engineer-first pattern as setup.md and how-to-guide.md (see [[feedback_setup_docs_ask_claude_callouts]]). Raw shell commands remain as the manual fallback. |
 | 2026-05-30 | Ben Xavier | Renamed from `how-to-guide.md` → `new-project-bootstrap.md` under task ben/069. Audience clarification banner added; Phase 0–10 content unchanged. The freed `how-to-guide.md` slot is being rewritten as a day-to-day-usage guide for new contributors (arthrex three-file model). |
 | 2026-05-21 | Ben Xavier | Filled all skeleton TODOs (Phases 1, 2, 8, 9, 10) under task 002. Corrected three drift findings verified against the live SKILLs: init asks **9** questions not "~8" (added Modules/functions + Primary DHF name to the table); replaced the non-existent `/medtech-docs import-guidance` with `update-external-references`/`add-standard`/`evaluate`; expanded Phase 9 to sync-skills **v8.2** (`status`, `prune`, three-way pull bucketing). Resolved doc-home open question (stays at root, sibling of `setup.md`). Added companion-doc cross-reference. |
