@@ -6,6 +6,18 @@ This is a working **demo**, not a regulatory submission. Fabricated clinical dat
 
 ## Where to start
 
+### 🧑‍💻 New to PDLC_DEMO? Pick your onboarding path
+
+| If you… | Read |
+|---|---|
+| Are joining the team and need to **set up your laptop** (admin → installs → repo clone → security posture) | [`setup.md`](setup.md) — accompanied by [`setup.sh`](setup.sh), the idempotent installer |
+| Already have your laptop set up and want to learn **day-to-day usage** (open VS Code, `git pull`, launch Claude Code, navigate the project, use skills) | [`how-to-guide.md`](how-to-guide.md) |
+| Want to **start a brand-new, *different* MedTech project** using the same skill stack — clone the hitachi registry, run `/medtech-docs init`, scaffold your own DHFs for a different device. You are NOT joining PDLC_DEMO; you are *replicating the pattern* for a different program. | [`new-project-bootstrap.md`](new-project-bootstrap.md) |
+
+> Each doc opens with the same "📍 You are here" decision banner so you can confirm at a glance you're on the right one. The third row is the easy one to get wrong — `new-project-bootstrap.md` is for *replicators*, not for contributors joining PDLC_DEMO.
+
+### 📖 Looking for specific content?
+
 | If you want to… | Read |
 |---|---|
 | Understand the project at a high level | [`project-overview.md`](project-overview.md) |
@@ -77,4 +89,5 @@ The project is driven by **Claude Code** with a curated set of installed skills 
 
 | Date | Change | Why |
 |---|---|---|
+| 2026-05-30 | Split "Where to start" into two sub-tables: "🧑‍💻 New to PDLC_DEMO? Pick your onboarding path" (the three onboarding docs — setup.md, how-to-guide.md, new-project-bootstrap.md — surfaced as the top-of-README entry point) + "📖 Looking for specific content?" (existing rows). Added an explicit warning that `new-project-bootstrap.md` is the easy doc to get wrong (replicators, not contributors). Under task ben/069. |
 | 2026-05-01 | Root `README.md` authored | Provide a discoverable entry point alongside `CLAUDE.md` (project-internal) and `project-overview.md` (subject-matter); `articles/` relocated whitepapers needed a top-level pointer |
