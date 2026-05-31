@@ -1,5 +1,5 @@
 meta:
-  source: project-overview-2.md
+  source: project-overview-sp6500.md
   source_sha256: 217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d
   distilled_by_agent: claude-opus-4-7
   distilled_at: 2026-05-02T09:45:22Z

@@ -2,7 +2,7 @@
   "schema": "md-deck/manifest@1",
   "generator": "md-deck v0.5.0",
   "source": {
-    "path": "project-overview-2.md",
+    "path": "project-overview-sp6500.md",
     "sha256": "217027fd9388b767d36ea78d9f6b40e1e1990b2a8713dba74c5e924908951a0d",
     "size_bytes": 10734
   },
