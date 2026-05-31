@@ -39,10 +39,30 @@ The canonical answer to "which is canonical?" is: **`project-overview.md`** is c
 - [x] **Phase 4** — Updated `project-overview-sp6500.md`: added 📍 "Sibling program — NOT v2 of project-overview.md" banner explaining the rename + clarifying it's a worked example of the agentic-overview pattern applied to a different device; replaced the broken `project-overview-2.pptx` link with a pointer to `assets/project-overview-sp6500/index.html` (md-deck output).
 - [x] **Phase 5** — Updated `project-overview.md` Companion deck reference (both intro paragraph + "Where things live" table): now points at `assets/project-overview/index.html` + `assets/project-overview/index.pdf` (md-deck), removed the `scripts/build-project-overview-pptx.py` mention.
 - [x] **Phase 6** — Swept cross-references: `README.md` (no stale refs — file tree didn't list .pptx/.pdf); `setup.md` + `how-to-guide.md` + `new-project-bootstrap.md` (no stale refs found); `assets/client-pdlc/` composite deck — sed-rewrote `picks.json` (29 refs), `build.py` (4 refs), `README.md` (5 refs), `candidate.html` (10 refs incl. data-key/data-src attrs + agenda comments). CSS class `.overview-2` (purple-badge styling) kept intact — it's a presentational classname mapped from source-key via `build.py:68`, decoupling rename from styling churn.
-- [ ] **Phase 7** — Commit + push (PR-then-auto-merge per `.claude/rules/git-workflow.md`)
-- [ ] **Phase 8** — Mark Complete; move to Completed in index
+- [x] **Phase 7** — Committed + merged (PR #23, commit 2fbc0e0 → merge 27684af).
+- [ ] **Phase 8** — Mark Complete; move to Completed in index — pending the sp6500 retirement work below.
 
-**Optional follow-up** (not in this task's scope): regenerate the SP6500 deck (`assets/project-overview-sp6500/`) via `/md-deck` so the `manifest.json` SHA256 reflects the new banner content. Current SHA is stale-by-rename but size_bytes still matches; a clean re-render would also refresh the .html slide content if it referenced the file by name internally. The user didn't request this — flagging for awareness only.
+## Phase 9 — Retire SP6500 entirely (follow-up after user questioned provenance)
+
+User reviewed the rename + banner and questioned the deck's provenance ("though this project demonstrates a different device, so i am not sure the providence of this deck"). Investigated git history (`16c0f56` task ben/039) — origin commit message explicitly states the file was created as "a structurally diverse second source exercising every variant trigger" for md-deck skill validation. Provenance is honest but thin: it's skill-test scaffolding pressed into double duty as a fake portfolio program, not a real sibling program doc.
+
+User picked "delete sp6500 only; keep client-pdlc by re-pointing it" (option 3 of 4). Quick wins discovered during execution:
+
+- `picks.json` analysis showed **zero kept slides from sp6500** in the final composite — all 27 sp6500 candidates had been curated OUT during selection. So the final `index.html` (280 KB, 31 slides) is unaffected by sp6500 removal — sp6500 was only ever in the candidate pool, never in the final deck. Big simplification: no need to regenerate the final composite or rewrite committed historical snapshots.
+
+Phase 9 changes:
+
+- [x] `git rm project-overview-sp6500.md` + `git rm -r assets/project-overview-sp6500/` (5 files)
+- [x] `assets/client-pdlc/build.py` — dropped sp6500 from SOURCES (line 55), IMG_REWRITES (whole dict reduced to `{}` since sp6500 was the only entry), BADGE_CLASS (line 68), SLIDE_MOVES (whole dict reduced to `{}` since the only entry was the sp6500-KOL slide move). Also deleted the dead CSS rule `.cp-controls .badge.overview-2` (no slides use that badge class anymore). Two comment-only refs to sp6500 retained at SLIDE_MOVES dict as historical context.
+- [x] `assets/client-pdlc/picks.json` — used jq to filter `.order` (dropped 27 sp6500 entries; 126 → 99), drop `.sources["project-overview-sp6500"]`, rewrite `._build_id` to drop the sp6500 segment. Final state: 99 order entries, 31 kept (same kept count as before — sp6500 contributed 0 to final).
+- [x] `assets/client-pdlc/README.md` — updated source-deck list (3 → 2 decks; 126 → 99 candidate pool), added "History note" explaining sp6500 retirement, updated all 126 references → 99 (5 occurrences). Schema example updated.
+- [x] Regenerated `assets/client-pdlc/candidate.html` via `python3 build.py --candidate`: 99 slides, 516 KB (down from 2.5 MB / 126 slides). Confirms build.py works without sp6500.
+- [x] **Did NOT** regenerate `index.html` / `client-pdlc-presentation-v1.html` / `GlobalLogic_Agentic_PDLC.pdf` — these are committed historical snapshots, self-contained (slides inlined), unaffected by source-deck removal since sp6500 contributed 0 final slides.
+
+Net result: sp6500 fully retired from the project. client-pdlc still functional with `agentic-delivery` + `project-overview` as the two source decks. Final composite content unchanged. Net repo savings: ~250 KB markdown + ~5 MB asset files (incl. the shrunken candidate.html).
+
+- [ ] **Phase 10** — Commit + push the Phase 9 changes (PR-then-auto-merge)
+- [ ] **Phase 11** — Mark Complete after Phase 10 lands
 
 ## Strategy Content
 
@@ -61,4 +81,5 @@ The canonical answer to "which is canonical?" is: **`project-overview.md`** is c
 
 ## Changelog
 
-- 2026-05-30: Task created. User raised cleanup need after the setup-onboarding overhaul (ben/069) surfaced the project-overview naming confusion. Three design decisions pinned via AskUserQuestion: delete .pptx/.pdf/script + rename project-overview-2 → project-overview-sp6500 + update companion deck reference. Lessons captured as a sibling-program-naming strategy block.
+- 2026-05-30: Task created. User raised cleanup need after the setup-onboarding overhaul (ben/069) surfaced the project-overview naming confusion. Three design decisions pinned via AskUserQuestion: delete .pptx/.pdf/script + rename project-overview-2 → project-overview-sp6500 + update companion deck reference. Lessons captured as a sibling-program-naming strategy block. PR #23 merged.
+- 2026-05-30: User questioned the deck's provenance after the rename ("though this project demonstrates a different device, so i am not sure the providence"). Traced via git log to task ben/039 origin commit — file was authored as a md-deck test fixture, not as a real portfolio program doc. User picked Option 3 from AskUserQuestion (delete sp6500, keep client-pdlc by re-pointing). Discovery during execution: zero kept slides from sp6500 in the final composite (all 27 candidates had been curated out during selection), so final `index.html` is unaffected by the removal — only the candidate pool shrinks from 126 → 99. Phase 9 changes ready for commit + push.
