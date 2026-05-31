@@ -8,6 +8,24 @@ You've finished setup — everything is installed. This guide is how to actually
 
 ---
 
+## 🤖 Default to plain English with Claude
+
+You don't need to memorize commands, slash skills, or terminal syntax to use PDLC_DEMO. **The recommended path for all roles** — including non-engineers (regulatory affairs, clinical, QE, human factors) — is to launch Claude Code (§5) and talk to it naturally:
+
+- *"Pull the latest changes from GitHub"* → Claude runs `git pull`
+- *"What tasks are we working on right now?"* → Claude reads the task indexes
+- *"Open the submission tracker"* → Claude points you at the right file or runs `/tracker`
+- *"I want to update the predicate analysis"* → Claude creates or finds a task, activates it, and starts work
+- *"This document needs internal review"* → Claude runs the `/change-control` workflow
+- *"Run the project health check"* → Claude runs `/best-practices`
+- *"What changed since yesterday?"* → Claude runs `/digest`
+
+You'll see slash commands like `/task` and `/change-control` throughout this doc. Those are how the skills work *under the hood*. **You almost never need to type them yourself** — they're shown so you can recognize what Claude is doing.
+
+The few exceptions where you do need to copy a command are flagged as **"manual fallback"** — usually because the underlying tool is interactive (e.g., a `bash` launcher that pops a browser window) or because Claude Code isn't running yet.
+
+---
+
 ## 1. Opening the Project
 
 ### First time
@@ -550,7 +568,11 @@ Before a doc goes to **formal customer review** (Confluence with Part 11 sign-of
 
 This requires the `web-control` browser-automation infrastructure (set up via `setup.sh` if `web-control` is present).
 
+> **✨ Just ask Claude**: *"I need internal review on this doc"* / *"Start an internal review of <path>"*. Claude launches the debug Chrome browser for you if it isn't already running, creates the Google Doc, pastes your content, and adds a tracking section to your active task doc. You only need to sign into Google in the browser window that pops up (once, on first use).
+
 ### Pre-flight: `web-control` must be running
+
+**Manual fallback** (only if you'd rather start the browser yourself before talking to Claude):
 
 ```
 bash .claude/skills/web-control/scripts/launch-debug-chrome.sh
@@ -593,12 +615,14 @@ You: "Update internal review"
 
 ### Get help inline
 
+> **✨ Just ask Claude**: *"How does the change-control internal review workflow work?"* / *"What can /change-control do?"* Claude reads the skill manual and explains it in plain language.
+
+**Manual fallback** (if you want the raw help output):
+
 ```
 python3 .claude/skills/change-control/actions/help.py
 python3 .claude/skills/change-control/actions/help.py review-start
 ```
-
-Lists every action with one-line descriptions; per-action gives full usage.
 
 ---
 
@@ -607,6 +631,8 @@ Lists every action with one-line descriptions; per-action gives full usage.
 > **Mac users**: skip this section.
 
 If you're on Windows + WSL, here's what you need to know about reaching Linux-hosted services (like `project-console`) from a Windows browser.
+
+> **✨ Just ask Claude if anything below breaks**: *"I can't reach the project console from my Windows browser — can you diagnose?"* Claude walks the troubleshooting matrix below, checks your WSL config, and fixes what it can without you copying any commands.
 
 ### The default just works
 
@@ -642,4 +668,5 @@ This is about **inbound from Windows → Linux services**. The `web-control` / `
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite — added a top-banner "🤖 Default to plain English with Claude" section reinforcing that slash commands are shown so readers can recognize what Claude is doing, not for them to memorize. Added inline "✨ Just ask Claude" callouts at §13 (change-control pre-flight + inline help) and §14 (WSL networking troubleshooting). Same non-engineer-first pattern as the setup.md follow-up (see [[feedback_setup_docs_ask_claude_callouts]]). |
 | 2026-05-30 | Ben Xavier | Rewrote how-to-guide.md as a day-to-day usage guide modeled on the arthrex-pccp sister project's `getting-started.md` (task ben/069). New audience: post-setup contributor learning to use the project. 15-section structure: opening the project → `git pull` habit → VS Code basics → terminal → launching Claude Code → project structure → things to try → Claude Desktop → key files to read → navigation tour → skills overview → task-first workflow → optional change-control internal review → WSL networking → getting help. Replaces prior content (new-MedTech-project bootstrap) which moved to `new-project-bootstrap.md`. |
