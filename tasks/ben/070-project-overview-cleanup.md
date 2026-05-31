@@ -61,8 +61,28 @@ Phase 9 changes:
 
 Net result: sp6500 fully retired from the project. client-pdlc still functional with `agentic-delivery` + `project-overview` as the two source decks. Final composite content unchanged. Net repo savings: ~250 KB markdown + ~5 MB asset files (incl. the shrunken candidate.html).
 
-- [ ] **Phase 10** — Commit + push the Phase 9 changes (PR-then-auto-merge)
-- [ ] **Phase 11** — Mark Complete after Phase 10 lands
+- [x] **Phase 10** — Phase 9 changes shipped via PR #24 (commit 3ca5952 → merge 016b123).
+
+## Phase 12 — Additional cleanup (xlsx + trace-matrix backup + CHANGELOG regen)
+
+User asked to "remove claude-capabilities.xlsx, then review what generates and depends on the CHANGELOG.md and trace-matrix.yml*". Investigated all three before acting.
+
+**Findings:**
+- `claude-capabilities.xlsx` (15 KB, root) — no generator, no dependencies, single informational mention in task ben/066. Orphan.
+- `CHANGELOG.md` (9.7 KB) — owned by `/digest log` action. Generated section via `build_changelog.py` (with optional `--llm` polish for plain-English summaries via batched `claude -p`). Last entry 2026-04-20; ~40 days stale.
+- `trace-matrix.yml` (7.6 KB) — owned by `/trace-matrix init`. Consumed by `/trace-matrix build`, `/trace-matrix analyze`, project-console's SRS adapter at `tools/project-console/trace-matrix/adapters/software.py`. Load-bearing.
+- `trace-matrix.yml.backup-2026-05-05` (1.2 KB) — orphan recovery snapshot from task ben/045's trace-matrix breakage analysis. Rollback path lives in git history; no skill or script reads it.
+
+**User picked Option 1** (recommended) — delete xlsx + backup, regenerate CHANGELOG.
+
+- [x] `git rm claude-capabilities.xlsx trace-matrix.yml.backup-2026-05-05`
+- [x] Ran `python3 .claude/skills/digest/scripts/build_changelog.py --since "2026-04-20T20:58:00Z" --llm --dry-run` to produce a polished 163-line section. 39 significant commits across 4 themes (Skills, Tasks Completed, Tasks, Project Structure). LLM rewrote each commit's body into plain-English for the project-manager / regulatory-reviewer audience.
+- [x] Inserted the new section into `CHANGELOG.md` between the preamble divider (`---`) and the sentinel marker.
+- [x] **Bug fix in CHANGELOG sentinel**: the original sentinel text read "inserts new sections **above** this line", but the algorithm that gives reverse-chronological newest-first ordering requires insertion **below** the sentinel (so the sentinel stays put right after the preamble and new sections push prior sections down). Reworded the sentinel to match. Repositioned the sentinel to its canonical location right after the preamble `---` separator.
+- [x] **Note**: today's ben/069 + ben/070 work is intentionally NOT in the new CHANGELOG section. The significance filter at `build_changelog.py:58` only matches commits whose subject says `task NNN` or whose files touch trigger paths (CLAUDE.md, project.yml, SKILL.md version bumps, new DHFs, etc.). Recent commits used `ben/NNN:` subjects and touched setup.md / how-to-guide.md / README.md — root-level contributor-onboarding docs, intentionally outside the regulatory-reviewer audience's CHANGELOG scope. The work is preserved in task docs + PRs + git history.
+
+- [ ] **Phase 13** — Commit + push the Phase 12 changes
+- [ ] **Phase 14** — Mark task 070 Complete after Phase 13 lands
 
 ## Strategy Content
 

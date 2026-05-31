@@ -16,7 +16,171 @@ Populated by the `/digest log` action of the `digest` skill. On retrospective fi
 
 ---
 
-<!-- /digest log inserts new sections above this line on each run. -->
+<!-- /digest log inserts new sections immediately below this line on each run. -->
+
+## 2026-05-31 06:09 UTC — Skill updates
+
+**39 significant commit(s)** across 4 theme(s).
+
+### Skills
+
+- **Pulled 79 files and 3 new productivity tools from upstream.**
+  Includes skills for document analysis and knowledge export.
+  _ben/067 · `f7cf778` · Ben Xavier · 2026-05-30_
+
+- **Fixed file corruption affecting Windows users during sync operations.**
+  Windows clones now safely download updates without losing agent files.
+  _ben/066 · `945d35c` · Ben Xavier · 2026-05-30_
+
+- **Automated cleanup of merged branches in git workflow.**
+  Eliminates manual housekeeping; keeps local workspace tidy.
+  _ben/063 · `a44878b` · Ben Xavier · 2026-05-16_
+
+- **Unified documentation rules under medtech-docs skill ownership.**
+  Rules auto-update from upstream; single canonical form per rule.
+  _ben/061 · `ec1a0f4` · Ben Xavier · 2026-05-16_
+
+- **Converted documentation rules to auto-updating symlinks.**
+  Rule improvements now propagate automatically to all projects.
+  _ben/060 · `3985e0a` · Ben Xavier · 2026-05-15_
+
+- **Established formal convention for temporary files in tasks.**
+  Prevents accidental commits of scratch work and build artifacts.
+  _ben/059 · `f158f62` · Ben Xavier · 2026-05-15_
+
+- **Added meaning-based file search to advisor agents.**
+  Agents now find relevant files by topic, not just filename.
+  _ben/058 · `a449d2e` · Ben Xavier · 2026-05-15_
+
+- **Fixed security audit to handle authentication token limits correctly.**
+  Two-factor check now distinguishes disabled from unverifiable states.
+  _ben/056 · `771f262` · benxavier-gl · 2026-05-13_
+
+- **Improved document discovery with better matching patterns (v9→v12).**
+  Documents now found by exact names, wildcards, and metadata tags.
+  _ben/051 · `3c06281` · benxavier-gl · 2026-05-13_
+
+- **Upgraded advisors and document discovery with improved matching.**
+  Advisors ground decisions in discovered files; expanded role catalog.
+  _`2d9ed96` · benxavier-gl · 2026-05-12_
+
+- **Redesigned requirements links to work in both directions.**
+  Fixes regression where design-input relationships broke with new layers.
+  _ben/050 · `90647d7` · benxavier-gl · 2026-05-12_
+
+- **Added draft-generation workflow and visual polish to console.**
+  Users can now auto-generate submission narratives; improved dark theme.
+  _`92ba076` · benxavier-gl · 2026-05-11_
+
+- **Approved new Jira integration and document discovery agents.**
+  Design controls pull directly from Jira; manifest tools enhanced.
+  _ben/035 · `f5affee` · benxavier-gl · 2026-05-05_
+
+- **Upgraded change control with formal review tiers and themes.**
+  Change process now structured; console supports multiple visual themes.
+  _`887d78b` · Ben Xavier · 2026-05-01_
+
+- **Reinstalled presentation skill with completed security audit.**
+  Presentation tool verified safe; no malicious code found.
+  _`5c1b503` · Ben Xavier · 2026-05-01_
+
+- **Added automated security scanning for installed tools and agents.**
+  Detects 30+ risk patterns; prevents malicious code injection.
+  _ben/041 · `6e7e95a` · Ben Xavier · 2026-05-01_
+
+- **Rebuilt deck-building skill with 86 curated SVG icons.**
+  Smart icon selection distinguishes tasks from generic entities.
+  _ben/039 · `9a73eb9` · Ben Xavier · 2026-05-01_
+
+- **Fixed symlink handling in sync tool across 3 upstream releases.**
+  No more file corruption when downloading updates; bugs closed.
+  _ben/029 · `790003b` · Ben Xavier · 2026-04-28_
+
+- **Synced 47 files; added two-tier review to change control.**
+  Change process now supports formal and internal review tiers.
+  _ben/029 · `105855d` · Ben Xavier · 2026-04-28_
+
+- **Made document tool reusable across projects with flexible naming.**
+  Tool now works with any project; outputs use project names.
+  _ben/033 · `ab0e5f4` · Ben Xavier · 2026-04-27_
+
+- **Merged upstream improvements without regressing local customizations.**
+  Synced change-control v0.4 while preserving project-specific changes.
+  _ben/032 · `3f76013` · Ben Xavier · 2026-04-27_
+
+- **Installed 6 new skills and completed all post-update setup.**
+  Document discovery, change control, and conversion tools now live.
+  _ben/030 · `777aa96` · Ben Xavier · 2026-04-27_
+
+- **Applied macOS fix and documented accumulated task work.**
+  Bash tool calls now work on macOS; 4 task docs added.
+  _`ddf04d1` · benxavier-gl · 2026-04-22_
+
+- **Relocated runtime files and added document-processing safety guard.**
+  Sensitive files protected from accidental commits; workflows enforced.
+  _`f38b74a` · Ben Xavier · 2026-04-21_
+
+- **Reformatted changelog to lead with readable outcomes.**
+  Non-technical readers now understand progress; summaries cached for speed.
+  _ben/021 · `44ec233` · Ben Xavier · 2026-04-20_
+
+### Tasks Completed
+
+- **Recorded upstream sync and closed the task.**
+  _ben/063 · `b24c833` · Ben Xavier · 2026-05-16_
+
+### Tasks
+
+- **Wrapped up sync work and deferred follow-up work.**
+  _ben/050 · `0d10d82` · benxavier-gl · 2026-05-12_
+
+### Project Structure
+
+- **Cleaned up 6 failing configuration checks post-sync.**
+  Brings the project to a clean audit baseline.
+  _ben/068 · `03d345a` · Ben Xavier · 2026-05-30_
+
+- **Added Dmytro Savenkov to the team roster.**
+  _`d89aac1` · Dmytro Savenkov · 2026-05-30_
+
+- **Configured git to ignore Excel temporary lock files.**
+  _`7dc6da4` · benxavier-gl · 2026-05-26_
+
+- **Adopted pull-request-then-auto-merge workflow as project policy.**
+  All commits now require code review before merging.
+  _ben/062 · `d8dd950` · Ben Xavier · 2026-05-16_
+
+- **Added 3 verified collaborators to the project roster.**
+  Closes roster gaps; 2 unverified collaborators remain pending.
+  _ben/055 · `80a4360` · benxavier-gl · 2026-05-13_
+
+- **Added PDF export for presentation decks and Drive exclusions.**
+  Prevents accidental commits of Google Drive temporary files.
+  _ben/053 · `e71d3d8` · benxavier-gl · 2026-05-13_
+
+- **Initialized regulatory document mapping for the PCA device.**
+  Project now auto-discovers which documents satisfy requirements.
+  _`7454063` · benxavier-gl · 2026-05-12_
+
+- **Expanded submission tracker to cover 3 medical devices.**
+  Tracker now shows 154 deliverables; improved documentation links.
+  _ben/047 · `446497d` · benxavier-gl · 2026-05-12_
+
+- **Restored submission tracker dashboard with 86+ compliance rows.**
+  Recovered tracker structure with engineering prerequisites and narratives.
+  _ben/047 · `3250202` · benxavier-gl · 2026-05-12_
+
+- **Updated task documentation and established skill-reading requirement.**
+  Captures lessons about invisible patterns requiring direct skill review.
+  _`a7395fa` · benxavier-gl · 2026-05-11_
+
+- **Documented session loss recovery and rebuild plan.**
+  Captures commit-discipline lessons from data loss incident.
+  _ben/039 · `ff10e07` · Ben Xavier · 2026-05-01_
+
+- **Initialized regulatory obligation mapping for all project devices.**
+  437 requirements routed across 9 devices; ready for gap analysis.
+  _ben/035 · `4235e9c` · Ben Xavier · 2026-04-27_
 
 ## 2026-04-20 20:58 UTC — Project retrospective
 
