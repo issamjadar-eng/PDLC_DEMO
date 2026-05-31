@@ -8,6 +8,23 @@ A reproducible walkthrough for starting a new regulated-device project using the
 
 ---
 
+## 🤖 You can drive most of this bootstrap by talking to Claude
+
+Once Phase 0 (Claude Code installed) is satisfied, most of the rest is either already a slash skill (`/medtech-docs init`, `/task`, `/sync-skills`, `/strategy`, `/best-practices`) or something Claude can do for you in plain English. Suggested entry points:
+
+- *"Help me bootstrap a new MedTech project here. Clone hitachi as a sibling, install the skills, init the git repo, and walk me through `/medtech-docs init`."* — drives Phases 1 → 3.
+- *"Personalize CLAUDE.md for our new device — it's <device name>, <pathway>, <classification>."* — drives Phase 4.
+- *"Create task 001 capturing the bootstrap work we just did."* — drives Phase 5.
+- *"Walk me through the architecture & component-strategy task — I'll tell you the system shape and you sketch the DHF topology."* — drives Phase 6.
+- *"Import the FDA guidances + standards that apply once the regulatory + architecture strategies are populated."* — drives Phase 6.5.
+- *"Scaffold the additional DHFs from our component list."* — drives Phase 7.
+
+You'll still see raw shell commands below (clone, mkdir, git init, cp -R). They're the **manual fallback** — useful if you want to see what Claude is doing under the hood, or if you're driving this from a sibling Claude Code session before the new project has Claude Code wired up.
+
+Non-engineer team leads can do the whole bootstrap by chat — see [[feedback_setup_docs_ask_claude_callouts]] for the project's convention on natural-language defaults in onboarding docs.
+
+---
+
 ## Audience
 
 A team lead or engineer who has been given a new device program and needs to turn an empty directory into a working DHF repository with design controls, standards, tasks, and an architecture-aligned DHF layout — the same shape PDLC_DEMO is in today. DHFs live under `docs/project/dhfs/<name>/` and can be top-level or arranged as parent→child (e.g., a `cloud-suite/` parent with per-service children).
@@ -47,6 +64,8 @@ Phase 10 — Troubleshooting
 
 The `hitachi` registry is the source of truth for skills and agents. A skill is a **directory** (`skills/<name>/SKILL.md` + supporting files) — not a single file. Installing a skill means copying its directory into your project's `.claude/skills/`. (The hitachi `README.md` still shows an older `curl` single-file install under `.claude/commands/` — ignore it; the directory model in `skills/manifest.md` is current.)
 
+> **✨ Or just ask Claude (from a sibling Claude Code session)**: *"Clone hitachi as a sibling of `~/projects/my-device/` and install the medtech-docs, task, best-practices, and trace-matrix skills into the new project."* Claude runs the clones + `cp -R` for you and checks for missing `shared/` dependencies.
+
 Clone hitachi **as a sibling** of where your new project will live — `/sync-skills` later resolves the registry via `project.yml` → `registries[hitachi].local_path`, which defaults to `../hitachi`:
 
 ```bash
@@ -70,6 +89,8 @@ At minimum you need `medtech-docs`, `task`, and `best-practices` to follow this 
 ## Phase 2 — Initialize the repo
 
 No skill runs yet — the task-gate hooks aren't wired until Phase 3's `init`. Set up the bare git repo and a starter `.gitignore`:
+
+> **✨ Or just ask Claude (from a sibling session)**: *"Initialize the git repo in `~/projects/my-device/` with the starter gitignore and rename the branch to main."* / *"Add the GitHub remote as `<owner>/<repo>`."* Claude runs `git init`, writes the gitignore, makes the initial commit, and wires up the remote.
 
 ```bash
 git init
@@ -157,6 +178,8 @@ The init-generated `CLAUDE.md` is a template. Before any task work, replace the 
 - **Demo vs. real disclaimers** — if this is a demo, say so explicitly so readers don't mistake fabricated data for real DHF evidence
 
 Use this repo's `CLAUDE.md` as the reference shape.
+
+> **✨ Or just ask Claude**: *"Personalize CLAUDE.md for our new device. It's <device name>, model <number>, <510(k)/De Novo/PMA>, classification <Class I/II/III>, predicate <K-number or 'none'>. This is a <real submission / demo / portfolio scaffold>."* Claude reads PDLC_DEMO's `CLAUDE.md` as a reference, rewrites your placeholders, and asks follow-up questions if something is ambiguous. You only review and confirm.
 
 ## Phase 5 — Create the first task (`001-project-init`)
 
@@ -278,6 +301,7 @@ Everything above is incremental — there's no "all at once." A new project typi
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-30 | Ben Xavier | Follow-up to the rename — added "🤖 You can drive most of this bootstrap by talking to Claude" top banner + inline "✨ Or just ask Claude" callouts at Phase 1 (clone hitachi + install skills), Phase 2 (git init + gitignore), and Phase 4 (personalize CLAUDE.md). Same non-engineer-first pattern as setup.md and how-to-guide.md (see [[feedback_setup_docs_ask_claude_callouts]]). Raw shell commands remain as the manual fallback. |
 | 2026-05-30 | Ben Xavier | Renamed from `how-to-guide.md` → `new-project-bootstrap.md` under task ben/069. Audience clarification banner added; Phase 0–10 content unchanged. The freed `how-to-guide.md` slot is being rewritten as a day-to-day-usage guide for new contributors (arthrex three-file model). |
 | 2026-05-21 | Ben Xavier | Filled all skeleton TODOs (Phases 1, 2, 8, 9, 10) under task 002. Corrected three drift findings verified against the live SKILLs: init asks **9** questions not "~8" (added Modules/functions + Primary DHF name to the table); replaced the non-existent `/medtech-docs import-guidance` with `update-external-references`/`add-standard`/`evaluate`; expanded Phase 9 to sync-skills **v8.2** (`status`, `prune`, three-way pull bucketing). Resolved doc-home open question (stays at root, sibling of `setup.md`). Added companion-doc cross-reference. |
 | 2026-04-13 | Ben Xavier | Initial skeleton — 10-phase outline created under task 002. |
