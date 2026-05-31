@@ -1,10 +1,10 @@
 {
   "schema": "client-pdlc/picks@1",
-  "_build_id": "agentic-delivery:47:105511|project-overview:52:35508|project-overview-2:27:58114",
+  "_build_id": "agentic-delivery:47:105511|project-overview:52:35508|project-overview-sp6500:27:58114",
   "sources": {
     "agentic-delivery": "../agentic-delivery/index.html",
     "project-overview": "../project-overview/index.html",
-    "project-overview-2": "../project-overview-2/index.html"
+    "project-overview-sp6500": "../project-overview-sp6500/index.html"
   },
   "order": [
     {
@@ -203,17 +203,17 @@
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 13,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 20,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 23,
       "keep": false
     },
@@ -518,122 +518,122 @@
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 0,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 1,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 2,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 3,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 4,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 5,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 6,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 7,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 8,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 9,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 10,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 11,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 12,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 14,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 15,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 16,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 17,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 18,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 19,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 21,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 22,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 24,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 25,
       "keep": false
     },
     {
-      "src": "project-overview-2",
+      "src": "project-overview-sp6500",
       "idx": 26,
       "keep": false
     }

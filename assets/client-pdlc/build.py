@@ -52,11 +52,11 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = [
     ("agentic-delivery",  "../agentic-delivery/index.html"),
     ("project-overview",  "../project-overview/index.html"),
-    ("project-overview-2","../project-overview-2/index.html"),
+    ("project-overview-sp6500","../project-overview-sp6500/index.html"),
 ]
 
 IMG_REWRITES = {
-    "project-overview-2": {
+    "project-overview-sp6500": {
         "assets/project-overview/console-01-landing.png":
             "../project-overview/console-01-landing.png",
     },
@@ -65,7 +65,7 @@ IMG_REWRITES = {
 BADGE_CLASS = {
     "agentic-delivery":   "agentic",
     "project-overview":   "overview",
-    "project-overview-2": "overview-2",
+    "project-overview-sp6500": "overview-2",
 }
 
 
@@ -1034,7 +1034,7 @@ AGENDA_REPLACES = ("project-overview", 1)
 
 # Move the KOL slide into Project Console → Agents subsection (rendered right after PO#45).
 SLIDE_MOVES = {
-    ("project-overview-2", 13): {"after": ("project-overview", 45)},
+    ("project-overview-sp6500", 13): {"after": ("project-overview", 45)},
 }
 
 

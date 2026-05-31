@@ -4,7 +4,7 @@ Single-file composite presentation built mechanically from the three sibling dec
 
 - `../agentic-delivery/index.html` — 47 slides
 - `../project-overview/index.html` — 52 slides
-- `../project-overview-2/index.html` — 27 slides
+- `../project-overview-sp6500/index.html` — 27 slides
 
 Total candidate pool: **126 slides**. Each source slide is harvested verbatim (`<section class="slide ...">`) and re-rendered inside a `<div class="src-{deck}">` wrapper with that deck's CSS scoped to the wrapper.
 
@@ -26,7 +26,7 @@ Selection and ordering are separated into two passes so each one is a focused to
 python build.py --candidate
 ```
 
-`candidate.html` shows all **126** slides in **source order** (agentic-delivery → project-overview → project-overview-2). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
+`candidate.html` shows all **126** slides in **source order** (agentic-delivery → project-overview → project-overview-sp6500). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
 
 - Click **KEEP / REMOVE** per slide. Default = all KEEP.
 - **Keep all** / **Remove all** sweep toggles.
@@ -84,12 +84,12 @@ Both `picks.json` and `index.html` are git-committable. The final deck is fully 
   "sources": {
     "agentic-delivery":   "../agentic-delivery/index.html",
     "project-overview":   "../project-overview/index.html",
-    "project-overview-2": "../project-overview-2/index.html"
+    "project-overview-sp6500": "../project-overview-sp6500/index.html"
   },
   "order": [
     {"src": "project-overview",   "idx":  0, "keep": true },
     {"src": "agentic-delivery",   "idx": 12, "keep": false},
-    {"src": "project-overview-2", "idx": 26, "keep": true }
+    {"src": "project-overview-sp6500", "idx": 26, "keep": true }
   ]
 }
 ```
@@ -102,7 +102,7 @@ The `order` array is the source of truth — sequence == final slide sequence; r
 - **Drops** each source's inline `<script>` (per-deck nav handlers conflict if combined) and body-level chrome (`.progress-bar`, `.nav-dots`, `.keyboard-hint`).
 - **CSS-scopes** every source rule: `.foo { ... }` → `.src-{deck} .foo { ... }`. Top-level `body`/`html`/`:root` selectors are remapped to `.src-{deck}` so the scope wrapper plays the role of the page root. `@media` / `@supports` recurse; `@keyframes` / `@font-face` left intact.
 - **Stamps `visible`** on every `<section class="slide ...">` — source decks gate `.reveal` animations on `.slide.visible`, normally added by IntersectionObserver. Static stamping lands every element at its post-animation state without needing the deck's runtime JS.
-- **Rewrites** image src paths that point into a sibling asset folder (currently just `project-overview-2`'s one screenshot).
+- **Rewrites** image src paths that point into a sibling asset folder (currently just `project-overview-sp6500`'s one screenshot).
 
 ## Limitations
 
