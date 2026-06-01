@@ -795,7 +795,71 @@ bash tools/file-locator-mcp/rebuild.sh --full   # from scratch
 
 ---
 
-## 18. Confirm Everything Is Wired Up
+## 18. Gemini CLI (`gemini`) — Optional, Evaluation Only
+
+> **For most contributors, skip this section.** Claude Code is the fully-supported assistant for this project — every skill, every slash command, every hook, and every agent under `.claude/` is built for it.
+>
+> **Read this section only if you do not have Claude access** and want to **evaluate or learn from** the project using Google's Gemini CLI instead. Gemini support here is **partial and intentional**: enough to read and reason about the project, **not** enough to develop in it.
+
+### What "partial" means
+
+| Capability | Claude Code | Gemini CLI |
+|---|---|---|
+| Read project files, follow CLAUDE.md, navigate skills/agents | ✅ | ✅ |
+| Run slash commands (`/secops`, `/best-practices`, `/task`, …) | ✅ | ❌ — no slash-skill execution |
+| `PreToolUse` task-gate hook enforcement | ✅ — denies edits when no task is active | ❌ — Gemini self-enforces per `GEMINI.md`, not by hook |
+| Project-specific MCP servers (`file-locator`, `web-control`) | ✅ | ⚠️ — not validated; treat as unsupported |
+| Develop / commit / push project changes | ✅ — recommended | ❌ — **not the supported path** |
+
+The intent: a user without a Claude subscription can still **clone the repo, launch Gemini CLI, and ask it to walk through the codebase, explain the DHF structure, summarize a skill, or trace requirements**. They cannot drive development workflows the same way. If you intend to develop, use Claude.
+
+### Install Gemini CLI
+
+Gemini CLI is distributed via npm. Node.js was installed in step 9, so this is a single command:
+
+```
+npm install -g @google/gemini-cli
+```
+
+Verify:
+
+```
+gemini --version
+```
+
+### Authenticate
+
+```
+gemini
+```
+
+On first launch, Gemini prompts for authentication — follow the on-screen instructions to sign in with your Google account. The session persists across terminal restarts.
+
+### Launch inside the project
+
+From the project root:
+
+```
+cd ~/projects/PDLC_DEMO
+gemini
+```
+
+Gemini auto-discovers the project root and reads **`GEMINI.md`** (at the project root) on startup. That file points Gemini at `CLAUDE.md`, `project.yml`, and the skill `SKILL.md` files — so Gemini follows the same project mandates as Claude (task-first workflow, three-tier documentation structure, single-source-of-truth wiring), with the caveats in the capability table above.
+
+### Project-specific Gemini guardrails
+
+`GEMINI.md` documents two important things Gemini users should read before doing anything beyond reading:
+
+1. **Self-enforced task gate** — Gemini CLI does NOT have Claude Code's `PreToolUse` hook. The mandate to associate edits with an active task is **honor-system** for Gemini users. See `GEMINI.md` § Workspace Safety.
+2. **macOS symlink fallback** — Gemini's sandbox occasionally throws a false-positive `File name too long` error during `git pull`. Workaround at `GEMINI.md` § Git Operations & Troubleshooting.
+
+### When to switch back to Claude
+
+If you find yourself wanting to **edit files, commit, push, run a slash command, or use a project skill**, that's the signal to stop and switch to Claude Code (step 13). Gemini here is for *understanding* the project; Claude is for *working in* it.
+
+---
+
+## 19. Confirm Everything Is Wired Up
 
 > **✨ Just ask Claude**: *"Run the security posture check and the best-practices audit, then tell me if I need to fix anything."* Claude runs both, summarizes the results, and walks you through any failures (often by fixing them for you).
 
@@ -822,6 +886,7 @@ If you're a *team lead* starting a new MedTech project (not just joining this on
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-05-31 | Ben Xavier | Added §18 — optional, evaluation-only Gemini CLI guide (install via `npm install -g @google/gemini-cli` → auth → launch in project → cross-link to existing `GEMINI.md`). Explicit framing: Gemini is **partial** support for users without Claude access who want to read and reason about the project; **not** the supported development path. Capability table contrasts Claude vs. Gemini on slash-skills, task-gate hook, MCP servers, and develop/commit/push. Renumbered "Confirm Everything Is Wired Up" §18 → §19. Task ben/071. |
 | 2026-05-30 | Ben Xavier | Added "📍 You are here" decision banner at the top — three-row table that tells the reader at a glance which of the three onboarding docs (setup.md / how-to-guide.md / new-project-bootstrap.md) they should be reading and explicitly flags `new-project-bootstrap.md` as "the easy one to get wrong" (it's for replicators starting their own project, NOT for contributors joining PDLC_DEMO). Removed redundant Companion-docs bullet list (now folded into the banner). Same banner applied to the other two docs for consistency. |
 | 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite: added an **"ask Claude"** layer for non-engineer users. New top-banner explaining the pattern. "✨ Or just ask Claude" callouts added at steps 11 (Git + SSH), 12 (VS Code extensions), 14 (repo clone), 15 banner (security posture overview), 15f (team registration), 16 (web-control), 17 (file-locator), 18 (confirmation). Added a third row to the "Choose Your Path" table: "Claude-assisted" — for users who already have Claude Code from another project. Under-the-hood manual commands still present so engineers can see what Claude is doing. |
 | 2026-05-30 | Ben Xavier | Rewrote setup.md as a full new-contributor onboarding guide modeled on the arthrex-pccp sister project (task ben/069). Adopted 18-section structure: admin → terminal → VS Code → WSL → GitHub account → Claude account → Google Drive → Claude Desktop → automated/manual install paths → Homebrew → Node + core utils → document tools → Git + SSH → VS Code extensions → Claude Code CLI → repo clone → security posture (training opt-out, 2FA, conversation hygiene, integration awareness, team registration) → web-control (optional) → file-locator (optional) → confirmation. Companion `setup.sh` introduced for the automated path. Folded prior security-posture content (training opt-out, 2FA, `/secops attest`) into §15 rather than keeping it as a separate doc. |
