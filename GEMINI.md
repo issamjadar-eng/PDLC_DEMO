@@ -2,6 +2,8 @@
 
 This project is primarily configured for **Claude Code**. To ensure consistency and avoid duplication, Gemini CLI must follow the established project mandates and workflows defined in the Claude configuration.
 
+> **For installation, authentication, and launch instructions**, see [`setup.md` §18 — Gemini CLI (Optional, Evaluation Only)](setup.md#18-gemini-cli-gemini--optional-evaluation-only). Gemini support is **partial**: read/reason ✅, develop/commit/push ❌ — use Claude Code for development work.
+
 ## Primary Mandates
 
 1.  **Follow `CLAUDE.md`**: The `CLAUDE.md` file in the project root is the authoritative source for project-wide instructions, information flow, and working conventions. **Read and adhere to `CLAUDE.md` for all tasks.**
