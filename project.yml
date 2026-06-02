@@ -260,6 +260,7 @@ security:
   - docflow
   - docx
   - file-locator
+  - frontend-design
   - frontend-slides
   - gap-analysis
   - jira-pull
