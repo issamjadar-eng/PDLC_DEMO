@@ -2,7 +2,7 @@
 
 **ID**: 076
 **Created**: 2026-06-02
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -52,7 +52,7 @@ The L1b HIPAA applicability is the load-bearing artifact for the user's goal: it
 - [x] Verify: HIPAA in advisor Tier 2 grounding (grep); file-locator rebuilt (5 new) → semantic query "HIPAA safeguards vs our cloud/CA architecture" returns L1a reg + 800-66 + CA SAD + cloud SRS in HIGH-confidence band. End-to-end retrieval proven.
 - [x] DECISION (user: cybersecurity only): added L1b `regulations` role to cybersecurity tier_2 + broadened the `regulations` role description (was "21 CFR parts" only → now Title 21 + Title 45/HIPAA) + added cybersecurity to its consumers. Re-rendered; cybersecurity now does full structured cite-both for HIPAA. clinical-affairs left as-is (semantic-search route).
 - [x] Gap 3 (folded in): advisors skill conformance — frontmatter added, BP+Changelog → README, VERSION removed, project refs scrubbed, validated
-- [ ] Push to PDLC_DEMO (project) + /sync-skills push to hitachi (registry-shared: canonical-roles.yaml + advisors SKILL.md/README + 11 advisor agents). Stage ONLY my files — other agents are mid-work on docs/_analysis, task 077, SECOPS.md.
+- [x] Pushed both repos. **PDLC_DEMO**: PR #39 merged (`983446f`; main now `a3b79ff` incl. CI index rebuild). **hitachi registry**: PR #194 merged (`cd3f800`) — canonical-roles.yaml + advisors SKILL/README + 11 agents + VERSION deletion. Staged only my files; other agents' work (docs/_analysis, task 077, SECOPS, index.db) untouched. Excluded core-team/design-review panels (pre-existing drift). index.db left to CI. Local main ff-recovered after gh left it stale (see lessons).
 
 ## Gap 3 (folded in) — advisors skill conformance to skill-creator conventions
 
@@ -70,6 +70,10 @@ Fixes (user: convert-to-integer + fold-into-076):
 - Removed the `VERSION` file (nothing reads it; verified).
 - Validated: frontmatter parses (version=9 int, 4 fields); zero project refs remain; best-practices "Skills are versioned" check will now pass (was previously exempted as a no-frontmatter external skill).
 
+<!-- LESSONS LEARNED: git-workflow -->
+**`gh pr merge --merge` can leave local `main` stale (and the working tree reverted) when `main` advanced during the task.** Concurrent agents merged PR #38 (ben/078-renumber) into `main` while this task ran. After my PR #39 merged on the remote, `gh pr merge --delete-branch` deleted my local branch and checked out the now-stale local `main` (`fc871e8`) — which reverted my edits in the working tree (advisors SKILL.md lost its frontmatter again, regulations/ vanished). The work was never lost — it was on `origin/main` (`983446f`). **Recovery:** `git fetch`; confirm `git merge-base --is-ancestor HEAD origin/main` (clean-ff safe); discard only the CI-owned `index.db` local change (`git checkout -- tools/file-locator-mcp/index.db`) since it blocked the ff; `git merge --ff-only origin/main`. Other agents' uncommitted files (docs/_analysis, task 077, SECOPS.md) are preserved by ff-only because the incoming commits don't touch them. **How to apply:** after `gh pr merge` prints `! not possible to fast-forward`, don't panic about reverted files — `fetch` + `merge --ff-only origin/main` restores them; never `reset --hard` (it would nuke concurrent agents' uncommitted work).
+<!-- /LESSONS LEARNED -->
+
 <!-- LESSONS LEARNED: skill-authoring -->
 **A skill with no YAML frontmatter is silently undiscoverable — its description degrades to the first content line.** The advisors SKILL.md had a stray `Base directory for this skill: ${CLAUDE_SKILL_DIR}` as line 1 and no `---` frontmatter, so Claude Code surfaced that literal line as the skill's "description" — meaning the skill could only be reached by typing `/advisors`, never by natural-language triggering. **Why:** the skill loader falls back to leading content when frontmatter/description is absent; `/best-practices` even *exempts* no-frontmatter skills as "external," so the gap passes the audit silently. **How to apply:** when auditing a skill, check `head -1 SKILL.md` for `---`; a skill that starts with anything else (especially an unexpanded `${CLAUDE_SKILL_DIR}`) is missing frontmatter and won't auto-trigger. The conformant pattern: frontmatter first (name/description/version/updated), BP+Changelog as stubs in SKILL.md pointing to README, real BP+Changelog in README, no VERSION file. See [[feedback_skill_version_bestpractices]].
 <!-- /LESSONS LEARNED -->
@@ -82,6 +86,7 @@ Fixes (user: convert-to-integer + fold-into-076):
 <!-- /LESSONS LEARNED -->
 
 ## Changelog
+- 2026-06-02: **Status → Complete.** Both HIPAA grounding gaps + advisors skill conformance shipped to both repos (PDLC_DEMO PR #39 `983446f`; hitachi PR #194 `cd3f800`). Local main ff-recovered after the cross-agent merge race. The 6 `[VERIFY]` items in `docs/external/regulations/hipaa.md` (emergency access, auto-logoff, pca-device media controls, HIPAA-framed risk analysis, BAA flow-down, breach procedure) are device-team follow-ups, not blockers for this task.
 - 2026-06-02: **Gap 3 (folded in) — advisors skill conformance.** User caught that advisors didn't follow skill-creator conventions. Audited + fixed: added missing YAML frontmatter (the headline — skill had none, so its description was a stray `Base directory` line → undiscoverable), moved BP+Changelog SKILL.md→README.md (stubs left behind), scrubbed all project task refs, dropped the semver VERSION file for integer `version: 9`. Validated frontmatter + zero project refs. Captured the no-frontmatter lesson.
 - 2026-06-02: **Gap 2 done + validated end-to-end.** Authored L1b applicability tier: `docs/external/regulations/{README,hipaa}.md` (first regulations L1b in the project) + `docs/external/industry-frameworks/nist-sp-800-66.md`; updated 2 READMEs + parent subfolder table. hipaa.md maps §164.312 to real SRS IDs and flags 6 gaps/[VERIFY]. Rebuilt discovery-index + file-locator index. **Validation:** file-locator query for HIPAA-vs-architecture returns L1a reg + 800-66 + connectivity-adapter SAD + cloud-suite SRS in the high-confidence band — proves a HIPAA question now retrieves regulation + guide + architecture + requirements together. Discovered a pre-existing `docs/_analysis/pca-device/hipaa-readiness-profile.md` (gap-analysis) — complementary to the new applicability doc. Residual: only regulatory-affairs is fully cite-both-wired (L1b `regulations` role); cybersecurity/clinical reach L1b via semantic search only — surfaced as a user decision. **Not yet committed/pushed.**
 - 2026-06-02: **Gap 1 done.** Broadened both registry role descriptions in `canonical-roles.yaml` (HIPAA/45 CFR + NIST SP 800-66); re-rendered all 11 canonical-role advisors → HIPAA now surfaces in regulatory/clinical/cybersecurity Tier 2. **Hit + fixed a `core.symlinks=false` blocker** (agent files were de-materialized symlinks — see lessons); healed 21 broken symlinks across `.claude/{agents,commands,hooks,rules}`. Working tree clean except intended changes. Next: discovery-index rebuild + Gap 2 L1b docs.
