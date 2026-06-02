@@ -12,6 +12,7 @@ Non-FDA, non-ISO/IEC frameworks that medtech projects commonly use when there's 
 | IHE Profiles | [`ihe-profiles.md`](ihe-profiles.md) | Integrating the Healthcare Enterprise profiles (how standards compose in clinical workflows) |
 | GMLP | [`gmlp.md`](gmlp.md) | FDA/Health Canada/MHRA Good Machine Learning Practice guiding principles |
 | NIST CSF | [`nist-csf.md`](nist-csf.md) | Cybersecurity Framework (Identify / Protect / Detect / Respond / Recover) |
+| NIST SP 800-66 Rev. 2 | [`nist-sp-800-66.md`](nist-sp-800-66.md) | Implementing the HIPAA Security Rule — risk-assessment/management guidance + crosswalk of Subpart C standards → NIST CSF + SP 800-53. Companion to `../regulations/45-cfr-part-164.md`. |
 | NTIA SBOM | [`ntia-sbom.md`](ntia-sbom.md) | Software Bill of Materials minimum elements |
 | OWASP | [`owasp.md`](owasp.md) | OWASP medical device security guidance |
 
@@ -41,4 +42,5 @@ Frameworks are usually invoked as *chosen alternatives* rather than hard require
 
 ## Changelog
 
+- 2026-06-02: Added `nist-sp-800-66.md` — NIST SP 800-66 Rev. 2 (HIPAA Security Rule implementation guide). Pairs with the new `../regulations/45-cfr-part-164.md` to close the privacy/data-protection gap in the library; placed here (implementation guide / chosen method) rather than `regulations/` (binding law). Crosswalks the Security Rule onto NIST CSF + SP 800-53 so HIPAA and FDA premarket cybersecurity share one control catalog and one risk process.
 - 2026-04-23: README authored as part of project-console v1.7.4 rollout.
