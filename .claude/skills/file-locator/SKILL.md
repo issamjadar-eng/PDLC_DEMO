@@ -1,8 +1,8 @@
 ---
 name: file-locator
 description: "Local file-locator MCP — semantic, file-granularity search over a medtech project's docs and registry-distributed regulatory knowledge. Returns ranked `(repo-relative-path, summary, heading_anchor?, score)` tuples for natural-language queries; complementary to `/dhf-manifest`'s canonical-role discovery index (this skill answers semantic queries, that one answers structural queries). Fully local: `fastembed` BGE-small ONNX + SQLite FTS5; no Anthropic API calls during indexing. The index lives at `tools/file-locator-mcp/index.db` and is **committed** (one canonical artifact for the team). Provides `setup`, `rebuild`, `status`, `audit` actions. TRIGGER when a user wants to install, build, refresh, inspect, or troubleshoot semantic file search — phrasings include: 'install the file locator', 'set up local RAG', 'set up semantic search', 'rebuild the locator index', 'audit the locator corpus', 'check what's indexed', 'why isn't <doc> showing up in locator results', 'add the file-locator MCP'."
-version: 1
-updated: 2026-05-14
+version: 2
+updated: 2026-06-01
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -33,6 +33,7 @@ A semantic file-locator MCP for medtech project work. Given a natural-language q
 | `scripts/rebuild.py` | Orchestrator — initializes DB schema, runs the indexer incrementally |
 | `scripts/server.py` | stdio MCP server exposing the `locate()` tool |
 | `templates/requirements.txt` | Pinned Python deps |
+| `templates/bootstrap.sh` | **Self-healing MCP launch wrapper** — installed to `tools/file-locator-mcp/bootstrap.sh` by `setup`. It is the `command` in `.mcp.json`: ensures the venv exists (builds + installs deps if missing, scrubs `Icon\r`), then `exec`s the venv interpreter on `server.py`. Makes a post-clone/post-move `/mcp → Reconnect` self-repair instead of failing `ENOENT`. Emits only to stderr — stdout is the MCP JSON-RPC channel. |
 | `templates/project.yml.snippet` | `file_locator:` config block, merged into project's `project.yml` by `setup` |
 | `templates/mcp.json.snippet` | MCP server registration, merged into project's `.mcp.json` by `setup` |
 | `templates/github-workflow.yml` | CI rebuild workflow, installed to `.github/workflows/file-locator-rebuild.yml` by `setup` |
@@ -63,6 +64,7 @@ Install the file-locator MCP into the current project. Idempotent.
 3. **Copy templates into the tool directory**
    - `${CLAUDE_SKILL_DIR}/templates/requirements.txt` → `${CLAUDE_PROJECT_DIR}/tools/file-locator-mcp/requirements.txt`
    - `${CLAUDE_SKILL_DIR}/templates/tool_readme.md` → `${CLAUDE_PROJECT_DIR}/tools/file-locator-mcp/README.md`
+   - `${CLAUDE_SKILL_DIR}/templates/bootstrap.sh` → `${CLAUDE_PROJECT_DIR}/tools/file-locator-mcp/bootstrap.sh`, then `chmod +x` it. This is the **self-healing MCP launch wrapper** referenced by `.mcp.json` (step 5). Overwrite on re-run so skill updates to the wrapper propagate (it carries no per-project state). The exec bit must be committed — git preserves it.
    - Generate `${CLAUDE_PROJECT_DIR}/tools/file-locator-mcp/rebuild.sh`:
      ```bash
      #!/usr/bin/env bash
@@ -100,7 +102,13 @@ Install the file-locator MCP into the current project. Idempotent.
    - Read `${CLAUDE_SKILL_DIR}/templates/mcp.json.snippet`
    - If `.mcp.json` doesn't exist, create with the snippet content.
    - If it exists, merge the `file-locator` entry into the `mcpServers` object (use `jq`).
-   - **Paths in the snippet are project-root-relative on purpose** — `./tools/file-locator-mcp/.venv/bin/python` and `./.claude/skills/file-locator/scripts/server.py`. Claude Code does **not** substitute `${CLAUDE_PROJECT_DIR}` inside the `command`/`args` fields of `.mcp.json` (it passes the literal string to `posix_spawn`, which fails with `ENOENT`). The MCP launcher's cwd is the project root, so relative paths resolve correctly. The `command` must point at the **venv** interpreter, not system `python3` — the deps (`fastembed`, `mcp`) live only in the venv. Do not rewrite these to absolute paths or `${CLAUDE_PROJECT_DIR}` forms.
+   - **Migration (v1 → v2 self-healing wrapper):** if an existing `file-locator` entry has `command` pointing at the venv interpreter directly (`./tools/file-locator-mcp/.venv/bin/python`), rewrite it to the wrapper. Idempotent jq:
+     ```bash
+     jq '.mcpServers["file-locator"].command = "./tools/file-locator-mcp/bootstrap.sh"' \
+       .mcp.json > .mcp.json.tmp && mv .mcp.json.tmp .mcp.json
+     ```
+     Leave a hand-forked entry (any other command) alone.
+   - **Paths in the snippet are project-root-relative on purpose** — `./tools/file-locator-mcp/bootstrap.sh` and `./.claude/skills/file-locator/scripts/server.py`. Claude Code does **not** substitute `${CLAUDE_PROJECT_DIR}` inside the `command`/`args` fields of `.mcp.json` (it passes the literal string; a literal `${…}` path fails `posix_spawn` with `ENOENT`). The MCP launcher's cwd is the project root, so relative paths resolve correctly — and bare command names are PATH-resolved (the sibling `chrome-devtools` entry uses `npx`). The `command` points at **`bootstrap.sh`**, not the venv interpreter directly: the wrapper guarantees the venv exists before exec'ing it, so a missing venv (fresh clone, repo move) self-heals on the next launch / `/mcp → Reconnect` instead of failing `ENOENT`. The wrapper then `exec`s the venv interpreter — the deps (`fastembed`, `mcp`) live only in the venv. Do not rewrite `command` to the venv interpreter, an absolute path, or a `${CLAUDE_PROJECT_DIR}` form.
 
 6. **Install the CI rebuild workflow**
    - Copy `${CLAUDE_SKILL_DIR}/templates/github-workflow.yml` → `${CLAUDE_PROJECT_DIR}/.github/workflows/file-locator-rebuild.yml` (create `.github/workflows/` if absent).
@@ -217,9 +225,13 @@ See `README.md` for design rationale and decision history.
 
 ### `mcp__file-locator__locate` tool missing after session restart
 
-MCP servers only load at session start, so any fix below requires a Claude Code restart to take effect. Two distinct causes have been seen — diagnose by reading the MCP launch log under `~/Library/Caches/claude-cli-nodejs/<project-slug>/mcp-logs-file-locator/*.jsonl`.
+MCP servers only load at session start, so any fix below requires a Claude Code restart to take effect. Diagnose by reading the MCP launch log under `~/Library/Caches/claude-cli-nodejs/<project-slug>/mcp-logs-file-locator/*.jsonl`.
 
-**Cause 1 — `${CLAUDE_PROJECT_DIR}` in `.mcp.json` is not substituted.** If the log shows `ENOENT ... posix_spawn '${CLAUDE_PROJECT_DIR}/...'`, the `.mcp.json` `file-locator` entry is using `${CLAUDE_PROJECT_DIR}` substitution in its `command`/`args`. Claude Code does not expand that variable in those fields — it passes the literal string. Fix: rewrite the entry to project-root-relative paths (see `templates/mcp.json.snippet` — `./tools/file-locator-mcp/.venv/bin/python` + `./.claude/skills/file-locator/scripts/server.py`, empty `env`). The MCP launcher's cwd is the project root, so relative paths resolve.
+**v2 self-heal (read this first).** As of v2 the `.mcp.json` `command` is `./tools/file-locator-mcp/bootstrap.sh`, a wrapper that **builds the venv on launch if it's missing** (fresh clone, repo move) and scrubs `Icon\r`, then `exec`s the venv interpreter on `server.py`. So the classic "venv gone after clone → `ENOENT`" failure now self-repairs on the next launch or `/mcp → Reconnect` — a one-time slow launch (it `uv venv` + `uv pip install`s, or falls back to stdlib `venv`+`pip`), then instant. The wrapper writes only to **stderr**; if the build fails, the traceback is in the launch log's stderr, not stdout (stdout is the JSON-RPC channel and must stay clean). If the tool is still missing, work through the causes below.
+
+**Cause 0 — wrapper not executable / not present.** If the log shows `ENOENT ... posix_spawn './tools/file-locator-mcp/bootstrap.sh'` or a permission error, the wrapper is missing or lost its exec bit (e.g. a Windows clone with `core.symlinks=false`, or a copy that dropped the mode). Fix: `cp .claude/skills/file-locator/templates/bootstrap.sh tools/file-locator-mcp/bootstrap.sh && chmod +x tools/file-locator-mcp/bootstrap.sh` (or re-run `/file-locator setup`). The exec bit is committed — git preserves it.
+
+**Cause 1 — `${CLAUDE_PROJECT_DIR}` in `.mcp.json` is not substituted.** If the log shows `ENOENT ... posix_spawn '${CLAUDE_PROJECT_DIR}/...'`, the `.mcp.json` `file-locator` entry is using `${CLAUDE_PROJECT_DIR}` substitution in its `command`/`args`. Claude Code does not expand that variable in those fields — it passes the literal string. Fix: rewrite the entry to project-root-relative paths (see `templates/mcp.json.snippet` — `./tools/file-locator-mcp/bootstrap.sh` + `./.claude/skills/file-locator/scripts/server.py`, empty `env`). The MCP launcher's cwd is the project root, so relative paths resolve.
 
 **Cause 2 — `Icon\r` artifacts inside the venv (macOS).** macOS Finder and iCloud Drive silently create zero-byte `Icon\r` files (literal `Icon` followed by carriage return) inside any directory they visit to hold custom folder icons. When these land inside `tools/file-locator-mcp/.venv/`, the server crashes on import (e.g. `NotADirectoryError` inside `jsonschema_specifications`' directory walk — third-party code with no exclude hook). The generated `rebuild.sh` scrubs them on every rebuild, but they repopulate whenever Finder/iCloud visits the tree. Manual scrub:
 
