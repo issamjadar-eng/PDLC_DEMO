@@ -1,6 +1,7 @@
-# 076 — Tracker Dashboard frontend-design Refresh (brand-align + depth/motion)
+# 078 — Tracker Dashboard frontend-design Refresh (brand-align + depth/motion)
 
-**ID**: 076
+**ID**: 078
+**Renumbered**: 2026-06-02 — was 076; collided with a concurrent `076-hipaa-advisor-grounding-gaps`, moved to the next free number. PRs #36/#37 and the v13 changelog referenced it as 076 (immutable history).
 **Created**: 2026-06-02
 **Status**: Complete
 **Created By**: Ben Xavier
@@ -66,17 +67,18 @@ Apply the `frontend-design` lens (chosen scope **R1 + R2**) to the **only** exte
   - `.claude/skills/tracker/SKILL.md` — version 11→13.
   - `.claude/skills/tracker/README.md` — changelog row 13.
   - `docs/project/submissions/submission-tracker.html` — **regenerated output** (524 KB) from the updated renderer.
-  - this task doc + `tasks/ben/000-index.md` (076 row).
+  - this task doc + `tasks/ben/000-index.md` (078 row, renumbered from 076).
 - Pre-existing unrelated change in tree: `tasks/ben/SECOPS.md` (not mine — leave alone).
 - Console running on :8765 (PID from ben/073 restart); serves the regenerated dashboard.
 
 ### First action on resume
-1. Verify 076 active (gate reads MAIN repo `.state`: `bash /Users/ben.xavier/projects/pdlc_demo/.claude/hooks/task-activate.sh add <UUID> 076`).
+1. Verify 078 active (gate reads MAIN repo `.state`: `bash /Users/ben.xavier/projects/pdlc_demo/.claude/hooks/task-activate.sh add <UUID> 078`).
 2. If pushing: branch, commit the 5 tracker/task files (NOT SECOPS.md), PR → merge to project `main`, delete branch. Hold `/sync-skills push`.
 3. Anti-patterns: don't re-run the CSS work; the dashboard HTML is regenerated output (re-run `/tracker render` after any further render.py change, don't hand-edit the .html); don't push to the skill registry.
 
 ## Changelog
 
-- 2026-06-02: Status → Complete. Pushed to project `main` via PR #36 (merge `decd1d2`). Registry `/sync-skills push` deferred per user. Note: a concurrent session created a colliding `tasks/ben/076-hipaa-advisor-grounding-gaps.md` + `077-...` (untracked, not mine) — numbering clash flagged to user for reconciliation.
+- 2026-06-02: **Renumbered 076 → 078** to clear the collision with the concurrent `076-hipaa-advisor-grounding-gaps` (it keeps 076). File + index row + tracker README v13 changelog reference updated; PR #36/#37 history left as-is.
+- 2026-06-02: Status → Complete. Pushed to project `main` via PR #36 (merge `decd1d2`). Registry `/sync-skills push` deferred per user.
 - 2026-06-02: **Shipped R1+R2 in `tracker/scripts/render.py` (skill v13).** R1 brand/font alignment via `load_brand_theme()` reading the active console theme (`--brand` purple + Manrope injected into `:root`, both render paths, slate+sky fallback) — new `--brand` token repaints chrome only, data palette preserved. R2 shadow scale + guarded `pc-rise` page-load stagger + heading tracking. Fixed a hex-eating comment-strip bug in the theme parser. Re-rendered the dashboard; verified in Chrome (`/dashboards/submission-tracker`): GL-purple active pills, elevated+animated cards, Manrope, zero console errors, interactivity intact. Pending: push decision (Q1); `/sync-skills push` held off.
 - 2026-06-02: Task created. Scope R1+R2 chosen by user. Grounding captured (console vs tracker palette/font mismatch; iframe isolation; output-vs-source). Follow-on to ben/073.
