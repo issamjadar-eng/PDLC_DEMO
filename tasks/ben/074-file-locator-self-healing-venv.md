@@ -2,7 +2,7 @@
 
 **ID**: 074
 **Created**: 2026-06-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -89,8 +89,9 @@ Replace the direct `command: ./…/.venv/bin/python` with a **committed wrapper*
 - [x] Bump version 1→2; SKILL.md Supporting-Files row + Troubleshooting (Cause 0 + v2 self-heal note); README changelog v2.
 - [x] Dogfood in this project: installed live `tools/file-locator-mcp/bootstrap.sh` (chmod +x), rewrote live `.mcp.json`. Fast-path + cold-path (venv removed → rebuilt) both verified; **0 stdout bytes** in both.
 - [x] Validate against sister project — `/Users/ben.xavier/projects/arthrex-pccp/` is in the **identical broken state** (v1, direct-venv command, `.venv` missing). Change is project-agnostic; fixes it too. Registry (`hitachi`) still v1.
-- [ ] **Restart Claude Code** to load the v2 wrapper (this session's MCP is still on the old spawn). — user action
-- [ ] `/sync-skills push` the v2 skill upstream to hitachi (→ sister pulls + re-runs `setup` to migrate). — pending user approval
+- [x] Push to project `main` — PR #30 merged (`85c86cb`), branch deleted.
+- [x] `/sync-skills push` v2 upstream to hitachi — registry **PR #192 merged** (squash `f3524ff`); hitachi `main` now at v2, local checkout ff'd, sync branch deleted. Excluded `indexer_docs.py` (pre-existing unrelated drift). Sister now picks it up via `/sync-skills pull` + `setup` re-run (migrates its v1 `.mcp.json`).
+- [ ] **Restart Claude Code** to load the v2 wrapper in this project (MCP still on old spawn; venv exists so works either way — wrapper payoff is next clone). — user action (next)
 
 ## Validation — sister project (arthrex-pccp)
 
@@ -122,6 +123,8 @@ Replace the direct `command: ./…/.venv/bin/python` with a **committed wrapper*
 ## Changelog
 
 - 2026-06-01: Task created. Live file-locator failure diagnosed + fixed for this machine (missing venv → recreated via `uv venv` + `uv pip install`; server smoke-tested healthy). Opened this task to make the recovery self-healing in the skill. Design pending — Phase 0 is reading the skill templates end-to-end per [[feedback_read_skill_before_planning]].
+- 2026-06-01: **Status → Complete.** All deliverables shipped and merged (project PR #30 `85c86cb`; registry PR #192 `f3524ff`). Only residual is a user-side Claude Code restart to load v2 in this project (non-urgent; venv present). Closeout bookkeeping (this doc + `.claude/sync-log.md` + index move) committed separately.
+- 2026-06-01: **Pushed.** Project `main` ← PR #30 merged (`85c86cb`, 7 file-locator files; branch deleted). Registry hitachi ← PR #192 opened (4 skill files, PR-only/awaiting review; `bootstrap.sh` carried `100755`). Sync logged in `.claude/sync-log.md`. Unrelated frontend-design bookkeeping (000-index/072/073) deliberately left out of both. Remaining: restart to load v2 here (non-urgent); merge PR #192 when reviewed → sister pulls.
 - 2026-06-01: Phase 0 done (launch contract confirmed) + design authored. User chose **Option A (`bootstrap.sh`)**. Implemented: new `.claude/skills/file-locator/templates/bootstrap.sh`; `templates/mcp.json.snippet` command → wrapper; SKILL.md v1→v2 (Supporting-Files row, setup copy+chmod + `.mcp.json` v1→v2 jq migration, Troubleshooting Cause-0 + v2 self-heal note); README changelog v2. Dogfooded live (`tools/file-locator-mcp/bootstrap.sh` +x, `.mcp.json` rewritten). **Verified:** fast-path execs server with 0 stdout bytes; cold-path (venv moved aside) rebuilt the venv on stderr in seconds, exec'd server, 0 stdout bytes; rebuilt venv imports `fastembed`/`mcp`/`yaml` OK. Validated against sister `arthrex-pccp` (identical broken state → fix generalizes). Two lessons captured. Not yet committed/pushed. Restart required to load v2 in this project.
 
 ## Open Questions

@@ -4,6 +4,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-01 — push (file-locator v2 — self-healing venv bootstrap wrapper)
+
+- Files: `skills/file-locator/SKILL.md`, `skills/file-locator/README.md`, `skills/file-locator/templates/bootstrap.sh` (new, `100755`), `skills/file-locator/templates/mcp.json.snippet`
+- Branch: `sync/pdlc-demo-file-locator-self-healing-2026-06-01`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/192
+- Commit: "file-locator v2: self-healing venv bootstrap wrapper"
+- Status: merged
+- Merge commit: `f3524ff` (squash, PR #192)
+- Hitachi HEAD after sync: `f3524ff`
+- Origin: pdlc_demo task ben/074. Excluded `skills/file-locator/scripts/indexer_docs.py` (pre-existing unrelated drift, UNDETERMINED/race — not part of v2).
+
 ## 2026-05-16 — push (advisors v1.3.1 — pytest test runner + build-artifact gitignore)
 
 - Files: `skills/advisors/SKILL.md`, `skills/advisors/README.md`, `skills/advisors/VERSION`, `skills/advisors/.gitignore` (new), `skills/advisors/tests/run.sh` (new)
