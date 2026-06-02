@@ -2,7 +2,7 @@
 
 **ID**: 072
 **Created**: 2026-06-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -36,7 +36,7 @@ This task document is the **session-recovery point** for this work. If the curre
 - [x] Copy `LICENSE.txt` verbatim and pin upstream SHA in `.pinned-sha` (`da20c92`).
 - [x] Add `frontend-design` to `project.yml security.approved_skills`.
 - [x] Disambiguate from sibling `frontend-slides` (deck-only) — explicit note in SKILL.md description.
-- [ ] Commit (await user confirmation before push).
+- [x] Commit + push: PR #29 merged to main (`6988209`).
 
 <!-- STRATEGY CONTENT: development, tooling -->
 **Decision**: Keep upstream skill name `frontend-design` despite sibling `frontend-slides`. They serve disjoint surfaces (slides vs general web UI) and their descriptions clearly differentiate; renaming would drift from upstream and impair future `/sync-skills`-style updates.
@@ -56,3 +56,4 @@ This task document is the **session-recovery point** for this work. If the curre
 ## Changelog
 - 2026-06-01: Task created. Upstream inspected (42-line SKILL.md, Apache-2.0).
 - 2026-06-01: Skill installed at `.claude/skills/frontend-design/` (SKILL.md 6.4KB, README.md 4.9KB, LICENSE.txt 10KB verbatim, .pinned-sha=`da20c92`). Added to `project.yml security.approved_skills`. Awaiting commit/push confirmation.
+- 2026-06-01: PR #29 merged to main (`6988209`). Task closed.
