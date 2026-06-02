@@ -19,6 +19,7 @@ These skills write only here — never to canonical DHF locations, never to mirr
 <!-- AUTO:STRUCTURE kind=subfolder-table source=fs -->
 | Folder | Purpose |
 |--------|---------|
+| `pca-device/` | System-level / cross-component analyses (PP3500 system DHF) — e.g. HIPAA readiness across the ePHI data path |
 <!-- /AUTO:STRUCTURE -->
 
 (The table above is empty today — populated by `/gap-analysis init <topic> --component <slug>` or `/reference-audit init <doc-path>`. Each component slug must match an item-DHF `arch_slug:` in `project.yml dhfs[]` or the system DHF's `leaf:` value.)

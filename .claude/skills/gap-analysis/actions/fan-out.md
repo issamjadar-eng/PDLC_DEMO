@@ -67,6 +67,9 @@ Invoke the primary advisor agent(s) referenced by a gap-analysis file to draft /
    - Which advisors were invoked
    - The file path the advisors will append to
    - A reminder to review the file after the agents return (the human owns `status:` transitions and the disposition of each finding)
+8. **Refresh sidecars.** Once findings have landed in the file, run `/gap-analysis render` so the project-console view reflects the new findings + agent contributions.
+
+> **Read-only advisor note.** Registry advisor agents ship without Edit/Write, and a subagent does not hold the parent session's task-gate, so they cannot append to the file directly. In practice the conductor (the task-active main session) passes the grounding + assertions to each advisor, collects the returned F-N findings, and appends them — the file stays the human-reviewed merge point. Use the advisor-writes-directly flow only where the advisors are write-capable and gate-exempt.
 
 ## Notes
 

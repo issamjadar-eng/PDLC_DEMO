@@ -1,0 +1,79 @@
+{% extends "_base.html" %}
+{% block title %}Gap Analysis · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}gap-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/gap_analysis.css">{% endblock %}
+{% block content %}
+<section class="ga-wrap">
+  <header class="ga-head">
+    <div class="ga-head-text">
+      <p class="ga-eyebrow">Content-gap analysis</p>
+      <h1>Gap Analysis</h1>
+      <p class="ga-sub">Substantive critiques of the project's own work product against standards and internal sources — produced by the <code>gap-analysis</code> skill and its advisor fan-out. Each card shows what the analysis was grounded against, which advisors ran, and what they found.</p>
+    </div>
+    {% if has_skill %}
+    <form method="post" action="/gap-analysis/render" class="ga-refresh">
+      <button type="submit" class="btn-secondary" title="Re-derive JSON sidecars from the analysis markdown">↻ Refresh</button>
+    </form>
+    {% endif %}
+  </header>
+
+  {% if render_error %}
+  <div class="ga-banner ga-banner-warn">
+    <strong>Render failed.</strong>
+    <pre>{{ render_error }}</pre>
+  </div>
+  {% endif %}
+
+  {% if not analyses %}
+  <div class="ga-empty">
+    <p><strong>No gap analyses yet.</strong></p>
+    <p>Scaffold one with <code>/gap-analysis init &lt;topic&gt; --component &lt;slug&gt;</code>, run <code>/gap-analysis fan-out &lt;id&gt;</code> to invoke the advisors, then <code>/gap-analysis render</code> to publish the sidecars this view reads.</p>
+  </div>
+  {% else %}
+  {% set c = index.counts %}
+  <div class="ga-rollup">
+    <div class="ga-rollup-stat"><span class="n">{{ c.total }}</span><span class="l">{{ 'analysis' if c.total == 1 else 'analyses' }}</span></div>
+    {% for status, n in c.by_status.items() %}
+    <div class="ga-rollup-stat"><span class="n">{{ n }}</span><span class="l">{{ status }}</span></div>
+    {% endfor %}
+    <div class="ga-rollup-stat ga-rollup-topics"><span class="n">{{ c.by_topic | length }}</span><span class="l">{{ 'topic' if (c.by_topic|length)==1 else 'topics' }}</span></div>
+  </div>
+
+  <div class="ga-grid">
+    {% for a in analyses %}
+    {% set s = a.stats %}
+    <a class="ga-card" href="/gap-analysis/{{ a.id }}" style="--i:{{ loop.index0 }}">
+      <div class="ga-card-top">
+        <span class="ga-chip ga-status {{ a._status.cls }}">{{ a._status.label }}</span>
+        <span class="ga-chip ga-topic">{{ a.topic }}</span>
+      </div>
+      <h3 class="ga-card-title">{{ a.title }}</h3>
+      <p class="ga-card-component">{{ a.component }}<span class="ga-dot">·</span>updated {{ a.last_updated }}</p>
+
+      <div class="ga-card-metrics">
+        <div class="ga-metric" title="Grounding sources"><span class="m-n">{{ s.grounding_count }}</span><span class="m-l">grounding</span></div>
+        <div class="ga-metric" title="Advisors that ran"><span class="m-n">{{ s.agent_count }}</span><span class="m-l">advisors</span></div>
+        <div class="ga-metric" title="Findings"><span class="m-n">{{ s.finding_count }}</span><span class="m-l">findings</span></div>
+      </div>
+
+      {% if s.assertion_status_counts %}
+      {% set asc = s.assertion_status_counts %}
+      <div class="ga-assert-bar" title="Assertion dispositions">
+        {% if asc.confirmed %}<span class="seg is-confirmed" style="flex:{{ asc.confirmed }}">{{ asc.confirmed }}</span>{% endif %}
+        {% if asc.partial %}<span class="seg is-partial" style="flex:{{ asc.partial }}">{{ asc.partial }}</span>{% endif %}
+        {% if asc.verify %}<span class="seg is-verify" style="flex:{{ asc.verify }}">{{ asc.verify }}</span>{% endif %}
+        {% if asc.refuted %}<span class="seg is-refuted" style="flex:{{ asc.refuted }}">{{ asc.refuted }}</span>{% endif %}
+        {% if asc.open %}<span class="seg is-open" style="flex:{{ asc.open }}">{{ asc.open }}</span>{% endif %}
+      </div>
+      {% endif %}
+
+      <div class="ga-card-agents">
+        {% for name in a.agents %}<span class="ga-avatar" title="{{ name }}">{{ name[:2] | upper }}</span>{% endfor %}
+        <span class="ga-card-cta">View analysis →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

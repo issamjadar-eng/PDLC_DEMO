@@ -1,0 +1,123 @@
+{% extends "_base.html" %}
+{% block title %}{{ d.meta.title }} · Gap Analysis{% endblock %}
+{% block body_class %}gap-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/gap_analysis.css">{% endblock %}
+{% block content %}
+{% set m = d.meta %}
+{% set s = d.stats %}
+<section class="ga-wrap ga-detail">
+  <a class="ga-back" href="/gap-analysis">← Gap Analysis</a>
+
+  <header class="ga-hero">
+    <div class="ga-hero-chips">
+      <span class="ga-chip ga-status {{ d._status.cls }}">{{ d._status.label }}</span>
+      <span class="ga-chip ga-topic">{{ m.topic }}</span>
+      <span class="ga-chip ga-ghost">{{ m.component }}</span>
+    </div>
+    <h1>{{ m.title }}</h1>
+    <p class="ga-hero-meta">
+      Updated {{ m.last_updated }}
+      {% if m.source_doc_url %}<a class="ga-source-link" href="{{ m.source_doc_url }}">Read full analysis ↗</a>{% endif %}
+    </p>
+    <div class="ga-statstrip">
+      <div><span class="n">{{ s.grounding_count }}</span><span class="l">grounding sources</span></div>
+      <div><span class="n">{{ s.agent_count }}</span><span class="l">advisors</span></div>
+      <div><span class="n">{{ s.assertion_count }}</span><span class="l">assertions</span></div>
+      <div><span class="n">{{ s.finding_count }}</span><span class="l">findings</span></div>
+    </div>
+  </header>
+
+  <!-- GROUNDING -->
+  <section class="ga-section" style="--i:0">
+    <h2 class="ga-section-h"><span class="ga-section-icon">📎</span> Grounded against <span class="ga-count">{{ d.grounding | length }}</span></h2>
+    <table class="ga-table">
+      <thead><tr><th class="ga-col-type">Source type</th><th>Path</th><th>Notes</th></tr></thead>
+      <tbody>
+        {% for g in d.grounding %}
+        <tr>
+          <td class="nowrap">{{ g._glyph }} {{ g._label }}</td>
+          <td><span class="ga-path">{{ g.path }}</span></td>
+          <td class="ga-muted">{{ g.note }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ADVISORS -->
+  <section class="ga-section" style="--i:1">
+    <h2 class="ga-section-h"><span class="ga-section-icon">🧠</span> Advisors that ran <span class="ga-count">{{ s.agent_count }}</span></h2>
+    <table class="ga-table">
+      <thead><tr><th class="ga-col-author">Advisor</th><th class="ga-col-role">Role</th><th class="nowrap">Findings</th><th>What they contributed</th></tr></thead>
+      <tbody>
+        {% for a in d.agents %}
+        <tr>
+          <td>
+            <div class="ga-agent-cell"><span class="ga-avatar">{{ a.name[:2] | upper }}</span><span class="ga-agent-name">{{ a.name }}</span></div>
+          </td>
+          <td><span class="ga-role-badge {{ 'is-primary' if a.role == 'primary' else 'is-consulting' }}">{{ a.role }}</span></td>
+          <td>{% for fid in a.contributed_finding_ids %}<a href="#{{ fid }}" class="ga-fchip">{{ fid }}</a>{% endfor %}</td>
+          <td class="ga-muted">{{ a.changelog_summary }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ASSERTIONS -->
+  <section class="ga-section" style="--i:2">
+    <h2 class="ga-section-h"><span class="ga-section-icon">⚖️</span> Assertions <span class="ga-count">{{ d.assertions | length }}</span></h2>
+    <table class="ga-table">
+      <thead><tr><th class="ga-col-id">#</th><th>Assertion</th><th>Safeguard (clause)</th><th>Evidence</th><th class="ga-col-status">Disposition</th></tr></thead>
+      <tbody>
+        {% for a in d.assertions %}
+        <tr>
+          <td class="num">{{ a.id }}</td>
+          <td>{{ a.assertion }}</td>
+          <td class="ga-clause">{{ a.clause }}</td>
+          <td class="ga-muted">{{ a.evidence }}</td>
+          <td><span class="ga-pill {{ a._meta.cls }}">{{ a._meta.glyph }} {{ a.status_label }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FINDINGS -->
+  <section class="ga-section" style="--i:3">
+    <h2 class="ga-section-h"><span class="ga-section-icon">🔎</span> Findings <span class="ga-count">{{ d.findings | length }}</span></h2>
+    <div class="ga-findings">
+      {% for f in d.findings %}
+      <details class="ga-finding" id="{{ f.id }}" {% if loop.index <= 2 %}open{% endif %}>
+        <summary>
+          <span class="ga-f-id">{{ f.id }}</span>
+          <span class="ga-f-label">{{ f.label }}</span>
+          <span class="ga-f-author" title="{{ f.author }}">{{ f._author_name }}</span>
+        </summary>
+        <div class="ga-f-body md">{{ f._html | safe }}</div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  {% if d.recommendations %}
+  <section class="ga-section" style="--i:4">
+    <h2 class="ga-section-h"><span class="ga-section-icon">✅</span> Recommendations <span class="ga-count">{{ d.recommendations | length }}</span></h2>
+    <ol class="ga-reco">
+      {% for r in d._recommendations_html %}<li class="md">{{ r | safe }}</li>{% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  <!-- OPEN QUESTIONS -->
+  {% if d.open_questions %}
+  <section class="ga-section" style="--i:5">
+    <h2 class="ga-section-h"><span class="ga-section-icon">❓</span> Open questions <span class="ga-count">{{ d.open_questions | length }}</span></h2>
+    <ul class="ga-oq">
+      {% for q in d._open_questions_html %}<li class="md">{{ q | safe }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</section>
+{% endblock %}
