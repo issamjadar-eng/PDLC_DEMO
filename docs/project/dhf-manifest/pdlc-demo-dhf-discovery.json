@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "generated": "2026-05-30T09:07:04.925342+00:00",
+  "generated": "2026-06-02T06:26:43.408295+00:00",
   "project": "pdlc-demo",
   "project_roles": {
     "regulatory_strategy": {
@@ -1276,15 +1276,15 @@
     "industry_frameworks": {
       "folder": "docs/external/industry-frameworks",
       "exists": true,
-      "file_count": 7,
+      "file_count": 8,
       "patterns_used": [
         "**/*.md"
       ]
     },
     "regulations": {
       "folder": "docs/external/regulations",
-      "exists": false,
-      "file_count": 0,
+      "exists": true,
+      "file_count": 2,
       "patterns_used": [
         "**/*.md"
       ]
@@ -1308,7 +1308,7 @@
     "registry_regulations": {
       "folder": ".claude/skills/medtech-docs/references/regulations",
       "exists": true,
-      "file_count": 4,
+      "file_count": 5,
       "patterns_used": [
         "*.md"
       ]
@@ -1316,7 +1316,7 @@
     "registry_industry_frameworks": {
       "folder": ".claude/skills/medtech-docs/references/industry-frameworks",
       "exists": true,
-      "file_count": 9,
+      "file_count": 10,
       "patterns_used": [
         "*.md"
       ]
@@ -3598,14 +3598,6 @@
       "reason": "no file matched any pattern in docs/project/submissions/qsub",
       "patterns_tried": [
         "composition-manifest.md"
-      ]
-    },
-    {
-      "scope": "external",
-      "role": "regulations",
-      "reason": "folder does not exist: docs/external/regulations",
-      "patterns_tried": [
-        "**/*.md"
       ]
     }
   ],

@@ -868,3 +868,22 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
   - `medtech-docs/hooks/taxonomy-freshness.sh` pulled but not wired into `settings.json` — needs `/medtech-docs setup` re-run to register.
   - `task/commands/checkpoint.md` + `task/hooks/checkpoint-recover.sh` pulled but checkpoint command/hook not wired — needs `/task setup` re-run.
   - Read each of the 3 new skills' SKILL.md end-to-end (per the project's "read the skill before planning" rule) before invoking.
+
+## 2026-06-02 — push
+
+- Files: `skills/medtech-docs/references/regulations/45-cfr-part-164.md`, `skills/medtech-docs/references/regulations/README.md`, `skills/medtech-docs/references/industry-frameworks/nist-sp-800-66.md`, `skills/medtech-docs/references/industry-frameworks/README.md`
+- Branch: `sync/pdlc-demo-hipaa-nist-references-2026-06-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/193
+- Commit: "medtech-docs: add HIPAA Security Rule + NIST SP 800-66 references"
+- Status: merged (--merge requested)
+- Merge commit: `502841c`
+- Hitachi HEAD after sync: `502841c`
+- Origin: PDLC_DEMO task ben/075. Two new reference distillations (HIPAA Security Rule + NIST SP 800-66 Rev. 2); README edits verified purely additive over upstream. GDPR deferred.
+
+## 2026-06-02 — push (advisors conformance + HIPAA grounding)
+
+- Files: `skills/dhf-manifest/data/canonical-roles.yaml`, `skills/advisors/SKILL.md`, `skills/advisors/README.md`, 11 `skills/advisors/agents/*.md` (clinical-affairs, cybersecurity, human-factors, post-market, program-manager, quality-engineering, rd-lead, regulatory-affairs, risk-management, systems-engineering, vnv-lead); deleted `skills/advisors/VERSION`
+- Branch: `sync/pdlc-demo-advisors-hipaa-grounding-2026-06-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/194
+- Status: merged (--squash)
+- Origin: PDLC_DEMO task ben/076. (1) advisors skill-creator conformance — frontmatter added, BP+Changelog→README, semver VERSION→integer version, project refs scrubbed. (2) canonical-roles HIPAA/45 CFR + NIST SP 800-66 descriptions + cybersecurity L1b regulations consumer. Excluded core-team-panel/design-review-panel (pre-existing drift, not this task's work).

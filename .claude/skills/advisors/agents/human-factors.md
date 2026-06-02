@@ -157,17 +157,24 @@ De Novo, PCCP, SaMD, AI/ML, MDDS, MFD, CDS, sw-changes, sw-functions, cybersecur
 premarket, Q-Sub program, eSTAR templates. Paired with `fda_guidance` (L1b) for
 project applicability — cite both per the medtech-docs cite-both mandate.
 
-- `registry_regulations` — Registry-canonical distillations of federal regulations — 21 CFR parts. The L1a
-tier of the medtech-docs two-tier grounding model. Verbatim regulatory text
-carrying the force of law (e.g., 21 CFR Part 807 establishment registration and
-510(k) procedures; Part 880 MDDS; Part 892 radiology QIH; Part 820 QSR;
-Part 803 MDR; Part 11 electronic records; Part 812 IDE). Paired with `regulations`
-(L1b) for project applicability — cite both per the medtech-docs cite-both mandate.
+- `registry_regulations` — Registry-canonical distillations of federal regulations carrying the force of law —
+the L1a tier of the medtech-docs two-tier grounding model. Verbatim regulatory text.
+Covers FDA / CDRH device regulations under Title 21 (e.g., 21 CFR Part 807
+establishment registration and 510(k) procedures; Part 880 MDDS; Part 892 radiology
+QIH; Part 820 QSR; Part 803 MDR; Part 11 electronic records; Part 812 IDE) AND other
+federal regulations that reach a device program — notably privacy/data-protection law
+under Title 45: HIPAA (45 CFR Part 164 Security Rule §§164.302-318 + Breach/Privacy
+subparts) for any device handling ePHI as a business associate. Consult this folder
+for HIPAA / ePHI / PHI safeguards, breach notification, and de-identification, not only
+21 CFR. Paired with `regulations` (L1b) for project applicability — cite both per the
+medtech-docs cite-both mandate.
 
 - `registry_industry_frameworks` — Registry-canonical distillations of industry frameworks (DICOM, HL7 FHIR, NIST CSF,
-GMLP, OWASP, AAMI TIRs, IMDRF documents, etc.) — the L1a tier of the medtech-docs
-two-tier grounding model. What each framework actually recommends. Paired with
-`industry_frameworks` (L1b) for project applicability — cite both per the
+NIST SP 800-66 Rev. 2 HIPAA Security Rule implementation guide, GMLP, OWASP, NTIA SBOM,
+AAMI TIRs, IMDRF documents, etc.) — the L1a tier of the medtech-docs two-tier grounding
+model. What each framework actually recommends. Includes the HIPAA Security-Rule →
+NIST CSF / 800-53 crosswalk (NIST SP 800-66) for implementing ePHI safeguards. Paired
+with `industry_frameworks` (L1b) for project applicability — cite both per the
 medtech-docs cite-both mandate.
 
 
