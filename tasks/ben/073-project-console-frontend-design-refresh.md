@@ -39,48 +39,74 @@ Apply the newly-installed Anthropic `frontend-design` skill (PR #29) to lift the
 ## Todos
 
 ### Phase 0 — Read the skill before planning
-- [ ] Read `.claude/skills/project-console/SKILL.md` end-to-end (per [[feedback_read_skill_before_planning]] — IoC patterns invisible from output inspection).
-- [ ] Read `.claude/skills/frontend-design/SKILL.md` and the Aesthetics Guidelines once more, fresh.
-- [ ] Read `.claude/skills/project-console/console/web/templates/` index to know what partials exist.
-- [ ] Identify the active theme pack and its CSS variable surface.
+- [x] Read `.claude/skills/project-console/SKILL.md` end-to-end (per [[feedback_read_skill_before_planning]]).
+- [x] Read `.claude/skills/frontend-design/SKILL.md` and the Aesthetics Guidelines once more, fresh.
+- [x] Read the templates dir + the full `console.css` (1917 lines) to map the token system + JS-coupled classes.
+- [x] Identify the active theme pack (`globallogic-dark`) and its CSS variable surface.
 
 ### Phase 1 — Aesthetic direction (G1)
-- [ ] Capture a short brief here: purpose / audience / tone / differentiation per the skill's Design Thinking prompts.
-- [ ] Propose 2–3 directional options as a one-question chat decision (per `feedback_one_decision_at_a_time`). Wait for user pick before drafting CSS.
+- [x] Direction chosen: **"refined precision instrument"** (see Session 2026-06-02 block). Scope = **Option 2, skill-level `console.css`** (Q1 resolved).
 
 ### Phase 2 — Route audit (G2)
-- [ ] Boot console, walk each route, capture screenshots into `_scratch/073/`.
-- [ ] For each route, list 3–5 candidate improvements scored High/Med/Low on impact + High/Med/Low on cost.
-- [ ] Promote a prioritized punch list here.
+- [x] Walked routes in-browser on the worktree console (port 8766): landing, agents, documents, trace-matrix, dashboards. Findings folded directly into the Phase-3 changes (the weakest points were generic typography, flat surfaces/topnav, and no depth/motion — all addressed).
 
-### Phase 3 — Ship (G3)
-- [ ] Implement picks. One PR per route (or one bundled PR — confirm with user at phase boundary).
-- [ ] Each change keeps the skill's Jinja partials, theme-pack surface, route structure intact.
+### Phase 3 — Ship (G3) — DONE (CSS-only, no markup)
+- [x] Implemented in the **skill** stylesheet `.claude/skills/project-console/console/web/static/console.css` (single file). Token system (elevation scale + motion + focus-ring + radii), body atmosphere via `color-mix()`, typographic rhythm, translucent sticky blurred topnav, card elevation/hover, one `prefers-reduced-motion`-guarded page-load stagger, themed scrollbars.
+- [x] No Jinja templates, class names, or JS touched → interactive features preserved by construction.
+- [x] Versioned: `VERSION` 1.21.1 → **1.22.0**; changelog row added to skill `README.md`.
 
-### Phase 4 — Verify (G4)
-- [ ] Re-walk routes in browser. Compare against the audit.
-- [ ] Document residual gaps as follow-up notes.
+### Phase 4 — Verify (G4) — DONE
+- [x] Re-walked every route in Chrome (DevTools MCP). Landing/agents/documents render with clear visual lift and **zero console errors**; JS-driven docs tree + selection + summary intact; dashboards tracker table intact.
+- [x] Residual note: `/trace-matrix` shows only the "Rebuild all DHFs" empty state — this is a **worktree data artifact** (fresh checkout has no built trace sidecars), NOT a CSS regression. Re-verify on a built tree before close.
 
 ### Phase 5 — Close
-- [ ] Push final PR(s).
+- [ ] **Validate the skill CSS against the `arthrex/pccp` sister project** (per [[feedback_sister_project_compat]]) before pushing — changes are token/`color-mix`-driven so they should generalize, but confirm.
+- [ ] Decide: keep worktree changes (port back to 8765, drop the worktree's console.yaml port edit) and merge to `main` via PR, or iterate further.
 - [ ] Update index, mark Complete.
 
 ## Open Questions
 
-- **Q1**: Apply the refresh to the active theme pack only (`globallogic` / `globallogic-dark`) or also propose upstream improvements to the skill-shipped `light` / `dark` defaults? (Default: theme-pack-only; upstream is a follow-up if signal is good.)
-- **Q2**: Per-route PRs vs one bundled PR? (Default per task-scope guidance: bundle, since this is one coherent visual effort.)
-- **Q3**: Motion appetite. The skill says "one well-orchestrated page load with staggered reveals > scattered micro-interactions." Should the console adopt a single page-load reveal, or stay completely still for a regulated-software feel?
+- ~~**Q1**: theme-pack-only vs skill-level defaults?~~ **RESOLVED 2026-06-02 → skill-level.** User chose **Option 2**: refresh the skill's brand-neutral `console.css` (CSS-only, no markup) so the improvement benefits every consumer. Theme packs still override color tokens on top.
+- **Q2**: Per-route PRs vs one bundled PR? (Default: bundle — one coherent visual effort.) **Leaning bundle.**
+- ~~**Q3**: Motion appetite.~~ **RESOLVED 2026-06-02 → one tasteful page-load reveal, `prefers-reduced-motion`-guarded.** Entrance-only stagger on static surfaces (landing/agents/overview cards); chat transcript + docs explorer stay still (JS-rendered, animation would fight JS). Initial `opacity:0` lives *only* inside the `no-preference` media query so reduced-motion users and any non-animating context see fully-visible content — never an invisible-UI failure.
+
+<!-- STRATEGY CONTENT: development, architecture; topics: console-visual-refresh, skill-vs-tool-boundary, safe-css-refresh -->
+## Session 2026-06-02 — Option 2 decision + design direction
+
+**Scope chosen: Option 2 — skill-level CSS-only refresh, in a git worktree.**
+
+Why this lane (vs theme-pack-only / full redesign):
+- The console UI lives in the **skill** (`.claude/skills/project-console/console/web/`), not the deployed tool. `tools/project-console/` is config + theme packs that import the skill's `console/` package via `PYTHONPATH`. So a real visual lift has to touch the skill.
+- **CSS-only, no markup** is the safety contract: the interactive JS (`chat.js`, `explorer.js`, `tracker_interactive.js`, assistant drawer, drift overlay) binds to specific classes/DOM. Refreshing `console.css` token values + existing-selector rules + additive motion cannot break those handlers. Restructuring templates (Option 3) could — explicitly excluded.
+- Worktree `console-design-refresh` (branch `worktree-console-design-refresh`) gives a clean revert path. Console is launched *from the worktree* so it picks up the worktree's skill CSS.
+
+**Aesthetic direction: "refined precision instrument."** Regulated-software audience (regulatory/clinical/quality/engineering). Not maximalist — confident, calm, precise. Execution levers (all font-independent / theme-independent so they generalize to `arthrex/pccp`):
+- **Depth system**: a real layered shadow scale (`--shadow-xs/sm/md/lg`) replacing the single `--shadow-soft` (kept as alias); subtle surface elevation via `color-mix()` derived from existing tokens (works on any palette, light or dark).
+- **Motion tokens + one page-load stagger** (guarded, as in Q3).
+- **Typographic rhythm**: tighter heading tracking, a cleaner type scale, `--font-heading` separation — no imposed typeface (brand fonts stay in theme packs; the skill ships no CDN/font dependency, important for offline regulated environments).
+- **Micro-refinement**: translucent/blurred topnav with a soft elevation edge, consistent accessible focus rings, custom themed scrollbars, smoother transitions on cards/pills/buttons.
+
+**Sister-project safety**: every change is a token addition or a refinement of an existing selector driven by tokens/`color-mix` — no project-specific values — so it generalizes. Validate against `../../projects/arthrex/pccp/` before the push to `main` (per [[feedback_sister_project_compat]]). We are in a worktree, not pushing yet.
 
 ## Resume
 
-### In-flight artifacts
-- No code changes yet. Phase 0 not started.
+### In-flight artifacts (as of 2026-06-02)
+- **Worktree**: `.claude/worktrees/console-design-refresh` (branch `worktree-console-design-refresh`). All edits live here, NOT yet on `main`. Nothing committed by Claude.
+- **Files changed in worktree**:
+  - `.claude/skills/project-console/console/web/static/console.css` — the refresh (token system, body atmosphere, typography, topnav, cards, motion, scrollbars, focus rings).
+  - `.claude/skills/project-console/VERSION` — 1.21.1 → 1.22.0.
+  - `.claude/skills/project-console/README.md` — changelog row for 1.22.0.
+  - `tools/project-console/console.yaml` — **port 8765 → 8766** (temporary, to run alongside the main console; revert before merge).
+  - this task doc.
+- **Running**: worktree console on `http://127.0.0.1:8766` (bg shell `bysdl6v5d`); main-repo console still on 8765 (PID 951), untouched.
 
 ### First action on resume
-1. Verify task 073 is active for current session.
-2. Phase 0 reads (project-console SKILL.md → frontend-design SKILL.md → templates dir → theme pack).
-3. Bring direction brief + Q1/Q2/Q3 to the user as a focused decision.
+1. Verify task 073 active. If gate denies, activate against **main repo** state: `bash /Users/ben.xavier/projects/pdlc_demo/.claude/hooks/task-activate.sh add <UUID> 073` (the hook reads `$CLAUDE_PROJECT_DIR/.state`, i.e. the MAIN repo, even when cwd is the worktree).
+2. Sister-project check against `../../projects/arthrex/pccp/` before any push.
+3. To merge: revert the `console.yaml` port to 8765, then push the worktree branch via PR per the git-workflow rule. Stop the 8766 console first.
+4. Anti-patterns: don't re-do the CSS work (shipped this session); don't commit unless the user asks; don't kill the 8765 main console.
 
 ## Changelog
 
+- 2026-06-02: **Shipped the refresh (Option 2, skill-level, CSS-only) in worktree `console-design-refresh`.** Refactored `console.css` to a layered elevation + motion + focus token system; added body atmosphere + typographic rhythm + translucent sticky topnav + card elevation + one guarded page-load stagger + themed scrollbars — all via tokens/`color-mix`, no markup touched. Bumped skill to 1.22.0 + changelog. Launched worktree console on :8766 and verified landing/agents/documents/dashboards in Chrome (DevTools MCP): clear visual lift, JS features intact, zero console errors. `/trace-matrix` empty = worktree data artifact, not a regression. Pending: sister-project validation + merge decision.
 - 2026-06-01: Task created in continuation of PR #29 (frontend-design skill install). Phases 0–5 sketched, three open questions captured. No code touched.
