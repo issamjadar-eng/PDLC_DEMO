@@ -101,6 +101,20 @@ Surface this in the advisor template so the 13 advisor agents inherit it:
 
 ## Changelog
 
+- **v2** (2026-06-01) — **Self-healing venv bootstrap.** The `.mcp.json`
+  `command` now points at a committed wrapper, `tools/file-locator-mcp/bootstrap.sh`
+  (new `templates/bootstrap.sh`), instead of `./.venv/bin/python` directly. The
+  wrapper ensures the venv exists — building it with `uv` (stdlib `venv`+`pip`
+  fallback) and scrubbing `Icon\r` — before exec'ing the interpreter on
+  `server.py`. This closes the recurring "venv gone after a fresh clone or repo
+  move → MCP fails `ENOENT`, and `/mcp → Reconnect` can't fix it" gap: only
+  `index.db` is committed, never the venv, so the interpreter the launcher
+  spawned didn't exist. Reconnect re-runs the wrapper, so the venv now
+  self-repairs (one slow launch, then instant). **stdout discipline:** the
+  wrapper sits on the MCP stdio pipe, so it emits *only* to stderr — stdout is
+  the JSON-RPC channel and any stray byte corrupts the protocol; all build
+  output is routed `>&2`. `setup` migrates an existing v1 `.mcp.json` entry
+  (venv-interp `command` → wrapper) idempotently. Tracks `ben/074`.
 - **v1** (2026-05-12) — Initial scaffold. SKILL.md + scripts (common,
   indexer_docs, rebuild, server) + templates (requirements, project.yml
   snippet, .mcp.json snippet, tool README). Stack: fastembed + SQLite FTS5.
