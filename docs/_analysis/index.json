@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "analyses": [
+    {
+      "id": "hipaa-readiness-profile",
+      "title": "HIPAA Readiness Profile — PP3500 System",
+      "status": "draft",
+      "topic": "cybersecurity",
+      "component": "pca-device",
+      "last_updated": "2026-06-02",
+      "source_md": "docs/_analysis/pca-device/hipaa-readiness-profile.md",
+      "sidecar": "docs/_analysis/pca-device/hipaa-readiness-profile.gap.json",
+      "agents": [
+        "cybersecurity",
+        "risk-management",
+        "regulatory-affairs"
+      ],
+      "stats": {
+        "grounding_count": 10,
+        "agent_count": 3,
+        "assertion_count": 12,
+        "assertion_status_counts": {
+          "confirmed": 7,
+          "partial": 3,
+          "refuted": 2
+        },
+        "finding_count": 14
+      }
+    }
+  ],
+  "counts": {
+    "total": 1,
+    "by_status": {
+      "draft": 1
+    },
+    "by_topic": {
+      "cybersecurity": 1
+    },
+    "by_component": {
+      "pca-device": 1
+    }
+  }
+}

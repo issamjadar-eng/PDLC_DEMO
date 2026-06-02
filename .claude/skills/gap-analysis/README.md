@@ -88,6 +88,16 @@ The file is shared between the human author and any agents invoked via `fan-out`
 
 The fan-out prompt requires advisors to cite specific standard clauses (`ISO 14971:2019 § 5.4`, `IEC 62304 § 4.3.c`, `21 CFR 820.30(g)`) alongside evidence. This is what distinguishes gap analysis from generic critique. Without it, the artifact has no regulatory leverage.
 
+### 7. Derived JSON contract for machine consumers (v3)
+
+Gap-analysis markdown is human/agent-shared prose, but downstream tools — the **project-console** Gap Analysis view first — need it machine-readable. The `render` action emits a derived JSON projection (`<id>.gap.json` + roll-up `index.json`) via `scripts/render_sidecars.py`.
+
+This deliberately follows the `trace-matrix` loose-coupling contract: the **producer emits a stable JSON shape; the consumer knows nothing about how it was produced**. Two properties make it safe:
+- **Derived, never authored.** The `.md` is the single source of truth; the JSON is regenerated (idempotent) and never hand-edited — so there is no double-authoring / drift-by-construction. (Contrast trace-matrix, which regenerates from *source docs*; here we regenerate from the *one* analysis markdown.)
+- **Structured surface vs. prose body.** Frontmatter (meta, grounding, recommended agents) + the assertions table decompose fully into JSON fields; the F-N finding *bodies* stay as markdown strings (prose shape varies across authors/advisors), so the consumer renders them. The structured surface drives cards; the bodies render on expand.
+
+The consumer (console) degrades gracefully when sidecars are absent — exactly like the trace-matrix view with no sidecar.
+
 ## Best Practices
 
 Consumed by `/best-practices` audit.
@@ -97,6 +107,8 @@ Consumed by `/best-practices` audit.
 | Skill installed | `.claude/skills/gap-analysis/SKILL.md` exists | Required | shared |
 | README.md exists | `.claude/skills/gap-analysis/README.md` exists | Required | shared |
 | Template present | `templates/gap-analysis.md` exists | Required | shared |
+| Renderer present | `scripts/render_sidecars.py` exists and `--check` runs clean | Required | shared |
+| Sidecars current | `python3 scripts/render_sidecars.py --check` exits 0 (no stale/missing `.gap.json` vs `.md`) | Recommended | local |
 | Topic-advisor map present | `data/topic-advisor-map.yml` parses as YAML with `topics:` and `aliases:` blocks | Required | shared |
 | Project-agnostic source | Skill files contain no project-specific names (cloud IDs, project keys, device names, advisor agents bound to project context) | Required | shared |
 | `_analysis/` tier present | `docs/_analysis/README.md` + at least one per-component subfolder | Required | local |
@@ -106,6 +118,7 @@ Consumed by `/best-practices` audit.
 
 ## Changelog
 
+- 3 (2026-06-02): Added the `render` action + `scripts/render_sidecars.py` (pure stdlib) — derives a JSON contract (`<id>.gap.json` per analysis + roll-up `index.json`, `schema_version: 1.0`) from the analysis markdown for machine consumers, primarily the project-console Gap Analysis view. Fulfills the `--format json` future-extension noted in `actions/list.md`. Markdown stays single source of truth; JSON is a regenerated projection (idempotent). New `actions/render.md`; SKILL.md § Actions + Supporting Files updated; `init`/`fan-out` reports now remind to re-render. Documented the read-only-advisor fan-out reality (conductor writes back; advisors return findings) in `fan-out.md` + SKILL.md. Best Practices: added renderer-present (Required) + sidecars-current (Recommended) rows. Built under ben/077 (gap-analysis ↔ console showcase tab).
 - 2 (2026-05-27): Conformance fixes per `skill-creator audit-triggers`. Moved Changelog out of SKILL.md (lives only in README.md per project convention). Reformatted README Changelog from table → bulleted list. Removed the empty `setup` action stub from SKILL.md § Actions (the skill ships no hooks/agents/rules yet, so no setup work to do; will re-add when the skill grows those). Replaced a project-specific arch-name list in the `filing` topic description with a generic "multiple architectural components" phrasing. Genericized two example strings in `actions/list.md` and `templates/gap-analysis.md` that named a regulatory framework abbreviation in example positions where a generic phrasing reads the same.
 - 1 (2026-05-27): Initial scaffold. SKILL.md + template + topic-advisor map + four action docs (`init`, `list`, `route`, `fan-out`). Companion to the `docs/_analysis/` first-class doc tier — the tier is the storage; this skill is the authoring convention over it.
 

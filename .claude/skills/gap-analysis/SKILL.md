@@ -1,8 +1,8 @@
 ---
 name: gap-analysis
-description: "Substantive content-gap analysis of medtech project artifacts — scaffolds and tracks structured gap-assessment markdown under `docs/_analysis/<component>/` that critiques the project's own work product (hazard-register conformance vs ISO 14971, FMEA scoring consistency, SRA / SAD / SRS adequacy vs IEC 62304, predicate-analysis sufficiency, V&V coverage holes, cybersecurity threat-model rigor, human-factors usability-engineering completeness, post-market surveillance loop integrity, filing-readiness arguments). Distinct from `/best-practices` (structural folder/file checks), `/dhf-manifest` (manifest coverage of regulatory obligations), `/jira-pull audit` (Jira-vs-DTM/HTM drift), and `/trace-matrix` (trace-edge integrity) — this skill answers 'is the CONTENT methodologically correct against standards and internal sources?'. Provides actions: `init` (scaffold a new gap-analysis from the template), `list` (roll-up open analyses by status / topic / component), `route` (which advisor agents to consult for a topic), `fan-out` (spawn advisor agents with grounding paths pre-loaded). Topic→advisor routing is advisory (soft suggestions), not gated. TRIGGER when the user asks for a 'gap analysis of <topic>', 'analyze our <document>', 'critique the hazard register', 'find issues with our <artifact>', 'compare our <X> against <standard>', 'are our <artifacts> per standards', 'audit the content of <doc>', or wants to assert findings about project content."
-version: 2
-updated: 2026-05-27
+description: "Substantive content-gap analysis of medtech project artifacts — scaffolds and tracks structured gap-assessment markdown under `docs/_analysis/<component>/` that critiques the project's own work product (hazard-register conformance vs ISO 14971, FMEA scoring consistency, SRA / SAD / SRS adequacy vs IEC 62304, predicate-analysis sufficiency, V&V coverage holes, cybersecurity threat-model rigor, human-factors usability-engineering completeness, post-market surveillance loop integrity, filing-readiness arguments). Distinct from `/best-practices` (structural folder/file checks), `/dhf-manifest` (manifest coverage of regulatory obligations), `/jira-pull audit` (Jira-vs-DTM/HTM drift), and `/trace-matrix` (trace-edge integrity) — this skill answers 'is the CONTENT methodologically correct against standards and internal sources?'. Provides actions: `init` (scaffold a new gap-analysis from the template), `list` (roll-up open analyses by status / topic / component), `route` (which advisor agents to consult for a topic), `fan-out` (spawn advisor agents with grounding paths pre-loaded), `render` (derive JSON sidecars for the project-console Gap Analysis view). Topic→advisor routing is advisory (soft suggestions), not gated. TRIGGER when the user asks for a 'gap analysis of <topic>', 'analyze our <document>', 'critique the hazard register', 'find issues with our <artifact>', 'compare our <X> against <standard>', 'are our <artifacts> per standards', 'audit the content of <doc>', or wants to assert findings about project content."
+version: 3
+updated: 2026-06-02
 ---
 
 # Gap Analysis Skill
@@ -59,6 +59,8 @@ The skill writes only to `docs/_analysis/` — never to the canonical DHF locati
 | `actions/list.md` | Action doc — roll up open analyses by status / topic / component |
 | `actions/route.md` | Action doc — print recommended advisors for a topic |
 | `actions/fan-out.md` | Action doc — spawn advisor agents with grounding paths from a gap-analysis file's frontmatter |
+| `actions/render.md` | Action doc — derive JSON sidecars (`<id>.gap.json` + `index.json`) for the project-console Gap Analysis view |
+| `scripts/render_sidecars.py` | Pure-stdlib renderer behind `render` — parses analysis markdown → structured JSON contract (`schema_version: 1.0`) |
 | `README.md` | Design doc — not loaded by Claude; for human reference |
 
 ## Actions
@@ -122,6 +124,23 @@ Spawn the recommended advisor agent(s) to draft / extend the analysis file.
 4. Use the `Agent` tool to invoke the primary advisor with this prompt. If `consulting[]` advisors are present, surface them as suggested next-step invocations rather than auto-spawning.
 
 The skill never edits the gap-analysis file directly during fan-out — advisors do that, with the human's review.
+
+> **Advisor write-back note.** The registry advisor agents are read-only (`Read/Glob/Grep/WebFetch/file-locator`), and a subagent does not hold the parent session's task-gate. In practice the fan-out **conductor** (the task-active main session) collects each advisor's returned findings and appends them to the file; the advisors return structured F-N findings rather than editing directly. Either way the file is the human-reviewed merge point.
+
+After fan-out appends findings, run **`/gap-analysis render`** to refresh the JSON sidecars the console consumes.
+
+### `render [--check]`
+
+Derive JSON sidecars from the analysis markdown for the project-console Gap Analysis view (and any other machine consumer). See `actions/render.md` for the full schema.
+
+1. Run the deterministic renderer:
+   ```bash
+   python3 .claude/skills/gap-analysis/scripts/render_sidecars.py
+   ```
+2. It writes `docs/_analysis/<component>/<id>.gap.json` (per-analysis detail) + `docs/_analysis/index.json` (roll-up). The markdown stays the single source of truth; the JSON is a regenerated projection (idempotent; never hand-edited).
+3. `--check` writes nothing and exits non-zero on missing/stale sidecars — for CI / `/best-practices` drift checks.
+
+Run after `init` (register the new analysis in the index) and after `fan-out` (project the appended findings), or whenever an analysis markdown is hand-edited. The console degrades gracefully when sidecars are absent (empty-state hint), mirroring the trace-matrix view.
 
 ## Notes
 

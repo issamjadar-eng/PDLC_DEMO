@@ -12,6 +12,7 @@
 {{ request.state.theme_css | safe }}
 </style>
 {% endif %}
+{% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
 <header class="topnav">
@@ -27,6 +28,7 @@
     <a href="/documents">Documents</a>
     <a href="/dashboards">Dashboards</a>
     <a href="/trace-matrix">Trace Matrix</a>
+    {% if request.state.gap_analysis_nav %}<a href="/gap-analysis">Gap Analysis</a>{% endif %}
     <a href="/workflows">Workflows</a>
   </nav>
 </header>

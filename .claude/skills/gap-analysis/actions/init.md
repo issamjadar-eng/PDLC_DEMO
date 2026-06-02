@@ -54,6 +54,7 @@ Scaffold a new gap-analysis markdown file from `templates/gap-analysis.md`.
    - `recommended_agents:` (primary first, then consulting)
    - Reminder: this file is author-owned; `/gap-analysis` never auto-overwrites it
    - Suggest the next action — typically `/gap-analysis fan-out <id>` to invoke the primary advisor for an initial pass, or open the file in your editor to fill in `## Goal of this analysis` and `## Assertions` by hand first
+8. **Refresh sidecars.** Run `/gap-analysis render` so the new analysis appears in `docs/_analysis/index.json` (the project-console roll-up). Re-run after fan-out / hand-edits.
 
 ## Example
 
