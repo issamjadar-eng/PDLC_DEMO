@@ -2,7 +2,7 @@
 
 **ID**: 073
 **Created**: 2026-06-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -59,10 +59,12 @@ Apply the newly-installed Anthropic `frontend-design` skill (PR #29) to lift the
 - [x] Re-walked every route in Chrome (DevTools MCP). Landing/agents/documents render with clear visual lift and **zero console errors**; JS-driven docs tree + selection + summary intact; dashboards tracker table intact.
 - [x] Residual note: `/trace-matrix` shows only the "Rebuild all DHFs" empty state — this is a **worktree data artifact** (fresh checkout has no built trace sidecars), NOT a CSS regression. Re-verify on a built tree before close.
 
-### Phase 5 — Close
-- [ ] **Validate the skill CSS against the `arthrex/pccp` sister project** (per [[feedback_sister_project_compat]]) before pushing — changes are token/`color-mix`-driven so they should generalize, but confirm.
-- [ ] Decide: keep worktree changes (port back to 8765, drop the worktree's console.yaml port edit) and merge to `main` via PR, or iterate further.
-- [ ] Update index, mark Complete.
+### Phase 5 — Close — DONE
+- [x] User accepted the changes (2026-06-02): "improvements, however minor. But improvements."
+- [~] Sister-project (`arthrex/pccp`) validation **waived by user** for now ("no need to test against our sister project right now"). Changes are token/`color-mix`-driven so they should generalize; revisit if/when the skill is pushed upstream.
+- [x] Merged to project `main` via **PR #34** (merge commit `934c297`; CI index-rebuild `f1f0cfe` layered on top). Branch deleted, worktree removed.
+- [x] Main console restarted on :8765 with the refreshed CSS (uvicorn `--reload` doesn't watch the skill package, so a restart was required).
+- [ ] **DEFERRED (intentional):** `/sync-skills push` to the hitachi skill registry. User asked to hold off — the v1.22.0 `console.css` change is on project `main` only, not yet upstream. Follow-up task when ready.
 
 ## Open Questions
 
@@ -108,5 +110,6 @@ Why this lane (vs theme-pack-only / full redesign):
 
 ## Changelog
 
+- 2026-06-02: Status → Complete. Merged to project `main` via PR #34; main console restarted on :8765 with the refresh. `/sync-skills push` to the skill registry deliberately deferred per user.
 - 2026-06-02: **Shipped the refresh (Option 2, skill-level, CSS-only) in worktree `console-design-refresh`.** Refactored `console.css` to a layered elevation + motion + focus token system; added body atmosphere + typographic rhythm + translucent sticky topnav + card elevation + one guarded page-load stagger + themed scrollbars — all via tokens/`color-mix`, no markup touched. Bumped skill to 1.22.0 + changelog. Launched worktree console on :8766 and verified landing/agents/documents/dashboards in Chrome (DevTools MCP): clear visual lift, JS features intact, zero console errors. `/trace-matrix` empty = worktree data artifact, not a regression. Pending: sister-project validation + merge decision.
 - 2026-06-01: Task created in continuation of PR #29 (frontend-design skill install). Phases 0–5 sketched, three open questions captured. No code touched.
