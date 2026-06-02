@@ -872,6 +872,94 @@ def gen_dynamic_css(scope_values, phase_values):
     return '\n'.join(out)
 
 
+# ─── Brand theme alignment (optional project-console coupling) ───
+#
+# Best-effort: if the project ships a project-console with an active theme pack,
+# pull its brand `primary` + `font_body` so the embedded dashboard visually
+# belongs to the console it renders inside (iframe = isolated document; it does
+# NOT inherit the console's CSS or theme tokens, so we mirror them here).
+#
+# The brand color lives in the theme pack — read it, don't redeclare it. Falls
+# back silently to the self-contained slate+sky defaults baked into
+# `_CSS_BASE_INNER`, so the skill stays standalone and project-agnostic with no
+# hard dependency on project-console. Regex line-parsed to avoid a YAML dep
+# (same approach as load_tracker_config).
+
+def _read_theme_yaml(path):
+    """Best-effort scalar parse of a theme.yaml (key: value lines)."""
+    out = {}
+    try:
+        for line in path.read_text().splitlines():
+            m = re.match(r'^([a-z_]+):\s*(.+?)\s*$', line)
+            if not m:
+                continue
+            # Strip a trailing inline comment only when the `#` is whitespace-
+            # preceded — otherwise it would eat hex color values like "#a855f7".
+            val = re.sub(r'\s+#.*$', '', m.group(2)).strip().strip('"\'')
+            if val:
+                out[m.group(1)] = val
+    except Exception:
+        pass
+    return out
+
+
+def load_brand_theme(project_dir):
+    """Resolve {brand, font} from the active project-console theme pack, or {}.
+
+    console.yaml `theme:` -> theme pack `theme.yaml` (project themes dir first,
+    then the skill's bundled themes), following `extends:` up the chain.
+    """
+    project_dir = Path(project_dir)
+    try:
+        ctext = (project_dir / 'tools/project-console/console.yaml').read_text()
+    except Exception:
+        return {}
+    tm = re.search(r'^theme:\s*(.+?)\s*$', ctext, re.MULTILINE)
+    if not tm:
+        return {}
+    theme_name = tm.group(1).split('#', 1)[0].strip().strip('"\'')
+
+    search_dirs = [
+        project_dir / 'tools/project-console/themes',
+        project_dir / '.claude/skills/project-console/themes',
+    ]
+
+    def resolve(name, seen):
+        if name in seen:            # cycle guard
+            return {}
+        seen.add(name)
+        for base in search_dirs:
+            ty = base / name / 'theme.yaml'
+            if ty.exists():
+                data = _read_theme_yaml(ty)
+                merged = {}
+                if data.get('extends'):
+                    merged.update(resolve(data['extends'], seen))
+                merged.update(data)  # child wins
+                return merged
+        return {}
+
+    data = resolve(theme_name, set())
+    tokens = {}
+    if data.get('primary'):
+        tokens['brand'] = data['primary']
+    if data.get('font_body'):
+        tokens['font'] = data['font_body']
+    return tokens
+
+
+def gen_theme_css(tokens):
+    """Emit a :root override for brand/font when a theme was resolved (else '')."""
+    if not tokens:
+        return ''
+    decls = []
+    if tokens.get('brand'):
+        decls.append(f"--brand:{tokens['brand']}")
+    if tokens.get('font'):
+        decls.append(f"--font:{tokens['font']}")
+    return ':root{' + ';'.join(decls) + '}' if decls else ''
+
+
 # ─── CSS — preserved dark-theme aesthetic ───
 #
 # `_CSS_BASE_INNER` is the raw CSS (no `<style>` wrapper) — single source of
@@ -879,21 +967,21 @@ def gen_dynamic_css(scope_values, phase_values):
 # dashboard view, and wrapped into `CSS_BASE` for the standalone `.html` file.
 
 _CSS_BASE_INNER = '''
-:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--text-muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--help-bg:#1a2744;--eng:#a78bfa}
+:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--text-muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--help-bg:#1a2744;--eng:#a78bfa;--brand:var(--accent);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--shadow-sm:0 1px 2px rgba(0,0,0,.25),0 4px 14px rgba(0,0,0,.22);--shadow-md:0 2px 4px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.34)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;padding:2rem}
 .header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.header h1{font-size:1.8rem;font-weight:700;color:var(--accent);margin-bottom:.3rem}
+.header h1{font-size:1.85rem;font-weight:700;letter-spacing:-.02em;color:var(--brand);margin-bottom:.3rem}
 .header .subtitle{color:var(--text-muted);font-size:.95rem}
 .header .timestamp{color:var(--text-muted);font-size:.8rem;margin-top:.5rem}
 .controls{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
 .controls .label{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin-right:.2rem}
 .controls button{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.72rem;cursor:pointer;transition:all .2s}
 .controls button:hover{background:var(--surface2);color:var(--text)}
-.controls button.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.controls button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 .controls .sep{border-left:1px solid var(--border);height:24px;margin:0 .15rem}
 .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
-.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;border-left-width:4px}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;border-left-width:4px;box-shadow:var(--shadow-sm)}
 .summary-card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:.3rem}
 .summary-card .number{font-size:2rem;font-weight:700}
 .summary-card .detail{font-size:.72rem;color:var(--text-muted);margin-top:.2rem}
@@ -915,7 +1003,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .eng-divider .badge{background:rgba(167,139,250,.15);color:var(--eng);border:1px solid rgba(167,139,250,.3)}
 .phase-meta{text-align:center;font-size:.78rem;color:var(--text-muted);margin:-.4rem 0 1rem}
 .phase-meta strong{color:var(--text)}
-.category{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:.8rem;overflow:hidden}
+.category{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:.8rem;overflow:hidden;box-shadow:var(--shadow-sm)}
 .category-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;cursor:pointer;user-select:none;transition:background .2s}
 .category-header:hover{background:var(--surface2)}
 .category-header .cat-title{font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:.5rem}
@@ -989,8 +1077,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .effort-badge.med{background:rgba(234,179,8,.15);color:var(--yellow)}
 .effort-badge.high{background:rgba(249,115,22,.15);color:var(--orange)}
 .effort-badge.vhigh{background:rgba(239,68,68,.15);color:var(--red)}
-.scale-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;margin-bottom:1rem}
-.scale-section h3{font-size:.95rem;margin-bottom:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.scale-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.scale-section h3{font-size:.95rem;margin-bottom:.6rem;color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
 .scale-table{width:100%;border-collapse:collapse;font-size:.78rem}
 .scale-table th{text-align:left;padding:.3rem .6rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.04em}
 .scale-table td{padding:.4rem .6rem;border-bottom:1px solid rgba(71,85,105,.3);vertical-align:top;color:var(--text-muted)}
@@ -1008,7 +1096,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
    Visually match the .controls filter-chip style so the dashboard's button language
    stays consistent. Project-console skill ships a parallel rule for the docs-view render. */
 .tracker-action-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.3rem .65rem;font-size:.72rem;font-family:inherit;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s}
-.tracker-action-btn:hover:not(:disabled):not([disabled]){background:var(--accent);color:#000;border-color:var(--accent)}
+.tracker-action-btn:hover:not(:disabled):not([disabled]){background:var(--brand);color:#fff;border-color:var(--brand)}
 .tracker-action-btn:disabled,.tracker-action-btn[disabled]{cursor:not-allowed;background:transparent;color:var(--text-muted);border-style:dashed;opacity:.85}
 .tracker-action-btn[data-draft-state]{background:var(--accent-soft,rgba(255,193,7,.12));border-color:var(--accent,#ffc107)}
 .tracker-action-btn .draft-stage-badge{display:inline-block;margin-left:.4em;padding:0 .4em;border-radius:6px;background:var(--accent,#ffc107);color:#000;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
@@ -1042,6 +1130,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .item-table td:nth-child(2){white-space:normal;min-width:150px}
   .scope-badge,.phase-badge,.status-badge{font-size:.58rem;padding:.08rem .3rem}
   .tier-divider .badge{font-size:.65rem;padding:.3rem .7rem}
+}
+/* One orchestrated page-load reveal on the summary cards. Guarded by
+   prefers-reduced-motion: the initial opacity:0 lives ONLY inside the
+   no-preference query, and fill is `backwards`, so reduced-motion users (and
+   any non-animating context) always see fully-visible content. */
+@keyframes pc-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .summary-grid .summary-card{animation:pc-rise .42s cubic-bezier(.22,1,.36,1) backwards}
+  .summary-grid .summary-card:nth-child(1){animation-delay:40ms}
+  .summary-grid .summary-card:nth-child(2){animation-delay:100ms}
+  .summary-grid .summary-card:nth-child(3){animation-delay:160ms}
+  .summary-grid .summary-card:nth-child(4){animation-delay:220ms}
+  .summary-grid .summary-card:nth-child(5){animation-delay:280ms}
+  .summary-grid .summary-card:nth-child(n+6){animation-delay:330ms}
 }
 '''
 
@@ -1085,6 +1187,7 @@ def render(project_dir, embed=False):
     loads `_CSS_BASE_INNER` + `_JS_INNER` via separate static routes.
     """
     project_dir = Path(project_dir)
+    brand_theme = load_brand_theme(project_dir)  # {} when no project-console theme is found
     md_path = project_dir / 'docs/project/submissions/submission-tracker.md'
     html_path = project_dir / 'docs/project/submissions/submission-tracker.html'
     src_dir = md_path.parent
@@ -1147,6 +1250,9 @@ def render(project_dir, embed=False):
         w('<meta name="viewport" content="width=device-width,initial-scale=1.0">')
         w('<title>Submission Package Tracker</title>')
         w(CSS_BASE)
+        theme_css = gen_theme_css(brand_theme)
+        if theme_css:
+            w(f'<style>{theme_css}</style>')
         w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
         w('</head><body>')
 
@@ -1156,6 +1262,9 @@ def render(project_dir, embed=False):
     else:
         # Embed mode: only the data-derived dynamic CSS goes inline (the
         # base CSS + JS are loaded via separate static routes by the host).
+        theme_css = gen_theme_css(brand_theme)
+        if theme_css:
+            w(f'<style>{theme_css}</style>')
         w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
         w('<div class="tracker-embed">')
 
