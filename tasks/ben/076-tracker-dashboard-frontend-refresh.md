@@ -2,7 +2,7 @@
 
 **ID**: 076
 **Created**: 2026-06-02
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -51,7 +51,7 @@ Apply the `frontend-design` lens (chosen scope **R1 + R2**) to the **only** exte
 - [x] R2: `--shadow-sm/md` on cards/categories/scale-section + one `prefers-reduced-motion`-guarded `pc-rise` stagger on summary cards (`backwards` fill, opacity:0 only inside no-preference) + tighter header tracking.
 - [x] Bumped `tracker` SKILL.md `version: 11 → 13` (README changelog was already at 12; drift resolved forward) + README changelog row 13.
 - [x] `/tracker render` regenerated `docs/project/submissions/submission-tracker.html` (524,262 B). Verified in Chrome at `/dashboards/submission-tracker`: active pills = `rgb(168,85,247)` (GL purple), `pc-rise` + shadow on cards, Manrope, **zero console errors**, filters/expansion intact.
-- [ ] **Decide push** (project main) — `/sync-skills push` held off per user. (Open — see Q1.)
+- [x] **Pushed to project `main`** via PR #36 (merge `decd1d2`). `/sync-skills push` to the registry held off per user.
 
 ## Open Questions
 
@@ -77,5 +77,6 @@ Apply the `frontend-design` lens (chosen scope **R1 + R2**) to the **only** exte
 
 ## Changelog
 
+- 2026-06-02: Status → Complete. Pushed to project `main` via PR #36 (merge `decd1d2`). Registry `/sync-skills push` deferred per user. Note: a concurrent session created a colliding `tasks/ben/076-hipaa-advisor-grounding-gaps.md` + `077-...` (untracked, not mine) — numbering clash flagged to user for reconciliation.
 - 2026-06-02: **Shipped R1+R2 in `tracker/scripts/render.py` (skill v13).** R1 brand/font alignment via `load_brand_theme()` reading the active console theme (`--brand` purple + Manrope injected into `:root`, both render paths, slate+sky fallback) — new `--brand` token repaints chrome only, data palette preserved. R2 shadow scale + guarded `pc-rise` page-load stagger + heading tracking. Fixed a hex-eating comment-strip bug in the theme parser. Re-rendered the dashboard; verified in Chrome (`/dashboards/submission-tracker`): GL-purple active pills, elevated+animated cards, Manrope, zero console errors, interactivity intact. Pending: push decision (Q1); `/sync-skills push` held off.
 - 2026-06-02: Task created. Scope R1+R2 chosen by user. Grounding captured (console vs tracker palette/font mismatch; iframe isolation; output-vs-source). Follow-on to ben/073.
