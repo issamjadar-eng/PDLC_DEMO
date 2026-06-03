@@ -1,6 +1,6 @@
 # Action: `list`
 
-Roll-up table of all gap analyses across components, with status / topic filtering.
+Roll-up table of all gap analyses across components, with status / topic filtering. Walks `docs/_analysis/<component>/*/` (subdirectories) and reads each subdirectory's aggregate file `<id>/<id>.md`. Per the folder-per-analysis convention in [`../SKILL.md`](../SKILL.md). Subdirectories without a matching-named aggregate are not gap-analysis folders (skip).
 
 ## Usage
 
@@ -16,7 +16,7 @@ Roll-up table of all gap analyses across components, with status / topic filteri
 
 ## Steps
 
-1. **Discover files.** For each component subfolder under `docs/_analysis/<component>/`, walk `*.md` excluding `README.md`.
+1. **Discover analyses.** For each component subfolder under `docs/_analysis/<component>/`, walk its analysis subdirectories and read each one's aggregate `<id>/<id>.md` (the file whose stem matches its folder name; skip `README.md`, `recs-*.md`, and `research-*.md`).
 2. **Parse frontmatter.** Read the YAML between the `---` fences. Skip files that lack an `id:` field — they're not gap analyses per this skill (likely stray docs that shouldn't be in `_analysis/`; surface them as warnings).
 3. **Apply filters.** Drop entries that don't match any of the provided `--status` / `--component` / `--topic` filters. No filters = include all.
 4. **Sort** by `(component, status_rank, last_updated desc)`. Status rank order: `draft → review → accepted → superseded` (newest editorial state surfaced first within a component).

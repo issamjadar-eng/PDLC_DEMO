@@ -16,7 +16,7 @@ Derive machine-readable JSON sidecars from the gap-analysis markdown so downstre
 
 Under `docs/_analysis/`:
 
-- **`<component>/<id>.gap.json`** — per-analysis structured detail (one per analysis markdown).
+- **`<component>/<id>/<id>.gap.json`** — per-analysis structured detail, written beside the aggregate inside the analysis folder (one per analysis).
 - **`index.json`** — lightweight roll-up array of every analysis (status / topic / component / agents / stats) for the console's list view.
 
 Both are **derived projections** of the markdown. The `.md` is the single source of truth; the JSON is regenerated and never hand-edited. This mirrors the `trace-matrix` sidecar / `drift.json` contract — the producer emits a stable JSON shape; the consumer (console) knows nothing about how it was produced.
@@ -27,7 +27,7 @@ Both are **derived projections** of the markdown. The `.md` is the single source
    ```bash
    python3 .claude/skills/gap-analysis/scripts/render_sidecars.py
    ```
-2. The script walks `docs/_analysis/<component>/*.md` (excluding `README.md`), skips any file without an `id:` frontmatter (not a gap-analysis), and for each writes `<id>.gap.json`; then writes the roll-up `index.json`.
+2. The script walks the folder-per-analysis layout `docs/_analysis/<component>/<id>/<id>.md` (the aggregate file — the one whose stem matches its folder name; `recs-*.md` / `research-*.md` / `README.md` siblings are skipped), skips any aggregate without an `id:` frontmatter, and for each writes `<id>/<id>.gap.json` beside it; then writes the roll-up `index.json`.
 3. Report the count written. Re-running with no markdown change is idempotent (byte-identical output → nothing rewritten).
 
 **When to run:** after `/gap-analysis init` (to register the new analysis in the index) and after `/gap-analysis fan-out` (to project the freshly-appended findings). Also any time an analysis markdown is hand-edited. The console reads whatever sidecars exist and degrades gracefully (empty-state hint) when they're absent — exactly like the trace-matrix view.

@@ -887,3 +887,38 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/194
 - Status: merged (--squash)
 - Origin: PDLC_DEMO task ben/076. (1) advisors skill-creator conformance — frontmatter added, BP+Changelog→README, semver VERSION→integer version, project refs scrubbed. (2) canonical-roles HIPAA/45 CFR + NIST SP 800-66 descriptions + cybersecurity L1b regulations consumer. Excluded core-team-panel/design-review-panel (pre-existing drift, not this task's work).
+
+## 2026-06-02 — pull
+
+- Hitachi HEAD before: `cd3f800`
+- Pulled: 11 files (auto-pull bucket — UPSTREAM_ADVANCE + UPSTREAM_ONLY)
+  - `skills/advisors/agents/core-team-panel.md`, `design-review-panel.md`, `scripts/render-grounding.py` (v1.5.2 "show the bytes" verify-claim rule, #187)
+  - `skills/knowledge-pack-export/{README,SKILL}.md`, `scripts/build_pack.py` (v3→v5: snapshot banner, image-ref counts, segment markers)
+  - `skills/skill-creator/SKILL.md`
+  - `skills/gap-analysis/actions/list.md`, `templates/gap-analysis.md` (v4 folder-per-analysis — 2-line diffs)
+  - `skills/medtech-docs/references/fda-guidance/{source-md/csa-qms.md, source/guidance-computer-software-assurance-production-quality-system.pdf}` (new CSA guidance)
+- project.yml: no changes (all pulled skills already in approved lists; reference files are content)
+- Project impact: none requiring action. No built knowledge-packs exist (banner moot); advisors GROUNDING re-render optional (prompt-rule change only).
+- Skipped: `gap-analysis` SKILL/README/init/fan-out (LOCAL_AHEAD but DIVERGED — local v3 vs upstream v4; held for v3⊕v4→v5 merge). Top-level `agents/*-panel.md` are symlinks into advisors (false-positive UNDETERMINED).
+
+## 2026-06-02 — push
+
+- Files (18): `skills/project-console/` (README, VERSION, console/app.py, web/static/console.css, web/templates/_base.html, console/gap_analysis/{__init__,loader,router}.py, web/static/gap_analysis.css, web/templates/gap_analysis_{index,view}.html); `skills/tracker/` (README, SKILL, scripts/render.py); `skills/frontend-design/` (.pinned-sha, LICENSE.txt, README, SKILL)
+- Branch: `sync/pdlc-demo-console-tracker-frontend-2026-06-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/195
+- Commit: "project-console 1.23, tracker v13, + new frontend-design skill"
+- Status: merged (--merge requested)
+- Merge commit: `09d643c`
+- Hitachi HEAD after sync: `09d643c`
+- Origin: PDLC_DEMO tasks ben/073 (console.css refresh), ben/077 (console Gap Analysis section), ben/078 (tracker dashboard refresh). project-console 1.21.1→1.23.0 + tracker v11→v13 both verified linearly-ahead (changelog contains upstream version); frontend-design net-new vendored fork. gap-analysis EXCLUDED (diverged — separate v3⊕v4→v5 merge to follow). Generalization validated against arthrex/pccp.
+
+## 2026-06-02 — push (gap-analysis v5 convergence)
+
+- Files (10): `skills/gap-analysis/` (SKILL, README, actions/{render,init,fan-out,list}.md, scripts/render_sidecars.py); `skills/project-console/` (console/gap_analysis/loader.py, VERSION, README)
+- Branch: `sync/pdlc-demo-gap-analysis-v5-2026-06-02`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/196
+- Commit: "gap-analysis v5 (folder-per-analysis convergence) + project-console 1.23.1"
+- Status: merged (--merge requested)
+- Merge commit: `a3f9959`
+- Hitachi HEAD after sync: `a3f9959`
+- Origin: PDLC_DEMO task ben/077 Phase E. Resolves the gap-analysis divergence held out of PR #195: 3-way merged our render/console work (parallel v3) onto upstream v4 folder-per-analysis (#188) → v5. Producer (render_sidecars.py `*/*/*.md`) + consumer (loader.py `*/*/*.gap.json`) migrated to nested layout; existing HIPAA analysis migrated into its folder; project-console → 1.23.1.

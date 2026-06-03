@@ -1,6 +1,8 @@
 # Action: `fan-out`
 
-Invoke the primary advisor agent(s) referenced by a gap-analysis file to draft / extend its findings.
+Invoke the recommended advisor agent(s) to draft per-discipline prescription files inside the analysis folder, then aggregate convergence signals + cross-discipline open questions into the aggregate file.
+
+Per the folder-per-analysis convention in [`../SKILL.md`](../SKILL.md): each advisor writes a `recs-<discipline>.md` file inside `docs/_analysis/<component>/<id>/`. Research-substantiation agents write `research-<topic>.md` in the same folder. The aggregate file rolls up **convergence findings** (the same root cause surfaced by ≥2 advisors from different anchors — high-confidence calls) and the **cross-discipline open questions** aggregated across siblings.
 
 ## Usage
 
@@ -10,7 +12,7 @@ Invoke the primary advisor agent(s) referenced by a gap-analysis file to draft /
 
 ## Arguments
 
-- **`<id>`** (required, positional) — the `id:` field of an existing gap-analysis file. The skill searches `docs/_analysis/<component>/<id>.md` across all component folders. Error if not found, or if the id matches multiple files (rare; would require `--component` to disambiguate).
+- **`<id>`** (required, positional) — the `id:` field of an existing gap-analysis file. The skill searches for the aggregate `docs/_analysis/<component>/<id>/<id>.md` across all component folders. Error if not found, or if the id matches multiple files (rare; would require `--component` to disambiguate).
 - **`--include-consulting`** (optional) — also spawn the `consulting[]` advisors in addition to `primary[]`. Default is primary-only; consulting advisors are surfaced as suggested next steps.
 
 ## Steps
@@ -48,6 +50,11 @@ Invoke the primary advisor agent(s) referenced by a gap-analysis file to draft /
    3. APPEND your findings to the file's `## Findings` section using the
       F-N format already in the template (do NOT replace existing findings;
       the file is shared between human authors and multiple agents).
+      Each F-N entry must include a **Category** field tagged from the
+      template's Category taxonomy (Drift / Manifest / Substantiation /
+      Coverage / Methodology / Probe-preempt / Format-Tone) plus
+      **Severity**, **Effort**, and **Depends-on** fields — these populate
+      the Findings summary table.
    4. APPEND any new open questions to `## Open Questions`.
    5. Update the `last_updated:` frontmatter to today's date.
    6. APPEND a row to the `## Changelog` table:
@@ -56,6 +63,11 @@ Invoke the primary advisor agent(s) referenced by a gap-analysis file to draft /
       reviewing your findings.
    8. Do NOT overwrite the file's `## Goal`, `## Source`, `## Assertions`
       sections. Those are the human author's framing.
+   9. If `## Findings` already contains a `### Summary table`, append a
+      single row to it per F-N you authored. If the table does not exist
+      yet, leave a marker comment `<!-- TODO: human/aggregator to render
+      summary table from F-N entries -->` so the aggregator (or a follow-up
+      pass) can build it after all fan-out advisors return.
 
    Project-agnostic discipline: cite paths verbatim from `grounded_against`
    — never invent paths or Jira keys. If a source is missing or empty, log

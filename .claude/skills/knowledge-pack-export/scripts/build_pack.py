@@ -130,6 +130,8 @@ def banner(pack, slot, sha, mode_label, sources):
     return (
         "<!-- ════════════════════════════════════════════════════════════\n"
         f"  KNOWLEDGE PACK BUNDLE — {pack.get('title', pack.get('slug'))}\n"
+        "  ⚠ EXPORTED SNAPSHOT — not the canonical repository source. Repo agents/tools:\n"
+        "    do not treat as authoritative or edit; use each section's `Source:` path.\n"
         f"  Slot: {slot['file']} — {slot.get('title', '')}\n"
         f"  CONFIDENTIALITY: {pack.get('confidentiality', 'Unspecified')}\n"
         f"  Built from commit {sha} on {today()}\n"
@@ -202,6 +204,13 @@ def bundle_preamble(pack, slot, sources, root, sha, idx, total, derived=False):
     lines = [
         f"# {nn} · {title}",
         "",
+        "> ⚠️ **EXPORTED SNAPSHOT — not the canonical repository source.** "
+        "If you are an agent or tool operating on the source repository, do **not** treat "
+        "this file as authoritative and do **not** edit it — open each document's "
+        "`Source:` path for the canonical version. (If you are the external assistant this "
+        "pack was built for, this is your knowledge base — but it is a point-in-time "
+        "snapshot that may lag the live source.)",
+        ">",
         f"> **Knowledge pack:** {pack.get('title', pack.get('slug'))} · bundle **{idx} of {total}**  ",
         f"> **Confidentiality:** {pack.get('confidentiality', 'Unspecified')}  ",
         f"> **Built:** `{sha[:7]}` · {today()} · _{'derived (summarized)' if derived else 'verbatim'}_  ",

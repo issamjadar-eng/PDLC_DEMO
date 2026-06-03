@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Render structured JSON sidecars from gap-analysis markdown.
 
-The `gap-analysis` skill authors human/agent-shared markdown under
-`docs/_analysis/<component>/<id>.md`. This script DERIVES a machine-readable
+The `gap-analysis` skill authors human/agent-shared markdown under the
+folder-per-analysis layout `docs/_analysis/<component>/<id>/<id>.md` (the
+aggregate file — its stem matches its folder name). This script DERIVES a machine-readable
 JSON projection of each analysis so downstream consumers — primarily the
 project-console Gap Analysis view — can render it natively without parsing
 prose. The markdown remains the single source of truth; the JSON is a
@@ -13,8 +14,8 @@ producer emits a stable JSON shape; the consumer knows nothing about how it
 was produced and only reads the contract.
 
 Outputs (under `docs/_analysis/`):
-  - <component>/<id>.gap.json   — per-analysis detail
-  - index.json                  — roll-up array of all analyses (lightweight)
+  - <component>/<id>/<id>.gap.json   — per-analysis detail (beside the aggregate)
+  - index.json                       — roll-up array of all analyses (lightweight)
 
 Pure standard library — no third-party deps, so it runs anywhere the skill
 is installed. The frontmatter is a controlled subset of YAML (scalars + the
@@ -393,8 +394,11 @@ def main(argv: list[str]) -> int:
         print(f"error: {analysis_root} does not exist", file=sys.stderr)
         return 1
 
+    # Folder-per-analysis layout: docs/_analysis/<component>/<id>/<id>.md
+    # The aggregate is the file whose stem matches its parent folder name;
+    # recs-*.md / research-*.md / README.md siblings are excluded by that test.
     md_files = sorted(
-        p for p in analysis_root.glob("*/*.md") if p.name.lower() != "readme.md"
+        p for p in analysis_root.glob("*/*/*.md") if p.stem == p.parent.name
     )
 
     details: list[dict] = []
