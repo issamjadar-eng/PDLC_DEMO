@@ -40,8 +40,8 @@ This skill is the **convention layer** for that work:
                                                           │
                                                           │ writes
                                                           ▼
-                                              docs/_analysis/<component>/<id>.md
-                                                  (structured markdown,
+                                              docs/_analysis/<component>/<id>/<id>.md
+                                                  (aggregate in its folder;
                                                    never overwritten by skill)
                                                           │
                                                           │ read by
@@ -53,8 +53,8 @@ This skill is the **convention layer** for that work:
                                                                                                             │
                                                                                                             │ appends findings
                                                                                                             ▼
-                                                                                              docs/_analysis/<component>/<id>.md
-                                                                                                  (same file, shared editorship)
+                                                                                              docs/_analysis/<component>/<id>/<id>.md
+                                                                                                  (same aggregate, shared editorship)
 ```
 
 ## Key design choices
@@ -118,7 +118,9 @@ Consumed by `/best-practices` audit.
 
 ## Changelog
 
-- 3 (2026-06-02): Added the `render` action + `scripts/render_sidecars.py` (pure stdlib) — derives a JSON contract (`<id>.gap.json` per analysis + roll-up `index.json`, `schema_version: 1.0`) from the analysis markdown for machine consumers, primarily the project-console Gap Analysis view. Fulfills the `--format json` future-extension noted in `actions/list.md`. Markdown stays single source of truth; JSON is a regenerated projection (idempotent). New `actions/render.md`; SKILL.md § Actions + Supporting Files updated; `init`/`fan-out` reports now remind to re-render. Documented the read-only-advisor fan-out reality (conductor writes back; advisors return findings) in `fan-out.md` + SKILL.md. Best Practices: added renderer-present (Required) + sidecars-current (Recommended) rows. Built under ben/077 (gap-analysis ↔ console showcase tab).
+- 5 (2026-06-02): **`render` action + full folder-per-analysis convergence.** (a) Added the `render` action + `scripts/render_sidecars.py` (pure stdlib) deriving a JSON contract (`<id>.gap.json` per analysis + roll-up `index.json`, `schema_version: 1.0`) for machine consumers — primarily the project-console Gap Analysis view (mirrors the trace-matrix sidecar loose-coupling). New `actions/render.md`; SKILL.md § Actions + Supporting Files updated; `init`/`fan-out` reports remind to re-render. Documented the read-only-advisor fan-out reality (conductor writes back; advisors return findings). (b) Reconciled this project-local render work (originally a parallel `version: 3`) with upstream v4's folder-per-analysis restructure: the renderer and the project-console loader now read the **nested** `docs/_analysis/<component>/<id>/<id>.md` aggregate + `<id>/<id>.gap.json` sidecar layout (`glob("*/*/*.md")`, aggregate = folder-name-matches-file-stem), and the one existing flat analysis was migrated into its folder. Best Practices: renderer-present (Required) + sidecars-current (Recommended). Built under ben/077 (gap-analysis ↔ console showcase tab); v4 history (status-tracking, summary-table) preserved below.
+- 4 (2026-05-27): Status-tracking convention added to `templates/gap-analysis.md`. The Summary-table gains a `Status` column (values: open / resolved YYYY-MM-DD / deferred / superseded) and a `Resolution progress: N / total` line below the table. The F-N detail block gains `Status`, `Category`, `Severity`, `Effort`, `Depends on`, and `Resolution applied (YYYY-MM-DD)` fields so each finding carries its own resolution audit trail. Motivated by sequential remediation walkthroughs where the team addresses findings one-at-a-time across multiple sessions and needs a single doc that shows "what's done, what's left" at a glance — alongside the per-edit detail.
+- 3 (2026-05-27): Findings summary-table convention added to `templates/gap-analysis.md`. New `### Summary table` subsection sits **before** the detailed F-N entries with: (a) Category taxonomy (Drift / Manifest / Substantiation / Coverage / Methodology / Probe-preempt / Format-Tone), (b) Effort estimate scale, (c) a parameterized `Blocks-<gate>?` column (renamed per analysis), (d) Multi-agent consensus flag, (e) Depends-on field, plus a Coverage-scope note at the top of `## Findings` to make in-scope-vs-out-of-scope explicit. `actions/fan-out.md` updated so advisor prompts now require Category / Severity / Effort / Depends-on fields on every F-N (these populate the summary table). Motivated by real-world fan-out experience: when 20+ findings come back from a multi-advisor fan-out, administrative findings look the same as substantive ones at a glance without a triage view.
 - 2 (2026-05-27): Conformance fixes per `skill-creator audit-triggers`. Moved Changelog out of SKILL.md (lives only in README.md per project convention). Reformatted README Changelog from table → bulleted list. Removed the empty `setup` action stub from SKILL.md § Actions (the skill ships no hooks/agents/rules yet, so no setup work to do; will re-add when the skill grows those). Replaced a project-specific arch-name list in the `filing` topic description with a generic "multiple architectural components" phrasing. Genericized two example strings in `actions/list.md` and `templates/gap-analysis.md` that named a regulatory framework abbreviation in example positions where a generic phrasing reads the same.
 - 1 (2026-05-27): Initial scaffold. SKILL.md + template + topic-advisor map + four action docs (`init`, `list`, `route`, `fan-out`). Companion to the `docs/_analysis/` first-class doc tier — the tier is the storage; this skill is the authoring convention over it.
 

@@ -3,8 +3,8 @@
 The console never parses analysis prose. It only reads the JSON sidecars the
 `gap-analysis` skill's `render` action writes under `docs/_analysis/`:
 
-    docs/_analysis/index.json                       — roll-up of all analyses
-    docs/_analysis/<component>/<id>.gap.json        — per-analysis detail
+    docs/_analysis/index.json                          — roll-up of all analyses
+    docs/_analysis/<component>/<id>/<id>.gap.json      — per-analysis detail (folder-per-analysis)
 
 Loose-coupling rule (same contract as the trace-matrix sidecar): if the
 sidecars don't exist, the section degrades to an empty state with a hint to
@@ -30,7 +30,7 @@ def discover(repo_root: Path) -> dict:
     root = _analysis_root(repo_root)
     index = root / INDEX_NAME
     has_index = index.is_file()
-    has_any = has_index or any(root.glob("*/*.gap.json"))
+    has_any = has_index or any(root.glob("*/*/*.gap.json"))
     return {"has_index": has_index, "has_any": has_any}
 
 
@@ -46,7 +46,7 @@ def load_index(repo_root: Path) -> dict | None:
             pass
     # Fallback: rebuild a lightweight index from whatever sidecars exist.
     analyses = []
-    for sidecar in sorted(root.glob("*/*.gap.json")):
+    for sidecar in sorted(root.glob("*/*/*.gap.json")):
         d = _read_json(sidecar)
         if not d:
             continue
@@ -73,7 +73,7 @@ def load_index(repo_root: Path) -> dict | None:
 def load_analysis(repo_root: Path, analysis_id: str) -> dict | None:
     """Load one per-analysis sidecar by id (searches all component folders)."""
     root = _analysis_root(repo_root)
-    for sidecar in root.glob("*/*.gap.json"):
+    for sidecar in root.glob("*/*/*.gap.json"):
         d = _read_json(sidecar)
         if d and d.get("meta", {}).get("id") == analysis_id:
             return d

@@ -29,14 +29,14 @@ These skills write only here — never to canonical DHF locations, never to mirr
 Per `<component>/` subfolder:
 
 - `README.md` — one-line per analysis with status, owner, last update
-- `<id>.md` — individual gap-analysis or reference-audit reports authored by `/gap-analysis` and `/reference-audit`. Filename convention: `<topic>-<YYYY-MM-DD>.md` for gap analyses; `<doc-slug>-references-audit/` (folder) for reference audits.
+- `<id>/` — **one folder per analysis** (folder-per-analysis convention). Inside: the aggregate `<id>/<id>.md` (start-here final report) + an auto-generated folder `README.md` + the derived `<id>.gap.json` sidecar + any `recs-<discipline>.md` / `research-<topic>.md` detail files. Gap analyses are authored by `/gap-analysis`; reference audits by `/reference-audit` (`<doc-slug>-references-audit/`).
 
 Components are project DHF leaves — for this project: `pca-device`, `connectivity-adapter`, `cloud-suite`, `drug-library-manager`, `fleet-management`, `compliance-reports`, `analytics-dashboard`, `inventory-tracker`, `alerts-engine`, `clinical-interface`.
 
 ## Conventions
 
 - **Read-only against canonical content.** Analysis writes go here only. The DHF, mirrors, and `formal/` folders are the **subject** of analysis, never the **destination** of analysis output.
-- **One file per finding.** Per `/gap-analysis init` and `/reference-audit init`, each analysis is its own markdown file with frontmatter (`topic`, `component`, `status`, `recommended_agents`, `grounded_against`, …).
+- **One folder per analysis.** Per `/gap-analysis init` and `/reference-audit init`, each analysis is its own `<id>/` folder whose aggregate `<id>/<id>.md` carries the frontmatter (`topic`, `component`, `status`, `recommended_agents`, `grounded_against`, …); detail files (`recs-*.md` / `research-*.md`) and the derived `<id>.gap.json` sidecar live beside it.
 - **Frontmatter-driven.** Analysis files declare what they're grounded against (mirror paths, standards refs) — the skills use this metadata for fan-out and validation.
 - **Records, not edits.** A gap-analysis surfaces a finding; it does NOT silently amend the source doc. Promotion of findings back into DHF content is a separate human-led step.
 - **Component slug = DHF identity.** New subfolders MUST match a `project.yml dhfs[]` entry (`arch_slug` for item DHFs, `leaf` for system DHFs). `/best-practices` flags strays as Required.
@@ -53,3 +53,4 @@ Components are project DHF leaves — for this project: `pca-device`, `connectiv
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-05-30 | Ben Xavier | Initial scaffold under ben/068 — closes the `/best-practices` audit FAIL for the missing gap-analysis v2 `docs/_analysis/` tier. No component subfolders yet; populated by `/gap-analysis init` / `/reference-audit init` on first invocation. |
+| 2026-06-02 | Ben Xavier | Expected Content + Conventions updated to the **folder-per-analysis** layout (`<id>/<id>.md` aggregate + folder README + `.gap.json` + detail files) when gap-analysis converged with upstream v4 (skill v5, ben/077). |

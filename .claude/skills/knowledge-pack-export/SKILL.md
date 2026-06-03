@@ -14,7 +14,7 @@ description: |
     - any edit/write to a `*.pack.yml` manifest or to `.claude/skills/knowledge-pack-export/`
 
   Actions: `setup`, `init <pack-slug>`, `validate <pack-slug>`, `build <pack-slug> [--target <key>]`, `freshness <pack-slug>|--repo`, `list`, `publish <pack-slug>` (v2). Project-agnostic — all project-specific selection lives in the pack manifest, never in the skill.
-version: 4
+version: 5
 updated: 2026-05-30
 ---
 

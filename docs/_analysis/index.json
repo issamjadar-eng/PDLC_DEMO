@@ -8,8 +8,8 @@
       "topic": "cybersecurity",
       "component": "pca-device",
       "last_updated": "2026-06-02",
-      "source_md": "docs/_analysis/pca-device/hipaa-readiness-profile.md",
-      "sidecar": "docs/_analysis/pca-device/hipaa-readiness-profile.gap.json",
+      "source_md": "docs/_analysis/pca-device/hipaa-readiness-profile/hipaa-readiness-profile.md",
+      "sidecar": "docs/_analysis/pca-device/hipaa-readiness-profile/hipaa-readiness-profile.gap.json",
       "agents": [
         "cybersecurity",
         "risk-management",

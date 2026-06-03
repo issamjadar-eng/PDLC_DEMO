@@ -13,8 +13,8 @@ description: |
   Actions: `setup`, `audit-triggers <skill>`, `improve-description <skill>`, `package <skill>`, plus the iterative create/eval/improve flow described below.
 
   A PreToolUse hook (installed by `setup`) emits a one-line reminder when a SKILL.md frontmatter or § Actions section is edited — armed once per skill per session, auto-cleared when `audit-triggers` runs or the session ends, body-only edits skipped.
-version: 7
-updated: 2026-05-15
+version: 8
+updated: 2026-05-30
 ---
 
 # Skill Creator
@@ -143,6 +143,31 @@ updated: YYYY-MM-DD
 - **description**: Primary triggering mechanism. Include both what the skill does AND specific contexts for when to use it. Make descriptions "pushy" to combat undertriggering
 - **version**: Integer, incremented on each meaningful change
 - **updated**: ISO date of last version bump
+
+### Optional Frontmatter: `dependencies:` (the resolver contract)
+
+If a skill needs **other skills** or **agents** to function, declare them in a `dependencies:` frontmatter block. This is the machine-readable contract the `sync-skills` skill reads (`/sync-skills deps <skill>` and the `pull` co-dependency step) to compute a skill's install closure — so a teammate who pulls one skill from the registry also learns what else must travel with it. Without it, a single-skill pull silently installs a broken skill (most often because **agents live on a separate sync surface** — `.claude/agents/`, not `.claude/skills/` — and are never carried by a skill-directory copy).
+
+```yaml
+dependencies:
+  skills:
+    - name: frontend-slides
+      type: required          # required | optional   (default: required if omitted)
+      reason: consumes the viewport contract + preset registry
+    - name: docflow
+      type: optional
+  agents:
+    - regulatory-affairs      # top-level agents that co-install with this skill
+    - clinical-affairs
+```
+
+Semantics (enforced by `sync-skills/scripts/resolve_deps.py`):
+
+- **`dependencies.skills`** — sibling skills this one needs. `required` edges are traversed **transitively** (they form the closure that MUST be co-installed). `optional` edges are reported one level deep but never auto-pulled. The `shared/` utilities are an ordinary dependency — name them `shared`.
+- **`dependencies.agents`** — top-level agents that must be installed into the consumer's `.claude/agents/`. **Owner convention:** the skill that *owns* a set of agents lists them here; a consumer that merely *uses* them depends on the **owning skill** (via `dependencies.skills`) rather than re-listing the agents — one source of truth per agent. The resolver collects the agent union across the required-skill closure.
+- Keep `reason` short — it shows in the resolver report so a puller understands *why* the edge exists.
+
+**This is distinct from the `## Dependencies` *section*** (below) — that section documents **project-infra** the skill reads/writes at runtime (files, `jq`, directories like `tasks/`). The `dependencies:` *frontmatter* declares **other registry components** (skills + agents) the skill needs co-installed. A skill may have both, one, or neither. Declare frontmatter `dependencies:` whenever a skill references another skill's scripts/templates/contracts or spawns/owns agents.
 
 ### Required SKILL.md Sections
 
