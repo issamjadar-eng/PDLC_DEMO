@@ -9,12 +9,17 @@
 body.gap-page main { max-width: none; padding: 0; }
 
 .ga-wrap {
-  --ga-confirmed: #16a34a;  --ga-confirmed-bg: #dcfce7;
-  --ga-partial: #d97706;    --ga-partial-bg: #fef3c7;
-  --ga-refuted: #dc2626;    --ga-refuted-bg: #fee2e2;
-  --ga-verify: #7c3aed;     --ga-verify-bg: #ede9fe;
-  --ga-open: var(--body-text-muted, #64748b);
-  --ga-open-bg: var(--surface-2, #f1f5f9);
+  /* Semantic hue anchors. Pills derive fill/text/border from these via color-mix
+     so they stay legible on BOTH light and dark themes: a translucent tint
+     background + text blended toward --body-text (lightens on dark surfaces,
+     darkens on light) + a matching low-alpha border. Matches the console.css
+     1.21.x "rgba tint + theme-blended text" convention — never light-tier solid
+     bg + mid-tier text (that fails contrast on dark; see ben/077 B1.2). */
+  --ga-confirmed: #16a34a;
+  --ga-partial:   #d97706;
+  --ga-refuted:   #dc2626;
+  --ga-verify:    #7c3aed;
+  --ga-open:      var(--body-text-muted, #64748b);
   --ga-measure: 92ch;
   max-width: 1720px;
   margin: 0 auto;
@@ -61,14 +66,28 @@ body.gap-page main { max-width: none; padding: 0; }
 .ga-card-cta { margin-left: auto; font-size: .8rem; font-weight: 600; color: var(--brand-primary, #4f46e5); }
 
 /* ---------- chips / avatars ---------- */
-.ga-chip { font-size: .7rem; font-weight: 600; padding: .2rem .55rem; border-radius: 99px; letter-spacing: .02em; white-space: nowrap; }
-.ga-topic { background: var(--brand-primary-tint, #eef2ff); color: var(--brand-primary-dark, #4338ca); }
-.ga-ghost { background: var(--surface-2, #f1f5f9); color: var(--body-text-muted, #64748b); }
-.ga-status.is-draft { background: var(--ga-partial-bg); color: var(--ga-partial); }
-.ga-status.is-review { background: var(--ga-verify-bg); color: var(--ga-verify); }
-.ga-status.is-accepted { background: var(--ga-confirmed-bg); color: var(--ga-confirmed); }
-.ga-status.is-superseded { background: var(--ga-open-bg); color: var(--ga-open); }
-.ga-avatar { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--brand-primary, #4f46e5); color: #fff; font-size: .62rem; font-weight: 700; flex-shrink: 0; }
+.ga-chip {
+  --c: var(--body-text-muted, #64748b);
+  font-size: .7rem; font-weight: 600; padding: .2rem .55rem; border-radius: 99px;
+  letter-spacing: .02em; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: color-mix(in srgb, var(--c) 52%, var(--body-text, #1f2937));
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+}
+.ga-topic { --c: var(--brand-primary, #4f46e5); }
+.ga-ghost { --c: var(--body-text-muted, #64748b); }
+.ga-status.is-draft { --c: var(--ga-partial); }
+.ga-status.is-review { --c: var(--ga-verify); }
+.ga-status.is-accepted { --c: var(--ga-confirmed); }
+.ga-status.is-superseded { --c: var(--ga-open); }
+.ga-avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  font-size: .62rem; font-weight: 700;
+  background: color-mix(in srgb, var(--brand-primary, #4f46e5) 20%, transparent);
+  color: color-mix(in srgb, var(--brand-primary, #4f46e5) 66%, var(--body-text, #1f2937));
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #4f46e5) 34%, transparent);
+}
 
 /* ---------- empty / banner ---------- */
 .ga-empty, .ga-banner { border: 1px solid var(--border, #e2e8f0); border-radius: 12px; padding: 1.25rem 1.4rem; background: var(--surface, #fff); }
@@ -115,18 +134,39 @@ body.gap-page main { max-width: none; padding: 0; }
 .ga-col-author { width: 11rem; }
 
 /* status pills inside cells */
-.ga-pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .74rem; font-weight: 600; padding: .12rem .5rem; border-radius: 99px; white-space: nowrap; }
-.ga-pill.is-confirmed { background: var(--ga-confirmed-bg); color: var(--ga-confirmed); }
-.ga-pill.is-partial { background: var(--ga-partial-bg); color: var(--ga-partial); }
-.ga-pill.is-refuted { background: var(--ga-refuted-bg); color: var(--ga-refuted); }
-.ga-pill.is-verify { background: var(--ga-verify-bg); color: var(--ga-verify); }
-.ga-pill.is-open { background: var(--ga-open-bg); color: var(--ga-open); }
+.ga-pill {
+  --c: var(--body-text-muted, #64748b);
+  display: inline-flex; align-items: center; gap: .3rem; font-size: .74rem; font-weight: 600;
+  padding: .12rem .5rem; border-radius: 99px; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: color-mix(in srgb, var(--c) 52%, var(--body-text, #1f2937));
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+}
+.ga-pill.is-confirmed { --c: var(--ga-confirmed); }
+.ga-pill.is-partial { --c: var(--ga-partial); }
+.ga-pill.is-refuted { --c: var(--ga-refuted); }
+.ga-pill.is-verify { --c: var(--ga-verify); }
+.ga-pill.is-open { --c: var(--ga-open); }
 
-.ga-role-badge { display: inline-block; font-size: .66rem; text-transform: uppercase; letter-spacing: .04em; padding: .12rem .45rem; border-radius: 99px; }
-.ga-role-badge.is-primary { background: var(--brand-primary, #4f46e5); color: #fff; }
-.ga-role-badge.is-consulting { background: var(--surface-2, #f1f5f9); color: var(--body-text-muted, #64748b); }
-.ga-fchip { display: inline-block; font-size: .7rem; font-weight: 600; text-decoration: none; padding: .1rem .4rem; border-radius: 5px; background: var(--brand-primary-tint, #eef2ff); color: var(--brand-primary-dark, #4338ca); margin: 0 .2rem .2rem 0; }
-.ga-fchip:hover { background: var(--brand-primary, #4f46e5); color: #fff; }
+.ga-role-badge {
+  --c: var(--body-text-muted, #64748b);
+  display: inline-block; font-size: .66rem; text-transform: uppercase; letter-spacing: .04em;
+  padding: .12rem .45rem; border-radius: 99px;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: color-mix(in srgb, var(--c) 54%, var(--body-text, #1f2937));
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+}
+.ga-role-badge.is-primary { --c: var(--brand-primary, #4f46e5); }
+.ga-role-badge.is-consulting { --c: var(--body-text-muted, #64748b); }
+.ga-fchip {
+  --c: var(--brand-primary, #4f46e5);
+  display: inline-block; font-size: .7rem; font-weight: 600; text-decoration: none;
+  padding: .1rem .4rem; border-radius: 5px; margin: 0 .2rem .2rem 0;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: color-mix(in srgb, var(--c) 56%, var(--body-text, #1f2937));
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+}
+.ga-fchip:hover { background: color-mix(in srgb, var(--c) 30%, transparent); color: color-mix(in srgb, var(--c) 70%, var(--body-text, #1f2937)); }
 .ga-agent-cell { display: flex; align-items: center; gap: .5rem; }
 .ga-agent-cell .ga-agent-name { font-weight: 600; }
 
