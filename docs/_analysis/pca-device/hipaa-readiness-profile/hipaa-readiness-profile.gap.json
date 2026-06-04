@@ -114,7 +114,19 @@
       "clause": "Technical · Access Control §164.312(a)(1)",
       "evidence": "`cloud-suite/.../user-needs.md` UN-002 (P1); trace into `design-inputs.md` + `software-requirements.md`",
       "status": "confirmed",
-      "status_label": "confirmed (F-1)"
+      "status_label": "confirmed (F-1)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "tenant isolation traced UN-002→DI→SRS (SW-002 + CI probe SW-024)"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "traced; the confidentiality-breach safety tail is unrepresented in the hazard file"
+        }
+      ]
     },
     {
       "id": "A2",
@@ -122,7 +134,19 @@
       "clause": "Technical · Audit Controls §164.312(b); Documentation retention §164.316(b)(2)(i)",
       "evidence": "`cloud-suite/.../user-needs.md` UN-011 (P4, ≥7yr); trace into SRS",
       "status": "confirmed",
-      "status_label": "confirmed (F-1)"
+      "status_label": "confirmed (F-1)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "tamper-evident audit log SW-011 (≥7yr) also satisfies §164.316 retention"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "audit strong; repudiation/integrity harms not promoted to a hazard row"
+        }
+      ]
     },
     {
       "id": "A3",
@@ -130,7 +154,19 @@
       "clause": "Technical · Integrity §164.312(c)(1)",
       "evidence": "UN-021 (P7, cryptographic purge); trace into DI + SRS",
       "status": "confirmed",
-      "status_label": "confirmed (F-1)"
+      "status_label": "confirmed (F-1)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "integrity + cryptographic end-of-retention purge specified (SW-011 / SW-021)"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "controls present; the HARM-DPS-002 corruption→clinical-decision chain has no hazard row"
+        }
+      ]
     },
     {
       "id": "A4",
@@ -138,7 +174,19 @@
       "clause": "Technical · Transmission Security §164.312(e)(1) (encryption (e)(2)(ii) addressable)",
       "evidence": "`connectivity-adapter/design-controls/` telemetry transport DI/SRS",
       "status": "confirmed",
-      "status_label": "confirmed (F-1)"
+      "status_label": "confirmed (F-1)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "ePHI encrypted in transit — mTLS 1.3 (CA SW-018 + cloud ingest SW-005)"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "transit encryption traced; the telemetry-corruption safety tail is un-evaluated"
+        }
+      ]
     },
     {
       "id": "A5",
@@ -146,7 +194,19 @@
       "clause": "Technical · Access Control — Encryption §164.312(a)(2)(iv) (addressable)",
       "evidence": "`cloud-suite/.../software-requirements.md` — encryption-at-rest SRS row",
       "status": "confirmed",
-      "status_label": "confirmed — addressable rationale gap (F-2)"
+      "status_label": "confirmed — addressable rationale gap (F-2)",
+      "positions": [
+        {
+          "stance": "neutral",
+          "advisor": "cybersecurity",
+          "note": "AES-256-GCM BYOK implemented (exceeds), but the §164.306(d)(3) addressable decision is not recorded as such"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "the addressable encrypt-or-document decision is an unrecorded ALARP trade"
+        }
+      ]
     },
     {
       "id": "A6",
@@ -154,7 +214,19 @@
       "clause": "Administrative · Contingency Plan §164.308(a)(7)(ii)(A)-(C)",
       "evidence": "UN-010 (restore ≤24h), UN-015 (RPO 15min / RTO 8h); trace into SRS",
       "status": "confirmed",
-      "status_label": "confirmed (F-5)"
+      "status_label": "confirmed (F-5)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "backup/DR with measurable RPO/RTO reach testable SRS rows (UN-010/UN-015)"
+        },
+        {
+          "stance": "positive",
+          "advisor": "risk-management",
+          "note": "contingency/DR specified — though availability-during-use still needs a hazard row"
+        }
+      ]
     },
     {
       "id": "A7",
@@ -162,7 +234,19 @@
       "clause": "Administrative · Information Access Management §164.308(a)(4); Technical · Authentication §164.312(d)",
       "evidence": "`cloud-suite/design-controls/` access-control UN/DI/SRS",
       "status": "confirmed",
-      "status_label": "confirmed (F-5)"
+      "status_label": "confirmed (F-5)",
+      "positions": [
+        {
+          "stance": "positive",
+          "advisor": "cybersecurity",
+          "note": "RBAC + federated authentication specified and verifiable"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "RBAC specified; the unauthorized-control HARM-DPS-004 (S4) chain is unrepresented"
+        }
+      ]
     },
     {
       "id": "A8",
@@ -170,7 +254,24 @@
       "clause": "Administrative · Security Management §164.308(a)(1)(ii)(A)-(B)",
       "evidence": "`cybersecurity-sop.md` + `threat-modeling-wi.md` — does either scope ePHI/HIPAA explicitly?",
       "status": "partial",
-      "status_label": "partial — no HIPAA-framed risk analysis (F-4)"
+      "status_label": "partial — no HIPAA-framed risk analysis (F-4)",
+      "positions": [
+        {
+          "stance": "negative",
+          "advisor": "cybersecurity",
+          "note": "no HIPAA-framed §164.308(a)(1) risk analysis; STRIDE threat model only, HIPAA as a bare responsibility row"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "regulatory-affairs",
+          "note": "the Required risk analysis is implied via the threat model, not documented as such"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "must reconcile with ISO 14971 — name which governs residual-risk acceptability"
+        }
+      ]
     },
     {
       "id": "A9",
@@ -178,7 +279,19 @@
       "clause": "Documentation/retention §164.316(b)(2); Privacy §164.524 / §164.530(j)",
       "evidence": "UN-021 (retention), P7 (Right of Access); trace into DI/SRS",
       "status": "partial",
-      "status_label": "partial — right-of-access only GDPR-framed (F-5)"
+      "status_label": "partial — right-of-access only GDPR-framed (F-5)",
+      "positions": [
+        {
+          "stance": "neutral",
+          "advisor": "cybersecurity",
+          "note": "retention solid; §164.524 Right-of-Access only GDPR-framed, no HIPAA mapping note"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "regulatory-affairs",
+          "note": "right-of-access carried only as a GDPR DSR capability"
+        }
+      ]
     },
     {
       "id": "A10",
@@ -186,7 +299,19 @@
       "clause": "Organizational · BA Contracts §164.314(a); §164.308(b)",
       "evidence": "`docs/project/strategies/regulatory-strategy.md` / submissions — any BAA mention?",
       "status": "refuted",
-      "status_label": "refuted — no BAA posture in any project artifact (F-6)"
+      "status_label": "refuted — no BAA posture in any project artifact (F-6)",
+      "positions": [
+        {
+          "stance": "negative",
+          "advisor": "cybersecurity",
+          "note": "no BAA posture in any project work-product (zero §164.314 hits in strategy/submissions)"
+        },
+        {
+          "stance": "negative",
+          "advisor": "regulatory-affairs",
+          "note": "BA determination unanchored to the device-class interaction; \"not a device\" ≠ \"out of HIPAA\""
+        }
+      ]
     },
     {
       "id": "A11",
@@ -194,7 +319,19 @@
       "clause": "Breach Notification §164.410 (R); Security Incident Procedures §164.308(a)(6) (R)",
       "evidence": "Grep `submissions/` + `strategies/` — no breach/notification procedure; `hipaa.md` §4/§6 item 6",
       "status": "refuted",
-      "status_label": "refuted — Subpart D / incident response wholly unowned (F-8)"
+      "status_label": "refuted — Subpart D / incident response wholly unowned (F-8)",
+      "positions": [
+        {
+          "stance": "negative",
+          "advisor": "regulatory-affairs",
+          "note": "Subpart D §164.410 (≤60-day clock) + §164.308(a)(6) incident response wholly unowned"
+        },
+        {
+          "stance": "negative",
+          "advisor": "risk-management",
+          "note": "breach/incident response carries no safety-tail residual evaluation"
+        }
+      ]
     },
     {
       "id": "A12",
@@ -202,7 +339,19 @@
       "clause": "Physical · Device & Media Controls §164.310(d) (R)",
       "evidence": "`hipaa.md` §2 / §6 item 3 `[VERIFY]` pump-firmware local ePHI; `composition-manifest.md:52` (21 CFR 801 labeling)",
       "status": "partial",
-      "status_label": "partial / [VERIFY] — determination open (F-10)"
+      "status_label": "partial / [VERIFY] — determination open (F-10)",
+      "positions": [
+        {
+          "stance": "neutral",
+          "advisor": "regulatory-affairs",
+          "note": "§164.310(d) local-ePHI determination open [VERIFY]; the 21 CFR 801 labeling consequence is unresolved"
+        },
+        {
+          "stance": "neutral",
+          "advisor": "risk-management",
+          "note": "pca-device-local-ePHI determination gates the device-tier DPS harms"
+        }
+      ]
     }
   ],
   "findings": [

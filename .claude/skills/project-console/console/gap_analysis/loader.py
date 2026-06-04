@@ -14,6 +14,7 @@ produced — only the `schema_version: "1.0"` shape.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ANALYSIS_DIR = ("docs", "_analysis")
@@ -91,6 +92,110 @@ def _read_json(p: Path) -> dict | None:
         return json.loads(p.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
+
+
+# ---------------------------------------------------------------------------
+# narrative companion (display-only)
+# ---------------------------------------------------------------------------
+# The JSON sidecar carries the *structured* projection (findings, assertions,
+# the one-line "what they contributed"). For the detail view we ALSO want two
+# pieces of prose the renderer leaves in the markdown: the analysis Goal, and
+# each agent's FULL writeup. Those live as sibling files in the folder-per-
+# analysis layout the gap-analysis skill authors:
+#
+#     <id>/<id>.md            ← aggregate (carries the "## Goal" section)
+#     <id>/recs-<advisor>.md  ← one discipline-advisor full response
+#     <id>/kol-*-<name>.md    ← one KOL-persona full response
+#
+# This is a loose-coupled, convention-based discovery (same spirit as the
+# trace-matrix drift.json sibling lookup): if the docs aren't there, the
+# detail view simply omits the goal banner / agent-response viewer. We match
+# each sibling doc to an agent the sidecar already lists, by name suffix, so
+# no extra contract field is required from the producer.
+
+_GOAL_HEADING = re.compile(r"^##\s+.*goal", re.IGNORECASE)
+_GOAL_ITEM = re.compile(r"^\s*-\s*\*\*(.+?):\*\*\s*(.+)$")
+
+
+def _strip_frontmatter(text: str) -> str:
+    if text.startswith("---"):
+        end = text.find("\n---", 3)
+        if end != -1:
+            return text[end + 4:].lstrip("\n")
+    return text
+
+
+def _frontmatter_field(text: str, key: str) -> str:
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    fm = text[3:end] if end != -1 else ""
+    m = re.search(rf"^{re.escape(key)}:\s*(.+)$", fm, re.MULTILINE)
+    return m.group(1).strip().strip('"').strip("'") if m else ""
+
+
+def _goal_items(agg_text: str) -> list[dict]:
+    """Pull the `- **Label:** value` rows out of the analysis Goal section.
+    Generic across analyses (the gap-analysis template authors the Goal section
+    with motivating-question / decision / stakeholders bullets in this shape)."""
+    body, capturing = [], False
+    for line in agg_text.splitlines():
+        if line.startswith("## "):
+            if capturing:
+                break
+            capturing = bool(_GOAL_HEADING.match(line))
+            continue
+        if capturing:
+            body.append(line)
+    items = []
+    for line in body:
+        m = _GOAL_ITEM.match(line)
+        if m:
+            items.append({"label": m.group(1).strip(), "value_md": m.group(2).strip()})
+    return items
+
+
+def load_narratives(repo_root: Path, detail: dict) -> dict:
+    """Return display-only companion prose for the detail view:
+        {"goal_items": [{"label","value_md"}, ...],
+         "agents": {<agent-name>: {"kind","title","specialty","body_md","file"}}}
+    Reads sibling markdown next to the aggregate named in `meta.source_md`.
+    Missing/unreadable docs degrade silently to empty."""
+    out: dict = {"goal_items": [], "agents": {}}
+    src = (detail.get("meta") or {}).get("source_md")
+    if not src:
+        return out
+    agg = repo_root / src
+    folder = agg.parent
+    try:
+        out["goal_items"] = _goal_items(agg.read_text(encoding="utf-8"))
+    except OSError:
+        pass
+
+    docs: list[tuple[Path, str]] = []
+    for pattern in ("recs-*.md", "kol-*.md"):
+        for p in sorted(folder.glob(pattern)):
+            try:
+                docs.append((p, p.read_text(encoding="utf-8")))
+            except OSError:
+                continue
+
+    for agent in detail.get("agents", []):
+        name = agent.get("name") or ""
+        if not name:
+            continue
+        for p, text in docs:
+            stem = p.stem
+            if stem == f"recs-{name}" or stem.endswith(f"-{name}"):
+                out["agents"][name] = {
+                    "kind": "advisor" if p.name.startswith("recs-") else "kol",
+                    "title": _frontmatter_field(text, "title"),
+                    "specialty": _frontmatter_field(text, "specialty"),
+                    "body_md": _strip_frontmatter(text),
+                    "file": p.relative_to(repo_root).as_posix(),
+                }
+                break
+    return out
 
 
 def _counts(analyses: list[dict]) -> dict:

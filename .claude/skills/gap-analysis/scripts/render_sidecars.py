@@ -182,9 +182,51 @@ def parse_assertions(sec: str) -> list[dict]:
                 "evidence": cells[3],
                 "status": _norm_status(status_raw),
                 "status_label": re.sub(r"\*\*", "", status_raw).strip(),
+                "positions": [],  # filled from the optional "Assertion positions" section
             }
         )
     return rows
+
+
+_POS_HEADING = re.compile(r"^###\s+(A\d+)\b")
+_POS_ROW = re.compile(
+    r"^\s*-\s*(positive|neutral|negative)\b\s*[—–-]\s*([^:]+?):\s*(.+)$",
+    re.IGNORECASE,
+)
+
+
+def attach_positions(assertions: list[dict], sec: str) -> None:
+    """Attach per-advisor stances from the optional `## Assertion positions`
+    section onto their matching assertion rows. Shape authored per assertion:
+
+        ### A2
+        - negative — paul-james: borrowed general-infusion, not OIRD
+        - neutral  — regulatory-affairs: pathway depends on Q-Sub feedback
+
+    Stance ∈ {positive, neutral, negative}. Advisor names match the agents the
+    sidecar already lists. Generic — any analysis may author this section."""
+    if not sec:
+        return
+    by_id: dict[str, list[dict]] = {}
+    cur = None
+    for line in sec.splitlines():
+        h = _POS_HEADING.match(line.strip())
+        if h:
+            cur = h.group(1)
+            by_id.setdefault(cur, [])
+            continue
+        if cur:
+            r = _POS_ROW.match(line)
+            if r:
+                by_id[cur].append(
+                    {
+                        "stance": r.group(1).lower(),
+                        "advisor": r.group(2).strip(),
+                        "note": r.group(3).strip(),
+                    }
+                )
+    for a in assertions:
+        a["positions"] = by_id.get(a.get("id"), [])
 
 
 def _norm_status(raw: str) -> str:
@@ -315,6 +357,7 @@ def build_analysis(md_path: Path, repo_root: Path) -> dict | None:
         for g in fm.get("grounded_against", [])
     ]
     assertions = parse_assertions(find_sec("assertion"))
+    attach_positions(assertions, find_sec("position"))
     findings = parse_findings(find_sec("finding"))
     agents = derive_agents(fm, findings, find_sec("changelog"))
 

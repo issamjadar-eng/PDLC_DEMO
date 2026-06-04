@@ -2,6 +2,41 @@
   "schema_version": "1.0",
   "analyses": [
     {
+      "id": "commercial-roadmap-kol-review",
+      "title": "KOL Review — 5-Year Commercial Roadmap (PP3500)",
+      "status": "draft",
+      "topic": "clinical",
+      "component": "pca-device",
+      "last_updated": "2026-06-04",
+      "source_md": "docs/_analysis/pca-device/commercial-roadmap-kol-review/commercial-roadmap-kol-review.md",
+      "sidecar": "docs/_analysis/pca-device/commercial-roadmap-kol-review/commercial-roadmap-kol-review.gap.json",
+      "agents": [
+        "clinical-affairs",
+        "regulatory-affairs",
+        "program-manager",
+        "human-factors",
+        "paul-james",
+        "giuliano-kathleen",
+        "shah-parth",
+        "kuitunen-sini",
+        "kirkendall-evan",
+        "pennathur-priyadarshini",
+        "gorski-lisa",
+        "braithwaite-susan"
+      ],
+      "stats": {
+        "grounding_count": 10,
+        "agent_count": 12,
+        "assertion_count": 12,
+        "assertion_status_counts": {
+          "refuted": 10,
+          "confirmed": 1,
+          "partial": 1
+        },
+        "finding_count": 21
+      }
+    },
+    {
       "id": "hipaa-readiness-profile",
       "title": "HIPAA Readiness Profile — PP3500 System",
       "status": "draft",
@@ -29,15 +64,16 @@
     }
   ],
   "counts": {
-    "total": 1,
+    "total": 2,
     "by_status": {
-      "draft": 1
+      "draft": 2
     },
     "by_topic": {
+      "clinical": 1,
       "cybersecurity": 1
     },
     "by_component": {
-      "pca-device": 1
+      "pca-device": 2
     }
   }
 }

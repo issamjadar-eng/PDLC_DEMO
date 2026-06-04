@@ -15,6 +15,7 @@ build endpoints), so a stale/missing sidecar can be refreshed from the UI.
 from __future__ import annotations
 
 import html
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -32,6 +33,7 @@ from console.config import get_config
 from console.gap_analysis.loader import (
     load_analysis,
     load_index,
+    load_narratives,
     skill_render_script,
 )
 
@@ -54,6 +56,13 @@ ASSERTION_META = {
     "refuted": {"label": "Refuted", "cls": "is-refuted", "glyph": "✗"},
     "verify": {"label": "Verify", "cls": "is-verify", "glyph": "?"},
     "open": {"label": "Open", "cls": "is-open", "glyph": "○"},
+}
+
+# Per-advisor stance on an assertion (the click-to-expand detail).
+STANCE_META = {
+    "positive": {"label": "Positive", "cls": "is-positive", "glyph": "▲"},
+    "neutral": {"label": "Neutral", "cls": "is-neutral", "glyph": "◆"},
+    "negative": {"label": "Negative", "cls": "is-negative", "glyph": "▼"},
 }
 
 # Grounding pointer type → short label + glyph for the Grounding panel.
@@ -82,7 +91,26 @@ def _md_to_html(text: str) -> str:
         return f"<pre class='ga-raw'>{html.escape(text)}</pre>"
 
 
-def _decorate_detail(detail: dict) -> dict:
+def _md_inline(text: str) -> str:
+    """Render an inline markdown fragment, unwrapping the single <p> the
+    markdown package adds, so it sits inside a banner without block spacing."""
+    h = _md_to_html(text).strip()
+    if h.startswith("<p>") and h.endswith("</p>") and h.count("<p>") == 1:
+        h = h[3:-4]
+    return h
+
+
+# Role → badge class. KOL persona agents carry role "contributor"; discipline
+# advisors carry primary/consulting. Anything else falls back to consulting.
+def _role_cls(role: str) -> str:
+    if role == "primary":
+        return "is-primary"
+    if role == "contributor":
+        return "is-contributor"
+    return "is-consulting"
+
+
+def _decorate_detail(detail: dict, repo_root: Path) -> dict:
     """Add display-only fields (rendered HTML, status meta) without mutating
     the contract semantics."""
     meta = detail.get("meta", {})
@@ -90,6 +118,13 @@ def _decorate_detail(detail: dict) -> dict:
 
     for a in detail.get("assertions", []):
         a["_meta"] = ASSERTION_META.get(a.get("status"), ASSERTION_META["open"])
+        a["_clause_html"] = _md_inline(a.get("clause", ""))
+        a["_evidence_html"] = _md_inline(a.get("evidence", ""))
+        for p in a.get("positions", []):
+            p["_meta"] = STANCE_META.get(p.get("stance"), STANCE_META["neutral"])
+            nm = p.get("advisor", "")
+            p["_initials"] = nm[:2].upper()
+        a["_pos_count"] = len(a.get("positions", []))
 
     for g in detail.get("grounding", []):
         lbl, glyph = GROUNDING_META.get(g.get("type", ""), (g.get("type") or "source", "•"))
@@ -103,6 +138,43 @@ def _decorate_detail(detail: dict) -> dict:
 
     detail["_recommendations_html"] = [_md_to_html(r) for r in detail.get("recommendations", [])]
     detail["_open_questions_html"] = [_md_to_html(q) for q in detail.get("open_questions", [])]
+
+    # --- narrative companion: Goal banner + full per-agent responses ---------
+    narr = load_narratives(repo_root, detail)
+
+    goal = []
+    for it in narr["goal_items"]:
+        label, value = it["label"], it["value_md"]
+        low = label.lower()
+        if "stakeholder" in low:
+            chips = [c.strip(" ._*`") for c in re.split(r"[;,]", value)]
+            goal.append({"label": label, "kind": "chips", "chips": [c for c in chips if c]})
+        else:
+            goal.append({
+                "label": label,
+                "kind": "question" if "question" in low else "text",
+                "value_html": _md_inline(value),
+            })
+    detail["_goal_items"] = goal
+
+    by_name = narr["agents"]
+    groups = {"advisor": [], "kol": []}
+    for a in detail.get("agents", []):
+        doc = by_name.get(a.get("name"))
+        if not doc:
+            continue
+        groups[doc["kind"]].append({
+            "name": a.get("name"),
+            "role": a.get("role"),
+            "role_cls": _role_cls(a.get("role")),
+            "title": doc["title"],
+            "specialty": doc["specialty"],
+            "file": doc["file"],
+            "finding_ids": a.get("contributed_finding_ids", []),
+            "html": _md_to_html(doc["body_md"]),
+        })
+    detail["_agent_docs"] = groups
+    detail["_agent_docs_total"] = len(groups["advisor"]) + len(groups["kol"])
     return detail
 
 
@@ -137,7 +209,7 @@ async def gap_analysis_view(request: Request, analysis_id: str):
             f"No gap-analysis sidecar for id '{analysis_id}'. "
             f"Run `/gap-analysis render` to (re)generate sidecars.",
         )
-    detail = _decorate_detail(detail)
+    detail = _decorate_detail(detail, cfg.repo_root)
     return templates.TemplateResponse(
         request,
         "gap_analysis_view.html",
