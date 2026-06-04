@@ -124,10 +124,25 @@ _What artifacts is this analysis grounded against? Mirror files, regulated artif
 
 _Each assertion is a falsifiable claim about the project artifacts. The point of this section is to make hypotheses explicit so the analysis can confirm or refute them with evidence._
 
-| # | Assertion | Evidence (path / Jira key / clause) | Status |
-|---|---|---|---|
-| A1 | _e.g., "Every Hazard with `Potential Harms: Annoyance / Dissatisfaction` has `Severity: 1` in the joined FMEA source."_ | _e.g., `_jira/<arch>/<version>/hazards.json` + `_jira/<arch>/<version>/hazard-causes.json`_ | open / confirmed / refuted |
-| A2 | _…_ | _…_ | open |
+_Table columns (the renderer expects all five): `#` | `Assertion` | `Clause / decision` | `Evidence (path / Jira key)` | `Status`._
+
+| # | Assertion | Clause / decision | Evidence (path / Jira key) | Status |
+|---|---|---|---|---|
+| A1 | _e.g., "Every Hazard with `Potential Harms: Annoyance / Dissatisfaction` has `Severity: 1` in the joined FMEA source."_ | _e.g., ISO 14971 §5.5_ | _e.g., `_jira/<arch>/<version>/hazards.json`_ | open / confirmed / refuted |
+| A2 | _…_ | _…_ | _…_ | open |
+
+## Assertion positions
+
+_OPTIONAL. Per-advisor stance on each assertion — the substantive "who thinks the claim holds, and why" behind the single overall `Status`. When present, the project-console renders these as a click-to-expand detail beneath each assertion, with a Positive / Neutral / Negative icon and the note per advisor._
+
+- **Stance vocabulary**: `positive` (advisor judges the claim holds / the artifact satisfies it) · `negative` (a real gap) · `neutral` (partial / depends / out of the advisor's lane).
+- **Format**: one `### A<n>` subheading per assertion (matching the table `#`), then `- <stance> — <advisor>: <few-words note>` rows. Advisor names match the agents the analysis lists (e.g. the `recommended_agents` / fan-out advisors). Omit assertions that have no recorded positions.
+
+```markdown
+### A2
+- negative — risk-management: severity score inconsistent with the harm described
+- neutral  — regulatory-affairs: defensible if the harm taxonomy is clarified first
+```
 
 ## Findings
 

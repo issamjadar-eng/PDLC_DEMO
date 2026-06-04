@@ -84,6 +84,59 @@ _Each assertion is a falsifiable claim about the project artifacts, keyed to a H
 | A11 | A documented breach-response procedure (BA→covered-entity, ≤60-day clock) and a security-incident response/reporting procedure exist. | Breach Notification §164.410 (R); Security Incident Procedures §164.308(a)(6) (R) | Grep `submissions/` + `strategies/` — no breach/notification procedure; `hipaa.md` §4/§6 item 6 | **refuted** — Subpart D / incident response wholly unowned (F-8) |
 | A12 | Physical device/media controls for pca-device-local ePHI (sanitization on disposal/RMA) are determined and, if applicable, specified + labeled. | Physical · Device & Media Controls §164.310(d) (R) | `hipaa.md` §2 / §6 item 3 `[VERIFY]` pump-firmware local ePHI; `composition-manifest.md:52` (21 CFR 801 labeling) | **partial / [VERIFY]** — determination open (F-10) |
 
+## Assertion positions
+
+_Per-advisor stance on each assertion (Positive = advisor judges the safeguard satisfied / traced; Negative = a real gap / absent; Neutral = partial / addressable-rationale-or-determination open / depends). Rendered as the click-to-expand detail behind each assertion in the project-console. Distilled from the three advisors' full responses (`recs-*.md`) in this folder._
+
+### A1
+- positive — cybersecurity: tenant isolation traced UN-002→DI→SRS (SW-002 + CI probe SW-024)
+- neutral — risk-management: traced; the confidentiality-breach safety tail is unrepresented in the hazard file
+
+### A2
+- positive — cybersecurity: tamper-evident audit log SW-011 (≥7yr) also satisfies §164.316 retention
+- neutral — risk-management: audit strong; repudiation/integrity harms not promoted to a hazard row
+
+### A3
+- positive — cybersecurity: integrity + cryptographic end-of-retention purge specified (SW-011 / SW-021)
+- neutral — risk-management: controls present; the HARM-DPS-002 corruption→clinical-decision chain has no hazard row
+
+### A4
+- positive — cybersecurity: ePHI encrypted in transit — mTLS 1.3 (CA SW-018 + cloud ingest SW-005)
+- neutral — risk-management: transit encryption traced; the telemetry-corruption safety tail is un-evaluated
+
+### A5
+- neutral — cybersecurity: AES-256-GCM BYOK implemented (exceeds), but the §164.306(d)(3) addressable decision is not recorded as such
+- neutral — risk-management: the addressable encrypt-or-document decision is an unrecorded ALARP trade
+
+### A6
+- positive — cybersecurity: backup/DR with measurable RPO/RTO reach testable SRS rows (UN-010/UN-015)
+- positive — risk-management: contingency/DR specified — though availability-during-use still needs a hazard row
+
+### A7
+- positive — cybersecurity: RBAC + federated authentication specified and verifiable
+- neutral — risk-management: RBAC specified; the unauthorized-control HARM-DPS-004 (S4) chain is unrepresented
+
+### A8
+- negative — cybersecurity: no HIPAA-framed §164.308(a)(1) risk analysis; STRIDE threat model only, HIPAA as a bare responsibility row
+- neutral — regulatory-affairs: the Required risk analysis is implied via the threat model, not documented as such
+- neutral — risk-management: must reconcile with ISO 14971 — name which governs residual-risk acceptability
+
+### A9
+- neutral — cybersecurity: retention solid; §164.524 Right-of-Access only GDPR-framed, no HIPAA mapping note
+- neutral — regulatory-affairs: right-of-access carried only as a GDPR DSR capability
+
+### A10
+- negative — cybersecurity: no BAA posture in any project work-product (zero §164.314 hits in strategy/submissions)
+- negative — regulatory-affairs: BA determination unanchored to the device-class interaction; "not a device" ≠ "out of HIPAA"
+
+### A11
+- negative — regulatory-affairs: Subpart D §164.410 (≤60-day clock) + §164.308(a)(6) incident response wholly unowned
+- negative — risk-management: breach/incident response carries no safety-tail residual evaluation
+
+### A12
+- neutral — regulatory-affairs: §164.310(d) local-ePHI determination open [VERIFY]; the 21 CFR 801 labeling consequence is unresolved
+- neutral — risk-management: pca-device-local-ePHI determination gates the device-tier DPS harms
+
 ## Findings
 
 _Populated by the fan-out advisors (cybersecurity primary; risk-management + regulatory-affairs consulting). Each finding: stable F-N id, author, evidence pointer, impact, resolution. Append-only — advisors add findings here; human author owns disposition._

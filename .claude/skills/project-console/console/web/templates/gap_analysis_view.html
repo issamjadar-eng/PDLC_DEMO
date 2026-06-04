@@ -5,6 +5,7 @@
 {% block content %}
 {% set m = d.meta %}
 {% set s = d.stats %}
+{% set has_adv = d._agent_docs_total %}
 <section class="ga-wrap ga-detail">
   <a class="ga-back" href="/gap-analysis">← Gap Analysis</a>
 
@@ -27,6 +28,48 @@
     </div>
   </header>
 
+  <!-- GOALS / "the brief" — context for both tabs -->
+  {% if d._goal_items %}
+  <section class="ga-goals" aria-label="Why this analysis exists">
+    <span class="ga-goals-eyebrow">Why this analysis exists</span>
+    {% for it in d._goal_items if it.kind == 'question' %}
+    <blockquote class="ga-goals-q">
+      <span class="ga-goals-qlabel">{{ it.label }}</span>
+      <span class="ga-goals-qtext md">{{ it.value_html | safe }}</span>
+    </blockquote>
+    {% endfor %}
+    <dl class="ga-goals-grid">
+      {% for it in d._goal_items if it.kind != 'question' %}
+      <div class="ga-goals-row">
+        <dt>{{ it.label }}</dt>
+        <dd>
+          {% if it.kind == 'chips' %}
+            {% for c in it.chips %}<span class="ga-stk-chip">{{ c }}</span>{% endfor %}
+          {% else %}
+            <span class="md">{{ it.value_html | safe }}</span>
+          {% endif %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </section>
+  {% endif %}
+
+  <!-- TOP-LEVEL TABS: Report | Advisors (only when advisor responses exist) -->
+  {% if has_adv %}
+  <div class="ga-toptabs" role="tablist" aria-label="View">
+    <button type="button" class="ga-toptab is-active" role="tab" id="vt-report"
+            aria-controls="view-report" aria-selected="true" data-view="view-report">Report</button>
+    <button type="button" class="ga-toptab" role="tab" id="vt-advisors"
+            aria-controls="view-advisors" aria-selected="false" data-view="view-advisors">
+      Advisors <span class="ga-toptab-n">{{ d._agent_docs_total }}</span>
+    </button>
+  </div>
+  {% endif %}
+
+  <!-- ===================== REPORT VIEW ===================== -->
+  <div class="ga-view is-active" id="view-report" {% if has_adv %}role="tabpanel" aria-labelledby="vt-report"{% endif %}>
+
   <!-- GROUNDING -->
   <section class="ga-section" style="--i:0">
     <h2 class="ga-section-h"><span class="ga-section-icon">📎</span> Grounded against <span class="ga-count">{{ d.grounding | length }}</span></h2>
@@ -44,7 +87,7 @@
     </table>
   </section>
 
-  <!-- ADVISORS -->
+  <!-- ADVISORS THAT RAN (summary) -->
   <section class="ga-section" style="--i:1">
     <h2 class="ga-section-h"><span class="ga-section-icon">🧠</span> Advisors that ran <span class="ga-count">{{ s.agent_count }}</span></h2>
     <table class="ga-table">
@@ -55,32 +98,53 @@
           <td>
             <div class="ga-agent-cell"><span class="ga-avatar">{{ a.name[:2] | upper }}</span><span class="ga-agent-name">{{ a.name }}</span></div>
           </td>
-          <td><span class="ga-role-badge {{ 'is-primary' if a.role == 'primary' else 'is-consulting' }}">{{ a.role }}</span></td>
-          <td>{% for fid in a.contributed_finding_ids %}<a href="#{{ fid }}" class="ga-fchip">{{ fid }}</a>{% endfor %}</td>
+          <td><span class="ga-role-badge {{ 'is-primary' if a.role == 'primary' else ('is-contributor' if a.role == 'contributor' else 'is-consulting') }}">{{ a.role }}</span></td>
+          <td>{% for fid in a.contributed_finding_ids %}<a href="#{{ fid }}" class="ga-fchip ga-anchor">{{ fid }}</a>{% endfor %}</td>
           <td class="ga-muted">{{ a.changelog_summary }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% if has_adv %}<p class="ga-av-hint">Read each advisor's complete write-up in the <button type="button" class="ga-inline-link" data-goto-view="view-advisors">Advisors tab →</button></p>{% endif %}
   </section>
 
-  <!-- ASSERTIONS -->
+  <!-- ASSERTIONS (click to expand → per-advisor positions) -->
   <section class="ga-section" style="--i:2">
     <h2 class="ga-section-h"><span class="ga-section-icon">⚖️</span> Assertions <span class="ga-count">{{ d.assertions | length }}</span></h2>
-    <table class="ga-table">
-      <thead><tr><th class="ga-col-id">#</th><th>Assertion</th><th>Safeguard (clause)</th><th>Evidence</th><th class="ga-col-status">Disposition</th></tr></thead>
-      <tbody>
-        {% for a in d.assertions %}
-        <tr>
-          <td class="num">{{ a.id }}</td>
-          <td>{{ a.assertion }}</td>
-          <td class="ga-clause">{{ a.clause }}</td>
-          <td class="ga-muted">{{ a.evidence }}</td>
-          <td><span class="ga-pill {{ a._meta.cls }}">{{ a._meta.glyph }} {{ a.status_label }}</span></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <p class="ga-av-hint">Click an assertion to see how each advisor read it — <span class="ga-stance is-positive">▲ Positive</span> <span class="ga-stance is-neutral">◆ Neutral</span> <span class="ga-stance is-negative">▼ Negative</span></p>
+    <div class="ga-assertions">
+      {% for a in d.assertions %}
+      <details class="ga-assertion" id="{{ a.id }}">
+        <summary>
+          <span class="ga-a-id">{{ a.id }}</span>
+          <span class="ga-a-text">{{ a.assertion }}</span>
+          {% if a.positions %}<span class="ga-a-dots" title="{{ a._pos_count }} advisor position(s)">{% for p in a.positions %}<span class="ga-sdot {{ p._meta.cls }}"></span>{% endfor %}</span>{% endif %}
+          <span class="ga-pill {{ a._meta.cls }}">{{ a._meta.glyph }} {{ a.status_label }}</span>
+        </summary>
+        <div class="ga-a-body">
+          <p class="ga-a-meta">
+            <span><strong>Safeguard:</strong> <span class="md">{{ a._clause_html | safe }}</span></span>
+            <span><strong>Evidence:</strong> <span class="md">{{ a._evidence_html | safe }}</span></span>
+          </p>
+          {% if a.positions %}
+          <div class="ga-a-positions">
+            <p class="ga-a-pos-h">Advisor positions <span class="ga-count">{{ a._pos_count }}</span></p>
+            {% for p in a.positions %}
+            <div class="ga-pos">
+              <span class="ga-avatar" title="{{ p.advisor }}">{{ p._initials }}</span>
+              <span class="ga-pos-adv">{{ p.advisor }}</span>
+              <span class="ga-stance {{ p._meta.cls }}">{{ p._meta.glyph }} {{ p._meta.label }}</span>
+              <span class="ga-pos-note">{{ p.note }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="ga-muted">No per-advisor positions recorded for this assertion.</p>
+          {% endif %}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
   </section>
 
   <!-- FINDINGS -->
@@ -119,5 +183,136 @@
     </ul>
   </section>
   {% endif %}
+
+  </div><!-- /view-report -->
+
+  <!-- ===================== ADVISORS VIEW ===================== -->
+  {% if has_adv %}
+  <div class="ga-view" id="view-advisors" role="tabpanel" aria-labelledby="vt-advisors" hidden>
+    <section class="ga-section" style="--i:0">
+      <p class="ga-av-hint">Each advisor's complete write-up. Discipline advisors authored the structured findings; the KOL panel are simulated persona opinions for this demo.</p>
+      <div class="ga-av">
+        <nav class="ga-av-rail" role="tablist" aria-label="Agent responses" aria-orientation="vertical">
+          {% set ns = namespace(first=true) %}
+          {% for grp, items in [('Discipline advisors', d._agent_docs.advisor), ('KOL panel', d._agent_docs.kol)] %}
+          {% if items %}
+          <p class="ga-av-group">{{ grp }} <span class="ga-av-gn">{{ items | length }}</span></p>
+          {% for a in items %}
+          <button type="button" class="ga-av-tab{{ ' is-active' if ns.first }}" role="tab"
+                  id="tab-{{ a.name }}" aria-controls="panel-{{ a.name }}"
+                  aria-selected="{{ 'true' if ns.first else 'false' }}"
+                  tabindex="{{ '0' if ns.first else '-1' }}" data-target="panel-{{ a.name }}">
+            <span class="ga-avatar">{{ a.name[:2] | upper }}</span>
+            <span class="ga-av-tabmeta">
+              <span class="ga-av-tabname">{{ a.name }}</span>
+              <span class="ga-role-badge {{ a.role_cls }}">{{ a.role }}</span>
+            </span>
+          </button>
+          {% set ns.first = false %}
+          {% endfor %}
+          {% endif %}
+          {% endfor %}
+        </nav>
+        <div class="ga-av-pane">
+          {% set np = namespace(first=true) %}
+          {% for items in [d._agent_docs.advisor, d._agent_docs.kol] %}
+          {% for a in items %}
+          <article class="ga-av-panel{{ ' is-active' if np.first }}" role="tabpanel"
+                   id="panel-{{ a.name }}" aria-labelledby="tab-{{ a.name }}"{{ '' if np.first else ' hidden' }}>
+            <header class="ga-av-phead">
+              <h3>{{ a.title or a.name }}</h3>
+              {% if a.specialty %}<p class="ga-av-spec">{{ a.specialty }}</p>{% endif %}
+              <p class="ga-av-links">
+                <span class="ga-role-badge {{ a.role_cls }}">{{ a.role }}</span>
+                {% for fid in a.finding_ids %}<a href="#{{ fid }}" class="ga-fchip ga-anchor">{{ fid }}</a>{% endfor %}
+                <a class="ga-source-link" href="/documents#path={{ a.file }}">Open document ↗</a>
+              </p>
+            </header>
+            <div class="ga-av-body md">{{ a.html | safe }}</div>
+          </article>
+          {% set np.first = false %}
+          {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div><!-- /view-advisors -->
+  {% endif %}
 </section>
+
+<script>
+(function () {
+  // ---- top-level view tabs (Report | Advisors) ----------------------------
+  var toptabs = Array.prototype.slice.call(document.querySelectorAll('.ga-toptab'));
+  function showView(id) {
+    if (!toptabs.length) return;
+    toptabs.forEach(function (tt) {
+      var on = tt.getAttribute('data-view') === id;
+      tt.classList.toggle('is-active', on);
+      tt.setAttribute('aria-selected', on ? 'true' : 'false');
+      var v = document.getElementById(tt.getAttribute('data-view'));
+      if (v) { v.classList.toggle('is-active', on); v.hidden = !on; }
+    });
+  }
+  toptabs.forEach(function (tt) {
+    tt.addEventListener('click', function () { showView(tt.getAttribute('data-view')); });
+  });
+  document.querySelectorAll('[data-goto-view]').forEach(function (b) {
+    b.addEventListener('click', function () { showView(b.getAttribute('data-goto-view')); });
+  });
+
+  // ---- agent roster rail (vertical tabs inside the Advisors view) ----------
+  var rail = document.querySelector('.ga-av-rail');
+  if (rail) {
+    var tabs = Array.prototype.slice.call(rail.querySelectorAll('.ga-av-tab'));
+    var activate = function (tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(t.getAttribute('data-target'));
+        if (panel) { panel.classList.toggle('is-active', on); panel.hidden = !on; }
+      });
+      if (focus) tab.focus();
+    };
+    rail.addEventListener('click', function (e) {
+      var tab = e.target.closest('.ga-av-tab');
+      if (tab) activate(tab, false);
+    });
+    rail.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(document.activeElement);
+      if (i < 0) return;
+      var next = null;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === 'Home') next = tabs[0];
+      else if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); activate(next, true); }
+    });
+    var m = (location.hash || '').match(/agent=([^&]+)/);
+    if (m) {
+      showView('view-advisors');
+      var want = document.getElementById('tab-' + decodeURIComponent(m[1]));
+      if (want) activate(want, false);
+    }
+  }
+
+  // ---- in-page anchors to findings/assertions live in the Report view ------
+  // If clicked from the Advisors tab, switch back to Report, open the target,
+  // and scroll to it.
+  document.querySelectorAll('a.ga-anchor').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = (a.getAttribute('href') || '').replace(/^#/, '');
+      var target = id && document.getElementById(id);
+      if (!target) return;
+      showView('view-report');
+      if (target.tagName === 'DETAILS') target.open = true;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', '#' + id);
+    });
+  });
+})();
+</script>
 {% endblock %}

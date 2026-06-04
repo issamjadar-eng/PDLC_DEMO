@@ -1,8 +1,8 @@
 ---
 name: gap-analysis
 description: "Substantive content-gap analysis of medtech project artifacts — scaffolds and tracks structured gap-assessment markdown under `docs/_analysis/<component>/` that critiques the project's own work product (hazard-register conformance vs ISO 14971, FMEA scoring consistency, SRA / SAD / SRS adequacy vs IEC 62304, predicate-analysis sufficiency, V&V coverage holes, cybersecurity threat-model rigor, human-factors usability-engineering completeness, post-market surveillance loop integrity, filing-readiness arguments). Distinct from `/best-practices` (structural folder/file checks), `/dhf-manifest` (manifest coverage of regulatory obligations), `/jira-pull audit` (Jira-vs-DTM/HTM drift), and `/trace-matrix` (trace-edge integrity) — this skill answers 'is the CONTENT methodologically correct against standards and internal sources?'. Provides actions: `init` (scaffold a new gap-analysis from the template), `list` (roll-up open analyses by status / topic / component), `route` (which advisor agents to consult for a topic), `fan-out` (spawn advisor agents with grounding paths pre-loaded), `render` (derive JSON sidecars for the project-console Gap Analysis view). Topic→advisor routing is advisory (soft suggestions), not gated. TRIGGER when the user asks for a 'gap analysis of <topic>', 'analyze our <document>', 'critique the hazard register', 'find issues with our <artifact>', 'compare our <X> against <standard>', 'are our <artifacts> per standards', 'audit the content of <doc>', or wants to assert findings about project content."
-version: 5
-updated: 2026-06-02
+version: 6
+updated: 2026-06-04
 ---
 
 # Gap Analysis Skill

@@ -922,3 +922,25 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Merge commit: `a3f9959`
 - Hitachi HEAD after sync: `a3f9959`
 - Origin: PDLC_DEMO task ben/077 Phase E. Resolves the gap-analysis divergence held out of PR #195: 3-way merged our render/console work (parallel v3) onto upstream v4 folder-per-analysis (#188) → v5. Producer (render_sidecars.py `*/*/*.md`) + consumer (loader.py `*/*/*.gap.json`) migrated to nested layout; existing HIPAA analysis migrated into its folder; project-console → 1.23.1.
+
+## 2026-06-03 — push (gap-analysis contrast fix)
+
+- Files (3): `skills/project-console/console/web/static/gap_analysis.css`, `VERSION`, `README.md`
+- Branch: `sync/pdlc-demo-console-contrast-1232-2026-06-03`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/197
+- Status: merged (--merge requested)
+- Merge commit: `7cc6a93`
+- Hitachi HEAD after sync: `7cc6a93`
+- Origin: PDLC_DEMO task ben/077 B1.2. project-console 1.23.1 → 1.23.2 — theme-robust semantic pills (color-mix tint + text toward --body-text); fixes dark-theme WCAG AA failures (2.07–4.04) found via Chrome DevTools. Project repo: PR #44 (`af5b057`).
+
+## 2026-06-04 — push (gap-analysis v6 + console 1.25.0)
+
+- Files (10): `skills/gap-analysis/` (SKILL, README, scripts/render_sidecars.py, templates/gap-analysis.md); `skills/project-console/` (README, VERSION, console/gap_analysis/{loader,router}.py, console/web/static/gap_analysis.css, console/web/templates/gap_analysis_view.html)
+- Branch: `sync/pdlc-demo-gapanalysis-console-positions-2026-06-04`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/198
+- Commit: "gap-analysis v6 + project-console 1.25.0: agent panels, goals, assertion positions"
+- Status: merged (--merge requested)
+- Merge commit: `e3a369b`
+- Hitachi HEAD after sync: `e3a369b`
+- Preflight: all 10 files `UPSTREAM_NEWER` by content but verified upstream == local committed baseline (divergence is purely local edits → safe LOCAL_AHEAD advance). `__pycache__` scrubbed pre-push.
+- Origin: PDLC_DEMO task ben/081. gap-analysis v5→v6 (optional `## Assertion positions` → additive `assertions[].positions[]`, schema_version unchanged 1.0); project-console 1.23.2→1.25.0 (1.24.0 Goals banner + agent-response viewer; 1.25.0 Report/Advisors tabs + per-advisor assertion positions). Design via frontend-design.
