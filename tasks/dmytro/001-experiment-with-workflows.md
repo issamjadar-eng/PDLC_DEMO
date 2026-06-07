@@ -38,7 +38,9 @@ _Actionable work items. Check off as completed._
 - [x] Define what specifically to experiment with
 - [x] Run through a representative workflow end-to-end (`/strategy assemble regulatory`, `/best-practices`, console-vs-CLI agent comparison)
 - [x] Understand the advisor grounding architecture (tier 1/2/3, glob-vs-Read, prompt-as-infrastructure)
-- [ ] Work through each skill and agent with real-world scenarios (tomorrow — see Resume plan)
+- [x] Exercise 1 — observe advisor tier-architecture via a live risk-management question (2026-06-06)
+- [ ] Exercise 2 — console vs Claude Code runtime comparison (tomorrow — see Resume plan)
+- [ ] Work through each skill and agent with real-world scenarios (skills walkthrough — see Resume plan)
 - [ ] _(deferred)_ Rehearse PDLC concepts / map PDLC → SDLC — superseded by the skill-by-skill scenario walk-through
 
 ## Session Log
@@ -111,16 +113,46 @@ Exercised the strategy-harvest workflow end-to-end as a representative agentic f
 **How to apply:** For completeness-critical review ("is anything left as a placeholder / unfilled?"), use the Claude Code runtime, or chunk the question so each console call stays under the cap. Treat console advisor answers as breadth-bounded.
 <!-- /LESSONS LEARNED -->
 
+### 2026-06-06 — Exercise 1: advisor tier-architecture observation (risk-management)
+
+**The exercise.** Asked the **risk-management advisor** a single practitioner question — _"what are the top risks for the PP3500 510(k) submission right now?"_ — and watched how it grounds itself before answering.
+
+**What we observed**
+- **24 tool calls** executed across the advisor's tiers before it answered — a concrete view of grounding-as-tool-calls (consistent with the 2026-06-04 mental model that tiers are prompt instructions the agent runs itself, not an enforced pipeline).
+- The agent **found the empty `{{}}` placeholder stubs in every PP3500 risk file** and **cited exact file paths** — `GL-TMP-RM-001` (risk plan) through `004` (risk management report), the `risk-management/` hazard analysis + design FMEA, plus the DLM accessory's matching empty stub. It distinguished "present but unpopulated" from "absent," which is the audit-relevant nuance.
+- It also caught a **discovery-index false-negative**: `pdlc-demo-dhf-discovery.json` resolves the risk roles to `null` for every DHF (pattern-matching gap — the index patterns don't match the `GL-TMP-RM-*` filenames), yet the files exist on disk. The agent verified disk over index.
+
+**Tier architecture understood (today's framing)**
+- **Tier 1** — a **small, always-read set** for project orientation (identity, roster, the load-bearing manifests). Cheap, read every time.
+- **Tier 2** — a **larger, domain-specific set** the advisor pulls for its lane, **plus semantic search** (file-locator) to discover relevant docs beyond the fixed list.
+- **Tier 3** — a **fallback subagent** (advisor-researcher) invoked only when Tier 1 + Tier 2 don't cover the question — walks READMEs / cross-refs / globs for additional grounding.
+
+**Takeaway.** The advisor's answer quality tracks how well the tiers surface the right files — and Tier 1's always-read orientation set is what let it know to go look for the risk files in the first place, even when the discovery index said they were null.
+
+### 2026-06-07 — Exercise 2: console vs Claude Code (existence/completeness)
+
+**The exercise.** Asked the **console** risk-management agent the same PP3500 top-risks question that the **Claude Code** risk-management advisor answered on 2026-06-06, to compare the two runtimes on a completeness-critical question.
+
+**What we observed (the failure is worse than expected).**
+- Yesterday's **Claude Code** advisor correctly found the PP3500 risk files **present but empty** — rev-0.1 `{{}}` placeholder stubs (`GL-TMP-RM-001`–`004` + hazard analysis/FMEA), and cited exact paths.
+- Today's **console** agent claimed the DHF risk files **don't exist at all**.
+- That is not a truncated answer — it's a **factually wrong conclusion**. The ~200 KB grounding cap didn't just shorten the response; it starved the agent of the files entirely, and the agent reported *absence* where the truth is *present-but-unpopulated*. For a risk file, "absent" and "empty stub" are very different findings with different remediation.
+
+<!-- LESSONS LEARNED: tooling -->
+**The console's 200 KB cap can flip a conclusion, not just shorten it — don't trust it for existence/completeness questions.** On the same PP3500 risk question, the Claude Code advisor found the risk files present-but-empty (`{{}}` stubs, exact paths cited); the console agent concluded the risk files **don't exist at all**. The cap starved the agent of the files, and it reported *absence* instead of *present-but-unpopulated*.
+
+**Why:** This is a sharper failure mode than the 2026-06-04 lesson (which framed the cap as missing some content). When the capped window excludes a file entirely, the agent doesn't say "I'm not sure" — it asserts a confident negative ("the file doesn't exist"). For a risk file, "absent" vs "empty stub" are materially different findings that drive different remediation, and a false "absent" is the more dangerous error in an audit context.
+
+**How to apply:** Never rely on the console for existence-, presence-, or completeness-of-evidence questions ("do we have X?", "is X filled in?", "what's missing?"). Use the Claude Code runtime, which reads files on demand, for any question whose answer hinges on what is or isn't on disk. Treat a console "X doesn't exist" as "X was outside my grounding window," not as ground truth — confirm against the CLI or the filesystem before acting.
+<!-- /LESSONS LEARNED -->
+
 ## Resume — pick up here next session
 
-_Refreshed on 2026-06-04 (end of architecture deep-dive session)._
+_Refreshed on 2026-06-06 (end of Exercise 1 session)._
 
-**Tomorrow's theme:** work through each skill and agent with **real-world scenarios** — drive them like a practitioner would, not just survey them.
-
-**First action on resume (priority order):**
-1. **`/trace-matrix` on `pca-device`** — build/inspect the bidirectional trace matrix for the PCA device DHF; use it as the first concrete scenario.
-2. **`/strategy assemble regulatory`** — re-run now that the §5.2 `ben/046`-vs-`ben/006` proposal exists; decide accept/withdraw/leave via `/strategy resolve regulatory`.
-3. **Agent comparisons** — continue the console-vs-Claude-Code advisor comparison on more questions, now that the 200 KB-cap gap is understood (see today's session log + lesson).
+**Tomorrow's plan:**
+1. **Exercise 2 — console vs Claude Code comparison.** Run the same advisor question in both runtimes and compare; re-confirm the ~200 KB console grounding-cap behavior observed on 2026-06-04 against today's risk-management findings.
+2. **Skills walkthrough** — work through each skill with real-world scenarios (the deferred skill-by-skill practitioner walk-through). Candidate concrete scenarios still queued: `/trace-matrix` on `pca-device`; `/strategy resolve regulatory` for the open §5.2 `ben/046`-vs-`ben/006` proposal.
 
 **In-flight artifacts / external state:**
 - `main` is at `9112240`. **This session's committed-to-disk changes** (not yet committed to git unless noted): re-assembled `docs/project/strategies/regulatory-strategy.md`; `STRATEGY PROPOSED` marker added to `tasks/ben/046` (line 132); **fixed `project-secops.md` symlink** (resolved the broken/deleted agent symlink from skill-sync churn).
@@ -159,3 +191,5 @@ See [README.md](README.md) for version history.
 - 2026-06-04 — Architecture deep-dive session. Ran `/best-practices` (3 FAILs, 8 WARNs); fixed the `project-secops.md` symlink (other findings untriaged). Compared the regulatory advisor across runtimes: Claude Code caught unfilled `{{...}}` template placeholders the console missed due to its ~200 KB grounding cap. Built the mental model that tier 1/2/3 grounding is **prompt instructions in the ~18 KB agent file** (not enforced infra), executed via the agent's own Glob (discover) + Read (fetch) calls — captured as a tooling lesson. Re-pointed tomorrow's plan to a skill-by-skill real-world-scenario walk-through; resume order = `/trace-matrix` (pca-device) → `/strategy assemble regulatory` (resolve §5.2 proposal) → more agent comparisons.
 - 2026-06-04 — Ran `/strategy assemble regulatory` as a workflow experiment. Re-assembled `docs/project/strategies/regulatory-strategy.md` (stale → 6 sources, 12 v15 DECISION blocks, 4,736 words) via the assembler subagent in non-interactive mode. 1 proposal surfaced (§5.2 DHF composition, ben/046 vs ben/006 — `STRATEGY PROPOSED` marker written to ben/046:132, awaiting `/strategy resolve`); 3 subsections in Uncategorized (HIPAA/privacy mapping gap). Logged a tooling lesson on code-block tag false positives. No commit made.
 - 2026-06-04 — Recovery checkpoint. Previous session ended 2026-06-04 10:02 uncheckpointed; reconstruction from `git log`/working tree found **no new task-001 artifacts** since 2026-05-31 (`1913ea9`) — that session left no git or working-tree trace for this task. Refreshed doc to resume-ready: added Resume + Open Questions sections, captured in-flight working-tree state (unrelated 002/003/secops untracked files, task-003 worktree). Next steps unchanged: PDLC rehearsal → PDLC↔SDLC mapping. Cleared the `uncheckpointed-dmytro-001` recovery marker.
+- 2026-06-07 — Ran **Exercise 2**: console vs Claude Code on the same PP3500 risk question. Console agent claimed the DHF risk files **don't exist**; the CLI advisor (2026-06-06) correctly found them present-but-empty (`{{}}` stubs). Captured a tooling lesson — the ~200 KB cap can **flip a conclusion** (assert false absence), not just truncate it; console is unreliable for existence/completeness questions. Started the console in the background (ID `b3tyc7wqm`) on http://127.0.0.1:8765. No commit made.
+- 2026-06-06 — Ran **Exercise 1**: asked the risk-management advisor for the PP3500 510(k) top risks and observed its grounding behavior. Watched **24 tool calls** across Tier 1/2; agent found empty `{{}}` placeholder stubs in all PP3500 risk files (`GL-TMP-RM-001`–`004` + hazard analysis/FMEA + DLM accessory) and cited exact paths, and caught a discovery-index false-negative (`pdlc-demo-dhf-discovery.json` resolves risk roles to `null` but files exist on disk). Consolidated the tier model: **Tier 1** = small always-read orientation set; **Tier 2** = larger domain-specific set + semantic search; **Tier 3** = fallback researcher subagent. Updated Todos + Resume; tomorrow = Exercise 2 (console vs Claude Code) then skills walkthrough. No commit made. (Recovery markers from prior uncheckpointed sessions cleared at session start per user direction.)
