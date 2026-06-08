@@ -2,7 +2,7 @@
 
 **ID**: 054
 **Created**: 2026-05-13
-**Status**: In Progress (paused)
+**Status**: Abandoned (superseded)
 **Created By**: Ben
 **Owner**: Ben
 **Priority**: High
@@ -724,3 +724,4 @@ _(Tag with `<!-- LESSONS LEARNED: category -->` blocks in-flight.)_
 - **2026-05-14** — Phase 1 chunk 5 decided (bootstrap vs. steady-state): named the bootstrap-vs-steady-state distinction; bootstrap mode = iterative (option 1 — minimal skeleton grown by the V-shape, the device build IS the demo); skeleton is "interface-complete, behavior-empty" (device-scale TDD red state); architecture doc + skeleton code are different-jurisdiction projections of one design (doc owns contract/intent, code owns realized structure, code traces to doc); consistency check owned by `rd-lead` agent with four named dimensions (module-set parity, interface-signature parity, intent alignment, trace-completeness), hardened as a required step in the orchestrator's per-feature-turn checkpoint protocol. Test tools/frameworks are defined in the Tooling Strategy axis doc (Chunk 3). Bootstrap overlaps task 046's missing system-architecture doc — flagged for coordination. Original plan's "Chunk 5 current-structure fit" renumbered to Chunk 6.
 - **2026-05-14** — Phase 1 human-checkpoint mapping done: 8 non-negotiable human checkpoints tabled against V-shape locations + standards + agent-prep steps; organizing principle "agents produce and review, humans accept" (every gate is a decision of record). Gate Maturity Ladder decided — 4 stages (Full Oversight → Full Coverage Tiered Depth → Risk-Tiered → Sampling), each transition evidence-gated + change-controlled, selector in `project.yml` `agentic.gate_policy_stage`. Ladder governs review *burden* (#2/#4/#5); ladder-exempt = #3 residual-risk acceptance + terminal authorizations #6/#7/#8. Reframe: the ladder + transition evidence IS the agentic-process-validation story. 4 more child-task candidates surfaced (g–j). Phase 1 nearly complete — remaining: Chunk 6 current-structure fit + end-to-end flow walk.
 - 2026-06-08: Status corrected to In Progress (paused) via task-doc audit — genuinely open work remaining (paused 2026-05-14, mid-Phase 1). Remains Active in 000-index.md.
+- **2026-06-08** — **Closed ABANDONED (superseded) per user.** Superseded by other work; the agentic-first PDLC blueprint is not being carried forward as a standalone task. Moved to Abandoned in 000-index.md.
