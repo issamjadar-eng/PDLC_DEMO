@@ -2,7 +2,7 @@
 
 **ID**: 005
 **Created**: 2026-04-12
-**Status**: Not Started
+**Status**: Abandoned
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -77,3 +77,4 @@ The CAPA-2023-001 feedback loop is already wired end-to-end (UN-007 → DI-013 �
 ## Changelog
 
 - 2026-04-12: Task created. Split out from task 001 after the clinical + postmarket ingestion phase completed, so that agent design and build can proceed as its own scoped effort with clear review gates.
+- 2026-06-08: Marked ABANDONED via task-doc audit — never built; single-purpose-agent premise overtaken by the 14-agent advisors framework. Filed under Abandoned in 000-index.md.

@@ -2,7 +2,7 @@
 
 **ID**: 002
 **Created**: 2026-04-12
-**Status**: In Progress
+**Status**: Complete (superseded by ben/069)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -86,6 +86,7 @@ This authoring session fills Phases 1, 2, 3 (transcript + table fix), 8, 9 (stat
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — superseded by ben/069 — setup-guide content overhauled + split into how-to-guide.md / new-project-bootstrap.md / setup.md. Moved to Completed in 000-index.md.
 - 2026-05-21 (cont.): Added the missing **post-init verification** content (old step 6) as a "Verify the scaffold" subsection under Phase 3 — five read-only checks (docs/ tree + READMEs, `jq` on `project.yml` DHF path, `settings.json` PreToolUse hook wiring, sentinel render, first dashboard run) plus the "re-run init, don't hand-patch" guidance; updated Flow-at-a-glance. Closed the step 5 / 6 / 7 todos (5 and 7 were already covered by Phases 3 and 5). Remaining open: peer review (needs a colleague on a fresh dir) + the two in-guide open questions (Phase-6-as-skill, init-prompted Phase-4).
 - 2026-05-21: Authoring session — filled all skeleton TODOs in `how-to-guide.md` (Phases 1, 2, 8, 9, 10). Verified the documented skills against their live `SKILL.md` and corrected three drift findings (init 9 questions; `import-guidance`→`update-external-references`; sync-skills v8.2 `status`/`prune`/three-way pull). Resolved doc-home open question. Captured a documentation-accuracy lesson and an onboarding-docs strategy decision inline. Status → In Progress; only peer-review todo remains.
 - 2026-04-12: Task created.

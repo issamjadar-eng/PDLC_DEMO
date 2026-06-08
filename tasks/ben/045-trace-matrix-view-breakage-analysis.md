@@ -2,7 +2,7 @@
 
 **ID**: 045
 **Created**: 2026-05-05
-**Status**: In Progress — **paused 2026-05-06** mid-Phase-3 awaiting user decisions (see "Decision points" near end of doc). Today's session: resumed 045, surfaced + spun off ben/046 (PCA Infusion System filing-entity gap), re-presented Decision 1 — user paused before answering. **All three Decision-points still open.**
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -406,3 +406,4 @@ Before pushing any skill change upstream, verify against `../arthrex-pccp/` — 
 - 2026-05-05: **Paused at Step 4 decision point** per pre-agreed scope-2 (pause-checkpoint between adapter-generation and build). Three decisions deferred to user: (1) defer architecture adapter generation to follow-up task 4a or generate now, (2) build scope all-9-DHFs vs just pca-device, (3) branch policy with uncommitted tracker work present. Task doc made resume-ready: explicit phase-3 todos, files-in-flight inventory (backups + modified + not-yet-created), resume command, snapshot of analyze.py output for context recovery.
 - 2026-05-06: **Resumed.** Presented Decision 1 (defer adapter generation vs do now). User pushed back on my framing — "the files reference doesn't make sense; we have 1 system SAD, and major components can have a software SAD." Surfaced a deeper structural gap: project lacks a top-level **PCA Infusion System** filing entity that owns the single system SAD, and the per-DHF "*-system-sad.md" docs are scope-mislabeled (they are component-level **software** SADs). Multi-function device regulatory strategy also needs authoring/update (Medical Device / MDDS / non-medical). **Spun off as ben/046** (`tasks/ben/046-pca-infusion-system-architecture-gap.md`) with 6-phase plan and 5 open questions; added to active task index. ben/045 stays surgical. Returning to Decision 1 with the same recommendation (defer adapter generation to follow-up 4a, build the rest).
 - 2026-05-06: **Paused for the day.** All 3 Decision-points still open (no user response yet on D1). Updated D1 + D2 with new context: ben/046's pending file renames + the eventual 10th DHF strengthen the "defer + pca-device only" path. Doc made fully resume-ready: explicit "What to do first on resume" priority-ordered checklist added under Resume command. Backups confirmed in place. No code/data changes this session.
+- 2026-06-08: Closed Complete via task-doc audit — missing sidecar console_trace_matrix.json restored (817de86) + consumed by ben/049/050; the 3 open decisions mooted by execution; residual gaps spun to ben/046. Moved to Completed in 000-index.md.

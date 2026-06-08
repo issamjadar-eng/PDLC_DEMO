@@ -2,7 +2,7 @@
 
 **ID**: 042
 **Created**: 2026-05-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -307,6 +307,7 @@ Not shipped in this session. The 8 PR-3 components already produce visually dist
   - Phase 4: md-deck SKILL.md frontmatter + body rewritten (Relationship section, Non-goals section, v0.3 status, content-split table, design notes); frontend-slides SKILL.md gained "Used by md-deck" section; STYLE_PRESETS.md gained shared-with-md-deck header note.
   - Phase 5: Rebuilt `project-overview-2.md` → `assets/project-overview-2/` (96 KB, 27 slides, both shared CSS chunks present, manifest reports v0.3.0). Did not touch `assets/project-overview/` or `assets/agentic-delivery/` — those are kept as v0.2-baseline comparisons.
   - **Deferred**: PDF export (explicit-request-only memory rule); `/sync-skills push` upstream (pending user review of the v0.3 deck).
+- 2026-06-08: Closed Complete via task-doc audit — shared layer shipped + pushed upstream (hitachi PR #113, md-deck v0.5; now v0.6.1). Moved to Completed in 000-index.md.
 
 <!-- LESSONS LEARNED: skill-composition -->
 **Shared-layer pattern as a model for future skill pairs.**

@@ -2,7 +2,7 @@
 
 **ID**: 024
 **Created**: 2026-04-21
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -33,6 +33,7 @@ Extract the bespoke Systems Engineering Assistant drawer from `trace_matrix_view
 
 - 2026-04-21: Task created. Plan: extract the drawer into a shared partial, unify endpoint, mount on Documents, replace on Trace Matrix, restart.
 - 2026-04-21: v1 landed. New `console/assistant/router.py` with `GET /assistant/api/agents` + `POST /assistant/chat/stream` (solo agents only; grounding capped at 80 KB). New `_assistant_drawer.html` partial + `assistant.js` + scoped `pc-assistant-*` CSS in `console.css`. Documents explorer mounts it with a floating FAB; grounding comes from `window.pcAssistantGetGrounding()` which fetches the selected file at send time. Trace Matrix view swapped to the generic drawer with grounding via `url:/trace-matrix/{dhf}/grounding` (new endpoint serves compact context). Old `tm-assistant-*` CSS + JS stripped from `trace_matrix_view.html` (~560 lines removed). Console relaunched on :8765 — smoke: agent list returns 10 agents, Documents page includes drawer + FAB markup, Trace Matrix view renders with 13 `pc-assistant` occurrences and 0 legacy message-element IDs. Dashboards sidecar migration deferred (no consumer yet in this project).
+- 2026-06-08: Closed Complete via task-doc audit — v1 landed + smoke-tested; shared assistant drawer mounted system-wide; dashboards-sidecar explicitly deferred. Moved to Completed in 000-index.md.
 
 <!-- STRATEGY CONTENT: architecture, console -->
 ## Strategy

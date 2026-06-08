@@ -2,7 +2,7 @@
 
 **ID**: 014
 **Created**: 2026-04-14
-**Status**: Not Started
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -96,4 +96,5 @@ _No strategy content this session — this is a plumbing / skill-cleanup task, n
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — shipped — render.py is project-agnostic; zero intra-op/pre-op strings remain. Moved to Completed in 000-index.md.
 - 2026-04-14: Task created — discovered during task 013 while running `/tracker build` against PDLC_DEMO for the first time.

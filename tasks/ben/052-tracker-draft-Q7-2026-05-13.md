@@ -2,7 +2,7 @@
 
 **ID**: 052
 **Created**: 2026-05-13
-**Status**: In Progress
+**Status**: Abandoned
 **Created By**: project-console (workflows/tracker-draft)
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -31,3 +31,4 @@ _Will be populated when Save & Commit relocates the draft from `_drafting/` to i
 ## Changelog
 
 - 2026-05-13 — Auto-created by project-console on first Create Draft click for row Q7.
+- 2026-06-08: Marked ABANDONED via task-doc audit — orphaned workflow stub; worktree + branch already removed; no draft ever produced. Filed under Abandoned in 000-index.md.

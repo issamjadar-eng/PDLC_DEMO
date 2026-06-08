@@ -2,7 +2,7 @@
 
 **ID**: 006
 **Created**: 2026-04-12
-**Status**: Not Started (unblocked 2026-04-13 by tasks 007 + 009; authors into `docs/project/strategies/` shared docs with topic-first + per-component callout shape)
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -344,6 +344,7 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — both shared strategy docs authored + merged (51f3946, bfb215c); multi-function-device follow-up is net-new ben/046. Moved to Completed in 000-index.md.
 - 2026-04-12: Task created. Strategy briefs initialized via `/strategy init`. Task skeleton includes both tagged blocks (architecture, regulatory); content pending user discussion.
 - 2026-04-14: Locked filing strategy as **critical-requirement carve-out**: every UN/DI tagged CtS/CtF/CtC/CtP; tagged subset = 510(k)+PCCP scope; untagged = commercial-only post-clearance development. Defines PCCP envelope structurally. Captured as new Filing Strategy decision block.
 - 2026-04-14: Locked baseline regulatory architecture: PCA = 510(k) **with PCCP**; Adapter = MDDS (non-device); Cloud Suite Drug Library Manager = Class II SaMD; rest of Cloud Suite = non-medical software. Captured as new Component Classification & Filing Posture decision block. Supersedes the case-by-case framing.
