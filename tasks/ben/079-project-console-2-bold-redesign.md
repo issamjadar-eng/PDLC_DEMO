@@ -2,7 +2,7 @@
 
 **ID**: 079
 **Created**: 2026-06-02
-**Status**: Not Started
+**Status**: Abandoned (superseded)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -98,3 +98,4 @@ Per `frontend-design`'s Design Thinking: commit to a bold, intentional aesthetic
 ## Changelog
 
 - 2026-06-02: Task created as the backlog home for a full, bold console redesign via a `project-console-2` skill fork. Captures the honest 073/078 retro (we were conservative), the design directions ranked by impact/risk, fork rationale, and open questions. Not started — deferred per user ("add a todo, continue another time"). Continuation of the frontend-design thread (ben/072 install → 073 console.css → 078 tracker → 079 full redesign).
+- 2026-06-08: **Closed ABANDONED (superseded) per user.** Superseded by other work; the shipped frontend-design console refreshes (ben/073 + ben/078) covered the console-visual-quality need without a full project-console-2 fork. Moved to Abandoned in 000-index.md.

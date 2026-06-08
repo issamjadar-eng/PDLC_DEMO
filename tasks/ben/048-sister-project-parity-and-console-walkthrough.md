@@ -2,7 +2,7 @@
 
 **ID**: 048
 **Created**: 2026-05-11
-**Status**: In Progress
+**Status**: Abandoned (superseded)
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -93,3 +93,4 @@ bash .claude/hooks/task-activate.sh add <UUID-from-printenv-or-denial> 048
 - 2026-05-11: **#5 done + Tier 1 complete.** Resolved the residual M-flagged pulls (assistant.js, tracker_interactive.js, router.py — all exact-match upstream `origin/main`). Found broader uncommitted scope: ~32 modified + ~19 untracked files spanning today's two sync pulls + tracker reset + parity work + 4 new task docs. Bundled into 4 logical commits + pushed to PDLC_DEMO `origin/main` (`92ba076` sync sweep + B6; `564bf95` ben/044 closeout + ben/047 follow-up; `409ace0` ben/048 #2-#3 parity sweep; `a7395fa` task housekeeping + CLAUDE.md skill rule). Held back project.yml + trace-matrix WIP (paused task ben/045 territory). Tier 1 of this task complete — moving to Tier 2 console UI walkthrough.
 - 2026-05-11: **Tier 2 progress — 4 of 7 routes greenlit by user visual walkthrough.** `/overview` consistent; `/agents` consistent and works; `/documents` good; `/workflows` work. Remaining: `/` (landing), `/trace-matrix` (the higher-risk one — sister has Jira mirror sidecars + drift overlay, ours doesn't), `/dashboards` (the submission-tracker only has 44 rows post-reset — sister's tracker shape may differ).
 - 2026-05-11: **Landing greenlit. `/dashboards/submission-tracker` deep-dive done — skill behavior is identical; all differences are project-data input volume.** Side-by-side comparison: ours 44 rows / 4 sections / 0 Create Draft buttons / empty AI Status / empty (?)(i) panels; sister 123 rows / 19 sections / 5 buttons / populated everywhere. Same 11-column template, same renderer code path on both. Mapped every visible gap to a missing project-side input: `milestones/engineering.yml`, `submissions/{qsub,pccp}/composition-manifest.md`, `tracker-user-rows.yml`, `submission-tracker.{help,details,agent}.json` sidecars (products of `/tracker enrich-help` / `enrich-details` / `assess` actions), plus hand-authored structural sections. All gaps already on ben/047 backlog — this comparison gives ben/047 the concrete sister-side patterns to mirror. Tier 2 now 5 of 7 done; remaining: `/trace-matrix` (#10).
+- 2026-06-08: **Closed ABANDONED (superseded) per user.** Tier-3 investigations not pursued as a one-off task — sister-project parity is maintained continuously via the routine `/sync-skills` + `/best-practices` cadence. Moved to Abandoned in 000-index.md.
