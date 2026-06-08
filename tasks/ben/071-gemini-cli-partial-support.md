@@ -2,7 +2,7 @@
 
 **ID**: 071
 **Created**: 2026-05-31
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Low
@@ -35,15 +35,17 @@ User's pinned constraints (2026-05-31):
 - [x] Drafted `setup.md` §18 — Gemini CLI Optional, Evaluation Only. Placed between §17 file-locator and the (now-renumbered) §19 Confirm. Capability table contrasts Claude vs. Gemini on slash-skills, task-gate hook enforcement, MCP servers, and develop/commit/push. Sections: capability table → install (`npm install -g @google/gemini-cli`) → auth (`gemini`) → launch-in-project (`cd ~/projects/PDLC_DEMO && gemini`) → project-specific guardrails (self-enforced task gate, macOS symlink fallback) → when to switch back to Claude.
 - [x] Cross-linked from `GEMINI.md` top → `setup.md#18`. Single sentence at top of GEMINI.md states partial-support framing + points at the install section.
 - [x] Renumbered "Confirm Everything Is Wired Up" §18 → §19; added Changelog row dated 2026-05-31.
-- [ ] Commit + push (PR-then-auto-merge per `.claude/rules/git-workflow.md`)
-- [ ] Mark Complete + move row in `tasks/ben/000-index.md`
+- [x] Commit + push — landed as `84e6eb8`, merged to `main` via PR #28 (`6be580b`).
+- [x] Mark Complete + add row in `tasks/ben/000-index.md`.
 
 ## Resume
 
-### First action on resume
-1. Activate task 071: `bash .claude/hooks/task-activate.sh add <SESSION_UUID> 071`
-2. Continue from the first unchecked Todo above.
+Nothing to resume — task Complete. All deliverables are on `main`:
+- `setup.md` §18 "Gemini CLI (`gemini`) — Optional, Evaluation Only" (install → auth → launch → guardrails → when-to-switch-back), plus the §18→§19 renumber and a dated setup.md Changelog row.
+- `GEMINI.md` line 5 cross-link to `setup.md#18` with the partial-support framing.
 
 ## Changelog
 
 - 2026-05-31: Task created. User requested Gemini CLI install/setup/launch guidance in setup.md, framed as evaluation-only for non-Claude users. Constraints: optional section (not in README path table), npm install path confirmed.
+- 2026-05-31: Authored `setup.md` §18 + `GEMINI.md` cross-link + §18→§19 renumber; committed as `84e6eb8` and merged via PR #28 (`6be580b`). _(Doc not updated at the time — session ended uncheckpointed.)_
+- 2026-06-08: Retroactive checkpoint. Confirmed all deliverables present on `main` (setup.md §18 at L798, GEMINI.md cross-link at L5). Flipped Status → Complete, ticked the two remaining Todos, and added the index Completed row that was never created. Cleared the uncheckpointed marker.
