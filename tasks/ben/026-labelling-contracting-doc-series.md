@@ -2,7 +2,7 @@
 
 **ID**: 026
 **Created**: 2026-04-15
-**Status**: Not Started
+**Status**: Abandoned
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -31,3 +31,4 @@ _Evaluate adding two additional document series to the PDLC_DEMO coverage: **lab
 ## Changelog
 
 - 2026-04-15: Task created
+- 2026-06-08: Marked ABANDONED via task-doc audit — never started; contracting/labelling intent partly absorbed by ben/080's commercial-strategy.md. Filed under Abandoned in 000-index.md.

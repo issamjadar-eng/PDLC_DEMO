@@ -2,7 +2,7 @@
 
 **ID**: 008
 **Created**: 2026-04-13
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -44,4 +44,5 @@ Task 003 stood up `tools/project-console/` with:
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — absorbed into the project-console skill (ben/015); all four IA sections ship. Moved to Completed in 000-index.md.
 - 2026-04-13: Task created. Scope and todos migrated from task 003 after its v1 (chat + documents) scope shipped. Task 003 closed out.

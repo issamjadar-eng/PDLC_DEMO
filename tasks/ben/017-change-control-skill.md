@@ -2,7 +2,7 @@
 
 **ID**: 017
 **Created**: 2026-04-14
-**Status**: Not Started
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -493,5 +493,6 @@ Per the standing rule, this skill must work for `../../projects/arthrex/pccp/` a
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — scaffold + design delivered (28dfbba); built out to full skill via upstream sync + ben/032. Moved to Completed in 000-index.md.
 - 2026-04-14: Added Connectivity Options Analysis section — full landscape of Confluence (5 options), Jira (4 options), and auth (3 patterns) considered, plus chosen stack and rationale. Decision: Atlassian Cloud first; raw `httpx` for base APIs; `mark` for markdown→Confluence rendering; raw `httpx` behind a `ReviewPlugin` interface for Comala/SoftComply; service-account + OS keychain for credentials; Atlassian MCP documented as a complementary chat-side capability. Six extensibility seams enumerated. Scaffolded `.claude/skills/change-control/` with all design captured in-skill (SKILL.md + README.md), every action and connector marked STUB / NOT IMPLEMENTED.
 - 2026-04-14: Task created. Captured the full design discussion: three-system stack (GitHub + Confluence/Comala + Windchill), Strategy C decision, agent-mediated freeze enforcement, lifecycle phases, frontmatter contract, skill package structure, action list, hook execution path, `init` wiring. Listed eight open questions for follow-up: Confluence/Comala connectivity, Jira connectivity, Jira-required policy, task-doc ↔ Jira linking, freeze trigger, diff classification, state cache vs frontmatter sync, sister-project generalization. Tagged two strategy blocks (development domain) and one lessons block (ai-tooling, change-control, regulated-workflows).

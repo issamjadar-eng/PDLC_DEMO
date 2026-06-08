@@ -2,7 +2,7 @@
 
 **ID**: 041
 **Created**: 2026-05-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -105,6 +105,7 @@ Summary: 0 Critical · 5 High · 4 Medium · 0 Low. Every match was triaged as *
   - `FS-WRITE-SYSTEM` suppressed in `web-control/scripts/install-chrome-wsl.sh` (legitimate Chrome apt-source-list installer, documented purpose, runs only on explicit user-invoked `web-control setup`).
   - Final state: `Skill/agent audit: no findings.` exit 0.
 - 2026-05-01 — Pushed locally (`6e7e95a` to PDLC_DEMO main) and upstream as hitachi PR [#109](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/109) (`secops/v7-skill-audit`). Status: substantively complete pending upstream merge.
+- 2026-06-08: Closed Complete via task-doc audit — audit_artifacts.py + audit action shipped (secops v7, 6e7e95a, hitachi PR #109). Moved to Completed in 000-index.md.
 
 ## Task Gate State File
 

@@ -2,7 +2,7 @@
 
 **ID**: 027
 **Created**: 2026-04-15
-**Status**: Not Started
+**Status**: Abandoned
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -33,3 +33,4 @@ _Add a dedicated **roadmaps** document series to PDLC_DEMO so planned future wor
 ## Changelog
 
 - 2026-04-15: Task created. Spun off from task 026's versioning discussion — roadmaps need to exist as their own series before labelling/contracting (or anything else) can cleanly reference "planned for future release."
+- 2026-06-08: Marked ABANDONED via task-doc audit — never started; no roadmaps/ folder; roadmap need met by ben/080's 5-year commercial roadmap. Filed under Abandoned in 000-index.md.

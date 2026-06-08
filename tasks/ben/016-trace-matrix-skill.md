@@ -2,7 +2,7 @@
 
 **ID**: 016
 **Created**: 2026-04-14
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -225,6 +225,7 @@ This mirrors the dashboards-section pattern: a fifth top-level section alongside
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — trace-matrix skill shipped (487879d), browser-verified, since evolved to v8. Moved to Completed in 000-index.md.
 - 2026-04-14: Task created. System architecture drafted (skill + console split, JSON sidecar contract, file layout). Source docs confirmed present for PP3500.
 - 2026-04-14: Decision — v1 covers full four layers + risk overlay. Missing items rendered as gaps. Phase 1 source-doc reconnaissance starting.
 - 2026-04-14: Phase 1 reconnaissance complete — see Phase 1 Findings. Layers are very uneven (UN/DI populated; SAD has modules but no DI mapping; V&V and risk are empty placeholders). Decision: derive V&V nodes from the DI doc's verification column for v1; render architecture as nodes-without-edges and risk as empty layer; both surface as visible gaps.

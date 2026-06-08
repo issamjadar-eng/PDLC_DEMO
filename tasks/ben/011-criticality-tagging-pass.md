@@ -2,7 +2,7 @@
 
 **ID**: 011
 **Created**: 2026-04-14
-**Status**: Not Started
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -31,4 +31,5 @@ _Apply the criticality carve-out decided in task 006 to the existing PCA device 
 
 ## Changelog
 
+- 2026-06-08: Closed Complete via task-doc audit — DIs tagged in design-inputs.md + trace matrices (2f54100); residual Filing-Scope column / reference doc not pursued. Moved to Completed in 000-index.md.
 - 2026-04-14: Task created. Spawned from task 006 Filing Strategy decision.

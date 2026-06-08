@@ -2,7 +2,7 @@
 
 **ID**: 040
 **Created**: 2026-05-02
-**Status**: In Progress
+**Status**: Abandoned
 **Created By**: project-console (workflows/strategy-reassembly)
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -29,3 +29,4 @@ Auto-created session task backing a live re-assembly of operations-strategy.md v
 ## Changelog
 
 - 2026-05-02 — Auto-created by project-console on first Execute in the strategy-reassembly workflow.
+- 2026-06-08: Marked ABANDONED via task-doc audit — orphaned workflow stub; branch merged, no mutations merged through the workflow; worktree retained (holds uncommitted edits). Filed under Abandoned in 000-index.md.
