@@ -259,6 +259,7 @@ security:
   - digest
   - docflow
   - docx
+  - explain
   - file-locator
   - frontend-design
   - frontend-slides

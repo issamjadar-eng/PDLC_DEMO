@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram — Tree / hierarchy</title>
+<style>
+  :root{--bg:#f6f8fb;--ink:#1a2330;--muted:#5b6573;--line:#d9dee6;--navy:#28384f;
+    --c1:#1b7f4b;--c1b:#e6f6ec;--c2:#1f5fa6;--c2b:#e6f0fa;--c3:#9a3412;--c3b:#fdece2;--c4:#6b21a8;--c4b:#f3e9fb}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:28px;line-height:1.5}
+  .pnote{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;padding:10px 14px;margin:0 0 18px;font-size:.82rem;color:#6b5618}
+  figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:.82rem;color:var(--muted);margin-top:10px;text-align:center}
+  svg text{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+</style>
+</head>
+<body>
+<div class="pnote">Standalone preview of the <code>diagram-tree-hierarchy</code> snippet. The CSS here is <strong>preview-only</strong> — canonical styles live in <code>../../templates/explainer.html</code>. To use this visual, copy only the markup between the SNIPPET markers. For <em>when</em> to use which visual, see the selection table in <code>../../SKILL.md</code>.</div>
+<!-- BEGIN SNIPPET: diagram-tree-hierarchy -->
+<figure>
+  <svg viewBox="0 0 1000 280" role="img" aria-label="{{what this hierarchy shows}}">
+    <!-- root -->
+    <rect x="400" y="14" width="200" height="48" rx="8" fill="#28384f"/>
+    <text x="500" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">{{Root}}</text>
+    <!-- connectors root → 3 children -->
+    <path d="M500,62 L500,84 M170,84 L830,84 M170,84 L170,110 M500,84 L500,110 M830,84 L830,110" fill="none" stroke="#c7cfdb" stroke-width="2"/>
+    <!-- children -->
+    <rect x="40" y="110" width="260" height="48" rx="8" fill="#e6f0fa" stroke="#1f5fa6"/><text x="170" y="139" text-anchor="middle" font-size="12.5" font-weight="700">{{Child 1}}</text>
+    <rect x="370" y="110" width="260" height="48" rx="8" fill="#e6f6ec" stroke="#1b7f4b"/><text x="500" y="139" text-anchor="middle" font-size="12.5" font-weight="700">{{Child 2}}</text>
+    <rect x="700" y="110" width="260" height="48" rx="8" fill="#fdece2" stroke="#9a3412"/><text x="830" y="139" text-anchor="middle" font-size="12.5" font-weight="700">{{Child 3}}</text>
+    <!-- grandchildren under child 1 -->
+    <path d="M170,158 L170,180 M90,180 L250,180 M90,180 L90,200 M250,180 L250,200" fill="none" stroke="#c7cfdb" stroke-width="2"/>
+    <rect x="20" y="200" width="140" height="42" rx="7" fill="#fff" stroke="#1f5fa6"/><text x="90" y="226" text-anchor="middle" font-size="11" >{{leaf}}</text>
+    <rect x="180" y="200" width="140" height="42" rx="7" fill="#fff" stroke="#1f5fa6"/><text x="250" y="226" text-anchor="middle" font-size="11">{{leaf}}</text>
+    <!-- grandchildren under child 3 -->
+    <path d="M830,158 L830,180 M750,180 L910,180 M750,180 L750,200 M910,180 L910,200" fill="none" stroke="#c7cfdb" stroke-width="2"/>
+    <rect x="680" y="200" width="140" height="42" rx="7" fill="#fff" stroke="#9a3412"/><text x="750" y="226" text-anchor="middle" font-size="11">{{leaf}}</text>
+    <rect x="840" y="200" width="140" height="42" rx="7" fill="#fff" stroke="#9a3412"/><text x="910" y="226" text-anchor="middle" font-size="11">{{leaf}}</text>
+  </svg>
+  <figcaption>{{Caption — the hierarchy and what each level groups.}}</figcaption>
+</figure>
+<!-- END SNIPPET -->
+</body>
+</html>

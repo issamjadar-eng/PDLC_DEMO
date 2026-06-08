@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+  EXPLAINER TEMPLATE — used by the `explain` skill.
+
+  How to use this file:
+  - Replace every {{PLACEHOLDER}} and the demo content inside each component block
+    with real, synthesized content for the question being answered.
+  - Keep the <style> block as-is (tweak only if a component needs it). It is the
+    shared design system; do not link external stylesheets.
+  - DELETE the components you don't need. Every component below is OPTIONAL except
+    the header, the not-canonical banner, the plain-language summary, the sources
+    section, and the footer. Use only the visuals that fit the answer.
+  - The file must stay self-contained: inline CSS, inline SVG, no external scripts,
+    stylesheets, fonts, or CDNs. It must open offline in any browser.
+  - Each component is wrapped in <!-- COMPONENT: name --> ... <!-- /COMPONENT -->
+    comments so it is easy to find and remove. Strip these comments in the final file
+    if you like; they are only authoring aids.
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{DOCUMENT_TITLE}}</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --ink:#1a2330; --muted:#5b6573; --line:#d9dee6;
+    --navy:#28384f;
+    /* four accent pairs (text / background) for badges and categories */
+    --c1:#1b7f4b; --c1b:#e6f6ec;   /* green  */
+    --c2:#1f5fa6; --c2b:#e6f0fa;   /* blue   */
+    --c3:#9a3412; --c3b:#fdece2;   /* orange */
+    --c4:#6b21a8; --c4b:#f3e9fb;   /* purple */
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);line-height:1.55;margin:0;background:var(--bg)}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 90px}
+  header h1{font-size:1.95rem;margin:0 0 6px}
+  header p.sub{color:var(--muted);margin:0 0 8px;font-size:.98rem}
+  .crumbs{font-size:.8rem;color:#8a93a3;font-family:"SF Mono",Consolas,monospace;margin-bottom:22px}
+  h2{font-size:1.3rem;margin:44px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+  h2 .count{font-size:.82rem;color:var(--muted);font-weight:400}
+  h3{font-size:1.05rem;margin:24px 0 6px}
+  p{font-size:.93rem}
+  code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:.84rem;
+    font-family:"SF Mono","Cascadia Code",Consolas,monospace}
+  /* tables */
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem;
+    box-shadow:0 1px 3px rgba(20,30,48,.06);border-radius:8px;overflow:hidden;margin:6px 0 12px}
+  thead th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:.8rem;letter-spacing:.02em}
+  tbody td{padding:9px 12px;border-top:1px solid #eef1f5;vertical-align:top}
+  tbody tr:nth-child(even){background:#fafbfd}
+  td.name{font-family:"SF Mono",Consolas,monospace;font-size:.82rem;white-space:nowrap;font-weight:600}
+  /* badges */
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.76rem;font-weight:600}
+  .b1{color:var(--c1);background:var(--c1b)} .b2{color:var(--c2);background:var(--c2b)}
+  .b3{color:var(--c3);background:var(--c3b)} .b4{color:var(--c4);background:var(--c4b)}
+  /* banner (not-canonical notice) */
+  .banner{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;
+    padding:11px 16px;margin:18px 0;font-size:.84rem;color:#6b5618}
+  /* summary card (plain-language) */
+  .summary{background:#fff;border:1px solid var(--line);border-left:4px solid var(--c2);
+    border-radius:10px;padding:18px 22px;margin:20px 0;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .summary h2{border:0;margin:0 0 6px;padding:0;font-size:1.05rem;color:var(--c2)}
+  .summary p{margin:6px 0 0}
+  /* table of contents */
+  .toc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 22px;margin:18px 0}
+  .toc strong{font-size:.9rem}
+  .toc ol{margin:6px 0;padding-left:22px;font-size:.9rem;columns:2;column-gap:34px}
+  .toc a{color:var(--c2);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  /* note / callout */
+  .note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--c3);
+    border-radius:8px;padding:13px 18px;margin:16px 0;font-size:.88rem;color:#44505f}
+  .note strong{color:var(--c3)}
+  /* generic card */
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 22px;
+    margin:16px 0;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .card h3{margin-top:0}
+  /* phase timeline */
+  .phases{list-style:none;counter-reset:ph;padding:0;margin:14px 0}
+  .phases>li{position:relative;padding:0 0 18px 56px;min-height:36px}
+  .phases>li:not(:last-child)::before{content:"";position:absolute;left:17px;top:30px;
+    bottom:-2px;width:2px;background:#e1e6ee}
+  .phases>li>.num{counter-increment:ph;position:absolute;left:0;top:0;width:36px;height:36px;
+    border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:.95rem;
+    display:flex;align-items:center;justify-content:center}
+  .phases>li>.num::before{content:counter(ph)}
+  .phases .pt{font-weight:700;font-size:.92rem;display:block;margin:6px 0 4px}
+  .phases p{margin:0;font-size:.88rem;color:#44505f}
+  /* svg figure */
+  figure{margin:18px 0;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:.82rem;color:var(--muted);margin-top:10px;text-align:center}
+  svg text{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  /* collapsible source citation */
+  details.cite{margin:2px 0 14px;font-size:.82rem}
+  details.cite summary{cursor:pointer;color:var(--c2);font-weight:600;list-style:none;
+    display:inline-flex;align-items:center;gap:6px;padding:2px 0}
+  details.cite summary::-webkit-details-marker{display:none}
+  details.cite summary::before{content:"▸ show source"}
+  details.cite[open] summary::before{content:"▾ hide source"}
+  details.cite .src{margin-top:8px;background:#f7f9fc;border:1px solid var(--line);
+    border-radius:8px;padding:10px 14px}
+  details.cite .src .path{font-family:"SF Mono",Consolas,monospace;font-size:.78rem;
+    color:var(--c4);margin-bottom:6px}
+  details.cite pre{margin:0;white-space:pre-wrap;font-size:.78rem;line-height:1.5;
+    font-family:"SF Mono","Cascadia Code",Consolas,monospace;color:#33414f}
+  /* related topics */
+  .related{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 20px;margin:22px 0}
+  .related strong{font-size:.9rem}
+  .related ul{margin:6px 0 0;padding-left:20px;font-size:.88rem;color:#44505f}
+  /* ---- gallery component styles (snippets in references/visuals/ rely on these) ---- */
+  /* legend / category cards */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+  .legend .item{flex:1 1 240px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .legend .item .badge{margin-bottom:6px}
+  .legend .item p{margin:4px 0 0;font-size:.85rem;color:var(--muted)}
+  /* stat / metric tiles */
+  .stats{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+  .stat{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--c2);
+    border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .stat .n{font-size:1.9rem;font-weight:700;color:var(--navy);line-height:1.1}
+  .stat .l{font-size:.8rem;color:var(--muted);margin-top:4px}
+  /* comparison ✓/✗ cells (used with a normal table) */
+  td.yes{color:var(--c1);font-weight:700;text-align:center}
+  td.no{color:var(--c3);font-weight:700;text-align:center}
+  td.mid{color:var(--muted);text-align:center}
+  /* progress / status bars */
+  .bars{margin:14px 0}
+  .bar-row{display:flex;align-items:center;gap:12px;margin:8px 0;font-size:.85rem}
+  .bar-row .bl{flex:0 0 170px}
+  .bar{flex:1;height:14px;background:#eef1f5;border-radius:999px;overflow:hidden}
+  .bar>span{display:block;height:100%;background:var(--c1);border-radius:999px}
+  .bar.warn>span{background:var(--c3)} .bar.info>span{background:var(--c2)}
+  .bar-row .bv{flex:0 0 46px;text-align:right;color:var(--muted)}
+  /* spec-sheet key–value panel */
+  .spec{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    margin:16px 0;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .spec .row{display:flex;border-top:1px solid #eef1f5}
+  .spec .row:first-child{border-top:0}
+  .spec .k{flex:0 0 220px;background:#fafbfd;padding:10px 14px;font-weight:600;font-size:.85rem}
+  .spec .v{padding:10px 14px;font-size:.88rem}
+  /* do / don't (pros / cons) two-column callout */
+  .dodont{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+  .dodont .col{flex:1 1 280px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:14px 18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .dodont .col.do{border-top:3px solid var(--c1)}
+  .dodont .col.dont{border-top:3px solid var(--c3)}
+  .dodont h4{margin:0 0 6px;font-size:.92rem}
+  .dodont .do h4{color:var(--c1)} .dodont .dont h4{color:var(--c3)}
+  .dodont ul{margin:6px 0 0;padding-left:20px;font-size:.86rem;color:#44505f}
+  /* horizontal dated timeline */
+  .htl{display:flex;margin:22px 0;overflow-x:auto}
+  .htl .ms{flex:1 1 0;min-width:120px;position:relative;padding:26px 10px 0;text-align:center}
+  .htl .ms::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:#e1e6ee}
+  .htl .ms::after{content:"";position:absolute;top:3px;left:50%;transform:translateX(-50%);
+    width:11px;height:11px;border-radius:50%;background:var(--c2);border:2px solid #fff;box-shadow:0 0 0 1px var(--c2)}
+  .htl .ms .d{font-size:.76rem;color:var(--c2);font-weight:700}
+  .htl .ms .t{font-size:.82rem;margin-top:2px}
+  /* pull-quote / highlight */
+  .pull{border-left:4px solid var(--c4);background:var(--c4b);border-radius:0 10px 10px 0;
+    padding:16px 22px;margin:18px 0;font-size:1.05rem;color:#3a2352;font-style:italic}
+  .pull .who{display:block;margin-top:8px;font-size:.82rem;color:var(--muted);font-style:normal}
+  /* footer */
+  footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);
+    color:#8a93a3;font-size:.78rem;line-height:1.6}
+  footer code{font-size:.74rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- COMPONENT: header (REQUIRED) -->
+<header>
+  <h1>{{DOCUMENT_TITLE}}</h1>
+  <p class="sub">{{ONE_LINE_SUBTITLE}}</p>
+  <div class="crumbs">question: "{{QUESTION}}" · generated {{DATE}} · /explain</div>
+</header>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: not-canonical banner (REQUIRED) -->
+<div class="banner">
+  <strong>Generated explainer — point-in-time snapshot.</strong> This document was
+  assembled to answer a question and is not a controlled or canonical source. The
+  authoritative material is the set of files listed in the Sources section; if this
+  document and a source file disagree, the source file wins.
+</div>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: plain-language summary (REQUIRED — always first content block) -->
+<div class="summary">
+  <h2>In plain terms</h2>
+  <p>{{PLAIN_LANGUAGE_SUMMARY — 3-5 sentences, no jargon. A non-technical reader
+  should grasp the gist of the answer from this block alone.}}</p>
+</div>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: table of contents (OPTIONAL — include when the doc has 4+ sections) -->
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#s1">{{SECTION_1_TITLE}}</a></li>
+    <li><a href="#s2">{{SECTION_2_TITLE}}</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ol>
+</div>
+<!-- /COMPONENT -->
+
+<!-- ============ BODY SECTIONS — repeat / mix / delete per the answer ============ -->
+
+<!-- COMPONENT: section with a table -->
+<h2 id="s1">{{SECTION_1_TITLE}} <span class="count">— {{OPTIONAL_COUNT}}</span></h2>
+<p>{{SECTION_INTRO_PARAGRAPH}}</p>
+<table>
+  <thead><tr><th>{{COL_A}}</th><th>{{COL_B}}</th><th>{{COL_C}}</th></tr></thead>
+  <tbody>
+    <tr><td class="name">{{row-key}}</td><td>{{cell}}</td><td>{{cell}}</td></tr>
+    <tr><td class="name">{{row-key}}</td><td>{{cell}}</td><td>{{cell}}</td></tr>
+  </tbody>
+</table>
+<!-- one citation for the whole table -->
+<details class="cite"><summary></summary>
+  <div class="src">
+    <div class="path">{{repo/relative/path/to/source.md}}</div>
+    <pre>{{verbatim excerpt that supports this table}}</pre>
+  </div>
+</details>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: badges (inline classification chips) -->
+<p>
+  <span class="badge b1">{{label}}</span>
+  <span class="badge b2">{{label}}</span>
+  <span class="badge b3">{{label}}</span>
+  <span class="badge b4">{{label}}</span>
+</p>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: note / callout (warnings, caveats, "good to know") -->
+<div class="note">
+  <strong>Good to know.</strong> {{caveat, warning, or important nuance}}
+</div>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: card (grouped narrative block) -->
+<div class="card">
+  <h3>{{CARD_TITLE}}</h3>
+  <p>{{card body — a self-contained explanation that benefits from being boxed off}}</p>
+</div>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: phase timeline (processes / workflows / ordered steps) -->
+<h2 id="s2">{{PROCESS_TITLE}}</h2>
+<ol class="phases">
+  <li><span class="num"></span>
+    <span class="pt">{{STEP_1_TITLE}}</span>
+    <p>{{what happens in this step}}</p>
+  </li>
+  <li><span class="num"></span>
+    <span class="pt">{{STEP_2_TITLE}}</span>
+    <p>{{what happens in this step}}</p>
+  </li>
+</ol>
+<!-- one citation for the whole process if a single source explains it -->
+<details class="cite"><summary></summary>
+  <div class="src">
+    <div class="path">{{repo/relative/path/to/source.md}}</div>
+    <pre>{{verbatim excerpt}}</pre>
+  </div>
+</details>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: svg figure (architecture / flow / relationship diagram)
+     This is a simple default. For richer, fit-for-purpose diagrams and components
+     (layered architecture, decision flow, lifecycle, swimlane, stat tiles, progress
+     bars, spec sheets, horizontal timelines, …) pick from the gallery at
+     references/visuals/ — read references/visuals/README.md for the situation→file
+     index, then copy the markup between that file's SNIPPET markers. All gallery
+     snippets rely on the CSS already in this template's <style> block.
+     Hand-author simple inline SVG: boxes (rect), labels (text), arrows (line/path
+     with a marker). Keep it legible; this is a diagram, not a chart library. -->
+<figure>
+  <svg viewBox="0 0 600 160" role="img" aria-label="{{diagram description}}">
+    <defs>
+      <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#5b6573"/>
+      </marker>
+    </defs>
+    <rect x="20" y="50" width="150" height="56" rx="8" fill="#e6f0fa" stroke="#1f5fa6"/>
+    <text x="95" y="83" text-anchor="middle" font-size="13" fill="#1a2330">{{Box A}}</text>
+    <line x1="170" y1="78" x2="225" y2="78" stroke="#5b6573" stroke-width="2" marker-end="url(#arr)"/>
+    <rect x="230" y="50" width="150" height="56" rx="8" fill="#e6f6ec" stroke="#1b7f4b"/>
+    <text x="305" y="83" text-anchor="middle" font-size="13" fill="#1a2330">{{Box B}}</text>
+    <line x1="380" y1="78" x2="435" y2="78" stroke="#5b6573" stroke-width="2" marker-end="url(#arr)"/>
+    <rect x="440" y="50" width="150" height="56" rx="8" fill="#fdece2" stroke="#9a3412"/>
+    <text x="515" y="83" text-anchor="middle" font-size="13" fill="#1a2330">{{Box C}}</text>
+  </svg>
+  <figcaption>{{caption explaining the diagram}}</figcaption>
+</figure>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: sources (REQUIRED) -->
+<h2 id="sources">Sources</h2>
+<p>What this document was assembled from. Open these files for the authoritative detail.</p>
+<table>
+  <thead><tr><th>File</th><th>What was used from it</th></tr></thead>
+  <tbody>
+    <tr><td class="name">{{repo/relative/path}}</td><td>{{what this source provided}}</td></tr>
+    <tr><td class="name">{{repo/relative/path}}</td><td>{{what this source provided}}</td></tr>
+  </tbody>
+</table>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: related topics (OPTIONAL but recommended) -->
+<div class="related">
+  <strong>Related topics this document touched but didn't cover</strong>
+  <ul>
+    <li>{{adjacent topic 1}}</li>
+    <li>{{adjacent topic 2}}</li>
+  </ul>
+</div>
+<!-- /COMPONENT -->
+
+<!-- COMPONENT: footer (REQUIRED — provenance) -->
+<footer>
+  Generated by <code>/explain</code> · question: "{{QUESTION}}" · {{DATE}}<br>
+  Source state: branch <code>{{GIT_BRANCH}}</code> @ <code>{{GIT_SHA}}</code> (when in a git repo)<br>
+  This is a generated, point-in-time explainer — not a canonical or controlled source.
+</footer>
+<!-- /COMPONENT -->
+
+</div>
+</body>
+</html>

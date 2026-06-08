@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram — 2×2 matrix / quadrant</title>
+<style>
+  :root{--bg:#f6f8fb;--ink:#1a2330;--muted:#5b6573;--line:#d9dee6;--navy:#28384f;
+    --c1:#1b7f4b;--c1b:#e6f6ec;--c2:#1f5fa6;--c2b:#e6f0fa;--c3:#9a3412;--c3b:#fdece2;--c4:#6b21a8;--c4b:#f3e9fb}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:28px;line-height:1.5}
+  .pnote{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;padding:10px 14px;margin:0 0 18px;font-size:.82rem;color:#6b5618}
+  figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:.82rem;color:var(--muted);margin-top:10px;text-align:center}
+  svg text{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+</style>
+</head>
+<body>
+<div class="pnote">Standalone preview of the <code>diagram-matrix-quadrant</code> snippet. The CSS here is <strong>preview-only</strong> — canonical styles live in <code>../../templates/explainer.html</code>. To use this visual, copy only the markup between the SNIPPET markers. For <em>when</em> to use which visual, see the selection table in <code>../../SKILL.md</code>.</div>
+<!-- BEGIN SNIPPET: diagram-matrix-quadrant -->
+<figure>
+  <svg viewBox="0 0 1000 420" role="img" aria-label="{{what this 2x2 positions}}">
+    <!-- quadrant fills -->
+    <rect x="120" y="40" width="400" height="160" fill="#e6f0fa"/>
+    <rect x="520" y="40" width="400" height="160" fill="#e6f6ec"/>
+    <rect x="120" y="200" width="400" height="160" fill="#fdece2"/>
+    <rect x="520" y="200" width="400" height="160" fill="#f3e9fb"/>
+    <!-- grid lines -->
+    <rect x="120" y="40" width="800" height="320" fill="none" stroke="#9aa6b6"/>
+    <line x1="520" y1="40" x2="520" y2="360" stroke="#9aa6b6"/>
+    <line x1="120" y1="200" x2="920" y2="200" stroke="#9aa6b6"/>
+    <!-- quadrant labels -->
+    <text x="320" y="125" text-anchor="middle" font-size="13" font-weight="700" fill="#1f5fa6">{{Quadrant TL}}</text>
+    <text x="720" y="125" text-anchor="middle" font-size="13" font-weight="700" fill="#1b7f4b">{{Quadrant TR}}</text>
+    <text x="320" y="285" text-anchor="middle" font-size="13" font-weight="700" fill="#9a3412">{{Quadrant BL}}</text>
+    <text x="720" y="285" text-anchor="middle" font-size="13" font-weight="700" fill="#6b21a8">{{Quadrant BR}}</text>
+    <!-- axis labels -->
+    <text x="520" y="392" text-anchor="middle" font-size="12" font-weight="700">{{X axis →  (low … high)}}</text>
+    <text x="40" y="200" text-anchor="middle" font-size="12" font-weight="700" transform="rotate(-90 40 200)">{{Y axis ↑  (low … high)}}</text>
+  </svg>
+  <figcaption>{{Caption — name the axes and what each quadrant means; place items as small labels if needed.}}</figcaption>
+</figure>
+<!-- END SNIPPET -->
+</body>
+</html>
