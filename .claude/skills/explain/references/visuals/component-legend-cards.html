@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Component — Legend / category cards</title>
+<style>
+  :root{--bg:#f6f8fb;--ink:#1a2330;--muted:#5b6573;--line:#d9dee6;--navy:#28384f;
+    --c1:#1b7f4b;--c1b:#e6f6ec;--c2:#1f5fa6;--c2b:#e6f0fa;--c3:#9a3412;--c3b:#fdece2;--c4:#6b21a8;--c4b:#f3e9fb}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:28px;line-height:1.5}
+  .pnote{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;padding:10px 14px;margin:0 0 18px;font-size:.82rem;color:#6b5618}
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.76rem;font-weight:600}
+  .b1{color:var(--c1);background:var(--c1b)} .b2{color:var(--c2);background:var(--c2b)}
+  .b3{color:var(--c3);background:var(--c3b)} .b4{color:var(--c4);background:var(--c4b)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+  .legend .item{flex:1 1 240px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  .legend .item .badge{margin-bottom:6px}
+  .legend .item p{margin:4px 0 0;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="pnote">Standalone preview of the <code>component-legend-cards</code> snippet. The CSS here is <strong>preview-only</strong> — canonical styles live in <code>../../templates/explainer.html</code>. To use this visual, copy only the markup between the SNIPPET markers. For <em>when</em> to use which visual, see the selection table in <code>../../SKILL.md</code>.</div>
+<!-- BEGIN SNIPPET: component-legend-cards -->
+<div class="legend">
+  <div class="item"><span class="badge b1">{{Category 1}}</span><p>{{what this category means}}</p></div>
+  <div class="item"><span class="badge b2">{{Category 2}}</span><p>{{what this category means}}</p></div>
+  <div class="item"><span class="badge b3">{{Category 3}}</span><p>{{what this category means}}</p></div>
+</div>
+<!-- END SNIPPET -->
+</body>
+</html>

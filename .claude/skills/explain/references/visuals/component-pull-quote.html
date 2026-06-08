@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Component — Pull-quote / highlight</title>
+<style>
+  :root{--bg:#f6f8fb;--ink:#1a2330;--muted:#5b6573;--c4:#6b21a8;--c4b:#f3e9fb}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:28px;line-height:1.5}
+  .pnote{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;padding:10px 14px;margin:0 0 18px;font-size:.82rem;color:#6b5618}
+  .pull{border-left:4px solid var(--c4);background:var(--c4b);border-radius:0 10px 10px 0;padding:16px 22px;margin:18px 0;font-size:1.05rem;color:#3a2352;font-style:italic}
+  .pull .who{display:block;margin-top:8px;font-size:.82rem;color:var(--muted);font-style:normal}
+</style>
+</head>
+<body>
+<div class="pnote">Standalone preview of the <code>component-pull-quote</code> snippet. The CSS here is <strong>preview-only</strong> — canonical styles live in <code>../../templates/explainer.html</code>. To use this visual, copy only the markup between the SNIPPET markers. For <em>when</em> to use which visual, see the selection table in <code>../../SKILL.md</code>.</div>
+<!-- BEGIN SNIPPET: component-pull-quote -->
+<div class="pull">
+  {{The single statement worth highlighting — a definition, principle, or key takeaway.}}
+  <span class="who">{{— optional attribution / source}}</span>
+</div>
+<!-- END SNIPPET -->
+</body>
+</html>

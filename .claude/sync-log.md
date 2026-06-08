@@ -944,3 +944,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Hitachi HEAD after sync: `e3a369b`
 - Preflight: all 10 files `UPSTREAM_NEWER` by content but verified upstream == local committed baseline (divergence is purely local edits → safe LOCAL_AHEAD advance). `__pycache__` scrubbed pre-push.
 - Origin: PDLC_DEMO task ben/081. gap-analysis v5→v6 (optional `## Assertion positions` → additive `assertions[].positions[]`, schema_version unchanged 1.0); project-console 1.23.2→1.25.0 (1.24.0 Goals banner + agent-response viewer; 1.25.0 Report/Advisors tabs + per-advisor assertion positions). Design via frontend-design.
+
+## 2026-06-08 — pull (explain skill + advisor advances)
+
+- Hitachi HEAD after sync: `3535fe7` (local mirror was 9 commits behind; fast-forwarded clean)
+- Pulled (35 files):
+  - `skills/explain/**` (24) — NEW skill: project-question → self-contained visualization-rich HTML explainer saved to personal scratch. Guidance-only (no hooks/scripts/setup action).
+  - `skills/advisors/agents/*.md` (11) — 1-commit advance (HIPAA-grounding follow-on, `cd3f800`). The 11 top-level `agents/*.md` symlinks resolved automatically once these targets updated (same content, double-counted in raw drift).
+- Drift after pull: 0 files (SYNCED).
+- project.yml: added `explain` to `security.approved_skills`.
+- Follow-ups: none — `explain` has no setup action, no hooks; no `/best-practices` re-run triggered. 17 stale `sync/*` branches pruned separately (hygiene).
+- Origin: PDLC_DEMO task ben/084. Surfaced when user asked "are we synced?"

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram — Side-by-side comparison / mapping</title>
+<style>
+  :root{--bg:#f6f8fb;--ink:#1a2330;--muted:#5b6573;--line:#d9dee6;--navy:#28384f;
+    --c1:#1b7f4b;--c1b:#e6f6ec;--c2:#1f5fa6;--c2b:#e6f0fa;--c3:#9a3412;--c3b:#fdece2;--c4:#6b21a8;--c4b:#f3e9fb}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:28px;line-height:1.5}
+  .pnote{background:#fff8e6;border:1px solid #f0dca0;border-radius:8px;padding:10px 14px;margin:0 0 18px;font-size:.82rem;color:#6b5618}
+  figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 1px 3px rgba(20,30,48,.06)}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:.82rem;color:var(--muted);margin-top:10px;text-align:center}
+  svg text{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+</style>
+</head>
+<body>
+<div class="pnote">Standalone preview of the <code>diagram-comparison-mapping</code> snippet. The CSS here is <strong>preview-only</strong> — canonical styles live in <code>../../templates/explainer.html</code>. To use this visual, copy only the markup between the SNIPPET markers. For <em>when</em> to use which visual, see the selection table in <code>../../SKILL.md</code>.</div>
+<!-- BEGIN SNIPPET: diagram-comparison-mapping -->
+<figure>
+  <svg viewBox="0 0 1000 300" role="img" aria-label="{{what is mapped to what}}">
+    <defs>
+      <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5b6573"/></marker>
+    </defs>
+    <!-- column headers -->
+    <rect x="40" y="14" width="360" height="40" rx="8" fill="#e6f0fa" stroke="#1f5fa6"/><text x="220" y="39" text-anchor="middle" font-size="13" font-weight="700">{{Side A}}</text>
+    <rect x="600" y="14" width="360" height="40" rx="8" fill="#e6f6ec" stroke="#1b7f4b"/><text x="780" y="39" text-anchor="middle" font-size="13" font-weight="700">{{Side B}}</text>
+    <!-- rows -->
+    <rect x="40" y="74" width="360" height="48" rx="7" fill="#fff" stroke="#1f5fa6"/><text x="220" y="103" text-anchor="middle" font-size="12">{{A item 1}}</text>
+    <rect x="600" y="74" width="360" height="48" rx="7" fill="#fff" stroke="#1b7f4b"/><text x="780" y="103" text-anchor="middle" font-size="12">{{B item 1}}</text>
+    <line x1="400" y1="98" x2="596" y2="98" stroke="#5b6573" stroke-width="2" marker-end="url(#arr)"/>
+
+    <rect x="40" y="134" width="360" height="48" rx="7" fill="#fff" stroke="#1f5fa6"/><text x="220" y="163" text-anchor="middle" font-size="12">{{A item 2}}</text>
+    <rect x="600" y="134" width="360" height="48" rx="7" fill="#fff" stroke="#1b7f4b"/><text x="780" y="163" text-anchor="middle" font-size="12">{{B item 2}}</text>
+    <line x1="400" y1="158" x2="596" y2="158" stroke="#5b6573" stroke-width="2" marker-end="url(#arr)"/>
+
+    <rect x="40" y="194" width="360" height="48" rx="7" fill="#fff" stroke="#1f5fa6"/><text x="220" y="223" text-anchor="middle" font-size="12">{{A item 3}}</text>
+    <rect x="600" y="194" width="360" height="48" rx="7" fill="#fff" stroke="#1b7f4b"/><text x="780" y="223" text-anchor="middle" font-size="12">{{B item 3}}</text>
+    <line x1="400" y1="218" x2="596" y2="218" stroke="#5b6573" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="498" y="266" text-anchor="middle" font-size="10.5" fill="#44505f">{{what the mapping means}}</text>
+  </svg>
+  <figcaption>{{Caption — what each side is and how the pairs correspond.}}</figcaption>
+</figure>
+<!-- END SNIPPET -->
+</body>
+</html>

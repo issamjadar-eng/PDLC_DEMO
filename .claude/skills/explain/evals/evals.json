@@ -1,0 +1,70 @@
+{
+  "skill_name": "explain",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/explain how is this project organized and where do I find what?",
+      "expected_output": "A self-contained HTML explainer answering the structural question, saved to the resolved scratch folder, plus a one-paragraph chat reply with a clickable link.",
+      "files": [],
+      "expectations": [
+        "An HTML file is created whose name matches the pattern YYYY-MM-DD-hh-mm-ss-<short-title>.html",
+        "The HTML file is self-contained: it has no external <script src>, <link href>, CDN, or font URLs",
+        "The document contains a plain-language summary block as its first content block",
+        "The document contains at least one table or one inline SVG diagram",
+        "The document contains at least one collapsible source-citation widget (a <details> block) and a Sources section listing files that were read",
+        "The document carries the not-canonical banner",
+        "The document substantively and accurately answers how the project is organized (grader judgment against the actual project structure)",
+        "The chat reply is roughly one paragraph and includes a clickable link/path to the generated file"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/explain --simple how do people work together and keep track of their work in this project?",
+      "expected_output": "A self-contained HTML explainer about the project's working/collaboration conventions, written jargon-free for a non-technical reader.",
+      "files": [],
+      "expectations": [
+        "An HTML file is created whose name matches the pattern YYYY-MM-DD-hh-mm-ss-<short-title>.html",
+        "The HTML file is self-contained (no external script/style/font/CDN URLs)",
+        "The document opens with a plain-language summary and substantively answers the collaboration/workflow question (grader judgment)",
+        "The document is written without unexplained technical jargon, consistent with the --simple flag (grader judgment)",
+        "The document includes source citations grounded in real project files (Sources section is non-empty and paths resolve)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/explain list",
+      "expected_output": "A small chat table of the user's previously generated explainers (or a clear 'none yet' message), with no new HTML file generated.",
+      "files": [],
+      "expectations": [
+        "No new HTML explainer document is generated for this invocation",
+        "The response is a chat-only listing (table of past explainers) or a plain 'no explainers yet' message when the folder is empty or missing"
+      ]
+    }
+  ],
+  "trigger_evals": {
+    "should_trigger": [
+      "/explain how is this project organized?",
+      "/explain what is the regulatory pathway and why was it chosen?",
+      "/explain --simple what does this project actually do?",
+      "/explain how does the task workflow work here?",
+      "/explain give me a visual overview of the folder structure",
+      "/explain list",
+      "/explain walk me through how documents flow from input to submission",
+      "/explain what are the main components and how do they relate?",
+      "/explain help",
+      "/explain summarize the project's current status as a document"
+    ],
+    "should_not_trigger": [
+      "how is this project organized?",
+      "what's the regulatory pathway for this device?",
+      "can you explain how the task workflow works?",
+      "give me an overview of the folder structure",
+      "what does this project do?",
+      "make me an HTML report of the open risks",
+      "build a slide deck explaining the architecture",
+      "create a dashboard of submission readiness",
+      "summarize the recent project activity",
+      "explain this error message I'm getting in the terminal"
+    ]
+  }
+}
