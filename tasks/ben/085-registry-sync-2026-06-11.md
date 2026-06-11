@@ -2,7 +2,7 @@
 
 **ID**: 085
 **Created**: 2026-06-11
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -40,7 +40,7 @@ _User asked: "pull the latest from our project and skill repo; push once you hav
 - [x] Fix 3: project.yml `file_locator.corpus_excludes` — add `**/_work/**` (file-locator v3)
 - [x] Fix 4: delete `.claude/skills/change-control/actions/promote.py` (upstream retired staging→promote in 0.13.1; local blob `954935b` = the exact blob upstream deleted in `ef75911`)
 - [x] Write `.claude/sync-log.md` entry (hitachi HEAD `9fb865e`)
-- [ ] Commit → branch `ben/085-registry-sync-2026-06-11` → PR → merge → delete branch
+- [x] Commit → branch `ben/085-registry-sync-2026-06-11` → PR #52 → merged to main (`de0fd44`) → branch deleted
 
 ## Notes — impact analysis findings
 
@@ -58,3 +58,4 @@ _User asked: "pull the latest from our project and skill repo; push once you hav
 
 - 2026-06-11: Task created mid-sync. Project pull + 65-file registry pull + impact analysis done; alignment fixes pending.
 - 2026-06-11: All 4 alignment fixes applied (ai-changelog symlink + CLAUDE.md pointer; scratch-and-tmp pointer; project.yml corpus_excludes; promote.py deleted). Sync-log entry written (hitachi HEAD `9fb865e`). Remaining: commit → PR → merge.
+- 2026-06-11: Landed on main via PR #52 (commit `3d2ba9b`, merge `de0fd44`); branch deleted. Post-merge `sync.sh check` drift = 0 (SYNCED). Status → Complete.
