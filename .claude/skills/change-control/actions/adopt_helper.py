@@ -7,7 +7,7 @@ Designed for Option A (agent-orchestrated) action flow:
      and `mcp__atlassian__getConfluencePage(contentFormat=adf)`.
   2. Agent invokes:
          python actions/adopt_helper.py write \
-             --target docs/confluence-staging/<SPACE>/<path>/<slug>.md \
+             --target <staging_target_root>/<SPACE>/<path>/<slug>.md \
              --space-key <SPACE> \
              --parent-page-id <parent-page-id> \
              --page-path "<SPACE>/<parent-title>/<page-title>" \

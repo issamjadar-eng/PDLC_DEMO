@@ -7,13 +7,13 @@ description: |
     - "grab the Confluence page(s) at <url>"
     - "pull the Confluence page <title> into our docs"
     - "sync the Confluence page <url> into the project"
-    - "import this Confluence subtree into docs/project/dhfs"
+    - "import this Confluence subtree into our docs"
     - "mirror the <space> Confluence pages locally"
     - "adopt the existing Confluence content for <topic>"
     - "copy the Confluence pages over to our repo"
     - "acquire the formal Confluence content as markdown"
     - "we already have these pages in Confluence — bring them in"
-  Inbound actions: `adopt` (single page), `adopt-tree` (subtree, bulk), `pull` (refresh side-by-side comparison), `promote` (staging → canonical DHF location). Output goes to `docs/confluence-staging/<space>/...` first; promotion to `docs/project/dhfs/...` is a deliberate later step.
+  Inbound actions: `adopt` (single page), `adopt-tree` (subtree, bulk), `pull` (refresh side-by-side comparison). Adopted content lands at the project-configured `staging_target_root` (`change_control.spaces[].staging_target_root` in `project.yml`) — typically the canonical Confluence-mirror root, so adopt writes content directly into its controlled home.
 
   TRIGGER for OUTBOUND (repo → Confluence/Windchill) — when the user wants to **publish, push, freeze, release, send-up, hand off, or sign off** local markdown to the regulated stack. Natural-language phrasings:
     - "publish this doc to Confluence"
@@ -28,8 +28,8 @@ description: |
   Lifecycle: `draft → published → review-formal → frozen → released`. Enforces freeze gate via PreToolUse hook with in-chat consent.
 
   Other actions: `init`, `status`, `help`, `reindex`, `verify`.
-version: 0.13.0
-updated: 2026-04-29
+version: 0.13.1
+updated: 2026-06-08
 status: adopt-publish-probe-validated
 ---
 
@@ -43,7 +43,7 @@ Owns the **change-management bridge** between AI-accelerated authoring (Claude C
 
 This skill handles **both directions** of the bridge between local markdown and the regulated stack:
 
-**INBOUND — Confluence → repo (`adopt` / `adopt-tree` / `pull` / `promote`)**
+**INBOUND — Confluence → repo (`adopt` / `adopt-tree` / `pull`)**
 
 When formal content already exists in Confluence and the team wants to bring it into the project's markdown tree (so Claude Code can author against it, trace tooling can index it, V&V can verify against it). Use this when the user says "grab", "pull", "import", "adopt", "mirror", "sync", "acquire", or "copy" Confluence pages into the repo.
 
@@ -51,11 +51,10 @@ When formal content already exists in Confluence and the team wants to bring it 
 Confluence page(s)
         │  -- adopt / adopt-tree (Atlassian MCP fetch, ADF→md, snapshot) --
         ▼
-docs/confluence-staging/<space>/<path>.md     ← staged hybrid (frontmatter snapshot kept)
-        │  -- promote (operator-supervised) --
-        ▼
-docs/project/dhfs/<dhf>/<canonical-location>.md
+<staging_target_root>/<space>/<path>.md   ← controlled markdown (frontmatter snapshot kept)
 ```
+
+`staging_target_root` is project-configured (`change_control.spaces[].staging_target_root`). Projects point it at the canonical Confluence-mirror root so adopt lands content directly in its controlled home — there is no separate "stage then promote" step.
 
 **OUTBOUND — repo → Confluence → Windchill (`publish` / `freeze` / `unfreeze` / `release`)**
 
@@ -85,7 +84,6 @@ The freeze enforcement lives in a **PreToolUse hook** that blocks Edit/Write on 
 | `adopt-tree` | **Probe-validated** | JSON-directive MCP bridge for bulk subtree pulls. Avoids per-page agent turn cost. Per `actions/adopt_tree.md`. |
 | `pull` | **Probe-validated** | Refreshes `<doc>.confluence-side.md` next to source. Required by `publish` Merge branch. |
 | `publish` | **Probe-validated** | First-publish + update with divergence detection + Confluence Zone preservation. Per `actions/publish.md`. |
-| `promote` | **Stub** (`actions/promote.py`) | Move adopted content from staging to canonical DHF path. |
 | `freeze` / `unfreeze` | **Stub** | Lifecycle transitions; PreToolUse hook design captured but enforcement not yet wired. |
 | `release` | **Stub** | Confluence → Windchill ECO handoff. |
 | `review-start` / `review-status` / `review-update` / `review-abort` | **v0.1 shipped** | gdoc round-trip via web-control + task-doc metadata block. |
@@ -135,7 +133,7 @@ Parse the user's argument string `$ARGUMENTS` to determine which action to perfo
 
 **STATUS: Probe-validated, agent-orchestrated.** Per `actions/adopt.md`.
 
-Pulls one Confluence page into the repo as markdown. Default target is `docs/confluence-staging/<space-key>/<sanitized-page-path>.md`. The page's ADF body is fetched via Atlassian MCP, normalized to markdown locally, and written with frontmatter capturing `confluence.page_id`, `confluence.version`, and a content snapshot used by `publish` for divergence detection.
+Pulls one Confluence page into the repo as markdown. Default target is `<staging_target_root>/<space-key>/<sanitized-page-path>.md`, where `staging_target_root` is read from the configured space in `project.yml` (`change_control.spaces[].staging_target_root`) — projects point it at the canonical Confluence-mirror root. The page's ADF body is fetched via Atlassian MCP, normalized to markdown locally, and written with frontmatter capturing `confluence.page_id`, `confluence.version`, and a content snapshot used by `publish` for divergence detection.
 
 Use when the user says: *"grab/pull/import/adopt/sync/mirror/copy/acquire the Confluence page at <url>"*, *"bring this Confluence page into our docs"*, *"we already have this in Confluence — pull it in"*.
 
@@ -155,10 +153,6 @@ Reads the current Confluence page body for an already-published doc and writes a
 
 Use when the user says: *"refresh the Confluence side of <doc>"*, *"show me what Confluence has for this page right now"*, *"diff our markdown against Confluence"*.
 
-### `promote <staged-path> <target-path>`
-
-**STATUS: Stub.** Move adopted content from `docs/confluence-staging/<space>/...` into a canonical DHF location under `docs/project/dhfs/...`. Updates frontmatter and any cross-references. Operator-supervised — never auto-promotes.
-
 ### `publish <doc>`
 
 **STATUS: Probe-validated.** Per `actions/publish.md`.
@@ -166,6 +160,8 @@ Use when the user says: *"refresh the Confluence side of <doc>"*, *"show me what
 Push local markdown to its Confluence page. Either creates a new page (when no `confluence.page_id` in frontmatter) or updates an existing page with **divergence detection** + **Confluence Zone preservation** (reserved `<details>` titles preserved across round-trips via ADF splice).
 
 On divergence (Confluence has been edited since last sync), prompts Overwrite / Merge / Abort. Refuses when `state ∈ {review-formal, frozen, released}`.
+
+**Publish gate — `confluence.publish_body` (default-deny for binary-authoritative records).** If the page's frontmatter has `confluence.publish_body: false` (or `docflow.authoritative: formal` with no explicit `publish_body: true`), do **NOT** push the markdown body as Confluence page content. These pages are *non-canonical derived views* (the docflow `_confluence`-splice convention): the canonical published artifact is the **attachment** (`label=actual`, uploaded via the `confluence-side: attachments` sentinel) **+ the node's `index.md` landing page** — not the version-page body. Publishing the body is opt-in only (`publish_body: true`). When the gate is active, `publish` still reconciles/uploads the attachment + maintains the index page, but skips the body→ADF push for the version page.
 
 Use when the user says: *"publish this doc to Confluence"*, *"push our markdown up to Confluence"*, *"update the Confluence page from our local copy"*.
 

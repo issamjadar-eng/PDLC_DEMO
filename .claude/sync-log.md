@@ -955,3 +955,21 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - project.yml: added `explain` to `security.approved_skills`.
 - Follow-ups: none — `explain` has no setup action, no hooks; no `/best-practices` re-run triggered. 17 stale `sync/*` branches pruned separately (hygiene).
 - Origin: PDLC_DEMO task ben/084. Surfaced when user asked "are we synced?"
+
+## 2026-06-11 — pull (bulk: 65 files, 8 skills advanced)
+
+- Hitachi HEAD after sync: `9fb865e` (local mirror already in lockstep with origin/main)
+- Pulled (65 files): 42 UPSTREAM_ADVANCE + 23 UPSTREAM_ONLY; 0 LOCAL_AHEAD, 0 BOTH_DIVERGED.
+  - `skills/task/` v29 — `_work/` committed personal sandbox wired in (`rules/scratch-and-tmp.md` + create/setup steps)
+  - `skills/medtech-docs/` v32 — new auto-loaded rule `rules/ai-changelog.md`; 8 new FDA-guidance distillations + source PDFs/MDs; reference-library escalation-contract pass; `templates/readme-dev-spec.md`
+  - `skills/file-locator/` v3 — `**/_work/**` excluded from corpus by default; new `scripts/binary_coverage.py`
+  - `skills/change-control/` 0.13.1 — retired staging→promote inbound model (adopt lands at `staging_target_root` directly)
+  - `skills/dhf-manifest/` — new `scripts/audit-coverage.py` (taxonomy mapping completeness) + audit row
+  - `skills/docflow/` v32–v35 — adopt explicit-location + `_confluence` SPLICE mode + faithfulness policy; new `scripts/locate_md_target.py`
+  - `skills/advisors/` 10 — advisor-researcher registry carve-out (may read `medtech-docs/references/**`)
+  - `skills/reference-audit/` 4 — `regulations/` category wired into citations stack
+- Deleted (mirroring upstream): `skills/change-control/actions/promote.py` (local blob `954935b` bit-identical to the blob upstream removed in `ef75911`)
+- Drift after pull: 0 files (SYNCED).
+- project.yml: added `**/_work/**` to `file_locator.corpus_excludes` (no allowlist changes — no new skills/agents).
+- Follow-ups applied in-line: `.claude/rules/ai-changelog.md` symlink + CLAUDE.md pointer (medtech-docs init Check 7d); CLAUDE.md `scratch-and-tmp.md` pointer line updated for `_work/` (task v29). index.db rebuild not needed locally (CI-owned on PR merge).
+- Origin: PDLC_DEMO task ben/085. User asked "pull the latest from project + skill repo, then push."

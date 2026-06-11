@@ -201,7 +201,13 @@ roles:
         - "*Software Architecture Document*.md"
         - "*-sad.md"
     external:
-      taxonomy_folder: software-architecture-document-sad
+      # A role can surface under different external-template slugs: item DHFs use
+      # `software-architecture-document-sad` (Software AD); a system DHF uses
+      # `system-architecture-document` (the device-level System AD). Candidates are
+      # tried in order — first whose folder exists under the DHF wins.
+      taxonomy_folder:
+        - software-architecture-document-sad   # item: Software Architecture Document
+        - system-architecture-document         # system DHF: System Architecture Document
       patterns:
         - "v*.md"        # versioned content (preferred — substantive)
         - "index.md"     # Confluence index page (small)
@@ -272,6 +278,29 @@ roles:
         - "v*.md"
         - "index.md"
 
+  software_development_plan:
+    scope: per-dhf
+    description: Software / Design & Development Plan (SDP / DDP) — development planning per IEC 62304 §5.1.
+    consumers: [program-manager, quality-engineering, rd-lead, regulatory-affairs]
+    internal:
+      folder: design-controls/plans
+      patterns:
+        - "*Software Development Plan*.md"
+        - "*-sdp.md"
+        - "*Design and Development Plan*.md"
+        - "* DDP.md"
+        - "*-ddp.md"
+    external:
+      # Item DHFs use `software-development-plan-sdp` (Software Development Plan);
+      # a system DHF uses `design-development-plan-ddp` (device-level Design &
+      # Development Plan). Candidates tried in order; first present under the DHF wins.
+      taxonomy_folder:
+        - software-development-plan-sdp
+        - design-development-plan-ddp
+      patterns:
+        - "v*.md"
+        - "index.md"
+
   verification_plan:
     scope: per-dhf
     description: V&V plan — verification + validation strategy per IEC 62304 §5.6 / §5.7.
@@ -321,8 +350,16 @@ roles:
         - "* - Risk Management Plan.md"
         - "*-risk-management-plan.md"
         - "*-rmp.md"
-    # No external-mode entry — item DHFs in Confluence template don't have a
-    # separate RMP document; risk evidence lives in SRA + HTM there.
+    external:
+      # Item DHFs in the Confluence template carry no separate RMP doc (risk
+      # evidence lives in SRA + HTM there) — but a SYSTEM DHF has a dedicated,
+      # device-level Risk Management Plan node. Only the system-tier slug is
+      # listed; on item DHFs it simply won't resolve (informational, not a gap).
+      taxonomy_folder:
+        - risk-management-plan                 # system DHF: integrated Risk Management Plan
+      patterns:
+        - "v*.md"
+        - "index.md"
 
   software_risk_assessment:
     scope: per-dhf

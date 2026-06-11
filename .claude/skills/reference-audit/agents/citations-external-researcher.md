@@ -56,19 +56,21 @@ Extract `(source_class, locator)`:
 `Glob` for the source file in `.claude/skills/medtech-docs/references/`:
 - Standards: `.claude/skills/medtech-docs/references/standards/<kebab-case>.md`
 - FDA guidance: `.claude/skills/medtech-docs/references/fda-guidance/<kebab-case>*.md` (also accept legacy `-distilled.md` suffix)
+- Regulations (CFR parts): `.claude/skills/medtech-docs/references/regulations/<kebab-case>.md` (e.g., `21 CFR 880.6310` → `21-cfr-part-880.md` — files are per-Part; search the Part file for the cited section)
 - Industry frameworks: `.claude/skills/medtech-docs/references/industry-frameworks/<kebab-case>.md`
 
-If found: `Read` the file. Search for the cited clause/section. Note whether the clause exists and what its distilled content says about the claim.
+If found: `Read` the file. Search for the cited clause/section. Note whether the clause exists and what its distilled content says about the claim. Honor any quarantine banner or `[VERIFY]` marker in the distilled file — content under a "CLAUSE NUMBERING UNVERIFIED" banner cannot support a `sound` verdict on a clause-number claim.
 
 If not found: L1a is silent on this reference. Mark this for the verdict.
 
-**Never read** files under `.../source/` or `.../source-md/` — those are raw upstream artifacts (L1c), not authority.
+**Do not ground on `.../source/` or `.../source-md/` (L1c)** — the distilled file is the citation authority. **Scoped escalation exception:** if the distilled file exists but is *silent on the cited clause/section*, or the claim turns on *exact wording*, you may `Read` the matching `source-md/<basename>.md` (where one exists — currently fda-guidance only) to complete the predicate match. Record the source-md excerpt in evidence; the citation authority you name remains the distilled file, and if the distillation omits content the source carries, say so in `suggested_fix` (the distillation needs a backfill).
 
 ### Step 3 — L1b lookup (project applicability)
 
 `Glob` for the corresponding applicability file under `docs/external/`:
 - Standards: `docs/external/standards/<kebab-case>*.md`
 - FDA guidance: `docs/external/fda-guidance/<kebab-case>*.md`
+- Regulations: `docs/external/regulations/<kebab-case>*.md`
 - Industry frameworks: `docs/external/industry-frameworks/<kebab-case>*.md`
 
 If found: `Read` it. Look for any project decision about the cited clause — applicability matrices, `[VERIFY]` markers, QMS deferrals, module-specific notes. Capture relevant context.
@@ -135,7 +137,7 @@ When you do fetch: capture the URL + retrieved excerpt + timestamp in evidence.
 ## Hard rules
 
 - **Always consult L1a + L1b before any web fetch.** The two-tier lookup is the default, not an option.
-- **L1c is excluded.** Never read `source/` or `source-md/`. Raw upstream artifacts are not authority.
+- **L1c is not authority, with one scoped exception.** Never read `source/` binaries, and never cite `source-md/` as the resolving source. You may read `source-md/<basename>.md` only under the Step-2 escalation conditions (distillation silent on the cited clause, or exact-wording claim) — as verification evidence, not as the cited authority.
 - **No web fetch for paywalled standards.** ISO and IEC standard bodies are paywalled — return `unverified, kind=unreachable-source` if L1a is silent on a paywalled clause. Do not hallucinate clause content.
 - **No domain opinions.** You verify whether the source supports the claim. You do not decide whether the citation is appropriate, whether a different source would be better, or what the project *should* do.
 - **Read shallowly.** Use `Read` with `limit:` parameter — typically 60–150 lines per file. You're verifying a single clause, not analyzing the full standard.

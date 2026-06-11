@@ -1,8 +1,8 @@
 ---
 name: reference-audit
 description: Verify references and citations in a project document — broken links, stale standards clauses, mismatched anchors, prose pointers that don't resolve. Builds a structured findings report at `docs/_analysis/<doc-slug>/references-audit.md`. Two-tier verification by default — L1a registry distillation (`.claude/skills/medtech-docs/references/`) + L1b project applicability (`docs/external/`) per the medtech-docs "cite both" mandate. Owns the `citations` advisor and three researcher subagents (external-formal / internal-formal / informal-link). TRIGGER when the user wants to audit, verify, validate, or check the references / citations / sources / links in a specific document (e.g. "audit the references in regulatory-strategy.md", "are the citations in our SRS sound?", "check for broken links in the system SAD", "verify the standards citations in this doc"); also trigger on broken-link / stale-citation troubleshooting and on requests for FDA-reviewer-style citation pen-testing. Project-agnostic.
-version: 3
-updated: 2026-05-29
+version: 4
+updated: 2026-06-11
 ---
 
 # Reference Audit
@@ -134,7 +134,7 @@ Roll-up of open reference audits across `docs/_analysis/`.
 
 - `applicability-gap` — L1a covers, L1b silent for this project; suggested fix extends the project's applicability file.
 - `applicability-conflict` — L1b contradicts the citing claim.
-- `obligation-unmapped` — citation references a regulation that has no obligation entry in the dhf-manifest tier1-regulatory catalog.
+- `obligation-unmapped` — citation references a regulation that has no obligation entry in the dhf-manifest Tier-1 obligation catalog (`.claude/skills/dhf-manifest/data/`).
 - `unsourced-claim-candidate` — paragraph asserts a regulatory/clinical/standards fact with no citation; routed to SME advisor for adjudication.
 - `weak-reference` / `stronger-source-exists` — a stronger source exists for the same claim.
 

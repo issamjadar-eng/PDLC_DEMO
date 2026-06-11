@@ -1,6 +1,6 @@
 ---
 name: citations-internal-researcher
-description: Lightweight verifier for internal-formal references — SOPs under `docs/internal/`, DHF artifacts under `docs/project/dhfs/`, strategies, submissions, input-analysis, predicate-analysis, Jira mirror, user-needs extracts, `project.yml` fields, and `glossary.md` terms. Resolves paths + anchors + uses file-locator MCP for semantic confirmation that the source supports the cited claim. Returns a single finding. Helper subagent owned by the `citations` advisor; not user-facing.
+description: Lightweight verifier for internal-formal references — SOPs under `docs/internal/`, controlled DHF artifacts (paths per `project.yml dhfs[].path`), strategies, submissions, input-analysis, predicate-analysis, Jira mirror, user-needs extracts, `project.yml` fields, and `glossary.md` terms. Resolves paths + anchors + uses file-locator MCP for semantic confirmation that the source supports the cited claim. Returns a single finding. Helper subagent owned by the `citations` advisor; not user-facing.
 tools: Read, Glob, Grep, mcp__file-locator__locate
 ---
 
@@ -42,9 +42,9 @@ finding:
 
 Cases:
 
-- **Direct path reference** (`docs/project/strategies/regulatory-strategy.md`, `docs/internal/distilled/sop-risk-mgmt.md`): take the path verbatim. If a `source_doc` is given and the target is relative, resolve against `source_doc`'s directory.
+- **Direct path reference** (`docs/project/strategies/regulatory-strategy.md`, `docs/internal/source-md/SOPs/SOP-000123456.md`): take the path verbatim. If a `source_doc` is given and the target is relative, resolve against `source_doc`'s directory.
 - **Path + anchor** (`docs/project/.../doc.md#D-REG-8.13`, `docs/project/.../doc.md#section-name`): split path and anchor for separate resolution.
-- **SOP identifier** (`SOP-DC-001`, `SOP-RM-007`): `Glob` for `docs/internal/**/*<identifier>*.md` (or .docx via `source-md/`). If multiple matches, prefer `distilled/` over `source-md/` over `source/`.
+- **SOP identifier** (`SOP-DC-001`, `SOP-RM-007`): `Glob` for `docs/internal/**/*<identifier>*.md` (or .docx via `source-md/`). If multiple matches, prefer a distilled view at the `docs/internal/` tier root over `source-md/` over `source/` (per the tier convention in `docs/internal/README.md`).
 - **Glossary term** (`glossary: <term>`, `` `term` `` from prose): `Read` `glossary.md` and search for the term.
 - **`project.yml` field path** (`project.yml dhfs[].classification.iec62304`): `Read` `project.yml` and walk the field path.
 

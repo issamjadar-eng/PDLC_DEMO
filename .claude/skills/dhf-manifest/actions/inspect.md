@@ -46,6 +46,38 @@ Exit 0 only if all checks pass.
 
 ---
 
+## `audit-coverage`
+
+Taxonomy mapping-completeness audit — the **inverse** of `discovery-index`. Discovery
+asks *role → folder* ("does each expected canonical role resolve?") one level deep;
+`audit-coverage` asks *folder → mapping* ("does **every** document-node folder in the
+external/Confluence-mirror tree — including **nested** sub-doctypes — have a
+`mappings[<slug>]` entry in its DHF's `.taxonomy.yml`?").
+
+This catches a class of silent gap the discovery index never surfaces: a Confluence
+page adopted (or a node migrated) into `_confluence/<dhf>/<discovery_root>/…` whose
+folder slug has no taxonomy entry — leaving it ungoverned (no `governing_qms`) and
+invisible to obligation binding.
+
+```bash
+python3 scripts/audit-coverage.py [--repo <project-root>] [--json]
+```
+
+- Iterates `project.yml dhfs[]` entries that declare `taxonomy_path` (external DHFs);
+  internal/waterfall DHFs are skipped (no rosetta to be incomplete against).
+- A "document node" = a folder holding a version file (`v*.md`) or `index.md`, or a
+  flat `<slug>.md` under the discovery root. Version dirs (`v1.0.0`, …) and asset dirs
+  (`images/`, `assets/`) are skipped.
+- **Exit 0** = full coverage; **exit 1** = ≥ 1 unmapped doctype (CI-friendly). Each
+  unmapped node is printed with its repo-relative path.
+- **Remediation:** add a `mappings[<slug>]` entry (canonical_role + governing_qms) for
+  each flagged folder — usually inheriting governance from its mapped parent doctype.
+
+Wired into `/best-practices` via the **Taxonomy mapping completeness** check in
+`README.md` § 9 (Required, shared scope) — runs automatically on every audit.
+
+---
+
 ## `scope diff`
 
 Hypothetical scope override — preview the routing impact without writing.

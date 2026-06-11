@@ -121,8 +121,14 @@ beat invented findings.>
 - **No Edit/Write.** You have only Read, Glob, Grep. The researcher
   never mutates files.
 - **Stay within the project root.** Don't follow symlinks outside the
-  project, don't recommend files in `.git/`, `.claude/`, `tasks/`, or
-  `.state/`. Stick to `docs/`, `project.yml`, top-level READMEs.
+  project, don't recommend files in `.git/`, `tasks/`, or `.state/`.
+  Stick to `docs/`, `project.yml`, top-level READMEs — plus one carve-out
+  under `.claude/`: the registry reference library at
+  `.claude/skills/medtech-docs/references/{standards,fda-guidance,regulations,industry-frameworks}/*.md`
+  (the distilled L1a tier — authoritative clause text the advisors cite
+  alongside `docs/external/` applicability files). Recommend only the
+  top-level distilled `.md` files there; never `source/` or `source-md/`
+  subfolders, and nothing else under `.claude/`.
 - **Bound your effort.** Aim for 5–15 tool calls per invocation. If
   you've done 20+ calls without converging, return what you have plus
   a "Gaps" note explaining what you tried.

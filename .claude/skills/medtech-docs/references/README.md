@@ -23,13 +23,13 @@ Agents grounded against a project should consult **both layers** when citing a s
 ### In Scope
 - Clause-level distillation of each standard / guidance document
 - Device-agnostic summaries usable across all medtech projects
-- Source PDFs (under `source/`) and full-text markdown conversions (under `source-md/`) — raw upstream material, NOT indexed or exposed to agents directly
+- Source PDFs (under `source/`) and full-text markdown conversions (under `source-md/`) — raw upstream material. **Not a grounding surface**: semantic-search indexes and console grounding should exclude `source/` + `source-md/` path segments so distillations (not 50 KB full texts) surface in search. `source-md/` remains directly readable as the **escalation tier** — when a distillation is silent on a section or exact wording matters, read `source-md/<basename>.md` (the distilled file's provenance block names it)
 
 ### Out of Scope (see instead)
-- Project-specific applicability analysis — lives at `docs/external/{standards,fda-guidance,industry-frameworks}/` in the consuming project
-- Clause-to-requirement trace — that's `docs/project/dhfs/<dhf>/design-controls/trace-matrix/` in the consuming project
-- Structured regulatory-obligations catalog (Tier 1 obligations, per `/dhf-manifest`) — see `.claude/skills/dhf-manifest/data/tier1-regulatory/`
-- Raw source files (`source/`, `source-md/`) — full-text original docs are pre-conversion artifacts; the project-console grounding surface auto-excludes them via path-segment rules
+- Project-specific applicability analysis — lives at `docs/external/{standards,fda-guidance,regulations,industry-frameworks}/` in the consuming project
+- Clause-to-requirement trace — the consuming project's trace-matrix deliverable (location per its `project.yml dhfs[].path` / trace-matrix config)
+- Structured regulatory-obligations catalog (Tier 1 obligations, per `/dhf-manifest`) — see `.claude/skills/dhf-manifest/data/{fda-guidance,standards,industry-frameworks}/`
+- Raw source files (`source/`, `source-md/`) — full-text original docs are pre-conversion artifacts; grounding surfaces (project-console path-segment rules, the consuming project's semantic file index) exclude them so distillations rank first. They are read on explicit escalation, not surfaced by search
 
 ## Conventions
 
@@ -46,6 +46,11 @@ When a question invokes a named standard, regulation, or framework:
 2. **Then pull the reference file here** for the clause-level content the applicability file is analyzing against
 3. **Cite both** in the response footnotes (applicability first, reference second)
 4. If the applicability file says `[VERIFY]` or defers a clause to QMS, don't invent an answer — acknowledge the gap and point the user to the right next step
+5. **Escalate when the distillation isn't enough.** If the reference file is silent on the cited section, carries a quarantine/`[VERIFY]` banner over it, or the question turns on exact wording:
+   - **FDA guidance** — read the full text at `fda-guidance/source-md/<basename>.md` (the only category bundling full texts)
+   - **Regulations (CFR)** — fetch the live eCFR versioner API (`https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?part=<N>`; the human-viewer URLs redirect automated fetchers); CFR text is public domain and regulations change
+   - **Standards (ISO/IEC) and most frameworks** — no source exists in the repo (copyrighted); say the original standard must be consulted rather than inferring clause content
+   A section's absence from a distillation is never evidence the source is silent.
 
 ## Changelog
 

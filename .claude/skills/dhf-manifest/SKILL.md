@@ -50,6 +50,7 @@ Layout is flat on both sides. Skill-side uses category folders mirroring `medtec
 | `validate` | [actions/inspect.md](actions/inspect.md) | scripts/validate.py |
 | `scope diff <flag>=<val>` | [actions/inspect.md](actions/inspect.md) | scripts/build-manifest.py --dry-run |
 | `discovery-index` | [actions/discovery-index.md](actions/discovery-index.md) | scripts/discovery-index.py |
+| `audit-coverage` | [actions/inspect.md](actions/inspect.md) | scripts/audit-coverage.py |
 
 ## Scope flags (`project.yml`)
 
