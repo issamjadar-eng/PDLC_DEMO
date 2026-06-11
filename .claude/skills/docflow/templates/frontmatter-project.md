@@ -64,11 +64,19 @@ version_lineage:                    # Monotonically growing audit trail. NEVER t
     date: "{YYYY-MM-DD}"
 
 # --- Provenance (round-trip pointers) ---
+authoritative: "working"                # "working" (classic adopt — this MD is the authoring source of
+                                        # truth that exports back to formal on release) OR "formal" (the
+                                        # binary is the controlled record; this MD is a derived faithful
+                                        # view, re-extracted from the binary via `refresh`, never exported
+                                        # back over it). Set to "formal" by `adopt --binary-authoritative`.
 source_formal: "formal/<Title>.pdf"     # Relpath (from this MD's folder) to the current formal.
-                                        # Filename is stable across versions; git tracks history.
+                                        # Filename is stable across versions; git tracks history. In
+                                        # explicit-location mode (`adopt --into`) this points at the
+                                        # binary's in-place location (e.g. images/<file>.docx) — not moved.
 target_formal: "formal/<Title>.pdf"     # Where /docflow export will write the next formal output.
-                                        # Same path as source_formal (export overwrites). Format can
-                                        # differ if explicitly set (e.g. adopted PDF, export DOCX).
+                                        # Same path as source_formal (export overwrites). When
+                                        # authoritative=formal this documents the authoritative binary the
+                                        # MD is a view of, NOT an export sink (export never overwrites it).
 conversion_date: "{YYYY-MM-DD}"
 conversion_method: "{pandoc+manual | pdftotext+manual | libreoffice+pandoc+manual |
                      xlsx+manual | claude-read+manual}"
@@ -257,7 +265,8 @@ If sources 1 and 2 disagree: **cover page wins** (what the reader sees as canoni
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `source_formal` | Yes | Relpath (from MD's folder) to the current formal file. Stable across versions — filename doesn't change when version bumps. |
+| `authoritative` | Yes | `working` (MD is authoring source of truth → exports back to formal on release) or `formal` (binary is the controlled record; MD is a derived faithful view, refreshed FROM the binary). Default `working`; set `formal` by `adopt --binary-authoritative`. |
+| `source_formal` | Yes | Relpath (from MD's folder) to the current formal file. Stable across versions — filename doesn't change when version bumps. In explicit-location mode (`adopt --into`) points at the binary's in-place location, which is not moved. |
 | `target_formal` | Yes | Relpath where `/docflow export` will write the next formal output. Normally same as `source_formal` (export overwrites). Can differ if explicit `--format docx` or similar. |
 | `conversion_date` | Yes | Date of the most recent adopt or override-merge event |
 | `conversion_method` | Yes | Toolchain used (see converter.md for tool selection rules) |

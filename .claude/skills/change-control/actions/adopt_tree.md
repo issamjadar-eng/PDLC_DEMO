@@ -8,9 +8,10 @@ turns for what should be one bulk operation.
 
     /change-control adopt-tree <root-page-url-or-id> [--target <root>] [--max-depth N] [--dry-run]
 
-If `--target` is omitted, default to:
+If `--target` is omitted, default to the configured
+`change_control.spaces[].staging_target_root` from `project.yml`:
 
-    docs/confluence-staging/<space-key>/
+    <staging_target_root>/<space-key>/
 
 ## How the bridge works
 
@@ -41,7 +42,7 @@ Linux/macOS: invoke the action as
         --root-page-id <ID> \
         --base-url <base> \
         --space-key <KEY> \
-        --target-root docs/confluence-staging/<KEY> \
+        --target-root <staging_target_root>/<KEY> \
         3>directives.jsonl 4<results.jsonl
 
 …then run a small driver loop that:

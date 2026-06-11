@@ -603,6 +603,7 @@ file_locator:
   corpus_excludes:
     # Universal artifacts
     - "**/_scratch/**"
+    - "**/_work/**"                # personal committed task-sandbox — never a grounding source
     - "**/.staging/**"
     - "**/.worktrees/**"
     - "**/node_modules/**"

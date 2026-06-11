@@ -124,7 +124,7 @@ This is a **demonstration**, not a regulatory submission. Fabricated clinical da
 
 Files under `.claude/rules/` are auto-loaded into every session — see those files, not this one, for the canonical text:
 
-- `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.
+- `scratch-and-tmp.md` — personal sandboxes: `tasks/{person}/_work/` (committed task-support artifacts, never a grounding source) and `tasks/{person}/_scratch/` (gitignored local scratch); OS `/tmp` for transient intermediates.
 - `readme-before-write.md` — read the target folder's README **and** its parent's before writing any file under `docs/`.
 - `sentinel-blocks.md` — the `<!-- AUTO:STRUCTURE -->` convention for auto-rendered structural content in READMEs / CLAUDE.md.
 - `audit-wiring-before-adding-fields.md` — grep `project.yml` + sibling configs before adding metadata, schema fields, or structural prose; reference the wiring, don't redeclare facts.
@@ -133,3 +133,4 @@ Files under `.claude/rules/` are auto-loaded into every session — see those fi
 - `doctype-governance.md` — read the governing QMS templates before editing any mirrored regulated doc.
 - `ground-in-contracts-not-assumptions.md` — read the contract (SKILL.md, schema, project.yml) before reasoning about behavior; don't infer from filenames or output inspection.
 - `internal-vs-external-scope-labels.md` — internal-review docs use 📤 / 📝 / ⏸️ / 📖 scope labels to mark formal-out vs draft vs paused vs read-only.
+- `ai-changelog.md` — AI-assisted edits to controlled markdown docs are logged in a non-published `<!-- AI-CHANGELOG -->` metadata block; never name the AI model/tool/vendor in document content — the only sanctioned label is "AI assistant(s)".

@@ -8,7 +8,7 @@
 
 ## Scope
 
-Part 880 classifies general hospital and personal use medical devices. It is the regulatory home of **§ 880.6310 — Medical Device Data System (MDDS)**, the foundational regulation for software that transfers, stores, converts, or displays medical-device data without controlling or altering connected devices. § 880.6310 was **reclassified from Class III to Class I (510(k)-exempt)** in 2011, and the 2015 FDA MDDS guidance (`../fda-guidance/mdds-distilled.md`) clarified the agency's enforcement posture for MDDS, image-storage, and image-communications devices.
+Part 880 classifies general hospital and personal use medical devices. It is the regulatory home of **§ 880.6310 — Medical Device Data System (MDDS)**. Since the **April 19, 2021 conforming final rule (86 FR 20278; this section amended at 86 FR 20283)**, § 880.6310 covers **hardware devices only**: software that solely transfers, stores, converts per a preset specification, or displays medical-device data is **not a device at all** under the Cures Act § 3060 carve-out (FD&C Act § 520(o)(1)(D)) and therefore has no classification regulation. § 880.6310 was originally **reclassified from Class III to Class I (510(k)-exempt)** in 2011 (76 FR 8637); the operative FDA guidance is the **September 2022 MDDS guidance update** (`../fda-guidance/mdds-distilled.md`), which establishes the Non-Device-MDDS (software) vs Device-MDDS (hardware) framework.
 
 Part 880 contains Subparts A–G:
 
@@ -30,7 +30,7 @@ This distillation focuses on **Subpart A § 880.9** (the exemption-limitation fr
 | § 880.1 | Scope | n/a | n/a |
 | § 880.9 | Limitations of exemptions from section 510(k) | n/a | n/a — limitation framework |
 | § 880.6300 | Implantable radiofrequency transponder system | III | Required |
-| § 880.6310 | Medical device data system (MDDS) | I | **Exempt** (subject to § 880.9) |
+| § 880.6310 | Medical device data system (MDDS) — **hardware only since 86 FR 20283 (2021)** | I | **Exempt** (subject to § 880.9) |
 | § 880.6315 | Remote medication management system | II | Required |
 
 ## Subpart A — General Provisions
@@ -62,32 +62,38 @@ The same pattern appears in other 800-series parts: § 892.9 for radiology, § 8
 
 ### § 880.6310 — Medical device data system (MDDS)
 
-#### Verbatim — § 880.6310(a) Identification
+#### Verbatim — § 880.6310(a) Identification (current text, as amended by 86 FR 20283, Apr 19, 2021)
 
-> A medical device data system (MDDS) is a hardware or software product that transfers, stores, converts according to preset specifications, or displays medical device data, without controlling or altering the function or parameters of any connected medical device. An MDDS may include:
+> A medical device data system (MDDS) is a **hardware device** that is intended to provide one or more of the following uses, without controlling or altering the functions or parameters of any connected medical devices:
 >
-> **(1)** Software that uses an off-the-shelf computer hardware to perform one or more of the following functions, without controlling or altering the functions or parameters of any connected medical device:
-> > (i) The electronic transfer of medical device data;
-> > (ii) The electronic storage of medical device data;
-> > (iii) The electronic conversion of medical device data from one format to another format in accordance with a preset specification;
-> > (iv) The electronic display of medical device data.
+> **(1)** The electronic transfer of medical device data;
 >
-> **(2)** Electronic or electrical hardware such as a physical communications medium (including wireless hardware), modems, interfaces, and a communications protocol that performs one or more of the four functions identified in paragraph (a)(1) of this section.
+> **(2)** The electronic storage of medical device data;
 >
-> An MDDS does not include devices intended to be used in connection with active patient monitoring.
+> **(3)** The electronic conversion of medical device data from one format to another format in accordance with a preset specification; or
+>
+> **(4)** The electronic display of medical device data.
+>
+> An MDDS may include electronic or electrical hardware such as a physical communications medium (including wireless hardware), modems, and interfaces. An MDDS is not intended to be used in connection with active patient monitoring.
+
+(Emphasis added on "hardware device". Lead-in sentence, paragraph (b), and amendment citation confirmed verbatim against the live eCFR API 2026-06-11; subparagraph wording transcribed via machine-assisted retrieval — [VERIFY subparagraph punctuation against eCFR before quoting in a submission].)
+
+**Amendment history (load-bearing).** The original 2011 text defined MDDS as "a hardware **or software** product" with a software subparagraph (a)(1) ("Software that uses an off-the-shelf computer hardware to perform..."). The **April 19, 2021 conforming final rule (86 FR 20278; § 880.6310 amended at 86 FR 20283)** removed software from the identification to conform to **Cures Act § 3060** (FD&C Act § 520(o)(1)(D)), under which software performing solely these MDDS functions is **not a device**. Any document quoting the "hardware or software product" text is citing the pre-2021 regulation.
 
 #### Verbatim — § 880.6310(b) Classification
 
-> Class I (general controls). The device is exempt from the premarket notification procedures in subpart E of part 807 of this chapter subject to the limitations in § 880.9.
+> Class I (general controls). The device is exempt from the premarket notification procedures in subpart E of part 807 of this chapter, subject to the limitations in § 880.9.
 
-#### Practical notes
+#### Practical notes (post-Cures framing — aligned with `../fda-guidance/mdds-distilled.md`)
 
-- **Reclassification history.** § 880.6310 was finalized at **76 FR 8637 (Feb 15, 2011)** reclassifying MDDS from Class III to Class I (510(k)-exempt). The 2011 final rule established the four-verb scope: **transfer / store / convert / display**. Any device intended for any of these four uses (and only those uses) without controlling or altering connected medical devices qualifies as MDDS.
-- **The "active patient monitoring" exclusion is load-bearing.** A device that transfers, stores, converts, or displays medical device data BUT is intended for active patient monitoring is **not** an MDDS — it falls under the relevant monitoring-device classification (e.g., § 880.2400 bed-patient monitor; § 870.2300 cardiac monitor). The active-monitoring exclusion is the most common boundary question for MDDS classification.
-- **§ 880.9 still applies.** Class I exempt status under § 880.6310 is **subject to the limitations in § 880.9**. A device that meets § 880.6310's identification but crosses a § 880.9 trigger (different intended use, different fundamental technology, IVD-specific category) loses its exempt status and must submit a 510(k).
-- **Enforcement discretion overlay.** FDA's Feb 2015 MDDS guidance (Federal Register notice 2015-02573) announced that the agency does not intend to enforce compliance with the regulatory requirements for MDDS for "low-risk" data-movement products. The guidance does not change the classification (still Class I exempt); it adds an enforcement-discretion layer for the manufacturer's compliance posture. See `../fda-guidance/mdds-distilled.md`.
-- **What's IN scope as MDDS.** Software that ingests DICOM images and stores them; software that converts proprietary device-data formats to HL7 FHIR; software that displays multi-device data on a dashboard without alarming or alerting; the hardware modems/interfaces that carry the data.
-- **What's OUT of scope (not MDDS).** Software that alerts on physiological thresholds (active monitoring → not MDDS); software that controls device parameters (not MDDS — likely PACS or device-specific classification); software that interprets device data to deliver a clinical recommendation (CDS or higher-risk SaMD, not MDDS).
+- **Two distinct outcomes for "MDDS-type" functions** (per the 2022 MDDS guidance):
+  - **Software** performing solely transfer/store/convert-per-preset-spec/display → **Non-Device-MDDS** — statutorily **not a device** (§ 520(o)(1)(D)). No classification regulation applies, including this one. There is nothing to "exempt" — it is outside FDA device jurisdiction.
+  - **Hardware** performing those functions → **Device-MDDS** under § 880.6310 — still a device (the Cures carve-out is software-only): Class I, 510(k)-exempt subject to § 880.9, and additionally under FDA **enforcement discretion** (FDA does not intend to enforce registration/listing, premarket review, postmarket reporting, or QSR).
+- **Do not classify software under § 880.6310.** A common stale framing ("our DICOM-ingestion software is Class I exempt MDDS under 880.6310") is wrong post-2021: software that ingests and stores DICOM images, converts device-data formats per a preset specification, or displays device data without analysis is **not a device**, not a Class-I-exempt device. The § 880.9 analysis is moot for such software; it matters only for hardware Device-MDDS.
+- **Qualification is processing-bound first.** Whether software OR hardware, a function qualifies as MDDS-type only if it does *solely* transfer/store/convert/display with no analysis, interpretation, or calculation beyond format conversion. If it processes, it is a device function regardless of the software/hardware split. See the 2022 guidance § IV-A (`../fda-guidance/mdds-distilled.md`).
+- **The "active patient monitoring" exclusion is load-bearing.** A product intended for active patient monitoring is **not** an MDDS (hardware case) and not Non-Device-MDDS (software case) — it falls under the relevant monitoring-device classification (e.g., § 880.2400 bed-patient monitor; § 870.2300 cardiac monitor). The active-monitoring exclusion is the most common boundary question for MDDS qualification.
+- **§ 880.9 applies to hardware Device-MDDS.** Class I exempt status under § 880.6310 is **subject to the limitations in § 880.9**. Hardware MDDS that crosses a § 880.9 trigger (different intended use, different fundamental technology, IVD-specific category) loses its exempt status and must submit a 510(k).
+- **Guidance lineage.** Feb 2015 MDDS guidance (FR notice 2015-02573) established the original enforcement-discretion posture; updated Sept 27, 2019; the **Sept 28, 2022 update is operative** — it aligns the guidance with 86 FR 20278 and the Non-Device-MDDS / Device-MDDS framework. See `../fda-guidance/mdds-distilled.md`.
 
 ### § 880.6315 — Remote medication management system
 
@@ -97,18 +103,19 @@ The same pattern appears in other 800-series parts: § 892.9 for radiology, § 8
 
 | Question | Look here |
 |----------|-----------|
-| Is this software an MDDS or something more? | § 880.6310(a) four-verb test (transfer/store/convert/display) + active-monitoring exclusion + § 880.9 limitations |
-| Can I claim MDDS-exempt status without a 510(k)? | § 880.6310(b) + § 880.9 non-applicability analysis + Feb 2015 enforcement-discretion overlay (`../fda-guidance/mdds-distilled.md`) |
-| Does MDDS interact with Multiple Function Device framework? | Yes — MDDS-functioning sub-modules in a larger device-function product fall under MFD scope; see `../fda-guidance/mfd-distilled.md` |
-| What if my device crosses § 880.9? | Submit a 510(k). The 510(k) compares against a predicate device. |
+| Is this *software* an MDDS-type function? | Four-verb qualification test (transfer/store/convert-per-preset-spec/display, no processing) per the 2022 guidance § IV-A — if yes, it is **Non-Device-MDDS, not a device**; § 880.6310 does not apply. See `../fda-guidance/mdds-distilled.md` |
+| Is this *hardware* an MDDS? | § 880.6310(a) four-verb test + active-monitoring exclusion → Device-MDDS, Class I exempt subject to § 880.9, plus enforcement discretion |
+| Can I claim MDDS-exempt status without a 510(k)? | Hardware only: § 880.6310(b) + § 880.9 non-applicability analysis. Software: nothing to claim — not a device (§ 520(o)(1)(D)) |
+| Does MDDS interact with Multiple Function Device framework? | Yes — a Non-Device-MDDS software function inside a multi-function product is an "other function" assessed under the MFD framework; see `../fda-guidance/mfd-distilled.md` |
+| What if my hardware device crosses § 880.9? | Submit a 510(k). The 510(k) compares against a predicate device. |
 
 ## Source Provenance
 
-- **eCFR API endpoint**: `https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?chapter=I&subchapter=H&part=880`
-- **Retrieval date**: 2026-05-29
-- **eCFR raw XML**: archived under `source/21-cfr-part-880.xml` (when present)
-- **Companion FDA guidance**: `../fda-guidance/mdds-distilled.md` (Feb 2015 enforcement-discretion guidance)
-- **Reclassification anchor**: 76 FR 8637 (Feb 15, 2011) — Class III → Class I exempt
-- **Authoring**: distilled from eCFR-returned content via a `citations` audit that surfaced this section as a `registry-gap`.
+- **eCFR API endpoint**: `https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?chapter=I&subchapter=H&part=880` (note: the human-viewer URLs at `ecfr.gov/current/...` redirect automated fetchers to `unblock.federalregister.gov`; use the API endpoint)
+- **Retrieval date**: 2026-06-11 (§ 880.6310 re-pulled from live eCFR API after an audit found the prior version quoted the pre-2021 text)
+- **Section source citation (from eCFR)**: 76 FR 8649, Feb. 15, 2011, as amended at **86 FR 20283, Apr. 19, 2021**
+- **Companion FDA guidance**: `../fda-guidance/mdds-distilled.md` (2015 guidance, updated 2019 and Sept 28, 2022 — the 2022 update is operative)
+- **Reclassification anchor**: 76 FR 8637 (Feb 15, 2011) — Class III → Class I exempt; **Cures conforming amendment**: 86 FR 20278 (Apr 19, 2021) — software removed from the identification
+- **Authoring**: distilled from eCFR-returned content via a `citations` audit that surfaced this section as a `registry-gap`; § 880.6310 corrected to the post-2021 text on 2026-06-11.
 
-[VERIFY all clause numbers and verbatim text against the live eCFR snapshot before relying on this distillation in a regulated submission.]
+[VERIFY all clause numbers and verbatim text against the live eCFR snapshot before relying on this distillation in a regulated submission. § 880.9 quoted text retains its 2026-05-29 retrieval basis.]

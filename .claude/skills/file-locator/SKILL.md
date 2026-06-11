@@ -1,8 +1,8 @@
 ---
 name: file-locator
 description: "Local file-locator MCP — semantic, file-granularity search over a medtech project's docs and registry-distributed regulatory knowledge. Returns ranked `(repo-relative-path, summary, heading_anchor?, score)` tuples for natural-language queries; complementary to `/dhf-manifest`'s canonical-role discovery index (this skill answers semantic queries, that one answers structural queries). Fully local: `fastembed` BGE-small ONNX + SQLite FTS5; no Anthropic API calls during indexing. The index lives at `tools/file-locator-mcp/index.db` and is **committed** (one canonical artifact for the team). Provides `setup`, `rebuild`, `status`, `audit` actions. TRIGGER when a user wants to install, build, refresh, inspect, or troubleshoot semantic file search — phrasings include: 'install the file locator', 'set up local RAG', 'set up semantic search', 'rebuild the locator index', 'audit the locator corpus', 'check what's indexed', 'why isn't <doc> showing up in locator results', 'add the file-locator MCP'."
-version: 2
-updated: 2026-06-01
+version: 3
+updated: 2026-06-10
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -169,6 +169,15 @@ Detailed report of what each inclusion gate filtered. Use when "why isn't `<doc>
 2. For each file, record which gate (if any) excluded it: `corpus_excludes`, `.gitignore`, `skip_sentinel`, or `not_in_corpus_includes`.
 3. Print a per-outcome count table + first 5 file samples per excluded outcome.
 
+### `audit --coverage`
+
+**Binary coverage detector** — find controlled binaries (`.docx/.doc/.pdf/.xlsx/.pptx`) that have **no indexed markdown view**, so the locator cannot surface their content in semantic search. This is the *detection* half of the binary-coverage loop; the *resolution* half (where a missing view should live + generating it) belongs to **docflow** — this action only detects and hands off.
+
+1. Run `python3 .claude/skills/file-locator/scripts/binary_coverage.py --root .` (add `--json` for machine output). The script reuses this skill's own `corpus_includes`/`corpus_excludes` semantics from `common.py`, so "covered" means: restricted to the **indexed** md set, a sibling-stem md exists OR an indexed md links the binary via a frontmatter `source_path`/`source_file`/`source_formal`/`target_formal` key.
+2. Scope: binaries under `docs/` not in an excluded tree (`_scratch`, `.staging`, `formal/`, etc. per `corpus_excludes`). Excluded trees are out of scope by construction (the locator isn't expected to surface them); the count of skipped binaries is reported — never silently dropped.
+3. **Hand off each uncovered binary to docflow**: the report emits a `/docflow adopt "<binary>"` line per uncovered file. Running it invokes docflow's **adopt auto-locate sub-mode**, which convention-detects the markdown target (README → `.taxonomy.yml` → sibling pattern), prompts when the location/action is ambiguous, and — when a same-title view already exists — proposes *linking* it rather than generating a duplicate. The binary stays the authoritative record; the generated md is a derived `authoritative: formal` view.
+4. Report the covered/uncovered/skipped counts and the uncovered list with handoff lines. A non-empty uncovered list is the actionable gap; it is informational (exit 1), not a hard failure — many `docs/external/.../source/` reference PDFs may legitimately stay un-viewed (that's the per-binary docflow/user decision).
+
 ## Configuration — `project.yml file_locator:` block
 
 ```yaml
@@ -202,6 +211,7 @@ file_locator:
     - ".claude/skills/docflow/**/*.md"
   corpus_excludes:
     - "**/_scratch/**"
+    - "**/_work/**"
     - "**/.staging/**"
     - "**/.worktrees/**"
     - "**/node_modules/**"

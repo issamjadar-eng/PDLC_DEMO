@@ -9,7 +9,9 @@ You are adopting a formal DHF document into a round-trippable working-MD copy. U
 - **DHF**: `{{DHF}}` — DHF leaf name (e.g. `mfd-a`)
 - **DHF_ROLE**: `{{DHF_ROLE}}` — `system` | `item` (from `project.yml`)
 - **DHF_AREA**: `{{DHF_AREA}}` — area path under the DHF (e.g. `design-controls/plans`)
-- **DHF_AREA_DIR**: `{{DHF_AREA_DIR}}` — absolute path to the DHF area folder (parent of `formal/`, where the working MD lands)
+- **DHF_AREA_DIR**: `{{DHF_AREA_DIR}}` — absolute path to the DHF area folder (parent of `formal/`, where the working MD lands **in default mode**). In explicit-location mode (`INTO_PATH` set) this is ignored in favor of `dirname(INTO_PATH)`.
+- **INTO_PATH**: `{{INTO_PATH}}` — optional explicit output path for the working MD (from the skill's `--into <md-path>` flag); null when not provided. When set, you write the working MD **exactly here** (no title-derived filename, no `formal/` restructure) and the source binary **stays where it is**. See "Explicit-location mode" below.
+- **AUTHORITY**: `{{AUTHORITY}}` — `working` (default) or `formal`. `working` = the markdown is the authoring source of truth that round-trips back to the binary on release (classic adopt). `formal` = the **binary** is the controlled authoritative record and the markdown is a *derived faithful view* (re-extracted from the binary via `refresh`, never the reverse). Drives the `authoritative` frontmatter field and `target_formal` semantics.
 - **STAGING_DIR**: `{{STAGING_DIR}}`
 - **DOC_VERSION_OVERRIDE**: `{{DOC_VERSION_OVERRIDE}}` — optional explicit version from `--doc-version` flag; null if not provided
 - **FORMS_INDEX_PATH**: `{{FORMS_INDEX_PATH}}` — `docs/internal/source-md/Forms/` (for template inference)
@@ -32,6 +34,75 @@ Filenames carry NO version suffix and NO `- Draft` marker. Working MDs live alon
 └── images/
     └── <title-kebab>_<desc>.png
 ```
+
+### Explicit-location mode (`INTO_PATH` set)
+
+When the skill passes `INTO_PATH` (user ran `adopt <source> --into <md-path>`), the forced `DHF_AREA_DIR/<Title>.md` + `formal/` layout is **overridden**. This is the mode for adopting a controlled binary that already lives somewhere the team manages it (e.g. a `_confluence` node's `images/<file>.docx` attachment) into a working MD at an explicit path — **without moving the binary**.
+
+```
+OUTPUT_PATH  = {{INTO_PATH}}                    ← working MD lands EXACTLY here (verbatim path; no title-derived name)
+OUTPUT_DIR   = dirname({{INTO_PATH}})           ← image sibling + README re-render anchor
+SOURCE_PATH  = stays put                        ← NO git mv; the binary is not renamed or relocated
+IMAGE_DIR    = {{OUTPUT_DIR}}/images/           ← images extracted alongside the working MD
+```
+
+- The source binary is **not** renamed and **not** moved into a `formal/` sibling. `source_formal` / `target_formal` are computed as the relative path from `OUTPUT_DIR` to the binary's actual location (often `images/<file>.<ext>`).
+- Combine with `AUTHORITY=formal` (skill flag `--binary-authoritative`) when the binary is the controlled record and the MD is a derived view — the normal case for adopting an externally-authored controlled document.
+- `OUTPUT_DIR` replaces `DHF_AREA_DIR` everywhere downstream (Phase 0.3 paths, Phase 7 checks, Phase 8 commit). In **default mode** (`INTO_PATH` null) `OUTPUT_DIR == DHF_AREA_DIR` and behavior is unchanged.
+- **Existing-file guard:** if `OUTPUT_PATH` already exists, behavior splits:
+  - **Existing file is a managed `_confluence` page** (its leading `<!-- ... -->` block contains a `confluence:` key — the change-control frontmatter contract) → **SPLICE mode** (see below). A page splice is inherently binary-authoritative, so it requires `AUTHORITY=formal` (`--binary-authoritative`); abort if not set.
+  - **Existing file, not a managed page** → collision; honor `--force` to overwrite, otherwise abort.
+
+### `_confluence`-page splice (SPLICE mode)
+
+When `OUTPUT_PATH` is an existing managed `_confluence` page, you do **not** rewrite the whole file. A `_confluence` page carries critical metadata that must survive verbatim: the leading `<!-- title:/state:/confluence: -->` block (the Confluence binding + change-control state), the `AUTO:PAGE-TITLE` sentinel, the `doc-governance` sentinel (Form/SOP/WI governance from `.taxonomy.yml`), the `### Controlled record` + `confluence-side: attachments` sentinel (the controlled binary), and hand-authored intro/scope-note blockquotes. **You replace only the document body**, and you record round-trip provenance.
+
+**The mental model for `authoritative: formal` pages.** The attached binary (`label=actual`) is the **canonical, controlled record**. This markdown is a **non-canonical, internal derived view** — it exists so agents and reviewers can *find and read* the content (semantic search, grep, diff), NOT as a publication. Therefore:
+- The markdown is **NOT canonical** and must say so loudly (Step 3 banner).
+- Nobody edits the markdown body — they edit the **source binary** and re-run docflow. The markdown is overwritten on refresh.
+- The markdown body is **NOT pushed to Confluence** unless the team explicitly opts in (`confluence.publish_body: true`). Default is **attachment-only**: the published artifact is the uploaded attachment + the node's `index.md` landing page, not this body.
+
+Splice procedure (replaces Phase 8's whole-file write):
+
+1. **Read** the existing page. Parse the leading `<!-- ... -->` YAML block (it round-trips through `change-control/lib/frontmatter.py`; `yaml.safe_load` tolerates extra keys).
+2. **Fold in / update a `docflow:` sub-block** in that comment block, preserving `title`/`state`/`confluence:`/`note` exactly. Also set **`confluence.publish_body: false`** inside the existing `confluence:` block (the publish gate — see model above), unless it is already explicitly `true`. `docflow:` shape:
+   ```yaml
+   docflow:
+     authoritative: formal               # the binary is the controlled record; this body is a non-canonical derived view
+     source_formal: "images/<file>.<ext>"   # what the source was (e.g. the Word doc), relpath from the page
+     source_format: <docx|xlsx|pdf|...>
+     conversion:
+       direction: formal-to-md           # binary -> page body (this direction); never md -> binary
+       extracted_at: <YYYY-MM-DD>         # WHEN this body was (re-)extracted from the binary
+       method: <pandoc+manual|...>
+       fidelity: <faithful|summary|partial>
+       faithful_to_source_structure: true # headings/lists mirror the source AS-IS; no invented heading outline (see note)
+       docflow_version: <vNN>             # the docflow SKILL.md version stamp
+     refresh_cmd: "/docflow adopt '<source>' --into <page> --binary-authoritative"
+   ```
+   Do **not** copy Form/SOP/WI/template IDs into `docflow:` — those live in `.taxonomy.yml` and render via the `doc-governance` sentinel (do not duplicate; audit-wiring rule).
+3. **Ensure the top non-canonical / do-not-edit banner** — immediately after the `AUTO:PAGE-TITLE` sentinel (the first thing a reader sees on open), insert/refresh a prominent banner wrapped in its own sentinel so refresh keeps it current:
+   ```
+   <!-- AUTO:DOCFLOW-NOTICE -->
+   > # 🚫 NON-CANONICAL — DO NOT EDIT THIS MARKDOWN
+   > This page is an **internal, non-canonical derived view**, kept so agents and reviewers can **find and read** the content (search/grep/diff). The **canonical controlled record is the attached source document** (`<file>.<ext>`, `label=actual`, under *Controlled record* below).
+   > - ✋ **Do NOT edit this markdown** — edits are not controlled and are **overwritten** on the next `docflow refresh`. To change content, **edit the source document** and re-run docflow (`refresh_cmd` in the page metadata).
+   > - 🚫 **Not published to Confluence** (`confluence.publish_body: false`) — the publication for this record is the **attachment + the node `index.md`**, not this body. Pushing the body up is opt-in only.
+   <!-- /AUTO:DOCFLOW-NOTICE -->
+   ```
+   Tune the wording to the source format (Word/Excel/PDF). This banner is **required** whenever `authoritative: formal`.
+4. **Replace the body region** with the faithful extraction, wrapped in a docflow-owned sentinel:
+   ```
+   <!-- AUTO:DOCFLOW-BODY source=images/<file>.<ext> extracted=<YYYY-MM-DD> -->
+   … faithful extracted body (your Phase 1–5 output) …
+   <!-- /AUTO:DOCFLOW-BODY -->
+   ```
+   If an `AUTO:DOCFLOW-BODY` pair already exists (a prior extraction / a `refresh`), replace **only** its inner content. If not, the body region is everything from the **first `## ` heading after the `### Controlled record` section** to EOF — wrap that span in the sentinel and replace it. Everything **above** the first body heading (comment block, all sentinels, intro blockquotes) is preserved untouched.
+   - **Faithful to source structure (HARD RULE).** Mirror the source's actual *section structure*, **preserving the source's section numbering**. Render the document's real top-level sections as `## N. Title` headings (keep the source numbers) — whether the source marked them with Word *Heading styles* OR as numbered section-divider paragraphs. Both are the document's sections; promoting a real numbered section to a heading is a **faithful transposition**, not an invention, and it makes the body navigable + consistent across pages (the suite DDP + RMP both use `## N.`). For a lone source heading-styled section that would collide with the page-title H1, demote it to `##` to nest. **Forbidden** (these would be unfaithful): fabricating sections/headings the source lacks, dropping/merging/re-ordering/re-titling sections, or adding heading levels that don't correspond to real sections. Body content (tables, lists, figures, checkboxes) stays exactly as the source has it. If section levels are genuinely ambiguous, prefer the flatter reading and flag it. Wanting *different* structure than the source has (consistent styles, new sections) is a **source-document** edit, then refresh — never a markdown-only change.
+5. **Refresh the provenance blockquote** that sits just below the `confluence-side: attachments` sentinel: replace any "pending / non-authoritative / task NNN" warning with a clean statement — source binary (`label=actual`, authoritative), this body extracted on `<date>` via docflow `<vNN>` (faithful view), refresh direction (edit the binary → re-run docflow; the markdown is never exported back over the controlled binary), governance shown in the banner above, publish gate (`publish_body: false` — attachment + index.md is the publication), and "on publish, change-control uploads the attachment."
+6. **Body-content divergence:** if the faithful extraction conflicts with hand-authored content that was in the prior page body (e.g. terminology, reconciled framing the binary lacks), do not silently drop it — list each notable delta in your RESULT report under `body_deltas:` for RA review. Binary-authoritative means the binary wins in the page, but a delta that *should* be in the controlled record is a binary edit, not a page-only keep.
+
+Image extraction in SPLICE mode still lands in `OUTPUT_DIR/images/` (= the page's own `images/`, where the controlled binary already lives) — extracted figures coexist with the attachment.
 
 **Only ONE current formal per title.** Prior versions live in git history. When a new formal version drops for an already-adopted title, the operation is an **override-merge** (see "Override-merge mode" below), not a second adoption.
 
@@ -100,17 +171,31 @@ Before any content conversion, extract the document's **title** and **doc_versio
 **On extraction failure** (steps 1–6 all produce no match):
 1. Write `{{STAGING_DIR}}/VERSION_NOT_FOUND.txt` with the title you extracted and a brief diagnostic (what patterns you searched, what you found adjacent to potential matches).
 2. Return RESULT: FAILURE with message: `"Doc version could not be auto-extracted. Re-run with --doc-version vNN to specify explicitly, or annotate the source document with a revision marker."`
-3. Do NOT proceed to any later phase. Do NOT write anything to `{{DHF_AREA_DIR}}/`.
+3. Do NOT proceed to any later phase. Do NOT write anything to the output location (`{{DHF_AREA_DIR}}/` in default mode, `dirname({{INTO_PATH}})` in explicit-location mode).
 
 #### 0.3 Derive output paths from title + extension
 
+**Default mode** (`INTO_PATH` null):
 ```
 TITLE_STEM            = sanitized title from 0.1 (e.g. "MedTech Project Web - Software Development Plan (SDP) - 1.0.0")
-NEW_FORMAL_PATH       = {{DHF_AREA_DIR}}/formal/<TITLE_STEM>.<FORMAT>
-OUTPUT_PATH           = {{DHF_AREA_DIR}}/<TITLE_STEM>.md
-IMAGE_DIR             = {{DHF_AREA_DIR}}/images/
+OUTPUT_DIR            = {{DHF_AREA_DIR}}
+NEW_FORMAL_PATH       = {{OUTPUT_DIR}}/formal/<TITLE_STEM>.<FORMAT>
+OUTPUT_PATH           = {{OUTPUT_DIR}}/<TITLE_STEM>.md
+IMAGE_DIR             = {{OUTPUT_DIR}}/images/
 IMAGE_FILENAME_PREFIX = <TITLE_STEM lowercased and kebab-cased>
 ```
+
+**Explicit-location mode** (`INTO_PATH` set — see "Explicit-location mode" above):
+```
+TITLE_STEM            = sanitized title from 0.1 (still extracted — used for frontmatter title + image prefix)
+OUTPUT_DIR            = dirname({{INTO_PATH}})
+NEW_FORMAL_PATH       = {{SOURCE_PATH}}            ← binary stays put; no rename, no git mv in Phase 8
+OUTPUT_PATH           = {{INTO_PATH}}              ← verbatim
+IMAGE_DIR             = {{OUTPUT_DIR}}/images/
+IMAGE_FILENAME_PREFIX = <TITLE_STEM lowercased and kebab-cased>
+```
+
+`OUTPUT_DIR` is the anchor for image placement, Phase 7 path checks, and Phase 8 README re-render in **both** modes.
 
 #### 0.4 Collision + mode detection
 
@@ -406,8 +491,9 @@ Read `.claude/skills/docflow/templates/frontmatter-project.md` — populate **ev
 - `last_modified`: today
 - `doc_version`: normalized form from Phase 0.2 (e.g. `"v30"`)
 - `release_version`: captured in Phase 0.1 if title had an embedded product-release version (e.g. `"1.0.0"`); else null
-- `source_formal`: `formal/<TITLE_STEM>.<FORMAT>` (relpath from working MD's folder)
-- `target_formal`: same as `source_formal` by default (export overwrites)
+- `source_formal`: relpath from `OUTPUT_DIR` (the working MD's folder) to the binary. **Default mode**: `formal/<TITLE_STEM>.<FORMAT>`. **Explicit-location mode**: the relpath to `SOURCE_PATH` as-is (e.g. `images/<file>.<ext>`) — the binary is not moved.
+- `target_formal`: same as `source_formal` by default. When `AUTHORITY=formal` the binary is the controlled record and is **not** overwritten by an MD→formal export — so `target_formal` documents the authoritative binary the MD is a view of, not an export sink.
+- `authoritative`: from `AUTHORITY` — `"formal"` when the binary is the controlled record (MD is a derived faithful view; round-trip direction is `refresh` re-extracting from the binary), else `"working"` (classic adopt — MD is the authoring source of truth that exports back to formal on release). Default `"working"` when `AUTHORITY` is unset.
 - `conversion_date`, `conversion_method`, `conversion_fidelity`, `pages`/`sheets`/`slides`, `has_images`, `image_count`, `has_tables`, `has_form_fields`: per converter Phase 6 rules
 - `has_hyperlinks` (v29+): `true` iff the Phase 2 splice summary line reported any spliced links (`spliced > 0`). Stored as boolean.
 - `hyperlink_count` (v29+): final count of `[text](url)` spans in the rendered working MD body — `grep -oE '\[[^]]+\]\([^)]+\)' OUTPUT_PATH | wc -l` after Phase 8 commit. This is the post-restructuring count, not the Phase 2 splice count, so it reflects what survived the pipeline (which is what matters for downstream dashboards).
@@ -425,57 +511,68 @@ Run converter-Phase-7 checks (structural, image, page-marker, content), **plus**
 
 | Check | How | Required? |
 |-------|-----|-----------|
-| `source_formal` resolves | `test -f {{DHF_AREA_DIR}}/<source_formal>` (after Phase 8 rename) | Yes |
-| `target_formal` parent folder exists | `test -d $(dirname {{DHF_AREA_DIR}}/<target_formal>)` | Yes |
+| `source_formal` resolves | `test -f {{OUTPUT_DIR}}/<source_formal>` (after Phase 8; in explicit-location mode the binary was never moved, so this resolves to its in-place location) | Yes |
+| `target_formal` parent folder exists | `test -d $(dirname {{OUTPUT_DIR}}/<target_formal>)` | Yes |
+| `authoritative` set + consistent | Frontmatter `authoritative` ∈ {`working`,`formal`}; when `formal`, `target_formal` points at the in-place binary (not a `formal/` export sink) | Yes |
 | `version_lineage` has ≥ 2 entries ending in event `adopt` | Last entry event is `adopt`, `lifecycle: draft`, `format: md` | Yes |
 | `doc_version` normalized (no dot, lowercase `v`) | Regex `^v\d+$` | Yes |
 | `doc_version` present in filename of neither formal nor working | Filenames should be `<TITLE>.md` / `<TITLE>.<ext>` — **no `-v\d+` suffix** | Yes |
 | No `- Draft` suffix in filename | Redundant with folder location; frontmatter `lifecycle: draft` is the marker | Yes |
 | Image path prefix is `images/` | Grep all `![...](...)` refs; each must start with `images/` | Yes |
 | `template_of` inferred or flagged in notes | Either `template_of.doc_id` set with `confidence`, OR `notes:` matches `template.*not.*inferred\|manual review` | Warning |
-| `dhf` + `dhf_area` match output path | Parse OUTPUT_PATH; verify frontmatter matches | Yes |
+| `dhf` + `dhf_area` match output path | Parse OUTPUT_PATH; verify frontmatter matches. **Explicit-location mode**: `dhf`/`dhf_area` are best-effort (inferred from the target path when it falls under a `project.yml dhfs[].path`, else null) — this check is a Warning, not Required, in explicit mode. | Yes / Warning (explicit mode) |
 | No collision with existing working MD | `test ! -f OUTPUT_PATH` before committing (skill pre-checked; re-verify) | Yes |
 | **Link-count floor (v29+)** | Compare body link count `B = grep -oE '\[[^]]+\]\([^)]+\)' OUTPUT_PATH \| wc -l` against the Phase 2 splice summary's `spliced=K` value. If `B >= K * 0.9` → pass. If `0.5 * K <= B < 0.9 * K` → **Warning** (some links lost during restructuring; reviewer should investigate which). If `B < 0.5 * K` → **Required failure** (catastrophic link loss; abort with `LINK-COUNT-FAILED.txt` in staging). When `K = 0` (source had no hyperlinks), check passes vacuously. | Yes / Warning / Required (graduated) |
 | **`has_hyperlinks` + `hyperlink_count` consistency (v29+)** | If `hyperlink_count > 0` then `has_hyperlinks: true`; if `hyperlink_count == 0` then `has_hyperlinks: false`. Mismatch → Required failure. | Yes |
 
 ### Phase 8: Commit — Transactional + Parent README Re-render
 
+**SPLICE mode** (explicit-location into an existing managed `_confluence` page — see "`_confluence`-page splice" above): do NOT run the whole-file sequence below. Instead follow the 5-step splice procedure (preserve comment block + sentinels + intro blockquotes, fold the `docflow:` sub-block, replace only the `AUTO:DOCFLOW-BODY` region, refresh the provenance blockquote, move images into the page's `images/`). Then jump to Step 8 (README re-render) + Step 9 (cleanup). The whole-file write below is for default mode and fresh `--into` writes only.
+
 Transactional sequence (all-or-nothing; abort leaves staging intact with a marker file):
+
+> `OUTPUT_DIR` below is `{{DHF_AREA_DIR}}` in default mode, `dirname({{INTO_PATH}})` in explicit-location mode (Phase 0.3).
 
 ```
 Step 1: mkdir targets
-  mkdir -p "{{DHF_AREA_DIR}}/formal"
-  mkdir -p "{{DHF_AREA_DIR}}"
+  mkdir -p "{{OUTPUT_DIR}}"
+  # formal/ dir only in default mode (binary gets restructured into it)
+  if [ -z "{{INTO_PATH}}" ]; then mkdir -p "{{OUTPUT_DIR}}/formal"; fi
   # Only mkdir images/ if we actually have content images to place
   if [ "$(ls {{STAGING_DIR}}/images/ 2>/dev/null)" ]; then
-      mkdir -p "{{DHF_AREA_DIR}}/images"
+      mkdir -p "{{OUTPUT_DIR}}/images"
   fi
 
 Step 2: git-mv the formal to its new name (title-based, no version suffix)
-  git mv "{{SOURCE_PATH}}" "{{DHF_AREA_DIR}}/formal/{{TITLE_STEM}}.{{FORMAT}}"
-  # Skip this step entirely if SOURCE_PATH already equals the target (no rename needed)
+  # DEFAULT MODE ONLY. In explicit-location mode the binary STAYS PUT — skip this step entirely.
+  if [ -z "{{INTO_PATH}}" ]; then
+      git mv "{{SOURCE_PATH}}" "{{OUTPUT_DIR}}/formal/{{TITLE_STEM}}.{{FORMAT}}"
+      # Skip even in default mode if SOURCE_PATH already equals the target (no rename needed)
+  fi
 
 Step 3: Move images FIRST (images must exist before markdown references them)
   For each file X in {{STAGING_DIR}}/images/:
-    mv "{{STAGING_DIR}}/images/X" "{{DHF_AREA_DIR}}/images/X"
+    mv "{{STAGING_DIR}}/images/X" "{{OUTPUT_DIR}}/images/X"
 
 Step 4: Verify every image arrived
-  test -f "{{DHF_AREA_DIR}}/images/X" for each expected X
+  test -f "{{OUTPUT_DIR}}/images/X" for each expected X
   On fail → abort, write COMMIT_FAILED.txt
 
 Step 5: Verify every markdown image ref resolves from OUTPUT_PATH
   For each ![...](images/X.png) in the markdown:
-    test -f "{{DHF_AREA_DIR}}/images/X.png"
+    test -f "{{OUTPUT_DIR}}/images/X.png"
   On fail → abort
 
-Step 6: Move working MD
-  mv "{{STAGING_DIR}}/<TITLE_STEM>.md" "{{DHF_AREA_DIR}}/{{TITLE_STEM}}.md"
+Step 6: Move working MD to OUTPUT_PATH
+  # Default mode: OUTPUT_PATH = {{OUTPUT_DIR}}/{{TITLE_STEM}}.md
+  # Explicit-location mode: OUTPUT_PATH = {{INTO_PATH}} (verbatim)
+  mv "{{STAGING_DIR}}/<TITLE_STEM>.md" "<OUTPUT_PATH>"
 
 Step 7: Verify working MD arrived
-  test -f "{{DHF_AREA_DIR}}/{{TITLE_STEM}}.md"
+  test -f "<OUTPUT_PATH>"
 
 Step 8: Re-render parent README sentinel blocks (non-blocking)
-  parent_dir = "{{DHF_AREA_DIR}}"
+  parent_dir = "{{OUTPUT_DIR}}"
   if [ -f "$parent_dir/README.md" ]; then
       python3 .claude/skills/medtech-docs/scripts/render-sentinels.py "$parent_dir/README.md" || true
   fi
@@ -503,7 +600,7 @@ Step 1: Skip if the adopt set --no-review, OR if the final MD has zero content i
   • if agent invoked with --no-review flag, skip Phase 9 (caller is running review externally)
 
 Step 2: Spawn the reviewer agent, scoped to --mermaid-only --fix
-  • Target: {{DHF_AREA_DIR}}/{{TITLE_STEM}}.md
+  • Target: <OUTPUT_PATH>  (={{OUTPUT_DIR}}/{{TITLE_STEM}}.md in default mode, ={{INTO_PATH}} in explicit-location mode)
   • Read agents/reviewer.md for the full spec
   • MODE=fix SCOPE=mermaid-only
   • The reviewer enumerates every content image, classifies per F11a, constructs a Mermaid

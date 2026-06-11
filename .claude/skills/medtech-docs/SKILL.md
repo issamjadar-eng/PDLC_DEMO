@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 30
-updated: 2026-05-29
+version: 32
+updated: 2026-06-11
 ---
 
 # MedTech Docs
@@ -26,6 +26,7 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `readme-input-analysis.md` | `init` | `docs/project/input-analysis/README.md` |
 | `readme-strategies.md` | `init` | `docs/project/strategies/README.md` (all shared strategy briefs — regulatory, architecture, development, testing, risk, postmarket, commercial, operations) |
 | `readme-submissions.md` | `init` | `docs/project/submissions/README.md` |
+| `readme-dev-spec.md` | on-demand | `docs/project/dev-spec/README.md` — the **dev-spec (engineering working source) tier**; see "Development Specification (dev-spec) tier" below. Created on-demand when a project homes engineering working material that feeds the controlled record; per-DHF subfolders mirror the DHF roster. Not part of the default `init` scaffold. |
 | `readme-dhf.md` | `init`, `add-dhf` | `docs/project/dhfs/<name>/README.md` — per DHF root README (substitute `{{SUB_DHF_NAME}}`, `{{REGULATORY_STATUS}}`, `{{FILING}}`) |
 | `readme-design-controls.md` | `init`, `add-dhf` | `docs/project/dhfs/<name>/design-controls/README.md` |
 | `readme-trace-matrix.md` | `init`, `add-dhf` | `docs/project/dhfs/<name>/design-controls/trace-matrix/README.md` |
@@ -44,6 +45,7 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `rules/claude-md-references.md` | `init` (Step 2c Check 6) | Canonical source for `.claude/rules/claude-md-references.md` — persistent docs reference durable artifacts, never task documents. `init` symlinks it into `.claude/rules/`. |
 | `rules/ground-in-contracts-not-assumptions.md` | `init` (Step 2c Check 7) | Canonical source for `.claude/rules/ground-in-contracts-not-assumptions.md` — when reasoning about how another component (sibling skill, agent, schema, script) behaves, read its contract first and cite specific lines; do not invent behavior from pattern memory. Design-time sibling to `audit-wiring-before-adding-fields` (authoring-time). `init` symlinks it into `.claude/rules/`. |
 | `rules/doctype-governance.md` | `init` (Step 2c Check 7b) | Canonical source for `.claude/rules/doctype-governance.md` — before editing a document under a `.taxonomy.yml`-governed folder, walk up to find the nearest taxonomy, look up the parent-folder slug in `mappings[]`, and read the listed `governing_qms.{forms[], sops[], work_instructions[]}` from the QMS registry before authoring changes. Project-agnostic — no FORM/SOP IDs, no DHF names. `init` symlinks it into `.claude/rules/`. |
+| `rules/ai-changelog.md` | `init` (Step 2c Check 7d) | Canonical source for `.claude/rules/ai-changelog.md` — log AI-assisted edits to a controlled markdown doc in a non-published `<!-- AI-CHANGELOG -->` metadata block (leading comment zone; never published downstream / stripped on DOCX/PDF export), and never name the AI model/tool/vendor in any document changelog or content — use "AI assistant(s)". Project-agnostic + vendor-neutral. `init` symlinks it into `.claude/rules/` and appends a one-line pointer to CLAUDE.md. |
 | `hooks/taxonomy-freshness.sh` | `init` (Step 2c Check 7c) | SessionStart hook that warns when any project `.taxonomy.yml` is past its `last_updated + review_cadence_days` threshold. Throttled to one notification per 24h per project via `.state/taxonomy-freshness-reminded` marker. Symlinked into `.claude/hooks/` and registered via `register-hook.sh` (SessionStart, no matcher). |
 | `claude-md-task-discipline.md` | `init` (Step 2c Check 8) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
@@ -346,13 +348,15 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 
 The helper is idempotent (no duplicate entries on re-run). The hook silently no-ops on projects with no `.taxonomy.yml` files; on projects that have one, it emits a single throttled SessionStart system reminder if the file's `last_updated + review_cadence_days < today`. Pairs with the five new audit rows in this skill's README "Best Practices" table (taxonomy freshness, filesystem coverage, ID resolvability) so on-demand `/best-practices audit` and automatic SessionStart together cover both push and pull notification modes.
 
+**Check 7d — `ai-changelog` rule**: symlink `.claude/rules/ai-changelog.md` → `../skills/medtech-docs/rules/ai-changelog.md` (same skip / repoint / leave-fork idempotency as Check 3). Establishes two coupled conventions: (1) AI-assisted edits to a controlled markdown doc are logged in a non-published `<!-- AI-CHANGELOG -->` HTML-comment block in the leading metadata zone (invisible in rendered markdown, no representation in the downstream rich-text/storage format so it is not published, stripped on DOCX/PDF export); (2) **vendor neutrality** — no document names the specific AI model/tool/vendor in any changelog or content; the only sanctioned label is "AI assistant(s)". Project-agnostic + vendor-neutral by construction. It is an auto-loaded `.claude/rules/` file; **also append a one-line pointer to the Auto-loaded rules section of CLAUDE.md** (the line `- ai-changelog.md — …`) so readers of CLAUDE.md learn the rule exists without enumerating `.claude/rules/`.
+
 **Check 8**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
 
 **Insert task discipline section** (place inside the existing "For Claude" section, after the "Task-First Workflow" subsection if present; otherwise append to "For Claude"):
 
 Read the template verbatim from `${CLAUDE_SKILL_DIR}/templates/claude-md-task-discipline.md` and insert it. The template is the single source of truth for the task-discipline language — never inline it here, never edit the inserted block by hand in a downstream project (edit the template + re-seed instead). The block defines the "update active task doc as you go" hard rule, which is the recovery contract for dropped/compacted/interrupted sessions.
 
-This ensures every project initialized by `/medtech-docs init` gets, from day one, the README convention, the six medtech-docs-owned auto-loaded rules (`readme-before-write`, `sentinel-blocks`, `audit-wiring-before-adding-fields`, `claude-md-references`, `ground-in-contracts-not-assumptions`, `doctype-governance`), the SessionStart taxonomy-freshness hook, and the task-discipline rule — not just the scaffolded README files, but the rules + hook telling Claude how to use and maintain them.
+This ensures every project initialized by `/medtech-docs init` gets, from day one, the README convention, the seven medtech-docs-owned auto-loaded rules (`readme-before-write`, `sentinel-blocks`, `audit-wiring-before-adding-fields`, `claude-md-references`, `ground-in-contracts-not-assumptions`, `doctype-governance`, `ai-changelog`), the SessionStart taxonomy-freshness hook, and the task-discipline rule — not just the scaffolded README files, but the rules + hook telling Claude how to use and maintain them.
 
 **Step 3 — Create the folder structure and READMEs**
 
@@ -962,6 +966,22 @@ Write the populated HTML to `docs/dashboard.html`.
 **Step 3 — Report**
 
 Tell the user the dashboard has been generated and provide the file path. Suggest they open it in a browser.
+
+## Development Specification (dev-spec) tier
+
+An **optional, on-demand documentation tier** for the **upstream engineering working source** that feeds and confirms a project's controlled record. Use it when developers / QA / RA / test need a sanctioned home for low-level working material — implementation/design notes ("working SAD"), tool-validation working packages, simulator source/fixtures, draft engineering test protocols — that is **not itself a controlled deliverable** but is legitimate, living source the controlled documents are derived from.
+
+**What it is — and is not:**
+- **Is**: a living, multi-role engineering working layer; the source from which controlled design outputs are authored; groundable by agents as *upstream source*.
+- **Is not**: under document control (no version/approval/sign-off); not the controlled record; not a submission narrative, strategy doc, or input-analysis synthesis; not a legacy waterfall DHF tree.
+
+**Location & shape:** `docs/project/dev-spec/` with one subfolder per DHF leaf mirroring the DHF roster (`project.yml dhfs[]`): `docs/project/dev-spec/<dhf>/<area>/`. Scaffold the tier README from `templates/readme-dev-spec.md` and a per-DHF/area README from `templates/readme-leaf.md`.
+
+**Relationship to the controlled record** (the regulated-mirror tier — e.g. a `_confluence/` mirror, a Windchill mirror): `dev-spec/<dhf>/` → *informs + confirms* → controlled record → *publish* → system of record. The flow is **dev-spec → controlled → published** (the reverse of adopt-and-extract). dev-spec is also the parity reference the controlled document must stay faithful to.
+
+**Grounding posture (load-bearing):** advisor agents and Claude MAY ground on dev-spec as *upstream source* and must label it as engineering working material (not a controlled deliverable); the controlled record is what gets cited for any regulatory/DHF claim. This is distinct from a *deactivated* legacy tree, which must not be grounded on at all. Exclude neither from nor include dev-spec in controlled-evidence discovery (`/dhf-manifest`, trace-matrix) — it is source, not evidence.
+
+**Not in the default `init` scaffold** — created on-demand. When relocating engineering working material into dev-spec, `git mv` (preserve history), leave a redirect where consumers may still look, and re-point any links from controlled docs to the controlled record (not into dev-spec).
 
 ## Best Practices
 See [README.md](README.md) — consumed by `/best-practices` audit.

@@ -7,7 +7,7 @@ Usage:
         --root-page-id <root-page-id> \
         --base-url https://<your-site>.atlassian.net \
         --space-key <SPACE> \
-        --target-root docs/confluence-staging/<SPACE> \
+        --target-root <staging_target_root>/<SPACE> \
         --cache-root docs/.change-control \
         [--max-depth N] [--dry-run] [--fixture <path-to-json>]
 

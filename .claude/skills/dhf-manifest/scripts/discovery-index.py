@@ -388,56 +388,71 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                 })
                 continue
 
-            taxonomy_folder = mode_block.get("taxonomy_folder")
-            if not external_folder_exists(taxonomy, taxonomy_folder):
-                # Role declares an external-mode mapping but the project's taxonomy
-                # doesn't catalog that folder. This is "not applicable in this
-                # project's external template", which is informational — same
-                # semantic as the role having no external block at all.
-                output["dhf_roles"][dhf_id][role_name] = None
-                output["gaps"].append({
-                    "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
-                    "reason": f"taxonomy folder '{taxonomy_folder}' not declared in {taxonomy_rel}",
-                    "patterns_tried": [],
-                    "informational": True,
-                })
-                continue
-
+            # `taxonomy_folder` may be a single slug (str) OR a list of candidate
+            # slugs (the same canonical role can surface under different external
+            # template slugs — e.g. an item DHF's `software-architecture-document-sad`
+            # vs. the system DHF's `system-architecture-document`). Try each
+            # candidate; the first whose folder/flat-file exists under THIS DHF wins.
+            tf_raw = mode_block.get("taxonomy_folder")
+            candidates = [tf_raw] if isinstance(tf_raw, str) else list(tf_raw or [])
             discovery_root = taxonomy.get("discovery_root", "")
             patterns = effective_patterns(mode_block.get("patterns"), override)
-            nested_root = dhf_path / discovery_root / taxonomy_folder
-            flat_file = dhf_path / discovery_root / f"{taxonomy_folder}.md"
 
-            # Look up taxonomy-declared QMS governance for this folder. Attached
-            # to the resolved entry below so downstream consumers (advisor
-            # agents reading the discovery index, /medtech-docs sentinel
-            # renderer) can surface which FORM/SOP/WI govern this doctype
-            # without re-reading the taxonomy file. (schema v0.3+)
-            gov_qms = taxonomy_governing_qms(taxonomy, taxonomy_folder)
+            resolved = False
+            declared_any = False
+            for taxonomy_folder in candidates:
+                # Skip candidate slugs the project's taxonomy doesn't catalog at all
+                # (a different template's slug — not applicable here).
+                if not external_folder_exists(taxonomy, taxonomy_folder):
+                    continue
+                declared_any = True
+                nested_root = dhf_path / discovery_root / taxonomy_folder
+                flat_file = dhf_path / discovery_root / f"{taxonomy_folder}.md"
+                # Taxonomy-declared QMS governance for this folder (schema v0.3+);
+                # attached to the resolved entry for downstream consumers.
+                gov_qms = taxonomy_governing_qms(taxonomy, taxonomy_folder)
 
-            # Sub-convention A: nested folder layout — <discovery_root>/<folder>/v*.md
-            if nested_root.is_dir():
-                _bind_per_dhf(role_name, dhf_id, nested_root, patterns, project_root, output,
-                              f"{discovery_root}/{taxonomy_folder}" if discovery_root else taxonomy_folder)
-                entry = output["dhf_roles"][dhf_id].get(role_name)
-                if isinstance(entry, dict) and gov_qms:
-                    entry["governing_qms"] = gov_qms
+                # Sub-convention A: nested folder — <discovery_root>/<folder>/v*.md
+                if nested_root.is_dir():
+                    _bind_per_dhf(role_name, dhf_id, nested_root, patterns, project_root, output,
+                                  f"{discovery_root}/{taxonomy_folder}" if discovery_root else taxonomy_folder)
+                    entry = output["dhf_roles"][dhf_id].get(role_name)
+                    if isinstance(entry, dict):
+                        if gov_qms:
+                            entry["governing_qms"] = gov_qms
+                        entry["taxonomy_folder"] = taxonomy_folder
+                        resolved = True
+                        break
+                # Sub-convention B: flat file — <discovery_root>/<folder>.md
+                elif flat_file.is_file():
+                    entry = build_entry(flat_file, project_root, f"{taxonomy_folder}.md (flat-file)")
+                    if gov_qms:
+                        entry["governing_qms"] = gov_qms
                     entry["taxonomy_folder"] = taxonomy_folder
-            # Sub-convention B: flat file layout — <discovery_root>/<folder>.md
-            elif flat_file.is_file():
-                entry = build_entry(flat_file, project_root, f"{taxonomy_folder}.md (flat-file)")
-                if gov_qms:
-                    entry["governing_qms"] = gov_qms
-                    entry["taxonomy_folder"] = taxonomy_folder
-                output["dhf_roles"][dhf_id][role_name] = entry
-            else:
+                    output["dhf_roles"][dhf_id][role_name] = entry
+                    resolved = True
+                    break
+                # else: candidate slug declared but no evidence under this DHF — try next
+
+            if not resolved:
                 output["dhf_roles"][dhf_id][role_name] = None
-                output["gaps"].append({
-                    "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
-                    "reason": f"neither {discovery_root}/{taxonomy_folder}/ folder "
-                              f"nor {discovery_root}/{taxonomy_folder}.md flat-file found",
-                    "patterns_tried": patterns,
-                })
+                if not declared_any:
+                    # None of the candidate slugs are catalogued in this project's
+                    # taxonomy — informational (this external template doesn't carry
+                    # the role), same semantic as no external block at all.
+                    output["gaps"].append({
+                        "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
+                        "reason": f"taxonomy folder(s) {candidates} not declared in {taxonomy_rel}",
+                        "patterns_tried": [],
+                        "informational": True,
+                    })
+                else:
+                    output["gaps"].append({
+                        "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
+                        "reason": f"none of {candidates} resolved under {discovery_root}/ "
+                                  f"(folder or flat-file) for this DHF",
+                        "patterns_tried": patterns,
+                    })
 
         else:
             output["dhf_roles"][dhf_id][role_name] = None

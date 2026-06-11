@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `setup` tasks organized by team member with index tracking. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
-version: 27
-updated: 2026-05-17
+version: 29
+updated: 2026-06-10
 ---
 
 # Task Management
@@ -52,7 +52,7 @@ When any action encounters a missing dependency, it should report:
 | `hooks/register-hook.sh` | Shared hook registration helper — installed to `.claude/hooks/` by `setup` action if not already present |
 | `commands/checkpoint.md` | Slash command alias — thin wrapper that invokes the `checkpoint` action by name. Symlinked from `.claude/commands/` by `setup` so the user can type `/checkpoint` directly. Source of truth lives inside the skill so `/sync-skills pull` propagates updates. |
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
-| `rules/scratch-and-tmp.md` | The scratch/tmp convention — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
+| `rules/scratch-and-tmp.md` | The personal-sandbox convention (`_work/` committed, `_scratch/` gitignored, OS `/tmp` transient) — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
 
 ## Actions
@@ -111,7 +111,7 @@ Wire up the task gate hook and activation script for this project. Self-containe
       '"$CLAUDE_PROJECT_DIR"/.claude/hooks/checkpoint-recover.sh'
     ```
     The helper safely appends to `settings.json` without overwriting other skills' hooks. It checks for duplicates (idempotent).
-15. **Install the scratch/tmp convention.** The `_scratch/` sandbox the `create` action provisions only holds up if the project also gitignores it and the convention is discoverable. The task skill owns this convention because `_scratch/` exists only because tasks exist. Install all three pieces idempotently:
+15. **Install the personal-sandbox convention.** The `_scratch/` and `_work/` sandboxes the `create` action provisions only hold up if the project also gitignores `_scratch/` (`_work/` is deliberately **not** ignored — it is meant to be committed) and the convention is discoverable. The task skill owns this convention because the sandboxes exist only because tasks exist. Install all three pieces idempotently:
     - **Rule file** — create `.claude/rules/` if missing, then symlink `.claude/rules/scratch-and-tmp.md` → `../skills/task/rules/scratch-and-tmp.md` (skip if it already points there; repoint if the target moved; if the project has forked the rule into a regular file, leave the fork alone). Files under `.claude/rules/` are auto-loaded into every session by Claude Code; the symlink — not a copy — is what makes a `/sync-skills pull` that updates the task skill auto-update the rule, with no drift and no stale copy to audit. This is the same install pattern the skill uses for its hooks.
     - **Gitignore** — ensure `.gitignore` contains both the `_scratch/` and `**/_scratch/` patterns. If `.gitignore` exists and has neither, append this commented block; if `.gitignore` does not exist, create it with this block:
       ```
@@ -126,9 +126,9 @@ Wire up the task gate hook and activation script for this project. Self-containe
 
       Files under `.claude/rules/` are auto-loaded into every session — see those files, not this one, for the canonical text:
 
-      - `scratch-and-tmp.md` — `tasks/{person}/_scratch/` is the only sanctioned scratch location; OS `/tmp` for transient intermediates.
+      - `scratch-and-tmp.md` — personal sandboxes: `tasks/{person}/_work/` (committed, reviewable; never a canonical/grounding source) and `tasks/{person}/_scratch/` (gitignored, local-only); OS `/tmp` for transient intermediates.
       ```
-      If CLAUDE.md already has an auto-loaded-rules section but no `scratch-and-tmp.md` line, add just that line.
+      If CLAUDE.md already has an auto-loaded-rules section but no `scratch-and-tmp.md` line, add just that line; if the existing line predates the `_work/` sandbox (mentions only `_scratch/`), update it to the text above.
 16. **Backfill missing index files.** For each `tasks/<person>/` folder that contains task files (`NNN-*.md`) but either has no `000-index.md` or has one missing rows for some task files:
     - Parse each task file for: `**ID**: NNN`, the title from the `# NNN — Title` H1 line, `**Status**: <status>`, `**Priority**: <priority>`.
     - Categorize by status: rows with `Status == Complete` go in the Completed table (ID | Task | Summary); all others go in Active (ID | Task | Status | Priority | Summary). Use the task title as the Summary placeholder.
@@ -196,7 +196,11 @@ Search for active tasks that relate to a topic or description. This is the entry
 Create a new task for a team member.
 
 1. Look in `tasks/<person>/` to find the highest existing task number. Increment by 1 (zero-padded to 3 digits) for the new task ID. If the folder doesn't exist yet, start at `001` and `mkdir -p` the folder.
-2. **Ensure the person's `_scratch/` folder exists** — if `tasks/<person>/_scratch/` does not exist, `mkdir -p tasks/<person>/_scratch/`. This is a personal sandbox folder, gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`), for ideas, drafts, and exploratory artifacts the person wants to keep around locally during a task. The directory is local-only — it will not appear in git, and nothing inside it will ever be committed. The folder existing as an empty local directory is the signal to the user that this is where their personal scratch goes. See `.claude/rules/scratch-and-tmp.md` for the full convention — the auto-loaded rule file installed by the `setup` action. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
+2. **Ensure the person's sandbox folders exist** — if `tasks/<person>/_scratch/` or `tasks/<person>/_work/` does not exist, `mkdir -p` each. They are the two personal sandboxes, distinguished by one axis — does it go into git?
+   - `_scratch/` — gitignored project-wide (`_scratch/` and `**/_scratch/` patterns in `.gitignore`); ideas, drafts, and exploratory artifacts kept locally during a task. Local-only — nothing inside it is ever committed. The empty local directory is the signal that this is where personal scratch goes.
+   - `_work/` — the personal **committed** sandbox: task-support artifacts the person wants in git and reviewable by teammates (data workbooks, generated reports, supporting outputs) that are neither a task doc nor a controlled `docs/` deliverable. Git won't show the directory until the first file lands (empty dirs are untracked), but provisioning it tells the person where committed companions go instead of loose in the task-folder root. `_work/` content is never a grounding/citation source and must be excluded from semantic-search corpora (`**/_work/**`).
+
+   See `.claude/rules/scratch-and-tmp.md` for the full three-sandbox convention — the auto-loaded rule file installed by the `setup` action. Note: Claude uses the OS-provided system `/tmp` for transient intermediates — there is no project-tree `tmp/` directory.
 3. Create the task file `tasks/<person>/NNN-<short-name>.md` using the template below. Populate the header fields as follows:
    - **Title** (`# NNN — Task Title`): generate from `<short-name>` with title-case (e.g., `project-bootstrap` → `Project Bootstrap`). The user may override.
    - `**ID**`: the new NNN.

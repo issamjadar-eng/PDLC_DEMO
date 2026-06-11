@@ -48,11 +48,11 @@ Verification is layered. You must know which layer a reference points at to rout
 
 | Layer | Path | Role |
 |---|---|---|
-| **L1a — Registry reference** | `.claude/skills/medtech-docs/references/{standards,fda-guidance,industry-frameworks}/` | Full clause-level distilled content of standards / guidance. Project-agnostic, registry-shipped. **Authoritative clause text.** |
-| **L1b — Project applicability** | `docs/external/{standards,fda-guidance,industry-frameworks,clinical-literature,gl-qms-documentation}/` | Project-specific applicability analysis. `[VERIFY]` markers, QMS deferrals, module-applicability matrices. **Project's decisions about each clause.** |
-| L1c — Upstream raw | `.../references/<x>/source/`, `.../references/<x>/source-md/` | Raw PDFs + their markdown conversions. **NOT a grounding target.** Skip if encountered. |
-| L1d — Obligation catalog | `.claude/skills/dhf-manifest/data/tier1-regulatory/` | Machine-readable obligation catalog. v1 does not consume directly. |
-| L2 — Internal QMS / SOPs | `docs/internal/{source,source-md,distilled}/` | Company process artifacts. |
+| **L1a — Registry reference** | `.claude/skills/medtech-docs/references/{standards,fda-guidance,regulations,industry-frameworks}/` | Full clause-level distilled content of standards / guidance / regulations. Project-agnostic, registry-shipped. **Authoritative clause text.** |
+| **L1b — Project applicability** | `docs/external/{standards,fda-guidance,regulations,industry-frameworks,clinical-literature,gl-qms-documentation}/` | Project-specific applicability analysis. `[VERIFY]` markers, QMS deferrals, module-applicability matrices. **Project's decisions about each clause.** |
+| L1c — Upstream raw | `.../references/<x>/source/`, `.../references/<x>/source-md/` | Raw PDFs + their markdown conversions. **Not a grounding target** — but `source-md/` is the sanctioned escalation surface for exact-wording verification (see Hard rules). |
+| L1d — Obligation catalog | `.claude/skills/dhf-manifest/data/{fda-guidance,standards,industry-frameworks}/` | Machine-readable obligation catalog. v1 does not consume directly. |
+| L2 — Internal QMS / SOPs | `docs/internal/` (`source/` originals, `source-md/` conversions, distilled views at the tier root) | Company process artifacts. |
 | L3 — Project artifacts | `docs/project/`, `project.yml`, `glossary.md` | What the project is building — DHFs, strategies, submissions, input-analysis, glossary. |
 | L4 — Web (upstream truth) | open web | Actual external sources. **Secondary path** — consulted only when L1a is silent on a cited clause AND the source is openly accessible. Paywalled standards (ISO/IEC) are never web-fetched. |
 | L5 — Cross-refs | within / between docs | Anchors, "see § X above", cross-DHF pointers. |
@@ -138,7 +138,7 @@ v2 candidate kinds (do not emit in v1.1): `applicability-gap`, `applicability-co
 - **Honest `unverified` beats false `sound`.** In a regulated context, a wrong `sound` verdict erodes trust in the entire audit. When in doubt, return `unverified`.
 - **No domain opinions.** Do not write regulatory analysis, risk arguments, or clinical reasoning in your output. The verdict + evidence + suggested fix is the entire output.
 - **Stay within the project root + the medtech-docs skill's references corpus.** Do not follow symlinks elsewhere. Do not recommend files outside `docs/`, `project.yml`, `glossary.md`, or `.claude/skills/medtech-docs/references/`.
-- **L1c is excluded.** Never read or cite files under `.claude/skills/medtech-docs/references/*/source/` or `.../source-md/`. Those are upstream raw artifacts — the registry's distilled files are the authority.
+- **L1c is excluded from grounding, with one scoped exception.** Never *cite* files under `.claude/skills/medtech-docs/references/*/source/` or `.../source-md/` as the resolving source, and never read `source/` binaries. The registry's distilled files are the citation authority. **Exception (escalation, not grounding):** when a distilled file is silent on the cited clause/section or the claim turns on *exact wording*, a researcher may read the matching `source-md/<basename>.md` (where one exists — currently fda-guidance only) to complete verification. The verdict still cites the distilled file (or `registry-gap` if the distillation omits the content); the source-md read is evidence, recorded in the finding's evidence field.
 
 ## Why you exist
 

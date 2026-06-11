@@ -148,7 +148,7 @@ def walk_corpus(cfg: LocatorConfig, audit: bool = False) -> WalkResult:
 def _walk_matching_includes(root: Path, includes: tuple[str, ...]) -> Iterable[Path]:
     """Yield files under root that match at least one include glob.
     Skips noisy directories early to avoid full-tree walks."""
-    pruned_dirs = {".git", "node_modules", "__pycache__", ".worktrees", "_scratch", ".staging"}
+    pruned_dirs = {".git", "node_modules", "__pycache__", ".worktrees", "_scratch", "_work", ".staging"}
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in pruned_dirs]
         for fn in filenames:

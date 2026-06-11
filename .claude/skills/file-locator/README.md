@@ -101,6 +101,16 @@ Surface this in the advisor template so the 13 advisor agents inherit it:
 
 ## Changelog
 
+- **v3** (2026-06-10) — **Exclude `**/_work/**` from the corpus by default.** The task
+  skill's personal-sandbox convention added `tasks/{person}/_work/` — a committed,
+  teammate-visible sandbox for personal task-support artifacts that is explicitly
+  *never* a grounding/citation source. Added `**/_work/**` to the default
+  `corpus_excludes` (SKILL.md + `templates/project.yml.snippet`) and to the
+  include-walk `pruned_dirs` in `scripts/common.py`, mirroring `_scratch`. Like the
+  `_scratch` exclude, this is defense-in-depth: default includes don't cover `tasks/`,
+  but a project broadening `corpus_includes` must not accidentally index personal
+  sandboxes. Existing committed indexes need no rebuild unless their includes already
+  covered a `_work/` path.
 - **v2** (2026-06-01) — **Self-healing venv bootstrap.** The `.mcp.json`
   `command` now points at a committed wrapper, `tools/file-locator-mcp/bootstrap.sh`
   (new `templates/bootstrap.sh`), instead of `./.venv/bin/python` directly. The

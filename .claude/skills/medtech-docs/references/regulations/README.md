@@ -10,8 +10,8 @@ Distinct from `../standards/` (consensus standards — ISO/IEC) and `../fda-guid
 
 | Citation | File | Subject |
 |----------|------|---------|
-| 21 CFR Part 807 | [`21-cfr-part-807.md`](21-cfr-part-807.md) | Establishment Registration and Device Listing — including § 807.81 (when a 510(k) is required) and § 807.85 (510(k) exemptions) |
-| 21 CFR Part 880 | [`21-cfr-part-880.md`](21-cfr-part-880.md) | General Hospital and Personal Use Devices — including § 880.6310 (MDDS, Class I exempt) and § 880.9 (exemption limitations) |
+| 21 CFR Part 807 | [`21-cfr-part-807.md`](21-cfr-part-807.md) | Establishment Registration and Device Listing — including § 807.81 (when a 510(k) is required) and § 807.85 (exemption for custom/practitioner-ordered devices and investigational distribution) `[VERIFY § 807.85 quoted text against live eCFR — audit flagged drift]` |
+| 21 CFR Part 880 | [`21-cfr-part-880.md`](21-cfr-part-880.md) | General Hospital and Personal Use Devices — including § 880.6310 (MDDS — hardware-only since 86 FR 20283 (2021); Class I exempt) and § 880.9 (exemption limitations) |
 | 21 CFR Part 892 | [`21-cfr-part-892.md`](21-cfr-part-892.md) | Radiology Devices — including § 892.2050 (medical image management & processing — QIH/PACS) and the broader image-system regulatory chain (§§ 892.2010–892.2080) |
 | 45 CFR Part 164 | [`45-cfr-part-164.md`](45-cfr-part-164.md) | HIPAA Security & Privacy of health information — anchored on **Subpart C, the Security Rule** (§§ 164.302–164.318 + Appendix A matrix): administrative / physical / technical safeguards for ePHI that flow down to a device manufacturer acting as a business associate. Breach Notification (Subpart D) and Privacy (Subpart E) summarized + pointered. Forward-looking note on the 2025 Security Rule NPRM. |
 
@@ -25,7 +25,7 @@ Each file opens with a citation block + scope paragraph + section index, then wa
 - Cross-references to companion consensus standards (`../standards/`)
 - 510(k) exemption status with applicable limitations (the § 880.9 / § 892.9 / § 807.85 framework)
 - Amendment/reclassification history when load-bearing for the project's regulatory posture (e.g., § 880.6310 reclassification from Class III to Class I in 2011)
-- Source XML retrieved from the eCFR API stored under `source/`; markdown conversion under `source-md/` — both excluded from project-console grounding surfaces (path-segment rules) so agents don't pull the full title into context
+- Retrieval provenance: every file's "Source provenance" section names the eCFR API endpoint and retrieval date. (No `source/` / `source-md/` archives exist in this category yet — unlike `../fda-guidance/`, the distilled files are currently the only local tier. CFR text is public domain, so archiving the retrieved XML under `source/` is permitted and desirable; until then, the live eCFR API is the escalation path.)
 
 ### Out of Scope (see instead)
 - **Project-specific applicability analysis** — `docs/external/regulations/<name>.md` in each consuming project. That's where module applicability, classification-decision rationale, `[VERIFY]` markers, and Q-Sub questions live.
@@ -51,7 +51,8 @@ When asked about a 21 CFR citation:
 2. Look for the project-applicability answer at **`docs/external/regulations/<name>.md`** — how this program has decided to apply the regulation to its modules.
 3. Cite **both** in footnotes — the regulation file for "what the rule says," the applicability file for "what this device program has decided about it."
 4. If the project's applicability file is thin or missing, say so explicitly — don't answer from training knowledge without flagging the gap.
-5. If a regulation has been amended/reclassified (e.g., § 880.6310 in 2011), note the reclassification date and the prior class in your response. Older citations to the reclassified status are common defect patterns the `citations` audit will catch.
+5. If a regulation has been amended/reclassified (e.g., § 880.6310 — reclassified 2011, software removed 2021), note the amendment date and the prior state in your response. Older citations to a superseded status are common defect patterns the `citations` audit will catch.
+6. **Escalate to the live eCFR when currency or exact wording matters.** Regulations change; each file is a dated snapshot. If the file's retrieval date is more than ~6 months old, the question touches a pending rulemaking, or the claim turns on exact regulatory text for a submission, fetch the live eCFR versioner API: `https://www.ecfr.gov/api/versioner/v1/full/<YYYY-MM-DD>/title-<N>.xml?part=<NNN>` (the human-viewer `ecfr.gov/current/...` URLs redirect automated fetchers — use the API). Quote what the API returns, and flag the distillation for re-pull if it has drifted.
 
 ## Changelog
 

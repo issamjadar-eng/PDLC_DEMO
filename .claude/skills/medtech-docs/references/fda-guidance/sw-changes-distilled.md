@@ -104,7 +104,7 @@ Key decision points:
 #### Flowchart D: IVD-Specific Changes
 
 - **D1**: Alters operating principle? -- New 510(k)
-- **D2**: Change identified in device-specific guidance? -- Follow that guidance
+- **D2**: Change identified in a device-specific final guidance or classification regulation? -- New 510(k) likely required
 - **D3**: Risk-based assessment identifies new/modified risks? -- New 510(k)
 - **D4**: Unexpected issues from V&V? -- New 510(k); otherwise Documentation
 

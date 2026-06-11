@@ -13,9 +13,11 @@ an optional target path:
 
 If `--target` is omitted, default to:
 
-    docs/confluence-staging/<space-key>/<sanitized-page-path>.md
+    <staging_target_root>/<space-key>/<sanitized-page-path>.md
 
-…where `<sanitized-page-path>` is the human-readable page path with
+…where `<staging_target_root>` is read from the configured space in
+`project.yml` (`change_control.spaces[].staging_target_root`) — projects
+point it at the canonical Confluence-mirror root — and `<sanitized-page-path>` is the human-readable page path with
 slashes preserved and unsafe characters replaced with hyphens.
 
 ## Step 1 — Resolve the cloudId

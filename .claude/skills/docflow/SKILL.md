@@ -1,7 +1,7 @@
 ---
 name: docflow
 description: "Document conversion and round-trip management between markdown and formal formats (DOCX, DOC, PDF, XLSX). Use this skill whenever a user asks to convert, adopt, import, export, refresh, round-trip, or 'test docflow on' any .docx / .doc / .pdf / .xlsx / .pptx file — whether under docs/internal/source/ (QMS SOPs, forms, policies, work instructions), under docs/project/dhfs/**/formal/ (DHF working drafts), or elsewhere in the repo. Also use when a user asks to extract images, resolve cross-references, or handle external review comments against any of those formats. Owns the conversion pipeline — image extraction, frontmatter, cross-ref resolution, quality gates, round-trip metadata — so direct pandoc / unzip / soffice / pdftotext calls are blocked by a PreToolUse Bash hook installed by the skill's `setup` action; `/docflow <action>` is the supported entry point."
-version: 31
+version: 35
 updated: 2026-04-23
 ---
 
@@ -259,28 +259,61 @@ NATURAL-LANGUAGE PHRASINGS (skill entry routes these to adopt):
   "convert the DHF formal docs to working"   "make a working copy of ..."
 
 TARGET FORMS:
-  /docflow adopt <file>                 Single formal doc
+  /docflow adopt <file>                 Single formal doc (default: into DHF area, restructured to formal/)
   /docflow adopt <dhf>                  All formal/ content in a DHF
   /docflow adopt <dhf> --area <area>    Scope to one sub-area
+  /docflow adopt <binary> --into <md>   Explicit-location: any source binary → working MD at <md>,
+                                        binary stays put (no formal/ restructure)
 
 FLAGS:
-  --plan              Dry run — inventory + planned actions, no writes
-  --refresh <file>    Re-adopt a file whose formal changed out-of-band.
-                      Previous working MD gets status: obsolete; new
-                      working MD created at the next version.
-  --force             Skip "working MD already exists" warning
-  --no-rename         Skip formal rename (advanced — breaks version lineage
-                      consistency, for manual recovery only)
+  --plan                   Dry run — inventory + planned actions, no writes
+  --refresh <file>         Re-adopt a file whose formal changed out-of-band.
+                           Previous working MD gets status: obsolete; new
+                           working MD created at the next version.
+  --force                  Skip "working MD already exists" warning
+  --no-rename              Skip formal rename (advanced — breaks version lineage
+                           consistency, for manual recovery only)
+  --into <md-path>         Explicit output location for the working MD. Lifts the
+                           dhfs/**/formal/ source requirement (binary may live
+                           anywhere) and leaves the binary IN PLACE — no rename,
+                           no formal/ restructure. source_formal points at the
+                           binary's actual location. One file → one location.
+  --binary-authoritative   Mark the binary as the controlled record and the MD as
+                           a derived faithful view (authoritative: formal). The MD
+                           is refreshed FROM the binary; export never overwrites it.
+                           Use for externally/team-authored controlled documents.
+                           Required when --into targets a managed _confluence page.
 
-PRODUCES:
+  SPLICE: when --into points at an existing managed _confluence page (its leading
+  <!-- --> block has a confluence: key), adopt SPLICES instead of colliding —
+  preserves the comment-block frontmatter (confluence: binding + state:), the
+  page-title / doc-governance / attachments sentinels, and intro blockquotes;
+  folds a docflow: provenance sub-block (source, authoritative, conversion
+  date/direction) into the comment block; replaces ONLY the body inside an
+  AUTO:DOCFLOW-BODY sentinel; refreshes the controlled-record blockquote.
+
+PRODUCES (default mode):
   <dhf-area>/<stem>-v{N+1}.md                  (working MD)
   <dhf-area>/formal/<stem>-v{N}.{ext}          (renamed formal, via git mv)
   <dhf-area>/images/                           (extracted images, if any)
+
+PRODUCES (explicit-location mode, --into a NEW path):
+  <md-path>                                    (working MD, verbatim location)
+  <md-dir>/images/                             (extracted images, if any)
+  (source binary unchanged, in place; source_formal points at it)
+
+PRODUCES (SPLICE — --into an existing _confluence page):
+  <page>.md                                    (body replaced in-place; preamble + sentinels preserved)
+  <page-dir>/images/                           (extracted figures, alongside the attachment)
+  (comment block gains a docflow: sub-block; AUTO:DOCFLOW-BODY wraps the body)
 
 EXAMPLES:
   /docflow adopt mfd-c --plan
   /docflow adopt mfd-a --area design-controls/user-needs
   /docflow adopt docs/project/dhfs/mfd-a/design-controls/user-needs/formal/AFAI-MedTech Project\ Planning-170426-111505.pdf
+  /docflow adopt "docs/project/_confluence/<dhf>/<root>/<slug>/images/FORM-NNN.docx" \
+    --into "docs/project/_confluence/<dhf>/<root>/<slug>/derived/FORM-NNN.md" \
+    --binary-authoritative
 ```
 
 #### `help batch`
@@ -529,23 +562,31 @@ Convert multiple documents in a priority category.
 
 Adopt DHF formal document(s) into round-trippable working markdown. Unlike `convert` (one-way reference conversion of QMS source docs), adopted MD becomes the **authoring source of truth** — the file the team edits. `/docflow export` (Phase 2) round-trips it back to formal.
 
-**Flags recognized**: `--plan`, `--refresh <file>`, `--force`, `--no-rename`, `--area <path>`
+**Flags recognized**: `--plan`, `--refresh <file>`, `--force`, `--no-rename`, `--area <path>`, `--into <md-path>`, `--binary-authoritative`
 
 0. **Preflight**:
-   - Target must either resolve to a single file under `docs/project/dhfs/<dhf>/**/formal/`, OR be a DHF leaf name matching `project.yml` `dhfs[]`.
+   - **Auto-locate sub-mode** (no `--into`, and the positional target is a **single binary** that is NOT under `docs/project/dhfs/<dhf>/**/formal/` and is NOT a DHF leaf name): docflow **infers** the output location by convention-detection instead of erroring. Run `python3 .claude/skills/docflow/scripts/locate_md_target.py "<binary>" --root .` and branch on the JSON `confidence` band (the helper reads the project's OWN conventions — existing link → `source→source-md` tier rule → nearest `.taxonomy.yml` → sibling-folder pattern → README; it never guesses from the filename):
+     - `covered` → an md view already exists/links this binary (`target_md`). Report it and STOP — nothing to adopt.
+     - `high` → set `INTO_PATH = target_md`, `AUTHORITY = formal` (binary is the controlled record), and proceed exactly as **explicit-location mode** below (incl. SPLICE if `target_md` is an existing managed `_confluence` page). Echo the inferred target + rationale to the user.
+     - `prompt` → the location/action is ambiguous (e.g. a folder already holds an md that may BE the view — see `alternatives[].action: link-existing`, or a `_confluence` node has multiple possible attachments). Present `target_md`, the `rationale`, and any `alternatives` (link-existing vs generate-new), and STOP for the user to confirm or pass `--into` explicitly. **Do NOT auto-generate** — silently creating a duplicate view is exactly the failure this guards against.
+     - `none` → no convention signal. Report and ask the user for an explicit `--into <md-path>`.
+     This sub-mode is what the file-locator `audit` detector hands off to (it finds binaries with no indexed md and calls `/docflow adopt <binary>` with no `--into`).
+   - **Default mode** (no `--into`): target must either resolve to a single file under `docs/project/dhfs/<dhf>/**/formal/`, OR be a DHF leaf name matching `project.yml` `dhfs[]`.
+   - **Explicit-location mode** (`--into <md-path>` given): the positional target is a single **source binary at any path** (the `dhfs/**/formal/` requirement is lifted — the binary may live anywhere the team manages it, e.g. a `_confluence` node's `images/<file>.docx`). `--into` is the explicit output path for the working MD; the binary stays where it is. `--binary-authoritative` marks the binary as the controlled record (MD is a derived view). DHF-name and `--area` forms are not valid with `--into` (it adopts exactly one file to one location).
    - Verify `docs/internal/source-md/Forms/` and `docs/internal/source-md/SOPs/` exist (required for template + SOP inference). If missing or empty, warn but do not block — inference will return null candidates.
-   - **Collision check**: for each formal file, if both `<stem>.ext` AND `<stem>-v{N}.ext` exist in the same folder → error, instruct user to manually resolve before re-running. Auto-resolution here silently loses content; we require explicit intent.
+   - **Collision check**: default mode — for each formal file, if both `<stem>.ext` AND `<stem>-v{N}.ext` exist in the same folder → error. Explicit-location mode — if the `--into` path already exists, branch: (a) the existing file is a **managed `_confluence` page** (its leading `<!-- … -->` block contains a `confluence:` key) → **SPLICE mode** (preserve the comment block + all sentinels + intro blockquotes; fold a `docflow:` sub-block into the comment block; replace only the body, wrapped in an `AUTO:DOCFLOW-BODY` sentinel; refresh the provenance blockquote — see `agents/adopter.md` "`_confluence`-page splice"). Splice requires `--binary-authoritative`. (b) any other existing file → error unless `--force`. Auto-resolution silently loses content; we require explicit intent.
    - If `--plan`, compute the action list and report without writing.
 
 1. **Resolve target**:
-   - **Single file** (absolute or relative path to a formal file) → one adoption job. Infer the DHF by walking up the path until a `project.yml` `dhfs[].path` match is found. Infer DHF_AREA from path segments between the DHF root and `formal/`.
+   - **Single file, default mode** (absolute or relative path to a formal file) → one adoption job. Infer the DHF by walking up the path until a `project.yml` `dhfs[].path` match is found. Infer DHF_AREA from path segments between the DHF root and `formal/`. DHF_AREA_DIR = parent of `formal/`.
+   - **Single file, explicit-location mode** (`--into <md-path>`) → one adoption job. SOURCE_PATH = the positional binary (any location). OUTPUT goes to `--into <md-path>` verbatim; OUTPUT_DIR = `dirname(<md-path>)`; the binary is **not** moved or renamed. Best-effort DHF/DHF_AREA inference: if `<md-path>` falls under a `project.yml dhfs[].path`, populate `dhf`/`dhf_role`/`dhf_area` from it; otherwise leave them null (the explicit path is authoritative, not the DHF layout). AUTHORITY = `formal` if `--binary-authoritative` else `working`.
    - **DHF name** (e.g. `mfd-c`) → enumerate every file under `docs/project/dhfs/<dhf>/**/formal/` matching `{pdf,docx,doc,xlsx,pptx}`. Exclude patterns: `c-arm-simulator-main/**` (source code), `HLCAS-TC-*` + `*.dcm` + pure-evidence screenshots (runtime evidence, not documentation).
    - **DHF + `--area <path>`** → scope to `docs/project/dhfs/<dhf>/<area>/formal/`.
 
 2. **Per-file adoption** (for each resolved file):
 
    **2a. Spawn adopter agent** — the agent does all extraction, rename, conversion, and validation:
-   - Spawn an Agent with `agents/adopter.md`, parameterized with: SOURCE_PATH (as-dropped), FORMAT, DHF, DHF_ROLE, DHF_AREA, DHF_AREA_DIR, STAGING_DIR, DOC_VERSION_OVERRIDE (if user passed `--doc-version`), FORMS_INDEX_PATH, SOPS_INDEX_PATH, WIS_INDEX_PATH, MANIFEST_PATHS, PROJECT_REFS_PATH.
+   - Spawn an Agent with `agents/adopter.md`, parameterized with: SOURCE_PATH (as-dropped), FORMAT, DHF, DHF_ROLE, DHF_AREA, DHF_AREA_DIR, STAGING_DIR, DOC_VERSION_OVERRIDE (if user passed `--doc-version`), FORMS_INDEX_PATH, SOPS_INDEX_PATH, WIS_INDEX_PATH, MANIFEST_PATHS, PROJECT_REFS_PATH, **INTO_PATH** (the `--into` value, or null), **AUTHORITY** (`formal` if `--binary-authoritative` else `working`).
    - The agent's Phase 0 extracts title + doc_version from the source document's content, detects adoption state (FRESH / IDEMPOTENT / OVERRIDE-MERGE / DOWNGRADE / TITLE-DRIFT), and derives output paths from the extracted title.
    - Up to 5 concurrent agents when processing a DHF-wide target. Serialize if `--plan` is set (no concurrency needed for dry run).
 
@@ -561,7 +602,9 @@ Adopt DHF formal document(s) into round-trippable working markdown. Unlike `conv
    - The agent's Phase 8 performs the transactional commit (git mv formal → title-based name, move images, move working MD, re-render parent README sentinels).
 
    **2d. Skill-side result handling**:
-   - On agent success, working MD has landed at `<DHF_AREA_DIR>/<TITLE>.md` and formal at `formal/<TITLE>.<ext>`. Parent README sentinels re-rendered.
+   - On agent success (default mode), working MD has landed at `<DHF_AREA_DIR>/<TITLE>.md` and formal at `formal/<TITLE>.<ext>`. Parent README sentinels re-rendered.
+   - On agent success (explicit-location mode), working MD has landed at the `--into` path verbatim; the source binary was **not** moved (`source_formal` points at its in-place location); `authoritative` reflects `--binary-authoritative`. No `formal/` restructure.
+   - On agent success (SPLICE mode — `--into` an existing managed `_confluence` page), the page's comment-block frontmatter (incl. `confluence:` binding), all sentinels (page-title, `doc-governance`, `confluence-side: attachments`), and intro blockquotes were preserved; a `docflow:` provenance sub-block was folded into the comment block; the body was replaced inside an `AUTO:DOCFLOW-BODY` sentinel. Surface any `body_deltas` the agent reported for RA review.
    - On agent failure: staging retained with diagnostic file. Collect into batch summary.
 
 3. **Quality gate enforcement** (DHF-wide targets):
@@ -1036,5 +1079,11 @@ See [README.md](README.md) — consumed by `/best-practices` audit.
 - The staging area is never committed to git
 
 ## Changelog
-See [README.md](README.md) for version history.
+
+- **v35** — Clarified the SPLICE faithful-to-source-structure rule. "Faithful" means render the document's **real sections as `## N. Title` headings, preserving the source's numbering** — whether the source used Word heading styles OR numbered section-divider paragraphs (promoting a real numbered section to a heading is a faithful transposition, not an invention, and keeps pages navigable + consistent). v34 was too literal (it kept numbered section paragraphs as list items, producing un-navigable bodies that disagreed with sibling pages). Still forbidden: fabricating/dropping/re-ordering/re-titling sections or inventing heading levels with no real section. Body content (tables/lists/figures) stays as-is. Wanting different structure is a source-document edit, then refresh. (ben/229)
+- **v34** — SPLICE-mode **non-canonical + publish-gate + faithfulness policy** (for `authoritative: formal` pages). The attached binary is the canonical record; the page markdown is an internal, non-canonical derived view for agent/reviewer findability — so SPLICE now (a) inserts a required top **`AUTO:DOCFLOW-NOTICE`** banner ("🚫 NON-CANONICAL — DO NOT EDIT THIS MARKDOWN; edit the source document and re-run docflow"), (b) sets **`confluence.publish_body: false`** by default (the markdown body is NOT pushed to Confluence unless the team opts in; the attachment + node `index.md` is the publication), and (c) enforces **faithful-to-source structure** (HARD RULE — mirror the source's real heading styles / numbered paragraphs as-is; do NOT invent a heading outline the controlled record lacks; structural changes are source-document edits, then refresh). `docflow.conversion.faithful_to_source_structure: true` records this. (ben/229)
+- **v33** — `adopt` **`_confluence`-page SPLICE mode** (extends explicit-location mode). When `--into` targets an existing managed `_confluence` page (leading `<!-- -->` block has a `confluence:` key), docflow no longer treats it as a collision — it **splices**: preserves the comment-block frontmatter (incl. the `confluence:` binding + change-control `state:`), the `AUTO:PAGE-TITLE` / `doc-governance` / `confluence-side: attachments` sentinels, and hand-authored intro blockquotes; folds a `docflow:` provenance sub-block into the comment block (authoritative side, `source_formal`, source format, conversion direction + date + method + fidelity + docflow_version, refresh_cmd); replaces **only** the body inside a new docflow-owned `AUTO:DOCFLOW-BODY` sentinel (which `refresh` regenerates); and refreshes the controlled-record provenance blockquote. Governance IDs are NOT duplicated into `docflow:` (they render from `.taxonomy.yml` via the `doc-governance` sentinel). Requires `--binary-authoritative`. Notable body-content deltas vs. a prior page draft are reported as `body_deltas` for RA review, not silently dropped. Grounded in `change-control/lib/frontmatter.py` (the comment block is `yaml.safe_load`-parsed → `docflow:` coexists with `confluence:`, round-trips, and is stripped before Confluence push). (ben/229)
+- **v32** — `adopt` explicit-location mode. New flags `--into <md-path>` (output the working MD at an explicit path; lifts the `dhfs/**/formal/` source requirement so the binary may live anywhere; leaves the binary IN PLACE — no rename, no `formal/` restructure; `source_formal` points at its actual location) and `--binary-authoritative` (binary is the controlled record, MD is a derived faithful view refreshed FROM the binary, never exported back over it — new `authoritative: formal|working` frontmatter field). Default mode behavior is unchanged (`INTO_PATH` null → `OUTPUT_DIR == DHF_AREA_DIR`). Motivation: adopting team/externally-authored controlled binaries that already live where the team manages them (e.g. a `_confluence` node's `images/<file>.docx`) into a git-reviewable working MD without forcing the waterfall layout. (ben/229)
+
+See [README.md](README.md) for earlier version history.
 
