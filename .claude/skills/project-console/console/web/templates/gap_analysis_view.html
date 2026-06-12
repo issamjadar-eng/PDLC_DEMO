@@ -240,6 +240,29 @@
   {% endif %}
 </section>
 
+{# Generic Assistant drawer — grounded in this analysis's compact sidecar
+   rendition, fetched from /gap-analysis/{id}/grounding at send time via the
+   drawer's "url:" grounding mode. Defaults to the analysis's primary advisor
+   so the user is talking to the agent that led the analysis. #}
+{% set assistant = {
+  "scope": "ga:" ~ m.id,
+  "endpoint": "/assistant/chat/stream",
+  "default_agent": d._default_advisor,
+  "allowed_agents": [],
+  "grounding_label": "GAP ANALYSIS CONTEXT",
+  "grounding_source": "url:/gap-analysis/" ~ m.id ~ "/grounding",
+  "title": "Gap Analysis Advisor",
+  "subtitle": m.id,
+  "placeholder": "Ask about this gap analysis…",
+  "empty_hint": "Ask about this analysis's assertions, findings, grounding, or recommendations. The advisor sees the full analysis. Example: <em>\"Which assertions are only partially supported, and what evidence would close them?\"</em>",
+  "open_button_id": "ga-assistant-open"
+} %}
+{% include "_assistant_drawer.html" %}
+
+{# Shared floating launcher (bottom-right). #}
+{% set launcher = {"button_id": "ga-assistant-open"} %}
+{% include "_assistant_launcher.html" %}
+
 <script>
 (function () {
   // ---- top-level view tabs (Report | Advisors) ----------------------------

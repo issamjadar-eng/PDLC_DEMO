@@ -47,9 +47,13 @@
     <button type="button" class="pc-assistant-close" id="pc-assistant-close" aria-label="Close">✕</button>
   </header>
   {# Decision-edit mode banner — hidden by default; revealed when JS sets
-     drawer dataset.editMode (used by /workflows/strategy-reassembly Edit). #}
+     drawer dataset.editMode (used by /workflows/strategy-reassembly Edit).
+     display:flex lives in the :not([hidden]) rule, not the inline style —
+     an inline display overrides the UA's [hidden]{display:none} and would
+     make the banner visible on every page hosting the drawer. #}
+  <style>#pc-edit-mode-bar:not([hidden]) { display: flex; }</style>
   <div id="pc-edit-mode-bar" hidden
-       style="padding:0.5rem 0.85rem;background:rgba(239,108,0,0.1);border-bottom:1px solid rgba(239,108,0,0.3);display:flex;flex-direction:column;gap:0.3rem;">
+       style="padding:0.5rem 0.85rem;background:rgba(239,108,0,0.1);border-bottom:1px solid rgba(239,108,0,0.3);flex-direction:column;gap:0.3rem;">
     <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.85em;line-height:1.35;">
       <span style="display:inline-flex;align-items:center;gap:0.35rem;flex:1 1 auto;min-width:0;">
         ✏️ <strong>Editing</strong> <code id="pc-edit-decision-id"></code>

@@ -175,6 +175,16 @@ def _decorate_detail(detail: dict, repo_root: Path) -> dict:
         })
     detail["_agent_docs"] = groups
     detail["_agent_docs_total"] = len(groups["advisor"]) + len(groups["kol"])
+
+    # Default advisor for the assistant drawer: the analysis's primary agent,
+    # falling back to the first listed agent. Sidecar agent names match the
+    # console roster by convention; when one doesn't resolve, assistant.js
+    # falls back to the first public agent in the picker.
+    agents = detail.get("agents", [])
+    detail["_default_advisor"] = next(
+        (a.get("name") for a in agents if a.get("role") == "primary"),
+        agents[0].get("name") if agents else "",
+    ) or ""
     return detail
 
 
