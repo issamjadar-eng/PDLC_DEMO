@@ -973,3 +973,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - project.yml: added `**/_work/**` to `file_locator.corpus_excludes` (no allowlist changes — no new skills/agents).
 - Follow-ups applied in-line: `.claude/rules/ai-changelog.md` symlink + CLAUDE.md pointer (medtech-docs init Check 7d); CLAUDE.md `scratch-and-tmp.md` pointer line updated for `_work/` (task v29). index.db rebuild not needed locally (CI-owned on PR merge).
 - Origin: PDLC_DEMO task ben/085. User asked "pull the latest from project + skill repo, then push."
+
+## 2026-06-12 — push (project-console 1.26.0)
+
+- Files: `skills/project-console/VERSION`, `skills/project-console/SKILL.md`, `skills/project-console/README.md`, `skills/project-console/console/gap_analysis/router.py`, `skills/project-console/console/web/templates/gap_analysis_view.html`, `skills/project-console/console/web/templates/_assistant_drawer.html`
+- Branch: `sync/pdlc-demo-project-console-gap-advisor-2026-06-12`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/216
+- Commit: "project-console 1.26.0: Gap Analysis ask-the-advisor drawer + hidden-banner fix"
+- Status: merged (user asked to land in both repos)
+- Merge commit: `9e6a305`
+- Hitachi HEAD after sync: `9e6a305` (local checkout fast-forwarded; sync branch deleted local + remote)
+- Origin: PDLC_DEMO task ben/086 (project PR #54, merged `6cda697`).

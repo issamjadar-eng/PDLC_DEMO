@@ -2,7 +2,7 @@
 
 **ID**: 086
 **Created**: 2026-06-11
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -41,7 +41,8 @@ Add an "ask an advisor" capability to the project-console **Gap Analysis** view,
 - [x] Restart console (`start.sh`) + browser-verify in Chrome (no `sync` needed — `console/` package is imported via PYTHONPATH, effective on restart)
 - [x] Update skill VERSION/changelog
 - [x] Drive-by bug fix: edit-mode banner visible on all drawer pages (inline `display:flex` defeating `hidden`)
-- [ ] Commit (await user direction on commit/push)
+- [x] Push to project repo (PR #54 → merged `6cda697`)
+- [x] Push to skill registry (hitachi PR #216 → squash-merged `9e6a305`; local checkout fast-forwarded; sync branch deleted)
 
 ## Design (decided 2026-06-11)
 
@@ -61,4 +62,4 @@ Add an "ask an advisor" capability to the project-console **Gap Analysis** view,
 - 2026-06-11: Implemented — `console/gap_analysis/router.py` (`_default_advisor` decoration) + `console/web/templates/gap_analysis_view.html` (drawer + launcher mount, trace-matrix pattern). Skill VERSION 1.25.0 → 1.26.0; SKILL.md frontmatter realigned (was stale at 1.17.0); README changelog entry added.
 - 2026-06-11: Browser-verified end-to-end on `/gap-analysis/hipaa-readiness-profile` — launcher renders, drawer opens titled "Gap Analysis Advisor / hipaa-readiness-profile", agent picker defaulted to Cybersecurity Assistant (the analysis's primary advisor), `/grounding` endpoint returns 35 KB compact rendition (HTTP 200), zero console errors. Live SSE smoke test: asked "which assertions are refuted" → advisor answered A10 (F-6) + A11 (F-8), exactly matching the sidecar — grounding injection confirmed working.
 - 2026-06-11: Drive-by bug found + fixed during verification: `_assistant_drawer.html` edit-mode banner visible on ALL drawer pages (inline `display:flex` overrides `hidden`; pre-existing since a May upstream pull). Fix: moved `display:flex` to a `#pc-edit-mode-bar:not([hidden])` rule. Re-verified: `display:none` when hidden; B3's `bar.hidden=false` reveal path unaffected. Folded into the 1.26.0 changelog entry.
-- 2026-06-11: All work UNCOMMITTED — files touched: `.claude/skills/project-console/{VERSION,SKILL.md,README.md,console/gap_analysis/router.py,console/web/templates/gap_analysis_view.html,console/web/templates/_assistant_drawer.html}` + this task doc + `tasks/ben/000-index.md`. Resume: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 086`. Next: commit (and `/sync-skills push` upstream if user wants).
+- 2026-06-12: **Shipped both repos; task Complete.** Project: branch `ben/086-gap-analysis-ask-advisor` → PR #54 → merged `6cda697` (commit `785ae50`, 8 files). Registry: `/sync-skills push --merge` of the 6 project-console files → hitachi PR #216 → squash-merged `9e6a305`; local hitachi checkout fast-forwarded, sync branch deleted both sides; sync-log entry appended. Preflight `check --analyzed` showed all 6 files LOCAL_AHEAD (clean push on top of the ben/085 drift-0 baseline). Nothing in flight.
