@@ -1,0 +1,31 @@
+doc: docs/project/submissions/qsub/fda-questions.md
+version: v0.1
+date: 2026-06-15
+agent: regulatory-affairs
+task: ben/087
+
+sources_consulted:
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["§1 Filing Scope", "§2 Module Classification", "§8 Q-Sub Questions"]
+    how_used: scope/classification/PCCP positions behind each question (§8 was empty — questions authored for the demo).
+  - path: docs/project/submissions/qsub/pccp-summary.md
+    sections: ["§2 Scope", "§3 Description of Modifications"]
+    how_used: Topic 2 PCCP questions.
+  - path: docs/project/input-analysis/predicate-analysis/README.md
+    how_used: Topic 3 predicate question.
+
+fda_visible_references:
+  - docs/project/submissions/qsub/device-description.md
+  - docs/project/submissions/qsub/pccp-summary.md
+
+claims_to_source:
+  - claim: "6 primary questions across 3 topics"
+    source: this document's Questions Overview table
+  - claim: "Single PCCP spanning drug-library, firmware, predictive-alarm changes"
+    source: regulatory-strategy.md §1 PCCP envelope
+
+open_gaps:
+  - "regulatory-strategy.md §8 Q-Sub Questions is unassembled — promote these demo questions there when ready."
+
+notes:
+  - "Demo seed; questions are illustrative, grounded in the device scope decisions."

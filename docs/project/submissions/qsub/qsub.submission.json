@@ -1,0 +1,470 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "id": "qsub",
+    "type": "Q-Sub (Pre-Submission)",
+    "title": "Q-Sub (Pre-Submission) — PP3500 (PainEase PCA Advanced)",
+    "device": "PP3500 (PainEase PCA Advanced)",
+    "filing_id": "TBD (assigned by FDA on receipt)",
+    "milestone": "qsub-release (posture: readiness-check)",
+    "dhfs": "pca-device` (lead) + `cloud-suite/drug-library-manager` (accessory SaMD) + `connectivity-adapter` (identified, not filed)",
+    "status": "drafting",
+    "folder": "docs/project/submissions/qsub",
+    "manifest_md": "docs/project/submissions/qsub/composition-manifest.md",
+    "default_advisor": "regulatory-affairs"
+  },
+  "pieces": {
+    "required": [
+      {
+        "name": "Q-Sub cover letter",
+        "path": "docs/project/submissions/qsub/cover-letter.md",
+        "purpose": "Formal request for pre-submission meeting; identifies device, submitter, target date, and the primary questions",
+        "tracker_row": "Q4"
+      },
+      {
+        "name": "Device description",
+        "path": "docs/project/submissions/qsub/device-description.md",
+        "purpose": "FDA-facing description of the PCA device + adjacent components, intended use, clinical context",
+        "tracker_row": "Q5"
+      },
+      {
+        "name": "Proposed indications for use",
+        "path": "docs/project/submissions/qsub/intended-use.md",
+        "purpose": "Draft IFU statement (patient population, care setting, user qualifications)",
+        "tracker_row": "Q6"
+      },
+      {
+        "name": "PCCP summary",
+        "path": "docs/project/submissions/qsub/pccp-summary.md",
+        "purpose": "Distilled PCCP scope for FDA discussion: change categories, modification protocols, monitoring",
+        "tracker_row": "Q8"
+      },
+      {
+        "name": "Questions for FDA",
+        "path": "docs/project/submissions/qsub/fda-questions.md",
+        "purpose": "Consolidated primary question set — 6 questions across 3 topics",
+        "tracker_row": "Q9"
+      },
+      {
+        "name": "System SAD",
+        "path": "docs/project/dhfs/pca-device/design-controls/architecture",
+        "purpose": "Establishes the PCA device architecture and the SaMD / SiMD / hardware boundary",
+        "tracker_row": "Q1"
+      },
+      {
+        "name": "Predicate analysis",
+        "path": "docs/project/input-analysis/predicate-analysis/README.md",
+        "purpose": "PP3000 (K190567) substantial-equivalence framing",
+        "tracker_row": "Q7"
+      }
+    ],
+    "supporting": [
+      {
+        "name": "Drug Library Manager DHF",
+        "path": "docs/project/dhfs/cloud-suite/drug-library-manager",
+        "purpose": "Accessory-SaMD detail framing the bundling question",
+        "tracker_row": "Q10"
+      },
+      {
+        "name": "Connectivity Adapter DHF",
+        "path": "docs/project/dhfs/connectivity-adapter",
+        "purpose": "MDDS classification + cybersecurity story for the adjacent component",
+        "tracker_row": "Q11"
+      }
+    ],
+    "strengtheners": [
+      {
+        "name": "Connectivity-Adapter MDDS rationale brief",
+        "path": "docs/project/submissions/qsub/mdds-rationale.md",
+        "purpose": "Anchors Q1.2 (Connectivity Adapter Non-Device-MDDS — not separately filed)",
+        "tracker_row": "",
+        "status": "draft-v0.0 — transmission-blocking",
+        "blocking": true
+      },
+      {
+        "name": "Drug-Library-Manager accessory brief",
+        "path": "docs/project/submissions/qsub/accessory-samd-brief.md",
+        "purpose": "Anchors Q1.1 (bundle-vs-standalone for the Class II SaMD accessory)",
+        "tracker_row": "",
+        "status": "draft-v0.0 — strongly-desired, not transmission-blocking",
+        "blocking": false
+      }
+    ],
+    "excluded": [
+      {
+        "name": "Full V&V protocols and results",
+        "reason": "Q-Sub precedes V&V execution; bound to 510(k) Release"
+      },
+      {
+        "name": "Risk management file",
+        "reason": "Drafting in progress; ships with 510(k) Release"
+      },
+      {
+        "name": "Clinical evaluation",
+        "reason": "Q-Sub asks whether clinical evidence is needed at all"
+      },
+      {
+        "name": "Cybersecurity assessment (system-level)",
+        "reason": "Per-component evidence exists; system-level assessment ships with 510(k) Release"
+      },
+      {
+        "name": "Labeling / DFU",
+        "reason": "Not polished for Q-Sub external review"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "cover-letter",
+      "title": "Cover Letter",
+      "kind": "cover-letter",
+      "path": "docs/project/submissions/qsub/cover-letter.md",
+      "version": "v0.1",
+      "status": "draft",
+      "summary": "Formal request for an FDA pre-submission meeting on the PP3500 PCA Advanced — device scope, accessory bundling, predicate, and PCCP envelope.",
+      "sections": [
+        {
+          "title": "1. Introduction",
+          "label": "external"
+        },
+        {
+          "title": "2. Device Description & Proposed IFU",
+          "label": "external"
+        },
+        {
+          "title": "3. Predicate Strategy",
+          "label": "external"
+        },
+        {
+          "title": "4. PCCP Scope",
+          "label": "external"
+        },
+        {
+          "title": "5. Pre-Submission Meeting Request",
+          "label": "external"
+        },
+        {
+          "title": "6. Submission Package Contents (Attachments)",
+          "label": "external"
+        }
+      ],
+      "provenance": {
+        "path": "docs/project/submissions/qsub/_provenance/cover-letter.provenance.yml",
+        "agent": "regulatory-affairs",
+        "task": "ben/087",
+        "version": "v0.1",
+        "claims": 2,
+        "open_gaps": 0
+      }
+    },
+    {
+      "id": "device-description",
+      "title": "Device Description",
+      "kind": "device-description",
+      "path": "docs/project/submissions/qsub/device-description.md",
+      "version": "v0.1",
+      "status": "draft",
+      "summary": "FDA-facing description of the PP3500 PCA infusion pump and its adjacent components — architecture, clinical functions, predicate framing, and documentation level.",
+      "sections": [
+        {
+          "title": "1. Purpose",
+          "label": "external"
+        },
+        {
+          "title": "2. Device Summary",
+          "label": "external"
+        },
+        {
+          "title": "3. Component Architecture",
+          "label": "external"
+        },
+        {
+          "title": "4. Clinical Functions per Component",
+          "label": "external"
+        },
+        {
+          "title": "5. Software Architecture & Component Separation",
+          "label": "external"
+        },
+        {
+          "title": "6. Intended Users",
+          "label": "external"
+        },
+        {
+          "title": "7. Predicate Justification",
+          "label": "external"
+        },
+        {
+          "title": "8. Software Documentation Level",
+          "label": "external"
+        },
+        {
+          "title": "9. Cross-Reference Grounding Map",
+          "label": "internal"
+        }
+      ],
+      "provenance": {
+        "path": "docs/project/submissions/qsub/_provenance/device-description.provenance.yml",
+        "agent": "regulatory-affairs",
+        "task": "ben/087",
+        "version": "v0.1",
+        "claims": 2,
+        "open_gaps": 0
+      }
+    },
+    {
+      "id": "intended-use",
+      "title": "Proposed Indications for Use",
+      "kind": "intended-use",
+      "path": "docs/project/submissions/qsub/intended-use.md",
+      "version": "v0.1",
+      "status": "draft",
+      "summary": "Proposed Indications for Use for the PP3500 PCA pump — device-level statement, patient population, care setting, and intended users.",
+      "sections": [
+        {
+          "title": "1. Purpose",
+          "label": "external"
+        },
+        {
+          "title": "2. Proposed IFU — Device",
+          "label": "external"
+        },
+        {
+          "title": "3. Patient Population",
+          "label": "external"
+        },
+        {
+          "title": "4. Care Setting",
+          "label": "external"
+        },
+        {
+          "title": "5. Intended Users",
+          "label": "external"
+        },
+        {
+          "title": "6. Contraindications",
+          "label": "external"
+        },
+        {
+          "title": "7. Clinical Context",
+          "label": "reference"
+        }
+      ],
+      "provenance": {
+        "path": "docs/project/submissions/qsub/_provenance/intended-use.provenance.yml",
+        "agent": "regulatory-affairs",
+        "task": "ben/087",
+        "version": "v0.1",
+        "claims": 1,
+        "open_gaps": 0
+      }
+    },
+    {
+      "id": "pccp-summary",
+      "title": "PCCP Summary",
+      "kind": "pccp-summary",
+      "path": "docs/project/submissions/qsub/pccp-summary.md",
+      "version": "v0.1",
+      "status": "draft",
+      "summary": "PP3500 PCCP scope distilled for FDA discussion — change categories (drug library, firmware, predictive-alarm SaMD), modification protocols, and post-market monitoring.",
+      "sections": [
+        {
+          "title": "1. Purpose",
+          "label": "external"
+        },
+        {
+          "title": "2. Device & PCCP Scope",
+          "label": "external"
+        },
+        {
+          "title": "3. Description of Modifications (candidate categories)",
+          "label": "external"
+        },
+        {
+          "title": "4. Modification Protocol Structure",
+          "label": "external"
+        },
+        {
+          "title": "5. Performance Criteria & Acceptance Posture",
+          "label": "external"
+        },
+        {
+          "title": "6. Software Changes Routing",
+          "label": "external"
+        },
+        {
+          "title": "7. Post-Market Monitoring Plan",
+          "label": "external"
+        },
+        {
+          "title": "8. Precedent Landscape",
+          "label": "reference"
+        }
+      ],
+      "provenance": {
+        "path": "docs/project/submissions/qsub/_provenance/pccp-summary.provenance.yml",
+        "agent": "regulatory-affairs",
+        "task": "ben/087",
+        "version": "v0.1",
+        "claims": 2,
+        "open_gaps": 0
+      }
+    },
+    {
+      "id": "fda-questions",
+      "title": "Questions for FDA",
+      "kind": "fda-questions",
+      "path": "docs/project/submissions/qsub/fda-questions.md",
+      "version": "v0.1",
+      "status": "draft",
+      "summary": "Six primary Q-Sub questions for FDA across three topics — device scope/classification, PCCP envelope, and predicate substantial equivalence.",
+      "sections": [
+        {
+          "title": "Questions Overview",
+          "label": "external"
+        },
+        {
+          "title": "Topic 1 — Device Scope, Classification, and Submission Structure",
+          "label": "external"
+        },
+        {
+          "title": "Topic 2 — PCCP Scope & Structure",
+          "label": "external"
+        },
+        {
+          "title": "Topic 3 — Predicate Strategy",
+          "label": "external"
+        },
+        {
+          "title": "Terms and Definitions",
+          "label": "reference"
+        }
+      ],
+      "provenance": {
+        "path": "docs/project/submissions/qsub/_provenance/fda-questions.provenance.yml",
+        "agent": "regulatory-affairs",
+        "task": "ben/087",
+        "version": "v0.1",
+        "claims": 2,
+        "open_gaps": 0
+      }
+    },
+    {
+      "id": "accessory-samd-brief",
+      "title": "Accessory SaMD Brief",
+      "kind": "brief",
+      "path": "docs/project/submissions/qsub/accessory-samd-brief.md",
+      "version": "v0.0",
+      "status": "draft",
+      "summary": "Strengthener brief anchoring Q1.1 — bundle-vs-standalone analysis for the Drug Library Manager Class II SaMD accessory.",
+      "sections": [
+        {
+          "title": "1. Position",
+          "label": "external"
+        },
+        {
+          "title": "2. Bundle vs Standalone",
+          "label": "external"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "mdds-rationale",
+      "title": "MDDS Rationale Brief",
+      "kind": "brief",
+      "path": "docs/project/submissions/qsub/mdds-rationale.md",
+      "version": "v0.0",
+      "status": "draft",
+      "summary": "Strengthener brief anchoring Q1.2 — why the Connectivity Adapter is a Non-Device MDDS and need not be separately filed.",
+      "sections": [
+        {
+          "title": "1. Position",
+          "label": "external"
+        },
+        {
+          "title": "2. Code-Path Walkthrough",
+          "label": "external"
+        },
+        {
+          "title": "3. Software-Update & Integrity Commitments",
+          "label": "external"
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1.1",
+      "topic": "Topic 1 — Device Scope, Classification, and Submission Structure",
+      "subject": "Bundling the Drug Library Manager SaMD accessory",
+      "label": "",
+      "position": "We propose bundling it as an accessory within the PP3500 filing, with its own design-control record, because its safety role is inseparable from the pump's dose enforcement."
+    },
+    {
+      "id": "Q1.2",
+      "topic": "Topic 1 — Device Scope, Classification, and Submission Structure",
+      "subject": "Connectivity Adapter as Non-Device MDDS",
+      "label": "",
+      "position": "We classify the adapter as Non-Device MDDS (post-2015 reclassification) and will identify it as adjacent infrastructure in the 510(k) without expanding the device boundary."
+    },
+    {
+      "id": "Q1.3",
+      "topic": "Topic 1 — Device Scope, Classification, and Submission Structure",
+      "subject": "Product code and submission structure",
+      "label": "",
+      "position": "We expect to carry the predicate's PCA infusion-pump product code and file a single 510(k) + PCCP."
+    },
+    {
+      "id": "Q2.1",
+      "topic": "Topic 2 — PCCP Scope & Structure",
+      "subject": "Single PCCP spanning three change families",
+      "label": "",
+      "position": "A unified PCCP with per-category modification protocols, bounded by the Ct*-tagged change envelope, is the most coherent structure."
+    },
+    {
+      "id": "Q2.2",
+      "topic": "Topic 2 — PCCP Scope & Structure",
+      "subject": "Acceptance criteria for drug-library updates",
+      "label": "",
+      "position": "We propose validation against the formulary source of truth plus regression of the pump's limit-enforcement behavior; numeric thresholds are pending FDA input."
+    },
+    {
+      "id": "Q3.1",
+      "topic": "Topic 3 — Predicate Strategy",
+      "subject": "PP3000 substantial equivalence with added connectivity",
+      "label": "",
+      "position": "PP3000 is the primary predicate; the added functions are addressed by the separation architecture and the PCCP envelope."
+    }
+  ],
+  "sign_off": [
+    {
+      "role": "R&D Lead",
+      "name": "TBD",
+      "date": "",
+      "status": "pending"
+    },
+    {
+      "role": "Regulatory Affairs",
+      "name": "TBD",
+      "date": "",
+      "status": "pending"
+    },
+    {
+      "role": "Quality Assurance",
+      "name": "TBD",
+      "date": "",
+      "status": "pending"
+    }
+  ],
+  "counts": {
+    "required": 7,
+    "supporting": 2,
+    "strengtheners": 2,
+    "excluded": 5,
+    "docs": 7,
+    "questions": 6
+  },
+  "blocking": 1
+}

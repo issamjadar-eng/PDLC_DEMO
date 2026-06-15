@@ -1,0 +1,216 @@
+{% extends "_base.html" %}
+{% block title %}{{ d.meta.type }} · Submission · {{ config.project_name }}{% endblock %}
+{% block body_class %}submission-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/submission.css">{% endblock %}
+{% block content %}
+{% set m = d.meta %}
+{% set c = d.counts %}
+{% set p = d.pieces %}
+<section class="sub-wrap">
+  <a class="sub-back" href="/submission">← Submission</a>
+
+  <header>
+    <div class="sub-hero-chips">
+      <span class="sub-chip sub-status {{ d._status.cls }}">{{ d._status.label }}</span>
+      <span class="sub-chip sub-type">{{ m.type }}</span>
+      {% if d.blocking %}<span class="sub-chip sub-blocking-chip">⚠ {{ d.blocking }} transmission-blocking</span>{% endif %}
+    </div>
+    <h1>{{ m.title }}</h1>
+    <p class="sub-hero-meta">
+      Filing ID: {{ m.filing_id or "TBD" }}
+      {% if m.milestone %}<span class="sub-muted"> · milestone {{ m.milestone }}</span>{% endif %}
+      {% if m.dhfs %}<span class="sub-muted"> · DHFs: {{ m.dhfs }}</span>{% endif %}
+    </p>
+    <div class="sub-statstrip">
+      <div><span class="n">{{ c.docs or 0 }}</span><span class="l">documents</span></div>
+      <div><span class="n">{{ c.required or 0 }}</span><span class="l">required</span></div>
+      <div><span class="n">{{ c.supporting or 0 }}</span><span class="l">supporting</span></div>
+      <div><span class="n">{{ c.strengtheners or 0 }}</span><span class="l">briefs</span></div>
+      <div><span class="n">{{ c.excluded or 0 }}</span><span class="l">excluded</span></div>
+      <div><span class="n">{{ c.questions or 0 }}</span><span class="l">questions</span></div>
+    </div>
+  </header>
+
+  {% if d.blocking %}
+  <div class="sub-banner sub-banner-block">
+    <strong>Not ready to transmit.</strong> {{ d.blocking }} transmission-blocking strengthener brief(s) below {{ 'is' if d.blocking == 1 else 'are' }} not yet at draft status. The FDA-facing package listing (cover-letter Attachments) must align 1:1 with the manifest before transmission.
+  </div>
+  {% else %}
+  <div class="sub-banner sub-banner-ok"><strong>No transmission-blocking gaps.</strong> All required strengthener briefs are present. Confirm the cover-letter Attachments align 1:1 with the manifest before transmission.</div>
+  {% endif %}
+
+  <!-- TOP TABS -->
+  <div class="sub-toptabs" role="tablist" aria-label="View">
+    <button type="button" class="sub-toptab is-active" role="tab" data-view="view-package" aria-selected="true">Package</button>
+    <button type="button" class="sub-toptab" role="tab" data-view="view-docs" aria-selected="false">Documents <span class="sub-toptab-n">{{ c.docs or 0 }}</span></button>
+    <button type="button" class="sub-toptab" role="tab" data-view="view-questions" aria-selected="false">Questions <span class="sub-toptab-n">{{ c.questions or 0 }}</span></button>
+  </div>
+
+  <!-- ============ PACKAGE VIEW ============ -->
+  <div class="sub-view is-active" id="view-package" role="tabpanel">
+    {% macro piece_table(rows, with_status=False) %}
+    <table class="sub-table">
+      <thead><tr><th>Piece</th><th>Purpose</th>{% if with_status %}<th>Status</th>{% else %}<th>Tracker</th>{% endif %}</tr></thead>
+      <tbody>
+        {% for r in rows %}
+        <tr class="{{ 'sub-row-block' if r._blocking }}">
+          <td class="sub-piece-name">
+            {% if r.path %}<a class="sub-open-link" href="/documents#path={{ r.path }}" target="_blank" rel="noopener">{{ r.name }} ↗</a>{% else %}{{ r.name }}{% endif %}
+          </td>
+          <td class="sub-muted">{{ r.purpose }}</td>
+          {% if with_status %}<td>{% if r._blocking %}<span class="sub-chip sub-blocking-chip">⚠ blocking</span> {% endif %}{{ r.status }}</td>{% else %}<td class="sub-muted">{{ r.tracker_row }}</td>{% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endmacro %}
+
+    <section class="sub-section">
+      <h2 class="sub-section-h"><span>📦</span> Required <span class="sub-count">{{ p.required | length }}</span></h2>
+      {% if p.required %}{{ piece_table(p.required) }}{% else %}<p class="sub-muted">None listed.</p>{% endif %}
+    </section>
+
+    {% if p.strengtheners %}
+    <section class="sub-section">
+      <h2 class="sub-section-h"><span>🛡️</span> Pre-meeting strengthener briefs <span class="sub-count">{{ p.strengtheners | length }}</span></h2>
+      {{ piece_table(p.strengtheners, with_status=True) }}
+    </section>
+    {% endif %}
+
+    {% if p.supporting %}
+    <section class="sub-section">
+      <h2 class="sub-section-h"><span>🧱</span> Supporting <span class="sub-count">{{ p.supporting | length }}</span></h2>
+      {{ piece_table(p.supporting) }}
+    </section>
+    {% endif %}
+
+    {% if p.excluded %}
+    <section class="sub-section">
+      <h2 class="sub-section-h"><span>🚫</span> Excluded <span class="sub-count">{{ p.excluded | length }}</span></h2>
+      <table class="sub-table">
+        <thead><tr><th>Piece</th><th>Why excluded</th></tr></thead>
+        <tbody>{% for e in p.excluded %}<tr><td class="sub-piece-name">{{ e.name }}</td><td class="sub-muted">{{ e.reason }}</td></tr>{% endfor %}</tbody>
+      </table>
+    </section>
+    {% endif %}
+
+    {% if d.sign_off %}
+    <section class="sub-section sub-signoff">
+      <h2 class="sub-section-h"><span>✍️</span> Reviewer sign-off</h2>
+      <table class="sub-table">
+        <thead><tr><th>Role</th><th>Name</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>{% for s in d.sign_off %}<tr><td>{{ s.role }}</td><td class="sub-muted">{{ s.name or '—' }}</td><td class="sub-muted">{{ s.date or '—' }}</td><td class="sub-muted">{{ s.status or 'pending' }}</td></tr>{% endfor %}</tbody>
+      </table>
+    </section>
+    {% endif %}
+  </div>
+
+  <!-- ============ DOCUMENTS VIEW ============ -->
+  <div class="sub-view" id="view-docs" role="tabpanel" hidden>
+    {% if d.documents %}
+    <p class="sub-legend">Scope: <span>📤 FDA-bound</span> <span>📝 internal</span> <span>⏸️ deferred</span> <span>📖 reference</span> — only FDA-bound content is transmitted.</p>
+    <div class="sub-docs">
+      <nav class="sub-doc-rail" role="tablist" aria-label="Documents" aria-orientation="vertical">
+        {% for doc in d.documents %}
+        <button type="button" class="sub-doc-tab{{ ' is-active' if loop.first }}" role="tab" data-target="doc-{{ doc.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}">
+          <span class="g">{{ doc._glyph }}</span>
+          <span class="tt"><span class="tn">{{ doc.title }}</span><span class="tv">{{ doc.version }} · {{ doc.status }}</span></span>
+        </button>
+        {% endfor %}
+      </nav>
+      <div class="sub-doc-pane">
+        {% for doc in d.documents %}
+        <article class="sub-doc-panel{{ ' is-active' if loop.first }}" id="doc-{{ doc.id }}" role="tabpanel"{{ '' if loop.first else ' hidden' }}>
+          <header class="sub-doc-phead">
+            <h3>{{ doc._glyph }} {{ doc.title }}</h3>
+            {% if doc.summary %}<p class="sub-muted">{{ doc.summary }}</p>{% endif %}
+            <p class="sub-doc-prov">
+              <span>v {{ doc.version or '—' }} · {{ doc.status or '—' }}</span>
+              {% if doc.provenance %}
+                {% if doc.provenance.agent %}<span>✍ {{ doc.provenance.agent }}</span>{% endif %}
+                {% if doc.provenance.claims %}<span>{{ doc.provenance.claims }} claims sourced</span>{% endif %}
+                {% if doc.provenance.open_gaps %}<span>{{ doc.provenance.open_gaps }} open gap(s)</span>{% endif %}
+              {% endif %}
+              <a class="sub-open-link" href="/documents#path={{ doc.path }}" target="_blank" rel="noopener">Open in Documents ↗</a>
+            </p>
+          </header>
+          <div class="sub-doc-body md">{{ doc._body_html | safe }}</div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    <p class="sub-muted">No content documents in this filing yet. Scaffold them with <code>/submissions scaffold {{ m.id }}</code>.</p>
+    {% endif %}
+  </div>
+
+  <!-- ============ QUESTIONS VIEW ============ -->
+  <div class="sub-view" id="view-questions" role="tabpanel" hidden>
+    {% if d.questions %}
+    {% for topic, qs in d._question_topics %}
+    <section class="sub-qtopic">
+      <h3 class="sub-qtopic-h">{{ topic }}</h3>
+      {% for q in qs %}
+      <div class="sub-qcard">
+        <div class="sub-qcard-head"><span class="sub-qid">{{ q.id }}</span><span class="sub-qsubject">{{ q.subject }}</span></div>
+        {% if q.position %}<p class="sub-qpos"><strong>Position:</strong> {{ q.position }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endfor %}
+    {% else %}
+    <p class="sub-muted">No questions parsed. Author them in <code>{{ m.folder }}/fda-questions.md</code> and run <code>/submissions render</code>.</p>
+    {% endif %}
+  </div>
+</section>
+
+{# Assistant drawer — grounded in this filing's compact sidecar rendition. #}
+{% set assistant = {
+  "scope": "sub:" ~ m.id,
+  "endpoint": "/assistant/chat/stream",
+  "default_agent": d._default_advisor,
+  "allowed_agents": [],
+  "grounding_label": "SUBMISSION CONTEXT",
+  "grounding_source": "url:/submission/" ~ m.id ~ "/grounding",
+  "title": "Submission Advisor",
+  "subtitle": m.type,
+  "placeholder": "Ask about this submission…",
+  "empty_hint": "Ask about this filing's scope, the package pieces, the FDA questions, or transmission readiness. The advisor sees the whole package. Example: <em>\"Which strengthener briefs block transmission, and what would close them?\"</em>",
+  "open_button_id": "sub-assistant-open"
+} %}
+{% include "_assistant_drawer.html" %}
+{% set launcher = {"button_id": "sub-assistant-open"} %}
+{% include "_assistant_launcher.html" %}
+
+<script>
+(function () {
+  var toptabs = Array.prototype.slice.call(document.querySelectorAll('.sub-toptab'));
+  function showView(id) {
+    toptabs.forEach(function (tt) {
+      var on = tt.getAttribute('data-view') === id;
+      tt.classList.toggle('is-active', on);
+      tt.setAttribute('aria-selected', on ? 'true' : 'false');
+      var v = document.getElementById(tt.getAttribute('data-view'));
+      if (v) { v.classList.toggle('is-active', on); v.hidden = !on; }
+    });
+  }
+  toptabs.forEach(function (tt) { tt.addEventListener('click', function () { showView(tt.getAttribute('data-view')); }); });
+
+  var rail = document.querySelector('.sub-doc-rail');
+  if (rail) {
+    var tabs = Array.prototype.slice.call(rail.querySelectorAll('.sub-doc-tab'));
+    rail.addEventListener('click', function (e) {
+      var tab = e.target.closest('.sub-doc-tab');
+      if (!tab) return;
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        var panel = document.getElementById(t.getAttribute('data-target'));
+        if (panel) { panel.classList.toggle('is-active', on); panel.hidden = !on; }
+      });
+    });
+  }
+})();
+</script>
+{% endblock %}

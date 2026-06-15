@@ -26,6 +26,9 @@ class Workflow:
     gaps: str = ""             # what's stubbed/missing
     tracking_tasks: list[str] = field(default_factory=list) # task IDs that will light it up
     has_detail_view: bool = False  # True for workflows with a specialized page (just B1 today)
+    topline: bool = False      # True once promoted to a first-class top-nav section
+                               # (no longer listed on the Workflows index). E.g. Strategy
+                               # (ben/087) — its page lives at /strategy.
 
     @property
     def readiness_pill(self) -> str:
@@ -148,6 +151,7 @@ CATALOG: list[Workflow] = [
         gaps="Full conflict-aware content merge on Re-Assemble still requires `/strategy assemble <domain>` from Claude Code — the console Re-Assemble is detection-only (no `> **Proposed change**` callouts written automatically). Accept's source-task rewrite skips with a warning when the older tag covers multiple subsections — user still splits such tags manually.",
         tracking_tasks=["100"],
         has_detail_view=True,
+        topline=True,  # promoted to the top-level Strategy section (ben/087); /strategy
     ),
     Workflow(
         slug="tracker-status-update",
@@ -265,9 +269,13 @@ def get_by_slug(slug: str) -> Workflow | None:
 
 
 def grouped() -> list[tuple[str, list[Workflow]]]:
-    """Return [(group_name, [workflows...])] in stable group order."""
+    """Return [(group_name, [workflows...])] in stable group order. Workflows
+    promoted to a first-class top-nav section (`topline=True`) are excluded —
+    they're reached from the top nav, not the Workflows index."""
     order = ["Gate-Readiness", "Authoring", "Feedback-Driven", "Daily/Periodic"]
     by_group: dict[str, list[Workflow]] = {g: [] for g in order}
     for w in CATALOG:
+        if w.topline:
+            continue
         by_group.setdefault(w.group, []).append(w)
     return [(g, by_group[g]) for g in order if by_group.get(g)]

@@ -262,16 +262,92 @@ select:focus-visible,
   color: var(--gl-black);
 }
 .topnav .brand:hover .brand-name { color: var(--gl-purple); }
-.topnav nav { display: flex; align-items: center; gap: 1.75rem; }
-.topnav nav a {
+/* Priority-overflow nav. The <nav> takes the space between the brand and the
+   far-right hamburger; topnav.js measures it and moves the lowest-priority
+   items into `.nav-more-menu` when they don't fit. `overflow:hidden` keeps the
+   measurement clean and prevents a flash of overflowing items before JS runs;
+   the dropdown lives in `.nav-more` (a sibling, NOT inside nav) so it isn't
+   clipped. */
+.topnav nav.topnav-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  /* flex-start so overflow falls on the RIGHT edge (which scrollWidth reports —
+     flex-end hides left-overflow from scrollWidth and breaks the JS measure).
+     Items pack left after the logo; the hamburger sits at the far right. */
+  justify-content: flex-start;
+}
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  flex: 0 0 auto;
   color: var(--gl-slate);
   font-weight: 600;
   font-size: .95rem;
   padding: .25rem 0;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  text-decoration: none;
   transition: color .15s, border-color .15s;
 }
-.topnav nav a:hover { color: var(--gl-purple); border-bottom-color: var(--gl-purple); }
+.nav-item:hover { color: var(--gl-purple); border-bottom-color: var(--gl-purple); }
+/* Monochrome vector icons — inherit the nav text color via currentColor. */
+.nav-svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pc-icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Far-right overflow hamburger + dropdown. */
+.nav-more { position: relative; flex: 0 0 auto; }
+.nav-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gl-slate);
+  padding: .35rem;
+  border-radius: 7px;
+  transition: color .15s, background .15s;
+}
+.nav-more-btn:hover { color: var(--gl-purple); background: color-mix(in srgb, var(--gl-purple) 10%, transparent); }
+.nav-more-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + .5rem);
+  min-width: 196px;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  padding: .4rem;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg, 0 14px 32px -14px rgba(15, 23, 42, .32));
+  z-index: 60;
+}
+/* The explicit display:flex above would override the UA's [hidden]{display:none},
+   leaving the dropdown permanently visible — re-assert hidden. */
+.nav-more-menu[hidden] { display: none; }
+.nav-more-menu .nav-item {
+  padding: .5rem .6rem;
+  border-bottom: none;
+  border-radius: 7px;
+}
+.nav-more-menu .nav-item:hover { background: color-mix(in srgb, var(--gl-purple) 10%, transparent); border-bottom: none; }
 .topnav nav .muted {
   font-weight: 500;
   font-size: .95rem;
@@ -1607,6 +1683,15 @@ body.docs-page.resizing * {
 }
 
 /* ============ Responsive ============ */
+
+/* Topnav: tighten spacing/type as the bar narrows. The priority-overflow JS
+   (topnav.js) then moves lowest-priority items into the far-right hamburger
+   whenever the remaining items still don't fit — at any width. */
+@media (max-width: 1200px) {
+  .topnav { gap: 1.5rem; padding: 0.5rem 1.5rem; }
+  .topnav nav.topnav-nav { gap: 1.1rem; }
+  .nav-item { font-size: .9rem; }
+}
 
 @media (max-width: 720px) {
   main { padding: 1.5rem 1.25rem 2rem; }

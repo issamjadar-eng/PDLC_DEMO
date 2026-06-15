@@ -1,15 +1,15 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.26.0
-updated: 2026-06-11
+version: 1.27.0
+updated: 2026-06-15
 ---
 
 # Project Console
 
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
-- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, and dashboards discovery
+- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), and **submission** (FDA submission-package viewer + Ask-the-advisor)
 - A **template library** of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) materialized into the project on init
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`
@@ -147,6 +147,9 @@ When sync detects drift in a skill-owned file that the user hasn't declared in t
     themes.py                 # theme resolver
     auth.py                   # OAuth preflight
     chat/                     # chat routes + domain agent loader + SDK wiring
+    strategy/                 # topline Strategy section (reuses workflows/ B3 machinery)
+    submission/               # topline Submission section — loader + router (reads
+                              #   submissions-skill JSON sidecars; renders doc bodies inline)
     documents/                # explorer + renderer + summary + tree
     dashboards/               # routes + glob-scan discovery
     web/
@@ -216,6 +219,32 @@ summaries.
 `drift.json` under `_jira/<arch>/<version>/` next to the mirror tables. Any
 other skill that emits the same JSON shape next to a trace-matrix source
 gets the overlay automatically — no console changes required.
+
+## Topline sections: Strategy & Submission
+
+Two first-class top-nav sections sit right after Overview:
+
+- **Strategy** (`/strategy`) — the program's per-domain strategy review surface
+  (proposed-change callouts, Accept/Reject/Modify, advisor drawer). It reuses the
+  `console/workflows/` B3 machinery in place; the former workflow card was removed
+  and `/workflows/strategy-reassembly` now redirects to `/strategy`. Nav shows
+  when `docs/project/strategies/*-strategy.md` exist.
+- **Submission** (`/submission`) — an FDA submission-package viewer (Q-Sub / 510(k)
+  / PCCP) with composition manifest, an inline tabbed document viewer, an FDA-
+  questions panel, and an Ask-the-advisor drawer (defaults to `regulatory-affairs`).
+
+The Submission section is a **generic consumer** of the `submissions` skill's JSON
+contract (`schema_version: 1.0`) — same loose-coupling rule as the gap-analysis /
+trace-matrix sidecars. It reads:
+
+- `docs/project/submissions/.console/submission-index.json` (roll-up of filings)
+- `docs/project/submissions/<filing>/<filing>.submission.json` (per-filing detail)
+
+If the sidecars are absent the section degrades to an empty state with a hint to
+run `/submissions render`; a `POST /submission/render` button shells to the skill's
+`render_sidecars.py`. Document *bodies* are rendered inline via the documents
+renderer using the repo-relative paths in the sidecar. The full contract lives in
+the `submissions` skill SKILL.md.
 
 ## Theme tokens (theme.yaml fields)
 

@@ -1,0 +1,222 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "id": "510k",
+    "type": "510(k)",
+    "title": "510(k) — PP3500 (PainEase PCA Advanced)",
+    "device": "PP3500 (PainEase PCA Advanced)",
+    "filing_id": null,
+    "milestone": null,
+    "dhfs": null,
+    "status": "scaffold",
+    "folder": "docs/project/submissions/510k",
+    "manifest_md": "docs/project/submissions/510k/composition-manifest.md",
+    "default_advisor": "regulatory-affairs"
+  },
+  "pieces": {
+    "required": [
+      {
+        "name": "User Needs (Ct*-tagged subset)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Design Inputs (Ct*-tagged subset)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "System SAD",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "SRS (per module, Ct*-tagged subset)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Design Outputs",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "V&V Plan + Reports (filing-scope track)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Trace Matrix (Filing Scope column)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Risk Management File",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Usability Engineering File",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Cybersecurity Plan + Threat Model + SBOM",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Clinical Evaluation",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Labeling",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "PCCP (drug-library + firmware update envelope)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Postmarket Surveillance Plan",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "System SAD (classification record)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Cybersecurity Plan",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Threat Model + SBOM",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Interoperability description",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "System SAD",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "User Needs + Design Inputs (Ct*-tagged)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "SRS (Validation Engine, Signing Service)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "V&V Plan + Reports",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Risk Management File",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Usability Engineering File",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "Cybersecurity Plan + Threat Model + Signing Trust Chain",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      },
+      {
+        "name": "21 CFR Part 11 Conformance (D2 workflow, D6 audit log)",
+        "path": "",
+        "purpose": "",
+        "tracker_row": ""
+      }
+    ],
+    "supporting": [],
+    "strengtheners": [],
+    "excluded": []
+  },
+  "documents": [],
+  "questions": [],
+  "sign_off": [
+    {
+      "role": "Regulatory Affairs Lead",
+      "name": "TBD",
+      "date": "_pending_",
+      "status": "pending"
+    },
+    {
+      "role": "Systems Architecture Lead",
+      "name": "TBD",
+      "date": "_pending_",
+      "status": "pending"
+    },
+    {
+      "role": "Cybersecurity Lead",
+      "name": "TBD",
+      "date": "_pending_",
+      "status": "pending"
+    },
+    {
+      "role": "Quality / Document Control",
+      "name": "TBD",
+      "date": "_pending_",
+      "status": "pending"
+    },
+    {
+      "role": "Submission Manager",
+      "name": "TBD",
+      "date": "_pending_",
+      "status": "pending"
+    }
+  ],
+  "counts": {
+    "required": 26,
+    "supporting": 0,
+    "strengtheners": 0,
+    "excluded": 0,
+    "docs": 0,
+    "questions": 0
+  },
+  "blocking": 0
+}

@@ -72,6 +72,7 @@ Installed skills live in `.claude/skills/` and are listed in `project.yml` under
 | `docflow` | Convert source documents (PDF/DOCX) into reviewable markdown |
 | `task` | Task management with active-task gating |
 | `strategy` | Regulatory and product strategy authoring |
+| `submissions` | Author/scaffold/render the FDA submission package (Q-Sub/510(k)/PCCP) + console sidecars |
 | `tracker` | Render compliance/progress dashboards |
 | `lessons` | Capture lessons learned across the program |
 | `best-practices` | Audit the project against the skill registry |

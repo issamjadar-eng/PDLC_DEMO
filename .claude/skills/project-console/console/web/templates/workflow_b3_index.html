@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block title %}{{ workflow.title }} · Workflows · {{ config.project_name }}{% endblock %}
+{% block title %}{% if topline %}Strategy · {{ config.project_name }}{% else %}{{ workflow.title }} · Workflows · {{ config.project_name }}{% endif %}{% endblock %}
 {% block body_class %}workflow-page{% endblock %}
 {% block content %}
 <style>
@@ -465,6 +465,10 @@
 </style>
 
 <section class="landing">
+  {% if topline %}
+  <h1>Strategy</h1>
+  <p class="sub">{{ workflow.one_liner }}</p>
+  {% else %}
   <p><a href="/workflows">← Workflows</a></p>
   <h1>
     <span style="opacity: 0.6; font-family: var(--font-mono, monospace);">{{ workflow.code }}</span>
@@ -472,6 +476,7 @@
     <span title="{{ workflow.readiness_label }}">{{ workflow.readiness_pill }}</span>
   </h1>
   <p class="sub">{{ workflow.one_liner }}</p>
+  {% endif %}
 
   <div style="padding: 0.55rem 1rem; background: rgba(46,125,50,0.08); border-left: 4px solid #2e7d32; margin: 0.75rem 0;">
     🟢 <strong>Live.</strong> Pick a strategy on the left, review pending proposals, and take action. Every Accept / Reject / Modify / Re-categorize updates the strategy and adds a History note. Re-categorize also saves and publishes automatically. We need to know who's making the change, so make sure your project task is active.

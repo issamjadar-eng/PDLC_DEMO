@@ -1,0 +1,35 @@
+doc: docs/project/submissions/qsub/cover-letter.md
+version: v0.1
+date: 2026-06-15
+agent: regulatory-affairs
+task: ben/087
+
+sources_consulted:
+  - path: docs/project/submissions/qsub/composition-manifest.md
+    sections: ["Filing Identification", "Included Pieces"]
+    how_used: §6 Attachments mirrors the manifest's included pieces.
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["§1 Filing Scope: PCA Device Alone", "§2 Module Classification"]
+    how_used: device scope, accessory bundling, and MDDS framing.
+  - path: docs/project/submissions/qsub/intended-use.md
+    sections: ["§2 Proposed IFU — Device"]
+    how_used: device-level IFU referenced in §2.
+
+fda_visible_references:
+  - docs/project/submissions/qsub/device-description.md
+  - docs/project/submissions/qsub/intended-use.md
+  - docs/project/submissions/qsub/pccp-summary.md
+  - docs/project/submissions/qsub/fda-questions.md
+
+claims_to_source:
+  - claim: "PP3500 is a Class II PCA infusion pump; predicate PP3000 (K190567)"
+    source: regulatory-strategy.md §§1-2
+  - claim: "Drug Library Manager = Class II SaMD accessory; Connectivity Adapter = Non-Device MDDS"
+    source: regulatory-strategy.md §2
+
+open_gaps:
+  - "PLACEHOLDER fields before transmission: submitter details, FDA division, tracking number, meeting attendees."
+  - "Documentation-level cascade (Enhanced) to be confirmed against the software-functions guidance."
+
+notes:
+  - "Demo seed; no fabricated FDA contacts or guidance titles. K210345/K190567 per regulatory-strategy.md."

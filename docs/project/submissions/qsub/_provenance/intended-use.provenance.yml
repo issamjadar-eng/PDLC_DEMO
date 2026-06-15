@@ -1,0 +1,26 @@
+doc: docs/project/submissions/qsub/intended-use.md
+version: v0.1
+date: 2026-06-15
+agent: regulatory-affairs
+task: ben/087
+
+sources_consulted:
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["§1 Device & Submission Overview"]
+    how_used: device-level intended use + care-setting framing.
+  - path: docs/project/input-analysis/predicate-analysis/README.md
+    how_used: align IFU wording with the PP3000 cleared IFU.
+
+fda_visible_references:
+  - docs/project/submissions/qsub/device-description.md
+
+claims_to_source:
+  - claim: "PCA infusion for adult and pediatric patients in professional healthcare settings"
+    source: predicate (PP3000) IFU — to be verified
+
+open_gaps:
+  - "Confirm IFU wording with regulatory counsel against the PP3000 cleared IFU."
+  - "Confirm pediatric weight floor."
+
+notes:
+  - "Demo seed; no fabricated indications beyond the predicate scope."

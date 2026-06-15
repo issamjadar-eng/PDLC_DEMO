@@ -18,6 +18,10 @@ from console.gap_analysis.loader import discover as discover_gap_analysis
 from console.gap_analysis.router import router as gap_analysis_router
 from console.overview.router import discover as discover_overview
 from console.overview.router import router as overview_router
+from console.strategy.router import discover as discover_strategy
+from console.strategy.router import router as strategy_router
+from console.submission.loader import discover as discover_submission
+from console.submission.router import router as submission_router
 from console.trace_matrix.router import router as trace_matrix_router
 from console.workflows.router import router as workflows_router
 
@@ -73,6 +77,10 @@ async def theme_context(request: Request, call_next):
     request.state.config = cfg
     # Overview nav visibility — cheap filesystem check per request (stat only).
     request.state.overview_nav = discover_overview(cfg.repo_root)["has_any"]
+    # Strategy nav visibility — shows when docs/project/strategies/*-strategy.md exist.
+    request.state.strategy_nav = discover_strategy(cfg.repo_root)["has_any"]
+    # Submission nav visibility — shows when submission sidecars / manifests exist.
+    request.state.submission_nav = discover_submission(cfg.repo_root)["has_any"]
     # Gap Analysis nav visibility — shows when sidecars exist under docs/_analysis/.
     request.state.gap_analysis_nav = discover_gap_analysis(cfg.repo_root)["has_any"]
     return await call_next(request)
@@ -82,6 +90,8 @@ app.include_router(chat_router)
 app.include_router(documents_router)
 app.include_router(dashboards_router)
 app.include_router(overview_router)
+app.include_router(strategy_router)
+app.include_router(submission_router)
 app.include_router(trace_matrix_router)
 app.include_router(gap_analysis_router)
 app.include_router(assistant_router)
