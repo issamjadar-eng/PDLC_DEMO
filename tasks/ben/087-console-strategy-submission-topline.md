@@ -2,7 +2,7 @@
 
 **ID**: 087
 **Created**: 2026-06-15
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -61,7 +61,8 @@ Update the `project-console` skill and its scaffolded outputs to add two topline
 - [x] **P4 — Console Submission section** (done): `console/submission/{__init__,loader,router}.py` (loader: discover/load_index/load_filing; router: index/detail/grounding/raw/render; inline doc-body rendering via documents renderer + cross-doc link rewrite to `/documents#path=`); `submission_index.html` + `submission_view.html` (Package/Documents/Questions tabs + assistant drawer, default `regulatory-affairs`, grounding `url:/submission/{id}/grounding`); `submission.css`; `_base.html` nav `Submission`; `app.py` import/include/`submission_nav`. Full app imports clean (88 routes).
 - [x] **P5 — render + restart + smoke test** (done): console restarted via `start.sh`; all routes 200 (`/strategy`, `/submission`, `/submission/qsub`, grounding, raw; `/workflows/strategy-reassembly`→307→`/strategy`; B3 card gone from `/workflows`). Browser-verified Submission Package + Documents tabs (pretty inline markdown, scope labels, blocking banner, advisor launcher). Fixed: status `**` de-emphasis, doc reading order (cover-letter first), question-position extraction.
 - [x] **P6 — docs + versioning** (done): project-console `VERSION` 1.26.0→**1.27.0**; SKILL.md frontmatter version + "ships" bullet + code-lives tree (`strategy/`, `submission/`) + new "Topline sections: Strategy & Submission" data-contract section; README.md changelog 1.27.0 entry; CLAUDE.md skills table + `submissions` row; `project.yml` approved_skills + `submissions`. Final checks: `render --check` clean (idempotent), app imports (88 routes).
-- [ ] **P7 — PUSH (awaiting user go-ahead)**: per git-workflow rule, commit/push only when asked. When approved: commit → branch → PR → auto-merge → delete branch (PDLC_DEMO). Optional `/sync-skills push` upstream for project-console 1.27.0 + the new `submissions` skill (registry) — note: `submissions` is net-new, not yet in any registry.
+- [x] **P7 — PROJECT PUSH (done)**: PR #56 merged to `main` — merge `c69b821`, work commit `54f753b`, branch deleted. (SECOPS.md left out — unrelated pre-existing change.)
+- [ ] **P8 — SKILL-REPO PUSH (blocked: hitachi clone missing)**: `/sync-skills push --merge` for project-console (1.27.0) + the net-new `submissions` skill needs the hitachi registry clone at `../hitachi`, which is **not present on this machine**. Next: clone `GlobalLogic-a-Hitachi-Company/hitachi` → `../hitachi`, run `/sync-skills check` (watch for project-console UPSTREAM divergence), push both skills, and add `submissions` (+ confirm `project-console`) to the registry `manifest.md`. Deferred pending user OK to clone.
 
 ## Resume / status (2026-06-15)
 
