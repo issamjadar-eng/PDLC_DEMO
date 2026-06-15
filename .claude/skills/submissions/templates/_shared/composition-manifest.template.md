@@ -20,23 +20,35 @@ _Snapshot of which pieces of which DHF(s) are included in this filing. Source of
 
 ### Required (per FDA {{FILING_TYPE}} guidance + milestone bindings)
 
-**Formal FDA submission deliverables**
+<!-- scaffold: emit one row per content doc in THIS filing's profile (see
+     submissions SKILL.md § Filing-type profiles) — do NOT carry another
+     profile's pieces. A 510(k) lists indications-for-use / 510(k)-summary /
+     substantial-equivalence / performance-testing / truthful-accuracy; a Q-Sub
+     lists intended-use / pccp-summary / fda-questions; a PMA lists SSED / etc.
+     DHF-derived exhibits (proposed labeling PDF, consensus-standards list /
+     declarations of conformity) are listed in the "attached from DHF" table
+     below — they are controlled-record PDFs, not ./<file>.md docs. The cover
+     letter's Attachments section must align 1:1 with this list. -->
+
+**Formal FDA submission deliverables** (authored in this filing folder)
 
 | Piece | Path | Purpose in {{FILING_SHORT}} | Tracker Row |
 |-------|------|------------------------------|-------------|
-| Cover letter | [`cover-letter.md`](./cover-letter.md) | Formal request / transmittal per FDA template | {{ROW}} |
-| Device description | [`device-description.md`](./device-description.md) | FDA-facing architecture + clinical context | {{ROW}} |
-| Proposed indications for use | [`intended-use.md`](./intended-use.md) | Draft IFU statement | {{ROW}} |
-| {{FILING_SHORT}} summary | [`pccp-summary.md`](./pccp-summary.md) | Distilled scope for FDA discussion | {{ROW}} |
-| Questions for FDA | [`fda-questions.md`](./fda-questions.md) | Consolidated primary question set | {{ROW}} |
+| {{PIECE}} | [`{{PIECE_FILE}}`](./{{PIECE_FILE}}) | {{PIECE_PURPOSE}} | {{ROW}} |
+
+**Attached from the DHF** (controlled-record PDFs — not authored here)
+
+| Piece | DHF source | Purpose in {{FILING_SHORT}} | Tracker Row |
+|-------|------------|------------------------------|-------------|
+| {{DHF_EXHIBIT}} | {{DHF_EXHIBIT_PATH}} | {{DHF_EXHIBIT_PURPOSE}} | {{ROW}} |
 
 **Supporting technical architecture**
 
 | Piece | Path | Purpose in {{FILING_SHORT}} | Tracker Row |
 |-------|------|------------------------------|-------------|
-| System SAD | {{SAD_PATH}} | Three-module architecture + SaMD boundary | {{ROW}} |
+| System SAD | {{SAD_PATH}} | Module architecture + SaMD boundary | {{ROW}} |
 
-**Required-Pre-Meeting strengthener briefs** (package should NOT transmit until these are at status ≥ `draft-v0.1`)
+**Transmission-blocking briefs** (optional — where a filing has gating pre-work, e.g. Q-Sub pre-meeting strengtheners; omit if none)
 
 | Piece | Path | Purpose in {{FILING_SHORT}} | Status |
 |-------|------|------------------------------|--------|

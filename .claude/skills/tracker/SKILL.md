@@ -1,8 +1,8 @@
 ---
 name: tracker
 description: "Submission package tracker — milestone-driven readiness dashboard. Builds tracker markdown from milestone catalog + composition manifests + DHF evidence, renders feature-rich HTML dashboard (filters, badges, click-row details, URL-rewriting to project-console Documents tab), assesses readiness. HCLS-portable via project.yml `tracker:` config block + plugin seams for lifecycle-state reading."
-version: 13
-updated: 2026-06-02
+version: 14
+updated: 2026-06-15
 ---
 
 # Submission Package Tracker
@@ -28,7 +28,7 @@ The tracker is a **projection of the milestone catalog onto evidence-on-disk**. 
 
 **Snapshot layer (records what's in each filing package):**
 
-3. **Composition manifests** (`docs/project/submissions/<filing>/composition-manifest.md`) — snapshot of pieces actually packaged at filing time. Each composition manifest is a projection of one milestone's bindings.
+3. **Composition manifests** (`docs/project/submissions/<filing>/composition-manifest.md`) — snapshot of pieces actually packaged at filing time, conceptually a projection of one milestone's bindings. **Owned by the `submissions` skill** (template + authoring + section/column schema); tracker is a **read-only consumer** — `generate.py` walks it for `(submission)`-scope rows and must key only on the section/column contract `submissions` declares (`submissions/SKILL.md` → `## Composition-manifest contract`). Never write the manifest from here.
 
 **Architecture + scope:**
 
