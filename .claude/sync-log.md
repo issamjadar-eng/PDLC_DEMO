@@ -984,3 +984,15 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Merge commit: `9e6a305`
 - Hitachi HEAD after sync: `9e6a305` (local checkout fast-forwarded; sync branch deleted local + remote)
 - Origin: PDLC_DEMO task ben/086 (project PR #54, merged `6cda697`).
+
+## 2026-06-15 — push
+
+- Files: project-console (1.17.0→1.27.0): `VERSION`, `SKILL.md`, `README.md`, `console/app.py`, `console/web/static/console.css`, `console/web/templates/_base.html`, `console/web/templates/workflow_b3_index.html`, `console/workflows/{catalog,router}.py` (modified) + `console/strategy/{__init__,router}.py`, `console/submission/{__init__,loader,router}.py`, `console/web/static/submission.css`, `console/web/templates/submission_{index,view}.html` (new); new `submissions` skill (SKILL/README/VERSION + `scripts/render_sidecars.py` + 7 templates); `skills/manifest.md` (project-console row bump + new Submissions row).
+- Branch: `sync/pdlc-demo-console-strategy-submission-2026-06-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/217
+- Commit: "project-console 1.27.0: Strategy + Submission topline sections; new submissions skill"
+- Status: merged (--merge requested; user asked to land in both repos)
+- Merge commit: `e93442f`
+- Hitachi HEAD after sync: `e93442f` (local checkout fast-forwarded; sync branch deleted local + remote)
+- Pre-push hitachi was at `9e6a305` (project-console 1.26.0); the 9 modified project-console files were LOCAL_AHEAD (clean advance, no divergence).
+- Origin: PDLC_DEMO task ben/087 (project PR #56, merged `c69b821`).
