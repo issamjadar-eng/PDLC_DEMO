@@ -159,6 +159,8 @@ Central index for all controlled documents in the demo GlobalLogic QMS. Required
 |---|---|---|---|---|---|
 | GL-SOP-RA-001 | SOP | [Regulatory Operations](regulatory-affairs/regulatory-operations-sop.md) | 1.0 | 2026-04-27 | ISO 13485 §7.2.1; 21 CFR Part 807; EU MDR Art. 10 |
 | GL-WI-RA-001 | WI | [510(k) Submission Process](regulatory-affairs/510k-submission-process-wi.md) | 1.0 | 2026-04-27 | 21 CFR 807 Subpart E; FDA 2019 Format guidance; FDA 2014 SE; FDA 2017 510(k) Change |
+| GL-WI-RA-003 | WI | [PMA Submission Process](regulatory-affairs/pma-submission-process-wi.md) | 1.0 | 2026-06-15 | 21 CFR Part 814 Subpart B; FDA PMA Acceptance & Filing guidance; 21 CFR Part 812 (IDE) |
+| GL-FORM-RA-001 | Form | [Submission Package Assembly & Sign-off Record](regulatory-affairs/templates/submission-package-record.md) | 1.0 | 2026-06-15 | 21 CFR 807.87; 21 CFR 814.20; GL-WI-RA-001/-003 §5.4 |
 
 ## 4. Cross-Category Relationships
 
@@ -197,6 +199,7 @@ Design Controls (§7.3)
 | FDA HFE/UE Guidance (2016) | GL-SOP-UC-001; GL-TMP-UC-003 |
 | FDA Cybersecurity Guidance (2023) | GL-SOP-SW-004; GL-WI-SW-002 |
 | FDA 510(k) Change Guidance (2017) | GL-SOP-DC-008 |
+| 21 CFR Part 814 (PMA) | GL-WI-RA-003; GL-FORM-RA-001 |
 | ISO 14155:2020 | GL-SOP-UC-002 |
 | ISO 19011:2018 | GL-SOP-QM-004 |
 | GHTF/SG3/N99-10:2004 | GL-SOP-SP-003 |
@@ -208,15 +211,16 @@ Design Controls (§7.3)
 
 - Manuals: 1
 - SOPs: 26 (was 25; +GL-SOP-QM-006, +GL-SOP-RA-001)
-- Work Instructions: 11 (was 6; +GL-WI-QM-001, +GL-WI-DC-001, +GL-WI-DC-002, +GL-WI-SW-003, +GL-WI-SW-004, +GL-WI-RA-001)
+- Work Instructions: 12 (was 11; +GL-WI-RA-003)
 - Standards: 2 (new doc-class; +GL-STD-RM-001, +GL-STD-RM-002)
 - Templates: 14
-- Forms: 10 (was 9; +GL-FORM-DC-002)
-- **Total released documents: 67** (12 added under task ben/036)
+- Forms: 11 (was 10; +GL-FORM-RA-001)
+- **Total released documents: 69** (2 added under task ben/089: GL-WI-RA-003, GL-FORM-RA-001)
 
 ## 7. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|
+| 1.2 | 2026-06-15 | Ben Xavier (via Claude, task ben/089) | Added GL-WI-RA-003 (PMA Submission Process — fills the GL-WI-RA-001 §2 deferral) and GL-FORM-RA-001 (Submission Package Assembly & Sign-off Record — first RA Form; the QMS record analogue of the submissions-skill composition manifest). New `regulatory-affairs/templates/` subfolder. Surfaced by the submissions-skill template verification (SOP + WI existed; no Form). |
 | 1.1 | 2026-04-27 | Ben Xavier (via Claude, task ben/036) | Added 12 documents filling representative QMS gaps (risk standards, phase-gate checklist, GDP SOP, deviation WI, DHF process WI, trace-matrix WI, threat-modeling WI, software-V&V WI, regulatory-affairs folder + 2 docs). New `Standards` doc-class introduced. New `Regulatory Affairs` top-level category. |
 | 1.0 | 2026-04-21 | Ben Xavier (via Claude, task ben/022) | Initial index. Captures all 55 documents released across P1–P6. |

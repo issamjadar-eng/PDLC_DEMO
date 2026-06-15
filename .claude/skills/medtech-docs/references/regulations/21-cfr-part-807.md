@@ -70,19 +70,27 @@ The three-way decision tree — PCCP / Letter-to-File / new 510(k) — explicitl
 
 ### § 807.87 — Information required in a premarket notification submission
 
-Lists the 12+ content elements required in every 510(k):
+The required content elements, **by subsection letter** (verified against eCFR 2026-06-15 — cite these letters; do not paraphrase from memory):
 
-- Device name and trade name; classification name; common or usual name
-- Establishment registration number; class into which the device is classified; action taken by manufacturer (e.g., labeling change, design change)
-- Proposed labels, labeling, and advertisements sufficient to describe intended use
-- Statement indicating substantial equivalence to a legally marketed device with comparison
-- Description of changes from the legally marketed device
-- 510(k) summary (per § 807.92) or 510(k) statement (per § 807.93)
-- Class III certification (per § 807.94) where applicable
-- Statement under penalty of perjury
-- Other information FDA may require
+| § | Element |
+|---|---|
+| (a) | Device name — trade/proprietary name, classification name, common or usual name |
+| (b) | Establishment registration number of the submitter |
+| (c) | Class into which the device is classified under § 513 + the classification panel |
+| (d) | Action taken to comply with any applicable performance standard under § 514 |
+| (e) | **Proposed labels, labeling, and advertisements** sufficient to describe the device, its intended use, and directions for use |
+| (f) | Statement of **substantial equivalence** — comparison showing similarities/differences to a legally marketed (predicate) device |
+| (g) | Supporting data for any significant change/modification or new indication |
+| (h) | A **510(k) summary** (§ 807.92) **or** a **510(k) statement** (§ 807.93) |
+| (i) | **Financial certification or disclosure** statement per Part 54 |
+| (j) | Statements of compliance for clinical data (domestic and foreign investigations) |
+| (k) | **Class III summary and certification** — types of safety/effectiveness problems + certification that a reasonable search of known information was conducted (preamendment Class III devices) |
+| (l) | **Truthful-and-accuracy statement** — submitter's best-of-knowledge attestation that all data/information are truthful and accurate and that no material fact has been omitted |
+| (m) | Any additional information FDA requests |
 
 This list is the 510(k) eSTAR's content backbone — each eSTAR module maps to a § 807.87 element.
+
+> **Citation discipline (load-bearing).** The two adjacent certifications are easily confused: **§ 807.87(k) is the *Class III summary & certification*; § 807.87(l) is the *truthful-and-accuracy statement*.** Cite **(l)** for the T&A statement. (A miscite of (k)↔(l) is exactly the slip this lettered table exists to prevent.)
 
 ### § 807.92 — Content and format of a 510(k) summary
 
@@ -117,7 +125,7 @@ Lists categories of establishments exempt from the registration and listing requ
 ## Source Provenance
 
 - **eCFR API endpoint**: `https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?chapter=I&subchapter=H&part=807`
-- **Retrieval date**: 2026-05-29
+- **Retrieval date**: 2026-05-29 (§ 807.87 subsection lettering re-verified against the eCFR API 2026-06-15 — the `§ 807.87 (a)–(m)` table)
 - **eCFR raw XML**: archived under `source/21-cfr-part-807.xml` (when present)
 - **Authoring agent**: distilled from eCFR-returned content via a `citations` audit that surfaced this section as a `registry-gap`.
 

@@ -15,7 +15,7 @@ summary: Device description — PLACEHOLDER stub for the PMA profile.
 
 _Demo sample data — not for clinical use._
 
-> **🚧 PLACEHOLDER — PMA profile.** Scaffold-only stub; not built out. Build against 21 CFR 814.20(b)(3). Architecture/classification facts reference the system SAD and `project.yml` — do not redeclare. `[VERIFY] everything below.`
+> **🚧 PLACEHOLDER — PMA profile.** Scaffold-only stub; not built out. Build against 21 CFR 814.20(b)(4) (complete device description; the summary-level description is (b)(3)(ii)). Architecture/classification facts reference the system SAD and `project.yml` — do not redeclare. `[VERIFY] everything below.`
 
 > **🔒 INTERNAL — working status.** Document control v0.1 · status: placeholder · authored under {{TASK}}.
 
