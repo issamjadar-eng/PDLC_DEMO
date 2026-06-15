@@ -1,0 +1,30 @@
+doc: docs/project/submissions/qsub/pccp-summary.md
+version: v0.1
+date: 2026-06-15
+agent: regulatory-affairs
+task: ben/087
+
+sources_consulted:
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["§1 Critical-Requirement Carve-out", "§1 Filing Scope: PCA Device Alone"]
+    how_used: PCCP envelope = Ct*-tagged change types within pre-specified bounds; scope excludes the MDDS adapter.
+  - path: docs/external/fda-guidance/pccp-general.md
+    how_used: general PCCP framing (cited by title).
+  - path: docs/external/fda-guidance/pccp-aiml.md
+    how_used: AI/ML PCCP framing for the predictive-alarm category (cited by title).
+
+fda_visible_references:
+  - docs/project/submissions/qsub/fda-questions.md
+
+claims_to_source:
+  - claim: "PCCP envelope defined structurally as Ct*-tagged change types within pre-specified bounds"
+    source: regulatory-strategy.md §1 Critical-Requirement Carve-out
+  - claim: "Three change categories: drug-library updates, firmware updates, predictive-alarm SaMD"
+    source: regulatory-strategy.md §1 PCCP envelope
+
+open_gaps:
+  - "Numeric acceptance values locked at design transfer / pending FDA input (Q2.2)."
+  - "Precedent K-numbers to verify before citing."
+
+notes:
+  - "Demo seed; category counts to be kept in sync with regulatory-strategy.md."

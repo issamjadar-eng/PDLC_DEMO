@@ -1,0 +1,29 @@
+doc: docs/project/submissions/{{FILING}}/{{DOC}}.md
+version: v0.1
+date: {{DATE}}
+agent: regulatory-affairs
+task: {{TASK}}
+
+sources_consulted:
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["{{D_REG_REFS}}"]
+    how_used: internal grounding for all substantive positions.
+  - path: docs/project/submissions/{{FILING}}/composition-manifest.md
+    sections: ["Filing Identification", "Included Pieces"]
+    how_used: authoritative listing of package contents.
+
+fda_visible_references:
+  - docs/project/submissions/{{FILING}}/device-description.md
+  - docs/project/submissions/{{FILING}}/intended-use.md
+  - docs/project/submissions/{{FILING}}/pccp-summary.md
+  - docs/project/submissions/{{FILING}}/fda-questions.md
+
+claims_to_source:
+  - claim: "{{CLAIM}}"
+    source: "{{SOURCE}}"
+
+open_gaps:
+  - "PLACEHOLDER fields must be filled before transmission: submitter details, FDA division, tracking number, contacts, meeting attendees."
+
+notes:
+  - "No fabricated names, K-numbers, FDA contacts, or guidance titles."

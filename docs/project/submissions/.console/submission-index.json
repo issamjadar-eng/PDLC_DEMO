@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "filings": [
+    {
+      "id": "510k",
+      "type": "510(k)",
+      "title": "510(k) — PP3500 (PainEase PCA Advanced)",
+      "status": "scaffold",
+      "folder": "docs/project/submissions/510k",
+      "manifest": "docs/project/submissions/510k/composition-manifest.md",
+      "counts": {
+        "required": 26,
+        "supporting": 0,
+        "strengtheners": 0,
+        "excluded": 0,
+        "docs": 0,
+        "questions": 0
+      },
+      "blocking": 0,
+      "default_advisor": "regulatory-affairs"
+    },
+    {
+      "id": "qsub",
+      "type": "Q-Sub (Pre-Submission)",
+      "title": "Q-Sub (Pre-Submission) — PP3500 (PainEase PCA Advanced)",
+      "status": "drafting",
+      "folder": "docs/project/submissions/qsub",
+      "manifest": "docs/project/submissions/qsub/composition-manifest.md",
+      "counts": {
+        "required": 7,
+        "supporting": 2,
+        "strengtheners": 2,
+        "excluded": 5,
+        "docs": 7,
+        "questions": 6
+      },
+      "blocking": 1,
+      "default_advisor": "regulatory-affairs"
+    }
+  ]
+}

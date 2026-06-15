@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+{% block title %}Submission · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}submission-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/submission.css">{% endblock %}
+{% block content %}
+<section class="sub-wrap">
+  <header class="sub-head">
+    <div>
+      <p class="sub-eyebrow">FDA submission package</p>
+      <h1>Submission</h1>
+      <p class="sub-sub">Pre-Submission (Q-Sub), 510(k), and PCCP packages — composition manifest, FDA-facing documents, and the questions for FDA. Each filing is rendered from the <code>submissions</code> skill's sidecars; open one to read the package and ask the regulatory advisor about it.</p>
+    </div>
+    {% if has_skill %}
+    <form method="post" action="/submission/render" class="sub-refresh">
+      <button type="submit" class="btn-secondary" title="Re-derive the console sidecars from the submission docs">↻ Refresh</button>
+    </form>
+    {% endif %}
+  </header>
+
+  {% if render_error %}
+  <div class="sub-banner sub-banner-warn">
+    <strong>Render failed.</strong>
+    <pre>{{ render_error }}</pre>
+  </div>
+  {% endif %}
+
+  {% if not filings %}
+  <div class="sub-empty">
+    <p><strong>No submission filings yet.</strong></p>
+    <p>Scaffold one with <code>/submissions scaffold qsub</code>, then <code>/submissions render</code> to publish the sidecars this view reads.</p>
+  </div>
+  {% else %}
+  {% set tot_docs = filings | sum(attribute='counts.docs') %}
+  {% set tot_block = filings | sum(attribute='blocking') %}
+  <div class="sub-rollup">
+    <div class="sub-rollup-stat"><span class="n">{{ filings | length }}</span><span class="l">{{ 'filing' if filings|length == 1 else 'filings' }}</span></div>
+    <div class="sub-rollup-stat"><span class="n">{{ tot_docs }}</span><span class="l">documents</span></div>
+    <div class="sub-rollup-stat"><span class="n">{{ tot_block }}</span><span class="l">blocking</span></div>
+  </div>
+
+  <div class="sub-grid">
+    {% for f in filings %}
+    {% set c = f.counts %}
+    <a class="sub-card" href="/submission/{{ f.id }}" style="--i:{{ loop.index0 }}">
+      <div class="sub-card-top">
+        <span class="sub-chip sub-status {{ f._status.cls }}">{{ f._status.label }}</span>
+        <span class="sub-chip sub-type">{{ f.type }}</span>
+        {% if f.blocking %}<span class="sub-chip sub-blocking-chip" title="Transmission-blocking briefs not ready">⚠ {{ f.blocking }} blocking</span>{% endif %}
+      </div>
+      <h3 class="sub-card-title">{{ f.title }}</h3>
+      <p class="sub-card-device sub-muted">{{ f.folder }}</p>
+      <div class="sub-card-metrics">
+        <div class="sub-metric"><span class="m-n">{{ c.docs or 0 }}</span><span class="m-l">docs</span></div>
+        <div class="sub-metric"><span class="m-n">{{ c.required or 0 }}</span><span class="m-l">required</span></div>
+        <div class="sub-metric"><span class="m-n">{{ c.strengtheners or 0 }}</span><span class="m-l">briefs</span></div>
+        <div class="sub-metric"><span class="m-n">{{ c.questions or 0 }}</span><span class="m-l">questions</span></div>
+      </div>
+      <span class="sub-card-cta">Open package →</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

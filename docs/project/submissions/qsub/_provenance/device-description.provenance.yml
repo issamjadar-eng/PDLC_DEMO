@@ -1,0 +1,32 @@
+doc: docs/project/submissions/qsub/device-description.md
+version: v0.1
+date: 2026-06-15
+agent: regulatory-affairs
+task: ben/087
+
+sources_consulted:
+  - path: docs/project/strategies/regulatory-strategy.md
+    sections: ["§1 Filing Scope", "§2 Module Classification"]
+    how_used: component classification and filing posture.
+  - path: docs/project/dhfs/pca-device/design-controls/architecture/
+    sections: ["System SAD"]
+    how_used: device architecture + SaMD/SiMD/hardware boundary.
+  - path: docs/project/input-analysis/predicate-analysis/README.md
+    how_used: PP3000 predicate framing.
+
+fda_visible_references:
+  - docs/project/submissions/qsub/intended-use.md
+  - docs/project/dhfs/pca-device/design-controls/architecture/
+
+claims_to_source:
+  - claim: "PP3500 composition = SiMD firmware + ME hardware + SaMD accessory"
+    source: project.yml composition + regulatory-strategy.md §2
+  - claim: "Drug Library Manager directly affects dose enforcement → Class II SaMD"
+    source: regulatory-strategy.md §2
+
+open_gaps:
+  - "Reconcile module table against the System SAD before transmission."
+  - "Confirm Enhanced documentation cascade."
+
+notes:
+  - "Demo seed; architecture facts defer to the System SAD."

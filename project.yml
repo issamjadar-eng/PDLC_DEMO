@@ -276,6 +276,7 @@ security:
   - secops
   - skill-creator
   - strategy
+  - submissions
   - sync-skills
   - task
   - trace-matrix
