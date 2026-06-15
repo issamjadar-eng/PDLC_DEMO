@@ -39,6 +39,10 @@ GlobalLogic regulatory affairs procedures, work instructions, and templates. Thi
 |---|---|---|---|
 | GL-SOP-RA-001 | Regulatory Operations | SOP | 2026-04-27 |
 | GL-WI-RA-001 | 510(k) Submission Process | WI | 2026-04-27 |
+| GL-WI-RA-003 | PMA Submission Process | WI | 2026-06-15 |
+| GL-FORM-RA-001 | Submission Package Assembly & Sign-off Record (in [`templates/`](templates/README.md)) | Form | 2026-06-15 |
+
+_(GL-WI-RA-002 — De Novo — reserved, not yet authored.)_
 
 ## Cross-References
 
@@ -52,3 +56,4 @@ GlobalLogic regulatory affairs procedures, work instructions, and templates. Thi
 | Date | Author | Summary |
 |---|---|---|
 | 2026-04-27 | Ben Xavier (via Claude, task ben/036) | Folder created. GL-SOP-RA-001 + GL-WI-RA-001 added. |
+| 2026-06-15 | Ben Xavier (via Claude, task ben/089) | Added GL-WI-RA-003 (PMA Submission Process) + the `templates/` subfolder with GL-FORM-RA-001 (Submission Package Assembly & Sign-off Record). Closes gaps surfaced by the submissions-skill template verification. |

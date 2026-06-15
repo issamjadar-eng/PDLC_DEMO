@@ -15,7 +15,7 @@ summary: Manufacturing information — PLACEHOLDER stub for the PMA profile.
 
 _Demo sample data — not for clinical use._
 
-> **🚧 PLACEHOLDER — PMA profile.** Scaffold-only stub; not built out. Build against 21 CFR 814.20(b)(4)(v) — methods, facilities, controls for manufacture/processing/packaging/installation. Reference the QMS (ISO 13485 / 21 CFR 820). `[VERIFY] everything below.`
+> **🚧 PLACEHOLDER — PMA profile.** Scaffold-only stub; not built out. Build against 21 CFR 814.20(b)(4) — the complete device description includes the methods, facilities, and controls for manufacture/processing/packaging/installation. Reference the QMS (ISO 13485 / 21 CFR 820). `[VERIFY] everything below.`
 
 > **🔒 INTERNAL — working status.** Document control v0.1 · status: placeholder · authored under {{TASK}}.
 
