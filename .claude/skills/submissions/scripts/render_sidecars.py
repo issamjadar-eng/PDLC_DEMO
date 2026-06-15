@@ -9,7 +9,7 @@ parses submission prose. This script (the producer) walks
     docs/project/submissions/<filing>/<filing>.submission.json — per-filing detail
 
 A "filing" is any immediate subfolder of `submissions/` that contains a
-`composition-manifest.md` (today: qsub / 510k / pccp). The manifest is the
+`composition-manifest.md` (today: qsub / 510k / pccp / pma). The manifest is the
 authoritative package-assembly artifact; this script projects it — plus the
 content docs and their `_provenance/*.provenance.yml` sidecars — into JSON.
 
@@ -38,8 +38,10 @@ SUBMISSIONS_DIR = ("docs", "project", "submissions")
 CONSOLE_DIR = ".console"
 INDEX_NAME = "submission-index.json"
 
-# Filename → (display title, kind) for the common Q-Sub content docs. Unknown
-# files fall back to a title-cased filename and kind "doc".
+# Filename → (display title, kind) for content docs across all filing-type
+# profiles (qsub / 510k / pccp / pma). Unknown files fall back to a title-cased
+# filename and kind "doc". Stems are profile-agnostic: the same parser serves
+# every filing; the filing-type profile only decides which stems get scaffolded.
 DOC_META = {
     "composition-manifest": ("Composition Manifest", "manifest"),
     "cover-letter": ("Cover Letter", "cover-letter"),
@@ -55,6 +57,18 @@ DOC_META = {
     "separation-argument": ("Architectural Separation Argument", "brief"),
     "predicate-comparison": ("Predicate Comparison", "predicate"),
     "accessory-samd-brief": ("Accessory SaMD Brief", "brief"),
+    # 510(k) profile
+    "indications-for-use": ("Indications for Use (Form FDA 3881)", "intended-use"),
+    "510k-summary": ("510(k) Summary", "summary"),
+    "substantial-equivalence": ("Substantial Equivalence Discussion", "predicate"),
+    "performance-testing": ("Performance Testing Summary", "performance"),
+    "truthful-accuracy-statement": ("Truthful & Accuracy Statement", "statement"),
+    # PMA profile (placeholder set)
+    "ssed-summary": ("Summary of Safety & Effectiveness Data (SSED)", "summary"),
+    "nonclinical-studies": ("Nonclinical Laboratory Studies", "doc"),
+    "clinical-studies": ("Clinical Investigations", "doc"),
+    "manufacturing-information": ("Manufacturing Information", "doc"),
+    "labeling": ("Proposed Labeling", "doc"),
 }
 
 # Reading order for the documents tab — the FDA-facing core first, then the
@@ -63,15 +77,26 @@ DOC_ORDER = [
     "cover-letter",
     "device-description",
     "intended-use",
+    "indications-for-use",
+    "510k-summary",
+    "ssed-summary",
     "predicate-comparison",
+    "substantial-equivalence",
+    "performance-testing",
+    "nonclinical-studies",
+    "clinical-studies",
+    "manufacturing-information",
+    "labeling",
     "pccp-summary",
     "fda-questions",
+    "truthful-accuracy-statement",
 ]
 
 FILING_META = {
     "qsub": "Q-Sub (Pre-Submission)",
     "510k": "510(k)",
     "pccp": "PCCP",
+    "pma": "PMA (Premarket Approval)",
 }
 
 # Scope-routing label emojis (see the internal-vs-external-scope-labels rule).

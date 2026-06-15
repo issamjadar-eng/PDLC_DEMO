@@ -33,6 +33,58 @@ the JSON is missing it degrades to "run `/submissions render`". This keeps the
 console company-agnostic and lets any producer that emits the same shape light up
 the view.
 
+## Architecture & boundaries
+
+### Filing-type profiles
+
+Scaffolding is **filing-type-aware**. `templates/` is organized as one folder per
+filing type plus a shared folder:
+
+```
+templates/
+├── _shared/   composition-manifest.template.md + provenance.template.yml
+├── qsub/      cover-letter · device-description · intended-use · fda-questions · pccp-summary
+├── 510k/      cover-letter · indications-for-use · 510k-summary · substantial-equivalence · device-description · performance-testing · truthful-accuracy-statement
+└── pma/       🚧 placeholder stubs (cover-letter · ssed-summary · device-description · nonclinical-studies · clinical-studies · manufacturing-information · labeling)
+```
+
+`scaffold <filing>` resolves the filing type to its profile and lays down that
+document set (+ `_shared/`). This fixes the v1 bug where a single flat Q-Sub-shaped
+set was instantiated for *any* filing — `scaffold 510k` would drop an FDA-questions
+doc into a 510(k) folder. The PMA profile is a **placeholder** (folder shape only);
+PMA (21 CFR Part 814) is far heavier than a 510(k) and is not built out in this
+version. The registry lives in SKILL.md (`## Filing-type profiles`) and is mirrored
+in `render_sidecars.py` (`FILING_META` / `DOC_META`).
+
+### submissions ↔ tracker — who owns what
+
+The only seam between this skill and `/tracker` is the **composition-manifest**, and
+the boundary is deliberate:
+
+- **`submissions` owns the manifest** — its template, its authoring, and its
+  **section/column schema**. The manifest is hand-authored from the template; it is
+  *not* generated from `regulatory.yml` milestones (tracker's SKILL.md calls it a
+  "projection of milestone bindings" — that is conceptual framing, not a code path).
+- **`/tracker` is a read-only consumer.** `tracker/scripts/generate.py` walks the
+  manifest as **one of ~7 inputs** (alongside the milestone catalog, the dhf-manifest
+  JSON, the system SAD, `project.yml`, FDA guidance…) to emit `(submission)`-scope
+  rows; two `/best-practices` checks assert the manifest parses and its pieces resolve.
+
+Two parsers therefore read one file (`render_sidecars.py::parse_manifest` here +
+`generate.py` there). They are kept **independent but governed by one declared
+schema** (the `## Composition-manifest contract` in SKILL.md) — the loose-coupled
+sidecar pattern, not a shared import. Collapsing them into a single shared parser is
+a possible future refinement, not a requirement.
+
+**Why not merge the two skills:** they sit at different layers. `submissions` =
+FDA-facing **content authoring + packaging** for one filing. `/tracker` = a
+**program-wide readiness scoreboard** across all DHFs, engineering prerequisites, and
+every milestone (QSub → 510k+PCCP → LMR1 → LMR2), with obligation-coverage analysis
+against the dhf-manifest catalog and lifecycle-state plugins (Confluence/Comala,
+SharePoint, Jira, Windchill). Submissions consumes none of that. Mental model:
+**dhf-manifest = syllabus · tracker = scorecard · submissions = one of the things
+being scored (and the only one it also authors).**
+
 ## Design rules followed
 
 - **Ground, don't redeclare.** Submission docs reference canonical facts
@@ -52,9 +104,16 @@ the view.
   in CI to catch drift).
 - Content docs follow the three-tier model; the filed body uses scope labels.
 - No fabricated K-numbers, FDA contacts, or guidance titles.
+- A scaffolded filing matches its **filing-type profile** (a `510k` folder carries
+  the 510(k) doc set, not Q-Sub docs); every filing type in `FILING_META` has a
+  `templates/<type>/` profile.
+- The composition manifest keeps the section/column **contract** (`## Composition-
+  manifest contract` in SKILL.md) so `/tracker`'s parser + its two manifest checks
+  keep working.
 
 ## Changelog
 
 | Version | Date | Summary |
 |---------|------|---------|
-| 1 | 2026-06-15 | Initial skill (task ben/087). `scaffold` + `render` + `list` actions; `render_sidecars.py` producer of the console `schema_version: 1.0` contract; templates modeled on the arthrex-pccp Q-Sub package shape (three-tier doc model, composition manifest, provenance sidecars). Paired with the project-console Submission section. |
+| 2 | 2026-06-15 | **Filing-type template profiles.** Reorganized `templates/` into per-filing-type profiles (`_shared/` + `qsub/` + `510k/` + `pma/`); `scaffold` now resolves a filing type to its profile instead of instantiating one flat Q-Sub-shaped set for every filing. Added the 510(k) document set (indications-for-use/FDA-3881, 510(k) summary, substantial-equivalence + predicate comparison, performance-testing summary, truthful-&-accuracy statement) and a PMA **placeholder** set. Registered `pma` as a filing type in `render_sidecars.py` `FILING_META` + new `DOC_META`/`DOC_ORDER` stems. Documented the **composition-manifest contract** (sections/columns `/tracker` parses) and affirmed submissions-owns-manifest / tracker-consumes in SKILL.md + README; added a producer/consumer skill-relationships table. No console JSON schema change (still `1.0`). **Post-authoring verification (regulatory + quality review of the new templates) drove fixes folded into this version:** corrected the Truthful-&-Accuracy citation `807.87(k)`→`807.87(l)` ((k) is the Class III cert); genericized the `_shared` composition-manifest Included-Pieces rows so they're profile-neutral (was Q-Sub-shaped, which broke the cover-letter↔manifest 1:1 alignment for other filings); documented proposed-labeling + consensus-standards/DoC as **DHF-attached exhibits** (controlled-record PDFs, not filing-folder templates); updated eCopy/eSTAR wording to the eSTAR-mandatory posture; and added scaffold-time QMS-mapping notes (sign-off-chain + controlled-record transition stay project-specific, never hard-coded in the registry templates). |
+| 1 | 2026-06-15 | Initial skill. `scaffold` + `render` + `list` actions; `render_sidecars.py` producer of the console `schema_version: 1.0` contract; templates modeled on a real Q-Sub package shape (three-tier doc model, composition manifest, provenance sidecars). Paired with the project-console Submission section. |
