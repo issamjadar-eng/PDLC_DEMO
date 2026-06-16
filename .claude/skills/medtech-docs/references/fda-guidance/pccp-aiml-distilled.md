@@ -1,5 +1,7 @@
 # FDA Guidance: PCCP for AI/ML-Enabled Device Software Functions
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/pccp-aiml.md`](source-md/pccp-aiml.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Marketing Submission Recommendations for a Predetermined Change Control Plan for Artificial Intelligence-Enabled Device Software Functions
 **Document Date**: August 18, 2025 (originally issued December 4, 2024)
 **Status**: Final

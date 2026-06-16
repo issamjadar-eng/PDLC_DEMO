@@ -1,5 +1,7 @@
 # NIST SP 800-66 Rev. 2 — Implementing the HIPAA Security Rule
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: NIST Special Publication 800-66 Revision 2, *Implementing the HIPAA Security Rule: A Cybersecurity Resource Guide*
 **Source**: National Institute of Standards and Technology (NIST), Computer Security Resource Center
 **Published**: February 2024 (final; supersedes Rev. 1, October 2008)

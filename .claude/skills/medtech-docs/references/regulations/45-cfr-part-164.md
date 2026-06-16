@@ -1,5 +1,7 @@
 # 45 CFR Part 164 — Security and Privacy of Individually Identifiable Health Information (HIPAA)
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary with selected commentary. Ground and cite the faithful verbatim full text [`source-md/45-cfr-part-164.md`](source-md/45-cfr-part-164.md) (a no-LLM transcription of the eCFR XML), not this file. Regulations change — verify currency against the live eCFR before relying on it in a submission. `[VERIFY]` marks are unconfirmed.
+
 **Citation**: 45 CFR Part 164 (Title 45, Subtitle A, Subchapter C — "Administrative Data Standards and Related Requirements")
 **Authority**: 42 U.S.C. 1302(a), 1320d–1320d-9, 1320d-2 note; sec. 264 of Pub. L. 104-191 (HIPAA); secs. 13400–13424 of Pub. L. 111-5 (HITECH Act)
 **Promulgating Agency**: HHS / Office for Civil Rights (OCR)

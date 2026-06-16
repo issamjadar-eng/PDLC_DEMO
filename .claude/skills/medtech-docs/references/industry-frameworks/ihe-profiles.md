@@ -1,5 +1,7 @@
 # IHE Profiles — Integrating the Healthcare Enterprise
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: IHE Technical Frameworks (Radiology, IT Infrastructure, Patient Care Coordination)
 **Source**: IHE International
 **Referenced In**: Healthcare interoperability best practice; complements DICOM by defining workflow-level integration patterns

@@ -1,5 +1,7 @@
 # FDA Guidance (DRAFT): Electronic Submission Template for Medical Device Q-Submissions
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/qsub-estar-draft.md`](source-md/qsub-estar-draft.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Electronic Submission Template for Medical Device Q-Submissions: Draft Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: May 29, 2025 (Draft — Not for Implementation)
 **Status**: **DRAFT** (Contains Nonbinding Recommendations; when final, will contain **both binding and nonbinding provisions** per § 745A(b)(3))

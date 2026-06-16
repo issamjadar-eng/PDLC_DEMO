@@ -38,7 +38,7 @@ Numeric acceptance values are `[locked at design transfer / pending FDA input]` 
 
 ## 6. Software Changes Routing 📤
 
-Each post-clearance change routes to exactly one of: PCCP-bounded execution, Letter-to-File, or a new 510(k), per 21 CFR 807.81(a)(3) and the FDA software-changes guidance.
+Each post-clearance change routes to exactly one of: PCCP-bounded execution, Letter-to-File, or a new 510(k), per 21 CFR 807.81(a)(3) and the FDA software-changes guidance. Changes executed within the cleared PCCP envelope are lawful without a new submission under the **21 CFR 807.81(b) predetermined-change-control-plan carve-out** (statutory basis: FD&C Act § 515C / FDORA 2022) — the regulatory hook that makes PCCP-authorized modifications permissible without a per-change 510(k).
 
 ## 7. Post-Market Monitoring Plan 📤
 

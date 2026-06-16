@@ -1,5 +1,7 @@
 # FDA Guidance: PCCP for Medical Devices (General)
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/pccp-general.md`](source-md/pccp-general.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Predetermined Change Control Plans for Medical Devices
 **Document Date**: August 22, 2024
 **Status**: Draft -- Not for Implementation
@@ -100,7 +102,7 @@ Both share the same three-component PCCP structure. Upon finalization, the AI/ML
 ### Impact Assessment Content
 
 1. Compare the version with each modification to the version without any modifications
-2. Discuss benefits and risks (including risks of harm per ISO 14971) of each individual modification
+2. Discuss benefits and risks (including risks of harm) of each individual modification
 3. Discuss how V&V activities continue to ensure safety and effectiveness
 4. Discuss interactions -- how implementation of one modification impacts another
 5. Describe cumulative impact of implementing all modifications together
@@ -148,6 +150,8 @@ FDA recommends a risk-based assessment process:
 - Changes that may need new clinical data (exception: method comparison data for IVDs)
 - Change to address a recall or safety issue
 - Change to device constituent part impacting biologic or drug constituent part
+
+> **Worked examples (not reproduced here).** The guidance carries **§ VIII — Examples of Modifications for PCCPs** (10 worked examples, each with "May be appropriate" / "Generally not appropriate" dispositions) and **§ IX — Sample of 510(k) Summary Information Regarding the PCCP**. Both are dropped from this finding aid — read `source-md/pccp-general.md` §§ VIII–IX for the full examples and the sample summary text.
 
 ### PCCP Deviation Policy
 

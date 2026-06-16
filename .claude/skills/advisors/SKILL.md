@@ -1,7 +1,7 @@
 ---
 name: advisors
 description: "Manage and ground a bundle of persona advisor subagents (Regulatory Affairs, Clinical Affairs, Risk Management, Cybersecurity, Quality Engineering, V&V, Human Factors, Post-Market, R&D, Systems Engineering, Program Manager) for a medtech project. Each advisor grounds itself in the project's DHF / strategy / standards / regulation documents via three-tier canonical-role grounding, and serves two runtimes from one source — Claude Code subagent delegation and the project-console browser UI. TRIGGER when the user wants to install, list, add, remove, enable, sync, or re-ground advisors / assistants; edit advisor grounding, overlays, or canonical-role tiers; regenerate the auto-rendered GROUNDING blocks; or wire advisor agents into the project or console. Actions: init, setup, list, add <name>, remove <name>, overlay <name> <op> <glob>, sync, help."
-version: 10
+version: 11
 updated: 2026-06-11
 ---
 

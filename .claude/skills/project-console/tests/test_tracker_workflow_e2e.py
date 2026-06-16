@@ -70,7 +70,7 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
             "|---|---|---|---|---|---|---|---|\n"
             "| PA1 | Cover Letter | (submission) | 510k+PCCP | 21 CFR 807.87 | Low | **Not Started** | `cover.md` |\n"
             "| PA2 | 510(k) Summary | (submission) | 510k+PCCP | 21 CFR 807.92 | Med | **Not Started** | `summary.md` |\n"
-            "| PA3 | Truthful & Accuracy | (submission) | 510k+PCCP | 21 CFR 807.87(k) | Low | **Not Started** | `truth.md` |\n",
+            "| PA3 | Truthful & Accuracy | (submission) | 510k+PCCP | 21 CFR 807.87(l) | Low | **Not Started** | `truth.md` |\n",
             encoding="utf-8",
         )
         _run(["git", "add", "-A"], cwd=self.repo)

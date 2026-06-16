@@ -1,5 +1,7 @@
 # FDA Guidance: 510(k) Substantial Equivalence
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/510k-se.md`](source-md/510k-se.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: The 510(k) Program: Evaluating Substantial Equivalence in Premarket Notifications [510(k)]
 **Document Date**: July 28, 2014 (final); draft issued December 27, 2011
 **Status**: Final (Contains Nonbinding Recommendations)

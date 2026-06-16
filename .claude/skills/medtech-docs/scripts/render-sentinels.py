@@ -467,12 +467,27 @@ def render_doc_governance(target_file, attrs, old_block_content, project_root):
     lines = ['**Governance** _(auto-rendered from `.taxonomy.yml`; edit there to change)_']
     lines.append('')
 
+    # Index the project's QMS registry (medtech-docs `source-md` convention)
+    # once, so each governing ID can render as a link to its distilled
+    # markdown. IDs with no registry file fall back to plain inline code.
+    registry_root = Path(project_root) / 'docs' / 'internal' / 'source-md'
+    registry_files = {}
+    if registry_root.is_dir():
+        for f in sorted(registry_root.rglob('*.md')):
+            registry_files.setdefault(f.name.split(' ')[0].split('.')[0], f)
+
+    def _id_link(qms_id):
+        f = registry_files.get(qms_id)
+        if not f:
+            return f'`{qms_id}`'
+        from urllib.parse import quote
+        rel = os.path.relpath(f, start=target.parent)
+        return f'[`{qms_id}`]({quote(rel.replace(os.sep, "/"))})'
+
     def _id_list(label, ids):
         if not ids:
             return None
-        # Render IDs as plain inline code — readers can grep the source-md
-        # tree for the linked artifact.
-        items = ', '.join(f'`{i}`' for i in ids)
+        items = ', '.join(_id_link(i) for i in ids)
         return f'- **{label}**: {items}'
 
     forms = gov.get('forms') or []
@@ -555,6 +570,18 @@ def render_file(target_path, dry_run=False, verbose=False):
     target = Path(target_path).resolve()
     if not target.exists():
         raise RuntimeError(f"target file does not exist: {target_path}")
+
+    # Guardrail: never render INTO a registry-tracked skill file. Sentinels that
+    # pull project data (e.g. project.yml:strategy_domains) must materialize only
+    # into PROJECT-LOCAL files (CLAUDE.md, docs/** READMEs). Baking a specific
+    # project's data into a shared skill file under .claude/skills/** creates
+    # permanent per-project sync drift — see the sentinel-blocks rule. Skip such
+    # writes (no-op, not an error) so callers like /best-practices fix don't break.
+    if '/.claude/skills/' in target.as_posix():
+        print(f"render-sentinels: SKIP {target_path} — registry-tracked skill file; "
+              f"project data is never rendered into .claude/skills/** (render into "
+              f"project-local files instead).", file=sys.stderr)
+        return False
 
     PROJECT_ROOT = find_project_root(target)
     log(f"[render] target={target} project_root={PROJECT_ROOT}", verbose)

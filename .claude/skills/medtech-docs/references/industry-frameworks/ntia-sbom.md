@@ -1,5 +1,7 @@
 # NTIA SBOM Minimum Elements
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: The Minimum Elements For a Software Bill of Materials (SBOM) (July 2021)
 **Source**: National Telecommunications and Information Administration (NTIA), U.S. Department of Commerce
 **Referenced In**: FDA Cybersecurity guidance

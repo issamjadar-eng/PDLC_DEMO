@@ -1,5 +1,7 @@
 # DICOM — Digital Imaging and Communications in Medicine
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: DICOM Standard (PS3.x series, continuously updated)
 **Source**: NEMA (National Electrical Manufacturers Association) / DICOM Standards Committee
 **Referenced In**: Fundamental to any imaging-based SaMD; FDA expects DICOM conformance for devices that import/process medical images

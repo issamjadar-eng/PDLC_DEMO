@@ -1,5 +1,7 @@
 # FDA Guidance: Q-Submission Program
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/qsub.md`](source-md/qsub.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Requests for Feedback and Meetings for Medical Device Submissions: The Q-Submission Program
 **Document Date**: May 29, 2025 (Final); draft was March 15, 2024
 **Status**: Final (Contains Nonbinding Recommendations)
@@ -73,8 +75,8 @@ Out-of-scope interactions explicitly identified in Section II.H include the **TA
 
 **Submission format** (as of May 2025):
 
-- **eCopy** is the current submission format to FDA Document Control Center per 21 CFR 1010.2 / eCopy guidance.
-- **eSTAR for Q-Subs** is being introduced — see the draft guidance `qsub-estar-draft-distilled.md` (May 29, 2025 draft) for the future state. eSTAR templates are guided submission-preparation tools intended to improve consistency and review efficiency. Section 745A(b) of FD&C Act (amended by FDARA § 207, 2017) mandates electronic-format standards for submissions.
+- **eCopy** is the current submission format to FDA Document Control Center per section 745A(b) of the FD&C Act and the eCopy Program guidance.
+- **eSTAR for Q-Subs** is being introduced — see the draft guidance `qsub-estar-draft-distilled.md` (May 29, 2025 draft) for the future state. eSTAR templates are guided submission-preparation tools intended to improve consistency and review efficiency. Section 745A(b) of FD&C Act mandates electronic-format standards for submissions.
 
 ## MDUFA-V FDA Response Timelines (Pre-Subs only)
 
@@ -82,11 +84,11 @@ Pre-Subs are the only Q-Sub type with MDUFA performance commitments. No user fee
 
 | Milestone | Timeline |
 |-----------|----------|
-| Acceptance Review (RTA) | Within 15 business days of receipt |
+| Acceptance Review (RTA) | Within 15 days of receipt (calendar days — per guidance footnote, "days refers to calendar days") |
 | Meeting date determined | By Day 30 (per MDUFA IV/V refinement) |
-| Written feedback provided (meeting request) | By Day 70 OR 5 business days before meeting, whichever is sooner |
+| Written feedback provided (meeting request) | By Day 70 OR 5 days before meeting, whichever is sooner |
 | Written feedback (no meeting) | By Day 70 |
-| Meeting held | Typically Day 75–90 |
+| Meeting held | Typically Day 70–75 |
 | Submitter drafts meeting minutes | Within 15 calendar days of meeting |
 | FDA reviews meeting minutes | Within 30 days of receipt |
 
@@ -131,13 +133,13 @@ Day 0:     Pre-Sub submitted
 Day 15:    RTA acceptance (or refuse — requires resubmission)
 Day 30:    Meeting date scheduled (if meeting requested)
 Day 65-70: Written feedback received
-Day 70-90: Meeting held (if requested)
-Day 90-105: Meeting minutes submitted by sponsor
-Day 105-135: FDA reviews minutes
-Day 135+:   Incorporate feedback into submission drafting
+Day 70-75: Meeting held (if requested)
+Day 75-90: Meeting minutes submitted by sponsor (within 15 days of the meeting)
+Day 90-105: FDA reviews/finalizes minutes
+Day 105+:   Incorporate feedback into submission drafting
 ```
 
-**Minimum recommended lead time before planned marketing submission: 4–5 months** to allow full Pre-Sub cycle plus incorporation time.
+**Planning estimate (not from the guidance): allow ~4–5 months** of lead time before a planned marketing submission to cover the full Pre-Sub cycle plus feedback-incorporation time.
 
 ## Key Definitions
 
@@ -149,7 +151,7 @@ Day 135+:   Incorporate feedback into submission drafting
 | **Study Risk Determination** | Q-Sub type for FDA SR/NSR/exempt determination on a planned clinical study |
 | **Informational Meeting** | Q-Sub type for sharing information with FDA without expectation of feedback |
 | **PMA Day 100 Meeting** | Statutory PMA-applicant meeting within 100 days of filing per FD&C Act § 515(d)(3)(A)(i) |
-| **RTA (Refuse to Accept)** | FDA's initial determination of whether a Pre-Sub meets minimum content requirements (within 15 business days) |
+| **RTA (Refuse to Accept)** | FDA's initial determination of whether a Pre-Sub meets minimum content requirements (within 15 calendar days) |
 | **Q-Sub Family** | Related Q-Subs for the same device/indication, tracked together with supplements and amendments |
 | **CPAM** | Combination Product Agreement Meeting per § 503(g)(2)(A) — tracked as Informational Meeting Q-Sub |
 

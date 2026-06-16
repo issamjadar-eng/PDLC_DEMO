@@ -1,5 +1,7 @@
 # FDA Guidance: Cybersecurity in Medical Devices
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/cybersecurity.md`](source-md/cybersecurity.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions
 **Document Date**: September 27, 2023
 **Status**: Final (Contains Nonbinding Recommendations)
@@ -39,6 +41,7 @@ Sponsors must provide:
 2. **Process documentation**: Design, development, and maintenance processes providing reasonable assurance the device is cybersecure
 3. **Update/patch capability**: Post-market updates and patches for known unacceptable vulnerabilities on a regular cycle, and critical vulnerabilities as soon as possible out-of-cycle
 4. **Software Bill of Materials (SBOM)**: Including commercial, open-source, and off-the-shelf software components
+5. **Other requirements**: Comply with such other requirements as the Secretary may require through regulation to demonstrate reasonable assurance of cybersecurity (the statutory catch-all)
 
 ### General Principles
 
@@ -50,6 +53,8 @@ Sponsors must provide:
 - Availability
 - Confidentiality
 - Secure and timely updateability and patchability
+
+To meet these objectives, the guidance outlines **eight security control categories** that manufacturers should consider and implement; **Appendix 1** provides specific control recommendations and implementation guidance (the source names the eight categories + Appendix 1 — consult them for the full control set).
 
 **Principle 3: Transparency.** End users need cybersecurity information to ensure continued safe use throughout the total product lifecycle.
 

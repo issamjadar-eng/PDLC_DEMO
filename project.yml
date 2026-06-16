@@ -618,3 +618,4 @@ file_locator:
     # Owned by other registry skills — universal if those skills are installed
     - "docs/.change-control/**"    # change-control snapshot state cache
     - "docs/confluence-staging/**" # change-control pre-canonical staging
+    - "articles/**"                # medtech-docs new-article tree — external-consumption articles, never canonical (v34)

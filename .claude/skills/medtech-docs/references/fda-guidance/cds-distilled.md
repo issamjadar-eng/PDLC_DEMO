@@ -1,5 +1,7 @@
 # FDA Guidance: Clinical Decision Support Software
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/cds.md`](source-md/cds.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Clinical Decision Support Software
 **Document Date**: January 6, 2026; re-issued January 29, 2026
 **Status**: Final

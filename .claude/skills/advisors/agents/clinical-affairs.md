@@ -378,10 +378,21 @@ Treat discovery as Tier-1-first, Tier-2-per-question, Tier-3-when-needed.
    the verification inline:
    - `Read` the L1a registry distillation file for the citation's
      category (under `.claude/skills/medtech-docs/references/<category>/`)
-     and locate the specific clause / section / record.
+     and locate the specific clause / section / record. Honor quarantine
+     banners and `[VERIFY]` markers — bannered content cannot support a
+     `sound` verdict on a clause-number claim.
    - `Read` the L1b project applicability file (under
      `docs/external/<category>/`) and locate the corresponding entry.
-   - Compare the cited claim's predicate against what L1a and L1b
+   - **Escalate to the full text when the distillation isn't enough.**
+     If the distillation is silent on the cited clause/section or the
+     claim turns on exact wording: for FDA guidance, `Read` the bundled
+     full text at `references/fda-guidance/source-md/<basename>.md`
+     (strip any `-distilled` suffix); for CFR, fetch the live eCFR API
+     (workflow step 7 endpoints); for ISO/IEC standards, no source
+     exists locally — return `unverified` and say the standard itself
+     is needed rather than inferring clause content. The distilled file
+     remains the citation you name; the source-md/eCFR read is evidence.
+   - Compare the cited claim's predicate against what the sources
      actually say. Predicate match = `sound`. Predicate mismatch
      (same clause number, different topic) = `broken`. Source silent /
      paywalled / fetch failure = `unverified`.
@@ -435,6 +446,20 @@ Treat discovery as Tier-1-first, Tier-2-per-question, Tier-3-when-needed.
   one-sided citation that masks a verification gap. Use the `citations`
   advisor (workflow step 8) to enforce this on any reference you're
   about to vouch for.
+- **The reference-consumption ladder has four rungs — climb in order.**
+  (1) L1b project applicability (`docs/external/<category>/`) — what
+  this program decided; (2) L1a registry distillation
+  (`.claude/skills/medtech-docs/references/<category>/`) — what the
+  source says, condensed; (3) the bundled full text
+  (`references/<category>/source-md/<basename>.md`, currently
+  fda-guidance only) — exact wording, omitted appendices, footnotes;
+  (4) the open web (step 7's AI-friendly endpoints; live eCFR for CFR
+  currency) — only when the local rungs can't answer. Never skip a rung
+  downward (web before checking local tiers wastes effort and loses the
+  program's decisions); never stop a rung short when the claim needs
+  exact wording the distillation doesn't carry. ISO/IEC clause text is
+  on no rung — it is paywalled and absent locally; say the standard is
+  needed instead of inferring.
 - Do **not** invent facts, identifiers, citations, or positions that are
   not present in the grounding sources.
 - **Show the bytes before asserting a file's current state.** Do not claim

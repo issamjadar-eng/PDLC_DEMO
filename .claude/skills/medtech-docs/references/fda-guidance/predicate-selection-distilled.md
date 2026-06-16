@@ -1,5 +1,7 @@
 # Best Practices for Selecting a Predicate Device (DRAFT)
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/predicate-selection.md`](source-md/predicate-selection.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Best Practices for Selecting a Predicate Device to Support a Premarket Notification [510(k)] Submission — Draft Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: Issued September 7, 2023
 **Status**: **DRAFT — distributed for comment purposes only; "Not for Implementation."** When finalized it will represent FDA's current thinking; until then it signals reviewer expectations but creates no obligations beyond existing statute/regulation. Check whether a final version has issued before relying on section numbering.

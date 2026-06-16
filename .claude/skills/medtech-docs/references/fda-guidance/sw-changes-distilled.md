@@ -1,5 +1,7 @@
 # FDA Guidance: Deciding When to Submit a 510(k) for a Change to an Existing Device
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/sw-changes.md`](source-md/sw-changes.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Deciding When to Submit a 510(k) for a Change to an Existing Device
 **Document Date**: October 25, 2017 (final); draft issued August 8, 2016
 **Status**: Final (Contains Nonbinding Recommendations)
@@ -26,9 +28,8 @@ The regulatory threshold: a premarket notification is required when the device i
 
 ### What This Guidance Does NOT Cover
 - Software changes (separate guidance)
-- 510(k)-exempt devices
-- PMA devices
-- Combination products (though general principles may be helpful)
+- Combination products (explicitly noted as not specifically addressed, though general principles may be helpful)
+- *(By inference — not stated as exclusions in § III:* 510(k)-exempt devices and PMA devices; this guidance addresses changes to **510(k)-cleared** devices.*)*
 
 ## Key Requirements
 
@@ -145,7 +146,6 @@ This creates a two-tier system: FDA premarket review for significant changes; QS
 
 When a new 510(k) is required:
 - Describe ALL changes since the last clearance (both those requiring and not requiring submission)
-- Clearly identify how prior deficiencies were resolved if resubmitting after NSE
 
 When a new 510(k) is NOT required:
 - Document all changes per QS regulation (21 CFR Part 820)
@@ -158,4 +158,4 @@ When a new 510(k) is NOT required:
 - **PCCP Guidances**: General PCCP and AI/ML PCCP -- for pre-specifying anticipated changes in the original submission
 - **510(k) SE Guidance**: "The 510(k) Program: Evaluating Substantial Equivalence"
 - **ISO 14971**: Risk Management for Medical Devices
-- **21 CFR Part 820**: Quality System Regulation
+- **21 CFR Part 820**: Quality System Regulation (amended Feb 2, 2024 (89 FR 7496); retitled the Quality Management System Regulation (QMSR), effective Feb 2, 2026, incorporating ISO 13485:2016 by reference)

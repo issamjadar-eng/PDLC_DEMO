@@ -1,5 +1,7 @@
 # FDA Guidance: AI-Enabled Device Software Functions -- Lifecycle Management
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/ai-dsf-lifecycle.md`](source-md/ai-dsf-lifecycle.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Artificial Intelligence-Enabled Device Software Functions: Lifecycle Management and Marketing Submission Recommendations
 **Document Date**: January 7, 2025
 **Status**: Draft -- Not for Implementation
@@ -133,7 +135,7 @@ These documents are **complementary**: this guidance tells you what to include i
 
 | Term | Definition |
 |------|-----------|
-| **Device Software Function (DSF)** | A software function that meets the device definition in section 201(h) of the FD&C Act. Includes both SaMD and SiMD. |
+| **Device Software Function (DSF)** | A software function that meets the device definition in section 201(h) of the FD&C Act. (The guidance's DSF definition does not itself use the SaMD/SiMD split.) |
 | **AI-Enabled Device** | A device that includes one or more AI-enabled device software functions (AI-DSFs). |
 | **AI-DSF** | A device software function that implements one or more AI models. |
 | **Model** | A mathematical construct that generates an inference or prediction based on new input data. |
@@ -143,7 +145,7 @@ These documents are **complementary**: this guidance tells you what to include i
 | **AI Bias** | A potential tendency to produce incorrect results systematically, which can impact safety and effectiveness within all or a subset of the intended use population. |
 | **Data Drift** | Changes in input data used during development compared to input data in actual deployments. |
 | **Reference Standard** | The best available representative truth for each patient/case/record. |
-| **Synthetic Data** | Artificially created data representing the structure, properties, and relationships of actual patient data. |
+| **Synthetic Data** | Artificially created data representing the structure, properties, and relationships of actual patient data. *(Distiller-supplied gloss — this guidance references synthetic data in passing but carries no formal definition.)* |
 
 **Terminology Warning:** FDA explicitly warns against using "validation" in the AI community sense (tuning/model selection) in marketing submissions. Use "development" for training/tuning and "validation" only for the 21 CFR 820.3(z) meaning.
 
@@ -175,7 +177,7 @@ These documents are **complementary**: this guidance tells you what to include i
 
 - 21 CFR 820.30 requires procedures to identify, document, validate or verify, review, and approve design changes before implementation
 - Nonconforming product procedures (21 CFR 820.90) and CAPA (21 CFR 820.100) apply
-- QSR transition to ISO 13485 effective February 2, 2026
+- QSR→QMSR transition: ISO 13485:2016 incorporated by reference effective February 2, 2026 *(external regulatory context, not stated in this guidance)*
 
 ## Cross-References
 
@@ -189,4 +191,4 @@ These documents are **complementary**: this guidance tells you what to include i
 - **Real-World Evidence**: Use of Real-World Evidence to Support Regulatory Decision-Making
 - **Diagnostic Statistics**: Statistical Guidance on Reporting Results from Studies Evaluating Diagnostic Tests
 - **Demographics in Studies**: Collection of Race and Ethnicity Data in Clinical Trials; Age-, Race-, and Ethnicity-Specific Data; Sex-Specific Data
-- **Standards**: ANSI/AAMI/ISO 14971 (Risk Management), AAMI CR34971 (ISO 14971 for AI/ML), ANSI/AAMI HE75 (Human Factors), ISO 13485 (QMS)
+- **Standards**: ANSI/AAMI/ISO 14971 (Risk Management), AAMI CR34971 (ISO 14971 for AI/ML). *(The guidance names only these two; ANSI/AAMI HE75 (Human Factors) and ISO 13485 (QMS) are distiller-added related standards.)*

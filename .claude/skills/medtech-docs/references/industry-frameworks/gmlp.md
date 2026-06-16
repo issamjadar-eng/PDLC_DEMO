@@ -1,5 +1,7 @@
 # Good Machine Learning Practice (GMLP) — Guiding Principles
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: Good Machine Learning Practice for Medical Device Development: Guiding Principles (October 2021)
 **Source**: FDA, Health Canada, MHRA (joint publication)
 **Referenced In**: PCCP AI/ML guidance
