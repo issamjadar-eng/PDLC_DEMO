@@ -10,7 +10,8 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - **PR #227** (hitachi, squash-merged): `submissions` v1→v2 — filing-type template profiles (`_shared/qsub/510k/pma`, renames preserve history), 510(k) + PMA template sets, `render_sidecars.py` pma registration, composition-manifest contract; deletes the 7 superseded flat templates.
 - Hitachi HEAD after merges: `82b867b`.
 - **prune**: removed 8 merged `sync/*` branches (0 unmerged kept).
-- Post-push: pulled a docflow re-advance (registry was active — advanced several times mid-session). Residual drift: only `references/fda-guidance/pccp-aiml-full.md` (project-local, unverified provenance — intentionally left, not pushed).
+- Post-push: pulled a docflow re-advance (registry was active — advanced several times mid-session). Residual drift: only `references/fda-guidance/pccp-aiml-full.md`.
+- Follow-up: confirmed `pccp-aiml-full.md` was a registry file **deleted upstream** in hitachi `297565c` (PR #218 — source-md-authoritative refactor; the standalone "full" distillation was superseded by the verbatim `source-md/` tier). Our copy (from the initial scaffold) was a stale leftover that surfaced as LOCAL_ONLY because the analyzer can't distinguish "we added" from "they deleted." **Deleted locally → skill drift now 0 (fully synced).**
 
 ## 2026-06-15 — pull (medtech-docs references refresh + advisors advance)
 

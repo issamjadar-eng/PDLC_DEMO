@@ -64,7 +64,8 @@ These were flagged out-of-scope in ben/089 PR #60 and are now owned here:
 - [x] Registry push (`/sync-skills push`): **hitachi PR #226** (references 814/807-lettering/regs-README + tracker v14 + R1 fixture) + **PR #227** (submissions v1→v2 migration w/ rename-preserving moves + 7 flat-template deletions). Hitachi HEAD `82b867b`.
 - [x] `/sync-skills prune` — removed 8 merged `sync/*` branches (0 unmerged).
 - [x] Pulled trailing docflow re-advance; **SYNCED** except `pccp-aiml-full.md` (project-local, unverified — left intentionally).
-- [ ] Final trailing commit (docflow re-advance + sync-log push entry + this doc) → PDLC_DEMO; then checkpoint.
+- [x] Final trailing commit (docflow re-advance + sync-log push entry + this doc) → PDLC_DEMO (PR #62, `1186505`).
+- [x] Closed the last residual: confirmed `pccp-aiml-full.md` was **deleted upstream** (hitachi `297565c`/PR #218 — superseded by the `source-md/` verbatim tier); deleted our stale local copy → **skill drift now 0, fully synced**.
 
 ## Open Questions
 
