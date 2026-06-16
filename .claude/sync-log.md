@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-15 — pull (medtech-docs references refresh + advisors advance)
+
+- Hitachi HEAD at sync: `88e793d` → advanced to `f3ee6f5` mid-session (a docflow update landed upstream; pulled in a second pass). Project repo also ff-pulled 1 commit: file-locator CI index.db `7e80881`.
+- Three-way buckets: UPSTREAM_ONLY 22 · LOCAL_ONLY 23 · UPSTREAM_NEWER 92 (ADVANCE 71 · LOCAL_AHEAD 8 · UNDETERMINED 13)
+- **Pulled 93 files** (86 first pass + 7 docflow in the mid-session second pass: docflow SKILL.md/agents/scripts advance + new `fidelity_adjudicator.md` agent + `verify_conversion_fidelity.py`, all clean UPSTREAM_ADVANCE/ONLY, no local docflow edits to collide): all `medtech-docs/references/fda-guidance/*` + `references/regulations/{880,892,164}` distillations advanced; new verbatim `references/regulations/source-md/*.md` + `source/*.xml` archives (807/880/892/164); advisors skill + 13 advisor agents (1-commit advance each); new `medtech-docs/rules/articles-not-canonical.md`, `templates/readme-articles.md`, `scripts/verify-conversion.py`; top-level `agents/citations*` (reference-audit). 13 UNDETERMINED agents = symlink artifact (real content pulled via advisors).
+- **Merged 2 (BOTH_DIVERGED)**: `references/regulations/21-cfr-part-807.md` (took upstream's §807.85/§807.100/§807.81 corrections + finding-aid/source-md tier, re-applied our §807.87 (a)–(m) table) and `references/regulations/README.md` (upstream refresh + re-added our Part 814 row/changelog).
+- **Skipped 7** `submissions/templates/*` UPSTREAM_ONLY — the old flat v1 templates superseded by our v2 profile reorg (do not resurrect).
+- **Held for push (no push this session, per user)**: 23 LOCAL_ONLY (submissions v2 profiled templates, `21-cfr-part-814.md`, `pccp-aiml-full.md`) + 6 LOCAL_AHEAD (submissions SKILL/README/VERSION/render_sidecars, tracker SKILL/README) + the 2 merged files above.
+- project.yml: added `file_locator.corpus_excludes: "articles/**"` (medtech-docs v34 post-update); allowlists already current (citations agents + reference-audit present).
+- Post-update: symlinked `.claude/rules/articles-not-canonical.md` (medtech-docs v34). Advisor GROUNDING re-render (`/advisors sync`) recommended but not yet run.
+- Doc-eval (medtech-docs v32/v33 reference corrections): project docs clean — no §807.85/§807.100/§807.87(k) miscitations in `docs/`; only §807.81(a)(3) cited (correct). Optional enhancement: cite §807.81(b) PCCP carve-out in `pccp-summary.md`.
+- Follow-ups: 6 stale `sync/*` branches (run `/sync-skills prune`); held push candidates above; R1/R2 (ben/090).
+
 ## 2026-06-01 — push (file-locator v2 — self-healing venv bootstrap wrapper)
 
 - Files: `skills/file-locator/SKILL.md`, `skills/file-locator/README.md`, `skills/file-locator/templates/bootstrap.sh` (new, `100755`), `skills/file-locator/templates/mcp.json.snippet`

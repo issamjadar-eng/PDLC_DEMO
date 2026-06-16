@@ -1,5 +1,7 @@
 # HL7 FHIR — Fast Healthcare Interoperability Resources
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: HL7 FHIR R4 (v4.0.1, normative) / R5 (v5.0.0)
 **Source**: Health Level Seven International (HL7)
 **Referenced In**: Healthcare interoperability; ONC Cures Act requirements; increasingly expected by FDA for connected devices

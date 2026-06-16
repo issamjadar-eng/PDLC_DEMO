@@ -1,8 +1,9 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified shared strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market, operations; topic-first with per-component callouts"
-version: 19
-updated: 2026-05-03
+version: 20
+updated: 2026-06-15
+# v20: De-rendered the Domain Registry + init-briefs sentinel tables out of this SKILL.md. They rendered project-specific project.yml:strategy_domains[] data into a registry-shared skill file → permanent per-project sync drift. The /strategy actions already read project.yml:strategy_domains[] directly (scanner/assembler); the SKILL.md now documents the schema + points to project.yml (source) and the project-local docs/project/strategies/README.md (rendered roster). Paired with render-sentinels.py guard (refuses to write under .claude/skills/**) + the sentinel-blocks rule guardrail.
 # v19: Added Q-Sub Authoring Guardrails section — HARD RULE that authors must load current regulator Q-Sub guidance into context before drafting Q-Sub strategy content; codifies the agreement-seeking pattern and the patterns-to-avoid list per FDA Q-Submission Program guidance.
 # v18: Added Design Philosophy + Agent Contract sections making narrative-first explicit. Schema unchanged from v16 (the v17 metadata-field additions were reverted — see Design Philosophy for why).
 ---
@@ -288,22 +289,18 @@ The lightest-weight alternative to marking a block as superseded: simply delete 
 
 ## Domain Registry
 
-Each domain has a key, output path, template, and list of formal plans it informs. **All domains are `shared`** (v10) — one output file per domain, project-wide. Strategy is a cross-component story: per-component nuance lives as callout subsections inside the shared doc, not as separate per-DHF files.
+Each domain entry has a `key`, `name`, `scope` (all domains are `shared` in v10+), `output_path`, `template`, `scope_description`, `plans_informed[]`, `what_belongs_here[]`, and `plans_table[]`. One output file per domain, project-wide — strategy is a cross-component story; per-component nuance lives as callout subsections inside the shared doc, not as separate per-DHF files.
 
-**Source of truth**: this table is rendered from `project.yml:strategy_domains[]` via a sentinel block (see `.claude/rules/sentinel-blocks.md`). Edit `project.yml`, then run `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py .claude/skills/strategy/SKILL.md` (or invoke via `/medtech-docs` / `/best-practices fix`).
+**Source of truth: `project.yml strategy_domains[]`.** Read it directly — every `/strategy` action does (`agents/scanner.md` and `agents/assembler.md` load the catalog from the manifest at startup). This skill documents the *schema and mechanism*; it deliberately does **not** embed a project's domain roster. A registry-shared skill must stay project-agnostic — materializing a specific project's `project.yml` into the skill body bakes project content into a shared file and causes permanent per-project sync drift. The human-readable roster instead renders into the **project-local** `docs/project/strategies/README.md` (which carries its own `strategy-domains` sentinel). **Rule: render project data into project-local files (CLAUDE.md, `docs/**` READMEs) — never into skill files.** `render-sentinels.py` enforces this by refusing to write under `.claude/skills/**` (see `.claude/rules/sentinel-blocks.md`).
 
-<!-- AUTO:STRUCTURE kind=strategy-domains source=project.yml:strategy_domains variant=registry -->
-| Domain Key | Domain Name | Scope | Output Path | Template | Plans Informed |
-|-----------|------------|-------|-------------|----------|----------------|
-| `regulatory` | Regulatory | shared | `docs/project/strategies/regulatory-strategy.md` | `regulatory-strategy.md` | 510(k), PCCP, Q-Sub, LMR |
-| `commercial` | Commercial | shared | `docs/project/strategies/commercial-strategy.md` | `default-strategy.md` | Go-to-market plan, Business case, Market expansion |
-| `architecture` | Architecture | shared | `docs/project/strategies/architecture-strategy.md` | `default-strategy.md` | SAD (per DHF), SRS, cybersecurity plan |
-| `development` | Development | shared | `docs/project/strategies/development-strategy.md` | `default-strategy.md` | SDP, Config Mgmt Plan |
-| `testing` | Testing & Validation | shared | `docs/project/strategies/testing-strategy.md` | `default-strategy.md` | V&V Plan, test protocols, usability plan |
-| `risk` | Risk | shared | `docs/project/strategies/risk-strategy.md` | `default-strategy.md` | Risk Mgmt Plan (per DHF), FMEA, risk-benefit analysis |
-| `postmarket` | Post-Market | shared | `docs/project/strategies/postmarket-strategy.md` | `default-strategy.md` | Maintenance Plan, PMS Plan (per DHF), LMR, PCCP tracking |
-| `operations` | Operations & Tooling | shared | `docs/project/strategies/operations-strategy.md` | `default-strategy.md` | CI/CD & release pipeline, SBOM/SOUP supply chain, cloud infrastructure, QMS operational posture, PM plan, tooling & agentic-infra roadmap, team onboarding |
-<!-- /AUTO:STRUCTURE -->
+**Domains are lifecycle-staged — set scope to the project's current stage.** A domain's *authoritative* home shifts as the program matures, and the per-domain `scope_description` / `what_belongs_here` in `project.yml strategy_domains[]` is where each project records where it currently sits. The **architecture** domain is the clearest case:
+
+- **Early** (the design outputs — SAD / architecture documents — don't exist yet or aren't mature): the strategy doc is the **authoritative** home for architecture decisions (module boundaries, platform/technology selection, data-flow design) and *seeds* the eventual design outputs.
+- **Mature** (the design outputs are controlled and current): the **design outputs become canonical** for architecture *facts*; the strategy doc becomes **additive** — forward-looking direction not yet a design input, plus cross-cutting rationale beyond the controlled record — and **defers to** the design outputs (never restates them).
+
+Express the current stage by editing that domain's `scope_description` + `what_belongs_here` in `project.yml` (and re-render the project-local `docs/project/strategies/README.md`). Keep the project's `CLAUDE.md` architecture-discipline language echoing the same `scope_description` so the two don't drift — `project.yml strategy_domains[]` is the source; `CLAUDE.md` is the echo.
+
+_(The per-project domain roster is not embedded here — read it from `project.yml strategy_domains[]`, or view the rendered roster in the project-local `docs/project/strategies/README.md`.)_
 
 **Output path resolution**: The path column is literal. One output file per domain, regardless of how many DHFs the project has. Cross-component nuance is carried by **per-component callout subsections** inside each shared doc (see `templates/default-strategy.md`).
 
@@ -316,7 +313,7 @@ Each domain has a key, output path, template, and list of formal plans it inform
 - `clinical` → inside `regulatory` until a clinical study is needed
 - `cybersecurity` → inside `architecture` until Section 524B complexity warrants separation
 
-**Adding a new domain:** Add a row to the registry table above, optionally create a custom template in `templates/`. No other changes needed.
+**Adding a new domain:** Add an entry to `project.yml strategy_domains[]` (or use `/strategy domains add`), optionally create a custom template in `templates/`. No other changes needed.
 
 ### Strategy → Plan Traceability
 
@@ -360,31 +357,18 @@ Parse the user's argument string `$ARGUMENTS` to determine which action to perfo
 
 Generate placeholder strategy briefs for all domains that don't yet have a strategy document (neither a brief nor an assembled document). Safe to re-run — skips domains that already have a file at their output path.
 
-1. For each domain in the registry:
+1. For each domain in `project.yml strategy_domains[]`:
    a. Check if a file exists at the domain's output path. If yes, skip (already has a brief or assembled document).
    b. Read the brief template from `${CLAUDE_SKILL_DIR}/templates/strategy-brief.md`.
-   c. Replace template variables using the domain brief content table below:
-      - `{{DOMAIN_NAME}}` — domain display name
-      - `{{DOMAIN_KEY}}` — domain key
-      - `{{WHAT_BELONGS_HERE}}` — bullet list of what belongs in this domain
-      - `{{PLANS_TABLE}}` — table rows for plans this domain informs
+   c. Replace template variables from the domain's entry in `project.yml strategy_domains[]`:
+      - `{{DOMAIN_NAME}}` — the domain's `name`
+      - `{{DOMAIN_KEY}}` — the domain's `key`
+      - `{{WHAT_BELONGS_HERE}}` — bullet list built from the domain's `what_belongs_here[]`
+      - `{{PLANS_TABLE}}` — table rows built from the domain's `plans_table[]`
    d. Write the brief to the domain's output path.
 2. Report which briefs were created and which were skipped.
 
-**Domain brief content** (rendered from `project.yml:strategy_domains[]` — edit the manifest, not this table):
-
-<!-- AUTO:STRUCTURE kind=strategy-domains source=project.yml:strategy_domains variant=init-briefs -->
-| Domain | What Belongs Here | Plans Table Rows |
-|--------|------------------|-----------------|
-| `regulatory` | Filing pathway and classification decisions; Multi-jurisdiction strategy (US, EU, Canada); Predicate device selection rationale; PCCP scope decisions; Q-Sub questions and FDA feedback | 510(k) Submission \| Filing pathway, submission structure; PCCP \| Change categories, module scope; Q-Sub \| Questions for FDA; LMR \| Post-clearance tracking |
-| `commercial` | Market entry sequence and timing; Launch phasing (which modules ship first); Pricing and reimbursement strategy; Competitive positioning; Customer segmentation; Geographic expansion plans | Go-to-market plan \| Market entry, launch timing; Business case \| Revenue model, pricing; Market expansion \| New indications, geographies |
-| `architecture` | Module boundaries and SaMD/non-SaMD split; Technology and vendor selection rationale; Platform decisions; Data architecture and flow design; Cybersecurity architecture approach (until promoted to own domain) | SAD \| Module boundaries, interfaces; SRS \| Requirements-driven architecture decisions; Cybersecurity plan \| Security architecture approach |
-| `development` | Development methodology (agile within design controls); Branching and release strategy; Environment management; SOUP/third-party component strategy; CI/CD approach; Coding standards decisions | SDP \| Development process, lifecycle; Config Mgmt Plan \| Branching, versioning, environments |
-| `testing` | Test strategy (bench vs. clinical); Acceptance criteria philosophy; AI/ML validation approach; Usability testing strategy (formative vs. summative); Test infrastructure and dataset management; Regression testing approach | V&V Plan \| Test strategy, protocols; Test protocols \| Acceptance criteria; Usability plan \| Formative/summative approach |
-| `risk` | Risk-benefit framing and acceptable risk thresholds; FMEA methodology decisions; Risk-driven architecture decisions; Cross-module risk interactions; Post-market risk monitoring approach | Risk Mgmt Plan \| Risk methodology, thresholds; FMEA \| Hazard analysis approach; Risk-benefit analysis \| Framing for submission |
-| `postmarket` | Post-market surveillance strategy; Complaint handling approach; Field safety and corrective action; Maintenance cadence and update strategy; LMR structure and reporting cadence; PCCP change tracking process | Maintenance Plan \| Update cadence, process; PMS Plan \| Surveillance approach; LMR \| Change tracking; PCCP tracking \| Modification reporting |
-| `operations` | Build, release, and CI/CD pipeline decisions; Supply chain and SOUP/SBOM management; Cloud infrastructure and hosting posture; QMS operational readiness; Project management approach; Tooling and agentic infrastructure decisions; Skill and automation roadmap; Team workflow, onboarding, and knowledge management | CI/CD & release plan \| Build, release, signing; SBOM/SOUP register \| Supply chain posture; Cloud ops runbook \| Hosting, facility equivalent; QMS operational plan \| Design-controls readiness; PM plan \| Ways of working; Tooling roadmap \| Agentic infra, automation; Team onboarding \| Knowledge transfer |
-<!-- /AUTO:STRUCTURE -->
+**Domain brief content** comes from each domain's `what_belongs_here[]` + `plans_table[]` in `project.yml strategy_domains[]` — `/strategy init` reads them straight from the manifest (it does not parse a table here). Edit the manifest to change what a domain's brief scaffolds.
 
 **Note:** The `assemble` action checks for `<!-- Status: awaiting-content -->` in the target file. If present, it replaces the entire file with the assembled document. If not present (already assembled), it regenerates normally.
 
@@ -651,7 +635,7 @@ Summary: 4/5 passed | 0 failed | 1 warning
 
 List all domains with their current status.
 
-1. Read `project.yml:strategy_domains[]` to get the canonical catalog (fallback: the Domain Registry table above, which is rendered from the same source).
+1. Read `project.yml:strategy_domains[]` to get the canonical catalog (fallback: the hard-coded defaults in `agents/scanner.md` if the manifest is missing).
 2. Run `scan` to determine which domains have tagged content.
 3. Check which domains have assembled documents at their output paths.
 4. Report:
@@ -814,7 +798,7 @@ then launch via Agent tool with subagent_type=Explore.
 Read agents/assembler.md, replace template variables:
   {{DOMAIN_KEY}}     — e.g., "regulatory"
   {{DOMAIN_NAME}}    — e.g., "Regulatory"
-  {{OUTPUT_PATH}}    — from domain registry table
+  {{OUTPUT_PATH}}    — the domain's output_path from project.yml strategy_domains[]
   {{TEMPLATE_TYPE}}  — "custom" if domain has a custom template, "default" otherwise
   {{TASK_ID}}        — current active task ID (for task gate)
   {{SESSION_ID}}     — current session UUID (from printenv CLAUDE_SESSION_ID)

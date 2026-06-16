@@ -1,5 +1,7 @@
 # FDA Guidance — Electronic Submission Template for Medical Device 510(k) Submissions
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/510k-estar.md`](source-md/510k-estar.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Electronic Submission Template for Medical Device 510(k) Submissions — Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: October 2, 2023 (originally issued September 22, 2022)
 **Status**: **Final — partially binding.** Insofar as it provides "standards," "timetable," or "criteria for waivers and exemptions" under FD&C Act § 745A(b)(3), it has binding effect (exempt from the usual 21 CFR 10.115(d) nonbinding-guidance restriction); other provisions are nonbinding recommendations

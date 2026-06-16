@@ -1,8 +1,8 @@
 ---
 name: gap-analysis
 description: "Substantive content-gap analysis of medtech project artifacts — scaffolds and tracks structured gap-assessment markdown under `docs/_analysis/<component>/` that critiques the project's own work product (hazard-register conformance vs ISO 14971, FMEA scoring consistency, SRA / SAD / SRS adequacy vs IEC 62304, predicate-analysis sufficiency, V&V coverage holes, cybersecurity threat-model rigor, human-factors usability-engineering completeness, post-market surveillance loop integrity, filing-readiness arguments). Distinct from `/best-practices` (structural folder/file checks), `/dhf-manifest` (manifest coverage of regulatory obligations), `/jira-pull audit` (Jira-vs-DTM/HTM drift), and `/trace-matrix` (trace-edge integrity) — this skill answers 'is the CONTENT methodologically correct against standards and internal sources?'. Provides actions: `init` (scaffold a new gap-analysis from the template), `list` (roll-up open analyses by status / topic / component), `route` (which advisor agents to consult for a topic), `fan-out` (spawn advisor agents with grounding paths pre-loaded), `render` (derive JSON sidecars for the project-console Gap Analysis view). Topic→advisor routing is advisory (soft suggestions), not gated. TRIGGER when the user asks for a 'gap analysis of <topic>', 'analyze our <document>', 'critique the hazard register', 'find issues with our <artifact>', 'compare our <X> against <standard>', 'are our <artifacts> per standards', 'audit the content of <doc>', or wants to assert findings about project content."
-version: 6
-updated: 2026-06-04
+version: 7
+updated: 2026-06-05
 ---
 
 # Gap Analysis Skill
@@ -58,7 +58,7 @@ docs/_analysis/<component>/<id>/
 ├── README.md                       ← folder meta + reading order + file inventory
 ├── <id>.md                         ← aggregate / final-report (start here)
 ├── <id>.yml                        ← optional structured-data sidecar (dashboard-consumable)
-├── recs-<discipline>.md            ← per-discipline prescription detail (one per fan-out advisor)
+├── recs-<advisor>.md               ← per-advisor prescription detail (REQUIRED, one per fan-out advisor; filename = advisor/subagent name verbatim — console advisor-tab contract)
 ├── research-<topic>.md             ← public-precedent + published-methodology research substantiation
 └── <named-sidecar>.md              ← analysis-specific extras (e.g., qsub-questions.md)
 ```
@@ -68,9 +68,10 @@ Rationale:
 - The aggregate file's `id:` frontmatter matches the folder name. Internal cross-references inside the folder use short relative paths (e.g., `[recs-risk-management.md](recs-risk-management.md)`), not legacy long-prefix forms.
 - Each detail file's frontmatter carries `parent_analysis: <id>` so a `list` walk can roll up the cluster as a unit.
 - The aggregate is **comprehensive enough to make decisions from**, but defers full step-by-step prescriptions, complete evidence base, and verbatim worked examples to the linked detail files. It is not an executive summary; it is a final report with deep references.
-- **Worked examples (before / after) live in the aggregate's per-finding sections** — they are the most teachable content the analysis produces and must not be pushed out into appendix files. Per-finding detail prescriptions (owner roles, artifacts-touched, acceptance criteria, full evidence base, references) live in the `recs-<discipline>.md` files.
+- **Worked examples (before / after) live in the aggregate's per-finding sections** — they are the most teachable content the analysis produces and must not be pushed out into appendix files. Per-finding detail prescriptions (owner roles, artifacts-touched, acceptance criteria, full evidence base, references) live in the `recs-<advisor>.md` files.
+- **`recs-<advisor>.md` is a REQUIRED fan-out output, and its filename is a load-bearing contract.** It must equal `recs-<recommended_agents value>.md` (the advisor / subagent name verbatim, e.g. `recs-regulatory-affairs.md`). The project console matches the sidecar `agents[]` `name` against a sibling whose stem is `recs-<name>` to populate its advisor tab; a mismatched name leaves the tab empty. `/gap-analysis render --check` flags any recommended/contributing agent missing its `recs-<name>.md`.
 
-The `init` action scaffolds the folder + README + aggregate file. The `fan-out` action writes advisor outputs to the same folder using the `recs-<discipline>.md` naming pattern. The `list` action walks subdirectories rather than individual files.
+The `init` action scaffolds the folder + README + aggregate file. The `fan-out` action writes **two outputs per advisor** to the same folder: the required `recs-<advisor>.md` writeup plus condensed F-N findings appended to the aggregate. The `list` action walks subdirectories rather than individual files.
 
 ## Supporting Files
 
@@ -130,7 +131,16 @@ Print recommended advisor agents for a topic.
 
 ### `fan-out <id>`
 
-Spawn the recommended advisor agent(s) to draft per-discipline prescription files inside the analysis folder, then (when multiple advisors return) aggregate convergence signals into the aggregate file.
+Spawn the recommended advisor agent(s) to produce **two required outputs per advisor** (HARD RULE), then (when multiple advisors return) aggregate convergence signals into the aggregate file.
+
+**Two required outputs per advisor:**
+
+1. **`recs-<advisor>.md`** — the advisor's full per-discipline writeup, written into the analysis folder. This is the **required** primary deliverable. The project-console advisor tab (`console/gap_analysis/loader.py:load_narratives`) reads these files directly off disk and renders each in its own advisor tab.
+2. **Aggregate contributions** — condensed F-N findings appended to the aggregate's `## Findings` + a `## Changelog` `agent:<name>` row. These feed the structured findings cards and the sidecar `agents[]` array.
+
+A fan-out that produced findings but no `recs-<advisor>.md` is **incomplete** — `/gap-analysis render --check` flags it.
+
+> **Console naming contract (HARD RULE).** The `recs-` filename must be exactly `recs-<recommended_agents value>.md` — the advisor / subagent name verbatim (e.g. `recs-regulatory-affairs.md`, `recs-vnv-lead.md`). The console matches the sidecar `agents[]` `name` (derived from `recommended_agents` / F-N `Author: agent:<name>` / the `agent:<name>` changelog row) against a sibling whose stem is `recs-<name>`. A mismatched filename leaves the advisor tab empty even though the file exists.
 
 1. Locate the folder by `<id>` across all `_analysis/<component>/` subdirectories. Error if not unique. The aggregate file is at `<folder>/<id>.md`.
 2. Read the aggregate file's frontmatter — extract `recommended_agents`, `grounded_against`, `topic`, `component`, and the Goal + Source + Findings + Methodology sections.
@@ -138,7 +148,7 @@ Spawn the recommended advisor agent(s) to draft per-discipline prescription file
    - States the goal verbatim
    - Lists the grounded-against paths plus sibling `recs-*.md` and `research-*.md` files already in the folder (so the advisor reads them with Read first and references rather than duplicates)
    - Lists the F-N findings the advisor owns (per the topic-to-advisor mapping in `data/topic-advisor-map.yml`)
-   - Asks the advisor to write a NEW per-discipline file `recs-<advisor>.md` inside the analysis folder, structured as: what-the-standard-says → what-we-do-instead → walk-through → worked example (before/after) → why-this-project-specifically → step-by-step prescription with owners + acceptance criteria → evidence base → cross-discipline open questions
+   - Asks the advisor to write its full writeup to `recs-<advisor>.md` (named exactly per the console naming contract above), structured as: what-the-standard-says → what-we-do-instead → walk-through → worked example (before/after) → why-this-project-specifically → step-by-step prescription with owners + acceptance criteria → evidence base → cross-discipline open questions — AND to contribute condensed F-N findings + a changelog row to the aggregate
    - Reminds the advisor that worked examples in their detail file are extended versions of the aggregate's per-finding worked example, not duplicates — the aggregate's example is the teaching summary; the detail file goes deeper with multiple cases
 4. Use the `Agent` tool to invoke each advisor. Research-substantiation agents (general-purpose) write `research-<topic>.md` files in the same folder, providing the citation base the advisors reference.
 5. **Convergence detection (when ≥2 advisor files return).** After siblings return, scan their `## Findings` / `## Recommendations` sections for findings that appear in ≥2 advisor files with different framings (e.g., Clinical, HF, and Cyber independently identifying "surgeon-in-the-loop ceiling" from different anchors). Surface these as `convergence:` items in the aggregate's "Top actions + execution roadmap" section — these are high-confidence calls because three disciplines reached the same root cause from different evidence bases.
@@ -146,11 +156,11 @@ Spawn the recommended advisor agent(s) to draft per-discipline prescription file
 
 The skill never edits an advisor's detail file directly during fan-out — advisors author their own. The skill DOES update the aggregate file to incorporate convergence findings + the open-questions roll-up (which is the synthesis layer the aggregate exists to carry).
 
-> **Advisor write-back note.** The registry advisor agents are read-only (`Read/Glob/Grep/WebFetch/file-locator`), and a subagent does not hold the parent session's task-gate. In practice the fan-out **conductor** (the task-active main session) collects each advisor's returned findings and appends them to the file; the advisors return structured F-N findings rather than editing directly. Either way the file is the human-reviewed merge point.
+> **Advisor write-back note.** The registry advisor agents are read-only (`Read/Glob/Grep/WebFetch/file-locator`), and a subagent does not hold the parent session's task-gate. In practice the fan-out **conductor** (the task-active main session) is responsible for **both** outputs: it collects each advisor's returned writeup and writes it to `recs-<advisor>.md` (named exactly per the console naming contract), and it appends the condensed F-N findings + changelog row to the aggregate. The advisors return content; the conductor lands it. Either way the files are the human-reviewed merge point.
 
-After fan-out appends findings, run **`/gap-analysis render`** to refresh the JSON sidecars the console consumes.
+After fan-out lands the `recs-*` files + aggregate findings, run **`/gap-analysis render`** to refresh the JSON sidecars the console consumes, then **`/gap-analysis render --check`** to confirm every recommended/contributing agent has its matching `recs-<name>.md`.
 
-### `render [--check]`
+### `render [--check] [--strict-recs]`
 
 Derive JSON sidecars from the analysis markdown for the project-console Gap Analysis view (and any other machine consumer). See `actions/render.md` for the full schema.
 
@@ -159,7 +169,8 @@ Derive JSON sidecars from the analysis markdown for the project-console Gap Anal
    python3 .claude/skills/gap-analysis/scripts/render_sidecars.py
    ```
 2. It writes `docs/_analysis/<component>/<id>/<id>.gap.json` (per-analysis detail) + `docs/_analysis/index.json` (roll-up). The markdown stays the single source of truth; the JSON is a regenerated projection (idempotent; never hand-edited).
-3. `--check` writes nothing and exits non-zero on missing/stale sidecars — for CI / `/best-practices` drift checks.
+3. `--check` writes nothing and exits non-zero (2) on missing/stale sidecars — for CI / `/best-practices` drift checks (sidecar staleness only).
+4. **Recs-completeness audit (always runs).** Every contributing agent should have a matching `recs-<name>.md` writeup the console advisor tab can discover; any gap prints a `WARN <id>: missing recs-<name>.md` line. This is advisory by default; pass `--strict-recs` to make a gap a non-zero exit (3) — warn-by-default avoids turning `/best-practices` red on pre-dual-output analyses.
 
 Run after `init` (register the new analysis in the index) and after `fan-out` (project the appended findings), or whenever an analysis markdown is hand-edited. The console degrades gracefully when sidecars are absent (empty-state hint), mirroring the trace-matrix view.
 

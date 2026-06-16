@@ -1,5 +1,7 @@
 # 21 CFR Part 880 — General Hospital and Personal Use Devices
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary with selected commentary. Ground and cite the faithful verbatim full text [`source-md/21-cfr-part-880.md`](source-md/21-cfr-part-880.md) (a no-LLM transcription of the eCFR XML), not this file. Regulations change — verify currency against the live eCFR before relying on it in a submission. `[VERIFY]` marks are unconfirmed.
+
 **Citation**: 21 CFR Part 880 (Title 21, Chapter I, Subchapter H)
 **Authority**: 21 U.S.C. 351, 360, 360c, 360e, 360j, 360l, 371
 **Promulgating Agency**: FDA / CDRH
@@ -37,11 +39,11 @@ This distillation focuses on **Subpart A § 880.9** (the exemption-limitation fr
 
 ### § 880.9 — Limitations of exemptions from section 510(k)
 
-> The exemption from the requirement of premarket notification (510(k)) for a generic type of device is only to the extent that the device has existing or reasonably foreseeable characteristics of commercially distributed devices within that generic type or, in the case of in vitro diagnostic devices, only to the extent that misdiagnosis as a result of using the device would not be associated with high morbidity or mortality. Accordingly, manufacturers of any commercially distributed device for which FDA has granted an exemption from the requirement of premarket notification must still submit a premarket notification to FDA before introducing or delivering for introduction into interstate commerce for commercial distribution the device when:
+> The exemption from the requirement of premarket notification (section 510(k) of the act) for a generic type of class I or II device is only to the extent that the device has existing or reasonably foreseeable characteristics of commercially distributed devices within that generic type or, in the case of in vitro diagnostic devices, only to the extent that misdiagnosis as a result of using the device would not be associated with high morbidity or mortality. Accordingly, manufacturers of any commercially distributed class I or II device for which FDA has granted an exemption from the requirement of premarket notification must still submit a premarket notification to FDA before introducing or delivering for introduction into interstate commerce for commercial distribution the device when:
 >
 > **(a)** The device is intended for a use different from the intended use of a legally marketed device in that generic type of device; e.g., the device is intended for a different medical purpose, or the device is intended for lay use where the former intended use was by health care professionals only;
 >
-> **(b)** The modified device operates using a different fundamental scientific technology than a legally marketed device in that generic type of device; e.g., a surgical instrument cuts tissue with a laser beam rather than with a sharpened metal blade, or an in vitro diagnostic device detects or identifies infectious agents by using deoxyribonucleic or ribonucleic acid hybridization or amplification rather than culture or immunoassay techniques; or
+> **(b)** The modified device operates using a different fundamental scientific technology than a legally marketed device in that generic type of device; e.g., a surgical instrument cuts tissue with a laser beam rather than with a sharpened metal blade, or an in vitro diagnostic device detects or identifies infectious agents by using deoxyribonucleic acid (DNA) probe or nucleic acid hybridization technology rather than culture or immunoassay technology; or
 >
 > **(c)** The device is an in vitro device that is intended:
 > > (1) For use in the diagnosis, monitoring, or screening of neoplastic diseases with the exception of immunohistochemical devices;
@@ -74,7 +76,7 @@ The same pattern appears in other 800-series parts: § 892.9 for radiology, § 8
 >
 > **(4)** The electronic display of medical device data.
 >
-> An MDDS may include electronic or electrical hardware such as a physical communications medium (including wireless hardware), modems, and interfaces. An MDDS is not intended to be used in connection with active patient monitoring.
+> **(2)** An MDDS may include electronic or electrical hardware such as a physical communications medium (including wireless hardware), modems, and interfaces. This identification does not include hardware devices intended to be used in connection with active patient monitoring. Hardware devices for active patient monitoring are classified under other regulations and are not included in this regulation.
 
 (Emphasis added on "hardware device". Lead-in sentence, paragraph (b), and amendment citation confirmed verbatim against the live eCFR API 2026-06-11; subparagraph wording transcribed via machine-assisted retrieval — [VERIFY subparagraph punctuation against eCFR before quoting in a submission].)
 

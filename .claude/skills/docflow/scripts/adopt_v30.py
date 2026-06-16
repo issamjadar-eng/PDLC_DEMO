@@ -456,7 +456,7 @@ def cmd_assemble(staging_dir: Path) -> dict:
 
 # --- validate ---
 
-def cmd_validate(staging_dir: Path) -> int:
+def cmd_validate(staging_dir: Path, source_path: Optional[Path] = None) -> int:
     final_md = staging_dir / "final.md"
     if not final_md.exists():
         print(json.dumps({"error": f"final.md not found at {final_md}"}), file=sys.stderr)
@@ -466,6 +466,12 @@ def cmd_validate(staging_dir: Path) -> int:
     # check is anchor-aware. Saves the user from passing --expected-* flags.
     cache_file = staging_dir / "all.txt"
     args = ["python3", str(SCRIPTS_DIR / "validate_phase7.py"), str(final_md)]
+    # Prose-fidelity check (PDF sources only — flags converted prose absent from
+    # the source). validate_phase7 returns `prose_fidelity: warn` + spans for
+    # adjudication; the adopter agent (adopter.md Phase 7) spawns the
+    # fidelity-adjudicator on a warn before committing.
+    if source_path and source_path.exists() and source_path.suffix.lower() == ".pdf":
+        args.extend(["--source", str(source_path)])
     if cache_file.exists():
         cache = cache_file.read_text(encoding="utf-8", errors="ignore")
         link_matches = [
@@ -513,7 +519,7 @@ def cmd_all(source_pdf: Path, dhf: str, dhf_area: str, staging_dir: Path) -> int
     _log("all: skipping agent fan-out (SKILL.md would spawn agents here)")
     a = cmd_assemble(staging_dir)
     print(json.dumps({"plan_wall_s": plan["wall_clock_s"], "assemble": a}, indent=2))
-    return cmd_validate(staging_dir)
+    return cmd_validate(staging_dir, source_pdf)
 
 
 # --- main ---
@@ -534,6 +540,8 @@ def main() -> int:
 
     p_val = sub.add_parser("validate")
     p_val.add_argument("staging_dir")
+    p_val.add_argument("--source", default=None,
+                       help="Source PDF for the prose-fidelity check (optional)")
 
     p_com = sub.add_parser("commit")
     p_com.add_argument("staging_dir")
@@ -564,7 +572,8 @@ def main() -> int:
             print(json.dumps(r, indent=2))
             return 0
         if args.cmd == "validate":
-            return cmd_validate(Path(args.staging_dir).resolve())
+            src = Path(args.source).resolve() if args.source else None
+            return cmd_validate(Path(args.staging_dir).resolve(), src)
         if args.cmd == "commit":
             return cmd_commit(Path(args.staging_dir).resolve(), Path(args.dhf_area_dir).resolve())
         if args.cmd == "all":

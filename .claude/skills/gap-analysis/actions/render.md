@@ -5,12 +5,23 @@ Derive machine-readable JSON sidecars from the gap-analysis markdown so downstre
 ## Usage
 
 ```
-/gap-analysis render [--check]
+/gap-analysis render [--check] [--strict-recs]
 ```
 
 ## Arguments
 
-- **`--check`** (optional) — don't write; exit non-zero if any sidecar is missing or stale relative to its markdown. For CI / `/best-practices` drift checks.
+- **`--check`** (optional) — don't write; exit non-zero (2) if any sidecar is missing or stale relative to its markdown. For CI / `/best-practices` drift checks. Exit code reflects **sidecar staleness only** — backward-compatible with existing consumers.
+- **`--strict-recs`** (optional) — turn the advisory recs-completeness audit into a hard gate: exit non-zero (3) if any **contributing** agent (one that authored a finding or has an `agent:` changelog row) lacks a matching `recs-<name>.md` writeup beside the aggregate. Combine with `--check` for CI enforcement. Without this flag, missing recs files are still printed as advisory `WARN` lines (stderr) but do not affect the exit code.
+
+## Recs-completeness audit (always runs)
+
+In **every** mode, the renderer audits each analysis for the console advisor-tab requirement: every contributing agent in the sidecar `agents[]` should have a sibling writeup the console can discover (`recs-<name>.md`, matched exactly as `console/gap_analysis/loader.py:load_narratives` does). Any gap prints:
+
+```
+  WARN <analysis-id>: contributing agent(s) without a writeup — missing recs-<name>.md
+```
+
+This is **advisory by default** (a merely-recommended agent that never contributed is not flagged — that's "fan-out not done yet"). Pass `--strict-recs` to make it a non-zero exit. Rationale for warn-by-default: pre-existing analyses authored before the dual-output fan-out contract (e.g. aggregate-only `qsub-*` analyses) would otherwise turn `/best-practices` red without any new authoring error.
 
 ## What it produces
 

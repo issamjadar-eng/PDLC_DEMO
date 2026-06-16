@@ -2,7 +2,7 @@
 
 **ID**: 089
 **Created**: 2026-06-15
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -41,7 +41,7 @@ Close the four follow-up gaps surfaced by ben/088's two-agent verification of th
 - [x] B3 — authored `GL-WI-RA-003` (PMA WI) at `regulatory-affairs/` mirroring GL-WI-RA-001; registered in qms-index + RA README
 - [x] Re-verified PMA template `814.20(b)(...)` citations against B1 — fixed two stubs: device-description `(b)(3)`→`(b)(4)` (complete description); manufacturing `(b)(4)(v)`→`(b)(4)` (eCFR shows no (b)(4)(v) sub-item)
 - [x] qms-index counts updated (WI 11→12, Forms 10→11, Total 67→69) + rev 1.2 row
-- [ ] Verify + push (commit → branch → PR → auto-merge); checkpoint
+- [x] Verify + push — PR #60 merged to `main` (`8a48b1d`); branch deleted. Status → Complete.
 
 ## Open Questions
 
@@ -51,3 +51,4 @@ Close the four follow-up gaps surfaced by ben/088's two-agent verification of th
 ## Changelog
 
 - 2026-06-15: Task created — B1–B4 follow-up backlog spun out of ben/088's verification. Scope: references (B1/B4, project-agnostic) + representative QMS docs (B2/B3).
+- 2026-06-15: **All four closed + shipped.** B4 pinned §807.87 (a)–(m) letters (eCFR-verified) in `21-cfr-part-807.md`; B1 authored `21-cfr-part-814.md` PMA distillation (§814.20 verbatim-verified) + regulations README index; re-verified PMA template citations (2 stubs fixed); B3 authored `GL-WI-RA-003` (PMA WI); B2 authored `GL-FORM-RA-001` + `regulatory-affairs/templates/` README; registered both in qms-index (67→69, rev 1.2) + RA README. `render --check` clean; new links resolve. **PR #60 merged to `main` (`8a48b1d`)**, branch deleted. Status → Complete. Residual (out of scope, flagged): a latent `807.87(k)` in a project-console test fixture; De Novo WI `GL-WI-RA-002` still reserved.

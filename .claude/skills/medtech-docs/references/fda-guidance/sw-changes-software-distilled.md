@@ -1,5 +1,7 @@
 # FDA Guidance — Deciding When to Submit a 510(k) for a Software Change to an Existing Device
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/sw-changes-software.md`](source-md/sw-changes-software.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Deciding When to Submit a 510(k) for a Software Change to an Existing Device — Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: October 25, 2017 (final); draft issued August 8, 2016
 **Status**: Final (Contains Nonbinding Recommendations)
@@ -68,7 +70,7 @@ Applied to changes that survive the flowchart with "document" — and as standin
 
 Gray areas → discuss with the review Division that cleared the device.
 
-### Appendix A — 19 worked examples (pattern)
+### Appendix A — 24 worked examples (pattern)
 
 Q1: security patch, added encryption/access control → document. Q2: fixes restoring cleared spec (barcode truncation, DICOM conformance, maintenance parameter, coding-error fix) → document; fix that **adds a new design element** (new database = spec change) → continue. Q3a: new quantitative diagnostic parameter (new miscalculation cause, unmitigated, serious harm) → new 510(k); removing an unused parameter → continue; mitigation of a *minor*-harm hazard → continue (harm not significant); new programming mode / new laser-control integration with new patient-injury risks → new 510(k). Q3b: widening a safety-threshold spec (weakened control) → new 510(k); noise-tolerance recalculation within spec → continue; automating a manual risk control for result mis-association → new 510(k); redundant print-page identifiers → continue; splitting an occlusion alarm into upstream/downstream variants → new 510(k). Q4: throughput gain via shorter incubation (assay performance) → new 510(k); throughput gain via transport timing only → document; more images per summary view, larger display font, sensor-version interoperability shim → document; arrhythmia-detection sensitivity/specificity change → new 510(k); snooze on a non-critical alarm → document.
 

@@ -28,6 +28,17 @@ Output:
 The orchestrator (`scripts/adopt_v30.py`) calls this after assembly and before
 commit_atomic. If this script exits 2, the orchestrator leaves staging in
 place and reports VALIDATION_FAILED.
+
+Prose-fidelity check (`prose_fidelity`, requires `--source <pdf>`): a deterministic
+shingle-diff (via `verify_conversion_fidelity.py`) that flags markdown prose runs
+absent from the source — the signature of an LLM converter silently *regenerating*
+prose instead of transcribing it. By design this is a TRIAGE finder: long invented
+runs are frequently benign (flowcharts/tables linearized to text, curated metadata
+headers), so it returns at most `warn` — never a hard `fail` on word-count alone, and
+it does NOT make this script exit 2. A `warn` carries `requires_adjudication: true`
+and the flagged `spans`; the converter/adopter Phase-7 step MUST pass those spans to
+the fidelity-adjudicator agent, which rules fabrication-vs-reformatting against the
+source. Only the adjudicator's verdict blocks a commit.
 """
 
 from __future__ import annotations
@@ -38,6 +49,14 @@ import re
 import sys
 from pathlib import Path
 from typing import Optional
+
+# Sibling fidelity finder (same scripts/ dir). Imported lazily-safe: if it or its
+# dependency (pdftotext) is unavailable, the prose_fidelity check degrades to skip.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    import verify_conversion_fidelity as _fidelity  # noqa: E402
+except Exception:  # noqa: BLE001
+    _fidelity = None
 
 
 # --- Frontmatter parsing (minimal — no external YAML dep) ---
@@ -315,6 +334,53 @@ def _check_link_count_floor(body: str, expected_k: Optional[int],
     }
 
 
+# --- Prose-fidelity gate (conversion faithfulness) ---
+
+def _check_prose_fidelity(body: str, source_path: Optional[str], span: int = 25) -> dict:
+    """Detect LLM-regenerated prose absent from the source (the source-md
+    fabrication failure mode).
+
+    Deterministic shingle-diff via verify_conversion_fidelity.assess. By design
+    this is a TRIAGE finder, NOT a hard gate: long invented runs are frequently
+    benign (flowcharts/decision-tables linearized to text, curated metadata
+    headers). So the worst this check returns is `warn` — never `fail` on
+    word-count alone. A `warn` carries `requires_adjudication: true` plus the
+    flagged spans; the converter/adopter Phase-7 step MUST hand those spans to
+    the fidelity-adjudicator agent, which rules fabrication-vs-reformatting
+    against the source region. Only the adjudicator's verdict blocks a commit.
+
+    `skip` when: no source provided (text-only re-render), the finder module is
+    unavailable (no pdftotext), or the source format isn't supported here.
+    """
+    if not source_path:
+        return {"status": "skip", "detail": "no --source provided; prose-fidelity not checked"}
+    if _fidelity is None:
+        return {"status": "skip", "detail": "verify_conversion_fidelity unavailable (pdftotext missing?)"}
+    sp = Path(source_path).expanduser()
+    if not sp.exists():
+        return {"status": "skip", "detail": f"source not found: {source_path}"}
+    try:
+        src_words = _fidelity.extract_source_words(str(sp))
+    except Exception as e:  # noqa: BLE001
+        return {"status": "skip", "detail": f"source extraction failed: {str(e)[:80]}"}
+    if src_words is None:
+        return {"status": "skip",
+                "detail": f"unsupported source format ({sp.suffix}); pass an extracted baseline instead"}
+    # assess() takes source TEXT; we already have words — join to reuse the one API.
+    r = _fidelity.assess(body, " ".join(src_words), span=span, fail=10 ** 9)  # fail disabled: warn-only
+    if r["status"] == "pass":
+        return {"status": "pass", "detail": f"no invented run >= {span} words (longest {r['longest']}w)"}
+    # r["status"] is "warn" (fail is disabled above)
+    return {
+        "status": "warn",
+        "detail": (f"{len(r['spans'])} invented run(s) >= {span}w (longest {r['longest']}w) "
+                   f"— ADJUDICATE each span vs source: fabrication or reformatting?"),
+        "requires_adjudication": True,
+        "longest_run": r["longest"],
+        "spans": r["spans"],
+    }
+
+
 # --- Doc-type-pack-driven gates ---
 
 _ARCH_REQUIRED_KEYWORDS = [
@@ -561,6 +627,8 @@ def validate(
     md_path: Path,
     expected_k: Optional[int] = None,
     expected_k_anchors: Optional[int] = None,
+    source_path: Optional[str] = None,
+    prose_span: int = 25,
 ) -> dict:
     md = md_path.read_text(encoding="utf-8")
     fm, body = _parse_frontmatter(md)
@@ -582,6 +650,7 @@ def validate(
     checks["image_path_prefix"] = _check_image_refs(body)
     checks["hyperlink_consistency"] = _check_hyperlink_consistency(fm, body)
     checks["link_count_floor"] = _check_link_count_floor(body, expected_k, expected_k_anchors)
+    checks["prose_fidelity"] = _check_prose_fidelity(body, source_path, prose_span)
     checks["required_sections"] = _check_required_sections(body, doc_type)
     checks["disallowed_elements"] = _check_disallowed_element_types(body, doc_type)
     checks["mermaid_presence_warning"] = _check_mermaid_warning(body, doc_type)
@@ -647,6 +716,19 @@ def main() -> int:
         help=("Phase-2-splice K-anchor (same-page `](#...)` count in the cache). "
               "Subtracted from K to compute the content-link ratio. Optional."),
     )
+    ap.add_argument(
+        "--source",
+        default=None,
+        help=("Path to the source document (PDF) for the prose-fidelity check. "
+              "When provided, flags markdown prose runs absent from the source "
+              "(warn + spans for adjudication). Omit to skip the check."),
+    )
+    ap.add_argument(
+        "--prose-span",
+        type=int,
+        default=25,
+        help="Minimum invented-run length (words) to flag for adjudication (default 25)",
+    )
     ap.add_argument("--self-test", action="store_true", help="Run smoke tests against repo MDs")
     args = ap.parse_args()
 
@@ -665,6 +747,8 @@ def main() -> int:
         md_path,
         expected_k=args.expected_hyperlink_count,
         expected_k_anchors=args.expected_anchor_count,
+        source_path=args.source,
+        prose_span=args.prose_span,
     )
     print(json.dumps(result, indent=2))
     return 0 if result["result"] == "pass" else 2

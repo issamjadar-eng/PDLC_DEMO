@@ -98,6 +98,21 @@ Specifically:
 - If a section has **no subsection headings** in the source, do NOT create subsection headings. Introductory text is just text, not a heading.
 - **Only create markdown headings (##, ###) for content that is explicitly a heading/title in the source document's formatting** (bold, larger font, numbered section title style). When in doubt, don't promote — keep it as body text.
 
+#### CRITICAL RULE: Source PROSE Is Authoritative (PF — prose faithfulness, MANDATORY)
+
+**Every sentence of body and appendix prose must be a faithful transcription of the source's words. You extract and structure; you do NOT re-author, regenerate, paraphrase, smooth, summarize, or "fill in" narrative text — not even when you are confident you know what the source "should" say.**
+
+This is the highest-stakes faithfulness rule because its failure is the hardest to see: a regenerated paragraph reads fluently and plausibly, so it survives casual review — yet it is invented. The motivating defect: a conversion kept the real section *titles* of an FDA-guidance appendix but **rewrote the worked-example bodies** with confident, FDA-style prose absent from the source; the fabricated text was then quoted into a submission as a verbatim guidance anchor. **Fluency is not fidelity.**
+
+Specifically:
+- **Transcribe, don't compose.** Work from the Phase-2 extracted text (`raw.txt` / `raw.md`). The markdown body is that text, re-structured — not a fresh retelling of it. If you find yourself writing a sentence whose wording came from your own knowledge of the topic rather than from the extracted text, stop: that is fabrication.
+- **Worked examples, scenarios, appendices, and tables are the danger zone** — they are repetitive and pattern-like, exactly what an LLM will "helpfully" regenerate from pattern memory. Reproduce each one from the source's actual words. Never graft content from one example onto another, and never invent a scenario that completes a pattern.
+- **Quoted phrases, numbers, names, dates, acceptance criteria, citations** are verbatim or they are wrong. Do not approximate them.
+- **Extraction gaps are flagged, not filled.** If a passage is unreadable (scanned image, failed OCR, garbled extraction), insert `%% REVIEW: PROSE-UNREADABLE — <what/where> %%` and leave the gap. Do **not** reconstruct the missing prose from what you think it says.
+- **Curated apparatus is the only sanctioned added prose** — a metadata header (title/docket/issuer), a "Conversion notes" block, editorial section labels. Keep it minimal and clearly apparatus; it is not body content.
+
+**Self-enforcement at Phase 7:** the `prose_fidelity` gate (`scripts/verify_conversion_fidelity.py` via `validate_phase7.py`) flags any prose run absent from the source. Long runs are *triage*, not automatic guilt (flowcharts/tables linearized to text and curated headers legitimately flag) — but every flagged span is adjudicated by the **fidelity-adjudicator agent** before commit, and a confirmed fabrication blocks the run. Writing faithfully here is how you pass that gate; regenerating prose is how you fail it.
+
 #### Heading Hierarchy
 
 Map the source document's **actual** section structure to markdown headings:
@@ -1001,10 +1016,26 @@ For each `![alt](path)` in the markdown body:
 
 | Check | Required? |
 |-------|----------|
+| **Prose fidelity (PF)** — no body/appendix prose run that is absent from the source survives unadjudicated. See the run-then-adjudicate procedure below | **Required** (a confirmed fabrication blocks Phase 8) |
 | Markdown table count ≥ estimated source table count | Warning only |
 | If form fields expected, at least one `[____]` / `- [ ]` / `[SIGNATURE ...]` marker present | Warning only |
 | Source typos preserved verbatim with `<!-- sic -->` markers (X6) — do NOT silently correct | Warning only (honor-system — hard to automate) |
 | Cross-references formatted as `[DOC-ID — Title]` or `[Title]`, not bare prose | Warning only |
+
+#### Prose-fidelity gate procedure (PF) — run-then-adjudicate
+
+This enforces the "Source PROSE Is Authoritative" rule (Phase 3) against the failure mode where fluent prose is regenerated rather than transcribed.
+
+1. **Run the deterministic finder** against the staged markdown and the source:
+   ```bash
+   python3 "${CLAUDE_PROJECT_DIR}/.claude/skills/docflow/scripts/verify_conversion_fidelity.py" "{{SOURCE_PATH}}" "{{STAGING_DIR}}/<filename>.md" --json
+   ```
+   (For DOCX/XLSX sources, the source isn't a PDF — point it at the Phase-2 `raw.md`/`raw.txt` baseline instead, or skip if no text baseline exists. This gate is most load-bearing for PDF guidance/standards conversions.)
+2. **`status: pass`** (no invented run ≥ span) → PF passes; proceed.
+3. **`status: warn`** (one or more invented runs ≥ span) → this is **triage, not a verdict**. Long runs are often benign (a flowchart/table linearized to text, a curated metadata header). **You MUST adjudicate before commit:** spawn the **fidelity-adjudicator agent** (`agents/fidelity_adjudicator.md`), passing MD_PATH = the staged file, SOURCE_PATH (or SOURCE_TEXT_PATH for the raw baseline), and SPANS_JSON = the finder's `spans` array.
+   - Adjudicator returns **`CLEAR`** → flags are faithful reformatting/apparatus; PF passes; proceed to Phase 8.
+   - Adjudicator returns **`BLOCK`** → ≥1 span is FABRICATION/UNCERTAIN. **PF is a Required failure.** Do NOT proceed to Phase 8. Re-extract the named span(s) faithfully from the source (no regeneration) or mark them `%% REVIEW: PROSE-UNREADABLE — ... %%`, then re-run the finder. Record the fabricated spans in `{{STAGING_DIR}}/VALIDATION_FAILED.txt`.
+4. Never silently accept a `warn` without adjudication, and never "fix" a flagged span by making the source-md match your expectation — the source is authoritative, not your prior.
 
 Report every check with pass/fail/warning. If any Required check fails, do NOT proceed to Phase 8 — return a failure summary listing which checks failed and leave `{{STAGING_DIR}}` intact.
 

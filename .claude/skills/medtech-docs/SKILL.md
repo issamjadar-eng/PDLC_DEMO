@@ -1,8 +1,9 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 32
-updated: 2026-06-11
+version: 35
+updated: 2026-06-15
+# v35: render-sentinels.py guardrail — refuses to write any file under `.claude/skills/**` (registry-tracked skill files must stay project-agnostic; rendering project.yml/folder-tree data into them caused permanent per-project sync drift). The sentinel-blocks rule gains a "never render project data into a registry-tracked skill file" guardrail section; templates render only after instantiation into the project copy, never in place. Paired with strategy v20 (de-rendered its Domain Registry + init-briefs tables).
 ---
 
 # MedTech Docs
@@ -38,6 +39,8 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `readme-source.md` | `init` | `docs/internal/source/README.md` |
 | `readme-source-md.md` | `init` | `docs/internal/source-md/README.md` |
 | `readme-formal.md` | `init`, `add-dhf` | Template for `formal/` subfolder READMEs (substitute `{{PARENT}}`) |
+| `readme-articles.md` | `new-article`, `init` | `articles/README.md` — the top-level external-audience **articles** tree (NOT canonical, NOT a DHF/design-control record, NOT indexed by the file-locator). See the `new-article` action. |
+| `rules/articles-not-canonical.md` | `new-article`, `init` (Step 2c Check 7e) | Canonical source for `.claude/rules/articles-not-canonical.md` — `articles/**` are external-audience explainers; never ground on, cite, or treat them as canonical. Project-agnostic. `init`/`new-article` symlink it into `.claude/rules/`. |
 | `standard-file.md` | `add-standard`, `init` | Template for new standard/framework files |
 | `rules/readme-before-write.md` | `init` (Step 2c Check 3) | Canonical source for `.claude/rules/readme-before-write.md` — the "read parent + target README before writing under `docs/`" rule. `init` symlinks it into `.claude/rules/`. |
 | `rules/sentinel-blocks.md` | `init` (Step 2c Check 4) | Canonical source for `.claude/rules/sentinel-blocks.md` — the `AUTO:STRUCTURE` sentinel convention spec that `scripts/render-sentinels.py` and `/best-practices fix` depend on. `init` symlinks it into `.claude/rules/`. |
@@ -349,6 +352,8 @@ If you encounter a folder under `docs/` that lacks a README.md, flag it to the u
 The helper is idempotent (no duplicate entries on re-run). The hook silently no-ops on projects with no `.taxonomy.yml` files; on projects that have one, it emits a single throttled SessionStart system reminder if the file's `last_updated + review_cadence_days < today`. Pairs with the five new audit rows in this skill's README "Best Practices" table (taxonomy freshness, filesystem coverage, ID resolvability) so on-demand `/best-practices audit` and automatic SessionStart together cover both push and pull notification modes.
 
 **Check 7d — `ai-changelog` rule**: symlink `.claude/rules/ai-changelog.md` → `../skills/medtech-docs/rules/ai-changelog.md` (same skip / repoint / leave-fork idempotency as Check 3). Establishes two coupled conventions: (1) AI-assisted edits to a controlled markdown doc are logged in a non-published `<!-- AI-CHANGELOG -->` HTML-comment block in the leading metadata zone (invisible in rendered markdown, no representation in the downstream rich-text/storage format so it is not published, stripped on DOCX/PDF export); (2) **vendor neutrality** — no document names the specific AI model/tool/vendor in any changelog or content; the only sanctioned label is "AI assistant(s)". Project-agnostic + vendor-neutral by construction. It is an auto-loaded `.claude/rules/` file; **also append a one-line pointer to the Auto-loaded rules section of CLAUDE.md** (the line `- ai-changelog.md — …`) so readers of CLAUDE.md learn the rule exists without enumerating `.claude/rules/`.
+
+**Check 7e — `articles-not-canonical` rule + articles guardrail**: symlink `.claude/rules/articles-not-canonical.md` → `../skills/medtech-docs/rules/articles-not-canonical.md` (same skip / repoint / leave-fork idempotency as Check 3). This HARD RULE establishes that the top-level `articles/` tree (external-audience explainers) is **never** canonical — no agent/skill may ground on, cite, or treat an article as a source. It is an auto-loaded `.claude/rules/` file; **also append a one-line pointer to the Auto-loaded rules section of CLAUDE.md** (the line `- articles-not-canonical.md — …`). Then seed the file-locator guardrail: ensure `project.yml` `file_locator.corpus_excludes` contains the `articles/**` glob (add it if absent — same audit-the-wiring discipline as any exclude). The `articles/` folder itself is **not** scaffolded at init time (created lazily by the first `new-article`); init only installs the rule + exclude so the guardrail exists before the first article.
 
 **Check 8**: Search CLAUDE.md for the string `Update as you go (HARD RULE`. If found, skip — task discipline is already seeded.
 
@@ -740,6 +745,53 @@ Show the user:
 # Simple single-component project (one system DHF, no items)
 /medtech-docs add-dhf my-device --role system --regulatory in-development
 ```
+
+### `new-article <slug> [title...]`
+
+Create an **article** — article-style documentation written for **external consumption** (explainers, narratives, overviews) under the top-level `articles/` tree. Articles are a communication artifact, typically the structured input that `frontend-design` / `frontend-slides` turn into a presentation. They are **NOT** part of the DHF, **NOT** a design-control or regulatory record, **NOT** indexed by the file-locator, and **NEVER** canonical (no agent/skill may ground on them). See `.claude/rules/articles-not-canonical.md`.
+
+**Arguments**:
+- `<slug>` — lowercase, hyphenated topic slug; becomes the article **folder** `articles/<slug>/` (each article is a folder so it can hold its body plus images and supporting files). Validate `^[a-z][a-z0-9-]*[a-z0-9]$`.
+- `[title...]` — optional human title. Default: title-case the slug.
+
+**Folder-per-article layout.** An article is a folder, not a single file:
+
+```
+articles/<slug>/
+├── index.md          ← the article body (carries the NOT-A-CANONICAL banner)
+└── images/           ← (optional) figures and media referenced by index.md
+```
+
+Tooling and the `frontend-slides` / `frontend-design` handoff target `articles/<slug>/index.md`.
+
+**Step 1 — Bootstrap the `articles/` tree (idempotent).** Create the guardrail + scaffold if any piece is missing:
+1. `mkdir -p articles/`.
+2. If `articles/README.md` is absent, write it from `${CLAUDE_SKILL_DIR}/templates/readme-articles.md`, then render its sentinels: `python3 .claude/skills/medtech-docs/scripts/render-sentinels.py articles/README.md`.
+3. Symlink `.claude/rules/articles-not-canonical.md` → `../skills/medtech-docs/rules/articles-not-canonical.md` (skip if it already points there; repoint if the target moved; leave a project fork alone).
+4. Ensure `project.yml` `file_locator.corpus_excludes` contains the `articles/**` glob — add it if absent (audit the existing list first; do not duplicate).
+5. Ensure `CLAUDE.md` Documentation Tiers narrative and the Auto-loaded rules list mention the articles tree + rule (one-line pointers); add them if absent.
+
+These are the same guardrails `init` Step 2c Check 7e installs — `new-article` re-asserts them so the capability is self-contained even on a project that pre-dates the articles feature.
+
+**Step 2 — Write the article stub** at `articles/<slug>/index.md` (`mkdir -p articles/<slug>`). It MUST open with the non-canonical banner, then a title and a sources scaffold:
+
+```markdown
+> **📄 ARTICLE — NOT A CANONICAL SOURCE.** External-audience explainer derived from project documents. Not part of the DHF, not a design-control or regulatory record, and **not** ground-truth for any agent, skill, or submission. If this article and a controlled document disagree, the controlled document wins. Verify every claim against the cited canonical source. See `.claude/rules/articles-not-canonical.md`.
+
+# {{Title}}
+
+_Audience: {{who this is for}} • Source-of-truth: the canonical docs linked inline._
+
+<!-- Write the narrative here. Paraphrase canonical sources and LINK each substantive claim to its source under docs/ , project.yml, or CLAUDE.md. -->
+
+## Sources
+
+- _List the canonical documents this article paraphrases (relative links)._
+```
+
+Do not stamp an AI-changelog block or doctype-governance banner — articles are not controlled records, so the DHF-authoring guidance (and its QA-conformance pass) does **not** apply.
+
+**Step 3 — Re-render the articles README structure** (`python3 .claude/skills/medtech-docs/scripts/render-sentinels.py articles/README.md`) so the new `articles/<slug>/` folder appears in the article index, and report: the article path (`articles/<slug>/index.md`), that the guardrails are in place, and that the next step is to write the narrative (then optionally `/frontend-slides` or `/frontend-design` to build a deck from `index.md`).
 
 ### `add-standard <name>`
 

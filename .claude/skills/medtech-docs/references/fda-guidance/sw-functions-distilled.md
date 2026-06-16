@@ -1,5 +1,7 @@
 # FDA Guidance: Content of Premarket Submissions for Device Software Functions
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/sw-functions.md`](source-md/sw-functions.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Content of Premarket Submissions for Device Software Functions
 **Document Date**: June 14, 2023
 **Status**: Final

@@ -1,5 +1,7 @@
 # FDA Guidance — The Special 510(k) Program
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/special-510k.md`](source-md/special-510k.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: The Special 510(k) Program — Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: September 13, 2019 (final); draft issued September 28, 2018
 **Status**: Final (Contains Nonbinding Recommendations)

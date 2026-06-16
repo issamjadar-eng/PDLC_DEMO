@@ -1,5 +1,7 @@
 # OWASP — Security Guidance for Medical Device Software
 
+🔎 **Finding aid — NOT the authoritative source.** Paraphrased distillation of an external standard/framework; no faithful full-text copy exists in this repository (copyrighted). The original document named in the header above is the sole authority — if a clause-level question isn't answered here, state that the original must be consulted; do not infer clause content. `[VERIFY]` marks are unconfirmed against the source.
+
 **Framework**: OWASP Top 10, OWASP ASVS, OWASP MASTG/MASVS, CycloneDX
 **Source**: Open Worldwide Application Security Project
 **Referenced In**: FDA Cybersecurity guidance (indirectly — references common vulnerability categories); IEC 81001-5-1

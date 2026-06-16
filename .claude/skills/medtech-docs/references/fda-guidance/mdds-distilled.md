@@ -1,5 +1,7 @@
 # FDA Guidance: Medical Device Data Systems, Medical Image Storage Devices, and Medical Image Communications Devices
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/mdds.md`](source-md/mdds.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Medical Device Data Systems, Medical Image Storage Devices, and Medical Image Communications Devices: Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: **September 28, 2022** (minor update); **originally issued February 9, 2015**; previously revised September 27, 2019
 **Status**: Final (Contains Nonbinding Recommendations)
@@ -51,7 +53,7 @@ A Non-Device-MDDS is a software function solely intended to provide one or more 
 - Software that **generates alarms or alerts** based on the data.
 - Software that **prioritizes patient information on multi-patient displays** (typical of active patient monitoring).
 
-These software functions ARE device software functions and remain subject to FDA regulation.
+These software functions ARE device software functions and remain subject to FDA regulation **unless they meet the criteria outlined in section 520(o)(1)(E) of the FD&C Act** (the CDS carve-out) — per the guidance (source § III).
 
 **The "active patient monitoring" framework.** Software functions are device functions intended for active patient monitoring (and thus NOT Non-Device-MDDS) when:
 
@@ -106,7 +108,7 @@ This means a multiple function device product containing MDDS sub-functions does
 | What if my product is a multiple-function device with an MDDS sub-function? | § IV-C + companion `mfd-distilled.md` for impact-assessment framework |
 | Is alarm/alert generation MDDS? | No — § IV-A excludes alarms, alerts, and active-monitoring prioritization explicitly |
 | Are general-purpose IT components (routers, NAS, monitors) MDDS? | No — they are not devices at all per § IV-B |
-| Does data conversion via AI count as MDDS? | No — "in accordance with a preset specification" excludes learned/AI transformations; AI conversion is interpretation/analysis |
+| Does data conversion via AI count as MDDS? | **Not addressed by this guidance** — the 2022 MDDS guidance does not mention AI/ML. The test it gives is whether conversion is "in accordance with a preset specification" (§ IV-A); whether a learned/AI transformation satisfies that is an open question for the program, *not* settled here. (Distiller note, not guidance text.) |
 
 ## Historical Context
 

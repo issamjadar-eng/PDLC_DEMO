@@ -88,9 +88,9 @@ The `strategy-domains` kind supports three variants, selected by the `variant=<n
 
 | Variant | Columns | Where it's used |
 |---------|---------|-----------------|
-| `expected-content` | `File` \| `Purpose` | `docs/project/strategies/README.md`, `.claude/skills/medtech-docs/templates/readme-strategies.md` — Expected Content tables |
-| `registry` (default) | `Domain Key` \| `Domain Name` \| `Scope` \| `Output Path` \| `Template` \| `Plans Informed` | `.claude/skills/strategy/SKILL.md` — Domain Registry table |
-| `init-briefs` | `Domain` \| `What Belongs Here` \| `Plans Table Rows` | `.claude/skills/strategy/SKILL.md` — Domain brief content table (for `/strategy init`) |
+| `expected-content` | `File` \| `Purpose` | `docs/project/strategies/README.md` (project-local). Also the template `.claude/skills/medtech-docs/templates/readme-strategies.md`, but that renders only **after** instantiation into the project copy — never in place (see the registry-file guardrail below). |
+| `registry` (default) | `Domain Key` \| `Domain Name` \| `Scope` \| `Output Path` \| `Template` \| `Plans Informed` | **Retired from skill files.** Was rendered into `.claude/skills/strategy/SKILL.md`; removed because rendering project data into a registry-shared skill caused permanent per-project sync drift. The `/strategy` actions read the roster from `project.yml strategy_domains[]` directly. |
+| `init-briefs` | `Domain` \| `What Belongs Here` \| `Plans Table Rows` | **Retired from skill files** (same reason). `/strategy init` reads `what_belongs_here[]` / `plans_table[]` from `project.yml strategy_domains[]` directly. |
 
 **Column derivation:**
 
@@ -128,13 +128,15 @@ governing_qms:
 ```markdown
 **Governance** _(auto-rendered from `.taxonomy.yml`; edit there to change)_
 
-- **Form(s)**: `FORM-NNNNNNNNN`
+- **Form(s)**: [`FORM-NNNNNNNNN`](relative/path/to/source-md/Forms/FORM-NNNNNNNNN%20-%20Title.md)
 - **Parent SOP(s)**: `SOP-NNNNNNNNN`
 - **Work Instruction(s)**: `WI-NNNNNNNNN`
 - **Upstream input form(s)**: `FORM-NNNNNNNNN`, `FORM-NNNNNNNNN`
 
 > First line of the taxonomy's `note:` field.
 ```
+
+Each governing ID renders as a **relative markdown link** to its distilled document in the project's QMS registry (`docs/internal/source-md/**`, the medtech-docs source-md convention) when a file whose name starts with that ID exists there; IDs with no registry file fall back to plain inline code (as `SOP-NNNNNNNNN` above). Link targets are URL-encoded (registry filenames contain spaces).
 
 **Three null cases (each renders a discoverable italic line, not an error):**
 
@@ -175,12 +177,18 @@ Canonical locations:
 | `docs/**/README.md` with `## Structure` | `subfolder-table` (via medtech-docs templates) |
 | `docs/project/dhfs/<dhf>/README.md` → Structure table | `subfolder-table` (via `readme-dhf.md` template) |
 | `docs/project/strategies/README.md` → Expected Content table | `strategy-domains variant=expected-content` |
-| `.claude/skills/medtech-docs/templates/readme-strategies.md` → Expected Content table | `strategy-domains variant=expected-content` |
-| `.claude/skills/strategy/SKILL.md` → Domain Registry table | `strategy-domains variant=registry` |
-| `.claude/skills/strategy/SKILL.md` → Domain brief content table (init action) | `strategy-domains variant=init-briefs` |
+| `.claude/skills/medtech-docs/templates/readme-strategies.md` → Expected Content table (template — renders only in the instantiated project copy, not in place) | `strategy-domains variant=expected-content` |
 | Per-doctype Confluence page (e.g., `_confluence/.../<slug>/v1.0.0.md`, `_confluence/.../<slug>/index.md`) → Governance banner above page body | `doc-governance source=taxonomy` (slug auto-derived from parent folder name) or `doc-governance source=taxonomy:<slug>` for explicit overrides |
 
 New docs with structural tables should wrap those tables in sentinels from the start.
+
+## Guardrail — never render project data into a registry-tracked skill file (HARD RULE)
+
+Sentinels that pull **project-specific data** (anything from `project.yml` or the project's folder tree) must render **only into project-local files** — `CLAUDE.md`, `docs/**/README.md`, and other files that never leave the project. They must **never** be placed in a registry-tracked file under `.claude/skills/**` (a SKILL.md, an agent prompt, or a template-in-place).
+
+Why: a skill file is *shared* — it syncs to and from the registry (`/sync-skills`) and must stay project-agnostic. If the renderer bakes one project's `project.yml` data into a shared skill file, that file diverges from the registry in every consuming project → **permanent, irresolvable sync drift**, plus a leak risk (a careless push carries one project's data upstream). This actually happened with the `strategy-domains` `registry` / `init-briefs` variants in `strategy/SKILL.md` (removed; the `/strategy` actions read `project.yml strategy_domains[]` directly instead).
+
+**Enforcement:** `render-sentinels.py` refuses to write any file whose path is under `.claude/skills/**` (it skips with a notice, returns no-op). Templates are the one nuance: a template like `readme-strategies.md` *carries* a sentinel, but it is rendered only **after** `/medtech-docs` instantiates it into the project-local copy (under `docs/`) — never in place in the skill tree. If you need a project's actual roster visible from a skill, **point to it** (read `project.yml` or the project-local rendered README), don't materialize it.
 
 ## Interaction with other rules
 

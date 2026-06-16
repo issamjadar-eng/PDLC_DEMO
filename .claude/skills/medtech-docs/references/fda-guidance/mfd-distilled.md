@@ -1,5 +1,7 @@
 # FDA Guidance: Multiple Function Device Products
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/mfd.md`](source-md/mfd.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Multiple Function Device Products: Policy and Considerations
 **Document Date**: July 29, 2020 (draft issued April 27, 2018)
 **Status**: Final (Contains Nonbinding Recommendations)

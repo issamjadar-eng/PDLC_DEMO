@@ -401,6 +401,37 @@ def build_analysis(md_path: Path, repo_root: Path) -> dict | None:
     }
 
 
+def missing_recs(md_path: Path, detail: dict) -> list[str]:
+    """Names of agents that contributed to this analysis (ran=True) but have
+    no `recs-<name>.md` writeup beside the aggregate.
+
+    Mirrors the project-console advisor-tab discovery predicate
+    (`console/gap_analysis/loader.py:load_narratives`): an agent is "covered"
+    when a sibling file's stem is exactly `recs-<name>` OR ends with `-<name>`.
+    Only `ran` agents are checked — a merely-recommended agent that never
+    contributed is "fan-out not done yet", not an incomplete fan-out.
+    """
+    folder = md_path.parent
+    # Mirror the console's candidate set exactly: it only globs recs-*.md and
+    # kol-*.md, then matches stem == recs-<name> or stem endswith -<name>.
+    stems = [
+        p.stem
+        for pat in ("recs-*.md", "kol-*.md")
+        for p in folder.glob(pat)
+    ]
+    out: list[str] = []
+    for a in detail.get("agents", []):
+        if not a.get("ran"):
+            continue
+        name = a.get("name") or ""
+        if not name:
+            continue
+        covered = any(s == f"recs-{name}" or s.endswith(f"-{name}") for s in stems)
+        if not covered:
+            out.append(name)
+    return out
+
+
 def index_entry(detail: dict) -> dict:
     m = detail["meta"]
     return {
@@ -424,6 +455,13 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--root")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument(
+        "--strict-recs",
+        action="store_true",
+        help="exit non-zero (3) if any contributing agent lacks a recs-<name>.md "
+        "writeup (console advisor-tab requirement). Without it, missing recs are "
+        "printed as advisory WARN lines but do not affect the exit code.",
+    )
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(argv)
 
@@ -445,6 +483,7 @@ def main(argv: list[str]) -> int:
     )
 
     details: list[dict] = []
+    recs_gaps: list[tuple[str, list[str]]] = []  # (analysis-id, [missing agent names])
     drift = False
     written = 0
     for md in md_files:
@@ -452,6 +491,9 @@ def main(argv: list[str]) -> int:
         if detail is None:
             continue
         details.append(detail)
+        gap = missing_recs(md, detail)
+        if gap:
+            recs_gaps.append((detail["meta"]["id"], gap))
         out_path = md.with_suffix(".gap.json")
         new_text = json.dumps(detail, indent=2, ensure_ascii=False) + "\n"
         old_text = out_path.read_text(encoding="utf-8") if out_path.is_file() else ""
@@ -488,12 +530,30 @@ def main(argv: list[str]) -> int:
             if not args.quiet:
                 print(f"  wrote {index_path.relative_to(root)}")
 
+    # Advisory recs-completeness audit — printed in both modes. A contributing
+    # agent without a recs-<name>.md writeup leaves the console advisor tab empty
+    # for that agent (see missing_recs / SKILL.md fan-out naming contract).
+    if recs_gaps:
+        for analysis_id, names in recs_gaps:
+            joined = ", ".join(f"recs-{n}.md" for n in names)
+            print(
+                f"  WARN {analysis_id}: contributing agent(s) without a writeup — "
+                f"missing {joined}",
+                file=sys.stderr,
+            )
+
     if args.check:
         status = "DRIFT" if drift else "up-to-date"
         print(f"gap-analysis sidecars: {len(details)} analyses — {status}")
+        # --check exit reflects sidecar staleness only (backward-compatible for
+        # CI / best-practices). recs gaps are WARN-only unless --strict-recs.
+        if args.strict_recs and recs_gaps:
+            return 3
         return 2 if drift else 0
 
     print(f"gap-analysis sidecars: {len(details)} analyses, {written} file(s) written")
+    if args.strict_recs and recs_gaps:
+        return 3
     return 0
 
 

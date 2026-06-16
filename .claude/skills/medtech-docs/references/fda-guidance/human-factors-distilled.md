@@ -1,5 +1,7 @@
 # FDA Guidance — Content of Human Factors Information in Medical Device Marketing Submissions
 
+🔎 **Finding aid — NOT the authoritative source.** Distilled summary for quick orientation and early analysis. Ground and cite the authoritative full text [`source-md/human-factors.md`](source-md/human-factors.md); verify any quote against the byte-correct `source/` PDF before treating it as verbatim. This paraphrases and omits (appendices/worked examples are routinely dropped) — a section's absence here is never evidence the source is silent.
+
 **Full Title**: Content of Human Factors Information in Medical Device Marketing Submissions — Guidance for Industry and Food and Drug Administration Staff
 **Document Date**: May 29, 2026 (final); draft issued December 9, 2022
 **Status**: Final (Level 1; Contains Nonbinding Recommendations)
