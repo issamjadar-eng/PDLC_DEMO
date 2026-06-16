@@ -2,7 +2,7 @@
 
 **ID**: 090
 **Created**: 2026-06-15
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -60,9 +60,11 @@ These were flagged out-of-scope in ben/089 PR #60 and are now owned here:
 - [x] Optional PCCP enhancement — added §807.81(b) cleared-PCCP carve-out citation (FD&C §515C/FDORA 2022) to `pccp-summary.md`
 - [x] `/advisors sync` — re-rendered grounding; all **unchanged** (pulled advisors already current); project-secops skipped (no frontmatter, expected)
 - [x] sync-log written
-- [ ] Persist all to PDLC_DEMO (commit → PR → merge) — user authorized "proceed with all needed changes"
-- [ ] Registry push of LOCAL skill contributions (`/sync-skills push`) — assess submissions-v2 move/delete complexity
-- [ ] `/sync-skills prune` (6 stale branches); checkpoint
+- [x] Persisted all to PDLC_DEMO — **PR #61 merged** (`e077d73`): 93-file pull + 2 merges + R1/R2/PCCP + project.yml + rule symlink + task docs.
+- [x] Registry push (`/sync-skills push`): **hitachi PR #226** (references 814/807-lettering/regs-README + tracker v14 + R1 fixture) + **PR #227** (submissions v1→v2 migration w/ rename-preserving moves + 7 flat-template deletions). Hitachi HEAD `82b867b`.
+- [x] `/sync-skills prune` — removed 8 merged `sync/*` branches (0 unmerged).
+- [x] Pulled trailing docflow re-advance; **SYNCED** except `pccp-aiml-full.md` (project-local, unverified — left intentionally).
+- [ ] Final trailing commit (docflow re-advance + sync-log push entry + this doc) → PDLC_DEMO; then checkpoint.
 
 ## Open Questions
 
@@ -71,5 +73,6 @@ These were flagged out-of-scope in ben/089 PR #60 and are now owned here:
 
 ## Changelog
 
+- 2026-06-15: **Closed — all changes landed.** Persisted the full sync+reconcile+doc-eval to PDLC_DEMO (PR #61, `e077d73`). Content follow-ups: R1 (807.87(k)→(l) fixture), R2 (GL-WI-RA-002 De Novo WI → RA pathway set complete, qms-index Total 70), PCCP §807.81(b) carve-out citation, `/advisors sync` (no-op). Pushed contributions upstream: hitachi PR #226 (references + tracker v14 + R1) + #227 (submissions v1→v2 migration). Pruned 8 merged sync branches. Registry SYNCED (HEAD `82b867b`) except the one project-local `pccp-aiml-full.md`. Status → Complete (pending the trailing-commit of this doc + docflow re-advance + sync-log).
 - 2026-06-15: Task created. Holds (a) the ben/089 residuals R1 (807.87(k) test-fixture miscite) + R2 (De Novo WI), and (b) the sync→reconcile→doc-evaluation workflow the user directed. HARD CONSTRAINT recorded: no pushes until user says.
 - 2026-06-15: **Sync + reconcile + doc-eval complete (no pushes).** ff-pulled project repo (CI index.db). `/sync-skills` three-way pull: pulled 86 clean upstream files (full `medtech-docs/references/` refresh — fda-guidance distillations + regs 880/892/164 + new verbatim source-md/source archives; advisors skill + 13 agents; new articles rule/template + verify-conversion script; citations agents); **merged** `21-cfr-part-807.md` (upstream §807.85/§807.100/§807.81 corrections + finding-aid tier ⊕ re-applied our §807.87 (a)–(m) table) and regs `README.md` (⊕ our 814 row); **skipped** 7 superseded flat submissions templates; **held** 23 LOCAL_ONLY + 6 LOCAL_AHEAD for push. Post-update: `articles/**` corpus-exclude + `articles-not-canonical.md` rule symlink (medtech-docs v34). **Doc-eval: project docs clean** — the upstream §807.85/§807.100/§807.87(k) corrections aren't cited anywhere in `docs/` (only §807.81(a)(3), correct); one optional enhancement (cite §807.81(b) PCCP carve-out). sync-log written. **Still held / open:** push of our LOCAL work (awaiting user); `/advisors sync` re-render (recommended); R1 + R2; `/sync-skills prune` (6 stale branches).

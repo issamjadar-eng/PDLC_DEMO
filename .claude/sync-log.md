@@ -4,6 +4,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-15 — push (references + tracker + submissions v2) + prune
+
+- **PR #226** (hitachi, squash-merged): `references/regulations/21-cfr-part-814.md` (new PMA distillation), `21-cfr-part-807.md` (§807.87 (a)–(m) lettering pin), regs `README.md` (814 row), `tracker/{SKILL,README}.md` (v14 manifest-ownership), `project-console/tests/test_tracker_workflow_e2e.py` (807.87(k)→(l) fixture fix).
+- **PR #227** (hitachi, squash-merged): `submissions` v1→v2 — filing-type template profiles (`_shared/qsub/510k/pma`, renames preserve history), 510(k) + PMA template sets, `render_sidecars.py` pma registration, composition-manifest contract; deletes the 7 superseded flat templates.
+- Hitachi HEAD after merges: `82b867b`.
+- **prune**: removed 8 merged `sync/*` branches (0 unmerged kept).
+- Post-push: pulled a docflow re-advance (registry was active — advanced several times mid-session). Residual drift: only `references/fda-guidance/pccp-aiml-full.md` (project-local, unverified provenance — intentionally left, not pushed).
+
 ## 2026-06-15 — pull (medtech-docs references refresh + advisors advance)
 
 - Hitachi HEAD at sync: `88e793d` → advanced to `f3ee6f5` mid-session (a docflow update landed upstream; pulled in a second pass). Project repo also ff-pulled 1 commit: file-locator CI index.db `7e80881`.
