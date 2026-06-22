@@ -23,6 +23,20 @@ schema_version: "1.2"
 # entry for a mode is "not applicable" in that mode — emitted as an informational
 # gap, not a resolver failure.
 #
+# CLIENT-SLUG MAPPING (external mode). This file speaks GENERIC canonical industry
+# role names — it must stay project-agnostic (no client/device names or vault
+# slugs). A client's regulated vault (Confluence/Windchill) uses its OWN doctype
+# slugs, which may differ from any generic `external.taxonomy_folder` here. Those
+# per-client mappings live in the PROJECT, not here:
+#   project.yml → evidence_layout.layers[<canonical_role>].external:
+#       taxonomy_folder: <client-slug> | [<slug>, <nested/path>, ...]
+#       multi_file: true            # optional — versioned/artifact-family folder
+#       patterns: [v*.md, index.md] # optional — defaults shown
+# The resolver tries project-override candidates BEFORE generic registry
+# candidates and treats them as taxonomy-declared (the project asserts them —
+# supports nested folders the taxonomy keys only by their leaf). This keeps the
+# registry reusable across clients with divergent vault taxonomies.
+#
 # Resolution algorithm (per role, per DHF):
 #   1. Pick mode block based on DHF's `dhf_organization`.
 #   2. Resolve folder:

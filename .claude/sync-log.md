@@ -1028,3 +1028,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Status: merged (--merge requested)
 - Merge commit / Hitachi HEAD after sync: `4d27a97`
 - Origin: PDLC_DEMO task ben/092 (import FDA Medical Device Accessories guidance)
+
+## 2026-06-22 — pull
+
+- Hitachi HEAD after sync: `4d27a97`
+- Pulled: 5 files (all dhf-manifest; UPSTREAM_ADVANCE, clean fast-forward)
+  - `skills/dhf-manifest/README.md`
+  - `skills/dhf-manifest/actions/discovery-index.md`
+  - `skills/dhf-manifest/data/canonical-roles.yaml`
+  - `skills/dhf-manifest/scripts/discovery-index.py`
+  - `skills/dhf-manifest/tests/test_discovery_index.sh`
+- Source: hitachi #228 — external client-slug override seam for the discovery-index resolver (`evidence_layout.layers[<role>].external`). **Backward-compatible: no override ⇒ unchanged output.**
+- project.yml: no changes (PDLC_DEMO uses no `external` override; resolver output unchanged)
+- Project impact: **none required.** Opt-in override seam only; no new skills/agents (no allowlist change), no setup-action change, no schema migration. Discovery-index regeneration would produce identical output — not required.
+- Follow-ups: dhf-manifest test suite couldn't run here (`pyyaml` not installed in shell) — pulled files are byte-identical to origin/main per sync check; validation deferred to a pyyaml-equipped env.

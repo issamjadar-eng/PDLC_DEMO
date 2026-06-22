@@ -82,7 +82,8 @@ The discovery-index pattern inverts control: the **skill** declares abstract can
 
 - A new project does not author L1 or L2 — it inherits both from the skill.
 - A new project authors only `project.yml dhfs[]` and runs `/dhf-manifest discovery-index`. The resolver probes the L2 ranked patterns against the project's filesystem; the result lands in L3 as `<slug>-dhf-discovery.json`.
-- Projects with non-standard conventions add minimal `project.yml evidence_layout.layers[role].{patterns_extra, patterns_exclude, folder_override}` blocks. The override block is **empty in the common case.**
+- Projects with non-standard conventions add minimal `project.yml evidence_layout.layers[role].{patterns_extra, patterns_exclude, folder_override, external}` blocks. The override block is **empty in the common case.**
+- **Client-slug mapping (external-mode):** the registry uses generic canonical industry role names; a client's regulated vault uses its own doctype slugs. `layers[<canonical_role>].external.{taxonomy_folder, multi_file, patterns}` maps the canonical role → the client's slug(s) (single slug or candidate list; nested paths allowed) so the registry stays project-agnostic. Keyed by **canonical role name** — a non-canonical key is inert.
 - Skill files contain no project-specific paths. Project files contain no skill conventions. The index ties the two together.
 
 ### 4.3 Resolution algorithm
