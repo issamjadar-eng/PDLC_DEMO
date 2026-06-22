@@ -847,6 +847,7 @@ For each bundled distilled file in `${CLAUDE_SKILL_DIR}/references/{fda-guidance
 | `sw-changes-distilled.md` | 510(k) pathway AND existing predicate / cleared device with software changes |
 | `cybersecurity-distilled.md` | any device containing software |
 | `mfd-distilled.md` | device has multiple functions and at least one is non-device (per MFD guidance criteria) |
+| `accessories-distilled.md` | program includes accessories used with a parent device — hardware accessories, or software/SaMD modules that support, supplement, and/or augment a parent device — OR the program must classify an article as an accessory (incl. via De Novo for a new accessory type) |
 | `cds-distilled.md` | any clinical decision support functionality |
 | `pccp-general-distilled.md` | strategy docs mention a PCCP, OR `regulatory_pathway` starts with `510k` and project is planning iterative changes |
 | `pccp-aiml-distilled.md` | PCCP applicable AND AI/ML capability present |

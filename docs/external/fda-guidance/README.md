@@ -14,6 +14,7 @@ Files are imported via `/medtech-docs update-external-references`. Re-run that a
 | sw-changes | [sw-changes.md](sw-changes.md) | Deciding When to Submit a 510(k) for a Software Change to an Existing Device | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/sw-changes.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/sw-changes.md) | 510(k) pathway + predicate PP3000 (K190567) |
 | cybersecurity | [cybersecurity.md](cybersecurity.md) | Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/cybersecurity.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/cybersecurity.md) | software + connected device (cloud-suite, connectivity-adapter) |
 | mfd | [mfd.md](mfd.md) | Multiple Function Device Products: Policy and Considerations | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/mfd.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/mfd.md) | cloud-suite hosts 7 functions, mix of device + non-device (analytics, inventory, fleet) |
+| accessories | [accessories.md](accessories.md) | Medical Device Accessories: Describing Accessories and Classification Pathways | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/accessories.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/accessories.md) | multi-function PCA system; connectivity-adapter + cloud-suite modules and hardware accessories support/supplement/augment the parent PP3500 pump — accessory classification (own-risk per FDARA 2017) in scope |
 | cds | [cds.md](cds.md) | Clinical Decision Support Software | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/cds.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/cds.md) | predictive-alarm SaMDs in PCCP envelope (regulatory-strategy.md §1, §2) |
 | pccp-general | [pccp-general.md](pccp-general.md) | Marketing Submission Recommendations for a Predetermined Change Control Plan | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/pccp-general.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/pccp-general.md) | PCCP filed with PP3500 510(k) (regulatory-strategy.md) |
 | pccp-aiml | [pccp-aiml.md](pccp-aiml.md) | PCCP for AI/ML-Enabled Device Software Functions | [PDF](../../../.claude/skills/medtech-docs/references/fda-guidance/source/pccp-aiml.pdf) · [MD](../../../.claude/skills/medtech-docs/references/fda-guidance/source-md/pccp-aiml.md) | PCCP + `capabilities.ai_ml: true` |
@@ -30,7 +31,7 @@ Guidances evaluated by `update-external-references` and not currently applicable
 
 | Topic | File | Rationale |
 |-------|------|-----------|
-| _(none — all 10 bundled FDA guidances apply to PDLC_DEMO at this time)_ | | |
+| _(none — all 11 applicable bundled FDA guidances apply to PDLC_DEMO at this time)_ | | |
 
 ## Conventions
 
@@ -43,5 +44,6 @@ Guidances evaluated by `update-external-references` and not currently applicable
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-06-22 | BX / AI Assistant | Imported `accessories.md` (Medical Device Accessories guidance) via the accessories rubric trigger added to `/medtech-docs update-external-references`; applicability driven by the multi-function PCA system (software modules + hardware accessories used with the parent PP3500 pump). |
 | 2026-04-14 | BX | Imported 10 distilled FDA guidances via /medtech-docs update-external-references; rewrote README to v15 model (distilled copies hosted here, originals linked to skill library). See `tasks/ben/012-medtech-docs-update-external-references.md`. |
 | 2026-04-12 | BX | Initial version — created by /medtech-docs init |
