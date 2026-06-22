@@ -1018,3 +1018,13 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Hitachi HEAD after sync: `e93442f` (local checkout fast-forwarded; sync branch deleted local + remote)
 - Pre-push hitachi was at `9e6a305` (project-console 1.26.0); the 9 modified project-console files were LOCAL_AHEAD (clean advance, no divergence).
 - Origin: PDLC_DEMO task ben/087 (project PR #56, merged `c69b821`).
+
+## 2026-06-22 — push
+
+- Files: `skills/medtech-docs/SKILL.md`, `skills/medtech-docs/references/fda-guidance/README.md`, `skills/medtech-docs/references/fda-guidance/accessories-distilled.md`, `skills/medtech-docs/references/fda-guidance/source-md/accessories.md`, `skills/medtech-docs/references/fda-guidance/source/accessories.pdf`
+- Branch: `sync/pdlc-demo-accessories-fda-guidance-2026-06-22`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/229
+- Commit: "medtech-docs: add FDA Medical Device Accessories guidance to references"
+- Status: merged (--merge requested)
+- Merge commit / Hitachi HEAD after sync: `4d27a97`
+- Origin: PDLC_DEMO task ben/092 (import FDA Medical Device Accessories guidance)
