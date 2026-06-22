@@ -697,6 +697,105 @@ print(len([n for n in d['ambiguity_notes']
 }
 
 # ──────────────────────────────────────────────────────────────────────
+# Case 11: external-mode CLIENT-SLUG override (L3a `external:` block).
+# The registry speaks generic role names; this client's vault uses its OWN
+# slugs (none matching any registry external slug). The project.yml
+# evidence_layout.layers[<canonical_role>].external mapping bridges them:
+#   - fmea            → client slug `client-fmea-doc` (flat folder, default patterns)
+#   - threat_model    → NESTED client path `security/client-threat-model`
+#   - verification_protocols → external multi_file folder `client-test-cases`
+# Asserts: client-slug resolution, governing_qms attaches from the taxonomy
+# leaf, nested-path resolution, and external multi-file folder-pointer shape.
+# ──────────────────────────────────────────────────────────────────────
+
+case11() {
+    local TMP
+    TMP=$(mktemp -d)
+    trap "rm -rf $TMP" RETURN
+
+    mkdir -p "$TMP/docs/project/strategies"
+    local POV="$TMP/docs/project/_mirror/widget/product-overview"
+    mkdir -p "$POV/client-fmea-doc"
+    mkdir -p "$POV/security/client-threat-model"
+    mkdir -p "$POV/client-test-cases"
+    mkdir -p "$TMP/docs/project/dhf-manifest"
+
+    echo "# Reg" > "$TMP/docs/project/strategies/regulatory-strategy.md"
+    # Client uses its OWN slugs — none match the generic registry external slugs.
+    echo "# FMEA v1" > "$POV/client-fmea-doc/v1.0.0.md"
+    echo "# Threat model v1 (nested)" > "$POV/security/client-threat-model/v1.0.0.md"
+    echo "# TC v1" > "$POV/client-test-cases/v1.0.0.md"
+    echo "# TC v2" > "$POV/client-test-cases/v2.0.0.md"
+
+    cat > "$TMP/docs/project/_mirror/.taxonomy.yml" <<EOF
+schema_version: 0.3
+discovery_root: product-overview
+mappings:
+  client-fmea-doc:
+    canonical_role: reliability
+    governing_qms:
+      forms: [FORM-000000001]
+  client-threat-model:
+    canonical_role: cybersecurity
+  client-test-cases:
+    canonical_role: verification
+EOF
+
+    cat > "$TMP/project.yml" <<EOF
+project:
+  name: fixture-client-slug-override
+dhfs:
+  - leaf: widget-dhf
+    path: docs/project/_mirror/widget
+    role: item
+    dhf_organization: external
+    taxonomy_path: docs/project/_mirror/.taxonomy.yml
+evidence_layout:
+  base: product-overview
+  layers:
+    fmea:
+      external:
+        taxonomy_folder: client-fmea-doc
+    threat_model:
+      external:
+        taxonomy_folder: security/client-threat-model
+    verification_protocols:
+      external:
+        multi_file: true
+        taxonomy_folder: client-test-cases
+EOF
+
+    run_resolver "$TMP"
+    local OUT
+    OUT=$(read_json "$TMP" "fixture-client-slug-override")
+
+    # 1. fmea resolves via the client slug (default external patterns) to v1.0.0.md
+    local fmea_path
+    fmea_path=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['widget-dhf']['fmea']; print(v['path'] if v else 'NULL')")
+    assert_path_endswith "case11.fmea.client_slug" "client-fmea-doc/v1.0.0.md" "$fmea_path"
+
+    # 2. fmea carries governing_qms resolved from the taxonomy leaf
+    local fmea_gov
+    fmea_gov=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['widget-dhf']['fmea']; print('YES' if v and v.get('governing_qms') else 'NO')")
+    assert_eq "case11.fmea.governing_qms" "YES" "$fmea_gov"
+
+    # 3. threat_model resolves via a NESTED client path
+    local tm_path
+    tm_path=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['widget-dhf']['threat_model']; print(v['path'] if v else 'NULL')")
+    assert_path_endswith "case11.threat_model.nested_path" "security/client-threat-model/v1.0.0.md" "$tm_path"
+
+    # 4. verification_protocols resolves as an external multi-file folder-pointer (count=2)
+    local vp_count
+    vp_count=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['widget-dhf']['verification_protocols']; print(v.get('file_count') if v else 'NULL')")
+    assert_eq "case11.verification_protocols.multi_file_count" "2" "$vp_count"
+
+    # 5. the multi-file entry is a folder pointer (has 'folder', no 'path')
+    local vp_shape
+    vp_shape=$(echo "$OUT" | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['dhf_roles']['widget-dhf']['verification_protocols']; print('YES' if v and 'folder' in v and 'path' not in v else 'NO')")
+    assert_eq "case11.verification_protocols.folder_pointer" "YES" "$vp_shape"
+}
+
+# ──────────────────────────────────────────────────────────────────────
 # Drive
 # ──────────────────────────────────────────────────────────────────────
 
@@ -711,6 +810,7 @@ case7; echo "case7: project-scoped multi_file role — folder pointer with file_
 case8; echo "case8: per-dhf multi_file role (internal mode) — folder pointer"
 case9; echo "case9: multi-match no-winner — ambiguity_notes + paired gap (was silently lost pre-fix)"
 case10; echo "case10: frontmatter canonical_role: opt-in outranks filename patterns"
+case11; echo "case11: external CLIENT-SLUG override — client slug, nested path, multi-file, governance"
 
 echo
 echo "Results: $PASS passed, $FAIL failed"

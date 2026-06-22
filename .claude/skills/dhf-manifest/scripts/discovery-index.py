@@ -343,9 +343,19 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                 _bind_per_dhf(role_name, dhf_id, search_root, patterns, project_root, output, folder)
 
         elif mode == "external":
-            mode_block = role_def.get("external")
-            if not mode_block:
-                # Role not mapped in external mode — informational gap, not a failure.
+            registry_block = role_def.get("external")
+            # Project-level CLIENT-SLUG override. The registry (canonical-roles.yaml)
+            # speaks generic canonical industry role names; a client's own taxonomy
+            # (Confluence/Windchill) doctype slugs live in
+            #   project.yml evidence_layout.layers[<canonical_role>].external
+            # so canonical-roles.yaml stays project-agnostic. The override may map a
+            # role to one or more client slugs (incl. NESTED paths under
+            # discovery_root) and may opt a role into external multi-file resolution.
+            ext_override = override.get("external") or {}
+
+            # No external mapping anywhere (registry silent AND no client override)
+            # → informational gap (role not applicable in this external template).
+            if not registry_block and not ext_override:
                 output["dhf_roles"][dhf_id][role_name] = None
                 output["gaps"].append({
                     "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
@@ -355,9 +365,11 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                     "informational": True,
                 })
                 continue
-            if role_def.get("multi_file"):
-                # Multi-file in external mode is deferred — convention not yet defined
-                # in the taxonomy. Emit informational gap, not a failure.
+
+            # multi_file external WITHOUT a client override stays deferred — the
+            # generic taxonomy has no convention for multi-file artifact families.
+            # A project opts in by supplying ...external.{taxonomy_folder, multi_file}.
+            if role_def.get("multi_file") and not ext_override:
                 output["dhf_roles"][dhf_id][role_name] = None
                 output["gaps"].append({
                     "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
@@ -367,6 +379,8 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                     "informational": True,
                 })
                 continue
+
+            eff_multi = bool(ext_override.get("multi_file", role_def.get("multi_file", False)))
 
             taxonomy_rel = dhf.get("taxonomy_path")
             if not taxonomy_rel:
@@ -388,41 +402,79 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                 })
                 continue
 
-            # `taxonomy_folder` may be a single slug (str) OR a list of candidate
-            # slugs (the same canonical role can surface under different external
-            # template slugs — e.g. an item DHF's `software-architecture-document-sad`
-            # vs. the system DHF's `system-architecture-document`). Try each
-            # candidate; the first whose folder/flat-file exists under THIS DHF wins.
-            tf_raw = mode_block.get("taxonomy_folder")
-            candidates = [tf_raw] if isinstance(tf_raw, str) else list(tf_raw or [])
+            # Candidate taxonomy folders. CLIENT-OVERRIDE candidates (the project's
+            # own slugs — possibly NESTED paths under discovery_root) are tried
+            # FIRST; generic registry candidates second. `taxonomy_folder` on either
+            # side may be a single slug (str) or a list of candidate slugs (the same
+            # canonical role can surface under different external template slugs).
+            tf_ov = ext_override.get("taxonomy_folder")
+            tf_reg = (registry_block or {}).get("taxonomy_folder")
+            ov_cands = [(c, True) for c in
+                        ([tf_ov] if isinstance(tf_ov, str) else list(tf_ov or []))]
+            reg_cands = [(c, False) for c in
+                         ([tf_reg] if isinstance(tf_reg, str) else list(tf_reg or []))]
+            candidates = ov_cands + reg_cands
+
             discovery_root = taxonomy.get("discovery_root", "")
-            patterns = effective_patterns(mode_block.get("patterns"), override)
+            patterns = effective_patterns(
+                ext_override.get("patterns", (registry_block or {}).get("patterns")), override)
+            # Override-only roles (no registry external block) may carry no patterns;
+            # fall back to the universal external doctype convention so a client-slug
+            # mapping resolves without restating patterns on every override.
+            if not patterns:
+                patterns = ["v*.md", "index.md"]
 
             resolved = False
             declared_any = False
-            for taxonomy_folder in candidates:
-                # Skip candidate slugs the project's taxonomy doesn't catalog at all
-                # (a different template's slug — not applicable here).
-                if not external_folder_exists(taxonomy, taxonomy_folder):
+            for taxonomy_folder, is_override in candidates:
+                # A client-override candidate is asserted by the project (it may be a
+                # nested path the taxonomy keys only by its leaf), so it is always
+                # "declared". A registry candidate must be catalogued in the taxonomy.
+                leaf = taxonomy_folder.split("/")[-1]
+                if not (is_override
+                        or external_folder_exists(taxonomy, taxonomy_folder)
+                        or external_folder_exists(taxonomy, leaf)):
                     continue
                 declared_any = True
+                # QMS governance: the taxonomy keys nested folders by their leaf
+                # doctype slug, so try the full path then the leaf.
+                gov_qms = (taxonomy_governing_qms(taxonomy, taxonomy_folder)
+                           or taxonomy_governing_qms(taxonomy, leaf))
                 nested_root = dhf_path / discovery_root / taxonomy_folder
                 flat_file = dhf_path / discovery_root / f"{taxonomy_folder}.md"
-                # Taxonomy-declared QMS governance for this folder (schema v0.3+);
-                # attached to the resolved entry for downstream consumers.
-                gov_qms = taxonomy_governing_qms(taxonomy, taxonomy_folder)
 
-                # Sub-convention A: nested folder — <discovery_root>/<folder>/v*.md
-                if nested_root.is_dir():
-                    _bind_per_dhf(role_name, dhf_id, nested_root, patterns, project_root, output,
-                                  f"{discovery_root}/{taxonomy_folder}" if discovery_root else taxonomy_folder)
-                    entry = output["dhf_roles"][dhf_id].get(role_name)
-                    if isinstance(entry, dict):
+                # External multi-file artifact family → folder-pointer entry (no winner).
+                if eff_multi:
+                    if nested_root.is_dir():
+                        folder_rel = relpath(nested_root, project_root)
+                        entry = build_multi_file_entry(folder_rel, nested_root, patterns)
                         if gov_qms:
                             entry["governing_qms"] = gov_qms
                         entry["taxonomy_folder"] = taxonomy_folder
+                        output["dhf_roles"][dhf_id][role_name] = entry
                         resolved = True
                         break
+                    continue  # folder absent under this DHF — try next candidate
+
+                # Single-file. Sub-convention A: nested folder — <root>/<folder>/v*.md
+                if nested_root.is_dir():
+                    winner, alternatives, _tried = resolve_one(
+                        patterns, nested_root, project_root, role_name)
+                    if winner:
+                        if gov_qms:
+                            winner["governing_qms"] = gov_qms
+                        winner["taxonomy_folder"] = taxonomy_folder
+                        output["dhf_roles"][dhf_id][role_name] = winner
+                        if alternatives:
+                            output["ambiguity_notes"].append({
+                                "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
+                                "winning_pattern": winner["matched_pattern"],
+                                "winning_path": winner["path"],
+                                "alternatives": alternatives,
+                            })
+                        resolved = True
+                        break
+                    continue  # folder exists but no file matched — try next candidate
                 # Sub-convention B: flat file — <discovery_root>/<folder>.md
                 elif flat_file.is_file():
                     entry = build_entry(flat_file, project_root, f"{taxonomy_folder}.md (flat-file)")
@@ -432,24 +484,25 @@ def resolve_per_dhf_role(role_name: str, role_def: dict, override: dict,
                     output["dhf_roles"][dhf_id][role_name] = entry
                     resolved = True
                     break
-                # else: candidate slug declared but no evidence under this DHF — try next
+                # else: candidate declared but no evidence under this DHF — try next
 
             if not resolved:
                 output["dhf_roles"][dhf_id][role_name] = None
+                cand_slugs = [c for c, _ in candidates]
                 if not declared_any:
                     # None of the candidate slugs are catalogued in this project's
                     # taxonomy — informational (this external template doesn't carry
                     # the role), same semantic as no external block at all.
                     output["gaps"].append({
                         "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
-                        "reason": f"taxonomy folder(s) {candidates} not declared in {taxonomy_rel}",
+                        "reason": f"taxonomy folder(s) {cand_slugs} not declared in {taxonomy_rel}",
                         "patterns_tried": [],
                         "informational": True,
                     })
                 else:
                     output["gaps"].append({
                         "scope": "per-dhf", "dhf": dhf_id, "role": role_name,
-                        "reason": f"none of {candidates} resolved under {discovery_root}/ "
+                        "reason": f"none of {cand_slugs} resolved under {discovery_root}/ "
                                   f"(folder or flat-file) for this DHF",
                         "patterns_tried": patterns,
                     })

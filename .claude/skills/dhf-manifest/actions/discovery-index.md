@@ -18,8 +18,24 @@ python3 .claude/skills/dhf-manifest/scripts/discovery-index.py [PROJECT_ROOT]
 | L0 — per-document frontmatter opt-in | `canonical_role: <slug>` in a doc's YAML frontmatter | Document authors (optional, **highest precedence**) |
 | L1 — canonical role names + scope semantics | `data/canonical-roles.yaml` (skill) | Skill maintainers |
 | L2 — ranked alternative pattern conventions per role | `data/canonical-roles.yaml` (skill) | Skill maintainers, append-mostly |
-| L3a — durable per-project overrides | `<project>/project.yml` → `evidence_layout.layers[role].{patterns_extra, patterns_exclude, folder_override}` | Project authors (optional) |
+| L3a — durable per-project overrides | `<project>/project.yml` → `evidence_layout.layers[role].{patterns_extra, patterns_exclude, folder_override, external}` | Project authors (optional) |
 | L3b — generated per-project resolution | `<project>/docs/project/dhf-manifest/<slug>-dhf-discovery.json` | This action |
+
+**L3a `external:` client-slug mapping (external-mode DHFs):** the registry (L1/L2)
+speaks GENERIC canonical industry role names; a client's regulated vault
+(Confluence/Windchill) uses its own doctype slugs. The optional
+`layers[<canonical_role>].external` block maps a canonical role → this client's
+slug(s) so the registry stays project-agnostic. Consulted only in external mode.
+Sub-keys: `taxonomy_folder` (a single slug **or a list** of candidate slugs/paths
+— tried in order, first existing under a DHF wins; **may be a nested path** under
+the taxonomy `discovery_root`); `multi_file: true` (resolve a versioned / artifact-
+family folder as a folder-pointer); `patterns` (override the default
+`[v*.md, index.md]`). Client-override candidates are tried **before** any generic
+registry `external.taxonomy_folder`, and are treated as taxonomy-declared (the
+project asserts them — useful when the taxonomy keys a nested folder only by its
+leaf). **The override block must be keyed by the CANONICAL role name** — the
+lookup is `evidence_layout.layers[<canonical_role>]`; a non-canonical key is
+silently inert. Empty in the common case.
 
 **L0 frontmatter opt-in (v12+):** a document declaring `canonical_role: <slug>`
 in its leading YAML frontmatter wins that role slot outright — ahead of every
