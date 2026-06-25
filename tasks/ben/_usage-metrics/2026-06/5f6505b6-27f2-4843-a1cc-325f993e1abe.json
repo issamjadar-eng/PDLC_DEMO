@@ -1,0 +1,37 @@
+{
+  "by_day": {
+    "2026-06-15": {
+      "cache_creation": 52960,
+      "cache_read": 454840,
+      "cache_write_1h": 52960,
+      "cache_write_5m": 0,
+      "input": 15682,
+      "messages": 8,
+      "output": 953
+    }
+  },
+  "by_model": {
+    "claude-opus-4-8": {
+      "cache_creation": 52960,
+      "cache_read": 454840,
+      "cache_write_1h": 52960,
+      "cache_write_5m": 0,
+      "input": 15682,
+      "messages": 8,
+      "output": 953
+    }
+  },
+  "month": "2026-06",
+  "session_id": "5f6505b6-27f2-4843-a1cc-325f993e1abe",
+  "source": "transcript",
+  "task_folder": "ben",
+  "totals": {
+    "cache_creation": 52960,
+    "cache_read": 454840,
+    "cache_write_1h": 52960,
+    "cache_write_5m": 0,
+    "input": 15682,
+    "messages": 8,
+    "output": 953
+  }
+}
