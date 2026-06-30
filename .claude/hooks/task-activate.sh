@@ -20,9 +20,30 @@ else
   STATE_DIR="$SCRIPT_DIR"
 fi
 mkdir -p "$STATE_DIR"
+PROJECT_ROOT="$(dirname "$STATE_DIR")"
 ACTION="${1:-help}"
 SESSION_ID="$2"
 TASK_ID="$3"
+
+# Append a timestamped event to the durable per-session activation ledger, used
+# by usage-metrics to attribute token cost to the task active at each moment
+# (time-sliced attribution; see task ben/096). Best-effort: never break activation.
+# Lives under _usage-metrics/ so it rides the existing gitignore + publish plumbing.
+log_activation() {
+  local event="$1"
+  [ -n "$SESSION_ID" ] && [ -n "$TASK_ID" ] || return 0
+  local resolver="$PROJECT_ROOT/.claude/skills/shared/scripts/resolve_user.py"
+  [ -f "$resolver" ] || return 0
+  command -v python3 >/dev/null 2>&1 || return 0
+  local tf
+  tf="$(cd "$PROJECT_ROOT" 2>/dev/null && python3 "$resolver" --task-folder 2>/dev/null)" || return 0
+  [ -n "$tf" ] || return 0
+  local dir="$PROJECT_ROOT/tasks/$tf/_usage-metrics/activations"
+  mkdir -p "$dir" 2>/dev/null || return 0
+  printf '{"ts":"%s","session_id":"%s","task_id":"%s","event":"%s"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$SESSION_ID" "$TASK_ID" "$event" \
+    >> "$dir/${SESSION_ID}.jsonl" 2>/dev/null || return 0
+}
 
 if [ -z "$SESSION_ID" ] || [ "$ACTION" = "help" ]; then
   echo "Usage: task-activate.sh <add|remove|list|clear> <session_id> [task_id]"
@@ -45,6 +66,7 @@ case "$ACTION" in
     fi
     touch "$STATE_FILE"
     grep -qxF "$TASK_ID" "$STATE_FILE" 2>/dev/null || echo "$TASK_ID" >> "$STATE_FILE"
+    log_activation add
     echo "Task $TASK_ID activated for session $SESSION_ID"
     ;;
   remove)
@@ -63,6 +85,7 @@ case "$ACTION" in
         rm -f "$STATE_FILE.tmp"
       fi
     fi
+    log_activation remove
     echo "Task $TASK_ID deactivated for session $SESSION_ID"
     ;;
   list)

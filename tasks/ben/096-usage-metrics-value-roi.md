@@ -113,6 +113,28 @@ _Gathered by a research subagent. The estimator rubric cites these; everything c
 
 _Implication for the design: this validates "ranges + confidence + red-team-the-aggregate" as the credibility model — since ~half the personas have no external anchor, honesty about which estimates are judgment-only is non-negotiable._
 
+## Phase 1 Spike Findings — transcript & subagent anatomy (2026-06-30)
+
+_Done empirically against this very session (it spawned a research subagent). Two surprises that reshape the Phase 1 build._
+
+**Transcript layout (verified):**
+- Main conversation tokens: `~/.claude/projects/<slug>/<session_id>.jsonl`; `assistant` rows carry `message.usage` = `{input_tokens, output_tokens, cache_creation_input_tokens, cache_read_input_tokens, cache_creation.{ephemeral_5m,ephemeral_1h}, server_tool_use.{web_search,web_fetch}}`. `collect.py` reads this — main-thread tokens ✓.
+- ⚠️ Each usage row ALSO has an `iterations[]` array that **duplicates the row's own totals** — cost math must not sum `iterations[]` on top of the row. (Separate from the `message.id` cross-row dedup.)
+
+**Surprise 1 — subagent tokens are NOT in the main transcript → `collect.py` undercounts.**
+- The transcript had **0 `isSidechain` rows** and only the **1 `Agent` tool_use** (the spawn). The subagent's tokens live in a **separate file**: `<slug>/<session_id>/subagents/agent-<agentId>.jsonl` (28 usage rows here), beside `agent-<agentId>.meta.json` = `{agentType, description, toolUseId, spawnDepth}`.
+- `meta.toolUseId` links the subagent back to the exact parent `Agent` tool_use → its timestamp → the active task. `spawnDepth` (=1 here) means **nested sub-subagents are possible** (scan recursively / cap depth).
+- **Impact:** today `collect.py` (only reads `<slug>/<session_id>.jsonl`) **misses 100% of subagent cost.** Red-team panels, workflows, advisors, and the future retrospective estimator are subagent-heavy — omitting them would **inflate ROI**. **Fix: `collect` also scans `<session_id>/subagents/**.jsonl`, sums their usage, attributes to the parent session** (time-slice by the spawn tool_use timestamp / session's active task at spawn).
+
+**Surprise 2 — one conversation can span MULTIPLE session ids (compaction).**
+- This single conversation = `516d9c61` (2026-06-29T17:33 → 06-30T05:40) → **compaction** → `24c349b9` (05:41 → ongoing); ~1-min gap. `CLAUDE_SESSION_ID` (the gate key) **changed across the boundary**.
+- **Impact:** the session↔task↔cost join must NOT assume one id per conversation. **Design adjustment:** per-session **timestamped** activation ledgers (written under whatever `CLAUDE_SESSION_ID` is current at activation), attribution = **timestamp-within-session** (message → task active at its ts), then **sum per task across all session-ids**. One rule handles compaction (sequential ids, summed) AND parallel sessions (isolated by id).
+
+**Net Phase 1 adjustments:**
+1. `collect` scans main + `<sid>/subagents/**.jsonl` (recursive for `spawnDepth>1`); attribute subagent tokens to the parent session via `meta.toolUseId` → parent tool_use timestamp.
+2. Attribution is timestamp-within-session; sum per task across session-ids (compaction-safe); never assume one id per conversation.
+3. Cost math ignores `iterations[]` (intra-row dup); keep `message.id` dedup.
+
 ## Open Questions
 
 - **Subagent token accounting** — inline vs sidechain in the installed CC? (Phase 1 spike; blocks trustworthy per-task cost.)
@@ -135,9 +157,10 @@ _Implication for the design: this validates "ranges + confidence + red-team-the-
 
 ## Todos
 
-- [ ] **Phase 1 spike:** run a subagent-heavy session; inspect the transcript; confirm where subagent tokens land (inline vs sidechain) and whether `collect` counts them
-- [ ] Phase 1: task-skill per-session activation log (timestamped, committed, concurrency-safe)
-- [ ] Phase 1: time-sliced + incremental `collect`, decoupled from SessionEnd (idempotent sweep); `unattributed` bucket
+- [x] **Phase 1 spike:** confirmed empirically — subagent tokens live in `<sid>/subagents/agent-<id>.jsonl` (NOT the main transcript; `collect` misses them today); one conversation can span multiple session-ids (compaction). See "Phase 1 Spike Findings" above.
+- [x] Phase 1: task-skill per-session activation log — `task-activate.sh` appends `{ts,session_id,task_id,event}` to `tasks/<tf>/_usage-metrics/activations/<sid>.jsonl` on add/remove (best-effort, one-line, gitignored→rides publish). Verified.
+- [x] Phase 1: time-sliced `collect` + subagent scan + `by_task` — `collect.py` reads the ledger → `task_at(ts)`, scans `<sid>/subagents/**.jsonl`, attributes each message to the active task, emits `by_task` + `_unattributed`. **Found+fixed a latent dedup bug** (see lessons). Validated: subagent 21→6,999 tokens, synthetic A→B→A slicing, real run (8 files). `collect` already runs at SessionStart (TTL-gated refresh hook) so it's not SessionEnd-only.
+- [ ] Phase 1 (remaining, optimizations — not correctness): always-collect at SessionStart (close the never-ended-session gap) + incremental transcript parse (offset/mtime skip) so always-collect stays cheap.
 - [x] Phase 0: research subagent → external by-hand effort references per persona (cited, with gaps); captured above as the estimator's reference basis
 - [ ] Phase 2: persona taxonomy (reuse advisors) + console-side labor-rate config (`[VERIFY]`)
 - [ ] Phase 3: estimation rubric in the task skill + inline `economics:` capture in update/checkpoint flow (no approval) — **the rubric file embeds/cites the Phase 0 external references** (anchor table + confidence-tag convention) as its grounding, so estimates point at published norms (or are labeled `judgment`) by construction
@@ -150,12 +173,20 @@ _Implication for the design: this validates "ranges + confidence + red-team-the-
 
 **Activation command:** `bash .claude/hooks/task-activate.sh add <SESSION_ID> 096`
 
-**Status:** design captured + Phase 0 external-effort references captured (research agent done, folded in above). Nothing built yet. **First action on resume:** the Phase 1 subagent-accounting spike (everything on the cost side depends on its answer), then the activation log + time-sliced collect.
+**Status:** Phase 0 done (external references). **Phase 1 attribution backbone built + validated** (activation ledger in `task-activate.sh`; `collect.py` does subagent scan + last-wins dedup + time-sliced `by_task`). **Uncommitted** — edits to `.claude/skills/task/hooks/task-activate.sh` (+ installed copy `.claude/hooks/task-activate.sh`) and `.claude/skills/usage-metrics/scripts/collect.py`; plus this doc. **First action on resume:** Phase 4 first-half — `aggregate.py` rolls `by_task` into per-task cost (actuals only, verifiable before any estimation). Then Phase 2 (persona taxonomy) → Phase 3 (inline estimates). Phase 1 optimizations (always-collect-at-start + incremental parse) can come anytime; not blocking.
 
 **Touches 3 skills:** `task` (activation log + estimation rubric + `economics:` block), `usage-metrics` (time-sliced incremental collect, value aggregation + JSON gen, retrospective builder; schema v2), `project-console` (Value/ROI view). Reuses `advisors` persona set + `red-team` for Phase 6.
 
+## Lessons Learned
+
+<!-- LESSONS LEARNED: tooling, token-accounting -->
+**Claude Code logs token usage differently on main vs subagent transcripts — `collect` must dedup by message.id keeping the LAST (not first) record.** Each message is logged ~2–5×. On the MAIN transcript every copy carries the same complete usage (`first==last==max`), so the old first-wins dedup was fine there. But SUBAGENT transcripts (`<slug>/<sid>/subagents/agent-*.jsonl`) stream **progressive** usage — the first row is a near-empty start, the final row holds the totals. Measured on one research subagent: first-wins = **21** output tokens, last-wins = **6,999**. First-wins silently dropped ~99% of streamed subagent cost.
+**Why it matters:** subagent-heavy work (red-team panels, workflows, advisors, the planned retrospective estimator) would have been undercounted → inflated ROI — the exact thing a skeptic attacks. **How to apply:** when summing CC transcript usage, dedup `message.id` with **last/max-wins**; and remember subagent tokens live in a separate `subagents/` tree, not the main transcript (scan both). Verified last-wins leaves main totals unchanged.
+
 ## Changelog
 
+- 2026-06-30: **Phase 1 attribution backbone built + validated** (uncommitted; edits to `task` + `usage-metrics` skills). (1) `task-activate.sh` now writes a per-session timestamped activation ledger (`_usage-metrics/activations/<sid>.jsonl`) on add/remove — verified it appends + is gitignored. (2) `collect.py` rewritten: reads the ledger → `task_at(ts)`, scans `<sid>/subagents/**.jsonl`, time-slices every message to the active task, emits `by_task` + `_unattributed`; **switched dedup from first-wins to last-wins** after discovering subagent transcripts stream progressive usage (first-wins captured 21 of 6,999 subagent output tokens — see Lessons). Validated: subagent delta now 6,999; synthetic A→B→A slicing correct; real `collect` wrote 8 session files with `by_task`. (3) Confirmed `collect` already runs at SessionStart (TTL-gated refresh hook) — not SessionEnd-only. Remaining Phase 1 = optimizations (always-collect-at-start + incremental parse). Next major step: Phase 4 first-half — teach `aggregate.py` to roll up `by_task` into per-task cost (actuals, no estimates yet).
+- 2026-06-30: **Phase 1 subagent-accounting spike done** (empirical, against this session). Found: (1) subagent tokens live in `<slug>/<sid>/subagents/agent-<id>.jsonl` + `.meta.json` (toolUseId→parent, spawnDepth), NOT the main transcript → `collect.py` currently misses 100% of subagent cost (would inflate ROI). (2) one conversation spans multiple session-ids across compaction (`516d9c61`→`24c349b9`); the gate's `CLAUDE_SESSION_ID` changes. (3) usage rows carry a duplicate `iterations[]` to avoid in cost math. Folded the net Phase-1 build adjustments into the doc. Design pushed earlier via PR #74; spike findings captured here (uncommitted).
 - 2026-06-30: **Phase 0 references captured** (research agent `a9e5c4b29fae39cc5` returned, 83k subagent tokens, 16 tool uses). Folded a cited reference table + well-sourced/thin/unfindable inventory + method guidance into the new "Phase 0 Findings" section. Key result: only doc-authoring (3–7 hr/pg), software (325–750 LOC/dev-month), requirements-ratio (10–18%), and PM-ratio (7–15%) have solid published norms; QE/risk/cyber/HF/V&V/post-market have **no** external hour figure → estimator uses per-page + specialist adder, labeled `confidence: judgment`. Validates the ranges+confidence+red-team-aggregate credibility model.
 - 2026-06-30: **Phase 0 reframed + research agent launched.** No internal calibration anchor exists → grounding by-hand estimates against **external references** instead, gathered by a **research subagent** (own context, keeps main thread lean). Agentic-time denominator settled = summed active session time (task-span as context). Research agent (general-purpose, background) is gathering published by-hand person-hour norms per persona/artifact-type with citations + honest gaps; findings to be captured here as the estimator's reference basis. _In-flight: background research agent `a9e5c4b29fae39cc5`; transcript at `.../tasks/a9e5c4b29fae39cc5.output` (do not tail — overflow). If this session drops before it returns, re-run the Phase-0 research prompt (in this doc's Phase 0) fresh._
 - 2026-06-30: Task created. Captured the full design from the planning session: time-sliced no-double-count attribution decoupled from SessionEnd; inline (not subagent) ranged person-hour estimates with no approval gate; persona-based multi-label categorization; person-hours in data / $ in console; on-demand retrospective dataset for existing task docs; JSON generation capability; 7-phase plan (0–6) with the subagent-accounting spike first. Design grounded in reads of `collect.py`/`aggregate.py`/`publish.py`/`setup.py` + the console metrics loader/router.

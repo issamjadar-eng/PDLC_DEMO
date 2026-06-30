@@ -173,15 +173,67 @@ def _add(bucket: dict, usage: dict) -> None:
     bucket["messages"] += 1
 
 
-def parse_session(jsonl_path: Path):
-    """Return {month: {"by_model": {model: stats}, "by_day": {YYYY-MM-DD: stats}}}
-    for one session transcript, deduped by message.id."""
-    seen_msg_ids: set[str] = set()
-    months: dict[str, dict] = defaultdict(lambda: {
-        "by_model": defaultdict(_zero),
-        "by_day": defaultdict(_zero),
-    })
-    with jsonl_path.open(encoding="utf-8") as fh:
+def load_activation_timeline(per_user_dir: Path, session_id: str):
+    """Load this session's activation ledger → a `task_at(ts)` function returning
+    the task active at an ISO timestamp (the most-recently-activated still-open
+    task), or None when no task was active.
+
+    The ledger (`<per_user_dir>/activations/<session_id>.jsonl`, append-only,
+    written by the task skill's task-activate.sh) is what lets us attribute each
+    message's tokens to the task being worked on at that moment — time-sliced, so
+    one session that spans several tasks is split (never double-counted), and a
+    task that spans several sessions is summed at aggregate time. Missing/empty
+    ledger → everything is unattributed (honest overhead bucket)."""
+    ledger = per_user_dir / "activations" / f"{session_id}.jsonl"
+    events: list[tuple[str, str, str]] = []
+    if ledger.is_file():
+        try:
+            for line in ledger.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    e = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                ts, tid, ev = e.get("ts"), e.get("task_id"), e.get("event")
+                if ts and tid and ev in ("add", "remove"):
+                    events.append((ts, str(tid), ev))
+        except OSError:
+            pass
+    events.sort(key=lambda x: x[0])
+
+    def task_at(ts: str):
+        if not events or not ts:
+            return None
+        active: list[str] = []  # insertion-ordered; last element = current owner
+        for ets, tid, ev in events:
+            if ets > ts:
+                break
+            if tid in active:
+                active.remove(tid)
+            if ev == "add":
+                active.append(tid)
+        return active[-1] if active else None
+
+    return task_at
+
+
+def _gather_records(jsonl_path: Path, records: dict) -> None:
+    """Read one transcript file; keep the LAST usage record per message.id.
+
+    Claude Code logs each message multiple times. On the MAIN transcript every
+    copy carries the SAME (complete) usage, so first==last. But SUBAGENT
+    transcripts stream PROGRESSIVE usage — the first row is a near-empty start and
+    the FINAL row carries the complete totals — so first-wins silently undercounts
+    all streamed subagent work (verified: 21 vs 6,999 output tokens for one
+    research subagent). Last-wins is correct for both. `<synthetic>` (local
+    interrupt/error messages, zero real tokens) and id-less rows are skipped."""
+    try:
+        fh = jsonl_path.open(encoding="utf-8")
+    except OSError:
+        return
+    with fh:
         for line in fh:
             line = line.strip()
             if not line:
@@ -195,20 +247,47 @@ def parse_session(jsonl_path: Path):
             if not usage:
                 continue
             model = msg.get("model") or "unknown"
-            # Claude Code emits locally-generated messages (interrupts, error
-            # notices) under model "<synthetic>" with zero-token usage — not real
-            # API usage; skip so they don't inflate message counts.
             if model == "<synthetic>":
                 continue
             msg_id = msg.get("id")
-            if not msg_id or msg_id in seen_msg_ids:
+            if not msg_id:
                 continue
-            seen_msg_ids.add(msg_id)
-            ts = row.get("timestamp") or ""
-            month = ts[:7] if len(ts) >= 7 else "unknown"
-            day = ts[:10] if len(ts) >= 10 else "unknown"
-            _add(months[month]["by_model"][model], usage)
-            _add(months[month]["by_day"][day], usage)
+            records[msg_id] = {  # last-wins: a later row for the same id overwrites
+                "usage": usage,
+                "model": model,
+                "ts": row.get("timestamp") or "",
+            }
+
+
+def parse_session(jsonl_path: Path, tdir: Path, session_id: str, task_at):
+    """Parse a session's MAIN transcript PLUS any subagent transcripts under
+    `<tdir>/<session_id>/` (e.g. `subagents/agent-*.jsonl`, recursive so nested
+    spawns at spawnDepth>1 are included). Subagent tokens are attributed to the
+    same task timeline as the parent — without this, ALL subagent cost (red-team
+    panels, workflows, advisors) is silently dropped. Dedup is last-per-id across
+    all files (see `_gather_records`). Returns {month: {by_model, by_day, by_task}};
+    by_task buckets each message by the task active at its timestamp."""
+    records: dict[str, dict] = {}
+    _gather_records(jsonl_path, records)
+    sub_root = tdir / session_id
+    if sub_root.is_dir():
+        for sub in sorted(sub_root.rglob("*.jsonl")):
+            _gather_records(sub, records)
+
+    months: dict[str, dict] = defaultdict(lambda: {
+        "by_model": defaultdict(_zero),
+        "by_day": defaultdict(_zero),
+        "by_task": defaultdict(lambda: defaultdict(_zero)),
+    })
+    for rec in records.values():
+        ts, model, usage = rec["ts"], rec["model"], rec["usage"]
+        month = ts[:7] if len(ts) >= 7 else "unknown"
+        day = ts[:10] if len(ts) >= 10 else "unknown"
+        task = task_at(ts) or "_unattributed"
+        m = months[month]
+        _add(m["by_model"][model], usage)
+        _add(m["by_day"][day], usage)
+        _add(m["by_task"][task][model], usage)
     return months
 
 
@@ -267,10 +346,12 @@ def main() -> int:
     grand = {"input": 0, "output": 0, "cache_creation": 0, "cache_read": 0, "messages": 0}
     for jf in transcripts:
         session_id = jf.stem
-        months = parse_session(jf)
+        task_at = load_activation_timeline(per_user_dir, session_id)
+        months = parse_session(jf, tdir, session_id, task_at)
         for month, mdata in months.items():
             model_map = mdata["by_model"]
             by_day = mdata["by_day"]
+            by_task = mdata["by_task"]
             totals = session_totals(model_map)
             if totals["messages"] == 0:
                 continue
@@ -283,6 +364,12 @@ def main() -> int:
                 "source": "transcript",
                 "by_model": {m: dict(s) for m, s in model_map.items()},
                 "by_day": {d: dict(s) for d, s in sorted(by_day.items())},
+                # Time-sliced task attribution (incl. subagent tokens). "_unattributed"
+                # = work with no active task (reading/planning/chat — honest overhead).
+                "by_task": {
+                    t: {m2: dict(s) for m2, s in mm.items()}
+                    for t, mm in sorted(by_task.items())
+                },
                 "totals": totals,
             }
             out_path = per_user_dir / month / f"{session_id}.json"
