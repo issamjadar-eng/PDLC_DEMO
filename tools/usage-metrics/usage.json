@@ -287,6 +287,8 @@
           "program-manager",
           "systems-engineering"
         ],
+        "retrospective": false,
+        "title": "Usage-Metrics: Value / ROI (person-hours saved via agentic-first)",
         "todos": 7
       },
       "sessions": 1,

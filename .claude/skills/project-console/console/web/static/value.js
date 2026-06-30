@@ -13,6 +13,13 @@
   const hrs = n => (Math.round((n || 0) * 10) / 10).toLocaleString();
   const rng = o => o ? `${hrs(o.min)}–${hrs(o.max)}` : "—";
   const confLabel = m => !m ? "—" : (m.low ? "low" : (m.med ? "med" : (m.high ? "high" : "—")));
+  const esc = s => (s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  // 3–5 word task summary from the doc title (drop parentheticals).
+  const shortTitle = t => {
+    if (!t) return "";
+    const w = t.replace(/\(.*?\)/g, "").replace(/[:—-]+/g, " ").split(/\s+/).filter(Boolean);
+    return esc(w.slice(0, 5).join(" "));
+  };
 
   // Anonymize people; keep the task number (value is task-scoped, people aren't ranked).
   const folders = [...new Set(Object.keys(tasks).map(r => r.split("/")[0]))].sort();
@@ -27,6 +34,8 @@
     const cats = e.personas || [];
     rows.push({
       label: memberOf[ref.split("/")[0]] + " · " + id,
+      title: e.title,
+      retro: !!e.retrospective,
       category: cats.length ? cats.slice(0, 3).join(", ") + (cats.length > 3 ? "…" : "") : "—",
       agentic_h: e.agentic_hours,
       byhand: e.manual_hours,
@@ -57,8 +66,8 @@
   const tb = document.querySelector("#vv-tbl tbody");
   if (tb) {
     tb.innerHTML = rows.map(r => `<tr>
-      <td>${r.label}</td>
-      <td>${r.category}</td>
+      <td>${r.label}${r.retro ? '<span class="vv-badge est">retro</span>' : ''}<div class="vv-sum">${shortTitle(r.title)}</div></td>
+      <td class="vv-cat">${r.category}</td>
       <td class="vv-mono">${r.agentic_h != null ? hrs(r.agentic_h) : "—"}</td>
       <td class="vv-mono">${rng(r.byhand)}</td>
       <td class="vv-mono vv-hero">${r.saved ? rng(r.saved) : "—"}</td>

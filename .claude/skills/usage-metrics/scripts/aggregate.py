@@ -275,6 +275,8 @@ def parse_task_economics(project_root: Path) -> dict:
                 for p in ps:
                     by_persona[p]["min"] += lo / n
                     by_persona[p]["max"] += hi / n
+            tm = re.search(r"(?m)^#\s+\S+\s+[—-]\s+(.+?)\s*$", text)
+            title = tm.group(1).strip() if tm else None
             ah = econ.get("agentic_hours")
             agentic_hours = float(ah) if isinstance(ah, (int, float)) else None
             # The savings headline: by-hand hours minus how long it actually took us.
@@ -288,6 +290,8 @@ def parse_task_economics(project_root: Path) -> dict:
                 by_persona.items(), key=lambda kv: kv[1]["max"], reverse=True)]
             out[f"{tf}/{nnn}"] = {
                 "method_version": econ.get("method_version"),
+                "title": title,
+                "retrospective": bool(econ.get("retrospective")),
                 "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
                 "agentic_hours": agentic_hours,
                 "hours_saved": hours_saved,
