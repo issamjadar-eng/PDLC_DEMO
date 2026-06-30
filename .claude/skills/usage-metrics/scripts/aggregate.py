@@ -184,6 +184,14 @@ def collect_records(project_root: Path, month_filter: str | None):
 
     data: dict = defaultdict(lambda: defaultdict(_slot))
 
+    def _task_slot():
+        return {"by_model": _dd(lambda: _dd(int)), "totals": _dd(int), "sessions": 0}
+
+    # Per-task rollup across all months/sessions (the value dimension). Keyed by
+    # "<task_folder>/<task_id>" so it can later join to per-task economics
+    # estimates that live under tasks/<person>/NNN-*.md.
+    task_data: dict = defaultdict(_task_slot)
+
     def _merge(dst, src):
         for k, v in (src or {}).items():
             if isinstance(v, (int, float)):
@@ -210,7 +218,14 @@ def collect_records(project_root: Path, month_filter: str | None):
                     _merge(slot["by_model"][model], ms)
                 for day, ds in (rec.get("by_day") or {}).items():
                     _merge(slot["by_day"][day], ds)
-    return data
+                # Per-task: by_task = {task_id: {model: stats}} (incl. "_unattributed").
+                for task_id, tmap in (rec.get("by_task") or {}).items():
+                    tslot = task_data[f"{task_folder}/{task_id}"]
+                    tslot["sessions"] += 1
+                    for model, ms in (tmap or {}).items():
+                        _merge(tslot["by_model"][model], ms)
+                        _merge(tslot["totals"], ms)
+    return data, task_data
 
 
 def fmt(n: int) -> str:
@@ -641,7 +656,7 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     pricing = load_pricing(project_root)
-    data = collect_records(project_root, args.month)
+    data, task_data = collect_records(project_root, args.month)
 
     if not data:
         if not args.quiet:
@@ -688,11 +703,29 @@ def main() -> int:
 
     # 2) Consolidated JSON — the machine-readable team view (consumed by
     #    project-console's Metrics view). Anonymized; no names, no task_folders.
+    # Per-task cost rollup — the value dimension. Task-IDENTIFIED (<tf>/<task_id>)
+    # so it can join to per-task economics estimates downstream; "_unattributed"
+    # is honest overhead (work with no active task). NOTE: unlike the `months`
+    # member view, this block is NOT person-anonymized — value is task-scoped, and
+    # the join to estimates needs the real task ref. The console (Phase 5) decides
+    # how to present it. Estimates/person-hours are added in a later phase.
+    tasks_out = {
+        ref: {
+            "by_model": {m: {**dict(ms), "cost": cost_of({m: ms}, pricing)}
+                         for m, ms in slot["by_model"].items()},
+            "totals": dict(slot["totals"]),
+            "sessions": slot["sessions"],
+            "cost": cost_of(slot["by_model"], pricing),
+        }
+        for ref, slot in sorted(task_data.items())
+    }
+
     usage_json = {
-        "schema": "usage-metrics/team/v1",
-        "anonymized": True,
+        "schema": "usage-metrics/team/v2",
+        "anonymized": True,           # applies to the `months`/member view
         "members": len(folders),
         "months": all_plain,
+        "tasks": tasks_out,           # v2: per-task cost (task-identified; value dimension)
         "daily_cost": daily_cost,
         "rate_card": pricing or {},
         "cost_note": cost_note,
