@@ -49,6 +49,7 @@ Mirrors the SECOPS 7-day TTL pattern: on session start, if the local dashboard i
 | README.md exists | Design doc at skill root | Required | shared |
 | Changelog current | Latest entry matches frontmatter version | Required | shared |
 | Hook symlinked, not copied | `.claude/hooks/usage-metrics-refresh.sh` is a symlink into the skill | Required | shared |
+| Status line symlinked, not copied | `.claude/statusline.sh` is a symlink into the skill (or a deliberate project fork) | Recommended | shared |
 | Execution via tools symlinks | `tools/usage-metrics/{collect,aggregate}.py` are symlinks to skill scripts | Recommended | local |
 | Project-agnostic | No company/device/team/task names in any skill file | Required | shared |
 | No PII in records | committed `_usage-metrics/*.json` contain no email/account id | Required | local |
@@ -58,6 +59,7 @@ Mirrors the SECOPS 7-day TTL pattern: on session start, if the local dashboard i
 
 ## Changelog
 
+- 4 (2026-06-25): Added a team-shared **status line**. `statusline.sh` (skill-owned) renders `[model] <bar> IN/SIZE ctx · ↑OUT resp · $cost` from the Claude Code statusLine stdin (`context_window.*` + `cost.total_cost_usd`); jq-guarded with graceful degradation on builds that omit `context_window.*`. `setup` now symlinks it to `.claude/statusline.sh` and registers the `statusLine` block in `settings.json` — idempotent, and a pre-existing different `statusLine` is treated as a project fork and left alone. Same self-contained symlink model as the hooks (a `/sync-skills pull` auto-updates the installed line).
 - 3 (2026-06-22): Added `publish.py` + a SessionEnd hook — each teammate's own `_usage-metrics/` data is pushed to the shared branch via an **isolated git worktree** (working branch untouched; fetch+retry for concurrency), closing the loop so the daily-aggregate workflow always has current data. Gated by `usage_metrics.publish.enabled`. `setup` now installs/registers both hooks (SessionStart refresh + SessionEnd publish).
 - 2 (2026-06-22): Team dashboard output moved to `tools/usage-metrics/` (anonymized `Member N`; `index.html` + consolidated `usage.json` consumed by project-console's Metrics view). Token quantities normalized to MTok; rate card collapsed to a single Write column (1h rate). `setup` now installs a daily-aggregate GitHub Actions workflow (CI re-aggregates committed per-user data; collection stays local). Aggregation is deterministic (byte-identical re-runs).
 - 1 (2026-06-22): Initial version — local transcript-parse collection, git-as-aggregator roll-up, self-contained HTML dashboard (cost projection + daily/by-member/by-model charts + rate card), per-model cost from an editable rate card, and a staleness-gated SessionStart auto-refresh hook. `setup` self-wires into a project (hook symlink + registration, `project.yml` block, file-locator exclude, pricing seed, `tools/` execution symlinks).

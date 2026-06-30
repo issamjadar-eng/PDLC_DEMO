@@ -272,7 +272,9 @@ security:
   - pdf
   - pptx
   - project-console
+  - red-team
   - reference-audit
+  - regulatory-authoring
   - secops
   - skill-creator
   - strategy
@@ -283,6 +285,7 @@ security:
   - tracker
   - usage-metrics
   - web-control
+  - writing-well
   - xlsx
   approved_mcps:
   - chrome-devtools
@@ -292,10 +295,20 @@ security:
   - dhf-manifest/agents/tier1-enricher
   - dhf-manifest/agents/tier1-restructure
   - project-secops
+  - red-team/agents/ceo-skeptic
+  - red-team/agents/cfo-skeptic
+  - red-team/agents/cto-skeptic
+  - red-team/agents/pmo-skeptic
+  - red-team/agents/qa-vp-skeptic
+  - red-team/agents/ra-vp-skeptic
+  - red-team/agents/red-team-researcher
+  - red-team/agents/vp-eng-skeptic
   - reference-audit/agents/citations
   - reference-audit/agents/citations-external-researcher
   - reference-audit/agents/citations-informal-researcher
   - reference-audit/agents/citations-internal-researcher
+  - regulatory-authoring/agents/regulatory-copy-editor
+  - writing-well/agents/prose-editor
 
 # ─── Strategy domains ───
 # Canonical 8-domain registry. Consumed by:

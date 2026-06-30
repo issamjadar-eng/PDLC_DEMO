@@ -1,0 +1,1 @@
+../skills/regulatory-authoring/rules/regulatory-authoring.md

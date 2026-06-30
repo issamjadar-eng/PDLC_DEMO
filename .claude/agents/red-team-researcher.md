@@ -1,0 +1,1 @@
+../skills/red-team/agents/red-team-researcher.md

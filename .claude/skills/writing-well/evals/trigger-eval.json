@@ -1,0 +1,23 @@
+[
+  {"query": "tighten the prose in section 3 of this doc", "should_trigger": true},
+  {"query": "is this paragraph too wordy?", "should_trigger": true},
+  {"query": "make this README clearer", "should_trigger": true},
+  {"query": "review my writing for clarity", "should_trigger": true},
+  {"query": "cut the passive voice in this article", "should_trigger": true},
+  {"query": "proofread this email before I send it", "should_trigger": true},
+  {"query": "this whitepaper section reads clunky — sharpen it", "should_trigger": true},
+  {"query": "cut the fluff and jargon from these release notes", "should_trigger": true},
+  {"query": "is this well written, or too hedgy?", "should_trigger": true},
+  {"query": "copy-edit this blog post for concision", "should_trigger": true},
+
+  {"query": "write me a white paper on agentic PDLC", "should_trigger": false},
+  {"query": "draft a one-pager for the sales team", "should_trigger": false},
+  {"query": "publish this externally as a PDF", "should_trigger": false},
+  {"query": "lint this doc against our brand guidelines", "should_trigger": false},
+  {"query": "strip the internal notes before we ship this", "should_trigger": false},
+  {"query": "build a slide deck from this markdown", "should_trigger": false},
+  {"query": "convert this pptx into an HTML presentation", "should_trigger": false},
+  {"query": "fix the bug in src/api/handler.py", "should_trigger": false},
+  {"query": "summarize this PDF for me", "should_trigger": false},
+  {"query": "create a task for the migration work", "should_trigger": false}
+]

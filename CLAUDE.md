@@ -135,3 +135,4 @@ Files under `.claude/rules/` are auto-loaded into every session — see those fi
 - `ground-in-contracts-not-assumptions.md` — read the contract (SKILL.md, schema, project.yml) before reasoning about behavior; don't infer from filenames or output inspection.
 - `internal-vs-external-scope-labels.md` — internal-review docs use 📤 / 📝 / ⏸️ / 📖 scope labels to mark formal-out vs draft vs paused vs read-only.
 - `ai-changelog.md` — AI-assisted edits to controlled markdown docs are logged in a non-published `<!-- AI-CHANGELOG -->` metadata block; never name the AI model/tool/vendor in document content — the only sanctioned label is "AI assistant(s)".
+- `regulatory-authoring.md` — authoring rules + writing guidelines for controlled documents that face a regulator/auditor (DHF deliverables, submission narratives); lint, copy-edit, and the canonical authoring standard.
