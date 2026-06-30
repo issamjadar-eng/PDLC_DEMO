@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-30 — push (usage-metrics v5 — gitignore fix) [ben/093]
+
+- **Files:** 5 — `usage-metrics/scripts/{publish,setup}.py`, `usage-metrics/{SKILL.md,README.md}`, `task/rules/scratch-and-tmp.md`. All `LOCAL_AHEAD` (clean push candidates).
+- **What:** fix the recurring fast-forward/merge abort from usage-metrics per-session JSONs (tracked on the branch via worktree-publish, but untracked locally → "untracked working tree files would be overwritten"). `setup` now git-ignores `tasks/*/_usage-metrics/` + `**/_usage-metrics/`; `publish.py` force-adds (`git add -f`) so data still reaches the branch. Auto-loaded rule row updated. v4→v5.
+- **Post-update:** projects re-run `/usage-metrics setup` after pulling (gitignore line is installed by setup; publish.py rides the sync).
+- **Branch:** `sync/pdlc-demo-usage-metrics-gitignore-fix-2026-06-30`
+- **PR:** https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/239 — merged (squash)
+- **Merge commit / Hitachi HEAD after sync:** `17cb8e5`
+- Project side landed first via PDLC_DEMO PR #72.
+
 ## 2026-06-30 — push (project-console v1.29.0) [ben/095]
 
 - **Files:** 22 — the whole `skills/project-console/` change set. 9 `LOCAL_ONLY` (new `agents/templates/red-team/` group) + 13 `LOCAL_AHEAD` (README, SKILL, VERSION, 3 fixed core-team templates, `console/chat/{sdk_client,domain_agents,router,panels,sources}.py`, `console/config.py`, `scripts/scaffold.py`). All clean push candidates — no `BOTH_DIVERGED`, no upstream to reconcile.
