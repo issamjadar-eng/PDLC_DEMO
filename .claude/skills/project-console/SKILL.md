@@ -1,8 +1,8 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.28.0
-updated: 2026-06-22
+version: 1.29.0
+updated: 2026-06-29
 ---
 
 # Project Console
@@ -10,7 +10,7 @@ updated: 2026-06-22
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
 - A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), and **submission** (FDA submission-package viewer + Ask-the-advisor)
-- A **template library** of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) materialized into the project on init
+- A **grouped template library** materialized into the project on init: a `core-team` group of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) plus two advisory panels, and a `red-team` group — an adversarial buyer committee (CEO, CFO, CTO, VP Eng, RA VP, QA VP, PMO skeptics + a panel) for pressure-testing outward-facing documents. Each `agents/templates/<group>/` directory materializes into `agents/<group>/`
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`
 
@@ -47,18 +47,29 @@ Scaffold `tools/project-console/` into the current project.
    uv run python .claude/skills/project-console/scripts/scaffold.py init --port <N>
    ```
    (Add `--force` only if the user explicitly asks to overwrite an existing scaffold.)
+   Agent templates materialize **by group**: each `agents/templates/<group>/` directory
+   (e.g. `core-team`, `red-team`) is copied into `agents/<group>/`, **skip-if-exists**, and a
+   per-file baseline SHA is recorded in the manifest's `agent_templates` map (so a later `sync`
+   can tell a pristine copy from a customized one). A flat `*.md` directly under `templates/`
+   is treated as `core-team` (the original single-group layout).
 4. Report what was created and the next steps printed by the scaffolder, including the configured port.
 5. Remind the user they can run `/project-console theme <url>` to build a branded theme pack. The port can be changed later by editing `tools/project-console/console.yaml` `server.port` — both `run.sh` and `start.sh` read it at launch.
 
-### `sync`
+### `sync [--apply-agent-updates]`
 Roll forward the scaffolded tool to match the currently-installed skill version. Use after `/sync-skills pull` brings a newer `project-console` skill.
 
 1. Run:
    ```bash
    uv run python .claude/skills/project-console/scripts/scaffold.py sync
    ```
-2. Report which files were updated (skill-owned files only).
-3. If the scaffolder reports drift in files not declared in `tools/project-console/README.md`'s `## Customizations` section, surface the drift to the user and ask before overwriting.
+2. Report which skill-owned files were updated (`run.sh`, `start.sh`).
+3. **Agent templates are handled idempotently and never clobber a project file** — the project owns its roster (`agents/` is project-owned). Sync sorts each template into one of four buckets and **guides** the user:
+   - **New** (a template/whole group the project lacks, e.g. `red-team/`) → materialized automatically; reported as "Added".
+   - **Update available** (the project's copy is byte-identical to the baseline recorded at materialize time, but the template advanced upstream) → **reported, not applied**. The copy is provably unmodified, so it's safe to update — re-run `sync --apply-agent-updates` to overwrite just those files (it never touches a customized one), or copy the template manually.
+   - **Review drift** (the project's copy differs from both the current template and any recorded baseline — i.e. customized, or a pre-baseline legacy install) → **reported only, never overwritten**. The user merges manually if they want the upstream change.
+   - **In sync** → silent.
+4. This is how an upstream agent fix (e.g. a corrected grounding glob) or a new group reaches existing projects: the fix lands in the template; `sync` surfaces it as "update available" (auto-applied only with the explicit flag) so customizations are always preserved.
+5. If the scaffolder reports drift in skill-owned files not declared in `tools/project-console/README.md`'s `## Customizations` section, surface the drift to the user and ask before overwriting.
 
 ### `theme <url> [--name <slug>]`
 Scrape a company website and materialize a project-local theme pack at `tools/project-console/themes/<slug>/`.
@@ -165,7 +176,9 @@ When sync detects drift in a skill-owned file that the user hasn't declared in t
       theme.yaml
       footer.html.j2
   agents/
-    templates/                # 10 common medtech personas (materialized into project on init)
+    templates/                # grouped agent template library (materialized into project on init)
+      <flat *.md>             #   → core-team group (10 medtech personas + panels; legacy flat layout)
+      red-team/               #   → red-team group (7 buyer-committee skeptics + panel + _group.md)
   scripts/
     scaffold.py               # init / sync / status implementation
 ```

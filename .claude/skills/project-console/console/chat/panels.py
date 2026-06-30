@@ -6,15 +6,26 @@ from console.chat.sources import resolve_with_meta
 from console.config import Config
 
 
-PANEL_FRAMING = (
-    "You are participating as a member of a clinical advisory panel reviewing "
-    "a patient-controlled analgesia (PCA) infusion device. Speak in first "
-    "person, stay in character as the KOL described below, and draw only on "
-    "that KOL's expertise. Keep your contribution focused — three to six "
-    "sentences — since other panelists will speak in turn.\n\n"
-)
-
 MAX_LLM_TURNS = 6
+
+
+def _panel_framing(panel: DomainAgent) -> str:
+    """Generic, project-agnostic wrapper for a panel member's turn.
+
+    What KIND of panel this is and how members should interact comes from the
+    panel's OWN body (injected as THIS PANEL below) — never hardcoded here, so
+    a KOL clinical panel, a cross-functional core-team panel, and a red-team
+    buyer committee each read correctly. This wrapper only guarantees the
+    mechanics every panel turn needs, regardless of panel type.
+    """
+    return (
+        f"You are participating as one member of the {panel.title}. "
+        "Speak in the first person and stay in character as the persona "
+        "described under YOUR ROLE below — draw only on that persona's "
+        "expertise and remit. Keep your contribution focused (about three to "
+        "six sentences); the other panelists each speak in turn, so make your "
+        "own point and leave theirs to them.\n\n"
+    )
 
 
 def build_member_system_prompt(
@@ -26,8 +37,16 @@ def build_member_system_prompt(
         config.repo_root,
         list(panel.sources) + list(member.sources),
     )
+    panel_body = panel.system_prompt.strip()
+    panel_context = (
+        f"===== THIS PANEL: {panel.title} =====\n{panel_body}\n\n"
+        if panel_body
+        else ""
+    )
     prompt = (
-        PANEL_FRAMING
+        _panel_framing(panel)
+        + panel_context
+        + "===== YOUR ROLE =====\n"
         + member.system_prompt
         + "\n\n===== GROUNDING SOURCES =====\n"
         + resolved.text
@@ -58,6 +77,7 @@ async def _run_member(
         system_prompt=system,
         user_message=prompt,
         model=member.model or panel.model,
+        subagents=member.subagents,
     ):
         yield {"type": "token", "text": token}
     yield {"type": "speaker_done", "name": member.name}
@@ -96,6 +116,8 @@ async def _llm_pick_next(
         system_prompt=moderator_system,
         user_message=prompt,
         model=panel.model,
+        enable_read_files=False,
+        enable_file_locator=False,
     )).strip()
     first = reply.splitlines()[0].strip().strip(".").strip()
     if first.upper().startswith("DONE"):

@@ -102,6 +102,19 @@ class Config:
                 out.append(r)
         return tuple(out)
 
+    @property
+    def chat_mcp_servers(self) -> list[str]:
+        """External MCP servers (by name, as declared in the project's
+        `.mcp.json`) exposed to every chat agent as tools — e.g. the
+        semantic file-locator. Project-configurable via console.yaml
+        `chat.mcp_servers`; defaults to the file-locator if present.
+        Names absent from `.mcp.json` are silently skipped at launch.
+        """
+        configured = (self.console.get("chat") or {}).get("mcp_servers")
+        if configured is None:
+            return ["file-locator"]
+        return [str(x) for x in configured]
+
     def caps_for_model(self, model: str) -> dict[str, int]:
         """Return cap values (`source_cap_kb`, `grounding_cap_kb`) for the given model.
 

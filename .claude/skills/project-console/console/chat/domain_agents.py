@@ -18,6 +18,7 @@ class DomainAgent:
     moderator: str = "round-robin"
     path: Path | None = None
     group: str | None = None
+    subagents: list[str] = field(default_factory=list)  # project subagents (.claude/agents/<name>.md) this agent may invoke via Task
 
     @property
     def is_panel(self) -> bool:
@@ -76,6 +77,7 @@ def load_from_file(path: Path) -> DomainAgent:
         members=list(meta.get("members", []) or []),
         moderator=meta.get("moderator", "round-robin"),
         path=path,
+        subagents=list(meta.get("subagents", []) or []),
     )
 
 
