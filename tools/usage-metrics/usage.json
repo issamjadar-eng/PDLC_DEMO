@@ -226,5 +226,6 @@
       }
     }
   },
-  "schema": "usage-metrics/team/v1"
+  "schema": "usage-metrics/team/v2",
+  "tasks": {}
 }
