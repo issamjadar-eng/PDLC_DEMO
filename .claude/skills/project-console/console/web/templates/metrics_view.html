@@ -46,6 +46,32 @@
   .um-lbl { font-size:10px; color:var(--muted,#8b93a7); margin-top:5px; white-space:nowrap; }
   .um-note { color:var(--muted,#8b93a7); font-size:11px; font-style:italic; margin-top:10px; }
   .um-empty { color:var(--muted,#8b93a7); padding:40px 0; text-align:center; }
+  /* sub-view tabs (Token Metrics / Value & ROI) */
+  .um-tabs { display:flex; gap:4px; margin:0 0 18px; border-bottom:1px solid var(--border,#2a2f3a); }
+  .um-tab { background:none; border:none; color:var(--muted,#8b93a7); font:inherit; font-size:13px;
+      padding:8px 14px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .um-tab:hover { color:var(--fg,#e6e9ef); }
+  .um-tab.active { color:var(--fg,#e6e9ef); border-bottom-color:#7ee0c0; font-weight:600; }
+  /* Value & ROI panel (vv- classes, used by value.js) */
+  .vv-cards { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+  .vv-card { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+      border-radius:10px; padding:14px 18px; min-width:150px; }
+  .vv-card .k { color:var(--muted,#8b93a7); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+  .vv-card .v { font-size:22px; font-weight:700; margin-top:3px; font-variant-numeric:tabular-nums; }
+  .vv-card .v small { font-size:13px; font-weight:500; color:var(--muted,#8b93a7); }
+  .vv-hero { color:#7ee0c0; }
+  table.vv-tbl { width:100%; border-collapse:collapse; }
+  .vv-tbl th, .vv-tbl td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border,#2a2f3a); white-space:nowrap; }
+  .vv-tbl th:first-child, .vv-tbl td:first-child { text-align:left; white-space:normal; }
+  .vv-tbl th { color:var(--muted,#8b93a7); font-weight:600; font-size:12px; }
+  .vv-tbl tfoot td { font-weight:700; border-top:2px solid var(--border,#2a2f3a); border-bottom:none; }
+  .vv-mono { font-variant-numeric:tabular-nums; }
+  .vv-disc { color:var(--muted,#8b93a7); font-size:11px; font-style:italic; margin-top:10px; max-width:80ch; }
+  .vv-badge { font-size:10px; padding:1px 6px; border-radius:10px; border:1px solid var(--border,#2a2f3a);
+      color:var(--muted,#8b93a7); margin-left:6px; vertical-align:middle; }
+  .vv-badge.measured { color:#7ee0c0; border-color:#2f5a4d; }
+  .vv-badge.est { color:#f0a93b; border-color:#5a4a2f; }
+  .vv-conf-high{color:#7ee0c0} .vv-conf-med{color:#f0a93b} .vv-conf-low{color:#e06b6b}
 </style>
 {% endblock %}
 
@@ -63,6 +89,11 @@
       to publish <code>tools/usage-metrics/usage.json</code>.
     </div>
   {% else %}
+    <div class="um-tabs">
+      <button class="um-tab active" data-tab="tokens">Token Metrics</button>
+      <button class="um-tab" data-tab="value">Value &amp; ROI</button>
+    </div>
+    <div id="tab-tokens">
     <div class="um-controls"><label>Month <select id="um-month"></select></label></div>
     <div class="um-cards" id="um-cards"></div>
 
@@ -101,9 +132,46 @@
       </table>
     </div>
     <p class="um-note" id="um-costnote"></p>
+    </div><!-- /tab-tokens -->
+
+    <div id="tab-value" hidden>
+      <p class="um-sub" style="margin-top:0">Agentic-first delivery vs. the by-hand baseline, per task.
+        The agentic side (token cost) is <strong>measured</strong>; the by-hand side (specialist
+        person-hours) is an <strong>estimate</strong> — ranged, so the uncertainty is explicit.
+        <strong>Person-hours is primary</strong>; the $ figures apply console-side labor rates (a swappable
+        <code>[VERIFY]</code> assumption — not baked into the data). Headlines lead with the conservative
+        low end; people anonymized.</p>
+      <div class="vv-cards" id="vv-hero"></div>
+      <div class="um-panel"><h2>By task — agentic cost vs by-hand baseline</h2>
+        <table class="vv-tbl" id="vv-tbl">
+          <thead><tr>
+            <th>Task</th><th>Sessions</th><th>Agentic $ (tokens)</th>
+            <th>By-hand hours</th><th>By-hand $</th><th>Leverage</th><th>Confidence</th>
+          </tr></thead>
+          <tbody></tbody><tfoot></tfoot>
+        </table>
+        <p class="vv-disc" id="vv-disc"></p>
+      </div>
+    </div>
   {% endif %}
 </div>
 
-<script>window.USAGE = {{ usage_json | safe }};</script>
-{% if available %}<script src="/static/metrics.js"></script>{% endif %}
+<script>
+  window.USAGE = {{ usage_json | safe }};
+  window.LABOR_RATES = {{ labor_rates_json | safe }};
+  window.CURRENCY = {{ currency | tojson | safe }};
+</script>
+{% if available %}
+<script src="/static/metrics.js"></script>
+<script src="/static/value.js"></script>
+<script>
+  document.querySelectorAll('.um-tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.um-tab').forEach(function (x) { x.classList.toggle('active', x === b); });
+      document.getElementById('tab-tokens').hidden = (b.dataset.tab !== 'tokens');
+      document.getElementById('tab-value').hidden = (b.dataset.tab !== 'value');
+    });
+  });
+</script>
+{% endif %}
 {% endblock %}

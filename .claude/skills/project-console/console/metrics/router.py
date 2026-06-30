@@ -35,26 +35,9 @@ async def metrics_index(request: Request):
         {
             "config": cfg,
             "available": usage is not None,
-            # Embedded so the page renders offline with no extra round-trip.
-            "usage_json": json.dumps(usage or {}),
-        },
-    )
-
-
-@router.get("/value", response_class=HTMLResponse)
-async def value_index(request: Request):
-    """Value / ROI view — per-task by-hand-hours vs agentic-cost, from usage.json
-    v2 (`tasks` + `value_summary`). The $ overlay is applied HERE from console-side
-    `labor_rates` (the contentious assumption stays out of the committed data);
-    person-hours is the primary metric, headlined at the conservative `min`."""
-    cfg = get_config()
-    usage = load_usage(cfg.repo_root)
-    return templates.TemplateResponse(
-        request,
-        "value_view.html",
-        {
-            "config": cfg,
-            "available": bool(usage and (usage.get("tasks") or usage.get("value_summary"))),
+            # Embedded so the page renders offline with no extra round-trip. The
+            # Value/ROI sub-tab applies the $ overlay from console-side labor rates
+            # (the contentious assumption stays out of the committed data).
             "usage_json": json.dumps(usage or {}),
             "labor_rates_json": json.dumps(cfg.labor_rates),
             "currency": cfg.value_currency,
