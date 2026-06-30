@@ -45,3 +45,10 @@ Icon?
 # User-managed, never committed. See .claude/rules/scratch-and-tmp.md.
 _scratch/
 **/_scratch/
+
+# Usage-metrics per-session telemetry — machine-generated locally and
+# published to the shared branch by the usage-metrics SessionEnd hook
+# (publish.py force-adds). Ignored locally so a generated-but-not-yet-
+# pulled file never blocks a fast-forward/merge of the shared branch.
+tasks/*/_usage-metrics/
+**/_usage-metrics/

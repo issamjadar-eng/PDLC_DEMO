@@ -113,7 +113,11 @@ def main() -> int:
             if dst.exists():
                 shutil.rmtree(dst)
             shutil.copytree(root / rel, dst)
-            run(["git", "add", "--", rel], wt)
+            # Force-add: the per-session data is git-ignored in working trees (so a
+            # generated-but-not-yet-pulled file never blocks a fast-forward/merge of
+            # the shared branch). It must still be committed HERE to reach the branch
+            # the aggregate workflow reads — hence -f.
+            run(["git", "add", "-f", "--", rel], wt)
             if run(["git", "diff", "--cached", "--quiet", "--", rel], wt).returncode == 0:
                 if not args.quiet:
                     print("publish: no changes to publish")
