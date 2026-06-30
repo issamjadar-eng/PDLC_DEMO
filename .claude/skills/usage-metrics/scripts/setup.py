@@ -8,6 +8,8 @@ Does the necessary work so the skill is operational in any project:
      `statusLine` block in settings.json (idempotent; leaves a project fork alone).
   3. Append the `usage_metrics:` config block to project.yml (if absent).
   4. Add `**/_usage-metrics/**` to file_locator.corpus_excludes (if absent).
+  4b. Gitignore the per-session usage data so a generated-but-unpulled file never
+     blocks a fast-forward of the shared branch (publish force-adds to commit it).
   5. Seed tools/usage-metrics/pricing.json from the bundled rate card (if absent).
   6. Create the gitignored .state/ dir.
   7. Report what was wired vs already present.
@@ -166,6 +168,33 @@ def main() -> int:
         report.append("file_locator exclude: added **/_usage-metrics/**")
     else:
         report.append("file_locator exclude: SKIP (no corpus_excludes: block — add **/_usage-metrics/** manually)")
+
+    # --- 4b. gitignore the per-session usage data ---
+    # The per-session JSONs are machine-generated locally and published to the
+    # shared branch by the SessionEnd hook (publish.py, via an isolated worktree
+    # with `git add -f`). If they sat in the working tree as plain UNTRACKED files,
+    # a later `git pull`/merge that brings the now-tracked file down from the branch
+    # would abort: "untracked working tree files would be overwritten". Ignoring
+    # them makes git treat the local copy as expendable — silently superseded by the
+    # tracked version — so the fast-forward never blocks. Already-tracked files stay
+    # tracked (gitignore never untracks); only fresh local copies are ignored.
+    gi = root / ".gitignore"
+    gi_text = gi.read_text(encoding="utf-8") if gi.is_file() else ""
+    if "_usage-metrics/" in gi_text:
+        report.append("gitignore usage-metrics: already present")
+    else:
+        block = (
+            "\n# Usage-metrics per-session telemetry — machine-generated locally and\n"
+            "# published to the shared branch by the usage-metrics SessionEnd hook\n"
+            "# (publish.py force-adds). Ignored locally so a generated-but-not-yet-\n"
+            "# pulled file never blocks a fast-forward/merge of the shared branch.\n"
+            "tasks/*/_usage-metrics/\n"
+            "**/_usage-metrics/\n"
+        )
+        if gi_text and not gi_text.endswith("\n"):
+            gi_text += "\n"
+        gi.write_text(gi_text + block, encoding="utf-8")
+        report.append("gitignore usage-metrics: added tasks/*/_usage-metrics/ + **/_usage-metrics/")
 
     # --- 5. seed pricing.json ---
     proj_pricing = root / "tools" / "usage-metrics" / "pricing.json"
