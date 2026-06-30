@@ -6,7 +6,7 @@ kind: solo
 sources:
   - docs/project/dhfs/**/design-controls/cybersecurity/**/*.md
   - docs/project/strategies/risk*.md
-  - docs/external/fda-guidance/**cybersecurity**.md
+  - docs/external/fda-guidance/*cybersecurity*.md
   - docs/external/standards/iec-81001*.md
 ---
 

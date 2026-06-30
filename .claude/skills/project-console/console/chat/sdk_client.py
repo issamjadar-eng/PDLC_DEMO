@@ -1,9 +1,11 @@
+import json
 import os
 import tempfile
 from pathlib import Path
 from typing import AsyncIterator
 
 from claude_agent_sdk import (
+    AgentDefinition,
     AssistantMessage,
     ClaudeAgentOptions,
     StreamEvent,
@@ -14,6 +16,7 @@ from claude_agent_sdk import (
 )
 from claude_agent_sdk.types import SystemPromptFile
 
+from console.chat.domain_agents import _parse_frontmatter
 from console.chat.index_builder import is_groundable
 from console.config import get_config
 
@@ -137,12 +140,89 @@ _GROUNDING_MCP_SERVER = create_sdk_mcp_server(
 )
 
 
+# ---------------- external MCP servers + subagents ----------------
+#
+# Two extra capability seams, both governed by the agent definition / project
+# config rather than hardcoded here so the skill stays project-agnostic:
+#   * external MCP servers (e.g. the semantic file-locator) — exposed to every
+#     chat agent, resolved by name from the project's `.mcp.json`.
+#   * project subagents (e.g. red-team-researcher) — opt-in per agent via the
+#     agent definition's `subagents:` list, loaded from `.claude/agents/`.
+
+
+def _external_mcp_servers(repo_root: Path, names: list[str]) -> dict:
+    """Build SDK `mcp_servers` entries for the named stdio servers declared in
+    the project's `.mcp.json`. Repo-root-relative commands/args are made
+    absolute so the server launches regardless of the console's cwd. Servers
+    not present (or not stdio) are silently skipped — the feature degrades to
+    "not available" rather than erroring.
+    """
+    out: dict = {}
+    mcp_path = repo_root / ".mcp.json"
+    if not mcp_path.exists():
+        return out
+    try:
+        data = json.loads(mcp_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return out
+    servers = data.get("mcpServers") or {}
+
+    def _abs(token: str) -> str:
+        if isinstance(token, str) and (token.startswith("./") or token.startswith("../")):
+            return str((repo_root / token).resolve())
+        return token
+
+    for name in names:
+        cfg = servers.get(name)
+        if not isinstance(cfg, dict) or cfg.get("type", "stdio") != "stdio":
+            continue
+        command = cfg.get("command")
+        if not command:
+            continue
+        out[name] = {
+            "type": "stdio",
+            "command": _abs(command),
+            "args": [_abs(a) for a in (cfg.get("args") or [])],
+            "env": dict(cfg.get("env") or {}),
+        }
+    return out
+
+
+def _load_subagent(repo_root: Path, name: str) -> tuple[str, AgentDefinition] | None:
+    """Load a project subagent (`.claude/agents/<name>.md`) into an SDK
+    AgentDefinition so a console agent can invoke it via the Task tool.
+    Returns None if the file is absent or unparseable.
+    """
+    path = repo_root / ".claude" / "agents" / f"{name}.md"
+    if not path.exists():
+        return None
+    try:
+        meta, body = _parse_frontmatter(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    tools_raw = meta.get("tools")
+    if isinstance(tools_raw, str):
+        tools = [t.strip() for t in tools_raw.split(",") if t.strip()]
+    elif isinstance(tools_raw, list):
+        tools = [str(t).strip() for t in tools_raw if str(t).strip()]
+    else:
+        tools = None
+    return name, AgentDefinition(
+        description=meta.get("description", name),
+        prompt=body.strip(),
+        tools=tools,
+        model=meta.get("model"),
+    )
+
+
 async def stream_response(
     *,
     system_prompt: str,
     user_message: str,
     model: str | None = None,
     enable_read_files: bool = True,
+    enable_file_locator: bool = True,
+    subagents: list[str] | None = None,
     max_turns: int = 15,
 ) -> AsyncIterator[str]:
     """Yield text deltas as they arrive from the Agent SDK.
@@ -169,11 +249,25 @@ async def stream_response(
             tmp.write(system_prompt)
             tmp_path = tmp.name
 
+        cfg = get_config()
+        repo_root = cfg.repo_root
         mcp_servers: dict = {}
         allowed_tools: list[str] = []
         if enable_read_files:
             mcp_servers["console-grounding"] = _GROUNDING_MCP_SERVER
             allowed_tools.append("mcp__console-grounding__read_files")
+        if enable_file_locator:
+            for sname, scfg in _external_mcp_servers(repo_root, cfg.chat_mcp_servers).items():
+                mcp_servers[sname] = scfg
+                allowed_tools.append(f"mcp__{sname}")  # allow all tools from this server
+
+        agents_opt: dict[str, AgentDefinition] = {}
+        for sa in (subagents or []):
+            loaded = _load_subagent(repo_root, sa)
+            if loaded:
+                agents_opt[loaded[0]] = loaded[1]
+        if agents_opt:
+            allowed_tools.append("Task")  # lets the agent invoke its declared subagent(s)
 
         options = ClaudeAgentOptions(
             system_prompt=SystemPromptFile(type="file", path=tmp_path),
@@ -181,6 +275,8 @@ async def stream_response(
             include_partial_messages=True,
             mcp_servers=mcp_servers,
             allowed_tools=allowed_tools,
+            agents=agents_opt or None,
+            cwd=str(repo_root),
             max_turns=max_turns,
         )
         got_any_delta = False
@@ -215,6 +311,8 @@ async def collect_response(
     user_message: str,
     model: str | None = None,
     enable_read_files: bool = True,
+    enable_file_locator: bool = True,
+    subagents: list[str] | None = None,
     max_turns: int = 15,
 ) -> str:
     parts: list[str] = []
@@ -223,6 +321,8 @@ async def collect_response(
         user_message=user_message,
         model=model,
         enable_read_files=enable_read_files,
+        enable_file_locator=enable_file_locator,
+        subagents=subagents,
         max_turns=max_turns,
     ):
         parts.append(token)

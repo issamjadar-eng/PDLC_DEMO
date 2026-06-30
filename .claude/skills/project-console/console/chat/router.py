@@ -151,6 +151,7 @@ async def agent_stream(name: str, body: StreamBody):
                     system_prompt=system,
                     user_message=prompt,
                     model=agent.model,
+                    subagents=agent.subagents,
                 ):
                     yield _sse({"type": "token", "text": token})
                 yield _sse({"type": "speaker_done", "name": agent.name})

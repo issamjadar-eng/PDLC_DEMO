@@ -1,8 +1,8 @@
 {
   "skill": "project-console",
-  "skill_version": "1.28.0",
+  "skill_version": "1.29.0",
   "installed_at": "2026-04-14T00:00:00Z",
-  "last_synced_at": "2026-06-23T18:22:04.906601+00:00",
+  "last_synced_at": "2026-06-30T06:35:14.189142+00:00",
   "file_classes": {
     "console.yaml": "project-owned",
     "pyproject.toml": "project-owned",
@@ -12,5 +12,30 @@
     "agents/": "project-owned",
     "themes/": "project-owned",
     ".env": "project-owned"
+  },
+  "agent_templates": {
+    "core-team/_group.md": "f8486610a5963d9d978064de28931f306c354d04fe0b08659a9483346da60737",
+    "core-team/clinical-affairs.md": "e1ff1067c814cdcb92ef1c3c33a950034f0bd122d8170998d74a03d349e43ef8",
+    "core-team/core-team-panel.md": "709e10d5b502245db4d79bd57e70841daadee2653e5046c99884897d8fc019b2",
+    "core-team/cybersecurity.md": "30be96205f63309c00c4a5bb0f06be241c2f9912b457b097728b4930697f0c27",
+    "core-team/design-review-panel.md": "c2c5c05a67c4bcdf376bf5bd1c367f713fbe9bc14960b70e72e27b4fab30ed7a",
+    "core-team/human-factors.md": "c2ff147d65ded6446e5910223f40e4c408ff90173ca00cf4ae58268dafdf252a",
+    "core-team/post-market.md": "f7491d71c5f0ac67b8e9b9729a70a660f2cbad6803d723968b68036a6fb47df8",
+    "core-team/program-manager.md": "ddb313146d7543d1166daa65b1fcfc307e7778c00f9c56d859a82651be812da1",
+    "core-team/quality-engineering.md": "e0304e140fa28b8be5f4897d3c75325066878678d0ba13365f12f20ee9fa43d1",
+    "core-team/rd-lead.md": "bccee332cf070009b6e99f10407d82672cb71347b1d065897710ce399c6320fd",
+    "core-team/regulatory-affairs.md": "acc179997a5490d9ec4ff07026bb32529af9702697599bb23959e7472763d8ca",
+    "core-team/risk-management.md": "8e1a536dc196e812ea870e440b4b89bc1bb32aefa5ce9a71506930e2f41facf3",
+    "core-team/systems-engineering.md": "f7b9f7b88794cdbfe2c86311f582c55dcc80d16ce033f150ff1933a8a813fdd5",
+    "core-team/vnv-lead.md": "cd0194d76b92954482eef57e0ae042cce7a045e55ad189328d8e8588dc8424c5",
+    "red-team/_group.md": "e70319df2d963e20756f2f38417aa7d21ff94f42f2270f567773c77284716368",
+    "red-team/ceo-skeptic.md": "2f783d99fe87cb475d14110942fe251e5e30e79abf5ed6726f8354a0cc954e3c",
+    "red-team/cfo-skeptic.md": "dfa07017255f7d69349d50323e48098456b67b9c28fe6a55d7f87454a2baca76",
+    "red-team/cto-skeptic.md": "8c83fbb4f9789f3f515fcd8243a3cc90d5837f9d0d4cca1909478104a2392889",
+    "red-team/pmo-skeptic.md": "2ad79d4109e4eb21c8defadb99b8cb68fb06975839e37454aae04e60f9639e22",
+    "red-team/qa-vp-skeptic.md": "f853d0a870b7972b3175ef25ed5dff79a10a7b5d7fed09000c4915a6925d873b",
+    "red-team/ra-vp-skeptic.md": "84bba1b9ec01825baa42727d8ee0d6fd73da58b10c32da1f66c757adad3c2c96",
+    "red-team/red-team-panel.md": "ff72bdddabd05654cf5696137702b1a25b9b6fc4b8e8c74366af22035a23ab34",
+    "red-team/vp-eng-skeptic.md": "0aa477dec9f11186db38e587adf713a7f0e3a5ffcd28343e58b34530423a6ad6"
   }
 }

@@ -36,7 +36,21 @@ def resolve_files(repo_root: Path, patterns: Iterable[str]) -> list[Path]:
     seen: set[Path] = set()
     paths: list[Path] = []
     for pattern in patterns:
-        for path in sorted(repo_root.glob(pattern)):
+        try:
+            matches = sorted(repo_root.glob(pattern))
+        except ValueError as e:
+            # A malformed grounding glob (e.g. `**topic**.md`, where `**` is not
+            # an entire path component) raises ValueError in pathlib. Skip the
+            # bad pattern instead of letting one agent's typo 500 the whole
+            # agent — the agent still grounds on its remaining valid patterns.
+            import sys
+            print(
+                f"[project-console] skipping invalid grounding glob "
+                f"{pattern!r}: {e}",
+                file=sys.stderr,
+            )
+            continue
+        for path in matches:
             if not path.is_file() or path in seen:
                 continue
             seen.add(path)

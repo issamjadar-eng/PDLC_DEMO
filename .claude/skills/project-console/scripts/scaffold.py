@@ -323,6 +323,53 @@ uv.lock
 DEFAULT_PORT = 8765
 
 
+def _iter_template_groups(src_agents: Path):
+    """Yield (group_name, [sorted *.md paths]) for the agent template library.
+
+    Group-aware layout: each subdirectory of agents/templates/ is a console
+    agent group — its *.md files (including `_group.md`) materialize into
+    `agents/<group>/`. Backward-compat: any flat *.md directly under
+    agents/templates/ is treated as a `core-team` template (the original
+    single-group layout, still how the medtech persona set ships).
+    """
+    if not src_agents.is_dir():
+        return
+    flat = sorted(src_agents.glob("*.md"))
+    if flat:
+        yield "core-team", flat
+    for sub in sorted(src_agents.iterdir()):
+        if sub.is_dir() and not sub.name.startswith("."):
+            mds = sorted(sub.glob("*.md"))
+            if mds:
+                yield sub.name, mds
+
+
+def _materialize_agent_templates(tool_root: Path, skill_root: Path, manifest: dict) -> list[str]:
+    """Copy template agents into agents/<group>/, **skip-if-exists** — idempotent
+    and never clobbers a project file. Records each materialized file's source
+    template SHA in manifest['agent_templates'][<group/name>] so a later `sync`
+    can tell a pristine copy from a customized one. Returns newly-created keys.
+    """
+    src_agents = skill_root / "agents" / "templates"
+    baselines = manifest.setdefault("agent_templates", {})
+    created: list[str] = []
+    for group, mds in _iter_template_groups(src_agents):
+        dst_dir = tool_root / "agents" / group
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        for src in mds:
+            key = f"{group}/{src.name}"
+            dst = dst_dir / src.name
+            if not dst.exists():
+                shutil.copy2(src, dst)
+                baselines[key] = sha256_file(src)
+                created.append(key)
+            elif key not in baselines and sha256_file(dst) == sha256_file(src):
+                # Legacy install with no baseline, but the project copy already
+                # matches the current template → safe to record as pristine.
+                baselines[key] = sha256_file(src)
+    return created
+
+
 def init_scaffold(project_root: Path, skill_root: Path, force: bool, port: int = DEFAULT_PORT) -> None:
     tool_root = project_root / "tools" / "project-console"
     if tool_root.exists() and not force:
@@ -334,16 +381,7 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool, port: int =
         return
 
     tool_root.mkdir(parents=True, exist_ok=True)
-
-    # Agents — copy template library
-    agents_dst = tool_root / "agents" / "core-team"
-    agents_dst.mkdir(parents=True, exist_ok=True)
-    src_agents = skill_root / "agents" / "templates"
-    if src_agents.is_dir():
-        for src in src_agents.glob("*.md"):
-            dst = agents_dst / src.name
-            if not dst.exists():
-                shutil.copy2(src, dst)
+    (tool_root / "agents").mkdir(parents=True, exist_ok=True)
 
     # Themes dir (empty — skill defaults are used until user runs `theme <url>`)
     (tool_root / "themes").mkdir(exist_ok=True)
@@ -380,11 +418,19 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool, port: int =
             ".env": "project-owned",
         },
     }
+
+    # Agents — materialize the grouped template library (idempotent, records
+    # per-file baselines into manifest['agent_templates']).
+    created_agents = _materialize_agent_templates(tool_root, skill_root, manifest)
+
     (tool_root / ".project-console.manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n"
     )
 
     print(f"Scaffolded {tool_root}")
+    if created_agents:
+        groups = sorted({k.split("/", 1)[0] for k in created_agents})
+        print(f"Materialized {len(created_agents)} agent template(s) across groups: {', '.join(groups)}")
     print(f"Configured port: {port} (edit tools/project-console/console.yaml server.port to change)")
     print("Next steps:")
     print("  1. cd tools/project-console && uv sync")
@@ -395,7 +441,7 @@ def init_scaffold(project_root: Path, skill_root: Path, force: bool, port: int =
 
 # ---------------- sync ----------------
 
-def sync_scaffold(project_root: Path, skill_root: Path) -> None:
+def sync_scaffold(project_root: Path, skill_root: Path, apply_agent_updates: bool = False) -> None:
     tool_root = project_root / "tools" / "project-console"
     manifest_path = tool_root / ".project-console.manifest.json"
     if not manifest_path.exists():
@@ -419,32 +465,76 @@ def sync_scaffold(project_root: Path, skill_root: Path) -> None:
             dst.chmod(mode)
             updated.append(rel)
 
-    # Copy over any NEW agent templates that the project doesn't have yet.
-    # Existing files are left alone — the project owns its roster after init.
+    # Agent templates — grouped, idempotent, and NEVER clobbers a project file.
+    # New templates (incl. whole new groups like red-team) are materialized
+    # automatically — there's nothing to clobber. Changed templates are surfaced
+    # as guidance: a provably-unmodified copy is flagged "update available" (and
+    # applied only with --apply-agent-updates); a customized copy is reported for
+    # manual review. The project owns its roster; the user decides.
     src_agents = skill_root / "agents" / "templates"
-    agents_dst = tool_root / "agents" / "core-team"
+    baselines = manifest.setdefault("agent_templates", {})
     new_agents: list[str] = []
-    if src_agents.is_dir() and agents_dst.is_dir():
-        for src in src_agents.glob("*.md"):
-            dst = agents_dst / src.name
+    applied_updates: list[str] = []
+    update_available: list[str] = []
+    review_drift: list[str] = []
+    for group, mds in _iter_template_groups(src_agents):
+        dst_dir = tool_root / "agents" / group
+        for src in mds:
+            key = f"{group}/{src.name}"
+            dst = dst_dir / src.name
+            cur = sha256_file(src)
             if not dst.exists():
+                dst_dir.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
-                new_agents.append(src.name)
+                baselines[key] = cur
+                new_agents.append(key)
+                continue
+            proj = sha256_file(dst)
+            if proj == cur:
+                baselines[key] = cur          # already current; (re)record baseline
+                continue
+            baseline = baselines.get(key)
+            if baseline is not None and proj == baseline:
+                # project copy untouched since materialize, but template advanced
+                if apply_agent_updates:
+                    shutil.copy2(src, dst)
+                    baselines[key] = cur
+                    applied_updates.append(key)
+                else:
+                    update_available.append(key)
+            else:
+                review_drift.append(key)      # customized or no baseline → never auto-touch
 
     manifest["skill_version"] = current_version
     manifest["last_synced_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
 
+    tmpl_rel = ".claude/skills/project-console/agents/templates"
     print(f"Synced: {prev_version} → {current_version}")
     if updated:
         print("Updated files:")
         for u in updated:
             print(f"  - {u}")
     if new_agents:
-        print("Added agent templates (new since last sync):")
-        for name in new_agents:
-            print(f"  - agents/core-team/{name}")
-    if not updated and not new_agents:
+        print("Added agent templates (new groups/agents since last sync):")
+        for k in new_agents:
+            print(f"  - agents/{k}")
+    if applied_updates:
+        print("Updated unmodified agent copies to the current template:")
+        for k in applied_updates:
+            print(f"  - agents/{k}")
+    if update_available:
+        print("Agent template updates available (your copies are unmodified):")
+        for k in update_available:
+            print(f"  - agents/{k}   (template: {tmpl_rel}/{k})")
+        print("  → re-run `/project-console sync --apply-agent-updates` to apply them,")
+        print("    or copy the template over your file. Your files are left unchanged for now.")
+    if review_drift:
+        print("Agent templates changed upstream, but your copies differ (customized or pre-baseline):")
+        for k in review_drift:
+            print(f"  - agents/{k}   (compare against {tmpl_rel}/{k})")
+        print("  → your customizations are preserved; review and merge manually for the upstream changes.")
+    if not any((updated, new_agents, applied_updates, update_available, review_drift)):
         print("No changes.")
     print()
     print("If the console is running, restart it to pick up skill code changes.")
@@ -480,6 +570,10 @@ def main() -> int:
                         "Claude should ask the user to confirm before running init.")
     p.add_argument("--project-root", default=None)
     p.add_argument("--skill-root", default=None)
+    p.add_argument("--apply-agent-updates", action="store_true",
+                   help="During sync, overwrite agent files that are provably "
+                        "unmodified since materialize with the current template. "
+                        "Never touches a customized file.")
     args = p.parse_args()
 
     project_root = resolve_project_root(args.project_root)
@@ -492,7 +586,7 @@ def main() -> int:
     if args.action == "init":
         init_scaffold(project_root, skill_root, args.force, args.port)
     elif args.action == "sync":
-        sync_scaffold(project_root, skill_root)
+        sync_scaffold(project_root, skill_root, args.apply_agent_updates)
     elif args.action == "status":
         status_scaffold(project_root, skill_root)
     return 0
