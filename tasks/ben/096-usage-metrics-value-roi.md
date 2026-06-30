@@ -163,9 +163,9 @@ _Done empirically against this very session (it spawned a research subagent). Tw
 - [ ] Phase 1 (remaining, optimizations — not correctness): always-collect at SessionStart (close the never-ended-session gap) + incremental transcript parse (offset/mtime skip) so always-collect stays cheap.
 - [x] Phase 0: research subagent → external by-hand effort references per persona (cited, with gaps); captured above as the estimator's reference basis
 - [x] Phase 2: persona taxonomy = the **11 advisor personas** (canonical source `.claude/skills/advisors/agents/`; not redeclared). Console-side labor-rate config added to `console.yaml` `value.labor_rates` (12 entries incl `default`, all `[VERIFY]` fully-loaded USD/hr) + `config.py` accessors (`labor_rates`, `labor_rate_for`, `value_currency`). Verified all personas covered + default fallback.
-- [ ] Phase 3: estimation rubric in the task skill + inline `economics:` capture in update/checkpoint flow (no approval) — **the rubric file embeds/cites the Phase 0 external references** (anchor table + confidence-tag convention) as its grounding, so estimates point at published norms (or are labeled `judgment`) by construction
+- [x] Phase 3: estimation **rubric** authored at `.claude/skills/usage-metrics/references/effort-estimation-rubric.md` (method v1; embeds the Phase 0 anchor table + confidence-tag + `economics` schema + the ranged/persona/no-approval/headline-conservative rules). Task-skill `checkpoint` action gains step 3b: record/refresh `## Economics` inline per the rubric. **Dogfooded** on ben/096 (7 todos → 33–71 by-hand person-hours); YAML validated (parses, personas∈advisors, min≤max). _(Rubric lives in usage-metrics for domain ownership; the task-skill checkpoint references it — slight deviation from "rubric in the task skill", but capture is still task-flow-driven as the user wanted.)_
 - [ ] Phase 3b: retrospective estimator + dataset builder (on-demand; hours-only; `basis: retrospective`)
-- [~] Phase 4 (first half DONE): `aggregate.py` rolls `by_task` → per-task **cost actuals** in `usage.json` (schema bumped `team/v1`→`v2`, additive `tasks` block keyed `<tf>/<task_id>`, cost via pricing). Verified: `ben/096` $10.88, `ben/_unattributed` $208.39. Remaining Phase 4: join per-task **person-hour estimates** (after Phase 2/3) + the retrospective dataset; measured/retrospective marker; markdown/HTML task section.
+- [x] Phase 4 (cost rollup + estimate join DONE): `aggregate.py` rolls `by_task` → per-task **cost actuals** AND parses `## Economics` JSON → per-task **by-hand person-hour estimates**, joined in `usage.json` v2 (`tasks` block + top-level `value_summary`). Person-hours in data; **no `$`** (console applies `labor_rates`). Stdlib-only (CI-safe). Verified: `ben/096` = $10.88 measured + 33–71 person-hours estimated (by_persona split). Remaining Phase 4: markdown/HTML task section (cosmetic).
 - [ ] Phase 5: project-console Value/ROI view ($ overlay, min–max bands, anonymized, measured/retrospective split)
 - [ ] Phase 6: red-team the aggregate ROI narrative; fix findings
 
@@ -173,9 +173,80 @@ _Done empirically against this very session (it spawned a research subagent). Tw
 
 **Activation command:** `bash .claude/hooks/task-activate.sh add <SESSION_ID> 096`
 
-**Status:** Phase 0 done (external references). **Phase 1 attribution backbone built + validated** (activation ledger in `task-activate.sh`; `collect.py` does subagent scan + last-wins dedup + time-sliced `by_task`). **Uncommitted** — edits to `.claude/skills/task/hooks/task-activate.sh` (+ installed copy `.claude/hooks/task-activate.sh`) and `.claude/skills/usage-metrics/scripts/collect.py`; plus this doc. **Phase 4 first-half DONE** — `aggregate.py` emits per-task cost in `usage.json` v2 (`ben/096` $10.88, `ben/_unattributed` $208.39). **First action on resume:** Phase 2 (persona taxonomy reusing advisors + a console-side labor-rate config), then Phase 3 (inline ranged person-hour estimates via the task-skill rubric), then Phase 4 second-half (join estimates → ROI) + Phase 5 (console Value view). Phase 1 optimizations (always-collect-at-start + incremental parse) + the ben/093 untrack-usage-JSONs cleanup can come anytime; not blocking. **Uncommitted now:** `aggregate.py` + regenerated `tools/usage-metrics/usage.json` + re-modified (tracked) `_usage-metrics/*.json`.
+**Status:** Phase 0 done (external references). **Phase 1 attribution backbone built + validated** (activation ledger in `task-activate.sh`; `collect.py` does subagent scan + last-wins dedup + time-sliced `by_task`). **Uncommitted** — edits to `.claude/skills/task/hooks/task-activate.sh` (+ installed copy `.claude/hooks/task-activate.sh`) and `.claude/skills/usage-metrics/scripts/collect.py`; plus this doc. **Phases 0,1,2,3,4 (cost+estimate join) DONE.** `usage.json` v2 now carries, per task, measured token cost + by-hand person-hour estimate (+ `value_summary`); `ben/096` = $10.88 + 33–71h. Economics block is **JSON** (stdlib/CI-parseable). **First action on resume:** Phase 5 — the project-console **Value/ROI view** consuming `usage.json` v2 `tasks`+`value_summary`, applying `config.labor_rates` for the $ overlay (manual $ vs agentic $, person-hours-saved headline at the `min`, min–max bands, measured/estimate badges, people anonymized). Then Phase 3b (retrospective dataset for the ~95 existing task docs) + Phase 6 (red-team the aggregate ROI). Phase 1 optimizations + ben/093 untrack-usage-JSONs cleanup still open, non-blocking. Phase 1 optimizations (always-collect-at-start + incremental parse) + the ben/093 untrack-usage-JSONs cleanup can come anytime; not blocking. **Uncommitted now:** `aggregate.py` + regenerated `tools/usage-metrics/usage.json` + re-modified (tracked) `_usage-metrics/*.json`.
 
 **Touches 3 skills:** `task` (activation log + estimation rubric + `economics:` block), `usage-metrics` (time-sliced incremental collect, value aggregation + JSON gen, retrospective builder; schema v2), `project-console` (Value/ROI view). Reuses `advisors` persona set + `red-team` for Phase 6.
+
+## Economics
+
+_By-hand person-hour estimates for the work completed under this task, per
+`.claude/skills/usage-metrics/references/effort-estimation-rubric.md` (method v1).
+Ranged + persona-tagged; the agentic side (tokens/wall-clock) is measured separately.
+First dogfood of the rubric — recorded inline by the thread that did the work._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "todos": [
+      {
+        "todo": "Design: value model across 3 skills (attribution, estimation, schema)",
+        "personas": ["systems-engineering", "rd-lead"],
+        "manual_hours": {"min": 8, "max": 16},
+        "confidence": "low",
+        "basis": "judgment — senior SW/systems design across attribution + estimation methodology + schema; no external norm"
+      },
+      {
+        "todo": "Phase 0: external effort-reference research + cited synthesis",
+        "personas": ["program-manager"],
+        "manual_hours": {"min": 6, "max": 14},
+        "confidence": "low",
+        "basis": "judgment — multi-domain web research + cited table (~0.5-1.5 person-days); no research-throughput norm"
+      },
+      {
+        "todo": "Phase 1 spike: reverse-engineer transcript/subagent token format",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 3, "max": 6},
+        "confidence": "med",
+        "basis": "software/judgment — reverse-engineering JSONL format + verifying token accounting"
+      },
+      {
+        "todo": "Phase 1: activation ledger in task-activate.sh",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 2, "max": 4},
+        "confidence": "high",
+        "basis": "software LOC-norm (low end) — small bash function + ledger schema + verification"
+      },
+      {
+        "todo": "Phase 1: subagent-aware time-sliced collect.py + last-wins dedup bug fix",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 8, "max": 18},
+        "confidence": "med",
+        "basis": "software — ~150 net LOC + a subtle progressive-usage dedup-bug diagnosis + multi-scenario validation; LOC-norm low end + debugging adder"
+      },
+      {
+        "todo": "Phase 2: persona taxonomy + console labor-rate config + config accessors",
+        "personas": ["rd-lead", "program-manager"],
+        "manual_hours": {"min": 2, "max": 5},
+        "confidence": "high",
+        "basis": "software — small config block + 3 accessors + test; rates are judgment placeholders"
+      },
+      {
+        "todo": "Phase 4a: aggregate.py per-task cost rollup + usage.json v2 schema",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 4, "max": 8},
+        "confidence": "med",
+        "basis": "software — collect_records extension + tasks-block emit + schema design + validation"
+      }
+    ]
+  }
+}
+```
+
+_Roll-up so far: **~33–71 by-hand person-hours** (mostly rd-lead, with systems-engineering
++ program-manager). Headline conservatively at the **33h** floor. Agentic side: this landed
+in ~1 day of session work — the comparison fills in once Phase 4b joins these to the measured
+tokens/wall-clock._
 
 ## Lessons Learned
 
@@ -185,6 +256,8 @@ _Done empirically against this very session (it spawned a research subagent). Tw
 
 ## Changelog
 
+- 2026-06-30: **Phase 4b done + validated** (uncommitted; `usage-metrics/aggregate.py`). `parse_task_economics()` extracts the `## Economics` **JSON** block from each task doc (switched the schema YAML→JSON so the stdlib-only CI aggregator can parse it — no PyYAML), rolls up per-task by-hand person-hours (min/max) + an even-split `by_persona` breakdown + confidence_mix; `main` joins it onto the per-task cost in `usage.json` `tasks` and adds a top-level `value_summary`. **Person-hours in data; no `$`** (console applies `labor_rates`). Validated with system python3 (CI-equivalent): `ben/096` = $10.88 measured token-cost joined to 33–71 estimated by-hand person-hours (rd-lead 22–46.5h, PM 7–16.5h, systems-eng 4–8h). Both halves of the value equation now sit together in the data. Next: Phase 5 (console Value/ROI view consuming v2) + Phase 3b (retrospective) + Phase 6 (red-team the aggregate).
+- 2026-06-30: **Phase 3 done + validated** (uncommitted; `usage-metrics/references/effort-estimation-rubric.md` new + `task/SKILL.md` checkpoint step 3b + ben/096 `## Economics`). Authored the inline estimation rubric (method v1: economics schema, persona list, Phase-0 anchors, ranged/persona/confidence/no-approval/headline-conservative rules); wired capture into the task `checkpoint` action; **dogfooded** by recording ben/096's own completed todos → 7 entries, **33–71 by-hand person-hours** (mostly rd-lead). YAML validated: parses, personas∈advisor set, min≤max, confidence/basis present. No approval gate; credibility = ranges + confidence + Phase-6 red-team. Rubric filed under usage-metrics (domain owner); task checkpoint references it. Phase 2 merged via PR #77. Next: Phase 4b — `aggregate.py` parses `## Economics` from task docs + joins to per-task cost → person-hours-saved/ROI (person-hours in data; $ stays console-side).
 - 2026-06-30: **Phase 2 done + validated** (uncommitted; `console.yaml` project-owned + `project-console/console/config.py` skill). Persona taxonomy = the 11 advisor personas (canonical source `.claude/skills/advisors/agents/`, referenced not redeclared). Added the console-side `value.labor_rates` block (presentation-layer $ assumption — kept OUT of the committed person-hours/token data) with `[VERIFY]` fully-loaded placeholders for all 11 personas + `default`, plus `config.py` accessors `labor_rates` / `labor_rate_for(persona)` / `value_currency`. Verified all advisor personas covered and `_unattributed`/unknown fall back to `default` ($170). Phase 4a (per-task cost) merged via PR #76. Next: Phase 3 (inline ranged person-hour estimates via a task-skill rubric that embeds the Phase 0 references).
 - 2026-06-30: **Phase 4 first-half built + validated** (uncommitted; `usage-metrics/aggregate.py`). `collect_records` now also accumulates per-task (`<tf>/<task_id>`); `main` emits a `tasks` block in `usage.json` with per-task cost (schema `team/v1`→`v2`, additive — the anonymized `months` member view + the console v1 consumer are unaffected; the `tasks` block is task-identified, not person-anonymized, since value is task-scoped and must join to estimates). Verified end-to-end: `ben/096` $10.88 / `ben/_unattributed` $208.39. The dominant `_unattributed` is expected — the activation ledger is brand-new, so all pre-ledger historical work is honestly unattributed; per-task fills in as tasks are activated under the ledger going forward. This is the "real per-task cost, no estimates" milestone. Next: Phase 2 (persona taxonomy + console rate config) → Phase 3 (inline ranged estimates) → Phase 4 second-half (join estimates → ROI).
 - 2026-06-30: **Phase 1 attribution backbone built + validated** (uncommitted; edits to `task` + `usage-metrics` skills). (1) `task-activate.sh` now writes a per-session timestamped activation ledger (`_usage-metrics/activations/<sid>.jsonl`) on add/remove — verified it appends + is gitignored. (2) `collect.py` rewritten: reads the ledger → `task_at(ts)`, scans `<sid>/subagents/**.jsonl`, time-slices every message to the active task, emits `by_task` + `_unattributed`; **switched dedup from first-wins to last-wins** after discovering subagent transcripts stream progressive usage (first-wins captured 21 of 6,999 subagent output tokens — see Lessons). Validated: subagent delta now 6,999; synthetic A→B→A slicing correct; real `collect` wrote 8 session files with `by_task`. (3) Confirmed `collect` already runs at SessionStart (TTL-gated refresh hook) — not SessionEnd-only. Remaining Phase 1 = optimizations (always-collect-at-start + incremental parse). Next major step: Phase 4 first-half — teach `aggregate.py` to roll up `by_task` into per-task cost (actuals, no estimates yet).

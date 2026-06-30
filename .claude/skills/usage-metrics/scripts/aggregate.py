@@ -228,6 +228,64 @@ def collect_records(project_root: Path, month_filter: str | None):
     return data, task_data
 
 
+def parse_task_economics(project_root: Path) -> dict:
+    """Parse `## Economics` JSON blocks from task docs → per-task by-hand
+    person-hour estimates. Key = "<task_folder>/<NNN>" (matches the cost `tasks`
+    keys). Stdlib `json` only — runs in CI without PyYAML (why the block is JSON,
+    not YAML). Person-hours ONLY; no $ (the console applies labor rates).
+    Even-splits a todo's hours across its listed personas for the by_persona
+    breakdown (the schema carries combined hours per todo)."""
+    import re
+    out: dict = {}
+    tasks_dir = project_root / "tasks"
+    if not tasks_dir.is_dir():
+        return out
+    for person_dir in sorted(tasks_dir.glob("*")):
+        if not person_dir.is_dir() or person_dir.name.startswith((".", "_")):
+            continue
+        tf = person_dir.name
+        for md in sorted(person_dir.glob("[0-9][0-9][0-9]-*.md")):
+            nnn = md.name.split("-", 1)[0]
+            try:
+                text = md.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            m = re.search(r"##\s+Economics\b.*?```json\s*\n(.*?)\n```", text, re.DOTALL)
+            if not m:
+                continue
+            try:
+                econ = (json.loads(m.group(1)) or {}).get("economics") or {}
+            except json.JSONDecodeError:
+                continue
+            todos = econ.get("todos") or []
+            if not todos:
+                continue
+            tot = {"min": 0.0, "max": 0.0}
+            by_persona: dict = defaultdict(lambda: {"min": 0.0, "max": 0.0})
+            conf: dict = defaultdict(int)
+            for t in todos:
+                mh = t.get("manual_hours") or {}
+                lo = float(mh.get("min", 0) or 0)
+                hi = float(mh.get("max", 0) or 0)
+                tot["min"] += lo
+                tot["max"] += hi
+                conf[t.get("confidence", "?")] += 1
+                ps = t.get("personas") or ["_unspecified"]
+                n = len(ps)
+                for p in ps:
+                    by_persona[p]["min"] += lo / n
+                    by_persona[p]["max"] += hi / n
+            out[f"{tf}/{nnn}"] = {
+                "method_version": econ.get("method_version"),
+                "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
+                "by_persona": {p: {"min": round(v["min"], 1), "max": round(v["max"], 1)}
+                               for p, v in sorted(by_persona.items())},
+                "todos": len(todos),
+                "confidence_mix": dict(conf),
+            }
+    return out
+
+
 def fmt(n: int) -> str:
     return f"{n:,}"
 
@@ -720,12 +778,37 @@ def main() -> int:
         for ref, slot in sorted(task_data.items())
     }
 
+    # Join by-hand person-hour estimates (from task-doc `## Economics`) onto the
+    # per-task cost. Person-hours stay in the data; the console applies labor rates
+    # for the $ side. A task may have an estimate before any cost is attributed
+    # (e.g. ledger started late) — surface it with zero measured cost.
+    estimates = parse_task_economics(project_root)
+    for ref, est in estimates.items():
+        if ref in tasks_out:
+            tasks_out[ref]["estimate"] = est
+        else:
+            tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0,
+                              "cost": 0.0, "estimate": est}
+
+    est_tasks = [t for t in tasks_out.values() if t.get("estimate")]
+    value_summary = {
+        "tasks_with_estimate": len(est_tasks),
+        "manual_hours": {
+            "min": round(sum(t["estimate"]["manual_hours"]["min"] for t in est_tasks), 1),
+            "max": round(sum(t["estimate"]["manual_hours"]["max"] for t in est_tasks), 1),
+        },
+        "note": ("By-hand person-hour estimates (ranged) from task-doc Economics blocks. "
+                 "Person-hours only — the console converts to $ via labor_rates. "
+                 "Headline the conservative `min`."),
+    }
+
     usage_json = {
         "schema": "usage-metrics/team/v2",
         "anonymized": True,           # applies to the `months`/member view
         "members": len(folders),
         "months": all_plain,
-        "tasks": tasks_out,           # v2: per-task cost (task-identified; value dimension)
+        "tasks": tasks_out,           # v2: per-task cost + estimate (task-identified)
+        "value_summary": value_summary,
         "daily_cost": daily_cost,
         "rate_card": pricing or {},
         "cost_note": cost_note,
