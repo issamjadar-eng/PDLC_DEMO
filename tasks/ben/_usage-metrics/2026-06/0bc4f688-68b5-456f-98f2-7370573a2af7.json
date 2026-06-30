@@ -1,16 +1,25 @@
 {
   "by_day": {
     "2026-06-15": {
-      "cache_creation": 913386,
-      "cache_read": 96131143,
+      "cache_creation": 1045848,
+      "cache_read": 97200495,
       "cache_write_1h": 913386,
-      "cache_write_5m": 0,
-      "input": 24581,
-      "messages": 247,
-      "output": 252119
+      "cache_write_5m": 132462,
+      "input": 25222,
+      "messages": 280,
+      "output": 268291
     }
   },
   "by_model": {
+    "claude-haiku-4-5-20251001": {
+      "cache_creation": 132462,
+      "cache_read": 1069352,
+      "cache_write_1h": 0,
+      "cache_write_5m": 132462,
+      "input": 641,
+      "messages": 33,
+      "output": 16172
+    },
     "claude-opus-4-8": {
       "cache_creation": 913386,
       "cache_read": 96131143,
@@ -21,17 +30,39 @@
       "output": 252119
     }
   },
+  "by_task": {
+    "_unattributed": {
+      "claude-haiku-4-5-20251001": {
+        "cache_creation": 132462,
+        "cache_read": 1069352,
+        "cache_write_1h": 0,
+        "cache_write_5m": 132462,
+        "input": 641,
+        "messages": 33,
+        "output": 16172
+      },
+      "claude-opus-4-8": {
+        "cache_creation": 913386,
+        "cache_read": 96131143,
+        "cache_write_1h": 913386,
+        "cache_write_5m": 0,
+        "input": 24581,
+        "messages": 247,
+        "output": 252119
+      }
+    }
+  },
   "month": "2026-06",
   "session_id": "0bc4f688-68b5-456f-98f2-7370573a2af7",
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 913386,
-    "cache_read": 96131143,
+    "cache_creation": 1045848,
+    "cache_read": 97200495,
     "cache_write_1h": 913386,
-    "cache_write_5m": 0,
-    "input": 24581,
-    "messages": 247,
-    "output": 252119
+    "cache_write_5m": 132462,
+    "input": 25222,
+    "messages": 280,
+    "output": 268291
   }
 }

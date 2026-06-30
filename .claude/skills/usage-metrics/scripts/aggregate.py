@@ -275,11 +275,25 @@ def parse_task_economics(project_root: Path) -> dict:
                 for p in ps:
                     by_persona[p]["min"] += lo / n
                     by_persona[p]["max"] += hi / n
+            ah = econ.get("agentic_hours")
+            agentic_hours = float(ah) if isinstance(ah, (int, float)) else None
+            # The savings headline: by-hand hours minus how long it actually took us.
+            hours_saved = (
+                {"min": round(tot["min"] - agentic_hours, 1),
+                 "max": round(tot["max"] - agentic_hours, 1)}
+                if agentic_hours is not None else None
+            )
+            # The task's category = its personas, ranked by estimated hours.
+            personas_ranked = [p for p, v in sorted(
+                by_persona.items(), key=lambda kv: kv[1]["max"], reverse=True)]
             out[f"{tf}/{nnn}"] = {
                 "method_version": econ.get("method_version"),
                 "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
+                "agentic_hours": agentic_hours,
+                "hours_saved": hours_saved,
                 "by_persona": {p: {"min": round(v["min"], 1), "max": round(v["max"], 1)}
                                for p, v in sorted(by_persona.items())},
+                "personas": personas_ranked,
                 "todos": len(todos),
                 "confidence_mix": dict(conf),
             }
@@ -790,16 +804,22 @@ def main() -> int:
             tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0,
                               "cost": 0.0, "estimate": est}
 
-    est_tasks = [t for t in tasks_out.values() if t.get("estimate")]
+    est_tasks = [t["estimate"] for t in tasks_out.values() if t.get("estimate")]
+    saved = [e for e in est_tasks if e.get("hours_saved")]
     value_summary = {
         "tasks_with_estimate": len(est_tasks),
         "manual_hours": {
-            "min": round(sum(t["estimate"]["manual_hours"]["min"] for t in est_tasks), 1),
-            "max": round(sum(t["estimate"]["manual_hours"]["max"] for t in est_tasks), 1),
+            "min": round(sum(e["manual_hours"]["min"] for e in est_tasks), 1),
+            "max": round(sum(e["manual_hours"]["max"] for e in est_tasks), 1),
         },
-        "note": ("By-hand person-hour estimates (ranged) from task-doc Economics blocks. "
-                 "Person-hours only — the console converts to $ via labor_rates. "
-                 "Headline the conservative `min`."),
+        "agentic_hours": round(sum((e.get("agentic_hours") or 0) for e in est_tasks), 1),
+        "hours_saved": ({
+            "min": round(sum(e["hours_saved"]["min"] for e in saved), 1),
+            "max": round(sum(e["hours_saved"]["max"] for e in saved), 1),
+        } if saved else None),
+        "note": ("Hours saved = by-hand person-hour estimate (ranged) − agentic_hours (how long it "
+                 "actually took). Person-hours is the headline metric; the console adds an optional $ "
+                 "overlay via labor_rates. Lead with the conservative `min`."),
     }
 
     usage_json = {
