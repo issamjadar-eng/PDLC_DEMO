@@ -45,7 +45,7 @@ def parse_roster(yml_text: str) -> list[dict[str, str]]:
     m = re.search(
         r"^team:\s*\n"
         r"\s*active:\s*\n"
-        r"(?P<body>(?:[ \t]+(?:-[ \t]+)?\w+:.*\n|[ \t]*\n)+?)"
+        r"(?P<body>(?:[ \t]+(?:-[ \t]+)?\w+:.*\n|[ \t]*#.*\n|[ \t]*\n)+?)"
         r"(?=\s*inactive:|^\S)",
         yml_text,
         re.MULTILINE,

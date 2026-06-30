@@ -1,0 +1,59 @@
+# usage-metrics aggregate — CI-owned daily refresh of the team dashboard.
+#
+# Installed by `/usage-metrics setup` to `.github/workflows/usage-metrics-aggregate.yml`.
+# Project-agnostic: the skill + tools live at fixed paths, so this needs no edits.
+#
+# IMPORTANT — CI aggregates, it does NOT collect. `collect` reads each teammate's
+# LOCAL Claude Code transcripts (~/.claude/projects/…), which do not exist on a
+# runner. So collection stays local (per-user, via the SessionStart hook), and
+# each person's tasks/<task_folder>/_usage-metrics/ data reaches CI through normal
+# commits/pushes. This job re-aggregates whatever has been committed and commits
+# the refreshed tools/usage-metrics/ dashboard — deterministically (same inputs →
+# byte-identical output, so an unrelated push is a genuine no-op).
+name: usage-metrics aggregate
+
+on:
+  schedule:
+    - cron: '0 6 * * *'        # daily at 06:00 UTC
+  push:
+    branches: [main]
+    paths:
+      - 'tasks/*/_usage-metrics/**'              # a teammate pushed fresh usage
+      - '.claude/skills/usage-metrics/scripts/**'
+      - 'tools/usage-metrics/pricing.json'       # rates changed
+  workflow_dispatch: {}
+
+# Serialize — concurrent runs would race on the committed dashboard.
+concurrency:
+  group: usage-metrics-aggregate
+  cancel-in-progress: false
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # stdlib-only — no dependencies to install.
+      - name: Aggregate team usage (committed per-user data; no collection in CI)
+        run: python3 .claude/skills/usage-metrics/scripts/aggregate.py
+
+      - name: Commit refreshed dashboard
+        run: |
+          if git diff --quiet -- tools/usage-metrics/usage.json tools/usage-metrics/index.html; then
+            echo "dashboard unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/usage-metrics/usage.json tools/usage-metrics/index.html
+          git add tools/usage-metrics/*.md 2>/dev/null || true
+          git commit -m "usage-metrics: CI aggregate team dashboard [skip ci]"
+          git push

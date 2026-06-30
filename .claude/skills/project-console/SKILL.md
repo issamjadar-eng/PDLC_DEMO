@@ -1,8 +1,8 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.27.0
-updated: 2026-06-15
+version: 1.28.0
+updated: 2026-06-22
 ---
 
 # Project Console
@@ -147,6 +147,8 @@ When sync detects drift in a skill-owned file that the user hasn't declared in t
     themes.py                 # theme resolver
     auth.py                   # OAuth preflight
     chat/                     # chat routes + domain agent loader + SDK wiring
+    metrics/                  # topline Metrics section — generic consumer of the
+                              #   usage-metrics skill's tools/usage-metrics/usage.json
     strategy/                 # topline Strategy section (reuses workflows/ B3 machinery)
     submission/               # topline Submission section — loader + router (reads
                               #   submissions-skill JSON sidecars; renders doc bodies inline)

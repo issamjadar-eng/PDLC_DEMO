@@ -48,6 +48,7 @@
     <a class="nav-item" href="/workflows" title="Workflows"><svg class="nav-svg" aria-hidden="true"><use href="#ic-workflows"/></svg><span class="nav-tx">Workflows</span></a>
     <a class="nav-item" href="/agents" title="Agents"><svg class="nav-svg" aria-hidden="true"><use href="#ic-agents"/></svg><span class="nav-tx">Agents</span></a>
     <a class="nav-item" href="/documents" title="Documents"><svg class="nav-svg" aria-hidden="true"><use href="#ic-documents"/></svg><span class="nav-tx">Documents</span></a>
+    {% if request.state.metrics_nav %}<a class="nav-item" href="/metrics" title="Metrics"><svg class="nav-svg" aria-hidden="true"><use href="#ic-dashboards"/></svg><span class="nav-tx">Metrics</span></a>{% endif %}
   </nav>
   <div class="nav-more" hidden>
     <button type="button" class="nav-more-btn" aria-label="More sections" aria-haspopup="true" aria-expanded="false">

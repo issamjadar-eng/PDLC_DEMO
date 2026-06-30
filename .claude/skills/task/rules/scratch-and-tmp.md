@@ -1,6 +1,6 @@
 # Rule: Personal Work, Personal Scratch & System tmp
 
-Three distinct sandboxes exist for personal/transient work, and only those three. Anything else (a project-root `_scratch/`, a project-root `_work/`, a project-tree `tmp/`) is drift.
+Three distinct sandboxes exist for personal/transient work, and only those three. Anything else (a project-root `_scratch/`, a project-root `_work/`, a project-tree `tmp/`) is drift. A fourth per-person folder — `_usage-metrics/` — exists for **machine-generated** committed data (see below); it is not a hand-authored work sandbox, so it is listed separately.
 
 The two personal sandboxes are distinguished by **one axis only — does it go into git?** `_work/` is committed and reviewable by teammates; `_scratch/` is gitignored and local-only. Same owner, same per-person location; different visibility.
 
@@ -11,6 +11,7 @@ The two personal sandboxes are distinguished by **one axis only — does it go i
 | `tasks/{person}/_work/` | Personal **committed** sandbox — task-support artifacts the person wants in git and reviewable by teammates (data files `.xlsx`/`.csv`, generated reports, supporting outputs attached to a task) that are **not** themselves a task doc and **not** a controlled `docs/` deliverable | Indefinite, user-managed | **Committed & tracked** | The person whose task folder it lives in |
 | `tasks/{person}/_scratch/` | Personal sandbox — ideas, drafts, work outputs the person wants to keep around locally during a task | Indefinite, user-managed | **Gitignored, never committed** | The person whose task folder it lives in |
 | System `/tmp/` (OS-provided) | Claude's intermediary files during a single activity (extracted text, partial conversions, throwaway exports) | Single activity, deleted on completion | N/A — outside the repo | Claude — must clean up |
+| `tasks/{person}/_usage-metrics/` | Per-person **machine-generated** token-usage data (one JSON file per Claude session, `YYYY-MM/<session_id>.json`) collected + aggregated by the `usage-metrics` tooling. Committed because git/GitHub is the aggregation transport. NOT hand-authored, NOT a `docs/` deliverable, **never a grounding/citation source** (file-locator-excluded, like `_work/`) | Indefinite, tool-managed | **Committed & tracked** | The person whose task folder it lives in |
 
 ## Rules
 
