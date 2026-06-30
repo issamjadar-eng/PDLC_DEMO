@@ -1063,3 +1063,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - project.yml: no changes (PDLC_DEMO uses no `external` override; resolver output unchanged)
 - Project impact: **none required.** Opt-in override seam only; no new skills/agents (no allowlist change), no setup-action change, no schema migration. Discovery-index regeneration would produce identical output — not required.
 - Follow-ups: dhf-manifest test suite couldn't run here (`pyyaml` not installed in shell) — pulled files are byte-identical to origin/main per sync check; validation deferred to a pyyaml-equipped env.
+
+## 2026-06-29 — pull
+
+- Hitachi HEAD after sync: `788df8c`
+- Pulled: 44 files (scope: updates + new skills, per user)
+  - Updates to installed skills (4): `skills/manifest.md`, `skills/usage-metrics/README.md`, `skills/usage-metrics/SKILL.md`, `skills/usage-metrics/scripts/setup.py`
+  - New skill `red-team` (+ 7 skeptic agents + researcher) — agents wired as symlinks via setup
+  - New skill `regulatory-authoring` (+ `regulatory-copy-editor` agent, `.claude/rules/regulatory-authoring.md`)
+  - New skill `writing-well` (+ `prose-editor` agent)
+  - New file `skills/usage-metrics/statusline.sh`
+- Kept local (LOCAL_AHEAD, NOT pulled): `skills/usage-metrics/scripts/collect.py` — local blob newer than registry; remains a push candidate
+- project.yml: approved_skills += red-team, regulatory-authoring, writing-well; approved_agents += 10 new agents (pending)
+- Follow-ups: commit + push the synced skills/agents; reconcile usage-metrics divergence (push collect.py) if desired

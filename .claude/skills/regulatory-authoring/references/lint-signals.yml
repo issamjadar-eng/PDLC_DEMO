@@ -1,0 +1,391 @@
+# lint-signals.yml — single source for the regulatory-authoring lint.
+#
+# The authoring standard's `Lint:` lines and the lint script both derive from THIS file,
+# so the doc and the script can never drift. `authoring_lint.py` reads it + `project.yml`.
+#
+# Schema (one row per signal):
+#   id          unique signal id
+#   rule        the W/R/D rule it enforces
+#   kind        regex | regex_partial | filesystem | dependency_gated | judgment
+#                 regex          → runnable; matches are findings
+#                 regex_partial  → runnable; matches are CANDIDATES (over/under-matches)
+#                 filesystem     → needs path/existence resolution
+#                 dependency_gated → needs data not shipped here (glossary, discovery index,
+#                                    project.yml field); run only if loaded, else flag unverified
+#                 judgment       → not mechanizable; surface candidates, never a verdict
+#   zone        filed | any        (filed = outside metadata comments AND 🔒 containers)
+#   jurisdiction portable | fda | eu
+#   severity    error | warn | info
+#   pattern     Python regex (omitted for judgment/dependency_gated with no runnable pattern)
+#   message     what the author should do
+#
+# Project-parameterized tokens (filled by the script from project.yml; never hard-code names):
+#   {{task_folders}}  → e.g. (alice|bob)        from team.active[].task_folder
+#   {{jira_keys}}     → e.g. (ABC|DEF)          from change_control.jira.project_keys
+#   {{confirm_token}} → the pre-transmission confirmation token, if the project defines one
+#   {{retired_tree}}  → the project's retired-doc tree path glob, if any
+
+version: 1
+
+signals:
+
+  # ---- L1 Writing craft ----
+  - id: W2-adjective-no-number
+    rule: W2
+    kind: regex_partial
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(fast|quick|accurate|precise|reliable|efficient|robust|high-quality|real-?time|instantaneous|immediate|scalable)\b'
+    message: "Evaluative adjective (candidate) — quantify (number+unit+tolerance) or gate as a managed TBD; confirm no number is in the same sentence. 'robust' is shared with R9 — count once."
+
+  - id: W3-agentless-determined
+    rule: W3
+    kind: regex
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    pattern: '\bit (was|is) (determined|decided|concluded|found) that\b'
+    message: "Agentless passive in a responsibility statement — name the actor (active voice)."
+
+  - id: W4-orphan-pronoun
+    rule: W4
+    kind: regex_partial
+    zone: any
+    jurisdiction: portable
+    severity: info
+    pattern: '(?m)^(This|These|It) '
+    message: "Sentence-initial pronoun (candidate) — confirm an unambiguous antecedent in the same/prior sentence; prefer repeating the noun. (Mid-sentence orphans are judgment.)"
+
+  - id: W9-hyphen-range
+    rule: W9
+    kind: regex
+    zone: any
+    jurisdiction: portable
+    severity: info
+    pattern: '\d-\d+\s*(mm|cm|s)\b'
+    message: "Hyphen range — write 'X mm to Y mm' (explicit range)."
+
+  - id: W10-should-future
+    rule: W10
+    kind: regex_partial
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(should|will)\b'
+    message: "Modal (candidate) — 'should' is a recommendation not a requirement; 'will' is promissory in the filed body (→ R1). Confirm intended modal."
+
+  - id: W11-marketing
+    rule: W11
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\b(seamless|best-in-class|cutting-edge|revolutionary|industry-leading|world-class|next-generation|game-chang)\w*\b'
+    message: "Marketing register — delete; state the capability."
+
+  - id: W12-bare-crossref
+    rule: W12
+    kind: regex
+    zone: any
+    jurisdiction: portable
+    severity: info
+    pattern: '\bsee (above|below|the [a-z ]*file)\b'
+    message: "Bare cross-reference — name the target (title) and state what the reader will find there."
+
+  # ---- L2 Regulated register ----
+  - id: R1-promissory
+    rule: R1
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\b(will|planned|roadmap|upcoming|eventually)\b'
+    message: "Promissory/future language in the filed body — state present-tense as-delivered capability; move future scope internal."
+
+  - id: R1.1-unscoped-no-ai
+    rule: R1.1
+    kind: regex
+    case_sensitive: true
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\b(contains|has|uses|runs) no (AI|ML|AI/ML|machine learning)\b'
+    message: "Unscoped absolute negative — scope to the device function ('no clinical AI/ML'), not the technology."
+
+  - id: R1.2-approach-statement
+    rule: R1.2
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(where possible|our approach|we (aim|strive|intend) to)\b'
+    message: "Design-approach commentary — internalize or delete; state the architecture declaratively."
+
+  - id: R1.3-obligation-recital
+    rule: R1.3
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(must be assessed|guidance requires|does not remove the .{0,20}obligation)\b'
+    message: "Obligation recital — perform the obligation declaratively; move legal/teaching context to internal rationale."
+
+  - id: R5-hedge
+    rule: R5
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\b(we believe|it appears|it seems|unfortunately|while not ideal|should generally|hopefully|to some extent)\b'
+    message: "Hedge phrase — state flatly (R5). If the claim is unevidenced, remove or TBD-gate it (R9), don't just de-hedge."
+
+  - id: R6-undated-now
+    rule: R6
+    kind: regex_partial
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(currently|now|today|recently|at present|as delivered)\b'
+    message: "Time-relative word (candidate) — pin to a date or version unless one is adjacent."
+
+  - id: R7-acronym-undefined
+    rule: R7
+    kind: regex_partial
+    case_sensitive: true
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    pattern: '\b[A-Z][A-Za-z]{1,7}[0-9.]*\b'
+    message: "Capitalized token (candidate) — high-recall; subtract the packaged stop-word/defined-term/brand sets. A brand token is a D12 removal, not an R7 definition."
+
+  # ---- L3 Medtech specifics ----
+  - id: D2-summary-not-locked
+    rule: D2
+    kind: regex
+    case_sensitive: true
+    zone: any
+    jurisdiction: portable
+    severity: error
+    pattern: '(?m)^<summary>(?!🔒 INTERNAL)'
+    message: "<details> summary must begin '🔒 INTERNAL' (internal container convention)."
+
+  - id: D2.4-hedge-in-cell
+    rule: D2.4
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b([Cc]andidate|[Pp]roposed|[Pp]reliminary)\b'
+    message: "Hedge word in a filed heading/header/cell — QMS vocabulary is unqualified; draft status lives in metadata + the internal banner."
+
+  - id: D2-bare-enum-cell
+    rule: D2.2
+    kind: regex
+    case_sensitive: true
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\| *[0-9A-Z]{2,4} *\|'
+    message: "Bare coded cell — spell the controlled-vocabulary label ('02 - Intended use'), not the bare code."
+
+  - id: D4-bare-changelog
+    rule: D4
+    kind: regex
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    pattern: '(?im)\|\s*(updated|changes|edits|revised)\.?\s*\|'
+    message: "Change-history cell has no substance — say what changed and why."
+
+  - id: D8-repo-path
+    rule: D8
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: 'docs/(project|internal|external)/|\.taxonomy\.yml|project\.yml|{{retired_tree}}'
+    message: "Repo path / config file in the filed body — cite by document title; relocate internal pointers to a 🔒 container."
+
+  - id: D8-task-finding-id
+    rule: D8
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\b{{task_folders}}/\d+\b|\bgap-analysis\b|\b(F|RA)\d+\b|see the change ?log'
+    message: "Internal task/finding ID or non-published-metadata pointer in the filed body — remove or internalize."
+
+  - id: D9-submissions-trace
+    rule: D9
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\]\([^)]*submissions/|\bQ-Sub\b|\bQ\d+\.\d+\b'
+    message: "Trace/citation to a submission proposal — trace to a controlled DHF artifact (named TBD ok); a submissions/ link is a wrong target (D9 > D8)."
+
+  - id: D10-bare-tbd
+    rule: D10
+    kind: regex_partial
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\bTBD\b'
+    message: "TBD (candidate) — confirm it carries an owner + closure gate; bare TBD is an unmanaged gap."
+
+  - id: D11-classification-churn
+    rule: D11
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(candidat(e|cy)|reclassif\w*|pending (formal )?(risk assessment|decomposition))\b'
+    message: "Classification churn in the filed body — declare the class; keep determination basis + fallback in internal rationale."
+
+  - id: D12-cloud-vendor
+    rule: D12.5
+    kind: regex_partial
+    case_sensitive: true
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(AWS|S3|Azure|GCP|Okta|Datadog|Snowflake)\b'
+    message: "Cloud vendor named as architecture (candidate) — name by function with 'e.g.'; a specific provider is allowed only as a dated, load-bearing config fact."
+
+  - id: D12-supplied-by
+    rule: D12.1
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    pattern: '\bsupplied by\b'
+    message: "'supplied by' reads as 'manufactured by' for COTS — write 'sourced and configured by'."
+
+  - id: D13-clinical-on-admin
+    rule: D13
+    kind: regex_partial
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '\bclinical\b'
+    message: "'clinical' (candidate) — confirm it is not attached to an administratively-positioned (non-device) function; every mention must agree with the intended-use boundary."
+
+  - id: D14-confirm-token
+    rule: D14.4
+    kind: regex
+    zone: filed
+    jurisdiction: fda
+    severity: error
+    pattern: '{{confirm_token}}'
+    message: "Pre-transmission confirmation token still present — convert to prose or remove before transmission."
+
+  - id: D15-fda-vocab-in-eu
+    rule: D15
+    kind: regex
+    zone: filed
+    jurisdiction: eu
+    severity: error
+    pattern: '\b(indications for use|510\(k\)|PCCP|substantial equivalence)\b|where commercially practical'
+    message: "FDA-only vocabulary (or economic-feasibility hedge) in an EU-routed document — use intended-purpose / Rule 11 / AFAP; zero PCCP in EU text."
+
+  # ---- Placeholder gate ----
+  - id: ground-later-stub
+    rule: D15
+    kind: regex
+    zone: filed
+    jurisdiction: portable
+    severity: error
+    pattern: '⟦ground later'
+    message: "Unresolved ⟦ground later⟧ clause-citation stub — must not survive into a transmitted filed body; resolve against the imported distillation, never from memory."
+
+  # ---- Filesystem ----
+  - id: D6-deadlink
+    rule: D6
+    kind: filesystem
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    message: "Relative link target does not resolve from the document's directory."
+
+  # ---- Dependency-gated (run only if the data is loaded) ----
+  - id: W8-synonym
+    rule: W8
+    kind: dependency_gated
+    zone: any
+    jurisdiction: portable
+    severity: info
+    message: "One-term-per-concept — needs the project glossary/synonym map; flag unverified if absent."
+
+  - id: D7-form-conformance
+    rule: D7
+    kind: dependency_gated
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    message: "Conform to the governing FORM (columns/sections/sign-offs) — needs the FORM from the taxonomy `governing_qms`; flag unverified if absent."
+
+  - id: D9-stale-not-authored
+    rule: D9
+    kind: dependency_gated
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    message: "'not yet authored'/'forward-plan' about a doctype that may already exist — needs the discovery index to confirm; flag unverified if absent."
+
+  - id: R8-cross-record
+    rule: R8
+    kind: dependency_gated
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    message: "Cross-record consistency — needs the parent/manifest record loaded; flag unverified if editing one file in isolation."
+
+  # ---- Judgment (surface candidates; disposition is the QA pass) ----
+  - id: W1-compound-claim
+    rule: W1
+    kind: judgment
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    message: "Possible multi-claim sentence — split if each conjunct is independently verifiable (W1); don't coordinate device-actor + human-actor claims (W1.1)."
+
+  - id: R2-requirement-form
+    rule: R2
+    kind: judgment
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    message: "Requirement without an acceptance criterion — judgment."
+
+  - id: R3-claim-evidence
+    rule: R3
+    kind: judgment
+    zone: filed
+    jurisdiction: portable
+    severity: info
+    message: "Claim of a performed activity/property without an evidence reference — judgment (route via R2/R3/R9)."
+
+  - id: R9-unevidenced-property
+    rule: R9
+    kind: judgment
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    message: "Declarative property/performance/safety claim with no evidence + no TBD — remove or gate; do NOT re-voice. Keep if it is a requirement (R2)."
+
+  - id: D1-preflight
+    rule: D1
+    kind: judgment
+    zone: any
+    jurisdiction: portable
+    severity: info
+    message: "FORM-instance draft without a schema-map artifact — pre-flight likely skipped."
+
+  - id: D3-control-header
+    rule: D3
+    kind: judgment
+    zone: any
+    jurisdiction: portable
+    severity: warn
+    message: "Document-control header completeness (ID/version/status/effective-date/approver+date/change-history) — judgment; the header is visible metadata, never 🔒-wrapped."

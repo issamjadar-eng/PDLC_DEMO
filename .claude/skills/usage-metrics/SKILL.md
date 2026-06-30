@@ -1,8 +1,8 @@
 ---
 name: usage-metrics
-description: "Cross-user Claude Code token-usage + cost telemetry for a team. TRIGGER when the user wants to measure, collect, aggregate, report, or project Claude Code token usage or spend across teammates — e.g. 'how many tokens are we using', 'what's our Claude usage/cost', 'build a usage dashboard', 'project our 30-day cost', 'set up usage tracking', 'who's using the most tokens', 'refresh the usage report'. Collects each teammate's usage LOCALLY from their session transcripts, uses git as the aggregation bus (no shared server), and renders a single self-contained HTML cost dashboard. Actions: setup, collect, aggregate, report, status."
-version: 3
-updated: 2026-06-22
+description: "Cross-user Claude Code token-usage + cost telemetry for a team. TRIGGER when the user wants to measure, collect, aggregate, report, or project Claude Code token usage or spend across teammates — e.g. 'how many tokens are we using', 'what's our Claude usage/cost', 'build a usage dashboard', 'project our 30-day cost', 'set up usage tracking', 'who's using the most tokens', 'refresh the usage report', or wants a live token/context/cost **status line** ('show my context usage', 'add a status line with tokens and cost'). Collects each teammate's usage LOCALLY from their session transcripts, uses git as the aggregation bus (no shared server), renders a single self-contained HTML cost dashboard, and installs a team-shared status line. Actions: setup, collect, aggregate, report, status."
+version: 4
+updated: 2026-06-25
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -24,6 +24,7 @@ Measure Claude Code token usage and equivalent cost across a whole team, without
 | `scripts/publish.py` | publish your own `_usage-metrics/` to the shared branch via an isolated git worktree (working branch untouched) |
 | `hooks/usage-metrics-refresh.sh` | SessionStart hook — auto-regenerate the dashboard when >TTL days stale (local-only) |
 | `hooks/usage-metrics-publish.sh` | SessionEnd hook — collect the final session + publish your data to the shared branch (gated, best-effort) |
+| `statusline.sh` | Team-shared Claude Code status line — `[model] <bar> IN/SIZE ctx · ↑OUT resp · $cost`. `setup` symlinks it to `.claude/statusline.sh` + registers the `statusLine` block. Reads `context_window.*` + `cost.total_cost_usd` from stdin; jq-guarded; degrades gracefully on builds without `context_window.*`. |
 | `templates/usage_metrics.config.yml` | The `project.yml usage_metrics:` block `setup` appends |
 | `templates/pricing.json` | Seed rate card (USD/MTok per model) `setup` installs to `tools/usage-metrics/` |
 
@@ -39,7 +40,7 @@ Wire the skill into the current project. Idempotent — safe to re-run. Run the 
 python3 "${CLAUDE_SKILL_DIR}/scripts/setup.py"
 ```
 
-It: symlinks `hooks/usage-metrics-refresh.sh` into `.claude/hooks/` (skill stays the source of truth), registers it as a SessionStart hook via `.claude/hooks/register-hook.sh`, appends the `usage_metrics:` block to `project.yml` (from `templates/usage_metrics.config.yml`), adds `**/_usage-metrics/**` to `file_locator.corpus_excludes`, seeds `tools/usage-metrics/pricing.json` from the bundled rate card, installs the **daily-aggregate GitHub Actions workflow** (`.github/workflows/usage-metrics-aggregate.yml`), and creates `.state/`. Preconditions: `project.yml` exists and `/task setup` has installed `register-hook.sh`. Report the script's output to the user.
+It: symlinks `hooks/usage-metrics-refresh.sh` into `.claude/hooks/` (skill stays the source of truth), registers it as a SessionStart hook via `.claude/hooks/register-hook.sh`, **symlinks `statusline.sh` to `.claude/statusline.sh` and registers the `statusLine` block in `settings.json`** (idempotent; a pre-existing different `statusLine` is treated as a project fork and left alone), appends the `usage_metrics:` block to `project.yml` (from `templates/usage_metrics.config.yml`), adds `**/_usage-metrics/**` to `file_locator.corpus_excludes`, seeds `tools/usage-metrics/pricing.json` from the bundled rate card, installs the **daily-aggregate GitHub Actions workflow** (`.github/workflows/usage-metrics-aggregate.yml`), and creates `.state/`. Preconditions: `project.yml` exists and `/task setup` has installed `register-hook.sh`. Report the script's output to the user.
 
 **The full automatic loop (no manual steps):**
 1. **SessionStart hook** — keeps each person's *local* dashboard current (local-only, no git).

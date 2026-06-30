@@ -1,0 +1,1 @@
+../skills/red-team/agents/vp-eng-skeptic.md

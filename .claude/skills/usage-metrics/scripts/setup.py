@@ -4,6 +4,8 @@
 Does the necessary work so the skill is operational in any project:
   1. Symlink the SessionStart refresh hook into .claude/hooks/ (skill is source).
   2. Register the hook in .claude/settings.json via the shared register-hook.sh.
+  2b. Symlink .claude/statusline.sh -> skill-owned statusline.sh + register the
+     `statusLine` block in settings.json (idempotent; leaves a project fork alone).
   3. Append the `usage_metrics:` config block to project.yml (if absent).
   4. Add `**/_usage-metrics/**` to file_locator.corpus_excludes (if absent).
   5. Seed tools/usage-metrics/pricing.json from the bundled rate card (if absent).
@@ -15,6 +17,7 @@ Run: python3 .claude/skills/usage-metrics/scripts/setup.py [--project-root PATH]
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -92,6 +95,38 @@ def main() -> int:
             capture_output=True, text=True,
         )
         report.append(f"{event} hook ({hook_name}): " + (res.stdout.strip() or res.stderr.strip() or "registered"))
+
+    # --- 2b. status line: symlink the skill-owned script + register statusLine ---
+    # The skill holds the SOURCE (statusline.sh); .claude/statusline.sh is a symlink,
+    # so a `/sync-skills pull` that updates the skill auto-updates the installed line.
+    sl_link = root / ".claude" / "statusline.sh"
+    sl_target = Path("skills") / "usage-metrics" / "statusline.sh"
+    sl_desired = os.fspath(sl_target)
+    if sl_link.is_symlink() and os.readlink(sl_link) == sl_desired:
+        report.append("statusline symlink: already present")
+    elif sl_link.is_file() and not sl_link.is_symlink():
+        report.append("statusline symlink: SKIP (project fork — regular file left alone)")
+    else:
+        if sl_link.exists() or sl_link.is_symlink():
+            sl_link.unlink()
+        sl_link.symlink_to(sl_target)
+        report.append("statusline symlink: created")
+    os.chmod(skill / "statusline.sh", 0o755)
+
+    # Register the statusLine block in settings.json (idempotent; leave a fork alone).
+    settings = root / ".claude" / "settings.json"
+    sl_cmd = '"$CLAUDE_PROJECT_DIR"/.claude/statusline.sh'
+    sj = json.loads(settings.read_text(encoding="utf-8")) if settings.is_file() else {}
+    existing = sj.get("statusLine")
+    if isinstance(existing, dict) and existing.get("command") == sl_cmd:
+        report.append("statusLine config: already present")
+    elif existing:
+        report.append("statusLine config: SKIP (a different statusLine is configured — left alone)")
+    else:
+        sj["statusLine"] = {"type": "command", "command": sl_cmd}
+        settings.parent.mkdir(parents=True, exist_ok=True)
+        settings.write_text(json.dumps(sj, indent=2) + "\n", encoding="utf-8")
+        report.append("statusLine config: registered in settings.json")
 
     # --- 3. project.yml usage_metrics block ---
     pyml = root / "project.yml"

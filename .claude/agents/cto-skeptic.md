@@ -1,0 +1,1 @@
+../skills/red-team/agents/cto-skeptic.md

@@ -1,0 +1,1 @@
+../skills/red-team/agents/qa-vp-skeptic.md
