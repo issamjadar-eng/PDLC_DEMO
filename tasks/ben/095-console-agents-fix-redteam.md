@@ -2,7 +2,7 @@
 
 **ID**: 095
 **Created**: 2026-06-29
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -197,14 +197,14 @@ manual review. Nothing project-owned is clobbered.
 
 **Activation command:** `bash .claude/hooks/task-activate.sh add <SESSION_ID> 095`
 
-**In-flight artifacts (NOT committed — user controls commits):**
-- Glob fix: `tools/project-console/agents/core-team/{cybersecurity,human-factors,post-market}.md` + the 3 matching skill templates under `.claude/skills/project-console/agents/templates/`.
-- Skill hardening: `.claude/skills/project-console/console/chat/sources.py` (`resolve_files` try/except).
-- New group: `tools/project-console/agents/red-team/` (9 files).
-- Console restarted on :8765 with all changes loaded.
-- Task index row added for 095.
+**Shipped + merged this session:**
+- **Project** → PDLC_DEMO PR #70 merged to `main` (merge `5898c1c`; local main now at `f84fc23` after a CI index-rebuild commit).
+- **Registry** → hitachi PR #238 squash-merged to registry `main` (`080ee9d`); project-console **v1.29.0** on hitachi. Local hitachi checkout reconciled; sync branch deleted. Recorded in `.claude/sync-log.md`.
+- Console running on :8765 with all changes loaded.
 
-**First action on resume:** if user says "push" → run the project-console `git-workflow` push sequence for the project files; separately, `/sync-skills push` the `project-console` skill changes (sources.py hardening + template glob fix) upstream to hitachi; optionally propose shipping the red-team console group as skill templates.
+**Only residual (user-side, not a blocker):** live in-browser smoke test that an agent actually *invokes* the file-locator tool and a red-team skeptic actually *calls* the researcher mid-chat — needs an authenticated chat turn, which can't be driven headless. Everything else is verified + merged.
+
+**First action on resume:** nothing required — task is Complete. If the live smoke test surfaces an issue, reopen with `bash .claude/hooks/task-activate.sh add <SESSION_ID> 095`.
 
 ## Changelog
 
@@ -214,3 +214,4 @@ manual review. Nothing project-owned is clobbered.
 - 2026-06-29: Shipped the red-team group as skill **templates** + made init/sync group-aware, idempotent, non-clobbering, and guidance-emitting (project-console v1.28→v1.29). New `agents/templates/red-team/` group; `scaffold.py` group materialization + per-file baseline hashes in the manifest; `sync` 4-bucket classification (new/update-available/review-drift/in-sync) + `--apply-agent-updates` flag. Validated across 5 temp-project scenarios; live `sync` on this project clean (23 baselines). SKILL.md + README + VERSION updated. This is the propagation mechanism: sister projects get the new group materialized and the agent glob fixes surfaced as update-available, without clobbering customizations.
 - 2026-06-29: Fixed `panels.py` panel-member framing bug. The hardcoded `PANEL_FRAMING` told **every** panel member they were on a "clinical advisory panel reviewing a PCA infusion device ... stay in character as the KOL below" — wrong for core-team + red-team, and project-specific (registry-guardrail violation). Replaced with a generic, project-agnostic `_panel_framing(panel)` wrapper (mechanics only) + injection of each panel's **own body** (`THIS PANEL: <title>`) + the member's persona (`YOUR ROLE`). Verified: red-team members get buyer-committee framing with zero clinical/KOL/PCA leakage; KOL members still get clinical framing (now from the KOL panel body); core-team gets its own. All 5 panel pages HTTP 200.
 - 2026-06-29: Per user direction, gave console agents two new tools. (1) **file-locator MCP** for every agent — resolved from `.mcp.json` via `config.chat_mcp_servers`, command absolutized, `cwd=repo_root`; `mcp__<server>` allowed. (2) **red-team-researcher subagent** for the 7 skeptics only — new `subagents:` agent-def field → loaded into an SDK `AgentDefinition` + `Task` tool; threaded through router + panels. Skeptic/panel prose updated to reflect researcher access. Validated structurally (options construct, paths resolve, no regression, pages 200); live tool-use to be confirmed in-browser. Files: `console/chat/{sdk_client,domain_agents,router,panels}.py`, `console/config.py`, 7 skeptics + panel.
+- 2026-06-30: **Pushed + skill-synced; task Complete.** Project work merged via PDLC_DEMO PR #70 (`5898c1c`). project-console skill (22 files, v1.28.0→v1.29.0) pushed to hitachi as PR #238, squash-merged (`080ee9d`); `check --analyzed` confirmed all 22 as clean push candidates (9 LOCAL_ONLY red-team templates + 13 LOCAL_AHEAD), no divergence. Hitachi checkout reconciled, sync branch deleted, `.claude/sync-log.md` updated. (Recovered cleanly from a post-merge hiccup: `gh pr merge --delete-branch` left local `main` stale because an auto-published untracked usage-metrics JSON blocked the fast-forward; moved it aside and ff'd main.) Residual: user-side live in-browser smoke test of tool-use.

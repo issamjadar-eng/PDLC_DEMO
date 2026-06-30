@@ -4,6 +4,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-30 — push (project-console v1.29.0) [ben/095]
+
+- **Files:** 22 — the whole `skills/project-console/` change set. 9 `LOCAL_ONLY` (new `agents/templates/red-team/` group) + 13 `LOCAL_AHEAD` (README, SKILL, VERSION, 3 fixed core-team templates, `console/chat/{sdk_client,domain_agents,router,panels,sources}.py`, `console/config.py`, `scripts/scaffold.py`). All clean push candidates — no `BOTH_DIVERGED`, no upstream to reconcile.
+- **What:** fix the cybersecurity/human-factors/post-market grounding-glob crash (`fda-guidance/**topic**.md` → `ValueError`) + harden `resolve_files`; new **Red Team** template group (7 buyer-committee skeptics + panel); grouped + idempotent + non-clobbering agent templates with `sync` guidance + `--apply-agent-updates`; per-agent **file-locator** MCP tool + `subagents:` (red-team-researcher via `Task`); `panels.py` framing de-hardcode. VERSION 1.28.0 → 1.29.0.
+- **Branch:** `sync/pdlc-demo-console-redteam-tooling-2026-06-30`
+- **PR:** https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/238
+- **Commit:** "project-console v1.29.0: Red Team group, agent tooling, grouped templates, glob-crash fix"
+- **Status:** merged (squash, `--merge`)
+- **Merge commit / Hitachi HEAD after sync:** `080ee9d`
+- Project side landed first via PDLC_DEMO PR #70 (merge `5898c1c`).
+
 ## 2026-06-23 — merge + pull (usage-metrics skill + project-console Metrics view) [ben/093]
 
 - **Context:** the new `usage-metrics` skill (cross-team token/cost telemetry) was the user's own work, authored from the **arthrex-pccp** project, sitting on hitachi branch `sync/arthrex-pccp-usage-metrics-console-2026-06-23` (`e23c6d1`) with **open PR #231** — not yet on origin/main (which is why a plain `check` reported "no new skills").
@@ -1076,3 +1087,13 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Kept local (LOCAL_AHEAD, NOT pulled): `skills/usage-metrics/scripts/collect.py` — local blob newer than registry; remains a push candidate
 - project.yml: approved_skills += red-team, regulatory-authoring, writing-well; approved_agents += 10 new agents (pending)
 - Follow-ups: commit + push the synced skills/agents; reconcile usage-metrics divergence (push collect.py) if desired
+
+## 2026-06-29 — push (--merge)
+
+- Files: `skills/usage-metrics/scripts/collect.py`
+- Branch: `sync/pdlc-demo-usage-metrics-collect-slug-fix-2026-06-29`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/237
+- Commit: "usage-metrics: fix transcript-dir slug encoding (non-alphanumeric -> '-')"
+- Status: merged (--merge requested)
+- Merge commit / hitachi HEAD after sync: `bbee8e9`
+- Resolves the ben/094 LOCAL_AHEAD divergence — local and registry collect.py now identical; skill drift = 0 (SYNCED).
