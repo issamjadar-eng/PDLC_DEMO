@@ -1,8 +1,8 @@
 {
   "skill": "project-console",
-  "skill_version": "1.25.0",
+  "skill_version": "1.28.0",
   "installed_at": "2026-04-14T00:00:00Z",
-  "last_synced_at": "2026-06-04T07:09:12.802626+00:00",
+  "last_synced_at": "2026-06-23T18:22:04.906601+00:00",
   "file_classes": {
     "console.yaml": "project-owned",
     "pyproject.toml": "project-owned",

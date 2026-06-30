@@ -16,6 +16,8 @@ from console.dashboards.router import router as dashboards_router
 from console.documents.router import router as documents_router
 from console.gap_analysis.loader import discover as discover_gap_analysis
 from console.gap_analysis.router import router as gap_analysis_router
+from console.metrics.loader import discover as discover_metrics
+from console.metrics.router import router as metrics_router
 from console.overview.router import discover as discover_overview
 from console.overview.router import router as overview_router
 from console.strategy.router import discover as discover_strategy
@@ -83,6 +85,9 @@ async def theme_context(request: Request, call_next):
     request.state.submission_nav = discover_submission(cfg.repo_root)["has_any"]
     # Gap Analysis nav visibility — shows when sidecars exist under docs/_analysis/.
     request.state.gap_analysis_nav = discover_gap_analysis(cfg.repo_root)["has_any"]
+    # Metrics nav visibility — shows when the usage-metrics skill has published
+    # tools/usage-metrics/usage.json.
+    request.state.metrics_nav = discover_metrics(cfg.repo_root)["has_any"]
     return await call_next(request)
 
 
@@ -96,6 +101,7 @@ app.include_router(trace_matrix_router)
 app.include_router(gap_analysis_router)
 app.include_router(assistant_router)
 app.include_router(workflows_router)
+app.include_router(metrics_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

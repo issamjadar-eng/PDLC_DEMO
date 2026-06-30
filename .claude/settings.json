@@ -74,6 +74,15 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/taxonomy-freshness.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/usage-metrics-refresh.sh"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -92,6 +101,15 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/skill-creator-cleanup.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/usage-metrics-publish.sh"
           }
         ]
       }

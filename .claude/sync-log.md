@@ -4,6 +4,27 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-23 — merge + pull (usage-metrics skill + project-console Metrics view) [ben/093]
+
+- **Context:** the new `usage-metrics` skill (cross-team token/cost telemetry) was the user's own work, authored from the **arthrex-pccp** project, sitting on hitachi branch `sync/arthrex-pccp-usage-metrics-console-2026-06-23` (`e23c6d1`) with **open PR #231** — not yet on origin/main (which is why a plain `check` reported "no new skills").
+- **Merged hitachi PR #231** → main (squash, branch deleted). Merge commit `94653c7`. Local hitachi checkout fast-forwarded to main; local sync branch removed.
+- **Pulled 23 files** (all auto-pull bucket: 16 UPSTREAM_ONLY + 7 UPSTREAM_ADVANCE; byte-identical to `94653c7`): new `skills/usage-metrics/**` (11), `project-console` Metrics view (5 new `console/metrics/**` + metrics.js + metrics_view.html; 5 mod: SKILL/README/VERSION/app.py/_base.html), `shared/scripts/resolve_user.py`, `task/rules/scratch-and-tmp.md` (adds `_usage-metrics/` sandbox row).
+- **project.yml:** added `usage-metrics` to `security.approved_skills`; `/usage-metrics setup` appended the `usage_metrics:` block (method=local, publish.enabled=true→branch main) and added `**/_usage-metrics/**` to `file_locator.corpus_excludes`.
+- **Setup (full team loop):** symlinked+registered 2 hooks (SessionStart `usage-metrics-refresh`, SessionEnd `usage-metrics-publish`); seeded `tools/usage-metrics/pricing.json`; installed `.github/workflows/usage-metrics-aggregate.yml` (daily cron). project-console synced 1.25.0→1.28.0 + restarted; Metrics view live on :8765 (200 on `/metrics`, `/metrics/data`).
+- **Bugfix (local, diverges from main — push candidate):** `usage-metrics/scripts/collect.py` slug did `/`→`-` only; missed the `_` in `PDLC_DEMO` (real transcript dir `-Users-…-PDLC-DEMO`). Fixed to replicate CC's all-non-alphanumeric→`-` encoding (+ legacy fallback). After fix: collect wrote 6 ben sessions; aggregate rendered the dashboard. **Affects any underscore/dot-named project → push upstream.**
+- **Nothing committed** — all changes are in the PDLC_DEMO working tree pending user's push decision.
+- Follow-ups: (a) project PR for PDLC_DEMO; (b) `/sync-skills push` the `collect.py` slug fix to hitachi.
+
+## 2026-06-23 — pull (task hook checkpoint-marker TTL)
+
+- Hitachi HEAD at sync: `b6067e0` (registry clone already current; `git fetch` confirmed 0 behind).
+- Three-way buckets: UPSTREAM_ONLY 0 · LOCAL_ONLY 0 · UPSTREAM_NEWER 1 (ADVANCE 1).
+- **Pulled 1 file**: `skills/task/hooks/check-active-task.sh` (UPSTREAM_ADVANCE, hitachi #230) — adds a 7-day TTL purge of `uncheckpointed-*.txt` checkpoint-recovery markers alongside the existing `active-tasks-*.txt` purge. Additive bugfix; no contract change.
+- **No new skills.** Project was fully in lockstep with the registry except this one hook (the references / dhf-manifest / submissions-v2 advances from #226–#229 were already present from the 2026-06-15 sessions).
+- project.yml: no changes. No new skills/agents/allowlist edits.
+- Setup impact: **none** — the hook is referenced in-place via settings.json; pulling the file updates it live, no re-registration. No `uncheckpointed-*` markers currently accumulating in `.state/`.
+- Follow-ups: none from this pull. (Pre-existing, unchanged: advisor GROUNDING re-render `/advisors sync`; R1/R2 from ben/090.)
+
 ## 2026-06-15 — push (references + tracker + submissions v2) + prune
 
 - **PR #226** (hitachi, squash-merged): `references/regulations/21-cfr-part-814.md` (new PMA distillation), `21-cfr-part-807.md` (§807.87 (a)–(m) lettering pin), regs `README.md` (814 row), `tracker/{SKILL,README}.md` (v14 manifest-ownership), `project-console/tests/test_tracker_workflow_e2e.py` (807.87(k)→(l) fixture fix).

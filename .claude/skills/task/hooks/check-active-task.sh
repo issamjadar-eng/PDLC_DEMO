@@ -94,9 +94,15 @@ fi
 
 # Auto-purge stale state files older than 7 days — rate-limited to once per 24h
 # via a sentinel file so we don't issue a find(1) on every Edit/Write call.
+# Covers two families: the per-session gate files (active-tasks-*) and the
+# checkpoint-recovery markers (uncheckpointed-*). The latter are written at
+# SessionEnd by session-cleanup.sh and only ever deleted by a /checkpoint run;
+# without this TTL they accumulate (one per day per still-active task, since the
+# filename is date-stamped) and nag at every SessionStart indefinitely.
 PURGE_SENTINEL="${CLAUDE_PROJECT_DIR}/.state/purge-last.txt"
 if [ ! -f "$PURGE_SENTINEL" ] || [ -n "$(find "$PURGE_SENTINEL" -mtime +1 2>/dev/null)" ]; then
   find "${CLAUDE_PROJECT_DIR}/.state" -name "active-tasks-*.txt" -mtime +7 -delete 2>/dev/null
+  find "${CLAUDE_PROJECT_DIR}/.state" -name "uncheckpointed-*.txt" -mtime +7 -delete 2>/dev/null
   touch "$PURGE_SENTINEL" 2>/dev/null
 fi
 

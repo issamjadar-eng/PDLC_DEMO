@@ -1,0 +1,28 @@
+# ---------------------------------------------------------------------------
+# usage_metrics — cross-user Claude Code token-usage telemetry (skill: usage-metrics)
+# ---------------------------------------------------------------------------
+# git-as-aggregator: each teammate collects LOCALLY into their own task folder
+# (tasks/{task_folder}/_usage-metrics/), commits it, and git/GitHub is the
+# transport that converges everyone's data. A script rolls it up — no shared
+# server, no LLM in the data path. Identity = the task_folder (the folder IS the
+# person), so no email/PII is written into committed records.
+usage_metrics:
+  method: local                  # local (git-as-aggregator, supported) | admin_api (future stub)
+  identity: task_folder          # the per-person folder IS the identity (reuses team.active[].task_folder)
+  source: transcript             # transcript (CC local session jsonl) | otel-local (alt, not built)
+  storage:
+    per_user_dir: tasks/{task_folder}/_usage-metrics   # committed; {task_folder} from team.active[]
+    layout: per-session          # YYYY-MM/<session_id>.json — collision-free across sessions/machines
+    dedup_key: message.id        # transcript rows duplicate ~2x; dedupe before summing
+  aggregate:
+    transport: git               # git/GitHub is the bus — no shared collector/server
+    output_dir: tools/usage-metrics   # team dashboard (index.html + usage.json), anonymized
+    anonymize: true              # team view shows "Member N" labels — no real names
+  refresh:
+    trigger: session-start       # auto-refresh via the usage-metrics-refresh.sh SessionStart hook
+    refresh_ttl_days: 7          # regenerate only if the local dashboard is older than this
+    scope: local                 # local (no git pull/commit/network) | pull | full-sync (see hook)
+  publish:
+    enabled: true                # SessionEnd: push your OWN _usage-metrics/ data to `branch`
+    branch: main                 #   via an isolated worktree (working branch untouched). This is
+                                 #   what feeds the daily-aggregate GitHub workflow. false to disable.
