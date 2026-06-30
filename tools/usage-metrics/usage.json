@@ -5,7 +5,9 @@
     "2026-06-15": 89.22,
     "2026-06-16": 31.55,
     "2026-06-22": 12.79,
-    "2026-06-23": 7.42
+    "2026-06-23": 7.42,
+    "2026-06-29": 0.89,
+    "2026-06-30": 7.07
   },
   "members": 1,
   "months": {
@@ -47,31 +49,49 @@
             "input": 26076,
             "messages": 61,
             "output": 52965
+          },
+          "2026-06-29": {
+            "cache_creation": 61431,
+            "cache_read": 295348,
+            "cache_write_1h": 61431,
+            "cache_write_5m": 0,
+            "input": 19475,
+            "messages": 5,
+            "output": 1059
+          },
+          "2026-06-30": {
+            "cache_creation": 155044,
+            "cache_read": 8770979,
+            "cache_write_1h": 155044,
+            "cache_write_5m": 0,
+            "input": 6478,
+            "messages": 68,
+            "output": 44041
           }
         },
         "by_model": {
           "claude-opus-4-8": {
-            "cache_creation": 2917477,
-            "cache_read": 189573255,
-            "cache_write_1h": 2917477,
+            "cache_creation": 3133952,
+            "cache_read": 198639582,
+            "cache_write_1h": 3133952,
             "cache_write_5m": 0,
-            "cost": 140.99,
-            "input": 151672,
-            "messages": 623,
-            "output": 650821
+            "cost": 148.95,
+            "input": 177625,
+            "messages": 696,
+            "output": 695921
           }
         },
-        "cost": 140.99,
+        "cost": 148.95,
         "name": "Member 1",
-        "sessions": 6,
+        "sessions": 7,
         "totals": {
-          "cache_creation": 2917477,
-          "cache_read": 189573255,
-          "cache_write_1h": 2917477,
+          "cache_creation": 3133952,
+          "cache_read": 198639582,
+          "cache_write_1h": 3133952,
           "cache_write_5m": 0,
-          "input": 151672,
-          "messages": 623,
-          "output": 650821
+          "input": 177625,
+          "messages": 696,
+          "output": 695921
         }
       }
     }
