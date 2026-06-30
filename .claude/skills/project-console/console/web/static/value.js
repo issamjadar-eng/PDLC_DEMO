@@ -1,105 +1,97 @@
-// Value / ROI view. Renders the per-task by-hand-baseline vs agentic-cost
-// comparison from usage.json v2 (window.USAGE) using console-side labor rates
-// (window.LABOR_RATES). Person-hours is primary; $ is a derived overlay applied
-// HERE (never in the committed data). Headlines lead with the conservative `min`.
+// Value / ROI tab. The headline is HOURS SAVED = by-hand person-hour estimate
+// (ranged) minus how long it actually took us (agentic_hours). Category = the
+// by-hand specialist persona(s). Agentic cost = measured token $ (real rates).
+// Reads usage.json v2 (window.USAGE) + console labor rates (window.LABOR_RATES).
 (function () {
   const U = window.USAGE || {};
-  const RATES = window.LABOR_RATES || {};
   const CUR = window.CURRENCY || "USD";
   const tasks = U.tasks || {};
+  const vs = U.value_summary || {};
 
   const usd = n => new Intl.NumberFormat(undefined, { style: "currency", currency: CUR,
-    maximumFractionDigits: n >= 100 ? 0 : 2 }).format(n || 0);
+    maximumFractionDigits: (n || 0) >= 100 ? 0 : 2 }).format(n || 0);
   const hrs = n => (Math.round((n || 0) * 10) / 10).toLocaleString();
-  const rateFor = p => (p in RATES ? RATES[p] : (RATES.default || 0));
+  const rng = o => o ? `${hrs(o.min)}–${hrs(o.max)}` : "—";
+  const confLabel = m => !m ? "—" : (m.low ? "low" : (m.med ? "med" : (m.high ? "high" : "—")));
+  const esc = s => (s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  // 3–5 word task summary from the doc title (drop parentheticals).
+  const shortTitle = t => {
+    if (!t) return "";
+    const w = t.replace(/\(.*?\)/g, "").replace(/[:—-]+/g, " ").split(/\s+/).filter(Boolean);
+    return esc(w.slice(0, 5).join(" "));
+  };
 
-  // Anonymize people: map each task_folder ("ben") to a stable "Member N",
-  // keeping the task number visible (value is task-scoped, people are not ranked).
+  // Anonymize people; keep the task number (value is task-scoped, people aren't ranked).
   const folders = [...new Set(Object.keys(tasks).map(r => r.split("/")[0]))].sort();
   const memberOf = {};
   folders.forEach((f, i) => { memberOf[f] = "Member " + (i + 1); });
 
-  // Per-task rows (only tasks that carry a by-hand estimate; "_unattributed" has none).
   const rows = [];
   for (const [ref, t] of Object.entries(tasks)) {
-    const est = t.estimate;
-    if (!est) continue;
-    const [tf, id] = [ref.split("/")[0], ref.split("/").slice(1).join("/")];
-    // by-hand $ from per-persona hours × that persona's loaded rate (min & max bands)
-    let manMin = 0, manMax = 0;
-    for (const [p, h] of Object.entries(est.by_persona || {})) {
-      manMin += (h.min || 0) * rateFor(p);
-      manMax += (h.max || 0) * rateFor(p);
-    }
-    const agentic = t.cost || 0;
+    const e = t.estimate;
+    if (!e) continue;
+    const id = ref.split("/").slice(1).join("/");
+    const cats = e.personas || [];
     rows.push({
-      label: memberOf[tf] + " · " + id,
-      sessions: t.sessions || 0,
-      agentic,
-      hMin: est.manual_hours?.min || 0, hMax: est.manual_hours?.max || 0,
-      manMin, manMax,
-      // Leverage = conservative by-hand $ floor ÷ measured agentic $.
-      lev: agentic > 0 ? manMin / agentic : null,
-      conf: est.confidence_mix || {},
+      label: memberOf[ref.split("/")[0]] + " · " + id,
+      title: e.title,
+      retro: !!e.retrospective,
+      category: cats.length ? cats.slice(0, 3).join(", ") + (cats.length > 3 ? "…" : "") : "—",
+      agentic_h: e.agentic_hours,
+      byhand: e.manual_hours,
+      saved: e.hours_saved,
+      cost: t.cost || 0,
+      conf: confLabel(e.confidence_mix),
+      savedMin: e.hours_saved ? e.hours_saved.min : -1,
     });
   }
-  rows.sort((a, b) => b.manMin - a.manMin);
+  rows.sort((a, b) => b.savedMin - a.savedMin);
 
-  // Program totals (estimated tasks only).
-  const T = rows.reduce((a, r) => ({
-    hMin: a.hMin + r.hMin, hMax: a.hMax + r.hMax,
-    manMin: a.manMin + r.manMin, manMax: a.manMax + r.manMax,
-    agentic: a.agentic + r.agentic,
-  }), { hMin: 0, hMax: 0, manMin: 0, manMax: 0, agentic: 0 });
-  const progLev = T.agentic > 0 ? T.manMin / T.agentic : null;
+  const totCost = rows.reduce((a, r) => a + r.cost, 0);
 
-  // ---- hero cards (headline the conservative low end) ----
+  // ---- hero cards (headline hours saved, conservative low end) ----
   const hero = document.getElementById("vv-hero");
   if (hero) {
     const card = (k, v, cls) => `<div class="vv-card"><div class="k">${k}</div>` +
       `<div class="v ${cls || ""}">${v}</div></div>`;
     hero.innerHTML =
-      card("By-hand effort", `${hrs(T.hMin)}–${hrs(T.hMax)} <small>person-hrs</small>`, "vv-hero") +
-      card("By-hand cost", `${usd(T.manMin)}–${usd(T.manMax)}`) +
-      card("Agentic cost (tokens)", usd(T.agentic)) +
-      card("Leverage", progLev ? `${progLev.toFixed(0)}×<small> (≥, conservative)</small>` : "—", "vv-hero") +
+      card("Person-hours saved", vs.hours_saved ? `${rng(vs.hours_saved)} <small>hrs</small>` : "—", "vv-hero") +
+      card("By-hand effort", `${rng(vs.manual_hours)} <small>hrs</small>`) +
+      card("Agentic time", `${hrs(vs.agentic_hours)} <small>hrs (est.)</small>`) +
+      card("Agentic cost", `${usd(totCost)} <small>tokens</small>`) +
       card("Tasks valued", String(rows.length));
   }
 
   // ---- per-task table ----
-  const confSpan = c => Object.entries(c).map(([k, n]) =>
-    `<span class="vv-conf-${k}">${n}${k[0]}</span>`).join(" ");
   const tb = document.querySelector("#vv-tbl tbody");
   if (tb) {
     tb.innerHTML = rows.map(r => `<tr>
-      <td>${r.label}<span class="vv-badge measured">measured $</span><span class="vv-badge est">est. hrs</span></td>
-      <td class="vv-mono">${r.sessions}</td>
-      <td class="vv-mono">${usd(r.agentic)}</td>
-      <td class="vv-mono">${hrs(r.hMin)}–${hrs(r.hMax)}</td>
-      <td class="vv-mono">${usd(r.manMin)}–${usd(r.manMax)}</td>
-      <td class="vv-mono">${r.lev ? r.lev.toFixed(0) + "×" : "—"}</td>
-      <td class="vv-mono">${confSpan(r.conf)}</td>
+      <td>${r.label}${r.retro ? '<span class="vv-badge est">retro</span>' : ''}<div class="vv-sum">${shortTitle(r.title)}</div></td>
+      <td class="vv-cat">${r.category}</td>
+      <td class="vv-mono">${r.agentic_h != null ? hrs(r.agentic_h) : "—"}</td>
+      <td class="vv-mono">${rng(r.byhand)}</td>
+      <td class="vv-mono vv-hero">${r.saved ? rng(r.saved) : "—"}</td>
+      <td class="vv-mono">${usd(r.cost)}</td>
+      <td class="vv-mono vv-conf-${r.conf}">${r.conf}</td>
     </tr>`).join("");
   }
   const tf = document.querySelector("#vv-tbl tfoot");
   if (tf) {
     tf.innerHTML = `<tr>
-      <td>Total (${rows.length} task${rows.length === 1 ? "" : "s"})</td>
-      <td class="vv-mono">${rows.reduce((a, r) => a + r.sessions, 0)}</td>
-      <td class="vv-mono">${usd(T.agentic)}</td>
-      <td class="vv-mono">${hrs(T.hMin)}–${hrs(T.hMax)}</td>
-      <td class="vv-mono">${usd(T.manMin)}–${usd(T.manMax)}</td>
-      <td class="vv-mono">${progLev ? progLev.toFixed(0) + "×" : "—"}</td>
-      <td></td></tr>`;
+      <td>Total (${rows.length} task${rows.length === 1 ? "" : "s"})</td><td></td>
+      <td class="vv-mono">${hrs(vs.agentic_hours)}</td>
+      <td class="vv-mono">${rng(vs.manual_hours)}</td>
+      <td class="vv-mono vv-hero">${vs.hours_saved ? rng(vs.hours_saved) : "—"}</td>
+      <td class="vv-mono">${usd(totCost)}</td><td></td></tr>`;
   }
 
   const disc = document.getElementById("vv-disc");
   if (disc) {
     disc.textContent =
-      "By-hand hours are ranged per-task estimates (method-versioned, persona-tagged); " +
-      "confidence shown as counts of high/med/low todos. By-hand $ = persona hours × console " +
-      "labor_rates ([VERIFY] demo placeholders). Leverage = conservative by-hand $ floor ÷ " +
-      "measured agentic token $ — indicative, not subscription billing. Tasks without a " +
-      "recorded estimate (incl. _unattributed overhead) are omitted from this view.";
+      "Hours saved = by-hand person-hour estimate (ranged) − agentic time (estimate of how long it " +
+      "actually took us). Category = the by-hand specialist persona(s). Agentic cost = measured token $ " +
+      "(real Anthropic list rates; indicative, not subscription billing). Confidence is the task's " +
+      "lowest-tier todo (conservative). Tasks with no recorded estimate (incl. _unattributed overhead) " +
+      "are omitted.";
   }
 })();

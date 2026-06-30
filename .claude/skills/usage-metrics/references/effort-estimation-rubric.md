@@ -25,6 +25,7 @@ commas.)
 {
   "economics": {
     "method_version": 1,
+    "agentic_hours": 8,
     "todos": [
       {
         "todo": "Harden resolve_files against bad globs",
@@ -38,9 +39,14 @@ commas.)
 }
 ```
 
-- `personas`: 1+ advisor personas (the by-hand specialists). `manual_hours`: specialist
-  person-hours, **RANGED** (`min`<`max`), never a point. `confidence`: `high|med|low`.
-  `basis`: one line — the anchor used (or "judgment") + sizing input.
+- **`agentic_hours`** (per task): your honest estimate of the **elapsed supervised hours the
+  agentic approach actually took** for this task — the "how long did it take *us*" number.
+  This is what makes savings concrete: **hours saved = (Σ by-hand `manual_hours`) − `agentic_hours`**
+  (ranged, since by-hand is ranged). A point estimate is fine (you roughly know your own time);
+  omit it and the view falls back to showing by-hand hours without a savings figure.
+- `personas`: 1+ advisor personas (the by-hand specialists) — this **is** the task's category.
+  `manual_hours`: specialist person-hours, **RANGED** (`min`<`max`), never a point.
+  `confidence`: `high|med|low`. `basis`: one line — the anchor used (or "judgment") + sizing input.
 
 - **Multi-persona** when the by-hand work needs several specialists: list each in `personas`
   and let `manual_hours` cover the combined specialist-hours (e.g. a DHF section = RA + QA +

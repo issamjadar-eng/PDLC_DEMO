@@ -72,6 +72,9 @@
   .vv-badge.measured { color:#7ee0c0; border-color:#2f5a4d; }
   .vv-badge.est { color:#f0a93b; border-color:#5a4a2f; }
   .vv-conf-high{color:#7ee0c0} .vv-conf-med{color:#f0a93b} .vv-conf-low{color:#e06b6b}
+  .vv-sum { font-size:11px; color:var(--muted,#8b93a7); margin-top:2px; }
+  .vv-cat { white-space:normal !important; max-width:220px; }
+  .vv-scroll { overflow-x:auto; max-width:100%; }
 </style>
 {% endblock %}
 
@@ -135,21 +138,22 @@
     </div><!-- /tab-tokens -->
 
     <div id="tab-value" hidden>
-      <p class="um-sub" style="margin-top:0">Agentic-first delivery vs. the by-hand baseline, per task.
-        The agentic side (token cost) is <strong>measured</strong>; the by-hand side (specialist
-        person-hours) is an <strong>estimate</strong> — ranged, so the uncertainty is explicit.
-        <strong>Person-hours is primary</strong>; the $ figures apply console-side labor rates (a swappable
-        <code>[VERIFY]</code> assumption — not baked into the data). Headlines lead with the conservative
-        low end; people anonymized.</p>
+      <p class="um-sub" style="margin-top:0"><strong>Hours saved</strong> = the by-hand person-hour
+        <em>estimate</em> (ranged) minus <strong>how long it actually took us</strong> (the agentic time).
+        <strong>Category</strong> is the by-hand specialist persona(s). <strong>Agentic cost</strong> is the
+        <em>measured</em> token spend (real rates). Headlines lead with the conservative low end; people
+        anonymized.</p>
       <div class="vv-cards" id="vv-hero"></div>
-      <div class="um-panel"><h2>By task — agentic cost vs by-hand baseline</h2>
+      <div class="um-panel"><h2>By task — hours saved (by-hand estimate − agentic time)</h2>
+        <div class="vv-scroll">
         <table class="vv-tbl" id="vv-tbl">
           <thead><tr>
-            <th>Task</th><th>Sessions</th><th>Agentic $ (tokens)</th>
-            <th>By-hand hours</th><th>By-hand $</th><th>Leverage</th><th>Confidence</th>
+            <th>Task</th><th>Category</th><th>Agentic (hrs)</th><th>By-hand (hrs)</th>
+            <th>Hours saved</th><th>Agentic $ (tokens)</th><th>Confidence</th>
           </tr></thead>
           <tbody></tbody><tfoot></tfoot>
         </table>
+        </div>
         <p class="vv-disc" id="vv-disc"></p>
       </div>
     </div>
