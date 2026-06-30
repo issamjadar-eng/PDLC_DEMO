@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+{% block title %}Value · {{ config.project_name }}{% endblock %}
+{% block body_class %}value-body{% endblock %}
+
+{% block head %}
+<style>
+  /* `vv-` prefix to avoid clashing with console.css / metrics' `um-`. */
+  .vv-wrap { padding: 8px 4px 40px; }
+  .vv-sub { color: var(--muted,#8b93a7); font-size: 12px; margin: 0 0 16px; max-width: 70ch; }
+  .vv-cards { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+  .vv-card { background: var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+      border-radius:10px; padding:14px 18px; min-width:150px; }
+  .vv-card .k { color:var(--muted,#8b93a7); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+  .vv-card .v { font-size:22px; font-weight:700; margin-top:3px; font-variant-numeric:tabular-nums; }
+  .vv-card .v small { font-size:13px; font-weight:500; color:var(--muted,#8b93a7); }
+  .vv-hero { color:#7ee0c0; }
+  .vv-panel { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+      border-radius:10px; padding:16px; margin-bottom:20px; }
+  .vv-panel h2 { font-size:13px; color:var(--muted,#8b93a7); margin:0 0 12px; text-transform:uppercase;
+      letter-spacing:.04em; font-weight:600; }
+  table.vv-tbl { width:100%; border-collapse:collapse; }
+  .vv-tbl th, .vv-tbl td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border,#2a2f3a); white-space:nowrap; }
+  .vv-tbl th:first-child, .vv-tbl td:first-child { text-align:left; white-space:normal; }
+  .vv-tbl th { color:var(--muted,#8b93a7); font-weight:600; font-size:12px; }
+  .vv-tbl tfoot td { font-weight:700; border-top:2px solid var(--border,#2a2f3a); border-bottom:none; }
+  .vv-mono { font-variant-numeric:tabular-nums; }
+  .vv-badge { font-size:10px; padding:1px 6px; border-radius:10px; border:1px solid var(--border,#2a2f3a);
+      color:var(--muted,#8b93a7); margin-left:6px; vertical-align:middle; }
+  .vv-badge.measured { color:#7ee0c0; border-color:#2f5a4d; }
+  .vv-badge.est { color:#f0a93b; border-color:#5a4a2f; }
+  .vv-conf-high{color:#7ee0c0} .vv-conf-med{color:#f0a93b} .vv-conf-low{color:#e06b6b}
+  .vv-disc { color:var(--muted,#8b93a7); font-size:11px; font-style:italic; margin-top:10px; max-width:80ch; }
+  .vv-empty { color:var(--muted,#8b93a7); padding:24px; text-align:center; }
+  .vv-empty code { color:var(--accent,#6ea8fe); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="vv-wrap">
+  <h1 style="margin:0 0 4px;">Value / ROI</h1>
+  <p class="vv-sub">Agentic-first delivery vs. the by-hand baseline. The agentic side
+    (token cost) is <strong>measured</strong>; the by-hand side (specialist person-hours) is an
+    <strong>estimate</strong> recorded per task — ranged, so the uncertainty is explicit.
+    <strong>Person-hours is the primary metric</strong>; the $ figures apply console-side labor
+    rates (a swappable <code>[VERIFY]</code> assumption — not baked into the data). Headlines
+    lead with the conservative low end. People are anonymized.</p>
+
+  {% if available %}
+  <div class="vv-cards" id="vv-hero"></div>
+  <div class="vv-panel">
+    <h2>By task — agentic cost vs by-hand baseline</h2>
+    <table class="vv-tbl" id="vv-tbl">
+      <thead><tr>
+        <th>Task</th><th>Sessions</th><th>Agentic $ (tokens)</th>
+        <th>By-hand hours</th><th>By-hand $</th><th>Leverage</th><th>Confidence</th>
+      </tr></thead>
+      <tbody></tbody><tfoot></tfoot>
+    </table>
+    <p class="vv-disc" id="vv-disc"></p>
+  </div>
+  {% else %}
+  <div class="vv-panel vv-empty">
+    No value data yet. Run <code>/usage-metrics</code> collect + aggregate after some task work
+    has been attributed (an active task during edits) and a task records a <code>## Economics</code>
+    block. Then this view fills in.
+  </div>
+  {% endif %}
+</div>
+<script>
+  window.USAGE = {{ usage_json | safe }};
+  window.LABOR_RATES = {{ labor_rates_json | safe }};
+  window.CURRENCY = {{ currency | tojson | safe }};
+</script>
+{% if available %}<script src="/static/value.js"></script>{% endif %}
+{% endblock %}
