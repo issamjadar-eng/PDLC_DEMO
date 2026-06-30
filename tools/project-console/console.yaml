@@ -38,6 +38,31 @@ dashboards:
       group: "Submissions"
       order: 1
 
+# ─── value model: person-hours → $ (presentation layer ONLY) ─────────────────
+# The committed data stays in person-HOURS (estimated) and TOKENS (measured).
+# The console converts hours → $ HERE, so the contentious labor-rate assumption is
+# isolated to the view and swappable per audience. Person-hours is the PRIMARY
+# value metric; $ is a derived overlay. Persona keys mirror the advisor set
+# (.claude/skills/advisors/agents/); `default` covers any persona not listed and
+# `_unattributed`. Rates are FULLY-LOADED USD/hr (salary + benefits + overhead)
+# for US MedTech specialists — ALL [VERIFY] DEMO PLACEHOLDERS; replace with your
+# org's real loaded rates before showing externally.
+value:
+  currency: USD
+  labor_rates:                  # [VERIFY] — demo placeholders, fully-loaded USD/hr
+    regulatory-affairs: 210
+    clinical-affairs: 210
+    quality-engineering: 165
+    risk-management: 175
+    cybersecurity: 195
+    human-factors: 175
+    vnv-lead: 155
+    post-market: 155
+    rd-lead: 160
+    systems-engineering: 175
+    program-manager: 165
+    default: 170                # fallback / _unattributed
+
 server:
   host: 127.0.0.1
   port: 8765

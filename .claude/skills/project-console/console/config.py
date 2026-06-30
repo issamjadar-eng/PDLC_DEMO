@@ -103,6 +103,24 @@ class Config:
         return tuple(out)
 
     @property
+    def labor_rates(self) -> dict[str, float]:
+        """Persona → fully-loaded USD/hour, from console.yaml `value.labor_rates`.
+        Presentation-layer ONLY — the contentious labor-rate assumption lives here,
+        not in the committed person-hours/token data. Persona keys mirror the
+        advisor set; `default` covers unlisted personas and `_unattributed`."""
+        block = (self.console.get("value") or {}).get("labor_rates") or {}
+        return {str(k): float(v) for k, v in block.items() if isinstance(v, (int, float))}
+
+    def labor_rate_for(self, persona: str) -> float:
+        """Loaded $/hr for a persona, falling back to `default` (then 0.0)."""
+        rates = self.labor_rates
+        return rates.get(persona, rates.get("default", 0.0))
+
+    @property
+    def value_currency(self) -> str:
+        return str((self.console.get("value") or {}).get("currency") or "USD")
+
+    @property
     def chat_mcp_servers(self) -> list[str]:
         """External MCP servers (by name, as declared in the project's
         `.mcp.json`) exposed to every chat agent as tools — e.g. the
