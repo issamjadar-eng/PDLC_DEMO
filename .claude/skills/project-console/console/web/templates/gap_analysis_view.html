@@ -157,6 +157,7 @@
           <span class="ga-f-id">{{ f.id }}</span>
           <span class="ga-f-label">{{ f.label }}</span>
           <span class="ga-f-author" title="{{ f.author }}">{{ f._author_name }}</span>
+          {% if f._meta %}<span class="ga-pill {{ f._meta.cls }}" title="{{ f.status_label or f._meta.label }}">{{ f._meta.glyph }} {{ f.status_label or f._meta.label }}</span>{% endif %}
         </summary>
         <div class="ga-f-body md">{{ f._html | safe }}</div>
       </details>

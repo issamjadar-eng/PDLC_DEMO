@@ -7,7 +7,8 @@ GET  /gap-analysis/{id}/grounding  — compact text rendition for the assistant 
 POST /gap-analysis/render          — shell to the gap-analysis skill's renderer
 
 The console is a generic consumer of the `gap-analysis` skill's JSON contract
-(`schema_version: 1.0`). It never parses the analysis markdown — only the
+(`schema_version: 1.1`; forward-compatible with additive minor bumps). It
+never parses the analysis markdown — only the
 sidecars under `docs/_analysis/`. The render endpoint shells out to the
 skill's `render_sidecars.py` if installed (same shape as the trace-matrix
 build endpoints), so a stale/missing sidecar can be refreshed from the UI.
@@ -55,6 +56,15 @@ ASSERTION_META = {
     "partial": {"label": "Partial", "cls": "is-partial", "glyph": "◐"},
     "refuted": {"label": "Refuted", "cls": "is-refuted", "glyph": "✗"},
     "verify": {"label": "Verify", "cls": "is-verify", "glyph": "?"},
+    "open": {"label": "Open", "cls": "is-open", "glyph": "○"},
+}
+
+# Finding disposition → display vocabulary (chip on the finding collapse bar).
+# Distinct vocabulary from assertions: resolved / partial / open / superseded.
+FINDING_META = {
+    "resolved": {"label": "Resolved", "cls": "is-confirmed", "glyph": "✓"},
+    "partial": {"label": "Partial", "cls": "is-partial", "glyph": "◐"},
+    "superseded": {"label": "Superseded", "cls": "is-superseded", "glyph": "⊘"},
     "open": {"label": "Open", "cls": "is-open", "glyph": "○"},
 }
 
@@ -133,6 +143,7 @@ def _decorate_detail(detail: dict, repo_root: Path) -> dict:
 
     for f in detail.get("findings", []):
         f["_html"] = _md_to_html(f.get("body_md", ""))
+        f["_meta"] = FINDING_META.get(f.get("status"), FINDING_META["open"])
         author = f.get("author", "")
         f["_author_name"] = author.split(":", 1)[1].strip() if ":" in author else author
 
