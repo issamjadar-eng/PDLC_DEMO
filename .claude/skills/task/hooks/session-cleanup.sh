@@ -25,9 +25,9 @@ if [ -n "$SESSION_ID" ]; then
     # Before purging the gate file, check if any active tasks were NOT recently
     # checkpointed. Write a marker for each stale one so the next session can
     # offer a retroactive `/checkpoint` recovery from git log.
-    # "Stale" = no last-checkpoint marker OR last-checkpoint marker > 30 min old.
+    # "Stale" = no last-checkpoint marker OR last-checkpoint marker > 15 min old.
     if [ -f "$GATE_FILE" ]; then
-        STALE_THRESHOLD=1800  # 30 minutes
+        STALE_THRESHOLD=900  # 15 minutes
         NOW=$(date +%s)
         TODAY=$(date +%Y-%m-%d)
         PROJECT_ROOT="$(cd "$STATE_DIR/.." && pwd)"
