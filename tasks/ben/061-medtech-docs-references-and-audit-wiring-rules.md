@@ -50,3 +50,31 @@ Third rule-disposition batch (after [[059]] task→scratch-and-tmp, [[060]] medt
 
 - 2026-05-15: Task created. Recon: PDLC-DEMO CLAUDE.md has neither the audit-wiring nor task-discipline block; both templates exist in medtech-docs.
 - 2026-05-15: **medtech-docs v24 → v25.** Created `rules/claude-md-references.md` (verbatim — already clean) and `rules/audit-wiring-before-adding-fields.md` (tightened: generic opening + new concrete ✅/❌ `## Examples` section — the source had only one abstract example). Deleted `templates/claude-md-config-audit.md` and removed the `init` Check 6 CLAUDE.md-block insertion (dedup — rule is now a single auto-loaded `.claude/rules/` file). Rewired `init` Step 2c: new Check 5 (audit-wiring symlink), Check 6 (claude-md-references symlink), task-discipline block renumbered Check 5 → 7. SKILL.md Supporting Files + closing sentence updated. README "Auto-Loaded Rules" section now covers 4 rules + a "One canonical form per rule" subsection on the dedup; v25 changelog entry added. Verified `/best-practices` has no dependency on the removed CLAUDE.md block (no audit FAIL introduced). Installed in PDLC-DEMO: `.claude/rules/` now holds 5 symlinked rules (all resolve). Pending: upstream push.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "medtech-docs references + audit-wiring rules",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 16
+        },
+        "confidence": "low",
+        "basis": "medtech-docs v25 rules (refs + audit-wiring)"
+      }
+    ]
+  }
+}
+```

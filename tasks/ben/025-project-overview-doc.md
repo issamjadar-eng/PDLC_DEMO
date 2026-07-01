@@ -40,3 +40,32 @@ Author `project-overview.md` at the repo root as a guided tour of PDLC_DEMO — 
 - 2026-04-21: Task Complete. Artifacts: `project-overview.md` (36 KB), `project-overview.pptx` (1.6 MB, 16 slides), `assets/project-overview/` (8 PNGs, ~1.7 MB), `scripts/build-project-overview-pptx.py` (regen script).
 - 2026-04-21: **Deck redesign pass.** User feedback: the Arthrex reference is "way nicer" and the GlobalLogic logo in the top-right was clipping. Rebuilt `scripts/build-project-overview-pptx.py` end-to-end to match the Arthrex quality bar: (i) full-bleed cover with a purple left band, logo in the band, info-block lockup on the right, a demo-scope strip at the bottom; (ii) every content slide now carries a top bar with the GlobalLogic wordmark + a `## · Section Name` chip (right-aligned, computed to stop before the logo so no overlap); (iii) sections numbered 01–06 (Overview & Strategy · Agentic Approach · Quality & Process · Humans in Charge · Project Console · Appendix); (iv) content patterns borrowed from Arthrex — 3-column accent cards, numbered deliverable cards, skill inventory table, 6-step handoff table with alternating row fills and color-coded human vs. agent rows, large agenda slide as a 5-row list with number badges; (v) screenshot slides now size the frame to match each image's actual displayed dimensions (no more tiny images floating in oversized frames); (vi) full-bleed purple thank-you slide at the end. PDF-rendered via soffice headless and spot-checked — all 22 slides pass visually. File: 1.4 MB, 22 slides (was 1.6 MB, 16 slides).
 - 2026-04-21: **Console Overview section.** User asked: can the console auto-detect `project-overview.pptx` and surface it before Agents? Chose option 2 (commit pre-built PDF, serve it; no runtime soffice dep). Converted `project-overview.pptx → project-overview.pdf` (1.1 MB) alongside the pptx. Added `console/overview/{__init__,router}.py` to the `project-console` skill with a `discover(repo_root)` function that checks for `project-overview.{pdf,pptx,md}` at root, plus `/overview` (embedded PDF in iframe with view=FitH), `/overview/raw.pdf` (inline-disposed file serve), `/overview/download.pptx` (attachment). Middleware in `app.py` stashes `overview_nav` on `request.state` so `_base.html` and `index.html` can conditionally render nav + landing tile (first position, before Agents). Nothing breaks when `project-overview.*` is absent — entries just don't appear. Styled in `console.css` (hero header, action buttons, full-height iframe viewer, no-viewer fallback). Smoke-tested via curl (200 / 200) and chrome-devtools MCP — PDF renders inline with thumbnails, all 22 slides navigable. Captured `assets/project-overview/console-09-overview.png` and `console-10-landing-with-overview.png`. This is a **local delta** to the project-console skill — `/sync-skills push` upstream is a follow-up.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "Project overview document + deck",
+        "personas": [
+          "program-manager",
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "36KB overview doc + 8 screenshots + 22-slide deck"
+      }
+    ]
+  }
+}
+```

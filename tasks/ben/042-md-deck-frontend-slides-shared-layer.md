@@ -322,3 +322,31 @@ When two skills overlap at infrastructure (CSS, scripts, registries) but diverge
 
 This split survived a green build with zero regressions and unblocks v0.4 multi-preset support without further architecture work.
 <!-- END -->
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "md-deck/frontend-slides shared layer",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "md-deck/frontend-slides shared layer"
+      }
+    ]
+  }
+}
+```

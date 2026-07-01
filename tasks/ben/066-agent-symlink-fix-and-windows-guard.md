@@ -90,3 +90,31 @@ See [README.md](README.md) for version history.
 - 2026-05-30: **G1 DONE.** Fix commit `bc2f698` built via plumbing; PR #11 merged at `54d7741`; local `main` pulled cleanly; 14 agent symlinks restored and resolving; SECOPS conflict resolved preserving both 2026-05-22 and 2026-05-26 history entries.
 - 2026-05-30: **G2 DONE.** sync-skills v8.2 → v8.3 — three new helpers (`_is_tracked_symlink`, `_read_symlink_target`, `_smart_content_hash`) + `_sha1_stdin`; `cmd_analyze` and `_walk_registry_tree` use index-based detection; `cmd_push_stage` hard-guards corrupt-symlink content with exit 8 + remediation message. New `tests/test_windows_symlink_guard.sh` (4 cases, all pass). All 40 prior assertions still green. Pushed to hitachi as PR #185, squash-merged at `8ebe1f2`. Sync-log entry recorded.
 - 2026-05-30: **G3 DEFERRED** per user scope decision — G2's push-stage hard refusal closes the failure surface regardless of whether a Windows cloner has seen a CLAUDE.md rule, so an additional rule was deemed redundant context. Re-open if user-friction reports surface that the inline `cmd_push_stage` error message doesn't address.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "Agent symlink fix + Windows guard",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "restore 14 symlinks + sync-skills v8.3 windows guard + tests"
+      }
+    ]
+  }
+}
+```

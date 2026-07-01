@@ -61,16 +61,26 @@ External references (from ben/096 Phase 0 research). Regulated-device work sits 
 **high end** of any generic range (review cycles, traceability, audit rigor) — anchor up when
 unsure, and say so in `basis`.
 
+Two credibility tiers. **Anchored** rows cite a real published norm — use the number and name the source in `basis`. **Judgment-tier** rows have NO external hour-norm; a defensible construction is given, but you MUST mark `confidence: judgment-tier` and state the basis. Full research summaries + source links live in the skill README (`## Effort-Estimation Research Basis`).
+
 | Work type | Anchor | Use |
 |---|---|---|
 | **Document authoring** (procedures, specs, narratives, protocols, reports) | **3–7 hr/page** (TechScribe; top end for regulated) | pages × rate |
 | **Software** (code, firmware, scripts, CLI tools / "skills") | **325–750 LOC/dev-month** (~20–25 LOC/day; **low end** for IEC 62304) | net delivered LOC ÷ rate; scripts = small modules |
 | **Requirements / arch decomposition** | **10–18% of total project effort** (Wiegers/Jones) | ratio on a total-effort base |
 | **Program management / coordination** | **7–15% of project** (PMI) | ratio overhead |
-| **QE, risk, cyber, human-factors, V&V, post-market** | **NO published hour norm exists** | per-page authoring + an explicit specialist analysis/workshop adder; mark `confidence: judgment-tier` in `basis` |
+| **Test engineering** (writing/executing tests, protocols) | **testing ≈ 30–50% of dev effort** (Boehm COCOMO II; Jones), or **FP × 1.2** test cases; **× 1.3–3 for IEC 62304 Class C** (DO-178C verification uplift; DAL A ≈ 3× DAL B/C) | testing factor on the component's impl. hours; anchor high (2–3×) for Class C safety functions |
+| **Defect fixing** (diagnose + correct + re-verify) | **~4–6 hr/defect** (Capers Jones ~5 h; empirical median ~1.5–14 h) · **× 2–4 regulated re-verification** (judgment; IEC 62304 §6/§8) | per-defect count; **not** severity-linear; **never cite "100× in production"** (contested — Bossavit 2015) |
+| **Code review** | **150–400 LOC/hr/inspector** (Wiegers 150–200 thorough; effectiveness cliff ~400–500, Cisco/SmartBear); formal **Fagan floor ~125–150 LOC/hr** | LOC ÷ rate × N inspectors; Class C firmware → Fagan floor + prep + meeting |
+| **Document / design review** (inspection) | **8–12 pg/hr** ordinary (Wiegers) · **1–3 pg/hr** rigorous/regulated (Gilb & Graham) | pages ÷ rate × reviewers; DHF/V&V/risk docs → the slow (1–3 pg/hr) end |
+| **Audit / gap assessment** | **QMS audit ~3–5 auditor-days (24–40 h)** for a 25–65-person scope (IAF MD 5:2023 Table QMS 1); single-standard/gap **~1–3 days + reporting** (method: ISO 19011) | auditor-days × 8 h; scale down for a focused single-standard audit |
+| **Security red-team / pentest** | **5–10 tester-days (40–80 h) + 1–2 days reporting** per web-app/SaMD-interface (CREST 2025; OWASP WSTG; NIST SP 800-115 = method, no durations) | tester-days × 8 h; scope-driven (roles/APIs/endpoints) |
+| **RCA / CAPA investigation** | **judgment-tier — NO published hour norm** (21 CFR 820.100 / ISO 13485 §8.5 mandate the activity, not an effort figure); ~16–60 h for a moderate facilitated RCA (3–5 people) | bottom-up by RCA method; scale by severity/evidence depth |
+| **Document red-teaming** (adversarial review) | **judgment-tier — NO published hour norm**; proxy = inspection rate **~1–2 pg/hr × reviewers × passes** (e.g. 40 pg × 3 lenses ≈ ~80 reviewer-hr) | constructed proxy — label it as such, not a cited standard |
+| **QE analysis, risk, cyber threat-modeling, human-factors, post-market** | **NO published hour norm exists** | per-page authoring + an explicit specialist analysis/workshop adder; mark `confidence: judgment-tier` in `basis` |
 
 **Honesty rule:** if no anchor fits, estimate from judgment and SAY so in `basis`
-("model judgment — no external norm"). Never invent a citation. ~half the personas have no
+("model judgment — no external norm"). Never invent a citation. Several personas have no
 external anchor — that's expected; transparency is what makes the aggregate survive a skeptic.
 
 ## Rules

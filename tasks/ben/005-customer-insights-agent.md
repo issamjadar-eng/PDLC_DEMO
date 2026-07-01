@@ -78,3 +78,31 @@ The CAPA-2023-001 feedback loop is already wired end-to-end (UN-007 → DI-013 �
 
 - 2026-04-12: Task created. Split out from task 001 after the clinical + postmarket ingestion phase completed, so that agent design and build can proceed as its own scoped effort with clear review gates.
 - 2026-06-08: Marked ABANDONED via task-doc audit — never built; single-purpose-agent premise overtaken by the 14-agent advisors framework. Filed under Abandoned in 000-index.md.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 1,
+    "todos": [
+      {
+        "todo": "Customer-insights domain agent (stale)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 1,
+          "max": 3
+        },
+        "confidence": "low",
+        "basis": "retrospective; stale \u2014 design only, never built"
+      }
+    ]
+  }
+}
+```

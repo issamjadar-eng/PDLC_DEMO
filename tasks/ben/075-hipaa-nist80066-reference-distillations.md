@@ -68,3 +68,32 @@ HIPAA Security Rule (45 CFR 164 Subpart C) is the load-bearing privacy reg for a
 - 2026-06-02: **Pushed.** PR #32 merged to `main` (merge `5a67932`, content `d7dfce7`), branch deleted. Staged only this task's 6 files — left unrelated `tasks/ben/SECOPS.md` modification out. **Remaining (optional):** `/sync-skills push` to propagate the two new references upstream to the hitachi registry so sister projects get them.
 - 2026-06-02: **Both deliverables authored.** (1) `references/regulations/45-cfr-part-164.md` — HIPAA Security Rule, verbatim §§164.302–318 + Appendix A matrix pulled from eCFR Title 45 API (issue 2026-05-29); Subparts D/E summarized; 2025 NPRM noted as forward-looking. (2) `references/industry-frameworks/nist-sp-800-66.md` — NIST SP 800-66 Rev. 2 implementation guide + Security-Rule→CSF/800-53 crosswalk (control IDs marked [VERIFY]). Both folder READMEs updated (regulations H1 broadened "FDA"→"Federal Regulations" since HIPAA is HHS/OCR Title 45; both changelogs appended). Leakage scan clean. **Not yet committed/pushed** — awaiting user go-ahead.
 - 2026-06-02: Task created. Grounding established (regulations README + 880 format, SKILL.md import path). Confirmed direct-authoring is the correct path (no skill action). Two deliverables scoped across regulations/ + industry-frameworks/.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "HIPAA + NIST 800-66 reference distillations",
+        "personas": [
+          "regulatory-affairs",
+          "cybersecurity"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "HIPAA + NIST SP 800-66 reference distillations"
+      }
+    ]
+  }
+}
+```

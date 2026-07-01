@@ -33,3 +33,32 @@ _Apply the criticality carve-out decided in task 006 to the existing PCA device 
 
 - 2026-06-08: Closed Complete via task-doc audit — DIs tagged in design-inputs.md + trace matrices (2f54100); residual Filing-Scope column / reference doc not pursued. Moved to Completed in 000-index.md.
 - 2026-04-14: Task created. Spawned from task 006 Filing Strategy decision.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Criticality tagging pass (CtS/CtF/CtC/CtP)",
+        "personas": [
+          "regulatory-affairs",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "tag 22 UNs/34 DIs + trace matrices with criticality"
+      }
+    ]
+  }
+}
+```

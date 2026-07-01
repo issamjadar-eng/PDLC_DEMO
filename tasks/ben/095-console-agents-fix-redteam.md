@@ -215,3 +215,32 @@ manual review. Nothing project-owned is clobbered.
 - 2026-06-29: Fixed `panels.py` panel-member framing bug. The hardcoded `PANEL_FRAMING` told **every** panel member they were on a "clinical advisory panel reviewing a PCA infusion device ... stay in character as the KOL below" — wrong for core-team + red-team, and project-specific (registry-guardrail violation). Replaced with a generic, project-agnostic `_panel_framing(panel)` wrapper (mechanics only) + injection of each panel's **own body** (`THIS PANEL: <title>`) + the member's persona (`YOUR ROLE`). Verified: red-team members get buyer-committee framing with zero clinical/KOL/PCA leakage; KOL members still get clinical framing (now from the KOL panel body); core-team gets its own. All 5 panel pages HTTP 200.
 - 2026-06-29: Per user direction, gave console agents two new tools. (1) **file-locator MCP** for every agent — resolved from `.mcp.json` via `config.chat_mcp_servers`, command absolutized, `cwd=repo_root`; `mcp__<server>` allowed. (2) **red-team-researcher subagent** for the 7 skeptics only — new `subagents:` agent-def field → loaded into an SDK `AgentDefinition` + `Task` tool; threaded through router + panels. Skeptic/panel prose updated to reflect researcher access. Validated structurally (options construct, paths resolve, no regression, pages 200); live tool-use to be confirmed in-browser. Files: `console/chat/{sdk_client,domain_agents,router,panels}.py`, `console/config.py`, 7 skeptics + panel.
 - 2026-06-30: **Pushed + skill-synced; task Complete.** Project work merged via PDLC_DEMO PR #70 (`5898c1c`). project-console skill (22 files, v1.28.0→v1.29.0) pushed to hitachi as PR #238, squash-merged (`080ee9d`); `check --analyzed` confirmed all 22 as clean push candidates (9 LOCAL_ONLY red-team templates + 13 LOCAL_AHEAD), no divergence. Hitachi checkout reconciled, sync branch deleted, `.claude/sync-log.md` updated. (Recovered cleanly from a post-merge hiccup: `gh pr merge --delete-branch` left local `main` stale because an auto-published untracked usage-metrics JSON blocked the fast-forward; moved it aside and ff'd main.) Residual: user-side live in-browser smoke test of tool-use.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "Console agents fix + Red-Team group",
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "manual_hours": {
+          "min": 24,
+          "max": 60
+        },
+        "confidence": "low",
+        "basis": "cybersecurity-agent fix + Red-Team group + tooling + panels + templates"
+      }
+    ]
+  }
+}
+```

@@ -113,3 +113,32 @@ Activation:
 ```bash
 bash .claude/hooks/task-activate.sh add c0f539d8-5981-427a-8999-74b2c0485d0d 041
 ```
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "SecOps skill/agent trojan-horse audit",
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "secops audit_artifacts.py + audit action"
+      }
+    ]
+  }
+}
+```

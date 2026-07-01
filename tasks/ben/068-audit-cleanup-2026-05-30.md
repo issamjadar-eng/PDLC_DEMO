@@ -53,3 +53,32 @@ After all six: re-run `/best-practices audit` to confirm FAIL count dropped to (
 - 2026-05-30: **G4a complete.** `/lessons assemble` finished: 44 lessons staged across 26 source tasks; bootstrap marker removed; 0 records (no `/lessons record`-ing yet — 27 untested-staged warnings expected on next validate). Subagent also flagged an upstream skill bug: SKILL.md `seq` definition is per-block but tasks with multiple `<!-- LESSONS LEARNED -->` tags (019, 034, 044, 047, 049) need across-task sequential numbering for ID uniqueness — subagent applied that interpretation. Worth a follow-up to clarify in the lessons skill SKILL.md when next revised.
 - 2026-05-30: **Cleanup PR #15 merged at `5ce804f`.** Bundle landed: CLAUDE.md fixes, project.yml strategy_domains, lessons-ledger v1, tasks/README.md Lesson Records, docs/_analysis/, 20 README scaffolds. Re-audit subagent confirms 8/8 FAILs closed, zero regressions, only delta is 12 new RECOMMENDED "Leaf Expected Content" WARNs on freshly-scaffolded sidecar leaves.
 - 2026-05-30: **Task Complete.** Silenced the 12 new WARNs by adding a 1-paragraph `## Expected Content` to each of: 10 `docs/project/console/<dhf>/README.md`, `docs/project/dhf-manifest/README.md`, `docs/project/milestones/README.md`. Project now in a fully-clean post-cleanup audit baseline against the 6 targeted FAILs + their downstream side-effect WARNs. Pre-existing WARNs (`marketed_name` on 10 DHFs, missing `docs/dashboard.html`, anthropic-skill versioning) remain — out of scope.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 5,
+    "todos": [
+      {
+        "todo": "Post-pull audit cleanup (2026-05-30)",
+        "personas": [
+          "rd-lead",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 10,
+          "max": 24
+        },
+        "confidence": "low",
+        "basis": "closed 6 Required FAILs + 20 READMEs"
+      }
+    ]
+  }
+}
+```

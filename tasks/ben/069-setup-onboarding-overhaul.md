@@ -114,3 +114,32 @@ Overhaul PDLC-DEMO's contributor onboarding to match the **arthrex-pccp three-fi
 - 2026-05-30: User raised confusion: "I don't understand the difference between setup.md and new-project-bootstrap.md." Diagnosed root cause: both use the word "setup" in different ways (set up *your machine* vs set up *a new repo*); new-project-bootstrap.md's Phase 0 IS the output of setup.md but that dependency wasn't called out; PDLC_DEMO shipping a "how to make your own demo" doc is meta and reads as ambiguous without strong framing. User picked option 1 ("keep both, sharpen the framing") from AskUserQuestion. Added "📍 You are here" three-row decision banner at the top of all three root onboarding docs (setup.md / how-to-guide.md / new-project-bootstrap.md). new-project-bootstrap.md gets an additional "⚠️ This is the doc most often read by mistake" callout + concrete GlobalLogic-hip-implant example. Phase 0 strengthened with explicit "Phase 0 is the *output* of setup.md" dependency callout. PR #20 merged (commit 6bd0cae → merge 58a9ab3).
 - 2026-05-30: User noted README is most readers' actual entry point — surface the three onboarding docs there too. Split README.md "Where to start" into "🧑‍💻 New to PDLC_DEMO? Pick your onboarding path" (3-row table mirroring the in-doc banners) + "📖 Looking for specific content?" (the prior content rows). Same "replicators not contributors" warning under the new table. PR #21 merged (commit a8f17dd → merge 5e4e326).
 - 2026-05-30: **Status changed to Complete.** All five PRs (#17 #18 #19 #20 #21) merged to main. Task scope fully delivered: arthrex three-file onboarding model adopted (setup.md / setup.sh / how-to-guide.md), prior how-to-guide content preserved as new-project-bootstrap.md, "ask Claude" non-engineer-first pattern applied across all three onboarding docs, "📍 You are here" decision banners installed for cross-doc disambiguation, README "Where to start" updated to surface the onboarding paths.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 9,
+    "todos": [
+      {
+        "todo": "Setup onboarding overhaul",
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 30,
+          "max": 70
+        },
+        "confidence": "low",
+        "basis": "3-file onboarding + setup.sh (1385L) + docs"
+      }
+    ]
+  }
+}
+```

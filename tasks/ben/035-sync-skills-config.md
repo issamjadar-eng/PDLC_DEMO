@@ -29,3 +29,31 @@ This task document is the **session-recovery point** for this work. Keep it upda
 
 2026-05-05 — Synced 191 files from hitachi registry (project-console v1.17.0, dhf-manifest scope refresh, new jira-pull skill, tracker maturity bump)
 2026-05-05 — Updated project.yml approved_skills + approved_agents; restarted console (v1.17.0 now active on port 8765)
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 2,
+    "todos": [
+      {
+        "todo": "Sync-skills config",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 4,
+          "max": 10
+        },
+        "confidence": "low",
+        "basis": "sync-skills config"
+      }
+    ]
+  }
+}
+```

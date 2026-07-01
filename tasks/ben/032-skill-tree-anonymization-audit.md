@@ -197,3 +197,32 @@ Per the prose-only constraint, the following items are leaks but **cannot** be s
 - 2026-04-27: User locked the simplified glossary (Arthrex/GlobalLogic → MedTech Company; HipLink/Arthrex PCCP/PDLC_DEMO → MedTech Project; HipLink Pre-Op/Intra-Op/Mgmt Services → MFD A/B/C; rest as recommended) and selected Option B (genericize Context sections in place). Added a hard prose-only constraint: never touch programmatic strings; raise instead.
 - 2026-04-27: Phase 2 prose pass complete. 89 files changed via ordered substitution script. Six items raised as programmatic-and-not-touched: dhf-manifest output filenames + leaf-name branch (deferred to ben/033), JSON keys with embedded HipLink (verified safe + genericized), README best-practice grep checks (coupled to ben/033), change-control example YAML (verified docstring-only), advisors header (fixed to `${CLAUDE_SKILL_DIR}` tokenized form, matching peer skills). Built artifacts (`data/reference-dhf.yml`, `data/*/*.json`) regenerated via `build-reference.py` to project the anonymized sources.
 - 2026-04-27: Phase 3 (push to hitachi) and Phase 4 (best-practices regression lint) still to execute.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 8,
+    "todos": [
+      {
+        "todo": "Skill-tree anonymization audit",
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "whole-tree anonymization audit (89 files) + guards"
+      }
+    ]
+  }
+}
+```

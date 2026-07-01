@@ -69,3 +69,32 @@ After the new docs land, extend `docs/project/dhf-manifest/qms-manifest.md` with
 
 - 2026-04-27: Task created. User asked for a more representative QMS using arthrex-pccp for inspiration only (no content copying). Three-phase plan covers the most-cited gaps: risk standards (criteria + harms list), phase-gate checklists, document-practices SOP + deviation WI, DHF process + trace-matrix WIs, cybersecurity threat-modeling + software V&V WIs, and a new regulatory-affairs folder with operations SOP + 510(k) submission WI.
 - 2026-04-27: All three phases complete. 12 new docs authored (Phase 1: 5 docs, Phase 2: 4 docs, Phase 3: 3 docs + new `regulatory-affairs/` folder). qms-index.md bumped to Rev 1.1 with new `Standards` doc-class and new `Regulatory Affairs` category. qms-manifest.md gained 6 new records grounding the new procedures. dhf-manifest pipeline reran clean: 17 QMS obligations across 13 topics, 27 regulatory refs across 20 OBL targets. **Direct-QMS hits jumped 92/437 → 120/437 (27.5%)**; no-grounding dropped 61 → 39. Validate 12/12 PASS. Task closed.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "QMS expansion (three phases)",
+        "personas": [
+          "quality-engineering",
+          "regulatory-affairs"
+        ],
+        "manual_hours": {
+          "min": 40,
+          "max": 100
+        },
+        "confidence": "low",
+        "basis": "QMS expansion across three phases"
+      }
+    ]
+  }
+}
+```

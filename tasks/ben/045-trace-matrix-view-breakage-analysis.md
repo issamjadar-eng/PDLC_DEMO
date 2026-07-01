@@ -407,3 +407,31 @@ Before pushing any skill change upstream, verify against `../arthrex-pccp/` — 
 - 2026-05-06: **Resumed.** Presented Decision 1 (defer adapter generation vs do now). User pushed back on my framing — "the files reference doesn't make sense; we have 1 system SAD, and major components can have a software SAD." Surfaced a deeper structural gap: project lacks a top-level **PCA Infusion System** filing entity that owns the single system SAD, and the per-DHF "*-system-sad.md" docs are scope-mislabeled (they are component-level **software** SADs). Multi-function device regulatory strategy also needs authoring/update (Medical Device / MDDS / non-medical). **Spun off as ben/046** (`tasks/ben/046-pca-infusion-system-architecture-gap.md`) with 6-phase plan and 5 open questions; added to active task index. ben/045 stays surgical. Returning to Decision 1 with the same recommendation (defer adapter generation to follow-up 4a, build the rest).
 - 2026-05-06: **Paused for the day.** All 3 Decision-points still open (no user response yet on D1). Updated D1 + D2 with new context: ben/046's pending file renames + the eventual 10th DHF strengthen the "defer + pca-device only" path. Doc made fully resume-ready: explicit "What to do first on resume" priority-ordered checklist added under Resume command. Backups confirmed in place. No code/data changes this session.
 - 2026-06-08: Closed Complete via task-doc audit — missing sidecar console_trace_matrix.json restored (817de86) + consumed by ben/049/050; the 3 open decisions mooted by execution; residual gaps spun to ben/046. Moved to Completed in 000-index.md.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Trace-matrix view breakage recovery",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 16
+        },
+        "confidence": "low",
+        "basis": "restore missing trace-matrix sidecar"
+      }
+    ]
+  }
+}
+```

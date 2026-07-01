@@ -57,3 +57,31 @@ medtech-docs v23 **already owns both rules** but with the pre-symlink copy patte
 - 2026-05-15: Task created. Recon: medtech-docs v23 already owns both rules via copy-pattern Checks 3 & 4; this task upgrades to the symlink pattern.
 - 2026-05-15: **medtech-docs v23 → v24.** Created `rules/readme-before-write.md` (canonical source — was inlined in Check 3 with no file). `git mv templates/rule-sentinel-blocks.md → rules/sentinel-blocks.md`; fixed a project-leak in it (`task 072` reference removed — skill files stay project-agnostic). Rewrote `init` Step 2c Checks 3 & 4 to symlink `.claude/rules/<rule>.md` → `../skills/medtech-docs/rules/<rule>.md` (skip/repoint/leave-fork idempotency) instead of copy/inline. SKILL.md Supporting Files table + intro updated; version bumped. README gained design section "Auto-Loaded Rules — Skill-Owned and Symlinked" + v24 changelog entry. Installed in PDLC-DEMO: `.claude/rules/readme-before-write.md` + `.claude/rules/sentinel-blocks.md` symlinks created, both resolve. `.claude/rules/` now holds all three rules (scratch-and-tmp from [[059]] + these two).
 - 2026-05-15: Committed project-side as `3985e0a`, pushed to `origin/main`. Pushed medtech-docs v24 to hitachi as **PR #165** (`sync/pdlc-demo-medtech-docs-rules-symlink-2026-05-15`, commit `b7c0874`), PR-only, awaiting review. Push included a rename (`templates/rule-sentinel-blocks.md` → `rules/sentinel-blocks.md`); old path removed via manual `git rm` on the hitachi branch since `push-stage` only copies. Sync-log recorded. **Task work complete pending PR review.**
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "medtech-docs rules symlink migration",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 14
+        },
+        "confidence": "low",
+        "basis": "medtech-docs rules symlink migration v24"
+      }
+    ]
+  }
+}
+```

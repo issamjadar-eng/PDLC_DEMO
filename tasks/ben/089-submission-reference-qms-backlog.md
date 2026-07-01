@@ -52,3 +52,32 @@ Close the four follow-up gaps surfaced by ben/088's two-agent verification of th
 
 - 2026-06-15: Task created — B1–B4 follow-up backlog spun out of ben/088's verification. Scope: references (B1/B4, project-agnostic) + representative QMS docs (B2/B3).
 - 2026-06-15: **All four closed + shipped.** B4 pinned §807.87 (a)–(m) letters (eCFR-verified) in `21-cfr-part-807.md`; B1 authored `21-cfr-part-814.md` PMA distillation (§814.20 verbatim-verified) + regulations README index; re-verified PMA template citations (2 stubs fixed); B3 authored `GL-WI-RA-003` (PMA WI); B2 authored `GL-FORM-RA-001` + `regulatory-affairs/templates/` README; registered both in qms-index (67→69, rev 1.2) + RA README. `render --check` clean; new links resolve. **PR #60 merged to `main` (`8a48b1d`)**, branch deleted. Status → Complete. Residual (out of scope, flagged): a latent `807.87(k)` in a project-console test fixture; De Novo WI `GL-WI-RA-002` still reserved.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 7,
+    "todos": [
+      {
+        "todo": "Submission reference + QMS backlog",
+        "personas": [
+          "regulatory-affairs",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "4 submission/QMS follow-ups (refs + WI + form)"
+      }
+    ]
+  }
+}
+```

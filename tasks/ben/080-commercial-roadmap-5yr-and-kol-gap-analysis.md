@@ -183,3 +183,33 @@ The KOL review surfaced that several roadmap claims (F4 alarm reduction, F6 15�
 | 2026-06-03 | Ben Xavier | G1 done: assembled `commercial-strategy.md` (9 D-COMM decisions, F1–F9 table, R1–R5). G2 done: scaffolded `_analysis/pca-device/commercial-roadmap-kol-review/`, fanned out 4 advisors (clinical/reg/PM/HF), captured 4 full `recs-*.md`, merged 13 findings + 12 assertions + convergence into the aggregate, rendered JSON sidecars. Verified live in Chrome (index card + full detail render; screenshots in _scratch). |
 | 2026-06-04 | Ben Xavier | **User clarification**: KOL evaluation should run the *individual KOL agents* alongside our discipline advisors — not just a consolidated clinical voice. Added the **8-member KOL persona-agent panel**: spawned one agent per roster KOL (Paul/Giuliano/Shah/Kuitunen/Kirkendall/Pennathur/Gorski/Braithwaite), each grounded in its own profile + speaking first-person. Captured each full opinion as a separate `kol-KOL-NNNN-*.md` (8 docs). Added findings **F-14…F-21** (one headline per KOL, incl. 4 genuinely-new issues: DERS governance, pediatric scope, INS nursing standards, insulin-analogy biomarker), a KOL-Panel verdict table, and KOL `agent:` changelog rows. Re-rendered: **12 agents** (4 advisors + 8 KOLs), **21 findings**, 12 assertions. Verified in Chrome — console "Advisors that ran" now shows all 12 voices with distinct avatars; index card reads 12 ADVISORS · 21 FINDINGS (screenshots `080-gap-analysis-kol-panel-console.png`, `080-gap-analysis-index-12advisors.png`). KOL opinions clearly marked **simulated/demo** (consistent with F-1). Task complete. |
 | 2026-06-08 | Ben Xavier | 2026-06-08: Confirmed Complete via task-doc audit — commercial-strategy.md + docs/_analysis/pca-device/commercial-roadmap-kol-review/ shipped (80f6793). Filed under Completed in 000-index.md. |
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 8,
+    "todos": [
+      {
+        "todo": "Commercial roadmap (5yr) + KOL gap-analysis",
+        "personas": [
+          "regulatory-affairs",
+          "clinical-affairs",
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 24,
+          "max": 60
+        },
+        "confidence": "low",
+        "basis": "5-year commercial roadmap + KOL gap-analysis"
+      }
+    ]
+  }
+}
+```

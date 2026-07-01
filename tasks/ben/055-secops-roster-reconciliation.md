@@ -101,3 +101,32 @@ _None yet._
 | 2026-05-13 | Ben (with Claude) | Added 4 collaborators to `project.yml` `team.active` (`vyanovych`, `mykhailochaus-GLO`, `orestdanchak-gl`, `tlytvyn`). `dmytro-savenkov-gl` + `WojtekTGL` deliberately held out of project.yml — won't put `[VERIFY]`-only rows into a live security config. Not yet committed; secops re-check pending. |
 | 2026-05-13 | Ben (with Claude) | Ben: `tlytvyn` personal-Gmail account removed from the repo; Taras has a new GL GitHub account, role Solution Architect, not yet a collaborator. Re-checked live collaborator list — confirmed `tlytvyn` gone. **Reverted the `tlytvyn` row** from project.yml. Orest Danchak role confirmed: Senior Manager, Engineering ([VERIFY] cleared). Roster now has 3 fully-verified additions; 2 unverified collaborators (`dmytro-savenkov-gl`, `WojtekTGL`) + Taras's pending new account remain. |
 | 2026-05-13 | Ben (with Claude) | Created `tasks/{vladyslav,mykhailo,orest}/000-index.md` — roster additions tripped check #13 (task_folder must be a real dir). Re-ran `/secops check`: 12/16 pass, check #12 down from 6→2 unauthorized, checks #13+#14 now PASS. Remaining #12 failures (`dmytro-savenkov-gl`, `WojtekTGL`) blocked on identity verification. Pre-existing non-roster failures (#1 2FA, #3 email domain, #6 branch protection) noted as out-of-scope. Not yet committed. |
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "SecOps roster reconciliation",
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 16
+        },
+        "confidence": "low",
+        "basis": "secops roster reconciliation"
+      }
+    ]
+  }
+}
+```

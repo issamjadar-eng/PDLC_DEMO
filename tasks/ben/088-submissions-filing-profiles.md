@@ -94,3 +94,32 @@ Read-only verification of the new 510(k)/PMA templates by `regulatory-affairs` (
 - 2026-06-15: **Capability build complete (local).** submissions v1→v2. (1) `templates/` reorganized into profiles `_shared/` + `qsub/` + `510k/` + `pma/` (`git mv` preserved history for the 7 moved files). (2) Authored 510(k) profile (7 docs incl. substantial-equivalence with inline predicate-comparison table, IFU/FDA-3881, 510(k) summary, performance-testing, truthful-&-accuracy) + PMA placeholder profile (7 `🚧 PLACEHOLDER` stubs). (3) `render_sidecars.py`: added `pma` to `FILING_META`, +10 `DOC_META` stems, expanded `DOC_ORDER`, docstring. (4) SKILL.md: profile-aware `scaffold` (resolves filing→profile, stops on unknown type instead of falling back to Q-Sub), `## Filing-type profiles` registry, `## Composition-manifest contract` (declares the sections/columns `/tracker` parses), `### Skill relationships` producer/consumer table, PMA in description. (5) README: `## Architecture & boundaries` (profiles + submissions-owns-manifest / tracker-consumes + why-not-merge), Best Practices + v2 changelog. (6) tracker SKILL.md v13→v14: manifest ownership attribution on Context input #3 + README changelog. **Verification:** `render` + `render --check` clean (exit 0), sidecars byte-identical (idempotent, no regression), qsub intact at 7 docs. No commit (awaiting user push request).
 - 2026-06-15: **Pushed + closed.** PR #59 merged to `main` (`b24111e`); branch deleted; submissions v2 + tracker v14 shipped. B1–B4 follow-ups spun to ben/089. Status → Complete.
 - 2026-06-15: **Two-agent verification + fixes.** `regulatory-affairs` (vs FDA: 21 CFR 807 Subpart E, RTA/eSTAR backbone, SE guidance, 814.20(b)) + `quality-engineering` (vs `docs/internal/source-md/` QMS). Both: 510(k) sound / PMA fine-as-placeholder. Applied F1 (citation `807.87(k)`→`(l)`, verified vs live eCFR + our `510k-estar-distilled.md`, 3 spots), F2 (genericized `_shared` manifest Included-Pieces — was Q-Sub-shaped, broke cover-letter↔manifest 1:1), F3/F4 (proposed-labeling + consensus-standards/DoC documented as **DHF-attached exhibits** per user decision + GL-WI-RA-001 §5.3 — annotated cover-letter §4 + manifest "Attached from DHF" table + SKILL.md profiles note), F5 (eSTAR-mandatory wording), S1/S2 (scaffold-time QMS-mapping notes in SKILL.md: sign-off chain + controlled-record transition stay project-specific). Re-verified clean. Fixes folded into v2 changelog. **Deferred B1–B4** (Part 814 distillation, GL-FORM-RA-001, GL-WI-RA-003, pin 807.87 letters) — separate docs/QMS authoring, out of this skill's scope. No commit.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 9,
+    "todos": [
+      {
+        "todo": "Submissions filing-type profiles",
+        "personas": [
+          "rd-lead",
+          "regulatory-affairs"
+        ],
+        "manual_hours": {
+          "min": 24,
+          "max": 60
+        },
+        "confidence": "low",
+        "basis": "submissions v2 filing-type profiles + doc sets"
+      }
+    ]
+  }
+}
+```

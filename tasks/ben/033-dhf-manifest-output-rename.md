@@ -61,3 +61,31 @@ The `dhf-manifest` skill writes its outputs as `hiplink-manifest.{md,json}`, `hi
 - 2026-04-27: Task created as the structural follow-up to ben/032's prose-only audit. Captured during ben/032 Phase 1 survey when the output filenames were identified as a programmatic leak (raised, not touched). User confirmed the prose-only constraint and the per-recommendation plan.
 - 2026-04-27: User locked the design — output prefix is `project.yml` `project.name` slugified, with optional `dhf_manifest.output_prefix` override. Output filename shape: `<project-slug>-dhf-{manifest.md, manifest.json, by-section.md, dashboard.md}`. Each project's manifests will be visually self-identifying, and the registry stays neutral. Implementation plan updated to reflect the slug-driven pattern (script changes, doc updates, migration note, best-practices lint tightening).
 - 2026-04-27: Implementation complete locally. `scripts/_project_slug.py` added (pure-stdlib slugifier with `dhf_manifest.output_prefix` override → `project.name` → `dhf` fallback). All four scripts (`build-manifest.py`, `dashboard.py`, `validate.py`, `gap-report.py`) now derive output filenames from the slug. Hardcoded `if leaf == "hiplink-intra-op":` branch replaced with `dhfs[].classification.subtitle_extra` field. Prose updated across SKILL.md (new `## Output filename derivation` section), README.md (best-practice grep checks retargeted; v6 changelog entry with migration note), and all `actions/*.md`. `best-practices` lint tightened to drop the `hiplink-*` filename exception and document the legitimate glossary-doc + post-update-note exceptions. Skill version bumped 5 → 6. Smoke tests: build-reference clean (114 obl × 11 dim × 19 src); validate passes (1 expected warning about no manifest yet); slug helper resolves correctly across PDLC_DEMO / arthrex-pccp / no-yml fallback.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "DHF-manifest output filename parameterization",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 14
+        },
+        "confidence": "low",
+        "basis": "output filename parameterization (slugifier)"
+      }
+    ]
+  }
+}
+```

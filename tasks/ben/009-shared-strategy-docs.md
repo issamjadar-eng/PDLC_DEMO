@@ -148,3 +148,32 @@ Component callouts are optional per topic — some topics apply uniformly and do
 - 2026-04-13: Upstream push complete — PR #10 merged to hitachi `54cc8ed` (19 files). `/best-practices audit` run against PDLC_DEMO — PR-#10-specific checks all clean (dhfs key recognized, strategy scope all shared, no per-dhf fan-out, renamed template rendered across all 10 DHFs). Pre-existing gaps remain (setup.md, glossary.md, tasks/README.md, lessons-ledger, shared/agent-design-principles.md, strategy content, composition manifests) — to be handled as plumbing pass before resuming task 006.
 - 2026-04-13: README review pass across 14 project READMEs + 10 DHF root READMEs. Updated 14 (stale per-DHF strategy references replaced with shared `strategies/` pointers; v10 tag convention refreshed; structure tables corrected). Created missing `docs/project/dhfs/README.md` as an index pointing at `project.yml` `dhfs[]` as source of truth. Open follow-ups: 9 stub DHF READMEs are thin/template and need device-scope content as each DHF's regulatory scope is defined (tracked as DHF-by-DHF backlog, not blocking).
 - 2026-04-20: Closed out. All 18 todos checkboxes were stale — prior 2026-04-13 changelog entries already declared the work done (skill edits complete, `git mv` done, stubs created, PR #10 merged `54cc8ed`, tracker v5 + strategy v10 version bumps applied, task 006 unblocked, 007 in Completed table). Spot-checked today: `docs/project/strategies/` contains all 8 shared docs; `.claude/skills/strategy/SKILL.md:98` declares "All domains are shared (v10)"; `.claude/skills/tracker/SKILL.md:28+102` read the shared path; `.claude/sync-log.md:214` records the merge.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 8,
+    "todos": [
+      {
+        "todo": "Shared strategy docs (per-DHF -> shared)",
+        "personas": [
+          "rd-lead",
+          "regulatory-affairs"
+        ],
+        "manual_hours": {
+          "min": 24,
+          "max": 60
+        },
+        "confidence": "low",
+        "basis": "retrospective; flip 6 strategy domains + terminology rename across 288 files + skill changes"
+      }
+    ]
+  }
+}
+```

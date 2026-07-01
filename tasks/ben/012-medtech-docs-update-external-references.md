@@ -147,3 +147,31 @@ The CLAUDE.md "one task, one file" rule applies even when the work is inside `.c
   - **All three subfolder readme templates**: gained a "Scope Qualifier" column on their exclusion tables. Prevents the failure mode where a too-broad rationale silences future applicability for an umbrella spec family.
   - Pushed as hitachi PR #14 (squash-merge `2d88ce6`).
 - 2026-04-20: **Task closed.** Both v15 and v16 merged upstream; action ran cleanly against PDLC_DEMO with 11 imports (10 FDA + IHE). Dashboard-run todo deprecated — the static `/medtech-docs dashboard` artifact is obsolete (replaced by project-console + /trace-matrix).
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 5,
+    "todos": [
+      {
+        "todo": "medtech-docs update-external-references action",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "new skill action + import 10 FDA guidances"
+      }
+    ]
+  }
+}
+```

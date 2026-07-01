@@ -73,3 +73,31 @@ How to apply: When a skill uses "the most recent dated header" as a since-cursor
 Why: The task-reference format rule `<person>/<NNN>` is canonical in `lessons/SKILL.md:115` but was not surfaced in CLAUDE.md or a global memory. When building the digest skill, I copied commit subjects verbatim into CHANGELOG.md — which used bare `task NNN:` because that's how the commits were authored. The commits themselves violate the convention too (including `task ben/018` commits I made earlier in this session), but historical commit subjects can't be rewritten. The fix has to live in every tool that *reads* commit subjects and re-emits them. Caught by the user, not by me.
 
 How to apply: When building a new skill that emits text referencing tasks (commit messages, changelog entries, reports, digests), audit the output against every documented project convention at design time, not only at bug-report time. The lessons skill is the canonical registry of these conventions; search it before writing output formatters. Also: save durable conventions as feedback memories so they surface at session start in subsequent sessions — documentation in a skill file isn't enough if the skill isn't loaded that session.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "Digest skill",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "new digest skill (daily briefing + project changelog)"
+      }
+    ]
+  }
+}
+```

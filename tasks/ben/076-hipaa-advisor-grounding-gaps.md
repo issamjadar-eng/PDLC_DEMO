@@ -91,3 +91,33 @@ Fixes (user: convert-to-integer + fold-into-076):
 - 2026-06-02: **Gap 2 done + validated end-to-end.** Authored L1b applicability tier: `docs/external/regulations/{README,hipaa}.md` (first regulations L1b in the project) + `docs/external/industry-frameworks/nist-sp-800-66.md`; updated 2 READMEs + parent subfolder table. hipaa.md maps §164.312 to real SRS IDs and flags 6 gaps/[VERIFY]. Rebuilt discovery-index + file-locator index. **Validation:** file-locator query for HIPAA-vs-architecture returns L1a reg + 800-66 + connectivity-adapter SAD + cloud-suite SRS in the high-confidence band — proves a HIPAA question now retrieves regulation + guide + architecture + requirements together. Discovered a pre-existing `docs/_analysis/pca-device/hipaa-readiness-profile.md` (gap-analysis) — complementary to the new applicability doc. Residual: only regulatory-affairs is fully cite-both-wired (L1b `regulations` role); cybersecurity/clinical reach L1b via semantic search only — surfaced as a user decision. **Not yet committed/pushed.**
 - 2026-06-02: **Gap 1 done.** Broadened both registry role descriptions in `canonical-roles.yaml` (HIPAA/45 CFR + NIST SP 800-66); re-rendered all 11 canonical-role advisors → HIPAA now surfaces in regulatory/clinical/cybersecurity Tier 2. **Hit + fixed a `core.symlinks=false` blocker** (agent files were de-materialized symlinks — see lessons); healed 21 broken symlinks across `.claude/{agents,commands,hooks,rules}`. Working tree clean except intended changes. Next: discovery-index rebuild + Gap 2 L1b docs.
 - 2026-06-02: Task created from ben/075 assessment. Two gaps scoped (stale registry descriptions; missing L1b applicability). Grounding from assessment captured.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 7,
+    "todos": [
+      {
+        "todo": "HIPAA advisor grounding gaps",
+        "personas": [
+          "regulatory-affairs",
+          "cybersecurity",
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "advisor grounding + L1b tier authoring + conformance"
+      }
+    ]
+  }
+}
+```

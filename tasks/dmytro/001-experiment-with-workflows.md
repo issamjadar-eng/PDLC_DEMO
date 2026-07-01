@@ -193,3 +193,31 @@ See [README.md](README.md) for version history.
 - 2026-06-04 — Recovery checkpoint. Previous session ended 2026-06-04 10:02 uncheckpointed; reconstruction from `git log`/working tree found **no new task-001 artifacts** since 2026-05-31 (`1913ea9`) — that session left no git or working-tree trace for this task. Refreshed doc to resume-ready: added Resume + Open Questions sections, captured in-flight working-tree state (unrelated 002/003/secops untracked files, task-003 worktree). Next steps unchanged: PDLC rehearsal → PDLC↔SDLC mapping. Cleared the `uncheckpointed-dmytro-001` recovery marker.
 - 2026-06-07 — Ran **Exercise 2**: console vs Claude Code on the same PP3500 risk question. Console agent claimed the DHF risk files **don't exist**; the CLI advisor (2026-06-06) correctly found them present-but-empty (`{{}}` stubs). Captured a tooling lesson — the ~200 KB cap can **flip a conclusion** (assert false absence), not just truncate it; console is unreliable for existence/completeness questions. Started the console in the background (ID `b3tyc7wqm`) on http://127.0.0.1:8765. No commit made.
 - 2026-06-06 — Ran **Exercise 1**: asked the risk-management advisor for the PP3500 510(k) top risks and observed its grounding behavior. Watched **24 tool calls** across Tier 1/2; agent found empty `{{}}` placeholder stubs in all PP3500 risk files (`GL-TMP-RM-001`–`004` + hazard analysis/FMEA + DLM accessory) and cited exact paths, and caught a discovery-index false-negative (`pdlc-demo-dhf-discovery.json` resolves risk roles to `null` but files exist on disk). Consolidated the tier model: **Tier 1** = small always-read orientation set; **Tier 2** = larger domain-specific set + semantic search; **Tier 3** = fallback researcher subagent. Updated Todos + Resume; tomorrow = Exercise 2 (console vs Claude Code) then skills walkthrough. No commit made. (Recovery markers from prior uncheckpointed sessions cleared at session start per user direction.)
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 2,
+    "todos": [
+      {
+        "todo": "Experiment with workflows",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 4,
+          "max": 10
+        },
+        "confidence": "low",
+        "basis": "experiment with workflows"
+      }
+    ]
+  }
+}
+```

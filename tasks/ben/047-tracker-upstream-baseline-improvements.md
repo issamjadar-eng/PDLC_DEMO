@@ -305,3 +305,31 @@ Effort calibration heuristic locked in for the PCA tracker: (a) QSub-phase rows 
   - `render.py::parse_markdown()` doesn't reset `in_scale = None` when entering Phase / Eng / Details modes (lines 312, 320, 326). If `## Effort Scale` or `## Phase Scale` sits BEFORE `## Phase: <name>` sections, subsequent row tables are consumed as scale entries → 0 rows. Workaround: place Scale tables AFTER row sections (sister's pattern). Permanent fix: reset `in_scale = None` in the phase_h2 / eng_h2 / details_h2 handlers.
   - `generate.py::discover_engineering_rows()` line 248 passes `target_milestone_id` as both `ms_id` AND `ms_short` to `_phase_for_milestone()`, so ENG rows render the milestone id (`pccp-release`) instead of the short label (`510k+PCCP`) when no override is configured. Workaround: project.yml `tracker.display.phase_label_overrides`. Permanent fix: look up the matching milestone's `short_label` (or stripped `name`) from the catalog so ENG rows match deliverable rows' code path.
   - `generate.py --write-canonical` overwrites the entire canonical including hand-authored chrome (Context & Sources, Legends, Cross-Milestone Summary, Reviewer Sign-off, Changelog, Deliverable Details inline blocks, Scale tables). The v11 changelog already documents this cutover-readiness gap. Permanent fix: parse the existing canonical, preserve chrome sections, replace only the generator-owned row tables (per-Phase + Engineering Prerequisites). Workaround until then: never use `--write-canonical`; always `--candidate` + hand-merge.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 5,
+    "todos": [
+      {
+        "todo": "Tracker upstream-baseline improvements",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 10,
+          "max": 24
+        },
+        "confidence": "low",
+        "basis": "tracker upstream-baseline artifacts + engineering.yml"
+      }
+    ]
+  }
+}
+```

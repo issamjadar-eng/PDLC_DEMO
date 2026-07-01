@@ -725,3 +725,32 @@ _(Tag with `<!-- LESSONS LEARNED: category -->` blocks in-flight.)_
 - **2026-05-14** — Phase 1 human-checkpoint mapping done: 8 non-negotiable human checkpoints tabled against V-shape locations + standards + agent-prep steps; organizing principle "agents produce and review, humans accept" (every gate is a decision of record). Gate Maturity Ladder decided — 4 stages (Full Oversight → Full Coverage Tiered Depth → Risk-Tiered → Sampling), each transition evidence-gated + change-controlled, selector in `project.yml` `agentic.gate_policy_stage`. Ladder governs review *burden* (#2/#4/#5); ladder-exempt = #3 residual-risk acceptance + terminal authorizations #6/#7/#8. Reframe: the ladder + transition evidence IS the agentic-process-validation story. 4 more child-task candidates surfaced (g–j). Phase 1 nearly complete — remaining: Chunk 6 current-structure fit + end-to-end flow walk.
 - 2026-06-08: Status corrected to In Progress (paused) via task-doc audit — genuinely open work remaining (paused 2026-05-14, mid-Phase 1). Remains Active in 000-index.md.
 - **2026-06-08** — **Closed ABANDONED (superseded) per user.** Superseded by other work; the agentic-first PDLC blueprint is not being carried forward as a standalone task. Moved to Abandoned in 000-index.md.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 2,
+    "todos": [
+      {
+        "todo": "Agentic-first MedTech strategy (superseded)",
+        "personas": [
+          "program-manager",
+          "regulatory-affairs"
+        ],
+        "manual_hours": {
+          "min": 2,
+          "max": 6
+        },
+        "confidence": "low",
+        "basis": "superseded \u2014 not carried forward"
+      }
+    ]
+  }
+}
+```

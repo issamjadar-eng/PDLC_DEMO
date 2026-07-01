@@ -41,3 +41,31 @@ Final rule of the disposition pass ([[059]], [[060]], [[061]]). `git-workflow` i
 - 2026-05-16: Task created. git-workflow is the last rule in the disposition pass; tier-3, project-authored.
 - 2026-05-16: Copied `git-workflow.md` from arthrex-pccp into `.claude/rules/` as a **regular file** (not a symlink — project-authored, never registry). Completed CLAUDE.md "Auto-loaded rules" section — now lists all 6 rules (was 1 of 6).
 - 2026-05-16: **User decision — keep verbatim.** PDLC-DEMO adopts the PR-then-auto-merge workflow: "push" / "merge" now means commit → branch → PR → auto-merge → delete branch. No edit to the rule. From here on, project-repo landings follow the 6-step sequence (the direct-to-`main` commits earlier this session predate the rule).
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 1,
+    "todos": [
+      {
+        "todo": "git-workflow rule",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 2,
+          "max": 5
+        },
+        "confidence": "low",
+        "basis": "copy git-workflow rule into project"
+      }
+    ]
+  }
+}
+```
