@@ -1,7 +1,7 @@
 ---
 name: usage-metrics
 description: "Cross-user Claude Code token-usage + cost telemetry for a team. TRIGGER when the user wants to measure, collect, aggregate, report, or project Claude Code token usage or spend across teammates — e.g. 'how many tokens are we using', 'what's our Claude usage/cost', 'build a usage dashboard', 'project our 30-day cost', 'set up usage tracking', 'who's using the most tokens', 'refresh the usage report', or wants a live token/context/cost **status line** ('show my context usage', 'add a status line with tokens and cost'). Collects each teammate's usage LOCALLY from their session transcripts, uses git as the aggregation bus (no shared server), renders a single self-contained HTML cost dashboard, and installs a team-shared status line. Actions: setup, collect, aggregate, report, status."
-version: 10
+version: 11
 updated: 2026-06-30
 ---
 

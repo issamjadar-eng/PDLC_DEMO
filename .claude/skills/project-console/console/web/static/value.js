@@ -49,7 +49,9 @@
       agMax: e.agentic_hours_range ? e.agentic_hours_range.max : e.agentic_hours,
       byhand: e.manual_hours, saved: e.hours_saved,
       by_persona: e.by_persona || {}, pct: pctRange(e.hours_saved, e.manual_hours),
-      cost: t.cost || 0, savedMin: e.hours_saved ? e.hours_saved.min : -1,
+      cost: (t.cost || 0) + (t.cost_allocated || 0),
+      costAlloc: t.cost_allocated || 0, costBasis: t.cost_basis || "measured",
+      savedMin: e.hours_saved ? e.hours_saved.min : -1,
     });
   }
 
@@ -83,7 +85,7 @@
     <td class="vv-mono">${agf(r.agMin, r.agMax)}</td>
     <td class="vv-mono">${rng(r.byhand)}</td>
     <td class="vv-hero"><span class="vv-mono">${r.saved ? rng(r.saved) : "—"}</span>${r.pct ? `<div class="vv-pct">${r.pct}</div>` : ""}</td>
-    <td class="vv-mono">${usd(r.cost)}</td></tr>`;
+    <td class="vv-mono"${r.costAlloc > 0 ? ' title="includes allocated cost — measured $ from _unattributed, split across tasks active that day"' : ''}>${r.costAlloc > 0 ? "≈" : ""}${usd(r.cost)}</td></tr>`;
 
   const sums = list => list.reduce((a, r) => ({
     bMin: a.bMin + (r.byhand ? r.byhand.min : 0), bMax: a.bMax + (r.byhand ? r.byhand.max : 0),

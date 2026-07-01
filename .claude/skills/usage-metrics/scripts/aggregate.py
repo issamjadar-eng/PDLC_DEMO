@@ -726,6 +726,93 @@ def render_html(all_plain: dict, cost_note: str, daily_cost: dict, pricing: dict
             .replace("__RATE_CARD__", json.dumps(pricing or {}, sort_keys=True)))
 
 
+def _task_active_days(project_root: Path) -> dict:
+    """Map (task_folder, YYYY-MM-DD) -> set of task_ids that were active that day.
+    Signal = a changelog date line (`- YYYY-MM-DD…`) in the task doc. Cheap proxy for
+    "which task was worked that day" for sessions that predate the activation ledger."""
+    import re
+    active: dict = defaultdict(set)
+    for person_dir in sorted((project_root / "tasks").glob("*")):
+        if not person_dir.is_dir() or person_dir.name.startswith("_"):
+            continue
+        tf = person_dir.name
+        for doc in sorted(person_dir.glob("[0-9][0-9][0-9]-*.md")):
+            nnn = doc.name[:3]
+            if nnn == "000":       # 000-index.md is the per-person index, not a task
+                continue
+            try:
+                text = doc.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            for day in set(re.findall(r"^\s*-\s+(\d{4}-\d{2}-\d{2})", text, re.MULTILINE)):
+                active[(tf, day)].add(nnn)
+    return active
+
+
+def allocate_unattributed(project_root: Path, pricing, tasks_out: dict, max_per_day: int = 4):
+    """Retrospectively distribute `_unattributed` MEASURED cost across the tasks active
+    each day (changelog-day overlap, even split). The cost is measured (tokens × rate);
+    only the SPLIT is estimated — a stronger basis than the modeled by-hand hours.
+
+    Method: apportion each session's `_unattributed` cost across its days by day
+    token-share, then split each (person, day) unattributed cost evenly across the
+    tasks with a changelog entry that day. Guards:
+      - a day with 0 active tasks stays unattributed;
+      - a day with > max_per_day active tasks is treated as bulk-edit noise (e.g. a
+        mass economics backfill) and skipped — left unattributed, surfaced in `skipped`.
+
+    Mutates tasks_out (adds `cost_allocated` + `cost_basis`); the measured `_unattributed`
+    totals are left intact — allocation is a derived overlay, not a mutation of measured
+    numbers. Returns (allocated_total, residual_total, skipped_days)."""
+    unattr_by_day: dict = defaultdict(float)
+    for person_dir in sorted((project_root / "tasks").glob("*/_usage-metrics")):
+        tf = person_dir.parent.name
+        for month_dir in sorted(person_dir.iterdir()):
+            if not month_dir.is_dir() or month_dir.name == "aggregate":
+                continue
+            for jf in sorted(month_dir.glob("*.json")):
+                try:
+                    rec = json.loads(jf.read_text(encoding="utf-8"))
+                except (json.JSONDecodeError, OSError):
+                    continue
+                un = (rec.get("by_task") or {}).get("_unattributed")
+                if not un:
+                    continue
+                unattr_cost = cost_of(un, pricing)
+                if unattr_cost <= 0:
+                    continue
+                by_day = rec.get("by_day") or {}
+                shares = {d: (v.get("output", 0) + v.get("input", 0)) for d, v in by_day.items()}
+                tot = sum(shares.values()) or 1
+                for d, s in shares.items():
+                    unattr_by_day[(tf, d)] += unattr_cost * (s / tot)
+
+    active = _task_active_days(project_root)
+    allocated: dict = defaultdict(float)
+    allocated_total = residual_total = 0.0
+    skipped_days = []
+    for (tf, d), cost in unattr_by_day.items():
+        tasks = active.get((tf, d), set())
+        if 1 <= len(tasks) <= max_per_day:
+            per = cost / len(tasks)
+            for nnn in tasks:
+                allocated[f"{tf}/{nnn}"] += per
+            allocated_total += cost
+        else:
+            residual_total += cost
+            if len(tasks) > max_per_day:
+                skipped_days.append({"folder": tf, "day": d, "active_tasks": len(tasks),
+                                     "cost": round(cost, 2)})
+
+    for ref, amt in allocated.items():
+        slot = tasks_out.get(ref)
+        if slot is None:
+            slot = tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0, "cost": 0.0}
+        slot["cost_allocated"] = round(amt, 2)
+        slot["cost_basis"] = "measured+allocated" if slot.get("cost", 0) > 0 else "allocated"
+    return round(allocated_total, 2), round(residual_total, 2), skipped_days
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Aggregate per-user Claude Code token usage.")
     ap.add_argument("--month", default=None, help="YYYY-MM (default: all months found)")
@@ -832,6 +919,18 @@ def main() -> int:
             tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0,
                               "cost": 0.0, "estimate": est}
 
+    # Retrospective cost allocation: de-unattribute pre-ledger measured spend by
+    # splitting each day's `_unattributed` cost across the tasks active that day.
+    max_per_day = int((cfg.get("cost_allocation") or {}).get("max_tasks_per_day", 4))
+    cost_allocated, cost_residual, skipped_days = allocate_unattributed(
+        project_root, pricing, tasks_out, max_per_day)
+    cost_measured_attr = round(sum(
+        t.get("cost", 0) for ref, t in tasks_out.items()
+        if not ref.endswith("/_unattributed")), 2)
+    cost_unattr_measured = round(sum(
+        t.get("cost", 0) for ref, t in tasks_out.items()
+        if ref.endswith("/_unattributed")), 2)
+
     est_tasks = [t["estimate"] for t in tasks_out.values() if t.get("estimate")]
     # F10 floor-guard: an inverted task (agentic ≥ by-hand) is EXCLUDED from the saved
     # sum and surfaced as a count, rather than silently netting a negative into the total.
@@ -842,6 +941,17 @@ def main() -> int:
         "tasks_with_estimate": len(est_tasks),
         "tasks_retrospective": retro_ct,          # F3: coverage/quality transparency
         "tasks_inverted_excluded": inverted_ct,   # F10: flagged, not hidden
+        # Cost breakdown. `cost_allocated` is a REALLOCATION of `_unattributed` measured
+        # spend onto tasks by day-overlap (measured $, estimated split) — not new cost.
+        "cost_measured_attributed": cost_measured_attr,
+        "cost_unattributed_measured": cost_unattr_measured,
+        "cost_allocated": cost_allocated,
+        "cost_unattributed_residual": cost_residual,
+        "cost_allocation_note": ("`cost_allocated` splits each day's `_unattributed` measured "
+                                 "cost across the tasks with a changelog entry that day (even "
+                                 f"split; days with >{max_per_day} active tasks skipped as bulk-edit "
+                                 "noise). Cost is measured; only the split is estimated. Bounded by "
+                                 "session-transcript coverage."),
         "manual_hours": {
             "min": round(sum(e["manual_hours"]["min"] for e in est_tasks), 1),
             "max": round(sum(e["manual_hours"]["max"] for e in est_tasks), 1),
