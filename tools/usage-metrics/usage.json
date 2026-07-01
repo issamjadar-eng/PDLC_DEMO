@@ -2,12 +2,13 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 92.02,
-    "2026-06-16": 31.41,
-    "2026-06-22": 13.84,
-    "2026-06-23": 7.38,
-    "2026-06-29": 0.88,
-    "2026-06-30": 7.03
+    "2026-06-15": 92.66,
+    "2026-06-16": 31.5,
+    "2026-06-22": 14.06,
+    "2026-06-23": 7.41,
+    "2026-06-29": 0.89,
+    "2026-06-30": 141.17,
+    "2026-07-01": 138.6
   },
   "members": 1,
   "months": {
@@ -60,13 +61,13 @@
             "output": 1059
           },
           "2026-06-30": {
-            "cache_creation": 155044,
-            "cache_read": 8770979,
-            "cache_write_1h": 155044,
-            "cache_write_5m": 0,
-            "input": 6478,
-            "messages": 68,
-            "output": 44041
+            "cache_creation": 2012050,
+            "cache_read": 210585386,
+            "cache_write_1h": 1886881,
+            "cache_write_5m": 125169,
+            "input": 92542,
+            "messages": 469,
+            "output": 642544
           }
         },
         "by_model": {
@@ -81,27 +82,66 @@
             "output": 16172
           },
           "claude-opus-4-8": {
-            "cache_creation": 3469271,
-            "cache_read": 199477783,
-            "cache_write_1h": 3133952,
-            "cache_write_5m": 335319,
-            "cost": 152.22,
-            "input": 219881,
-            "messages": 714,
-            "output": 717791
+            "cache_creation": 5326277,
+            "cache_read": 401292190,
+            "cache_write_1h": 4865789,
+            "cache_write_5m": 460488,
+            "cost": 286.62,
+            "input": 305945,
+            "messages": 1115,
+            "output": 1316294
           }
         },
-        "cost": 152.57,
+        "cost": 286.97,
         "name": "Member 1",
-        "sessions": 7,
+        "sessions": 8,
         "totals": {
-          "cache_creation": 3601733,
-          "cache_read": 200547135,
-          "cache_write_1h": 3133952,
-          "cache_write_5m": 467781,
-          "input": 220522,
-          "messages": 747,
-          "output": 733963
+          "cache_creation": 5458739,
+          "cache_read": 402361542,
+          "cache_write_1h": 4865789,
+          "cache_write_5m": 592950,
+          "input": 306586,
+          "messages": 1148,
+          "output": 1332466
+        }
+      }
+    },
+    "2026-07": {
+      "Member 1": {
+        "by_day": {
+          "2026-07-01": {
+            "cache_creation": 3231735,
+            "cache_read": 194361285,
+            "cache_write_1h": 1695555,
+            "cache_write_5m": 1536180,
+            "input": 213282,
+            "messages": 527,
+            "output": 580585
+          }
+        },
+        "by_model": {
+          "claude-opus-4-8": {
+            "cache_creation": 3231735,
+            "cache_read": 194361285,
+            "cache_write_1h": 1695555,
+            "cache_write_5m": 1536180,
+            "cost": 139.32,
+            "input": 213282,
+            "messages": 527,
+            "output": 580585
+          }
+        },
+        "cost": 139.32,
+        "name": "Member 1",
+        "sessions": 1,
+        "totals": {
+          "cache_creation": 3231735,
+          "cache_read": 194361285,
+          "cache_write_1h": 1695555,
+          "cache_write_5m": 1536180,
+          "input": 213282,
+          "messages": 527,
+          "output": 580585
         }
       }
     }
@@ -4054,8 +4094,19 @@
       "totals": {}
     },
     "ben/096": {
-      "by_model": {},
-      "cost": 0.0,
+      "by_model": {
+        "claude-opus-4-8": {
+          "cache_creation": 2930930,
+          "cache_read": 199935354,
+          "cache_write_1h": 2520295,
+          "cache_write_5m": 410635,
+          "cost": 139.98,
+          "input": 147398,
+          "messages": 375,
+          "output": 460172
+        }
+      },
+      "cost": 139.98,
       "estimate": {
         "agentic_hours": 12.0,
         "agentic_hours_range": {
@@ -4101,12 +4152,56 @@
         "todos": 7,
         "updated": "2026-06-30"
       },
-      "sessions": 0,
-      "totals": {}
+      "sessions": 2,
+      "totals": {
+        "cache_creation": 2930930,
+        "cache_read": 199935354,
+        "cache_write_1h": 2520295,
+        "cache_write_5m": 410635,
+        "input": 147398,
+        "messages": 375,
+        "output": 460172
+      }
+    },
+    "ben/097": {
+      "by_model": {
+        "claude-opus-4-8": {
+          "cache_creation": 98541,
+          "cache_read": 19950234,
+          "cache_write_1h": 98541,
+          "cache_write_5m": 0,
+          "cost": 13.26,
+          "input": 2279,
+          "messages": 59,
+          "output": 91650
+        }
+      },
+      "cost": 13.26,
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 98541,
+        "cache_read": 19950234,
+        "cache_write_1h": 98541,
+        "cache_write_5m": 0,
+        "input": 2279,
+        "messages": 59,
+        "output": 91650
+      }
     },
     "ben/098": {
-      "by_model": {},
-      "cost": 0.0,
+      "by_model": {
+        "claude-opus-4-8": {
+          "cache_creation": 1335150,
+          "cache_read": 69820774,
+          "cache_write_1h": 209605,
+          "cache_write_5m": 1125545,
+          "cost": 50.64,
+          "input": 63407,
+          "messages": 216,
+          "output": 251158
+        }
+      },
+      "cost": 50.64,
       "estimate": {
         "agentic_hours": null,
         "agentic_hours_range": null,
@@ -4144,12 +4239,31 @@
         "todos": 4,
         "updated": "2026-06-30"
       },
-      "sessions": 0,
-      "totals": {}
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 1335150,
+        "cache_read": 69820774,
+        "cache_write_1h": 209605,
+        "cache_write_5m": 1125545,
+        "input": 63407,
+        "messages": 216,
+        "output": 251158
+      }
     },
     "ben/099": {
-      "by_model": {},
-      "cost": 0.0,
+      "by_model": {
+        "claude-opus-4-8": {
+          "cache_creation": 53832,
+          "cache_read": 24874629,
+          "cache_write_1h": 53832,
+          "cache_write_5m": 0,
+          "cost": 14.03,
+          "input": 12851,
+          "messages": 39,
+          "output": 39438
+        }
+      },
+      "cost": 14.03,
       "estimate": {
         "agentic_hours": 2.0,
         "agentic_hours_range": {
@@ -4183,8 +4297,16 @@
         "todos": 1,
         "updated": "2026-07-01"
       },
-      "sessions": 0,
-      "totals": {}
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 53832,
+        "cache_read": 24874629,
+        "cache_write_1h": 53832,
+        "cache_write_5m": 0,
+        "input": 12851,
+        "messages": 39,
+        "output": 39438
+      }
     },
     "ben/_unattributed": {
       "by_model": {
@@ -4199,26 +4321,26 @@
           "output": 16172
         },
         "claude-opus-4-8": {
-          "cache_creation": 3469271,
-          "cache_read": 199477783,
-          "cache_write_1h": 3133952,
-          "cache_write_5m": 335319,
-          "cost": 152.22,
-          "input": 219881,
-          "messages": 714,
-          "output": 717791
+          "cache_creation": 4139559,
+          "cache_read": 281072484,
+          "cache_write_1h": 3679071,
+          "cache_write_5m": 460488,
+          "cost": 208.03,
+          "input": 293292,
+          "messages": 953,
+          "output": 1054461
         }
       },
-      "cost": 152.57,
-      "sessions": 7,
+      "cost": 208.39,
+      "sessions": 8,
       "totals": {
-        "cache_creation": 3601733,
-        "cache_read": 200547135,
-        "cache_write_1h": 3133952,
-        "cache_write_5m": 467781,
-        "input": 220522,
-        "messages": 747,
-        "output": 733963
+        "cache_creation": 4272021,
+        "cache_read": 282141836,
+        "cache_write_1h": 3679071,
+        "cache_write_5m": 592950,
+        "input": 293933,
+        "messages": 986,
+        "output": 1070633
       }
     },
     "dmytro/001": {
@@ -4265,9 +4387,9 @@
     "agentic_hours": 485.0,
     "cost_allocated": 146.91,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 0.0,
-    "cost_unattributed_measured": 152.57,
-    "cost_unattributed_residual": 5.66,
+    "cost_measured_attributed": 217.91,
+    "cost_unattributed_measured": 208.39,
+    "cost_unattributed_residual": 61.47,
     "hours_saved": {
       "max": 2768.0,
       "min": 801.0
