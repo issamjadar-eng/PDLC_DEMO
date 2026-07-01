@@ -25,6 +25,7 @@ commas.)
 {
   "economics": {
     "method_version": 1,
+    "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
     "agentic_hours": 8,
     "todos": [
       {
@@ -39,6 +40,7 @@ commas.)
 }
 ```
 
+- **`method_ref`** (optional, per task): the path to this rubric. Makes the block **self-describing** — a session resuming from the task doc alone (without loading the task skill) can follow it back to the anchors/schema. Stamp it verbatim; it's a pointer, not a copy.
 - **`agentic_hours`** (per task): your honest estimate of the **elapsed supervised hours the
   agentic approach actually took** for this task — the "how long did it take *us*" number.
   This is what makes savings concrete: **hours saved = (Σ by-hand `manual_hours`) − `agentic_hours`**
