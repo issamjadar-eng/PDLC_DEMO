@@ -3667,6 +3667,8 @@
     "ben/087": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 24.8,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 10.0,
         "agentic_hours_range": {
@@ -3706,6 +3708,8 @@
     "ben/088": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 24.8,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 9.0,
         "agentic_hours_range": {
@@ -3750,6 +3754,8 @@
     "ben/089": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 24.8,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 7.0,
         "agentic_hours_range": {
@@ -3794,6 +3800,8 @@
     "ben/090": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 24.8,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -3838,6 +3846,8 @@
     "ben/091": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 30.93,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -3877,6 +3887,8 @@
     "ben/092": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 7.07,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -3916,6 +3928,8 @@
     "ben/093": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 7.42,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -3955,6 +3969,8 @@
     "ben/094": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 1.15,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -3994,6 +4010,8 @@
     "ben/095": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 1.15,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 10.0,
         "agentic_hours_range": {
@@ -4039,10 +4057,10 @@
       "by_model": {},
       "cost": 0.0,
       "estimate": {
-        "agentic_hours": 9.0,
+        "agentic_hours": 12.0,
         "agentic_hours_range": {
-          "max": 9.0,
-          "min": 9.0
+          "max": 12.0,
+          "min": 7.0
         },
         "by_persona": {
           "program-manager": {
@@ -4064,8 +4082,8 @@
           "med": 3
         },
         "hours_saved": {
-          "max": 62.0,
-          "min": 24.0
+          "max": 64.0,
+          "min": 21.0
         },
         "inverted": false,
         "manual_hours": {
@@ -4125,6 +4143,45 @@
         "title": "Economics Model Integrity + Red-Team the Aggregate",
         "todos": 4,
         "updated": "2026-06-30"
+      },
+      "sessions": 0,
+      "totals": {}
+    },
+    "ben/099": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 2.0,
+        "agentic_hours_range": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "by_persona": {
+          "rd-lead": {
+            "max": 14.0,
+            "min": 6.0
+          }
+        },
+        "confidence_mix": {
+          "med": 1
+        },
+        "hours_saved": {
+          "max": 13.0,
+          "min": 4.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 14.0,
+          "min": 6.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead"
+        ],
+        "retrospective": false,
+        "title": "Retrospective Token-Cost Allocation (de-unattribute by day-overlap)",
+        "todos": 1,
+        "updated": "2026-07-01"
       },
       "sessions": 0,
       "totals": {}
@@ -4205,18 +4262,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 480.0,
+    "agentic_hours": 485.0,
+    "cost_allocated": 146.91,
+    "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
+    "cost_measured_attributed": 0.0,
+    "cost_unattributed_measured": 152.57,
+    "cost_unattributed_residual": 5.66,
     "hours_saved": {
-      "max": 2753.0,
-      "min": 800.0
+      "max": 2768.0,
+      "min": 801.0
     },
     "manual_hours": {
-      "max": 3278.0,
-      "min": 1298.0
+      "max": 3292.0,
+      "min": 1304.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 0,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 96
+    "tasks_with_estimate": 97
   }
 }
