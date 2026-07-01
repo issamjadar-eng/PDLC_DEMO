@@ -69,7 +69,7 @@
   const numKey = { agentic: r => r.agMax || 0, byhand: r => (r.byhand ? r.byhand.min : 0), saved: r => r.savedMin, cost: r => r.cost };
   const strKey = { title: r => (r.title || "").toLowerCase(), updated: r => r.updated || "", category: r => r.category.toLowerCase() };
   const keep = r => {
-    if (state.meas && r.retro) return false;
+    if (state.meas && !(r.cost > 0)) return false;   // "has agentic cost" → rows with token cost > 0 (measured or allocated)
     if (state.cat && !(r.personas || []).includes(state.cat)) return false;
     if (state.q && !`${r.title} ${r.label} ${r.category}`.toLowerCase().includes(state.q)) return false;
     return true;
