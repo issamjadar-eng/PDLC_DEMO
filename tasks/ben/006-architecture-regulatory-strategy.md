@@ -350,3 +350,32 @@ These have been discussed but not yet resolved and are not yet in the strategy c
 - 2026-04-14: Locked baseline regulatory architecture: PCA = 510(k) **with PCCP**; Adapter = MDDS (non-device); Cloud Suite Drug Library Manager = Class II SaMD; rest of Cloud Suite = non-medical software. Captured as new Component Classification & Filing Posture decision block. Supersedes the case-by-case framing.
 - 2026-04-12: User feedback — start architecture at the system level, not module/detailed level. Detailed thinking moved to a "Deferred" section under Architecture Strategy. New "System context" section opened as Step 1 of the architecture discussion, listing 5 candidate top-level components (PCA device, local server, on-prem adapter, cloud platform, hospital IT) and the open questions that need to be resolved before drilling into any one component. Regulatory strategy discussion is paused until system architecture is agreed, so the reg scope can match the system scope.
 - 2026-04-13: **Blocked on task 007.** Decision to go with Option A (full migration to `dhfs/` tree) means the folder shape this task writes into doesn't exist yet. Task 007 created to perform the migration; this task will resume once 007 is complete, at which point the strategy content authoring will target `docs/project/dhfs/pca-device/design-controls/architecture/` and `.../plans/` instead of the current top-level paths. The pending regulatory and architecture decisions captured here (DHF shape, remaining step-1 questions) remain valid across the migration.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "PP3500 architecture & regulatory strategy",
+        "personas": [
+          "regulatory-affairs",
+          "systems-engineering"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "retrospective; two strategy docs (architecture + regulatory)"
+      }
+    ]
+  }
+}
+```

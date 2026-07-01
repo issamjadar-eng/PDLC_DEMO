@@ -59,3 +59,32 @@ PDLC_DEMO `project.yml` `dhfs[]` is missing the schema fields that `dhf-manifest
 
 - 2026-04-27: Task created. Triggered by user request to run the dhf-manifest pipeline end-to-end after ben/033 landed the slug-driven output filenames. PDLC_DEMO `project.yml` lacks the `leaf`/`role`/`classification` schema fields the build script needs; this task fills the gap and exercises the pipeline.
 - 2026-04-27: Pipeline brought up end-to-end. `project.yml` `dhfs[]` extended with `leaf` / `role` / `classification` / `composes` fields and a project-level `scope:` block. Stub `qms-manifest.md` authored. `build-qms` → `build-manifest` → `dashboard` → `validate` all run clean: 437 routed entries across 9 DHFs, 12/12 validate PASS. Output files land as `pdlc-demo-dhf-*` per ben/033's slug logic. Two small polish fixes (project-name in dashboard / gap-report titles) folded in and pushed upstream as PR #91 (`b57d469`). Local commit `4235e9c` on PDLC_DEMO main. Task closed.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 5,
+    "todos": [
+      {
+        "todo": "DHF-manifest pipeline bring-up",
+        "personas": [
+          "rd-lead",
+          "systems-engineering"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "fill project.yml schema + run dhf-manifest pipeline"
+      }
+    ]
+  }
+}
+```

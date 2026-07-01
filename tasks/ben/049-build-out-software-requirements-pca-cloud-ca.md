@@ -162,3 +162,32 @@ bash .claude/hooks/task-activate.sh add <SESSION_UUID> 049
 | 2026-05-12 | Ben (with Claude) | Task created at session pause. Captures in-flight state, planned phases, and resume command. SRS authoring begins next session. |
 | 2026-05-12 | Ben (with Claude) | **Phases 1–3 complete.** Wired `software:` blocks for the 3 DHFs in `trace-matrix.yml`. Authored 92 SW rows across pca-device (32), connectivity-adapter (30), cloud-suite (30). Wrote project software adapter at `tools/project-console/trace-matrix/adapters/software.py`. Built all 10 DHFs; DI→SW edges = 34 / 32 / 31. Discovered V&V scope-filter side effect (broken DI→VER refs); captured as new open question with two fix paths. Phase 4 (commit + push) pending user OK. |
 | 2026-06-08 | Ben (with Claude) | 2026-06-08: Confirmed Complete via task-doc audit — SRS authored for all three DHFs (51f8294); loose V&V end handed to ben/050; index was stale. Filed under Completed in 000-index.md. |
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 8,
+    "todos": [
+      {
+        "todo": "Build out software requirements (3 DHFs)",
+        "personas": [
+          "systems-engineering",
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 24,
+          "max": 60
+        },
+        "confidence": "low",
+        "basis": "SRS authored for 3 DHFs"
+      }
+    ]
+  }
+}
+```

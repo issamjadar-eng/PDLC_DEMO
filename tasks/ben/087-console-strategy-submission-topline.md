@@ -79,3 +79,31 @@ Update the `project-console` skill and its scaffolded outputs to add two topline
 - 2026-06-15: Post-build polish (still uncommitted): (a) topnav simplified — removed the "{project} Console" brand-name label + separator; company logo alone is the home link. (b) Fixed composition-manifest piece paths (relative `./x.md`) → repo-relative in `render_sidecars.py` so Package-tab links open in Documents.
 - 2026-06-15: **Responsive priority-overflow nav (replaces the emoji icon-collapse approach).** Per user: monochrome **vector** SVG icons (inline `<symbol>` sprite, Lucide/MIT geometry, `currentColor`) + a far-right **hamburger** holding overflow. `topnav.js` measures on load/resize and moves lowest-priority items into the hamburger dropdown. Priority (left→right): Overview · Strategy · Submission · Dashboards · Trace Matrix · Gap Analysis · Workflows · Agents · Documents (user chose "Submission high, Documents low"). Bugs fixed during build: `justify-content:flex-end` hid right-overflow from `scrollWidth` (→ `flex-start`); `.nav-more-menu` `display:flex` defeated `[hidden]` (→ `[hidden]{display:none}` guard). Browser-verified: 1440 all-fit, 1230 → 7 visible + hamburger{Agents,Documents}, dropdown open/close. _(Note: `chrome-devtools` resize_page pins window.innerWidth so intermediate widths can't be screenshotted — verified via scrollWidth/clientWidth measurements instead; real browsers fire resize normally. Static `console.css`/`_base.html`: hard-refresh to see changes.)_
 - 2026-06-15: **P1–P6 all complete in one session.** Built: Strategy topline (`/strategy` reusing B3), new `submissions` skill (scaffold/render/list + render_sidecars.py + templates), seeded PP3500 Q-Sub content (6 docs + 2 briefs + 5 provenance), console Submission section (loader/router/2 templates/submission.css + assistant drawer). Browser-verified Submission Package/Documents/Questions tabs + Strategy topline. Bumped project-console 1.26.0→1.27.0; updated SKILL/README/CLAUDE.md/project.yml. All routes 200; render idempotent; app imports clean. **Not committed — awaiting user push go-ahead.**
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "Console strategy + submission topline",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 30,
+          "max": 80
+        },
+        "confidence": "low",
+        "basis": "console strategy+submission topline + new submissions skill"
+      }
+    ]
+  }
+}
+```

@@ -67,3 +67,31 @@ The original v1 todos are largely done — the scaffold, OAuth-only auth, chat r
 - 2026-04-13: Reviewed the agents section. Added five corrections (LLM moderator, source token budget, native message history, `is_system` cleanup, browser-local chat history persistence with thread list per agent/panel).
 - 2026-04-13: **Task closed out.** V1 scope (architecture doc, FastAPI+uv scaffold, OAuth-only auth, chat router with SSE streaming, multi-agent panels with round-robin + LLM moderator, documents browser, populated core-team + KOL agent corpus, source token budget with warnings, native structured message history, browser-local chat thread persistence) shipped. Remaining work (dashboards section, workflows section, dashboard-scoped chat sidecar, wiring new routers into `app.py`, end-to-end OAuth smoke test, README refresh to four-section IA) migrated to task 008.
 - 2026-04-13: Implemented all five agents-section corrections. New files: `domain_agents/kol/kol-panel-pp3500-llm.md`. Modified: `chat/sources.py`, `chat/panels.py`, `chat/sdk_client.py`, `chat/router.py`, `web/templates/chat.html`, `web/static/chat.js`, `web/static/console.css`. Imports verified clean via `uv run python -c`.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 14,
+    "todos": [
+      {
+        "todo": "Build the project-console (FastAPI + chat + docs)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 50,
+          "max": 140
+        },
+        "confidence": "low",
+        "basis": "retrospective; full FastAPI console (OAuth, chat+SSE, docs browser, panels) \u2014 software LOC norm"
+      }
+    ]
+  }
+}
+```

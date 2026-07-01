@@ -74,3 +74,31 @@ The commit bundles two things:
 ## Changelog
 - 2026-06-23: Task created. Evaluation done; user chose merge-to-main + full setup. Starting PR #231 merge.
 - 2026-06-30: **Fixed the recurring fast-forward/merge abort caused by per-session usage data** (surfaced repeatedly, incl. during ben/095's merge). Root cause: `collect.py` writes `tasks/<tf>/_usage-metrics/YYYY-MM/<id>.json` into the working tree (untracked on a feature branch); `publish.py` then commits the same file to the shared branch via an isolated worktree → file becomes **tracked on the branch but untracked locally** → next `git pull --ff-only`/`gh pr merge` that updates the branch aborts with "untracked working tree files would be overwritten." NOT a CI-vs-local conflict — CI (`aggregate.py`) only writes `tools/usage-metrics/`, never the per-session JSONs. Fix (usage-metrics v4→v5): `setup` now **git-ignores** `tasks/*/_usage-metrics/` + `**/_usage-metrics/`, and `publish.py` **force-adds** (`git add -f`) so it still reaches the branch. Ignored files are silently superseded on pull → abort impossible; already-tracked files stay tracked; worktree-publish still never touches the working tree. Also updated the auto-loaded `scratch-and-tmp.md` rule row (was "Committed & tracked" → "git-ignored locally, force-published"). **Propagation:** publish.py rides `/sync-skills pull`; the `.gitignore` line is installed by `setup`, so sister projects must **re-run `/usage-metrics setup`** after pulling. Ran setup on this project (added the gitignore). Deliberately reverted the status-line wiring setup also does (team-shared settings.json — out of scope for a bugfix). Files: `usage-metrics/scripts/{publish,setup}.py`, `usage-metrics/{SKILL.md,README.md}`, `task/rules/scratch-and-tmp.md`, project `.gitignore`.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "Usage-metrics sync + setup",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 12,
+          "max": 30
+        },
+        "confidence": "low",
+        "basis": "usage-metrics merge + full setup + gitignore fix"
+      }
+    ]
+  }
+}
+```

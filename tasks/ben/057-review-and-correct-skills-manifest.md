@@ -63,3 +63,31 @@ Commit `2456f5a` (Mykhailo Chaus, May 12) refreshes `skills/manifest.md` from 9 
 
 - Registry repo: `/Users/ben.xavier/Documents/demos/hitachi`
 - Resume command: `bash .claude/hooks/task-activate.sh add <UUID-from-denial> 057`
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Review/correct skills manifest",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "manifest review + corrections + branch cleanup"
+      }
+    ]
+  }
+}
+```

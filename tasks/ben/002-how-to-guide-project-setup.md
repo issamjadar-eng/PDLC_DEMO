@@ -95,3 +95,31 @@ This authoring session fills Phases 1, 2, 3 (transcript + table fix), 8, 9 (stat
 - 2026-04-14: Added Phase 6.5 — gate reference import on minimum strategy docs (architecture + regulatory) existing, then instruct user to use `medtech-docs` skill to import applicable standards and FDA guidances called out by those strategy docs.
 - 2026-04-13: Scope expanded beyond mechanical setup. Root `how-to-guide.md` skeleton created with 10 phases; added Phase 4 (CLAUDE.md personalization), Phase 6 (architecture/component strategy → drives DHF topology), Phase 7 (add-dhf per component). Open questions captured in the guide.
 - 2026-04-12: Added step 9 covering the `/sync-skills` skill — `check`, `pull`, `push` (PR-only default), `push --merge` (opt-in auto-merge), and `sync`. Updated Goals and References accordingly. Retired the separate "registry updates later" bullet (absorbed into step 9).
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "How-to guide for repeating project setup",
+        "personas": [
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 16
+        },
+        "confidence": "low",
+        "basis": "retrospective; how-to/onboarding doc authoring (per-page rate)"
+      }
+    ]
+  }
+}
+```

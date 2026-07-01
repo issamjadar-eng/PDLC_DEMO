@@ -105,3 +105,31 @@ User asked to "remove claude-capabilities.xlsx, then review what generates and d
 - 2026-05-30: User questioned the deck's provenance after the rename ("though this project demonstrates a different device, so i am not sure the providence"). Traced via git log to task ben/039 origin commit — file was authored as a md-deck test fixture, not as a real portfolio program doc. User picked Option 3 from AskUserQuestion (delete sp6500, keep client-pdlc by re-pointing). Discovery during execution: zero kept slides from sp6500 in the final composite (all 27 candidates had been curated out during selection), so final `index.html` is unaffected by the removal — only the candidate pool shrinks from 126 → 99. PR #24 merged (commit 3ca5952 → merge 016b123).
 - 2026-05-31: User requested follow-up cleanup ("remove claude-capabilities.xlsx, then review what generates and depends on the CHANGELOG.md and trace-matrix.yml*"). Investigated all four artifacts → claude-capabilities.xlsx + trace-matrix.yml.backup-2026-05-05 are orphans; CHANGELOG.md owned by /digest skill (stale ~40 days); trace-matrix.yml is load-bearing (consumed by /trace-matrix + project-console SRS adapter). User picked Option 1: delete both orphans + regenerate CHANGELOG with --llm polish. Phase 12 work: deleted the two orphans; ran `/digest log` with --llm to produce 163-line polished section (39 significant commits across 4 themes); inserted between preamble divider and sentinel marker; drive-by fixed the CHANGELOG sentinel comment (text said "above" but algorithm requires "below"). PR #25 merged (commit a9553a9 → merge a74d6cd).
 - 2026-05-31: **Status changed to Complete.** All four PRs (#23 project-overview cleanup + #24 SP6500 retirement + #25 xlsx + backup + CHANGELOG regen) shipped to main. Task scope fully delivered across Phases 1–14.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Project-overview cleanup + SP6500 retirement",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "overview hygiene + SP6500 retirement across PRs"
+      }
+    ]
+  }
+}
+```

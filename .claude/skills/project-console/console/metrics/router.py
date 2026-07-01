@@ -16,6 +16,8 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
+import markdown as _md_lib
+
 from console.config import get_config
 from console.metrics.loader import load_usage
 
@@ -23,6 +25,40 @@ router = APIRouter()
 templates = Jinja2Templates(
     directory=str(Path(__file__).parent.parent / "web" / "templates")
 )
+
+# The estimation methodology shown at the bottom of the Value tab is rendered
+# LIVE from the usage-metrics skill's rubric — so updating the rubric (or pulling
+# a newer skill via /sync-skills) updates the console with no duplication.
+RUBRIC_REL = ".claude/skills/usage-metrics/references/effort-estimation-rubric.md"
+
+_STATIC_DIR = Path(__file__).parent.parent / "web" / "static"
+
+
+def _asset_version() -> str:
+    """Cache-bust token = newest mtime across the metrics/value static assets.
+
+    Restarting the console changes the files but not the URL, so browsers keep
+    serving a stale value.js. Appending ?v=<mtime> forces a refetch whenever the
+    JS actually changes (and nothing more) — no manual hard-refresh needed.
+    """
+    latest = 0.0
+    for name in ("metrics.js", "value.js"):
+        try:
+            latest = max(latest, (_STATIC_DIR / name).stat().st_mtime)
+        except OSError:
+            pass
+    return str(int(latest))
+
+
+def _methodology_html(repo_root: Path) -> str:
+    p = repo_root / RUBRIC_REL
+    if not p.is_file():
+        return ""
+    try:
+        text = p.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    return _md_lib.markdown(text, extensions=["tables", "fenced_code", "sane_lists"])
 
 
 @router.get("/metrics", response_class=HTMLResponse)
@@ -41,6 +77,8 @@ async def metrics_index(request: Request):
             "usage_json": json.dumps(usage or {}),
             "labor_rates_json": json.dumps(cfg.labor_rates),
             "currency": cfg.value_currency,
+            "methodology_html": _methodology_html(cfg.repo_root),
+            "asset_v": _asset_version(),
         },
     )
 

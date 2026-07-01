@@ -813,3 +813,31 @@ If a fresh session picks this up:
 - 2026-04-30: Task created. Spun out of ben/038 at the natural stopping point — 47-slide deck shipped, 23 MB PDF exported. Core insight: ~80% of authoring time on ben/038 was geometry math + renumbering, not content. Two-track proposal: (A) harden `frontend-slides` with a component library + 10-lint self-test loop covering the 18 issue patterns, and (B) author a new `md-deck` skill that takes any structured markdown and produces a beautiful single-file HTML deck via the Track-A components. Heuristic registry and metaphor catalog defined. Project-overview-md rebuild named as the validation target.
 - 2026-04-30: Skill name finalized as `md-deck` (renamed from `whitepaper-deck` — the input is any structured markdown, not whitepapers specifically). Output convention added (§B.5): every deck lands at `<root>/assets/<source-slug>/`. Provenance contract added (§B.6): `<meta>` tags, top-of-file generator banner, `manifest.json` sidecar, per-slide `data-source-anchor`, drift detection on rebuild. Two new self-test lints (`provenance-present`, `output-path-correct`) and four new success criteria (B6–B8) gating the skill on traceability and source-of-truth invariants. Strategy block captured: provenance is non-negotiable — decks live longer than memory.
 - 2026-04-30: **Track C added — brand pack & web-derived theming.** Self-contained capability layer consumed by both Track A (`frontend-slides` presets) and Track B (`md-deck` builds). Single versioned artifact at `.brand/style-guide.json` carrying colors, typography, logo, footer/legal/copyright, and corporate-link metadata. `/md-deck brand-from <url>` runs a 7-step scrape pipeline (HTML head, CSS color sweep + clustering, computed-style font sample, logo discovery, footer/legal text extraction, contact + link extraction, sanity + license guardrails) — graceful degradation on partial fields. Variant generator produces 4 deterministic variants from any baseline (Faithful, Bolder Dark, Editorial, Tech-Forward) so the user always picks rather than settles. Footer / copyright / corporate-link injection is automatic per slide-class — title, dividers, and demo-handoff get the full footer block; other slides get the chrome brand string. Six-step fallback chain resolves the active style (CLI → active variant → project pack → project.yml theme → preset → default). License + robots.txt guardrails (`--require-license-confirm` flag for third-party logos). Six new success criteria (C1–C6) and Phase 2.5 todos. Two new open questions on brand-scrape policy and project.yml-theme precedence. Worked example for globallogic.com walks the full flow. Strategy block: brand-correct on first build is a commercial primitive — it gates "this deck is sellable to a customer" the way component library and content pipeline cannot.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Deck-build skill improvements",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "md-deck build skill improvements"
+      }
+    ]
+  }
+}
+```

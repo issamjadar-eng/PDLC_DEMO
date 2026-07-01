@@ -143,3 +143,32 @@ PCA Infusion System  (NEW top-level DHF — filing entity)
 ## Changelog
 
 - 2026-05-06: Task created. Captures structural gap surfaced during ben/045 trace-matrix recovery work — namely (a) missing top-level "PCA Infusion System" filing entity, (b) the single system SAD has no home, (c) component "*-system-sad.md" docs are misnamed (they are software SADs by scope), (d) multi-function device regulatory strategy needs to be authored / updated. Phase 1 scoping not yet started; ben/045 trace-matrix recovery resumes ahead of this task.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 2,
+    "todos": [
+      {
+        "todo": "PCA filing-entity architecture gap (planning)",
+        "personas": [
+          "systems-engineering",
+          "regulatory-affairs"
+        ],
+        "manual_hours": {
+          "min": 2,
+          "max": 5
+        },
+        "confidence": "low",
+        "basis": "not started \u2014 captured plan + open questions"
+      }
+    ]
+  }
+}
+```

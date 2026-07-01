@@ -67,3 +67,31 @@ _Keep the project's installed skills/agents aligned with the `hitachi` registry,
 ## Notes
 
 - Pull buckets: advisors v-bump adds `mcp__file-locator__locate` retrieval mode (degrades gracefully w/o MCP); `file-locator` is a new local semantic-search MCP skill (fastembed + SQLite FTS5).
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Registry sync (file-locator skill)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "pull + file-locator skill setup + verify"
+      }
+    ]
+  }
+}
+```

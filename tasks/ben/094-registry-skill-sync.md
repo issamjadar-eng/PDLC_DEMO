@@ -39,10 +39,39 @@ _Bring the project's installed skills/agents into alignment with the `hitachi` r
 - [x] `project.yml`: add 3 skills to `approved_skills`, 10 agents to `approved_agents`
 - [x] CLAUDE.md: add `regulatory-authoring.md` to Auto-loaded rules list
 - [x] Commit + push the sync (project repo → main) — PR #68 merged, branch deleted
-- [ ] (optional, deferred) Reconcile usage-metrics divergence — push newer `collect.py` to registry
+- [x] Reconcile usage-metrics divergence — pushed newer collect.py to registry (hitachi PR #237, merged)
 
 ## Changelog
 
 - 2026-06-29: Task created. Pull already applied (44 files), agents/rule symlinked, sync-log updated.
 - 2026-06-29: project.yml allowlists updated (approved_skills +red-team/regulatory-authoring/writing-well; approved_agents +10 pathed entries). CLAUDE.md auto-loaded-rules pointer added for regulatory-authoring. YAML validated.
 - 2026-06-29: Pushed to main — PR #68 merged (49 files; agents/rule confirmed as symlinks mode 120000), branch deleted, working tree clean. Status → Complete. Only deferred item: optional push-back of locally-newer collect.py to registry.
+- 2026-06-29: Deferred item done — pushed the locally-newer `collect.py` slug-encoding bugfix to hitachi (PR #237, merged, squashed). Registry HEAD `bbee8e9`; skill drift now 0 / SYNCED.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "Registry skill sync",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 20
+        },
+        "confidence": "low",
+        "basis": "pulled 44 files + new skills (red-team/regulatory-authoring/writing-well)"
+      }
+    ]
+  }
+}
+```

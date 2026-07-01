@@ -248,3 +248,32 @@ This mirrors the dashboards-section pattern: a fifth top-level section alongside
   - **Inline markdown renderer** (~90 lines of vanilla JS, no library) for assistant bubbles: headers, bold, italic, inline + fenced code, unordered/ordered lists, pipe tables, links. HTML-escaped first so LLM output can't inject raw tags. Runs on every streamed token so formatting emerges live. User bubbles stay plain text.
   - End-to-end validated via chrome-devtools MCP: real question ("Show the 3 alarm DIs as a markdown table…") produced a proper `<table class="tm-md-table">` with bordered cells, `<strong>` headline, and a grounded analysis of the V&V coverage gap. Prior question ("Which CtS DIs have no verification?") returned an exact enumeration of the 10 orphan safety-critical DIs.
 - 2026-04-15: **Design docs updated.** `tools/project-console/ARCHITECTURE.md` now lists Trace Matrix as the fifth top-level section with full IA, routes, loose-coupling rules, layout tree, and changelog entries for Pass 2 + Pass 4. `.claude/skills/trace-matrix/SKILL.md` is current at v2 from Pass 3 (adapter model, 9 Best Practices rules, Changelog). `tools/project-console/trace-matrix/README.md` documents the project-side adapter contract.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "Trace-matrix skill + console section",
+        "personas": [
+          "rd-lead",
+          "systems-engineering"
+        ],
+        "manual_hours": {
+          "min": 30,
+          "max": 80
+        },
+        "confidence": "low",
+        "basis": "new trace-matrix skill (parsers, graph, gap engine) + console"
+      }
+    ]
+  }
+}
+```

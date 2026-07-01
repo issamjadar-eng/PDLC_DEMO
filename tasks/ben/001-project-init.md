@@ -167,3 +167,33 @@ Phases 1, 2 run independently. Phases 3–9 should run sequentially because each
 - 2026-04-12: **Known follow-ups flagged**: (1) the 25 imported clinical MDs all reference generic `DEV-1001..1005` in body text — a future rebrand pass may normalize to PP3500-specific content; (2) complaints ledger mentions software v1.4.0/v1.4.1 which extend beyond the device_master_catalog's v1.3 — minor forward-looking inconsistency, acceptable for demo; (3) the `related_user_needs`/`related_design_inputs` frontmatter fields await population by the customer-insights agent.
 - 2026-04-12: **Customer-insights domain agent split out to task 005.** The clinical + postmarket ingestion in this task prepared the source corpora and frontmatter schema; the agent design, spec, build, and population of `related_user_needs`/`related_design_inputs` + authoring of `insights-index.md` are scoped separately under `005-customer-insights-agent.md`.
 - 2026-04-20: **Task closed.** Three of five remaining todos landed organically through downstream work (functional modules → 9 groups in Rev B design-inputs; sample-doc mapping → Phases 3–7 + task 012 absorbing Phase 1; first commit → origin live). Two remaining items deprecated: `src/` placeholder (architecture is expressed in SADs, not illustrative code) and `/medtech-docs dashboard` (replaced by project-console + /trace-matrix).
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "Stand up repo + three-tier docs + sample ingestion",
+        "personas": [
+          "program-manager",
+          "systems-engineering",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 40,
+          "max": 90
+        },
+        "confidence": "low",
+        "basis": "retrospective; foundational DHF scaffold + multi-artifact ingestion (22 UNs/34 DIs/V&V/clinical)"
+      }
+    ]
+  }
+}
+```

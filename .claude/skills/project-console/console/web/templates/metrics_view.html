@@ -60,6 +60,9 @@
   .vv-card .v { font-size:22px; font-weight:700; margin-top:3px; font-variant-numeric:tabular-nums; }
   .vv-card .v small { font-size:13px; font-weight:500; color:var(--muted,#8b93a7); }
   .vv-hero { color:#7ee0c0; }
+  /* Savings % in the category cards — deliberately a different (amber) hue from the
+     green hours-saved range so the two numbers on one line stay legible. */
+  .vv-catpct { color:#e0b25a; font-weight:600; }
   table.vv-tbl { width:100%; border-collapse:collapse; }
   .vv-tbl th, .vv-tbl td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border,#2a2f3a); white-space:nowrap; }
   .vv-tbl th:first-child, .vv-tbl td:first-child { text-align:left; white-space:normal; }
@@ -73,6 +76,47 @@
   .vv-badge.est { color:#f0a93b; border-color:#5a4a2f; }
   .vv-conf-high{color:#7ee0c0} .vv-conf-med{color:#f0a93b} .vv-conf-low{color:#e06b6b}
   .vv-sum { font-size:11px; color:var(--muted,#8b93a7); margin-top:2px; }
+  .vv-title { font-size:13px; font-weight:600; }
+  .vv-id { font-size:11px; color:var(--muted,#8b93a7); margin-top:2px; }
+  .vv-pct { font-size:11px; color:#7ee0c0; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .vv-catgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:12px; }
+  .vv-catcard { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a); border-radius:10px; padding:12px 14px; }
+  .vv-catname { font-size:13px; font-weight:600; margin-bottom:8px; text-transform:capitalize; }
+  .vv-catn { font-size:11px; color:var(--muted,#8b93a7); font-weight:400; text-transform:none; }
+  .vv-catrow { display:flex; justify-content:space-between; gap:12px; font-size:12px; padding:2px 0; }
+  .vv-catrow > span:first-child { color:var(--muted,#8b93a7); }
+  .vv-controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+  .vv-input { background:var(--card-bg,#181b22); color:var(--fg,#e6e9ef); border:1px solid var(--border,#2a2f3a);
+      border-radius:8px; padding:6px 10px; font-size:13px; }
+  .vv-check { font-size:12px; color:var(--muted,#8b93a7); display:inline-flex; gap:6px; align-items:center; cursor:pointer; }
+  .vv-sortable { cursor:pointer; user-select:none; white-space:nowrap; }
+  .vv-sortable:hover { color:var(--fg,#e6e9ef); }
+  .vv-tbl th.vv-sorted { color:var(--fg,#e6e9ef); }
+  .vv-arrow { font-size:9px; }
+  .vv-range { display:flex; align-items:center; gap:6px; margin:0 0 16px; flex-wrap:wrap; }
+  .vv-rangelbl { font-size:12px; color:var(--muted,#8b93a7); margin-right:4px; }
+  .vv-range button { background:var(--card-bg,#181b22); color:var(--muted,#8b93a7); border:1px solid var(--border,#2a2f3a);
+      border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; }
+  .vv-range button:hover { color:var(--fg,#e6e9ef); }
+  .vv-range button.active { background:#7ee0c0; color:#0f1115; border-color:#7ee0c0; font-weight:600; }
+  .vv-pager { display:flex; align-items:center; gap:12px; margin-top:12px; font-size:12px; color:var(--muted,#8b93a7); }
+  .vv-pager button { background:var(--card-bg,#181b22); color:var(--fg,#e6e9ef); border:1px solid var(--border,#2a2f3a);
+      border-radius:8px; padding:5px 12px; font-size:12px; cursor:pointer; }
+  .vv-pager button:disabled { opacity:.4; cursor:default; }
+  .vv-catall { border-color:#7ee0c0; }
+  .vv-method { margin-top:24px; border-top:1px solid var(--border,#2a2f3a); padding-top:14px; }
+  .vv-method > summary { cursor:pointer; font-size:13px; color:var(--muted,#8b93a7); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+  .vv-method > summary:hover { color:var(--fg,#e6e9ef); }
+  .vv-method-body { margin-top:14px; font-size:13px; color:var(--fg,#e6e9ef); max-width:960px; line-height:1.55; }
+  .vv-method-body h1,.vv-method-body h2,.vv-method-body h3 { font-size:14px; margin:18px 0 6px; }
+  .vv-method-body table { border-collapse:collapse; margin:8px 0; font-size:12px; display:block; overflow-x:auto; }
+  .vv-method-body th,.vv-method-body td { border:1px solid var(--border,#2a2f3a); padding:4px 8px; text-align:left; }
+  .vv-method-body th { color:var(--muted,#8b93a7); }
+  .vv-method-body code { background:#11141a; padding:1px 5px; border-radius:3px; font-size:12px; }
+  .vv-method-body pre { background:#11141a; padding:10px 12px; border-radius:6px; overflow-x:auto; }
+  .vv-method-body pre code { background:none; padding:0; }
+  .vv-method-body a { color:var(--accent,#6ea8fe); }
+  .vv-method-body ul,.vv-method-body ol { padding-left:20px; }
   .vv-cat { white-space:normal !important; max-width:220px; }
   .vv-scroll { overflow-x:auto; max-width:100%; }
 </style>
@@ -143,19 +187,58 @@
         <strong>Category</strong> is the by-hand specialist persona(s). <strong>Agentic cost</strong> is the
         <em>measured</em> token spend (real rates). Headlines lead with the conservative low end; people
         anonymized.</p>
+      <div class="vv-range">
+        <span class="vv-rangelbl">Range</span>
+        <button data-days="0" class="active">All</button>
+        <button data-days="30">Last 30 days</button>
+        <button data-days="60">Last 60 days</button>
+        <button data-days="90">Last 90 days</button>
+      </div>
       <div class="vv-cards" id="vv-hero"></div>
+      <div class="um-panel"><h2>By category — where the savings come from</h2>
+        <div class="vv-catgrid" id="vv-cats"></div>
+      </div>
       <div class="um-panel"><h2>By task — hours saved (by-hand estimate − agentic time)</h2>
+        <div class="vv-controls">
+          <input id="vv-search" class="vv-input" type="search" placeholder="Filter tasks…">
+          <select id="vv-catfilter" class="vv-input"></select>
+          <label class="vv-check"><input type="checkbox" id="vv-measonly"> measured only</label>
+          <label class="vv-check" style="margin-left:auto">Rows
+            <select id="vv-pagesize" class="vv-input">
+              <option value="10">10</option><option value="20">20</option>
+              <option value="50" selected>50</option><option value="100">100</option>
+              <option value="0">All</option>
+            </select>
+          </label>
+        </div>
         <div class="vv-scroll">
         <table class="vv-tbl" id="vv-tbl">
           <thead><tr>
-            <th>Task</th><th>Category</th><th>Agentic (hrs)</th><th>By-hand (hrs)</th>
-            <th>Hours saved</th><th>Agentic $ (tokens)</th><th>Confidence</th>
+            <th data-k="title" class="vv-sortable">Task <span class="vv-arrow"></span></th>
+            <th data-k="updated" class="vv-sortable">Last updated <span class="vv-arrow"></span></th>
+            <th data-k="category" class="vv-sortable">Category <span class="vv-arrow"></span></th>
+            <th data-k="agentic" class="vv-sortable">Agentic (hrs) <span class="vv-arrow"></span></th>
+            <th data-k="byhand" class="vv-sortable">By-hand (hrs) <span class="vv-arrow"></span></th>
+            <th data-k="saved" class="vv-sortable">Hours saved <span class="vv-arrow"></span></th>
+            <th data-k="cost" class="vv-sortable">Agentic $ (tokens) <span class="vv-arrow"></span></th>
           </tr></thead>
           <tbody></tbody><tfoot></tfoot>
         </table>
         </div>
+        <div class="vv-pager">
+          <button id="vv-prev">‹ Prev</button>
+          <span id="vv-pageinfo"></span>
+          <button id="vv-next">Next ›</button>
+        </div>
         <p class="vv-disc" id="vv-disc"></p>
       </div>
+      {% if methodology_html %}
+      <details class="vv-method">
+        <summary>Estimation methodology</summary>
+        <div class="vv-method-body">{{ methodology_html | safe }}</div>
+        <p class="vv-disc">Rendered live from <code>.claude/skills/usage-metrics/references/effort-estimation-rubric.md</code> — edit the rubric (or pull a newer skill) and this updates automatically.</p>
+      </details>
+      {% endif %}
     </div>
   {% endif %}
 </div>
@@ -166,8 +249,8 @@
   window.CURRENCY = {{ currency | tojson | safe }};
 </script>
 {% if available %}
-<script src="/static/metrics.js"></script>
-<script src="/static/value.js"></script>
+<script src="/static/metrics.js?v={{ asset_v }}"></script>
+<script src="/static/value.js?v={{ asset_v }}"></script>
 <script>
   document.querySelectorAll('.um-tab').forEach(function (b) {
     b.addEventListener('click', function () {

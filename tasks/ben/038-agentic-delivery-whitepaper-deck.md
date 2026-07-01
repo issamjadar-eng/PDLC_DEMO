@@ -258,3 +258,31 @@ If a fresh session picks this up:
 4. Read ben/034's Phase 6 captured pipeline insights — the deck build inherits the rendering guardrails (`--wrap=none`, `\$` escape, italic-merge repair, mermaid 8.x compatibility, cluster-bounds preservation, self-test loop).
 5. Activate the task: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 038`.
 6. **Status:** Active — Backlog. The five open questions in this doc must be answered before Phase 1 outline drafting begins.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 6,
+    "todos": [
+      {
+        "todo": "Agentic-delivery whitepaper deck",
+        "personas": [
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 16,
+          "max": 40
+        },
+        "confidence": "low",
+        "basis": "25-slide agentic-delivery deck + PDF"
+      }
+    ]
+  }
+}
+```

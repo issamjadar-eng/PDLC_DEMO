@@ -49,3 +49,32 @@ Nothing to resume — task Complete. All deliverables are on `main`:
 - 2026-05-31: Task created. User requested Gemini CLI install/setup/launch guidance in setup.md, framed as evaluation-only for non-Claude users. Constraints: optional section (not in README path table), npm install path confirmed.
 - 2026-05-31: Authored `setup.md` §18 + `GEMINI.md` cross-link + §18→§19 renumber; committed as `84e6eb8` and merged via PR #28 (`6be580b`). _(Doc not updated at the time — session ended uncheckpointed.)_
 - 2026-06-08: Retroactive checkpoint. Confirmed all deliverables present on `main` (setup.md §18 at L798, GEMINI.md cross-link at L5). Flipped Status → Complete, ticked the two remaining Todos, and added the index Completed row that was never created. Cleared the uncheckpointed marker.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 2,
+    "todos": [
+      {
+        "todo": "Gemini CLI partial-support guidance",
+        "personas": [
+          "program-manager",
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 4,
+          "max": 10
+        },
+        "confidence": "low",
+        "basis": "setup.md Gemini-CLI section"
+      }
+    ]
+  }
+}
+```

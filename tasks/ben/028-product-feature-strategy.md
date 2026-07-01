@@ -34,3 +34,31 @@ _Author a **product feature strategy** document that sits alongside the existing
 
 - 2026-04-15: Task created. Adds product feature strategy as a new first-class strategy domain — the "what the product does and why" lens that currently has no dedicated home.
 - 2026-06-08: Marked ABANDONED via task-doc audit — never started; feature content landed in commercial-strategy.md (ben/080); no product-feature strategy domain registered. Filed under Abandoned in 000-index.md.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 1,
+    "todos": [
+      {
+        "todo": "Product feature strategy (stale)",
+        "personas": [
+          "program-manager"
+        ],
+        "manual_hours": {
+          "min": 1,
+          "max": 3
+        },
+        "confidence": "low",
+        "basis": "stale \u2014 never started"
+      }
+    ]
+  }
+}
+```

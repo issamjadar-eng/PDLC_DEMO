@@ -52,3 +52,31 @@ _Bring the project's installed skills/agents back into lockstep with the hitachi
 
 - 2026-06-08: Task created mid-session to back the registry sync. Steps through "pull 35 files → drift 0" already complete; remaining: approved_skills + sync-log + project-repo push + prune.
 - 2026-06-08: Sync complete — 35 files pulled (drift 0/SYNCED), `explain` added to approved_skills, sync-log written, 17 stale branches pruned. Status → Complete.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "Registry sync (2026-06-08)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 16
+        },
+        "confidence": "low",
+        "basis": "pull explain skill + 11 advisor advances"
+      }
+    ]
+  }
+}
+```

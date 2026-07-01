@@ -699,3 +699,31 @@ _(none — Phase 1 complete)_
 **Why:** Users of a "start a medtech console" skill overwhelmingly want the same 10-ish domain voices with prompts already written; what differs between projects is *which documents ground those voices* and *device-specific context*. So the high-value default is "pre-built personas with generic prompts + source-glob hints"; the customization surface is "point them at the right docs and add your device context."
 
 **How to apply:** Any project console installed via this skill gets a usable agent panel immediately after `/project-console init` without hand-writing YAML. The skill owns the persona library (upgraded via `/sync-skills pull`), the project owns the materialized roster (never overwritten). New personas added upstream are offered via `/project-console sync` as opt-in imports, not forced updates.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 10,
+    "todos": [
+      {
+        "todo": "Project-console skill (genericize console)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 30,
+          "max": 80
+        },
+        "confidence": "low",
+        "basis": "turn hand-built console into reusable skill"
+      }
+    ]
+  }
+}
+```

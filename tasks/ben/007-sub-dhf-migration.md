@@ -2740,3 +2740,32 @@ P6 is the live-fire migration of PDLC_DEMO. Most P6 work is execution, but a few
   **Remaining**: `/sync-skills push` for upstream contribution back to hitachi. Task 007's core objective is achieved — the unified-sub-DHF-shape skill redesign is live, PDLC_DEMO is reorganized into it, all consuming skills are topology-aware, 10 sub-DHFs are populated, and task 006 is unblocked.
 - 2026-04-13: Resolved all 4 P6 prerequisites. #1 (atomic `project.yml` write) signed off as "write in final commit" then marked moot under the Architectural Pivot (no topology field to flip). #2 (pre-reorg baseline audit) resolved "skip — solo developer, rebasable history, and the flat shape wouldn't be intelligible to the new `/best-practices` anyway." #3 (stub composition manifest) resolved "no stub; add a structural cross-cutting check (new P5.4a) that WARNs when `sub_dhfs[]` is non-empty but zero composition manifests exist." #4 (Scope column rollout sequencing) resolved "inside P6, batched as separate commits per skill, using a mechanical classification rule based on which folder each check references." Reasoning: deferring would produce an audit blackout because post-reorg `docs/project/design-controls/` no longer exists.
 - 2026-04-13: **Architectural Pivot — dropped the dual-topology model entirely.** User proposed: what if single-dhf and multi-sub-dhf use the same shape from day one? On review, every piece of dual-topology complexity (P1 topology model, P2 `migrate-to-multi-dhf`, P3/P4/P5 mode branching, ambiguities #1/#2/#4/#9) traced back to three wrong assumptions (small projects carrying `dhfs/` overhead, existing flat projects needing a migration-able path, single and multi being fundamentally different). The set of "existing flat projects" is exactly one (PDLC_DEMO). Adopted the unified shape: every project is `docs/project/dhfs/<primary>/...` from init, N=1 is just a degenerate case of N>1, growth is a plain `add-sub-dhf` call. Deleted `migrate-to-multi-dhf` action. Deleted `init --topology` flag. Deleted `project.topology` field. Ambiguity #2 marked moot. P2/P3/P4/P5 dramatically simplified; subagent dispatch (P5.5a) stays and runs uniformly. PDLC_DEMO's one-time reorg from flat → `dhfs/pca-device/` becomes a P6 execution step, not a skill feature. Init prompts for the primary sub-DHF name with no default (option 1). Architectural Pivot section added near the top; "Why this shape" and "Topology model (proposed)" marked historical.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 12,
+    "todos": [
+      {
+        "todo": "Unified DHF shape migration (6 skills)",
+        "personas": [
+          "rd-lead",
+          "systems-engineering"
+        ],
+        "manual_hours": {
+          "min": 40,
+          "max": 100
+        },
+        "confidence": "low",
+        "basis": "retrospective; unified-DHF skill redesign across 6 skills + reorg 10 DHFs + 261 READMEs"
+      }
+    ]
+  }
+}
+```

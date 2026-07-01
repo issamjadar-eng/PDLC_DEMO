@@ -136,3 +136,31 @@ Replace the direct `command: ./…/.venv/bin/python` with a **committed wrapper*
 ## Changelog
 
 - 2026-06-01: Task created. Live file-locator failure diagnosed + fixed for this machine (missing venv → recreated via `uv venv` + `uv pip install`; server smoke-tested healthy). Opened this task to make the recovery self-healing in the skill. Design pending — Phase 0 is reading the skill templates end-to-end per [[feedback_read_skill_before_planning]].
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 4,
+    "todos": [
+      {
+        "todo": "file-locator self-healing venv",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 8,
+          "max": 18
+        },
+        "confidence": "low",
+        "basis": "file-locator self-healing venv bootstrap"
+      }
+    ]
+  }
+}
+```

@@ -57,3 +57,31 @@ This task document is the **session-recovery point** for this work. If the curre
 - 2026-06-01: Task created. Upstream inspected (42-line SKILL.md, Apache-2.0).
 - 2026-06-01: Skill installed at `.claude/skills/frontend-design/` (SKILL.md 6.4KB, README.md 4.9KB, LICENSE.txt 10KB verbatim, .pinned-sha=`da20c92`). Added to `project.yml security.approved_skills`. Awaiting commit/push confirmation.
 - 2026-06-01: PR #29 merged to main (`6988209`). Task closed.
+
+## Economics
+
+_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
+
+```json
+{
+  "economics": {
+    "method_version": 1,
+    "retrospective": true,
+    "agentic_hours": 3,
+    "todos": [
+      {
+        "todo": "Install frontend-design skill",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 14
+        },
+        "confidence": "low",
+        "basis": "adapt Anthropic frontend-design skill"
+      }
+    ]
+  }
+}
+```
