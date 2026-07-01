@@ -26,7 +26,7 @@ commas.)
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": 8,
+    "agentic_hours": {"min": 6, "max": 10},
     "todos": [
       {
         "todo": "Harden resolve_files against bad globs",
@@ -49,8 +49,11 @@ commas.)
   **additive across tasks** — one person can't attend two things at once, so summing it to the
   program level is meaningful — and it is honestly comparable to by-hand person-hours. So
   **hours saved = (Σ by-hand `manual_hours`) − `agentic_hours`** (ranged) is a labor-vs-labor
-  comparison, not calendar-vs-labor. A point estimate is fine; omit it and the view falls back to
-  by-hand hours without a savings figure.
+  comparison, not calendar-vs-labor. **RANGE it** — `{"min": N, "max": M}`, same as `manual_hours`
+  (a bare scalar is accepted as a legacy point but flagged; a point hides the uncertainty this
+  subtrahend carries, and it's the term that most drives `hours_saved`). The roll-up computes the
+  **conservative floor** as `by-hand-min − agentic-max`, so the headline `min` is a real floor.
+  Omit `agentic_hours` entirely and the view falls back to by-hand hours without a savings figure.
   - _Unit-migration note: estimates recorded before method v1.1 used elapsed/wall-clock-ish time,
     which **over-states** the human cost (background runs counted as labor) and therefore biases
     `hours_saved` **downward** — they are conservative floors, safe to leave. Re-tighten toward

@@ -280,14 +280,32 @@ def parse_task_economics(project_root: Path) -> dict:
             # last-updated proxy = latest YYYY-MM-DD anywhere in the doc (changelog/created)
             dates = re.findall(r"\b(\d{4}-\d{2}-\d{2})\b", text)
             updated = max(dates) if dates else None
+            # agentic_hours may be a scalar (legacy) or a {min,max} range (preferred, per
+            # rubric F2). Normalize to ah_min/ah_max; a scalar is treated as a point.
             ah = econ.get("agentic_hours")
-            agentic_hours = float(ah) if isinstance(ah, (int, float)) else None
-            # The savings headline: by-hand hours minus how long it actually took us.
-            hours_saved = (
-                {"min": round(tot["min"] - agentic_hours, 1),
-                 "max": round(tot["max"] - agentic_hours, 1)}
-                if agentic_hours is not None else None
-            )
+            if isinstance(ah, dict):
+                ah_min = float(ah["min"]) if isinstance(ah.get("min"), (int, float)) else None
+                ah_max = float(ah["max"]) if isinstance(ah.get("max"), (int, float)) else None
+                if ah_min is not None and ah_max is not None and ah_min > ah_max:
+                    ah_min, ah_max = ah_max, ah_min
+            elif isinstance(ah, (int, float)):
+                ah_min = ah_max = float(ah)
+            else:
+                ah_min = ah_max = None
+            # Conservative savings: the floor subtracts the LARGER agentic estimate
+            # (by-hand-min − agentic-max), so the headline `min` is genuinely a floor.
+            inverted = False
+            if ah_max is not None:
+                hs_min = round(tot["min"] - ah_max, 1)
+                hs_max = round(tot["max"] - ah_min, 1)
+                inverted = hs_min < 0          # F10: agentic ≥ by-hand → flag, don't hide
+                hours_saved = {"min": hs_min, "max": hs_max}
+            else:
+                hours_saved = None
+            # Back-compat scalar for the console (= conservative agentic-max); range kept for fidelity.
+            agentic_hours = round(ah_max, 1) if ah_max is not None else None
+            agentic_hours_range = ({"min": round(ah_min, 1), "max": round(ah_max, 1)}
+                                   if ah_max is not None else None)
             # The task's category = its personas, ranked by estimated hours.
             personas_ranked = [p for p, v in sorted(
                 by_persona.items(), key=lambda kv: kv[1]["max"], reverse=True)]
@@ -298,7 +316,9 @@ def parse_task_economics(project_root: Path) -> dict:
                 "retrospective": bool(econ.get("retrospective")),
                 "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
                 "agentic_hours": agentic_hours,
+                "agentic_hours_range": agentic_hours_range,
                 "hours_saved": hours_saved,
+                "inverted": inverted,
                 "by_persona": {p: {"min": round(v["min"], 1), "max": round(v["max"], 1)}
                                for p, v in sorted(by_persona.items())},
                 "personas": personas_ranked,
@@ -813,9 +833,15 @@ def main() -> int:
                               "cost": 0.0, "estimate": est}
 
     est_tasks = [t["estimate"] for t in tasks_out.values() if t.get("estimate")]
-    saved = [e for e in est_tasks if e.get("hours_saved")]
+    # F10 floor-guard: an inverted task (agentic ≥ by-hand) is EXCLUDED from the saved
+    # sum and surfaced as a count, rather than silently netting a negative into the total.
+    saved = [e for e in est_tasks if e.get("hours_saved") and not e.get("inverted")]
+    inverted_ct = sum(1 for e in est_tasks if e.get("inverted"))
+    retro_ct = sum(1 for e in est_tasks if e.get("retrospective"))
     value_summary = {
         "tasks_with_estimate": len(est_tasks),
+        "tasks_retrospective": retro_ct,          # F3: coverage/quality transparency
+        "tasks_inverted_excluded": inverted_ct,   # F10: flagged, not hidden
         "manual_hours": {
             "min": round(sum(e["manual_hours"]["min"] for e in est_tasks), 1),
             "max": round(sum(e["manual_hours"]["max"] for e in est_tasks), 1),
@@ -825,9 +851,12 @@ def main() -> int:
             "min": round(sum(e["hours_saved"]["min"] for e in saved), 1),
             "max": round(sum(e["hours_saved"]["max"] for e in saved), 1),
         } if saved else None),
-        "note": ("Hours saved = by-hand person-hour estimate (ranged) − agentic_hours (how long it "
-                 "actually took). Person-hours is the headline metric; the console adds an optional $ "
-                 "overlay via labor_rates. Lead with the conservative `min`."),
+        "note": ("MODELED, UNCALIBRATED estimate — not a measured saving. Hours saved = by-hand "
+                 "person-hour estimate (ranged) − agentic supervised-attention hours (conservative: "
+                 "floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task "
+                 "estimates are low-confidence retrospective backfill (see tasks_retrospective). "
+                 "Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator "
+                 "deviation — treat as order-of-magnitude, lead with the conservative `min`."),
     }
 
     usage_json = {
