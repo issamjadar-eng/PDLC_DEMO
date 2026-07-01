@@ -41,11 +41,21 @@ commas.)
 ```
 
 - **`method_ref`** (optional, per task): the path to this rubric. Makes the block **self-describing** — a session resuming from the task doc alone (without loading the task skill) can follow it back to the anchors/schema. Stamp it verbatim; it's a pointer, not a copy.
-- **`agentic_hours`** (per task): your honest estimate of the **elapsed supervised hours the
-  agentic approach actually took** for this task — the "how long did it take *us*" number.
-  This is what makes savings concrete: **hours saved = (Σ by-hand `manual_hours`) − `agentic_hours`**
-  (ranged, since by-hand is ranged). A point estimate is fine (you roughly know your own time);
-  omit it and the view falls back to showing by-hand hours without a savings figure.
+- **`agentic_hours`** (per task): your honest estimate of the **human supervised-attention hours**
+  the agentic approach cost — the hands-on-keyboard + active-review labor a person actually put in.
+  This is **not** elapsed wall-clock and **not** machine compute (tokens/$ are measured separately):
+  count the time you were genuinely steering or reviewing; do **not** count stretches where agents
+  ran in the background unattended. Defined as *attention* (not calendar time), the number is
+  **additive across tasks** — one person can't attend two things at once, so summing it to the
+  program level is meaningful — and it is honestly comparable to by-hand person-hours. So
+  **hours saved = (Σ by-hand `manual_hours`) − `agentic_hours`** (ranged) is a labor-vs-labor
+  comparison, not calendar-vs-labor. A point estimate is fine; omit it and the view falls back to
+  by-hand hours without a savings figure.
+  - _Unit-migration note: estimates recorded before method v1.1 used elapsed/wall-clock-ish time,
+    which **over-states** the human cost (background runs counted as labor) and therefore biases
+    `hours_saved` **downward** — they are conservative floors, safe to leave. Re-tighten toward
+    attention-hours whenever you next touch a task's estimate; no bulk recalibration is required,
+    and `method_version` stays `1` (this sharpens an ambiguous definition, it doesn't change the method)._
 - `personas`: 1+ advisor personas (the by-hand specialists) — this **is** the task's category.
   `manual_hours`: specialist person-hours, **RANGED** (`min`<`max`), never a point.
   `confidence`: `high|med|low`. `basis`: one line — the anchor used (or "judgment") + sizing input.
