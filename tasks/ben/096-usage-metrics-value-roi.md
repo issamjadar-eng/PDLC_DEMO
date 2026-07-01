@@ -188,7 +188,8 @@ First dogfood of the rubric — recorded inline by the thread that did the work.
 {
   "economics": {
     "method_version": 1,
-    "agentic_hours": 9,
+    "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
+    "agentic_hours": {"min": 7, "max": 12},
     "todos": [
       {
         "todo": "Design: value model across 3 skills (attribution, estimation, schema)",
