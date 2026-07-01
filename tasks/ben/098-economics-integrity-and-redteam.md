@@ -36,7 +36,7 @@ _Make the agentic-value model defensible before the ROI claim (~800–2,753 pers
 - [x] task v33: `update … Complete` fills economics before flipping Status (completion gate — new step 1b)
 - [x] task v33: lower SessionEnd marker threshold 30 → 15 min (`session-cleanup.sh` + 2 doc refs)
 - [ ] task v33: version bump + changelog; push to registry _(bumped v32→v33 + README row; push pending)_
-- [ ] usage-metrics v9: tighten `agentic_hours` definition (attention-hours) + unit note; bump + push
+- [x] usage-metrics v9: tightened `agentic_hours` → **human supervised-attention hours** (additive, labor-vs-labor) + unit-migration note (old wall-clock values = conservative floors, method_version stays 1). Fixed the console Agentic-hrs tooltip copy to match (dropped the now-wrong "not additive"; project-console 1.30.5). Verified live: methodology re-renders from the rubric + tooltip consistent.
 - [ ] Assemble the ROI narrative (claim + method + honest caveats) as the red-team target
 - [ ] Run the red-team panel; capture findings + triage (fix / defer / accept)
 
@@ -57,6 +57,13 @@ _By-hand person-hour estimate, **filled at checkpoint / on todo check-off** per 
         "manual_hours": {"min": 3, "max": 6},
         "confidence": "med",
         "basis": "skill authoring: PERMANENT RULE 1 + update step 1b + session-cleanup threshold + 2 doc refs + versioning across 4 sites — small module, LOC-norm low end + judgment on trigger semantics"
+      },
+      {
+        "todo": "usage-metrics v9 — tighten agentic_hours definition (attention-hours) + fix console tooltip to match",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 1, "max": 3},
+        "confidence": "med",
+        "basis": "definition/authoring: rubric paragraph rewrite + unit-migration note + tooltip copy fix + 2 version bumps — judgment-tier (conceptual clarity work, no LOC anchor)"
       }
     ]
   }
@@ -66,5 +73,6 @@ _`agentic_hours` left `null` until 098 completes (agentic_hours-fix + red-team s
 
 ## Changelog
 
+- 2026-06-30: **usage-metrics v9 — `agentic_hours` = attention-hours (uncommitted).** Tightened the rubric definition from "elapsed supervised wall-clock" → **human supervised-attention hours** (hands-on + active review; not compute, not background/unattended time). Now additive across tasks (one person can't attend two things at once) → `Σ agentic_hours` is a real "human hours" number and `hours_saved` is labor-vs-labor. Old wall-clock estimates over-state human cost → bias savings down → conservative floors; `method_version` stays 1 (definition sharpened, not changed). Fixed the console Agentic-hrs tooltip (project-console 1.30.5) — it still said "not additive" (old framing); now "sums honestly across tasks." Verified live: methodology re-renders from rubric + tooltip consistent (0 stale strings). This directly answers your "if you add agentic_hours up, it's not human hours" point. Next: red-team the corrected model.
 - 2026-06-30: **task v32→v33 — economics fill-cadence (uncommitted).** Closed the fill-gap (v32 made the section exist; it only got *filled* at manual checkpoint). Three triggers, no per-turn hook (per user — didn't re-introduce the ben/100 pattern): (1) **PERMANENT RULE 1** (template `create` rule 1) now says ticking a Todo off fills the matching `## Economics` entry in the same edit; (2) **`update … Complete` step 1b** — completion gate refuses to close on an unfilled stub; (3) **SessionEnd threshold 30→15 min** (`session-cleanup.sh` + 2 SKILL.md doc refs). `checkpoint` 3b reworded "fill"→"reconcile". Bumped v32→v33 (frontmatter + README row). **Dogfooded:** checked off the three v33 todos above and filled this doc's `## Economics` entry in the same edit (rd-lead, 3–6 h). Next: push v33, then agentic_hours (v9) + red-team.
 - 2026-06-30: Task created — economics model integrity (checkpoint-cadence fill fix + agentic_hours definition) + red-team the aggregate ROI claim. Spun out of the ben/096 close-out discussion (agentic_hours ambiguity + the checkpoint fill-gap surfaced while fixing the missing-economics-section issue).
