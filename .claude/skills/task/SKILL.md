@@ -1,7 +1,7 @@
 ---
 name: task
 description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `setup` tasks organized by team member with index tracking. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
-version: 30
+version: 32
 updated: 2026-06-30
 ---
 
@@ -45,7 +45,7 @@ When any action encounters a missing dependency, it should report:
 | File | Purpose |
 |------|---------|
 | `hooks/check-active-task.sh` | PreToolUse hook — denies Edit/Write/NotebookEdit when no active task is set. Symlinked from `.claude/hooks/`. |
-| `hooks/task-activate.sh` | Activation script source — installed to `.claude/hooks/` by `setup` action (writes per-session state files into `.state/` at project root). |
+| `hooks/task-activate.sh` | Activation script source — symlinked into `.claude/hooks/` by `setup` action (writes per-session state files into `.state/` at project root; also appends an activation ledger under `_usage-metrics/` for per-task token attribution). |
 | `hooks/session-env.sh` | SessionStart hook — reads `session_id` from hook JSON and exports `CLAUDE_SESSION_ID` via `CLAUDE_ENV_FILE`, making the ID available to all Bash tool calls. Required by `check-active-task.sh`. Symlinked from `.claude/hooks/` by `setup`. |
 | `hooks/session-cleanup.sh` | SessionEnd hook — removes `.state/active-tasks-{session_id}.txt` when a session ends, AND writes `.state/uncheckpointed-<person>-<NNN>-<date>.txt` markers for any active task whose `last-checkpoint-*.txt` marker is older than 30 minutes (or missing). Symlinked from `.claude/hooks/` by `setup`. |
 | `hooks/checkpoint-recover.sh` | SessionStart hook — scans `.state/` for any `uncheckpointed-*.txt` markers from previous sessions; if found, injects a SessionStart `additionalContext` block prompting Claude to offer retroactive `/checkpoint` recovery from `git log` + diff. Symlinked from `.claude/hooks/` by `setup`. Pairs with `session-cleanup.sh` and the `checkpoint` action. |
@@ -70,7 +70,7 @@ Wire up the task gate hook and activation script for this project. Self-containe
 6. Create symlink `.claude/hooks/session-env.sh` → `../skills/task/hooks/session-env.sh` (skip if already exists). This hook makes `CLAUDE_SESSION_ID` available to all Bash tool calls — the task gate relies on it.
 7. Create symlink `.claude/hooks/session-cleanup.sh` → `../skills/task/hooks/session-cleanup.sh` (skip if already exists). This hook fires on SessionEnd and (a) purges the task-gate state file for the ending session, (b) writes an `uncheckpointed-<person>-<NNN>-<date>.txt` marker into `.state/` for any active task whose `last-checkpoint-*.txt` marker is older than 30 minutes (or missing). The marker is the SessionStart hook's signal to offer retroactive `/checkpoint` recovery in the next session.
 8. Create symlink `.claude/hooks/checkpoint-recover.sh` → `../skills/task/hooks/checkpoint-recover.sh` (skip if already exists). This hook fires on SessionStart and scans `.state/` for any `uncheckpointed-*` markers left by previous sessions; if any exist, it injects an `additionalContext` block into Claude's startup context so the new session proactively offers to recover the lost state from `git log` + diff.
-9. Install `task-activate.sh` into `.claude/hooks/` — copy from `${CLAUDE_SKILL_DIR}/hooks/task-activate.sh` and make executable. (Skip if already exists and content matches.)
+9. Create symlink `.claude/hooks/task-activate.sh` → `../skills/task/hooks/task-activate.sh` (skip if it already points there). This is the same source-of-truth-in-skill pattern as the other hooks (steps 5–8): the symlink — not a copy — is what makes a `/sync-skills pull` that updates the task skill auto-update the installed hook, with no stale copy to audit. **Migration (copy → symlink):** older installs (skill ≤ v30) copied this hook as a regular file; if `.claude/hooks/task-activate.sh` exists and is **not** a symlink, replace it (`rm -f` then create the symlink) so the pulled skill version takes effect. If the project has forked it into a customized regular file, leave the fork alone and report it.
 10. **Migration — uninstall deprecated capture hooks (v13 → v23)**. The Strategy/Lessons capture-nag hooks (v12–v22) have been retired; they fired on every user prompt and every response turn with a 25% hit rate and high flow cost (see task ben/100). If a project was previously set up, clean up the now-orphaned artifacts:
     - Remove dangling symlinks: `rm -f .claude/hooks/capture-signals.sh .claude/hooks/capture-check.sh`
     - Remove `UserPromptSubmit` entries whose command path ends with `capture-signals.sh`, and `Stop` entries whose command path ends with `capture-check.sh`. If either event array becomes empty after filtering, drop the array entirely. Do this with a single idempotent jq pass over `settings.json`:
@@ -257,6 +257,27 @@ _Actionable work items. Check off as completed._
 See [README.md](README.md) for version history.
 ```
 
+4b. **Scaffold the `## Economics` section (if the `usage-metrics` skill is installed).** If `.claude/skills/usage-metrics/` exists, insert an `## Economics` section immediately **before** `## Changelog` in the new task doc — so economics tracking is present **from creation**, not conditional on a later checkpoint ever running. Use this **empty stub**: it carries the method pointer but no estimate yet (an empty `todos` list is safely ignored by the aggregator), and gets **filled at checkpoint** per the `checkpoint` action's step 3b, against the effort-estimation rubric:
+
+    ````markdown
+    ## Economics
+
+    _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimation rubric (`usage-metrics` skill). Empty until the first completed todo is estimated; an empty `todos` list is ignored by the aggregator._
+
+    ```json
+    {
+      "economics": {
+        "method_version": 1,
+        "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
+        "agentic_hours": null,
+        "todos": []
+      }
+    }
+    ```
+    ````
+
+    Skip this step **silently** if `usage-metrics` isn't installed — the base task doc simply has no `## Economics` section (matching PERMANENT RULE 6's "if present" gating). Do **not** copy the rubric's content into the doc; the `method_ref` pointer is the whole link.
+
 5. **Update `tasks/<person>/000-index.md`** — see "## Index file format" above. If the index file doesn't exist, create it from the empty template (substituting `<Full Name>` from `project.yml`). Then append a new row to the Active table:
    ```
    | NNN | <Task Title> | Not Started | <Priority> | <Task Title — refine as scope solidifies> |
@@ -296,7 +317,7 @@ Args are optional. With no args, use the currently-active task. Pass `<person> <
 1. **Identify the target task doc.** If args were omitted: run `printenv CLAUDE_SESSION_ID` (use the **literal UUID** in subsequent calls — see the warning in "## Task Gate State File" below), then read `.state/active-tasks-{session_id}.txt`. Use the first task ID listed; if multiple are active, prefer the most recently activated. Find the file via `tasks/*/NNN-*.md`. If no task is active and no args were given, fail with: `"No active task to checkpoint. Pass <person> <NNN> or activate a task first."`
 2. **Audit the doc** against the PERMANENT RULE 4 success criteria — a fresh session must be able to recover: (a) what was completed this session with concrete artifacts (commit SHAs, PR URLs, file paths), (b) status of any in-flight work and outstanding temp artifacts, (c) priority-ordered next steps with file paths, (d) open questions blocking progress, (e) the exact `/task` activation command to resume.
 3. **Refresh the Todos section.** Tick off items completed this session. Rewrite the remaining list in priority order with concrete file paths. Promote completed Todos into the Goals checklist if they were structural milestones (not just one-off chores).
-3b. **Refresh the `## Economics` estimates** (if the `usage-metrics` skill is installed). For each todo **completed this session**, add/refresh a `## Economics` entry — the **by-hand person-hours** the same work would have taken, **ranged + persona-tagged**, per `.claude/skills/usage-metrics/references/effort-estimation-rubric.md`. Stamp the block's `method_ref` with that rubric path so the estimate is self-describing on a bare resume. Do it inline now (you hold the context); no approval gate. Skip silently if usage-metrics isn't installed. This is what makes the agentic-value comparison possible — the agentic side (tokens/wall-clock) is measured automatically; this is the only by-hand half.
+3b. **Fill the `## Economics` estimates** (if the `usage-metrics` skill is installed). The section is normally **already scaffolded as an empty stub** by the `create` action (step 4b); if it's missing (e.g. an older doc), add it. For each todo **completed this session**, fill/refresh a `## Economics` entry — the **by-hand person-hours** the same work would have taken, **ranged + persona-tagged**, per `.claude/skills/usage-metrics/references/effort-estimation-rubric.md`. Replace the stub's `agentic_hours: null` with your estimate and populate `todos`. Ensure the block's `method_ref` names that rubric path so the estimate is self-describing on a bare resume. Do it inline now (you hold the context); no approval gate. Skip silently if usage-metrics isn't installed. This is what makes the agentic-value comparison possible — the agentic side (tokens/wall-clock) is measured automatically; this is the only by-hand half.
 4. **Refresh the Open Questions section.** Resolve any questions answered this session — strike them through or move to a "Resolved this session" subsection. Trim the list. Open Questions should never accumulate stale entries across multiple sessions; if the same question survived two checkpoints, surface that explicitly.
 5. **Refresh the Resume → In-flight artifacts subsection.** List every file you (Claude) generated or modified this session that's expected to be reviewed/edited externally (browsers, IDEs). Note the current state of relevant external systems: git HEADs of any repos touched, merged PR URLs, deployed URLs, outstanding temp files. **Explicitly state whether anything has been committed by Claude** (it usually has not — the user controls commits).
 6. **Refresh the Resume → First action on resume subsection.** List the priority-ordered first steps for the next session. Include anti-patterns to avoid: work that already shipped this session (so it isn't redone), commits not to make unless explicitly asked, sub-sessions or branches already cleaned up.

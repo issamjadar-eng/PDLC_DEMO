@@ -155,11 +155,12 @@
       <td class="vv-mono">${hrs(T.bMin)}–${hrs(T.bMax)}</td>
       <td class="vv-hero"><span class="vv-mono">${hrs(T.sMin)}–${hrs(T.sMax)}</span>${fPct ? `<div class="vv-pct">${fPct}</div>` : ""}</td>
       <td class="vv-mono">${usd(T.cost)}</td></tr>`;
-    const pg = $("vv-pageinfo");
-    if (pg) pg.textContent = total === 0 ? "No tasks"
+    const info = total === 0 ? "No tasks"
       : (ps ? `Showing ${state.page * ps + 1}–${Math.min(total, (state.page + 1) * ps)} of ${total}` : `Showing all ${total}`);
-    if ($("vv-prev")) $("vv-prev").disabled = !ps || state.page <= 0;
-    if ($("vv-next")) $("vv-next").disabled = !ps || state.page >= pageCount - 1;
+    // Class-based so every pager instance (top + bottom) stays in sync.
+    document.querySelectorAll('.vv-pageinfo').forEach(pg => pg.textContent = info);
+    document.querySelectorAll('.vv-prev').forEach(b => b.disabled = !ps || state.page <= 0);
+    document.querySelectorAll('.vv-next').forEach(b => b.disabled = !ps || state.page >= pageCount - 1);
     document.querySelectorAll('#vv-tbl th[data-k]').forEach(th => {
       const on = th.dataset.k === state.key;
       th.classList.toggle('vv-sorted', on);
@@ -180,8 +181,10 @@
   if ($("vv-search")) $("vv-search").addEventListener("input", e => { state.q = e.target.value.toLowerCase().trim(); repage(); });
   if ($("vv-measonly")) $("vv-measonly").addEventListener("change", e => { state.meas = e.target.checked; repage(); });
   if ($("vv-pagesize")) $("vv-pagesize").addEventListener("change", e => { state.pageSize = +e.target.value; repage(); });
-  if ($("vv-prev")) $("vv-prev").addEventListener("click", () => { state.page--; renderTable(rf); });
-  if ($("vv-next")) $("vv-next").addEventListener("click", () => { state.page++; renderTable(rf); });
+  document.querySelectorAll('.vv-prev').forEach(b => b.addEventListener("click", () => { state.page--; renderTable(rf); }));
+  document.querySelectorAll('.vv-next').forEach(b => b.addEventListener("click", () => { state.page++; renderTable(rf); }));
+  // Info icons in the headers must not trigger the column sort.
+  document.querySelectorAll('#vv-tbl .vv-info').forEach(i => i.addEventListener('click', e => e.stopPropagation()));
   document.querySelectorAll('#vv-tbl th[data-k]').forEach(th => th.addEventListener('click', () => {
     const k = th.dataset.k;
     if (state.key === k) state.dir = -state.dir; else { state.key = k; state.dir = numKey[k] ? -1 : 1; }
