@@ -13,6 +13,9 @@
   const hrs0 = n => Math.round(n || 0).toLocaleString();   // whole hours (category cards)
   const usd0 = n => new Intl.NumberFormat(undefined, { style: "currency", currency: CUR, maximumFractionDigits: 0 }).format(n || 0);
   const rng = o => o ? `${hrs(o.min)}–${hrs(o.max)}` : "—";
+  // agentic-hours formatter: shows a range (min–max) but collapses to a single
+  // number when min==max, so legacy scalar estimates still read cleanly.
+  const agf = (mn, mx, f) => { const g = f || hrs; return mn == null ? "—" : (mn === mx ? g(mn) : `${g(mn)}–${g(mx)}`); };
   const pctRange = (sv, bh) => {
     if (!sv || !bh || !bh.min || !bh.max) return null;
     const lo = Math.round(sv.min / bh.min * 100), hi = Math.round(sv.max / bh.max * 100);
@@ -41,7 +44,10 @@
       label: memberOf[ref.split("/")[0]] + " · " + id,
       title: e.title, updated: e.updated || "", retro: !!e.retrospective,
       personas: cats, category: cats.length ? cats.slice(0, 3).join(", ") + (cats.length > 3 ? "…" : "") : "—",
-      agentic_h: e.agentic_hours, byhand: e.manual_hours, saved: e.hours_saved,
+      agentic_h: e.agentic_hours,
+      agMin: e.agentic_hours_range ? e.agentic_hours_range.min : e.agentic_hours,
+      agMax: e.agentic_hours_range ? e.agentic_hours_range.max : e.agentic_hours,
+      byhand: e.manual_hours, saved: e.hours_saved,
       by_persona: e.by_persona || {}, pct: pctRange(e.hours_saved, e.manual_hours),
       cost: t.cost || 0, savedMin: e.hours_saved ? e.hours_saved.min : -1,
     });
@@ -58,7 +64,7 @@
 
   // ---- table-only filters/sort (on top of the range) ----
   const state = { q: "", cat: "", meas: false, key: "updated", dir: -1, pageSize: 50, page: 0 };
-  const numKey = { agentic: r => r.agentic_h || 0, byhand: r => (r.byhand ? r.byhand.min : 0), saved: r => r.savedMin, cost: r => r.cost };
+  const numKey = { agentic: r => r.agMax || 0, byhand: r => (r.byhand ? r.byhand.min : 0), saved: r => r.savedMin, cost: r => r.cost };
   const strKey = { title: r => (r.title || "").toLowerCase(), updated: r => r.updated || "", category: r => r.category.toLowerCase() };
   const keep = r => {
     if (state.meas && r.retro) return false;
@@ -74,7 +80,7 @@
     <td><div class="vv-title">${shortTitle(r.title) || r.label}${r.retro ? '<span class="vv-badge est">retro</span>' : ''}</div><div class="vv-id">${r.label}</div></td>
     <td class="vv-mono">${r.updated || "—"}</td>
     <td class="vv-cat">${r.category}</td>
-    <td class="vv-mono">${r.agentic_h != null ? hrs(r.agentic_h) : "—"}</td>
+    <td class="vv-mono">${agf(r.agMin, r.agMax)}</td>
     <td class="vv-mono">${rng(r.byhand)}</td>
     <td class="vv-hero"><span class="vv-mono">${r.saved ? rng(r.saved) : "—"}</span>${r.pct ? `<div class="vv-pct">${r.pct}</div>` : ""}</td>
     <td class="vv-mono">${usd(r.cost)}</td></tr>`;
@@ -82,8 +88,8 @@
   const sums = list => list.reduce((a, r) => ({
     bMin: a.bMin + (r.byhand ? r.byhand.min : 0), bMax: a.bMax + (r.byhand ? r.byhand.max : 0),
     sMin: a.sMin + (r.saved ? r.saved.min : 0), sMax: a.sMax + (r.saved ? r.saved.max : 0),
-    ag: a.ag + (r.agentic_h || 0), cost: a.cost + r.cost,
-  }), { bMin: 0, bMax: 0, sMin: 0, sMax: 0, ag: 0, cost: 0 });
+    agMin: a.agMin + (r.agMin || 0), agMax: a.agMax + (r.agMax || 0), cost: a.cost + r.cost,
+  }), { bMin: 0, bMax: 0, sMin: 0, sMax: 0, agMin: 0, agMax: 0, cost: 0 });
 
   let rf = rows.slice();  // range-filtered set (drives hero + cats + table)
 
@@ -95,7 +101,7 @@
     hero.innerHTML =
       card("Person-hours saved", (T.sMin || T.sMax) ? `${hrs(T.sMin)}–${hrs(T.sMax)} <small>hrs${pct ? " · " + pct + " of by-hand" : ""}</small>` : "—", "vv-hero") +
       card("By-hand effort", `${hrs(T.bMin)}–${hrs(T.bMax)} <small>hrs</small>`) +
-      card("Agentic time", `${hrs(T.ag)} <small>hrs (est.)</small>`) +
+      card("Agentic time", `${agf(T.agMin, T.agMax)} <small>hrs (est.)</small>`) +
       card("Agentic cost", `${usd(T.cost)} <small>tokens</small>`) +
       card("Tasks valued", String(list.length));
   }
@@ -108,10 +114,10 @@
       const denom = Object.values(bp).reduce((a, h) => a + (h.max || 0), 0) || 1;
       for (const [p, h] of Object.entries(bp)) {
         const w = (h.max || 0) / denom;
-        const c = cats[p] || (cats[p] = { bhMin: 0, bhMax: 0, svMin: 0, svMax: 0, ag: 0, cost: 0, tasks: 0 });
+        const c = cats[p] || (cats[p] = { bhMin: 0, bhMax: 0, svMin: 0, svMax: 0, agMin: 0, agMax: 0, cost: 0, tasks: 0 });
         c.bhMin += h.min || 0; c.bhMax += h.max || 0;
         if (r.saved) { c.svMin += (r.saved.min || 0) * w; c.svMax += (r.saved.max || 0) * w; }
-        c.ag += (r.agentic_h || 0) * w; c.cost += (r.cost || 0) * w; c.tasks += 1;
+        c.agMin += (r.agMin || 0) * w; c.agMax += (r.agMax || 0) * w; c.cost += (r.cost || 0) * w; c.tasks += 1;
       }
     }
     // "All" aggregate card — true totals (each task once), not the per-persona split.
@@ -121,7 +127,7 @@
       <div class="vv-catname">All categories<span class="vv-catn"> · ${list.length} task${list.length === 1 ? "" : "s"}</span></div>
       <div class="vv-catrow"><span>Hours saved</span><span class="vv-mono"><span class="vv-hero">${hrs0(A.sMin)}–${hrs0(A.sMax)}</span>${allPct ? ` <span class="vv-catpct">${allPct}</span>` : ""}</span></div>
       <div class="vv-catrow"><span>By-hand effort</span><span class="vv-mono">${hrs0(A.bMin)}–${hrs0(A.bMax)} hrs</span></div>
-      <div class="vv-catrow"><span>Agentic time</span><span class="vv-mono">${hrs0(A.ag)} hrs</span></div>
+      <div class="vv-catrow"><span>Agentic time</span><span class="vv-mono">${agf(Math.round(A.agMin), Math.round(A.agMax), hrs0)} hrs</span></div>
       <div class="vv-catrow"><span>Agentic cost</span><span class="vv-mono">${usd0(A.cost)}</span></div>
     </div>`;
     const html = Object.entries(cats).sort((a, b) => b[1].svMin - a[1].svMin).map(([p, c]) => {
@@ -131,7 +137,7 @@
         <div class="vv-catname">${p}<span class="vv-catn"> · ${c.tasks} task${c.tasks === 1 ? "" : "s"} · ${share}% of tasks</span></div>
         <div class="vv-catrow"><span>Hours saved</span><span class="vv-mono"><span class="vv-hero">${hrs0(c.svMin)}–${hrs0(c.svMax)}</span>${catPct ? ` <span class="vv-catpct">${catPct}</span>` : ""}</span></div>
         <div class="vv-catrow"><span>By-hand effort</span><span class="vv-mono">${hrs0(c.bhMin)}–${hrs0(c.bhMax)} hrs</span></div>
-        <div class="vv-catrow"><span>Agentic time</span><span class="vv-mono">${hrs0(c.ag)} hrs</span></div>
+        <div class="vv-catrow"><span>Agentic time</span><span class="vv-mono">${agf(Math.round(c.agMin), Math.round(c.agMax), hrs0)} hrs</span></div>
         <div class="vv-catrow"><span>Agentic cost</span><span class="vv-mono">${usd0(c.cost)}</span></div>
       </div>`;
     }).join("");
