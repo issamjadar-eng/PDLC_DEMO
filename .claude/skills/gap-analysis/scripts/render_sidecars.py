@@ -42,7 +42,7 @@ import re
 import sys
 from pathlib import Path
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 ANALYSIS_DIR = ("docs", "_analysis")
 
@@ -242,7 +242,36 @@ def _norm_status(raw: str) -> str:
     return "open"
 
 
+def _norm_finding_status(raw: str) -> str:
+    """Normalize a finding's disposition to the gap-analysis vocabulary
+    (resolved | partial | superseded | open) — distinct from the assertion
+    vocabulary in `_norm_status` (confirmed/refuted/verify/open). Reads the
+    leading word(s) of the status cell/line, e.g. 'resolved 2026-06-30 (DG-3)'
+    → 'resolved', '**partial 2026-06-29**' → 'partial'."""
+    t = raw.lower()
+    if "resolv" in t:
+        return "resolved"
+    if "supersed" in t:
+        return "superseded"
+    if "partial" in t:
+        return "partial"
+    return "open"
+
+
 _FINDING_RE = re.compile(r"^###\s+(F-\d+):\s*(.*)$")
+_FINDING_ROW = re.compile(r"^\|\s*(F-\d+)\s*\|([^|]*)\|")
+
+
+def parse_finding_status_table(sec: str) -> dict[str, str]:
+    """Map F-N → raw status label from the Findings summary table — the
+    fallback source when a finding's detail body has no `- **Status:**` line.
+    Reads the second column of each `| F-N | <status> | … |` row."""
+    out: dict[str, str] = {}
+    for line in sec.splitlines():
+        m = _FINDING_ROW.match(line.strip())
+        if m:
+            out[m.group(1)] = re.sub(r"\*\*", "", m.group(2)).strip()
+    return out
 
 
 def parse_findings(sec: str) -> list[dict]:
@@ -257,7 +286,14 @@ def parse_findings(sec: str) -> list[dict]:
             if cur is not None:
                 cur["body_md"] = "\n".join(buf).strip()
                 findings.append(cur)
-            cur = {"id": m.group(1), "label": m.group(2).strip(), "author": "", "body_md": ""}
+            cur = {
+                "id": m.group(1),
+                "label": m.group(2).strip(),
+                "author": "",
+                "status": "",
+                "status_label": "",
+                "body_md": "",
+            }
             buf = []
         else:
             if cur is not None:
@@ -265,6 +301,13 @@ def parse_findings(sec: str) -> list[dict]:
                 am = re.match(r"^\s*-\s*\*\*Author:\*\*\s*(.+)$", line)
                 if am and not cur["author"]:
                     cur["author"] = am.group(1).strip()
+                sm = re.match(r"^\s*-\s*\*\*Status:\*\*\s*(.+)$", line)
+                if sm and not cur["status_label"]:
+                    # status cell often carries a date/qualifier after a `·` —
+                    # keep the leading clause as the human label, normalize the word
+                    label = re.sub(r"\*\*", "", sm.group(1).split("·")[0]).strip()
+                    cur["status_label"] = label
+                    cur["status"] = _norm_finding_status(label)
     if cur is not None:
         cur["body_md"] = "\n".join(buf).strip()
         findings.append(cur)
@@ -359,11 +402,23 @@ def build_analysis(md_path: Path, repo_root: Path) -> dict | None:
     assertions = parse_assertions(find_sec("assertion"))
     attach_positions(assertions, find_sec("position"))
     findings = parse_findings(find_sec("finding"))
+    # Fallback: findings whose detail body carried no `- **Status:**` line take
+    # their status from the Findings summary table (so every finding is measured).
+    _fstatus_tbl = parse_finding_status_table(find_sec("finding"))
+    for f in findings:
+        if not f.get("status_label"):
+            lbl = _fstatus_tbl.get(f["id"], "")
+            f["status_label"] = lbl
+            f["status"] = _norm_finding_status(lbl) if lbl else "open"
     agents = derive_agents(fm, findings, find_sec("changelog"))
 
     status_counts: dict[str, int] = {}
     for a in assertions:
         status_counts[a["status"]] = status_counts.get(a["status"], 0) + 1
+
+    finding_status_counts: dict[str, int] = {}
+    for f in findings:
+        finding_status_counts[f["status"]] = finding_status_counts.get(f["status"], 0) + 1
 
     rel = md_path.relative_to(repo_root).as_posix()
     return {
@@ -397,6 +452,7 @@ def build_analysis(md_path: Path, repo_root: Path) -> dict | None:
             "assertion_count": len(assertions),
             "assertion_status_counts": status_counts,
             "finding_count": len(findings),
+            "finding_status_counts": finding_status_counts,
         },
     }
 

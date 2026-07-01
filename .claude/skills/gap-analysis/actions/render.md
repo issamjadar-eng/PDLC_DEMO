@@ -43,7 +43,7 @@ Both are **derived projections** of the markdown. The `.md` is the single source
 
 **When to run:** after `/gap-analysis init` (to register the new analysis in the index) and after `/gap-analysis fan-out` (to project the freshly-appended findings). Also any time an analysis markdown is hand-edited. The console reads whatever sidecars exist and degrades gracefully (empty-state hint) when they're absent — exactly like the trace-matrix view.
 
-## JSON schema (`schema_version: "1.0"`)
+## JSON schema (`schema_version: "1.1"`)
 
 Per-analysis `<id>.gap.json`:
 
@@ -55,10 +55,10 @@ Per-analysis `<id>.gap.json`:
 | `grounding` | `[{type,path,note}]` | frontmatter `grounded_against` (typed pointers) |
 | `agents` | `[{name,role,ran,contributed_finding_ids[],changelog_summary}]` | `recommended_agents` (role: first=primary) + finding authorship + `agent:` changelog rows |
 | `assertions` | `[{id,assertion,clause,evidence,status,status_label}]` | `## Assertions` table; `status` normalized to confirmed/partial/refuted/verify/open |
-| `findings` | `[{id,label,author,body_md}]` | `## Findings` F-N blocks (body kept as markdown — consumer renders it) |
+| `findings` | `[{id,label,author,status,status_label,body_md}]` | `## Findings` F-N blocks; `status` normalized to resolved/partial/superseded/open from the finding's `- **Status:**` body line, falling back to the summary-table status column; `status_label` keeps the human label (e.g. `resolved 2026-06-30 (DG-3)`); body kept as markdown — consumer renders it |
 | `recommendations` | `[string]` | `## Recommendations` list |
 | `open_questions` | `[string]` | `## Open Questions` list |
-| `stats` | `{grounding_count,agent_count,assertion_count,assertion_status_counts,finding_count}` | derived |
+| `stats` | `{grounding_count,agent_count,assertion_count,assertion_status_counts,finding_count,finding_status_counts}` | derived (`finding_status_counts` = `{resolved,partial,open,…}` tally — the findings parallel to `assertion_status_counts`) |
 
 Roll-up `index.json`: `{schema_version, analyses:[{id,title,status,topic,component,last_updated,source_md,sidecar,agents[],stats}], counts:{total,by_status,by_topic,by_component}}`.
 
@@ -67,4 +67,4 @@ Roll-up `index.json`: `{schema_version, analyses:[{id,title,status,topic,compone
 - **Derived, not authored** — never edit the `.gap.json` by hand; edit the `.md` and re-render. The renderer is idempotent.
 - **No new project config** — the script discovers the repo root via `project.yml` and walks the fixed `docs/_analysis/` tier. Project-agnostic.
 - **Schema versioning** — bump `SCHEMA_VERSION` in `scripts/render_sidecars.py` (and this table + the README changelog) when the shape changes, so consumers can guard on `schema_version`.
-- **Findings stay as markdown** — the F-N body is intentionally not decomposed into sub-fields; prose shape varies across authors/advisors, so the consumer renders the markdown chunk. The structured surface (meta / grounding / agents / assertions / stats) is what drives the cards.
+- **Findings stay as markdown, but disposition is now measured** — the F-N body is still not decomposed into sub-fields (prose shape varies, so the consumer renders the markdown chunk), with one exception: the finding's **status** is extracted (from its `- **Status:**` body line, or the summary-table status column as fallback) and normalized into `status` + tallied into `stats.finding_status_counts`, so finding disposition (resolved / partial / open) is measurable the same way assertion status is. Author the status as the leading word of the cell/line (`resolved`/`partial`/`open`/`superseded`), optionally followed by a date/qualifier after a `·` or in parentheses.

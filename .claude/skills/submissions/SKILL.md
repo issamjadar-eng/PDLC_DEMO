@@ -64,6 +64,39 @@ The `composition-manifest.md` is itself **🔒 INTERNAL — NOT TRANSMITTED**; t
 FDA-facing package listing is the cover letter's Attachments section, which must
 align 1:1 with the manifest before transmission.
 
+## Stable Question Keys — decouple question identity from the FDA display number (HARD RULE)
+
+A submission's question set (the Q-Sub Specific Questions, and the cover letter's
+question enumeration) is **referenced across the whole package** — cover letter,
+device description, predicate summary, PCCP summary, strategy docs, briefs. If the
+FDA-facing display number (e.g. `Q1.2`) doubles as the question's identity in every
+cross-reference and in history, any reorder or trim churns hundreds of references and
+floods internal reviewers with noise. Decouple the two:
+
+1. **Each question carries one permanent, unique stable key** — a `QK-<slug>`
+   (e.g. `QK-PCCP-PREOP-AI`) that **never renumbers**. The slug is semantic so it
+   self-documents in history.
+2. **Zone rule.** **FDA-transmitted filed bodies** (what the reviewer reads) show the
+   human **display number** (`Q1.1`, `Q2.2`, …; deferred questions live in the deferred
+   container with no display number). **Everything internal** — `<!-- -->`
+   changelog/history, `🔒 INTERNAL` containers, internal-only docs (strategy, analyses),
+   deferred-question provenance — references the **stable `QK`**, so it never churns on a
+   renumber.
+3. **One master map** (a `QK ↔ display ↔ topic ↔ transmit/defer` table in a 🔒 container
+   in the questions doc) is the **single source of truth**. A renumber edits only the
+   filed display numbers + this map; internal/history are untouched.
+
+**Renumber procedure (collision-safe).** A package-wide renumber is a scripted,
+zone-aware, single-pass remap (each match resolved against the *original* text so the
+old/new display-number namespaces cannot cascade), with a **dry-run + integrity checks**
+(filed headers contiguous + in order, no duplicate display IDs, `<details>` balance,
+master-map ⇄ filed-headers agreement) before apply, and a **QA-conformance pass** after.
+Never hand-edit a package-wide renumber.
+
+Why: the display number is for the FDA reader; the stable key is the identity. Keeping
+history and internal apparatus on the stable key is what lets the question set be
+reordered or trimmed without drift or reviewer noise.
+
 **Grounding rule:** submission docs reference canonical facts (classifications,
 predicate K-numbers, change categories) from `regulatory-strategy.md` D-REG-*
 blocks, the system SAD, and `project.yml` — they do not restate them as new

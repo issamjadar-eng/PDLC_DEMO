@@ -4,6 +4,21 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-06-30 — push (Value/ROI across task v30 + usage-metrics v8 + project-console 1.30.3) [ben/096]
+
+- **Files:** 16 — `task/{SKILL.md,README.md,hooks/task-activate.sh}`, `usage-metrics/{SKILL.md,README.md,references/effort-estimation-rubric.md,scripts/aggregate.py,scripts/collect.py}`, `project-console/{SKILL.md,README.md,VERSION,console/config.py,console/metrics/router.py,console/web/static/value.js,console/web/templates/{_base.html,metrics_view.html}}`. All `LOCAL_AHEAD`/`LOCAL_ONLY` (clean push candidates).
+- **What:** the cross-skill agentic-value feature — activation ledger + time-sliced `by_task` attribution; research-backed effort-estimation rubric (two credibility tiers) + `## Effort-Estimation Research Basis`; aggregate roll-up → `hours_saved`/`value_summary`; console Value & ROI tab (category cards, filters, page range, live methodology sourced from the rubric); task-doc self-sufficiency for resuming the estimate (rule 6 + `method_ref`). Fixed the `project-console/VERSION` file (lagged 1.30.2 → 1.30.3).
+- **Not pushed (intentional):** project-side labor rates (`console.yaml`) — the $ assumption stays project-local, never in a skill.
+- **Branch:** `sync/pdlc-demo-value-roi-estimation-2026-06-30`
+- **PR:** https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/241 — **merged (squash)**
+- **Hitachi HEAD after sync:** `3fe05a9`
+
+## 2026-06-30 — pull (7 upstream advances) [ben/096]
+
+- **Files:** 7, all `UPSTREAM_ADVANCE` (clean fast-forward): `gap-analysis/{README.md,actions/render.md,scripts/render_sidecars.py}` (v8 — findings gain a measured status, `schema_version` 1.0→1.1, additive), `submissions/SKILL.md` (authoring refinement), `project-console/console/{gap_analysis/router.py,web/static/gap_analysis.css,web/templates/gap_analysis_view.html}` (surface the new finding-status counts).
+- **Impact analysis:** no project action required — all additive/backward-compatible; no `setup` re-run, hook, template regen, or new required best-practices check. Existing gap-analysis sidecars gain `finding_status_counts` on next render (absent→`open`).
+- **Follow-ups:** none blocking. (Optional: re-render gap-analysis sidecars to populate the new counts.)
+
 ## 2026-06-30 — push (usage-metrics v5 — gitignore fix) [ben/093]
 
 - **Files:** 5 — `usage-metrics/scripts/{publish,setup}.py`, `usage-metrics/{SKILL.md,README.md}`, `task/rules/scratch-and-tmp.md`. All `LOCAL_AHEAD` (clean push candidates).
