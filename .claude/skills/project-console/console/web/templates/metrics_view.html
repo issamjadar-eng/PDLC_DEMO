@@ -93,6 +93,20 @@
   .vv-sortable:hover { color:var(--fg,#e6e9ef); }
   .vv-tbl th.vv-sorted { color:var(--fg,#e6e9ef); }
   .vv-arrow { font-size:9px; }
+  /* Per-column info hover — explains what each column means (esp. the hours units). */
+  .vv-info { position:relative; display:inline-flex; align-items:center; justify-content:center;
+      width:14px; height:14px; margin-left:5px; border:1px solid var(--muted,#8b93a7); border-radius:50%;
+      color:var(--muted,#8b93a7); font:italic 700 9px/1 serif; cursor:help; vertical-align:middle; user-select:none; }
+  .vv-info:hover, .vv-info:focus { color:var(--fg,#e6e9ef); border-color:var(--fg,#e6e9ef); outline:none; }
+  .vv-tip { position:absolute; top:calc(100% + 7px); left:50%; transform:translateX(-50%); width:220px;
+      background:#11141a; border:1px solid var(--border,#2a2f3a); border-radius:6px; padding:8px 10px;
+      font:400 11px/1.45 -apple-system,system-ui,sans-serif; text-align:left; white-space:normal;
+      letter-spacing:normal; text-transform:none; color:var(--fg,#e6e9ef); z-index:40;
+      opacity:0; visibility:hidden; transition:opacity .12s; pointer-events:none; box-shadow:0 4px 14px rgba(0,0,0,.45); }
+  .vv-tip b { color:#e0b25a; font-weight:700; }
+  .vv-info:hover .vv-tip, .vv-info:focus .vv-tip { opacity:1; visibility:visible; }
+  .vv-info-l .vv-tip { left:0; right:auto; transform:none; }   /* left edge — don't overflow left */
+  .vv-info-r .vv-tip { left:auto; right:0; transform:none; }   /* right edge — don't overflow right */
   .vv-range { display:flex; align-items:center; gap:6px; margin:0 0 16px; flex-wrap:wrap; }
   .vv-rangelbl { font-size:12px; color:var(--muted,#8b93a7); margin-right:4px; }
   .vv-range button { background:var(--card-bg,#181b22); color:var(--muted,#8b93a7); border:1px solid var(--border,#2a2f3a);
@@ -103,6 +117,10 @@
   .vv-pager button { background:var(--card-bg,#181b22); color:var(--fg,#e6e9ef); border:1px solid var(--border,#2a2f3a);
       border-radius:8px; padding:5px 12px; font-size:12px; cursor:pointer; }
   .vv-pager button:disabled { opacity:.4; cursor:default; }
+  /* Compact pager shown at the top of the table, inline with the Rows selector. */
+  .vv-pager-top { margin-top:0; gap:8px; }
+  .vv-pager-top button { padding:3px 9px; border-radius:6px; }
+  .vv-pager-top .vv-pageinfo { min-width:118px; text-align:center; }
   .vv-catall { border-color:#7ee0c0; }
   .vv-method { margin-top:24px; border-top:1px solid var(--border,#2a2f3a); padding-top:14px; }
   .vv-method > summary { cursor:pointer; font-size:13px; color:var(--muted,#8b93a7); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
@@ -210,25 +228,30 @@
               <option value="0">All</option>
             </select>
           </label>
+          <div class="vv-pager vv-pager-top">
+            <button class="vv-prev" type="button" aria-label="Previous page">‹</button>
+            <span class="vv-pageinfo"></span>
+            <button class="vv-next" type="button" aria-label="Next page">›</button>
+          </div>
         </div>
         <div class="vv-scroll">
         <table class="vv-tbl" id="vv-tbl">
           <thead><tr>
-            <th data-k="title" class="vv-sortable">Task <span class="vv-arrow"></span></th>
-            <th data-k="updated" class="vv-sortable">Last updated <span class="vv-arrow"></span></th>
-            <th data-k="category" class="vv-sortable">Category <span class="vv-arrow"></span></th>
-            <th data-k="agentic" class="vv-sortable">Agentic (hrs) <span class="vv-arrow"></span></th>
-            <th data-k="byhand" class="vv-sortable">By-hand (hrs) <span class="vv-arrow"></span></th>
-            <th data-k="saved" class="vv-sortable">Hours saved <span class="vv-arrow"></span></th>
-            <th data-k="cost" class="vv-sortable">Agentic $ (tokens) <span class="vv-arrow"></span></th>
+            <th data-k="title" class="vv-sortable">Task <span class="vv-arrow"></span><span class="vv-info vv-info-l" tabindex="0" aria-label="The task this row covers. Top line: a short summary of the task. Bottom line: owner · task number.">i<span class="vv-tip" aria-hidden="true">The task this row covers. Top line: a short summary. Bottom line: owner · task number.</span></span></th>
+            <th data-k="updated" class="vv-sortable">Last updated <span class="vv-arrow"></span><span class="vv-info" tabindex="0" aria-label="Most recent date recorded in the task document.">i<span class="vv-tip" aria-hidden="true">Most recent date recorded in the task document.</span></span></th>
+            <th data-k="category" class="vv-sortable">Category <span class="vv-arrow"></span><span class="vv-info" tabindex="0" aria-label="The by-hand specialist persona(s) this work maps to — its cost category (e.g. rd-lead, regulatory-affairs).">i<span class="vv-tip" aria-hidden="true">The by-hand specialist persona(s) this work maps to — its cost category (e.g. rd-lead, regulatory-affairs).</span></span></th>
+            <th data-k="agentic" class="vv-sortable">Agentic (hrs) <span class="vv-arrow"></span><span class="vv-info" tabindex="0" aria-label="Human supervised time to do this with agents — hands-on plus active review. NOT machine compute (see Agentic $), and NOT additive across parallel or overlapping runs.">i<span class="vv-tip" aria-hidden="true">Human supervised time to do this with agents — hands-on + active review. <b>Not</b> machine compute (see Agentic $), and not additive across parallel/overlapping runs.</span></span></th>
+            <th data-k="byhand" class="vv-sortable">By-hand (hrs) <span class="vv-arrow"></span><span class="vv-info" tabindex="0" aria-label="Estimated specialist person-hours to do the same work by hand — a labor sum across specialists, shown as a min–max range.">i<span class="vv-tip" aria-hidden="true">Estimated specialist <b>person-hours</b> to do the same work by hand — a labor sum across specialists, as a min–max range.</span></span></th>
+            <th data-k="saved" class="vv-sortable">Hours saved <span class="vv-arrow"></span><span class="vv-info vv-info-r" tabindex="0" aria-label="By-hand person-hours minus agentic supervised hours — the human labor avoided, shown as a range.">i<span class="vv-tip" aria-hidden="true">By-hand person-hours − agentic supervised hours — the human labor avoided, as a range.</span></span></th>
+            <th data-k="cost" class="vv-sortable">Agentic $ (tokens) <span class="vv-arrow"></span><span class="vv-info vv-info-r" tabindex="0" aria-label="Measured token cost of the agentic run at API list prices — the machine-compute cost, separate from the human hours.">i<span class="vv-tip" aria-hidden="true">Measured token cost of the agentic run at API list prices — the machine-compute cost, separate from the human hours.</span></span></th>
           </tr></thead>
           <tbody></tbody><tfoot></tfoot>
         </table>
         </div>
         <div class="vv-pager">
-          <button id="vv-prev">‹ Prev</button>
-          <span id="vv-pageinfo"></span>
-          <button id="vv-next">Next ›</button>
+          <button id="vv-prev" class="vv-prev">‹ Prev</button>
+          <span id="vv-pageinfo" class="vv-pageinfo"></span>
+          <button id="vv-next" class="vv-next">Next ›</button>
         </div>
         <p class="vv-disc" id="vv-disc"></p>
       </div>
