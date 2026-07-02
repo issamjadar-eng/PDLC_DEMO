@@ -55,6 +55,15 @@ uv --project tools/project-console run python3 \
   --out /tmp/tracker-help-bundles/
 ```
 
+**Inventory = every row that renders.** The builder starts from
+`generate.generate_rows()` (catalog + composition-manifest walk + overlay +
+`tracker-user-rows.yml`) and then calls `generate.merge_md_only_rows()`, which
+parses `submission-tracker.md` and appends any row hand-added directly to the
+markdown that the pipeline doesn't know about. So a row that renders can always
+be enriched — no more "row not found in inventory" for hand-added rows. Such
+rows carry no catalog binding, so their bundle has empty `bound_obligations`;
+the help-author degrades gracefully (`regulatory_anchors[].role: "inferred"`).
+
 The bundle YAML files are the agent input — one file per row, named
 `<ROW_ID>.yaml`, each carrying:
 - row metadata (id, display_name, canonical_role, scope, phase, status)

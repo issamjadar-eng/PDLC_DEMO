@@ -1,8 +1,8 @@
 ---
 name: usage-metrics
 description: "Cross-user Claude Code token-usage + cost telemetry for a team. TRIGGER when the user wants to measure, collect, aggregate, report, or project Claude Code token usage or spend across teammates — e.g. 'how many tokens are we using', 'what's our Claude usage/cost', 'build a usage dashboard', 'project our 30-day cost', 'set up usage tracking', 'who's using the most tokens', 'refresh the usage report', or wants a live token/context/cost **status line** ('show my context usage', 'add a status line with tokens and cost'). Collects each teammate's usage LOCALLY from their session transcripts, uses git as the aggregation bus (no shared server), renders a single self-contained HTML cost dashboard, and installs a team-shared status line. Actions: setup, collect, aggregate, report, status."
-version: 11
-updated: 2026-06-30
+version: 12
+updated: 2026-07-01
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -72,6 +72,8 @@ python3 tools/usage-metrics/aggregate.py --pull        # git pull --ff-only firs
 ```
 
 Outputs the **team view** (aggregating everyone) to `tools/usage-metrics/`: a self-contained **`index.html`** (cost projection, daily/by-member/by-model charts, rate card), a consolidated **`usage.json`** (machine-readable; consumed by project-console's Metrics view), and per-month markdown. **Anonymized** — members appear as `Member 1…N` (stable by sorted task_folder); no real names or task_folders are written. Cost is per-model from `tools/usage-metrics/pricing.json` (falls back to the bundled seed). To view: `open tools/usage-metrics/index.html`. Non-canonical (not a controlled record).
+
+**By-hand estimate sources (two, in-doc wins).** The Value & ROI half reads per-task by-hand `## Economics` blocks from **(1)** the task docs (the canonical, self-describing home — filled at checkpoint/completion per the `task` skill), and **(2)** an optional **sidecar** `tools/usage-metrics/economics.json` — a committed, hand-authored **backfill** for tasks whose docs have no (or only an empty-stub) in-doc block, e.g. retroactive estimates for historical tasks. The sidecar is a flat `{"<task_folder>/<NNN>": <economics-object>}` map (or wrapped as `{"economics": {…}}`), same object shape as the in-doc block, estimated per the effort-estimation rubric; entries should carry `"retrospective": true`. **The in-doc block always takes precedence** — the sidecar only fills tasks the docs don't cover, so a task that later gains a real in-doc estimate silently supersedes its sidecar entry. Sidecar entries apply only to tasks that have a doc (title/date come from it); absent/malformed sidecar → silently ignored.
 
 ### `status`
 

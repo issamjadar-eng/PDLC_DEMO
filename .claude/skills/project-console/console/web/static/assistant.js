@@ -7,8 +7,13 @@
 /*                                                                         */
 /* Grounding source modes (drawer resolves text at send time):             */
 /*   static:<inline>   — pre-rendered text in #pc-assistant-config.staticGrounding */
-/*   url:<relative>    — GET that URL; response is text/plain OR {text}    */
+/*   url:<relative>    — GET that URL; response is text/plain OR {text|body|body_text} */
 /*   element:<sel>     — read .textContent of the matching element        */
+/*   active:<sel>      — tab-aware: find the visible ([hidden]-toggled)     */
+/*                       panel matching <sel> and resolve ITS own          */
+/*                       data-grounding descriptor. Any tabbed view opts   */
+/*                       in by hiding inactive panels with [hidden] and     */
+/*                       giving each a data-grounding attribute.           */
 /*   handler           — call window.pcAssistantGetGrounding()             */
 /*   ""                — no grounding                                      */
 /*                                                                         */
@@ -159,40 +164,56 @@
 
   // -------- grounding resolution ---------------------------------------
 
-  async function resolveGrounding() {
-    if (!groundingSrc) return '';
-    if (groundingSrc.startsWith('static:')) {
+  // Resolve one grounding-source descriptor to text. Factored out so the
+  // `active:` mode can delegate to whichever tab panel is currently visible.
+  // `depth` guards against a cyclic active:→active: configuration.
+  async function resolveSource(src, depth) {
+    depth = depth || 0;
+    if (!src || depth > 3) return '';
+    if (src.startsWith('static:')) {
       // Static text was injected server-side into pageCfg.staticGrounding.
-      return pageCfg.staticGrounding || groundingSrc.slice('static:'.length);
+      return pageCfg.staticGrounding || src.slice('static:'.length);
     }
-    if (groundingSrc.startsWith('element:')) {
-      const sel = groundingSrc.slice('element:'.length);
-      const el = document.querySelector(sel);
+    if (src.startsWith('element:')) {
+      const el = document.querySelector(src.slice('element:'.length));
       return el ? (el.textContent || '') : '';
     }
-    if (groundingSrc.startsWith('url:')) {
-      const url = groundingSrc.slice('url:'.length);
+    if (src.startsWith('url:')) {
       try {
-        const r = await fetch(url);
+        const r = await fetch(src.slice('url:'.length));
         if (!r.ok) return '';
         const ct = r.headers.get('content-type') || '';
         if (ct.includes('application/json')) {
           const j = await r.json();
-          return j.text || j.body || JSON.stringify(j);
+          return j.text || j.body || j.body_text || JSON.stringify(j);
         }
         return await r.text();
       } catch (e) {
         return '';
       }
     }
-    if (groundingSrc === 'handler') {
+    if (src === 'handler') {
       if (typeof window.pcAssistantGetGrounding === 'function') {
-        const v = await window.pcAssistantGetGrounding();
-        return v || '';
+        return (await window.pcAssistantGetGrounding()) || '';
       }
       return '';
     }
+    if (src.startsWith('active:')) {
+      // Tab-aware grounding: the visible panel (inactive ones carry [hidden])
+      // matching the selector supplies its own data-grounding descriptor,
+      // which we resolve recursively. Lets the advisor ground on whichever
+      // tab the user currently has open, per that tab's declared source.
+      const sel = src.slice('active:'.length);
+      const panel = document.querySelector(sel + ':not([hidden])')
+                 || document.querySelector(sel);
+      const inner = panel ? (panel.getAttribute('data-grounding') || '') : '';
+      return await resolveSource(inner, depth + 1);
+    }
     return '';
+  }
+
+  async function resolveGrounding() {
+    return await resolveSource(groundingSrc);
   }
 
   // -------- agent picker -----------------------------------------------
@@ -435,6 +456,22 @@
     const assistantEl = appendMessageEl('assistant', '', { streaming: true });
     sendBtn.disabled = true;
 
+    // Live "thinking" indicator. The advisor can sit silent for 20-30s while
+    // the model reasons before the first token (adaptive thinking + a large
+    // grounded prompt); with no feedback that silent wait reads as a crash.
+    // Show elapsed time in the bubble until the first token replaces it.
+    let thinkingTimer = null;
+    const thinkStart = Date.now();
+    const renderThinking = () => {
+      const s = Math.round((Date.now() - thinkStart) / 1000);
+      assistantEl.textContent = '⏳ Advisor is thinking… ' + s + 's';
+    };
+    const stopThinking = () => {
+      if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
+    };
+    renderThinking();
+    thinkingTimer = setInterval(renderThinking, 1000);
+
     try {
       const resp = await fetch(endpoint, {
         method: 'POST',
@@ -487,6 +524,7 @@
             try {
               const evt = JSON.parse(payload);
               if (evt.type === 'token') {
+                stopThinking();
                 flushWarnings();
                 full += evt.text;
                 // Sticky auto-scroll: only auto-follow if the user was
@@ -502,6 +540,7 @@
                   jumpToLatestBtn.classList.add('visible');
                 }
               } else if (evt.type === 'error') {
+                stopThinking();
                 assistantEl.classList.remove('is-streaming');
                 assistantEl.classList.add('pc-msg-error');
                 assistantEl.textContent = 'Error: ' + evt.message;
@@ -515,6 +554,7 @@
                 i.textContent = 'ℹ ' + evt.message;
                 messagesEl.insertBefore(i, assistantEl);
               } else if (evt.type === 'done') {
+                stopThinking();
                 flushWarnings();
                 assistantEl.classList.remove('is-streaming');
               }
@@ -532,6 +572,7 @@
       assistantEl.classList.add('pc-msg-error');
       assistantEl.textContent = 'Error: ' + e.message;
     } finally {
+      stopThinking();
       sendBtn.disabled = false;
       input.focus();
     }

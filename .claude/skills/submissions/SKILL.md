@@ -300,6 +300,203 @@ open_gaps: ["<placeholder / pending item>"]
 notes: ["<implementation note>"]
 ```
 
+## eStar format layer
+
+The **format/packaging** counterpart to the content authoring above: it maps the
+submission content docs + `composition-manifest.md` onto the FDA **eSTAR**
+electronic-submission template — the binding outer structure of a 510(k) (and
+De Novo/PMA). This skill owns the eStar *mapping, admissibility linting, and
+completion guide*; it does **not** fill the FDA form itself.
+
+**Hard reality (why we don't auto-fill the PDF).** The FDA eSTAR is a **dynamic
+XFA + JavaScript Adobe form**, not a plain AcroForm — every section, attachment
+slot, and field lives in the XFA `template` packet, and the conditional logic +
+"eSTAR Complete" self-check run only inside Acrobat Pro. Open-source PDF
+libraries cannot reliably fill or validate it. So the automatable core is:
+derive the structure, prepare admissible attachments (via `/docflow`), and emit
+a completion guide + linter. Final field entry, the green-banner verify, and
+CDRH-Portal transmission stay human-in-Acrobat. (An Acrobat-Pro fill add-on is a
+possible future stretch — see the owning task.)
+
+**Version discipline.** eSTAR revs often (build target = **nIVD eSTAR v7.0**,
+mandatory 2026-08-03). Everything derived is **version-pinned**; re-derive when a
+new template supersedes.
+
+### Setup (this skill is the guide/setup owner)
+
+The eStar tooling needs `pikepdf` (a compiled QPDF binding), which a
+PEP-668-managed system Python refuses to install globally. The installation lives
+in the project's **`tools/estar/`** (committed `requirements.txt` + `bootstrap.sh`;
+gitignored `.venv/`) — same pattern as `tools/file-locator-mcp/`.
+
+```bash
+bash tools/estar/bootstrap.sh          # idempotent: builds tools/estar/.venv + installs deps
+```
+
+### `extract-sectionmap [<template.pdf>]`
+
+(Re)derive the version-pinned, machine-readable **section-map** from the eSTAR
+template's XFA layer — the reference model the crosswalk/linter key on.
+
+```bash
+tools/estar/.venv/bin/python .claude/skills/submissions/scripts/estar_extract_sectionmap.py \
+  .claude/skills/medtech-docs/references/fda-guidance/templates/nIVD_eSTAR_7-0.pdf \
+  --template-id nIVD_eSTAR --version v7.0 \
+  --json .claude/skills/submissions/data/estar/sectionmap-nivd-v7.0.json \
+  --outline .claude/skills/submissions/data/estar/sectionmap-nivd-v7.0.outline.md
+```
+
+- **Section-map** (`data/estar/sectionmap-<template>-<ver>.json` + `.outline.md`)
+  is **project-agnostic FDA structure** (sections → subsections → attachment
+  slots → fields) and lives in the skill as reference data. It is **not** cited as
+  grounding text — the eSTAR *guidance* triplet in `references/fda-guidance/` is.
+- **Template binaries** live under
+  `.claude/skills/medtech-docs/references/fda-guidance/templates/` (version-pinned).
+- **The filled crosswalk** — each eStar section/slot ↔ its manifest piece + repo
+  source + structured answer — is the **project instance** and lives under
+  `docs/project/submissions/510k/` (never in the skill). The `docs/external`
+  applicability report (`fda-guidance/510k-estar.md`) references the section-map
+  as its derived source and carries the applicability narrative.
+
+### `lint [--attachments <dir>] [--transmit-gate]`
+
+Pre-flight the package for eSTAR admissibility + coverage — **advisory by
+default**, a **hard gate** with `--transmit-gate` (exit non-zero on any BLOCK).
+Template-parameterized via `--sectionmap` (defaults to nIVD eSTAR v7.0), so the
+same linter serves PreSTAR (Q-Sub) by pointing at a PreSTAR section-map.
+
+```bash
+tools/estar/.venv/bin/python .claude/skills/submissions/scripts/estar_lint.py \
+  --crosswalk docs/project/submissions/510k/estar-crosswalk.md \
+  [--attachments <dir-of-prepared-PDF-exhibits>] [--transmit-gate] [--json]
+```
+
+Checks: **structure** (section-map loads, version-pinned) · **attachments**
+(each exhibit PDF is admissible — PDF 1.4–1.7/PDF-A, no encryption, no live
+form/XFA, bookmarks on long docs, safe filename, ≤1 GB) · **quality**
+(per the FDA *PDF Specifications* v4.1 — the project's applicability file under
+`docs/external/fda-guidance/` records adoption scope: Letter page size;
+**per-font-descriptor embedding**; standard-font-set notice (spec Table 1);
+**minimum text size ≥9pt** (spec: 9–12pt, tables 9–10pt) scanned from
+content-stream `Tf` operators; **prohibited content** — JavaScript + embedded
+files BLOCK, non-link annotations WARN (spec § VERSION); **lowercase filenames**
+(spec § NAMING); **no-emoji HARD RULE** — emoji-font detection, WARN advisory /
+**BLOCK under `--transmit-gate`**) · **coverage** (in-scope crosswalk sections
+have a ready source; applicable slots have a prepared exhibit) · **accuracy**
+(the § A structured-answer set is complete + `[VERIFY]`-free — a
+technical-screening matcher) · **references** (assembly-manifest hygiene:
+resolved cross-refs counted; refs to docs NOT in the package reported for RA
+disposition — WARN advisory, **BLOCK under `--transmit-gate`**: zero
+undispositioned references at transmit time) · **manifest coverage** (every
+REQUIRED composition-manifest piece — formal FDA deliverables + transmission-
+blocking briefs — must be in the assembled package or recorded as deliberately
+structured-only; the grounding-only "supporting technical architecture" rows
+are exempt by design. WARN advisory / **BLOCK under `--transmit-gate`** — the
+systematic catch for "the cover letter cites a Required doc that never got
+attached") · **gaps** (open § C items). It **cannot** reproduce eSTAR's
+in-Acrobat "eSTAR Complete" JS verify — it is the pre-flight *before* a human
+opens Acrobat.
+
+> **Regulator format basis** — the eSTAR guidance governs *structure only*;
+> typography is NOT mandated. The formatting layer is the FDA **PDF
+> Specifications** (Technical Specifications Document v4.1, Sep 2016 —
+> nonbinding, eCTD-anchored; adopt via a project applicability file under
+> `docs/external/fda-guidance/pdf-specifications.md` and cite the registry
+> full text). Its rules (fonts Table 1 / 9–12pt sizes, margins, prohibited
+> content, naming, ≥5-page bookmarks) are enforced at the producer by
+> `/docflow export`'s house-style pass and verified here. Table geometry
+> (margin-to-margin, content-weighted columns, header repeat) is enforced at
+> the producer, not re-derived from the PDF.
+
+> **eSTAR vs PreSTAR** — the 510(k)+PCCP is **one eSTAR** (the PCCP is a section
+> inside it, not a separate template/submission), governed by the *final* 510(k)
+> eSTAR guidance and **mandatory**. The Q-Sub uses the **separate PreSTAR**
+> template under a *different, draft* guidance and is **voluntary**. Same XFA
+> format family + admissibility rules (so this tooling generalizes); different
+> section-map + crosswalk per template.
+
+### `completion-guide`
+
+Since open tooling cannot fill the XFA form, generate the **completion guide** —
+the exact structured answers a human types into Acrobat + the attachment→source
+mapping — in two forms: a machine-readable JSON (shaped to feed a future
+Acrobat-Pro XFA-dataset import) and a human Acrobat-entry checklist (markdown).
+
+```bash
+tools/estar/.venv/bin/python .claude/skills/submissions/scripts/estar_completion_guide.py \
+  --sectionmap .claude/skills/submissions/data/estar/sectionmap-nivd-v7.0.json \
+  --crosswalk  docs/project/submissions/510k/estar-crosswalk.md \
+  --out-json   docs/project/submissions/510k/estar-completion-guide.json \
+  --out-md     docs/project/submissions/510k/estar-completion-guide.md
+```
+
+Reads the crosswalk (§ A answers, § B applicable sections + sources, § C gaps)
+and the section-map (actual slot names per section) → emits: **§1 structured
+answers to enter**, **§2 attachments to prepare + load** (source → slot(s), via
+`/docflow`), **§3 N/A sections** (answer "No", never blank), **§4 `[VERIFY]`
+items to resolve**, **§5 open gaps**. The guide is **generated** (project
+instance under `docs/project/submissions/<filing>/`) — re-run, don't hand-edit.
+Template-parameterized: swap `--sectionmap`/`--crosswalk` for the PreSTAR/Q-Sub.
+
+### `assemble`
+
+One-command package dry-run: gather the crosswalk's attachment sources, strip
+internal tiers, render **draft exhibit PDFs**, lint, and emit the completion
+guide — all into `<filing>/_estar/`.
+
+```bash
+tools/estar/.venv/bin/python .claude/skills/submissions/scripts/estar_assemble.py \
+  --crosswalk  docs/project/submissions/qsub/prestar-crosswalk.md \
+  --sectionmap .claude/skills/submissions/data/estar/sectionmap-prestar-v3.0.json \
+  --header     "<Sponsor legal name> - {title}" \
+  --out        docs/project/submissions/qsub/_estar   [--transmit-gate]
+```
+
+- **Source selection**: only crosswalk § B rows whose **Mode declares an
+  attachment** (`Attachment`/📎) yield exhibits — `Structured`-only rows are
+  typed into the form, never attached. The "Supporting briefs" paragraph's
+  linked docs attach as Questions context. Internal-not-transmitted docs must
+  not be linked as attach sources in the crosswalk.
+- **Internal-tier strip** (the filed body is exactly what FDA sees): HTML
+  comments, `🔒 INTERNAL` `<details>` containers, and 🔒-marked table columns
+  are removed; per-doc strip stats land in `assembly-manifest.json`. The strip
+  is **fence-aware end-to-end** — containers can hold fenced code and fenced
+  examples can hold container-like text; a naive regex strip eats a fence
+  delimiter and the rest of the document renders as one raw-markdown code
+  block.
+- **Document-reference resolution**: links to docs IN the package become
+  textual cross-refs "(Attachment NNN)" (cross-file PDF links break inside
+  eSTAR slots; attachment numbers don't); links to repo docs NOT in the
+  package are dropped (text kept) and **reported** — assembly manifest +
+  the lint `references` check — so RA dispositions each: mark it 🔒 INTERNAL
+  in the source md, or add the doc to the package. Same-doc `#anchors` and
+  http/mailto links survive; image paths are absolutized so figures embed.
+- **View-output check** (after every assemble): `estar_viewcheck.py
+  --attachments <dir>` emits a prioritized worklist of pages to eyeball —
+  ASCII-art/code pages (mono-font usage), the smallest-text page, first/last
+  page per exhibit. Automated lint can't judge how a page *looks*; the
+  reviewing agent opens each listed page (PDF page reader) and verifies art
+  integrity, table breaks, and layout before the package is called done.
+- **Formal-exhibit symbol policy (HARD RULE — filed exhibits never contain
+  emoji)**: emoji/dingbats are transliterated (✅→Yes, ⛔→N/A, ⚠→[!], …) or
+  dropped — they pull unembeddable bitmap fonts (AppleColorEmoji) into the PDF
+  and read as informal. Real typographic characters (→, ≥, ·) are kept —
+  common serif fonts carry them. The `lint` `quality` group enforces the rule
+  (WARN advisory; **BLOCK under `--transmit-gate`**), so exhibits produced
+  outside `assemble` are caught too.
+- **Rendering** (`--renderer auto|docflow|fpdf2`, default auto): prefers
+  **`/docflow export`** (pandoc → DOCX → LibreOffice → PDF — real typesetting,
+  embedded fonts, heading outline as bookmarks) when pandoc+soffice are
+  present; falls back to the built-in fpdf2 renderer otherwise. Either way:
+  eCopy-style numbered names (`NNN_<Section>_<slug>.pdf`), PDF 1.7 — designed
+  to pass the `lint` admissibility checks.
+- **DRAFT exhibits**: these renders are for package dry-runs, linting, and
+  internal review; the transmission-time conversion of controlled documents
+  follows the project's formal-doc/QMS process.
+- Output folder contents: `attachments/`, `assembly-manifest.json`,
+  `<template>-completion-guide.{json,md}`, `lint-report.json` (+ human lint
+  summary on stdout; `--transmit-gate` makes BLOCK findings exit non-zero).
+
 ## Notes
 
 - **Never fabricate** standard / clinical / regulatory content. Anything not

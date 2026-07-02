@@ -1,6 +1,8 @@
 import dataclasses
 import json
+import re
 from pathlib import Path
+from posixpath import dirname, normpath
 from typing import AsyncIterator
 from urllib.parse import quote
 
@@ -50,11 +52,38 @@ async def api_children(path: str = Query(...)):
     return JSONResponse({"children": tree.list_children(cfg.repo_root, path)})
 
 
+_IMG_SRC_RE = re.compile(r'(<img\b[^>]*?\bsrc=)(["\'])(.*?)\2', re.IGNORECASE)
+_ABSOLUTE_SRC_RE = re.compile(r"^(?:[a-z][a-z0-9+.-]*:|//|/|#|data:)", re.IGNORECASE)
+
+
+def _rewrite_relative_media(html: str, virtual_path: str) -> str:
+    """Rewrite relative ``<img src>`` values so co-located images resolve.
+
+    Markdown authored in ``docs/`` references images by a path relative to the
+    document (e.g. ``image-20251216.png`` or ``images/foo.png``). Rendered into
+    the SPA at ``/documents#path=…`` those relative URLs resolve against
+    ``/documents`` and 404. Rewrite each relative src to the doc's directory,
+    served through the ``/documents/raw/`` route. Absolute URLs (http(s), root-
+    relative, protocol-relative, ``data:``, anchors) are left untouched.
+    """
+    doc_dir = dirname(virtual_path)
+
+    def _sub(m: re.Match) -> str:
+        src = m.group(3).strip()
+        if not src or _ABSOLUTE_SRC_RE.match(src):
+            return m.group(0)
+        target = normpath(f"{doc_dir}/{src}") if doc_dir else normpath(src)
+        return f'{m.group(1)}{m.group(2)}/documents/raw/{quote(target, safe="/")}{m.group(2)}'
+
+    return _IMG_SRC_RE.sub(_sub, html)
+
+
 def _file_payload(virtual_path: str, abs_path: Path) -> dict:
     rendered = renderer.render(abs_path)
     # URL-encode path segments but keep the slashes as separators so
     # filenames with spaces or special characters still resolve.
     encoded = quote(virtual_path, safe="/")
+    body_html = _rewrite_relative_media(rendered.body_html, virtual_path)
     return {
         "path": virtual_path,
         "filename": abs_path.name,
@@ -62,7 +91,7 @@ def _file_payload(virtual_path: str, abs_path: Path) -> dict:
         "extension": rendered.extension,
         "size": rendered.size,
         "frontmatter": _jsonable(rendered.frontmatter),
-        "body_html": rendered.body_html,
+        "body_html": body_html,
         "body_text": rendered.body_text,
         "summarizable": rendered.kind in SUMMARIZABLE_KINDS,
         "raw_url": f"/documents/raw/{encoded}",
