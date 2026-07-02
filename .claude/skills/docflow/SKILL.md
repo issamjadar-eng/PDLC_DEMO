@@ -1,8 +1,8 @@
 ---
 name: docflow
 description: "Document conversion and round-trip management between markdown and formal formats (DOCX, DOC, PDF, XLSX). Use this skill whenever a user asks to convert, adopt, import, export, refresh, round-trip, or 'test docflow on' any .docx / .doc / .pdf / .xlsx / .pptx file — whether under docs/internal/source/ (QMS SOPs, forms, policies, work instructions), under docs/project/dhfs/**/formal/ (DHF working drafts), or elsewhere in the repo. Also use when a user asks to extract images, resolve cross-references, or handle external review comments against any of those formats. Owns the conversion pipeline — image extraction, frontmatter, cross-ref resolution, quality gates, round-trip metadata — so direct pandoc / unzip / soffice / pdftotext calls are blocked by a PreToolUse Bash hook installed by the skill's `setup` action; `/docflow <action>` is the supported entry point."
-version: 35
-updated: 2026-04-23
+version: 36
+updated: 2026-07-01
 ---
 
 # Docflow
@@ -24,7 +24,7 @@ This skill includes supporting files in `${CLAUDE_SKILL_DIR}/`:
 | `scripts/validate_phase7.py` | `convert`, `adopt` (Phase 7) | Scripted Phase-7 gate (structure/markers/images/links). `--source <pdf>` adds the `prose_fidelity` check (warn + `requires_adjudication` + spans). |
 | `references/classification-taxonomy.md` | `adopt` (Phase 5e), `review` (Phase 4 requirements audit) | Canonical industry-informed classification tags for requirement docs — 9 tags anchored in ISO 25010, ISO 14971, IEC 62366, IEC 81001-5-1, 21 CFR Part 11, MDR GSPR, HIPAA/GDPR. NOT project-editable. |
 | `agents/importer.md` | `import` | Agent prompt: formal DOCX/PDF → project markdown (Phase 2) |
-| `agents/exporter.md` | `export` | Agent prompt: project markdown → formal DOCX/PDF (Phase 2) |
+| `scripts/export_formal.py` | `export` | Deterministic md → formal DOCX/PDF (pandoc → LibreOffice → optional pikepdf version-floor); eSubmission-admissible PDF output (bookmarks, embedded fonts, PDF ≥1.7) |
 | `templates/frontmatter-source.md` | `convert`, `refresh` | YAML frontmatter template for source-md files |
 | `templates/frontmatter-project.md` | `adopt`, `import`, `export` | YAML frontmatter template for project-doc working MD (adopt schema — active; export/import remain Phase 2) |
 | `scripts/extract_images.sh` | `convert`, `refresh`, `adopt`, `import` | Image extraction helper |
@@ -416,7 +416,9 @@ WHEN NOT TO USE:
 WHAT: Export a markdown document to formal DOCX or PDF.
 WHEN: You've written or edited markdown and need a formal deliverable.
 WORKFLOW: WF-1 (new doc), WF-2 (revision), WF-3 (post-reconciliation)
-STATUS: Phase 2 — not yet implemented.
+STATUS: Implemented for md→docx/pdf via scripts/export_formal.py
+        (pandoc → LibreOffice → optional pikepdf). --redline/--clean
+        remain Phase 2 (need the import/reconcile round-trip).
 ```
 
 #### `help import`
@@ -951,7 +953,57 @@ Docflow Status
   Toolchain: pandoc ✓  pdftotext ✓  pdfimages ✓  libreoffice ✗  unzip ✓
 ```
 
-### `export`, `import`, `reconcile`
+### `export <file> [--format docx|pdf] [flags]`
+
+Export working markdown to a formal **DOCX** or **PDF** via the deterministic
+script — the WF-1 half of the round-trip (md → formal):
+
+```bash
+python3 .claude/skills/docflow/scripts/export_formal.py <file.md> \
+  --format pdf --out <path.pdf> [--title "..."] [--reference-doc REF.docx] \
+  [--min-pdf-version 1.7] [--keep-docx] [--no-house-style] \
+  [--body-font "Times New Roman"] [--body-size 12] \
+  [--header-text "<Sponsor> — <Title>"] [--json]
+```
+
+- **Pipeline**: pandoc (GFM → DOCX; styled headings, real lists/tables) →
+  house-style DOCX post-pass (below) → LibreOffice headless (DOCX → PDF; fonts
+  embedded, heading outline exported as PDF bookmarks; isolated LO profile so a
+  running LibreOffice doesn't clash) → optional pikepdf post-pass (PDF version
+  floor, default 1.7 — silently skipped if pikepdf isn't importable in the
+  invoking interpreter).
+- **House-style readability pass (default on; `--no-house-style` to skip).**
+  Fixes pandoc's even-grid tables for reviewer readability: **tables span
+  margin-to-margin with content-weighted column widths** — short ID/number
+  columns get exact-fit width so they never wrap; long columns share the rest
+  by text volume. Table anatomy: gridlines, shaded header row, **header
+  repeated on every page** a table spans, rows never split across a break.
+  **ASCII art / code blocks** are sized to fit the text width (mono advance
+  ≈0.6em; floor 6pt) and kept together (`keepLines`) so diagrams neither wrap
+  mid-line nor break mid-figure. Sets the **default serif body font/size**
+  (`--body-font` Times New Roman / `--body-size` 12pt) across all styles incl.
+  headings (code keeps mono). Adds a centered **"Page N of M" footer** (10pt,
+  standard 0.5in position — outside the spec's 3/8in header/footer exclusion;
+  document page = PDF page, first page = 1 per spec § PAGE NUMBERING) and,
+  with `--header-text`, a small right-aligned **9pt running header**
+  (e.g. "<Sponsor> — <Document Title>"). Basis:
+  the eSTAR guidance governs structure only — typography is NOT mandated; the
+  FDA *PDF Specifications* (v4.1) carries the recommendations these defaults
+  encode as best practice.
+- **Electronic-submission admissibility**: the PDF output satisfies the common
+  eSubmission attachment window (PDF 1.4–1.7, no encryption, embedded fonts,
+  bookmarks, flattened). Downstream packagers (e.g. an eStar assembly step)
+  should verify with their own linter — export produces, the packager gates.
+- **Content is converted as-given.** Export strips nothing; any internal-tier
+  stripping (publish-strip, 🔒 containers) is the caller's responsibility
+  before invoking export.
+- **Hook note**: the direct-conversion guard blocks raw `pandoc`/`soffice`
+  Bash calls; invoking this script is the sanctioned docflow-owned path.
+- `--format docx` stops after pandoc (no LibreOffice needed). `--redline` /
+  `--clean` remain Phase 2 (they require the import/reconcile round-trip).
+- Exit codes: `0` ok · `2` toolchain missing (pandoc / soffice) · `3` conversion failed.
+
+### `import`, `reconcile`
 
 **Phase 2 — not yet implemented.**
 
@@ -960,12 +1012,11 @@ If invoked, display:
 /docflow {action} is planned for Phase 2.
 
 Phase 2 covers:
-  - WF-1: Export markdown → formal DOCX/PDF
   - WF-2: Import formal → markdown for editing, re-export with redlines
   - WF-3: Import with comments, reconcile, re-export clean
 
-Current Phase 1 actions available:
-  convert, refresh, batch, validate, status, help, guide
+Current actions available:
+  convert, refresh, batch, validate, status, help, guide, export
 ```
 
 ## Conventions
@@ -1083,6 +1134,7 @@ See [README.md](README.md) — consumed by `/best-practices` audit.
 
 ## Changelog
 
+- **v36** — `export` action implemented for md→DOCX/PDF via the new deterministic `scripts/export_formal.py` (pandoc GFM→DOCX → LibreOffice headless DOCX→PDF with isolated profile → optional pikepdf PDF-version floor). PDF output is eSubmission-admissible (bookmarks from headings, embedded fonts, PDF ≥1.7, no encryption, flattened); export converts content as-given (internal-tier stripping stays the caller's job). `--redline`/`--clean` and `import`/`reconcile` remain Phase 2. Supporting-files row repointed from the never-created `agents/exporter.md` to the script. Includes a **house-style readability post-pass** (default on): margin-to-margin tables with content-weighted column widths (exact-fit short columns), default body font/size (Times New Roman 12pt per FDA PDF-spec recommendations) — headings/code keep their styles.
 - **v35** — Clarified the SPLICE faithful-to-source-structure rule. "Faithful" means render the document's **real sections as `## N. Title` headings, preserving the source's numbering** — whether the source used Word heading styles OR numbered section-divider paragraphs (promoting a real numbered section to a heading is a faithful transposition, not an invention, and keeps pages navigable + consistent). v34 was too literal (it kept numbered section paragraphs as list items, producing un-navigable bodies that disagreed with sibling pages). Still forbidden: fabricating/dropping/re-ordering/re-titling sections or inventing heading levels with no real section. Body content (tables/lists/figures) stays as-is. Wanting different structure is a source-document edit, then refresh. (ben/229)
 - **v34** — SPLICE-mode **non-canonical + publish-gate + faithfulness policy** (for `authoritative: formal` pages). The attached binary is the canonical record; the page markdown is an internal, non-canonical derived view for agent/reviewer findability — so SPLICE now (a) inserts a required top **`AUTO:DOCFLOW-NOTICE`** banner ("🚫 NON-CANONICAL — DO NOT EDIT THIS MARKDOWN; edit the source document and re-run docflow"), (b) sets **`confluence.publish_body: false`** by default (the markdown body is NOT pushed to Confluence unless the team opts in; the attachment + node `index.md` is the publication), and (c) enforces **faithful-to-source structure** (HARD RULE — mirror the source's real heading styles / numbered paragraphs as-is; do NOT invent a heading outline the controlled record lacks; structural changes are source-document edits, then refresh). `docflow.conversion.faithful_to_source_structure: true` records this. (ben/229)
 - **v33** — `adopt` **`_confluence`-page SPLICE mode** (extends explicit-location mode). When `--into` targets an existing managed `_confluence` page (leading `<!-- -->` block has a `confluence:` key), docflow no longer treats it as a collision — it **splices**: preserves the comment-block frontmatter (incl. the `confluence:` binding + change-control `state:`), the `AUTO:PAGE-TITLE` / `doc-governance` / `confluence-side: attachments` sentinels, and hand-authored intro blockquotes; folds a `docflow:` provenance sub-block into the comment block (authoritative side, `source_formal`, source format, conversion direction + date + method + fidelity + docflow_version, refresh_cmd); replaces **only** the body inside a new docflow-owned `AUTO:DOCFLOW-BODY` sentinel (which `refresh` regenerates); and refreshes the controlled-record provenance blockquote. Governance IDs are NOT duplicated into `docflow:` (they render from `.taxonomy.yml` via the `doc-governance` sentinel). Requires `--binary-authoritative`. Notable body-content deltas vs. a prior page draft are reported as `body_deltas` for RA review, not silently dropped. Grounded in `change-control/lib/frontmatter.py` (the comment block is `yaml.safe_load`-parsed → `docflow:` coexists with `confluence:`, round-trips, and is stripped before Confluence push). (ben/229)

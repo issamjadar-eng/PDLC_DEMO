@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-02 — pull (39 upstream files; all UPSTREAM_ADVANCE / UPSTREAM_ONLY) [ben/099]
+
+- **Pulled 39 files** (22 advances + 17 new), all clean — **0 local-side drift** (everything built this session was already pushed). Notable version bumps: `usage-metrics` v11→**v12**, `submissions` →**v2**, `tracker` →**v14**, `docflow` →**v36**; plus project-console console-file advances (app.py, config.py, renderer.py, `_base.html`, assistant.js, console.css, submission_view.html) with no version bump.
+- **New capabilities landed:**
+  - `usage-metrics` **v12 — `## Economics` sidecar** (`tools/usage-metrics/economics.json`): backfill historical tasks' by-hand estimates *without editing task docs* (in-doc block always wins). Directly complements ben/098/099 retrospective work.
+  - `submissions` **v2 + eStAR/PreSTAR layer** (new `scripts/estar_*.py` + `data/estar/` sectionmaps): filing-type template profiles + eSTAR format generation. `docflow` v36 gained the matching format-generation hook-free scripts. New FDA-guidance references under `medtech-docs` (pdf-specifications, eSTAR/PreSTAR templates).
+  - `tracker` **v14**: `merge_md_only_rows` (enrich hand-added markdown rows) + composition-manifest ownership doc.
+- **Impact analysis:** additive across the board. **No hook files changed; no `setup` re-run required** (usage-metrics v12 explicitly "no setup/hook change"); no new top-level skills/agents → no `project.yml` allowlist change. submissions v2 changes *scaffold* behavior for **new** packages only (existing docs untouched).
+- **Follow-ups:** none blocking. Optional: adopt the `economics.json` sidecar for historical backfill instead of in-doc blocks; run `/submissions`/`/docflow` eStAR actions if/when an eSTAR package is needed.
+
 ## 2026-06-30 — push (Value/ROI across task v30 + usage-metrics v8 + project-console 1.30.3) [ben/096]
 
 - **Files:** 16 — `task/{SKILL.md,README.md,hooks/task-activate.sh}`, `usage-metrics/{SKILL.md,README.md,references/effort-estimation-rubric.md,scripts/aggregate.py,scripts/collect.py}`, `project-console/{SKILL.md,README.md,VERSION,console/config.py,console/metrics/router.py,console/web/static/value.js,console/web/templates/{_base.html,metrics_view.html}}`. All `LOCAL_AHEAD`/`LOCAL_ONLY` (clean push candidates).

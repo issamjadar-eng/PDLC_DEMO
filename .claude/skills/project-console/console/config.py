@@ -162,9 +162,19 @@ DEFAULT_SUMMARIZER = "claude-haiku-4-5"
 
 # Fallback cap defaults (Sonnet-tier) — apply when no per-model or user
 # override is present. Expressed in KB for readability in console.yaml.
+#
+# `context_budget_kb` is the TOTAL assembled-system-prompt budget (persona +
+# core + rubric + index + focus). It is the guardrail that keeps a request
+# inside the model's *standard* context window: if the assembled prompt
+# exceeds the standard window, Claude Code silently requires the 1M-context
+# beta (which needs usage credits) and the request fails. The index tier is
+# trimmed to fit this budget — it's a finding-aid the agent can supplement
+# via read_files(). Sized well under 200K tokens (~800 KB) to leave headroom
+# for the user message, MCP tool schemas, history, and the response.
 DEFAULT_CAPS: dict[str, int] = {
     "source_cap_kb": 500,
     "grounding_cap_kb": 80,
+    "context_budget_kb": 480,
 }
 
 # Per-model cap defaults baked into the code. console.yaml `models.caps`
@@ -174,9 +184,9 @@ DEFAULT_CAPS: dict[str, int] = {
 #   Haiku 4.5  ≈ 200K tokens ≈ 800 KB plaintext
 # Caps sized to leave headroom for conversation history + response.
 _MODEL_CAP_DEFAULTS: dict[str, dict[str, int]] = {
-    "claude-sonnet-4-6": {"source_cap_kb": 500, "grounding_cap_kb": 80},
-    "claude-opus-4-7":   {"source_cap_kb": 2000, "grounding_cap_kb": 200},
-    "claude-haiku-4-5":  {"source_cap_kb": 300, "grounding_cap_kb": 80},
+    "claude-sonnet-4-6": {"source_cap_kb": 500, "grounding_cap_kb": 80, "context_budget_kb": 480},
+    "claude-opus-4-7":   {"source_cap_kb": 2000, "grounding_cap_kb": 200, "context_budget_kb": 3000},
+    "claude-haiku-4-5":  {"source_cap_kb": 300, "grounding_cap_kb": 80, "context_budget_kb": 480},
 }
 
 _DEFAULT_CONSOLE_YAML: dict[str, Any] = {

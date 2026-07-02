@@ -877,6 +877,69 @@ def generate_rows(project_dir):
     return rows, dhfs, milestones
 
 
+def merge_md_only_rows(rows, project_dir):
+    """Align the enrichment row universe with what render.py actually shows.
+
+    `generate_rows()` yields only *pipeline* rows — those derived from the
+    milestone catalog, composition-manifest walk, overlay, and the
+    `tracker-user-rows.yml` registry. Rows hand-added directly to
+    `submission-tracker.md` render fine (render.py parses the markdown), but
+    are invisible to the pipeline, so `/tracker enrich-help` and
+    `/tracker enrich-details` would report "row not found in inventory" and
+    could not build a bundle for them.
+
+    This helper parses the rendered markdown (reusing render.py's
+    `parse_markdown`) and appends any row whose id is not already present, so
+    the invariant becomes **"if it renders, it can be enriched."** Appended
+    rows are tagged `md_only: True` and carry no catalog binding
+    (`dhf`/`canonical_role` are None/empty), so downstream bundles get empty
+    `bound_obligations` — the help/details authors degrade gracefully
+    (`regulatory_anchors[].role: "inferred"`).
+
+    Project-agnostic: no project names, no fixed row ids. Deliberately NOT
+    called by `generate_rows()` itself (nor the canonical-markdown writer), so
+    `generate` output is unchanged — this only widens the *read* universe the
+    enrichment builders see.
+    """
+    project_dir = Path(project_dir)
+    md_path = project_dir / 'docs/project/submissions/submission-tracker.md'
+    if not md_path.is_file():
+        return rows
+    try:
+        import importlib.util
+        here = Path(__file__).resolve().parent
+        spec = importlib.util.spec_from_file_location('tracker_render', here / 'render.py')
+        render = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(render)
+        parsed = render.parse_markdown(str(md_path))
+    except Exception:
+        return rows  # best-effort: never break enrichment over a parse hiccup
+
+    have = {r.get('id') for r in rows}
+    for mr in parsed.get('rows', []):
+        rid = mr.get('id')
+        if not rid or rid in have:
+            continue
+        rows.append({
+            'id': rid,
+            'name_token': mr.get('name', ''),
+            'name': mr.get('name', ''),
+            'scope': mr.get('scope', ''),
+            'phase': mr.get('phase', ''),
+            'ref': mr.get('ref', ''),
+            'effort': mr.get('effort', ''),
+            'status': mr.get('status', ''),
+            'path': _extract_md_path(mr.get('path', '')) or (mr.get('path', '') or '').strip(),
+            'dhf': None,
+            'canonical_role': '',
+            'source_manifest': None,
+            'source_section': None,
+            'md_only': True,
+        })
+        have.add(rid)
+    return rows
+
+
 # ─── R9.4: Round-trip preservation via human sidecar overlay ───
 #
 # The generator owns the markdown's structural fields (id, scope, phase, dhf,

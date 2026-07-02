@@ -66,6 +66,24 @@ The tracker markdown is **milestone-driven**: per-Phase sections (one per milest
 ## Changelog                           ← author/contributor tracking lives here
 ```
 
+### Overlay precedence — the source of truth for a cell is NOT always the markdown (HARD RULE)
+
+A tracker deliverable's rendered `status` / `path` / `ref` / `effort` / `name` can come from **two** places, and the sidecar **wins**:
+
+| Layer | File | Owns | Applied |
+|-------|------|------|---------|
+| Canonical markdown | `submission-tracker.md` | structural cells (`scope`, `phase`), and any cell with no overlay override | parsed by `render.py` |
+| **Overlay sidecar** | `submission-tracker.overlay.yml` (`rows.<id>`) | **human-curated overrides of `status`, `path`, `ref`, `effort`, `name`** | merged over the markdown at render time (`render.py` `load_human_overlay` / `apply_human_overlay`) — **overlay value overrides the markdown cell** |
+
+**Failure mode this prevents:** you edit a status/path in `submission-tracker.md`, re-render, and the console still shows the old value — because an `overlay.yml` `rows.<id>` entry silently overrode your edit. Editing the `.md` alone is not enough when an overlay override exists; **update the overlay**. The overlay is also the *durable* home — `/tracker generate --write-canonical` regenerates the `.md` from catalog + overlay, so `.md`-only edits to overlay-managed cells are lost, while overlay edits survive.
+
+**Two environment gotchas that make a "correct" render lie:**
+
+1. **PyYAML must be present.** `render.py` reads the YAML overlay only if `import yaml` succeeds. Run with a bare interpreter that lacks PyYAML and the overlay is **skipped** — the render emits raw markdown that looks right but does **not** match what a yaml-enabled environment (the project console venv) serves. Always `/tracker render` in an env with PyYAML (the console's venv, or `pip install pyyaml`). The renderer now prints a loud stderr `WARNING` in this case — do not ignore it.
+2. **Verify in the running console, on the right port, not a standalone file open.** The console live-renders the tracker (applying the overlay) and rewrites row paths to clickable `/documents#path=…` links; a browser opened directly on `submission-tracker.html` cannot resolve those links, and a console on a *different project's* port shows a different project's tracker. Confirm the port in that project's `tools/project-console/console.yaml` (`server.port`) before concluding "the link is missing."
+
+**Update recipe when changing a deliverable's status or path:** (1) edit `submission-tracker.md` for readability/audit, (2) **edit the matching `rows.<id>` in `overlay.yml`** (or remove the override if the `.md` should win), (3) `/tracker render` in a PyYAML env, (4) verify in the console.
+
 ### Column Definitions
 
 **Deliverable rows (regulatory + submission narrative):**
@@ -113,6 +131,8 @@ Per-ID entries in the `## Deliverable Details` section surface as inline expansi
   - FDA SE Guidance (2014) §III — modifications under SE
 - **Notes**: Decision tree for what qualifies as a PCCP-authorized change.
 ```
+
+**Do NOT restate the row's `Status` (or a "To be created" path) in the detail block (HARD RULE).** The detail schema is `Phase · Scope · Path · Primary REF · All applicable REFs · Notes` — the same fields the `submission-tracker.details.json` sidecar carries, and it deliberately has **no status field**. Status lives in the row's badge (driven by the `.md` cell + `overlay.yml`); duplicating it here is redundant *and* rots — a status/path change made to the row cell + overlay leaves the hand-authored detail line stale, so an expanded row shows "Not Started / To be created" long after the deliverable is In Review. Keep the detail's `Path` in sync with the row's Path (or omit it and let the row cell carry it); never add a `Status` line.
 
 ### Reviewer Sign-off
 
@@ -164,16 +184,36 @@ The renderer:
 
 ### `update <id> <field> <value>`
 
-Update a row's field in the markdown source.
+Update a deliverable row's field **across every layer that can display it**, so the change can't be silently reverted by an overlay override or left stale in a click-row detail. **Fields**: `status`, `phase`, `scope`, `path`, `ref`, `effort`, `name`.
 
-**Fields**: `status`, `phase`, `scope`, `path`, `ref`
+This action is a **coordinated multi-layer write** — a tracker cell can surface from up to three places (see "Overlay precedence"), so a single edit is not enough. Do all applicable steps, in order:
+
+**Step 0 — Resolve the files** (standard project-agnostic locations under the submissions root):
+- canonical markdown: `docs/project/submissions/submission-tracker.md`
+- overlay sidecar: `docs/project/submissions/submission-tracker.overlay.yml` (`rows.<id>`)
+- details sidecar (optional): `docs/project/submissions/submission-tracker.details.json` (`entries[].row_ids`)
+
+**Step 1 — Markdown row cell (always).** Find the row whose first column is `<id>` and set the `<field>` cell to `<value>`. This keeps the human-readable, audit-facing canonical correct.
+
+**Step 2 — Overlay upsert (only for overlay-managed fields: `status`, `path`, `ref`, `effort`, `name`).** The overlay **wins at render time**, so the cell change in Step 1 is invisible unless the overlay agrees. Upsert `rows.<id>.<field>: <value>` in `submission-tracker.overlay.yml` — create the `rows:` map and/or the `<id>:` entry if absent; if an override for this `(id, field)` already existed, overwrite it. (To make the `.md` cell authoritative instead, *remove* the `rows.<id>.<field>` override rather than leaving a stale one.) **`scope` / `phase` are structural / generator-owned — do NOT put them in the overlay; Step 1 alone is correct for those.**
+
+**Step 3 — Click-row detail sync (for `path`; and status-hygiene).** In the `## Deliverable Details` section, if a `### <id> — …` block exists:
+- when `<field>` is `path`, update that block's inline `**Path**: …` to match (add it if missing);
+- regardless of field, **remove any `**Status**: …` fragment** from the detail line — the detail schema (mirrored by the details sidecar) carries **no status field**; status belongs to the row badge only, and a restated status is exactly what goes stale. Never write a `Status` into a detail block.
+- If the id is covered by the details **sidecar** (`submission-tracker.details.json` `entries[].row_ids`), update the matching entry's `path` there too (or re-run `/tracker enrich-details <id>`), because the sidecar overrides the inline block.
+
+**Step 4 — Re-render with PyYAML present.** Run `/tracker render` (below) using an interpreter that has PyYAML — the project console's venv if the console is installed, otherwise a system Python with `pyyaml` installed. If the renderer prints the `overlay.yml … PyYAML is not installed` WARNING, **stop and fix the environment** — that render ignored every overlay override and does not match the console.
+
+**Step 5 — Verify in the running console, not a file open.** Confirm the change in the project console (it live-renders with the overlay applied and rewrites paths to clickable `/documents#path=…`). Find the port in that project's `tools/project-console/console.yaml` (`server.port`); a standalone browser open of `submission-tracker.html` cannot resolve the document links, and a console on another project's port shows a different tracker.
+
+**Step 6 — Report** which layers were touched (md cell / overlay / inline detail / details sidecar) so the operator can see the change is coherent end-to-end.
 
 ```
-/tracker update PI3 status Partial
+/tracker update PI3 status "In Review"    # → md cell + overlay rows.PI3.status; detail Status stripped
 /tracker update PA6 path "submissions/510k/predicate-analysis-v1.md"
+                                          # → md cell + overlay rows.PA6.path + detail **Path** synced
+/tracker update PI3 phase LMR1            # structural → md cell only (no overlay)
 ```
-
-Suggest `/tracker render` after.
 
 ### `assess`
 

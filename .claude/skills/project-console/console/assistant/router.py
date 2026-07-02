@@ -255,7 +255,8 @@ def _build_system_prompt(
     core_text: str,
     index_text: str,
     grounding_cap_bytes: int,
-) -> str:
+    context_budget_bytes: int = 0,
+) -> tuple[str, int]:
     """Compose the agent's system prompt with tiered grounding.
 
     Order:
@@ -266,6 +267,15 @@ def _build_system_prompt(
       4. Tier 3 INDEX — README tree
       5. Tier 1 FOCUS — page-supplied grounding (last word; steers the
          current question without overriding agent persona)
+
+    The INDEX tier is trimmed so the whole assembled prompt stays within
+    ``context_budget_bytes`` (0 = no budget). This is the guardrail that keeps
+    the request inside the model's *standard* context window; without it a
+    large core + full README index overflows to the 1M-context beta, which
+    requires usage credits and fails. The index is a finding-aid — the agent
+    still reaches anything trimmed via read_files().
+
+    Returns ``(system_prompt, index_bytes_dropped)``.
     """
     parts = [agent.system_prompt]
 
@@ -275,19 +285,38 @@ def _build_system_prompt(
 
     parts.append(_DISCOVERY_RUBRIC)
 
-    if index_text:
-        parts.append("===== INDEX (folder READMEs) =====")
-        parts.append(index_text)
-
+    focus_parts: list[str] = []
     if grounding_text:
         capped = grounding_text[:grounding_cap_bytes]
         if len(grounding_text) > grounding_cap_bytes:
             capped += f"\n\n[...truncated at {grounding_cap_bytes} bytes]"
         label = grounding_label or "PAGE CONTEXT"
-        parts.append(f"===== {label} (current focus) =====")
-        parts.append(capped)
+        focus_parts = [f"===== {label} (current focus) =====", capped]
 
-    return "\n\n".join(parts)
+    index_dropped = 0
+    if index_text:
+        included = index_text
+        if context_budget_bytes:
+            # Bytes already committed to everything except the index.
+            committed = sum(len(p) for p in parts) + sum(len(p) for p in focus_parts)
+            committed += len("===== INDEX (folder READMEs) =====")
+            # "\n\n".join overhead between segments (approximate, small).
+            committed += 2 * (len(parts) + len(focus_parts) + 1)
+            room = context_budget_bytes - committed
+            if room < len(index_text):
+                keep = max(0, room - 200)  # reserve room for the truncation note
+                included = index_text[:keep] + (
+                    "\n\n[... INDEX truncated to fit the model's standard context "
+                    "window; use read_files() to fetch any folder not shown ...]"
+                )
+                index_dropped = len(index_text) - keep
+        if included:
+            parts.append("===== INDEX (folder READMEs) =====")
+            parts.append(included)
+
+    parts.extend(focus_parts)
+
+    return "\n\n".join(parts), index_dropped
 
 
 def _sse(event: dict) -> str:
@@ -314,6 +343,7 @@ async def assistant_chat_stream(body: AssistantStreamBody):
     caps = cfg.caps_for_model(effective_model)
     core_cap_bytes = caps["source_cap_kb"] * 1024
     grounding_cap_bytes = caps["grounding_cap_kb"] * 1024
+    context_budget_bytes = caps.get("context_budget_kb", 0) * 1024
 
     # Resolve agent's Tier 2 core. `core` includes the agent's declared
     # entries (or legacy `sources:` via backwards-compat shim).
@@ -330,13 +360,14 @@ async def assistant_chat_stream(body: AssistantStreamBody):
     # Tier 3 index (cached).
     idx = _ensure_index()
 
-    system = _build_system_prompt(
+    system, index_dropped = _build_system_prompt(
         agent=agent,
         grounding_text=body.grounding_text,
         grounding_label=body.grounding_label,
         core_text=core_text,
         index_text=idx.text,
         grounding_cap_bytes=grounding_cap_bytes,
+        context_budget_bytes=context_budget_bytes,
     )
     prompt = _format_prompt(body.history, body.message)
 
@@ -361,16 +392,22 @@ async def assistant_chat_stream(body: AssistantStreamBody):
                         f"of the project is still reachable via read_files()."
                     ),
                 })
-            if idx.missing_readme_folders:
+            if index_dropped:
                 yield _sse({
                     "type": "warning",
                     "message": (
-                        f"Index has {len(idx.missing_readme_folders)} folder(s) "
-                        f"with content but no README.md: "
-                        f"{', '.join(idx.missing_readme_folders[:3])}"
-                        + ("..." if len(idx.missing_readme_folders) > 3 else "")
+                        f"INDEX trimmed by {index_dropped // 1024} KB to fit the "
+                        f"model's standard context window (core + full index would "
+                        f"otherwise require the 1M-context beta). The agent can still "
+                        f"reach trimmed folders via read_files()."
                     ),
                 })
+            # NOTE: the missing-README coverage warning is intentionally NOT
+            # surfaced in the advisor drawer — it's non-actionable mid-chat noise
+            # and was being mislabeled under the "Source budget notice" bucket
+            # (which is only meant for core-truncation / index-trim warnings). The
+            # data is still computed and exposed via GET /assistant/api/index/status
+            # and the startup log for anyone auditing index coverage.
             async for token in stream_response(
                 system_prompt=system,
                 user_message=prompt,

@@ -500,13 +500,28 @@ def load_human_overlay(project_dir):
     if overlay_yml.is_file():
         try:
             import yaml  # type: ignore
-            data = yaml.safe_load(overlay_yml.read_text(encoding='utf-8')) or {}
-            rows = data.get('rows') if isinstance(data, dict) else None
-            if isinstance(rows, dict):
-                return rows
-            return {}
-        except Exception:
-            pass  # fall through to legacy
+        except ImportError:
+            # PyYAML missing but an overlay exists → the render would silently
+            # ignore every human-curated status/path/ref override and emit the
+            # raw generator markdown, producing output that looks correct but
+            # diverges from what a yaml-enabled environment (e.g. the project
+            # console venv) serves. Warn loudly rather than mislead; do NOT run
+            # `render.py` with a bare interpreter when an overlay is present.
+            sys.stderr.write(
+                "WARNING: submission-tracker.overlay.yml exists but PyYAML is "
+                "not installed — overlay overrides (status/path/ref) are being "
+                "IGNORED. This render will NOT match the console. Install "
+                "PyYAML or run via the console venv.\n"
+            )
+        else:
+            try:
+                data = yaml.safe_load(overlay_yml.read_text(encoding='utf-8')) or {}
+                rows = data.get('rows') if isinstance(data, dict) else None
+                if isinstance(rows, dict):
+                    return rows
+                return {}
+            except Exception:
+                pass  # malformed overlay — fall through to legacy
     # Legacy: human.json (pre-overlay-unification)
     import json
     sidecar = Path(project_dir) / 'docs/project/submissions/submission-tracker.human.json'

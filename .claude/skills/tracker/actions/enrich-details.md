@@ -70,6 +70,11 @@ uv --project tools/project-console run python3 \
   --out /tmp/tracker-detail-bundles/
 ```
 
+**Inventory = every row that renders.** Like `enrich-help`, the builder calls
+`generate.merge_md_only_rows()` after `generate.generate_rows()`, so rows
+hand-added directly to `submission-tracker.md` (not just catalog / manifest /
+registry rows) are included — a row that renders can always be enriched.
+
 The bundle YAML files are the agent input — one file per row, named
 `<ROW_ID>.yaml`, each carrying:
 - row metadata (id, display_name, canonical_role, scope, phase, status,

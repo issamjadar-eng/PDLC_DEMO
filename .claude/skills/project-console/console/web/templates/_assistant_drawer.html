@@ -109,4 +109,4 @@
   "staticGrounding": {{ (assistant.static_grounding | default('')) | tojson }}
 }
 </script>
-<script src="/static/assistant.js" defer></script>
+<script src="/static/assistant.js?v={{ request.state.static_v }}" defer></script>

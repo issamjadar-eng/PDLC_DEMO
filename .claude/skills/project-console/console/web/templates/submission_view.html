@@ -47,7 +47,8 @@
   </div>
 
   <!-- ============ PACKAGE VIEW ============ -->
-  <div class="sub-view is-active" id="view-package" role="tabpanel">
+  <div class="sub-view is-active" id="view-package" role="tabpanel"
+       data-grounding="url:/submission/{{ m.id }}/grounding">
     {% macro piece_table(rows, with_status=False) %}
     <table class="sub-table">
       <thead><tr><th>Piece</th><th>Purpose</th>{% if with_status %}<th>Status</th>{% else %}<th>Tracker</th>{% endif %}</tr></thead>
@@ -106,7 +107,8 @@
   </div>
 
   <!-- ============ DOCUMENTS VIEW ============ -->
-  <div class="sub-view" id="view-docs" role="tabpanel" hidden>
+  <div class="sub-view" id="view-docs" role="tabpanel" hidden
+       data-grounding="element:#view-docs .sub-doc-panel:not([hidden])">
     {% if d.documents %}
     <p class="sub-legend">Scope: <span>📤 FDA-bound</span> <span>📝 internal</span> <span>⏸️ deferred</span> <span>📖 reference</span> — only FDA-bound content is transmitted.</p>
     <div class="sub-docs">
@@ -145,7 +147,8 @@
   </div>
 
   <!-- ============ QUESTIONS VIEW ============ -->
-  <div class="sub-view" id="view-questions" role="tabpanel" hidden>
+  <div class="sub-view" id="view-questions" role="tabpanel" hidden
+       data-grounding="element:#view-questions">
     {% if d.questions %}
     {% for topic, qs in d._question_topics %}
     <section class="sub-qtopic">
@@ -171,7 +174,7 @@
   "default_agent": d._default_advisor,
   "allowed_agents": [],
   "grounding_label": "SUBMISSION CONTEXT",
-  "grounding_source": "url:/submission/" ~ m.id ~ "/grounding",
+  "grounding_source": "active:.sub-view",
   "title": "Submission Advisor",
   "subtitle": m.type,
   "placeholder": "Ask about this submission…",

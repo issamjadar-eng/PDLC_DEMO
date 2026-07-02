@@ -228,18 +228,111 @@ def collect_records(project_root: Path, month_filter: str | None):
     return data, task_data
 
 
+def _econ_to_entry(econ: dict, title, updated) -> dict | None:
+    """Transform one `economics` object → the per-task rollup entry. Shared by
+    the in-doc block reader and the sidecar reader so both sources yield byte-
+    identical entries. Returns None when there are no todos to score."""
+    todos = econ.get("todos") or []
+    if not todos:
+        return None
+    tot = {"min": 0.0, "max": 0.0}
+    by_persona: dict = defaultdict(lambda: {"min": 0.0, "max": 0.0})
+    conf: dict = defaultdict(int)
+    for t in todos:
+        mh = t.get("manual_hours") or {}
+        lo = float(mh.get("min", 0) or 0)
+        hi = float(mh.get("max", 0) or 0)
+        tot["min"] += lo
+        tot["max"] += hi
+        conf[t.get("confidence", "?")] += 1
+        ps = t.get("personas") or ["_unspecified"]
+        n = len(ps)
+        for p in ps:
+            by_persona[p]["min"] += lo / n
+            by_persona[p]["max"] += hi / n
+    # agentic_hours may be a scalar (legacy) or a {min,max} range (preferred, per
+    # rubric F2). Normalize to ah_min/ah_max; a scalar is treated as a point.
+    ah = econ.get("agentic_hours")
+    if isinstance(ah, dict):
+        ah_min = float(ah["min"]) if isinstance(ah.get("min"), (int, float)) else None
+        ah_max = float(ah["max"]) if isinstance(ah.get("max"), (int, float)) else None
+        if ah_min is not None and ah_max is not None and ah_min > ah_max:
+            ah_min, ah_max = ah_max, ah_min
+    elif isinstance(ah, (int, float)):
+        ah_min = ah_max = float(ah)
+    else:
+        ah_min = ah_max = None
+    # Conservative savings: the floor subtracts the LARGER agentic estimate
+    # (by-hand-min − agentic-max), so the headline `min` is genuinely a floor.
+    inverted = False
+    if ah_max is not None:
+        hs_min = round(tot["min"] - ah_max, 1)
+        hs_max = round(tot["max"] - ah_min, 1)
+        inverted = hs_min < 0          # F10: agentic ≥ by-hand → flag, don't hide
+        hours_saved = {"min": hs_min, "max": hs_max}
+    else:
+        hours_saved = None
+    # Back-compat scalar for the console (= conservative agentic-max); range kept for fidelity.
+    agentic_hours = round(ah_max, 1) if ah_max is not None else None
+    agentic_hours_range = ({"min": round(ah_min, 1), "max": round(ah_max, 1)}
+                           if ah_max is not None else None)
+    # The task's category = its personas, ranked by estimated hours.
+    personas_ranked = [p for p, v in sorted(
+        by_persona.items(), key=lambda kv: kv[1]["max"], reverse=True)]
+    return {
+        "method_version": econ.get("method_version"),
+        "title": title,
+        "updated": updated,
+        "retrospective": bool(econ.get("retrospective")),
+        "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
+        "agentic_hours": agentic_hours,
+        "agentic_hours_range": agentic_hours_range,
+        "hours_saved": hours_saved,
+        "inverted": inverted,
+        "by_persona": {p: {"min": round(v["min"], 1), "max": round(v["max"], 1)}
+                       for p, v in sorted(by_persona.items())},
+        "personas": personas_ranked,
+        "todos": len(todos),
+        "confidence_mix": dict(conf),
+    }
+
+
+def _load_economics_sidecar(project_root: Path) -> dict:
+    """Load the optional hand-authored economics sidecar → {"<tf>/<NNN>": econ}.
+    A backfill source for tasks whose docs carry no in-doc `## Economics` block
+    (e.g. retroactive estimates for historical tasks). File:
+    `tools/usage-metrics/economics.json` — either a flat `{"<tf>/<NNN>": {...}}`
+    map or wrapped as `{"economics": {...}}`. Stdlib json only. Entries should
+    carry `retrospective: true`. Absent/malformed file → empty (silent)."""
+    sc = project_root / "tools" / "usage-metrics" / "economics.json"
+    if not sc.is_file():
+        return {}
+    try:
+        raw = json.loads(sc.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    if isinstance(raw, dict) and isinstance(raw.get("economics"), dict):
+        raw = raw["economics"]
+    return raw if isinstance(raw, dict) else {}
+
+
 def parse_task_economics(project_root: Path) -> dict:
-    """Parse `## Economics` JSON blocks from task docs → per-task by-hand
-    person-hour estimates. Key = "<task_folder>/<NNN>" (matches the cost `tasks`
-    keys). Stdlib `json` only — runs in CI without PyYAML (why the block is JSON,
-    not YAML). Person-hours ONLY; no $ (the console applies labor rates).
-    Even-splits a todo's hours across its listed personas for the by_persona
-    breakdown (the schema carries combined hours per todo)."""
+    """Per-task by-hand person-hour estimates, keyed "<task_folder>/<NNN>" (matches
+    the cost `tasks` keys). Person-hours ONLY; no $ (the console applies labor rates).
+
+    Two sources, in-doc-wins precedence:
+      1. `## Economics` ```json``` block embedded in the task doc — the canonical,
+         self-describing home (filled at checkpoint/completion per the task skill).
+      2. `tools/usage-metrics/economics.json` sidecar — a backfill for tasks whose
+         doc has no (or an empty-stub) in-doc block. Yields to the in-doc block.
+    Stdlib `json` only (runs in CI without PyYAML — why the block is JSON, not YAML).
+    Sidecar entries only apply to tasks that have a doc (title/`updated` come from it)."""
     import re
     out: dict = {}
     tasks_dir = project_root / "tasks"
     if not tasks_dir.is_dir():
         return out
+    sidecar = _load_economics_sidecar(project_root)
     for person_dir in sorted(tasks_dir.glob("*")):
         if not person_dir.is_dir() or person_dir.name.startswith((".", "_")):
             continue
@@ -250,81 +343,29 @@ def parse_task_economics(project_root: Path) -> dict:
                 text = md.read_text(encoding="utf-8")
             except OSError:
                 continue
-            m = re.search(r"##\s+Economics\b.*?```json\s*\n(.*?)\n```", text, re.DOTALL)
-            if not m:
-                continue
-            try:
-                econ = (json.loads(m.group(1)) or {}).get("economics") or {}
-            except json.JSONDecodeError:
-                continue
-            todos = econ.get("todos") or []
-            if not todos:
-                continue
-            tot = {"min": 0.0, "max": 0.0}
-            by_persona: dict = defaultdict(lambda: {"min": 0.0, "max": 0.0})
-            conf: dict = defaultdict(int)
-            for t in todos:
-                mh = t.get("manual_hours") or {}
-                lo = float(mh.get("min", 0) or 0)
-                hi = float(mh.get("max", 0) or 0)
-                tot["min"] += lo
-                tot["max"] += hi
-                conf[t.get("confidence", "?")] += 1
-                ps = t.get("personas") or ["_unspecified"]
-                n = len(ps)
-                for p in ps:
-                    by_persona[p]["min"] += lo / n
-                    by_persona[p]["max"] += hi / n
             tm = re.search(r"(?m)^#\s+\S+\s+[—-]\s+(.+?)\s*$", text)
             title = tm.group(1).strip() if tm else None
             # last-updated proxy = latest YYYY-MM-DD anywhere in the doc (changelog/created)
             dates = re.findall(r"\b(\d{4}-\d{2}-\d{2})\b", text)
             updated = max(dates) if dates else None
-            # agentic_hours may be a scalar (legacy) or a {min,max} range (preferred, per
-            # rubric F2). Normalize to ah_min/ah_max; a scalar is treated as a point.
-            ah = econ.get("agentic_hours")
-            if isinstance(ah, dict):
-                ah_min = float(ah["min"]) if isinstance(ah.get("min"), (int, float)) else None
-                ah_max = float(ah["max"]) if isinstance(ah.get("max"), (int, float)) else None
-                if ah_min is not None and ah_max is not None and ah_min > ah_max:
-                    ah_min, ah_max = ah_max, ah_min
-            elif isinstance(ah, (int, float)):
-                ah_min = ah_max = float(ah)
-            else:
-                ah_min = ah_max = None
-            # Conservative savings: the floor subtracts the LARGER agentic estimate
-            # (by-hand-min − agentic-max), so the headline `min` is genuinely a floor.
-            inverted = False
-            if ah_max is not None:
-                hs_min = round(tot["min"] - ah_max, 1)
-                hs_max = round(tot["max"] - ah_min, 1)
-                inverted = hs_min < 0          # F10: agentic ≥ by-hand → flag, don't hide
-                hours_saved = {"min": hs_min, "max": hs_max}
-            else:
-                hours_saved = None
-            # Back-compat scalar for the console (= conservative agentic-max); range kept for fidelity.
-            agentic_hours = round(ah_max, 1) if ah_max is not None else None
-            agentic_hours_range = ({"min": round(ah_min, 1), "max": round(ah_max, 1)}
-                                   if ah_max is not None else None)
-            # The task's category = its personas, ranked by estimated hours.
-            personas_ranked = [p for p, v in sorted(
-                by_persona.items(), key=lambda kv: kv[1]["max"], reverse=True)]
-            out[f"{tf}/{nnn}"] = {
-                "method_version": econ.get("method_version"),
-                "title": title,
-                "updated": updated,
-                "retrospective": bool(econ.get("retrospective")),
-                "manual_hours": {"min": round(tot["min"], 1), "max": round(tot["max"], 1)},
-                "agentic_hours": agentic_hours,
-                "agentic_hours_range": agentic_hours_range,
-                "hours_saved": hours_saved,
-                "inverted": inverted,
-                "by_persona": {p: {"min": round(v["min"], 1), "max": round(v["max"], 1)}
-                               for p, v in sorted(by_persona.items())},
-                "personas": personas_ranked,
-                "todos": len(todos),
-                "confidence_mix": dict(conf),
-            }
+            # (1) in-doc block wins when it carries todos …
+            econ = None
+            m = re.search(r"##\s+Economics\b.*?```json\s*\n(.*?)\n```", text, re.DOTALL)
+            if m:
+                try:
+                    doc_econ = (json.loads(m.group(1)) or {}).get("economics") or {}
+                except json.JSONDecodeError:
+                    doc_econ = {}
+                if doc_econ.get("todos"):
+                    econ = doc_econ
+            # (2) … otherwise fall back to the sidecar backfill.
+            if econ is None:
+                econ = sidecar.get(f"{tf}/{nnn}")
+            if not econ:
+                continue
+            entry = _econ_to_entry(econ, title, updated)
+            if entry:
+                out[f"{tf}/{nnn}"] = entry
     return out
 
 

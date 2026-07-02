@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ config.project_name }} Console{% endblock %}</title>
 <link rel="icon" type="image/x-icon" href="/theme/assets/favicon.ico">
-<link rel="stylesheet" href="/static/console.css">
-<link rel="stylesheet" href="/static/console.overrides.css">
+<link rel="stylesheet" href="/static/console.css?v={{ request.state.static_v }}">
+<link rel="stylesheet" href="/static/console.overrides.css?v={{ request.state.static_v }}">
 {% if request.state.theme_css %}
 <style id="theme-overrides">
 {{ request.state.theme_css | safe }}

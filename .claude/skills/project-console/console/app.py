@@ -56,6 +56,27 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Project Console", lifespan=lifespan)
 
+# Cache-buster for the static stylesheet. The console uses hash-based SPA
+# navigation, so console.css is only fetched on a full page load; without a
+# version query a browser keeps serving the cached copy after a CSS edit.
+# Stat the file per request (cheap) so edits take effect on the next load.
+_static_css_path = Path(__file__).parent / "web" / "static" / "console.css"
+
+
+def _static_version() -> str:
+    """Cache-busting token = newest mtime across served CSS + JS assets, so any
+    static edit (console.css, assistant.js, …) forces a reload. Previously this
+    tracked only console.css, so JS-only edits went unnoticed until a hard
+    refresh."""
+    try:
+        mtimes = [
+            p.stat().st_mtime
+            for p in (*_static_dir.glob("*.css"), *_static_dir.glob("*.js"))
+        ]
+        return str(int(max(mtimes))) if mtimes else "0"
+    except (OSError, ValueError):
+        return "0"
+
 
 def _render_theme_footer(theme) -> str:
     footer_path = theme.pack_dir / "footer.html.j2"
@@ -77,6 +98,7 @@ async def theme_context(request: Request, call_next):
     request.state.theme_css = theme.css_variables()
     request.state.theme_footer = _render_theme_footer(theme)
     request.state.config = cfg
+    request.state.static_v = _static_version()
     # Overview nav visibility — cheap filesystem check per request (stat only).
     request.state.overview_nav = discover_overview(cfg.repo_root)["has_any"]
     # Strategy nav visibility — shows when docs/project/strategies/*-strategy.md exist.

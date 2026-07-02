@@ -36,6 +36,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -150,13 +151,27 @@ def _resolve_evidence_path(row: dict, project_dir: Path) -> Path | None:
     raw = (row.get('path') or '').strip()
     if not raw:
         return None
+    # Path cells may be markdown links `[label](target)` — extract the target.
+    m = re.search(r'\]\(([^)]+)\)', raw)
+    if m:
+        raw = m.group(1).strip()
+    # Skip non-file targets (action buttons, external URLs, pure anchors).
+    if not raw or raw.startswith(('http://', 'https://', '#', '<')):
+        return None
+    # Tracker row paths are written relative to the tracker file's home
+    # (docs/project/submissions/); also try docs/project/ and repo root.
     candidates = [
+        project_dir / 'docs/project/submissions' / raw,
         project_dir / 'docs/project' / raw,
         project_dir / raw,
     ]
     for c in candidates:
-        if c.is_file():
-            return c.resolve()
+        try:
+            rc = c.resolve()
+        except Exception:
+            continue
+        if rc.is_file():
+            return rc
     return None
 
 
@@ -300,6 +315,10 @@ def main():
     gen = _load_generate_module()
     project_dir = Path(args.project_dir) if args.project_dir else gen.find_project_dir()
     rows, dhfs_meta, _ = gen.generate_rows(project_dir)
+    # Option C: widen the inventory to every row that renders — including rows
+    # hand-added directly to submission-tracker.md — so "if it renders, it can
+    # be enriched" holds for details too.
+    rows = gen.merge_md_only_rows(rows, project_dir)
 
     catalog = _load_catalog(project_dir)
     obligations_index = _index_obligations_by_dhf_role(catalog)

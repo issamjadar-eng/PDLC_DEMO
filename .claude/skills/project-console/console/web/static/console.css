@@ -1028,7 +1028,8 @@ body.docs-page.resizing * {
 .prompt-text.rendered-md li { margin: .2rem 0; }
 .prompt-text.rendered-md strong { color: var(--gl-black); font-weight: 700; }
 .prompt-text.rendered-md code {
-  background: var(--gl-gray-light);
+  background: var(--code-bg, var(--gl-gray-light));
+  color: var(--code-text, inherit);
   padding: .1em .3em;
   border-radius: 3px;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -1374,6 +1375,7 @@ body.docs-page.resizing * {
 .md-content em { font-style: italic; }
 .md-content code {
   background: rgba(122, 0, 223, 0.08);
+  color: var(--code-text, inherit);
   padding: .1rem .35rem;
   border-radius: 3px;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -1406,6 +1408,18 @@ body.docs-page.resizing * {
   font-size: inherit;
   word-break: inherit;
   overflow-wrap: inherit;
+}
+/* Constrain rendered images to the content pane — source PNGs (Confluence
+   screenshots, diagrams) carry their full natural resolution and would
+   otherwise overflow. */
+.md-content img,
+.markdown-body img,
+.docs-rendered img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.75rem 0;
+  border-radius: var(--radius-sm);
 }
 /* Markdown table rendering — match VS Code / GitHub preview behavior.
    - display: block + width: max-content + max-width: 100% + overflow-x: auto
@@ -1472,7 +1486,8 @@ body.docs-page.resizing * {
 .markdown-body ul, .markdown-body ol { margin: .5rem 0 .5rem 1.5rem; }
 .markdown-body li { margin: .25rem 0; line-height: 1.6; }
 .markdown-body code {
-  background: var(--gl-gray-light);
+  background: var(--code-bg, var(--gl-gray-light));
+  color: var(--code-text, inherit);
   padding: .1rem .4rem;
   border-radius: 3px;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -1881,17 +1896,20 @@ body.docs-page.resizing * {
 .pc-msg-assistant h1 { font-size: 1.02rem; }
 .pc-msg-assistant h2 { font-size: 0.94rem; }
 .pc-msg-assistant h3 { font-size: 0.88rem; }
-.pc-msg-assistant h4 { font-size: 0.85rem; color: #333; }
+.pc-msg-assistant h4 { font-size: 0.85rem; color: inherit; }
 .pc-msg-assistant ul,
 .pc-msg-assistant ol { margin: 0.3rem 0 0.3rem 1.1rem; padding: 0; }
 .pc-msg-assistant li { margin: 0.15rem 0; }
 .pc-msg-assistant code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.78rem; background: #eef0f3; padding: 0.05rem 0.3rem;
+  font-size: 0.78rem;
+  background: var(--code-bg, #eef0f3); color: var(--code-text, #24292f);
+  padding: 0.05rem 0.3rem;
   border-radius: 3px;
 }
 .pc-msg-assistant pre {
-  background: #f0f2f5; border: 1px solid var(--border-light, #e1e4e8);
+  background: var(--code-bg, #f0f2f5); color: var(--code-text, #24292f);
+  border: 1px solid var(--border, #e1e4e8);
   border-radius: 4px; padding: 0.5rem 0.6rem; margin: 0.4rem 0;
   overflow-x: auto; font-size: 0.76rem;
 }
