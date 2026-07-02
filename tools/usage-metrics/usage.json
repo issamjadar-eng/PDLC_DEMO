@@ -4308,6 +4308,45 @@
         "output": 39438
       }
     },
+    "ben/100": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 2.0,
+        "agentic_hours_range": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "by_persona": {
+          "rd-lead": {
+            "max": 5.0,
+            "min": 2.0
+          }
+        },
+        "confidence_mix": {
+          "med": 1
+        },
+        "hours_saved": {
+          "max": 4.0,
+          "min": 0.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 5.0,
+          "min": 2.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead"
+        ],
+        "retrospective": false,
+        "title": "Migrate Retrospective Economics to the v12 Sidecar",
+        "todos": 1,
+        "updated": "2026-07-02"
+      },
+      "sessions": 0,
+      "totals": {}
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-haiku-4-5-20251001": {
@@ -4384,23 +4423,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 485.0,
+    "agentic_hours": 487.0,
     "cost_allocated": 146.91,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 217.91,
     "cost_unattributed_measured": 208.39,
     "cost_unattributed_residual": 61.47,
     "hours_saved": {
-      "max": 2768.0,
+      "max": 2772.0,
       "min": 801.0
     },
     "manual_hours": {
-      "max": 3292.0,
-      "min": 1304.0
+      "max": 3297.0,
+      "min": 1306.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 0,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 97
+    "tasks_with_estimate": 98
   }
 }
