@@ -1,0 +1,1822 @@
+{
+  "ben/001": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; foundational DHF scaffold + multi-artifact ingestion (22 UNs/34 DIs/V&V/clinical)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 90,
+          "min": 40
+        },
+        "personas": [
+          "program-manager",
+          "systems-engineering",
+          "quality-engineering"
+        ],
+        "todo": "Stand up repo + three-tier docs + sample ingestion"
+      }
+    ]
+  },
+  "ben/002": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; how-to/onboarding doc authoring (per-page rate)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "How-to guide for repeating project setup"
+      }
+    ]
+  },
+  "ben/003": {
+    "agentic_hours": 14,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; full FastAPI console (OAuth, chat+SSE, docs browser, panels) \u2014 software LOC norm",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 140,
+          "min": 50
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Build the project-console (FastAPI + chat + docs)"
+      }
+    ]
+  },
+  "ben/004": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; small registry sync + setup",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 5,
+          "min": 2
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sync skills registry (2026-04-12)"
+      }
+    ]
+  },
+  "ben/005": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; stale \u2014 design only, never built",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 3,
+          "min": 1
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Customer-insights domain agent (stale)"
+      }
+    ]
+  },
+  "ben/006": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; two strategy docs (architecture + regulatory)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "regulatory-affairs",
+          "systems-engineering"
+        ],
+        "todo": "PP3500 architecture & regulatory strategy"
+      }
+    ]
+  },
+  "ben/007": {
+    "agentic_hours": 12,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; unified-DHF skill redesign across 6 skills + reorg 10 DHFs + 261 READMEs",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 100,
+          "min": 40
+        },
+        "personas": [
+          "rd-lead",
+          "systems-engineering"
+        ],
+        "todo": "Unified DHF shape migration (6 skills)"
+      }
+    ]
+  },
+  "ben/008": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; console dashboards + workflows sections",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 50,
+          "min": 20
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console dashboards, workflows & validation"
+      }
+    ]
+  },
+  "ben/009": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; flip 6 strategy domains + terminology rename across 288 files + skill changes",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "rd-lead",
+          "regulatory-affairs"
+        ],
+        "todo": "Shared strategy docs (per-DHF -> shared)"
+      }
+    ]
+  },
+  "ben/010": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "retrospective; post-audit compliance backlog fixes",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "quality-engineering",
+          "rd-lead"
+        ],
+        "todo": "Compliance plumbing (post-009 audit backlog)"
+      }
+    ]
+  },
+  "ben/011": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "tag 22 UNs/34 DIs + trace matrices with criticality",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "regulatory-affairs",
+          "quality-engineering"
+        ],
+        "todo": "Criticality tagging pass (CtS/CtF/CtC/CtP)"
+      }
+    ]
+  },
+  "ben/012": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "new skill action + import 10 FDA guidances",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "medtech-docs update-external-references action"
+      }
+    ]
+  },
+  "ben/013": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "authored 3 system SADs + composition manifest",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "systems-engineering",
+          "rd-lead"
+        ],
+        "todo": "Tracker prerequisites (SADs + manifest)"
+      }
+    ]
+  },
+  "ben/014": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "genericize tracker skill (discover vocab from md)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Tracker skill genericize"
+      }
+    ]
+  },
+  "ben/015": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "turn hand-built console into reusable skill",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 80,
+          "min": 30
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Project-console skill (genericize console)"
+      }
+    ]
+  },
+  "ben/016": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "new trace-matrix skill (parsers, graph, gap engine) + console",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 80,
+          "min": 30
+        },
+        "personas": [
+          "rd-lead",
+          "systems-engineering"
+        ],
+        "todo": "Trace-matrix skill + console section"
+      }
+    ]
+  },
+  "ben/017": {
+    "agentic_hours": 9,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "change-control skill design + scaffold + buildout",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 70,
+          "min": 24
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Change-control skill (GitHub/Confluence/Windchill)"
+      }
+    ]
+  },
+  "ben/018": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "bulk registry pull + audit FAIL fixes",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sync skills registry (2026-04-20)"
+      }
+    ]
+  },
+  "ben/019": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "new digest skill (daily briefing + project changelog)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Digest skill"
+      }
+    ]
+  },
+  "ben/020": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "roster-driven git identity helper + skill changes",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Roster-driven git identity"
+      }
+    ]
+  },
+  "ben/021": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "changelog readable format + LLM cache",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 18,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Digest CHANGELOG readable format"
+      }
+    ]
+  },
+  "ben/022": {
+    "agentic_hours": 16,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "55 QMS docs (Manual+25 SOPs+6 WIs+14 Templates+9 Forms) w/ clause anchors",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 320,
+          "min": 120
+        },
+        "personas": [
+          "quality-engineering",
+          "regulatory-affairs",
+          "risk-management"
+        ],
+        "todo": "GlobalLogic QMS scaffold (55 docs)"
+      }
+    ]
+  },
+  "ben/023": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "198 DHF placeholder artifacts from QMS templates",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 100,
+          "min": 40
+        },
+        "personas": [
+          "quality-engineering"
+        ],
+        "todo": "DHF placeholders from QMS templates (198)"
+      }
+    ]
+  },
+  "ben/024": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "reusable assistant drawer sidecar (software)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Unified assistant drawer (reusable sidecar)"
+      }
+    ]
+  },
+  "ben/025": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "36KB overview doc + 8 screenshots + 22-slide deck",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "program-manager",
+          "rd-lead"
+        ],
+        "todo": "Project overview document + deck"
+      }
+    ]
+  },
+  "ben/026": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "stale \u2014 never started",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 3,
+          "min": 1
+        },
+        "personas": [
+          "regulatory-affairs"
+        ],
+        "todo": "Labelling & contracting doc series (stale)"
+      }
+    ]
+  },
+  "ben/027": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "stale \u2014 never started",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 3,
+          "min": 1
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "Roadmaps doc series (stale)"
+      }
+    ]
+  },
+  "ben/028": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "stale \u2014 never started",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 3,
+          "min": 1
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "Product feature strategy (stale)"
+      }
+    ]
+  },
+  "ben/029": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "fixed 3 sync-skills bugs across PRs v6/v7/v8",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sync-skills bugs (stale-delete + symlink)"
+      }
+    ]
+  },
+  "ben/030": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "pull + 4 post-update migrations + smoke-test",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sync-skills pull (2026-04-27) + migrations"
+      }
+    ]
+  },
+  "ben/031": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "relative-link rewriter in console renderer",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console relative-link rewriter"
+      }
+    ]
+  },
+  "ben/032": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "whole-tree anonymization audit (89 files) + guards",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "todo": "Skill-tree anonymization audit"
+      }
+    ]
+  },
+  "ben/033": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "output filename parameterization (slugifier)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 14,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "DHF-manifest output filename parameterization"
+      }
+    ]
+  },
+  "ben/034": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "two whitepapers + PDFs + render pipeline",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "program-manager",
+          "rd-lead"
+        ],
+        "todo": "Agent-engineering whitepaper & deck"
+      }
+    ]
+  },
+  "ben/035": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "sync-skills config",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 10,
+          "min": 4
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sync-skills config"
+      }
+    ]
+  },
+  "ben/036": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "QMS expansion across three phases",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 100,
+          "min": 40
+        },
+        "personas": [
+          "quality-engineering",
+          "regulatory-affairs"
+        ],
+        "todo": "QMS expansion (three phases)"
+      }
+    ]
+  },
+  "ben/037": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "abandoned orphan workflow stub",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 2,
+          "min": 1
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console strategy reassembly (abandoned)"
+      }
+    ]
+  },
+  "ben/038": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "25-slide agentic-delivery deck + PDF",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "Agentic-delivery whitepaper deck"
+      }
+    ]
+  },
+  "ben/039": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "md-deck build skill improvements",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Deck-build skill improvements"
+      }
+    ]
+  },
+  "ben/040": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "abandoned orphan workflow stub",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 2,
+          "min": 1
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console strategy reassembly ops (abandoned)"
+      }
+    ]
+  },
+  "ben/041": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "secops audit_artifacts.py + audit action",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "todo": "SecOps skill/agent trojan-horse audit"
+      }
+    ]
+  },
+  "ben/042": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "md-deck/frontend-slides shared layer",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "md-deck/frontend-slides shared layer"
+      }
+    ]
+  },
+  "ben/043": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "assets/cards overview",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "Assets/cards overview"
+      }
+    ]
+  },
+  "ben/044": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "reset-to-upstream tracker recovery + re-sync",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Tracker console integration recovery"
+      }
+    ]
+  },
+  "ben/045": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "restore missing trace-matrix sidecar",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Trace-matrix view breakage recovery"
+      }
+    ]
+  },
+  "ben/046": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "not started \u2014 captured plan + open questions",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 5,
+          "min": 2
+        },
+        "personas": [
+          "systems-engineering",
+          "regulatory-affairs"
+        ],
+        "todo": "PCA filing-entity architecture gap (planning)"
+      }
+    ]
+  },
+  "ben/047": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "tracker upstream-baseline artifacts + engineering.yml",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Tracker upstream-baseline improvements"
+      }
+    ]
+  },
+  "ben/048": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "superseded \u2014 continuous parity cadence",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 3,
+          "min": 1
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Sister-project parity (superseded)"
+      }
+    ]
+  },
+  "ben/049": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "SRS authored for 3 DHFs",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "systems-engineering",
+          "rd-lead"
+        ],
+        "todo": "Build out software requirements (3 DHFs)"
+      }
+    ]
+  },
+  "ben/050": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "trace-matrix v8 bidirectional edges + analyze fix",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Trace-matrix bidirectional edges"
+      }
+    ]
+  },
+  "ben/051": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "dhf-manifest v12 canonical-role followups",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "DHF-manifest canonical-roles follow-ups"
+      }
+    ]
+  },
+  "ben/052": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "abandoned orphan workflow stub",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 2,
+          "min": 1
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Tracker draft Q7 (abandoned)"
+      }
+    ]
+  },
+  "ben/053": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "composite deck builder (build.py + deck + PDF)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "todo": "Client PDLC composite deck builder"
+      }
+    ]
+  },
+  "ben/054": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "superseded \u2014 not carried forward",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 6,
+          "min": 2
+        },
+        "personas": [
+          "program-manager",
+          "regulatory-affairs"
+        ],
+        "todo": "Agentic-first MedTech strategy (superseded)"
+      }
+    ]
+  },
+  "ben/055": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "secops roster reconciliation",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "todo": "SecOps roster reconciliation"
+      }
+    ]
+  },
+  "ben/056": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "secops 2FA null-handling bug fix",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 8,
+          "min": 3
+        },
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "todo": "SecOps 2FA check null handling"
+      }
+    ]
+  },
+  "ben/057": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "manifest review + corrections + branch cleanup",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Review/correct skills manifest"
+      }
+    ]
+  },
+  "ben/058": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "pull + file-locator skill setup + verify",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Registry sync (file-locator skill)"
+      }
+    ]
+  },
+  "ben/059": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "task skill v25 scratch/tmp convention",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 14,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Codify scratch-and-tmp convention"
+      }
+    ]
+  },
+  "ben/060": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "medtech-docs rules symlink migration v24",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 14,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "medtech-docs rules symlink migration"
+      }
+    ]
+  },
+  "ben/061": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "medtech-docs v25 rules (refs + audit-wiring)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "medtech-docs references + audit-wiring rules"
+      }
+    ]
+  },
+  "ben/062": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "copy git-workflow rule into project",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 5,
+          "min": 2
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "git-workflow rule"
+      }
+    ]
+  },
+  "ben/063": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "sync-skills v8.2 prune action + auto-clean branches",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "sync-skills branch cleanup + prune"
+      }
+    ]
+  },
+  "ben/064": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "small sentinel-blocks rule pull",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 5,
+          "min": 2
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "sync-skills pull (sentinel-blocks)"
+      }
+    ]
+  },
+  "ben/065": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "file-locator incremental rebuild FK-cascade fix",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 12,
+          "min": 4
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "file-locator incremental rebuild bug"
+      }
+    ]
+  },
+  "ben/066": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "restore 14 symlinks + sync-skills v8.3 windows guard + tests",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Agent symlink fix + Windows guard"
+      }
+    ]
+  },
+  "ben/067": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "pull 79 files + 6 G5 followups",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Bulk registry sync (2026-05-30)"
+      }
+    ]
+  },
+  "ben/068": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "closed 6 Required FAILs + 20 READMEs",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead",
+          "quality-engineering"
+        ],
+        "todo": "Post-pull audit cleanup (2026-05-30)"
+      }
+    ]
+  },
+  "ben/069": {
+    "agentic_hours": 9,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "3-file onboarding + setup.sh (1385L) + docs",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 70,
+          "min": 30
+        },
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "todo": "Setup onboarding overhaul"
+      }
+    ]
+  },
+  "ben/070": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "overview hygiene + SP6500 retirement across PRs",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Project-overview cleanup + SP6500 retirement"
+      }
+    ]
+  },
+  "ben/071": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "setup.md Gemini-CLI section",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 10,
+          "min": 4
+        },
+        "personas": [
+          "program-manager",
+          "rd-lead"
+        ],
+        "todo": "Gemini CLI partial-support guidance"
+      }
+    ]
+  },
+  "ben/072": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "adapt Anthropic frontend-design skill",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 14,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Install frontend-design skill"
+      }
+    ]
+  },
+  "ben/073": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "console.css frontend-design refresh",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "project-console frontend-design refresh"
+      }
+    ]
+  },
+  "ben/074": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "file-locator self-healing venv bootstrap",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 18,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "file-locator self-healing venv"
+      }
+    ]
+  },
+  "ben/075": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "HIPAA + NIST SP 800-66 reference distillations",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "regulatory-affairs",
+          "cybersecurity"
+        ],
+        "todo": "HIPAA + NIST 800-66 reference distillations"
+      }
+    ]
+  },
+  "ben/076": {
+    "agentic_hours": 7,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "advisor grounding + L1b tier authoring + conformance",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "regulatory-affairs",
+          "cybersecurity",
+          "rd-lead"
+        ],
+        "todo": "HIPAA advisor grounding gaps"
+      }
+    ]
+  },
+  "ben/077": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "console gap-analysis showcase tab",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console gap-analysis showcase tab"
+      }
+    ]
+  },
+  "ben/078": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "tracker dashboard frontend-design refresh",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Tracker dashboard frontend refresh"
+      }
+    ]
+  },
+  "ben/079": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "superseded \u2014 fork not carried forward",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 6,
+          "min": 2
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "project-console-2 bold redesign (superseded)"
+      }
+    ]
+  },
+  "ben/080": {
+    "agentic_hours": 8,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "5-year commercial roadmap + KOL gap-analysis",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "regulatory-affairs",
+          "clinical-affairs",
+          "program-manager"
+        ],
+        "todo": "Commercial roadmap (5yr) + KOL gap-analysis"
+      }
+    ]
+  },
+  "ben/081": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "console gap-analysis agent panels + goals banner",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console gap-analysis agent panels"
+      }
+    ]
+  },
+  "ben/084": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "pull explain skill + 11 advisor advances",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Registry sync (2026-06-08)"
+      }
+    ]
+  },
+  "ben/085": {
+    "agentic_hours": 3,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "registry sync 2026-06-11",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 16,
+          "min": 6
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Registry sync (2026-06-11)"
+      }
+    ]
+  },
+  "ben/086": {
+    "agentic_hours": 5,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "gap-analysis ask-advisor drawer + grounding",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 24,
+          "min": 10
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console gap-analysis ask-an-advisor"
+      }
+    ]
+  },
+  "ben/087": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "console strategy+submission topline + new submissions skill",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 80,
+          "min": 30
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Console strategy + submission topline"
+      }
+    ]
+  },
+  "ben/088": {
+    "agentic_hours": 9,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "submissions v2 filing-type profiles + doc sets",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "rd-lead",
+          "regulatory-affairs"
+        ],
+        "todo": "Submissions filing-type profiles"
+      }
+    ]
+  },
+  "ben/089": {
+    "agentic_hours": 7,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "4 submission/QMS follow-ups (refs + WI + form)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 40,
+          "min": 16
+        },
+        "personas": [
+          "regulatory-affairs",
+          "quality-engineering"
+        ],
+        "todo": "Submission reference + QMS backlog"
+      }
+    ]
+  },
+  "ben/090": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "references refresh + doc-eval + upstream pushes",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead",
+          "regulatory-affairs"
+        ],
+        "todo": "Registry sync + reconcile + doc-eval"
+      }
+    ]
+  },
+  "ben/091": {
+    "agentic_hours": 1,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "not started \u2014 article scope pending",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 5,
+          "min": 2
+        },
+        "personas": [
+          "program-manager"
+        ],
+        "todo": "Article: AI cost control (not started)"
+      }
+    ]
+  },
+  "ben/092": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "import accessories FDA guidance + verify + applicability",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "regulatory-affairs"
+        ],
+        "todo": "Import accessories FDA guidance"
+      }
+    ]
+  },
+  "ben/093": {
+    "agentic_hours": 6,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "usage-metrics merge + full setup + gitignore fix",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 30,
+          "min": 12
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Usage-metrics sync + setup"
+      }
+    ]
+  },
+  "ben/094": {
+    "agentic_hours": 4,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "pulled 44 files + new skills (red-team/regulatory-authoring/writing-well)",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 20,
+          "min": 8
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Registry skill sync"
+      }
+    ]
+  },
+  "ben/095": {
+    "agentic_hours": 10,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "cybersecurity-agent fix + Red-Team group + tooling + panels + templates",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 60,
+          "min": 24
+        },
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "todo": "Console agents fix + Red-Team group"
+      }
+    ]
+  },
+  "dmytro/001": {
+    "agentic_hours": 2,
+    "method_version": 1,
+    "retrospective": true,
+    "todos": [
+      {
+        "basis": "experiment with workflows",
+        "confidence": "low",
+        "manual_hours": {
+          "max": 10,
+          "min": 4
+        },
+        "personas": [
+          "rd-lead"
+        ],
+        "todo": "Experiment with workflows"
+      }
+    ]
+  }
+}

@@ -44,30 +44,3 @@ Extract the bespoke Systems Engineering Assistant drawer from `trace_matrix_view
 
 **How to apply:** Any new section that wants a chat drawer includes the `_assistant_drawer.html` partial and hands it the five `data-*` attributes. Grounding is fetched from the page-supplied URL; the unified endpoint caps it at 80 KB server-side. Do **not** add section-specific hooks into the drawer partial — if a section needs specialized grounding, it exposes a new GET endpoint and points the drawer at it.
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 6,
-    "todos": [
-      {
-        "todo": "Unified assistant drawer (reusable sidecar)",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 16,
-          "max": 40
-        },
-        "confidence": "low",
-        "basis": "reusable assistant drawer sidecar (software)"
-      }
-    ]
-  }
-}
-```

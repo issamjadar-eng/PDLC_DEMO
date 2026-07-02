@@ -141,30 +141,3 @@ bash .claude/hooks/task-activate.sh add <SESSION_UUID> 051
 | 2026-05-13 | Ben (with Claude) | Phases 0–2 complete. Read SKILL.md + discovery-index resolver end-to-end before planning. **Bug fix shipped (skill v9 → v10):** multi-match no-winner now surfaces as `ambiguity_notes[]` entry with nullable `winning_pattern`/`winning_path` + paired `gaps[]` reason. Three call sites updated (`resolve_project_role`, `_bind_per_dhf`, `resolve_per_submission_role`). Test suite 36 → 40 with new case9. PDLC_DEMO counts unchanged at 9+133 / 221 gaps / 7 ambiguity_notes (4 of which are the new no-winner shape — surfaced predicate_analysis README ambiguity + 3× fmea design-vs-process ambiguity in the system DHFs as diagnostic value-add). Sister-project (arthrex/pccp) bit-for-bit identical at v10 — zero regression. Sister script reverted; upstream push deferred to after Phase 4. **Mid-task refinement (worth surfacing for Phase 3):** the PDLC_DEMO `user_needs` override was masking a *multi-match ambiguity*, not a *missing-pattern* gap as task 050's wrap-up framed it. The two cases need different Phase 3 fixes: `user_needs` needs an exact-match `user-needs.md` pattern at top rank (to outrank the broad `*user-needs*.md`); `software_requirements` needs a lowercase-hyphen variant alongside the Title-Case patterns. Next session resumes from Phase 3. |
 | 2026-06-08 | Ben (with Claude) | 2026-06-08: Confirmed Complete via task-doc audit — dhf-manifest v12 (canonical_role/frontmatter_winner); hitachi PR #161; index was stale. Filed under Completed in 000-index.md. |
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 6,
-    "todos": [
-      {
-        "todo": "DHF-manifest canonical-roles follow-ups",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 12,
-          "max": 30
-        },
-        "confidence": "low",
-        "basis": "dhf-manifest v12 canonical-role followups"
-      }
-    ]
-  }
-}
-```

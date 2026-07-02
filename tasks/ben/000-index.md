@@ -4,6 +4,7 @@
 
 | ID | Task | Status | Priority | Summary |
 |----|------|--------|----------|---------|
+| 100 | [100](100-migrate-economics-to-sidecar.md) — Migrate Retrospective Economics to v12 Sidecar | In Progress | Medium | Move the 95 retrospective `## Economics` blocks out of finished task docs into the v12 `economics.json` sidecar (keep the 4 real-time blocks in-doc); Value numbers must stay identical. |
 | 099 | [099](099-retrospective-cost-allocation.md) — Retrospective Token-Cost Allocation | In Progress | Medium | Add a cost allocator to usage-metrics/aggregate.py: distribute the ~$208 `_unattributed` measured spend (pre-ledger sessions) across tasks active each day (changelog-day overlap, even split, max-per-day guard against bulk-edit noise). Cost measured, split estimated; flagged `cost_basis`. Bounded by transcript coverage (Jun 15–Jul 1). |
 | 098 | [098](098-economics-integrity-and-redteam.md) — Economics Model Integrity + Red-Team the Aggregate | In Progress | High | Make the agentic-value model defensible before the ROI claim goes external: (1) close the economics fill-gap (task v33 — trigger the `## Economics` fill on todo check-off, task completion, and session end, not just at manual checkpoint); (2) tighten `agentic_hours` from elapsed wall-clock → human supervised-attention hours (usage-metrics v9); (3) red-team the aggregate hours-saved claim with the buyer-committee skeptics (verdict: honest but not externalize-ready; relabeled a **modeled, uncalibrated demo estimate**). |
 | 097 | [097](097-value-table-column-info-hover.md) — Value & ROI Table — Column Info Hover | In Progress | Medium | Add per-column info (?) hover tooltips to the console's Metrics ▸ Value & ROI by-task table, explaining each column (Task, Last updated, Category, Agentic hrs, By-hand hrs, Hours saved, Agentic $). Tooltip copy states the honest unit distinction from the ben/096 close-out: Agentic (hrs) = human supervised time (not compute, not additive across overlap), By-hand = specialist person-hours, Hours saved = the difference. Accessible + scoped `vv-` styling; touches project-console. |
@@ -109,6 +110,7 @@ _Tasks closed without completion — premise overtaken, never started, or orphan
 
 ## Changelog
 
+- 2026-07-02: Task 100 created — migrate retrospective economics to the v12 sidecar.
 - 2026-07-01: Task 099 created — retrospective token-cost allocation.
 - 2026-06-30: Task 098 created — economics model integrity + red-team the aggregate.
 - 2026-06-30: Task 097 created — Value & ROI table column info hovers.

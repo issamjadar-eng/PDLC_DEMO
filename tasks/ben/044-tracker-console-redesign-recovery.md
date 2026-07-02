@@ -567,30 +567,3 @@ To restart the project-console (if needed):
 bash tools/project-console/start.sh
 ```
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 5,
-    "todos": [
-      {
-        "todo": "Tracker console integration recovery",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 10,
-          "max": 24
-        },
-        "confidence": "low",
-        "basis": "reset-to-upstream tracker recovery + re-sync"
-      }
-    ]
-  }
-}
-```

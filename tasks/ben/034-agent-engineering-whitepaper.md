@@ -460,31 +460,3 @@ If a fresh session picks this up:
 4. Phase 4 plan: build a `scripts/build-agent-engineering-pptx.py` modeled on the ben/025 `scripts/build-project-overview-pptx.py` (GlobalLogic theme, full-bleed agenda + thank-you slides, 3-column cards, numbered section chips). Slides should map to whitepaper sections — opener, exec summary, the argument (compiler + optics), the discipline, the differentiator table, proof points (parity + scale + leverage), GTM call-outs, pre-sales call-outs, talk-track summary, closing. Speaker notes per slide. Output to repo root.
 5. Open question for the user before starting Phase 4: brand the deck (GlobalLogic theme as ben/025), or vendor-neutral / co-brandable? Length target: ~20 slides like project-overview.pptx, or shorter executive cut?
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 8,
-    "todos": [
-      {
-        "todo": "Agent-engineering whitepaper & deck",
-        "personas": [
-          "program-manager",
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 24,
-          "max": 60
-        },
-        "confidence": "low",
-        "basis": "two whitepapers + PDFs + render pipeline"
-      }
-    ]
-  }
-}
-```

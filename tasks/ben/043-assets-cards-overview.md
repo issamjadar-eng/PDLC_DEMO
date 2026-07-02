@@ -54,30 +54,3 @@ Workflows card on landing page wired to `/workflows` route with descriptive text
 2026-05-05 — Restructured /overview to show project overview as cards (PDF + PPTX) + asset decks as selectable cards with unified iframe viewer below; users select any card to view inline; verified PDF and asset HTML decks working (commit a39609b)
 2026-05-05 — Consolidated all control buttons into single bottom bar: Download .pptx, Open markdown, Open in tab, Close; removed viewer header bar; verified across PDF and asset deck; feature complete and portable (commit fef0560)
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 3,
-    "todos": [
-      {
-        "todo": "Assets/cards overview",
-        "personas": [
-          "program-manager"
-        ],
-        "manual_hours": {
-          "min": 6,
-          "max": 16
-        },
-        "confidence": "low",
-        "basis": "assets/cards overview"
-      }
-    ]
-  }
-}
-```
