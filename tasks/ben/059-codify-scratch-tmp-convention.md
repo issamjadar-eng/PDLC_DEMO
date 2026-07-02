@@ -69,30 +69,3 @@ Reviewed sister project `arthrex-pccp`: it codifies this in `.claude/rules/scrat
 
 Sister-project reference: `../arthrex-pccp/.claude/rules/scratch-and-tmp.md`, and the CLAUDE.md "Auto-loaded rules (do not restate here)" section (~line 232).
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 3,
-    "todos": [
-      {
-        "todo": "Codify scratch-and-tmp convention",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 6,
-          "max": 14
-        },
-        "confidence": "low",
-        "basis": "task skill v25 scratch/tmp convention"
-      }
-    ]
-  }
-}
-```

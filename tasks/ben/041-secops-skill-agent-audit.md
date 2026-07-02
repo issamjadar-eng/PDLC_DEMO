@@ -92,8 +92,6 @@ Summary: 0 Critical · 5 High · 4 Medium · 0 Low. Every match was triaged as *
 **How to apply.** When adding new rules to `audit_artifacts.py`, accept that the rule definitions themselves may match. Document expected self-matches inline in the Findings table rather than building suppression machinery for them. If a future rule pattern is too noisy when applied to its own definition, move that rule's pattern to a sidecar file rather than trying to teach the scanner to skip its own rule block.
 <!-- /LESSONS -->
 
-
-
 ## Changelog
 
 - 2026-05-01 — Task created. Scanner spec drafted in Implementation Notes.
@@ -114,31 +112,3 @@ Activation:
 bash .claude/hooks/task-activate.sh add c0f539d8-5981-427a-8999-74b2c0485d0d 041
 ```
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 6,
-    "todos": [
-      {
-        "todo": "SecOps skill/agent trojan-horse audit",
-        "personas": [
-          "rd-lead",
-          "cybersecurity"
-        ],
-        "manual_hours": {
-          "min": 12,
-          "max": 30
-        },
-        "confidence": "low",
-        "basis": "secops audit_artifacts.py + audit action"
-      }
-    ]
-  }
-}
-```

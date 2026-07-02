@@ -74,30 +74,3 @@ Why: The task-reference format rule `<person>/<NNN>` is canonical in `lessons/SK
 
 How to apply: When building a new skill that emits text referencing tasks (commit messages, changelog entries, reports, digests), audit the output against every documented project convention at design time, not only at bug-report time. The lessons skill is the canonical registry of these conventions; search it before writing output formatters. Also: save durable conventions as feedback memories so they surface at session start in subsequent sessions — documentation in a skill file isn't enough if the skill isn't loaded that session.
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 6,
-    "todos": [
-      {
-        "todo": "Digest skill",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 16,
-          "max": 40
-        },
-        "confidence": "low",
-        "basis": "new digest skill (daily briefing + project changelog)"
-      }
-    ]
-  }
-}
-```

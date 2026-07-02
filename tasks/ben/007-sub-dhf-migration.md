@@ -795,7 +795,6 @@ Recommended (not Required) because a team may legitimately defer migration while
 
 > **⚠️ Phase status under Architectural Pivot (2026-04-13):** Most of P2 is superseded. The `migrate-to-multi-dhf` action is **deleted** — there is no migration in the unified shape. `init --topology` is **deleted** — init always creates `dhfs/<primary>/`. P2.1 (init flow), P2.3 (migrate action), P2.4 (validator), P2.7 (dry-run gate) are **historical**. What survives into implementation: **P2.2 `add-sub-dhf`** (still the only way to add a sub-DHF), and **P2.5 Templates** (README template + composition-manifest template). The PDLC_DEMO reorg moves out of "skill feature" into "one-time P6 execution step." Historical content retained below for reasoning trail.
 
-
 **Status**: Draft — pending review.
 
 ### P2.0 — Overview
@@ -1505,7 +1504,6 @@ When the gate passes, P2 is **done** and task 007 advances to **P3 — `/strateg
 
 > **⚠️ Phase status under Architectural Pivot (2026-04-13):** Simplified. There is no topology branching in `/strategy` — it always writes to `dhfs/<name>/design-controls/plans/`. What survives: **domain registry changes (P3.1), tag-scope convention (P3.2) including `sub-dhf=<leaf>` resolution from Q1, scan/assemble sub-DHF iteration (P3.3/P3.4), transition of existing task 006 tag blocks (P3.8), best-practices updates (P3.9), exit gate (P3.10)**. What's moot: any section discussing "in `single-dhf` mode, do X / in `multi-sub-dhf` mode, do Y" — the single-dhf branch is deleted; the multi-sub-dhf branch is the only path and runs uniformly with N=1 or N>1.
 
-
 **Status**: Draft — pending review.
 
 ### P3.0 — Overview
@@ -1922,7 +1920,6 @@ When the above hold, **P4 (`/tracker` topology awareness) can start in parallel 
 
 > **⚠️ Phase status under Architectural Pivot (2026-04-13):** Simplified. `/tracker` always reads `dhfs/<name>/...`. No mode branching. What survives: **composition-manifest-as-source-of-truth (P4.2), strategy docs as advisory input (P4.3), action changes (P4.4), tracker markdown schema changes (P4.5), HTML dashboard changes (P4.6), best-practices updates (P4.7), exit gate (P4.8)**. What's moot: any discussion of "how tracker behaves in single-dhf vs multi-sub-dhf mode" — there is only one mode.
 
-
 **Status**: Draft — pending review.
 
 ### P4.0 — Overview
@@ -2188,7 +2185,6 @@ P4 can proceed in parallel with P5 (best-practices). Both feed into P6 (PDLC_DEM
 ## Phase P5 — /best-practices Topology Awareness
 
 > **⚠️ Phase status under Architectural Pivot (2026-04-13):** Simplified but mostly intact. `/best-practices` always iterates `sub_dhfs[]` for per-dhf checks — no flat-layout fallback. All checks, Scope column schema, subagent dispatch (P5.5a), stale-manifest check, unreferenced-sub-DHF check carry forward unchanged. What's moot: **ambiguity #2** (per-dhf behavior in single-dhf mode) and any "in single-dhf mode, skip this" language. The dispatcher still has a performance optimization available — when `sub_dhfs[]` has exactly one entry, it can short-circuit subagent fan-out and run per-dhf checks in the parent context directly. That's a performance knob, not a semantic difference.
-
 
 **Status**: Draft — pending review.
 
@@ -2741,31 +2737,3 @@ P6 is the live-fire migration of PDLC_DEMO. Most P6 work is execution, but a few
 - 2026-04-13: Resolved all 4 P6 prerequisites. #1 (atomic `project.yml` write) signed off as "write in final commit" then marked moot under the Architectural Pivot (no topology field to flip). #2 (pre-reorg baseline audit) resolved "skip — solo developer, rebasable history, and the flat shape wouldn't be intelligible to the new `/best-practices` anyway." #3 (stub composition manifest) resolved "no stub; add a structural cross-cutting check (new P5.4a) that WARNs when `sub_dhfs[]` is non-empty but zero composition manifests exist." #4 (Scope column rollout sequencing) resolved "inside P6, batched as separate commits per skill, using a mechanical classification rule based on which folder each check references." Reasoning: deferring would produce an audit blackout because post-reorg `docs/project/design-controls/` no longer exists.
 - 2026-04-13: **Architectural Pivot — dropped the dual-topology model entirely.** User proposed: what if single-dhf and multi-sub-dhf use the same shape from day one? On review, every piece of dual-topology complexity (P1 topology model, P2 `migrate-to-multi-dhf`, P3/P4/P5 mode branching, ambiguities #1/#2/#4/#9) traced back to three wrong assumptions (small projects carrying `dhfs/` overhead, existing flat projects needing a migration-able path, single and multi being fundamentally different). The set of "existing flat projects" is exactly one (PDLC_DEMO). Adopted the unified shape: every project is `docs/project/dhfs/<primary>/...` from init, N=1 is just a degenerate case of N>1, growth is a plain `add-sub-dhf` call. Deleted `migrate-to-multi-dhf` action. Deleted `init --topology` flag. Deleted `project.topology` field. Ambiguity #2 marked moot. P2/P3/P4/P5 dramatically simplified; subagent dispatch (P5.5a) stays and runs uniformly. PDLC_DEMO's one-time reorg from flat → `dhfs/pca-device/` becomes a P6 execution step, not a skill feature. Init prompts for the primary sub-DHF name with no default (option 1). Architectural Pivot section added near the top; "Why this shape" and "Topology model (proposed)" marked historical.
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 12,
-    "todos": [
-      {
-        "todo": "Unified DHF shape migration (6 skills)",
-        "personas": [
-          "rd-lead",
-          "systems-engineering"
-        ],
-        "manual_hours": {
-          "min": 40,
-          "max": 100
-        },
-        "confidence": "low",
-        "basis": "retrospective; unified-DHF skill redesign across 6 skills + reorg 10 DHFs + 261 READMEs"
-      }
-    ]
-  }
-}
-```

@@ -116,30 +116,3 @@ bash .claude/hooks/task-activate.sh add <SESSION_UUID> 050
 | 2026-05-12 | Ben (with Claude) | **Upstream push complete + project re-synced.** hitachi PR #159 merged at `d3c3429`. Project pulled 27 files (advisors v1.0→v1.2.0, dhf-manifest v7→v9). Ran `/dhf-manifest discovery-index` post-update action — 9 project + 133 per-DHF resolutions, 0 ambiguity issues for resolved roles. Surfaced filename-convention mismatch (canonical-roles.yaml uses Title Case patterns; medtech-docs convention is lowercase-hyphen). Applied project-side `evidence_layout.layers` override in `project.yml` for `user_needs` + `software_requirements`. Three follow-up improvements scoped + deferred to **task 051 (fresh session)**: (a) lowercase-hyphen pattern variants in `canonical-roles.yaml`, (b) bug fix to populate `ambiguity_notes[]` on multi-match no-winner, (c) frontmatter `canonical_role` declaration as author-facing opt-in. LLM-subagent-at-`--resolve-ambiguity` deferred indefinitely (deterministic improvements first). Commit `7454063`. |
 | 2026-06-08 | Ben (with Claude) | 2026-06-08: Confirmed Complete via task-doc audit — analyze.py imports LAYER_ORDER; trace-matrix v8; hitachi PR #159. Filed under Completed in 000-index.md. |
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 4,
-    "todos": [
-      {
-        "todo": "Trace-matrix bidirectional edges",
-        "personas": [
-          "rd-lead"
-        ],
-        "manual_hours": {
-          "min": 8,
-          "max": 20
-        },
-        "confidence": "low",
-        "basis": "trace-matrix v8 bidirectional edges + analyze fix"
-      }
-    ]
-  }
-}
-```

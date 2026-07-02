@@ -115,31 +115,3 @@ Build a new `assets/client-pdlc/` composite presentation that mechanically harve
 
 Precedent for a similar curation sidecar exists at `assets/project-overview-2/picks.json` (schema `md-deck/picks@2`), but that's per-anchor creative cache from `/md-deck`, not slide-level keep/order curation. We'll likely define our own simpler schema.
 
-## Economics
-
-_Retrospective estimate (rough; from task summary). See effort-estimation-rubric.md._
-
-```json
-{
-  "economics": {
-    "method_version": 1,
-    "retrospective": true,
-    "agentic_hours": 6,
-    "todos": [
-      {
-        "todo": "Client PDLC composite deck builder",
-        "personas": [
-          "rd-lead",
-          "program-manager"
-        ],
-        "manual_hours": {
-          "min": 16,
-          "max": 40
-        },
-        "confidence": "low",
-        "basis": "composite deck builder (build.py + deck + PDF)"
-      }
-    ]
-  }
-}
-```
