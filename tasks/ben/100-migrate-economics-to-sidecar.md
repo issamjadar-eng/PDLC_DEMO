@@ -2,7 +2,7 @@
 
 **ID**: 100
 **Created**: 2026-07-02
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -72,5 +72,7 @@ _By-hand person-hour estimate, **filled at checkpoint / on todo check-off** per 
 
 ## Changelog
 
+- 2026-07-03: Status changed to Complete. Economics already filled (agentic 1–2 h).
+- 2026-07-03 (checkpoint recovery — no transcript): Reconciled doc vs git. The migration below marked *"uncommitted / Next: commit + push"* **shipped and is merged to `main`**: PR #96 (`88bc141` — migrate 94 retrospective economics blocks to the v12 `economics.json` sidecar; `value_summary` verified byte-identical). This is the commit brought in by today's `git pull`. **Do not re-run the migration or re-push.** All described work delivered — Status left `In Progress` pending user confirmation to close.
 - 2026-07-02: **Migration done + verified (uncommitted).** Extracted the 94 retrospective `## Economics` objects into `tools/usage-metrics/economics.json` (v12 sidecar, flat `{"tf/NNN": econ}` map) and removed the `## Economics` section from 95 finished task docs (kept 096–099 real-time + 100's stub in-doc). Re-aggregated: `value_summary` **byte-identical** to baseline (97 w/ estimate, 94 retro, 801–2,768 hrs saved) — pure relocation, no data change. Console value data intact. Note: `ben/035` has two docs sharing the number (pre-existing dup) → one sidecar key, both docs stripped; aggregate already collapsed them so no numeric change. Next: commit + push. The finished docs are now clean of rough backfill data; the sidecar is CI-read, in-doc-wins so any future real per-task estimate silently supersedes it.
 - 2026-07-02: Task created — migrate the 95 retrospective `## Economics` blocks out of finished task docs into the v12 `economics.json` sidecar (pulled this session), keeping the 4 real-time blocks in-doc. Value numbers must not change.

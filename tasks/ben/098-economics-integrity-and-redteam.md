@@ -2,7 +2,7 @@
 
 **ID**: 098
 **Created**: 2026-06-30
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -103,7 +103,7 @@ _By-hand person-hour estimate, **filled at checkpoint / on todo check-off** per 
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": null,
+    "agentic_hours": {"min": 4, "max": 8},
     "todos": [
       {
         "todo": "task v33 — economics fill-cadence (todo-check trigger + completion gate + 15-min SessionEnd)",
@@ -137,10 +137,12 @@ _By-hand person-hour estimate, **filled at checkpoint / on todo check-off** per 
   }
 }
 ```
-_`agentic_hours` left `null` until 098 completes (agentic_hours-fix + red-team still pending); set at the completion gate per the rubric._
+_`agentic_hours` set to a 4–8 h range at the completion gate (2026-07-03) — supervised-attention hours across v33/v9/v10 authoring + the 5-skeptic red-team panel + the F13 blind re-estimate. Deferred: F11 (rate data), F12–F13 calibration fork (user decision)._
 
 ## Changelog
 
+- 2026-07-03: Status changed to Complete. `agentic_hours` set at the completion gate (4–8 h). Deferred F11 + the F12–F13 calibration fork remain a user decision (spin a follow-up task if pursued).
+- 2026-07-03 (checkpoint recovery — no transcript): Reconciled doc vs git. Everything below marked *"uncommitted / Next: push"* **shipped and is merged to `main`**: PR #88 (`42cfa62` — task v33 economics fill-cadence), PR #89 (`43b799f` — agentic_hours = attention-hours, usage-metrics v9 + console 1.30.5), PR #90 (`84605b0` — red-team fixes, narrative v2, usage-metrics v10), PR #91 (`0fb291a` — console renders agentic_hours as a range, 1.30.6 + ben/096 ranged estimate). Red-team + F1–F10 fixes all delivered. **Do not re-push.** Only residual is the deferred F11 (rate data) / user's F12–F13 calibration fork; `agentic_hours` still `null` at the completion gate. Status left `In Progress` pending user confirmation to close.
 - 2026-06-30: **F13 independent re-estimate + F1–F10 fixes applied (uncommitted).** (F13) Blind-re-estimated a 12-task sample (economics stripped, verified no leak) with a second estimator → **~88% mean midpoint deviation** between estimators (2/12 diverged 3.8–5.5×; 10/12 within 2×), aggregate **1.52× higher** (215–538 vs 140–356 h). Honest read: **imprecise (±~90%/task) but not biased high** — refutes the "thumb on the scale" worry on the by-hand side while confirming "don't claim precision." (Fixes) Rewrote the ROI narrative → **v2 "modeled, uncalibrated illustration"** with a not-for-external-quotation banner, regulatory non-commitment disclaimer, "assisted not produced," work-type split, single-operator scoping, governance-asymmetry note, risks-of-the-approach block, and the $53→$0/$152.57 reconciliation. Method: **F2** — `agentic_hours` now ranged, roll-up floor = by-hand-min − agentic-max (`aggregate.py` tolerant of scalar-or-range; back-compat scalar = agentic-max so `value.js` unaffected); **F10** — inverted tasks flagged + excluded from the sum. usage-metrics v9→**v10**. Bound the demo caveat to the number in `000-index.md` (3 spots). F11 deferred (rate data), F14 accepted (reframed as efficiency, not moat). Next: push.
 - 2026-06-30: **Red-team complete — 5 skeptics, 14 findings, unanimous verdict (uncommitted).** Assembled the honest ROI narrative (claim + 4-stage method + 6 stated weaknesses) and ran CFO/PMO/QA-VP/CEO/RA-VP against it. **Verdict: honest internally, NOT externalize-ready.** Two cross-cutting themes: (1) *disclosure ≠ validation* — never calibrated against one real actual, self-estimated by a non-deterministic LLM with no independent gate (~71% re-estimate inconsistency; METR: self-report runs optimistic); (2) claim language overreaches, esp. for regulated work. Conceded across all 5: the disclosure discipline is genuine, anchored citations are real, the arithmetic is clean/deterministic, token cost is measured — exposure is in inputs + wording, not math. Captured 14 triaged findings (F1–F14) in the new `## Red-Team Findings + Triage` section. F1–F10 = unambiguous fixes (incl. a real one they caught: **the narrative's `$53` doesn't reconcile to the committed `usage.json`, which shows $0/task + ~$152.57 unattributed** — my $53 was a discarded local re-collection). F12–F13 (calibration + independent gate) = decision fork for the user. Next: user's call on the fork, then apply F1–F10.
 - 2026-06-30: **usage-metrics v9 — `agentic_hours` = attention-hours (uncommitted).** Tightened the rubric definition from "elapsed supervised wall-clock" → **human supervised-attention hours** (hands-on + active review; not compute, not background/unattended time). Now additive across tasks (one person can't attend two things at once) → `Σ agentic_hours` is a real "human hours" number and `hours_saved` is labor-vs-labor. Old wall-clock estimates over-state human cost → bias savings down → conservative floors; `method_version` stays 1 (definition sharpened, not changed). Fixed the console Agentic-hrs tooltip (project-console 1.30.5) — it still said "not additive" (old framing); now "sums honestly across tasks." Verified live: methodology re-renders from rubric + tooltip consistent (0 stale strings). This directly answers your "if you add agentic_hours up, it's not human hours" point. Next: red-team the corrected model.

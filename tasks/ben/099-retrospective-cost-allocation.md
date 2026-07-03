@@ -2,7 +2,7 @@
 
 **ID**: 099
 **Created**: 2026-07-01
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -77,5 +77,7 @@ _First ranged `agentic_hours` on a real task (dogfooding usage-metrics v10) — 
 
 ## Changelog
 
+- 2026-07-03: Status changed to Complete. Economics already filled (agentic 1–2 h).
+- 2026-07-03 (checkpoint recovery — no transcript): Reconciled doc vs git. The allocator work below marked *"uncommitted / Next: push"* **shipped and is merged to `main`**: PR #92 (`ae56b5b` — retrospective token-cost allocation, de-unattribute by day-overlap, usage-metrics v11 + project-console 1.30.7). **Do not re-push.** All described work appears delivered — Status left `In Progress` pending user confirmation to close.
 - 2026-07-01: **Allocator built + tested + wired to console (uncommitted).** `allocate_unattributed()` in `aggregate.py`: apportions each session's `_unattributed` cost across its days by token-share, then splits each (person, day) cost evenly across tasks with a changelog entry that day (`_task_active_days`, **excluding `000-index`** — it was eating $17 as a phantom task). Guards: 0-active-tasks day stays unattributed; >4-active-tasks day skipped as bulk-edit noise (config `max_tasks_per_day`). Per-task `cost_allocated` + `cost_basis`; `value_summary` gains the 4-way cost breakdown. **Result: $146.91 of $208.39 (70%) allocated onto tasks 087–095; $61.47 residual.** The cost is measured; only the split is estimated (stronger than the modeled hours). project-console 1.30.7: by-task Agentic-$ column adds allocated + shows a ≈ marker + tooltip; hero/card totals include it. usage-metrics v10→v11. Verified live on :8765. Dogfooded the ranged `agentic_hours` (099's own = "1–2"). Next: push.
 - 2026-07-01: Task created — retrospective token-cost allocation. Spun out of the ben/098 cost discussion: the ~$208 `_unattributed` (pre-ledger sessions) can be de-unattributed by allocating each day's measured cost across the tasks active that day, bounded by transcript coverage. Cost is measured; only the split is estimated.
