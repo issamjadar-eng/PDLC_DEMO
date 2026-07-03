@@ -1,24 +1,33 @@
 {
   "by_day": {
     "2026-07-01": {
-      "cache_creation": 3231735,
-      "cache_read": 194361285,
-      "cache_write_1h": 1695555,
+      "cache_creation": 3254011,
+      "cache_read": 201196618,
+      "cache_write_1h": 1717831,
       "cache_write_5m": 1536180,
-      "input": 213282,
-      "messages": 527,
-      "output": 580585
+      "input": 213603,
+      "messages": 537,
+      "output": 600649
+    },
+    "2026-07-02": {
+      "cache_creation": 730244,
+      "cache_read": 18916974,
+      "cache_write_1h": 730244,
+      "cache_write_5m": 0,
+      "input": 1978,
+      "messages": 27,
+      "output": 43967
     }
   },
   "by_model": {
     "claude-opus-4-8": {
-      "cache_creation": 3231735,
-      "cache_read": 194361285,
-      "cache_write_1h": 1695555,
+      "cache_creation": 3984255,
+      "cache_read": 220113592,
+      "cache_write_1h": 2448075,
       "cache_write_5m": 1536180,
-      "input": 213282,
-      "messages": 527,
-      "output": 580585
+      "input": 215581,
+      "messages": 564,
+      "output": 644616
     }
   },
   "by_task": {
@@ -57,13 +66,24 @@
     },
     "099": {
       "claude-opus-4-8": {
-        "cache_creation": 53832,
-        "cache_read": 24874629,
-        "cache_write_1h": 53832,
+        "cache_creation": 794763,
+        "cache_read": 43918377,
+        "cache_write_1h": 794763,
         "cache_write_5m": 0,
-        "input": 12851,
-        "messages": 39,
-        "output": 39438
+        "input": 15003,
+        "messages": 67,
+        "output": 92775
+      }
+    },
+    "100": {
+      "claude-opus-4-8": {
+        "cache_creation": 11589,
+        "cache_read": 6708559,
+        "cache_write_1h": 11589,
+        "cache_write_5m": 0,
+        "input": 147,
+        "messages": 9,
+        "output": 10694
       }
     }
   },
@@ -72,12 +92,12 @@
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 3231735,
-    "cache_read": 194361285,
-    "cache_write_1h": 1695555,
+    "cache_creation": 3984255,
+    "cache_read": 220113592,
+    "cache_write_1h": 2448075,
     "cache_write_5m": 1536180,
-    "input": 213282,
-    "messages": 527,
-    "output": 580585
+    "input": 215581,
+    "messages": 564,
+    "output": 644616
   }
 }
