@@ -4011,7 +4011,7 @@
         "retrospective": true,
         "title": "Usage-Metrics Skill: Registry Merge + Full Setup",
         "todos": 1,
-        "updated": "2026-06-30"
+        "updated": "2026-07-03"
       },
       "sessions": 0,
       "totals": {}
@@ -4187,6 +4187,39 @@
         }
       },
       "cost": 13.26,
+      "estimate": {
+        "agentic_hours": 4.0,
+        "agentic_hours_range": {
+          "max": 4.0,
+          "min": 2.0
+        },
+        "by_persona": {
+          "rd-lead": {
+            "max": 10.0,
+            "min": 4.0
+          }
+        },
+        "confidence_mix": {
+          "med": 2
+        },
+        "hours_saved": {
+          "max": 8.0,
+          "min": 0.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 10.0,
+          "min": 4.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead"
+        ],
+        "retrospective": false,
+        "title": "Value & ROI Table \u2014 Column Info Hover",
+        "todos": 2,
+        "updated": "2026-07-03"
+      },
       "sessions": 1,
       "totals": {
         "cache_creation": 98541,
@@ -4213,8 +4246,11 @@
       },
       "cost": 50.64,
       "estimate": {
-        "agentic_hours": null,
-        "agentic_hours_range": null,
+        "agentic_hours": 8.0,
+        "agentic_hours_range": {
+          "max": 8.0,
+          "min": 4.0
+        },
         "by_persona": {
           "program-manager": {
             "max": 10.0,
@@ -4232,7 +4268,10 @@
         "confidence_mix": {
           "med": 4
         },
-        "hours_saved": null,
+        "hours_saved": {
+          "max": 41.0,
+          "min": 10.0
+        },
         "inverted": false,
         "manual_hours": {
           "max": 45.0,
@@ -4247,7 +4286,7 @@
         "retrospective": false,
         "title": "Economics Model Integrity + Red-Team the Aggregate",
         "todos": 4,
-        "updated": "2026-06-30"
+        "updated": "2026-07-03"
       },
       "sessions": 1,
       "totals": {
@@ -4305,7 +4344,7 @@
         "retrospective": false,
         "title": "Retrospective Token-Cost Allocation (de-unattribute by day-overlap)",
         "todos": 1,
-        "updated": "2026-07-01"
+        "updated": "2026-07-03"
       },
       "sessions": 1,
       "totals": {
@@ -4363,7 +4402,7 @@
         "retrospective": false,
         "title": "Migrate Retrospective Economics to the v12 Sidecar",
         "todos": 1,
-        "updated": "2026-07-02"
+        "updated": "2026-07-03"
       },
       "sessions": 1,
       "totals": {
@@ -4452,23 +4491,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 487.0,
+    "agentic_hours": 499.0,
     "cost_allocated": 146.91,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 239.92,
     "cost_unattributed_measured": 208.39,
     "cost_unattributed_residual": 61.47,
     "hours_saved": {
-      "max": 2772.0,
-      "min": 801.0
+      "max": 2821.0,
+      "min": 811.0
     },
     "manual_hours": {
-      "max": 3297.0,
-      "min": 1306.0
+      "max": 3307.0,
+      "min": 1310.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 0,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 98
+    "tasks_with_estimate": 99
   }
 }
