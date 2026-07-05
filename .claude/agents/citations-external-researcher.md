@@ -48,7 +48,7 @@ Extract `(source_class, locator)`:
 - `ISO 14971 § 7` → `(standard, iso-14971, § 7)`
 - `IEC 62304 § 5.3` → `(standard, iec-62304, § 5.3)`
 - `21 CFR 820.30(g)` → `(cfr, 21-cfr-820.30, (g))`
-- `K230045` → `(fda-database, k230045, —)`
+- `K123456` → `(fda-database, k123456, —)`
 - FDA guidance by title → match against medtech-docs registry filenames
 
 ### Step 2 — L1a lookup (registry reference layer: `source-md/` = authority, distilled = finding aid)
@@ -93,6 +93,10 @@ If not found: L1b is silent on this reference.
    - Same clause number + **different predicate** (e.g. "verify effectiveness" ≠ "evaluate new hazards") → **`broken, kind=stale-citation`**, even though the clause exists and is on the same broad subject.
    - Same clause number + claim's predicate fully contained within source's broader predicate → `sound`.
 4. **If the predicates differ**, your verdict is `broken`. Emit the cited clause's actual content as evidence and a suggested fix naming the correct clause (or the correct restatement of the claim).
+5. **Label-existence check (against the byte-correct source).** Verify the cited *label* itself — the Example/Scenario/§/clause/table/appendix **number** — actually appears in the source (rung-3 source-md), not just that *some* related content exists. Two failure modes to emit as `broken`:
+   - **`citation-absent-from-source`** — the cited label appears **nowhere** in the source (e.g. a citation to a global "Scenario 5" where the source numbers its examples (1)–(6), each with its own Modification Scenario 1/2/3, so no global "Scenario 5" exists). Suggested fix: name the correct location or drop the citation.
+   - **`citation-mislabeled`** — the cited *content* is real but lives under a **different label** than cited (right analog, wrong number/term). Suggested fix: name the correct label (e.g. "Appendix B, Example (5) …, Modification Scenario 1"), not "Scenario 5".
+   Do not let "the described pattern is genuinely in the guidance" rubber-stamp a `sound` verdict when the *cited coordinates* are wrong — the label is part of the citation.
 
 **Why this step exists.** Standards are often cited by clause-number-only ("per § 7.5") without the citer having verified that the clause's content matches the asserted predicate. The clause exists; the citation merely tags the wrong number. A researcher that only confirms "clause exists" rubber-stamps the misattribution. The whole point of two-tier verification is to **catch** these — do not skip Step 3.5.
 
@@ -131,7 +135,7 @@ When you do fetch: capture the URL + retrieved excerpt + timestamp in evidence.
 
 ## Special cases
 
-- **K-numbers cited with a sub-claim** (e.g., "K230045 supports X"): Step 5 is the right path; fetch the accessdata record. Verdict `sound` if the record exists AND supports the sub-claim per its 510(k) summary; `unverified` if the record exists but the sub-claim isn't explicitly in the summary; `broken` if no such K-number exists.
+- **K-numbers cited with a sub-claim** (e.g., "K123456 supports X"): Step 5 is the right path; fetch the accessdata record. Verdict `sound` if the record exists AND supports the sub-claim per its 510(k) summary; `unverified` if the record exists but the sub-claim isn't explicitly in the summary; `broken` if no such K-number exists.
 - **K-numbers when WebFetch fails (v1.1).** If WebFetch returns 404, network failure, or is otherwise unreachable, return `unverified, kind=unreachable-source` — **do not** fall back to "the K-number is also mentioned in project-internal `predicate-selection.md` so it must be sound." Internal project mentions corroborate that the project BELIEVES the K-number exists; they do not verify it against FDA's authoritative database. List the internal corroboration as evidence with a note "not authoritative; FDA-database verification deferred" so the audit reader sees that internal sources back the claim but the canonical check did not happen. The verdict reflects what was verified, not what was inferred.
 - **Standards-revision mismatches** (citing doc says "ISO 14971:2007", L1a is "ISO 14971:2019"): flag as `stale-citation` with suggested fix = "update citation to current revision noted in L1a."
 - **Clause-numbering changes between revisions**: if the citing doc references a clause number that doesn't exist in the L1a revision, flag as `stale-citation` and suggest the corresponding clause in the current revision (if obvious).
