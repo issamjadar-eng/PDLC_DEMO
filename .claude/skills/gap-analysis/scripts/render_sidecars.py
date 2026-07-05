@@ -244,11 +244,20 @@ def _norm_status(raw: str) -> str:
 
 def _norm_finding_status(raw: str) -> str:
     """Normalize a finding's disposition to the gap-analysis vocabulary
-    (resolved | partial | superseded | open) — distinct from the assertion
-    vocabulary in `_norm_status` (confirmed/refuted/verify/open). Reads the
-    leading word(s) of the status cell/line, e.g. 'resolved 2026-06-30 (DG-3)'
-    → 'resolved', '**partial 2026-06-29**' → 'partial'."""
+    (addressed | resolved | partial | superseded | open) — distinct from the
+    assertion vocabulary in `_norm_status` (confirmed/refuted/verify/open).
+    Reads the leading word(s) of the status cell/line, e.g. 'resolved
+    2026-06-30 (DG-3)' → 'resolved', '**partial 2026-06-29**' → 'partial'.
+
+    `addressed` = remediation is authored/in-repo but not yet ratified or
+    published to the downstream record (in review). Rendered green like
+    `resolved` but labelled 'Addressed — In-Review' — the honest state for a
+    finding whose fix is done in the repo yet whose downstream comment/record
+    has not been re-published or signed off. Checked first so it wins even if
+    the qualifier text also mentions a resolution."""
     t = raw.lower()
+    if "addressed" in t:
+        return "addressed"
     if "resolv" in t:
         return "resolved"
     if "supersed" in t:

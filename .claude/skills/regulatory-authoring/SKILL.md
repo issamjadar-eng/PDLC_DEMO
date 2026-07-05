@@ -33,6 +33,7 @@ Author and edit **controlled documents that a regulator or auditor reads** so th
 - This SKILL.md carries the **one-line rule index** (below) + the apply-workflow — the default load.
 - `references/authoring-standard.md` carries the **full** rule + rationale + examples + corollaries — load it **on demand** for the specific rule in play, not all at once.
 - `references/rule-interactions.md` carries the precedence + routing map — load it when two rules touch one span.
+- `references/doctype-notes.md` carries the **per-document-type** layer — each doctype's register, characteristic form, the rules that bite hardest, and which supplementary-prose/slop signals transfer vs. are register false-positives. Load it when authoring/copy-editing a specific doctype (cover letter, IFU, SRS, risk file, SE argument, PCCP, …).
 - `references/lint-signals.yml` is read by the **lint script**, never into your reasoning context.
 
 ## Supporting Files
@@ -42,6 +43,7 @@ Author and edit **controlled documents that a regulator or auditor reads** so th
 | `README.md` | Design document — architecture, lineage, dependencies (not loaded at runtime) |
 | `references/authoring-standard.md` | The canonical standard — full rules (W/R/D), rationale, examples, corollaries. Loaded on demand |
 | `references/rule-interactions.md` | Consolidated precedence pairs + adjective/claim routing — load when rules collide on one span |
+| `references/doctype-notes.md` | Per-doctype authoring layer — register, form, dominant rules, and the register-safe vs false-positive slop signals per document type. Loaded on demand |
 | `references/lint-signals.yml` | Single-source machine-lint patterns (`id, rule, kind, pattern, zone, jurisdiction, severity, message`). Read by the script |
 | `rules/regulatory-authoring.md` | The auto-loaded binding rule (symlinked into `.claude/rules/`). Makes the standard mandatory for DHF/submission edits |
 | `agents/regulatory-copy-editor.md` | Redline-first copy-editor subagent — applies prose/clarity/consistency edits, never substance |
@@ -62,7 +64,7 @@ Rules live in three layers (the extraction seam): **L1 `W` — universal writing
 - **W8** one term per concept, one concept per term (W8.1: verification ≠ validation)
 - **W9** house conventions (ISO dates, SI units, semantic versions, explicit ranges)
 - **W10** modal precision — shall/should/may; no `will` in the filed body (→ R1)
-- **W11** `[filed-only]` no marketing register · **W12** cross-refs name target + relationship · **W13** definition = genus + differentia
+- **W11** `[filed-only]` no marketing register · **W12** cross-refs name target + relationship (W12.1: carry the gist inline — reference the fact, restate the rationale/enumeration; a reference is for depth, not comprehension) · **W13** definition = genus + differentia
 
 **L2 — Regulated register (`R`)** — most are `[filed-only]`
 - **R1** declarative, as-delivered, present tense; no promissory (R1.1 scope negatives to the device function; R1.2 approach-statements internal; R1.3 perform obligations, don't recite; R1.4 process status is always internal)
@@ -91,13 +93,19 @@ Rules live in three layers (the extraction seam): **L1 `W` — universal writing
 - **D14** `[FDA]` FDA framing — PCCP boundary, SE tone, predicate narrative, confirmation token
 - **D15** `[EU-NB]` ⟦clause-grounding placeholder⟧ EU framing — intended-purpose, state-of-the-art, AFAP, GSPR trace, Rule 11, zero PCCP, CER, EU label particulars
 
-## Apply-workflow (the 3 stages)
+## Apply-workflow (3 per-edit stages + a task-close reference-audit gate)
 
 A controlled document goes through three checks, each a different *kind* of check. Run them in order — lint clears mechanical noise first, the copy-editor improves prose, QA verifies the result still conforms to the FORM:
 
 1. **Lint (mechanical)** — `authoring_lint.py` runs the `regex` / `regex, partial` / `filesystem` signals over the filed zones. Deterministic, no judgment. `dependency-gated` signals run only if their data (glossary, discovery index, `project.yml` field) is loaded, else flag unverified. `judgment` signals are surfaced as candidates, never auto-verdicts.
 2. **Copy-edit (prose judgment)** — the `regulatory-copy-editor` agent applies the W/R rules as a redline (per-change rule + rationale), within a hard guardrail: **edits prose/clarity/consistency/register only, never substance** (claims, classifications, numbers, citations, tier placement). When clarity and a claim conflict, it flags rather than resolves.
 3. **QA-conformance (structure)** — the `quality-engineering` agent asserts the edited document still conforms to its governing FORM (columns/sections/sign-offs) and the three-tier structure. This is the substance gate the lint cannot be.
+
+**Task-close gate — independent reference audit (citation-bearing docs).** The three stages above run per edit. Citations are cheapest to verify **once, in batch, at task end** rather than per-edit — so instead of a per-edit reference check, when an authoring pass **adds or changes a citation** (a standards clause, a guidance example/appendix/§, a K-number/precedent, or a cross-doc reference), ensure the **active task doc's `## Todos` carries a final-stage item**, e.g.:
+
+> - [ ] **Final stage — reference audit.** Run an independent reference audit (`/reference-audit <doc>`) over every citation added/changed this task; verify each against the **byte-correct source** (rung 3: `source-md/` or the md5-pinned `source/` PDF), not the distilled finding-aid. Do not close the task until clean.
+
+Why a task-close gate and not per-edit: it is **efficient** (one batched pass), **enforced + visible** (a checklist item, not advice), and **independent** — `/reference-audit` fans out to the `citations` subagents, so verification never rides on the same main-thread reasoning that wrote the citation. A self-reviewing author does not re-derive a cited label from the source, so a mislabel (a cited "Example/Scenario/§ N" that does not exist in the source) survives every prose/QA pass but not a source-grounded audit. Add or confirm this todo whenever a pass touches a citation.
 
 ## Actions
 
@@ -119,8 +127,11 @@ Run `python3 .claude/skills/regulatory-authoring/scripts/authoring_lint.py <file
 **Supplementary universal-prose pass (writing-well — conflict-free subset only).** If the sibling `writing-well` skill is installed, also run its deterministic linter for universal mechanical tells the regulatory signals don't cover — **but only the subset that is empirically conflict-free for the regulated register**:
 ```
 python3 .claude/skills/writing-well/scripts/lint_prose.py <file> --only clutter,nominalization,opener,length
+python3 .claude/skills/writing-well/scripts/lint_slop.py  <file>   # AI-tells / slop pass — advisory
 ```
-This adds clutter-phrase / buried-verb / empty-opener / long-sentence catches ("In order to" → "to"; "It should be noted that" → cut — which reinforces R1.3). **Do NOT enable writing-well's `passive`, `cliche`, `adverb`, or `hedge` tags on a regulatory document** — they fight the register: device-as-actor passive is correct (R2/R3/W3); **"state of the art" is a required EU term (D15.2), not a cliché**; technical adverbs ("automatically", "manually") are load-bearing; and `hedge`/`cliche` would double-report R5/W11. This pass is supplementary, advisory, and never gates; skip it silently if `writing-well` is absent. **Never run the `prose-editor` agent on a filed regulatory document** — its voice/warmth/lead/ending mandate is the opposite of the regulated register (use `regulatory-copy-editor`).
+The first pass adds clutter-phrase / buried-verb / empty-opener / long-sentence catches ("In order to" → "to"; "It should be noted that" → cut — which reinforces R1.3). The second pass (writing-well's `slop` action) is the **AI-generated-text tells detector** — em-dash density, booster/puffery lexicon, "not just X — it's Y" constructions — the successor to the former in-`lint_prose` `aislop` tag; it is source-grounded and advisory, and never gates. **On a regulated document, only the em-dash-density signal transfers cleanly** — it is register-neutral (converting em-dashes to periods/colons/commas does not fight the regulated voice) and is the one to act on when high (filed docs commonly run 15–30/1k words vs. the ~3.2 norm; flag is >7). Treat the detector's **`aitell-listformat`** (`**Bold:**` colon-lists) and **`aitell-emoji`** hits as **false positives for this register**: bounded `**Bold:**` itemization is a legitimate, scannable structure for requirements/specifications, and the 🔒/⏸️ markers are deliberate tier markers the package assembler strips before transmission — neither is slop, and "fixing" them would damage the document. The register-safe *lexical* hits to cut are puffery/antithesis (`not just X — it's Y`, `serves as a testament to`) and clustered signposts. **Do NOT enable writing-well's `passive`, `cliche`, `adverb`, or `hedge` tags on a regulatory document** — they fight the register: device-as-actor passive is correct (R2/R3/W3); **"state of the art" is a required EU term (D15.2), not a cliché**; technical adverbs ("automatically", "manually") are load-bearing; and `hedge`/`cliche` would double-report R5/W11. This pass is supplementary, advisory, and never gates; skip it silently if `writing-well` is absent. **Never run the `prose-editor` agent on a filed regulatory document** — its voice/warmth/lead/ending mandate is the opposite of the regulated register (use `regulatory-copy-editor`).
+
+**Reading the `length` tag — it is a proxy for W1, not a rewrite order.** On a well-authored regulated doc the `clutter`/`nominalization` catches usually come back empty (the register discipline already handles them); the one tag that carries signal is `length`, and it is useful **because a long sentence usually coordinates several claims** — i.e. it flags likely **W1** ("one verifiable claim per sentence") candidates. Apply it that way: **split the multi-claim run-ons** (the reader must hold 3–5 facts to parse one sentence) and **leave the long-but-scannable** ones alone (one claim followed by a colon + a parallel list is *still one claim* — chopping it into stubs hurts readability). Two caveats: (1) the sentence splitter has no period to break markdown **tables and enumeration blocks**, so it mis-reports them as single 150–300-word "paragraphs" — ignore those artifacts (or strip tables/fenced blocks before the run); (2) every split must be **fact-frozen** — reflow the same claims into separate sentences, changing no number, citation, classification, or term. The goal is human readability and clarity, never a different meaning.
 
 ### `check <file>`
 Run the full 3-stage workflow: (1) `lint`, then (2) spawn `regulatory-copy-editor` on the file with the lint output, then (3) spawn `quality-engineering` for the QA-conformance pass. Consolidate into one report with each stage's findings and a pass / pass-with-findings / fail verdict. For a **substantive** edit to a DHF/submission document, the QA stage is mandatory (per the binding rule).

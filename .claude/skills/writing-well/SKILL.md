@@ -1,7 +1,7 @@
 ---
 name: writing-well
-description: "Improve the PROSE QUALITY of existing nonfiction writing — tighten it, cut the clutter, make it clearer, punchier, more readable. Grounded in Zinsser's *On Writing Well*: simplicity, clarity, brevity, humanity. Use when the user wants to lint / review / copy-edit / tighten / sharpen / proofread / 'make this clearer' / 'cut the fluff' / 'is this well written' / 'too wordy' / 'too passive' / 'remove jargon' / 'edit my writing' on any markdown or text — whitepaper sections, articles, READMEs, docs, emails. Runs a deterministic no-LLM linter for mechanical tells (clutter phrases, hedges, passive voice, nominalizations, -ly adverbs, weak verbs, empty openers, sentence length, clichés) plus a judgment agent for rhythm / voice / lead / ending / structure. Advisory, never blocks; standalone and project-agnostic. NOT for authoring/publishing a new external doc end-to-end, brand/house-style, internal-leak stripping, or PDF rendering — that's public-doc. NOT for slides/decks — that's md-deck / frontend-slides / pptx. This skill sharpens prose; it does not manage documents or produce artifacts."
-version: 2
+description: "Improve the PROSE QUALITY of existing nonfiction writing — tighten it, cut the clutter, make it clearer, punchier, more readable. Grounded in Zinsser's *On Writing Well*: simplicity, clarity, brevity, humanity. Use when the user wants to lint / review / copy-edit / tighten / sharpen / proofread / 'make this clearer' / 'cut the fluff' / 'is this well written' / 'too wordy' / 'too passive' / 'remove jargon' / 'edit my writing' on any markdown or text — whitepaper sections, articles, READMEs, docs, emails. Runs a deterministic no-LLM linter for mechanical tells (clutter phrases, hedges, passive voice, nominalizations, -ly adverbs, weak verbs, empty openers, sentence length, clichés) plus a judgment agent for rhythm / voice / lead / ending / structure. Also detects **AI-generated-text 'tells' / slop** (em-dash density, AI excess-vocabulary, puffery & 'not just X, it's Y' constructions, signpost over-use) via the `slop` action — trigger on 'does this read AI-generated', 'remove the AI slop / tells', 'too many em-dashes', 'make it sound less like ChatGPT', 'humanize this'. Advisory, never blocks; standalone and project-agnostic. NOT for authoring/publishing a new external doc end-to-end, brand/house-style, internal-leak stripping, or PDF rendering — that's public-doc. NOT for slides/decks — that's md-deck / frontend-slides / pptx. This skill sharpens prose; it does not manage documents or produce artifacts."
+version: 3
 updated: 2026-06-25
 ---
 
@@ -34,6 +34,7 @@ For the design rationale, see `README.md`.
 |------|---------|
 | `README.md` | Design document — decisions, three-layer rationale, linter rule set, lineage, Best Practices, Changelog |
 | `scripts/lint_prose.py` | Deterministic no-LLM linter (mechanical pass). `--json`, `--max-len N`, `--max-para N`, `--strict`, `--only TAG,…`, `--no-color` |
+| `scripts/lint_slop.py` | Deterministic no-LLM **AI-tells / slop** detector (em-dash density, excess-vocabulary, puffery/antithesis constructions, signposts, bold-colon lists). `--json`, `--folklore` (opt-in unvalidated tier), `--strict`, `--no-color`. Source-grounded (Kobak/Liang excess-word studies; em-dash density); advisory — flags density, never single words |
 | `references/zinsser-principles.md` | The standard, paraphrased into operating rules — grounds every judgment pass |
 | `agents/prose-editor.md` | Judgment-pass subagent; consumes linter output. Symlinked into `.claude/agents/` by `setup` |
 | `tests/run_tests.sh` | Self-test of the linter against fixtures (mechanical tells + skip-zones) |
@@ -58,6 +59,19 @@ The script skips YAML frontmatter, fenced/indented code, inline code, link URLs,
 markdown tables so it only ever sees prose. Summarize the findings for the user grouped by
 tag, and offer to fix the high-value ones. **Exit code is 0 by default** — lint is
 advisory. Only `--strict` makes it non-zero.
+
+### `slop <file>`
+
+Deterministic **AI-generated-text 'tells'** detector — for "does this read like ChatGPT", "strip the AI slop", "too many em-dashes". No LLM, no agent.
+
+```bash
+python3 .claude/skills/writing-well/scripts/lint_slop.py <file>
+# flags: --folklore (add the unvalidated vendor-blog word tier), --json, --strict, --no-color
+```
+
+Flags the source-backed, deterministically-detectable tells: **em-dash density** (per 1k words; human norm ~3.2, flag >7), **academic excess-vocabulary** (delve / underscore / meticulous / tapestry…, density-gated — clustering, not singles), **puffery & antithesis constructions** ('serves as a testament to', 'it's not just X — it's Y'), **stock openers**, **clustered signposts** (Moreover/Furthermore…), and **`**Bold:**` colon-lists**. Skips frontmatter/code/links/tables and a trailing References section.
+
+Summarize grouped by tag; lead with the highest-leverage tell (usually em-dash density). **Always surface the caveat the script prints**: tells are probabilistic and combinatorial, every word is legitimate English, and word-list detectors over-flag non-native writers — so present findings as prompts to look, never as proof of AI authorship, and never as a blocking gate. To act on findings, hand off to `copyedit` (e.g. "thin the em-dashes; convert most to periods/colons").
 
 ### `review <file>`
 

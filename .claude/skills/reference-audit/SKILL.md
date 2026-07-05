@@ -124,6 +124,8 @@ Roll-up of open reference audits across `docs/_analysis/`.
 
 - `sound` — reference resolves and content supports the claim (per semantic-predicate match — see `citations-external-researcher` Step 3.5; not just clause-existence).
 - `broken-link` — internal link / path does not exist.
+- `citation-absent-from-source` — a cited external label (Example/Scenario/§/clause/table/appendix **number**) does not appear anywhere in the byte-correct source; the citation names a location that does not exist. Emitted by the external researcher's Step 3.5 label-existence check.
+- `citation-mislabeled` — the cited *content* exists in the source but under a *different* label/number than cited (right analog, wrong coordinates); suggested fix names the correct label.
 - `stale-citation` — external source exists but its **predicate** does not match the claim's — same clause number, different topic. Emitted by Step 3.5 predicate match.
 - `unresolved-anchor` — doc + heading does not resolve.
 - `unreachable-source` — fetch failure / paywalled / 404. **Includes K-number WebFetch failures** (v1.1) — do not fall back to internal-corroboration → `sound`.

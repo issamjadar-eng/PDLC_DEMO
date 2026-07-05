@@ -60,8 +60,13 @@ ASSERTION_META = {
 }
 
 # Finding disposition → display vocabulary (chip on the finding collapse bar).
-# Distinct vocabulary from assertions: resolved / partial / open / superseded.
+# Distinct vocabulary from assertions: addressed / resolved / partial / open /
+# superseded. `addressed` = remediation authored/in-repo but not yet ratified
+# or published downstream (in review) — rendered green like `resolved` but
+# labelled "Addressed — In-Review" so the board reads honest: the fix is done,
+# the downstream comment/record just hasn't been re-published or signed off.
 FINDING_META = {
+    "addressed": {"label": "Addressed — In-Review", "cls": "is-confirmed", "glyph": "✓"},
     "resolved": {"label": "Resolved", "cls": "is-confirmed", "glyph": "✓"},
     "partial": {"label": "Partial", "cls": "is-partial", "glyph": "◐"},
     "superseded": {"label": "Superseded", "cls": "is-superseded", "glyph": "⊘"},

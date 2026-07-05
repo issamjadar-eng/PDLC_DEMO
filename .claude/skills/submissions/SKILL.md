@@ -103,6 +103,26 @@ blocks, the system SAD, and `project.yml` — they do not restate them as new
 facts (per `audit-wiring-before-adding-fields` and `claude-md-references`). Demo
 projects banner every doc `_Demo sample data — not for clinical use._`.
 
+**"Reference, don't redeclare" bans redeclaring *facts*, not *explanation* (readability).**
+The rule is anti-drift: a fact restated in two docs can diverge (an R8 cross-record
+finding). It does **not** require a doc to be a bare pointer-farm. Draw the line by
+content type — exactly the `audit-wiring-before-adding-fields` carve-out ("rationale
+may duplicate; facts may not"):
+
+- **Facts** (a classification, a K-number, a change-category ID, a quantity) — single-
+  sourced; reference the canonical home, never restate. Divergence here is a finding.
+- **Rationale, explanation, and enumerations** — *may* be carried inline so the reviewer
+  follows the argument without leaving the doc. The *authoritative* wording still lives
+  in one place (the referenced source); the inline gist is a readable summary, not a
+  second record, so it cannot drift the fact.
+
+> **Citation-bearing submission edits follow the authoring standard's task-close reference-audit gate.** When a submission edit adds/changes a standards clause, guidance example/appendix/§, K-number/precedent, or cross-doc reference, ensure the active task doc carries a **final-stage todo to run an independent `/reference-audit`** over the doc — verifying each citation against the **byte-correct source** (rung 3), not the distilled finding-aid. Batched once per task, run as a subagent. See `regulatory-authoring` SKILL.md (Apply-workflow) + its rule.
+
+So: **reference the fact, restate the gist** — per the authoring standard's **W12.1**
+(carry the gist inline; a reference is for depth, not comprehension). A filed section
+that is mostly cross-references with little self-contained substance is a readability
+defect, not compliance.
+
 ## Supporting Files
 
 | File | Purpose |
@@ -243,6 +263,56 @@ Roll-up of filings + readiness. Read `.console/submission-index.json` (run
 `render` first if absent) and print one line per filing: type, status, doc count,
 required/supporting/strengthener/excluded counts, and `blocking` (count of
 transmission-blocking strengthener briefs not yet ready).
+
+### `scope-lint <qsub-dir> [--transmit-gate]` — Q-Sub scope & reviewer-availability (HARD-RULE check for `qsub` filings)
+
+A Q-Submission is a request for **focused feedback on named questions**, not a full
+technical submission. A package assembled from 510(k)-grade DHF artifacts inherits two
+defects the leak scrub and the link-based `references` check **cannot** see — regardless
+of the source documents:
+
+1. **Reviewer-availability (T1):** filed-body *prose* references to documents the reviewer
+   does **not** receive — child SADs, per-module SRAs, threat models, SBOMs, item SRSs,
+   internal QMS `SOP-*/FORM-*` IDs. (The `references` lint is link-based; prose references
+   are invisible to it.)
+2. **🔒-container integrity:** a visible `🔒 END INTERNAL` marker that diverges from its
+   `</details>` tag — a marker-keyed or copy-paste strip can then leak deferred/internal
+   content (a marker-keyed strip has been observed to nearly ship a batch of deferred questions this way — the check exists to make that failure mode unreachable).
+
+```bash
+python3 .claude/skills/submissions/scripts/qsub_scope_lint.py docs/project/submissions/qsub [--transmit-gate] [--json]
+```
+
+The linter is **tag-based** (strips 🔒 `<details>…</details>` by *balanced tag*, nesting-safe
+— never by the fragile visible marker) and **prose-aware**, and it lints **only what actually
+ships** (the transmitted set is read from the cover-letter `## Attachments` list, so a doc
+moved to the 510(k) drops off the worklist automatically). Five checks:
+
+- **C1 container-integrity** (BLOCK) — `<details>`/`</details>` balanced; every `🔒 END INTERNAL` adjacent to a `</details>`.
+- **C2 reference-availability** (WARN → BLOCK under `--transmit-gate`) — filed-body prose references to non-transmitted doctypes, minus the forward-reference allowlist ("… part of the 510(k) …", "… on request").
+- **C3 blocking-brief-anchor** (BLOCK) — a transmission-blocking brief must anchor an **active** (non-`DQ-*`) question.
+- **C4 manifest ⇄ cover-letter reconciliation** (BLOCK / WARN) — section-aware three-state match (`transmitted` / `on-request` / `grounding-only`, via a `### Grounding — not transmitted` manifest sub-bucket) on path-aware doc identity; flags a transmitted manifest piece not attached, an attachment with no manifest entry, or an unmarked grounding row.
+- **C5 altitude** (WARN) — a raw controlled DHF doc (a `_confluence/**` path) attached with no Q-Sub scoping note/extract adjacent to its attachment line.
+
+WARN advisory by default; `--transmit-gate` makes any BLOCK a non-zero exit. **Run before any `qsub` transmit.**
+
+### `gen-sad-extract` — the Q-Sub SAD extract (F-11 tooling)
+
+The canonical System SAD is a full 510(k) technical-file artifact. Rather than attach it raw
+(C5) or hand-maintain a divergent copy, **derive** a Q-Sub-scoped projection:
+
+```bash
+python3 .claude/skills/submissions/scripts/gen_qsub_sad_extract.py \
+  --sad <canonical-SAD.md> --out <qsub-dir>/system-architecture-overview.qsub.md \
+  --sections 2,4,5,8.1,8.3,9.3,10.2 --title "System Architecture Overview (Q-Sub extract)" --preface "…"
+```
+
+Selects the allowlisted section set, strips 🔒 `<details>` containers (by balanced tag) and
+child-SAD tables, **reframes prose child-SAD/SRS references to 510(k)-forward form**, and stamps
+a `GENERATED — do not hand-edit` banner + Q-Sub scoping preface. The `--sections` allowlist is a
+CLI arg (project-agnostic; the SAD's own numbering). Attach the generated `*.qsub.md` in place of
+the raw SAD (cover-letter Attachment; manifest lists the extract as transmitted + the canonical
+as grounding-source). Regenerate when the canonical SAD changes.
 
 ## Console JSON contract (`schema_version: "1.0"`)
 

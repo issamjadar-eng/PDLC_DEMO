@@ -4,6 +4,20 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-04 — pull
+
+- Hitachi HEAD after sync: `c9dfa23`
+- Pulled: 17 files (all auto-pull bucket — 12 UPSTREAM_ADVANCE + 5 new UPSTREAM_ONLY)
+  - `skills/gap-analysis/scripts/render_sidecars.py`, `skills/project-console/console/gap_analysis/router.py` — gap-analysis sidecar renderer + console router refresh
+  - `skills/medtech-docs/references/standards/iec-62304.md` — reference distillation refresh
+  - `skills/reference-audit/SKILL.md` + `agents/citations-external-researcher.md` — added the label-existence check (citation-absent / citation-mislabeled `broken` kinds)
+  - `skills/regulatory-authoring/` — `SKILL.md`, `references/authoring-standard.md`, `rules/regulatory-authoring.md` (new rule 6: citation-bearing edits carry a final-stage `/reference-audit` todo), + new `references/doctype-notes.md`
+  - `skills/submissions/SKILL.md` + new `scripts/gen_qsub_sad_extract.py`, `scripts/qsub_scope_lint.py`
+  - `skills/writing-well/` — `README.md`, `SKILL.md`, `tests/run_tests.sh` + new `scripts/lint_slop.py`, `tests/test_slop.py` (v3 `slop` AI-tells detector)
+- Also re-materialized `.claude/agents/citations-external-researcher.md` (top-level real-file copy) from the updated skill source — upstream stores it as a symlink, so `check` spuriously flagged BOTH_DIVERGED; content now matches the skill.
+- project.yml: no changes (all skills already in `approved_skills`; no new skills/agents/hooks/setup actions)
+- Follow-ups: none required. No `**Post-update:**` annotations; new writing-well `slop` action + submissions scripts are additive; new regulatory-authoring rule 6 auto-loads via `.claude/rules/`.
+
 ## 2026-07-02 — pull (39 upstream files; all UPSTREAM_ADVANCE / UPSTREAM_ONLY) [ben/099]
 
 - **Pulled 39 files** (22 advances + 17 new), all clean — **0 local-side drift** (everything built this session was already pushed). Notable version bumps: `usage-metrics` v11→**v12**, `submissions` →**v2**, `tracker` →**v14**, `docflow` →**v36**; plus project-console console-file advances (app.py, config.py, renderer.py, `_base.html`, assistant.js, console.css, submission_view.html) with no version bump.
