@@ -2,17 +2,18 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 92.67,
-    "2026-06-16": 31.5,
-    "2026-06-22": 14.07,
-    "2026-06-23": 7.41,
+    "2026-06-15": 92.84,
+    "2026-06-16": 31.57,
+    "2026-06-22": 14.11,
+    "2026-06-23": 7.43,
     "2026-06-29": 0.89,
-    "2026-06-30": 141.19,
-    "2026-07-01": 142.75,
-    "2026-07-02": 17.85,
-    "2026-07-03": 6.46,
+    "2026-06-30": 141.42,
+    "2026-07-01": 142.96,
+    "2026-07-02": 17.92,
+    "2026-07-03": 6.48,
     "2026-07-05": 2.18,
-    "2026-07-08": 0.97
+    "2026-07-08": 0.98,
+    "2026-07-14": 0.87
   },
   "members": 1,
   "months": {
@@ -157,9 +158,28 @@
             "input": 18989,
             "messages": 6,
             "output": 1107
+          },
+          "2026-07-14": {
+            "cache_creation": 67173,
+            "cache_read": 351644,
+            "cache_write_1h": 67173,
+            "cache_write_5m": 0,
+            "input": 10,
+            "messages": 5,
+            "output": 702
           }
         },
         "by_model": {
+          "claude-fable-5": {
+            "cache_creation": 67173,
+            "cache_read": 351644,
+            "cache_write_1h": 67173,
+            "cache_write_5m": 0,
+            "cost": 1.73,
+            "input": 10,
+            "messages": 5,
+            "output": 702
+          },
           "claude-opus-4-8": {
             "cache_creation": 4290665,
             "cache_read": 229662577,
@@ -171,17 +191,17 @@
             "output": 702551
           }
         },
-        "cost": 170.96,
+        "cost": 172.69,
         "name": "Member 1",
-        "sessions": 4,
+        "sessions": 5,
         "totals": {
-          "cache_creation": 4290665,
-          "cache_read": 229662577,
-          "cache_write_1h": 2754485,
+          "cache_creation": 4357838,
+          "cache_read": 230014221,
+          "cache_write_1h": 2821658,
           "cache_write_5m": 1536180,
-          "input": 283944,
-          "messages": 645,
-          "output": 702551
+          "input": 283954,
+          "messages": 650,
+          "output": 703253
         }
       }
     }
@@ -4447,6 +4467,16 @@
     },
     "ben/_unattributed": {
       "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 67173,
+          "cache_read": 351644,
+          "cache_write_1h": 67173,
+          "cache_write_5m": 0,
+          "cost": 1.73,
+          "input": 10,
+          "messages": 5,
+          "output": 702
+        },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
           "cache_read": 1069352,
@@ -4468,16 +4498,16 @@
           "output": 1112396
         }
       },
-      "cost": 218.02,
-      "sessions": 11,
+      "cost": 219.75,
+      "sessions": 12,
       "totals": {
-        "cache_creation": 4578431,
-        "cache_read": 291690821,
-        "cache_write_1h": 3985481,
+        "cache_creation": 4645604,
+        "cache_read": 292042465,
+        "cache_write_1h": 4052654,
         "cache_write_5m": 592950,
-        "input": 362296,
-        "messages": 1067,
-        "output": 1128568
+        "input": 362306,
+        "messages": 1072,
+        "output": 1129270
       }
     },
     "dmytro/001": {
@@ -4525,8 +4555,8 @@
     "cost_allocated": 146.91,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 239.92,
-    "cost_unattributed_measured": 218.02,
-    "cost_unattributed_residual": 71.1,
+    "cost_unattributed_measured": 219.75,
+    "cost_unattributed_residual": 72.83,
     "hours_saved": {
       "max": 2821.0,
       "min": 811.0
