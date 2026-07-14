@@ -5,7 +5,7 @@
 # Claude Code) at most once per 12 hours per user. User identity is resolved
 # via `git config user.email`; throttle state lives at
 # `.state/briefing-last-shown-<email-slug>.txt` (relocated from .claude/state/
-# in ben/083 to escape .claude/** sensitive-file guard).
+# to escape the .claude/** sensitive-file guard).
 #
 # Silent unless ≥12h since last briefing for this user. No errors on
 # unconfigured user email (falls back to 'unknown-user' slug).
@@ -33,7 +33,7 @@ fi
 # resolve_user.py --task-folder emits the roster task_folder on match, or
 # a stable email-slug fallback otherwise; either value is fine as a
 # state-file key. If the helper is missing, fall back to 'unknown-user'.
-# Lives in shared/scripts/ since task ben/098 (cross-skill: digest + secops).
+# Lives in shared/scripts/ (cross-skill: digest + secops).
 RESOLVER="$PROJECT_DIR/.claude/skills/shared/scripts/resolve_user.py"
 SLUG=""
 if [[ -f "$RESOLVER" ]]; then
@@ -104,7 +104,14 @@ if [[ -n "$UPSTREAM" ]]; then
       CHANGE_WORD="changes"
       COMMIT_WORD="commits"
     fi
-    SYNC_NOTICE=$(cat <<EOF
+    # NOTE: use `read -r -d ''` rather than `SYNC_NOTICE=$(cat <<EOF ...)`.
+    # macOS system bash (3.2) has a parser bug where a heredoc body inside
+    # `$( )` command substitution is wrongly scanned for quote chars; the
+    # apostrophes below ("you'll", "they'd", ...) then trip an "unexpected
+    # EOF looking for matching quote" error. `read` avoids command
+    # substitution entirely. `|| true` because read returns 1 at EOF and
+    # `set -e` is active; IFS= preserves leading whitespace.
+    IFS= read -r -d '' SYNC_NOTICE <<EOF || true
 
 ## Heads up — your project folder is out of date
 
@@ -120,7 +127,6 @@ The local branch is $BEHIND $COMMIT_WORD behind $UPSTREAM. On your very next tur
   5. If they decline, just acknowledge and continue with whatever they originally asked for.
 -->
 EOF
-)
   fi
 fi
 

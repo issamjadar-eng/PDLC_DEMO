@@ -21,7 +21,6 @@ on:
       - 'tasks/*/_usage-metrics/**'              # a teammate pushed fresh usage
       - '.claude/skills/usage-metrics/scripts/**'
       - 'tools/usage-metrics/pricing.json'       # rates changed
-      - 'tools/usage-metrics/economics.json'     # by-hand estimate sidecar (v12) changed
   workflow_dispatch: {}
 
 # Serialize — concurrent runs would race on the committed dashboard.

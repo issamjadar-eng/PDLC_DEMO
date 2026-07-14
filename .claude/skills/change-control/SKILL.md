@@ -163,7 +163,9 @@ On divergence (Confluence has been edited since last sync), prompts Overwrite / 
 
 **Publish gate — `confluence.publish_body` (default-deny for binary-authoritative records).** If the page's frontmatter has `confluence.publish_body: false` (or `docflow.authoritative: formal` with no explicit `publish_body: true`), do **NOT** push the markdown body as Confluence page content. These pages are *non-canonical derived views* (the docflow `_confluence`-splice convention): the canonical published artifact is the **attachment** (`label=actual`, uploaded via the `confluence-side: attachments` sentinel) **+ the node's `index.md` landing page** — not the version-page body. Publishing the body is opt-in only (`publish_body: true`). When the gate is active, `publish` still reconciles/uploads the attachment + maintains the index page, but skips the body→ADF push for the version page.
 
-Use when the user says: *"publish this doc to Confluence"*, *"push our markdown up to Confluence"*, *"update the Confluence page from our local copy"*.
+**Filed-body-only mode — `--strip-internal` (three-tier docs).** By default the transform *keeps* `🔒 INTERNAL` `<details>` containers so they round-trip to Confluence as collapsed expands. For a three-tier submission doc (leading metadata → `🔒 INTERNAL` working apparatus → filed body) where the Confluence page should carry **only the filed body the regulator sees**, pass `--strip-internal` to `publish_helper` (`precheck` / `body` / `adf-body`). It strips — fence-aware — every HTML-comment metadata block, every `🔒`-headed `<details>` container, and every `🔒`-marked table column (mirrors the eStar `strip_internal` so the Confluence body matches the eStar exhibit). Opt-in per publish; enable it durably for a doc with `confluence.strip_internal: true` in frontmatter (the agent reads it and passes the flag). Report the `internal_zones_stripped` `{comments, containers, columns}` counts to the user.
+
+Use when the user says: *"publish this doc to Confluence"*, *"push our markdown up to Confluence"*, *"update the Confluence page from our local copy"*, *"publish the filed body only / strip the internals"*.
 
 ### `init`
 

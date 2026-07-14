@@ -6,8 +6,8 @@ description: |
   TRIGGER when the user wants to **scaffold, build, author, seed, generate, assemble, or render** a Q-Submission / pre-submission / 510(k) / PCCP / PMA **content package** — phrasings include: "scaffold the Q-Sub package", "set up the qsub documents", "scaffold the 510(k)", "create the FDA questions doc", "build the cover letter / device description / intended-use / substantial-equivalence / PCCP summary", "seed submission content", "assemble the composition manifest", "render the submission console view", "refresh the submission sidecars", "what's in the Q-Sub package", "is the qsub package ready to transmit". Also fire on any edit/write under `docs/project/submissions/<filing>/` content docs or `_provenance/`.
 
   Sibling boundaries — this skill owns submission **content** + its console sidecars. It is NOT `/tracker` (deliverable × phase readiness dashboard), NOT `/change-control` (publish to Confluence/Windchill), NOT `/medtech-docs` (DHF scaffolding), NOT `/dhf-manifest` (deliverable-coverage projection). When a fact is canonical elsewhere (regulatory-strategy.md D-REG-* blocks, the system SAD, project.yml), submission docs reference it — they do not redeclare it.
-version: 2
-updated: 2026-06-15
+version: 6
+updated: 2026-07-07
 ---
 
 # Submissions
@@ -128,6 +128,8 @@ defect, not compliance.
 | File | Purpose |
 |---|---|
 | `scripts/render_sidecars.py` | Producer of the console JSON contract (see below). Stdlib only. |
+| `scripts/provenance_reconcile.py` | `provenance {check,stamp}` — source-drift pinning (git blob SHA) **and** claim↔primary-source grounding (`ungrounded-claim`). PyYAML for read; `pypdf` for PDF quote grounding. |
+| `references/claim-grounding.md` | Rule — a factual claim about an external primary source (predicate/cleared filing) must be grounded in that source with a verbatim `quote`, not paraphrased from a sibling summary while the source sits un-consulted. |
 | `templates/_shared/` | Filing-agnostic templates: `composition-manifest.template.md` (the manifest skeleton — its section/column contract is documented below) + `provenance.template.yml`. |
 | `templates/qsub/` | Q-Sub profile: cover letter, device description, intended-use, FDA questions, PCCP summary. |
 | `templates/510k/` | 510(k) profile: cover letter, indications-for-use (Form FDA 3881), 510(k) summary, substantial-equivalence discussion + predicate comparison, device description, performance-testing summary, truthful-&-accuracy statement. |
@@ -200,6 +202,12 @@ filing gets the 510(k) document set, not the Q-Sub one.
    and `docs/project/submissions/<filing>/README.md`. Read
    `docs/project/strategies/regulatory-strategy.md` for the D-REG-* decisions the
    content must reference (pathway, predicate, PCCP categories, monitoring).
+   **When authoring/scoping PCCP change categories**, read
+   [`references/pccp-change-scope-modify-vs-add.md`](references/pccp-change-scope-modify-vs-add.md)
+   first — the "modify an existing output vs add a new output" distinction (a new
+   output dressed as an improvement of an existing one is a scope over-claim, and
+   generally needs its own bounded category + regulator agreement, not an existing
+   retrain/refine category).
 2. **Resolve the profile.** Map `<filing>` to its profile via the **Filing-type
    profiles** registry below (`qsub` → `templates/qsub/`, `510k` → `templates/510k/`,
    `pccp` → `templates/qsub/` PCCP-subset, `pma` → `templates/pma/`). If `<filing>`
@@ -314,6 +322,44 @@ CLI arg (project-agnostic; the SAD's own numbering). Attach the generated `*.qsu
 the raw SAD (cover-letter Attachment; manifest lists the extract as transmitted + the canonical
 as grounding-source). Regenerate when the canonical SAD changes.
 
+### `check <filing-dir> [--transmit-gate]` — cross-document "seam" consistency
+
+`scope-lint`, the leak scrub, and the authoring lint each validate one document **in
+isolation**. A distinct class of defect survives all of them because it lives in the **seam
+between two documents** — a pointer in one document that *describes*, *numbers*, or *reaches
+for* another. Each side is internally clean; only the pair is wrong. Full principle + the
+predicate/SE tiering model: [`references/pre-sub-package-consistency.md`](references/pre-sub-package-consistency.md).
+
+```bash
+python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub [--transmit-gate] [--json]
+```
+
+Project-agnostic (transmitted set + numbered lists read from the package's own cover letter;
+the filed-body scans cover only what ships — internal assembly artifacts are excluded). Three checks:
+
+- **S1 cross-reference accuracy** (WARN) — a filed-body pointer that calls a linked package doc the "full/complete/comprehensive" predicate/SE analysis while that target self-describes as an **abbreviated/summary** treatment (tier confusion). Deferral and contrastive sentences ("the full analysis is a 510(k) deliverable"; "abbreviated … gates full analysis") are exempt.
+- **S2 attachment-number consistency** (FAIL / WARN) — a prose "attachment N" whose number matches **none** of the package's numbered lists for the doc it links (FAIL), plus per-list contiguity (gaps/dupes → FAIL); two lists numbering the same doc by a **uniform** offset (one counts the cover letter, the other doesn't) collapse to one WARN, a **non-uniform** offset lists each drift.
+- **S3 folder-boundary compliance** (FAIL / WARN) — a **transmitted** attachment whose path escapes the filing folder (`../`) with no on-request/internal/grounding disposition on its line (FAIL); a filed-body `../../` link reaching outside the filing folder (WARN — confirm grounding-only).
+- **S4 stable-key liveness** (WARN) — an *anchor/support* declaration (in a transmitted doc or the manifest) that names a stable question key (`QK-*`) which the questions master map has since **deferred or dropped**. This is the **semantic seam** the structural checks (S1–S3) cannot see: a "spine" fact (a question's number or transmit status) changes in its home doc, and sibling docs that declare they anchor/support it are not updated in lockstep — the root cause of recurring "stale reference" drift. Reads the `QK → display → transmitted?` master map from `fda-questions.md`; disposition-guarded (a "QK-X was deferred → DQ-N" note is not flagged) and skips changelog/metadata rows. Prefer stable `QK-*` keys over bare display numbers (`Q1.3`) in apparatus — display numbers churn on every renumber; the master map is the drift-resistant anchor.
+
+WARN advisory by default; `--transmit-gate` makes any FAIL a non-zero (2) exit. **Run before any transmit**, alongside `scope-lint`. This check earned its keep on the seam defects that a per-document lint cannot see: a summary attachment described as the "full" analysis (S1), a prose "attachment N" off-by-one against the contents table (S2), a transmitted piece sourced from an out-of-package folder (S3), and a filed/apparatus claim to anchor a since-deferred question (S4 — found in the cyber brief, the cover letter, and the separation argument after a question-set renumber).
+
+### `provenance {check,stamp}` — source-drift reconciliation + claim grounding
+
+The seam checks above catch *reference* drift. A **different** class is **reproduced-content drift**: a filed document keeps a self-contained summary of an upstream source (a device description reproduces the system-architecture module tables; readability requires this — the reviewer must not be sent out to hundreds of pages, per **W12.1**), and the source later changes while the copy silently does not. You cannot fix this by "just referencing the source" — that sacrifices readability and reviewer confidence. You fix it by **pinning the source's git blob SHA** in the document's provenance sidecar and flagging when the source moves on.
+
+A **third** class — the one drift-pinning alone cannot catch — is an **ungrounded claim**: a factual assertion *about an external primary source* (a predicate/cleared-filing PDF, a De Novo/PMA summary) that the source does not actually support, or that was written from a sibling summary while the primary source was never opened. `check` catches this when the claim carries structured grounding (`source_path` + `source_page` + verbatim `quote`) by verifying the quote resolves in the pinned source. See `references/claim-grounding.md`.
+
+```bash
+python3 .claude/skills/submissions/scripts/provenance_reconcile.py check docs/project/submissions/qsub [--json] [--transmit-gate]
+python3 .claude/skills/submissions/scripts/provenance_reconcile.py stamp <doc-basename>   # after reconciling a doc against its sources
+```
+
+- Each `_provenance/<doc>.provenance.yml` already records the upstream sources a doc reproduces/summarizes (`path` + `sections`/`decisions`/`terms` + `how_used`). **`stamp`** pins each *content* source (an entry naming `sections`/`decisions`/`terms`; framing files like a root README/CLAUDE are skipped) to its `git hash-object` SHA in a **generated** `<doc>.sources-lock.json` beside the sidecar — kept separate so the churny hashes never force a fragile edit of the comment-carrying human sidecar.
+- **`check`** compares each pinned SHA against the source's current SHA and emits: **drift** (source changed since the doc was last reconciled — re-check the derived content, with the `how_used` note printed so you know *what* to re-check, then re-stamp); **unbaselined** (source not pinned yet); **unresolved-path** (a recorded source path no longer resolves — the source moved or its tree was retired, i.e. the provenance itself has rotted); **malformed-yaml** (sidecar unparseable). It also runs **claim grounding**: **ungrounded-claim** (a `claims_to_source[]` row with `source_path`+`quote` whose quote does not resolve in the source), **unresolved-source** (its `source_path` doesn't resolve), **grounding-skipped** (a NOTE when `pypdf` is absent so PDF quotes can't be verified).
+- **Workflow:** after reconciling a document against its sources (or authoring a new version), run `stamp <doc>`. Run `check` before transmit and whenever a canonical source (e.g., the system SAD) changes — `check` is the trigger that turns a silent source edit into an explicit "re-reconcile these documents" worklist. `--transmit-gate` makes **drift** *and* **ungrounded-claim** a non-zero (2) exit.
+- This catches two classes a reference check can't — **(a)** the SAD §4 Pre-Op cell changing to "bone segmentation only" while a device-description copy still said "anatomy segmentation" (drift); **(b)** a predicate-comparison stating a predicate's software level from a sibling `.md` while the cleared-filing PDF that would confirm it sat un-consulted in the repo (ungrounded-claim). Keep the content in the doc (readability); let the hashes watch the source **and** the claims.
+
 ## Console JSON contract (`schema_version: "1.0"`)
 
 `render` is the **producer**; the project-console `submission/` package is the
@@ -365,10 +411,22 @@ sources_consulted:
 fda_visible_references: [<transmitted docs + guidance titles>]
 claims_to_source:
   - claim: "<exact claim>"
-    source: "<doc/section>"
+    source: "<doc/section>"           # free-text (legacy) OR add structured grounding ↓
+    source_path: <repo-relative primary source>   # optional — e.g. a cleared-filing PDF
+    source_page: <int>                             # optional — page for PDF sources
+    quote: "<verbatim substring of the source supporting the claim>"  # optional
 open_gaps: ["<placeholder / pending item>"]
 notes: ["<implementation note>"]
 ```
+
+**Claim grounding (optional, per claim).** When a claim is a factual assertion *about
+an external primary source* (a predicate/cleared-filing PDF, a De Novo/PMA summary), pin
+it structurally: add `source_path` + `source_page` + a verbatim `quote`. `provenance check`
+then verifies the quote resolves in that source snapshot and flags **`ungrounded-claim`**
+(transmit-blocking) if not. This is the gate that catches a fact written from a sibling
+summary while the primary source sat in `sources_not_consulted` — see the **claim-grounding
+rule** (`references/claim-grounding.md`). A factual claim about a primary source belongs in
+`sources_consulted` **with a grounding quote**, never only in `sources_not_consulted`.
 
 ## eStar format layer
 

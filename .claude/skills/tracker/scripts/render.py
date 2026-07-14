@@ -38,6 +38,157 @@ def find_project_dir():
     return Path(os.getcwd())
 
 
+def last_updated_date(project_dir):
+    """Return the tracker's 'last updated' date as 'DD-Mon-YY' (e.g. 01-Jul-26), or None.
+
+    Records when the tracker was genuinely last updated (not when the HTML was
+    rendered). Sourced honestly per tracker source file: use the local file
+    mtime when the file has uncommitted local changes (git working copy differs
+    from HEAD, or the tree is not a git repo) — a locally-edited-but-uncommitted
+    doc *was* just updated and its last commit date would be stale — otherwise
+    the last git commit date touching it. Most recent across sources wins.
+    Returns None only when no source file resolves (caller then falls back to
+    the render date). Project-agnostic: degrades to plain mtime outside git."""
+    import subprocess
+    from datetime import datetime
+    project_dir = Path(project_dir)
+    sources = [
+        'docs/project/submissions/submission-tracker.md',
+        'docs/project/submissions/submission-tracker.overlay.yml',
+    ]
+
+    def _commit_date(rel):
+        try:
+            log = subprocess.run(
+                ['git', '-C', str(project_dir), 'log', '-1', '--format=%cs', '--', rel],
+                capture_output=True, text=True, timeout=5)
+            if log.returncode == 0 and log.stdout.strip():
+                return datetime.strptime(log.stdout.strip(), '%Y-%m-%d').date()
+        except Exception:
+            pass
+        return None
+
+    candidates = []
+    for rel in sources:
+        f = project_dir / rel
+        if not f.is_file():
+            continue
+        d = None
+        try:
+            porcelain = subprocess.run(
+                ['git', '-C', str(project_dir), 'status', '--porcelain', '--', rel],
+                capture_output=True, text=True, timeout=5)
+            clean = (porcelain.returncode == 0 and not porcelain.stdout.strip())
+        except Exception:
+            clean = False  # git unavailable / not a repo → treat as dirty (use mtime)
+        if clean:
+            # committer date (YYYY-MM-DD, committer's tz) — matches git log --date=short
+            d = _commit_date(rel)
+        if d is None:
+            # uncommitted change, not a git repo, or git error → local file mtime
+            d = datetime.fromtimestamp(f.stat().st_mtime).date()
+        candidates.append(d)
+    if not candidates:
+        return None
+    return max(candidates).strftime('%d-%b-%y')
+
+
+def build_row_last_updated(rows, src_dir, project_dir):
+    """Map deliverable row-id -> 'DD-Mon-YY' last-updated date, derived from each
+    row's own evidence file (its Path-column link). Same honest sourcing as
+    last_updated_date(): git commit date of the evidence file, overridden by the
+    file's local mtime when it has uncommitted changes; '—' when the row has no
+    resolvable in-repo evidence file (Not Started / "To be created" / external).
+
+    Uses two scoped git calls total (log + status over just the evidence files),
+    NOT one-per-row, so it stays cheap on the console live-render. Degrades to
+    mtime (or '—') outside git."""
+    import subprocess
+    import re as _re
+    from datetime import datetime
+    src_dir = Path(src_dir)
+    project_dir = Path(project_dir)
+
+    link_re = _re.compile(r'\]\(([^)]+)\)')
+    ev = {}  # iid -> (repo_relative_path, absolute_path)
+    for r in rows:
+        pf = r.get('path') or ''
+        m = link_re.search(pf)
+        target = m.group(1) if m else None
+        if not target:
+            continue
+        target = target.split('#')[0].strip()
+        if not target or target.startswith(('http://', 'https://', 'mailto:', '/')):
+            continue
+        ab = (src_dir / target).resolve()
+        try:
+            rel = os.path.relpath(ab, project_dir).replace(os.sep, '/')
+        except Exception:
+            continue
+        if rel.startswith('..'):
+            continue  # outside the repo
+        ev[r['id']] = (rel, ab)
+
+    rels = sorted({rel for rel, _ in ev.values()})
+
+    # Dirty set — one git-status call over just the evidence files.
+    dirty = set()
+    if rels:
+        try:
+            st = subprocess.run(
+                ['git', '-C', str(project_dir), 'status', '--porcelain', '--', *rels],
+                capture_output=True, text=True, timeout=10)
+            if st.returncode == 0:
+                for line in st.stdout.splitlines():
+                    p = line[3:].strip()
+                    if ' -> ' in p:  # rename: "old -> new"
+                        p = p.split(' -> ', 1)[1]
+                    dirty.add(p.strip().strip('"'))
+        except Exception:
+            pass
+
+    # Commit date per file — one `git log -1 --format=%cs` per (non-dirty) file,
+    # run CONCURRENTLY (the cost is subprocess spawns, not git). `%cs` is the
+    # committer date (YYYY-MM-DD, committer's tz, matching `git log --date=short`)
+    # so a late-evening commit doesn't roll to the next day for a viewer.
+    #
+    # Why per-file rather than one bulk `git log --name-only` pass: a bulk pass
+    # attributes the *merge* commit's date (and omits merge-only files) instead
+    # of the content-commit date these per-file queries return; parallelising the
+    # per-file calls is byte-identical to the sequential version and ~7x faster.
+    def _commit_date(rel):
+        try:
+            r = subprocess.run(
+                ['git', '-C', str(project_dir), 'log', '-1', '--format=%cs', '--', rel],
+                capture_output=True, text=True, timeout=10)
+            if r.returncode == 0 and r.stdout.strip():
+                return rel, datetime.strptime(r.stdout.strip(), '%Y-%m-%d').date()
+        except Exception:
+            pass
+        return rel, None
+
+    to_lookup = [rel for rel in rels if rel not in dirty]  # dirty files use mtime
+    commit_dates = {}
+    if to_lookup:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=min(16, len(to_lookup))) as ex:
+            for rel, d in ex.map(_commit_date, to_lookup):
+                commit_dates[rel] = d
+
+    result = {}
+    for iid, (rel, ab) in ev.items():
+        d = None
+        if rel in dirty:
+            if ab.is_file():
+                d = datetime.fromtimestamp(ab.stat().st_mtime).date()
+        else:
+            d = commit_dates.get(rel)
+            if d is None and ab.is_file():  # untracked / not in history
+                d = datetime.fromtimestamp(ab.stat().st_mtime).date()
+        result[iid] = d.strftime('%d-%b-%y') if d else '—'
+    return result
+
+
 def project_subtitle(project_dir):
     """Build the tracker subtitle from project.yml if available."""
     try:
@@ -989,12 +1140,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .header h1{font-size:1.85rem;font-weight:700;letter-spacing:-.02em;color:var(--brand);margin-bottom:.3rem}
 .header .subtitle{color:var(--text-muted);font-size:.95rem}
 .header .timestamp{color:var(--text-muted);font-size:.8rem;margin-top:.5rem}
+.tracker-embed>.timestamp{color:var(--text-muted);font-size:.8rem;text-align:center;margin:0 0 1rem}
 .controls{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
 .controls .label{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin-right:.2rem}
 .controls button{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.72rem;cursor:pointer;transition:all .2s}
 .controls button:hover{background:var(--surface2);color:var(--text)}
 .controls button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 .controls .sep{border-left:1px solid var(--border);height:24px;margin:0 .15rem}
+.controls label.filter-dd{display:inline-flex;align-items:center;gap:.3rem}
+.controls select{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.32rem .5rem;font-size:.72rem;cursor:pointer;font-family:inherit;transition:all .2s}
+.controls select:hover{background:var(--surface2)}
+.controls select.filter-active{border-color:var(--brand);color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
 .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
 .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;border-left-width:4px;box-shadow:var(--shadow-sm)}
 .summary-card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:.3rem}
@@ -1035,6 +1191,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .item-table{width:100%;border-collapse:collapse;font-size:.78rem}
 .item-table th{text-align:left;padding:.35rem .6rem;background:var(--surface2);color:var(--text-muted);font-weight:600;font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;z-index:1}
 .item-table td{padding:.35rem .6rem;border-top:1px solid rgba(71,85,105,.4);vertical-align:top}
+.item-table .updated-col{white-space:nowrap;color:var(--text-muted);font-size:.72rem}
 .item-row{cursor:pointer;transition:background .15s}.item-row:hover td{background:rgba(56,189,248,.05)}
 .item-row.expanded-info td{background:rgba(56,189,248,.08)}
 .item-row.expanded-help td{background:rgba(168,85,247,.08)}
@@ -1181,12 +1338,50 @@ function siblingByClass(itemRow,cls){var n=itemRow.nextElementSibling;while(n&&!
 function toggleRowInfo(itemRow){var info=siblingByClass(itemRow,'info-row');if(!info)return;info.classList.toggle('visible');itemRow.classList.toggle('expanded-info')}
 function toggleRowHelp(itemRow){var help=siblingByClass(itemRow,'help-row');if(!help)return;help.classList.toggle('visible');itemRow.classList.toggle('expanded-help')}
 var filters={status:'all',scope:'all',phase:'all',effort:'all'};
-function setFilter(t,v){filters[t]=v;document.querySelectorAll('button[data-group="'+t+'"]').forEach(function(b){b.classList.remove('active')});document.querySelector('button[data-group="'+t+'"][data-value="'+v+'"]').classList.add('active');applyFilters()}
+function setFilter(t,v){filters[t]=v;var btns=document.querySelectorAll('button[data-group="'+t+'"]');btns.forEach(function(b){b.classList.remove('active')});var ab=document.querySelector('button[data-group="'+t+'"][data-value="'+v+'"]');if(ab)ab.classList.add('active');var dd=document.querySelector('select[data-group="'+t+'"]');if(dd){if(dd.value!==v)dd.value=v;dd.classList.toggle('filter-active',v!=='all')}applyFilters()}
 function applyFilters(){document.querySelectorAll('.item-row').forEach(function(r){var s=true;if(filters.status!=='all'&&r.getAttribute('data-status')!==filters.status)s=false;if(filters.scope!=='all'&&r.getAttribute('data-scope')!==filters.scope)s=false;if(filters.phase!=='all'&&r.getAttribute('data-phase')!==filters.phase)s=false;if(filters.effort!=='all'&&r.getAttribute('data-effort')!==filters.effort)s=false;r.style.display=s?'':'none';var n=r.nextElementSibling;while(n&&!n.classList.contains('item-row')){if(n.classList.contains('info-row')||n.classList.contains('help-row')){if(!s){n.classList.remove('visible')}}n=n.nextElementSibling}if(!s){r.classList.remove('expanded-info');r.classList.remove('expanded-help')}});document.querySelectorAll('.category').forEach(function(c){var visibleRows=c.querySelectorAll('.item-row:not([style*="display: none"])').length;c.style.display=visibleRows===0?'none':''})}
 document.addEventListener('click',function(e){var t=e.target;if(t.tagName==='A'||t.tagName==='BUTTON'||t.tagName==='SELECT'||t.tagName==='OPTION')return;if(t.classList&&t.classList.contains('row-icon')){var ri=findItemRow(t);if(!ri)return;if(t.classList.contains('info'))toggleRowInfo(ri);else if(t.classList.contains('help'))toggleRowHelp(ri);e.stopPropagation();return}var r=t.closest('.item-row');if(!r)return;toggleRowInfo(r)})
 '''
 
 JS = '<script>' + _JS_INNER + '</script>'
+
+
+def emit_controls_html(scope_values, phase_values):
+    """Build the controls bar HTML — view-toggle buttons + filter dropdowns.
+
+    Rendered *below* the summary cards and progress bars: those are computed
+    from all rows and do not react to the filters, so the controls belong
+    adjacent to the detail tables they actually filter. View toggles stay as
+    buttons (fire-and-forget actions); the four filters are compact <select>
+    dropdowns wired to the same setFilter()/applyFilters() contract as before
+    (row data-* attributes and applyFilters() are untouched)."""
+    status_values = ['Approved', 'In Review', 'Drafted', 'Drafting', 'Needs Revision', 'Not Started', 'N/A']
+    effort_values = ['Low', 'Med', 'High', 'V.High']
+
+    def dropdown(group, label, values):
+        opts = ['<option value="all">All</option>']
+        opts += [f'<option value="{v}">{v}</option>' for v in values]
+        return (f'<label class="filter-dd"><span class="label">{label}</span>'
+                f'<select data-group="{group}" onchange="setFilter(\'{group}\',this.value)">'
+                + ''.join(opts) + '</select></label>')
+
+    parts = ['<div class="controls">']
+    # View toggles — actions, kept as buttons.
+    parts.append('<button onclick="toggleAllSections(true)">Expand All</button>')
+    parts.append('<button onclick="toggleAllSections(false)">Collapse All</button>')
+    parts.append('<button onclick="toggleAllInfo()" id="btn-info">Show All Info</button>')
+    parts.append('<button onclick="toggleAllHelp()" id="btn-help">Show All Help</button>')
+    # Filters — compact dropdowns.
+    parts.append('<span class="sep"></span>')
+    parts.append(dropdown('status', 'Status', status_values))
+    parts.append(dropdown('scope', 'Scope', scope_values))
+    parts.append(dropdown('phase', 'Phase', phase_values))
+    parts.append(dropdown('effort', 'Effort', effort_values))
+    parts.append('</div>')
+    # Mode banners relocate with the controls.
+    parts.append('<div class="info-mode-banner" id="info-banner"><strong>Info mode active</strong> &mdash; per-row deterministic details (Phase, Scope, Path, References) expanded.</div>')
+    parts.append('<div class="help-mode-banner purple" id="help-banner"><strong>Help mode active</strong> &mdash; LLM-generated artifact help (what is this, why it matters in this project) expanded. Run <code>/tracker help</code> to populate empty rows.</div>')
+    return ''.join(parts)
 
 
 # ─── Render ───
@@ -1207,8 +1402,18 @@ def render(project_dir, embed=False):
     html_path = project_dir / 'docs/project/submissions/submission-tracker.html'
     src_dir = md_path.parent
 
+    # "Last updated" — when the tracker content genuinely changed,
+    # not when this HTML was rendered. Falls back to the render date if it can't
+    # be resolved. Rendered in both standalone and embed (console) modes below.
+    _last_updated = last_updated_date(project_dir)
+    updated_line = (f'Last updated: {_last_updated}' if _last_updated
+                    else f'Generated: {date.today().strftime("%d-%b-%y")}')
+
     data = parse_markdown(md_path)
     rows, eng, details, scales = data['rows'], data['eng'], data['details'], data.get('scales', {'status':[],'phase':[],'effort':[]})
+
+    # Per-deliverable "Last Updated" — each row's evidence-file date (DD-Mon-YY).
+    row_updated = build_row_last_updated(rows, src_dir, project_dir)
 
     # Sidecar override: when submission-tracker.details.json exists, its
     # entries take precedence over the inline `## Deliverable Details`
@@ -1273,7 +1478,7 @@ def render(project_dir, embed=False):
 
         w(f'<div class="header"><h1>Submission Package Tracker</h1>'
           f'<div class="subtitle">{project_subtitle(project_dir)}</div>'
-          f'<div class="timestamp">Generated: {date.today().isoformat()}</div></div>')
+          f'<div class="timestamp">{updated_line}</div></div>')
     else:
         # Embed mode: only the data-derived dynamic CSS goes inline (the
         # base CSS + JS are loaded via separate static routes by the host).
@@ -1282,36 +1487,12 @@ def render(project_dir, embed=False):
             w(f'<style>{theme_css}</style>')
         w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
         w('<div class="tracker-embed">')
+        w(f'<div class="timestamp">{updated_line}</div>')
 
-    w('<div class="controls">')
-    w('<button onclick="toggleAllSections(true)">Expand All</button>')
-    w('<button onclick="toggleAllSections(false)">Collapse All</button>')
-    w('<button onclick="toggleAllInfo()" id="btn-info">Show All Info</button>')
-    w('<button onclick="toggleAllHelp()" id="btn-help">Show All Help</button>')
-
-    w('<span class="sep"></span><span class="label">Status</span>')
-    w('<button class="active" data-group="status" data-value="all" onclick="setFilter(\'status\',\'all\')">All</button>')
-    for s in ['Approved', 'In Review', 'Drafted', 'Drafting', 'Needs Revision', 'Not Started', 'N/A']:
-        w(f'<button data-group="status" data-value="{s}" onclick="setFilter(\'status\',\'{s}\')">{s}</button>')
-
-    w('<span class="sep"></span><span class="label">Scope</span>')
-    w('<button class="active" data-group="scope" data-value="all" onclick="setFilter(\'scope\',\'all\')">All</button>')
-    for s in scope_values:
-        w(f'<button data-group="scope" data-value="{s}" onclick="setFilter(\'scope\',\'{s}\')">{s}</button>')
-
-    w('<span class="sep"></span><span class="label">Phase</span>')
-    w('<button class="active" data-group="phase" data-value="all" onclick="setFilter(\'phase\',\'all\')">All</button>')
-    for p in phase_values:
-        w(f'<button data-group="phase" data-value="{p}" onclick="setFilter(\'phase\',\'{p}\')">{p}</button>')
-
-    w('<span class="sep"></span><span class="label">Effort</span>')
-    w('<button class="active" data-group="effort" data-value="all" onclick="setFilter(\'effort\',\'all\')">All</button>')
-    for e_val in ['Low', 'Med', 'High', 'V.High']:
-        w(f'<button data-group="effort" data-value="{e_val}" onclick="setFilter(\'effort\',\'{e_val}\')">{e_val}</button>')
-    w('</div>')
-
-    w('<div class="info-mode-banner" id="info-banner"><strong>Info mode active</strong> &mdash; per-row deterministic details (Phase, Scope, Path, References) expanded.</div>')
-    w('<div class="help-mode-banner purple" id="help-banner"><strong>Help mode active</strong> &mdash; LLM-generated artifact help (what is this, why it matters in this project) expanded. Run <code>/tracker help</code> to populate empty rows.</div>')
+    # Controls bar (filters + view toggles) is emitted BELOW the summary cards
+    # and progress bars — see emit_controls_html() and the call after the
+    # progress section. The summary/progress are filter-independent, so the
+    # controls sit adjacent to the detail tables they actually filter.
 
     # `inflight` = active work between Not Started and Approved
     INFLIGHT_STATES = ('Drafting', 'Drafted', 'In Review', 'Needs Revision')
@@ -1378,6 +1559,10 @@ def render(project_dir, embed=False):
           f'<div class="progress-stats">{d}/{n} done</div></div>')
     w('</div>')
 
+    # Controls bar — filters + view toggles, placed below the (filter-independent)
+    # summary + progress, adjacent to the detail tables they filter.
+    w(emit_controls_html(scope_values, phase_values))
+
     # Per-Phase sections
     for p in phase_values:
         w(f'<div class="tier-divider phase-divider">'
@@ -1414,6 +1599,7 @@ def render(project_dir, embed=False):
               f'<th class="scope-col">Scope</th><th class="phase-col">Phase</th>'
               f'<th class="ref-col">REF</th><th>Effort</th>'
               f'<th class="ai-status-col">AI Status</th><th class="status-col">Status</th>'
+              f'<th class="updated-col">Last Updated</th>'
               f'<th class="path-col">Path</th></tr></thead><tbody>')
 
             for r in sub_items:
@@ -1431,14 +1617,15 @@ def render(project_dir, embed=False):
                   f'<td><span class="{effort_class(r.get("effort",""))}">{r.get("effort","")}</span></td>'
                   f'{ai_status_cell(iid, agent_map)}'
                   f'<td><span class="{status_class(r["status"])}" data-row-id="{iid}" data-status="{r["status"]}">{r["status"]}</span></td>'
+                  f'<td class="updated-col">{row_updated.get(iid, "—")}</td>'
                   f'<td class="path-col">{wire_create_draft_button(md_inline_to_html(r["path"], src_dir, project_dir), iid, r["status"], find_draft_stage(project_dir, iid))}</td>'
                   f'</tr>')
                 if iid in details:
                     detail_html = detail_md_to_html(details[iid], src_dir, project_dir)
-                    w(f'<tr class="info-row"><td colspan="9"><div class="info-content">{detail_html}</div></td></tr>')
+                    w(f'<tr class="info-row"><td colspan="10"><div class="info-content">{detail_html}</div></td></tr>')
                 else:
-                    w(f'<tr class="info-row"><td colspan="9"><div class="info-content info-empty">No detail entry yet for <code>{iid}</code> &mdash; populate via Deliverable Details section in the markdown.</div></td></tr>')
-                w(help_row_html(iid, help_map, colspan=9))
+                    w(f'<tr class="info-row"><td colspan="10"><div class="info-content info-empty">No detail entry yet for <code>{iid}</code> &mdash; populate via Deliverable Details section in the markdown.</div></td></tr>')
+                w(help_row_html(iid, help_map, colspan=10))
 
             w('</tbody></table></div></div>')
 
@@ -1471,6 +1658,7 @@ def render(project_dir, embed=False):
       f'<th class="scope-col">Scope</th><th class="phase-col">Phase</th>'
       f'<th>Effort</th>'
       f'<th class="ai-status-col">AI Status</th><th class="status-col">Status</th>'
+      f'<th class="updated-col">Last Updated</th>'
       f'<th>Gates</th></tr></thead><tbody>')
 
     for e in eng:
@@ -1485,10 +1673,11 @@ def render(project_dir, embed=False):
           f'<td><span class="{effort_class(e.get("effort",""))}">{e.get("effort","")}</span></td>'
           f'{ai_status_cell(e["id"], agent_map)}'
           f'<td><span class="{status_class(e["status"])}" data-row-id="{e["id"]}" data-status="{e["status"]}">{e["status"]}</span></td>'
+          f'<td class="updated-col">&mdash;</td>'
           f'<td class="gates-col">{md_inline_to_html(e["gates"], src_dir, project_dir)}</td>'
           f'</tr>')
-        w(f'<tr class="info-row"><td colspan="8"><div class="info-content info-empty">Engineering prerequisite — see project README for capability ownership.</div></td></tr>')
-        w(help_row_html(e["id"], help_map, colspan=8))
+        w(f'<tr class="info-row"><td colspan="9"><div class="info-content info-empty">Engineering prerequisite — see project README for capability ownership.</div></td></tr>')
+        w(help_row_html(e["id"], help_map, colspan=9))
     w('</tbody></table></div></div>')
 
     # Scale sections (Status / Phase / Effort) — definitions of each badge value

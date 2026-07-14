@@ -1,0 +1,44 @@
+{
+  "_comment": "Narrative profile for the PreSTAR (Q-Sub) completion guide. Generic FDA-form content — NO project-specific data (no device/company names). Injected by estar_completion_guide.py when the section-map template_id matches `template_match`. The nIVD eSTAR (510k) template has its own profile (or none). Sourced against FDA draft guidance FDA-2025-D-1082 (May 29 2025); see qsub-estar-draft source-md.",
+  "template_match": "PreSTAR",
+  "one_liner": "this guide tells you exactly what to type, and which files to attach where, to fill out the FDA's PreSTAR form for our Q-Submission.",
+  "start_here": [
+    "## Start here",
+    "",
+    "**What you're doing.** We are sending the FDA a **Q-Submission** — a request for feedback on our plan *before* we file the real 510(k). The FDA takes a Q-Sub on a fill-in PDF form called **PreSTAR**. Your job is to fill that form out and send it.",
+    "",
+    "**Who does what.** A Regulatory Affairs (RA) team member fills in the form in Adobe Acrobat Pro. This guide is the source of truth for every answer you type and every file you attach — the form itself only adds up and checks what you enter.",
+    "",
+    "**Three things to know before you start:**",
+    "",
+    "- The form **only works in Adobe Acrobat Pro** — not a web browser, not Preview. (FDA calls it a \"structured dynamic PDF\"; it's built on Adobe's forms technology, which only Acrobat runs.)",
+    "- **Never leave a required box blank.** If a section doesn't apply to us, the answer is **\"No / N-A\"** — see §3.",
+    "- PreSTAR is based on **draft** FDA guidance (FDA-2025-D-1082, May 29 2025) and is currently **voluntary**. Confirm it's still the right route before you build the package (see §5)."
+  ],
+  "glossary": [
+    ["Q-Sub / Pre-Submission", "A request for FDA feedback on our plan, before the real submission"],
+    ["PreSTAR", "The FDA's fill-in PDF form for Q-Subs (this form)"],
+    ["eSTAR", "The FDA's form for the later 510(k) — a cousin of PreSTAR, **not** this one"],
+    ["CDRH Portal", "The FDA website you upload the finished package to"],
+    ["Attachment area", "The upload button(s) inside a form section where you add the exhibit PDFs for that section"],
+    ["Structured answer", "Something you type or select directly in the form (vs. a file you attach)"],
+    ["SaMD", "Software as a Medical Device"],
+    ["MFD", "Multiple-Function Device (a device that bundles several functions)"],
+    ["MDDS", "Medical Device Data System (transfers/stores/displays data, no clinical analysis)"],
+    ["N/A", "\"Not applicable\" — answered as **\"No / N-A\"**, never left blank"]
+  ],
+  "steps_intro": "> **The exhibit PDFs are already prepared for you.** They were converted to the FDA's format and checked for admissibility upstream — you don't need to convert, lint, or edit them. Just load each one under its section.",
+  "steps": [
+    "Open the PreSTAR template in **Adobe Acrobat Pro**.",
+    "Type in the **structured answers** from **§1**.",
+    "Load each **provided exhibit** PDF under its **form section** from **§2**.",
+    "Mark every section that doesn't apply as **\"No / N-A\"** — see **§3**.",
+    "Clear the **open items** in **§4** and **§5**, confirm the form's **status shows the submission is complete**, then **transmit through the CDRH Portal**."
+  ],
+  "transmit_context": [
+    "**We're filing on PreSTAR, not eCopy.** The two are different ways to hand a submission to FDA:",
+    "  - **eCopy** is an electronic *copy of a paper package* — a set of PDFs you send as-is. FDA still checks it for completeness after it arrives.",
+    "  - **PreSTAR** is FDA's *guided form*: you fill in structured fields and it **checks the package is complete before you send it**, so it isn't expected to hit FDA's post-arrival completeness screen. It's the only electronic template FDA offers for Q-Subs today.",
+    "  - **Why PreSTAR:** the built-in completeness check lowers the risk of an incomplete package, and FDA is steadily moving toward guided templates like this one. It's **voluntary** for Pre-Subs right now (eCopy is still allowed), so confirm this is still the plan before you build the package — see \"Start here.\""
+  ]
+}

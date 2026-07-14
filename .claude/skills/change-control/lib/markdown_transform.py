@@ -94,6 +94,7 @@ class TransformReport:
     fence_swaps: int = 0
     frontmatter_stripped: bool = False
     internal_blocks_stripped: list[dict] = field(default_factory=list)  # {kind, line_count}
+    internal_zones_stripped: dict = field(default_factory=dict)  # {comments, containers, columns} — only when strip_internal is on
 
 
 # Kinds of HTML-comment blocks that are project-internal tooling-only and
@@ -122,6 +123,13 @@ class TransformOptions:
     # to the source doc, or repo-root) → manifest key. Defaults to
     # normalizing to a clean repo-relative path.
     path_normalizer: str | None = None  # reserved for future use
+    # When True, strip the three-tier working apparatus (🔒 INTERNAL
+    # <details> containers, all HTML-comment metadata blocks, 🔒-marked
+    # table columns) so the published page carries the FILED BODY ONLY —
+    # the same content transmitted to the regulator. Default False keeps
+    # the legacy behavior (🔒 blocks round-trip to Confluence as collapsed
+    # expands). See strip_internal_zones().
+    strip_internal: bool = False
 
 
 # ---- Public API ----
@@ -153,6 +161,10 @@ def transform_markdown(
 
     text, stripped_blocks = strip_internal_only_blocks(text)
     rep.internal_blocks_stripped = stripped_blocks
+
+    if opts.strip_internal:
+        text, zone_stats = strip_internal_zones(text)
+        rep.internal_zones_stripped = zone_stats
 
     text, swap_count = swap_html_fence_to_text(text)
     rep.fence_swaps = swap_count
@@ -257,6 +269,126 @@ def strip_internal_only_blocks(
 
     out = pattern.sub(_capture, source)
     return out, blocks
+
+
+# ---- Step 1c: internal-zone strip (three-tier filed-body-only mode) ----
+
+
+_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
+
+
+def _is_fence(line: str) -> bool:
+    return bool(_FENCE_RE.match(line))
+
+
+def strip_internal_zones(source: str) -> tuple[str, dict]:
+    """Strip the three-tier working apparatus so only the FILED BODY remains —
+    the content transmitted to a regulator. Removes, **fence-aware throughout**
+    (a 🔒 container may hold fenced code, and fenced examples may contain
+    comment/`<details>`-like text; a naive strip eats a fence delimiter and turns
+    the rest of the document into one code block):
+
+      1. every HTML comment (`<!-- ... -->`, single- or multi-line) — the metadata
+         tier (version/AI changelogs, AUTO markers);
+      2. every `<details>...</details>` block whose head carries the 🔒 marker —
+         the `🔒 INTERNAL` working-apparatus containers;
+      3. `🔒`-marked table columns (a column whose header cell contains 🔒).
+
+    Returns `(filed_body, stats)` where stats = {comments, containers, columns}.
+    Mirrors the submissions eStar `strip_internal` so the Confluence filed-body
+    matches the eStar exhibit byte-for-byte in intent. Project-agnostic: the only
+    marker is the 🔒 sentinel (the three-tier convention), no project names.
+    """
+    stats = {"comments": 0, "containers": 0, "columns": 0}
+    lines = source.splitlines()
+
+    # pass 1 — HTML comments + 🔒 <details> containers (outside fences only)
+    kept: list[str] = []
+    i, in_fence = 0, False
+    while i < len(lines):
+        ln = lines[i]
+        if _is_fence(ln):
+            in_fence = not in_fence
+            kept.append(ln); i += 1; continue
+        if in_fence:
+            kept.append(ln); i += 1; continue
+        if "<!--" in ln:
+            new, n = re.subn(r"<!--.*?-->", "", ln)
+            stats["comments"] += n
+            if "<!--" in new:  # unterminated on this line → multi-line comment
+                pre = new[: new.index("<!--")]
+                j = i + 1
+                while j < len(lines) and "-->" not in lines[j]:
+                    j += 1
+                post = lines[j].split("-->", 1)[1] if j < len(lines) else ""
+                stats["comments"] += 1
+                merged = (pre + post).rstrip()
+                if merged.strip():
+                    kept.append(merged)
+                i = j + 1; continue
+            if new.strip() or not ln.strip():
+                kept.append(new)
+            i += 1; continue
+        if ln.lstrip().startswith("<details"):
+            j, depth, f2 = i + 1, 1, False
+            while j < len(lines):
+                t = lines[j].lstrip()
+                if _is_fence(t):
+                    f2 = not f2
+                elif not f2:
+                    if t.startswith("<details"):
+                        depth += 1
+                    elif t.startswith("</details"):
+                        depth -= 1
+                        if depth == 0:
+                            break
+                j += 1
+            head = "\n".join(lines[i : min(i + 6, j + 1)])
+            if "🔒" in head:
+                stats["containers"] += 1
+                i = j + 1; continue
+            kept.append(ln); i += 1; continue  # non-internal <details>: keep
+        kept.append(ln); i += 1
+
+    # pass 2 — drop 🔒-marked table columns (outside fences only)
+    def _flush(buf: list[str]) -> list[str]:
+        if not buf:
+            return []
+        hdr = [c.strip() for c in buf[0].strip().strip("|").split("|")]
+        drop = [k for k, h in enumerate(hdr) if "🔒" in h]
+        if not drop:
+            return buf
+        stats["columns"] += len(drop)
+        fixed = []
+        for row in buf:
+            cells = [c for c in row.strip().strip("|").split("|")]
+            keep = [c for k, c in enumerate(cells) if k not in drop]
+            fixed.append("| " + " | ".join(c.strip() for c in keep) + " |")
+        return fixed
+
+    out: list[str] = []
+    buf: list[str] = []
+    in_fence = False
+    for ln in kept:
+        if _is_fence(ln):
+            if buf:
+                out += _flush(buf); buf = []
+            in_fence = not in_fence
+            out.append(ln); continue
+        if in_fence:
+            out.append(ln); continue
+        if ln.strip().startswith("|"):
+            buf.append(ln); continue
+        if buf:
+            out += _flush(buf); buf = []
+        out.append(ln)
+    if buf:
+        out += _flush(buf)
+
+    # collapse >2 consecutive blank lines the strips may leave
+    text = "\n".join(out)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip() + "\n", stats
 
 
 # ---- Step 2: code-fence language swap ----
