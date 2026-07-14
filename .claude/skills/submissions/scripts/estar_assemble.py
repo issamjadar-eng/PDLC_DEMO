@@ -497,7 +497,8 @@ def main():
         else:
             pages = render_pdf(body, title, out_path, a.font)
         manifest["attachments"].append({
-            "n": idx, "section": section, "source": os.path.relpath(src),
+            "n": idx, "section": section, "title": title,
+            "source": os.path.relpath(src),
             "source_sha256": hashlib.sha256(raw_md.encode()).hexdigest()[:16],
             "output": os.path.join("attachments", fname), "pages": pages,
             "stripped": stats, "refs": refs})
@@ -515,6 +516,7 @@ def main():
     guide_base = os.path.join(a.out, f"{tpl}-completion-guide")
     subprocess.run([sys.executable, os.path.join(SCRIPT_DIR, "estar_completion_guide.py"),
                     "--sectionmap", a.sectionmap, "--crosswalk", a.crosswalk,
+                    "--assembly-manifest", os.path.join(a.out, "assembly-manifest.json"),
                     "--out-json", guide_base + ".json", "--out-md", guide_base + ".md"],
                    check=True)
 

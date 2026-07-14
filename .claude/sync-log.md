@@ -4,6 +4,27 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-14 — push
+
+- Files: `skills/submissions/VERSION` (`5` → `6`)
+- Branch: `sync/pdlc-demo-submissions-version-2026-07-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/266
+- Commit: "submissions: bump VERSION file 5 -> 6 to match SKILL.md frontmatter"
+- Status: awaiting review
+- Rationale: upstream PR #264 delivered submissions v6 (README changelog row + SKILL.md frontmatter `version: 6`) but never bumped the `VERSION` file (last touched by #262 at `5`). Local copy fixed to `6` in the same session (task ben/101).
+
+## 2026-07-14 — pull
+
+- Hitachi HEAD after sync: `761afd3`
+- Pulled: 18 files (all auto-pull bucket — 12 UPSTREAM_ADVANCE + 6 new UPSTREAM_ONLY)
+  - `skills/change-control/` → **v0.14.0** — filed-body-only publish mode (`--strip-internal` on `publish_helper` precheck/body/adf-body/html-body): fence-aware stripping of HTML-comment metadata blocks, `🔒` `<details>` containers, and `🔒` table columns so the published Confluence body carries only the filed body. Default behavior unchanged.
+  - `skills/submissions/` → **v6** (README/SKILL/VERSION + 4 new scripts/references + 1 new eStar sectionmap) — v3 cross-document seam checks (`check` action, S1–S3), v4 stable-key liveness (S4), v5 provenance source-drift reconciliation (`provenance {check,stamp}` + `provenance_reconcile.py` + sources-lock), v6 claim↔primary-source grounding (`ungrounded-claim` / `unresolved-source` findings; `pypdf` soft dependency). Note: upstream `VERSION` file says `5` while SKILL.md frontmatter says `6` — upstream inconsistency, not local drift.
+  - `skills/digest/hooks/session-briefing.sh` — bash-3.2 heredoc fix + de-leak task refs (in-place hook update; registration path unchanged, no setup re-run needed)
+  - `skills/tracker/scripts/render.py` — last-updated-date sourcing improvements
+- statusline check: `skills/usage-metrics/statusline.sh` already in sync (landed 77a39f0; byte-identical across PDLC_DEMO / hitachi / arthrex-pccp) — no pending statusline update existed.
+- project.yml: no changes (all four skills already in `approved_skills`; new files are additive within existing skills; no new agents/hooks/setup actions)
+- Follow-ups: none blocking. No `**Post-update:**` annotations. Optional: run `/submissions check` + `provenance check` over the Q-Sub package to exercise the new seam/grounding checks; install `pypdf` in the relevant venv if PDF quote-grounding is wanted.
+
 ## 2026-07-04 — pull
 
 - Hitachi HEAD after sync: `c9dfa23`

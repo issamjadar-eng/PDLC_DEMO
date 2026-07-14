@@ -105,6 +105,14 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("lenient", "strict", "placeholder"),
         default="lenient",
     )
+    pc.add_argument(
+        "--strip-internal",
+        action="store_true",
+        help="Publish the FILED BODY ONLY — strip 🔒 INTERNAL <details> containers, "
+             "HTML-comment metadata blocks, and 🔒-marked table columns (the same "
+             "content transmitted to the regulator). Default keeps 🔒 blocks as "
+             "collapsed Confluence expands.",
+    )
 
     # body
     bd = sub.add_parser(
@@ -116,6 +124,8 @@ def _build_parser() -> argparse.ArgumentParser:
     bd.add_argument(
         "--miss-policy", choices=("lenient", "strict", "placeholder"), default="lenient"
     )
+    bd.add_argument("--strip-internal", action="store_true",
+                    help="Filed-body only: strip 🔒 INTERNAL containers + metadata comments.")
 
     # html-body — Confluence storage HTML output (kept for diagnostic
     # use even though the Atlassian MCP write API does NOT accept
@@ -129,6 +139,8 @@ def _build_parser() -> argparse.ArgumentParser:
     hb.add_argument(
         "--miss-policy", choices=("lenient", "strict", "placeholder"), default="lenient"
     )
+    hb.add_argument("--strip-internal", action="store_true",
+                    help="Filed-body only: strip 🔒 INTERNAL containers + metadata comments.")
 
     # adf-body — Atlassian Document Format JSON for contentFormat=adf publish.
     # Recovers panel chrome (panelType), underlines (mark.type=underline),
@@ -144,6 +156,8 @@ def _build_parser() -> argparse.ArgumentParser:
     ab.add_argument(
         "--miss-policy", choices=("lenient", "strict", "placeholder"), default="lenient"
     )
+    ab.add_argument("--strip-internal", action="store_true",
+                    help="Filed-body only: strip 🔒 INTERNAL containers + metadata comments.")
     ab.add_argument(
         "--emit-images-sidecar",
         default="",
@@ -297,7 +311,10 @@ def cmd_precheck(args: argparse.Namespace) -> int:
         fm.body,
         source_doc_path=str(source_path),
         page_index=page_index,
-        options=TransformOptions(miss_policy=args.miss_policy),
+        options=TransformOptions(
+            miss_policy=args.miss_policy,
+            strip_internal=getattr(args, "strip_internal", False),
+        ),
     )
 
     # Capture zones from the current ADF (only meaningful for existing pages)
@@ -338,6 +355,7 @@ def cmd_precheck(args: argparse.Namespace) -> int:
             "fence_swaps": report.fence_swaps,
             "frontmatter_stripped": report.frontmatter_stripped,
             "internal_blocks_stripped": report.internal_blocks_stripped,
+            "internal_zones_stripped": report.internal_zones_stripped,
         },
         "zones_captured": captured_zones,
         "diverged": diverged,
@@ -357,7 +375,10 @@ def cmd_body(args: argparse.Namespace) -> int:
         fm.body,
         source_doc_path=str(source_path),
         page_index=page_index,
-        options=TransformOptions(miss_policy=args.miss_policy),
+        options=TransformOptions(
+            miss_policy=args.miss_policy,
+            strip_internal=getattr(args, "strip_internal", False),
+        ),
     )
     sys.stdout.write(transformed)
     return 0
@@ -1409,7 +1430,10 @@ def cmd_adf_body(args: argparse.Namespace) -> int:
         fm.body,
         source_doc_path=str(source_path),
         page_index=page_index,
-        options=TransformOptions(miss_policy=args.miss_policy),
+        options=TransformOptions(
+            miss_policy=args.miss_policy,
+            strip_internal=getattr(args, "strip_internal", False),
+        ),
     )
     images_collector: list[dict] = []
     adf = _md_to_adf(transformed, images_collector=images_collector)
@@ -1538,7 +1562,10 @@ def cmd_html_body(args: argparse.Namespace) -> int:
         fm.body,
         source_doc_path=str(source_path),
         page_index=page_index,
-        options=TransformOptions(miss_policy=args.miss_policy),
+        options=TransformOptions(
+            miss_policy=args.miss_policy,
+            strip_internal=getattr(args, "strip_internal", False),
+        ),
     )
     sys.stdout.write(_md_to_storage_html(transformed))
     return 0
