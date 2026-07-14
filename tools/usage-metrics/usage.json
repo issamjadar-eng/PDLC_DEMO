@@ -2,18 +2,18 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 92.84,
-    "2026-06-16": 31.57,
-    "2026-06-22": 14.11,
-    "2026-06-23": 7.43,
-    "2026-06-29": 0.89,
-    "2026-06-30": 141.42,
-    "2026-07-01": 142.96,
-    "2026-07-02": 17.92,
-    "2026-07-03": 6.48,
-    "2026-07-05": 2.18,
-    "2026-07-08": 0.98,
-    "2026-07-14": 0.87
+    "2026-06-15": 94.17,
+    "2026-06-16": 32.04,
+    "2026-06-22": 14.32,
+    "2026-06-23": 7.55,
+    "2026-06-29": 0.9,
+    "2026-06-30": 143.44,
+    "2026-07-01": 144.87,
+    "2026-07-02": 18.2,
+    "2026-07-03": 6.58,
+    "2026-07-05": 2.22,
+    "2026-07-08": 0.99,
+    "2026-07-14": 7.6
   },
   "members": 1,
   "months": {
@@ -160,25 +160,25 @@
             "output": 1107
           },
           "2026-07-14": {
-            "cache_creation": 67173,
-            "cache_read": 351644,
-            "cache_write_1h": 67173,
+            "cache_creation": 217929,
+            "cache_read": 8933565,
+            "cache_write_1h": 217929,
             "cache_write_5m": 0,
-            "input": 10,
-            "messages": 5,
-            "output": 702
+            "input": 138,
+            "messages": 69,
+            "output": 32978
           }
         },
         "by_model": {
           "claude-fable-5": {
-            "cache_creation": 67173,
-            "cache_read": 351644,
-            "cache_write_1h": 67173,
+            "cache_creation": 217929,
+            "cache_read": 8933565,
+            "cache_write_1h": 217929,
             "cache_write_5m": 0,
-            "cost": 1.73,
-            "input": 10,
-            "messages": 5,
-            "output": 702
+            "cost": 14.94,
+            "input": 138,
+            "messages": 69,
+            "output": 32978
           },
           "claude-opus-4-8": {
             "cache_creation": 4290665,
@@ -191,17 +191,17 @@
             "output": 702551
           }
         },
-        "cost": 172.69,
+        "cost": 185.9,
         "name": "Member 1",
-        "sessions": 5,
+        "sessions": 6,
         "totals": {
-          "cache_creation": 4357838,
-          "cache_read": 230014221,
-          "cache_write_1h": 2821658,
+          "cache_creation": 4508594,
+          "cache_read": 238596142,
+          "cache_write_1h": 2972414,
           "cache_write_5m": 1536180,
-          "input": 283954,
-          "messages": 650,
-          "output": 703253
+          "input": 284082,
+          "messages": 714,
+          "output": 735529
         }
       }
     }
@@ -4465,17 +4465,71 @@
         "output": 10694
       }
     },
+    "ben/101": {
+      "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 24322,
+          "cache_read": 5229850,
+          "cache_write_1h": 24322,
+          "cache_write_5m": 0,
+          "cost": 6.51,
+          "input": 66,
+          "messages": 33,
+          "output": 15824
+        }
+      },
+      "cost": 6.51,
+      "cost_allocated": 8.43,
+      "cost_basis": "measured+allocated",
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 3
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Registry Sync 2026-07-14 + Statusline Install + Submissions VERSION Fix",
+        "todos": 3,
+        "updated": "2026-07-14"
+      },
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 24322,
+        "cache_read": 5229850,
+        "cache_write_1h": 24322,
+        "cache_write_5m": 0,
+        "input": 66,
+        "messages": 33,
+        "output": 15824
+      }
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 67173,
-          "cache_read": 351644,
-          "cache_write_1h": 67173,
+          "cache_creation": 193607,
+          "cache_read": 3703715,
+          "cache_write_1h": 193607,
           "cache_write_5m": 0,
-          "cost": 1.73,
-          "input": 10,
-          "messages": 5,
-          "output": 702
+          "cost": 8.43,
+          "input": 72,
+          "messages": 36,
+          "output": 17154
         },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
@@ -4498,16 +4552,16 @@
           "output": 1112396
         }
       },
-      "cost": 219.75,
-      "sessions": 12,
+      "cost": 226.45,
+      "sessions": 13,
       "totals": {
-        "cache_creation": 4645604,
-        "cache_read": 292042465,
-        "cache_write_1h": 4052654,
+        "cache_creation": 4772038,
+        "cache_read": 295394536,
+        "cache_write_1h": 4179088,
         "cache_write_5m": 592950,
-        "input": 362306,
-        "messages": 1072,
-        "output": 1129270
+        "input": 362368,
+        "messages": 1103,
+        "output": 1145722
       }
     },
     "dmytro/001": {
@@ -4552,11 +4606,11 @@
   },
   "value_summary": {
     "agentic_hours": 499.0,
-    "cost_allocated": 146.91,
+    "cost_allocated": 155.34,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 239.92,
-    "cost_unattributed_measured": 219.75,
-    "cost_unattributed_residual": 72.83,
+    "cost_measured_attributed": 246.43,
+    "cost_unattributed_measured": 226.45,
+    "cost_unattributed_residual": 71.1,
     "hours_saved": {
       "max": 2821.0,
       "min": 811.0
@@ -4568,6 +4622,6 @@
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 0,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 99
+    "tasks_with_estimate": 100
   }
 }
