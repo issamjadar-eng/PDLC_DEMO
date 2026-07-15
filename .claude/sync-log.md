@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-14 — push (project-console 1.30.8 → 1.33.0)
+
+- Branch: `sync/pdlc-demo-project-console-setup-2026-07-14`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/267
+- Commit: "project-console: Setup as full project-settings surface (1.30.8 -> 1.33.0)"
+- Status: merged (squash) — merge commit `6f5464c`; local hitachi clone fast-forwarded `bd09efa` → `6f5464c`; sync branch deleted local+remote
+- Files: 11 (new `console/setup/` module ×5, `setup_view.html`, `app.py`, `_base.html`, `SKILL.md`, `README.md`, `VERSION`)
+- Rationale: the topline Setup section built under tasks ben/103 (1.31.0 connectors) + ben/104 (1.32.0 settings shell, 1.33.0 registries/automation) is registry-shared skill code; sister projects adopt via `/sync-skills pull` — changelog entries carry **Post-update** notes (restart console; optional `registries[].local_path` enables install buttons). Preflight `check --analyzed`: 6 LOCAL_ONLY + 5 LOCAL_AHEAD, no conflicts.
+- Known pull candidate left open: `sync-skills` v8.4 upstream vs v8.3 local (visible in the console's new Registries view; take via Update button or `/sync-skills pull`).
+
 ## 2026-07-14 — push
 
 - Files: `skills/submissions/VERSION` (`5` → `6`)
