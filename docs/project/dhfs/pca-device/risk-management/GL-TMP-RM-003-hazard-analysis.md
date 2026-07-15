@@ -34,6 +34,7 @@ notes: "Populated hazard analysis for PP3500 — 16 hazards scored per GL-STD-RM
 |------------|------|---------|
 | 2026-07-14 | 102  | Hazard analysis backfilled: 16 hazards, GL-STD-RM-001 scoring, DI trace column populated. |
 | 2026-07-14 | 102  | QA-conformance pass (quality-engineering): CONFORMANT — all 16 rows matrix-recomputed clean; no changes required. |
+| 2026-07-14 | 102  | Reference audit (RA-gl-tmp-rm-003-hazard-analysis-001): fixed stale clause cite 81001-5-1 §5→§7.1 (threat modeling); RMR disposition claim softened to forward tense; Annex C taxonomy [VERIFY] added. |
 -->
 
 # PCA-DEVICE-GL-TMP-RM-003-hazard-analysis — Hazard Analysis
@@ -46,7 +47,7 @@ _Demo sample data — not for clinical use._
 **Revision:** 0.2 DRAFT
 **Effective Date:** — (not released)
 
-This document records the ISO 14971 §5 hazard analysis for the PainEase PCA Advanced (PP-3500) patient-controlled analgesia infusion pump. Hazards were identified per GL-WI-RM-001 using the ISO 14971 Annex C stimulus classes (energy, biological & chemical, operational, information, environmental), the IEC 60601-1 hazard clauses, the IEC 81001-5-1 §5 threat catalog for the connected functions, and predicate history (including the decimal-point misread heritage of predicate CAPA-2023-001). Severity (S), Probability (P), and the risk-acceptance regions are taken exclusively from GL-STD-RM-001 §3, §4, and the §5 acceptance matrix. Each hazard traces to the implementing design inputs in DHF-PP3500-DI-001 (`../design-controls/requirements/design-inputs.md`). Bottom-up dFMEA/pFMEA analyses in the sibling GL-TMP-RM-004 documents link back to these HAZ IDs via their Linked Hazard ID column.
+This document records the ISO 14971 §5 hazard analysis for the PainEase PCA Advanced (PP-3500) patient-controlled analgesia infusion pump. Hazards were identified per GL-WI-RM-001 using the ISO 14971 Annex C stimulus classes (energy, biological & chemical, operational, information, environmental) [VERIFY — confirm the class taxonomy against the ISO 14971:2019 original; the registry distillation characterizes Annex C as safety-characteristic questions], the IEC 60601-1 hazard clauses, IEC 81001-5-1 §7.1 threat modeling for the connected functions, and predicate history (including the decimal-point misread heritage of predicate CAPA-2023-001). Severity (S), Probability (P), and the risk-acceptance regions are taken exclusively from GL-STD-RM-001 §3, §4, and the §5 acceptance matrix. Each hazard traces to the implementing design inputs in DHF-PP3500-DI-001 (`../design-controls/requirements/design-inputs.md`). Bottom-up dFMEA/pFMEA analyses in the sibling GL-TMP-RM-004 documents link back to these HAZ IDs via their Linked Hazard ID column.
 
 ---
 
@@ -88,7 +89,7 @@ This document records the ISO 14971 §5 hazard analysis for the PainEase PCA Adv
 | ALARP | 7 |
 | Broadly acceptable | 9 |
 
-Pre-control distribution for reference: 6 Unacceptable (HAZ-001, HAZ-002, HAZ-003, HAZ-004, HAZ-012, HAZ-014), 10 ALARP, 0 Acceptable. Every pre-control Unacceptable risk is reduced by design or protective measures (not information for safety alone), per GL-STD-RM-001 §6. Residual ALARP risks (HAZ-001, HAZ-002, HAZ-003, HAZ-004, HAZ-008, HAZ-012, HAZ-014) are dispositioned in the Risk Management Report; the S5 hazards remain ALARP by matrix construction (S5 rows cannot reach Acceptable per GL-STD-RM-001 §5) and feed the benefit-risk considerations of GL-STD-RM-001 §7.
+Pre-control distribution for reference: 6 Unacceptable (HAZ-001, HAZ-002, HAZ-003, HAZ-004, HAZ-012, HAZ-014), 10 ALARP, 0 Acceptable. Every pre-control Unacceptable risk is reduced by design or protective measures (not information for safety alone), per GL-STD-RM-001 §6. Residual ALARP risks (HAZ-001, HAZ-002, HAZ-003, HAZ-004, HAZ-008, HAZ-012, HAZ-014) will be dispositioned in the Risk Management Report (GL-TMP-RM-002 instance — not yet authored); the S5 hazards remain ALARP by matrix construction (S5 rows cannot reach Acceptable per GL-STD-RM-001 §5) and feed the benefit-risk considerations of GL-STD-RM-001 §7.
 
 ## Approvals
 

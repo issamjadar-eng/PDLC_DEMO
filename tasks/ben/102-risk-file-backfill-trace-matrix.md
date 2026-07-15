@@ -2,7 +2,7 @@
 
 **ID**: 102
 **Created**: 2026-07-14
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -46,8 +46,8 @@ _Actionable work items. Check off as completed._
 - [x] Write project risk adapter `tools/project-console/trace-matrix/adapters/risk.py` + rationale in `tools/project-console/trace-matrix/analysis-notes.md` (new file; also backfilled a software.py note); `trace-matrix.yml` pca-device risk source → `GL-TMP-RM-003-hazard-analysis.md`, id_prefix `HZ`→`HAZ`
 - [x] `/trace-matrix build --dhf pca-device` → sidecar verified: risk layer 16 items ([proj] adapter, 0 warnings), 33 `design_inputs_to_risk` edges, DI orphans 7→1, risk orphans 0; the 3 broken refs (SW→VER) pre-date this change (verified vs HEAD sidecar)
 - [x] QA-conformance pass (quality-engineering agent) vs GL-TMP-RM-003/-004: **CONFORMANT** — all 16 HA rows matrix-recomputed clean, RPN arithmetic verified on all 30 FMEA rows, WI/STD citations verified. F9 (minor FAIL: "ALARP rows" mislabel in both FMEA coverage summaries) **fixed** + QA verdict rows appended to all 3 AI-CHANGELOG blocks; F3 + F15 deferred (see Open Questions). Lint on all 3 docs: no hard violations (high-recall candidates + 2 FORM-prescribed bare-enum WARNs, accepted)
-- [ ] Final-stage: run `/reference-audit` over the hazard analysis + FMEAs (citation-bearing docs — standards clauses cited)
-- [ ] Update task doc + index; commit/push only when user asks
+- [x] Final-stage `/reference-audit` COMPLETE 2026-07-14: 3 audits scaffolded under `docs/_analysis/pca-device/gl-tmp-rm-00{3-hazard-analysis,4-design-fmea,4-process-fmea}-references-audit/`; citations-advisor batches done for dFMEA (10 sound / 2 unverified / 0 broken) + pFMEA (7/2/0) — the 4 unverified are all `registry-gap` (IEC 60812, IEC 60601-1-8, 21 CFR 820 lack L1a/L1b distillations; citations themselves present and plausible); HA batch: 13 sound / 9 unverified / 1 broken — the broken (E4: '81001-5-1 §5 threat catalog' → threat modeling is §7.1) FIXED in the doc; L2 (RMR stub cited in present tense) FIXED (forward tense); Annex C taxonomy [VERIFY] added; trace matrix rebuilt clean. Registry gaps spun out to ben/105 (Part 820 imported there; pFMEA §820.75 repaired — repealed by QMSR)
+- [x] Update task doc + index; pushed via PR #100; audit artifacts + closure ride the ben/105 push
 
 ## Strategy
 
@@ -94,7 +94,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": {"min": 0.75, "max": 1.5},
+    "agentic_hours": {"min": 1.0, "max": 2.0},
     "todos": [
       {
         "todo": "Contracts read + state survey + risk-file organization decision",
@@ -132,6 +132,13 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
         "basis": "judgment — tool run + JSON diff review"
       },
       {
+        "todo": "Reference audit: 3 audit scaffolds + 44 references verified via citations advisor batches + findings reports + 2 source-doc citation fixes",
+        "personas": ["quality-engineering", "regulatory-affairs"],
+        "manual_hours": {"min": 8, "max": 16},
+        "confidence": "med",
+        "basis": "judgment-tier proxy — citation-by-citation verification vs two source tiers ~15-20 min/ref by hand x 44 refs, low end for the internal ones"
+      },
+      {
         "todo": "QA-conformance pass (FORM schemas, full matrix recompute, RPN arithmetic, cross-doc integrity) + lint + F9 fix",
         "personas": ["quality-engineering"],
         "manual_hours": {"min": 6, "max": 12},
@@ -149,3 +156,5 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 - 2026-07-14: Contracts read (trace-matrix SKILL.md v8, risk.py default parser, graph.py overlay model, GL-TMP-RM-003/-004 FORMs, GL-STD-RM-001 criteria, 34-DI design-inputs). Organization decided: hazard-analysis spine (HAZ-###, trace-matrix source) + FMEA feeders (FM-D-/FM-P-, Linked Hazard ID). Two authoring agents launched (hazard analysis; dFMEA+pFMEA) with a fixed 16-hazard spine. Wiring landed: `tools/project-console/trace-matrix/adapters/risk.py` (parses GL-TMP-RM-003 FORM columns, authors HAZ→DI edges from `Design Input(s)`), `analysis-notes.md` rationale, `trace-matrix.yml` risk source/prefix update. Next: agents finish → build → verify sidecar → QA pass.
 - 2026-07-14: Pushed to main via PR #100 (merge landed at origin/main `7f9a40e`; branch deleted). Remaining before Complete: /reference-audit final-stage pass.
 - 2026-07-14: All authoring + wiring shipped this session. HA (16 hazards) + dFMEA (21) + pFMEA (9) written by agents, grounded in GL-WI-RM-001/-002 + GL-STD-RM-001 + design-inputs.md. Build verified: risk layer 16 items / 33 `design_inputs_to_risk` edges / DI orphans 7→1 / no new gaps. QA agent verdict CONFORMANT (F9 wording fixed inline; F3/F15 deferred to Open Questions); lint clean of hard violations; AI-CHANGELOG verdict rows appended; sidecar rebuilt post-fix. Nothing committed. Remaining: /reference-audit (final-stage) + commit/push on user request.
+
+- 2026-07-14: Reference audit complete (3 reports under docs/_analysis/pca-device/*-references-audit/). Fixes applied to the HA (E4 clause, L2 tense, E2 [VERIFY]) and — under ben/105 — the pFMEA (§820.75 repealed by QMSR). Task marked **Complete**; registry-gap remediation continues in ben/105.

@@ -13,6 +13,12 @@ Clause-level distillations of IEC and ISO consensus standards that govern medica
 | ISO 14971 | [`iso-14971.md`](iso-14971.md) | Medical devices — Application of risk management |
 | IEC 62366-1 | [`iec-62366-1.md`](iec-62366-1.md) | Medical devices — Usability engineering |
 | IEC 81001-5-1 | [`iec-81001-5-1.md`](iec-81001-5-1.md) | Health software & IT security — Security activities in the software lifecycle |
+| IEC 60601-1 | [`iec-60601-1.md`](iec-60601-1.md) | Medical electrical equipment — basic safety & essential performance (FDA rec 19-49, Ed 3.2 consolidated) |
+| IEC 60601-1-2 | [`iec-60601-1-2.md`](iec-60601-1-2.md) | Medical electrical equipment — EMC (FDA rec 19-36, Ed 4.1 only, partial — two carve-outs) |
+| IEC 60601-1-8 | [`iec-60601-1-8.md`](iec-60601-1-8.md) | Medical electrical equipment — alarm systems (FDA rec 5-131, Ed 2.2) |
+| IEC 60601-2-24 | [`iec-60601-2-24.md`](iec-60601-2-24.md) | Infusion pumps & controllers particular standard (**no current FDA recognition** — verified null; publisher-preview-verified 201.x front matter incl. Table 201.101) |
+| ISO 10993 series | [`iso-10993.md`](iso-10993.md) | Biological evaluation series (-1 evaluation, -5 cytotoxicity, -10 sensitization, -23 irritation — the 2021 -10/-23 split is pinned) |
+| IEC 60812 | [`iec-60812.md`](iec-60812.md) | FMEA/FMECA method standard, 2018 3rd ed (FDA rec 5-120, complete) |
 
 Each file opens with a header block (edition/amendment, FDA-recognition note, distillation notice or quarantine banner where applicable), then clause-by-clause sections with distilled requirement text and (where applicable) mappings to typical downstream deliverables. Coverage is not guaranteed to be complete — absence of a clause from a file does **not** mean the standard is silent there.
 
@@ -49,5 +55,7 @@ When asked about a named IEC/ISO standard:
 5. **If the distillation can't answer, say the standard is needed.** Honor quarantine banners and `[VERIFY]` markers; when the distilled file is silent on the cited clause, carries a banner over it, or the question turns on exact normative wording, state that the original standard must be consulted (no source copy exists in the repo) rather than inferring clause content. A clause's absence from the distillation is not evidence the standard is silent.
 
 ## Changelog
+
+- 2026-07-15: Added six distillations driven by a consuming project's risk-file reference audit (the L1a layer previously covered only 5 software-adjacent standards, leaving the 60601 family / ISO 10993 / IEC 60812 unverifiable): `iec-60601-1.md`, `iec-60601-1-2.md`, `iec-60601-1-8.md`, `iec-60601-2-24.md`, `iso-10993.md` (series file), `iec-60812.md`. All are 🔎 finding aids grounded ONLY in public sources (FDA Recognized Consensus Standards DB entries with recognition numbers, IEC/ISO webstore abstracts, publisher-authorized preview front matter) with recall-derived content `[VERIFY]`-flagged — no verbatim standard text. Notable public determinations recorded: IEC 60601-2-24 has NO current FDA recognition (verified null); IEC 60601-1-2 recognized only at Ed 4.1 (partial); ISO 10993-10:2021 lost irritation to ISO 10993-23:2021.
 
 - 2026-04-23: README authored as part of project-console v1.7.4 rollout (skill-library exposed to assistant drawer grounding via `grounding.extra_roots`).
