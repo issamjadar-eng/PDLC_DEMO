@@ -27,8 +27,11 @@ dhfs:
         source: null
         id_prefix: VER
       risk:
-        source: docs/project/dhfs/pca-device/risk-management/risk-strategy.md
-        id_prefix: HZ
+        # GL-TMP-RM-003 hazard-analysis instance (backfilled ben/102); parsed by
+        # the project risk adapter, which authors HAZ→DI edges from the
+        # `Design Input(s)` column. `risk-strategy.md` was the placeholder source.
+        source: docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-003-hazard-analysis.md
+        id_prefix: HAZ
 
   - name: connectivity-adapter
     layers:
