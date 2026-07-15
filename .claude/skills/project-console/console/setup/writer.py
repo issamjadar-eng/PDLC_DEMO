@@ -505,9 +505,12 @@ def _backup_dir(tool_root: Path, target: Path) -> Path:
     return bdir
 
 
-def install_skill(repo_root: Path, tool_root: Path, registry_local: str,
+def install_skill(repo_root: Path, tool_root: Path, registry: dict,
                   name: str) -> str:
-    """Install or update a skill by copying it from a registry's local clone.
+    """Install or update a skill from a registry — the local clone when one
+    exists (fast path), otherwise a tarball downloaded straight from GitHub
+    via `gh` (read access is enough; customer projects often have no clone
+    and no write access to the registry).
 
     Scope is deliberately narrow — this is the console's convenience path,
     not a replacement for the registry sync tooling:
@@ -523,40 +526,67 @@ def install_skill(repo_root: Path, tool_root: Path, registry_local: str,
 
     Returns a human-readable note for the UI.
     """
+    import tempfile
+
     from console.setup.loader import _skill_version, _version_key  # local import: avoid cycle at module load
 
     name = validate_name(name)
-    src_root = (repo_root / registry_local).resolve()
-    src = src_root / "skills" / name
-    if not (src / "SKILL.md").is_file():
-        raise SetupWriteError(
-            f"Skill {name!r} not found in the registry clone at {registry_local}/skills/."
-        )
+    src = None
+    source_note = ""
+    registry_local = str(registry.get("local_path") or "")
+    if registry_local:
+        cand = (repo_root / registry_local).resolve() / "skills" / name
+        if (cand / "SKILL.md").is_file():
+            src = cand
+            source_note = f"from={registry_local}"
+    tmp = None
+    if src is None:
+        repo = str(registry.get("repo") or "")
+        if not repo:
+            raise SetupWriteError(
+                f"Skill {name!r}: registry has neither a usable local clone nor a "
+                "`repo` to download from."
+            )
+        from console.setup.registry_remote import RegistryRemoteError, download_skill_dir
+        tmp = tempfile.TemporaryDirectory()
+        try:
+            src = download_skill_dir(
+                repo, str(registry.get("branch") or "main"), name, Path(tmp.name)
+            )
+        except RegistryRemoteError as e:
+            tmp.cleanup()
+            raise SetupWriteError(str(e))
+        source_note = f"from=github:{repo}"
     dst = repo_root / ".claude" / "skills" / name
     updating = dst.is_dir()
-    if updating:
-        reg_v, loc_v = _skill_version(src), _skill_version(dst)
-        if _version_key(reg_v) <= _version_key(loc_v):
-            raise SetupWriteError(
-                f"Registry has {name} v{reg_v or '?'} but v{loc_v or '?'} is installed — "
-                "not an upgrade. Use the registry sync tooling to reconcile."
-            )
-        backup = _backup_dir(tool_root, dst)
-        shutil.rmtree(dst)
-    else:
-        backup = None
-    shutil.copytree(src, dst, symlinks=True)
+    try:
+        if updating:
+            reg_v, loc_v = _skill_version(src), _skill_version(dst)
+            if _version_key(reg_v) <= _version_key(loc_v):
+                raise SetupWriteError(
+                    f"Registry has {name} v{reg_v or '?'} but v{loc_v or '?'} is installed — "
+                    "not an upgrade. Use the registry sync tooling to reconcile."
+                )
+            backup = _backup_dir(tool_root, dst)
+            shutil.rmtree(dst)
+        else:
+            backup = None
+        shutil.copytree(src, dst, symlinks=True)
+    finally:
+        if tmp is not None:
+            tmp.cleanup()
     changed = set_approved(repo_root, tool_root, name, approved=True, key="approved_skills")
     _audit(
         tool_root,
         "skill-update" if updating else "skill-install",
         name,
-        f"from={registry_local}" + (f" backup={backup.name}" if backup else "")
+        source_note + (f" backup={backup.name}" if backup else "")
         + (" allowlisted" if changed else ""),
     )
     action = "Updated" if updating else "Installed"
+    source_human = "the registry's local clone" if "github:" not in source_note else "GitHub"
     return (
-        f"{action} {name} from the registry clone"
+        f"{action} {name} from {source_human}"
         + (" (previous copy backed up under .data/setup-backups/)" if backup else "")
         + ". Restart the Claude Code session to pick it up; if the skill has a "
         "setup action, run /"

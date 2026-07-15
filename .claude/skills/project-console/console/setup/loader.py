@@ -566,15 +566,71 @@ def load_rules_hooks(repo_root: Path) -> dict:
                     matcher = str(entry.get("matcher") or "")
                     for h in entry.get("hooks") or []:
                         cmd = str(h.get("command") or "")
+                        # The registered command points at a script (usually a
+                        # .claude/hooks/ symlink into the owning skill). The
+                        # script's own header comment is its description — the
+                        # convention skill-creator's hook template stamps.
+                        script = _hook_script_path(repo_root, cmd)
+                        desc = _script_summary(script) if script else ""
+                        owner = (_symlink_owner(script) or "project") if script else "project"
                         hooks.append({
                             "event": str(event),
                             "matcher": matcher,
                             "command": cmd.rsplit("/", 1)[-1].strip('"'),
                             "command_full": cmd.replace('"$CLAUDE_PROJECT_DIR"/', ""),
+                            "description": _first_sentence(desc),
+                            "full_description": _clip(desc, 600),
+                            "owner": owner,
                         })
         except (json.JSONDecodeError, OSError):
             pass
     return {"rules": rules, "hooks": hooks}
+
+
+def _hook_script_path(repo_root: Path, command: str) -> Path | None:
+    """Best-effort script path from a registered hook command string
+    (e.g. '"$CLAUDE_PROJECT_DIR"/.claude/hooks/x.sh --flag')."""
+    m = re.search(r"\.claude/hooks/[\w./-]+", command or "")
+    if not m:
+        return None
+    p = repo_root / m.group(0)
+    return p if p.is_file() else None
+
+
+def _script_summary(path: Path) -> str:
+    """Description from a script's leading header — the `#` comment block
+    after the shebang (shell) or the module docstring (python). A
+    `name.sh — description` first line yields just the description."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    lines = text.splitlines()
+    if lines and lines[0].startswith("#!"):
+        lines = lines[1:]
+    # python module docstring
+    body = "\n".join(lines).lstrip()
+    for quote in ('"""', "'''"):
+        if body.startswith(quote):
+            end = body.find(quote, 3)
+            para = body[3:end if end > 0 else None].strip()
+            return " ".join(para.split("\n\n", 1)[0].split())
+    # shell/other: leading comment block, first paragraph
+    para: list[str] = []
+    for line in lines:
+        s = line.strip()
+        if not s.startswith("#"):
+            break
+        s = s.lstrip("#").strip()
+        if not s or set(s) <= {"─", "-", "="}:  # blank or divider comment
+            if para:
+                break
+            continue
+        para.append(s)
+    summary = " ".join(para)
+    # 'name.sh — description' convention → keep the description side
+    m = re.match(r"^\S+\.(?:sh|py|bash)\s+[—-]+\s+(.*)$", summary)
+    return m.group(1) if m else summary
 
 
 # ---------------------------------------------------------------------------
@@ -844,12 +900,31 @@ def _skill_version(skill_dir: Path) -> str:
     return str(_frontmatter(skill_dir / "SKILL.md").get("version") or "")
 
 
+def _registry_status(reg_v: str, loc_v: str | None) -> str:
+    if loc_v is None:
+        return "not-installed"
+    if _version_key(reg_v) > _version_key(loc_v):
+        return "update"
+    if _version_key(reg_v) < _version_key(loc_v):
+        return "local-ahead"
+    return "current"
+
+
 def load_registries(repo_root: Path, project: dict) -> dict:
     """Configured registries (project.yml registries[]) + per-registry skill
     availability vs the local install.
 
-    For a `github` registry the catalog is read from its **local clone**
-    (`local_path` — the same clone /sync-skills works against). Per skill:
+    Catalog source order for a `github`-type registry:
+
+    1. the cached **GitHub catalog** (`.state/registry-catalog-<name>.json`,
+       written by the Refresh-from-GitHub action) — works with read-only
+       repo access and no local clone;
+    2. the **local clone** (`local_path`, the sync tooling's checkout) when
+       no GitHub catalog has been fetched yet;
+    3. neither → `reachable: false` with a Refresh hint.
+
+    Statuses are recomputed per request against the CURRENT local install,
+    so an install/update reflects immediately even with an older cache:
 
     - `not-installed` → available to Add
     - `update`        → registry version is newer than the installed one
@@ -857,8 +932,7 @@ def load_registries(repo_root: Path, project: dict) -> dict:
                         an update here would be a downgrade)
     - `current`       → versions match
 
-    Reads only; installs go through the writer. A missing clone degrades to
-    `reachable: false` with a hint, never an error.
+    Reads only; installs go through the writer.
     """
     installed: dict[str, str] = {}
     skills_dir = repo_root / ".claude" / "skills"
@@ -866,6 +940,11 @@ def load_registries(repo_root: Path, project: dict) -> dict:
         for d in skills_dir.iterdir():
             if d.is_dir() and (d / "SKILL.md").is_file():
                 installed[d.name] = _skill_version(d)
+
+    def _local_desc(name: str) -> tuple[str, str]:
+        fm = _frontmatter(skills_dir / name / "SKILL.md")
+        desc = str(fm.get("description") or "")
+        return _first_sentence(desc), _clip(desc, 900)
 
     registries = []
     actionable = 0
@@ -879,8 +958,11 @@ def load_registries(repo_root: Path, project: dict) -> dict:
             "description": str(reg.get("description") or ""),
             "local_path": str(reg.get("local_path") or ""),
             "reachable": None,
+            "source": "",
+            "fetched_at": "",
             "skills": [],
         }
+        cached = None
         if entry["type"] == "builtin":
             entry["reachable"] = True
             entry["skills"] = [
@@ -888,10 +970,40 @@ def load_registries(repo_root: Path, project: dict) -> dict:
                  "registry_version": "", "local_version": ""}
                 for s in reg.get("skills") or []
             ]
+            registries.append(entry)
+            continue
+
+        if entry["repo"]:
+            from console.setup.registry_remote import load_cached_catalog
+            cached = load_cached_catalog(repo_root, entry["name"])
+
+        if cached:
+            entry["reachable"] = True
+            entry["source"] = "github"
+            entry["fetched_at"] = str(cached.get("fetched_at") or "")
+            for name in sorted(cached.get("skills") or {}):
+                info = cached["skills"][name] or {}
+                reg_v = str(info.get("version") or "")
+                loc_v = installed.get(name)
+                status = _registry_status(reg_v, loc_v)
+                if status in ("not-installed", "update"):
+                    actionable += 1
+                desc, full = str(info.get("description") or ""), str(info.get("full_description") or "")
+                if not desc and loc_v is not None:
+                    desc, full = _local_desc(name)
+                entry["skills"].append({
+                    "name": name,
+                    "description": desc,
+                    "full_description": full,
+                    "registry_version": reg_v,
+                    "local_version": loc_v or "",
+                    "status": status,
+                })
         elif entry["local_path"]:
             root = (repo_root / entry["local_path"]).resolve()
             catalog = root / "skills"
             entry["reachable"] = catalog.is_dir()
+            entry["source"] = "clone" if entry["reachable"] else ""
             if entry["reachable"]:
                 for d in sorted(catalog.iterdir()):
                     if not d.is_dir() or not (d / "SKILL.md").is_file():
@@ -899,14 +1011,7 @@ def load_registries(repo_root: Path, project: dict) -> dict:
                     fm = _frontmatter(d / "SKILL.md")
                     reg_v = _skill_version(d)
                     loc_v = installed.get(d.name)
-                    if loc_v is None:
-                        status = "not-installed"
-                    elif _version_key(reg_v) > _version_key(loc_v):
-                        status = "update"
-                    elif _version_key(reg_v) < _version_key(loc_v):
-                        status = "local-ahead"
-                    else:
-                        status = "current"
+                    status = _registry_status(reg_v, loc_v)
                     if status in ("not-installed", "update"):
                         actionable += 1
                     entry["skills"].append({
@@ -917,6 +1022,8 @@ def load_registries(repo_root: Path, project: dict) -> dict:
                         "local_version": loc_v or "",
                         "status": status,
                     })
+        else:
+            entry["reachable"] = False
         registries.append(entry)
 
     return {"registries": registries, "actionable": actionable}

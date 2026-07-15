@@ -9,6 +9,9 @@ POST   /setup/connectors/{name}        — add/update a server in .mcp.json
                                           two files move in lockstep)
 POST   /setup/connectors/{name}/approval — {"approved": bool} allowlist toggle
 DELETE /setup/connectors/{name}        — remove the server from .mcp.json
+POST   /setup/registries/{name}/refresh — fetch the registry catalog straight
+                                          from GitHub (gh, read access) and
+                                          cache it under .state/
 POST   /setup/environment/check        — run the project's `setup.sh --check`
                                           (read-only mode) and cache the parsed
                                           report; the full install never runs
@@ -106,10 +109,46 @@ async def setup_install_skill(name: str, request: Request):
     The registry is referenced by NAME and resolved against project.yml —
     the browser never supplies a filesystem path.
     """
+    import anyio
+
     cfg = get_config()
     body = await request.json()
     reg_name = str(body.get("registry") or "") if isinstance(body, dict) else ""
-    project = _load_project_yml_dict(cfg.repo_root)
+    reg = _find_registry(cfg.repo_root, reg_name)
+    try:
+        note = await anyio.to_thread.run_sync(
+            lambda: writer.install_skill(cfg.repo_root, cfg.tool_root, reg, name)
+        )
+    except writer.SetupWriteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "note": note}
+
+
+@router.post("/setup/registries/{name}/refresh", response_class=JSONResponse)
+async def setup_registry_refresh(name: str, request: Request):
+    """Fetch a registry's skill catalog straight from GitHub (via gh, read
+    access suffices) and cache it — the catalog source that works for
+    projects with no local clone and no sync tooling."""
+    import anyio
+
+    from console.setup import registry_remote
+    cfg = get_config()
+    reg = _find_registry(cfg.repo_root, name)
+    try:
+        catalog = await anyio.to_thread.run_sync(
+            lambda: registry_remote.refresh_catalog(cfg.repo_root, reg)
+        )
+    except registry_remote.RegistryRemoteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {
+        "ok": True,
+        "note": f"Fetched {len(catalog['skills'])} skills from {catalog['repo']}.",
+        "fetched_at": catalog["fetched_at"],
+    }
+
+
+def _find_registry(repo_root: Path, reg_name: str) -> dict:
+    project = _load_project_yml_dict(repo_root)
     reg = next(
         (r for r in project.get("registries") or []
          if isinstance(r, dict) and r.get("name") == reg_name),
@@ -117,17 +156,7 @@ async def setup_install_skill(name: str, request: Request):
     )
     if not reg:
         raise HTTPException(status_code=400, detail=f"Unknown registry {reg_name!r}.")
-    local_path = str(reg.get("local_path") or "")
-    if reg.get("type") != "github" or not local_path:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Registry {reg_name!r} has no local clone to install from.",
-        )
-    try:
-        note = writer.install_skill(cfg.repo_root, cfg.tool_root, local_path, name)
-    except writer.SetupWriteError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    return {"ok": True, "note": note}
+    return reg
 
 
 @router.post("/setup/environment/check", response_class=JSONResponse)
