@@ -1,7 +1,7 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.32.0
+version: 1.33.0
 updated: 2026-07-14
 ---
 
@@ -272,8 +272,9 @@ topnav. A settings shell (inner sidebar + content pane) with six sections:
 | **Skills** | `.claude/skills/*/` (SKILL.md frontmatter + VERSION) × `security.approved_skills`; `registries[].type: builtin` marks built-ins | Read-only |
 | **Agents** | Both surfaces: `.claude/agents/*.md` (registered top-level; symlink target → owning skill) AND `.claude/skills/*/agents/*.md` (bundled skill-internal workers) × `security.approved_agents` (matched on final path segment). Bundled agents inherit approval from their owning skill in `approved_skills`; explicit listing still honored | Read-only |
 | **Plugins** | `security.approved_plugins` (allowlist only — installs live outside the repo) | Read-only |
-| **Rules & Hooks** | `.claude/rules/*.md` + `.claude/settings.json` `hooks` | Read-only |
-| **Team & Security** | `project.yml` `team.*`, `security.*`, `registries[]` | Read-only |
+| **Automation** | `.claude/rules/*.md` (session rules) + `.claude/settings.json` `hooks` + `.github/workflows/*.yml` (GitHub Actions — name, triggers parsed from `on:`, jobs, and the owning skill resolved by filename mention in skill trees) | Read-only |
+| **Registries** | `project.yml` `registries[]` + each github registry's **local clone** (`local_path`) catalog vs the local install. Per skill: not-installed / update (registry strictly newer) / current / local-ahead (push candidate — never a downgrade button) | Yes — Add installs a new skill by copy from the clone + allowlists it in `approved_skills` (lockstep); Update (strictly-newer only) backs up the whole local skill dir under `.data/setup-backups/` then replaces it. Reconciliation of diverged skills stays with the registry sync tooling |
+| **Team & Security** | `project.yml` `team.*`, `security.*` | Read-only |
 
 Non-connector sections are deliberately read-only: skills/agents/rules are
 managed by the registry sync tooling, and duplicating that merge logic behind

@@ -20,6 +20,7 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import re
+import shutil
 from pathlib import Path
 
 import yaml
@@ -153,24 +154,25 @@ def remove_server(repo_root: Path, tool_root: Path, name: str) -> None:
     _audit(tool_root, "remove", name)
 
 
-# ── project.yml security.approved_mcps (surgical, comment-preserving) ────────
+# ── project.yml security.approved_* (surgical, comment-preserving) ───────────
 
-def _approved_block(lines: list[str]) -> tuple[int, str]:
-    """Locate the `approved_mcps:` key line. Returns (index, key_indent)."""
+def _approved_block(lines: list[str], key: str = "approved_mcps") -> tuple[int, str]:
+    """Locate the `<key>:` list-key line. Returns (index, key_indent)."""
     for i, line in enumerate(lines):
-        m = re.match(r"^(\s*)approved_mcps:\s*(\[\s*\])?\s*$", line)
+        m = re.match(rf"^(\s*){re.escape(key)}:\s*(\[\s*\])?\s*$", line)
         if m:
             return i, m.group(1)
     raise SetupWriteError(
-        "project.yml has no approved_mcps: key under security: — add it manually first."
+        f"project.yml has no {key}: key under security: — add it manually first."
     )
 
 
-def _validate_yaml(path: Path, original: str, expect_name: str, present: bool) -> None:
+def _validate_yaml(path: Path, original: str, expect_name: str, present: bool,
+                   key: str = "approved_mcps") -> None:
     """Re-parse the edited file; on failure restore original bytes and raise."""
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        approved = [str(x) for x in ((data.get("security") or {}).get("approved_mcps") or [])]
+        approved = [str(x) for x in ((data.get("security") or {}).get(key) or [])]
         ok = (expect_name in approved) if present else (expect_name not in approved)
         if not ok:
             raise ValueError("post-edit allowlist state mismatch")
@@ -179,16 +181,17 @@ def _validate_yaml(path: Path, original: str, expect_name: str, present: bool) -
         raise SetupWriteError(f"project.yml edit failed validation ({e}); file restored.")
 
 
-def set_approved(repo_root: Path, tool_root: Path, name: str, approved: bool) -> bool:
-    """Insert/remove `- <name>` inside the approved_mcps block. Returns True if
-    the file changed (idempotent no-op returns False)."""
+def set_approved(repo_root: Path, tool_root: Path, name: str, approved: bool,
+                 key: str = "approved_mcps") -> bool:
+    """Insert/remove `- <name>` inside a security.<key> allowlist block.
+    Returns True if the file changed (idempotent no-op returns False)."""
     name = validate_name(name)
     p = project_yml_path(repo_root)
     if not p.is_file():
         raise SetupWriteError("project.yml not found.")
     original = p.read_text(encoding="utf-8")
     lines = original.splitlines(keepends=True)
-    key_idx, key_indent = _approved_block(lines)
+    key_idx, key_indent = _approved_block(lines, key)
 
     # Collect the existing item lines directly under the key. Items may sit at
     # the key's indent or deeper (both are valid YAML); match the first item's
@@ -219,9 +222,9 @@ def set_approved(repo_root: Path, tool_root: Path, name: str, approved: bool) ->
 
     _backup(tool_root, p)
     if approved:
-        # `approved_mcps: []` inline-empty form → expand to a block list.
-        if re.match(r"^\s*approved_mcps:\s*\[\s*\]\s*$", lines[key_idx]):
-            lines[key_idx] = f"{key_indent}approved_mcps:\n"
+        # `<key>: []` inline-empty form → expand to a block list.
+        if re.match(rf"^\s*{re.escape(key)}:\s*\[\s*\]\s*$", lines[key_idx]):
+            lines[key_idx] = f"{key_indent}{key}:\n"
         insert_at = block[-1][0] + 1 if block else key_idx + 1
         lines.insert(insert_at, f"{item_indent}- {name}\n")
     else:
@@ -230,6 +233,74 @@ def set_approved(repo_root: Path, tool_root: Path, name: str, approved: bool) ->
                 del lines[idx]
                 break
     p.write_text("".join(lines), encoding="utf-8")
-    _validate_yaml(p, original, name, present=approved)
-    _audit(tool_root, "approve" if approved else "unapprove", name)
+    _validate_yaml(p, original, name, present=approved, key=key)
+    _audit(tool_root, "approve" if approved else "unapprove", name, f"list={key}")
     return True
+
+
+# ── registry skill install / update (copy from the registry's local clone) ───
+
+def _backup_dir(tool_root: Path, target: Path) -> Path:
+    stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    bdir = _data_dir(tool_root) / "setup-backups" / f"{target.name}.{stamp}"
+    shutil.copytree(target, bdir, symlinks=True)
+    return bdir
+
+
+def install_skill(repo_root: Path, tool_root: Path, registry_local: str,
+                  name: str) -> str:
+    """Install or update a skill by copying it from a registry's local clone.
+
+    Scope is deliberately narrow — this is the console's convenience path,
+    not a replacement for the registry sync tooling:
+
+    - **New skill**: plain copy (there is no local state to clobber — the
+      same thing the sync tooling does for registry-only files) + allowlist.
+    - **Update**: allowed only when the registry version is strictly newer
+      than the installed one (server-side downgrade guard); the entire local
+      skill directory is backed up under `.data/setup-backups/` first, then
+      replaced wholesale. Locally-diverged skills at equal-or-newer versions
+      never get an update path here — that reconciliation belongs to the
+      sync tooling.
+
+    Returns a human-readable note for the UI.
+    """
+    from console.setup.loader import _skill_version, _version_key  # local import: avoid cycle at module load
+
+    name = validate_name(name)
+    src_root = (repo_root / registry_local).resolve()
+    src = src_root / "skills" / name
+    if not (src / "SKILL.md").is_file():
+        raise SetupWriteError(
+            f"Skill {name!r} not found in the registry clone at {registry_local}/skills/."
+        )
+    dst = repo_root / ".claude" / "skills" / name
+    updating = dst.is_dir()
+    if updating:
+        reg_v, loc_v = _skill_version(src), _skill_version(dst)
+        if _version_key(reg_v) <= _version_key(loc_v):
+            raise SetupWriteError(
+                f"Registry has {name} v{reg_v or '?'} but v{loc_v or '?'} is installed — "
+                "not an upgrade. Use the registry sync tooling to reconcile."
+            )
+        backup = _backup_dir(tool_root, dst)
+        shutil.rmtree(dst)
+    else:
+        backup = None
+    shutil.copytree(src, dst, symlinks=True)
+    changed = set_approved(repo_root, tool_root, name, approved=True, key="approved_skills")
+    _audit(
+        tool_root,
+        "skill-update" if updating else "skill-install",
+        name,
+        f"from={registry_local}" + (f" backup={backup.name}" if backup else "")
+        + (" allowlisted" if changed else ""),
+    )
+    action = "Updated" if updating else "Installed"
+    return (
+        f"{action} {name} from the registry clone"
+        + (" (previous copy backed up under .data/setup-backups/)" if backup else "")
+        + ". Restart the Claude Code session to pick it up; if the skill has a "
+        "setup action, run /"
+        + name + " setup. Run the registry sync tooling's status check to confirm lockstep."
+    )

@@ -203,16 +203,81 @@ def _approved_list(project: dict, key: str) -> list[str]:
     return [str(x) for x in val]
 
 
+def _fallback_fm(block: str) -> dict:
+    """Line-oriented frontmatter parser for blocks strict YAML rejects.
+
+    Agent descriptions are prose and routinely contain unquoted `: ` (e.g.
+    "the economic buyer: weighs …"), which is a yaml.safe_load parse error.
+    This fallback treats the block as `key: value` lines at indent 0, where a
+    value continues across subsequent indented lines and supports `>` / `|`
+    block scalars. Values are kept as plain strings.
+    """
+    fields: dict = {}
+    key = None
+    buf: list[str] = []
+    key_re = re.compile(r"^([A-Za-z_][\w-]*):\s?(.*)$")
+
+    def flush():
+        nonlocal key, buf
+        if key is not None:
+            val = " ".join(s.strip() for s in buf if s.strip())
+            if val.startswith((">", "|")):
+                val = val[1:].lstrip("-+ ").strip()
+            if len(val) >= 2 and val[0] == val[-1] and val[0] in "'\"":
+                val = val[1:-1]
+            fields[key] = val
+        key, buf = None, []
+
+    for line in block.splitlines():
+        m = key_re.match(line)
+        if m and not line[:1].isspace():
+            flush()
+            key = m.group(1)
+            buf = [m.group(2)]
+        elif key is not None:
+            buf.append(line)
+    flush()
+    return fields
+
+
+def _body_summary(path: Path) -> str:
+    """First prose paragraph of a markdown file (after any frontmatter /
+    leading headings) — the summary of record for frontmatter-less agent
+    prompt files, which conventionally open with `# Title` + a role line."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    text = _FRONTMATTER_RE.sub("", text, count=1)
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith(("#", "<!--", "|", "-", "*", "```", ">")):
+            continue
+        return line
+    return ""
+
+
 def _frontmatter(path: Path) -> dict:
-    """Best-effort YAML frontmatter of a markdown file; {} on any failure."""
+    """Best-effort YAML frontmatter of a markdown file; {} on any failure.
+
+    Strict YAML first; if that fails (prose descriptions with unquoted
+    colons are common in agent files), fall back to a tolerant line parser
+    so the description/tools/model still surface.
+    """
     try:
         m = _FRONTMATTER_RE.match(path.read_text(encoding="utf-8"))
         if not m:
             return {}
-        data = yaml.safe_load(m.group(1))
-        return data if isinstance(data, dict) else {}
-    except Exception:
+    except OSError:
         return {}
+    block = m.group(1)
+    try:
+        data = yaml.safe_load(block)
+        if isinstance(data, dict):
+            return data
+    except yaml.YAMLError:
+        pass
+    return _fallback_fm(block)
 
 
 def _clip(text, max_chars: int = 900) -> str:
@@ -366,13 +431,14 @@ def load_agents(repo_root: Path, project: dict) -> dict:
                     target = f.readlink().as_posix().lstrip("./")
             except OSError:
                 target = ""
+            desc = str(fm.get("description") or "") or _body_summary(f)
             rows.append({
                 "name": name,
                 "installed": True,
                 "approved": is_approved,
                 "owner": _symlink_owner(f) or "project",
-                "description": _first_sentence(fm.get("description") or ""),
-                "full_description": _clip(fm.get("description"), 900),
+                "description": _first_sentence(desc),
+                "full_description": _clip(desc, 900),
                 "path": f".claude/agents/{f.name}",
                 "target": target,
                 "tools": str(tools or ""),
@@ -555,6 +621,208 @@ def _counts(rows: list[dict]) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# GitHub workflows (repo automation)
+# ---------------------------------------------------------------------------
+
+def _workflow_triggers(data: dict) -> list[str]:
+    """Human-readable trigger list from a workflow's `on:` block.
+
+    YAML 1.1 parses the bare key `on` as boolean True — read both spellings.
+    """
+    on = data.get("on", data.get(True))
+    out: list[str] = []
+    if isinstance(on, str):
+        return [on]
+    if isinstance(on, list):
+        return [str(x) for x in on]
+    if not isinstance(on, dict):
+        return []
+    for event, cfg in on.items():
+        event = "manual (workflow_dispatch)" if event == "workflow_dispatch" else str(event)
+        if isinstance(cfg, dict):
+            bits = []
+            for k in ("branches", "paths", "types"):
+                v = cfg.get(k)
+                if isinstance(v, list) and v:
+                    bits.append(f"{k}: {', '.join(str(x) for x in v)}")
+            if event == "schedule":
+                pass
+            out.append(f"{event} ({'; '.join(bits)})" if bits else event)
+        elif isinstance(cfg, list) and event == "schedule":
+            crons = [c.get("cron") for c in cfg if isinstance(c, dict) and c.get("cron")]
+            out.append(f"schedule (cron: {'; '.join(crons)})" if crons else "schedule")
+        else:
+            out.append(event)
+    return out
+
+
+def _skill_text_index(repo_root: Path) -> dict[str, str]:
+    """skill-name → concatenated small-text-file content, for ownership grep."""
+    index: dict[str, str] = {}
+    skills_dir = repo_root / ".claude" / "skills"
+    if not skills_dir.is_dir():
+        return index
+    for d in skills_dir.iterdir():
+        if not d.is_dir():
+            continue
+        chunks: list[str] = []
+        for f in d.rglob("*"):
+            if f.suffix not in (".md", ".py", ".sh", ".yml", ".yaml"):
+                continue
+            try:
+                if f.stat().st_size > 200_000:
+                    continue
+                chunks.append(f.read_text(encoding="utf-8", errors="ignore"))
+            except OSError:
+                continue
+        index[d.name] = "\n".join(chunks)
+    return index
+
+
+def load_workflows(repo_root: Path) -> dict:
+    """Inventory of .github/workflows/*.yml: what each is, what triggers it,
+    and which installed skill owns it (a skill that scaffolds or documents the
+    workflow file mentions its filename; otherwise it's project-authored)."""
+    wf_dir = repo_root / ".github" / "workflows"
+    rows: list[dict] = []
+    if not wf_dir.is_dir():
+        return {"rows": rows}
+    skill_texts = _skill_text_index(repo_root)
+    for f in sorted(list(wf_dir.glob("*.yml")) + list(wf_dir.glob("*.yaml"))):
+        try:
+            text = f.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        try:
+            data = yaml.safe_load(text) or {}
+        except yaml.YAMLError:
+            data = {}
+        if not isinstance(data, dict):
+            data = {}
+        # Leading comment block = the workflow's own description of record.
+        comment: list[str] = []
+        for line in text.splitlines():
+            if line.startswith("#"):
+                comment.append(line.lstrip("# ").strip())
+            elif line.strip():
+                break
+        jobs = data.get("jobs")
+        job_names = list(jobs.keys()) if isinstance(jobs, dict) else []
+        owner = next(
+            (s for s, blob in skill_texts.items() if f.name in blob), "project"
+        )
+        rows.append({
+            "name": str(data.get("name") or f.stem),
+            "file": f".github/workflows/{f.name}",
+            "triggers": _workflow_triggers(data),
+            "jobs": job_names,
+            "description": _clip(" ".join(c for c in comment if c), 400),
+            "owner": owner,
+        })
+    return {"rows": rows}
+
+
+# ---------------------------------------------------------------------------
+# Registries
+# ---------------------------------------------------------------------------
+
+def _version_key(v: str) -> tuple:
+    """Loose version ordering: numeric runs compared as ints ('1.32.0', '11')."""
+    nums = re.findall(r"\d+", str(v or ""))
+    return tuple(int(n) for n in nums) if nums else (0,)
+
+
+def _skill_version(skill_dir: Path) -> str:
+    vfile = skill_dir / "VERSION"
+    if vfile.is_file():
+        try:
+            v = vfile.read_text(encoding="utf-8").strip()
+            if v:
+                return v
+        except OSError:
+            pass
+    return str(_frontmatter(skill_dir / "SKILL.md").get("version") or "")
+
+
+def load_registries(repo_root: Path, project: dict) -> dict:
+    """Configured registries (project.yml registries[]) + per-registry skill
+    availability vs the local install.
+
+    For a `github` registry the catalog is read from its **local clone**
+    (`local_path` — the same clone /sync-skills works against). Per skill:
+
+    - `not-installed` → available to Add
+    - `update`        → registry version is newer than the installed one
+    - `local-ahead`   → installed version is newer (push candidate; no button,
+                        an update here would be a downgrade)
+    - `current`       → versions match
+
+    Reads only; installs go through the writer. A missing clone degrades to
+    `reachable: false` with a hint, never an error.
+    """
+    installed: dict[str, str] = {}
+    skills_dir = repo_root / ".claude" / "skills"
+    if skills_dir.is_dir():
+        for d in skills_dir.iterdir():
+            if d.is_dir() and (d / "SKILL.md").is_file():
+                installed[d.name] = _skill_version(d)
+
+    registries = []
+    actionable = 0
+    for reg in project.get("registries") or []:
+        if not isinstance(reg, dict):
+            continue
+        entry: dict = {
+            "name": str(reg.get("name") or ""),
+            "type": str(reg.get("type") or ""),
+            "repo": str(reg.get("repo") or ""),
+            "description": str(reg.get("description") or ""),
+            "local_path": str(reg.get("local_path") or ""),
+            "reachable": None,
+            "skills": [],
+        }
+        if entry["type"] == "builtin":
+            entry["reachable"] = True
+            entry["skills"] = [
+                {"name": str(s), "status": "builtin", "description": "",
+                 "registry_version": "", "local_version": ""}
+                for s in reg.get("skills") or []
+            ]
+        elif entry["local_path"]:
+            root = (repo_root / entry["local_path"]).resolve()
+            catalog = root / "skills"
+            entry["reachable"] = catalog.is_dir()
+            if entry["reachable"]:
+                for d in sorted(catalog.iterdir()):
+                    if not d.is_dir() or not (d / "SKILL.md").is_file():
+                        continue
+                    fm = _frontmatter(d / "SKILL.md")
+                    reg_v = _skill_version(d)
+                    loc_v = installed.get(d.name)
+                    if loc_v is None:
+                        status = "not-installed"
+                    elif _version_key(reg_v) > _version_key(loc_v):
+                        status = "update"
+                    elif _version_key(reg_v) < _version_key(loc_v):
+                        status = "local-ahead"
+                    else:
+                        status = "current"
+                    if status in ("not-installed", "update"):
+                        actionable += 1
+                    entry["skills"].append({
+                        "name": d.name,
+                        "description": _first_sentence(fm.get("description") or ""),
+                        "full_description": _clip(fm.get("description"), 900),
+                        "registry_version": reg_v,
+                        "local_version": loc_v or "",
+                        "status": status,
+                    })
+        registries.append(entry)
+
+    return {"registries": registries, "actionable": actionable}
+
+
+# ---------------------------------------------------------------------------
 # Aggregate
 # ---------------------------------------------------------------------------
 
@@ -568,6 +836,8 @@ def load_setup(repo_root: Path) -> dict:
         "agents": load_agents(repo_root, project),
         "plugins": load_plugins(repo_root, project),
         "rules_hooks": load_rules_hooks(repo_root),
+        "workflows": load_workflows(repo_root),
         "team": load_team_security(project),
+        "registries": load_registries(repo_root, project),
         "warnings": warnings,
     }

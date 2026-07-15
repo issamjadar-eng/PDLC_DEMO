@@ -91,6 +91,43 @@ async def setup_approval(name: str, request: Request):
     return {"ok": True, "changed": changed}
 
 
+@router.post("/setup/skills/{name}/install", response_class=JSONResponse)
+async def setup_install_skill(name: str, request: Request):
+    """Install/update a skill from a configured registry's local clone.
+
+    The registry is referenced by NAME and resolved against project.yml —
+    the browser never supplies a filesystem path.
+    """
+    cfg = get_config()
+    body = await request.json()
+    reg_name = str(body.get("registry") or "") if isinstance(body, dict) else ""
+    project = _load_project_yml_dict(cfg.repo_root)
+    reg = next(
+        (r for r in project.get("registries") or []
+         if isinstance(r, dict) and r.get("name") == reg_name),
+        None,
+    )
+    if not reg:
+        raise HTTPException(status_code=400, detail=f"Unknown registry {reg_name!r}.")
+    local_path = str(reg.get("local_path") or "")
+    if reg.get("type") != "github" or not local_path:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Registry {reg_name!r} has no local clone to install from.",
+        )
+    try:
+        note = writer.install_skill(cfg.repo_root, cfg.tool_root, local_path, name)
+    except writer.SetupWriteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "note": note}
+
+
+def _load_project_yml_dict(repo_root: Path) -> dict:
+    from console.setup.loader import _load_project_yml
+    project, _ = _load_project_yml(repo_root)
+    return project
+
+
 @router.delete("/setup/connectors/{name}", response_class=JSONResponse)
 async def setup_remove(name: str, request: Request):
     cfg = get_config()
