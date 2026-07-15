@@ -1,7 +1,7 @@
 ---
 name: sync-skills
-description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge). `pull` performs a three-way merge analysis on every UPSTREAM_NEWER file via git blob-history probing — bucketing each into UPSTREAM_ADVANCE / LOCAL_AHEAD / BOTH_DIVERGED before any auto-apply, so locally-newer files are surfaced as push candidates instead of being clobbered. `status` action gives an at-a-glance \"are all four places in lockstep?\" health check before switching machines. `prune` action removes merged `sync/*` push branches that accumulate in the registry checkout."
-version: 8.3
+description: "Bidirectional sync between this project's `.claude/skills` + `.claude/agents` and the hitachi registry repository. Pulls updates with evaluation, pushes local fixes upstream as PRs (with opt-in auto-merge). `pull` performs a three-way merge analysis on every UPSTREAM_NEWER file via git blob-history probing — bucketing each into UPSTREAM_ADVANCE / LOCAL_AHEAD / BOTH_DIVERGED before any auto-apply, so locally-newer files are surfaced as push candidates instead of being clobbered. `status` action gives an at-a-glance \"are all four places in lockstep?\" health check before switching machines. `prune` action removes merged `sync/*` push branches that accumulate in the registry checkout. `deps` action resolves a skill's dependency closure (sibling skills + agents) from `dependencies:` frontmatter so a single-skill pull also brings what it needs — and `pull` now surfaces that closure before applying."
+version: 8.4
 updated: 2026-05-30
 ---
 
@@ -13,9 +13,11 @@ Keeps the project's installed skills and agents aligned with the `hitachi` regis
 
 | File | Purpose |
 |------|---------|
-| `scripts/sync.sh` | Mechanical primitives: fetch, diff, copy, branch, commit, push, status, three-way analyze. Never opens PRs — that's the skill's job via `gh`. |
+| `scripts/sync.sh` | Mechanical primitives: fetch, diff, copy, branch, commit, push, status, three-way analyze, deps closure. Never opens PRs — that's the skill's job via `gh`. |
+| `scripts/resolve_deps.py` | Dependency-closure resolver — reads each skill's `dependencies:` frontmatter block and computes the transitive skill closure + agent union; flags closure members absent in the consumer. Dependency-free (hand-parses the bounded YAML shape). Backs the `deps` subcommand and the `pull` co-dependency step. |
 | `tests/test_status.sh` | Self-contained smoke tests for the `status` action. Builds a fake project + registry world, exercises 4 cases (all-synced, dirty, ahead, drift). |
 | `tests/test_three_way_pull.sh` | Self-contained smoke tests for `analyze` + `check --analyzed`. Four cases (UPSTREAM_ADVANCE, LOCAL_AHEAD, BOTH_DIVERGED, mixed batch with UPSTREAM_ONLY). |
+| `tests/test_deps.sh` | Self-contained smoke tests for the `deps` action / `resolve_deps.py`. Builds a fake registry with `dependencies:` blocks + a consumer missing some members; asserts transitive closure, optional-not-traversed, agent union, missing-flagging, JSON shape, exit codes, unresolved detection (21 assertions). |
 | `tests/test_prune.sh` | Self-contained smoke tests for the `prune` action — builds a hitachi world with merged + unmerged `sync/*` branches; 15 assertions over dry-run classification, `--apply` deletion (local + remote), idempotence, and the empty case. |
 | `tests/test_windows_symlink_guard.sh` | Regression tests for the Windows-clone symlink corruption vector (v8.3). 4 cases: clean Windows-style symlink reports no false drift; corrupted-target push-stage refused with exit 8 (oversized + multi-line variants); real Linux symlink still stages cleanly. |
 
@@ -110,6 +112,20 @@ Apply upstream changes to the local project. Interactive — per-file approval f
 
 **Step 3 — Present the bucketed batch to the user.** Show the three buckets explicitly with counts and per-file lines (recommendation + 1-line summary). The default action is **"approve auto-pull bucket only"** — the safest default. Other options: "approve auto-pull + walk confirm bucket", "approve everything (acknowledged risk)", "abort". The skip bucket (LOCAL_AHEAD) is NEVER auto-pulled regardless of choice — it's surfaced for the next push.
 
+**Step 3b — Resolve dependency closure for any newly-pulled skill (MANDATORY when a `UPSTREAM_ONLY` skill is in the approved batch).** A skill's dependencies — sibling skills it consumes, the `shared/` utilities, and (the silent-failure case) **agents**, which live on a separate sync surface (`.claude/agents/` vs `.claude/skills/`) — are not carried automatically just because you pulled the skill's directory. For each skill being newly added, run:
+
+```bash
+.claude/skills/sync-skills/scripts/sync.sh deps <skill-name>
+```
+
+This reads the skill's `dependencies:` frontmatter (the contract documented by `skill-creator`) and prints the transitive **required** skill closure + the **agent** union, flagging every member `[MISSING locally]`. Then:
+- **Required skills flagged `[MISSING locally]`** → add them to the pull batch (they bucket as `UPSTREAM_ONLY` themselves) and re-resolve until the closure is satisfied. A required dep you don't pull means the skill is installed broken.
+- **Agents flagged `[MISSING locally]`** → these are NOT pulled by file-copy. Note them and, in Step 5, run the owning skill's agent-install action (`/advisors init`, `/reference-audit setup`, `/secops setup`) so the agents land as symlinks/copies in `.claude/agents/`.
+- **Optional skills** → list them for the user; do not auto-add.
+- **`! UNRESOLVED`** lines mean a declared required dep names a skill absent from the registry — surface it as a registry-integrity bug, don't silently drop it.
+
+If the resolver reports "Required skills: none" and "Agents: none," say so and continue — the skill is self-contained.
+
 **Critical safety property:** `UPSTREAM_NEWER` + `LOCAL_AHEAD` and `UPSTREAM_NEWER` + `BOTH_DIVERGED` files are NEVER auto-applied. The pre-v8 behavior of bulk-approving every UPSTREAM_NEWER file overwrote 1131 lines of un-pushed local work in one incident — the bucketing in v8 exists to make that failure mode unreachable.
 
 **Step 4 — Apply approved changes:**
@@ -118,6 +134,7 @@ Apply upstream changes to the local project. Interactive — per-file approval f
 
 **Step 5 — Post-apply reconciliation:**
 - If new skills were added → suggest updating `project.yml` `security.approved_skills` and ask the user to confirm additions
+- **If Step 3b flagged any agents `[MISSING locally]`** → run the owning skill's agent-install action so they land in `.claude/agents/`: `/advisors init` (advisor personas), `/reference-audit setup` (citations agents), `/secops setup` (project-secops). Agents are a separate sync surface — a file-copy pull never installs them. Then add the new agents to `project.yml` `security.approved_agents`.
 - If new agents were added → update `security.approved_agents`
 - If a newly-synced skill has a `### \`setup\`` action that wasn't present before → offer to invoke `/skill-name setup`
 - If deleted skills/agents were in the allowlist → offer to remove them from `project.yml`
@@ -237,6 +254,22 @@ Delete merged `sync/*` push branches that have accumulated in the hitachi checko
 5. Report what was removed. **Do not** write a `.claude/sync-log.md` entry — `prune` is branch hygiene, not a pull/push sync action.
 
 `prune` only ever touches the `sync/*` namespace — never `main`, never feature branches, never `agents/` or `skills/`. It refuses to run if the hitachi working tree is dirty. The conservative default (dry-run; UNMERGED kept; explicit `--apply` to delete) means a stray branch is never lost without the user seeing it first.
+
+### `deps <skill> [<skill> ...]`
+
+Resolve and show a skill's **dependency closure** — what else must be installed for it to work — without pulling anything. The closure has two surfaces that a naive single-skill pull misses:
+
+1. **Sibling skills** the skill consumes (and *their* required deps, transitively), including the `shared/` utilities.
+2. **Agents**, which live on a separate sync surface (`.claude/agents/`). Pulling a skill's directory never installs its agents — they must be wired by the owning skill's install action.
+
+Use this before pulling an unfamiliar skill ("what does `gap-analysis` drag in?"), as part of `pull` Step 3b, or any time you want to know whether the project is missing a co-dependency.
+
+1. Run `.claude/skills/sync-skills/scripts/sync.sh deps <skill> [...]`. The script reads each skill's `dependencies:` frontmatter from the **registry** (what a pull would bring) and, by default, flags every closure member not present in this project as `[MISSING locally]`. Read-only.
+2. The report has four parts: **Required skills** (transitive — must co-install), **Agents** (the union across the required closure — must co-install via the owning skill's install action), **Optional skills** (listed, never auto-pulled), and a `! UNRESOLVED` line if a required dep names a skill absent from the registry.
+3. Pass `--json` for machine-readable output (consumed by tooling); `--no-missing` to skip the local-presence annotation (pure closure).
+4. Present the result and, if anything is `[MISSING locally]`, recommend the concrete follow-up: `pull` the missing required skills, and run `/advisors init` / `/reference-audit setup` / `/secops setup` for missing agents.
+
+The `dependencies:` frontmatter contract (shape, `required`/`optional` semantics, the owner-lists-its-agents convention) is documented by the `skill-creator` skill — that's the authoring side; `deps` is the resolving side.
 
 ## Notes
 

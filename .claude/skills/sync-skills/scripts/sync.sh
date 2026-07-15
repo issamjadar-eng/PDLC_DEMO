@@ -1044,6 +1044,48 @@ cmd_prune() {
   echo "prune: done — removed ${#merged[@]} merged branch(es)"
 }
 
+# ─── deps ──────────────────────────────────────────────────────────────────
+#
+# Resolve the dependency closure for one or more skills by reading their
+# SKILL.md frontmatter `dependencies:` blocks (skills + agents). Thin wrapper
+# over scripts/resolve_deps.py. Reads from the HITACHI registry by default
+# (that's what a pull would bring), and flags which closure members are not yet
+# present in this project's `.claude/` (the consumer root).
+#
+# Usage: deps [--json] [--no-missing] <skill> [<skill> ...]
+#   --json        emit the resolver's JSON object
+#   --no-missing  do not annotate closure members absent locally
+#
+# The closure is computed against the registry's CURRENT working tree (which
+# push-prep/pull keep aligned to origin/main), consistent with every other
+# action here. Read-only — never mutates.
+cmd_deps() {
+  local as_json=0 check_missing=1
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --json)       as_json=1; shift ;;
+      --no-missing) check_missing=0; shift ;;
+      -*) echo "ERROR: unknown deps flag: $1" >&2; exit 2 ;;
+      *)  args+=("$1"); shift ;;
+    esac
+  done
+  if [[ ${#args[@]} -eq 0 ]]; then
+    echo "ERROR: deps requires at least one skill name" >&2
+    exit 2
+  fi
+  local resolver
+  resolver="$(dirname "${BASH_SOURCE[0]}")/resolve_deps.py"
+  if [[ ! -f "$resolver" ]]; then
+    echo "ERROR: resolver not found: $resolver" >&2
+    exit 1
+  fi
+  local cmd=(python3 "$resolver" --root "$HITACHI")
+  [[ $as_json -eq 1 ]] && cmd+=(--json)
+  [[ $check_missing -eq 1 ]] && cmd+=(--missing-against "$PROJECT_DIR")
+  "${cmd[@]}" "${args[@]}"
+}
+
 # ─── Dispatch ──────────────────────────────────────────────────────────────
 
 case "${1:-}" in
@@ -1055,6 +1097,7 @@ case "${1:-}" in
   push-stage)           shift; cmd_push_stage "$@" ;;
   push-finalize)        shift; cmd_push_finalize "$@" ;;
   prune)                shift; cmd_prune "$@" ;;
+  deps)                 shift; cmd_deps "$@" ;;
   hitachi-path)         shift; cmd_hitachi_path ;;
   hitachi-head)         shift; cmd_hitachi_head ;;
   skill-version)        shift; cmd_skill_version "$@" ;;
@@ -1081,6 +1124,10 @@ Commands:
   prune [--apply]                Classify hitachi sync/* branches MERGED / UNMERGED
                                  against main. Dry-run unless --apply, which deletes
                                  the merged ones (local + remote). Unmerged kept.
+  deps [--json] [--no-missing] <skill>...
+                                 Resolve a skill's dependency closure (skills + agents)
+                                 from registry SKILL.md `dependencies:` frontmatter.
+                                 Flags closure members absent in this project. Read-only.
   hitachi-path                   Print resolved hitachi path.
   hitachi-head                   Print short HEAD hash of hitachi working checkout.
   skill-version <skill-path>     Print version number from a local SKILL.md frontmatter.
