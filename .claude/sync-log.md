@@ -4,6 +4,15 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-14 — pull (sync-skills 8.3 → 8.4)
+
+- Hitachi HEAD after sync: `2865319`
+- Pulled: the whole `skills/sync-skills/` tree (SKILL.md, README.md, new `scripts/resolve_deps.py`, new `tests/test_deps.sh`, sync.sh) — byte-identical to registry after copy
+- Method: **not** `/sync-skills pull` — `sync.sh` deliberately excludes `skills/sync-skills/*` from its own check/pull/push walks (the tool doesn't sync itself), which is also why `check` showed 0 drift while the console's Registries view showed the 8.4 update. Copied via the console's `writer.install_skill` path (whole-dir backup under `tools/project-console/.data/setup-backups/sync-skills.20260714-232157`, audit-logged, strictly-newer guard passed 8.4 > 8.3).
+- Impact analysis (pull Step 5b): v8.4 = new `deps` action (dependency-closure resolver over `dependencies:` frontmatter) + pull Step 3b + tests (ran locally: 21/21 pass). No hooks, no setup action, no template/schema/terminology changes → **no local action required**. Paired convention (skill-creator v8 `dependencies:` authoring) already installed.
+- project.yml: no changes (sync-skills already in approved_skills)
+- Follow-ups: upstream README changelog lacks an 8.4 entry (frontmatter is 8.4, changelog tops at 8.3) — registry hygiene gap, candidate for a small upstream PR.
+
 ## 2026-07-14 — push (project-console 1.30.8 → 1.33.0)
 
 - Branch: `sync/pdlc-demo-project-console-setup-2026-07-14`
