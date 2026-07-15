@@ -2,7 +2,7 @@
 
 **ID**: 105
 **Created**: 2026-07-14
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -39,7 +39,7 @@ Close the registry gaps surfaced by the ben/102 reference audits (9 unverified e
 - [x] Fix pFMEA: 2× `21 CFR 820.75` → `ISO 13485 §7.5.6 process validation (via 21 CFR 820.7 QMSR incorporation)` incl. frontmatter note + Standards Anchor; AI-CHANGELOG row; audit report E2 → stale-citation RESOLVED
 - [x] Agents: 6 standards distillations (L1a) + applicability docs (L1b), all public-source-grounded with [VERIFY] discipline. Public determinations: IEC 60601-1 FDA rec 19-49 (Ed 3.2 — DHF's "3rd ed + A1" needs DoC reconciliation); IEC 60601-1-2 rec 19-36 (Ed 4.1 ONLY, partial, 2 carve-outs — DI-012 "4th ed" edition question); IEC 60601-1-8 rec 5-131 (Ed 2.2; SPL range stays licensed-copy-gated); **IEC 60601-2-24: NO current FDA recognition (verified null)** + publisher-preview front matter contradicts §201.12.1.103-as-free-flow and casts doubt on .101/.4.4.103 (Table 201.101: accuracy = .102–.107, occlusion/bolus = .4.4.104) — subclause confirmation BLOCKING for HA Rev 1.0, controlled docs NOT renumbered from preview; ISO 10993 -10/-23 irritation split (2021) pinned; IEC 60812 rec 5-120 (complete)
 - [x] READMEs indexed (registry standards README +6 rows + changelog; docs/external/standards README +5 rows + 60601-1 stale-link fix 2603→67497 + changelog); all 3 audit reports' Open Resolutions updated (gaps CLOSED with the escalated E5/E6/E7 counter-evidence recorded)
-- [ ] Task docs + index; push to main; `/sync-skills push` the references additions upstream
+- [x] Task docs + index; pushed to main via PR #108 (`fac86aa`); references pushed upstream as hitachi PR #270 (squash `67003b6`, drift 0)
 
 ## Open Questions
 
@@ -97,3 +97,4 @@ _Filled at checkpoint per the effort-estimation rubric._
 - 2026-07-14/15: Part 820 workstream shipped: two-tier QMSR import (XML + deterministic source-md + finding aid), L1b applicability with program citation rule, pFMEA repaired (§820.75 was repealed by the QMSR — the audit's E2 suspicion confirmed), both READMEs indexed. 6 standards agents launched (60601-1/-1-2/-1-8/-2-24, ISO 10993 series, IEC 60812).
 
 - 2026-07-15: All 6 agents returned; 12 standards files + READMEs + audit-report reconciliation landed. Headline: IEC 60601-2-24 non-recognition + public front-matter contradiction of the cited free-flow subclause (blocking item for HA Rev 1.0 recorded, docs not renumbered from preview).
+- 2026-07-15: Pushed — PDLC_DEMO PR #108 + hitachi PR #270; both repos lockstep. Task **Complete**. Open downstream items live in the audit reports / L1b docs (subclause confirmation blocking HA Rev 1.0; edition determinations; RMR authoring).

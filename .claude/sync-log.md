@@ -4,6 +4,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-15 — push (medtech-docs references: QMSR + six standards)
+
+- Branch: `sync/pdlc-demo-references-820-standards-2026-07-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/270
+- Status: merged (squash) — `67003b6`; clone ff'd; branch deleted both sides; post-merge `check`: 0 drift rows
+- Files: 11 — regulations `21-cfr-part-820.{md,source XML,source-md}` + README; standards `iec-60601-1/-1-2/-1-8/-2-24`, `iso-10993`, `iec-60812` + README
+- Rationale: closes the L1a coverage gap surfaced by the ben/102 reference audit (registry held only 5 software-adjacent standards); QMSR import also proved a live former-§820.75 citation stale. Public determinations (FDA recognition numbers/editions, 60601-2-24 non-recognition, ISO 10993 -10/-23 split) now travel to every consuming project.
+
 ## 2026-07-14 — pull (sync-skills 8.3 → 8.4)
 
 - Hitachi HEAD after sync: `2865319`
