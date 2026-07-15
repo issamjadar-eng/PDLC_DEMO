@@ -2,18 +2,19 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 94.17,
-    "2026-06-16": 32.04,
-    "2026-06-22": 14.32,
-    "2026-06-23": 7.55,
-    "2026-06-29": 0.9,
-    "2026-06-30": 143.44,
-    "2026-07-01": 144.87,
-    "2026-07-02": 18.2,
-    "2026-07-03": 6.58,
-    "2026-07-05": 2.22,
-    "2026-07-08": 0.99,
-    "2026-07-14": 7.6
+    "2026-06-15": 111.0,
+    "2026-06-16": 37.41,
+    "2026-06-22": 17.07,
+    "2026-06-23": 8.8,
+    "2026-06-29": 1.02,
+    "2026-06-30": 168.26,
+    "2026-07-01": 173.8,
+    "2026-07-02": 21.1,
+    "2026-07-03": 7.68,
+    "2026-07-05": 2.56,
+    "2026-07-08": 1.13,
+    "2026-07-14": 30.29,
+    "2026-07-15": 126.23
   },
   "members": 1,
   "months": {
@@ -160,48 +161,57 @@
             "output": 1107
           },
           "2026-07-14": {
-            "cache_creation": 217929,
-            "cache_read": 8933565,
-            "cache_write_1h": 217929,
-            "cache_write_5m": 0,
-            "input": 138,
-            "messages": 69,
-            "output": 32978
+            "cache_creation": 913341,
+            "cache_read": 24712331,
+            "cache_write_1h": 607944,
+            "cache_write_5m": 305397,
+            "input": 346,
+            "messages": 173,
+            "output": 180426
+          },
+          "2026-07-15": {
+            "cache_creation": 3904784,
+            "cache_read": 120630597,
+            "cache_write_1h": 934812,
+            "cache_write_5m": 2969972,
+            "input": 1162,
+            "messages": 581,
+            "output": 482613
           }
         },
         "by_model": {
           "claude-fable-5": {
-            "cache_creation": 217929,
-            "cache_read": 8933565,
-            "cache_write_1h": 217929,
-            "cache_write_5m": 0,
-            "cost": 14.94,
-            "input": 138,
-            "messages": 69,
-            "output": 32978
+            "cache_creation": 4679535,
+            "cache_read": 144125622,
+            "cache_write_1h": 1542756,
+            "cache_write_5m": 3136779,
+            "cost": 246.5,
+            "input": 1472,
+            "messages": 736,
+            "output": 645945
           },
           "claude-opus-4-8": {
-            "cache_creation": 4290665,
-            "cache_read": 229662577,
+            "cache_creation": 4429255,
+            "cache_read": 230879883,
             "cache_write_1h": 2754485,
-            "cache_write_5m": 1536180,
-            "cost": 170.96,
-            "input": 283944,
-            "messages": 645,
-            "output": 702551
+            "cache_write_5m": 1674770,
+            "cost": 172.86,
+            "input": 283980,
+            "messages": 663,
+            "output": 719645
           }
         },
-        "cost": 185.9,
+        "cost": 419.37,
         "name": "Member 1",
-        "sessions": 6,
+        "sessions": 8,
         "totals": {
-          "cache_creation": 4508594,
-          "cache_read": 238596142,
-          "cache_write_1h": 2972414,
-          "cache_write_5m": 1536180,
-          "input": 284082,
-          "messages": 714,
-          "output": 735529
+          "cache_creation": 9108790,
+          "cache_read": 375005505,
+          "cache_write_1h": 4297241,
+          "cache_write_5m": 4811549,
+          "input": 285452,
+          "messages": 1399,
+          "output": 1365590
         }
       }
     }
@@ -4479,11 +4489,12 @@
         }
       },
       "cost": 6.51,
-      "cost_allocated": 8.43,
-      "cost_basis": "measured+allocated",
       "estimate": {
-        "agentic_hours": null,
-        "agentic_hours_range": null,
+        "agentic_hours": 0.8,
+        "agentic_hours_range": {
+          "max": 0.8,
+          "min": 0.8
+        },
         "by_persona": {
           "_unspecified": {
             "max": 0.0,
@@ -4491,10 +4502,13 @@
           }
         },
         "confidence_mix": {
-          "?": 3
+          "?": 4
         },
-        "hours_saved": null,
-        "inverted": false,
+        "hours_saved": {
+          "max": -0.8,
+          "min": -0.8
+        },
+        "inverted": true,
         "manual_hours": {
           "max": 0.0,
           "min": 0.0
@@ -4505,7 +4519,7 @@
         ],
         "retrospective": false,
         "title": "Registry Sync 2026-07-14 + Statusline Install + Submissions VERSION Fix",
-        "todos": 3,
+        "todos": 4,
         "updated": "2026-07-14"
       },
       "sessions": 1,
@@ -4519,17 +4533,325 @@
         "output": 15824
       }
     },
+    "ben/102": {
+      "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 624454,
+          "cache_read": 10814507,
+          "cache_write_1h": 319057,
+          "cache_write_5m": 305397,
+          "cost": 26.49,
+          "input": 138,
+          "messages": 69,
+          "output": 109463
+        }
+      },
+      "cost": 26.49,
+      "estimate": {
+        "agentic_hours": 2.0,
+        "agentic_hours_range": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "by_persona": {
+          "clinical-affairs": {
+            "max": 12.0,
+            "min": 6.0
+          },
+          "quality-engineering": {
+            "max": 30.7,
+            "min": 15.3
+          },
+          "rd-lead": {
+            "max": 16.7,
+            "min": 8.3
+          },
+          "regulatory-affairs": {
+            "max": 8.0,
+            "min": 4.0
+          },
+          "risk-management": {
+            "max": 26.7,
+            "min": 13.3
+          },
+          "systems-engineering": {
+            "max": 6.0,
+            "min": 3.0
+          }
+        },
+        "confidence_mix": {
+          "high": 2,
+          "med": 5
+        },
+        "hours_saved": {
+          "max": 99.0,
+          "min": 48.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 100.0,
+          "min": 50.0
+        },
+        "method_version": 1,
+        "personas": [
+          "quality-engineering",
+          "risk-management",
+          "rd-lead",
+          "clinical-affairs",
+          "regulatory-affairs",
+          "systems-engineering"
+        ],
+        "retrospective": false,
+        "title": "Risk File Backfill + Trace-Matrix Risk Mapping",
+        "todos": 7,
+        "updated": "2026-07-14"
+      },
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 624454,
+        "cache_read": 10814507,
+        "cache_write_1h": 319057,
+        "cache_write_5m": 305397,
+        "input": 138,
+        "messages": 69,
+        "output": 109463
+      }
+    },
+    "ben/103": {
+      "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 498263,
+          "cache_read": 27491160,
+          "cache_write_1h": 498263,
+          "cache_write_5m": 0,
+          "cost": 42.9,
+          "input": 194,
+          "messages": 97,
+          "output": 108923
+        }
+      },
+      "cost": 42.9,
+      "estimate": {
+        "agentic_hours": 1.0,
+        "agentic_hours_range": {
+          "max": 1.0,
+          "min": 0.5
+        },
+        "by_persona": {
+          "cybersecurity": {
+            "max": 7.0,
+            "min": 4.0
+          },
+          "rd-lead": {
+            "max": 25.0,
+            "min": 14.0
+          }
+        },
+        "confidence_mix": {
+          "high": 1,
+          "med": 3
+        },
+        "hours_saved": {
+          "max": 31.5,
+          "min": 17.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 32.0,
+          "min": 18.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "retrospective": false,
+        "title": "Console Setup Tab \u2014 Connector (MCP) Configuration",
+        "todos": 4,
+        "updated": "2026-07-14"
+      },
+      "sessions": 2,
+      "totals": {
+        "cache_creation": 498263,
+        "cache_read": 27491160,
+        "cache_write_1h": 498263,
+        "cache_write_5m": 0,
+        "input": 194,
+        "messages": 97,
+        "output": 108923
+      }
+    },
+    "ben/104": {
+      "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 2500843,
+          "cache_read": 67718641,
+          "cache_write_1h": 208473,
+          "cache_write_5m": 2292370,
+          "cost": 113.53,
+          "input": 724,
+          "messages": 362,
+          "output": 259547
+        },
+        "claude-opus-4-8": {
+          "cache_creation": 38968,
+          "cache_read": 177231,
+          "cache_write_1h": 0,
+          "cache_write_5m": 38968,
+          "cost": 0.37,
+          "input": 10,
+          "messages": 5,
+          "output": 1485
+        }
+      },
+      "cost": 113.9,
+      "estimate": {
+        "agentic_hours": 1.0,
+        "agentic_hours_range": {
+          "max": 1.0,
+          "min": 0.5
+        },
+        "by_persona": {
+          "quality-engineering": {
+            "max": 1.0,
+            "min": 0.5
+          },
+          "rd-lead": {
+            "max": 32.0,
+            "min": 16.0
+          },
+          "systems-engineering": {
+            "max": 3.0,
+            "min": 1.5
+          }
+        },
+        "confidence_mix": {
+          "high": 2,
+          "med": 2
+        },
+        "hours_saved": {
+          "max": 35.5,
+          "min": 17.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 36.0,
+          "min": 18.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "systems-engineering",
+          "quality-engineering"
+        ],
+        "retrospective": false,
+        "title": "Console Setup Section Redesign (beyond MCP servers, professional design)",
+        "todos": 4,
+        "updated": "2026-07-14"
+      },
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 2539811,
+        "cache_read": 67895872,
+        "cache_write_1h": 208473,
+        "cache_write_5m": 2331338,
+        "input": 734,
+        "messages": 367,
+        "output": 261032
+      }
+    },
+    "ben/105": {
+      "by_model": {
+        "claude-fable-5": {
+          "cache_creation": 619426,
+          "cache_read": 27816305,
+          "cache_write_1h": 80414,
+          "cache_write_5m": 539012,
+          "cost": 42.4,
+          "input": 248,
+          "messages": 124,
+          "output": 124634
+        },
+        "claude-opus-4-8": {
+          "cache_creation": 99622,
+          "cache_read": 1040075,
+          "cache_write_1h": 0,
+          "cache_write_5m": 99622,
+          "cost": 1.53,
+          "input": 26,
+          "messages": 13,
+          "output": 15609
+        }
+      },
+      "cost": 43.93,
+      "cost_allocated": 2.07,
+      "cost_basis": "measured+allocated",
+      "estimate": {
+        "agentic_hours": 2.0,
+        "agentic_hours_range": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "by_persona": {
+          "quality-engineering": {
+            "max": 11.0,
+            "min": 5.0
+          },
+          "regulatory-affairs": {
+            "max": 32.0,
+            "min": 16.0
+          },
+          "risk-management": {
+            "max": 24.0,
+            "min": 12.0
+          }
+        },
+        "confidence_mix": {
+          "high": 1,
+          "med": 2
+        },
+        "hours_saved": {
+          "max": 66.0,
+          "min": 31.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 67.0,
+          "min": 33.0
+        },
+        "method_version": 1,
+        "personas": [
+          "regulatory-affairs",
+          "risk-management",
+          "quality-engineering"
+        ],
+        "retrospective": false,
+        "title": "Reference Registry Extension: 21 CFR 820 (QMSR) + Missing Standards Distillations",
+        "todos": 3,
+        "updated": "2026-07-15"
+      },
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 719048,
+        "cache_read": 28856380,
+        "cache_write_1h": 80414,
+        "cache_write_5m": 638634,
+        "input": 274,
+        "messages": 137,
+        "output": 140243
+      }
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 193607,
-          "cache_read": 3703715,
-          "cache_write_1h": 193607,
+          "cache_creation": 412227,
+          "cache_read": 5055159,
+          "cache_write_1h": 412227,
           "cache_write_5m": 0,
-          "cost": 8.43,
-          "input": 72,
-          "messages": 36,
-          "output": 17154
+          "cost": 14.68,
+          "input": 102,
+          "messages": 51,
+          "output": 27554
         },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
@@ -4552,16 +4874,16 @@
           "output": 1112396
         }
       },
-      "cost": 226.45,
-      "sessions": 13,
+      "cost": 232.69,
+      "sessions": 15,
       "totals": {
-        "cache_creation": 4772038,
-        "cache_read": 295394536,
-        "cache_write_1h": 4179088,
+        "cache_creation": 4990658,
+        "cache_read": 296745980,
+        "cache_write_1h": 4397708,
         "cache_write_5m": 592950,
-        "input": 362368,
-        "messages": 1103,
-        "output": 1145722
+        "input": 362398,
+        "messages": 1118,
+        "output": 1156122
       }
     },
     "dmytro/001": {
@@ -4605,23 +4927,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 499.0,
-    "cost_allocated": 155.34,
+    "agentic_hours": 505.8,
+    "cost_allocated": 148.98,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 246.43,
-    "cost_unattributed_measured": 226.45,
-    "cost_unattributed_residual": 71.1,
+    "cost_measured_attributed": 473.65,
+    "cost_unattributed_measured": 232.69,
+    "cost_unattributed_residual": 83.71,
     "hours_saved": {
-      "max": 2821.0,
-      "min": 811.0
+      "max": 3053.0,
+      "min": 924.0
     },
     "manual_hours": {
-      "max": 3307.0,
-      "min": 1310.0
+      "max": 3542.0,
+      "min": 1429.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
-    "tasks_inverted_excluded": 0,
+    "tasks_inverted_excluded": 1,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 100
+    "tasks_with_estimate": 104
   }
 }
