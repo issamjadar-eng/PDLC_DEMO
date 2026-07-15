@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-15 — push (third of the day)
+
+- Files (10): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{loader.py, registry_remote.py (new), router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_hooks_loader.py (new), test_setup_registry_remote.py (new)}`
+- Branch: `sync/pdlc-demo-project-console-138-2026-07-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/273
+- Commit: "project-console 1.38.0: GitHub-direct registries + Automation polish"
+- Status: merged (user requested sync; squash)
+- Merge commit: `e575797`
+- Hitachi HEAD after sync: `e575797` (clone ff'd, sync branch deleted local+remote)
+- Post-check: 0 project-console drift rows — lockstep at 1.38.0. Consumer note: registries now work with read-only registry access (`local_path` optional).
+
+---
+
 ## 2026-07-15 — push (second of the day)
 
 - Files (10): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{envcheck.py (new), loader.py, router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_envcheck.py (new), test_setup_team_writer.py}`
