@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-15 — push
+
+- Files (12): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{catalog.py, loader.py, router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_agents_loader.py, test_setup_cli_catalog.py, test_setup_team_writer.py, test_tracker_workflow_e2e.py}`
+- Branch: `sync/pdlc-demo-project-console-135-2026-07-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/271
+- Commit: "project-console 1.33.1→1.35.0: agent summaries, team roster editing, connectors"
+- Status: merged (user requested sync; squash)
+- Merge commit: `9ad965e`
+- Hitachi HEAD after sync: `9ad965e` (clone ff'd, sync branch deleted local+remote)
+- Post-check: `check` shows 0 project-console rows — registry and project in lockstep at 1.35.0
+
+---
+
 ## 2026-07-15 — push (medtech-docs references: QMSR + six standards)
 
 - Branch: `sync/pdlc-demo-references-820-standards-2026-07-15`
