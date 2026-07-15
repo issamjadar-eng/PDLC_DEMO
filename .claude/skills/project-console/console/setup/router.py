@@ -9,6 +9,10 @@ POST   /setup/connectors/{name}        — add/update a server in .mcp.json
                                           two files move in lockstep)
 POST   /setup/connectors/{name}/approval — {"approved": bool} allowlist toggle
 DELETE /setup/connectors/{name}        — remove the server from .mcp.json
+POST   /setup/environment/check        — run the project's `setup.sh --check`
+                                          (read-only mode) and cache the parsed
+                                          report; the full install never runs
+                                          from the browser
 POST   /setup/team/members             — add a member to project.yml team.active
 POST   /setup/team/members/{github}/deactivate — move to team.inactive
                                           ({"reason": str}; roster edit only —
@@ -124,6 +128,24 @@ async def setup_install_skill(name: str, request: Request):
     except writer.SetupWriteError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True, "note": note}
+
+
+@router.post("/setup/environment/check", response_class=JSONResponse)
+async def setup_environment_check(request: Request):
+    """Run the project's `setup.sh --check` (its own read-only mode) and
+    return the parsed report. The full install is never run from here —
+    it mutates the machine and belongs in the user's terminal."""
+    import anyio
+
+    from console.setup import envcheck
+    cfg = get_config()
+    try:
+        report = await anyio.to_thread.run_sync(
+            lambda: envcheck.run_check(cfg.repo_root)
+        )
+    except RuntimeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "report": report}
 
 
 @router.post("/setup/team/members", response_class=JSONResponse)

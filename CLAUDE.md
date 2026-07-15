@@ -45,13 +45,13 @@ external/  ──── defines rules ───▶ project/  ◀─── conver
 | Section | Purpose |
 |---------|---------|
 | `project:` | Project name, repo, type, regulatory pathway, device class, device family, composition, capabilities |
-| `team:` | Active and inactive team members — name, GitHub username, task folder, role, email. Every repo collaborator must have a row here. |
+| `team:` | Active and inactive team members — name, GitHub username, task folder, role, email. Every collaborator with **write access** must have a row here; read-only observers (this is a teaching project) may have repo access without a roster row. |
 | `registries:` | Approved sources for skills and templates. Skills are either `builtin` (shipped with Claude Code) or fetched from a `github` registry. Each `github` registry has a `local_path` (default `../hitachi`) for local clone-based sync used by `/sync-skills` and `/best-practices`. |
 | `security:` | Approved email domains, gitignore patterns, and allowlists for skills, MCPs, plugins, and agents |
 
 **Security allowlists** — when adding new skills, MCP servers, plugins, or agents to the project, add them to the corresponding `approved_*` list in `project.yml` first. The security posture check warns on anything installed but not listed. This ensures the team can audit what tools have access to project data.
 
-**Team roster** — when onboarding a new team member, add their entry to `team.active`. When someone leaves, move them to `team.inactive` with a `removed` date and `reason`. The `setup.sh --check` audit cross-references this roster against actual GitHub repo collaborators.
+**Team roster** — when onboarding a new team member, add their entry to `team.active`. When someone leaves, move them to `team.inactive` with a `removed` date and `reason`. The `setup.sh --check` audit cross-references this roster against actual GitHub repo collaborators, permission-aware: unrostered **write/maintain/admin** access is a warning (roster them or reduce to read); unrostered **read/triage** access is informational — teaching-project observers routinely get read access without contributing; inactive members retaining any access is an error.
 
 ## Working Conventions
 

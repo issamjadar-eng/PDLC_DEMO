@@ -68,6 +68,9 @@
   .su-add { background: var(--surface,#181b22); border: 1px solid var(--border,#2a2f3a);
       border-radius: 12px; padding: 13px 15px; transition: border-color .12s ease; }
   .su-add:hover { border-color: var(--brand-primary,#6ea8fe); }
+  .su-add.off { opacity: .55; }
+  .su-add.off:hover { border-color: var(--border,#2a2f3a); opacity: .8; }
+  .su-badge.ok { color: #4fbf9a; border-color: rgba(79,191,154,.45); }
   .su-add h3 { margin: 0 0 3px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
   .su-add p { margin: 0 0 10px; font-size: 12px; line-height: 1.45; color: var(--body-text-muted,#8b93a7); }
   .su-add a { font-size: 11.5px; }
@@ -205,11 +208,17 @@
         <span class="su-count">{{ setup.registries.registries | length }}</span></a>
       <a href="#team" data-sec="team"><svg class="su-ico"><use href="#su-ic-shield"/></svg>Team &amp; Security
         <span class="su-count">{{ setup.team.members | length }}</span></a>
+      {% if setup.environment.available %}
+      <a href="#environment" data-sec="environment"><svg class="su-ico"><use href="#su-ic-plug"/></svg>Environment
+        {% if setup.environment.stale or not setup.environment.last_check %}<span class="su-dot" title="environment check needed"></span>
+        {% elif setup.environment.last_check.counts.warn or setup.environment.last_check.counts.error %}<span class="su-dot" title="environment warnings"></span>{% endif %}</a>
+      {% endif %}
     </nav>
     <div class="su-side-foot">
       Read from <code>project.yml</code>, <code>.mcp.json</code>, and
-      <code>.claude/</code>. Only connectors are editable here — skills and
-      agents are managed by the registry sync tooling.
+      <code>.claude/</code>. Editable here: connectors, registry installs,
+      team roster. Skills and agents are managed by the registry sync tooling;
+      machine changes stay in your terminal.
     </div>
   </aside>
 
@@ -238,15 +247,25 @@
       {% for w in setup.connectors.warnings %}<div class="su-warn">{{ w }}</div>{% endfor %}
 
       <div class="su-h2">Popular</div>
+      {% set configured_names = setup.connectors.connectors | selectattr('configured') | map(attribute='name') | list %}
       <div class="su-cards">
         {% for entry in catalog %}
-        <div class="su-add" id="su-add-{{ entry.key }}">
-          <h3><span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>{{ entry.title }}</h3>
+        {% set already = entry.spec is not none and entry.key in configured_names %}
+        <div class="su-add{{ ' off' if already }}" id="su-add-{{ entry.key }}">
+          <h3><span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>{{ entry.title }}
+            {% if already %}<span class="su-badge ok">configured</span>{% endif %}</h3>
           <p>{{ entry.description }}</p>
           {% if entry.docs %}<a href="{{ entry.docs }}" target="_blank" rel="noopener">Reference ↗</a>{% endif %}
+          {% if already %}
+          <div class="su-actions">
+            <button class="su-btn" onclick="suShowConfigured('{{ entry.key }}')">View configured ↓</button>
+          </div>
+          {% else %}
           <div class="su-actions">
             <button class="su-btn" onclick="suToggleForm('{{ entry.key }}')">Configure…</button>
           </div>
+          {% endif %}
+          {% if not already %}
           <div class="su-form" id="su-form-{{ entry.key }}">
             {% if entry.spec and entry.spec.url %}
             <label>Connector name</label>
@@ -290,6 +309,7 @@
             </div>
             {% endif %}
           </div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
@@ -328,6 +348,9 @@
           </dl>
           {% endif %}
           <div class="su-actions">
+            {% if c.configured %}
+            <button class="su-btn" onclick="event.stopPropagation(); suToggleForm('edit-{{ c.name }}')">Edit configuration…</button>
+            {% endif %}
             {% if not c.approved %}
             <button class="su-btn" onclick="event.stopPropagation(); suApprove('{{ c.name }}', true)">Add to allowlist</button>
             {% elif c.configured %}
@@ -337,6 +360,25 @@
             <button class="su-btn danger" onclick="event.stopPropagation(); suRemove('{{ c.name }}')">Remove connector</button>
             {% endif %}
           </div>
+          {% if c.configured %}
+          <div class="su-form" id="su-form-edit-{{ c.name }}">
+            {% if c.spec.url %}
+            <label>URL</label>
+            <input id="su-edit-{{ c.name }}-url" value="{{ c.spec.url }}">
+            <label>Transport (http or sse)</label>
+            <input id="su-edit-{{ c.name }}-transport" value="{{ c.transport }}">
+            {% else %}
+            <label>Command</label>
+            <input id="su-edit-{{ c.name }}-command" value="{{ c.spec.command }}">
+            <label>Args (space-separated — quoting is not supported; keep args simple)</label>
+            <input id="su-edit-{{ c.name }}-args" value="{{ c.spec.args | join(' ') }}">
+            {% endif %}
+            <div class="su-actions">
+              <button class="su-btn" onclick="event.stopPropagation(); suSubmitEdit('{{ c.name }}', {{ 'true' if c.spec.url else 'false' }})">Save changes</button>
+            </div>
+            <p class="su-note">Existing env keys and headers are preserved on save — they are never edited from the browser.</p>
+          </div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
@@ -762,6 +804,90 @@
       {% endif %}
 
     </section>
+
+    {# ============================ ENVIRONMENT =========================== #}
+    {% if setup.environment.available %}
+    {% set env = setup.environment %}
+    <section class="su-sec" id="sec-environment" data-title="Environment">
+      <div class="su-head">
+        <h1>Environment</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search checks…" data-filter="environment"></div>
+      </div>
+      <p class="su-sub">
+        The machine-setup surface defined by the project's <code>{{ env.script }}</code>
+        {% if env.guide %}(guide: <code>{{ env.guide }}</code>){% endif %}.
+        The console runs only the script's read-only <code>--check</code> mode —
+        installing or fixing anything is a terminal action:
+        <code>bash {{ env.script }}</code> from the project root.
+      </p>
+
+      {% if env.stale %}
+      <div class="su-warn"><code>{{ env.script }}</code> changed after the last check
+        ({{ env.script_modified }}) — the report below may be out of date. Re-run the check.</div>
+      {% endif %}
+
+      <div class="su-h2">Status</div>
+      <div class="su-tiles">
+        <div class="su-tile">
+          <div class="su-tile-n">{{ env.last_check.ran_at[:10] if env.last_check else '—' }}</div>
+          <div class="su-tile-l">last check{{ ' · ' + env.last_check.ran_at[11:16] + ' UTC' if env.last_check }}</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n">{{ env.last_full_run[:10] if env.last_full_run else '—' }}</div>
+          <div class="su-tile-l">{{ 'last full setup.sh run' if env.last_full_run else 'full run not recorded (stamp written on next full run)' }}</div>
+        </div>
+        {% if env.last_check %}
+        <div class="su-tile">
+          <div class="su-tile-n">{{ env.last_check.counts.ok }}</div>
+          <div class="su-tile-l">checks OK</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n">{{ env.last_check.counts.warn + env.last_check.counts.error }}</div>
+          <div class="su-tile-l">warnings / errors</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="su-actions" style="margin-top:14px">
+        <button class="su-btn" id="su-env-run" onclick="suEnvCheck()">
+          {{ 'Re-run check' if env.last_check else 'Run first check' }} (read-only, ~1 min)</button>
+      </div>
+
+      {% if env.last_check %}
+      <div class="su-h2">Check report
+        <span style="text-transform:none;letter-spacing:0">— {{ env.last_check.duration_s }}s, exit {{ env.last_check.exit_code }}</span></div>
+      {% for sec in env.last_check.sections %}
+      <div class="su-list" style="margin-bottom:10px" data-list="environment">
+        <div class="su-cols" style="grid-template-columns:1fr"><span>{{ sec.title }}</span></div>
+        {% for l in sec.lines %}
+        <div class="su-row" style="grid-template-columns:1fr auto" data-search="{{ sec.title | lower }} {{ l.text | lower }}">
+          <span class="su-type" style="color:var(--body-text,#e6e9ef)">{{ l.text }}</span>
+          <span class="su-status">
+            {% if l.level == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            {% elif l.level == 'warn' %}<span class="su-badge warning">warn</span>
+            {% elif l.level == 'error' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">error</span>
+            {% else %}<span class="su-badge info">info</span>{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="su-h2">Check report</div>
+      <div class="su-list"><div class="su-empty">No check has been run yet — run the first check above,
+        or in a terminal: <code>bash {{ env.script }} --check</code></div></div>
+      {% endif %}
+
+      <div class="su-h2">Fixing findings</div>
+      <p class="su-sub">
+        Warnings and errors are fixed in a terminal at the project root:
+        <code>bash {{ env.script }}</code> installs and configures everything the check
+        probes{% if env.guide %}; <code>{{ env.guide }}</code> documents the manual steps the
+        script can't do (accounts, 2FA, browser sign-ins){% endif %}. Then re-run the check here.
+      </p>
+    </section>
+    {% endif %}
   </section>
 </div>
 
@@ -858,6 +984,52 @@ function suInstall(name, registry, isUpdate) {
     : 'Install skill "' + name + '" from registry "' + registry + '" and add it to security.approved_skills?';
   if (!confirm(msg)) return;
   suCall('POST', '/setup/skills/' + encodeURIComponent(name) + '/install', { registry: registry });
+}
+function suSubmitEdit(name, isRemote) {
+  var spec;
+  if (isRemote) {
+    spec = {
+      type: document.getElementById('su-edit-' + name + '-transport').value.trim() || 'http',
+      url: document.getElementById('su-edit-' + name + '-url').value.trim(),
+    };
+  } else {
+    var argsRaw = document.getElementById('su-edit-' + name + '-args').value.trim();
+    spec = {
+      type: 'stdio',
+      command: document.getElementById('su-edit-' + name + '-command').value.trim(),
+      args: argsRaw ? argsRaw.split(/\s+/) : [],
+    };
+  }
+  suCall('POST', '/setup/connectors/' + encodeURIComponent(name), { spec: spec });
+}
+function suShowConfigured(name) {
+  var row = document.getElementById('su-row-cx-' + name);
+  var det = document.getElementById('su-detail-cx-' + name);
+  if (!det) return;
+  det.classList.add('open');
+  if (row) {
+    row.classList.add('open');
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+async function suEnvCheck() {
+  var btn = document.getElementById('su-env-run');
+  btn.disabled = true;
+  var original = btn.textContent;
+  btn.textContent = 'Checking… (runs setup.sh --check server-side, can take a minute)';
+  try {
+    var res = await fetch('/setup/environment/check', { method: 'POST' });
+    var j = await res.json();
+    if (!res.ok) { suToast(j.detail || 'Check failed', true); return; }
+    suToast('Check complete — ' + j.report.counts.ok + ' OK, '
+      + (j.report.counts.warn + j.report.counts.error) + ' warnings/errors.');
+    setTimeout(function () { location.reload(); }, 900);
+  } catch (e) {
+    suToast(String(e), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = original;
+  }
 }
 function suTeamAdd() {
   suCall('POST', '/setup/team/members', {
