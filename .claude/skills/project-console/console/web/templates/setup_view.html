@@ -1,0 +1,696 @@
+{% extends "_base.html" %}
+{% block title %}Setup · {{ config.project_name }}{% endblock %}
+{% block body_class %}setup-body{% endblock %}
+
+{% block head %}
+<style>
+  /* All classes prefixed `su-` to avoid clashing with console.css.
+     Settings-shell layout: inner sidebar + content pane. Every color rides
+     the theme tokens so light/dark packs restyle the page for free. */
+  /* The settings shell earns more width than the default reading column. */
+  .setup-body main { max-width: 1280px; }
+  .su-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0;
+      max-width: 1240px; margin: 0 auto; padding: 8px 4px 48px;
+      min-height: calc(100vh - 160px); }
+
+  /* ---- sidebar ---- */
+  .su-side { border-right: 1px solid var(--border,#2a2f3a); padding: 14px 14px 14px 4px;
+      position: sticky; top: 64px; align-self: start; }
+  .su-side-label { font-size: 11px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--body-text-muted,#8b93a7); margin: 4px 0 10px 10px; }
+  .su-nav { display: flex; flex-direction: column; gap: 2px; }
+  .su-nav a { display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+      border-radius: 8px; font-size: 13.5px; color: var(--body-text,#e6e9ef);
+      text-decoration: none; border: 1px solid transparent; transition: background .12s ease; }
+  .su-nav a:hover { background: var(--surface,#181b22); }
+  .su-nav a.active { background: var(--surface-2,#20242e); border-color: var(--border,#2a2f3a); font-weight: 600; }
+  .su-ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+  .su-nav .su-count { margin-left: auto; font-size: 11px; color: var(--body-text-muted,#8b93a7);
+      font-variant-numeric: tabular-nums; }
+  .su-nav .su-dot { width: 6px; height: 6px; border-radius: 50%; background: #f0a93b;
+      margin-left: 6px; flex: none; }
+  .su-side-foot { margin: 22px 10px 0; font-size: 11px; line-height: 1.6;
+      color: var(--body-text-muted,#8b93a7); }
+  .su-side-foot code { font-size: 10.5px; background: var(--code-bg,#11141a);
+      padding: 0 4px; border-radius: 4px; }
+
+  /* ---- content pane ---- */
+  .su-main { padding: 6px 0 0 28px; min-width: 0; }
+  .su-head { display: flex; align-items: center; gap: 14px; margin: 0 0 4px; }
+  .su-head h1 { margin: 0; font-size: 21px; letter-spacing: -.01em; }
+  .su-search { margin-left: auto; position: relative; }
+  .su-search input { width: 220px; box-sizing: border-box; padding: 6px 10px 6px 30px;
+      font: inherit; font-size: 12.5px; color: var(--body-text,#e6e9ef);
+      background: var(--surface,#181b22); border: 1px solid var(--border,#2a2f3a);
+      border-radius: 8px; outline: none; }
+  .su-search input:focus { border-color: var(--brand-primary,#6ea8fe); }
+  .su-search .su-ico { position: absolute; left: 9px; top: 50%; transform: translateY(-50%);
+      width: 13px; height: 13px; pointer-events: none; color: var(--body-text-muted,#8b93a7); }
+  .su-sub { color: var(--body-text-muted,#8b93a7); font-size: 12.5px; margin: 2px 0 16px; max-width: 84ch; }
+  .su-sec { display: none; }
+  .su-sec.active { display: block; animation: su-in .18s ease; }
+  @keyframes su-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .su-sec.active { animation: none; } }
+
+  .su-banner { background: var(--banner-warning-bg,#3a3320); color: var(--banner-warning-text,#e8d9a0);
+      border: 1px solid var(--border,#2a2f3a); border-radius: 10px; padding: 9px 13px;
+      font-size: 12px; margin: 0 0 16px; }
+  .su-warn { background: var(--surface-muted,#1c202a); border: 1px solid var(--border,#2a2f3a);
+      border-left: 3px solid #e06b6b; border-radius: 8px; padding: 8px 12px; font-size: 12.5px;
+      margin-bottom: 10px; }
+  .su-h2 { font-size: 11.5px; color: var(--body-text-muted,#8b93a7); margin: 22px 0 10px;
+      text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+  .su-h2:first-child { margin-top: 0; }
+
+  /* ---- popular / catalog cards ---- */
+  .su-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .su-add { background: var(--surface,#181b22); border: 1px solid var(--border,#2a2f3a);
+      border-radius: 12px; padding: 13px 15px; transition: border-color .12s ease; }
+  .su-add:hover { border-color: var(--brand-primary,#6ea8fe); }
+  .su-add h3 { margin: 0 0 3px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+  .su-add p { margin: 0 0 10px; font-size: 12px; line-height: 1.45; color: var(--body-text-muted,#8b93a7); }
+  .su-add a { font-size: 11.5px; }
+
+  /* ---- list rows (the reference's table look) ---- */
+  .su-list { border: 1px solid var(--border,#2a2f3a); border-radius: 12px; overflow: hidden;
+      background: var(--surface,#181b22); }
+  .su-cols { display: grid; grid-template-columns: minmax(0,1fr) 130px 170px;
+      padding: 8px 16px; font-size: 11px; font-weight: 600; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--body-text-muted,#8b93a7);
+      border-bottom: 1px solid var(--border,#2a2f3a); background: var(--surface-2,#20242e); }
+  .su-row { display: grid; grid-template-columns: minmax(0,1fr) 130px 170px; align-items: center;
+      padding: 10px 16px; border-bottom: 1px solid var(--border,#2a2f3a); font-size: 13px;
+      transition: background .1s ease; }
+  .su-row:last-child, .su-detail:last-child { border-bottom: none; }
+  .su-row.clickable { cursor: pointer; }
+  .su-row.clickable:hover { background: var(--surface-2,#20242e); }
+  .su-row .su-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .su-row .su-name b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .su-row .su-desc { font-size: 11.5px; color: var(--body-text-muted,#8b93a7);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+  .su-glyph { width: 26px; height: 26px; flex: none; border-radius: 7px;
+      background: var(--surface-2,#20242e); border: 1px solid var(--border,#2a2f3a);
+      display: grid; place-items: center; color: var(--body-text-muted,#8b93a7); }
+  .su-glyph .su-ico { width: 14px; height: 14px; opacity: 1; }
+  .su-type { font-size: 12px; color: var(--body-text-muted,#8b93a7); }
+  .su-type code { background: var(--code-bg,#11141a); color: var(--code-text,#e6e9ef);
+      padding: 1px 6px; border-radius: 5px; font-size: 11px; }
+  .su-status { display: flex; align-items: center; gap: 6px; justify-content: flex-end;
+      font-size: 12px; text-align: right; }
+  .su-ok { color: #4fbf9a; display: inline-flex; align-items: center; gap: 5px; }
+  .su-badge { font-size: 10.5px; padding: 2px 8px; border-radius: 10px;
+      border: 1px solid var(--border,#2a2f3a); color: var(--body-text-muted,#8b93a7);
+      font-weight: 600; letter-spacing: .02em; white-space: nowrap; }
+  .su-badge.warning { color: #f0a93b; border-color: rgba(240,169,59,.45); }
+  .su-badge.info { color: #6ea8fe; border-color: rgba(110,168,254,.4); }
+  .su-chev { width: 13px; height: 13px; margin-left: 8px; transition: transform .15s ease;
+      color: var(--body-text-muted,#8b93a7); flex: none; }
+  .su-row.open .su-chev { transform: rotate(90deg); }
+
+  /* ---- expanded connector detail ---- */
+  .su-detail { display: none; padding: 4px 16px 14px 52px;
+      border-bottom: 1px solid var(--border,#2a2f3a); background: var(--surface-muted,#14171e); }
+  .su-detail.open { display: block; }
+  .su-note { font-size: 12px; color: var(--body-text-muted,#8b93a7); margin: 8px 0 0; }
+  .su-note.flag { color: #f0a93b; }
+  .su-kv { margin: 10px 0 0; font-size: 12.5px; display: grid; grid-template-columns: 84px 1fr; gap: 3px 10px; }
+  .su-kv dt { color: var(--body-text-muted,#8b93a7); }
+  .su-kv dd { margin: 0; overflow-wrap: anywhere; }
+  .su-kv code { background: var(--code-bg,#11141a); color: var(--code-text,#e6e9ef);
+      padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+  .su-envkey { display: inline-block; margin: 0 6px 4px 0; font-size: 11px; padding: 1px 7px;
+      border-radius: 9px; border: 1px solid var(--border,#2a2f3a); }
+  .su-envkey.set { color: #4fbf9a; } .su-envkey.empty { color: #e06b6b; }
+  .su-probe-ok { color: #4fbf9a; } .su-probe-bad { color: #e06b6b; }
+  .su-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .su-btn { background: var(--surface-2,#20242e); color: var(--body-text,#e6e9ef);
+      border: 1px solid var(--border,#2a2f3a); border-radius: 8px; padding: 5px 12px;
+      font: inherit; font-size: 12.5px; cursor: pointer; transition: border-color .1s ease; }
+  .su-btn:hover { border-color: var(--brand-primary,#6ea8fe); }
+  .su-btn.danger:hover { border-color: #e06b6b; color: #e06b6b; }
+  .su-form { display: none; margin-top: 10px; border-top: 1px solid var(--border,#2a2f3a); padding-top: 10px; }
+  .su-form.open { display: block; }
+  .su-form label { display: block; font-size: 11.5px; color: var(--body-text-muted,#8b93a7); margin: 8px 0 3px; }
+  .su-form input { width: 100%; box-sizing: border-box; background: var(--surface-muted,#11141a);
+      color: var(--body-text,#e6e9ef); border: 1px solid var(--border,#2a2f3a); border-radius: 7px;
+      padding: 6px 9px; font-size: 12.5px; font-family: ui-monospace, monospace; }
+
+  /* ---- summary tiles (team & security) ---- */
+  .su-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .su-tile { background: var(--surface,#181b22); border: 1px solid var(--border,#2a2f3a);
+      border-radius: 12px; padding: 12px 15px; }
+  .su-tile .su-tile-n { font-size: 22px; font-weight: 650; letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums; }
+  .su-tile .su-tile-l { font-size: 11.5px; color: var(--body-text-muted,#8b93a7); margin-top: 2px; }
+  .su-chip { display: inline-block; margin: 0 6px 6px 0; font-size: 11.5px; padding: 2px 9px;
+      border-radius: 10px; border: 1px solid var(--border,#2a2f3a);
+      color: var(--body-text,#e6e9ef); background: var(--surface-2,#20242e); }
+
+  .su-empty { padding: 28px 16px; text-align: center; font-size: 12.5px;
+      color: var(--body-text-muted,#8b93a7); }
+  .su-toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      background: var(--surface-2,#20242e); border: 1px solid var(--border,#2a2f3a);
+      color: var(--body-text,#e6e9ef); border-radius: 10px; padding: 10px 16px; font-size: 13px;
+      max-width: 620px; box-shadow: 0 6px 24px rgba(0,0,0,.35); display: none; z-index: 60; }
+  .su-toast.err { border-color: #e06b6b; }
+
+  @media (max-width: 720px) {
+    .su-shell { grid-template-columns: 1fr; }
+    .su-side { position: static; border-right: none; border-bottom: 1px solid var(--border,#2a2f3a);
+        padding: 6px 0 12px; }
+    .su-nav { flex-direction: row; flex-wrap: wrap; }
+    .su-main { padding-left: 0; }
+    .su-cols, .su-row { grid-template-columns: minmax(0,1fr) 150px; }
+    .su-type { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{# Section-local icon sprite (Lucide-adapted, MIT), stroke-based like the topnav set. #}
+<svg width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="su-ic-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/></symbol>
+  <symbol id="su-ic-skill" viewBox="0 0 24 24"><path d="M12 3l1.9 5.7L19.5 10l-5.6 1.3L12 17l-1.9-5.7L4.5 10l5.6-1.3z"/><path d="M19 15l.7 2.1 2.1.7-2.1.7L19 20.6l-.7-2.1-2.1-.7 2.1-.7z"/></symbol>
+  <symbol id="su-ic-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="su-ic-puzzle" viewBox="0 0 24 24"><path d="M14 7V4a1 1 0 0 0-1-1h-3a1 1 0 0 0-1 1v3H6a1 1 0 0 0-1 1v3h2.5a2.5 2.5 0 0 1 0 5H5v3a1 1 0 0 0 1 1h3v-2.5a2.5 2.5 0 0 1 5 0V20h3a1 1 0 0 0 1-1v-3h2.5a2.5 2.5 0 0 0 0-5H18V8a1 1 0 0 0-1-1z"/></symbol>
+  <symbol id="su-ic-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="su-ic-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+  <symbol id="su-ic-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="su-ic-chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="su-ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+</svg>
+
+<div class="su-shell">
+  <aside class="su-side">
+    <div class="su-side-label">Project settings</div>
+    <nav class="su-nav" id="su-nav">
+      <a href="#connectors" data-sec="connectors"><svg class="su-ico"><use href="#su-ic-plug"/></svg>Connectors
+        {% if setup.connectors.connectors | selectattr('status','equalto','warning') | list %}<span class="su-dot" title="unapproved connector"></span>{% endif %}
+        <span class="su-count">{{ setup.connectors.connectors | length }}</span></a>
+      <a href="#skills" data-sec="skills"><svg class="su-ico"><use href="#su-ic-skill"/></svg>Skills
+        {% if setup.skills.counts.warning %}<span class="su-dot" title="unapproved skill"></span>{% endif %}
+        <span class="su-count">{{ setup.skills.counts.total }}</span></a>
+      <a href="#agents" data-sec="agents"><svg class="su-ico"><use href="#su-ic-users"/></svg>Agents
+        {% if setup.agents.counts.warning %}<span class="su-dot" title="unapproved agent"></span>{% endif %}
+        <span class="su-count">{{ setup.agents.counts.total }}</span></a>
+      <a href="#plugins" data-sec="plugins"><svg class="su-ico"><use href="#su-ic-puzzle"/></svg>Plugins
+        <span class="su-count">{{ setup.plugins.counts.total }}</span></a>
+      <a href="#rules" data-sec="rules"><svg class="su-ico"><use href="#su-ic-book"/></svg>Rules &amp; Hooks
+        <span class="su-count">{{ setup.rules_hooks.rules | length + setup.rules_hooks.hooks | length }}</span></a>
+      <a href="#team" data-sec="team"><svg class="su-ico"><use href="#su-ic-shield"/></svg>Team &amp; Security
+        <span class="su-count">{{ setup.team.members | length }}</span></a>
+    </nav>
+    <div class="su-side-foot">
+      Read from <code>project.yml</code>, <code>.mcp.json</code>, and
+      <code>.claude/</code>. Only connectors are editable here — skills and
+      agents are managed by the registry sync tooling.
+    </div>
+  </aside>
+
+  <section class="su-main">
+    {% for w in setup.warnings %}<div class="su-warn">{{ w }}</div>{% endfor %}
+
+    {# ============================ CONNECTORS ============================ #}
+    <section class="su-sec" id="sec-connectors" data-title="Connectors">
+      <div class="su-head">
+        <h1>Connectors</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search connectors…" data-filter="connectors"></div>
+      </div>
+      <p class="su-sub">
+        MCP servers available to Claude Code in this project — merged from
+        <code>{{ setup.connectors.sources.mcp_json }}</code> (definitions) and
+        <code>{{ setup.connectors.sources.project_yml }}</code>
+        <code>security.approved_mcps</code> (the team's allowlist).
+        Environment variable values are never shown or edited here.
+      </p>
+      <div class="su-banner">
+        ⟳ Connector changes take effect at the next Claude Code session start
+        (or via <code>/mcp</code> → Reconnect) — the console edits configuration only;
+        it never launches or stops MCP servers.
+      </div>
+      {% for w in setup.connectors.warnings %}<div class="su-warn">{{ w }}</div>{% endfor %}
+
+      <div class="su-h2">Popular</div>
+      <div class="su-cards">
+        {% for entry in catalog %}
+        <div class="su-add" id="su-add-{{ entry.key }}">
+          <h3><span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>{{ entry.title }}</h3>
+          <p>{{ entry.description }}</p>
+          {% if entry.docs %}<a href="{{ entry.docs }}" target="_blank" rel="noopener">Reference ↗</a>{% endif %}
+          <div class="su-actions">
+            <button class="su-btn" onclick="suToggleForm('{{ entry.key }}')">Configure…</button>
+          </div>
+          <div class="su-form" id="su-form-{{ entry.key }}">
+            {% if entry.spec %}
+            <label>Connector name</label>
+            <input id="su-{{ entry.key }}-name" value="{{ entry.key }}">
+            <label>Command</label>
+            <input id="su-{{ entry.key }}-command" value="{{ entry.spec.command }}">
+            <label>Args (space-separated — quoting is not supported; keep args simple)</label>
+            <input id="su-{{ entry.key }}-args" value="{{ entry.spec.args | join(' ') }}">
+            <div class="su-actions">
+              <button class="su-btn" onclick="suSubmitStdio('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
+            </div>
+            {% elif 'url' in entry.editable %}
+            <label>Connector name</label>
+            <input id="su-{{ entry.key }}-name" placeholder="my-remote-server">
+            <label>URL</label>
+            <input id="su-{{ entry.key }}-url" placeholder="https://example.com/mcp">
+            <label>Transport (http or sse)</label>
+            <input id="su-{{ entry.key }}-transport" value="http">
+            <div class="su-actions">
+              <button class="su-btn" onclick="suSubmitHttp('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
+            </div>
+            {% else %}
+            <label>Connector name</label>
+            <input id="su-{{ entry.key }}-name" placeholder="my-local-server">
+            <label>Command</label>
+            <input id="su-{{ entry.key }}-command" placeholder="./tools/my-server/run.sh">
+            <label>Args (space-separated)</label>
+            <input id="su-{{ entry.key }}-args" placeholder="--flag value">
+            <div class="su-actions">
+              <button class="su-btn" onclick="suSubmitStdio('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="su-h2">Configured</div>
+      {% if setup.connectors.connectors %}
+      <div class="su-list" data-list="connectors">
+        <div class="su-cols"><span>Connector</span><span>Type</span><span style="text-align:right">Status</span></div>
+        {% for c in setup.connectors.connectors %}
+        <div class="su-row clickable" data-search="{{ c.name | lower }}" onclick="suToggleRow('cx-{{ c.name }}')" id="su-row-cx-{{ c.name }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>
+            <b>{{ c.name }}</b>
+          </span>
+          <span class="su-type">{% if c.transport %}<code>{{ c.transport }}</code>{% else %}—{% endif %}</span>
+          <span class="su-status">
+            {% if c.status == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            {% elif c.status == 'warning' %}<span class="su-badge warning">not in allowlist</span>
+            {% else %}<span class="su-badge info">approved · not installed</span>{% endif %}
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg>
+          </span>
+        </div>
+        <div class="su-detail" id="su-detail-cx-{{ c.name }}">
+          {% if c.status_note %}<p class="su-note flag">{{ c.status_note }}</p>{% endif %}
+          {% if c.configured %}
+          <dl class="su-kv">
+            {% if c.spec.command %}<dt>command</dt><dd><code>{{ c.spec.command }}</code></dd>{% endif %}
+            {% if c.spec.args %}<dt>args</dt><dd>{% for a in c.spec.args %}<code>{{ a }}</code> {% endfor %}</dd>{% endif %}
+            {% if c.spec.url %}<dt>url</dt><dd><code>{{ c.spec.url }}</code></dd>{% endif %}
+            {% if c.probe %}<dt>launcher</dt>
+              <dd class="{{ 'su-probe-ok' if c.probe.ok else 'su-probe-bad' }}">
+                {{ '✓' if c.probe.ok else '✗' }} {{ c.probe.detail }}</dd>{% endif %}
+            {% if c.env %}<dt>env</dt><dd>
+              {% for e in c.env %}<span class="su-envkey {{ 'set' if e.set else 'empty' }}">{{ e.key }}{{ ' · set' if e.set else ' · empty' }}</span>{% endfor %}
+            </dd>{% endif %}
+          </dl>
+          {% endif %}
+          <div class="su-actions">
+            {% if not c.approved %}
+            <button class="su-btn" onclick="event.stopPropagation(); suApprove('{{ c.name }}', true)">Add to allowlist</button>
+            {% elif c.configured %}
+            <button class="su-btn" onclick="event.stopPropagation(); suApprove('{{ c.name }}', false)">Remove from allowlist</button>
+            {% endif %}
+            {% if c.configured %}
+            <button class="su-btn danger" onclick="event.stopPropagation(); suRemove('{{ c.name }}')">Remove connector</button>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No connectors configured yet — configure one from the cards above.</div></div>
+      {% endif %}
+    </section>
+
+    {# ============================== SKILLS ============================== #}
+    <section class="su-sec" id="sec-skills" data-title="Skills">
+      <div class="su-head">
+        <h1>Skills</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search skills…" data-filter="skills"></div>
+      </div>
+      <p class="su-sub">
+        Installed skills under <code>.claude/skills/</code> cross-checked against
+        <code>project.yml</code> <code>security.approved_skills</code>. Skills are
+        installed and updated via the registry sync tooling — this view is the
+        team's audit surface, not an installer.
+      </p>
+      {% if setup.skills.rows %}
+      <div class="su-list" data-list="skills">
+        <div class="su-cols"><span>Skill</span><span>Version</span><span style="text-align:right">Status</span></div>
+        {% for s in setup.skills.rows %}
+        <div class="su-row clickable" data-search="{{ s.name | lower }} {{ s.description | lower }}" onclick="suToggleRow('sk-{{ s.name }}')" id="su-row-sk-{{ s.name }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-skill"/></svg></span>
+            <span style="min-width:0">
+              <b>{{ s.name }}</b>{% if s.builtin %} <span class="su-badge">built-in</span>{% endif %}
+              {% if s.description %}<div class="su-desc">{{ s.description }}</div>{% endif %}
+            </span>
+          </span>
+          <span class="su-type">{% if s.version %}<code>v{{ s.version }}</code>{% else %}—{% endif %}</span>
+          <span class="su-status" title="{{ s.status_note }}">
+            {% if s.status == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            {% elif s.status == 'warning' %}<span class="su-badge warning">not in allowlist</span>
+            {% else %}<span class="su-badge info">approved · not installed</span>{% endif %}
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg>
+          </span>
+        </div>
+        <div class="su-detail" id="su-detail-sk-{{ s.name }}">
+          {% if s.status_note %}<p class="su-note flag">{{ s.status_note }}</p>{% endif %}
+          {% if s.full_description %}<p class="su-note" style="color:var(--body-text,#e6e9ef)">{{ s.full_description }}</p>{% endif %}
+          <dl class="su-kv">
+            {% if s.path %}<dt>path</dt><dd><code>{{ s.path }}</code></dd>{% endif %}
+            {% if s.version %}<dt>version</dt><dd><code>{{ s.version }}</code></dd>{% endif %}
+            {% if s.updated %}<dt>updated</dt><dd>{{ s.updated }}</dd>{% endif %}
+            {% if s.files %}<dt>ships</dt><dd>{% for f in s.files %}<code>{{ f }}/</code> {% endfor %}</dd>{% endif %}
+            <dt>approved</dt><dd>{{ '✓ security.approved_skills' if s.approved else ('built-in registry' if s.builtin else '✗ not listed') }}</dd>
+          </dl>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No skills installed.</div></div>
+      {% endif %}
+    </section>
+
+    {# ============================== AGENTS ============================== #}
+    <section class="su-sec" id="sec-agents" data-title="Agents">
+      <div class="su-head">
+        <h1>Agents</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search agents…" data-filter="agents"></div>
+      </div>
+      <p class="su-sub">
+        Subagents installed under <code>.claude/agents/</code> cross-checked against
+        <code>security.approved_agents</code>. The Owner column shows which skill an
+        agent is symlinked from; <code>project</code> means a project-local file.
+      </p>
+      {% if setup.agents.rows %}
+      <div class="su-list" data-list="agents">
+        <div class="su-cols"><span>Agent</span><span>Owner</span><span style="text-align:right">Status</span></div>
+        {% for a in setup.agents.rows %}
+        <div class="su-row clickable" data-search="{{ a.name | lower }} {{ a.description | lower }} {{ a.owner | lower }}" onclick="suToggleRow('ag-{{ a.name }}')" id="su-row-ag-{{ a.name }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-users"/></svg></span>
+            <span style="min-width:0">
+              <b>{{ a.name }}</b>{% if a.source == 'bundled' %} <span class="su-badge">bundled</span>{% endif %}
+              {% if a.description %}<div class="su-desc">{{ a.description }}</div>{% endif %}
+            </span>
+          </span>
+          <span class="su-type">{% if a.owner %}<code>{{ a.owner }}</code>{% else %}—{% endif %}</span>
+          <span class="su-status" title="{{ a.status_note }}">
+            {% if a.status == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            {% elif a.status == 'warning' %}<span class="su-badge warning">not in allowlist</span>
+            {% else %}<span class="su-badge info">approved · not installed</span>{% endif %}
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg>
+          </span>
+        </div>
+        <div class="su-detail" id="su-detail-ag-{{ a.name }}">
+          {% if a.status_note %}<p class="su-note flag">{{ a.status_note }}</p>{% endif %}
+          {% if a.full_description %}<p class="su-note" style="color:var(--body-text,#e6e9ef)">{{ a.full_description }}</p>{% endif %}
+          <dl class="su-kv">
+            {% if a.path %}<dt>path</dt><dd><code>{{ a.path }}</code></dd>{% endif %}
+            {% if a.target %}<dt>links to</dt><dd><code>{{ a.target }}</code></dd>{% endif %}
+            {% if a.source %}<dt>source</dt><dd>{{ 'registered top-level (.claude/agents/)' if a.source == 'installed' else 'bundled inside its skill — spawned by the skill, not registered top-level' }}</dd>{% endif %}
+            {% if a.model %}<dt>model</dt><dd><code>{{ a.model }}</code></dd>{% endif %}
+            {% if a.tools %}<dt>tools</dt><dd>{{ a.tools }}</dd>{% endif %}
+            <dt>approved</dt><dd>{% if a.approved %}✓ security.approved_agents{% elif a.get('approved_via') == 'skill' %}✓ via the owning skill ({{ a.owner }} in security.approved_skills){% else %}✗ not listed{% endif %}</dd>
+          </dl>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No agents installed.</div></div>
+      {% endif %}
+    </section>
+
+    {# ============================== PLUGINS ============================= #}
+    <section class="su-sec" id="sec-plugins" data-title="Plugins">
+      <div class="su-head">
+        <h1>Plugins</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search plugins…" data-filter="plugins"></div>
+      </div>
+      <p class="su-sub">
+        The team's plugin allowlist from <code>security.approved_plugins</code>.
+        Plugin installs live in each contributor's Claude Code environment, so this
+        section shows the approved set — an empty list means the team has approved
+        no plugins, which is itself part of the security posture.
+      </p>
+      {% if setup.plugins.rows %}
+      <div class="su-list" data-list="plugins">
+        <div class="su-cols"><span>Plugin</span><span></span><span style="text-align:right">Status</span></div>
+        {% for p in setup.plugins.rows %}
+        <div class="su-row" data-search="{{ p.name | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-puzzle"/></svg></span>
+            <b>{{ p.name }}</b>
+          </span>
+          <span class="su-type"></span>
+          <span class="su-status"><span class="su-badge info">approved</span></span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No plugins approved — the allowlist is intentionally empty.</div></div>
+      {% endif %}
+    </section>
+
+    {# =========================== RULES & HOOKS =========================== #}
+    <section class="su-sec" id="sec-rules" data-title="Rules & Hooks">
+      <div class="su-head">
+        <h1>Rules &amp; Hooks</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search rules &amp; hooks…" data-filter="rules"></div>
+      </div>
+      <p class="su-sub">
+        Auto-loaded session rules (<code>.claude/rules/</code>) and hooks registered in
+        <code>.claude/settings.json</code>. The Owner column shows the skill a rule is
+        symlinked from — rules and hooks travel with their owning skill on registry sync.
+      </p>
+      <div class="su-h2">Rules — loaded into every session</div>
+      {% if setup.rules_hooks.rules %}
+      <div class="su-list" data-list="rules">
+        <div class="su-cols"><span>Rule</span><span>Owner</span><span></span></div>
+        {% for r in setup.rules_hooks.rules %}
+        <div class="su-row clickable" data-search="{{ r.name | lower }} {{ r.owner | lower }}" onclick="suToggleRow('ru-{{ r.name }}')" id="su-row-ru-{{ r.name }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-book"/></svg></span>
+            <span style="min-width:0">
+              <b>{{ r.name }}</b>
+              {% if r.title %}<div class="su-desc">{{ r.title }}</div>{% endif %}
+            </span>
+          </span>
+          <span class="su-type"><code>{{ r.owner }}</code></span>
+          <span class="su-status"><span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
+        </div>
+        <div class="su-detail" id="su-detail-ru-{{ r.name }}">
+          {% if r.summary %}<p class="su-note" style="color:var(--body-text,#e6e9ef)">{{ r.summary }}</p>{% endif %}
+          <dl class="su-kv">
+            <dt>path</dt><dd><code>{{ r.path }}</code></dd>
+            {% if r.target %}<dt>links to</dt><dd><code>{{ r.target }}</code> (owned by the <code>{{ r.owner }}</code> skill — updates on registry sync)</dd>
+            {% else %}<dt>source</dt><dd>project-authored rule (not registry-synced)</dd>{% endif %}
+          </dl>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No auto-loaded rules found.</div></div>
+      {% endif %}
+
+      <div class="su-h2">Hooks — registered in settings.json</div>
+      {% if setup.rules_hooks.hooks %}
+      <div class="su-list" data-list="rules">
+        <div class="su-cols"><span>Hook</span><span>Event</span><span style="text-align:right">Matcher</span></div>
+        {% for h in setup.rules_hooks.hooks %}
+        <div class="su-row clickable" data-search="{{ h.command | lower }} {{ h.event | lower }}" onclick="suToggleRow('hk-{{ loop.index }}')" id="su-row-hk-{{ loop.index }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>
+            <b>{{ h.command }}</b>
+          </span>
+          <span class="su-type"><code>{{ h.event }}</code></span>
+          <span class="su-status"><span class="su-type">{{ h.matcher or '·' }}</span>
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
+        </div>
+        <div class="su-detail" id="su-detail-hk-{{ loop.index }}">
+          <dl class="su-kv">
+            <dt>command</dt><dd><code>{{ h.command_full }}</code></dd>
+            <dt>event</dt><dd><code>{{ h.event }}</code>{% if h.matcher %} — fires on tools matching <code>{{ h.matcher }}</code>{% else %} — no matcher (fires on every {{ h.event }} event){% endif %}</dd>
+          </dl>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No hooks registered.</div></div>
+      {% endif %}
+    </section>
+
+    {# =========================== TEAM & SECURITY ========================== #}
+    <section class="su-sec" id="sec-team" data-title="Team & Security">
+      <div class="su-head">
+        <h1>Team &amp; Security</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search team…" data-filter="team"></div>
+      </div>
+      <p class="su-sub">
+        The roster and security posture declared in <code>project.yml</code> — the
+        single source of truth the posture check audits against. Roster changes and
+        attestations are made through the project's onboarding flow, not here.
+      </p>
+
+      <div class="su-h2">Posture at a glance</div>
+      <div class="su-tiles">
+        <div class="su-tile"><div class="su-tile-n">{{ setup.team.members | length }}</div>
+          <div class="su-tile-l">active team member{{ 's' if setup.team.members|length != 1 }}{% if setup.team.inactive_count %} · {{ setup.team.inactive_count }} inactive{% endif %}</div></div>
+        {% for key, n in setup.team.allowlist_counts.items() %}
+        <div class="su-tile"><div class="su-tile-n">{{ n }}</div>
+          <div class="su-tile-l">approved {{ key }}</div></div>
+        {% endfor %}
+      </div>
+
+      <div class="su-h2">Approved email domains</div>
+      <div>{% for d in setup.team.email_domains %}<span class="su-chip">@{{ d }}</span>{% else %}<span class="su-note">none declared</span>{% endfor %}</div>
+
+      <div class="su-h2">Team roster</div>
+      {% if setup.team.members %}
+      <div class="su-list" data-list="team">
+        <div class="su-cols"><span>Member</span><span>GitHub</span><span style="text-align:right">Role</span></div>
+        {% for m in setup.team.members %}
+        <div class="su-row" data-search="{{ m.name | lower }} {{ m.role | lower }} {{ m.github | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-users"/></svg></span>
+            <b>{{ m.name }}</b>
+          </span>
+          <span class="su-type"><code>{{ m.github }}</code></span>
+          <span class="su-status"><span class="su-type">{{ m.role }}</span></span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="su-h2">Skill registries</div>
+      {% if setup.team.registries %}
+      <div class="su-list" data-list="team">
+        <div class="su-cols"><span>Registry</span><span>Type</span><span style="text-align:right">Skills</span></div>
+        {% for r in setup.team.registries %}
+        <div class="su-row" data-search="{{ r.name | lower }} {{ r.repo | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-book"/></svg></span>
+            <span style="min-width:0"><b>{{ r.name }}</b>
+              {% if r.repo %}<div class="su-desc">{{ r.repo }}</div>{% endif %}</span>
+          </span>
+          <span class="su-type"><code>{{ r.type }}</code></span>
+          <span class="su-status"><span class="su-type">{{ r.skills }}</span></span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+  </section>
+</div>
+
+<div class="su-toast" id="su-toast"></div>
+
+<script>
+/* ---- section (hash) routing ---- */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('#su-nav a'));
+  function show(sec) {
+    document.querySelectorAll('.su-sec').forEach(function (el) {
+      el.classList.toggle('active', el.id === 'sec-' + sec);
+    });
+    links.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('data-sec') === sec);
+    });
+  }
+  function fromHash() {
+    var sec = (location.hash || '#connectors').slice(1);
+    if (!document.getElementById('sec-' + sec)) sec = 'connectors';
+    show(sec);
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+
+/* ---- per-section search filter ---- */
+document.querySelectorAll('.su-search input').forEach(function (input) {
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase();
+    var sec = input.closest('.su-sec');
+    sec.querySelectorAll('.su-row[data-search]').forEach(function (row) {
+      var hit = !q || row.getAttribute('data-search').indexOf(q) !== -1;
+      row.style.display = hit ? '' : 'none';
+      var det = row.nextElementSibling;
+      if (det && det.classList.contains('su-detail') && !hit) det.classList.remove('open');
+    });
+  });
+});
+
+/* ---- connector row expand ---- */
+function suToggleRow(name) {
+  var row = document.getElementById('su-row-' + name);
+  var det = document.getElementById('su-detail-' + name);
+  if (!det) return;
+  det.classList.toggle('open');
+  if (row) row.classList.toggle('open', det.classList.contains('open'));
+}
+
+/* ---- toasts + write paths (config-edit only; servers are never launched) ---- */
+function suToast(msg, isErr) {
+  var t = document.getElementById('su-toast');
+  t.textContent = msg;
+  t.className = 'su-toast' + (isErr ? ' err' : '');
+  t.style.display = 'block';
+  clearTimeout(t._h);
+  t._h = setTimeout(function () { t.style.display = 'none'; }, 6000);
+}
+function suToggleForm(key) {
+  document.getElementById('su-form-' + key).classList.toggle('open');
+}
+async function suCall(method, url, body) {
+  try {
+    var res = await fetch(url, {
+      method: method,
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    var j = await res.json();
+    if (!res.ok) { suToast(j.detail || 'Request failed', true); return false; }
+    suToast(j.note || 'Saved.');
+    setTimeout(function () { location.reload(); }, 900);
+    return true;
+  } catch (e) { suToast(String(e), true); return false; }
+}
+function suApprove(name, approved) {
+  suCall('POST', '/setup/connectors/' + encodeURIComponent(name) + '/approval', { approved: approved });
+}
+function suRemove(name) {
+  if (!confirm('Remove connector "' + name + '" from .mcp.json? A timestamped backup is kept under tools/project-console/.data/setup-backups/.')) return;
+  suCall('DELETE', '/setup/connectors/' + encodeURIComponent(name));
+}
+function suSubmitStdio(key) {
+  var name = document.getElementById('su-' + key + '-name').value.trim();
+  var command = document.getElementById('su-' + key + '-command').value.trim();
+  var argsRaw = document.getElementById('su-' + key + '-args').value.trim();
+  var args = argsRaw ? argsRaw.split(/\s+/) : [];
+  suCall('POST', '/setup/connectors/' + encodeURIComponent(name),
+    { spec: { type: 'stdio', command: command, args: args } });
+}
+function suSubmitHttp(key) {
+  var name = document.getElementById('su-' + key + '-name').value.trim();
+  var url = document.getElementById('su-' + key + '-url').value.trim();
+  var transport = document.getElementById('su-' + key + '-transport').value.trim() || 'http';
+  suCall('POST', '/setup/connectors/' + encodeURIComponent(name),
+    { spec: { type: transport, url: url } });
+}
+</script>
+{% endblock %}

@@ -292,6 +292,20 @@ security:
   - file-locator
   approved_plugins: []
   approved_agents:
+  - advisors/agents/advisor-researcher
+  - advisors/agents/clinical-affairs
+  - advisors/agents/core-team-panel
+  - advisors/agents/cybersecurity
+  - advisors/agents/design-review-panel
+  - advisors/agents/human-factors
+  - advisors/agents/post-market
+  - advisors/agents/program-manager
+  - advisors/agents/quality-engineering
+  - advisors/agents/rd-lead
+  - advisors/agents/regulatory-affairs
+  - advisors/agents/risk-management
+  - advisors/agents/systems-engineering
+  - advisors/agents/vnv-lead
   - dhf-manifest/agents/tier1-enricher
   - dhf-manifest/agents/tier1-restructure
   - project-secops

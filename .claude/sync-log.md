@@ -10,8 +10,10 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Branch: `sync/pdlc-demo-submissions-version-2026-07-14`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/266
 - Commit: "submissions: bump VERSION file 5 -> 6 to match SKILL.md frontmatter"
-- Status: awaiting review
-- Rationale: upstream PR #264 delivered submissions v6 (README changelog row + SKILL.md frontmatter `version: 6`) but never bumped the `VERSION` file (last touched by #262 at `5`). Local copy fixed to `6` in the same session (task ben/101).
+- Status: merged (2026-07-14 20:58 UTC, outside the skill — PR-only push, merged upstream shortly after)
+- Merge commit: `67b7fbe`
+- Hitachi HEAD after sync: `bd09efa` (includes #266; #260 merged after it — PR numbers ≠ merge order)
+- Rationale: upstream PR #264 delivered submissions v6 (README changelog row + SKILL.md frontmatter `version: 6`) but never bumped the `VERSION` file (last touched by #262 at `5`). Local copy fixed to `6` in the same session (task ben/101). Post-merge `check`: 0 drift rows.
 
 ## 2026-07-14 — pull
 
