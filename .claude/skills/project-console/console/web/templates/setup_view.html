@@ -131,6 +131,7 @@
       border: 1px solid var(--border,#2a2f3a); border-radius: 8px; padding: 5px 12px;
       font: inherit; font-size: 12.5px; cursor: pointer; transition: border-color .1s ease; }
   .su-btn:hover { border-color: var(--brand-primary,#6ea8fe); }
+  .su-btn:disabled { opacity: .55; cursor: progress; }
   .su-btn.danger:hover { border-color: #e06b6b; color: #e06b6b; }
   .su-form { display: none; margin-top: 10px; border-top: 1px solid var(--border,#2a2f3a); padding-top: 10px; }
   .su-form.open { display: block; }
@@ -603,19 +604,24 @@
       <div class="su-list" data-list="rules">
         <div class="su-cols"><span>Hook</span><span>Event</span><span style="text-align:right">Matcher</span></div>
         {% for h in setup.rules_hooks.hooks %}
-        <div class="su-row clickable" data-search="{{ h.command | lower }} {{ h.event | lower }}" onclick="suToggleRow('hk-{{ loop.index }}')" id="su-row-hk-{{ loop.index }}">
+        <div class="su-row clickable" data-search="{{ h.command | lower }} {{ h.event | lower }} {{ h.description | lower }} {{ h.owner | lower }}" onclick="suToggleRow('hk-{{ loop.index }}')" id="su-row-hk-{{ loop.index }}">
           <span class="su-name">
             <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>
-            <b>{{ h.command }}</b>
+            <span style="min-width:0">
+              <b>{{ h.command }}</b>
+              {% if h.description %}<div class="su-desc">{{ h.description }}</div>{% endif %}
+            </span>
           </span>
           <span class="su-type"><code>{{ h.event }}</code></span>
           <span class="su-status"><span class="su-type">{{ h.matcher or '·' }}</span>
             <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
         </div>
         <div class="su-detail" id="su-detail-hk-{{ loop.index }}">
+          {% if h.full_description %}<p class="su-note" style="color:var(--body-text,#e6e9ef)">{{ h.full_description }}</p>{% endif %}
           <dl class="su-kv">
             <dt>command</dt><dd><code>{{ h.command_full }}</code></dd>
             <dt>event</dt><dd><code>{{ h.event }}</code>{% if h.matcher %} — fires on tools matching <code>{{ h.matcher }}</code>{% else %} — no matcher (fires on every {{ h.event }} event){% endif %}</dd>
+            <dt>owner</dt><dd>{% if h.owner != 'project' %}<code>{{ h.owner }}</code> skill (the script header is the description of record){% else %}project-authored{% endif %}</dd>
           </dl>
         </div>
         {% endfor %}
@@ -627,7 +633,7 @@
       <div class="su-h2">GitHub workflows — repo automation (CI)</div>
       {% if setup.workflows.rows %}
       <div class="su-list" data-list="rules">
-        <div class="su-cols"><span>Workflow</span><span>Owner</span><span style="text-align:right">Triggers</span></div>
+        <div class="su-cols"><span>Workflow</span><span>Owner</span><span style="text-align:right">Jobs</span></div>
         {% for w in setup.workflows.rows %}
         <div class="su-row clickable" data-search="{{ w.name | lower }} {{ w.file | lower }} {{ w.owner | lower }} {{ w.triggers | join(' ') | lower }}" onclick="suToggleRow('wf-{{ loop.index }}')" id="su-row-wf-{{ loop.index }}">
           <span class="su-name">
@@ -638,7 +644,7 @@
             </span>
           </span>
           <span class="su-type"><code>{{ w.owner }}</code></span>
-          <span class="su-status"><span class="su-type">{{ w.triggers | join(' · ') }}</span>
+          <span class="su-status"><span class="su-type">{% for j in w.jobs %}<code>{{ j }}</code>{{ ' ' if not loop.last }}{% else %}—{% endfor %}</span>
             <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
         </div>
         <div class="su-detail" id="su-detail-wf-{{ loop.index }}">
@@ -666,17 +672,27 @@
       </div>
       <p class="su-sub">
         Skill registries configured in <code>project.yml</code> <code>registries[]</code>,
-        and each registry's catalog compared against the local install. Adding a new skill
-        copies it from the registry's local clone and allowlists it in the same operation;
-        Update appears only when the registry version is strictly newer. Locally-newer
-        skills are push candidates and never get a downgrade button — reconciliation
-        stays with the registry sync tooling.
+        and each registry's catalog compared against the local install. The catalog is
+        fetched <b>directly from GitHub</b> (read access is enough — no clone, no sync
+        tooling required) and cached; a local clone is used only as a fallback before the
+        first fetch. Adding a skill downloads it from the registry (clone when present,
+        GitHub tarball otherwise) and allowlists it in the same operation; Update appears
+        only when the registry version is strictly newer. Locally-newer skills are push
+        candidates and never get a downgrade button.
       </p>
       {% for reg in setup.registries.registries %}
       <div class="su-h2">{{ reg.name }}{% if reg.type %} · {{ reg.type }}{% endif %}{% if reg.repo %} · {{ reg.repo }}{% endif %}</div>
       {% if reg.description %}<p class="su-sub" style="margin-top:-4px">{{ reg.description }}</p>{% endif %}
+      {% if reg.type != 'builtin' and reg.repo %}
+      <div class="su-actions" style="margin:0 0 10px">
+        <button class="su-btn" onclick="suRegistryRefresh('{{ reg.name }}', this)">Refresh from GitHub</button>
+        {% if reg.source == 'github' %}<span class="su-note" style="margin:0">catalog fetched {{ reg.fetched_at[:16] | replace('T', ' ') }} UTC</span>
+        {% elif reg.source == 'clone' %}<span class="su-note" style="margin:0">showing the local clone at <code>{{ reg.local_path }}</code> — Refresh switches to reading GitHub directly</span>
+        {% endif %}
+      </div>
+      {% endif %}
       {% if reg.type != 'builtin' and not reg.reachable %}
-      <div class="su-warn">{% if reg.local_path %}Local clone not found at <code>{{ reg.local_path }}</code> — pull the registry clone to browse and install its skills.{% else %}No <code>local_path</code> configured for this registry — add one in <code>project.yml</code> to browse and install its skills.{% endif %}</div>
+      <div class="su-warn">No catalog yet — click <b>Refresh from GitHub</b> above (needs the <code>gh</code> CLI authenticated; read access to <code>{{ reg.repo or 'the registry repo' }}</code> is enough).</div>
       {% elif reg.skills %}
       <div class="su-list" data-list="registries">
         <div class="su-cols"><span>Skill</span><span>Version</span><span style="text-align:right">Status</span></div>
@@ -697,8 +713,8 @@
             {% if s.status == 'builtin' %}<span class="su-badge">built-in</span>
             {% elif s.status == 'current' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> up to date</span>
             {% elif s.status == 'local-ahead' %}<span class="su-badge info">local ahead — push candidate</span>
-            {% elif s.status == 'update' %}<button class="su-btn" onclick="suInstall('{{ s.name }}', '{{ reg.name }}', true)">Update to v{{ s.registry_version }}</button>
-            {% else %}<button class="su-btn" onclick="suInstall('{{ s.name }}', '{{ reg.name }}', false)">Add</button>{% endif %}
+            {% elif s.status == 'update' %}<button class="su-btn" onclick="suInstall('{{ s.name }}', '{{ reg.name }}', true, this)">Update to v{{ s.registry_version }}</button>
+            {% else %}<button class="su-btn" onclick="suInstall('{{ s.name }}', '{{ reg.name }}', false, this)">Add</button>{% endif %}
           </span>
         </div>
         {% endfor %}
@@ -978,12 +994,26 @@ function suSubmitStdio(key) {
   suCall('POST', '/setup/connectors/' + encodeURIComponent(name),
     { spec: { type: 'stdio', command: command, args: args } });
 }
-function suInstall(name, registry, isUpdate) {
+async function suBusyCall(btn, busyText, method, url, body) {
+  var original = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = busyText; }
+  try {
+    await suCall(method, url, body);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = original; }
+  }
+}
+function suRegistryRefresh(name, btn) {
+  suBusyCall(btn, 'Fetching catalog from GitHub… (can take ~15s)',
+    'POST', '/setup/registries/' + encodeURIComponent(name) + '/refresh');
+}
+function suInstall(name, registry, isUpdate, btn) {
   var msg = isUpdate
     ? 'Update skill "' + name + '" from registry "' + registry + '"? The current copy is backed up under tools/project-console/.data/setup-backups/ and replaced wholesale.'
     : 'Install skill "' + name + '" from registry "' + registry + '" and add it to security.approved_skills?';
   if (!confirm(msg)) return;
-  suCall('POST', '/setup/skills/' + encodeURIComponent(name) + '/install', { registry: registry });
+  suBusyCall(btn, (isUpdate ? 'Updating…' : 'Installing…') + ' (downloads from GitHub when no local clone)',
+    'POST', '/setup/skills/' + encodeURIComponent(name) + '/install', { registry: registry });
 }
 function suSubmitEdit(name, isRemote) {
   var spec;
