@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-15 — push (second of the day)
+
+- Files (10): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{envcheck.py (new), loader.py, router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_envcheck.py (new), test_setup_team_writer.py}`
+- Branch: `sync/pdlc-demo-project-console-137-2026-07-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/272
+- Commit: "project-console 1.36.0/1.37.0: connectors polish + Environment section"
+- Status: merged (user requested sync; squash)
+- Merge commit: `6a316a6`
+- Hitachi HEAD after sync: `6a316a6` (clone ff'd, sync branch deleted local+remote)
+- Post-check: 0 project-console drift rows — lockstep at 1.37.0. Note: project-local companions (setup.sh check improvements, setup.md, CLAUDE.md policy) stay in the project repo — they are not registry artifacts.
+
+---
+
 ## 2026-07-15 — push
 
 - Files (12): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{catalog.py, loader.py, router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_agents_loader.py, test_setup_cli_catalog.py, test_setup_team_writer.py, test_tracker_workflow_e2e.py}`
