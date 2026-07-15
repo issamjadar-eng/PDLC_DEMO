@@ -1,7 +1,14 @@
-"""End-to-end integration test for the B4 tracker-status-update workflow
-(task ben/154 P7). Exercises the full path: bootstrap session →
+"""End-to-end integration test for the tracker-status-update workflow.
+Exercises the full path: bootstrap session →
 3 status changes → snapshot shows pending → commit_and_merge → verify
-md committed + task Complete + worktree torn down.
+overlay committed + task Complete + worktree torn down.
+
+Encodes the overlay-first write contract: `write_status_change` records the
+change in `submission-tracker.human.json` and leaves the md generator-owned
+(untouched); the renderer merges the overlay at render time. Statuses use
+the canonical 7-state lifecycle vocabulary (tracker_writer VALID_STATUSES) —
+the write path deliberately rejects legacy aliases like "Done"/"In Progress";
+only the tracker renderer coerces those at parse time.
 
 Self-contained: builds a temp git repo with a minimal tracker md + tasks
 folder; uses stdlib unittest (no pytest required). Skips when git is
@@ -14,6 +21,7 @@ Run:
 
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -106,9 +114,9 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
         # 4. Three status changes (skip HTML regen — no /tracker render
         #    script in the test repo)
         for row_id, new_status, rationale in [
-            ("PA1", "Done", "draft signed off"),
-            ("PA2", "In Progress", None),
-            ("PA3", "Partial", "needs legal review"),
+            ("PA1", "Approved", "draft signed off"),
+            ("PA2", "Drafting", None),
+            ("PA3", "In Review", "needs legal review"),
         ]:
             result = tw.write_status_change(
                 wt=wt,
@@ -121,15 +129,23 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
             )
             self.assertEqual(result["row_id"], row_id)
             self.assertEqual(result["new_status"], new_status)
+            self.assertEqual(result["old_status"], "Not Started")  # md baseline
             self.assertTrue(result["written"])
             self.assertTrue(result["changelog_appended"])
 
-        # 5. Worktree md now reflects the changes
+        # 5. Worktree overlay sidecar carries the changes; the md stays
+        #    generator-owned and untouched (overlay-first contract).
+        overlay = json.loads(
+            (wt / tw.TRACKER_HUMAN_SIDECAR_REL).read_text(encoding="utf-8")
+        )
+        self.assertEqual(overlay["rows"]["PA1"]["status"], "Approved")
+        self.assertEqual(overlay["rows"]["PA2"]["status"], "Drafting")
+        self.assertEqual(overlay["rows"]["PA3"]["status"], "In Review")
+        self.assertEqual(overlay["rows"]["PA3"]["notes"], "needs legal review")
         wt_md = (wt / ts.TRACKER_MD_REL).read_text(encoding="utf-8")
         self.assertIn("| PA1 | Cover Letter |", wt_md)
-        self.assertIn("**Done**", wt_md)
-        self.assertIn("**In Progress**", wt_md)
-        self.assertIn("**Partial**", wt_md)
+        self.assertNotIn("**Approved**", wt_md)
+        self.assertEqual(wt_md.count("**Not Started**"), 3)
 
         # 6. Pending-changes parser sees all 3
         pending = tw.parse_pending_changes(task_path)
@@ -137,13 +153,16 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
         ids = sorted(p["row_id"] for p in pending)
         self.assertEqual(ids, ["PA1", "PA2", "PA3"])
 
-        # 7. snapshot now shows has_diff (md mutated; task doc lives in
-        #    main repo by design — the commit only captures regulated md
-        #    changes, the task-doc changelog stays in main)
+        # 7. snapshot now shows has_diff (overlay sidecar added in the
+        #    worktree; task doc lives in main repo by design — the commit
+        #    only captures regulated tracker changes, the task-doc changelog
+        #    stays in main)
         sess = ts.snapshot(self.repo, actor_folder, "status")
         self.assertTrue(sess.has_diff)
         self.assertGreaterEqual(len(sess.diff_summary), 1)
-        self.assertTrue(any(ts.TRACKER_MD_REL in line for line in sess.diff_summary))
+        self.assertTrue(
+            any(tw.TRACKER_HUMAN_SIDECAR_REL in line for line in sess.diff_summary)
+        )
 
         # 8. commit_and_merge — push step is best-effort and will fail
         #    silently (no remote); merge into main should succeed.
@@ -155,10 +174,14 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
         self.assertIn("commit_sha", result)
 
         # 9. Verify post-conditions:
-        #    a) main has the tracker md changes
+        #    a) main has the overlay changes; the md is still generator-owned
+        overlay_main = json.loads(
+            (self.repo / tw.TRACKER_HUMAN_SIDECAR_REL).read_text(encoding="utf-8")
+        )
+        self.assertEqual(overlay_main["rows"]["PA1"]["status"], "Approved")
+        self.assertEqual(overlay_main["rows"]["PA3"]["status"], "In Review")
         main_md = (self.repo / ts.TRACKER_MD_REL).read_text(encoding="utf-8")
-        self.assertIn("**Done**", main_md)
-        self.assertIn("**Partial**", main_md)
+        self.assertEqual(main_md.count("**Not Started**"), 3)
         #    b) Worktree directory removed
         self.assertFalse((wt / ".git").exists())
         #    c) Branch deleted
@@ -185,14 +208,15 @@ class TestTrackerStatusWorkflowE2E(unittest.TestCase):
             self.repo, actor_folder, actor_name, "status"
         )
         tw.write_status_change(
-            wt=wt, row_id="PA1", new_status="Done",
+            wt=wt, row_id="PA1", new_status="Approved",
             rationale=None, actor=actor_name,
             task_path=task_path, repo_root=self.repo,
         )
         result = ts.cancel_workflow(self.repo, actor_folder, "status")
         self.assertEqual(result["status"], "cancelled")
         self.assertFalse((wt / ".git").exists())
-        # Main md unchanged (cancel doesn't write to main)
+        # Main untouched (cancel discards the worktree's overlay + everything else)
+        self.assertFalse((self.repo / tw.TRACKER_HUMAN_SIDECAR_REL).is_file())
         main_md = (self.repo / ts.TRACKER_MD_REL).read_text(encoding="utf-8")
         self.assertIn("PA1 | Cover Letter | (submission) | 510k+PCCP | 21 CFR 807.87 | Low | **Not Started**", main_md)
         # Task flipped to Abandoned
