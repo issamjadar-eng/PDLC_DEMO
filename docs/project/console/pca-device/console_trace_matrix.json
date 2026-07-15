@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "dhf": "pca-device",
-  "generated_at": "2026-05-12T19:12:53Z",
+  "generated_at": "2026-07-14T21:20:08Z",
   "layers": [
     {
       "key": "user_needs",
@@ -781,6 +781,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-001",
+              "summary": "Over-infusion — pump mechanism/motor runaway (Operational)"
+            },
+            {
               "id": "SW-001",
               "summary": "The pump-motor control firmware shall maintain commanded flow rate within ±5% (or ±0.5…"
             },
@@ -865,6 +869,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-014",
+              "summary": "PCA-by-proxy — bolus activation by someone other than the patient (Operational —…"
+            },
+            {
               "id": "SW-003",
               "summary": "The lockout-interval state machine shall block any patient-requested bolus while the…"
             },
@@ -902,6 +910,18 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-001",
+              "summary": "Over-infusion — pump mechanism/motor runaway (Operational)"
+            },
+            {
+              "id": "HAZ-002",
+              "summary": "Over-infusion — programming error, decimal-point misread (Operational / use-related)"
+            },
+            {
+              "id": "HAZ-014",
+              "summary": "PCA-by-proxy — bolus activation by someone other than the patient (Operational —…"
+            },
             {
               "id": "SW-004",
               "summary": "The cumulative-dose tracker shall maintain rolling 1-hour and 4-hour delivered-volume…"
@@ -944,6 +964,14 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-002",
+              "summary": "Over-infusion — programming error, decimal-point misread (Operational / use-related)"
+            },
+            {
+              "id": "HAZ-003",
+              "summary": "Wrong drug / wrong concentration administered (Operational)"
+            },
             {
               "id": "SW-005",
               "summary": "The therapy-parameter validator shall reject programming submissions whose rate, bolus,…"
@@ -991,6 +1019,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-003",
+              "summary": "Wrong drug / wrong concentration administered (Operational)"
+            },
+            {
               "id": "SW-007",
               "summary": "The drug-library loader shall accept signed library packages (≥200 medications), validate…"
             }
@@ -1024,6 +1056,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-003",
+              "summary": "Wrong drug / wrong concentration administered (Operational)"
+            },
             {
               "id": "SW-008",
               "summary": "The barcode-scan handler shall capture 1D/2D barcodes from the integrated scanner, parse…"
@@ -1059,6 +1095,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-006",
+              "summary": "Undetected downstream occlusion — therapy interruption + post-occlusion bolus…"
+            },
+            {
               "id": "SW-009",
               "summary": "The occlusion-detection routine shall sample downstream-pressure sensor output at ≥10 Hz,…"
             }
@@ -1093,6 +1133,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-005",
+              "summary": "Air embolism — air-in-line infused (Operational)"
+            },
+            {
               "id": "SW-010",
               "summary": "The air-in-line detection algorithm shall identify single bubbles ≥50 µL and accumulated…"
             }
@@ -1126,6 +1170,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-001",
+              "summary": "Over-infusion — pump mechanism/motor runaway (Operational)"
+            },
             {
               "id": "SW-011",
               "summary": "The over-infusion detector shall compute the difference between commanded delivered…"
@@ -1165,6 +1213,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-008",
+              "summary": "Alarm failure — not annunciated or not heard (Information)"
+            },
+            {
               "id": "SW-012",
               "summary": "The alarm-priority engine shall route alarm events to the audio driver with IEC…"
             }
@@ -1199,6 +1251,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-004",
+              "summary": "Free-flow delivery with administration set removed (Operational)"
+            },
+            {
               "id": "SW-013",
               "summary": "The door-state monitor shall sample the cassette-door sensor at ≥10 Hz, halt the motor…"
             }
@@ -1232,6 +1288,18 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-008",
+              "summary": "Alarm failure — not annunciated or not heard (Information)"
+            },
+            {
+              "id": "HAZ-009",
+              "summary": "Electrical shock (Energy)"
+            },
+            {
+              "id": "HAZ-016",
+              "summary": "Mechanical failure — drop or mount detachment during transport (Energy — mechanical)"
+            },
             {
               "id": "SW-014",
               "summary": "The power-on self-test shall validate motor encoder, pressure sensor, air-in-line sensor,…"
@@ -1269,7 +1337,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-011",
+              "summary": "Biological contamination / material incompatibility — fluid path and patient-contact…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-015",
@@ -1298,7 +1371,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-010",
+              "summary": "EMC disturbance disrupting delivery (Energy — electromagnetic)"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-018",
@@ -1328,6 +1406,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-002",
+              "summary": "Over-infusion — programming error, decimal-point misread (Operational / use-related)"
+            },
             {
               "id": "SW-015",
               "summary": "The numeric-entry widget shall render every entered value with an unambiguous decimal…"
@@ -1401,6 +1483,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-002",
+              "summary": "Over-infusion — programming error, decimal-point misread (Operational / use-related)"
+            },
+            {
               "id": "SW-016",
               "summary": "The programming task-flow state machine shall guide the operator through load-library →…"
             }
@@ -1434,6 +1520,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-007",
+              "summary": "Therapy interruption — battery depletion / power loss (Energy)"
+            },
             {
               "id": "SW-017",
               "summary": "The home-screen renderer shall display active therapy parameters, current alarm state (if…"
@@ -1473,6 +1563,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-007",
+              "summary": "Therapy interruption — battery depletion / power loss (Energy)"
+            },
+            {
               "id": "SW-019",
               "summary": "The battery state-of-charge estimator shall maintain SoC within ±5% of coulomb-counted…"
             }
@@ -1507,6 +1601,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-007",
+              "summary": "Therapy interruption — battery depletion / power loss (Energy)"
+            },
+            {
               "id": "SW-020",
               "summary": "The charge-controller firmware shall manage cell-balanced charging from 0% to 100% within…"
             }
@@ -1539,7 +1637,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-011",
+              "summary": "Biological contamination / material incompatibility — fluid path and patient-contact…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-016",
@@ -1569,6 +1672,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-013",
+              "summary": "Opioid diversion — unauthorized access to drug cassette (Operational)"
+            },
             {
               "id": "SW-021",
               "summary": "The lockbox-state monitor shall poll the lockbox latch sensor at ≥1 Hz and shall record…"
@@ -1602,7 +1709,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-016",
+              "summary": "Mechanical failure — drop or mount detachment during transport (Energy — mechanical)"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-011",
@@ -1671,6 +1783,10 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-015",
+              "summary": "Misleading remote data — EHR event-message loss or corruption (Information)"
+            },
+            {
               "id": "SW-023",
               "summary": "The HL7 v2.5 message builder shall encode therapy start, stop, parameter-change, bolus,…"
             },
@@ -1712,6 +1828,10 @@
           "resolution": null,
           "duedate": null,
           "traces_forward": [
+            {
+              "id": "HAZ-012",
+              "summary": "Cybersecurity — unauthorized modification of therapy parameters or firmware (Information)"
+            },
             {
               "id": "SW-025",
               "summary": "The firmware-update verifier shall validate the digital signature of every firmware…"
@@ -1755,6 +1875,14 @@
           "duedate": null,
           "traces_forward": [
             {
+              "id": "HAZ-012",
+              "summary": "Cybersecurity — unauthorized modification of therapy parameters or firmware (Information)"
+            },
+            {
+              "id": "HAZ-015",
+              "summary": "Misleading remote data — EHR event-message loss or corruption (Information)"
+            },
+            {
               "id": "SW-028",
               "summary": "The tamper-evident audit log shall append every therapy, alarm, programming, and security…"
             },
@@ -1795,7 +1923,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-012",
+              "summary": "Cybersecurity — unauthorized modification of therapy parameters or firmware (Information)"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-013",
@@ -1929,7 +2062,12 @@
           "reporter": null,
           "resolution": null,
           "duedate": null,
-          "traces_forward": [],
+          "traces_forward": [
+            {
+              "id": "HAZ-014",
+              "summary": "PCA-by-proxy — bolus activation by someone other than the patient (Operational —…"
+            }
+          ],
           "traces_reverse": [
             {
               "id": "UN-018",
@@ -3249,19 +3387,555 @@
     {
       "key": "risk",
       "title": "Risk",
-      "id_prefix": "HZ",
+      "id_prefix": "HAZ",
       "source_files": [
-        "docs/project/dhfs/pca-device/risk-management/risk-strategy.md"
+        "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-003-hazard-analysis.md"
       ],
-      "items": [],
-      "missing_reason": "no_items_parsed",
+      "items": [
+        {
+          "id": "HAZ-001",
+          "summary": "Over-infusion — pump mechanism/motor runaway (Operational)",
+          "full_text": "Patient receives opioid at a rate exceeding the programmed rate — Harm: Opioid overdose; respiratory arrest / death — Pre-control S/P/Risk: 5 / 3 / Unacceptable — Controls: Flow-rate accuracy design ±5% across operating range (DI-001, design); independent volume-tracking over-infusion watchdog with high-priority alarm and motor halt (DI-009, protective); 1-hr/4-hr cumulative dose limits blocking excess delivery (DI-004, protective) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-001",
+              "summary": "The device shall deliver programmed continuous flow rates from 0.01 to 25 mL/hr with an…"
+            },
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            },
+            {
+              "id": "DI-009",
+              "summary": "The device shall annunciate a high-priority over-infusion alarm and halt delivery if the…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-002",
+          "summary": "Over-infusion — programming error, decimal-point misread (Operational / use-related)",
+          "full_text": "Pump programmed at ~10× the intended rate or bolus dose — Harm: Severe respiratory depression requiring rescue — Pre-control S/P/Risk: 4 / 4 / Unacceptable — Controls: Unambiguous decimal-point display with explicit decimal-placement confirmation (DI-013, design); drug-library hard limits blocking out-of-range values on every entry path (DI-005, design); 1-hr/4-hr cumulative dose limits (DI-004, protective); validated programming task flow with zero harmful use errors (DI-020, design) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            },
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            },
+            {
+              "id": "DI-013",
+              "summary": "The device's numeric entry interface shall display all dose values with an unambiguous…"
+            },
+            {
+              "id": "DI-020",
+              "summary": "The device shall allow a trained nurse to complete the standard PCA programming task…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-003",
+          "summary": "Wrong drug / wrong concentration administered (Operational)",
+          "full_text": "Patient infused with a medication or concentration other than prescribed — Harm: Overdose with severe respiratory depression, or under-treatment of pain — Pre-control S/P/Risk: 4 / 4 / Unacceptable — Controls: Integrated 1D/2D barcode scan matched against active drug library with blocking mismatch alert (DI-016, protective); on-board drug library ≥200 medications with version banner at therapy start (DI-015, design); drug-library hard limits (DI-005, design) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-005",
+              "summary": "The device shall enforce drug-library hard maximum limits such that no programming path —…"
+            },
+            {
+              "id": "DI-015",
+              "summary": "The device shall maintain an on-board drug library of at least 200 medications with…"
+            },
+            {
+              "id": "DI-016",
+              "summary": "The device shall include an integrated 1D/2D barcode scanner capable of reading…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-004",
+          "summary": "Free-flow delivery with administration set removed (Operational)",
+          "full_text": "Uncontrolled gravity flow of opioid into the patient — Harm: Massive opioid overdose; death — Pre-control S/P/Risk: 5 / 4 / Unacceptable — Controls: Integral anti-siphon / anti-free-flow mechanism on the dedicated administration set (DI-006, inherently safe design) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-006",
+              "summary": "The device shall prevent free-flow delivery of medication when the administration set is…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-005",
+          "summary": "Air embolism — air-in-line infused (Operational)",
+          "full_text": "Air infused into the patient's vein — Harm: Life-threatening air embolism — Pre-control S/P/Risk: 4 / 3 / ALARP — Controls: Air-in-line detection ≥50 µL single bubble / ≥1 mL cumulative per 15 min, with high-priority alarm and delivery stop (DI-008, protective) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-008",
+              "summary": "The device shall detect single air-in-line bubbles ≥50 µL and cumulative air ≥1 mL over a…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-006",
+          "summary": "Undetected downstream occlusion — therapy interruption + post-occlusion bolus…",
+          "full_text": "Delivery silently stops; on release, accumulated volume delivered as an unintended bolus — Harm: Uncontrolled pain requiring intervention; transient over-delivery on release — Pre-control S/P/Risk: 3 / 4 / ALARP — Controls: Downstream occlusion detection 3–15 psi with high-priority alarm within the IEC 60601-2-24 response time (DI-007, protective) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-007",
+              "summary": "The device shall detect downstream occlusions in the range 3 to 15 psi and annunciate a…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-007",
+          "summary": "Therapy interruption — battery depletion / power loss (Energy)",
+          "full_text": "Infusion stops while patient depends on continuous analgesia — Harm: Uncontrolled pain requiring medical intervention — Pre-control S/P/Risk: 3 / 4 / ALARP — Controls: ≥150 h battery endurance under nominal therapy (DI-017, design); ≤4 h full recharge (DI-018, design); remaining-battery-life presentation on home screen readable at 1 m (DI-021, protective/info) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-017",
+              "summary": "The device shall operate continuously on a single fully-charged internal lithium-ion…"
+            },
+            {
+              "id": "DI-018",
+              "summary": "The device shall recharge from 0% to 100% state-of-charge in ≤4 hours from the supplied…"
+            },
+            {
+              "id": "DI-021",
+              "summary": "The device shall present therapy parameters, alarm states, and remaining battery life on…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-008",
+          "summary": "Alarm failure — not annunciated or not heard (Information)",
+          "full_text": "An alarm condition exists but clinical staff are not alerted — Harm: Delayed intervention; serious patient deterioration requiring rescue — Pre-control S/P/Risk: 4 / 3 / ALARP — Controls: IEC 60601-1-8-compliant high/medium/low-priority audible alarm scheme with SPL adjustable 45–80 dB(A) at 1 m (DI-019, protective); electrical-safety and essential-performance compliance per IEC 60601-1 and IEC 60601-2-24 covering alarm-function integrity (DI-010, design) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            },
+            {
+              "id": "DI-019",
+              "summary": "The device shall provide audible alarms compliant with IEC 60601-1-8 for high-, medium-,…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-009",
+          "summary": "Electrical shock (Energy)",
+          "full_text": "Patient or operator contacts hazardous leakage current — Harm: Electrical burn; cardiac arrhythmia; life-threatening injury — Pre-control S/P/Risk: 4 / 3 / ALARP — Controls: Electrical-safety design per IEC 60601-1 (3rd edition + A1) and IEC 60601-2-24 — insulation, leakage-current limits, applied-part isolation (DI-010, design) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-010",
+          "summary": "EMC disturbance disrupting delivery (Energy — electromagnetic)",
+          "full_text": "Delivery deviates or halts under electromagnetic disturbance — Harm: Over- or under-delivery; serious injury requiring intervention — Pre-control S/P/Risk: 4 / 3 / ALARP — Controls: EMC immunity and emissions design per IEC 60601-1-2 (4th edition) for professional healthcare facility environments, with essential performance maintained during immunity exposure (DI-012, design) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-012",
+              "summary": "The device shall meet the EMC immunity and emissions requirements of IEC 60601-1-2 (4th…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-011",
+          "summary": "Biological contamination / material incompatibility — fluid path and patient-contact…",
+          "full_text": "Patient exposed to leachables, degraded materials, or bioburden — Harm: Local infection, irritation, or sensitization requiring medical treatment — Pre-control S/P/Risk: 3 / 3 / ALARP — Controls: Biocompatible patient-contacting materials per ISO 10993-1 for the intended contact category (DI-011, design); housing/touchscreen/lockbox materials compatible with hospital disinfection agents for the service life (DI-030, design) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-011",
+              "summary": "All patient-contacting materials of the dedicated administration set, lockbox exterior,…"
+            },
+            {
+              "id": "DI-030",
+              "summary": "The device housing, touchscreen, and lockbox shall withstand cleaning and disinfection…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-012",
+          "summary": "Cybersecurity — unauthorized modification of therapy parameters or firmware (Information)",
+          "full_text": "Pump operates on attacker-modified therapy settings or firmware — Harm: Opioid overdose; death — Pre-control S/P/Risk: 5 / 3 / Unacceptable — Controls: Authenticated/signed firmware update, role-based access control, TLS 1.2+ encrypted communications (DI-024, design); tamper-evident audit logging of all programming and security events (DI-034, protective/detective); SBOM with vulnerability monitoring for fielded firmware (DI-025, protective) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-024",
+              "summary": "The device shall implement cybersecurity controls — including authenticated firmware…"
+            },
+            {
+              "id": "DI-025",
+              "summary": "The device manufacturer shall maintain a Software Bill of Materials (SBOM) covering all…"
+            },
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-013",
+          "summary": "Opioid diversion — unauthorized access to drug cassette (Operational)",
+          "full_text": "Patient's analgesic supply removed or tampered with; drug diverted — Harm: Untreated pain requiring intervention; therapy interruption — Pre-control S/P/Risk: 3 / 4 / ALARP — Controls: Key/PIN-released drug-cassette lockbox with tamper-evident indication of unauthorized opening (DI-032, protective) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-032",
+              "summary": "The drug-cassette lockbox shall require a physical key or PIN-released latch and shall be…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-014",
+          "summary": "PCA-by-proxy — bolus activation by someone other than the patient (Operational —…",
+          "full_text": "Boluses delivered while the patient is too sedated to self-limit dosing — Harm: Severe respiratory depression requiring rescue — Pre-control S/P/Risk: 4 / 4 / Unacceptable — Controls: Programmable 1–99 min lockout interval between boluses (DI-003, design); 1-hr/4-hr cumulative dose limits blocking over-limit boluses from any path (DI-004, design/protective); IFU and labeling opioid warnings incl. patient-only-activation instruction (DI-029, info) — Residual risk: ALARP",
+          "category": null,
+          "criticality": "ALARP",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-003",
+              "summary": "The device shall support a programmable lockout interval from 1 to 99 minutes between…"
+            },
+            {
+              "id": "DI-004",
+              "summary": "The device shall enforce programmable 1-hour and 4-hour cumulative dose limits and shall…"
+            },
+            {
+              "id": "DI-029",
+              "summary": "The Instructions for Use (IFU), labeling, and warning content shall comply with 21 CFR…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-015",
+          "summary": "Misleading remote data — EHR event-message loss or corruption (Information)",
+          "full_text": "Clinician acts on stale or incorrect remote therapy/alarm data — Harm: Delayed treatment; reversible injury requiring medical intervention — Pre-control S/P/Risk: 3 / 3 / ALARP — Controls: Validated HL7 v2.5 / FHIR R4 event publication with protocol-conformant messaging (DI-023, design); tamper-evident on-device audit log with integrity hash as the authoritative event record (DI-034, protective) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-023",
+              "summary": "The device shall publish therapy start, stop, parameter-change, bolus, and alarm events…"
+            },
+            {
+              "id": "DI-034",
+              "summary": "The device shall provide a tamper-evident audit log capable of storing at least 10,000…"
+            }
+          ]
+        },
+        {
+          "id": "HAZ-016",
+          "summary": "Mechanical failure — drop or mount detachment during transport (Energy — mechanical)",
+          "full_text": "Pump falls onto patient/floor; therapy interrupted or device damaged — Harm: Contusion/laceration; therapy interruption requiring intervention — Pre-control S/P/Risk: 3 / 4 / ALARP — Controls: ≤0.85 kg device mass with dedicated IV-pole clamp and belt-clip mounting interfaces (DI-033, design); enclosure and mechanical robustness per IEC 60601-1 (DI-010, design) — Residual risk: Acceptable",
+          "category": null,
+          "criticality": "Acceptable",
+          "group": null,
+          "group_label": null,
+          "stakeholder": null,
+          "priority": null,
+          "source_ref": null,
+          "acceptance_criteria": null,
+          "verification_method": null,
+          "iec_class": null,
+          "module_name": null,
+          "jira_key": null,
+          "status": null,
+          "assignee": null,
+          "reporter": null,
+          "resolution": null,
+          "duedate": null,
+          "traces_forward": [],
+          "traces_reverse": [
+            {
+              "id": "DI-010",
+              "summary": "The device shall meet the general electrical-safety and essential-performance…"
+            },
+            {
+              "id": "DI-033",
+              "summary": "The device shall weigh ≤0.85 kg with a full medication cassette and shall provide both an…"
+            }
+          ]
+        }
+      ],
+      "missing_reason": null,
       "edges_known": true,
-      "warnings": [
-        "source is awaiting-content placeholder"
-      ]
+      "warnings": []
     }
   ],
   "edges": [
+    {
+      "from": "DI-001",
+      "to": "HAZ-001",
+      "kind": "design_inputs_to_risk"
+    },
     {
       "from": "DI-001",
       "to": "SW-001",
@@ -3289,6 +3963,11 @@
     },
     {
       "from": "DI-003",
+      "to": "HAZ-014",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-003",
       "to": "SW-003",
       "kind": "di_to_sw"
     },
@@ -3299,6 +3978,21 @@
     },
     {
       "from": "DI-004",
+      "to": "HAZ-001",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-004",
+      "to": "HAZ-002",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-004",
+      "to": "HAZ-014",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-004",
       "to": "SW-004",
       "kind": "di_to_sw"
     },
@@ -3306,6 +4000,16 @@
       "from": "DI-004",
       "to": "VER-PP3500-SW-002",
       "kind": "di_to_vnv"
+    },
+    {
+      "from": "DI-005",
+      "to": "HAZ-002",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-005",
+      "to": "HAZ-003",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-005",
@@ -3324,8 +4028,18 @@
     },
     {
       "from": "DI-006",
+      "to": "HAZ-004",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-006",
       "to": "SW-013",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-007",
+      "to": "HAZ-006",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-007",
@@ -3334,8 +4048,18 @@
     },
     {
       "from": "DI-008",
+      "to": "HAZ-005",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-008",
       "to": "SW-010",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-009",
+      "to": "HAZ-001",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-009",
@@ -3344,8 +4068,38 @@
     },
     {
       "from": "DI-010",
+      "to": "HAZ-008",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-010",
+      "to": "HAZ-009",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-010",
+      "to": "HAZ-016",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-010",
       "to": "SW-014",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-011",
+      "to": "HAZ-011",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-012",
+      "to": "HAZ-010",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-013",
+      "to": "HAZ-002",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-013",
@@ -3359,8 +4113,18 @@
     },
     {
       "from": "DI-015",
+      "to": "HAZ-003",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-015",
       "to": "SW-007",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-016",
+      "to": "HAZ-003",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-016",
@@ -3369,8 +4133,18 @@
     },
     {
       "from": "DI-017",
+      "to": "HAZ-007",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-017",
       "to": "SW-019",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-018",
+      "to": "HAZ-007",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-018",
@@ -3379,13 +4153,28 @@
     },
     {
       "from": "DI-019",
+      "to": "HAZ-008",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-019",
       "to": "SW-012",
       "kind": "di_to_sw"
     },
     {
       "from": "DI-020",
+      "to": "HAZ-002",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-020",
       "to": "SW-016",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-021",
+      "to": "HAZ-007",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-021",
@@ -3399,6 +4188,11 @@
     },
     {
       "from": "DI-023",
+      "to": "HAZ-015",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-023",
       "to": "SW-023",
       "kind": "di_to_sw"
     },
@@ -3406,6 +4200,11 @@
       "from": "DI-023",
       "to": "SW-024",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-024",
+      "to": "HAZ-012",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-024",
@@ -3423,6 +4222,11 @@
       "kind": "di_to_sw"
     },
     {
+      "from": "DI-025",
+      "to": "HAZ-012",
+      "kind": "design_inputs_to_risk"
+    },
+    {
       "from": "DI-026",
       "to": "SW-030",
       "kind": "di_to_sw"
@@ -3433,14 +4237,44 @@
       "kind": "di_to_sw"
     },
     {
+      "from": "DI-029",
+      "to": "HAZ-014",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-030",
+      "to": "HAZ-011",
+      "kind": "design_inputs_to_risk"
+    },
+    {
       "from": "DI-031",
       "to": "SW-031",
       "kind": "di_to_sw"
     },
     {
       "from": "DI-032",
+      "to": "HAZ-013",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-032",
       "to": "SW-021",
       "kind": "di_to_sw"
+    },
+    {
+      "from": "DI-033",
+      "to": "HAZ-016",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-034",
+      "to": "HAZ-012",
+      "kind": "design_inputs_to_risk"
+    },
+    {
+      "from": "DI-034",
+      "to": "HAZ-015",
+      "kind": "design_inputs_to_risk"
     },
     {
       "from": "DI-034",
@@ -3707,13 +4541,7 @@
     "orphans": {
       "user_needs": [],
       "design_inputs": [
-        "DI-011",
-        "DI-012",
-        "DI-030",
-        "DI-033",
-        "DI-025",
-        "DI-027",
-        "DI-029"
+        "DI-027"
       ],
       "software": [
         "SW-001",
@@ -3774,9 +4602,7 @@
         "reason": "unknown_id"
       }
     ],
-    "empty_layers": [
-      "risk"
-    ]
+    "empty_layers": []
   },
   "stats": {
     "user_needs": {
@@ -3787,9 +4613,9 @@
     },
     "design_inputs": {
       "count": 34,
-      "with_forward": 27,
+      "with_forward": 33,
       "with_reverse": 34,
-      "orphan": 7
+      "orphan": 1
     },
     "software": {
       "count": 32,
@@ -3811,10 +4637,9 @@
       "orphan": 0
     },
     "risk": {
-      "count": 0,
-      "missing_reason": "no_items_parsed",
+      "count": 16,
       "with_forward": 0,
-      "with_reverse": 0,
+      "with_reverse": 16,
       "orphan": 0
     }
   }
