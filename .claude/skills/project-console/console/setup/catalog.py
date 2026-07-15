@@ -58,6 +58,27 @@ CATALOG: list[dict] = [
         "editable": [],
     },
     {
+        "key": "atlassian",
+        "title": "Atlassian (Jira / Confluence)",
+        "description": (
+            "Atlassian's official remote MCP server — Jira, Confluence, and "
+            "Compass tools over OAuth. Sign-in happens in the MCP client on "
+            "first connect (/mcp in a session); no tokens in config."
+        ),
+        "docs": (
+            "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/"
+            "getting-started-with-the-atlassian-remote-mcp-server/"
+        ),
+        # /v1/mcp/authv2 is the OAuth endpoint; the older /v1/sse endpoint is
+        # deprecated (unsupported after 2026-06-30) — do not use it here.
+        "spec": {
+            "type": "http",
+            "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+        },
+        "env_required": [],
+        "editable": ["url"],
+    },
+    {
         "key": "custom-stdio",
         "title": "Custom stdio server",
         "description": (

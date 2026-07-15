@@ -1,8 +1,8 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.33.0
-updated: 2026-07-14
+version: 1.35.0
+updated: 2026-07-15
 ---
 
 # Project Console
@@ -268,15 +268,15 @@ topnav. A settings shell (inner sidebar + content pane) with six sections:
 
 | Section | Sources | Writable? |
 |---|---|---|
-| **Connectors** | `.mcp.json` × `security.approved_mcps` × catalog | Yes (the original MCP config editor — see below) |
+| **Connectors** | `.mcp.json` × `security.approved_mcps` × catalog; plus a read-only **Command-line tooling** panel (git/gh presence, version, `gh auth status`, origin remote — detection + copy-paste fix commands only; the console never installs or runs interactive auth) | Yes (the original MCP config editor — see below) |
 | **Skills** | `.claude/skills/*/` (SKILL.md frontmatter + VERSION) × `security.approved_skills`; `registries[].type: builtin` marks built-ins | Read-only |
 | **Agents** | Both surfaces: `.claude/agents/*.md` (registered top-level; symlink target → owning skill) AND `.claude/skills/*/agents/*.md` (bundled skill-internal workers) × `security.approved_agents` (matched on final path segment). Bundled agents inherit approval from their owning skill in `approved_skills`; explicit listing still honored | Read-only |
 | **Plugins** | `security.approved_plugins` (allowlist only — installs live outside the repo) | Read-only |
 | **Automation** | `.claude/rules/*.md` (session rules) + `.claude/settings.json` `hooks` + `.github/workflows/*.yml` (GitHub Actions — name, triggers parsed from `on:`, jobs, and the owning skill resolved by filename mention in skill trees) | Read-only |
 | **Registries** | `project.yml` `registries[]` + each github registry's **local clone** (`local_path`) catalog vs the local install. Per skill: not-installed / update (registry strictly newer) / current / local-ahead (push candidate — never a downgrade button) | Yes — Add installs a new skill by copy from the clone + allowlists it in `approved_skills` (lockstep); Update (strictly-newer only) backs up the whole local skill dir under `.data/setup-backups/` then replaces it. Reconciliation of diverged skills stays with the registry sync tooling |
-| **Team & Security** | `project.yml` `team.*`, `security.*` | Read-only |
+| **Team & Security** | `project.yml` `team.*`, `security.*` | Yes — roster edits. **Add member** appends to `team.active` (name / github / task_folder / role / email + today's `added:`; email domain validated against `security.approved_email_domains`, github + task_folder uniqueness enforced). **Deactivate** moves the member's block to `team.inactive` with `removed:` (today) + a required `reason:`. Surgical comment-preserving line edits (never a yaml.dump round-trip), backup + audit + re-parse-validate-or-restore like every writer path. Roster of record only — GitHub repo access is granted/revoked in GitHub; the posture check cross-references the two. Re-activating a former member stays a manual edit (one history row per person) |
 
-Non-connector sections are deliberately read-only: skills/agents/rules are
+Skills/agents/rules/plugins sections are deliberately read-only: those are
 managed by the registry sync tooling, and duplicating that merge logic behind
 a browser button would fork it. Each read-only section reuses the connectors'
 installed-vs-approved status triad (ok / warning "not in allowlist" / info

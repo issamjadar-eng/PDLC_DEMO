@@ -9,6 +9,10 @@ POST   /setup/connectors/{name}        — add/update a server in .mcp.json
                                           two files move in lockstep)
 POST   /setup/connectors/{name}/approval — {"approved": bool} allowlist toggle
 DELETE /setup/connectors/{name}        — remove the server from .mcp.json
+POST   /setup/team/members             — add a member to project.yml team.active
+POST   /setup/team/members/{github}/deactivate — move to team.inactive
+                                          ({"reason": str}; roster edit only —
+                                          GitHub repo access is not touched)
 
 Writes go exclusively through console.setup.writer (backups + audit log).
 The console edits config only — Claude Code owns the MCP server lifecycle,
@@ -117,6 +121,33 @@ async def setup_install_skill(name: str, request: Request):
         )
     try:
         note = writer.install_skill(cfg.repo_root, cfg.tool_root, local_path, name)
+    except writer.SetupWriteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "note": note}
+
+
+@router.post("/setup/team/members", response_class=JSONResponse)
+async def setup_team_add(request: Request):
+    """Add a member to project.yml team.active (roster of record only)."""
+    cfg = get_config()
+    body = await request.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=400, detail="Body must be a member object.")
+    try:
+        note = writer.add_team_member(cfg.repo_root, cfg.tool_root, body)
+    except writer.SetupWriteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "note": note}
+
+
+@router.post("/setup/team/members/{github}/deactivate", response_class=JSONResponse)
+async def setup_team_deactivate(github: str, request: Request):
+    """Move a member from team.active to team.inactive with removed + reason."""
+    cfg = get_config()
+    body = await request.json()
+    reason = str(body.get("reason") or "") if isinstance(body, dict) else ""
+    try:
+        note = writer.deactivate_team_member(cfg.repo_root, cfg.tool_root, github, reason)
     except writer.SetupWriteError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True, "note": note}

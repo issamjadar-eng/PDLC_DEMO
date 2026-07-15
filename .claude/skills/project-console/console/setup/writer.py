@@ -48,6 +48,10 @@ def _backup(tool_root: Path, target: Path) -> Path | None:
     bdir = _data_dir(tool_root) / "setup-backups"
     bdir.mkdir(parents=True, exist_ok=True)
     dest = bdir / f"{target.name}.{stamp}.bak"
+    n = 1
+    while dest.exists():  # same-second writes must not clobber earlier backups
+        n += 1
+        dest = bdir / f"{target.name}.{stamp}-{n}.bak"
     dest.write_bytes(target.read_bytes())
     return dest
 
@@ -236,6 +240,254 @@ def set_approved(repo_root: Path, tool_root: Path, name: str, approved: bool,
     _validate_yaml(p, original, name, present=approved, key=key)
     _audit(tool_root, "approve" if approved else "unapprove", name, f"list={key}")
     return True
+
+
+# ── project.yml team roster (surgical, comment-preserving) ───────────────────
+#
+# Same doctrine as the allowlist edits: never yaml.dump the file. Members are
+# multi-line list items, so the unit of edit is an item BLOCK (the `- name:`
+# line plus its deeper-indented field lines). Add appends to team.active;
+# deactivate moves the block to team.inactive with `removed:` + `reason:` —
+# the roster convention the project manifest documents. The console edits
+# project.yml only: actual repo access lives in GitHub and is audited against
+# this roster by the project's posture check, not granted/revoked here.
+
+_GITHUB_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$")
+_FOLDER_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def _validate_scalar(label: str, value: str, max_len: int) -> str:
+    """A value we will emit as a plain YAML scalar on one line."""
+    value = " ".join((value or "").split())
+    if not value:
+        raise SetupWriteError(f"{label} is required.")
+    if len(value) > max_len:
+        raise SetupWriteError(f"{label} is too long (max {max_len} chars).")
+    if ":" in value or "#" in value or value[0] in "-&*?|>!%@`\"'{[":
+        raise SetupWriteError(
+            f"{label} must not contain ':' or '#' or start with YAML punctuation."
+        )
+    return value
+
+
+def _find_team_list(lines: list[str], list_key: str):
+    """Locate `team.<list_key>` in project.yml lines.
+
+    Returns (key_idx, key_indent, inline_empty, item_indent, items) where
+    items is a list of (start, end) line ranges — one per `- ` member block
+    (end exclusive). item_indent is None when the list has no items yet.
+    """
+    team_idx = next(
+        (i for i, l in enumerate(lines) if re.match(r"^team:\s*$", l)), None
+    )
+    if team_idx is None:
+        raise SetupWriteError("project.yml has no top-level team: block — add it manually first.")
+    key_idx = key_indent = None
+    inline_empty = False
+    for j in range(team_idx + 1, len(lines)):
+        if re.match(r"^\S", lines[j]):  # next top-level key ends the team block
+            break
+        m = re.match(rf"^(\s+){re.escape(list_key)}:\s*(\[\s*\])?\s*$", lines[j])
+        if m:
+            key_idx, key_indent, inline_empty = j, m.group(1), bool(m.group(2))
+            break
+    if key_idx is None:
+        raise SetupWriteError(
+            f"project.yml team: block has no {list_key}: key — add it manually first."
+        )
+    items: list[tuple[int, int]] = []
+    item_indent = None
+    i = key_idx + 1
+    while not inline_empty and i < len(lines):
+        m = re.match(r"^(\s*)-\s", lines[i])
+        if m and len(m.group(1)) >= len(key_indent) and (
+            item_indent is None or m.group(1) == item_indent
+        ):
+            item_indent = m.group(1)
+            start = i
+            i += 1
+            while i < len(lines):
+                nxt = lines[i]
+                indent = len(nxt) - len(nxt.lstrip())
+                if nxt.strip() and indent > len(item_indent) and not re.match(
+                    rf"^{re.escape(item_indent)}-\s", nxt
+                ):
+                    i += 1
+                    continue
+                break
+            items.append((start, i))
+            continue
+        break
+    return key_idx, key_indent, inline_empty, item_indent, items
+
+
+def _item_field(lines: list[str], start: int, end: int, field: str) -> str:
+    for line in lines[start:end]:
+        m = re.match(rf"^\s*(?:-\s+)?{re.escape(field)}:\s*(.*?)\s*$", line)
+        if m:
+            v = m.group(1)
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+                v = v[1:-1]
+            return v
+    return ""
+
+
+def _member_block(fields: list[tuple[str, str]], item_indent: str) -> list[str]:
+    field_indent = item_indent + "  "
+    first_key, first_val = fields[0]
+    out = [f"{item_indent}- {first_key}: {first_val}\n"]
+    out += [f"{field_indent}{k}: {v}\n" for k, v in fields[1:]]
+    return out
+
+
+def _validate_team_yaml(path: Path, original: str, github: str, active: bool) -> None:
+    """Re-parse the edited file; on failure restore original bytes and raise."""
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        team = data.get("team") or {}
+        in_active = any(
+            isinstance(m, dict) and m.get("github") == github
+            for m in team.get("active") or []
+        )
+        in_inactive = any(
+            isinstance(m, dict) and m.get("github") == github
+            for m in team.get("inactive") or []
+        )
+        ok = (in_active and not in_inactive) if active else (in_inactive and not in_active)
+        if not ok:
+            raise ValueError("post-edit roster state mismatch")
+    except Exception as e:
+        path.write_text(original, encoding="utf-8")
+        raise SetupWriteError(f"project.yml edit failed validation ({e}); file restored.")
+
+
+def add_team_member(repo_root: Path, tool_root: Path, member: dict) -> str:
+    """Append a member to team.active (name, github, task_folder, role, email
+    + today's `added:` date). Email domain is checked against
+    security.approved_email_domains when that list is declared."""
+    name = _validate_scalar("Name", str(member.get("name") or ""), 80)
+    role = _validate_scalar("Role", str(member.get("role") or ""), 120)
+    github = str(member.get("github") or "").strip()
+    if not _GITHUB_RE.match(github):
+        raise SetupWriteError("GitHub username is invalid (letters, digits, dashes; max 39 chars).")
+    folder = str(member.get("task_folder") or "").strip().lower()
+    if not _FOLDER_RE.match(folder):
+        raise SetupWriteError("Task folder must be a lowercase slug (letters, digits, - or _).")
+    email = str(member.get("email") or "").strip().lower()
+    if not _EMAIL_RE.match(email):
+        raise SetupWriteError("Email address is invalid.")
+
+    p = project_yml_path(repo_root)
+    if not p.is_file():
+        raise SetupWriteError("project.yml not found.")
+    original = p.read_text(encoding="utf-8")
+    project = yaml.safe_load(original) or {}
+    domains = [
+        str(d).lstrip("@").lower()
+        for d in (project.get("security") or {}).get("approved_email_domains") or []
+    ]
+    domain = email.rsplit("@", 1)[-1]
+    if domains and domain not in domains:
+        raise SetupWriteError(
+            f"Email domain @{domain} is not in security.approved_email_domains "
+            f"({', '.join('@' + d for d in domains)})."
+        )
+    team = project.get("team") or {}
+    for m in team.get("active") or []:
+        if not isinstance(m, dict):
+            continue
+        if str(m.get("github") or "") == github:
+            raise SetupWriteError(f"{github!r} is already on the active roster.")
+        if str(m.get("task_folder") or "") == folder:
+            raise SetupWriteError(
+                f"Task folder {folder!r} is already used by {m.get('name')!r}."
+            )
+    if any(
+        isinstance(m, dict) and str(m.get("github") or "") == github
+        for m in team.get("inactive") or []
+    ):
+        raise SetupWriteError(
+            f"{github!r} is in team.inactive — re-activating a former member is a "
+            "manual project.yml edit (move the row back and clear removed/reason), "
+            "so their history stays on one entry."
+        )
+
+    lines = original.splitlines(keepends=True)
+    key_idx, key_indent, inline_empty, item_indent, items = _find_team_list(lines, "active")
+    item_indent = item_indent if item_indent is not None else key_indent
+    block = _member_block(
+        [("name", name), ("github", github), ("task_folder", folder),
+         ("role", role), ("email", email),
+         ("added", _dt.date.today().isoformat())],
+        item_indent,
+    )
+    _backup(tool_root, p)
+    if inline_empty:
+        lines[key_idx] = f"{key_indent}active:\n"
+    insert_at = items[-1][1] if items else key_idx + 1
+    lines[insert_at:insert_at] = block
+    p.write_text("".join(lines), encoding="utf-8")
+    _validate_team_yaml(p, original, github, active=True)
+    _audit(tool_root, "team-add", github, f"folder={folder}")
+    return (
+        f"Added {name} to team.active. project.yml is the roster of record — "
+        "grant actual repo access in GitHub, then run the project's posture "
+        "check to confirm the two match. Create their tasks/" + folder + "/ folder on first task."
+    )
+
+
+def deactivate_team_member(repo_root: Path, tool_root: Path, github: str,
+                           reason: str) -> str:
+    """Move a member's block from team.active to team.inactive, appending
+    `removed:` (today) + `reason:` per the roster convention."""
+    github = (github or "").strip()
+    if not _GITHUB_RE.match(github):
+        raise SetupWriteError("GitHub username is invalid.")
+    reason = _validate_scalar("Reason", reason, 200)
+
+    p = project_yml_path(repo_root)
+    if not p.is_file():
+        raise SetupWriteError("project.yml not found.")
+    original = p.read_text(encoding="utf-8")
+    lines = original.splitlines(keepends=True)
+
+    a_key, a_indent, a_empty, _a_item, a_items = _find_team_list(lines, "active")
+    match = next(
+        ((s, e) for s, e in a_items if _item_field(lines, s, e, "github") == github),
+        None,
+    )
+    if a_empty or match is None:
+        raise SetupWriteError(f"{github!r} is not on the active roster.")
+    start, end = match
+    fields = [
+        (k, _item_field(lines, start, end, k))
+        for k in ("name", "github", "task_folder", "role", "email", "added")
+    ]
+    fields = [(k, v) for k, v in fields if v]
+    fields += [("removed", _dt.date.today().isoformat()), ("reason", reason)]
+
+    _backup(tool_root, p)
+    del lines[start:end]
+    if len(a_items) == 1:  # roster now empty → keep the key parseable
+        lines[a_key] = f"{a_indent}active: []\n"
+
+    i_key, i_indent, i_empty, i_item, i_items = _find_team_list(lines, "inactive")
+    i_item = i_item if i_item is not None else i_indent
+    block = _member_block(fields, i_item)
+    if i_empty:
+        lines[i_key] = f"{i_indent}inactive:\n"
+    insert_at = i_items[-1][1] if i_items else i_key + 1
+    lines[insert_at:insert_at] = block
+    p.write_text("".join(lines), encoding="utf-8")
+    _validate_team_yaml(p, original, github, active=False)
+    _audit(tool_root, "team-deactivate", github, f"reason={reason}")
+    name = dict(fields).get("name") or github
+    return (
+        f"Moved {name} to team.inactive. This edits the roster of record only — "
+        "revoke their GitHub repo access separately, then run the project's "
+        "posture check to confirm."
+    )
 
 
 # ── registry skill install / update (copy from the registry's local clone) ───

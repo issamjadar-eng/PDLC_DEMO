@@ -248,7 +248,17 @@
             <button class="su-btn" onclick="suToggleForm('{{ entry.key }}')">Configure…</button>
           </div>
           <div class="su-form" id="su-form-{{ entry.key }}">
-            {% if entry.spec %}
+            {% if entry.spec and entry.spec.url %}
+            <label>Connector name</label>
+            <input id="su-{{ entry.key }}-name" value="{{ entry.key }}">
+            <label>URL</label>
+            <input id="su-{{ entry.key }}-url" value="{{ entry.spec.url }}">
+            <label>Transport (http or sse)</label>
+            <input id="su-{{ entry.key }}-transport" value="{{ entry.spec.type }}">
+            <div class="su-actions">
+              <button class="su-btn" onclick="suSubmitHttp('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
+            </div>
+            {% elif entry.spec %}
             <label>Connector name</label>
             <input id="su-{{ entry.key }}-name" value="{{ entry.key }}">
             <label>Command</label>
@@ -333,6 +343,38 @@
       {% else %}
       <div class="su-list"><div class="su-empty">No connectors configured yet — configure one from the cards above.</div></div>
       {% endif %}
+
+      <div class="su-h2">Command-line tooling</div>
+      <p class="su-sub">
+        Read-only checks for the CLI tools the project's git workflow depends on.
+        The console detects state only — install and authenticate in your terminal
+        with the command shown (<code>gh auth login</code> is an interactive OAuth
+        flow, so it can't run from here).
+      </p>
+      <div class="su-list">
+        <div class="su-cols"><span>Tool</span><span>Version</span><span style="text-align:right">Status</span></div>
+        {% for t in setup.cli.tools %}
+        <div class="su-row">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>
+            <span style="min-width:0">
+              <b>{{ t.title }}</b>
+              {% if t.detail %}<div class="su-desc">{{ t.detail }}</div>{% endif %}
+            </span>
+          </span>
+          <span class="su-type">{% if t.version %}<code>{{ t.version }}</code>{% else %}—{% endif %}</span>
+          <span class="su-status">
+            {% if t.status == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg></span>
+            {% else %}<span class="su-badge warning">{{ 'not authenticated' if t.installed else 'not installed' }}</span>{% endif %}
+          </span>
+        </div>
+        {% if t.fix %}
+        <div class="su-detail open" style="display:block">
+          <div class="su-note flag">Fix in a terminal: <code>{{ t.fix }}</code></div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
     </section>
 
     {# ============================== SKILLS ============================== #}
@@ -638,8 +680,9 @@
       </div>
       <p class="su-sub">
         The roster and security posture declared in <code>project.yml</code> — the
-        single source of truth the posture check audits against. Roster changes and
-        attestations are made through the project's onboarding flow, not here.
+        single source of truth the posture check audits against. Add and deactivate
+        edit the roster of record only: repo access itself is granted/revoked in
+        GitHub, and the posture check cross-references the two.
       </p>
 
       <div class="su-h2">Posture at a glance</div>
@@ -656,17 +699,63 @@
       <div>{% for d in setup.team.email_domains %}<span class="su-chip">@{{ d }}</span>{% else %}<span class="su-note">none declared</span>{% endfor %}</div>
 
       <div class="su-h2">Team roster</div>
+      <div class="su-add" style="margin-bottom:12px">
+        <h3><svg class="su-ico"><use href="#su-ic-users"/></svg>Onboard a team member</h3>
+        <p>Appends a row to <code>team.active</code> in <code>project.yml</code> (with today's
+          <code>added:</code> date). Grant GitHub repo access separately.</p>
+        <button class="su-btn" onclick="suToggleForm('team-add')">Add member…</button>
+        <div class="su-form" id="su-form-team-add">
+          <label>Full name</label><input id="su-team-name" placeholder="Jane Smith">
+          <label>GitHub username</label><input id="su-team-github" placeholder="janesmith-gl">
+          <label>Task folder (tasks/&lt;folder&gt;/)</label><input id="su-team-folder" placeholder="jane">
+          <label>Role</label><input id="su-team-role" placeholder="Senior QA Engineer">
+          <label>Email{% if setup.team.email_domains %} (approved: {% for d in setup.team.email_domains %}@{{ d }}{{ ', ' if not loop.last }}{% endfor %}){% endif %}</label>
+          <input id="su-team-email" placeholder="jane.smith@example.com">
+          <div class="su-actions"><button class="su-btn" onclick="suTeamAdd()">Add to team.active</button></div>
+        </div>
+      </div>
       {% if setup.team.members %}
       <div class="su-list" data-list="team">
         <div class="su-cols"><span>Member</span><span>GitHub</span><span style="text-align:right">Role</span></div>
         {% for m in setup.team.members %}
-        <div class="su-row" data-search="{{ m.name | lower }} {{ m.role | lower }} {{ m.github | lower }}">
+        <div class="su-row clickable" id="su-row-tm-{{ m.github }}" onclick="suToggleRow('tm-{{ m.github }}')"
+             data-search="{{ m.name | lower }} {{ m.role | lower }} {{ m.github | lower }} {{ m.email | lower }}">
           <span class="su-name">
             <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-users"/></svg></span>
             <b>{{ m.name }}</b>
           </span>
           <span class="su-type"><code>{{ m.github }}</code></span>
-          <span class="su-status"><span class="su-type">{{ m.role }}</span></span>
+          <span class="su-status"><span class="su-type">{{ m.role }}</span>
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
+        </div>
+        <div class="su-detail" id="su-detail-tm-{{ m.github }}">
+          <dl class="su-kv">
+            <dt>Email</dt><dd>{{ m.email or '—' }}</dd>
+            <dt>Tasks</dt><dd><code>tasks/{{ m.task_folder }}/</code></dd>
+            <dt>Added</dt><dd>{{ m.added or '—' }}</dd>
+          </dl>
+          <div class="su-actions">
+            <button class="su-btn danger" onclick="event.stopPropagation(); suTeamDeactivate('{{ m.github }}', '{{ m.name }}')">Deactivate…</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No active team members declared in <code>project.yml team.active</code>.</div></div>
+      {% endif %}
+
+      {% if setup.team.inactive %}
+      <div class="su-h2">Inactive (offboarded)</div>
+      <div class="su-list">
+        <div class="su-cols"><span>Member</span><span>Removed</span><span style="text-align:right">Reason</span></div>
+        {% for m in setup.team.inactive %}
+        <div class="su-row" data-search="{{ m.name | lower }} {{ m.github | lower }} {{ m.reason | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-users"/></svg></span>
+            <span><b>{{ m.name }}</b><div class="su-desc"><code>{{ m.github }}</code>{% if m.role %} · {{ m.role }}{% endif %}</div></span>
+          </span>
+          <span class="su-type">{{ m.removed or '—' }}</span>
+          <span class="su-status"><span class="su-type">{{ m.reason or '—' }}</span></span>
         </div>
         {% endfor %}
       </div>
@@ -769,6 +858,22 @@ function suInstall(name, registry, isUpdate) {
     : 'Install skill "' + name + '" from registry "' + registry + '" and add it to security.approved_skills?';
   if (!confirm(msg)) return;
   suCall('POST', '/setup/skills/' + encodeURIComponent(name) + '/install', { registry: registry });
+}
+function suTeamAdd() {
+  suCall('POST', '/setup/team/members', {
+    name: document.getElementById('su-team-name').value.trim(),
+    github: document.getElementById('su-team-github').value.trim(),
+    task_folder: document.getElementById('su-team-folder').value.trim(),
+    role: document.getElementById('su-team-role').value.trim(),
+    email: document.getElementById('su-team-email').value.trim(),
+  });
+}
+function suTeamDeactivate(github, name) {
+  var reason = prompt('Deactivate ' + name + ' — reason (recorded in team.inactive):');
+  if (reason === null) return;
+  if (!reason.trim()) { suToast('A reason is required for the roster record.', true); return; }
+  if (!confirm('Move ' + name + ' (' + github + ') to team.inactive? This edits project.yml only — revoke their GitHub repo access separately.')) return;
+  suCall('POST', '/setup/team/members/' + encodeURIComponent(github) + '/deactivate', { reason: reason.trim() });
 }
 function suSubmitHttp(key) {
   var name = document.getElementById('su-' + key + '-name').value.trim();

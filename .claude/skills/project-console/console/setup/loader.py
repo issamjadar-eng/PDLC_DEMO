@@ -29,6 +29,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -249,12 +250,15 @@ def _body_summary(path: Path) -> str:
     except OSError:
         return ""
     text = _FRONTMATTER_RE.sub("", text, count=1)
+    para: list[str] = []
     for line in text.splitlines():
         line = line.strip()
         if not line or line.startswith(("#", "<!--", "|", "-", "*", "```", ">")):
+            if para:
+                break  # end of the first prose paragraph (hard-wrapped lines joined)
             continue
-        return line
-    return ""
+        para.append(line)
+    return " ".join(para)
 
 
 def _frontmatter(path: Path) -> dict:
@@ -472,13 +476,14 @@ def load_agents(repo_root: Path, project: dict) -> dict:
             tools = fm.get("tools")
             if isinstance(tools, list):
                 tools = ", ".join(str(t) for t in tools)
+            desc = str(fm.get("description") or "") or _body_summary(f)
             rows.append({
                 "name": name,
                 "installed": True,
                 "approved": is_approved,
                 "owner": f.parent.parent.name,
-                "description": _first_sentence(fm.get("description") or ""),
-                "full_description": _clip(fm.get("description"), 900),
+                "description": _first_sentence(desc),
+                "full_description": _clip(desc, 900),
                 "path": f.relative_to(repo_root).as_posix(),
                 "target": "",
                 "tools": str(tools or ""),
@@ -583,8 +588,22 @@ def load_team_security(project: dict) -> dict:
             "name": str(m.get("name") or ""),
             "role": str(m.get("role") or ""),
             "github": str(m.get("github") or ""),
+            "task_folder": str(m.get("task_folder") or ""),
+            "email": str(m.get("email") or ""),
+            "added": str(m.get("added") or ""),
         }
         for m in (team.get("active") or [])
+        if isinstance(m, dict)
+    ]
+    inactive = [
+        {
+            "name": str(m.get("name") or ""),
+            "role": str(m.get("role") or ""),
+            "github": str(m.get("github") or ""),
+            "removed": str(m.get("removed") or ""),
+            "reason": str(m.get("reason") or ""),
+        }
+        for m in (team.get("inactive") or [])
         if isinstance(m, dict)
     ]
     registries = [
@@ -600,7 +619,8 @@ def load_team_security(project: dict) -> dict:
     security = project.get("security") or {}
     return {
         "members": members,
-        "inactive_count": len(team.get("inactive") or []),
+        "inactive": inactive,
+        "inactive_count": len(inactive),
         "registries": registries,
         "email_domains": [str(x) for x in security.get("approved_email_domains") or []],
         "allowlist_counts": {
@@ -609,6 +629,86 @@ def load_team_security(project: dict) -> dict:
                         "approved_plugins", "approved_agents")
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Command-line tooling (read-only probes — the console never installs or
+# authenticates anything; it detects state and shows the fix commands)
+# ---------------------------------------------------------------------------
+
+def _probe(cmd: list[str], timeout: int = 5) -> tuple[int, str]:
+    """Run a read-only diagnostic command. Never raises."""
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        return r.returncode, (r.stdout + r.stderr).strip()
+    except FileNotFoundError:
+        return 127, ""
+    except Exception as e:  # timeout, permission, …
+        return 1, str(e)
+
+
+def parse_gh_auth(output: str) -> dict:
+    """Extract login state from `gh auth status` output (any gh 2.x format).
+    Pure function — unit-testable without a gh install."""
+    m = re.search(r"Logged in to (\S+?)(?: account| as) (\S+)", output or "")
+    if m:
+        return {"logged_in": True, "host": m.group(1), "account": m.group(2)}
+    return {"logged_in": False, "host": "", "account": ""}
+
+
+def load_cli_tooling(repo_root: Path) -> dict:
+    """Detect the git/gh command-line tooling this project's workflow needs.
+    Read-only: presence, version, auth state, repo remote — plus the
+    copy-paste fix command when something is missing. Installation and
+    `gh auth login` (interactive OAuth) happen in the user's terminal."""
+    tools: list[dict] = []
+
+    git_path = shutil.which("git")
+    version = detail = ""
+    if git_path:
+        _, out = _probe(["git", "--version"])
+        version = out.removeprefix("git version").strip()
+        rc, remote = _probe(["git", "-C", str(repo_root), "remote", "get-url", "origin"])
+        detail = f"origin: {remote}" if rc == 0 and remote else "no origin remote configured"
+    tools.append({
+        "name": "git",
+        "title": "git",
+        "installed": bool(git_path),
+        "version": version,
+        "detail": detail,
+        "status": "ok" if git_path else "warning",
+        "fix": "" if git_path else "xcode-select --install   (or: brew install git)",
+    })
+
+    gh_path = shutil.which("gh")
+    version = detail = fix = ""
+    status = "warning"
+    if gh_path:
+        _, vout = _probe(["gh", "--version"])
+        m = re.search(r"gh version (\S+)", vout)
+        version = m.group(1) if m else ""
+        _, aout = _probe(["gh", "auth", "status"])
+        auth = parse_gh_auth(aout)
+        if auth["logged_in"]:
+            status = "ok"
+            detail = f"authenticated as {auth['account']} ({auth['host']})"
+        else:
+            detail = "installed but not authenticated"
+            fix = "gh auth login"
+    else:
+        detail = "not installed — the project's push workflow (PR create/merge) needs it"
+        fix = "brew install gh && gh auth login"
+    tools.append({
+        "name": "gh",
+        "title": "GitHub CLI (gh)",
+        "installed": bool(gh_path),
+        "version": version,
+        "detail": detail,
+        "status": status,
+        "fix": fix,
+    })
+
+    return {"tools": tools, "counts": _counts(tools)}
 
 
 def _counts(rows: list[dict]) -> dict:
@@ -839,5 +939,6 @@ def load_setup(repo_root: Path) -> dict:
         "workflows": load_workflows(repo_root),
         "team": load_team_security(project),
         "registries": load_registries(repo_root, project),
+        "cli": load_cli_tooling(repo_root),
         "warnings": warnings,
     }
