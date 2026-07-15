@@ -20,6 +20,7 @@ from console.metrics.loader import discover as discover_metrics
 from console.metrics.router import router as metrics_router
 from console.overview.router import discover as discover_overview
 from console.overview.router import router as overview_router
+from console.setup.router import router as setup_router
 from console.strategy.router import discover as discover_strategy
 from console.strategy.router import router as strategy_router
 from console.submission.loader import discover as discover_submission
@@ -124,6 +125,7 @@ app.include_router(gap_analysis_router)
 app.include_router(assistant_router)
 app.include_router(workflows_router)
 app.include_router(metrics_router)
+app.include_router(setup_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

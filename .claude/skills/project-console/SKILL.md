@@ -1,15 +1,15 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.30.8
-updated: 2026-06-30
+version: 1.32.0
+updated: 2026-07-14
 ---
 
 # Project Console
 
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
-- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), and **submission** (FDA submission-package viewer + Ask-the-advisor)
+- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), and **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security)
 - A **grouped template library** materialized into the project on init: a `core-team` group of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) plus two advisory panels, and a `red-team` group — an adversarial buyer committee (CEO, CFO, CTO, VP Eng, RA VP, QA VP, PMO skeptics + a panel) for pressure-testing outward-facing documents. Each `agents/templates/<group>/` directory materializes into `agents/<group>/`
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`
@@ -260,6 +260,63 @@ run `/submissions render`; a `POST /submission/render` button shells to the skil
 `render_sidecars.py`. Document *bodies* are rendered inline via the documents
 renderer using the repo-relative paths in the sidecar. The full contract lives in
 the `submissions` skill SKILL.md.
+
+## Topline section: Setup (project settings)
+
+**Setup** (`/setup`) — the project-settings surface. Always visible in the
+topnav. A settings shell (inner sidebar + content pane) with six sections:
+
+| Section | Sources | Writable? |
+|---|---|---|
+| **Connectors** | `.mcp.json` × `security.approved_mcps` × catalog | Yes (the original MCP config editor — see below) |
+| **Skills** | `.claude/skills/*/` (SKILL.md frontmatter + VERSION) × `security.approved_skills`; `registries[].type: builtin` marks built-ins | Read-only |
+| **Agents** | Both surfaces: `.claude/agents/*.md` (registered top-level; symlink target → owning skill) AND `.claude/skills/*/agents/*.md` (bundled skill-internal workers) × `security.approved_agents` (matched on final path segment). Bundled agents inherit approval from their owning skill in `approved_skills`; explicit listing still honored | Read-only |
+| **Plugins** | `security.approved_plugins` (allowlist only — installs live outside the repo) | Read-only |
+| **Rules & Hooks** | `.claude/rules/*.md` + `.claude/settings.json` `hooks` | Read-only |
+| **Team & Security** | `project.yml` `team.*`, `security.*`, `registries[]` | Read-only |
+
+Non-connector sections are deliberately read-only: skills/agents/rules are
+managed by the registry sync tooling, and duplicating that merge logic behind
+a browser button would fork it. Each read-only section reuses the connectors'
+installed-vs-approved status triad (ok / warning "not in allowlist" / info
+"approved, not installed") so the security-posture semantics are identical
+across the whole tool surface. All loaders are defensive — a missing or
+malformed file degrades to an empty section plus a surfaced warning.
+
+### Connectors (the writable section)
+
+Merges three sources into one per-connector status model:
+
+- `.mcp.json` `mcpServers` — server definitions (transport, command/args or url,
+  env **keys** — values are always masked and never editable from the browser)
+- `project.yml` `security.approved_mcps` — the team's security allowlist
+- a skill-shipped, company-agnostic catalog (`console/setup/catalog.py`) of
+  connectors the console can configure, plus custom stdio / HTTP forms
+
+Status per connector: configured + approved → OK; configured but unapproved →
+warning (the security posture check would flag it); approved but not defined →
+"approved, not installed". Stdio launch commands get a cheap existence probe
+(repo-relative path stat / `shutil.which`) — advisory only; the console never
+launches servers.
+
+**Write path** (all writes via `console/setup/writer.py`):
+
+- Add/update a connector writes `.mcp.json` **and** ensures the name is in
+  `project.yml security.approved_mcps` in the same operation — installs and the
+  allowlist move in lockstep.
+- `project.yml` is edited with **surgical line inserts/removals** inside the
+  `approved_mcps:` block (never a yaml round-trip, which would destroy the
+  file's comments); the file is re-parsed after every edit and restored on
+  validation failure.
+- Every write takes a timestamped backup under
+  `tools/project-console/.data/setup-backups/` and appends to
+  `.data/setup-audit.log`.
+- Removing a connector deliberately leaves its allowlist row (removal ≠
+  un-approval); the UI surfaces the resulting "approved, not installed" state.
+
+The console edits configuration only — Claude Code owns the MCP server
+lifecycle, so the UI banners that changes take effect at the next session
+start (or `/mcp` → Reconnect).
 
 ## Theme tokens (theme.yaml fields)
 

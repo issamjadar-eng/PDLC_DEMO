@@ -2,7 +2,7 @@
 
 **ID**: 101
 **Created**: 2026-07-14
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -41,13 +41,15 @@ _Routine registry-alignment + tooling maintenance, three units:_
 - [x] Fix `.claude/skills/submissions/VERSION` `5` → `6` locally
 - [x] Push the VERSION fix upstream to hitachi as a sync PR — [hitachi PR #266](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/266), branch `sync/pdlc-demo-submissions-version-2026-07-14`, awaiting review (PR-only default; not merged)
 - [x] Record push in `.claude/sync-log.md`
-- [ ] Merge hitachi PR #266 (or wait for review), then `git -C ../hitachi pull --ff-only` — until merged, local VERSION shows LOCAL_AHEAD in sync checks (protected, won't be clobbered)
-- [ ] Commit session changes in PDLC_DEMO when user asks (nothing committed yet)
+- [x] Push session changes to PDLC_DEMO main — PR #99 merged (`3f25117`); resolved generated-dashboard conflicts (`tools/usage-metrics/{index.html,usage.json,2026-07.md}`) by taking origin/main's CI-aggregated versions
+- [x] Hitachi PR #266 merged upstream (`67b7fbe`, 2026-07-14 20:58 UTC); local hitachi fast-forwarded (HEAD `bd09efa`), stale sync branch deleted, post-merge `/sync-skills check` = 0 drift rows
 
 ## Changelog
 
 - 2026-07-14: Task created (retroactively covers the sync pull + statusline install done just before the task gate fired on the VERSION edit).
 - 2026-07-14: Sync pull recorded in `.claude/sync-log.md` (hitachi HEAD `761afd3`); statusline installed + smoke-tested (`[Fable 5] · $1.23` render OK).
+- 2026-07-14: Hitachi PR #266 confirmed merged (`67b7fbe`); local hitachi checkout fast-forwarded to `bd09efa`, stale sync branch deleted, drift 0. All goals met → Status Complete. Economics filled (agentic_hours set). Post-merge bookkeeping edits (this doc, index, sync-log) are uncommitted — fold into the next push.
+- 2026-07-14: Pushed to main — PDLC_DEMO PR #99 merged (`3f25117`, 28 files + merge). Conflicts in the three generated usage-metrics dashboard files vs the CI aggregate on origin/main; resolved by taking origin's versions (deterministic CI output, regenerated daily). Task-doc edits after this line are uncommitted until next push.
 - 2026-07-14: Reviewed the submissions version mismatch — evidence: README changelog v6 row (2026-07-07) + SKILL.md frontmatter `version: 6` (both from PR #264) vs `VERSION` file `5` (last touched PR #262) → correct value is 6. Fixed local `.claude/skills/submissions/VERSION`; pushed upstream as hitachi PR #266 (commit `2381d8a`, awaiting review); push logged in `.claude/sync-log.md`; hitachi checkout returned to `main`.
 
 ## Economics
@@ -59,7 +61,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": null,
+    "agentic_hours": 0.75,
     "todos": [
       {
         "todo": "sync-skills pull (18 files) + three-way analysis + per-skill impact review + sync-log entry",
@@ -76,6 +78,12 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
       {
         "todo": "review VERSION-vs-frontmatter mismatch via upstream git history, fix locally, branch + commit + upstream PR #266 + sync-log entry",
         "by_hand_hours": [0.25, 0.5],
+        "persona": "devops-engineer",
+        "retrospective": false
+      },
+      {
+        "todo": "PDLC push: branch/commit/PR #99, resolve 3 generated-dashboard merge conflicts vs CI aggregate, merge; verify hitachi #266 round-trip + branch hygiene",
+        "by_hand_hours": [0.5, 1.0],
         "persona": "devops-engineer",
         "retrospective": false
       }
