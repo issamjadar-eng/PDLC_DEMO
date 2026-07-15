@@ -940,5 +940,11 @@ def load_setup(repo_root: Path) -> dict:
         "team": load_team_security(project),
         "registries": load_registries(repo_root, project),
         "cli": load_cli_tooling(repo_root),
+        "environment": _load_environment(repo_root),
         "warnings": warnings,
     }
+
+
+def _load_environment(repo_root: Path) -> dict:
+    from console.setup.envcheck import load_environment
+    return load_environment(repo_root)

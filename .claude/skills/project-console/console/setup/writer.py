@@ -139,8 +139,14 @@ def upsert_server(repo_root: Path, tool_root: Path, name: str, spec: dict) -> No
     spec = validate_spec(spec)
     data = _read_mcp(repo_root)
     existing = data["mcpServers"].get(name)
-    if isinstance(existing, dict) and isinstance(existing.get("env"), dict) and "env" in spec:
-        spec["env"] = existing["env"]
+    # Carry secrets-adjacent blocks across updates for BOTH transports: the
+    # browser never sends env/headers, so an update must not drop them
+    # (URL specs carry no env key at all — the old `"env" in spec` guard
+    # silently lost a remote server's env/headers on every update).
+    if isinstance(existing, dict):
+        for key in ("env", "headers"):
+            if isinstance(existing.get(key), dict) and not spec.get(key):
+                spec[key] = existing[key]
     _backup(tool_root, mcp_json_path(repo_root))
     data["mcpServers"][name] = spec
     _write_mcp(repo_root, data)

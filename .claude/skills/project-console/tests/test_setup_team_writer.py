@@ -197,5 +197,55 @@ class TeamWriterTest(unittest.TestCase):
         self.assertIn("team-deactivate | carol-gh", audit)
 
 
+class UpsertPreservationTest(unittest.TestCase):
+    """Connector updates must never drop env/headers — the browser never
+    sends them, so an edit that omits them is not a request to delete them.
+    Pins the fix for URL specs, which carry no env key at all (the old
+    `"env" in spec` guard silently lost a remote server's env/headers)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self.tool = self.root / "tool"
+        self.tool.mkdir()
+        (self.root / "project.yml").write_text(
+            "security:\n  approved_mcps: []\n", encoding="utf-8"
+        )
+        import json
+        (self.root / ".mcp.json").write_text(json.dumps({
+            "mcpServers": {
+                "local-server": {"type": "stdio", "command": "run.sh", "args": [],
+                                 "env": {"API_KEY": "secret"}},
+                "remote-server": {"type": "http", "url": "https://old.example.com/mcp",
+                                  "env": {"TOKEN": "secret"},
+                                  "headers": {"X-Org": "demo"}},
+            }
+        }), encoding="utf-8")
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _servers(self) -> dict:
+        import json
+        return json.loads(
+            (self.root / ".mcp.json").read_text(encoding="utf-8")
+        )["mcpServers"]
+
+    def test_stdio_update_preserves_env(self):
+        writer.upsert_server(self.root, self.tool, "local-server",
+                             {"type": "stdio", "command": "run2.sh", "args": ["-v"]})
+        s = self._servers()["local-server"]
+        self.assertEqual(s["command"], "run2.sh")
+        self.assertEqual(s["env"], {"API_KEY": "secret"})
+
+    def test_url_update_preserves_env_and_headers(self):
+        writer.upsert_server(self.root, self.tool, "remote-server",
+                             {"type": "http", "url": "https://new.example.com/mcp"})
+        s = self._servers()["remote-server"]
+        self.assertEqual(s["url"], "https://new.example.com/mcp")
+        self.assertEqual(s["env"], {"TOKEN": "secret"})
+        self.assertEqual(s["headers"], {"X-Org": "demo"})
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

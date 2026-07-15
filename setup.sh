@@ -757,23 +757,34 @@ configure_git() {
     current_name="$(git config --global user.name 2>/dev/null || true)"
     current_email="$(git config --global user.email 2>/dev/null || true)"
 
-    if [[ -n "$current_name" && -n "$current_email" ]]; then
-        success "Git identity is configured: $current_name <$current_email>"
-        if ! $check_only; then
-            if ! ask_yes "Keep this identity?"; then
-                current_name=""
-                current_email=""
+    if $check_only; then
+        # Multi-account setups keep a repo-LOCAL identity override — that is
+        # what commits in this project actually use, so report it as the
+        # effective identity instead of the global one.
+        local project_dir repo_name repo_email
+        project_dir="$(cd "$(dirname "$0")" && pwd)"
+        repo_name="$(git -C "$project_dir" config user.name 2>/dev/null || true)"
+        repo_email="$(git -C "$project_dir" config user.email 2>/dev/null || true)"
+        if [[ -n "$repo_name" && -n "$repo_email" ]] && \
+           [[ "$repo_name" != "$current_name" || "$repo_email" != "$current_email" ]]; then
+            success "Project git identity (repo-local override): $repo_name <$repo_email>"
+            if [[ -n "$current_name" ]]; then
+                info "Global git identity: $current_name <$current_email> — used only by repos without a local override."
             fi
-        fi
-    else
-        if $check_only; then
+        elif [[ -n "$current_name" && -n "$current_email" ]]; then
+            success "Git identity is configured: $current_name <$current_email>"
+        else
             warn "Git identity is NOT configured"
-            return 0
         fi
+        return 0
     fi
 
-    if $check_only; then
-        return 0
+    if [[ -n "$current_name" && -n "$current_email" ]]; then
+        success "Git identity is configured: $current_name <$current_email>"
+        if ! ask_yes "Keep this identity?"; then
+            current_name=""
+            current_email=""
+        fi
     fi
 
     if [[ -z "$current_name" ]]; then
@@ -807,14 +818,72 @@ setup_ssh_key() {
 
     local key_file="$HOME/.ssh/id_ed25519"
 
-    if [[ -f "$key_file" ]]; then
-        success "SSH key already exists: $key_file"
+    # Discover keys beyond the default path: multi-account setups name keys
+    # id_ed25519_work / id_ed25519_personal and wire them to host aliases via
+    # ~/.ssh/config IdentityFile entries. A missing default key is NOT a
+    # missing key.
+    local found_keys=()
+    [[ -f "$key_file" ]] && found_keys+=("$key_file")
+    if [[ -f "$HOME/.ssh/config" ]]; then
+        local idf
+        while IFS= read -r idf; do
+            idf="${idf/#\~/$HOME}"
+            if [[ -f "$idf" ]]; then
+                case " ${found_keys[*]-} " in
+                    *" $idf "*) ;;
+                    *) found_keys+=("$idf") ;;
+                esac
+            fi
+        done < <(awk 'tolower($1)=="identityfile" {print $2}' "$HOME/.ssh/config")
+    fi
+    local pub
+    for pub in "$HOME"/.ssh/id_*.pub; do
+        [[ -f "$pub" ]] || continue
+        local priv="${pub%.pub}"
+        if [[ -f "$priv" ]]; then
+            case " ${found_keys[*]-} " in
+                *" $priv "*) ;;
+                *) found_keys+=("$priv") ;;
+            esac
+        fi
+    done
+
+    # If this project's origin is an SSH remote, the check that actually
+    # matters is whether SSH auth to that host (alias) works — and WHICH
+    # GitHub account the key maps to ("Hi <user>!").
+    probe_ssh_auth() {
+        local project_dir origin_url origin_host ssh_out ssh_user
+        project_dir="$(cd "$(dirname "$0")" && pwd)"
+        origin_url="$(git -C "$project_dir" remote get-url origin 2>/dev/null || true)"
+        case "$origin_url" in
+            http*|"") return 0 ;;  # https remotes don't use SSH keys
+        esac
+        origin_host="$(echo "$origin_url" \
+            | sed -n 's/^ssh:\/\///; s/^\([^@\/]*@\)\{0,1\}\([^:\/]*\)[:\/].*/\2/p')"
+        [[ -z "$origin_host" ]] && return 0
+        ssh_out="$(ssh -o BatchMode=yes -o ConnectTimeout=5 -T "git@$origin_host" 2>&1 || true)"
+        if echo "$ssh_out" | grep -q "successfully authenticated"; then
+            ssh_user="$(echo "$ssh_out" | sed -n 's/^Hi \([^!]*\)!.*/\1/p')"
+            success "SSH auth to $origin_host works — GitHub sees account: ${ssh_user:-unknown}"
+        else
+            warn "SSH auth to $origin_host failed — check the IdentityFile for this host in ~/.ssh/config."
+        fi
+    }
+
+    if [[ ${#found_keys[@]} -gt 0 ]]; then
+        if [[ ${#found_keys[@]} -eq 1 && "${found_keys[0]}" == "$key_file" ]]; then
+            success "SSH key already exists: $key_file"
+        else
+            success "SSH key(s) found: ${found_keys[*]}"
+        fi
+        probe_ssh_auth
         if $check_only; then
             return 0
         fi
+        [[ ! -f "$key_file" ]] && return 0  # custom-named keys: nothing to generate or upload
     else
         if $check_only; then
-            warn "No SSH key found at $key_file"
+            warn "No SSH key found ($key_file, ~/.ssh/config IdentityFile entries, or ~/.ssh/id_*)"
             return 0
         fi
 
@@ -1137,23 +1206,36 @@ audit_team_access() {
     fi
 
     local collaborators
-    if ! collaborators="$(gh api "repos/$repo/collaborators" --jq '.[].login' 2>/dev/null)"; then
+    if ! collaborators="$(gh api "repos/$repo/collaborators" --jq '.[] | "\(.login) \(.role_name)"' 2>/dev/null)"; then
         warn "Could not fetch collaborators for $repo."
         warn "You may not have admin access to view collaborators."
         return 0
     fi
 
+    # Parallel arrays (macOS ships bash 3.2 — no associative arrays).
     local collab_array=()
-    while IFS= read -r user; do
-        [[ -n "$user" ]] && collab_array+=("$user")
+    local collab_roles=()
+    while IFS=' ' read -r user role; do
+        if [[ -n "$user" ]]; then
+            collab_array+=("$user")
+            collab_roles+=("${role:-unknown}")
+        fi
     done <<< "$collaborators"
 
     info "GitHub repo collaborators: ${collab_array[*]}"
 
     local issues_found=false
+    local observer_count=0
 
-    # Check 1: Collaborators not in active team roster (unauthorized access)
-    for collab in "${collab_array[@]}"; do
+    # Check 1: Collaborators not in the active team roster.
+    # This is a teaching project: read-only observers are routinely granted
+    # access without joining the roster — they never modify the project, so
+    # unrostered READ access is informational, not a posture failure.
+    # Unrostered WRITE access is different: anyone who can modify the repo
+    # should be on the roster (or have their access reduced to read).
+    for i in "${!collab_array[@]}"; do
+        local collab="${collab_array[$i]}"
+        local role="${collab_roles[$i]}"
         local found=false
         for active in "${active_users[@]}"; do
             if [[ "$collab" == "$active" ]]; then
@@ -1162,8 +1244,16 @@ audit_team_access() {
             fi
         done
         if ! $found; then
-            error "UNAUTHORIZED ACCESS: '$collab' has repo access but is NOT in project.yml active roster."
-            issues_found=true
+            case "$role" in
+                read|triage)
+                    info "OBSERVER: '$collab' has $role access and is not in the roster — expected for teaching-project observers."
+                    observer_count=$((observer_count + 1))
+                    ;;
+                *)
+                    warn "UNROSTERED WRITE ACCESS: '$collab' has $role access but is NOT in the project.yml roster — add them to team.active or reduce their access to read."
+                    issues_found=true
+                    ;;
+            esac
         fi
     done
 
@@ -1195,7 +1285,11 @@ audit_team_access() {
     fi
 
     if ! $issues_found; then
-        success "Team roster and repo access are in sync."
+        if [[ $observer_count -gt 0 ]]; then
+            success "Team roster and repo access are in sync ($observer_count read-only observer(s) not rostered — expected for a teaching project)."
+        else
+            success "Team roster and repo access are in sync."
+        fi
     fi
 }
 
@@ -1260,6 +1354,13 @@ print_summary() {
     echo ""
     echo -e "  Then read ${BOLD}how-to-guide.md${NC} for day-to-day usage of the project."
     echo ""
+
+    # Stamp the successful full run so tooling (e.g. the project console's
+    # Environment view) can answer "has setup.sh been run, and when?"
+    local stamp_dir
+    stamp_dir="$(cd "$(dirname "$0")" && pwd)/.state"
+    mkdir -p "$stamp_dir"
+    date -u +"%Y-%m-%dT%H:%M:%SZ" > "$stamp_dir/setup-last-run.txt"
 }
 
 # ---------------------------------------------------------------------------

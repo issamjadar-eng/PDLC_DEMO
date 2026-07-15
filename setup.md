@@ -17,7 +17,8 @@ Onboarding for a new contributor joining the PDLC_DEMO repository. Walks from a 
 > **About PDLC_DEMO**: this is a *demonstration* project for agentic workflows across the Product Development Life Cycle (PDLC) in MedTech. The DHF, design controls, V&V, and submission artifacts anchor on the **PainEase PCA Advanced (PP3500)** — a patient-controlled analgesia infusion pump (combination SaMD / SiMD / hardware device). Fabricated clinical data and placeholder predicates are clearly flagged — read `CLAUDE.md` and `project-overview.md` for the full scope.
 >
 > **Companion files**:
-> - `setup.sh` — automated installer for everything in steps 8–14 below (works on macOS, WSL, Linux).
+> - `setup.sh` — automated installer for everything in steps 8–14 below, plus the optional §16/§17 components when present (works on macOS, WSL, Linux). A successful full run stamps `.state/setup-last-run.txt` so tooling can tell setup has been done.
+> - `bash setup.sh --check` — read-only health check: verifies every installed tool, your effective git identity, SSH keys **and** live SSH auth to the repo host, and audits the team roster against actual GitHub collaborators. Changes nothing. Also runnable from the project console (Setup → **Environment** → Run check), which keeps the last report with timestamps and a staleness banner.
 
 > **Windows users**: This project uses Unix-based tools for document processing, automation, and AI workflows. To keep the team consistent, Windows users run these tools inside **WSL** (Windows Subsystem for Linux). Step 3 walks you through it.
 
@@ -461,6 +462,7 @@ ls ~/.ssh/id_ed25519.pub
 ```
 
 - If you see a file path — skip the generation step below and go straight to "Add your SSH key to GitHub".
+- **Already juggling multiple GitHub accounts?** Keys at custom paths (e.g. `~/.ssh/id_ed25519_work`) wired to host aliases in `~/.ssh/config` work fine — the setup check discovers keys through your ssh config's `IdentityFile` entries and verifies auth against the repo's actual host alias, so you don't need a key at the default path. The same goes for a repo-local git identity override (`git config user.email` inside the repo): the check reports the identity this repo's commits actually use.
 - If you see "No such file or directory" — generate one:
 
 ```
@@ -673,11 +675,15 @@ Before adding a new MCP server, plugin, or agent:
 
 > **✨ Or just ask Claude**: *"Add me to the team roster. I'm Jane Smith, GitHub username `jsmith`, email `jane.smith@globallogic.com`, role 'Regulatory Affairs'."* Claude edits `project.yml`, creates `tasks/jsmith/000-index.md` for you (lowercase first name as the task folder), and runs `/secops check` to confirm your entry is wired correctly. You do **not** need to know YAML or hand-edit `project.yml`.
 
+> **Or use the project console**: if the console is running (`tools/project-console/start.sh`), Setup → **Team & Security** → **Add member…** does the same roster edit from the browser, with the domain and uniqueness checks built in.
+
 The manual steps (what Claude does under the hood):
 
 1. Open `project.yml`.
 2. Add yourself to `team.active` — name, GitHub username, task folder (lowercase first name), role, email on an approved domain (see `security.approved_email_domains`), and `added: <YYYY-MM-DD>`.
 3. Open a Claude Code session and run `/secops check` (or just start a new session — the SessionStart hook runs it automatically). The hook writes your `tasks/<person>/SECOPS.md` file with a 7-day freshness cycle and a 30-day attestation cycle.
+
+> **Who needs a roster row?** Everyone who *contributes* (i.e., has write access). This is a teaching project — read-only observers get repo access without registering, and the roster audit treats them as expected. If you'll only be reading, you can skip this step.
 
 ---
 
@@ -872,6 +878,18 @@ The underlying commands, if you prefer to run them yourself:
 
 Both should exit with zero Required FAILs after you complete the steps above. If anything fails, the output includes the specific fix for each check.
 
+### Environment health check
+
+Independently of the Claude-side audits, verify the machine setup itself:
+
+```
+bash setup.sh --check
+```
+
+Read-only — reports every tool's install state, your **effective** git identity for this repo (repo-local override wins over global), SSH keys (default path, `~/.ssh/config` `IdentityFile` entries, or `id_*` pairs) plus a live SSH-auth probe against the repo's host that names the GitHub account your key maps to, and the team-roster-vs-collaborators audit.
+
+If the project console is running, the same check is available in the browser at Setup → **Environment** → **Run check** — it keeps the last report with a timestamp and flags when `setup.sh` has changed since the report was generated. Fixes always happen in the terminal (`bash setup.sh`); the console never installs anything.
+
 ---
 
 ## You're Done!
@@ -886,6 +904,7 @@ If you're a *team lead* starting a new MedTech project (not just joining this on
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-07-15 | Ben Xavier / AI Assistant | Drift audit against the current `setup.sh` (task ben/104). Documented the previously-unmentioned **`--check` mode** (companion-files banner + new §19 "Environment health check" subsection) and the project console's Setup → Environment view that runs/caches it. §11: multi-account note — custom-path SSH keys via `~/.ssh/config` `IdentityFile` and repo-local git identity overrides are detected by the check. §15f: console Add-member alternative + teaching-project observer policy (roster rows required for write access; read-only observers exempt, matching the permission-aware roster audit). Companion bullet now notes the `.state/setup-last-run.txt` full-run stamp. |
 | 2026-05-31 | Ben Xavier | Added §18 — optional, evaluation-only Gemini CLI guide (install via `npm install -g @google/gemini-cli` → auth → launch in project → cross-link to existing `GEMINI.md`). Explicit framing: Gemini is **partial** support for users without Claude access who want to read and reason about the project; **not** the supported development path. Capability table contrasts Claude vs. Gemini on slash-skills, task-gate hook, MCP servers, and develop/commit/push. Renumbered "Confirm Everything Is Wired Up" §18 → §19. Task ben/071. |
 | 2026-05-30 | Ben Xavier | Added "📍 You are here" decision banner at the top — three-row table that tells the reader at a glance which of the three onboarding docs (setup.md / how-to-guide.md / new-project-bootstrap.md) they should be reading and explicitly flags `new-project-bootstrap.md` as "the easy one to get wrong" (it's for replicators starting their own project, NOT for contributors joining PDLC_DEMO). Removed redundant Companion-docs bullet list (now folded into the banner). Same banner applied to the other two docs for consistency. |
 | 2026-05-30 | Ben Xavier | Follow-up to the initial rewrite: added an **"ask Claude"** layer for non-engineer users. New top-banner explaining the pattern. "✨ Or just ask Claude" callouts added at steps 11 (Git + SSH), 12 (VS Code extensions), 14 (repo clone), 15 banner (security posture overview), 15f (team registration), 16 (web-control), 17 (file-locator), 18 (confirmation). Added a third row to the "Choose Your Path" table: "Claude-assisted" — for users who already have Claude Code from another project. Under-the-hood manual commands still present so engineers can see what Claude is doing. |
