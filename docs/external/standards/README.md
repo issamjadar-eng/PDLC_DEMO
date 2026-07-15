@@ -15,7 +15,12 @@ Standards with per-file requirement breakdowns in this folder:
 | IEC 62366-1 | [iec-62366-1.md](./iec-62366-1.md) | Application of usability engineering to medical devices | Usability engineering | User-facing SaMD + device UI hardware | [webstore.iec.ch](https://webstore.iec.ch/publication/61937) |
 | IEC 82304-1 | [iec-82304-1.md](./iec-82304-1.md) | Health software — Product safety requirements | Health software product safety | SaMD components | [webstore.iec.ch](https://webstore.iec.ch/publication/29316) |
 | IEC 81001-5-1 | [iec-81001-5-1.md](./iec-81001-5-1.md) | Health software and health IT systems safety, effectiveness and security — Security — Activities in the product life cycle | Health software security | All connected software (EHR/FHIR interface, SaMD, firmware updates) | [webstore.iec.ch](https://webstore.iec.ch/publication/76914) |
-| IEC 60601-1 | [iec-60601-1.md](./iec-60601-1.md) | Medical electrical equipment — Part 1: General requirements for basic safety and essential performance | Medical electrical equipment | Custom medical electrical hardware (power supply, motor drive, fluid delivery assembly, user-facing electrical interfaces) | [webstore.iec.ch](https://webstore.iec.ch/publication/2603) |
+| IEC 60601-1 | [iec-60601-1.md](./iec-60601-1.md) | Medical electrical equipment — Part 1: General requirements for basic safety and essential performance | Medical electrical equipment | Custom medical electrical hardware (power supply, motor drive, fluid delivery assembly, user-facing electrical interfaces) | [webstore.iec.ch](https://webstore.iec.ch/en/publication/67497) |
+| IEC 60601-1-2 | [iec-60601-1-2.md](./iec-60601-1-2.md) | Medical electrical equipment — EMC — Requirements and tests | EMC | Whole device (DI-012; HAZ-010); edition determination open (FDA recognizes Ed 4.1 only) | [webstore.iec.ch](https://webstore.iec.ch/en/publication/67554) |
+| IEC 60601-1-8 | [iec-60601-1-8.md](./iec-60601-1-8.md) | Medical electrical equipment — Alarm systems | Alarms | Alarm annunciation path (DI-019; HAZ-008; FM-D-018) | [webstore.iec.ch](https://webstore.iec.ch/en/publication/67388) |
+| IEC 60601-2-24 | [iec-60601-2-24.md](./iec-60601-2-24.md) | Particular requirements — infusion pumps and controllers | Infusion pump particular | Therapy delivery + protection (DI-001/002/006/007/010; HAZ-001/004/006); **subclause-number confirmation blocking for HA Rev 1.0**; no current FDA recognition | [webstore.iec.ch](https://webstore.iec.ch/en/publication/2635) |
+| ISO 10993 series | [iso-10993.md](./iso-10993.md) | Biological evaluation of medical devices (-1/-5/-10/-23) | Biocompatibility | Patient-contacting materials (DI-011; HAZ-011); edition pin open (-10/-23 irritation split, 2021) | [iso.org](https://www.iso.org/standard/68936.html) |
+| IEC 60812 | [iec-60812.md](./iec-60812.md) | Failure modes and effects analysis (FMEA and FMECA) | Risk analysis method | FMEA methodology anchor (GL-WI-RM-002; both GL-TMP-RM-004 instances) | [webstore.iec.ch](https://webstore.iec.ch/en/publication/26359) |
 
 - **Original Source** column links to the publisher (IEC standards are copyrighted and not redistributable; only the distilled markdown ships in the skill library). `iec-60601-1.md` is manually authored — not in the skill library — and is preserved as-is by `update-external-references`.
 
@@ -65,6 +70,8 @@ Standards evaluated and determined not applicable, with rationale:
 - Note that established device companies likely have ISO 13485 QMS in place — verify before assuming gaps
 
 ## Changelog
+
+- 2026-07-15: Added five applicability docs (60601-1-2, 60601-1-8, 60601-2-24, ISO 10993 series, IEC 60812) + populated the iec-60601-1.md [VERIFY] stub — closing the ben/102 reference-audit registry gaps (task ben/105). Fixed the stale IEC 60601-1 webstore link (2603 → 67497 Ed 3.2 CSV).
 
 | Date | Author | Summary |
 |------|--------|---------|

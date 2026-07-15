@@ -8,6 +8,7 @@ Per the medtech-docs **cite-both mandate**, any external regulatory citation mus
 
 | Regulation | File | Full Title | Applies To | L1a Source |
 |-----------|------|-----------|-----------|-----------|
+| QMSR (21 CFR Part 820) | [qmsr-part-820.md](./qmsr-part-820.md) | Quality Management System Regulation | The whole program QMS — § 820.10 ISO 13485 QMS requirement + Clause 7.3 design controls (Class II); § 820.35/§ 820.45 record/labeling supplements; program citation rule for repealed QSR numbers (former § 820.75 et al.) | [`references/regulations/21-cfr-part-820.md`](../../../.claude/skills/medtech-docs/references/regulations/21-cfr-part-820.md) |
 | HIPAA (45 CFR Part 164) | [hipaa.md](./hipaa.md) | Security & Privacy of Individually Identifiable Health Information | The connected SaMD/cloud path that handles ePHI — cloud-suite + connectivity-adapter (PP3500 acts as a **business associate**) | [`references/regulations/45-cfr-part-164.md`](../../../.claude/skills/medtech-docs/references/regulations/45-cfr-part-164.md) |
 
 ## Evaluated — Not Required
@@ -23,6 +24,8 @@ _(none yet)_
 - This is demo content — carry the `_Demo sample data — not for clinical use._` banner.
 
 ## Changelog
+
+- 2026-07-14: Added `qmsr-part-820.md` — QMSR applicability + the program rule for repealed-QSR-number citations (driven by reference audit RA-gl-tmp-rm-004-process-fmea-001 finding E2). (task ben/105)
 
 | Date | Author | Summary |
 |------|--------|---------|
