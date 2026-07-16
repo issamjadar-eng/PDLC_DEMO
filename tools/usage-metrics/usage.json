@@ -2,20 +2,20 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 118.85,
-    "2026-06-16": 40.09,
-    "2026-06-22": 18.03,
-    "2026-06-23": 9.36,
+    "2026-06-15": 118.78,
+    "2026-06-16": 40.06,
+    "2026-06-22": 18.01,
+    "2026-06-23": 9.35,
     "2026-06-29": 1.07,
-    "2026-06-30": 180.66,
-    "2026-07-01": 185.59,
-    "2026-07-02": 22.47,
-    "2026-07-03": 8.2,
+    "2026-06-30": 180.58,
+    "2026-07-01": 185.51,
+    "2026-07-02": 22.44,
+    "2026-07-03": 8.19,
     "2026-07-05": 2.71,
     "2026-07-08": 1.18,
-    "2026-07-14": 32.13,
-    "2026-07-15": 203.06,
-    "2026-07-16": 18.93
+    "2026-07-14": 32.1,
+    "2026-07-15": 202.99,
+    "2026-07-16": 19.77
   },
   "members": 1,
   "months": {
@@ -180,13 +180,13 @@
             "output": 724497
           },
           "2026-07-16": {
-            "cache_creation": 249695,
+            "cache_creation": 317774,
             "cache_read": 22536212,
-            "cache_write_1h": 249695,
+            "cache_write_1h": 317774,
             "cache_write_5m": 0,
-            "input": 87,
-            "messages": 43,
-            "output": 44136
+            "input": 90,
+            "messages": 44,
+            "output": 44808
           }
         },
         "by_model": {
@@ -211,27 +211,27 @@
             "output": 719645
           },
           "claude-sonnet-4-6": {
-            "cache_creation": 196646,
+            "cache_creation": 264725,
             "cache_read": 0,
-            "cache_write_1h": 196646,
+            "cache_write_1h": 264725,
             "cache_write_5m": 0,
-            "cost": 1.18,
-            "input": 3,
-            "messages": 1,
-            "output": 123
+            "cost": 1.6,
+            "input": 6,
+            "messages": 2,
+            "output": 795
           }
         },
-        "cost": 555.35,
+        "cost": 555.77,
         "name": "Member 1",
-        "sessions": 10,
+        "sessions": 11,
         "totals": {
-          "cache_creation": 10040546,
+          "cache_creation": 10108625,
           "cache_read": 480806285,
-          "cache_write_1h": 5228997,
+          "cache_write_1h": 5297076,
           "cache_write_5m": 4811549,
-          "input": 286091,
-          "messages": 1718,
-          "output": 1651610
+          "input": 286094,
+          "messages": 1719,
+          "output": 1652282
         }
       }
     }
@@ -4896,26 +4896,26 @@
           "output": 1112396
         },
         "claude-sonnet-4-6": {
-          "cache_creation": 196646,
+          "cache_creation": 264725,
           "cache_read": 0,
-          "cache_write_1h": 196646,
+          "cache_write_1h": 264725,
           "cache_write_5m": 0,
-          "cost": 1.18,
-          "input": 3,
-          "messages": 1,
-          "output": 123
+          "cost": 1.6,
+          "input": 6,
+          "messages": 2,
+          "output": 795
         }
       },
-      "cost": 235.35,
-      "sessions": 17,
+      "cost": 235.77,
+      "sessions": 18,
       "totals": {
-        "cache_creation": 5253090,
+        "cache_creation": 5321169,
         "cache_read": 296842436,
-        "cache_write_1h": 4660140,
+        "cache_write_1h": 4728219,
         "cache_write_5m": 592950,
-        "input": 362405,
-        "messages": 1121,
-        "output": 1157428
+        "input": 362408,
+        "messages": 1122,
+        "output": 1158100
       }
     },
     "dmytro/001": {
@@ -4963,8 +4963,8 @@
     "cost_allocated": 150.23,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 606.98,
-    "cost_unattributed_measured": 235.35,
-    "cost_unattributed_residual": 85.11,
+    "cost_unattributed_measured": 235.77,
+    "cost_unattributed_residual": 85.53,
     "hours_saved": {
       "max": 3105.0,
       "min": 954.0
