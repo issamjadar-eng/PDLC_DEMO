@@ -16,6 +16,11 @@ POST   /setup/environment/check        — run the project's `setup.sh --check`
                                           (read-only mode) and cache the parsed
                                           report; the full install never runs
                                           from the browser
+POST   /setup/project/field            — update one scalar field in the
+                                          project.yml `project:` block
+POST   /setup/team/access-audit        — cross-reference GitHub collaborators
+                                          against the project.yml roster
+                                          (report-only, cached under .state/)
 POST   /setup/team/members             — add a member to project.yml team.active
 POST   /setup/team/members/{github}/deactivate — move to team.inactive
                                           ({"reason": str}; roster edit only —
@@ -175,6 +180,46 @@ async def setup_environment_check(request: Request):
     except RuntimeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True, "report": report}
+
+
+@router.post("/setup/project/field", response_class=JSONResponse)
+async def setup_project_field(request: Request):
+    """Update one scalar project.* field (surgical project.yml edit)."""
+    cfg = get_config()
+    body = await request.json()
+    if not isinstance(body, dict) or "key" not in body or "value" not in body:
+        raise HTTPException(status_code=400, detail="Body must be {'key','value'}.")
+    try:
+        note = writer.set_project_field(
+            cfg.repo_root, cfg.tool_root, str(body["key"]), str(body["value"])
+        )
+    except writer.SetupWriteError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "note": note}
+
+
+@router.post("/setup/team/access-audit", response_class=JSONResponse)
+async def setup_team_access_audit(request: Request):
+    """Cross-reference GitHub repo collaborators against the project.yml
+    roster (permission-aware) and cache the result. Report-only — access
+    changes happen in GitHub."""
+    import anyio
+
+    from console.setup import team_access
+    cfg = get_config()
+    try:
+        report = await anyio.to_thread.run_sync(
+            lambda: team_access.run_audit(cfg.repo_root)
+        )
+    except team_access.TeamAccessError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    c = report["counts"]
+    return {
+        "ok": True,
+        "note": (f"Audited {len(report['rows'])} accounts on {report['repo']}: "
+                 f"{c['ok']} rostered, {c['info']} observers, "
+                 f"{c['warning']} warnings, {c['error']} errors."),
+    }
 
 
 @router.post("/setup/team/members", response_class=JSONResponse)

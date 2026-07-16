@@ -496,6 +496,71 @@ def deactivate_team_member(repo_root: Path, tool_root: Path, github: str,
     )
 
 
+# ── project.yml project.* scalar fields (surgical, comment-preserving) ───────
+
+def set_project_field(repo_root: Path, tool_root: Path, key: str, value: str) -> str:
+    """Update one SCALAR field inside the top-level `project:` block —
+    surgical line replacement, same discipline as every project.yml write
+    (backup, re-parse validation with restore-on-failure, audit). Only
+    fields that already exist as single-line scalars are editable: adding
+    fields or editing structured blocks stays with their owning tooling."""
+    key = (key or "").strip()
+    if not re.match(r"^[a-z][a-z0-9_]{0,63}$", key):
+        raise SetupWriteError("Invalid field key.")
+    value = _validate_scalar("Value", value, 200)
+
+    p = project_yml_path(repo_root)
+    if not p.is_file():
+        raise SetupWriteError("project.yml not found.")
+    original = p.read_text(encoding="utf-8")
+    lines = original.splitlines(keepends=True)
+
+    proj_idx = next(
+        (i for i, l in enumerate(lines) if re.match(r"^project:\s*$", l)), None
+    )
+    if proj_idx is None:
+        raise SetupWriteError("project.yml has no top-level project: block.")
+    target = None
+    for j in range(proj_idx + 1, len(lines)):
+        if re.match(r"^\S", lines[j]):  # next top-level key ends the block
+            break
+        m = re.match(rf"^(\s+){re.escape(key)}:\s*(.*?)\s*$", lines[j])
+        if m:
+            old = m.group(2)
+            if not old or old.startswith(("[", "{", "|", ">", "&", "*")):
+                raise SetupWriteError(
+                    f"project.{key} is not a single-line scalar — edit it in "
+                    "project.yml directly (or via its owning tooling)."
+                )
+            target = (j, m.group(1), old)
+            break
+    if target is None:
+        raise SetupWriteError(
+            f"project.{key} does not exist — the console edits existing scalar "
+            "fields only; add new fields in project.yml directly."
+        )
+    j, indent, old = target
+    if old.strip("'\"") == value:
+        return f"project.{key} already has that value — nothing changed."
+
+    _backup(tool_root, p)
+    lines[j] = f"{indent}{key}: {value}\n"
+    p.write_text("".join(lines), encoding="utf-8")
+    try:
+        data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        parsed = (data.get("project") or {}).get(key)
+        if str(parsed) != value and parsed != yaml.safe_load(value):
+            raise ValueError("post-edit value mismatch")
+    except Exception as e:
+        p.write_text(original, encoding="utf-8")
+        raise SetupWriteError(f"project.yml edit failed validation ({e}); file restored.")
+    _audit(tool_root, "project-field", key, f"{old!r} -> {value!r}")
+    return (
+        f"project.{key} updated. Tools read project.yml at run time — no restart "
+        "needed for the console; Claude Code sessions pick it up on next start."
+    )
+
+
 # ── registry skill install / update (copy from the registry's local clone) ───
 
 def _backup_dir(tool_root: Path, target: Path) -> Path:
