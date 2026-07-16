@@ -4,6 +4,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-15 — push (fourth of the day)
+
+- Files (11): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{loader.py, project_meta.py (new), router.py, team_access.py (new), writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_project_fields.py (new), test_setup_team_access.py (new)}`
+- Branch: `sync/pdlc-demo-project-console-140-2026-07-15`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/274
+- Commit: "project-console 1.39.0/1.40.0: team access audit + Project section"
+- Status: merged (user requested sync; squash)
+- Merge commit: `05eafb9`
+- Hitachi HEAD after sync: `05eafb9` (clone ff'd, sync branch deleted local+remote)
+- Post-check: 0 project-console drift rows — lockstep at 1.40.0. Consumer note: access audit needs `project.repo` in project.yml; field/section descriptions come from the skill's project_meta.py catalog.
+
+---
+
 ## 2026-07-15 — push (third of the day)
 
 - Files (10): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{loader.py, registry_remote.py (new), router.py, writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_hooks_loader.py (new), test_setup_registry_remote.py (new)}`
