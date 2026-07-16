@@ -677,6 +677,7 @@ def load_team_security(project: dict) -> dict:
         "members": members,
         "inactive": inactive,
         "inactive_count": len(inactive),
+        "repo": str((project.get("project") or {}).get("repo") or ""),
         "registries": registries,
         "email_domains": [str(x) for x in security.get("approved_email_domains") or []],
         "allowlist_counts": {
@@ -1038,6 +1039,7 @@ def load_setup(repo_root: Path) -> dict:
     project, warnings = _load_project_yml(repo_root)
     connectors = load_connectors(repo_root)
     return {
+        "project": load_project_settings(project),
         "connectors": connectors,
         "skills": load_skills(repo_root, project),
         "agents": load_agents(repo_root, project),
@@ -1045,6 +1047,7 @@ def load_setup(repo_root: Path) -> dict:
         "rules_hooks": load_rules_hooks(repo_root),
         "workflows": load_workflows(repo_root),
         "team": load_team_security(project),
+        "team_access": _load_team_access(repo_root),
         "registries": load_registries(repo_root, project),
         "cli": load_cli_tooling(repo_root),
         "environment": _load_environment(repo_root),
@@ -1055,3 +1058,73 @@ def load_setup(repo_root: Path) -> dict:
 def _load_environment(repo_root: Path) -> dict:
     from console.setup.envcheck import load_environment
     return load_environment(repo_root)
+
+
+def _load_team_access(repo_root: Path) -> dict | None:
+    from console.setup.team_access import load_audit
+    return load_audit(repo_root)
+
+
+def load_project_settings(project: dict) -> dict:
+    """Setup → Project data: the `project:` block's fields (scalars editable)
+    plus an inventory of every top-level project.yml section, each annotated
+    from the skill-shipped description catalog (project_meta.py) so all
+    consuming projects render the same explanations."""
+    from console.setup.project_meta import PROJECT_FIELDS, SECTIONS, UNKNOWN_FIELD_NOTE
+
+    fields = []
+    for key, value in (project.get("project") or {}).items():
+        scalar = isinstance(value, (str, int, float, bool))
+        if scalar:
+            display = str(value)
+        elif isinstance(value, list) and all(isinstance(x, (str, int, float, bool)) for x in value):
+            display = ", ".join(str(x) for x in value)
+        elif isinstance(value, dict):
+            display = ", ".join(f"{k}: {v}" for k, v in value.items())
+        else:
+            display = _clip(str(value), 160)
+        fields.append({
+            "key": str(key),
+            "value": display,
+            "editable": scalar,
+            "known": key in PROJECT_FIELDS,
+            "description": PROJECT_FIELDS.get(key, UNKNOWN_FIELD_NOTE),
+        })
+
+    sections = []
+    for key, value in project.items():
+        if key == "project":
+            continue
+        meta = SECTIONS.get(key) or {}
+        if isinstance(value, list):
+            size = f"{len(value)} item{'s' if len(value) != 1 else ''}"
+        elif isinstance(value, dict):
+            size = f"{len(value)} key{'s' if len(value) != 1 else ''}"
+        else:
+            size = "scalar"
+        preview, truncated = _yaml_preview(value)
+        sections.append({
+            "key": str(key),
+            "size": size,
+            "known": key in SECTIONS,
+            "description": meta.get("description", UNKNOWN_FIELD_NOTE),
+            "managed": meta.get("managed", ""),
+            "preview": preview,
+            "preview_truncated": truncated,
+        })
+    return {"fields": fields, "sections": sections}
+
+
+def _yaml_preview(value, max_lines: int = 40) -> tuple[str, int]:
+    """Compact YAML rendering of a config block for the row expansion.
+    Returns (text, hidden_line_count) — capped so huge blocks (dhfs,
+    strategy_domains) don't blow the page up."""
+    try:
+        text = yaml.safe_dump(value, sort_keys=False, allow_unicode=True,
+                              default_flow_style=False, width=100).rstrip()
+    except yaml.YAMLError:
+        text = str(value)
+    lines = text.splitlines()
+    if len(lines) <= max_lines:
+        return text, 0
+    return "\n".join(lines[:max_lines]), len(lines) - max_lines

@@ -122,6 +122,10 @@
   .su-kv dd { margin: 0; overflow-wrap: anywhere; }
   .su-kv code { background: var(--code-bg,#11141a); color: var(--code-text,#e6e9ef);
       padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+  .su-yaml { margin: 10px 0 0; padding: 10px 12px; font-size: 11.5px; line-height: 1.5;
+      background: var(--code-bg,#11141a); color: var(--code-text,#e6e9ef);
+      border: 1px solid var(--border,#2a2f3a); border-radius: 8px;
+      overflow-x: auto; white-space: pre; font-family: ui-monospace, monospace; }
   .su-envkey { display: inline-block; margin: 0 6px 4px 0; font-size: 11px; padding: 1px 7px;
       border-radius: 9px; border: 1px solid var(--border,#2a2f3a); }
   .su-envkey.set { color: #4fbf9a; } .su-envkey.empty { color: #e06b6b; }
@@ -191,6 +195,8 @@
   <aside class="su-side">
     <div class="su-side-label">Project settings</div>
     <nav class="su-nav" id="su-nav">
+      <a href="#project" data-sec="project"><svg class="su-ico"><use href="#su-ic-box"/></svg>Project
+        {% if setup.project.fields | rejectattr('known') | list or setup.project.sections | rejectattr('known') | list %}<span class="su-dot" title="fields without registered descriptions"></span>{% endif %}</a>
       <a href="#connectors" data-sec="connectors"><svg class="su-ico"><use href="#su-ic-plug"/></svg>Connectors
         {% if setup.connectors.connectors | selectattr('status','equalto','warning') | list %}<span class="su-dot" title="unapproved connector"></span>{% endif %}
         <span class="su-count">{{ setup.connectors.connectors | length }}</span></a>
@@ -225,6 +231,80 @@
 
   <section class="su-main">
     {% for w in setup.warnings %}<div class="su-warn">{{ w }}</div>{% endfor %}
+
+    {# ============================== PROJECT ============================= #}
+    <section class="su-sec" id="sec-project" data-title="Project">
+      <div class="su-head">
+        <h1>Project</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search fields…" data-filter="project"></div>
+      </div>
+      <p class="su-sub">
+        The project's identity and classification from <code>project.yml</code>'s
+        <code>project:</code> block. Expand a row for what the field means and, for
+        single-line values, an inline edit (surgical <code>project.yml</code> write —
+        backup + audit, like every console edit). Field descriptions ship with the
+        console skill, so every project reads the same explanations.
+      </p>
+
+      <div class="su-h2">Identity &amp; classification</div>
+      <div class="su-list" data-list="project">
+        <div class="su-cols"><span>Field</span><span></span><span style="text-align:right">Value</span></div>
+        {% for f in setup.project.fields %}
+        <div class="su-row clickable" id="su-row-pf-{{ f.key }}" onclick="suToggleRow('pf-{{ f.key }}')"
+             data-search="{{ f.key | lower }} {{ f.value | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-box"/></svg></span>
+            <b><code>{{ f.key }}</code></b>
+          </span>
+          <span class="su-type">{% if not f.known %}<span class="su-badge warning">no description</span>{% endif %}</span>
+          <span class="su-status"><span class="su-type" style="max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.value }}</span>
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
+        </div>
+        <div class="su-detail" id="su-detail-pf-{{ f.key }}">
+          <p class="su-note" style="color:var(--body-text,#e6e9ef)">{{ f.description }}</p>
+          {% if f.editable %}
+          <div class="su-form open" style="border-top:none;padding-top:0;margin-top:8px">
+            <label>Value</label>
+            <input id="su-pf-{{ f.key }}" value="{{ f.value }}">
+            <div class="su-actions">
+              <button class="su-btn" onclick="event.stopPropagation(); suProjectField('{{ f.key }}')">Save</button>
+            </div>
+          </div>
+          {% else %}
+          <p class="su-note">Structured value — edit in <code>project.yml</code> (or via its owning tooling), not here.</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="su-h2">Configuration sections</div>
+      <p class="su-sub">Everything else project.yml configures, and where each block is managed. Read-only here — structured sections belong to their owners.</p>
+      <div class="su-list" data-list="project">
+        <div class="su-cols"><span>Section</span><span>Size</span><span style="text-align:right">Managed by</span></div>
+        {% for s in setup.project.sections %}
+        <div class="su-row clickable" id="su-row-ps-{{ s.key }}" onclick="suToggleRow('ps-{{ s.key }}')"
+             data-search="{{ s.key | lower }} {{ s.description | lower }} {{ s.managed | lower }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-book"/></svg></span>
+            <span style="min-width:0">
+              <b><code>{{ s.key }}</code></b>
+              <div class="su-desc">{{ s.description }}</div>
+            </span>
+          </span>
+          <span class="su-type">{{ s.size }}</span>
+          <span class="su-status"><span class="su-type">{{ s.managed or '—' }}</span>
+            <svg class="su-chev"><use href="#su-ic-chev"/></svg></span>
+        </div>
+        <div class="su-detail" id="su-detail-ps-{{ s.key }}">
+          <pre class="su-yaml">{{ s.preview }}</pre>
+          {% if s.preview_truncated %}
+          <p class="su-note">… {{ s.preview_truncated }} more line{{ 's' if s.preview_truncated != 1 }} — see <code>project.yml</code> for the full block.</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
 
     {# ============================ CONNECTORS ============================ #}
     <section class="su-sec" id="sec-connectors" data-title="Connectors">
@@ -802,6 +882,49 @@
       <div class="su-list"><div class="su-empty">No active team members declared in <code>project.yml team.active</code>.</div></div>
       {% endif %}
 
+      <div class="su-h2">Repo access audit</div>
+      <p class="su-sub">
+        GitHub collaborators on <code>{{ setup.team.repo or 'the project repo' }}</code>
+        cross-referenced against the roster. Rostered members and read-only observers
+        are healthy; unrostered <b>write</b> access and inactive members retaining access
+        are findings. Report-only — change access in GitHub
+        (e.g. <code>gh api -X PUT repos/&lt;repo&gt;/collaborators/&lt;user&gt; -f permission=pull</code>).
+      </p>
+      {% set ta = setup.team_access %}
+      {% if ta and ta.stale %}
+      <div class="su-warn">The roster (<code>project.yml</code>) changed after this audit ran — re-run it.</div>
+      {% endif %}
+      <div class="su-actions" style="margin:0 0 10px">
+        <button class="su-btn" onclick="suTeamAudit(this)">{{ 'Re-run audit' if ta else 'Run audit' }} (reads GitHub, ~5s)</button>
+        {% if ta %}<span class="su-note" style="margin:0">last audited {{ ta.checked_at[:16] | replace('T', ' ') }} UTC —
+          {{ ta.counts.ok }} rostered · {{ ta.counts.info }} observers · {{ ta.counts.warning }} warning{{ 's' if ta.counts.warning != 1 }} · {{ ta.counts.error }} error{{ 's' if ta.counts.error != 1 }}</span>{% endif %}
+      </div>
+      {% if ta %}
+      <div class="su-list" data-list="team">
+        <div class="su-cols"><span>Account</span><span>Repo role</span><span style="text-align:right">Verdict</span></div>
+        {% for r in ta.rows %}
+        <div class="su-row" data-search="{{ r.login | lower }} {{ r.role }} {{ r.status }}">
+          <span class="su-name">
+            <span class="su-glyph"><svg class="su-ico"><use href="#su-ic-users"/></svg></span>
+            <span style="min-width:0">
+              <b>{{ r.login }}</b>
+              <div class="su-desc">{{ r.note }}</div>
+            </span>
+          </span>
+          <span class="su-type"><code>{{ r.role }}</code></span>
+          <span class="su-status">
+            {% if r.status == 'ok' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> member</span>
+            {% elif r.status == 'info' %}<span class="su-badge info">observer</span>
+            {% elif r.status == 'warning' %}<span class="su-badge warning">{{ 'no access' if r.role == 'none' else 'unrostered write' }}</span>
+            {% else %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">stale access</span>{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="su-list"><div class="su-empty">No audit yet — run it above (needs <code>gh</code> authenticated with push access, to list collaborators).</div></div>
+      {% endif %}
+
       {% if setup.team.inactive %}
       <div class="su-h2">Inactive (offboarded)</div>
       <div class="su-list">
@@ -1060,6 +1183,14 @@ async function suEnvCheck() {
     btn.disabled = false;
     btn.textContent = original;
   }
+}
+function suProjectField(key) {
+  suCall('POST', '/setup/project/field',
+    { key: key, value: document.getElementById('su-pf-' + key).value.trim() });
+}
+function suTeamAudit(btn) {
+  suBusyCall(btn, 'Auditing collaborators via GitHub…',
+    'POST', '/setup/team/access-audit');
 }
 function suTeamAdd() {
   suCall('POST', '/setup/team/members', {
