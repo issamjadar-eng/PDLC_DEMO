@@ -995,12 +995,12 @@ CHAPTERS = [
      "lead": "PDLC_DEMO · PainEase PCA Advanced — the device, the regulatory strategy, and the deliverables shape."},
     {"num": "04", "title": "Project Shape & Capabilities", "anchor": ("project-overview", 9), "replace": True,
      "lead": "Operating rules, project-level skills, and persona agents — the machinery underneath the work."},
-    {"num": "05", "title": "Quality & Process", "anchor": ("project-overview", 22), "replace": True,
+    {"num": "05", "title": "Quality & Process", "anchor": ("project-overview", 23), "replace": True,
      "lead": "How the guardrails actually work — hooks, traces, and the audit surface a regulator can read."},
-    {"num": "06", "title": "Humans in Charge", "anchor": ("project-overview", 31), "replace": True,
+    {"num": "06", "title": "Humans in Charge", "anchor": ("project-overview", 38), "replace": True,
      "lead": "Where the handoff lands. Agents advise; humans decide; the regulated record is human-attributed."},
-    {"num": "07", "title": "The Project Console", "anchor": ("project-overview", 44), "replace": True,
-     "lead": "The single pane: advisors, documents, dashboards, trace, strategy review, the FDA package, gap analyses, team metrics, and project settings.",
+    {"num": "07", "title": "The Project Console", "anchor": ("project-overview", 51), "replace": True,
+     "lead": "The single pane: advisors, documents, task activity, dashboards, trace, strategy review, the FDA package, gap analyses, team metrics, and project settings.",
      # Subsections carry no `anchor` — they no longer inject divider slides.
      # They drive the agenda card's sub-list AND the §7 screenshot slides
      # (one slide per section: compact title strip + console screenshot).
@@ -1008,14 +1008,15 @@ CHAPTERS = [
         {"num": "01", "title": "Landing Page",       "image": "console-landing.png"},
         {"num": "02", "title": "Agents",             "image": "console-agents.png"},
         {"num": "03", "title": "Documents Explorer", "image": "console-documents.png"},
-        {"num": "04", "title": "Submission Tracker", "image": "console-dashboards.png"},
-        {"num": "05", "title": "Trace Matrix",       "image": "console-trace-matrix.png"},
-        {"num": "06", "title": "Strategy Review",    "image": "console-strategy.png"},
-        {"num": "07", "title": "Submission Package", "image": "console-submission.png"},
-        {"num": "08", "title": "Gap Analysis",       "image": "console-gap-analysis.png"},
-        {"num": "09", "title": "Value & ROI",        "image": "console-metrics.png"},
-        {"num": "10", "title": "Project Settings",   "image": "console-setup.png"},
-        {"num": "11", "title": "Workflows",          "image": "console-workflows.png"},
+        {"num": "04", "title": "Tasks",              "image": "console-tasks.png"},
+        {"num": "05", "title": "Submission Tracker", "image": "console-dashboards.png"},
+        {"num": "06", "title": "Trace Matrix",       "image": "console-trace-matrix.png"},
+        {"num": "07", "title": "Strategy Review",    "image": "console-strategy.png"},
+        {"num": "08", "title": "Submission Package", "image": "console-submission.png"},
+        {"num": "09", "title": "Gap Analysis",       "image": "console-gap-analysis.png"},
+        {"num": "10", "title": "Value & ROI",        "image": "console-metrics.png"},
+        {"num": "11", "title": "Project Settings",   "image": "console-setup.png"},
+        {"num": "12", "title": "Workflows",          "image": "console-workflows.png"},
      ]},
 ]
 
@@ -1023,7 +1024,7 @@ CHAPTERS = [
 # slides (one per CHAPTERS[-1]["subsections"] entry). PO #58 ("How the console
 # relates to Claude Code") is the §7 intro slide; the screenshots follow it.
 SLIDE_APPENDS = {
-    ("project-overview", 58): "console-sections",
+    ("project-overview", 66): "console-sections",
 }
 
 # Replace the original "Agenda" slide (project-overview #1) with our generated agenda.

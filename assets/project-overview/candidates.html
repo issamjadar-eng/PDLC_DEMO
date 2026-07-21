@@ -4,19 +4,19 @@
 <!--
   md-deck v0.6.1 — DO NOT HAND-EDIT
   Source: project-overview.md
-  SHA-256: f9eec15df89f504d8ac0f2ddc770065d30b5390f1e937c97f99789a150d678ee
-  Built:  2026-07-16T16:19:06Z by benxavier
+  SHA-256: 3f6f0eea28933fca11789e4098c1c211969fcdfba42de299a75ca0ea19fe0ebe
+  Built:  2026-07-21T06:35:52Z by benxavier
   Update: python .claude/skills/md-deck/scripts/build.py project-overview.md
 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="md-deck v0.6.1">
 <meta name="md-deck:source" content="project-overview.md">
-<meta name="md-deck:source-sha256" content="f9eec15df89f504d8ac0f2ddc770065d30b5390f1e937c97f99789a150d678ee">
-<meta name="md-deck:built-at" content="2026-07-16T16:19:06Z">
+<meta name="md-deck:source-sha256" content="3f6f0eea28933fca11789e4098c1c211969fcdfba42de299a75ca0ea19fe0ebe">
+<meta name="md-deck:built-at" content="2026-07-21T06:35:52Z">
 <meta name="md-deck:built-by" content="benxavier">
 <meta name="md-deck:style" content="bold-signal">
-<meta name="md-deck:slide-count" content="31">
+<meta name="md-deck:slide-count" content="34">
 <title>project-overview</title>
 <style>
 /* === viewport-base.css (frontend-slides canonical viewport contract) === */
@@ -1609,7 +1609,7 @@ table.compact-table {
 <body>
 <div class="candidates-page"><header class="candidates-header">
 <h1>md-deck candidates · review &amp; pick</h1>
-<p>Multiple visual treatments per variant-eligible section — 2 templates + 2 agents by default. <strong>Pick toggles independently</strong>: click Pick on multiple cards in a section and the deck will emit one slide per picked card (in selection order). Save into the deck assets folder as <code>picks.json</code> (same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. Re-run the build to lock the picks into <code>index.html</code>.</p><p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">source: project-overview.md · sha256: f9eec15df89f504d… · built: 2026-07-16T16:19:06Z</p>
+<p>Multiple visual treatments per variant-eligible section — 2 templates + 2 agents by default. <strong>Pick toggles independently</strong>: click Pick on multiple cards in a section and the deck will emit one slide per picked card (in selection order). Save into the deck assets folder as <code>picks.json</code> (same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. Re-run the build to lock the picks into <code>index.html</code>.</p><p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">source: project-overview.md · sha256: 3f6f0eea28933fca… · built: 2026-07-21T06:35:52Z</p>
 </header>
 <div class="candidate-section" data-anchor="s1-1-what-pp3500-is">
 <h2>What PP3500 is <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
@@ -1690,12 +1690,12 @@ table.compact-table {
 </section>
 </div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's2-2-operating-rules-baked-into-the-project', 'card-grid')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s2-2-operating-rules-baked-into-the-project">
+<div class="candidate-section" data-anchor="s2-2-operating-rules-baked-into-the-project--cont2">
 <h2>Operating rules baked into the project (cont.) <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§2.2 · s2-2-operating-rules-baked-into-the-project</div>
+<div class="anchor-tag">§2.2 · s2-2-operating-rules-baked-into-the-project--cont2</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="card-grid" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">card-grid</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s2-2-operating-rules-baked-into-the-project">
+<section class="slide" data-source-anchor="s2-2-operating-rules-baked-into-the-project--cont2">
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.2 · Operating rules baked into the project (cont.)</span></div>
     <div class="slide-content">
         <h2 class="reveal">Operating rules baked into the project (cont.)</h2>
@@ -1703,7 +1703,7 @@ table.compact-table {
         <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Semantic file search, fully local.</div><div class="mc-sub">A <code>file-locator</code> MCP server (fastembed + SQLite FTS5, no cloud calls) gives Claude and every advisor agent ranked semantic search over the whole docs corpus; its index is committed so the team shares one canonical artifact.</div><div class="mc-full"><div class="mc-full-label">Semantic file search, fully local.</div><div class="mc-full-body">A <code>file-locator</code> MCP server (fastembed + SQLite FTS5, no cloud calls) gives Claude and every advisor agent ranked semantic search over the whole docs corpus; its index is committed so the team shares one canonical artifact.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Usage telemetry built in.</div><div class="mc-sub">SessionStart/SessionEnd hooks collect per-session token usage locally and publish it through git — feeding the console&#x27;s Metrics section (cost, and modeled hours-saved per task).</div><div class="mc-full"><div class="mc-full-label">Usage telemetry built in.</div><div class="mc-full-body">SessionStart/SessionEnd hooks collect per-session token usage locally and publish it through git — feeding the console&#x27;s Metrics section (cost, and modeled hours-saved per task).</div></div></div><div class="mini-card accent-coral"><div class="mc-label"><code>project.yml</code> as single source of truth.</div><div class="mc-sub">Identity, device family, portfolio context, DHF topology (with <code>regulatory</code> + <code>filing</code> + <code>parent</code> per DHF), team roster, skill registries, secops allowlists, and <code>advisors.enabled</code> curation all live in one manifest.</div><div class="mc-full"><div class="mc-full-label"><code>project.yml</code> as single source of truth.</div><div class="mc-full-body">Identity, device family, portfolio context, DHF topology (with <code>regulatory</code> + <code>filing</code> + <code>parent</code> per DHF), team roster, skill registries, secops allowlists, and <code>advisors.enabled</code> curation all live in one manifest.</div></div></div></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's2-2-operating-rules-baked-into-the-project', 'card-grid')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's2-2-operating-rules-baked-into-the-project--cont2', 'card-grid')">Pick A</button></div></div>
 </div></div>
 <div class="candidate-section" data-anchor="s2-3-skills-project-level">
 <h2>Skills (project-level) <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
@@ -1714,11 +1714,11 @@ table.compact-table {
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§2.3 · Skills (project-level)</span></div>
     <div class="slide-content">
         <h2 class="reveal">Skills (project-level)</h2>
-        <p class="lead reveal"><strong>35 skills</strong> are installed under <code>.claude/skills/</code> and allow-listed in <code>project.yml</code> under <code>security.approved_skills</code> — 31 from the shared <strong>hitachi</strong> registry plus four document-format skills (<code>docx</code>, <code>pptx</code>, <code>xlsx</code>, <code>pdf</code>) from the <code>anthropic</code> builtin registry. The project-specific and highest-leverage ones:</p>
+        <p class="lead reveal"><strong>35 skills</strong> are installed under <code>.claude/skills/</code> and allow-listed in <code>project.yml</code> under <code>security.approved_skills</code> — 30 from the shared <strong>hitachi</strong> registry, four document-format skills (<code>docx</code>, <code>pptx</code>, <code>xlsx</code>, <code>pdf</code>) from the <code>anthropic</code> builtin registry, and one (<code>frontend-slides</code>) from a <strong>pinned, pull-only community registry</strong> (SHA-pinned, MIT-licensed) — every source registry is declared in <code>project.yml</code> so the supply chain is auditable. The project-specific and highest-leverage ones:</p>
         <div class="table-wrap reveal">
             <table class="compact-table density-compact">
                 <thead><tr><th>Skill</th><th>What it does</th></tr></thead>
-                <tbody><tr><td><code>task</code></td><td>Task lifecycle: create / find / update / checkpoint. Owns the task-first gate and the checkpoint-recovery hooks.</td></tr><tr><td><code>medtech-docs</code></td><td>Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks, generates compliance dashboard.</td></tr><tr><td><code>docflow</code></td><td>Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image fidelity, cross-reference resolution, and metadata tracking. Entry enforced by hook.</td></tr><tr><td><code>strategy</code></td><td>Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks from tasks into unified shared strategy docs across eight domains (regulatory, commercial, architecture, development, testing, risk, postmarket, operations).</td></tr><tr><td><code>submissions</code></td><td>Authors and scaffolds the FDA submission package itself — filing-type-aware document sets for Q-Sub / 510(k) / PCCP, composition manifests, provenance sidecars, and the console Submission section&#x27;s data.</td></tr><tr><td><code>tracker</code></td><td>Builds the milestone-driven submission-package tracker from composition manifests + DHF evidence; renders the interactive HTML dashboard with live status editing.</td></tr><tr><td><code>trace-matrix</code></td><td>Bidirectional design-controls trace (UN ↔ DI ↔ SW Reqs ↔ Architecture ↔ V&amp;V ↔ Risk) per DHF with project-adaptive parsers. Emits <code>.md</code> deliverable + <code>.json</code> sidecar consumed by the console.</td></tr><tr><td><code>dhf-manifest</code></td><td>Projects regulatory + QMS obligations through the project scope into per-DHF deliverable manifests with gap reports — &quot;are the right documents present?&quot;</td></tr><tr><td><code>gap-analysis</code></td><td>Substantive content-gap critiques of the project&#x27;s own work product against standards, run by advisor fan-out; feeds the console Gap Analysis section.</td></tr><tr><td><code>advisors</code></td><td>Installs and curates the Core Team Assistant personas, advisory panels, and KOL personas. Same definitions feed Claude Code and the console chat.</td></tr><tr><td><code>red-team</code></td><td>A buyer-committee of 7 hostile skeptic personas (CEO, CFO, CTO, VP-Eng, QA-VP, RA-VP, PMO) that stress-test outward-facing documents before they ship.</td></tr><tr><td><code>regulatory-authoring</code></td><td>The writing-quality layer for regulator-facing documents: authoring standard, lint, and a substance-preserving copy-editor.</td></tr><tr><td><code>reference-audit</code></td><td>Independent verification of every citation in a document against byte-correct sources — broken links, stale clauses, mismatched anchors.</td></tr><tr><td><code>usage-metrics</code></td><td>Cross-team token/cost telemetry with git as the aggregation bus; models person-hours saved per task and powers the console&#x27;s Value &amp; ROI view.</td></tr><tr><td><code>file-locator</code></td><td>Local semantic file search MCP (fastembed + SQLite FTS5) over the whole docs corpus — no cloud calls, committed index.</td></tr><tr><td><code>project-console</code></td><td>Scaffolds and maintains the local FastAPI console (see §5).</td></tr><tr><td><code>lessons</code></td><td>Harvests <code>&lt;!-- LESSONS LEARNED --&gt;</code> blocks into the ledger; promotes mature lessons to their permanent home (skill / CLAUDE.md / agent / rule / glossary).</td></tr><tr><td><code>best-practices</code></td><td>Audits project setup against checks from the shared hitachi registry and each skill&#x27;s <code>## Best Practices</code> table.</td></tr><tr><td><code>secops</code></td><td>Session-start security posture check, attestations, allowlists, trojan-horse artifact audit.</td></tr><tr><td><code>change-control</code></td><td>Bidirectional bridge to the regulated downstream systems — adopt/pull Confluence pages into the repo, publish frozen versions back out (Comala/SoftComply Part 11 review, Windchill vault, Jira ECRs).</td></tr><tr><td><code>sync-skills</code></td><td>Bidirectional sync with the shared <strong>hitachi</strong> registry — three-way merge analysis on every pull, local fixes pushed upstream as PRs.</td></tr><tr><td><code>md-deck</code></td><td>Builds single-file HTML slide decks (like this document&#x27;s companion deck) from structured markdown, with full provenance metadata.</td></tr><tr><td><code>digest</code></td><td>Morning briefing + on-demand append to <code>CHANGELOG.md</code>.</td></tr></tbody>
+                <tbody><tr><td><code>task</code></td><td>Task lifecycle: create / find / update / checkpoint / summary (derives the console Tasks-tab activity JSON). Owns the task-first gate and the checkpoint-recovery hooks.</td></tr><tr><td><code>medtech-docs</code></td><td>Scaffolds <code>docs/</code> tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks, generates compliance dashboard.</td></tr><tr><td><code>docflow</code></td><td>Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image fidelity, cross-reference resolution, and metadata tracking. Entry enforced by hook.</td></tr><tr><td><code>strategy</code></td><td>Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks from tasks into unified shared strategy docs across eight domains (regulatory, commercial, architecture, development, testing, risk, postmarket, operations).</td></tr><tr><td><code>submissions</code></td><td>Authors and scaffolds the FDA submission package itself — filing-type-aware document sets for Q-Sub / 510(k) / PCCP, composition manifests, provenance sidecars, and the console Submission section&#x27;s data.</td></tr><tr><td><code>tracker</code></td><td>Builds the milestone-driven submission-package tracker from composition manifests + DHF evidence; renders the interactive HTML dashboard with live status editing.</td></tr><tr><td><code>trace-matrix</code></td><td>Bidirectional design-controls trace (UN ↔ DI ↔ SW Reqs ↔ Architecture ↔ V&amp;V ↔ Risk) per DHF with project-adaptive parsers. Emits <code>.md</code> deliverable + <code>.json</code> sidecar consumed by the console.</td></tr><tr><td><code>dhf-manifest</code></td><td>Projects regulatory + QMS obligations through the project scope into per-DHF deliverable manifests with gap reports — &quot;are the right documents present?&quot;</td></tr><tr><td><code>gap-analysis</code></td><td>Substantive content-gap critiques of the project&#x27;s own work product against standards, run by advisor fan-out; feeds the console Gap Analysis section.</td></tr><tr><td><code>advisors</code></td><td>Installs and curates the Core Team Assistant personas, advisory panels, and KOL personas. Same definitions feed Claude Code and the console chat.</td></tr><tr><td><code>red-team</code></td><td>A buyer-committee of 7 hostile skeptic personas (CEO, CFO, CTO, VP-Eng, QA-VP, RA-VP, PMO) that stress-test outward-facing documents before they ship.</td></tr><tr><td><code>regulatory-authoring</code></td><td>The writing-quality layer for regulator-facing documents: authoring standard, lint, and a substance-preserving copy-editor.</td></tr><tr><td><code>reference-audit</code></td><td>Independent verification of every citation in a document against byte-correct sources — broken links, stale clauses, mismatched anchors.</td></tr><tr><td><code>usage-metrics</code></td><td>Cross-team token/cost telemetry with git as the aggregation bus; models person-hours saved per task and powers the console&#x27;s Value &amp; ROI view.</td></tr><tr><td><code>file-locator</code></td><td>Local semantic file search MCP (fastembed + SQLite FTS5) over the whole docs corpus — no cloud calls, committed index.</td></tr><tr><td><code>project-console</code></td><td>Scaffolds and maintains the local FastAPI console (see §5).</td></tr><tr><td><code>lessons</code></td><td>Harvests <code>&lt;!-- LESSONS LEARNED --&gt;</code> blocks into the ledger; promotes mature lessons to their permanent home (skill / CLAUDE.md / agent / rule / glossary).</td></tr><tr><td><code>best-practices</code></td><td>Audits project setup against checks from the shared hitachi registry and each skill&#x27;s <code>## Best Practices</code> table.</td></tr><tr><td><code>secops</code></td><td>Session-start security posture check, attestations, allowlists, trojan-horse artifact audit.</td></tr><tr><td><code>change-control</code></td><td>Bidirectional bridge to the regulated downstream systems — adopt/pull Confluence pages into the repo, publish frozen versions back out (Comala/SoftComply Part 11 review, Windchill vault, Jira ECRs).</td></tr><tr><td><code>sync-skills</code></td><td>Bidirectional sync with the shared <strong>hitachi</strong> registry — three-way merge analysis on every pull, local fixes pushed upstream as PRs.</td></tr><tr><td><code>md-deck</code></td><td>Builds single-file HTML slide decks (like this document&#x27;s companion deck) from structured markdown, with full provenance metadata.</td></tr><tr><td><code>digest</code></td><td>Morning briefing + on-demand append to <code>CHANGELOG.md</code>.</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -1800,50 +1800,79 @@ table.compact-table {
 </section>
 </div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-3-rules-project-conventions-the-tool-reads-and-obeys', 'card-grid')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s3-3-rules-project-conventions-the-tool-reads-and-obeys">
+<div class="candidate-section" data-anchor="s3-3-rules-project-conventions-the-tool-reads-and-obeys--cont2">
 <h2>Rules — project conventions the tool reads and obeys (cont.) <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§3.3 · s3-3-rules-project-conventions-the-tool-reads-and-obeys</div>
+<div class="anchor-tag">§3.3 · s3-3-rules-project-conventions-the-tool-reads-and-obeys--cont2</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="card-grid" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">card-grid</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s3-3-rules-project-conventions-the-tool-reads-and-obeys">
+<section class="slide" data-source-anchor="s3-3-rules-project-conventions-the-tool-reads-and-obeys--cont2">
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.3 · Rules — project conventions the tool reads and obeys (cont.)</span></div>
     <div class="slide-content">
         <h2 class="reveal">Rules — project conventions the tool reads and obeys (cont.)</h2>
         
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">AI provenance without vendor lock.</div><div class="mc-sub">AI-assisted edits to controlled documents are logged in a non-published metadata block, attributed only as &quot;AI assistant(s)&quot; — the controlled record stays human-authored and tool-agnostic.</div><div class="mc-full"><div class="mc-full-label">AI provenance without vendor lock.</div><div class="mc-full-body">AI-assisted edits to controlled documents are logged in a non-published metadata block, attributed only as &quot;AI assistant(s)&quot; — the controlled record stays human-authored and tool-agnostic.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Demo banner on every fabricated datum.</div><div class="mc-sub">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div><div class="mc-full"><div class="mc-full-label">Demo banner on every fabricated datum.</div><div class="mc-full-body">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div></div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Derived artifacts are never the source of truth.</div><div class="mc-sub">Audience-facing retellings (articles, decks, knowledge packs) are re-derived from canonical documents, never worked from or &quot;fixed&quot; in place — the controlled source always wins.</div><div class="mc-full"><div class="mc-full-label">Derived artifacts are never the source of truth.</div><div class="mc-full-body">Audience-facing retellings (articles, decks, knowledge packs) are re-derived from canonical documents, never worked from or &quot;fixed&quot; in place — the controlled source always wins.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Every change lands through a pull-request record.</div><div class="mc-sub">Even with no human review gate, work merges to <code>main</code> via a PR — a durable, linkable audit trail of what changed, when, and why.</div><div class="mc-full"><div class="mc-full-label">Every change lands through a pull-request record.</div><div class="mc-full-body">Even with no human review gate, work merges to <code>main</code> via a PR — a durable, linkable audit trail of what changed, when, and why.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">AI provenance without vendor lock.</div><div class="mc-sub">AI-assisted edits to controlled documents are logged in a non-published metadata block, attributed only as &quot;AI assistant(s)&quot; — the controlled record stays human-authored and tool-agnostic.</div><div class="mc-full"><div class="mc-full-label">AI provenance without vendor lock.</div><div class="mc-full-body">AI-assisted edits to controlled documents are logged in a non-published metadata block, attributed only as &quot;AI assistant(s)&quot; — the controlled record stays human-authored and tool-agnostic.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Demo banner on every fabricated datum.</div><div class="mc-sub">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div><div class="mc-full"><div class="mc-full-label">Demo banner on every fabricated datum.</div><div class="mc-full-body">Every illustrative clinical figure, placeholder predicate, or sample analysis carries <code>_Demo sample data — not for clinical use._</code> near the top.</div></div></div></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-3-rules-project-conventions-the-tool-reads-and-obeys', 'card-grid')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-3-rules-project-conventions-the-tool-reads-and-obeys--cont2', 'card-grid')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s3-4-what-this-adds-up-to">
-<h2>What this adds up to <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§3.4 · s3-4-what-this-adds-up-to</div>
+<div class="candidate-section" data-anchor="s3-4-the-regulated-document-authoring-pipeline">
+<h2>The regulated-document authoring pipeline <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
+<div class="anchor-tag">§3.4 · s3-4-the-regulated-document-authoring-pipeline</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="card-grid" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">card-grid</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s3-4-what-this-adds-up-to">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.4 · What this adds up to</span></div>
+<section class="slide" data-source-anchor="s3-4-the-regulated-document-authoring-pipeline">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.4 · The regulated-document authoring pipeline</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">The regulated-document authoring pipeline</h2>
+        <p class="lead reveal">Self-review demonstrably misses structural contracts — so no regulator-facing document ships on one pass. Every substantive edit to a filed DHF or submission body runs a staged control chain:</p>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Lint.</div><div class="mc-sub">A deterministic pass catches mechanical defects — internal leaks (task IDs, repo paths), hedge words, undefined acronyms, tier violations. Necessary, never sufficient.</div><div class="mc-full"><div class="mc-full-label">Lint.</div><div class="mc-full-body">A deterministic pass catches mechanical defects — internal leaks (task IDs, repo paths), hedge words, undefined acronyms, tier violations. Necessary, never sufficient.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Copy-edit.</div><div class="mc-sub">A substance-preserving redline improves clarity and register without touching claims, classifications, numbers, or citations.</div><div class="mc-full"><div class="mc-full-label">Copy-edit.</div><div class="mc-full-body">A substance-preserving redline improves clarity and register without touching claims, classifications, numbers, or citations.</div></div></div><div class="mini-card accent-coral"><div class="mc-label">QA-conformance.</div><div class="mc-sub">An independent pass verifies the document against its governing QMS form and the three-tier structure — the checks a linter cannot make.</div><div class="mc-full"><div class="mc-full-label">QA-conformance.</div><div class="mc-full-body">An independent pass verifies the document against its governing QMS form and the three-tier structure — the checks a linter cannot make.</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Independent reference audit.</div><div class="mc-sub">For citation-bearing edits, a separate agent re-derives every citation from the byte-correct source — the control that catches a cited clause that does not exist.</div><div class="mc-full"><div class="mc-full-label">Independent reference audit.</div><div class="mc-full-body">For citation-bearing edits, a separate agent re-derives every citation from the byte-correct source — the control that catches a cited clause that does not exist.</div></div></div></div>
+    </div>
+</section>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-4-the-regulated-document-authoring-pipeline', 'card-grid')">Pick A</button></div></div>
+</div></div>
+<div class="candidate-section" data-anchor="s3-5-the-lessons-learned-loop">
+<h2>The lessons-learned loop <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
+<div class="anchor-tag">§3.5 · s3-5-the-lessons-learned-loop</div>
+<div class="candidate-grid">
+<div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
+<section class="slide" data-source-anchor="s3-5-the-lessons-learned-loop">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.5 · The lessons-learned loop</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">The lessons-learned loop</h2>
+        <div class="prose"><p class="reveal">The methodology improves itself, with an evidence ledger. Corrections and insights are captured in the task doc <strong>in the same turn they happen</strong>; the <code>/lessons</code> skill harvests them into a team-shared staging ledger; mature lessons are promoted to their permanent home — a skill, a rule, an agent prompt, CLAUDE.md — where they bind every future session. The staging ledger currently holds <strong>40+ lessons</strong> with application evidence tracked per lesson, so &quot;we learned that already&quot; is a lookup, not a memory.</p></div>
+    </div>
+</section>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's3-5-the-lessons-learned-loop', 'prose-slide')">Pick A</button></div></div>
+</div></div>
+<div class="candidate-section" data-anchor="s3-6-what-this-adds-up-to">
+<h2>What this adds up to <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
+<div class="anchor-tag">§3.6 · s3-6-what-this-adds-up-to</div>
+<div class="candidate-grid">
+<div class="candidate-card" data-component="card-grid" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">card-grid</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
+<section class="slide" data-source-anchor="s3-6-what-this-adds-up-to">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.6 · What this adds up to</span></div>
     <div class="slide-content">
         <h2 class="reveal">What this adds up to</h2>
         <p class="lead reveal">Every substantive change in this repository is, by construction:</p>
         <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Owned</div><div class="mc-sub">by a named, dated task document (task gate).</div><div class="mc-full"><div class="mc-full-label">Owned</div><div class="mc-full-body">by a named, dated task document (task gate).</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Located</div><div class="mc-sub">in a folder whose rules were read before the write (README-before-write).</div><div class="mc-full"><div class="mc-full-label">Located</div><div class="mc-full-body">in a folder whose rules were read before the write (README-before-write).</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Traced</div><div class="mc-sub">to a design input, architecture node, V&amp;V item, and risk control (trace matrix).</div><div class="mc-full"><div class="mc-full-label">Traced</div><div class="mc-full-body">to a design input, architecture node, V&amp;V item, and risk control (trace matrix).</div></div></div><div class="mini-card accent-orange"><div class="mc-label">Audited</div><div class="mc-sub">against a standing best-practices registry (<code>/best-practices</code>).</div><div class="mc-full"><div class="mc-full-label">Audited</div><div class="mc-full-body">against a standing best-practices registry (<code>/best-practices</code>).</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Security-checked</div><div class="mc-sub">at session start (secops hook).</div><div class="mc-full"><div class="mc-full-label">Security-checked</div><div class="mc-full-body">at session start (secops hook).</div></div></div><div class="mini-card accent-coral"><div class="mc-label">Recoverable</div><div class="mc-sub">every session&#x27;s narrative is checkpointed into the task doc, and an uncheckpointed session triggers automatic recovery from git history at the next start.</div><div class="mc-full"><div class="mc-full-label">Recoverable</div><div class="mc-full-body">every session&#x27;s narrative is checkpointed into the task doc, and an uncheckpointed session triggers automatic recovery from git history at the next start.</div></div></div></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-4-what-this-adds-up-to', 'card-grid')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-6-what-this-adds-up-to', 'card-grid')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s3-4-what-this-adds-up-to">
+<div class="candidate-section" data-anchor="s3-6-what-this-adds-up-to--cont2">
 <h2>What this adds up to (cont.) <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§3.4 · s3-4-what-this-adds-up-to</div>
+<div class="anchor-tag">§3.6 · s3-6-what-this-adds-up-to--cont2</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="card-grid" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">card-grid</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s3-4-what-this-adds-up-to">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.4 · What this adds up to (cont.)</span></div>
+<section class="slide" data-source-anchor="s3-6-what-this-adds-up-to--cont2">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§3.6 · What this adds up to (cont.)</span></div>
     <div class="slide-content">
         <h2 class="reveal">What this adds up to (cont.)</h2>
         
         <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">Measured</div><div class="mc-sub">token spend and modeled hours-saved are collected per session and rolled up in the console&#x27;s Metrics section.</div><div class="mc-full"><div class="mc-full-label">Measured</div><div class="mc-full-body">token spend and modeled hours-saved are collected per session and rolled up in the console&#x27;s Metrics section.</div></div></div></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-4-what-this-adds-up-to', 'card-grid')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's3-6-what-this-adds-up-to--cont2', 'card-grid')">Pick A</button></div></div>
 </div></div>
 <div class="candidate-section" data-anchor="s4-1-what-an-agent-actually-is-here">
 <h2>What an &quot;agent&quot; actually is here <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
@@ -1934,7 +1963,7 @@ table.compact-table {
     <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.1 · Landing page</span></div>
     <div class="slide-content">
         <h2 class="reveal">Landing page</h2>
-        <div class="prose"><p class="reveal">![Landing](http://127.0.0.1:8765/)</p><p class="reveal">Branded with the <strong>GlobalLogic</strong> theme pack (scraped and materialized by <code>/project-console theme</code>). A responsive priority-overflow topnav carries the section set — <strong>Overview, Strategy, Submission, Dashboards, Trace Matrix, Gap Analysis, Workflows, Agents, Documents</strong>, with <strong>Metrics</strong> and <strong>Setup</strong> in the overflow menu — over top-level tiles for the most-used sections. <strong>[http://127.0.0.1:8765/](http://127.0.0.1:8765/)</strong></p></div>
+        <div class="prose"><p class="reveal">![Landing](http://127.0.0.1:8765/)</p><p class="reveal">Branded with the <strong>GlobalLogic</strong> theme pack (scraped and materialized by <code>/project-console theme</code>). A responsive priority-overflow topnav carries the section set — <strong>Overview, Strategy, Submission, Dashboards, Trace Matrix, Gap Analysis, Workflows, Agents, Documents</strong>, with <strong>Tasks</strong>, <strong>Metrics</strong>, and <strong>Setup</strong> in the overflow menu — over top-level tiles for the most-used sections. <strong>[http://127.0.0.1:8765/](http://127.0.0.1:8765/)</strong></p></div>
     </div>
 </section>
 </div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-1-landing-page', 'prose-slide')">Pick A</button></div></div>
@@ -1949,7 +1978,7 @@ table.compact-table {
     <div class="slide-content">
         <h2 class="reveal">Agents (persona advisors)</h2>
         <p class="lead reveal">![Agents](http://127.0.0.1:8765/agents)</p>
-        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">31 agents total</div><div class="mc-sub">11 Core Team Assistants + 8 KOLs + 7 Red Team skeptics + 5 panels. Filter toggles switch between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, <strong>Core Team Assistants</strong>, and <strong>Red Team</strong>.</div><div class="mc-full"><div class="mc-full-label">31 agents total</div><div class="mc-full-body">11 Core Team Assistants + 8 KOLs + 7 Red Team skeptics + 5 panels. Filter toggles switch between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, <strong>Core Team Assistants</strong>, and <strong>Red Team</strong>.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Each card links to a full threaded chat UI with grounding so</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Each card links to a full threaded chat UI with grounding so</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-coral"><div class="mc-label">Core Team curation is driven by `project.yml → advisors.enab</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Core Team curation is driven by `project.yml → advisors.enab</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-orange"><div class="mc-label">http://127.0.0.1:8765/agents</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">http://127.0.0.1:8765/agents</div><div class="mc-full-body"></div></div></div></div>
+        <div class="card-grid reveal"><div class="mini-card accent-orange"><div class="mc-label">31 agents total</div><div class="mc-sub">11 Core Team Assistants + 8 KOLs + 7 Red Team skeptics + 5 panels. Filter toggles switch between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, <strong>Core Team Assistants</strong>, and <strong>Red Team</strong>.</div><div class="mc-full"><div class="mc-full-label">31 agents total</div><div class="mc-full-body">11 Core Team Assistants + 8 KOLs + 7 Red Team skeptics + 5 panels. Filter toggles switch between <strong>All</strong>, <strong>Key Opinion Leaders</strong>, <strong>Core Team Assistants</strong>, and <strong>Red Team</strong>.</div></div></div><div class="mini-card accent-amber"><div class="mc-label">Each card links to a full threaded chat UI with grounding sources visible.</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Each card links to a full threaded chat UI with grounding sources visible.</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-coral"><div class="mc-label">Core Team curation is driven by <code>project.yml → advisors.enabled</code>.</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">Core Team curation is driven by <code>project.yml → advisors.enabled</code>.</div><div class="mc-full-body"></div></div></div><div class="mini-card accent-orange"><div class="mc-label">http://127.0.0.1:8765/agents</div><div class="mc-sub"></div><div class="mc-full"><div class="mc-full-label">http://127.0.0.1:8765/agents</div><div class="mc-full-body"></div></div></div></div>
     </div>
 </section>
 </div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: emphasis-atmosphere</div><div class="candidate-actions"><button onclick="pick(this, 's5-2-agents-persona-advisors', 'card-grid')">Pick A</button></div></div>
@@ -1969,125 +1998,139 @@ table.compact-table {
 </section>
 </div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-3-documents-explorer', 'list-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-4-dashboards">
-<h2>Dashboards <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.4 · s5-4-dashboards</div>
+<div class="candidate-section" data-anchor="s5-4-tasks-activity-summary">
+<h2>Tasks — activity summary <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
+<div class="anchor-tag">§5.4 · s5-4-tasks-activity-summary</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-4-dashboards">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.4 · Dashboards</span></div>
+<section class="slide" data-source-anchor="s5-4-tasks-activity-summary">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.4 · Tasks — activity summary</span></div>
+    <div class="slide-content">
+        <h2 class="reveal">Tasks — activity summary</h2>
+        <div class="prose"><p class="reveal">![Tasks](http://127.0.0.1:8765/tasks)</p><p class="reveal">A program <strong>activity summary — deliberately not a task list</strong>: rollup stats (in progress / queued / complete / all-time), a composed window-in-review narrative with an optional ⚠ watch callout, categorized <strong>Open now</strong> cards, and a <strong>Recently shipped</strong> timeline. The console is a pure consumer of the task skill&#x27;s derived <code>tasks/task-summary.json</code> (regenerated via <code>/task summary</code>); task docs and per-person indexes stay the source of truth. A freshness badge shows the summary&#x27;s age, and the effort footnote links to the Value &amp; ROI view for the economics behind the activity. <strong>[http://127.0.0.1:8765/tasks](http://127.0.0.1:8765/tasks)</strong></p></div>
+    </div>
+</section>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-4-tasks-activity-summary', 'prose-slide')">Pick A</button></div></div>
+</div></div>
+<div class="candidate-section" data-anchor="s5-5-dashboards">
+<h2>Dashboards <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
+<div class="anchor-tag">§5.5 · s5-5-dashboards</div>
+<div class="candidate-grid">
+<div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
+<section class="slide" data-source-anchor="s5-5-dashboards">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.5 · Dashboards</span></div>
     <div class="slide-content">
         <h2 class="reveal">Dashboards</h2>
         <div class="prose"><p class="reveal">![Dashboards](http://127.0.0.1:8765/dashboards)</p><p class="reveal">Glob-discovered HTML dashboards rendered inline. Discovery patterns are defined in <code>tools/project-console/console.yaml</code> (e.g. <code>docs/**/*-tracker.html</code>, <code>docs/**/*-dashboard.html</code>). Today&#x27;s headline dashboard is the <strong>Submission Package Tracker</strong>; additional rollups come online as their generators land.</p><p class="reveal"><strong>[http://127.0.0.1:8765/dashboards](http://127.0.0.1:8765/dashboards)</strong></p><p class="reveal">![Submission tracker](http://127.0.0.1:8765/dashboards/submission-tracker)</p><p class="reveal">The tracker is built by <code>/tracker build</code> from milestone catalogs, composition manifests, and DHF evidence, then rendered to HTML. It catalogs <strong>154 deliverables</strong> across the Q-Sub, 510(k)+PCCP, and internal milestone-review scopes, with per-row status badges, filters, effort rollups, and inline help. Status changes are <strong>editable in the browser</strong> — pending changes accumulate in a session and <strong>Save &amp; Publish</strong> writes them back to the tracked source and commits, closing the loop from dashboard to repository. <strong>[http://127.0.0.1:8765/dashboards/submission-tracker](http://127.0.0.1:8765/dashboards/submission-tracker)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-4-dashboards', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-5-dashboards', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-5-trace-matrix">
+<div class="candidate-section" data-anchor="s5-6-trace-matrix">
 <h2>Trace Matrix <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.5 · s5-5-trace-matrix</div>
+<div class="anchor-tag">§5.6 · s5-6-trace-matrix</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-5-trace-matrix">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.5 · Trace Matrix</span></div>
+<section class="slide" data-source-anchor="s5-6-trace-matrix">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.6 · Trace Matrix</span></div>
     <div class="slide-content">
         <h2 class="reveal">Trace Matrix</h2>
         <div class="prose"><p class="reveal">![Trace matrix](http://127.0.0.1:8765/trace-matrix)</p><p class="reveal">Each DHF gets a bidirectional trace sidecar driven by <code>trace-matrix.yml</code> at repo root. <strong>All ten DHFs now carry a built matrix</strong>, with per-DHF <strong>Rebuild</strong> buttons (and a Rebuild-all): where project adapters exist the deterministic <code>build.py</code> runs; otherwise <code>/trace-matrix init</code> authors the adapters via the Claude Agent SDK.</p><p class="reveal"><strong>[http://127.0.0.1:8765/trace-matrix](http://127.0.0.1:8765/trace-matrix)</strong></p><p class="reveal">![Trace matrix detail](http://127.0.0.1:8765/trace-matrix/pca-device)</p><p class="reveal">Per-DHF view across <strong>six trace layers</strong> — for PP3500: <strong>User Needs (22) / Design Inputs (34) / SW Requirements (32) / Architecture (7) / V&amp;V (3) / Risk (16)</strong> — with criticality filters (CtS / CtF / CtC / CtP / Supp / Untagged), orphan badges per layer, group expand/collapse, and an Assistant drawer defaulted to <code>systems-engineering</code>. The <strong>Risk column is live</strong>: the ISO 14971 hazard analysis and FMEAs backfilled into the PP3500 risk file link every design input to its hazards, and the orphan badges (e.g. 28 SW requirements without verification) surface the open V&amp;V work — exactly what the trace matrix is for. <strong>[http://127.0.0.1:8765/trace-matrix/pca-device](http://127.0.0.1:8765/trace-matrix/pca-device)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-5-trace-matrix', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-6-trace-matrix', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-6-strategy-review">
+<div class="candidate-section" data-anchor="s5-7-strategy-review">
 <h2>Strategy review <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.6 · s5-6-strategy-review</div>
+<div class="anchor-tag">§5.7 · s5-7-strategy-review</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-6-strategy-review">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.6 · Strategy review</span></div>
+<section class="slide" data-source-anchor="s5-7-strategy-review">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.7 · Strategy review</span></div>
     <div class="slide-content">
         <h2 class="reveal">Strategy review</h2>
         <div class="prose"><p class="reveal">![Strategy](http://127.0.0.1:8765/strategy)</p><p class="reveal">The eight strategy domains (regulatory, commercial, architecture, development, testing, risk, post-market, operations) as a <strong>live review surface</strong>: per-domain status, pending proposals harvested from task docs, and <strong>Accept / Reject / Modify / Re-categorize</strong> actions that update the strategy document and append a history note. A <strong>Run Assembler</strong> button scans task docs for new <code>STRATEGY CONTENT</code> blocks and surfaces merge conflicts as reviewable proposals. <strong>[http://127.0.0.1:8765/strategy](http://127.0.0.1:8765/strategy)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-6-strategy-review', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-7-strategy-review', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-7-submission-package">
+<div class="candidate-section" data-anchor="s5-8-submission-package">
 <h2>Submission package <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.7 · s5-7-submission-package</div>
+<div class="anchor-tag">§5.8 · s5-8-submission-package</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-7-submission-package">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.7 · Submission package</span></div>
+<section class="slide" data-source-anchor="s5-8-submission-package">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.8 · Submission package</span></div>
     <div class="slide-content">
         <h2 class="reveal">Submission package</h2>
         <div class="prose"><p class="reveal">![Submission](http://127.0.0.1:8765/submission)</p><p class="reveal">The FDA-facing package, rendered from the <code>submissions</code> skill&#x27;s sidecars: one card per filing — today the <strong>Q-Sub (drafting: 7 documents, 2 strengthener briefs, 6 questions for FDA, 1 blocking gate)</strong> and the <strong>510(k) (scaffolded: 26 required documents)</strong>. Opening a package shows the composition manifest, an inline tabbed document viewer, the FDA-questions panel, and an <strong>Ask-the-regulatory-advisor</strong> drawer grounded on the package. <strong>[http://127.0.0.1:8765/submission](http://127.0.0.1:8765/submission)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-7-submission-package', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-8-submission-package', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-8-gap-analysis">
+<div class="candidate-section" data-anchor="s5-9-gap-analysis">
 <h2>Gap Analysis <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.8 · s5-8-gap-analysis</div>
+<div class="anchor-tag">§5.9 · s5-9-gap-analysis</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-8-gap-analysis">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.8 · Gap Analysis</span></div>
+<section class="slide" data-source-anchor="s5-9-gap-analysis">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.9 · Gap Analysis</span></div>
     <div class="slide-content">
         <h2 class="reveal">Gap Analysis</h2>
         <div class="prose"><p class="reveal">![Gap analysis](http://127.0.0.1:8765/gap-analysis)</p><p class="reveal">Substantive critiques of the project&#x27;s <strong>own work product</strong> against standards and internal sources, produced by the <code>gap-analysis</code> skill&#x27;s advisor fan-out. Each card shows what the analysis was grounded against, which advisors ran, and a severity-banded findings bar — today: a <strong>KOL review of the 5-year commercial roadmap</strong> (12 advisors, 21 findings) and a <strong>HIPAA readiness profile</strong> for the PP3500 system (3 advisors, 14 findings). Detail views carry per-finding advisor panels and the Ask-an-advisor drawer. <strong>[http://127.0.0.1:8765/gap-analysis](http://127.0.0.1:8765/gap-analysis)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-8-gap-analysis', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-9-gap-analysis', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-9-metrics-cost-of-the-agentic-approach">
+<div class="candidate-section" data-anchor="s5-10-metrics-cost-of-the-agentic-approach">
 <h2>Metrics — cost of the agentic approach <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.9 · s5-9-metrics-cost-of-the-agentic-approach</div>
+<div class="anchor-tag">§5.10 · s5-10-metrics-cost-of-the-agentic-approach</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-9-metrics-cost-of-the-agentic-approach">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.9 · Metrics — cost of the agentic approach</span></div>
+<section class="slide" data-source-anchor="s5-10-metrics-cost-of-the-agentic-approach">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.10 · Metrics — cost of the agentic approach</span></div>
     <div class="slide-content">
         <h2 class="reveal">Metrics — cost of the agentic approach</h2>
         <div class="prose"><p class="reveal">![Metrics](http://127.0.0.1:8765/metrics)</p><p class="reveal">Claude Code token usage and estimated cost across the team, aggregated and anonymized from each member&#x27;s locally-collected session telemetry (git is the aggregation bus — no shared server). Month filters, per-day volume and cost charts, and a <strong>30-day cost projection</strong> from the recent run-rate. <strong>[http://127.0.0.1:8765/metrics](http://127.0.0.1:8765/metrics)</strong></p><p class="reveal">![Value and ROI](http://127.0.0.1:8765/metrics)</p><p class="reveal">The other half of the ledger: for every task, the by-hand person-hour estimate (ranged, persona-tagged, rubric-based) is compared with the measured agentic time and token cost. The current retrospective across <strong>104 valued tasks</strong> models <strong>920–3,050 person-hours saved</strong> (65–86% of the by-hand effort) against roughly <strong>$623 of measured token spend</strong> — a <em>modeled, uncalibrated demo estimate</em>, presented with its methodology and ranges rather than as a certified saving. Category cards show where the savings concentrate (R&amp;D, regulatory, quality, program management). <strong>[http://127.0.0.1:8765/metrics](http://127.0.0.1:8765/metrics)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-9-metrics-cost-of-the-agentic-approach', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-10-metrics-cost-of-the-agentic-approach', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-10-setup-project-settings-surface">
+<div class="candidate-section" data-anchor="s5-11-setup-project-settings-surface">
 <h2>Setup — project settings surface <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.10 · s5-10-setup-project-settings-surface</div>
+<div class="anchor-tag">§5.11 · s5-11-setup-project-settings-surface</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-10-setup-project-settings-surface">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.10 · Setup — project settings surface</span></div>
+<section class="slide" data-source-anchor="s5-11-setup-project-settings-surface">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.11 · Setup — project settings surface</span></div>
     <div class="slide-content">
         <h2 class="reveal">Setup — project settings surface</h2>
         <div class="prose"><p class="reveal">![Setup](http://127.0.0.1:8765/setup)</p><p class="reveal">A full settings shell over the project&#x27;s tool surface, each section cross-checked against the <code>project.yml</code> allowlists: <strong>Project</strong> (manifest fields with inline edit), <strong>Connectors</strong> (MCP servers, add/edit with lockstep allowlist writes), <strong>Skills (35)</strong>, <strong>Agents (49)</strong>, <strong>Plugins</strong>, <strong>Automation</strong> (12 hooks + 26 automation entries incl. CI workflows), <strong>Registries</strong> (GitHub-direct catalog browse + one-click skill install), <strong>Team &amp; Security</strong> (roster add/deactivate + a GitHub repo-access audit), and <strong>Environment</strong> (runs <code>setup.sh --check</code> from the browser). Configuration editing is deliberately narrow — connectors, roster, and project scalars; skills and agents stay owned by the registry sync tooling. <strong>[http://127.0.0.1:8765/setup](http://127.0.0.1:8765/setup)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-10-setup-project-settings-surface', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-11-setup-project-settings-surface', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-11-workflows">
+<div class="candidate-section" data-anchor="s5-12-workflows">
 <h2>Workflows <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.11 · s5-11-workflows</div>
+<div class="anchor-tag">§5.12 · s5-12-workflows</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="prose-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">prose-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-11-workflows">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.11 · Workflows</span></div>
+<section class="slide" data-source-anchor="s5-12-workflows">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.12 · Workflows</span></div>
     <div class="slide-content">
         <h2 class="reveal">Workflows</h2>
         <div class="prose"><p class="reveal">![Workflows](http://127.0.0.1:8765/workflows)</p><p class="reveal">Composed automation across project skills — gate-readiness checks (DHF gate check, submission pre-flight, PR readiness), authoring flows (doc round-trip batch, trace refresh on save), and tracker status write-back. Each card declares its backend readiness honestly: <strong>live</strong>, <strong>prototype</strong>, or <strong>proposed</strong> — look-and-feel previews are clearly labeled, never passed off as wired. <strong>[http://127.0.0.1:8765/workflows](http://127.0.0.1:8765/workflows)</strong></p></div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-11-workflows', 'prose-slide')">Pick A</button></div></div>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: long-form-prose</div><div class="candidate-actions"><button onclick="pick(this, 's5-12-workflows', 'prose-slide')">Pick A</button></div></div>
 </div></div>
-<div class="candidate-section" data-anchor="s5-12-how-the-console-relates-to-claude-code">
+<div class="candidate-section" data-anchor="s5-13-how-the-console-relates-to-claude-code">
 <h2>How the console relates to Claude Code <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
-<div class="anchor-tag">§5.12 · s5-12-how-the-console-relates-to-claude-code</div>
+<div class="anchor-tag">§5.13 · s5-13-how-the-console-relates-to-claude-code</div>
 <div class="candidate-grid">
 <div class="candidate-card" data-component="table-slide" data-kind="template"><div class="candidate-header"><span class="pick-letter">A</span><span class="pick-name">table-slide</span><span class="pick-score">score 0.50</span></div><div class="candidate-preview">
-<section class="slide" data-source-anchor="s5-12-how-the-console-relates-to-claude-code">
-    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.12 · How the console relates to Claude Code</span></div>
+<section class="slide" data-source-anchor="s5-13-how-the-console-relates-to-claude-code">
+    <div class="chrome"><span class="chrome-num">XX</span><span class="brand">Project Overview</span><span class="crumb">§5.13 · How the console relates to Claude Code</span></div>
     <div class="slide-content">
         <h2 class="reveal">How the console relates to Claude Code</h2>
         <p class="lead reveal"><strong>Same agents. Same grounding. Two runtimes.</strong> Updating an agent (<code>.claude/agents/regulatory-affairs.md</code>) updates both surfaces simultaneously — no drift between what Claude Code sees and what the console exposes.</p>
@@ -2099,8 +2142,8 @@ table.compact-table {
         </div>
     </div>
 </section>
-</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: composition-breakdown</div><div class="candidate-actions"><button onclick="pick(this, 's5-12-how-the-console-relates-to-claude-code', 'table-slide')">Pick A</button></div></div>
-</div></div><div id="picks-summary" class="picks-summary" onclick="downloadPicks()">0 picks · download picks.json</div><script>const DECK_KEY = "project-overview";const SOURCE_NAME = "project-overview.md";const SOURCE_STEM = "project-overview";const SOURCE_SHA = "f9eec15df89f504d8ac0f2ddc770065d30b5390f1e937c97f99789a150d678ee";</script>
+</div><div class="candidate-rationale">base classification (md-deck heuristic) · cluster: composition-breakdown</div><div class="candidate-actions"><button onclick="pick(this, 's5-13-how-the-console-relates-to-claude-code', 'table-slide')">Pick A</button></div></div>
+</div></div><div id="picks-summary" class="picks-summary" onclick="downloadPicks()">0 picks · download picks.json</div><script>const DECK_KEY = "project-overview";const SOURCE_NAME = "project-overview.md";const SOURCE_STEM = "project-overview";const SOURCE_SHA = "3f6f0eea28933fca11789e4098c1c211969fcdfba42de299a75ca0ea19fe0ebe";</script>
 <script>
 // PICKS shape (v3): { <anchor>: { selected: [ {component, html?, rolled_at}, ... ] } }
 // Each card toggles independently — you can pick 1, 2, 3 or all 4 candidates per
@@ -2198,11 +2241,11 @@ document.addEventListener('DOMContentLoaded', () => {
     <h3>Deck provenance</h3>
     <dl>
       <dt>Source</dt><dd><code>project-overview.md</code></dd>
-      <dt>SHA-256</dt><dd><code>f9eec15df89f504d8ac0f2ddc770065d30b5390f1e937c97f99789a150d678ee</code></dd>
-      <dt>Built</dt><dd>2026-07-16T16:19:06Z</dd>
+      <dt>SHA-256</dt><dd><code>3f6f0eea28933fca11789e4098c1c211969fcdfba42de299a75ca0ea19fe0ebe</code></dd>
+      <dt>Built</dt><dd>2026-07-21T06:35:52Z</dd>
       <dt>By</dt><dd>benxavier</dd>
       <dt>Generator</dt><dd>md-deck v0.6.1 · style=bold-signal</dd>
-      <dt>Slides</dt><dd>31</dd>
+      <dt>Slides</dt><dd>34</dd>
     </dl>
     <p class="dim">Update by re-running the source-of-truth build:<br>
     <code>python .claude/skills/md-deck/scripts/build.py project-overview.md</code></p>
