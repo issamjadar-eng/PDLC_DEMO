@@ -59,7 +59,7 @@ _Actionable work items. Check off as completed._
 - [x] Corrections Phase C — Tasks screenshots (PO + client copies); landing recapture verified unnecessary
 - [x] Corrections Phase D — PO deck rebuild (67 slides) + picks remap/re-curation + build.py anchors/gallery (57-slide composite)
 - [x] Corrections Phase E — styling package (leak scrub, WCAG token lift, unclamp, wayfinding, captions) + candidate + PDF (10.3MB)
-- [ ] `/sync-skills push` the md-deck 0.6.2 fix upstream to the hitachi registry
+- [ ] `/sync-skills push` the md-deck 0.6.2 fix upstream — **BLOCKED on user decision**: preflight shows `skills/md-deck/{SKILL.md,scripts/build.py}` are UPSTREAM_NEWER (registry evolved past our baseline; our 0.6.2 fix diverges from it). Per the push contract, do NOT push over it. Recommended path: `/sync-skills pull` md-deck to see the upstream delta, re-apply the 0.6.2 fixes (`--contN` slugs in `_split_dense_slide`, `_split_label_sub`, comma in bold-lead regexes, README) on top of the upstream version, then push. README.md is LOCAL_ONLY (safe to push).
 - [x] Gap assessment (2026-07-20): 4 advisory agents launched — (1) skills-framework coverage vs `project-overview.md`, (2) console 1.40→1.41 feature/screenshot drift, (3) narrative completeness + curation, (4) styling/design critique of `assets/client-pdlc/index.html` (frontend-design lens, recommendations expressible as build.py changes). Synthesize findings into recommendations here when they return.
 - [ ] User review of the new deck (`assets/client-pdlc/index.html`), then push per git-workflow
 
