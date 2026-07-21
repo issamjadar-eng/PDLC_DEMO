@@ -1232,8 +1232,11 @@ INTERSTITIALS = {
 # replaced by an illustration.
 CUSTOM_REPLACES = {
     ("project-overview", 8): "key-deliverables",
+    ("project-overview", 11): "operating-rules",
     ("project-overview", 15): "skills-overview",
     ("project-overview", 20): "agents-overview",
+    ("project-overview", 25): "skills-catalog",
+    ("project-overview", 35): "adds-up-to",
 }
 
 
@@ -1619,6 +1622,15 @@ DECO_CSS = """
 }
 .ovw-chip .c-name { font-family: var(--mono); color: #fff; font-size: clamp(0.82rem, 1.05vw, 0.95rem); font-weight: 500; }
 .ovw-chip .c-tag { color: var(--secondary); font-size: clamp(0.76rem, 0.95vw, 0.88rem); line-height: 1.3; margin-top: 0.15rem; }
+.ovw-chip.mini { padding: clamp(0.3rem, 0.7vh, 0.5rem) clamp(0.55rem, 1.1vw, 0.8rem); }
+.ovw-grid3 {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.5rem, 1.2vh, 0.9rem) clamp(0.6rem, 1.4vw, 1.1rem);
+}
+.ovw-grid4 {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.5rem, 1.2vh, 0.9rem) clamp(0.6rem, 1.4vw, 1.1rem);
+}
 .deco-screenshot .shot-frame {
   flex: 1;
   min-height: 0;
@@ -2045,10 +2057,105 @@ def _render_agents_overview_slide(slide_num: int) -> str:
 """
 
 
+def _render_operating_rules_slide(slide_num: int) -> str:
+    """Authored replacement merging the two-page Operating-rules card grid:
+    all nine baked-in rules on one slide."""
+    rules = [
+        ("Task-first gate", "No file edit without an owning task document — a hook refuses otherwise. No orphan changes, ever."),
+        ("One task, one file", "All analysis, drafts, and decisions live inside the task's own document. The trail stays auditable."),
+        ("Real-time capture", "Strategy decisions and lessons land in the task doc the same turn they happen — not in a cleanup pass."),
+        ("Session security check", "Every session opens with an audit against the project manifest's tool allowlists; drift triggers remediation."),
+        ("Checkpoint &amp; recovery", "A session that ends without a checkpoint leaves a marker; the next session recovers the narrative from git history."),
+        ("Audited conversions", "Raw document-conversion commands are blocked — every DOCX/PDF round-trip goes through one audited pipeline."),
+        ("Local semantic search", "Ranked search over the whole documentation corpus, fully local — no cloud calls, one shared index."),
+        ("Usage telemetry", "Token spend is collected per session and published through git into the console's metrics view."),
+        ("Single source of truth", "Identity, DHF topology, team roster, registries, and security policy live in one project manifest."),
+    ]
+    chips = "".join(
+        f'<div class="ovw-chip"><div class="c-name">{n}</div><div class="c-tag">{t}</div></div>'
+        for n, t in rules
+    )
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="operating-rules">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">OPERATING RULES · BAKED INTO THE PROJECT</div>
+    <h2>Nine rules the tooling enforces.</h2>
+    <div class="ovw-grid3">{chips}</div>
+  </div>
+</section>
+"""
+
+
+def _render_skills_catalog_slide(slide_num: int) -> str:
+    """Authored replacement for the 6-row skills-playbook mosaic: the FULL
+    skill roster as a grouped name catalog."""
+    groups = [
+        ("DHF &amp; REGULATORY", ["medtech-docs", "docflow", "dhf-manifest", "trace-matrix",
+                                  "submissions", "change-control", "regulatory-authoring", "reference-audit"]),
+        ("QUALITY &amp; REVIEW", ["gap-analysis", "red-team", "best-practices", "secops",
+                                  "writing-well", "lessons"]),
+        ("PROGRAM OPS", ["task", "tracker", "strategy", "digest", "jira-pull",
+                          "usage-metrics", "project-console", "advisors"]),
+        ("AUTHORING &amp; FORMATS", ["docx", "pptx", "xlsx", "pdf", "md-deck", "frontend-design",
+                                     "frontend-slides", "explain", "knowledge-pack-export"]),
+        ("PLATFORM", ["file-locator", "skill-creator", "sync-skills", "web-control"]),
+    ]
+    cols = "".join(
+        '<div class="ovw-col"><div class="ovw-head">' + head + '</div>' +
+        "".join(f'<div class="ovw-chip mini"><div class="c-name">{n}</div></div>' for n in names) +
+        '</div>'
+        for head, names in groups
+    )
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="skills-catalog">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">SKILLS · THE FULL TOOLBOX</div>
+    <h2>Thirty-five playbooks. One auditable registry.</h2>
+    <div class="ovw-groups">{cols}</div>
+    <div class="takeaway">Every skill is <strong>allow-listed</strong> in the project manifest and synced from a shared registry — consistency is installed, not trained.</div>
+  </div>
+</section>
+"""
+
+
+def _render_adds_up_to_slide(slide_num: int) -> str:
+    """Authored replacement merging the two-page 'What this adds up to' grid:
+    all seven by-construction properties on one slide."""
+    props = [
+        ("Owned", "By a named, dated task document — the task gate makes ownership automatic."),
+        ("Located", "In a folder whose rules were read before the write."),
+        ("Traced", "To a design input, architecture node, V&amp;V item, and risk control."),
+        ("Audited", "Against a standing best-practices registry."),
+        ("Security-checked", "At session start, against the project's tool allowlists."),
+        ("Recoverable", "Every session's narrative is checkpointed; a dropped session auto-recovers."),
+        ("Measured", "Token spend and modeled hours-saved, rolled up per task."),
+    ]
+    chips = "".join(
+        f'<div class="ovw-chip"><div class="c-name">{i+1} · {n}</div><div class="c-tag">{t}</div></div>'
+        for i, (n, t) in enumerate(props)
+    )
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="adds-up-to">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">QUALITY &amp; PROCESS · THE SUM</div>
+    <h2>Every change is, by construction —</h2>
+    <div class="ovw-grid4">{chips}</div>
+    <div class="takeaway">None of the seven depends on a person remembering. <strong>Compliance stops being a tax on velocity and becomes a property of the toolchain.</strong></div>
+  </div>
+</section>
+"""
+
+
 CUSTOM_RENDERERS = {
     "key-deliverables": _render_key_deliverables_slide,
+    "operating-rules": _render_operating_rules_slide,
     "skills-overview": _render_skills_overview_slide,
+    "skills-catalog": _render_skills_catalog_slide,
     "agents-overview": _render_agents_overview_slide,
+    "adds-up-to": _render_adds_up_to_slide,
 }
 
 
