@@ -4725,7 +4725,7 @@
         }
       },
       "cost": 247.23,
-      "cost_allocated": 1.66,
+      "cost_allocated": 5.52,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 1.0,
@@ -4769,7 +4769,7 @@
         "retrospective": false,
         "title": "Console Setup Section Redesign (beyond MCP servers, professional design)",
         "todos": 12,
-        "updated": "2026-07-15"
+        "updated": "2026-07-16"
       },
       "sessions": 2,
       "totals": {
@@ -4877,6 +4877,47 @@
         }
       },
       "cost": 31.51,
+      "cost_allocated": 3.86,
+      "cost_basis": "measured+allocated",
+      "estimate": {
+        "agentic_hours": 1.5,
+        "agentic_hours_range": {
+          "max": 1.5,
+          "min": 1.0
+        },
+        "by_persona": {
+          "program-manager": {
+            "max": 6.0,
+            "min": 3.5
+          },
+          "rd-lead": {
+            "max": 13.0,
+            "min": 7.0
+          }
+        },
+        "confidence_mix": {
+          "high": 2,
+          "med": 2
+        },
+        "hours_saved": {
+          "max": 18.0,
+          "min": 9.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 19.0,
+          "min": 10.5
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "retrospective": false,
+        "title": "Client PDLC Deck Refresh (June\u2192July improvements + new screenshots)",
+        "todos": 4,
+        "updated": "2026-07-20"
+      },
       "sessions": 1,
       "totals": {
         "cache_creation": 147033,
@@ -4887,6 +4928,51 @@
         "messages": 110,
         "output": 58434
       }
+    },
+    "ben/107": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 0.7,
+        "agentic_hours_range": {
+          "max": 0.7,
+          "min": 0.3
+        },
+        "by_persona": {
+          "program-manager": {
+            "max": 1.5,
+            "min": 0.8
+          },
+          "rd-lead": {
+            "max": 16.5,
+            "min": 8.8
+          }
+        },
+        "confidence_mix": {
+          "high": 1,
+          "med": 2
+        },
+        "hours_saved": {
+          "max": 17.7,
+          "min": 8.8
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 18.0,
+          "min": 9.5
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "retrospective": false,
+        "title": "Console Tasks Tab (port from spec-gaming sister project)",
+        "todos": 3,
+        "updated": "2026-07-20"
+      },
+      "sessions": 0,
+      "totals": {}
     },
     "ben/_unattributed": {
       "by_model": {
@@ -4984,23 +5070,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 505.8,
-    "cost_allocated": 150.23,
+    "agentic_hours": 508.0,
+    "cost_allocated": 157.94,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 638.49,
     "cost_unattributed_measured": 241.66,
-    "cost_unattributed_residual": 91.42,
+    "cost_unattributed_residual": 83.71,
     "hours_saved": {
-      "max": 3105.0,
-      "min": 954.0
+      "max": 3140.7,
+      "min": 971.8
     },
     "manual_hours": {
-      "max": 3594.0,
-      "min": 1459.0
+      "max": 3631.0,
+      "min": 1479.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 104
+    "tasks_with_estimate": 106
   }
 }
