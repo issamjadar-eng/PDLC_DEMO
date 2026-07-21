@@ -63,7 +63,7 @@
   {
    "src": "agentic-delivery",
    "idx": 19,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
@@ -98,7 +98,7 @@
   {
    "src": "project-overview",
    "idx": 13,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
@@ -158,7 +158,7 @@
   {
    "src": "project-overview",
    "idx": 34,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
@@ -168,7 +168,7 @@
   {
    "src": "project-overview",
    "idx": 37,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
