@@ -4880,33 +4880,33 @@
       "cost_allocated": 3.86,
       "cost_basis": "measured+allocated",
       "estimate": {
-        "agentic_hours": 1.5,
+        "agentic_hours": 5.5,
         "agentic_hours_range": {
-          "max": 1.5,
-          "min": 1.0
+          "max": 5.5,
+          "min": 3.5
         },
         "by_persona": {
           "program-manager": {
-            "max": 6.0,
-            "min": 3.5
+            "max": 18.5,
+            "min": 11.0
           },
           "rd-lead": {
-            "max": 13.0,
-            "min": 7.0
+            "max": 45.5,
+            "min": 24.5
           }
         },
         "confidence_mix": {
-          "high": 2,
-          "med": 2
+          "high": 3,
+          "med": 7
         },
         "hours_saved": {
-          "max": 18.0,
-          "min": 9.0
+          "max": 60.5,
+          "min": 30.0
         },
         "inverted": false,
         "manual_hours": {
-          "max": 19.0,
-          "min": 10.5
+          "max": 64.0,
+          "min": 35.5
         },
         "method_version": 1,
         "personas": [
@@ -4915,8 +4915,8 @@
         ],
         "retrospective": false,
         "title": "Client PDLC Deck Refresh (June\u2192July improvements + new screenshots)",
-        "todos": 4,
-        "updated": "2026-07-20"
+        "todos": 10,
+        "updated": "2026-07-21"
       },
       "sessions": 1,
       "totals": {
@@ -5070,19 +5070,19 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 508.0,
+    "agentic_hours": 512.0,
     "cost_allocated": 157.94,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 638.49,
     "cost_unattributed_measured": 241.66,
     "cost_unattributed_residual": 83.71,
     "hours_saved": {
-      "max": 3140.7,
-      "min": 971.8
+      "max": 3183.2,
+      "min": 992.8
     },
     "manual_hours": {
-      "max": 3631.0,
-      "min": 1479.0
+      "max": 3676.0,
+      "min": 1504.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
