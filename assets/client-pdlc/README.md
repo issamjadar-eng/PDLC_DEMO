@@ -3,9 +3,9 @@
 Single-file composite presentation built mechanically from two sibling decks:
 
 - `../agentic-delivery/index.html` — 47 slides
-- `../project-overview/index.html` — 52 slides
+- `../project-overview/index.html` — 59 slides
 
-Total candidate pool: **99 slides**. Each source slide is harvested verbatim (`<section class="slide ...">`) and re-rendered inside a `<div class="src-{deck}">` wrapper with that deck's CSS scoped to the wrapper.
+Total candidate pool: **106 slides**. Each source slide is harvested verbatim (`<section class="slide ...">`) and re-rendered inside a `<div class="src-{deck}">` wrapper with that deck's CSS scoped to the wrapper.
 
 > **History note**: a third source deck, `project-overview-sp6500` (27 slides), was retired in task ben/070 (2026-05-30). It originated as a md-deck test fixture (task ben/039 — "structurally diverse second source") rather than as a real portfolio program doc. All 27 of its candidates had been curated out during selection (zero kept slides in the final composite), so removing it does not change `index.html` content — only shrinks the candidate pool. The historical final-deck snapshots (`index.html`, `client-pdlc-presentation-v1.html`, `GlobalLogic_Agentic_PDLC.pdf`) are unaffected.
 
@@ -27,7 +27,7 @@ Selection and ordering are separated into two passes so each one is a focused to
 python build.py --candidate
 ```
 
-`candidate.html` shows all **99** slides in **source order** (agentic-delivery → project-overview). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
+`candidate.html` shows all **106** slides in **source order** (agentic-delivery → project-overview). Each slide has only a KEEP/REMOVE toggle — no reorder controls. The topbar pill reads **PASS 1 · SELECT**.
 
 - Click **KEEP / REMOVE** per slide. Default = all KEEP.
 - **Keep all** / **Remove all** sweep toggles.
@@ -48,7 +48,7 @@ python build.py --reorder
 - **Reset order** reverts to the picks.json sequence.
 - When done, click **Export picks.json**. Save over `assets/client-pdlc/picks.json`.
 
-Removed slides stay in `picks.json` (appended at the tail with `keep:false`) so a return trip to Pass 1 still sees the full 99-slide catalog with your keep state intact.
+Removed slides stay in `picks.json` (appended at the tail with `keep:false`) so a return trip to Pass 1 still sees the full 106-slide catalog with your keep state intact.
 
 ### Final
 
@@ -63,7 +63,7 @@ Reads `picks.json`, emits `index.html` containing only `keep:true` slides in `or
 You can move back and forth between the two passes freely:
 
 - **Pass 1 → Pass 2**: SELECT export preserves the kept-order if a prior `picks.json` already had one (i.e., Pass 2's earlier ordering survives a Pass 1 visit). Only the `keep` field is updated.
-- **Pass 2 → Pass 1**: REORDER export writes the kept slides in your chosen order, then appends removed slides at the tail with `keep:false`. On the next `--candidate` build, all 99 slides reappear in source order with the correct keep state.
+- **Pass 2 → Pass 1**: REORDER export writes the kept slides in your chosen order, then appends removed slides at the tail with `keep:false`. On the next `--candidate` build, all 106 slides reappear in source order with the correct keep state.
 - **Resetting**: delete `picks.json` to start from scratch (all keep, source order).
 
 Both `picks.json` and `index.html` are git-committable. The final deck is fully regenerable from `picks.json` + the source decks.
@@ -73,7 +73,7 @@ Both `picks.json` and `index.html` are git-committable. The final deck is fully 
 | File | Generator | Committable | Notes |
 |---|---|---|---|
 | `build.py` | hand-authored | ✓ | Single Python script; stdlib-only. |
-| `candidate.html` | `build.py --candidate` (Pass 1) or `build.py --reorder` (Pass 2) | ✓ | Same path; the two passes overwrite it in place. ~500 KB in SELECT mode (99 slides), shrinks in REORDER mode (kept slides only). |
+| `candidate.html` | `build.py --candidate` (Pass 1) or `build.py --reorder` (Pass 2) | ✓ | Same path; the two passes overwrite it in place. ~550 KB in SELECT mode (106 slides), shrinks in REORDER mode (kept slides only). |
 | `picks.json` | exported from `candidate.html` | ✓ | Curation state — schema `client-pdlc/picks@1`. |
 | `index.html` | `build.py --final` | ✓ | The final deliverable. Contains only kept slides, no curation chrome. |
 
@@ -105,6 +105,10 @@ The `order` array is the source of truth — sequence == final slide sequence; r
 
 ## Limitations
 
-- No thumbnail / grid view in `candidate.html` — slides render at native size in a vertical scroll. 99 × ~900px ≈ 90k px of scroll. Use browser zoom-out for an overview.
+- No thumbnail / grid view in `candidate.html` — slides render at native size in a vertical scroll. 106 × ~900px ≈ 95k px of scroll. Use browser zoom-out for an overview.
 - The candidate page is single-user single-browser. Curation state lives in `localStorage` until you Export.
 - This pipeline is HTML-to-HTML only. It is **not** a `/md-deck` action — there's no markdown source, no `data-source-anchor` round-trip, no theme harmonization between source decks. Each slide carries forward exactly the look it had in its source deck.
+
+## Changelog
+
+- 2026-07-16 — **June→July refresh** (task ben/106). `project-overview.md` updated with everything since June 12 (console 1.26→1.40, risk file, submissions, value/ROI) and its deck rebuilt: 52 → **59 slides**, so the candidate pool is now **106**. `picks.json` project-overview indices auto-remapped by title ({0..15} same, 16→17, {17..50}+1, 51→58); the new Skills mosaic page 3/3 (idx 16) added to keeps; the six new console text slides (idx 52–57) left removed because the §7 screenshot gallery covers them. `build.py`: CHAPTERS anchors 21→22 / 30→31 / 43→44, SLIDE_APPENDS 51→58, §7 gallery expanded 6 → **11 slides** (adds Strategy Review, Submission Package, Gap Analysis, Value & ROI, Project Settings; Dashboards slide retitled Submission Tracker). All 11 console screenshots recaptured live at 1440×900 (console 1.40.0). Final deck 41 → **47 slides**; PDF regenerated.

@@ -113,24 +113,22 @@ _Actionable work items. Check off as completed._
 
 ## Open Questions
 
-- Edit capability scope: connectors keep existing add/remove/allowlist editing; other sections launched **read-only status** (editing skills/agents = `/sync-skills` domain). Confirm with user if inline allowlist toggles are wanted for skills/agents/plugins too.
-- **Posture finding surfaced by the new view:** 14 installed agents (the `advisors`-owned personas + several researcher agents) are NOT in `project.yml security.approved_agents` (17 entries vs 31 installed) — flagged "not in allowlist" in the Agents section. Either backfill the allowlist or codify an "owned-by-approved-skill = approved" convention. User decision.
-- Registry push (`/sync-skills push` of project-console 1.32.0 to hitachi) — pending user's usual cadence.
+- Edit capability scope for **skills/agents/plugins** allowlist toggles: connectors + team roster + project scalars are editable; skills/agents/plugins remain read-only status views (editing = `/sync-skills` domain). Inline allowlist toggles for those sections: wanted or not? (Survived two checkpoints — decide or drop.)
+- **Secops automated check vs the new observer policy:** the weekly `SECOPS.md` automated check (2026-07-15 run, uncommitted in the working tree) still classifies all 17 unrostered read-only collaborators as "Unauthorized" → FAIL, contradicting the permission-aware posture shipped in this task (`setup.sh` roster audit: observers = info). The secops skill's collaborator check needs the same permission-aware treatment — likely a small follow-up task.
+- ~~Posture finding: 14 installed agents not in `approved_agents`~~ — resolved: backfilled +14, board green.
+- ~~Registry push pending user cadence~~ — resolved: lockstep at 1.40.0 (hitachi PR #274).
 
 ## Resume
 
 ### In-flight artifacts
-All uncommitted (Claude commits nothing unprompted). project-console skill files:
-- `console/setup/loader.py` (+~260 lines: 5 section loaders + aggregate), `console/setup/router.py` (aggregate wiring)
-- `console/web/templates/setup_view.html` (full rewrite — settings shell), `console/web/templates/_base.html` (nav title)
-- `SKILL.md` (v1.32.0 + Setup section table), `VERSION`, `README.md` (changelog)
-- Task docs: `tasks/ben/104-*.md`, `tasks/ben/000-index.md`
-- Console running on :8765 with the new page live (templates auto-reload; python loaded at start)
+- **All task-104 work is committed and pushed** — main at `11994ac` (PR #117); console + registry in lockstep at project-console **1.40.0** (hitachi PR #274, 0 drift). Nothing from this task remains uncommitted.
+- Only working-tree change: `tasks/ben/SECOPS.md` — automated weekly secops check output (2026-07-15, FAIL on the pre-observer-policy collaborator check; see Open Questions). Not authored by this task; safe to commit standalone or leave for the secops follow-up.
+- Console runs on :8765 via `tools/project-console/start.sh`.
 
 ### First action on resume
 - Activate: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 104`
-- Remaining: user decisions on the 3 Open Questions; commit/push per git-workflow when asked.
-- Do NOT redo: loaders/template/version bump/browser verification (all done).
+- Remaining: the two live Open Questions (skills/agents inline-toggle scope; secops collaborator-check alignment). All build/verify/push work is done — this task is otherwise ready to mark Complete.
+- Do NOT redo: any 1.32.0–1.40.0 feature, verification, or registry push (all shipped + recorded above).
 
 ## Economics
 
@@ -234,6 +232,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 
 ## Changelog
 
+- 2026-07-16: Retroactive checkpoint (session of 2026-07-16 ended uncheckpointed; recovered from git). Verified: no commits after the recorded PR #116/#117 push — the doc was already current. Working tree holds only the automated `SECOPS.md` weekly-check update (FAIL on the pre-observer-policy collaborator check — new Open Question: align the secops check with the permission-aware posture). Open Questions pruned (agents allowlist + registry push resolved); Resume section rewritten — everything shipped, task is Complete-ready pending the two remaining decisions.
 - 2026-07-14: Task created from user direction: "setup should be more than mcp servers… design should look and be professional" + Claude Desktop Connectors screenshot as reference.
 - 2026-07-14: Follow-ups shipped: row-detail expansion for Skills/Agents/Rules & Hooks; Agents section now covers bundled skill-internal agents (49 total) with approval inherited from the owning approved skill; `approved_agents` backfilled +14 advisors entries (board fully green); tier1-enricher/restructure question resolved (bundled in dhf-manifest, legitimately allowlisted). Renumbered 103->104 after the uncommitted pre-existing 103 (Setup tab connectors, 1.31.0) surfaced; its artifacts committed with this task's push.
 - 2026-07-15: Pushed 1.39.0/1.40.0 batch: project PR #116 merged (`980da49`, commit `2767249` — 12 files, +813/−4). Registry sync: hitachi PR #274 squash-merged `05eafb9`; clone ff'd, branch pruned; post-check 0 drift — lockstep at 1.40.0. Sync-log entry written.

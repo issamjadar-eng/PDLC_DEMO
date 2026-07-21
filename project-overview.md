@@ -2,7 +2,7 @@
 
 **Program:** PainEase PCA Advanced (PP3500) — patient-controlled analgesia infusion pump, with a surrounding connectivity adapter and Cloud Suite
 **Regulatory path:** 510(k) with a Predetermined Change Control Plan (PCCP)
-**Last updated:** 2026-04-21
+**Last updated:** 2026-07-16
 
 > _**Demo scope.**_ PDLC_DEMO is a **demonstration project** for agentic workflows across the Product Development Life Cycle in MedTech. The device identity (PP3500), predicate (PP3000 / K190567), clearance number (K210345), DHF artifacts, and clinical data are **illustrative** — not a real submission. Every fabricated datum in this repo carries a `_Demo sample data — not for clinical use._` banner.
 
@@ -53,7 +53,8 @@ Full strategy: [`docs/project/strategies/regulatory-strategy.md`](docs/project/s
 1. **Q-Sub package** (`docs/project/submissions/qsub/`) — cover letter, device description, classification validation, PCCP scope questions.
 2. **510(k) submission** (`docs/project/submissions/510k/`) — substantial-equivalence argument to PP3000, software docs, performance and validation data, risk analysis, labeling. Composition driven by `composition-manifest.md`.
 3. **PCCP document** (`docs/project/submissions/pccp/`) — change categories, modification protocols, performance criteria, reporting plan.
-4. **Trace matrix** per DHF (`docs/project/dhfs/<dhf>/design-controls/trace-matrix/`) — User Needs ↔ Design Inputs ↔ Architecture ↔ V&V ↔ Risk, with a **Filing Scope** column derived from Ct\* tags.
+4. **Trace matrix** per DHF (`docs/project/dhfs/<dhf>/design-controls/trace-matrix/`) — User Needs ↔ Design Inputs ↔ SW Requirements ↔ Architecture ↔ V&V ↔ Risk, with a **Filing Scope** column derived from Ct\* tags.
+5. **Risk file** (`docs/project/dhfs/pca-device/risk-management/`) — ISO 14971 hazard analysis (16 hazards) plus design and process FMEAs, QMS-form-conformant and wired into the trace matrix as a live risk layer.
 
 ---
 
@@ -110,36 +111,49 @@ PDLC_DEMO/
 
 - **Task-first workflow (hard gate).** A PreToolUse hook (`.claude/hooks/check-active-task.sh`) denies any Edit/Write/NotebookEdit unless the session has an active task. Every substantive change in the repo traces back to a task document under `tasks/<person>/NNN-*.md`.
 - **One task, one file.** All design work, analysis, drafts, and phase deliverables produced under a task belong inside that task's numbered markdown file — never as sibling `NNN-task-p1.md` files. If a deliverable genuinely lives elsewhere (a new doc in `docs/`), the task still records what was produced and links to it.
-- **Strategy / Lessons capture backstops.** UserPromptSubmit + Stop hooks detect strategic-intent signals and block ending a session that generated strategy/lessons content without capturing it into the active task doc using `<!-- STRATEGY CONTENT: domain, topics -->` or `<!-- LESSONS LEARNED: category -->` blocks. `/strategy` and `/lessons` harvest from those blocks.
+- **Strategy / Lessons captured in real time.** Strategic decisions and lessons land in the active task doc as `<!-- STRATEGY CONTENT: domain, topics -->` / `<!-- LESSONS LEARNED: category -->` blocks in the same turn they happen (a CLAUDE.md hard rule). `/strategy` and `/lessons` harvest those blocks into the shared strategy docs and the team lessons ledger.
 - **Session-start security check.** The `project-secops` agent runs `security-assert.sh` on every session against the `security.*` allowlists in `project.yml`. Results cached to `tasks/<person>/SECOPS.md` with a 7-day TTL. High-severity drift triggers guided remediation.
+- **Checkpoint discipline with automatic recovery.** `/checkpoint` refreshes the active task doc to resume-ready state; a SessionEnd hook marks any session that ends without one, and a SessionStart hook offers retroactive recovery from git history in the next session — dropped sessions don't lose the project narrative.
 - **Docflow entry enforcement.** A PreToolUse Bash hook (`block-direct-conversion.sh`) refuses direct `pandoc` / `unzip` / `soffice` / `pdftotext` calls so all PDF/DOCX/XLSX conversions round-trip through the audited `/docflow` pipeline.
+- **Semantic file search, fully local.** A `file-locator` MCP server (fastembed + SQLite FTS5, no cloud calls) gives Claude and every advisor agent ranked semantic search over the whole docs corpus; its index is committed so the team shares one canonical artifact.
+- **Usage telemetry built in.** SessionStart/SessionEnd hooks collect per-session token usage locally and publish it through git — feeding the console's Metrics section (cost, and modeled hours-saved per task).
 - **`project.yml` as single source of truth.** Identity, device family, portfolio context, DHF topology (with `regulatory` + `filing` + `parent` per DHF), team roster, skill registries, secops allowlists, and `advisors.enabled` curation all live in one manifest.
 
 ### 2.3 Skills (project-level)
 
-15 skills are installed under `.claude/skills/` and allow-listed in `project.yml` under `security.approved_skills`, plus four document-format skills (`docx`, `pptx`, `xlsx`, `pdf`) from the `anthropic` builtin registry. The project-specific and highest-leverage ones:
+**35 skills** are installed under `.claude/skills/` and allow-listed in `project.yml` under `security.approved_skills` — 31 from the shared **hitachi** registry plus four document-format skills (`docx`, `pptx`, `xlsx`, `pdf`) from the `anthropic` builtin registry. The project-specific and highest-leverage ones:
 
 | Skill | What it does |
 |---|---|
-| `task` | Task lifecycle: create / find / list / update / show. Owns the task-first gate and Strategy/Lessons capture hooks. |
+| `task` | Task lifecycle: create / find / update / checkpoint. Owns the task-first gate and the checkpoint-recovery hooks. |
 | `medtech-docs` | Scaffolds `docs/` tree, manages DHFs, imports FDA guidance / ISO-IEC standards / industry frameworks, generates compliance dashboard. |
 | `docflow` | Round-trip conversion between markdown and DOCX / DOC / PDF / XLSX with image fidelity, cross-reference resolution, and metadata tracking. Entry enforced by hook. |
 | `strategy` | Harvests `<!-- STRATEGY CONTENT: domain -->` blocks from tasks into unified shared strategy docs across eight domains (regulatory, commercial, architecture, development, testing, risk, postmarket, operations). |
-| `tracker` | Builds the submission-package tracker from architecture + regulatory strategy + composition manifests; renders HTML dashboard. |
-| `trace-matrix` | Bidirectional design-controls trace (UN ↔ DI ↔ Architecture ↔ V&V ↔ Risk) per DHF with project-adaptive parsers. Emits `.md` deliverable + `.json` sidecar consumed by the console. |
-| `advisors` | Installs and curates the 11 Core Team Assistant personas + 2 advisory panels + KOL personas. Same definitions feed Claude Code and the console chat. |
+| `submissions` | Authors and scaffolds the FDA submission package itself — filing-type-aware document sets for Q-Sub / 510(k) / PCCP, composition manifests, provenance sidecars, and the console Submission section's data. |
+| `tracker` | Builds the milestone-driven submission-package tracker from composition manifests + DHF evidence; renders the interactive HTML dashboard with live status editing. |
+| `trace-matrix` | Bidirectional design-controls trace (UN ↔ DI ↔ SW Reqs ↔ Architecture ↔ V&V ↔ Risk) per DHF with project-adaptive parsers. Emits `.md` deliverable + `.json` sidecar consumed by the console. |
+| `dhf-manifest` | Projects regulatory + QMS obligations through the project scope into per-DHF deliverable manifests with gap reports — "are the right documents present?" |
+| `gap-analysis` | Substantive content-gap critiques of the project's own work product against standards, run by advisor fan-out; feeds the console Gap Analysis section. |
+| `advisors` | Installs and curates the Core Team Assistant personas, advisory panels, and KOL personas. Same definitions feed Claude Code and the console chat. |
+| `red-team` | A buyer-committee of 7 hostile skeptic personas (CEO, CFO, CTO, VP-Eng, QA-VP, RA-VP, PMO) that stress-test outward-facing documents before they ship. |
+| `regulatory-authoring` | The writing-quality layer for regulator-facing documents: authoring standard, lint, and a substance-preserving copy-editor. |
+| `reference-audit` | Independent verification of every citation in a document against byte-correct sources — broken links, stale clauses, mismatched anchors. |
+| `usage-metrics` | Cross-team token/cost telemetry with git as the aggregation bus; models person-hours saved per task and powers the console's Value & ROI view. |
+| `file-locator` | Local semantic file search MCP (fastembed + SQLite FTS5) over the whole docs corpus — no cloud calls, committed index. |
 | `project-console` | Scaffolds and maintains the local FastAPI console (see §5). |
 | `lessons` | Harvests `<!-- LESSONS LEARNED -->` blocks into the ledger; promotes mature lessons to their permanent home (skill / CLAUDE.md / agent / rule / glossary). |
 | `best-practices` | Audits project setup against checks from the shared hitachi registry and each skill's `## Best Practices` table. |
-| `secops` | Session-start security posture check, attestations, allowlists. |
-| `change-control` | **(Scaffold only.)** Bridge to Confluence + Comala/SoftComply for Part 11 review, and Windchill for release vault. Hybrid freeze-point lifecycle (draft → frozen → released). |
-| `sync-skills` | Bidirectional sync with the shared **hitachi** registry (`../hitachi` local checkout). |
-| `skill-creator` | Authors new skills, runs evals. |
+| `secops` | Session-start security posture check, attestations, allowlists, trojan-horse artifact audit. |
+| `change-control` | Bidirectional bridge to the regulated downstream systems — adopt/pull Confluence pages into the repo, publish frozen versions back out (Comala/SoftComply Part 11 review, Windchill vault, Jira ECRs). |
+| `sync-skills` | Bidirectional sync with the shared **hitachi** registry — three-way merge analysis on every pull, local fixes pushed upstream as PRs. |
+| `md-deck` | Builds single-file HTML slide decks (like this document's companion deck) from structured markdown, with full provenance metadata. |
 | `digest` | Morning briefing + on-demand append to `CHANGELOG.md`. |
+
+Also installed: `skill-creator` (authors new skills, runs evals), `writing-well` (Zinsser-grounded prose linting), `knowledge-pack-export` (curated doc bundles for external LLM platforms), `explain` (visual onboarding answers), `frontend-design` / `frontend-slides`, `jira-pull`, and `web-control`.
 
 ### 2.4 Agents (persona advisors)
 
-**23 domain agents** total — a mix of **Core Team Assistants** and **Key Opinion Leaders** — plus `project-secops` on the security side. All live under `.claude/agents/` (Core Team) and `tools/project-console/agents/` (KOLs, project-specific). Each is exposed identically to (a) Claude Code via `Agent(subagent_type=...)` and (b) the project console as chat advisors. `project.yml` under `advisors.enabled` curates which Core Team assistants are on for a given session (today: `regulatory-affairs`, `clinical-affairs`, `risk-management`).
+**31 domain agents** are exposed as chat advisors — **Core Team Assistants**, **Key Opinion Leaders**, and a **Red Team** buyer-committee — plus `project-secops` on the security side. Counting the worker agents bundled inside skills (docflow converters, researchers, copy-editors), the project carries **49 agents total**, every one allow-listed or approval-inherited via `project.yml`. Each advisor is exposed identically to (a) Claude Code via `Agent(subagent_type=...)` and (b) the project console as chat advisors. `project.yml` under `advisors.enabled` curates which Core Team assistants are on for a given session (today: `regulatory-affairs`, `clinical-affairs`, `risk-management`).
 
 **Core Team Assistants — 11 individuals + 2 panels:**
 
@@ -174,6 +188,18 @@ PDLC_DEMO/
 | **Susan Braithwaite** | Insulin infusion protocols, ICU glucose management (portfolio context, not PCA-specific) |
 | `kol-panel-pp3500` | Round-robin panel of the four most PCA-relevant KOLs |
 | `kol-panel-pp3500-llm` | Same four KOLs with a silent LLM moderator picking the next speaker based on conversation |
+
+**Red Team — 7 skeptics + 1 panel** (hostile buyer-committee personas that stress-test outward-facing documents; each grounds itself with for/against evidence before critiquing):
+
+| Skeptic | Reads the document as… |
+|---|---|
+| `ceo-skeptic` | The strategic buyer — vision with no mechanism, upside asserted while downside hidden |
+| `cfo-skeptic` | The economic buyer — benefit with no number, cost of adoption omitted |
+| `cto-skeptic` | The technical buyer — mechanism, scale behavior, lock-in, failure modes |
+| `vp-eng-skeptic` | The adoption owner — ramp cost, migration path, day-2 operations |
+| `qa-vp-skeptic` | The quality buyer — validation, traceability, non-determinism under control |
+| `ra-vp-skeptic` | The regulatory buyer — what a regulator could later hold the company to |
+| `pmo-skeptic` | The governance buyer — does the productivity claim survive a real plan? |
 
 Every advisor is grounded via a three-tier sourcing model: **universal** (FDA guidance + ISO/IEC standards in `docs/external/`), **shape-stable** (paths guaranteed by medtech-docs — DHFs, strategies, submissions), **project-specific overlay** (narrowing via `project.yml → advisors.overlays.<name>`).
 
@@ -214,10 +240,12 @@ A **hook** is a small automation that fires at a specific moment — when a sess
 |---|---|---|
 | **Task-first gate** (`check-active-task.sh`) | Before any file edit | Refuses to edit a file unless there's an active task document that owns the change. No orphan edits, ever. |
 | **Session security check** (`security-assert.sh`) | When a session opens | Runs the `project-secops` audit against `project.yml` allowlists. High-severity drift triggers guided remediation. |
-| **Session env** (`session-env.sh`) | When a session opens | Exports `CLAUDE_SESSION_ID` so the task gate can key per-session state. |
-| **Strategy/lessons capture** (`capture-signals.sh` + `capture-check.sh`) | UserPromptSubmit + Stop | Arms when a prompt shows strategic-intent signals; blocks session end if the armed task didn't capture the decision into a `<!-- STRATEGY CONTENT -->` / `<!-- LESSONS LEARNED -->` block. |
+| **Morning briefing** (`session-briefing.sh`) | When a session opens | Missing context — a 12h-throttled digest of what changed across the team since you last looked. |
+| **Checkpoint recovery** (`checkpoint-recover.sh` + `session-cleanup.sh`) | Session start + end | Lost project narrative — a session that ends without a `/checkpoint` leaves a marker, and the next session offers recovery from git history. |
 | **Docflow entry** (`block-direct-conversion.sh`) | Before raw `pandoc` / `unzip` / `soffice` / `pdftotext` Bash calls | Refuses direct conversion commands that would bypass the audited `/docflow` pipeline. |
-| **Session cleanup** (`session-cleanup.sh`) | When a session ends | Removes per-session state files so completed sessions don't leave orphans. |
+| **Skill integrity watch** (`skill-creator-watch.py`) | Before edits under `.claude/skills/` | Uncontrolled changes to the shared skill surface — skill edits follow the skill-creator conventions. |
+| **Taxonomy freshness** (`taxonomy-freshness.sh`) | When a session opens | Silently stale doctype-governance mappings — flags `.taxonomy.yml` files past their review cadence. |
+| **Usage telemetry** (`usage-metrics-refresh.sh` + `usage-metrics-publish.sh`) | Session start + end | Unmeasured spend — collects per-session token usage locally and publishes it to the shared metrics branch. |
 
 Think of them as the seatbelt interlock of the project: the car doesn't lecture you about seatbelts — it just won't start until yours is on.
 
@@ -233,6 +261,9 @@ A **rule** is a short written convention stored in `CLAUDE.md` or `.claude/rules
 - **READMEs have `## Conventions` and `## Changelog` sections.** When Claude edits a README, it appends a changelog row explaining the rationale — AI sessions collapse many edits into one commit, and the changelog captures context git alone doesn't.
 - **Capture strategy and lessons in real time.** Strategic decisions go into the active task as `<!-- STRATEGY CONTENT: domain -->` blocks in the same turn they were made — not as a deferred cleanup pass. Same rule for lessons.
 - **Never fabricate standard, clinical, or regulatory content.** Anything not derivable from a distilled source under `docs/external/` or `docs/internal/source-md/` is flagged `[VERIFY]` inline.
+- **Read the contract before reasoning about behavior.** Claims about how a skill, schema, or agent behaves must be grounded in its contract file (SKILL.md, schema, prompt) with line citations — never inferred from names or pattern memory.
+- **Regulator-facing documents follow the authoring standard.** Any edit to a filed DHF or submission body runs the `regulatory-authoring` lint, a substance-preserving copy-edit, and a QA-conformance pass; citation-bearing edits get an independent reference audit.
+- **AI provenance without vendor lock.** AI-assisted edits to controlled documents are logged in a non-published metadata block, attributed only as "AI assistant(s)" — the controlled record stays human-authored and tool-agnostic.
 - **Demo banner on every fabricated datum.** Every illustrative clinical figure, placeholder predicate, or sample analysis carries `_Demo sample data — not for clinical use._` near the top.
 
 ### 3.4 What this adds up to
@@ -244,9 +275,10 @@ Every substantive change in this repository is, by construction:
 3. **Traced** to a design input, architecture node, V&V item, and risk control (trace matrix).
 4. **Audited** against a standing best-practices registry (`/best-practices`).
 5. **Security-checked** at session start (secops hook).
-6. **Captured** for strategic/lessons content before any session ends (capture hooks).
+6. **Recoverable** — every session's narrative is checkpointed into the task doc, and an uncheckpointed session triggers automatic recovery from git history at the next start.
+7. **Measured** — token spend and modeled hours-saved are collected per session and rolled up in the console's Metrics section.
 
-None of those six properties depend on a person remembering. That is the point. The cost of compliance stops being a tax on velocity and becomes a property of the toolchain.
+None of those seven properties depend on a person remembering. That is the point. The cost of compliance stops being a tax on velocity and becomes a property of the toolchain.
 
 ---
 
@@ -328,7 +360,7 @@ The AI made the specialist briefings cheap enough that every decision can afford
 
 ## 5. The Project Console
 
-A local FastAPI app launched from `tools/project-console/` gives the team — and any stakeholder — a browser-native view into the same agents and artifacts Claude Code works with, without needing Claude Code installed.
+A local FastAPI app launched from `tools/project-console/` gives the team — and any stakeholder — a browser-native view into the same agents and artifacts Claude Code works with, without needing Claude Code installed. The console has grown into a full program workbench: **eleven sections** covering advisors, documents, dashboards, trace, strategy review, the FDA submission package, gap analyses, team metrics, and project settings.
 
 **Start / restart:** `/project-console start` (idempotent) or `./tools/project-console/run.sh`.
 **Local URL:** **[http://127.0.0.1:8765/](http://127.0.0.1:8765/)**
@@ -337,14 +369,14 @@ A local FastAPI app launched from `tools/project-console/` gives the team — an
 
 [![Landing](assets/project-overview/console-01-landing.png)](http://127.0.0.1:8765/)
 
-Branded with the **GlobalLogic** theme pack (scraped and materialized by `/project-console theme`). Top-level tiles for **Agents** (23 domain agents), **Documents**, **Dashboards**, and **Trace Matrix**. Workflows tile marked "Coming soon."
+Branded with the **GlobalLogic** theme pack (scraped and materialized by `/project-console theme`). A responsive priority-overflow topnav carries the section set — **Overview, Strategy, Submission, Dashboards, Trace Matrix, Gap Analysis, Workflows, Agents, Documents**, with **Metrics** and **Setup** in the overflow menu — over top-level tiles for the most-used sections.
 **[http://127.0.0.1:8765/](http://127.0.0.1:8765/)**
 
 ### 5.2 Agents (persona advisors)
 
 [![Agents](assets/project-overview/console-02-agents.png)](http://127.0.0.1:8765/agents)
 
-- **23 agents total** — 11 Core Team Assistants + 8 KOLs + 4 panels (2 Core Team + 2 KOL). A filter toggle switches between **All**, **Key Opinion Leaders**, and **Core Team Assistants**.
+- **31 agents total** — 11 Core Team Assistants + 8 KOLs + 7 Red Team skeptics + 5 panels. Filter toggles switch between **All**, **Key Opinion Leaders**, **Core Team Assistants**, and **Red Team**.
 - Each card links to a full threaded chat UI with grounding sources visible.
 - Core Team curation is driven by `project.yml → advisors.enabled`.
 - **[http://127.0.0.1:8765/agents](http://127.0.0.1:8765/agents)**
@@ -353,16 +385,16 @@ Branded with the **GlobalLogic** theme pack (scraped and materialized by `/proje
 
 [![Agent chat](assets/project-overview/console-07-agent-chat.png)](http://127.0.0.1:8765/agents/regulatory-affairs)
 
-Threaded conversations per agent, per-thread rename/delete, and a collapsible **View grounding sources and system prompt** panel so the user can see exactly what the advisor is reading.
+Threaded conversations per agent, per-thread rename/delete, and a collapsible **View grounding sources and system prompt** panel so the user can see exactly what the advisor is reading. Advisors carry the `file-locator` semantic-search tool, so their answers are grounded in ranked project sources, not just pre-listed files.
 **[http://127.0.0.1:8765/agents/regulatory-affairs](http://127.0.0.1:8765/agents/regulatory-affairs)**
 
 ### 5.3 Documents explorer
 
 [![Documents](assets/project-overview/console-03-documents.png)](http://127.0.0.1:8765/documents)
 
-- File tree over the entire project with markdown rendering in the right pane.
+- File tree over the entire project with markdown rendering in the right pane and a one-click **AI summary** per file.
 - Surfaces DHFs, submissions, standards, FDA guidance, tasks, and strategies side by side.
-- A **unified Assistant drawer** (task ben/024) mounts on this page: the user picks an advisor, the drawer grounds on the document currently open, and thread history persists per-scope in browser localStorage.
+- A **unified Assistant drawer** mounts on this page: the user picks an advisor, the drawer grounds on the document currently open, and thread history persists per-scope in browser localStorage.
 - Junk-filtered (macOS `Icon\r`, `._*`, Windows `Thumbs.db` hidden).
 - **[http://127.0.0.1:8765/documents](http://127.0.0.1:8765/documents)**
 
@@ -370,11 +402,7 @@ Threaded conversations per agent, per-thread rename/delete, and a collapsible **
 
 [![Dashboards](assets/project-overview/console-04-dashboards.png)](http://127.0.0.1:8765/dashboards)
 
-Glob-discovered HTML dashboards rendered inline. Discovery patterns are defined in `tools/project-console/console.yaml` (e.g. `docs/**/*-tracker.html`, `docs/**/*-dashboard.html`). Today's set:
-
-- **Submission Package Tracker** — `docs/project/submissions/submission-tracker.html` (510(k) + PCCP deliverable tracker)
-
-Additional dashboards (documentation compliance rollup, DHF topology view) come online as their generators land under `/medtech-docs` and `/tracker`.
+Glob-discovered HTML dashboards rendered inline. Discovery patterns are defined in `tools/project-console/console.yaml` (e.g. `docs/**/*-tracker.html`, `docs/**/*-dashboard.html`). Today's headline dashboard is the **Submission Package Tracker**; additional rollups come online as their generators land.
 
 **[http://127.0.0.1:8765/dashboards](http://127.0.0.1:8765/dashboards)**
 
@@ -382,14 +410,14 @@ Additional dashboards (documentation compliance rollup, DHF topology view) come 
 
 [![Submission tracker](assets/project-overview/console-05-submission-tracker.png)](http://127.0.0.1:8765/dashboards/submission-tracker)
 
-The tracker is built by `/tracker build` from architecture, regulatory strategy, and each submission's `composition-manifest.md`, then rendered to HTML. It catalogs every 510(k) base + PCCP additive deliverable, maps it to project state, and surfaces the effort rollup.
+The tracker is built by `/tracker build` from milestone catalogs, composition manifests, and DHF evidence, then rendered to HTML. It catalogs **154 deliverables** across the Q-Sub, 510(k)+PCCP, and internal milestone-review scopes, with per-row status badges, filters, effort rollups, and inline help. Status changes are **editable in the browser** — pending changes accumulate in a session and **Save & Publish** writes them back to the tracked source and commits, closing the loop from dashboard to repository.
 **[http://127.0.0.1:8765/dashboards/submission-tracker](http://127.0.0.1:8765/dashboards/submission-tracker)**
 
 ### 5.5 Trace Matrix
 
 [![Trace matrix](assets/project-overview/console-06-trace-matrix.png)](http://127.0.0.1:8765/trace-matrix)
 
-Each DHF gets a bidirectional trace sidecar driven by `trace-matrix.yml` at repo root. The index shows which DHFs have a built matrix (today: **pca-device**) and which are empty-state (today: the other nine). Empty-state rows offer a **Build this DHF** button; once adapters exist the deterministic `build.py` runs; otherwise `/trace-matrix init` authors them via the Claude Agent SDK.
+Each DHF gets a bidirectional trace sidecar driven by `trace-matrix.yml` at repo root. **All ten DHFs now carry a built matrix**, with per-DHF **Rebuild** buttons (and a Rebuild-all): where project adapters exist the deterministic `build.py` runs; otherwise `/trace-matrix init` authors the adapters via the Claude Agent SDK.
 
 **[http://127.0.0.1:8765/trace-matrix](http://127.0.0.1:8765/trace-matrix)**
 
@@ -397,10 +425,59 @@ Each DHF gets a bidirectional trace sidecar driven by `trace-matrix.yml` at repo
 
 [![Trace matrix detail](assets/project-overview/console-08-trace-matrix-detail.png)](http://127.0.0.1:8765/trace-matrix/pca-device)
 
-Per-DHF view with tabs for **User Needs (22) / Design Inputs (34) / Architecture (7) / V&V (3) / Risk**, criticality filters (CtS / CtF / CtC / CtP / Supp / Untagged), orphan-only toggle, and a unified Assistant drawer defaulted to `systems-engineering`. The current PP3500 build surfaces **30 Design-Input orphans** (DIs without a verification target) as the headline gap — exactly what the trace matrix is for.
+Per-DHF view across **six trace layers** — for PP3500: **User Needs (22) / Design Inputs (34) / SW Requirements (32) / Architecture (7) / V&V (3) / Risk (16)** — with criticality filters (CtS / CtF / CtC / CtP / Supp / Untagged), orphan badges per layer, group expand/collapse, and an Assistant drawer defaulted to `systems-engineering`. The **Risk column is live**: the ISO 14971 hazard analysis and FMEAs backfilled into the PP3500 risk file link every design input to its hazards, and the orphan badges (e.g. 28 SW requirements without verification) surface the open V&V work — exactly what the trace matrix is for.
 **[http://127.0.0.1:8765/trace-matrix/pca-device](http://127.0.0.1:8765/trace-matrix/pca-device)**
 
-### 5.6 How the console relates to Claude Code
+### 5.6 Strategy review
+
+[![Strategy](assets/project-overview/console-11-strategy.png)](http://127.0.0.1:8765/strategy)
+
+The eight strategy domains (regulatory, commercial, architecture, development, testing, risk, post-market, operations) as a **live review surface**: per-domain status, pending proposals harvested from task docs, and **Accept / Reject / Modify / Re-categorize** actions that update the strategy document and append a history note. A **Run Assembler** button scans task docs for new `STRATEGY CONTENT` blocks and surfaces merge conflicts as reviewable proposals.
+**[http://127.0.0.1:8765/strategy](http://127.0.0.1:8765/strategy)**
+
+### 5.7 Submission package
+
+[![Submission](assets/project-overview/console-12-submission.png)](http://127.0.0.1:8765/submission)
+
+The FDA-facing package, rendered from the `submissions` skill's sidecars: one card per filing — today the **Q-Sub (drafting: 7 documents, 2 strengthener briefs, 6 questions for FDA, 1 blocking gate)** and the **510(k) (scaffolded: 26 required documents)**. Opening a package shows the composition manifest, an inline tabbed document viewer, the FDA-questions panel, and an **Ask-the-regulatory-advisor** drawer grounded on the package.
+**[http://127.0.0.1:8765/submission](http://127.0.0.1:8765/submission)**
+
+### 5.8 Gap Analysis
+
+[![Gap analysis](assets/project-overview/console-13-gap-analysis.png)](http://127.0.0.1:8765/gap-analysis)
+
+Substantive critiques of the project's **own work product** against standards and internal sources, produced by the `gap-analysis` skill's advisor fan-out. Each card shows what the analysis was grounded against, which advisors ran, and a severity-banded findings bar — today: a **KOL review of the 5-year commercial roadmap** (12 advisors, 21 findings) and a **HIPAA readiness profile** for the PP3500 system (3 advisors, 14 findings). Detail views carry per-finding advisor panels and the Ask-an-advisor drawer.
+**[http://127.0.0.1:8765/gap-analysis](http://127.0.0.1:8765/gap-analysis)**
+
+### 5.9 Metrics — cost of the agentic approach
+
+[![Metrics](assets/project-overview/console-14-metrics.png)](http://127.0.0.1:8765/metrics)
+
+Claude Code token usage and estimated cost across the team, aggregated and anonymized from each member's locally-collected session telemetry (git is the aggregation bus — no shared server). Month filters, per-day volume and cost charts, and a **30-day cost projection** from the recent run-rate.
+**[http://127.0.0.1:8765/metrics](http://127.0.0.1:8765/metrics)**
+
+#### 5.9.1 Value & ROI
+
+[![Value and ROI](assets/project-overview/console-15-value-roi.png)](http://127.0.0.1:8765/metrics)
+
+The other half of the ledger: for every task, the by-hand person-hour estimate (ranged, persona-tagged, rubric-based) is compared with the measured agentic time and token cost. The current retrospective across **104 valued tasks** models **920–3,050 person-hours saved** (65–86% of the by-hand effort) against roughly **$623 of measured token spend** — a *modeled, uncalibrated demo estimate*, presented with its methodology and ranges rather than as a certified saving. Category cards show where the savings concentrate (R&D, regulatory, quality, program management).
+**[http://127.0.0.1:8765/metrics](http://127.0.0.1:8765/metrics)**
+
+### 5.10 Setup — project settings surface
+
+[![Setup](assets/project-overview/console-16-setup.png)](http://127.0.0.1:8765/setup)
+
+A full settings shell over the project's tool surface, each section cross-checked against the `project.yml` allowlists: **Project** (manifest fields with inline edit), **Connectors** (MCP servers, add/edit with lockstep allowlist writes), **Skills (35)**, **Agents (49)**, **Plugins**, **Automation** (12 hooks + 26 automation entries incl. CI workflows), **Registries** (GitHub-direct catalog browse + one-click skill install), **Team & Security** (roster add/deactivate + a GitHub repo-access audit), and **Environment** (runs `setup.sh --check` from the browser). Configuration editing is deliberately narrow — connectors, roster, and project scalars; skills and agents stay owned by the registry sync tooling.
+**[http://127.0.0.1:8765/setup](http://127.0.0.1:8765/setup)**
+
+### 5.11 Workflows
+
+[![Workflows](assets/project-overview/console-17-workflows.png)](http://127.0.0.1:8765/workflows)
+
+Composed automation across project skills — gate-readiness checks (DHF gate check, submission pre-flight, PR readiness), authoring flows (doc round-trip batch, trace refresh on save), and tracker status write-back. Each card declares its backend readiness honestly: **live**, **prototype**, or **proposed** — look-and-feel previews are clearly labeled, never passed off as wired.
+**[http://127.0.0.1:8765/workflows](http://127.0.0.1:8765/workflows)**
+
+### 5.12 How the console relates to Claude Code
 
 | Surface | Runtime | Grounding | Auth |
 |---|---|---|---|
@@ -436,3 +513,9 @@ Per-DHF view with tabs for **User Needs (22) / Design Inputs (34) / Architecture
 | Console documents | [http://127.0.0.1:8765/documents](http://127.0.0.1:8765/documents) |
 | Console dashboards | [http://127.0.0.1:8765/dashboards](http://127.0.0.1:8765/dashboards) |
 | Console trace matrix | [http://127.0.0.1:8765/trace-matrix](http://127.0.0.1:8765/trace-matrix) |
+| Console strategy review | [http://127.0.0.1:8765/strategy](http://127.0.0.1:8765/strategy) |
+| Console submission package | [http://127.0.0.1:8765/submission](http://127.0.0.1:8765/submission) |
+| Console gap analysis | [http://127.0.0.1:8765/gap-analysis](http://127.0.0.1:8765/gap-analysis) |
+| Console metrics (cost + Value & ROI) | [http://127.0.0.1:8765/metrics](http://127.0.0.1:8765/metrics) |
+| Console setup (project settings) | [http://127.0.0.1:8765/setup](http://127.0.0.1:8765/setup) |
+| Console workflows | [http://127.0.0.1:8765/workflows](http://127.0.0.1:8765/workflows) |
