@@ -21,6 +21,8 @@ from console.metrics.router import router as metrics_router
 from console.overview.router import discover as discover_overview
 from console.overview.router import router as overview_router
 from console.setup.router import router as setup_router
+from console.tasks_view.loader import discover as discover_tasks
+from console.tasks_view.router import router as tasks_router
 from console.strategy.router import discover as discover_strategy
 from console.strategy.router import router as strategy_router
 from console.submission.loader import discover as discover_submission
@@ -111,6 +113,9 @@ async def theme_context(request: Request, call_next):
     # Metrics nav visibility — shows when the usage-metrics skill has published
     # tools/usage-metrics/usage.json.
     request.state.metrics_nav = discover_metrics(cfg.repo_root)["has_any"]
+    # Tasks nav visibility — shows when the task skill has published
+    # tasks/task-summary.json (regenerated via /task summary).
+    request.state.tasks_nav = discover_tasks(cfg.repo_root)["has_any"]
     return await call_next(request)
 
 
@@ -126,6 +131,7 @@ app.include_router(assistant_router)
 app.include_router(workflows_router)
 app.include_router(metrics_router)
 app.include_router(setup_router)
+app.include_router(tasks_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

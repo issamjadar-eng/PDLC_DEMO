@@ -1,0 +1,39 @@
+{
+  "_comment": "Project-owned category tuning for /task summary (task skill scripts/task_summary.py). Keyword -> category, first match wins, checked against task title + index summary (lowercased). Icons flow into tasks/task-summary.json category_icons for the console Tasks tab.",
+  "categories": [
+    {
+      "name": "Console & Tooling",
+      "icon": "🛠",
+      "keywords": ["console", "tab", "dashboard", "mcp", "connector", "tooling",
+                   "metrics", "file-locator", "tracker", "statusline", "status line",
+                   "usage-metrics", "value & roi", "setup tab", "deck builder"]
+    },
+    {
+      "name": "Skills & Registry",
+      "icon": "🧱",
+      "keywords": ["skill", "agent", "advisor", "rule", "hook", "sync", "registry",
+                   "framework", "grounding", "workflow", "docflow", "manifest"]
+    },
+    {
+      "name": "Regulatory & Submission",
+      "icon": "📋",
+      "keywords": ["regulatory", "submission", "510(k)", "510k", "q-sub", "qsub",
+                   "pccp", "fda", "predicate", "guidance", "standard", "sop", "qms",
+                   "reference", "citation", "cfr", "hipaa", "authoring"]
+    },
+    {
+      "name": "Design Controls & Risk",
+      "icon": "🧪",
+      "keywords": ["risk", "hazard", "fmea", "trace", "requirement", "srs", "sad",
+                   "v&v", "verification", "validation", "dhf", "architecture",
+                   "design input", "criticality", "gap analysis", "gap-analysis"]
+    },
+    {
+      "name": "Docs & Narrative",
+      "icon": "🧭",
+      "keywords": ["strategy", "strategies", "article", "whitepaper", "deck",
+                   "glossary", "changelog", "narrative", "readme", "onboarding",
+                   "setup guide", "overview", "lessons"]
+    }
+  ]
+}

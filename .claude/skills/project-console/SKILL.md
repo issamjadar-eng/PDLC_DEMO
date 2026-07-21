@@ -1,15 +1,15 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.40.0
-updated: 2026-07-15
+version: 1.41.0
+updated: 2026-07-20
 ---
 
 # Project Console
 
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
-- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), and **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security)
+- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security), and **tasks** (activity summary from the task skill's derived JSON)
 - A **grouped template library** materialized into the project on init: a `core-team` group of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) plus two advisory panels, and a `red-team` group — an adversarial buyer committee (CEO, CFO, CTO, VP Eng, RA VP, QA VP, PMO skeptics + a panel) for pressure-testing outward-facing documents. Each `agents/templates/<group>/` directory materializes into `agents/<group>/`
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`
@@ -260,6 +260,29 @@ run `/submissions render`; a `POST /submission/render` button shells to the skil
 `render_sidecars.py`. Document *bodies* are rendered inline via the documents
 renderer using the repo-relative paths in the sidecar. The full contract lives in
 the `submissions` skill SKILL.md.
+
+## Topline section: Tasks (activity summary)
+
+**Tasks** (`/tasks`) — an *activity summary*, deliberately not a task list: what's
+moving, what's open (categorized cards with the index's curated one-liners), a
+recently-shipped timeline, and an effort-picture footnote. Nav shows when
+`tasks/task-summary.json` exists.
+
+The console is a **pure consumer** of the `task` skill's `/task summary`
+artifact (same loose-coupling rule as the submission/gap-analysis sidecars):
+
+- `tasks/task-summary.json` — counts, `open_tasks[]`, `categories`,
+  `category_icons` (project-tunable via `tasks/task-summary-config.json`,
+  owned by the task skill), `recent{}` window with `highlights[]`,
+  `economics{}` rollup, plus Claude-composed `narrative` / `watch` prose.
+- The page shows the `generated` stamp's age (fresh ≤ 7 d, aging ≤ 21 d,
+  stale beyond) with a "regenerate with `/task summary`" hint; missing file →
+  empty state with the same hint. `GET /tasks/summary.json` exposes the raw
+  artifact.
+- Task-doc deep links render via the documents explorer
+  (`/documents/view/tasks/...` — `tasks` is a documents-tree root).
+- Category icons come from the artifact; the console holds no project
+  vocabulary of its own (fallback icon only).
 
 ## Topline section: Setup (project settings)
 
