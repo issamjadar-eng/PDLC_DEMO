@@ -1092,6 +1092,10 @@ SLIDE_PATCHES = {
     # we must not split, so the patches break the sentence into three chunks
     # around that span.
     ("agentic-delivery", 6): [
+        # "Cost of waiting" callout: center it and line its width up with the
+        # stat cards above (was left-pinned at a narrower max-width).
+        ("align-self: flex-start; max-width: min(95vw, 1100px)",
+         "align-self: center; width: 100%; max-width: min(95vw, 1200px)"),
         ("A delivery firm that waits will be",
          "An organization that delays adoption will be"),
         ("competitors who front-fund",
@@ -1182,6 +1186,10 @@ SLIDE_PATCHES = {
     # reader as a firm with a client portfolio. Neutralize.
     ("agentic-delivery", 16): [
         ("propagatable across customer programs", "propagatable across program work"),
+        # "The invariant" callout: center it and line its width up with the
+        # pyramid content above (same fix as AD #6's "Cost of waiting").
+        ("align-self: flex-start; max-width: min(95vw, 1100px)",
+         "align-self: center; width: 100%; max-width: min(95vw, 1200px)"),
     ],
     # AD #11 — "SDLC sits inside PDLC" — bottom caption was whitepaper-voiced
     # ("our delivery", "what this paper is about"). Rewrite client-facing.
@@ -1213,6 +1221,19 @@ INTERSTITIALS = {
         "lead": "Regulatory, clinical, architectural, post-market — each strategy is a curated, versioned artifact in the harness, the canonical reference every downstream document derives from.",
         "callout": "What follows are generated outputs from the sample project — a working strategy harness in action.",
     },
+}
+
+
+# Custom-authored replacement slides. Keyed by the kept anchor slide's
+# (src, idx); the anchor is consumed and a bespoke deco slide is emitted in
+# its place (same pattern as `replace` chapters). Used where a harvested
+# source slide is the right *position* but the wrong *presentation* — e.g.
+# a catalog mosaic collapsed into one authored overview, or a tile grid
+# replaced by an illustration.
+CUSTOM_REPLACES = {
+    ("project-overview", 8): "key-deliverables",
+    ("project-overview", 15): "skills-overview",
+    ("project-overview", 20): "agents-overview",
 }
 
 
@@ -1528,6 +1549,76 @@ DECO_CSS = """
   z-index: 99; transition: width 0.25s ease;
 }
 @media print { #cp-progress { display: none; } }
+
+/* ---- CUSTOM SLIDES (authored replacements) — shared scaffold ---- */
+.deco-custom .content {
+  position: relative; z-index: 2; flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(2.6rem, 6vh, 4rem) var(--pad) clamp(1.2rem, 3vh, 2rem);
+  gap: clamp(0.7rem, 1.6vh, 1.2rem);
+}
+.deco-custom .eyebrow {
+  font-family: var(--mono); font-size: clamp(0.72rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange);
+}
+.deco-custom h2 {
+  font-family: var(--display); font-size: clamp(1.6rem, 3.2vw, 2.7rem);
+  line-height: 1.05; margin: 0;
+}
+.deco-custom .lead { color: var(--secondary); font-size: clamp(0.9rem, 1.25vw, 1.1rem); max-width: 62rem; }
+.deco-custom .takeaway {
+  border-left: 3px solid var(--orange);
+  background: rgba(255, 87, 34, 0.08);
+  padding: clamp(0.5rem, 1.2vh, 0.8rem) clamp(0.8rem, 1.6vw, 1.2rem);
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+}
+.deco-custom .takeaway strong { color: var(--orange); }
+
+/* key-deliverables: pathway rail + evidence backbone */
+.dlv-rail { display: flex; align-items: stretch; gap: 0; }
+.dlv-node {
+  flex: 1; border: 1px solid rgba(255,255,255,0.16); border-radius: 10px;
+  background: rgba(255,255,255,0.035);
+  padding: clamp(0.7rem, 1.6vh, 1.1rem) clamp(0.8rem, 1.6vw, 1.2rem);
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.dlv-node.lit { border-color: rgba(255,87,34,0.55); background: rgba(255,87,34,0.07); }
+.dlv-step { font-family: var(--mono); font-size: clamp(0.68rem, 0.85vw, 0.78rem); color: var(--muted); letter-spacing: 0.14em; }
+.dlv-name { font-family: var(--display); font-size: clamp(1.05rem, 1.8vw, 1.5rem); }
+.dlv-desc { color: var(--secondary); font-size: clamp(0.8rem, 1.05vw, 0.95rem); line-height: 1.35; }
+.dlv-arrow {
+  align-self: center; padding: 0 clamp(0.4rem, 1vw, 0.9rem);
+  color: var(--orange); font-family: var(--display);
+  font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+}
+.dlv-flow { display: flex; justify-content: space-around; color: var(--orange); font-size: clamp(1rem, 1.8vw, 1.5rem); line-height: 1; }
+.dlv-backbone {
+  display: flex; gap: clamp(0.8rem, 1.8vw, 1.4rem);
+  border: 1px solid rgba(255,180,0,0.35); border-radius: 10px;
+  background: rgba(255,180,0,0.05);
+  padding: clamp(0.7rem, 1.6vh, 1.1rem) clamp(0.8rem, 1.6vw, 1.2rem);
+}
+.dlv-backbone .bb-cell { flex: 1; }
+.dlv-backbone .bb-tag { font-family: var(--mono); font-size: clamp(0.68rem, 0.85vw, 0.78rem); color: #FFB400; letter-spacing: 0.14em; }
+.dlv-backbone .bb-name { font-family: var(--display); font-size: clamp(0.95rem, 1.5vw, 1.25rem); margin: 0.2rem 0; }
+.dlv-backbone .bb-desc { color: var(--secondary); font-size: clamp(0.78rem, 1vw, 0.92rem); line-height: 1.35; }
+
+/* skills-overview / agents-overview: grouped chip columns */
+.ovw-groups { display: flex; gap: clamp(0.9rem, 2vw, 1.6rem); align-items: stretch; }
+.ovw-col { flex: 1; display: flex; flex-direction: column; gap: clamp(0.45rem, 1vh, 0.7rem); }
+.ovw-head {
+  font-family: var(--mono); font-size: clamp(0.72rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange);
+  border-bottom: 2px solid rgba(255,87,34,0.5); padding-bottom: 0.35rem;
+}
+.ovw-head .count { color: var(--muted); letter-spacing: 0.05em; }
+.ovw-chip {
+  border: 1px solid rgba(255,255,255,0.13); border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  padding: clamp(0.45rem, 1vh, 0.7rem) clamp(0.6rem, 1.2vw, 0.9rem);
+}
+.ovw-chip .c-name { font-family: var(--mono); color: #fff; font-size: clamp(0.82rem, 1.05vw, 0.95rem); font-weight: 500; }
+.ovw-chip .c-tag { color: var(--secondary); font-size: clamp(0.76rem, 0.95vw, 0.88rem); line-height: 1.3; margin-top: 0.15rem; }
 .deco-screenshot .shot-frame {
   flex: 1;
   min-height: 0;
@@ -1823,6 +1914,144 @@ def _render_console_section_slide(section: dict, parent: dict, slide_num: int) -
 """
 
 
+def _render_key_deliverables_slide(slide_num: int) -> str:
+    """Authored replacement for the Key-deliverables tile grid: the three
+    filings drawn as a pathway rail, standing on the shared evidence backbone."""
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="key-deliverables">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">KEY DELIVERABLES</div>
+    <h2>Three filings. One evidence backbone.</h2>
+    <div class="dlv-rail">
+      <div class="dlv-node">
+        <div class="dlv-step">STEP 1 · DIALOGUE</div>
+        <div class="dlv-name">Q-Sub package</div>
+        <div class="dlv-desc">Pre-submission conversation with FDA — device description, classification validation, and the PCCP scope questions we want answered before filing.</div>
+      </div>
+      <div class="dlv-arrow">→</div>
+      <div class="dlv-node lit">
+        <div class="dlv-step">STEP 2 · CLEARANCE</div>
+        <div class="dlv-name">510(k) submission</div>
+        <div class="dlv-desc">Substantial equivalence to the PP3000 predicate — software documentation, performance and validation data, risk analysis, labeling.</div>
+      </div>
+      <div class="dlv-arrow">→</div>
+      <div class="dlv-node">
+        <div class="dlv-step">STEP 3 · CHANGE ENVELOPE</div>
+        <div class="dlv-name">PCCP document</div>
+        <div class="dlv-desc">Pre-authorized post-market changes — categories, modification protocols, performance criteria, and the reporting plan.</div>
+      </div>
+    </div>
+    <div class="dlv-flow"><span>▲</span><span>▲</span><span>▲</span></div>
+    <div class="dlv-backbone">
+      <div class="bb-cell">
+        <div class="bb-tag">EVIDENCE BACKBONE</div>
+        <div class="bb-name">Trace matrix — per DHF</div>
+        <div class="bb-desc">User Needs ↔ Design Inputs ↔ SW Requirements ↔ Architecture ↔ V&amp;V ↔ Risk, with the filing scope derived from criticality tags. Rebuilt from source on demand.</div>
+      </div>
+      <div class="bb-cell">
+        <div class="bb-tag">&nbsp;</div>
+        <div class="bb-name">Risk file — ISO 14971</div>
+        <div class="bb-desc">Hazard analysis (16 hazards) plus design and process FMEAs, QMS-form-conformant and wired into the trace matrix as a live risk layer.</div>
+      </div>
+    </div>
+    <div class="takeaway">Every filing draws on the <strong>same</strong> trace and risk evidence — built once, cited everywhere, never copy-pasted.</div>
+  </div>
+</section>
+"""
+
+
+def _render_skills_overview_slide(slide_num: int) -> str:
+    """Authored replacement for the three-page skills catalog mosaic: one
+    slide, the load-bearing skills grouped by what they do for the program."""
+    groups = [
+        ("AUTHOR", "", [
+            ("medtech-docs", "Scaffolds the DHF and documentation tree per FDA / IEC 62304 expectations."),
+            ("docflow", "Audited DOCX / PDF / XLSX round-trips — images, cross-references, metadata preserved."),
+            ("submissions", "Builds the Q-Sub / 510(k) / PCCP package structure and its composition manifests."),
+            ("regulatory-authoring", "Lint, copy-edit, and QA-conformance for every regulator-facing sentence."),
+        ]),
+        ("VERIFY", "", [
+            ("trace-matrix", "Six-layer bidirectional trace, rebuilt from source on demand."),
+            ("dhf-manifest", "Are the right documents present for the regulatory obligations we carry?"),
+            ("gap-analysis", "Critiques our own work product against the standards it claims to meet."),
+            ("red-team", "A hostile buyer committee stress-tests outward documents before they ship."),
+            ("reference-audit", "Every citation independently re-derived from the byte-correct source."),
+        ]),
+        ("OPERATE", "", [
+            ("task", "The task-first gate: no change without an owning task document."),
+            ("tracker", "Milestone-driven submission-readiness dashboard, editable in the browser."),
+            ("project-console", "The browser workbench over the same agents and artifacts."),
+            ("usage-metrics", "Token cost and modeled hours-saved, per task, honestly framed."),
+            ("lessons", "Corrections harvested, staged, and promoted into permanent guardrails."),
+        ]),
+    ]
+    cols = "".join(
+        '<div class="ovw-col"><div class="ovw-head">' + head + '</div>' +
+        "".join(f'<div class="ovw-chip"><div class="c-name">{n}</div><div class="c-tag">{t}</div></div>' for n, t in chips) +
+        '</div>'
+        for head, _, chips in groups
+    )
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="skills-overview">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">SKILLS · PACKAGED EXPERT PLAYBOOKS</div>
+    <h2>35 skills. These carry the program.</h2>
+    <div class="lead">Every skill is allow-listed in the project manifest and pulled from an auditable registry — the same playbook, run the same way, by everyone.</div>
+    <div class="ovw-groups">{cols}</div>
+  </div>
+</section>
+"""
+
+
+def _render_agents_overview_slide(slide_num: int) -> str:
+    """Authored replacement for the two-page agents catalog mosaic: the whole
+    advisory bench in four groups, with the two-runtimes takeaway folded in."""
+    groups = [
+        ("CORE TEAM", "11 assistants", [
+            ("regulatory-affairs · clinical-affairs · risk-management …",
+             "One specialist per discipline — regulatory, clinical, risk, cybersecurity, quality, V&amp;V, human factors, systems, R&amp;D, post-market, program — each grounded in the project's own DHF and strategies, citing its sources."),
+        ]),
+        ("KOL PERSONAS", "8 voices", [
+            ("clinicians &amp; domain experts",
+             "Outside clinical voices that pressure-test user needs, workflows, and claims the way a real advisory board would."),
+        ]),
+        ("RED TEAM", "7 skeptics", [
+            ("CEO · CFO · CTO · VP-Eng · QA-VP · RA-VP · PMO",
+             "A hostile buyer committee. Every outward-facing document faces them — and their objections — before a real buyer ever sees it."),
+        ]),
+        ("PANELS", "5 boards", [
+            ("core-team panel · design-review panel …",
+             "Cross-functional boards that answer as one — program questions get multi-perspective input in a single pass."),
+        ]),
+    ]
+    cols = "".join(
+        f'<div class="ovw-col"><div class="ovw-head">{head} <span class="count">— {count}</span></div>' +
+        "".join(f'<div class="ovw-chip"><div class="c-name">{n}</div><div class="c-tag">{t}</div></div>' for n, t in chips) +
+        '</div>'
+        for head, count, chips in groups
+    )
+    return f"""
+<section class="deco-slide deco-custom" data-deco-id="agents-overview">
+  {_decoration_chrome(f"{slide_num:02d}")}
+  <div class="content">
+    <div class="eyebrow">AGENTS · THE ADVISORY BENCH</div>
+    <h2>One bench. Thirty-one advisors. Four jobs.</h2>
+    <div class="ovw-groups">{cols}</div>
+    <div class="takeaway"><strong>Same agents, two runtimes.</strong> One definition serves both the engineering environment and the browser console — and a security agent audits every session against the project manifest. Updating an advisor updates every surface at once.</div>
+  </div>
+</section>
+"""
+
+
+CUSTOM_RENDERERS = {
+    "key-deliverables": _render_key_deliverables_slide,
+    "skills-overview": _render_skills_overview_slide,
+    "agents-overview": _render_agents_overview_slide,
+}
+
+
 def _render_subsection_divider(parent: dict, sub: dict, slide_num: int) -> str:
     eyebrow = f"§{int(parent['num'])} · {parent['title']}"
     return f"""
@@ -1878,6 +2107,9 @@ def _decorated_sequence(kept):
         # subsection_by_anchor branches below if the slide is also an anchor).
         if key in INTERSTITIALS:
             out.append({"kind": "concept", "concept": INTERSTITIALS[key]})
+        if key in CUSTOM_REPLACES:
+            out.append({"kind": "custom", "name": CUSTOM_REPLACES[key]})
+            continue
         if key in chapter_by_anchor:
             ch = chapter_by_anchor[key]
             out.append({"kind": "chapter", "chapter": ch})
@@ -2106,6 +2338,8 @@ def build_final() -> Path:
             pieces.append(f'<div class="cp-slide-final" data-deco="sub-{item["parent"]["num"]}-{item["subsection"]["num"]}">{_render_subsection_divider(item["parent"], item["subsection"], slide_num)}</div>')
         elif kind == "concept":
             pieces.append(f'<div class="cp-slide-final" data-deco="concept">{_render_concept_slide(item["concept"], slide_num)}</div>')
+        elif kind == "custom":
+            pieces.append(f'<div class="cp-slide-final" data-deco="custom-{item["name"]}">{CUSTOM_RENDERERS[item["name"]](slide_num)}</div>')
         elif kind == "screenshot":
             pieces.append(f'<div class="cp-slide-final" data-deco="console-{item["section"]["num"]}">{_render_console_section_slide(item["section"], item["parent"], slide_num)}</div>')
         elif kind == "closing":

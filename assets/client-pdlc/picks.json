@@ -108,12 +108,12 @@
   {
    "src": "project-overview",
    "idx": 16,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
    "idx": 17,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
@@ -123,7 +123,7 @@
   {
    "src": "project-overview",
    "idx": 21,
-   "keep": true
+   "keep": false
   },
   {
    "src": "project-overview",
