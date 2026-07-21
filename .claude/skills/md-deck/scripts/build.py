@@ -1892,6 +1892,46 @@ def _load_asset(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+# Hardened print stylesheet injected into every generated deck (v0.6.3).
+# Screenshot-based export (frontend-slides/scripts/export-pdf.sh) doesn't need
+# it, but decks also get printed via Chrome --print-to-pdf, where two failure
+# modes bite:
+#   1. Big-blur glow box-shadows: several PDF viewers (macOS Preview among
+#      them) rasterize Chrome's printed shadow groups as HARD-EDGED
+#      TRANSLUCENT SLABS painted over neighboring content — an 80px orange
+#      glow becomes a giant orange rectangle. Shadows add nothing on paper;
+#      borders and backgrounds carry the design.
+#   2. Page-box mismatch: fonts/paddings sit at fixed px/rem clamp caps, so a
+#      print box smaller than the authored viewport renders every fixed-size
+#      element proportionally larger than the browser view. The page box must
+#      equal the authored viewport (16:9-ish, inches — Chrome mis-handles px
+#      in @page size; 15in x 9.375in = 1440x900 @ 96dpi).
+# Verification discipline: check the printed PDF in the viewer the audience
+# uses (e.g. Preview) — poppler-based extractors render shadows softly and
+# will NOT show failure mode 1.
+PRINT_HARDENING_CSS = """
+/* === print hardening (md-deck; Chrome --print-to-pdf path) === */
+@media print {
+  @page { size: 15in 9.375in; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  html, body { margin: 0; padding: 0; }
+  .slide {
+    width: 1440px !important;
+    height: 900px !important;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-of-type { break-after: auto; page-break-after: avoid; }
+  .progress-bar, .nav-dots { display: none !important; }
+}
+"""
+
+
 def wrap_document(*, body: str, source_path: Path, source_sha: str,
                   built_at: str, slide_count: int, style: str) -> str:
     viewport_path, preset_path = _resolve_style_css(style)
@@ -1912,6 +1952,7 @@ def wrap_document(*, body: str, source_path: Path, source_sha: str,
             "/* === v0.4 component library (frontend-slides/components/_v04-components.css) === */\n"
             + _load_asset(v04_path)
         )
+    css_parts.append(PRINT_HARDENING_CSS)
     css = "\n\n".join(css_parts)
     js = _load_asset(JS_PATH)
     built_by = getpass.getuser()

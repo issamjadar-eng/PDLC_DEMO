@@ -5,7 +5,7 @@
   md-deck v0.6.1 — DO NOT HAND-EDIT
   Source: project-overview.md
   SHA-256: efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582
-  Built:  2026-07-21T06:45:06Z by benxavier
+  Built:  2026-07-21T07:34:32Z by benxavier
   Update: python .claude/skills/md-deck/scripts/build.py project-overview.md
 -->
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
 <meta name="generator" content="md-deck v0.6.1">
 <meta name="md-deck:source" content="project-overview.md">
 <meta name="md-deck:source-sha256" content="efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582">
-<meta name="md-deck:built-at" content="2026-07-21T06:45:06Z">
+<meta name="md-deck:built-at" content="2026-07-21T07:34:32Z">
 <meta name="md-deck:built-by" content="benxavier">
 <meta name="md-deck:style" content="bold-signal">
 <meta name="md-deck:slide-count" content="67">
@@ -1604,6 +1604,28 @@ table.compact-table {
     max-width: 70ch;
 }
 
+
+
+/* === print hardening (md-deck; Chrome --print-to-pdf path) === */
+@media print {
+  @page { size: 15in 9.375in; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  html, body { margin: 0; padding: 0; }
+  .slide {
+    width: 1440px !important;
+    height: 900px !important;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-of-type { break-after: auto; page-break-after: avoid; }
+  .progress-bar, .nav-dots { display: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -2320,7 +2342,7 @@ table.compact-table {
     <dl>
       <dt>Source</dt><dd><code>project-overview.md</code></dd>
       <dt>SHA-256</dt><dd><code>efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582</code></dd>
-      <dt>Built</dt><dd>2026-07-21T06:45:06Z</dd>
+      <dt>Built</dt><dd>2026-07-21T07:34:32Z</dd>
       <dt>By</dt><dd>benxavier</dd>
       <dt>Generator</dt><dd>md-deck v0.6.1 · style=bold-signal</dd>
       <dt>Slides</dt><dd>67</dd>
