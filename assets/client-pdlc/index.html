@@ -24,6 +24,15 @@ html, body { margin: 0; padding: 0; background: #000; }
 @media print {
   @page { size: 15in 9.375in; margin: 0; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  /* Kill glow shadows in print. On screen they render as soft halos, but
+     several PDF viewers (macOS Preview among them) rasterize Chrome's
+     printed shadow groups as hard-edged translucent slabs — an 80px-blur
+     orange box-shadow becomes a giant orange rectangle painted over the
+     slide. Borders and backgrounds carry the card definition on paper. */
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
   html, body { margin: 0; padding: 0; background: #000; }
   .cp-slide-final {
     width: 1440px;
