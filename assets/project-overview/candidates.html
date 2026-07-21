@@ -5,7 +5,7 @@
   md-deck v0.6.1 — DO NOT HAND-EDIT
   Source: project-overview.md
   SHA-256: efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582
-  Built:  2026-07-21T06:45:06Z by benxavier
+  Built:  2026-07-21T07:34:32Z by benxavier
   Update: python .claude/skills/md-deck/scripts/build.py project-overview.md
 -->
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
 <meta name="generator" content="md-deck v0.6.1">
 <meta name="md-deck:source" content="project-overview.md">
 <meta name="md-deck:source-sha256" content="efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582">
-<meta name="md-deck:built-at" content="2026-07-21T06:45:06Z">
+<meta name="md-deck:built-at" content="2026-07-21T07:34:32Z">
 <meta name="md-deck:built-by" content="benxavier">
 <meta name="md-deck:style" content="bold-signal">
 <meta name="md-deck:slide-count" content="34">
@@ -1604,12 +1604,34 @@ table.compact-table {
     max-width: 70ch;
 }
 
+
+
+/* === print hardening (md-deck; Chrome --print-to-pdf path) === */
+@media print {
+  @page { size: 15in 9.375in; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  html, body { margin: 0; padding: 0; }
+  .slide {
+    width: 1440px !important;
+    height: 900px !important;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-of-type { break-after: auto; page-break-after: avoid; }
+  .progress-bar, .nav-dots { display: none !important; }
+}
+
 </style>
 </head>
 <body>
 <div class="candidates-page"><header class="candidates-header">
 <h1>md-deck candidates · review &amp; pick</h1>
-<p>Multiple visual treatments per variant-eligible section — 2 templates + 2 agents by default. <strong>Pick toggles independently</strong>: click Pick on multiple cards in a section and the deck will emit one slide per picked card (in selection order). Save into the deck assets folder as <code>picks.json</code> (same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. Re-run the build to lock the picks into <code>index.html</code>.</p><p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">source: project-overview.md · sha256: efd40896598f29bc… · built: 2026-07-21T06:45:06Z</p>
+<p>Multiple visual treatments per variant-eligible section — 2 templates + 2 agents by default. <strong>Pick toggles independently</strong>: click Pick on multiple cards in a section and the deck will emit one slide per picked card (in selection order). Save into the deck assets folder as <code>picks.json</code> (same directory as <code>index.html</code> / <code>candidates.html</code>) when you are done. Re-run the build to lock the picks into <code>index.html</code>.</p><p style="margin-top:0.6rem;font-family:var(--font-mono,monospace);font-size:0.8em;color:var(--text-muted);">source: project-overview.md · sha256: efd40896598f29bc… · built: 2026-07-21T07:34:32Z</p>
 </header>
 <div class="candidate-section" data-anchor="s1-1-what-pp3500-is">
 <h2>What PP3500 is <span class="section-pick-count" style="font-size: 0.55em; color: var(--card-orange); font-family: var(--font-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.8em;"></span></h2>
@@ -2242,7 +2264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <dl>
       <dt>Source</dt><dd><code>project-overview.md</code></dd>
       <dt>SHA-256</dt><dd><code>efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582</code></dd>
-      <dt>Built</dt><dd>2026-07-21T06:45:06Z</dd>
+      <dt>Built</dt><dd>2026-07-21T07:34:32Z</dd>
       <dt>By</dt><dd>benxavier</dd>
       <dt>Generator</dt><dd>md-deck v0.6.1 · style=bold-signal</dd>
       <dt>Slides</dt><dd>34</dd>

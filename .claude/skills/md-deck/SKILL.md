@@ -1,8 +1,8 @@
 ---
 name: md-deck
 description: Build a beautiful single-file HTML slide deck from any structured markdown source (whitepaper, project overview, strategy doc, board briefing, investor memo, ops report). Non-interactive markdown → HTML pipeline; the builder sibling to the `frontend-slides` stylist. v0.6 — domain-neutral trunk + opt-in icon vocabulary packs (medtech / finance / manufacturing / …) loaded via project.yml `md_deck.vocabulary_packs` or the `--vocabulary` flag. Consumes the canonical viewport contract and preset registry from `frontend-slides` (no duplication); content-split rules replace shrink-to-fit density modifiers; handles title, agenda, dividers, table-slides, card-grids, list-slides, quote-slides, prose-slides, image-feature slides; injects scope-iceberg / concept-canvas / handoff-relay / principle-tiles / catalog-mosaic / catalog-featured variants; detects homogeneous groups (cohorts, teams, deliverables, milestones, metrics, plus pack-specific groups) and gives them a shared kind-icon. Output lands at `<root>/assets/<source-slug>/` with full provenance metadata.
-version: 0.6.2
-updated: 2026-07-20
+version: 0.6.3
+updated: 2026-07-21
 ---
 
 # md-deck
@@ -70,6 +70,15 @@ PDF export is **not** auto-run on rebuild. Generate explicitly only when needed:
 ```bash
 bash .claude/skills/frontend-slides/scripts/export-pdf.sh assets/<slug>/index.html assets/<slug>/index.pdf
 ```
+
+### PDF export caveats (v0.6.3)
+
+Two export paths, different failure modes:
+
+- **`export-pdf.sh` (screenshot-based, preferred)** — Playwright rasters each slide; immune to viewer-dependent rendering.
+- **Chrome `--print-to-pdf` (vector print)** — every generated deck carries a hardened `@media print` block (`PRINT_HARDENING_CSS` in `build.py`): page box pinned to the authored viewport in **inches** (Chrome mis-handles px in `@page size`), one slide per page, and **all box/text-shadows stripped**. The shadow strip is load-bearing: several PDF viewers (macOS Preview included) rasterize Chrome's printed shadow groups as hard-edged translucent slabs painted over neighboring content — a soft glow becomes a giant opaque rectangle.
+
+**Verification discipline:** always eyeball a Chrome-printed PDF in the viewer the audience actually uses (e.g. Preview). Poppler-based page extractors render shadows softly and will not reproduce the slab defect — a single-renderer check can pass while the deliverable is broken.
 
 ## Heuristic registry — markdown shape → slide type
 
