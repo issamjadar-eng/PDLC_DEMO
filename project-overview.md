@@ -387,7 +387,7 @@ A local FastAPI app launched from `tools/project-console/` gives the team — an
 
 [![Landing](assets/project-overview/console-01-landing.png)](http://127.0.0.1:8765/)
 
-Branded with the **GlobalLogic** theme pack (scraped and materialized by `/project-console theme`). A responsive priority-overflow topnav carries the section set — **Overview, Strategy, Submission, Dashboards, Trace Matrix, Gap Analysis, Workflows, Agents, Documents, Tasks**, with **Metrics** and **Setup** in the overflow menu — over top-level tiles for the most-used sections.
+Branded with the **GlobalLogic** theme pack (scraped and materialized by `/project-console theme`). A responsive priority-overflow topnav carries the section set — **Overview, Strategy, Submission, Dashboards, Trace Matrix, Gap Analysis, Workflows, Agents, Documents**, with **Tasks**, **Metrics**, and **Setup** in the overflow menu — over top-level tiles for the most-used sections.
 **[http://127.0.0.1:8765/](http://127.0.0.1:8765/)**
 
 ### 5.2 Agents (persona advisors)
