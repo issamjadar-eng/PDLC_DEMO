@@ -41,8 +41,8 @@ The **portfolio context** — a broader 5-device infusion family (IP5000, PP3000
 We are filing **one 510(k)** for the PCA device itself, **with an integrated PCCP** that pre-authorizes two classes of post-market change: drug-library updates and bounded firmware updates.
 
 - **Filing scope = PCA device alone.** The Connectivity Adapter (MDDS) and all Cloud Suite components except the Drug Library Manager are **out of the PP3500 filing**. Each is analyzed and filed (or not filed) on its own regulatory merits. See `docs/project/strategies/regulatory-strategy.md` §1 *Filing Scope: PCA Device Alone*.
-- **Critical-requirement carve-out (CtS / CtF / CtC / CtP).** Every user need and design input is tagged with one or more of **Critical to Safety / Function / Compliance / Performance**. Only Ct\*-tagged requirements are in scope for the 510(k) + PCCP; everything else ships post-clearance on the commercial track. This keeps the submission minimum and the V&V burden tractable. See regulatory-strategy.md §1 *Filing Strategy — Critical-Requirement Carve-out*.
-- **PCCP envelope.** The PCCP pre-authorizes changes to Ct\*-tagged requirements that stay within pre-specified bounds — drug-library updates, firmware patches against a fixed risk profile, and predictive-alarm SaMD updates that meet the PCCP change-protocol acceptance criteria.
+- **Critical-requirement carve-out (CtS / CtF / CtC / CtP).** Every user need and design input is tagged with one or more of **Critical to Safety / Function / Compliance / Performance**. Only `Ct*`-tagged requirements are in scope for the 510(k) + PCCP; everything else ships post-clearance on the commercial track. This keeps the submission minimum and the V&V burden tractable. See regulatory-strategy.md §1 *Filing Strategy — Critical-Requirement Carve-out*.
+- **PCCP envelope.** The PCCP pre-authorizes changes to `Ct*`-tagged requirements that stay within pre-specified bounds — drug-library updates, firmware patches against a fixed risk profile, and predictive-alarm SaMD updates that meet the PCCP change-protocol acceptance criteria.
 - **Predicate.** PP3000 (K190567) — a prior PainEase PCA pump in the same family. The PCCP envelope is the substantive delta vs. the predicate.
 - **Drug Library Manager**, classified as Class II SaMD accessory, is either bundled into the PP3500 filing or filed separately (posture TBD in submission planning — see `docs/project/submissions/510k/composition-manifest.md`).
 
@@ -53,7 +53,7 @@ Full strategy: [`docs/project/strategies/regulatory-strategy.md`](docs/project/s
 1. **Q-Sub package** (`docs/project/submissions/qsub/`) — cover letter, device description, classification validation, PCCP scope questions.
 2. **510(k) submission** (`docs/project/submissions/510k/`) — substantial-equivalence argument to PP3000, software docs, performance and validation data, risk analysis, labeling. Composition driven by `composition-manifest.md`.
 3. **PCCP document** (`docs/project/submissions/pccp/`) — change categories, modification protocols, performance criteria, reporting plan.
-4. **Trace matrix** per DHF (`docs/project/dhfs/<dhf>/design-controls/trace-matrix/`) — User Needs ↔ Design Inputs ↔ SW Requirements ↔ Architecture ↔ V&V ↔ Risk, with a **Filing Scope** column derived from Ct\* tags.
+4. **Trace matrix** per DHF (`docs/project/dhfs/<dhf>/design-controls/trace-matrix/`) — User Needs ↔ Design Inputs ↔ SW Requirements ↔ Architecture ↔ V&V ↔ Risk, with a **Filing Scope** column derived from `Ct*` tags.
 5. **Risk file** (`docs/project/dhfs/pca-device/risk-management/`) — ISO 14971 hazard analysis (16 hazards) plus design and process FMEAs, QMS-form-conformant and wired into the trace matrix as a live risk layer.
 
 ---

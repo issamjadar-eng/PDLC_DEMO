@@ -3,11 +3,11 @@
   "generator": "md-deck v0.6.1",
   "source": {
     "path": "project-overview.md",
-    "sha256": "3f6f0eea28933fca11789e4098c1c211969fcdfba42de299a75ca0ea19fe0ebe",
-    "size_bytes": 51902
+    "sha256": "efd40896598f29bc729f6e1fc0f45f2d2307b9d0700311f159f05c2e69156582",
+    "size_bytes": 51905
   },
   "build": {
-    "at": "2026-07-21T06:35:52Z",
+    "at": "2026-07-21T06:45:06Z",
     "by": "benxavier",
     "style": "bold-signal"
   },
@@ -60,7 +60,7 @@
       "anchor": "L39-L49",
       "slug": "s1-2-regulatory-strategy-at-a-glance",
       "source_lines": "L39-L49",
-      "source_sha256": "ec4ea110666f29149bd342278902b46417fac3b6409aec67bc570f835c329f98"
+      "source_sha256": "b22128d18992f6bf2668a3afa7c6438cae82df50c608b6a8ee9519b0938b21f9"
     },
     {
       "index": 5,
@@ -70,7 +70,7 @@
       "anchor": "L39-L49",
       "slug": "s1-2-regulatory-strategy-at-a-glance",
       "source_lines": "L39-L49",
-      "source_sha256": "ec4ea110666f29149bd342278902b46417fac3b6409aec67bc570f835c329f98"
+      "source_sha256": "b22128d18992f6bf2668a3afa7c6438cae82df50c608b6a8ee9519b0938b21f9"
     },
     {
       "index": 6,
@@ -80,7 +80,7 @@
       "anchor": "L39-L49",
       "slug": "s1-2-regulatory-strategy-at-a-glance",
       "source_lines": "L39-L49",
-      "source_sha256": "ec4ea110666f29149bd342278902b46417fac3b6409aec67bc570f835c329f98"
+      "source_sha256": "b22128d18992f6bf2668a3afa7c6438cae82df50c608b6a8ee9519b0938b21f9"
     },
     {
       "index": 7,
@@ -90,7 +90,7 @@
       "anchor": "L51-L59",
       "slug": "s1-3-key-deliverables",
       "source_lines": "L51-L59",
-      "source_sha256": "0fb6fce155df8151a13b06301fcb753721349d6d7497ed336fcbb39aeb4ea411"
+      "source_sha256": "8cf0b355e169a8246d2631a41a7454b35efddffbfcd2abcf03834f4691bf7c4a"
     },
     {
       "index": 8,
@@ -100,7 +100,7 @@
       "anchor": "L51-L59",
       "slug": "s1-3-key-deliverables",
       "source_lines": "L51-L59",
-      "source_sha256": "0fb6fce155df8151a13b06301fcb753721349d6d7497ed336fcbb39aeb4ea411"
+      "source_sha256": "8cf0b355e169a8246d2631a41a7454b35efddffbfcd2abcf03834f4691bf7c4a"
     },
     {
       "index": 9,

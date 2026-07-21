@@ -781,7 +781,7 @@ def _classify_section_slide(*, title: str, section: str, content: list[dict],
         if bold_count >= max(2, len(bullet_items) // 2):
             tiles = []
             for it in bullet_items:
-                m = re.match(r"^\*\*([^*]+?)\*\*[:.\s—-]*\s*(.*)$", it)
+                m = re.match(r"^\*\*([^*]+?)\*\*[:,.\s—-]*\s*(.*)$", it)
                 if m:
                     label = m.group(1).strip()
                     sub = m.group(2).strip()
@@ -904,7 +904,7 @@ def _inject_variants(slide: dict) -> list[dict]:
         # Synthesize tiles from list items (split bold lead from rest if any)
         synthetic_tiles = []
         for it in (slide.get("items") or [])[:6]:
-            m = re.match(r"^\*\*([^*]+?)\*\*[:.\s—-]*\s*(.*)$", it)
+            m = re.match(r"^\*\*([^*]+?)\*\*[:,.\s—-]*\s*(.*)$", it)
             label, sub = (m.group(1).strip(), m.group(2).strip()) if m else _split_label_sub(it)
             synthetic_tiles.append({"label": label, "subtitle": sub})
         synthetic_slide = {**slide, "type": "card-grid", "tiles": synthetic_tiles}
@@ -2047,7 +2047,7 @@ def _adapt_slide_to_component(base: dict, component_name: str) -> dict:
             tiles = []
             for it in items:
                 text = it if isinstance(it, str) else " ".join(str(x) for x in it)
-                m = re.match(r"^\*\*([^*]+)\*\*\s*[—.:-]?\s*(.*)$", text)
+                m = re.match(r"^\*\*([^*]+)\*\*\s*[—,.:-]?\s*(.*)$", text)
                 if m:
                     tiles.append({"label": m.group(1).strip(), "subtitle": m.group(2).strip()})
                 else:
