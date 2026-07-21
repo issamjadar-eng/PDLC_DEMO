@@ -2363,18 +2363,21 @@ FINAL_CSS = """
 html, body { margin: 0; padding: 0; background: #000; }
 .cp-slide-final { position: relative; }
 
-/* ---- Print / PDF: one slide per page. Page box == 1400x900 CSS px, but
-       expressed in INCHES (14.5833in x 9.375in = 1400x900 at 96dpi). Chrome's
+/* ---- Print / PDF: one slide per page. Page box == 1440x900 CSS px — the
+       SAME viewport the deck is authored and browser-reviewed at — but
+       expressed in INCHES (15in x 9.375in = 1440x900 at 96dpi). Chrome's
        print engine mis-handles px units in `@page size` — vw/vh then resolve
        against a wrong box and content renders ~2x too tall. Inches resolve
-       correctly, so vw/vh inside the slides match the 1400x900 screen view
-       the deck is authored at. ---- */
+       correctly. Matching the authored viewport exactly matters: fonts and
+       paddings sit at fixed px/rem clamp caps, so any smaller page box makes
+       them proportionally larger than the browser view (the old 1400x900 box
+       rendered callouts/cards visibly bigger than index.html). ---- */
 @media print {
-  @page { size: 14.5833in 9.375in; margin: 0; }
+  @page { size: 15in 9.375in; margin: 0; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   html, body { margin: 0; padding: 0; background: #000; }
   .cp-slide-final {
-    width: 1400px;
+    width: 1440px;
     height: 900px;
     overflow: hidden;
     break-after: page;
@@ -2387,7 +2390,7 @@ html, body { margin: 0; padding: 0; background: #000; }
   .cp-slide-final > section,
   .cp-slide-final .slide,
   .cp-slide-final .deco-slide {
-    width: 1400px !important;
+    width: 1440px !important;
     height: 900px !important;
   }
 }
@@ -2533,11 +2536,12 @@ def build_pdf() -> Path:
         "--no-pdf-header-footer",
         "--hide-scrollbars",
         "--allow-file-access-from-files",
-        # Window size == the @page box (1400x900) so the scale-to-fit script
-        # (FINAL_FIT_JS, runs on `load`) measures slides against the same box
-        # the print engine uses — headless --print-to-pdf does not reliably
-        # fire `beforeprint`, so the on-load measurement must already be right.
-        "--window-size=1400,900",
+        # Window size == the @page box (1440x900 — the authored viewport) so
+        # the scale-to-fit script (FINAL_FIT_JS, runs on `load`) measures
+        # slides against the same box the print engine uses — headless
+        # --print-to-pdf does not reliably fire `beforeprint`, so the on-load
+        # measurement must already be right.
+        "--window-size=1440,900",
         "--virtual-time-budget=20000",   # let Google Fonts + console PNGs settle
         f"--print-to-pdf={out}",
         index.as_uri(),
