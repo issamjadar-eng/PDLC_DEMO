@@ -1,0 +1,190 @@
+{% extends "_base.html" %}
+{% block title %}Tasks · {{ config.project_name }}{% endblock %}
+{% block body_class %}tasks-body{% endblock %}
+
+{% block head %}
+<style>
+  /* Tasks tab — activity summary (not a task list). All classes prefixed
+     `tk-` to avoid clashing with console.css; colors from theme vars. */
+  .tk-wrap { max-width: 1250px; margin: 0 auto; padding: 8px 4px 48px; }
+  .tk-empty { border: 1px solid var(--border,#2a2f3a); border-radius: 12px; padding: 18px 22px;
+      background: var(--surface,#181b22); color: var(--body-text-muted,#8b93a7); }
+  .tk-empty code, .tk-sub code, .tk-open-sum code, .tk-hl-line code {
+      background: var(--code-bg,#11141a); color: var(--code-text,#e6e9ef);
+      padding: 1px 5px; border-radius: 4px; font-size: .85em; }
+  .tk-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px;
+      margin-bottom: 16px; flex-wrap: wrap; }
+  .tk-eyebrow { color: var(--brand-primary,#6ea8fe); font-size: 11px; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase; margin: 0 0 3px; }
+  .tk-head h1 { margin: 0 0 5px; }
+  .tk-sub { color: var(--body-text-muted,#8b93a7); margin: 0; font-size: 13px; }
+  .tk-age { margin-left: 8px; font-size: 11px; }
+  .tk-age.is-fresh { color: var(--body-text-muted,#8b93a7); }
+  .tk-age.is-aging { color: #eab308; }
+  .tk-age.is-stale { color: #e06b6b; font-weight: 700; }
+  .tk-rollup { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tk-stat { display: flex; flex-direction: column; align-items: center; min-width: 86px;
+      padding: 10px 14px; background: var(--surface,#181b22);
+      border: 1px solid var(--border,#2a2f3a); border-radius: 10px; }
+  .tk-stat .n { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .tk-stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--body-text-muted,#8b93a7); }
+  .tk-stat-total .n { color: var(--body-text-muted,#8b93a7); }
+
+  .tk-narrative { border: 1px solid var(--border,#2a2f3a);
+      border-left: 3px solid var(--brand-primary,#6ea8fe); border-radius: 12px;
+      background: var(--surface,#181b22); padding: 16px 20px; margin-bottom: 22px; }
+  .tk-narrative-h { margin: 0 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--brand-primary,#6ea8fe); }
+  .tk-narrative-p { margin: 0 0 9px; font-size: 14px; line-height: 1.65; }
+  .tk-watch { margin: 0 0 9px; font-size: 13px; line-height: 1.55; color: #b48a08;
+      background: color-mix(in srgb, #eab308 9%, transparent);
+      border: 1px solid color-mix(in srgb, #eab308 30%, var(--border,#2a2f3a));
+      border-radius: 8px; padding: 8px 12px; }
+  .tk-window-stats { display: flex; gap: 18px; margin: 0; font-size: 12.5px;
+      color: var(--body-text-muted,#8b93a7); flex-wrap: wrap; }
+  .tk-window-stats b { color: var(--body-text,#e6e9ef); font-size: 14px; }
+  .tk-dim { color: var(--body-text-muted,#8b93a7); }
+
+  .tk-columns { display: grid; grid-template-columns: minmax(320px, 5fr) minmax(340px, 6fr);
+      gap: 22px; align-items: start; }
+  @media (max-width: 980px) { .tk-columns { grid-template-columns: 1fr; } }
+  .tk-section-h { font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--body-text-muted,#8b93a7); margin: 0 0 10px; font-weight: 600; }
+  .tk-count { background: var(--surface-2,#20242e); padding: 1px 8px; border-radius: 99px;
+      font-size: 11px; margin-left: 5px; text-transform: none; letter-spacing: 0; }
+
+  .tk-open-card { border: 1px solid var(--border,#2a2f3a); border-radius: 11px;
+      background: var(--surface,#181b22); padding: 12px 14px; margin-bottom: 9px; }
+  .tk-open-card.is-active { border-color: color-mix(in srgb, var(--brand-primary,#6ea8fe) 45%, var(--border,#2a2f3a)); }
+  .tk-open-top { display: flex; align-items: baseline; gap: 8px; }
+  .tk-cat { flex: 0 0 auto; }
+  .tk-open-title { font-weight: 700; font-size: 14px; }
+  .tk-chip { margin-left: auto; flex: 0 0 auto; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 99px; background: var(--surface-2,#20242e); white-space: nowrap; }
+  .tk-chip.is-progress { color: var(--brand-primary,#6ea8fe); }
+  .tk-chip.is-queued { color: var(--body-text-muted,#8b93a7); }
+  .tk-open-sum { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5;
+      color: var(--body-text-muted,#8b93a7); display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden; }
+  .tk-open-meta { margin: 5px 0 0; font-size: 11px; color: var(--body-text-muted,#8b93a7);
+      font-family: ui-monospace, Menlo, monospace; }
+  .tk-prio { color: #e06b6b; font-weight: 700; }
+  .tk-cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 11px 0 0; }
+  .tk-cat-pill { font-size: 11px; padding: 2px 9px; border-radius: 99px;
+      background: var(--surface-2,#20242e); color: var(--body-text-muted,#8b93a7); }
+
+  .tk-timeline { border-left: 2px solid var(--border,#2a2f3a); padding-left: 14px;
+      display: flex; flex-direction: column; gap: 8px; }
+  .tk-hl-date { margin: 5px 0 2px -14px; padding-left: 14px; font-size: 10.5px; font-weight: 800;
+      letter-spacing: .08em; color: var(--brand-accent,#9b8cff);
+      border-left: 2px solid var(--brand-accent,#9b8cff); }
+  .tk-hl { display: flex; gap: 9px; align-items: flex-start; border-radius: 8px;
+      padding: 4px 6px; margin-left: -6px; transition: background .12s ease; }
+  .tk-hl:hover { background: var(--surface,#181b22); }
+  .tk-hl-icon { flex: 0 0 auto; margin-top: 1px; }
+  .tk-hl-title { margin: 0; font-size: 13px; font-weight: 700; }
+  .tk-hl-title .tk-dim { font-weight: 400; font-size: 11px; font-family: ui-monospace, Menlo, monospace; }
+  .tk-hl-line { margin: 2px 0 0; font-size: 12px; line-height: 1.5;
+      color: var(--body-text-muted,#8b93a7); display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden; }
+
+  .tk-econ { margin-top: 24px; border: 1px solid var(--border,#2a2f3a); border-radius: 12px;
+      background: var(--surface,#181b22); padding: 14px 18px; }
+  .tk-econ-line { margin: 3px 0; font-size: 14px; color: var(--body-text-muted,#8b93a7); }
+  .tk-econ-line b { color: var(--body-text,#e6e9ef); }
+  .tk-econ-note { margin: 4px 0 0; font-size: 11px; color: var(--body-text-muted,#8b93a7); font-style: italic; }
+
+  .tk-doclink { color: inherit; text-decoration: none;
+      border-bottom: 1px dotted color-mix(in srgb, var(--brand-primary,#6ea8fe) 50%, transparent); }
+  .tk-doclink:hover { color: var(--brand-primary,#6ea8fe); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="tk-wrap">
+  {% if not s %}
+  <div class="tk-empty"><p><strong>No task summary yet.</strong> Generate it with <code>/task summary</code> — the task skill derives counts, open work, and the recent-activity digest into <code>tasks/task-summary.json</code>.</p></div>
+  {% else %}
+  <header class="tk-head">
+    <div>
+      <p class="tk-eyebrow">Activity summary</p>
+      <h1>Tasks</h1>
+      <p class="tk-sub">What's moving and what's open — derived by <code>/task summary</code> from the task docs, not a task list.
+        <span class="tk-age is-{{ s._freshness }}" title="Regenerate with /task summary">generated {{ s._age_label }}</span></p>
+    </div>
+    <div class="tk-rollup">
+      <div class="tk-stat"><span class="n">{{ s.counts['In Progress'] or 0 }}</span><span class="l">in progress</span></div>
+      <div class="tk-stat"><span class="n">{{ (s.counts['Not Started'] or 0) + (s.counts['Blocked'] or 0) }}</span><span class="l">queued</span></div>
+      <div class="tk-stat"><span class="n">{{ s.counts.Complete or 0 }}</span><span class="l">complete</span></div>
+      <div class="tk-stat tk-stat-total"><span class="n">{{ s.counts.total }}</span><span class="l">all time</span></div>
+    </div>
+  </header>
+
+  {% if s.narrative %}
+  <div class="tk-narrative">
+    <p class="tk-narrative-h">The last {{ s.window_days }} days</p>
+    <p class="tk-narrative-p">{{ s.narrative }}</p>
+    {% if s.watch %}<p class="tk-watch">⚠ <strong>Watch:</strong> {{ s.watch }}</p>{% endif %}
+    <p class="tk-window-stats">
+      <span><b>{{ s.recent.closed }}</b> closed</span>
+      <span><b>{{ s.recent.created }}</b> created</span>
+      <span><b>{{ s.recent.tasks_touched }}</b> touched</span>
+      <span class="tk-dim">since {{ s.recent.since }}</span>
+    </p>
+  </div>
+  {% endif %}
+
+  <div class="tk-columns">
+    <div class="tk-col">
+      <h2 class="tk-section-h">Open now <span class="tk-count">{{ s.open_tasks | length }}</span></h2>
+      {% for t in s.open_tasks %}
+      <div class="tk-open-card {{ 'is-active' if 'Progress' in t.status }}">
+        <div class="tk-open-top">
+          <span class="tk-cat" title="{{ t.category }}">{{ t._icon }}</span>
+          {% if t.path %}<a class="tk-open-title tk-doclink" href="/documents/view/{{ t.path }}" title="Open task doc">{{ t.title }}</a>
+          {% else %}<span class="tk-open-title">{{ t.title }}</span>{% endif %}
+          <span class="tk-chip {{ 'is-progress' if 'Progress' in t.status else 'is-queued' }}">{{ t.status.split('(')[0].strip() }}</span>
+        </div>
+        {% if t._summary_html %}<p class="tk-open-sum">{{ t._summary_html | safe }}</p>{% endif %}
+        <p class="tk-open-meta">{{ t.id }}{% if t.age_days is not none %} · open {{ t.age_days }}d{% endif %}{% if t.priority in ('High', 'Critical') %} · <span class="tk-prio">{{ t.priority }}</span>{% endif %}{% if '(' in t.status %} · {{ t.status.split('(', 1)[1].rstrip(')') }}{% endif %}</p>
+      </div>
+      {% endfor %}
+      {% if s.categories %}
+      <p class="tk-cats">
+        {% for cat, n in s.categories.items() %}<span class="tk-cat-pill">{{ s._cat_icons.get(cat, '📌') }} {{ cat }} · {{ n }}</span>{% endfor %}
+      </p>
+      {% endif %}
+    </div>
+
+    <div class="tk-col">
+      <h2 class="tk-section-h">Recently shipped <span class="tk-count">{{ s.recent.highlights | length }}</span></h2>
+      <div class="tk-timeline">
+        {% set ns = namespace(prev_date=None) %}
+        {% for h in s.recent.highlights %}
+        {% if h.date != ns.prev_date %}<p class="tk-hl-date">{{ h.date }}</p>{% set ns.prev_date = h.date %}{% endif %}
+        <div class="tk-hl">
+          <span class="tk-hl-icon" title="{{ h.category }}">{{ h._icon }}</span>
+          <div class="tk-hl-body">
+            <p class="tk-hl-title">{% if h.path %}<a class="tk-doclink" href="/documents/view/{{ h.path }}" title="Open task doc">{{ h.title }}</a>{% else %}{{ h.title }}{% endif %} <span class="tk-dim">{{ h.task }}</span></p>
+            <p class="tk-hl-line">{{ h._line_html | safe }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if s.economics and s.economics.tasks_with_economics %}
+  <div class="tk-econ">
+    <p class="tk-section-h">Effort picture <span class="tk-count">{{ s.economics.tasks_with_economics }} measured tasks</span></p>
+    <p class="tk-econ-line">
+      By-hand equivalent <b>{{ s.economics.manual_min }}–{{ s.economics.manual_max }}h</b> (modeled)
+      <span class="tk-dim">vs.</span> supervised agentic attention <b>{{ s.economics.agentic_min }}–{{ s.economics.agentic_max }}h</b> (self-reported)
+    </p>
+    <p class="tk-econ-note">{{ s.economics.note }} — the full value story lives in Metrics ▸ Value &amp; ROI.</p>
+  </div>
+  {% endif %}
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,8 +1,8 @@
 ---
 name: task
-description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `setup` tasks organized by team member with index tracking. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
-version: 33
-updated: 2026-06-30
+description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `summary`, `setup` tasks organized by team member with index tracking. The `summary` action derives `tasks/task-summary.json` (counts, categorized open work, recent-activity digest, economics rollup) for the project console's Tasks tab — use it when the user says 'refresh the task summary', 'update the tasks tab', or the console shows a stale/missing task summary. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
+version: 34
+updated: 2026-07-20
 ---
 
 # Task Management
@@ -51,6 +51,7 @@ When any action encounters a missing dependency, it should report:
 | `hooks/checkpoint-recover.sh` | SessionStart hook — scans `.state/` for any `uncheckpointed-*.txt` markers from previous sessions; if found, injects a SessionStart `additionalContext` block prompting Claude to offer retroactive `/checkpoint` recovery from `git log` + diff. Symlinked from `.claude/hooks/` by `setup`. Pairs with `session-cleanup.sh` and the `checkpoint` action. |
 | `hooks/register-hook.sh` | Shared hook registration helper — installed to `.claude/hooks/` by `setup` action if not already present |
 | `commands/checkpoint.md` | Slash command alias — thin wrapper that invokes the `checkpoint` action by name. Symlinked from `.claude/commands/` by `setup` so the user can type `/checkpoint` directly. Source of truth lives inside the skill so `/sync-skills pull` propagates updates. |
+| `scripts/task_summary.py` | `summary` action — derives `tasks/task-summary.json` (counts, categorized open work, recent-activity window, economics rollup) for the project console's Tasks tab. Stdlib-only; categories overridable per-project via `tasks/task-summary-config.json` |
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
 | `rules/scratch-and-tmp.md` | The personal-sandbox convention (`_work/` committed, `_scratch/` gitignored, OS `/tmp` transient) — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
@@ -173,6 +174,16 @@ Each team member has an index file at `tasks/<person>/000-index.md` — a per-pe
 **Placeholder rows** (`| — | — | … | No active tasks |`) preserve the markdown table when a section is empty. Keep them; replace when the first real row is added.
 
 When moving a row from Active → Completed, drop the Status and Priority cells. The Completed table is intentionally narrower because completed tasks don't need triage data.
+
+### `summary [--window N]`
+
+Generate the project activity summary the console **Tasks tab** renders — current activities, what's open (categorized), and a short recent-window digest, WITHOUT dumping the full task list. Data lives in the repo (`tasks/task-summary.json`), regenerated on request; the console is a pure consumer.
+
+1. Run: `python3 .claude/skills/task/scripts/task_summary.py --root <repo_root>` — derives counts (all statuses), open tasks with the index's curated one-liners + keyword categories, the last-N-days window (touched/created/closed + shipped-highlight changelog lines; both bullet `- YYYY-MM-DD: …` and table `| date | msg |` changelog forms are parsed), and the Economics rollup (modeled by-hand hours vs. self-reported agentic hours — evidence classes labeled, never conflated; in-doc `## Economics` blocks only).
+2. **Compose the narrative.** Read the derived data, then write a 2–4 sentence window-in-review (what actually moved, the honest headline) and re-run with `--narrative "<text>"`; add the one thing to watch via `--watch "<text>"` when there is one. The script never writes prose — the narrative is Claude's editorial read, stamped into the JSON; without the flags the previous prose is preserved.
+3. The console shows the `generated` stamp's age (fresh ≤ 7 d, aging ≤ 21 d, stale beyond) — regenerate when it goes stale, after a milestone, or when the board visibly changed.
+4. The JSON is a regenerated projection — never hand-edit; task docs + indexes stay the source of truth.
+5. **Category tuning is project data, not skill code.** The keyword→category map (with icons) defaults to a generic set inside the script; a project overrides it by writing `tasks/task-summary-config.json` (`{"categories": [{"name", "icon", "keywords": [...]}]}`). Never edit the script's defaults with project-specific vocabulary — the skill is registry-shared.
 
 ### `find <description>`
 Search for active tasks that relate to a topic or description. This is the entry point for the task-first workflow.
