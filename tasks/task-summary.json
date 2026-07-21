@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-20",
+  "generated": "2026-07-21",
   "window_days": 30,
   "narrative": "A tooling-heavy month: the usage-metrics value story went from raw token counts to a red-teamed Value & ROI view in the console — collection, retrospective cost allocation, and the honest modeled-not-measured framing all landed — while the console itself kept growing: the Setup tab arrived and expanded into a full project-settings surface, now joined by this Tasks view. On the regulatory side the reference registry gained the 21 CFR 820 QMSR set and the accessories guidance, and routine registry syncs kept skills in lockstep with hitachi. The open board is small and mostly console/skills work; the one substantive DHF workstream in flight is the PP3500 risk-file backfill with trace-matrix risk mapping (ben/102).",
   "counts": {
-    "Complete": 87,
+    "Complete": 88,
     "Abandoned": 10,
     "Not Started": 3,
-    "In Progress": 7,
+    "In Progress": 6,
     "total": 107
   },
   "open_tasks": [
@@ -17,7 +17,7 @@
       "priority": "High",
       "category": "Other",
       "summary": "",
-      "age_days": 68,
+      "age_days": 69,
       "path": "tasks/ben/055-secops-roster-reconciliation.md",
       "last_activity": "2026-05-13"
     },
@@ -28,7 +28,7 @@
       "priority": "High",
       "category": "Skills & Registry",
       "summary": "Restored 14 corrupted `.claude/agents/*.md` symlinks broken by upstream commit `07574e9` (filemode 120000 with 5KB target string content). G1: corrective PR rewriting the 14 entries via pre-vlad blobs (PDLC_DEMO PR #11, `bc2f698`). G2: sync-skills v8.2→v8.3 — three new helpers (`_is_tracked_symlink`, `_read_symlink_target`, `_smart_content_hash`); `cmd_analyze` and `_walk_registry_tree` switched from `[[ -L ]]` to index-based detection; `cmd_push_stage` hard-guards corrupt-symlink content with exit 8 + remediation message. New `tests/test_windows_symlink_guard.sh` (4 cases). 44 test assertions all green. Pushed to hitachi as PR #185 (`8ebe1f2`); local landed via PDLC_DEMO PR #12. G3 (CLAUDE.md rule) deferred per user scope call — G2's push-stage refusal closes the failure surface regardless.",
-      "age_days": 51,
+      "age_days": 52,
       "path": "tasks/ben/066-agent-symlink-fix-and-windows-guard.md",
       "last_activity": "2026-05-30"
     },
@@ -39,7 +39,7 @@
       "priority": "Medium",
       "category": "Console & Tooling",
       "summary": "Add a Setup section to the project console projecting connector (MCP) configuration — `.mcp.json` definitions merged with the `project.yml security.approved_mcps` allowlist — with a configure/edit flow for supported connectors via a skill-shipped generic catalog. project-console skill work.",
-      "age_days": 6,
+      "age_days": 7,
       "path": "tasks/ben/103-console-setup-tab-connectors.md",
       "last_activity": "2026-07-14"
     },
@@ -50,19 +50,8 @@
       "priority": "High",
       "category": "Console & Tooling",
       "summary": "Rebuild the project console's Setup section from MCP-connectors-only into a full professional settings surface (connectors, skills, agents, plugins, rules/hooks, team & security posture vs `project.yml` allowlists), designed to the Claude Desktop Settings/Connectors reference. Lands in the `project-console` skill scaffold + synced to `tools/project-console/`.",
-      "age_days": 6,
+      "age_days": 7,
       "path": "tasks/ben/104-console-setup-redesign.md",
-      "last_activity": "2026-07-16"
-    },
-    {
-      "id": "ben/106",
-      "title": "Client PDLC Deck Refresh (June→July improvements + new screenshots)",
-      "status": "In Progress",
-      "priority": "High",
-      "category": "Console & Tooling",
-      "summary": "Refresh `assets/client-pdlc/` composite client deck with everything landed since its June 12 build: update `project-overview.md` (new console sections, risk file, submissions, value/ROI), capture fresh console screenshots, rebuild the project-overview deck via md-deck, auto-map picks.json curation, rebuild final index.html + regenerate the client PDF.",
-      "age_days": 4,
-      "path": "tasks/ben/106-client-pdlc-deck-refresh.md",
       "last_activity": "2026-07-16"
     },
     {
@@ -72,7 +61,7 @@
       "priority": "Medium",
       "category": "Console & Tooling",
       "summary": "Port the sister project's console Tasks tab: `/task summary` action (task skill) derives `tasks/task-summary.json` (counts, categorized open work, recent highlights, economics rollup, Claude-composed narrative) and a new console `tasks_view` section renders it. Adaptations: project-agnostic categories via `tasks/task-summary-config.json`, bullet-changelog parsing, `/documents/view/` links, our template conventions.",
-      "age_days": 0,
+      "age_days": 1,
       "path": "tasks/ben/107-console-tasks-tab.md",
       "last_activity": "2026-07-20"
     },
@@ -83,7 +72,7 @@
       "priority": "Medium",
       "category": "Skills & Registry",
       "summary": "Explore and experiment with the project's agentic workflows",
-      "age_days": 51,
+      "age_days": 52,
       "path": "tasks/dmytro/001-experiment-with-workflows.md",
       "last_activity": null
     },
@@ -94,7 +83,7 @@
       "priority": "Medium",
       "category": "Skills & Registry",
       "summary": "",
-      "age_days": 81,
+      "age_days": 82,
       "path": "tasks/ben/039-deck-build-skill-improvements.md",
       "last_activity": "2026-05-02"
     },
@@ -105,7 +94,7 @@
       "priority": "High (architecturally load-bearing for the filing)",
       "category": "Console & Tooling",
       "summary": "Captures structural gap surfaced during ben/045 trace-matrix recovery: (a) no top-level \"PCA Infusion System\" filing entity exists — the three current top-level DHFs (`pca-device`, `connectivity-adapter`, `cloud-suite`) sit parentless; (b) the single SYSTEM SAD has no home (the per-DHF \"*-system-sad.md\" docs are scope-mislabeled — they're component-level **software** SADs); (c) regulatory strategy needs to be authored / updated to reflect a multi-function device with 3 classifications under one filing (Medical Device / MDDS / non-medical). Six-phase plan drafted (scoping → regulatory strategy → top-level DHF skeleton → system SAD vs component software SADs → downstream sweep across `trace-matrix.yml` + `dhf-manifest` + `tracker` + console + sister-project check → commit). 5 open questions captured for Phase-1 scoping. Deferred from ben/045 to keep that trace-matrix recovery surgical.",
-      "age_days": 75,
+      "age_days": 76,
       "path": "tasks/ben/046-pca-infusion-system-architecture-gap.md",
       "last_activity": "2026-05-06"
     },
@@ -116,13 +105,13 @@
       "priority": "Medium",
       "category": "Docs & Narrative",
       "summary": "Author a new external-audience article (under `articles/`, via `/medtech-docs new-article`) on controlling/governing AI-model usage cost — token accounting, prompt/context budgeting, model-tier right-sizing, caching/batching, rate guardrails, and per-team cost attribution/chargeback — framed through a fintech/FinOps lens. Non-canonical explainer; carries the NOT-A-CANONICAL banner. Scope/angle/audience to confirm with user.",
-      "age_days": 34,
+      "age_days": 35,
       "path": "tasks/ben/091-article-ai-cost-control.md",
       "last_activity": "2026-06-22"
     }
   ],
   "categories": {
-    "Console & Tooling": 5,
+    "Console & Tooling": 4,
     "Skills & Registry": 3,
     "Other": 1,
     "Docs & Narrative": 1
@@ -136,11 +125,19 @@
     "Other": "📌"
   },
   "recent": {
-    "since": "2026-06-20",
+    "since": "2026-06-21",
     "tasks_touched": 17,
     "created": 16,
-    "closed": 12,
+    "closed": 13,
     "highlights": [
+      {
+        "task": "ben/106",
+        "title": "Client PDLC Deck Refresh (June→July improvements + new screenshots)",
+        "date": "2026-07-21",
+        "category": "Console & Tooling",
+        "path": "tasks/ben/106-client-pdlc-deck-refresh.md",
+        "line": "Task COMPLETE — user signed off on the deck. Status → Complete; Economics reconciled (6 new todo estimates for the assessment/corrections/review/PDF/prevention work; agentic_hours 1.0–1.5 → 3.5–5.5 across the three sessi…"
+      },
       {
         "task": "ben/105",
         "title": "Reference Registry Extension: 21 CFR 820 (QMSR) + Missing Standards Distillations",
@@ -228,23 +225,15 @@
         "category": "Console & Tooling",
         "path": "tasks/ben/094-registry-skill-sync.md",
         "line": "Pushed to main — PR #68 merged (49 files; agents/rule confirmed as symlinks mode 120000), branch deleted, working tree clean. Status → Complete. Only deferred item: optional push-back of locally-newer collect.py to regis…"
-      },
-      {
-        "task": "ben/092",
-        "title": "Import Accessories FDA Guidance Into medtech-docs References",
-        "date": "2026-06-22",
-        "category": "Skills & Registry",
-        "path": "tasks/ben/092-import-accessories-fda-guidance.md",
-        "line": "Ran applicability — added accessories rubric trigger to `update-external-references` (SKILL.md); copied distilled → `docs/external/fda-guidance/accessories.md`; updated project applicability README. Marked task Complete.…"
       }
     ]
   },
   "economics": {
-    "manual_min": 222.5,
-    "manual_max": 451.0,
-    "agentic_min": 19.0,
-    "agentic_max": 35.5,
-    "tasks_with_economics": 11,
+    "manual_min": 257.0,
+    "manual_max": 514.0,
+    "agentic_min": 21.8,
+    "agentic_max": 40.2,
+    "tasks_with_economics": 12,
     "note": "manual hours are MODELED (retrospective rubric estimates, order-of-magnitude — lead with min); agentic hours are self-reported supervised attention; sums cover only task docs carrying an in-doc Economics block"
   },
   "watch": "ben/046 — the PCA Infusion System filing-entity / multi-function-device architecture gap — remains unstarted while DHF work continues around it; it shapes the filing structure everything else anchors to."

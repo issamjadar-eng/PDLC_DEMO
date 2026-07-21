@@ -2,7 +2,7 @@
 
 **ID**: 106
 **Created**: 2026-07-16
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -61,7 +61,7 @@ _Actionable work items. Check off as completed._
 - [x] Corrections Phase E — styling package (leak scrub, WCAG token lift, unclamp, wayfinding, captions) + candidate + PDF (10.3MB)
 - [x] `/sync-skills push` md-deck 0.6.2+0.6.3 upstream — **DONE 2026-07-21** (hitachi PR #275, squash-merged `258e017`, checkout synced, branch pruned, sync-log entry added). The UPSTREAM_NEWER flag turned out to be a false positive: upstream was byte-identical to our 05-11 baseline, so the push was a clean fast-forward. Local ↔ registry lockstep verified via `diff -r`.
 - [x] Gap assessment (2026-07-20): 4 advisory agents launched — (1) skills-framework coverage vs `project-overview.md`, (2) console 1.40→1.41 feature/screenshot drift, (3) narrative completeness + curation, (4) styling/design critique of `assets/client-pdlc/index.html` (frontend-design lens, recommendations expressible as build.py changes). Synthesize findings into recommendations here when they return.
-- [ ] User review of the new deck (`assets/client-pdlc/index.html`), then push per git-workflow
+- [x] User review of the new deck — two review rounds applied (2026-07-21: callout alignment, deliverables graphic, skills/agents consolidation; removals/merges/full skills catalog) + PDF parity + shadow fixes; **user signed off 2026-07-21**. All work merged to main (PRs #118–#126).
 
 ## Lessons Learned — deck generation pipeline
 
@@ -151,22 +151,23 @@ Quick wins independent of the chain: token floor lift, wayfinding, gallery capti
 
 ## Open Questions
 
-- `assets/project-overview/index.pdf` is still the June 12 render (the md-deck HTML deck was rebuilt but md-deck has no local PDF exporter — SKILL.md points to a frontend-slides script that isn't installed in this project). Regenerate or drop the PDF reference? User call.
-- md-deck v0.6.1 auto-emitted `assets/project-overview/README.md` + `candidates.html` (new build artifacts, committable per its own README) — included in the change set.
+- ~~md-deck v0.6.1 auto-emitted `assets/project-overview/README.md` + `candidates.html`~~ — resolved: committed as part of PR #119.
+- Carried to Resume (not blocking closure): stale `assets/project-overview/index.pdf` June 12 render — regenerate or drop reference; owner's call in a future touch.
 
 ## Resume
 
 ### In-flight artifacts
-**All uncommitted** (nothing committed this session; user controls push). Change set:
-- `project-overview.md` — content refresh (§1.3, §2.2–2.4, §3.2–3.4, §5 full rewrite w/ 11 console sections, appendix)
-- `assets/project-overview/` — index.html (59 slides) + manifest.json rebuilt; 9 screenshots refreshed + 7 new (console-11..17); NEW md-deck artifacts README.md + candidates.html; index.pdf STALE (see Open Questions)
-- `assets/client-pdlc/` — build.py (anchor remap + 11-slide gallery), picks.json (remapped, 106 entries/32 keeps), index.html (47 slides), GlobalLogic_Agentic_PDLC.pdf (8.5MB), candidate.html (106), README.md (counts + changelog), 6 refreshed + 5 new console-*.png
-- Also in tree: ben/104 + 000-index task-doc updates (checkpoint recovery, separate concern), SECOPS.md auto-update (pre-existing), and ben/107 console-tasks-tab changes (task skill v34 + project-console 1.41.0, uncommitted, tracked in its own doc) — take care to keep the two change sets in separate commits at push time
+**None — task COMPLETE, everything on `main`, working tree clean.** Final state (2026-07-21):
+- Client deck: `assets/client-pdlc/index.html` (50 slides) + `GlobalLogic_Agentic_PDLC.pdf` (7.3MB, shadow-stripped, viewport-parity print CSS) — **user signed off**.
+- Source deck: `assets/project-overview/index.html` (67 slides, md-deck 0.6.3 w/ print hardening).
+- Skill: md-deck 0.6.3 local AND in the hitachi registry (PR #275, `258e017`); lockstep verified.
+- Lessons: ledger regenerated, L-ben-106-01..03 staged.
+- Project PRs this task: #118–#126, all merged.
 
 ### First action on resume
-- Activate: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 106`
-- Remaining: user deck review → adjustments if any → push per git-workflow (commit → branch → PR → auto-merge). Decide the stale index.pdf question.
-- Do NOT redo: screenshots, project-overview.md rewrite, deck builds, picks remap, PDF — all done and verified.
+Task is Complete — nothing to resume. Residuals intentionally left open (new task if pursued):
+- Deferred: self-hosted font subsets for offline PDF export (P2 from the styling assessment).
+- Open question (carried): stale `assets/project-overview/index.pdf` (June 12 render) — regenerate via frontend-slides export-pdf.sh or drop the appendix reference.
 
 ## Economics
 
@@ -177,7 +178,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": {"min": 1.0, "max": 1.5},
+    "agentic_hours": {"min": 3.5, "max": 5.5},
     "todos": [
       {
         "todo": "Console screenshot recapture — 15 live captures (9 refreshed + 6 new sections) at fixed viewport, each verified",
@@ -206,6 +207,48 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
         "manual_hours": {"min": 0.5, "max": 1},
         "confidence": "high",
         "basis": "judgment — small audit + doc refresh"
+      },
+      {
+        "todo": "Gap assessment: 4-lens review of the 47-slide deck vs skills framework, console 1.41, narrative, and styling + synthesis + independent verification of the top finding",
+        "personas": ["program-manager", "rd-lead"],
+        "manual_hours": {"min": 6, "max": 10},
+        "confidence": "med",
+        "basis": "judgment — four independent expert review passes (content accuracy, feature drift, narrative, design) at 1.5-2.5h each plus a synthesis + root-cause verification"
+      },
+      {
+        "todo": "md-deck 0.6.2/0.6.3: root-cause + fix head-slide loss (slug collision in split x candidates machinery), label truncation, comma regex, print-hardening injection; SKILL.md contract + new README",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 4, "max": 8},
+        "confidence": "med",
+        "basis": "software anchor — reproducing and tracing a silent data-loss bug through a 3.5k-line generation pipeline is the cost driver; fixes themselves are small"
+      },
+      {
+        "todo": "Corrections B-E: project-overview.md content fixes (Tasks section, provenance, counts, 2 new sections), Tasks screenshot capture, PO rebuild 67 slides + picks remap, styling package (leak scrub patches, WCAG token lift, unclamp, wayfinding JS, 12 gallery captions), rebuilds + PDF",
+        "personas": ["rd-lead", "program-manager"],
+        "manual_hours": {"min": 6, "max": 10},
+        "confidence": "med",
+        "basis": "doc-authoring + software — coordinated three-artifact remap (source md, PO deck, client picks/build) plus a CSS/JS styling pass with per-slide verification"
+      },
+      {
+        "todo": "Deck review rounds 1+2: CUSTOM_REPLACES mechanism + 6 authored slides (deliverables graphic, skills overview + full catalog, agents overview, operating rules, adds-up-to), callout alignment patches, removals/merges, rebuilds + PDFs + browser/PDF verification",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 4, "max": 7},
+        "confidence": "med",
+        "basis": "software + design — six bespoke slide layouts authored and pixel-verified; the replace mechanism is small but the slide design iteration is real by-hand time"
+      },
+      {
+        "todo": "PDF fidelity: viewport-parity fix (@page 1400->1440) and shadow-slab root cause (viewer-dependent rasterization of printed shadow groups) + print shadow strip + multi-viewer verification",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 2, "max": 5},
+        "confidence": "med",
+        "basis": "judgment — an obscure viewer-dependent rendering bug; by hand this is hours of cross-viewer bisection"
+      },
+      {
+        "todo": "Prevention + sync: lessons restructured to scanner format, full ledger assembly (76 staged incl. 3 new), md-deck registry push (hitachi PR #275) with divergence analysis + sync-log",
+        "personas": ["program-manager", "rd-lead"],
+        "manual_hours": {"min": 3, "max": 5},
+        "confidence": "high",
+        "basis": "process anchor — ledger regeneration across ~100 task docs + a registry contribution with three-way baseline analysis"
       }
     ]
   }
@@ -214,6 +257,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 
 ## Changelog
 
+- 2026-07-21: **Task COMPLETE — user signed off on the deck.** Status → Complete; Economics reconciled (6 new todo estimates for the assessment/corrections/review/PDF/prevention work; agentic_hours 1.0–1.5 → 3.5–5.5 across the three sessions); Resume section closed out; index row moved to Completed. Final deliverables: 50-slide client deck + 7.3MB PDF (signed off), md-deck 0.6.3 local + registry, 76-lesson ledger, PRs #118–#126 + hitachi #275 all merged.
 - 2026-07-21: **Prevention encoded + registry synced.** (1) md-deck 0.6.3 print hardening merged to project main (PR #125). (2) Task-doc lessons restructured into scanner-conformant `### Principle:` subsections; full `/lessons assemble` run (subagent): ledger regenerated — 76 staged lessons (32 new incl. L-ben-106-01..03; agent also caught a prior-assembly miss, L-ben-007-03). (3) `/sync-skills push` to hitachi: PR #275 squash-merged `258e017`; UPSTREAM_NEWER flag proved a false positive (upstream = our 05-11 baseline byte-identical) so clean fast-forward; lockstep verified; sync-log entry added.
 - 2026-07-21: **PDF orange-slab root cause found + fixed** (user screenshot showed the callout's glow rendered as a giant translucent rectangle over the cards in Preview — invisible in the poppler-based extraction used for earlier verification, hence the earlier false "verified"). Cause: 80px-blur `box-shadow` glows; some viewers rasterize Chrome's printed shadow groups as hard slabs. Fix: `@media print` strips box-shadow/text-shadow globally (checked: no kept slide relies on ring-shadows). PDF 8.6→7.3MB. LESSON: verifying PDF output with one renderer is insufficient — viewer-dependent constructs (shadow smasks) need checking in the viewer the audience uses.
 - 2026-07-21: **PDF/index formatting parity fixed** (user report: orange blocking larger in PDF pages 4/12/34). Root cause: print box was 1400×900 vs authored 1440×900 — px/rem-capped elements stayed the same absolute size on a smaller canvas → proportionally larger. `@page` → 15in×9.375in + export `--window-size=1440,900` in client build.py; PDF regenerated (8.6MB) and pages 4/12/34 verified to match browser proportions exactly (83.3% card-block width parity).
