@@ -4,6 +4,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-21 — push
+
+- Files: `skills/md-deck/SKILL.md`, `skills/md-deck/scripts/build.py`, `skills/md-deck/README.md` (new)
+- Branch: `sync/pdlc-demo-md-deck-063-2026-07-21`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/275
+- Commit: "md-deck 0.6.3: head-slide loss fix, label-split fix, print hardening"
+- Status: merged (user requested full sync)
+- Merge commit: `258e017`
+- Hitachi HEAD after sync: `258e017`
+- Note: the earlier `check` UPSTREAM_NEWER classification for these files was a false positive — upstream content was byte-identical to our 2026-05-11 pull baseline (`92ba076`), so the push was a clean fast-forward, no three-way merge needed. Post-push `diff -r` confirms local ↔ registry lockstep for md-deck.
+
 ## 2026-07-15 — push (fourth of the day)
 
 - Files (11): `skills/project-console/{README.md, SKILL.md, VERSION}`, `skills/project-console/console/setup/{loader.py, project_meta.py (new), router.py, team_access.py (new), writer.py}`, `skills/project-console/console/web/templates/setup_view.html`, `skills/project-console/tests/{test_setup_project_fields.py (new), test_setup_team_access.py (new)}`
