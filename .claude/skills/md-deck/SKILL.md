@@ -1,8 +1,8 @@
 ---
 name: md-deck
 description: Build a beautiful single-file HTML slide deck from any structured markdown source (whitepaper, project overview, strategy doc, board briefing, investor memo, ops report). Non-interactive markdown → HTML pipeline; the builder sibling to the `frontend-slides` stylist. v0.6 — domain-neutral trunk + opt-in icon vocabulary packs (medtech / finance / manufacturing / …) loaded via project.yml `md_deck.vocabulary_packs` or the `--vocabulary` flag. Consumes the canonical viewport contract and preset registry from `frontend-slides` (no duplication); content-split rules replace shrink-to-fit density modifiers; handles title, agenda, dividers, table-slides, card-grids, list-slides, quote-slides, prose-slides, image-feature slides; injects scope-iceberg / concept-canvas / handoff-relay / principle-tiles / catalog-mosaic / catalog-featured variants; detects homogeneous groups (cohorts, teams, deliverables, milestones, metrics, plus pack-specific groups) and gives them a shared kind-icon. Output lands at `<root>/assets/<source-slug>/` with full provenance metadata.
-version: 0.6.0
-updated: 2026-05-02
+version: 0.6.2
+updated: 2026-07-20
 ---
 
 # md-deck
@@ -91,7 +91,7 @@ Code blocks (`````) are dropped from output.
 
 ## Content-split rules (replaces v0.2 density modifiers)
 
-md-deck honors `frontend-slides`' density-limits table. When a slide's content count exceeds the per-type maximum, the slide **splits into N continuation slides** rather than shrinking type to fit. Continuation slides carry a "(cont.)" suffix in the title; deck-runtime auto-renumbers from DOM position; every part shares the original `data-source-anchor` for drift detection.
+md-deck honors `frontend-slides`' density-limits table. When a slide's content count exceeds the per-type maximum, the slide **splits into N continuation slides** rather than shrinking type to fit. Continuation slides carry a "(cont.)" suffix in the title and a `--contN` suffix on their slug (v0.6.2 — parts must not share a slug: the section/picks machinery keys by slug, and a shared slug made the last part overwrite the head slide). All parts share the original `source_lines` / `source_sha256` provenance for drift detection; the head part keeps the unsuffixed slug so existing `picks.json` entries stay bound to it. Deck-runtime auto-renumbers chrome from DOM position.
 
 | Slide type | Limit | Behavior on overflow |
 |---|---|---|

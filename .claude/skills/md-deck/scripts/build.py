@@ -292,6 +292,34 @@ def _shorten(text: str, n_words: int) -> str:
     return " ".join(words[:n_words]).rstrip(",;:") + "…"
 
 
+def _split_label_sub(text: str) -> tuple[str, str]:
+    """Split a non-bold-led bullet into (label, subtitle) without losing content.
+
+    Prefers a sentence or em-dash clause boundary so the tail lands in the
+    subtitle; short bullets become the label whole. Never slices mid-word and
+    never silently drops the tail — the old `text[:60]` fallback amputated
+    sentences with no ellipsis.
+    """
+    t = text.strip()
+    m = re.match(r"^(.{10,90}?[.:;!?])\s+(.+)$", t)
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+    m = re.match(r"^(.{10,60}?)\s+[—–]\s+(.+)$", t)
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+    if len(t) <= 90:
+        return t, ""
+    words = t.split()
+    label_words: list[str] = []
+    ln = 0
+    for w in words:
+        if ln + len(w) > 60 and label_words:
+            break
+        label_words.append(w)
+        ln += len(w) + 1
+    return " ".join(label_words).rstrip(",;:") + "…", " ".join(words[len(label_words):])
+
+
 def _pick_icon(label: str) -> str:
     """Resolve a label to an SVG via the icons.py repository."""
     return _pick_icon_from_repo(label or "")
@@ -753,13 +781,12 @@ def _classify_section_slide(*, title: str, section: str, content: list[dict],
         if bold_count >= max(2, len(bullet_items) // 2):
             tiles = []
             for it in bullet_items:
-                m = re.match(r"^\*\*([^*]+?)\*\*[:.\s—-]*\s*(.*)$", it)
+                m = re.match(r"^\*\*([^*]+?)\*\*[:,.\s—-]*\s*(.*)$", it)
                 if m:
                     label = m.group(1).strip()
                     sub = m.group(2).strip()
                 else:
-                    label = it[:60]
-                    sub = ""
+                    label, sub = _split_label_sub(it)
                 tiles.append({"label": label, "subtitle": sub})
             return {
                 "type": "card-grid", "title": title, "section": section,
@@ -877,8 +904,8 @@ def _inject_variants(slide: dict) -> list[dict]:
         # Synthesize tiles from list items (split bold lead from rest if any)
         synthetic_tiles = []
         for it in (slide.get("items") or [])[:6]:
-            m = re.match(r"^\*\*([^*]+?)\*\*[:.\s—-]*\s*(.*)$", it)
-            label, sub = (m.group(1).strip(), m.group(2).strip()) if m else (it[:60], "")
+            m = re.match(r"^\*\*([^*]+?)\*\*[:,.\s—-]*\s*(.*)$", it)
+            label, sub = (m.group(1).strip(), m.group(2).strip()) if m else _split_label_sub(it)
             synthetic_tiles.append({"label": label, "subtitle": sub})
         synthetic_slide = {**slide, "type": "card-grid", "tiles": synthetic_tiles}
         v = _make_principle_tiles(synthetic_slide)
@@ -2020,11 +2047,12 @@ def _adapt_slide_to_component(base: dict, component_name: str) -> dict:
             tiles = []
             for it in items:
                 text = it if isinstance(it, str) else " ".join(str(x) for x in it)
-                m = re.match(r"^\*\*([^*]+)\*\*\s*[—.:-]?\s*(.*)$", text)
+                m = re.match(r"^\*\*([^*]+)\*\*\s*[—,.:-]?\s*(.*)$", text)
                 if m:
                     tiles.append({"label": m.group(1).strip(), "subtitle": m.group(2).strip()})
                 else:
-                    tiles.append({"label": _shorten(text, 6), "subtitle": ""})
+                    lbl, sub = _split_label_sub(text)
+                    tiles.append({"label": lbl, "subtitle": sub})
             base = dict(base, tiles=tiles)
         return _make_principle_tiles(base) | {"_base_type": base["type"], "_picked_component": component_name, "anchor": base.get("anchor", "")}
     if component_name == "scope-iceberg":
@@ -2263,6 +2291,13 @@ def _split_dense_slide(slide: dict) -> list[dict]:
             if chunk_i > 0:
                 part["title"] = f"{slide['title']} (cont.)"
                 part["lead"] = ""  # lead only on first part
+                # Continuation parts need their own slug — the section/picks
+                # machinery keys sections by slug, and a shared slug makes the
+                # last part overwrite the head part (head slide silently
+                # dropped, (cont.) part emitted twice). Head keeps the minted
+                # slug so existing picks.json entries stay bound to it.
+                if slide.get("slug"):
+                    part["slug"] = f"{slide['slug']}--cont{chunk_i + 1}"
             parts.append(part)
         return parts
     if stype == "list-slide":
@@ -2276,6 +2311,9 @@ def _split_dense_slide(slide: dict) -> list[dict]:
             if chunk_i > 0:
                 part["title"] = f"{slide['title']} (cont.)"
                 part["lead"] = ""
+                # Same slug-uniqueness requirement as the card-grid branch.
+                if slide.get("slug"):
+                    part["slug"] = f"{slide['slug']}--cont{chunk_i + 1}"
             parts.append(part)
         return parts
     return [slide]

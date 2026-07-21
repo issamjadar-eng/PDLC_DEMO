@@ -995,27 +995,40 @@ CHAPTERS = [
      "lead": "PDLC_DEMO · PainEase PCA Advanced — the device, the regulatory strategy, and the deliverables shape."},
     {"num": "04", "title": "Project Shape & Capabilities", "anchor": ("project-overview", 9), "replace": True,
      "lead": "Operating rules, project-level skills, and persona agents — the machinery underneath the work."},
-    {"num": "05", "title": "Quality & Process", "anchor": ("project-overview", 22), "replace": True,
+    {"num": "05", "title": "Quality & Process", "anchor": ("project-overview", 23), "replace": True,
      "lead": "How the guardrails actually work — hooks, traces, and the audit surface a regulator can read."},
-    {"num": "06", "title": "Humans in Charge", "anchor": ("project-overview", 31), "replace": True,
+    {"num": "06", "title": "Humans in Charge", "anchor": ("project-overview", 38), "replace": True,
      "lead": "Where the handoff lands. Agents advise; humans decide; the regulated record is human-attributed."},
-    {"num": "07", "title": "The Project Console", "anchor": ("project-overview", 44), "replace": True,
-     "lead": "The single pane: advisors, documents, dashboards, trace, strategy review, the FDA package, gap analyses, team metrics, and project settings.",
+    {"num": "07", "title": "The Project Console", "anchor": ("project-overview", 51), "replace": True,
+     "lead": "The single pane: advisors, documents, task activity, dashboards, trace, strategy review, the FDA package, gap analyses, team metrics, and project settings.",
      # Subsections carry no `anchor` — they no longer inject divider slides.
      # They drive the agenda card's sub-list AND the §7 screenshot slides
      # (one slide per section: compact title strip + console screenshot).
      "subsections": [
-        {"num": "01", "title": "Landing Page",       "image": "console-landing.png"},
-        {"num": "02", "title": "Agents",             "image": "console-agents.png"},
-        {"num": "03", "title": "Documents Explorer", "image": "console-documents.png"},
-        {"num": "04", "title": "Submission Tracker", "image": "console-dashboards.png"},
-        {"num": "05", "title": "Trace Matrix",       "image": "console-trace-matrix.png"},
-        {"num": "06", "title": "Strategy Review",    "image": "console-strategy.png"},
-        {"num": "07", "title": "Submission Package", "image": "console-submission.png"},
-        {"num": "08", "title": "Gap Analysis",       "image": "console-gap-analysis.png"},
-        {"num": "09", "title": "Value & ROI",        "image": "console-metrics.png"},
-        {"num": "10", "title": "Project Settings",   "image": "console-setup.png"},
-        {"num": "11", "title": "Workflows",          "image": "console-workflows.png"},
+        {"num": "01", "title": "Landing Page",       "image": "console-landing.png",
+         "caption": "One local console over the same agents and artifacts the engineering environment works with."},
+        {"num": "02", "title": "Agents",             "image": "console-agents.png",
+         "caption": "31 grounded advisors — every answer cites the project document it came from."},
+        {"num": "03", "title": "Documents Explorer", "image": "console-documents.png",
+         "caption": "The whole project tree, rendered and summarized, with an advisor drawer on every file."},
+        {"num": "04", "title": "Tasks",              "image": "console-tasks.png",
+         "caption": "What's moving and what's open — derived from the task docs, not a separate tracker."},
+        {"num": "05", "title": "Submission Tracker", "image": "console-dashboards.png",
+         "caption": "154 deliverables across Q-Sub and 510(k)+PCCP scopes — status editable in the browser."},
+        {"num": "06", "title": "Trace Matrix",       "image": "console-trace-matrix.png",
+         "caption": "All ten DHFs traced across six layers, from user needs to risk."},
+        {"num": "07", "title": "Strategy Review",    "image": "console-strategy.png",
+         "caption": "Eight strategy domains as a live review surface — accept, reject, or modify harvested proposals."},
+        {"num": "08", "title": "Submission Package", "image": "console-submission.png",
+         "caption": "The FDA-facing package: composition manifests, documents, and open questions in one place."},
+        {"num": "09", "title": "Gap Analysis",       "image": "console-gap-analysis.png",
+         "caption": "The project critiques its own work product against standards, with advisor panels per finding."},
+        {"num": "10", "title": "Value & ROI",        "image": "console-metrics.png",
+         "caption": "104 tasks · 920–3,050 modeled person-hours saved vs ~$623 token spend — modeled, uncalibrated."},
+        {"num": "11", "title": "Project Settings",   "image": "console-setup.png",
+         "caption": "Every skill, agent, hook, and registry audited against the project manifest."},
+        {"num": "12", "title": "Workflows",          "image": "console-workflows.png",
+         "caption": "Composed automation with honest readiness labels: live, prototype, or proposed."},
      ]},
 ]
 
@@ -1023,7 +1036,7 @@ CHAPTERS = [
 # slides (one per CHAPTERS[-1]["subsections"] entry). PO #58 ("How the console
 # relates to Claude Code") is the §7 intro slide; the screenshots follow it.
 SLIDE_APPENDS = {
-    ("project-overview", 58): "console-sections",
+    ("project-overview", 66): "console-sections",
 }
 
 # Replace the original "Agenda" slide (project-overview #1) with our generated agenda.
@@ -1040,6 +1053,39 @@ SLIDE_MOVES: dict = {}
 # slide's raw HTML before emitting. Use exact substrings (no regex) so
 # review is straightforward.
 SLIDE_PATCHES = {
+    # PO #4 — "Regulatory strategy at a glance". Replace raw repo paths with
+    # plain-language pointers; internal file paths read as a leak on a
+    # client-facing deck (the source doc keeps the precise paths).
+    ("project-overview", 4): [
+        ("See <code>docs/project/strategies/regulatory-strategy.md</code> §1 <em>Filing Scope: PCA Device Alone</em>.",
+         "See the regulatory strategy, §1 <em>Filing Scope: PCA Device Alone</em>."),
+        ("See regulatory-strategy.md §1 <em>Filing Strategy — Critical-Requirement Carve-out</em>.",
+         "See the regulatory strategy, §1 <em>Filing Strategy — Critical-Requirement Carve-out</em>."),
+        ("see <code>docs/project/submissions/510k/composition-manifest.md</code>",
+         "see the 510(k) composition manifest"),
+    ],
+    # PO #8 — "Key deliverables" tiles: strip repo-path parentheticals.
+    ("project-overview", 8): [
+        ("(<code>docs/project/submissions/qsub/</code>) — ", ""),
+        ("(<code>docs/project/submissions/510k/</code>) — ", ""),
+        ("(<code>docs/project/submissions/pccp/</code>) — ", ""),
+        ("per DHF (<code>docs/project/dhfs/&lt;dhf&gt;/design-controls/trace-matrix/</code>) — ", "per DHF — "),
+        ("(<code>docs/project/dhfs/pca-device/risk-management/</code>) — ", ""),
+    ],
+    # PO #11 / #15 / #28 — replace literal HTML-comment marker syntax with
+    # plain language; the mechanism matters to a client, the sigil doesn't.
+    ("project-overview", 11): [
+        ("as <code>&lt;!-- STRATEGY CONTENT: domain, topics --&gt;</code> / <code>&lt;!-- LESSONS LEARNED: category --&gt;</code> blocks",
+         "as tagged strategy / lessons blocks"),
+    ],
+    ("project-overview", 15): [
+        ("Harvests <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks",
+         "Harvests tagged strategy blocks"),
+    ],
+    ("project-overview", 28): [
+        ("as <code>&lt;!-- STRATEGY CONTENT: domain --&gt;</code> blocks",
+         "as tagged strategy blocks"),
+    ],
     # AD #6 — "Three external signals". Drop internal delivery-firm framing
     # from the "Cost of waiting" card; rewrite for the client/program reader.
     # Source has an inner `<span style="color: white">18–24 months behind</span>`
@@ -1100,7 +1146,7 @@ SLIDE_PATCHES = {
               <div class="od-panel-sub">A purpose-built MedTech agentic harness &mdash; versioned, audited, and yours.</div>
             </div>
             <ul class="od-bullets">
-              <li><strong>Domain-grounded.</strong> IEC 62304, ISO 14971, ISO 13485, and 21 CFR Part 11 encoded directly into skills, agents, hooks, and rules.</li>
+              <li><strong>Domain-grounded.</strong> IEC 62304, ISO 14971, and ISO 13485 encoded directly into skills, agents, hooks, and rules — with a Part 11-aware publishing flow into the formal review system.</li>
               <li><strong>Audit-trailed by construction.</strong> Every decision attributable; every change links design inputs to verification to the DHF record.</li>
               <li><strong>Lives in your repository.</strong> Versioned alongside the device. No vendor tenant. No platform you have to log into.</li>
               <li><strong>Built for regulated delivery.</strong> DHF-shaped outputs, submission-ready by construction, reusable across programs in your portfolio.</li>
@@ -1189,7 +1235,7 @@ DECO_CSS = """
   color: #ffffff;
   font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
   --orange: #FF5722;
-  --muted: #6b6b7d;
+  --muted: #8a8a99;  /* was #6b6b7d — 3.7:1 on #0e0e10 failed WCAG AA for small text */
   --secondary: #a8a8b3;
   --display: "Archivo Black", "Helvetica Neue", sans-serif;
   --mono: "JetBrains Mono", monospace;
@@ -1210,7 +1256,7 @@ DECO_CSS = """
   top: clamp(0.75rem, 2vh, 1.25rem);
   left: var(--pad); right: var(--pad);
   display: flex; justify-content: space-between; align-items: center;
-  font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+  font-size: clamp(0.72rem, 0.9vw, 0.8rem);
   font-family: var(--mono);
   letter-spacing: 0.06em;
   z-index: 5;
@@ -1464,10 +1510,24 @@ DECO_CSS = """
   margin-left: auto;
   font-family: var(--mono);
   color: var(--muted);
-  font-size: clamp(0.62rem, 0.85vw, 0.74rem);
+  font-size: clamp(0.72rem, 0.85vw, 0.8rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
+.deco-screenshot .shot-caption {
+  margin-top: clamp(0.35rem, 0.9vh, 0.7rem);
+  font-family: var(--mono);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  color: var(--secondary);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+#cp-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0;
+  background: linear-gradient(90deg, #FF5722, #FFB400);
+  z-index: 99; transition: width 0.25s ease;
+}
+@media print { #cp-progress { display: none; } }
 .deco-screenshot .shot-frame {
   flex: 1;
   min-height: 0;
@@ -1666,7 +1726,7 @@ def _render_closing_slide() -> str:
 <section class="deco-slide deco-title deco-closing" data-deco="closing">
   <img class="logo" src="globallogic-logo.png" alt="GlobalLogic">
   <div class="content">
-    <div class="eyebrow">— THANK YOU —</div>
+    <div class="eyebrow">— QUESTIONS & NEXT STEPS —</div>
     <h1>Thank<br/><span class="accent">you.</span></h1>
     <p class="lead">Let&rsquo;s bring a <strong>purpose-built agentic harness</strong> to your MedTech programs.</p>
     <div class="meta">
@@ -1757,6 +1817,7 @@ def _render_console_section_slide(section: dict, parent: dict, slide_num: int) -
     <div class="shot-frame">
       <img src="{section['image']}" alt="{_html.escape(section['title'])} — project console">
     </div>
+    {f'<div class="shot-caption">{_html.escape(section["caption"])}</div>' if section.get("caption") else ''}
   </div>
 </section>
 """
@@ -1848,12 +1909,42 @@ FINAL_NAV_JS = r"""
 (function () {
   const slides = Array.from(document.querySelectorAll(".cp-slide-final"));
   if (!slides.length) return;
+
+  // Wayfinding: 3px top progress bar + "NN / total" counters + chapter crumb.
+  const bar = document.createElement("div");
+  bar.id = "cp-progress";
+  document.body.appendChild(bar);
+  let chapter = "";
+  slides.forEach(sl => {
+    const divider = sl.querySelector(".deco-divider:not(.deco-subsection)");
+    if (divider) {
+      const numEl = divider.querySelector(".section-num");
+      const hEl = divider.querySelector("h2");
+      if (numEl && hEl) chapter = "§" + parseInt(numEl.textContent, 10) + " · " + hEl.textContent.trim();
+    }
+    const crumb = sl.querySelector(".chrome .crumb");
+    // Screenshot slides already carry the chapter in their own shot-eyebrow.
+    if (crumb && chapter && !sl.querySelector(".shot-eyebrow")) crumb.textContent = chapter;
+    const num = sl.querySelector(".chrome .num");
+    if (num) num.textContent = num.textContent.trim() + " / " + slides.length;
+  });
+
+  function idxFromScroll() {
+    return Math.max(0, Math.min(slides.length - 1, Math.round(window.scrollY / window.innerHeight)));
+  }
+  function paint() { bar.style.width = (((idxFromScroll() + 1) / slides.length) * 100) + "%"; }
+  window.addEventListener("scroll", paint, { passive: true });
+  paint();
+
   let cur = 0;
   function go(n) {
     cur = Math.max(0, Math.min(slides.length - 1, n));
     slides[cur].scrollIntoView({ behavior: "smooth", block: "start" });
   }
   document.addEventListener("keydown", e => {
+    // Re-derive position from scroll first — wheel/trackpad scrolling would
+    // otherwise leave `cur` stale and a keypress would jump backwards.
+    cur = idxFromScroll();
     if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
       e.preventDefault(); go(cur + 1);
     } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
@@ -1865,6 +1956,22 @@ FINAL_NAV_JS = r"""
     }
   });
 })();
+"""
+
+# Composite-scoped CSS overrides — appended AFTER the scoped source-deck CSS
+# so they win the cascade. Fixes systemic issues in project-overview-sourced
+# slides: line-clamped card text (full text was hover-only — dead in PDF) and
+# the sub-AA muted-text token.
+COMPOSITE_OVERRIDES_CSS = """
+/* ===== composite overrides (win over scoped source CSS) ===== */
+.src-project-overview, .src-agentic-delivery { --text-muted: #8a8a99; }
+.src-project-overview .mini-card .mc-sub {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-height: none;
+}
+.src-project-overview .mini-card .mc-full { display: none; }
 """
 
 # Scale-to-fit: a handful of source slides carry more content than fits a
@@ -2027,6 +2134,7 @@ def build_final() -> Path:
 {FINAL_CSS}
 {DECO_CSS}
 {scoped_css}
+{COMPOSITE_OVERRIDES_CSS}
 </style>
 </head>
 <body>
