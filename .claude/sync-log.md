@@ -4,6 +4,18 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-22 — push (commercial advisor)
+
+- Files (6): `skills/advisors/{SKILL.md, README.md, agents/commercial.md (new)}`, `agents/commercial.md (new symlink, mode 120000)`, `skills/dhf-manifest/{SKILL.md, data/canonical-roles.yaml}`
+- Branch: `sync/pdlc-demo-commercial-advisor-2026-07-22`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/280
+- Commit: "advisors v12 + dhf-manifest v15: new commercial domain advisor + canonical roles"
+- Status: merged (user asked "push and do a skill sync")
+- Merge commit: `4eed64e`
+- Hitachi HEAD after sync: `4eed64e` (clone ff'd, sync branch deleted local+remote)
+- Deliberately excluded (in-flight in other sessions): `skills/commercial/**`, `skills/corpus/**`, `skills/project-console/**` LOCAL_ONLY/LOCAL_AHEAD rows; UPSTREAM_ADVANCE pull candidates (medtech-docs sw-functions refs, regulatory-authoring, submissions) left for a future pull.
+- Note: `push-stage` copied the local `agents/commercial.md` symlink as a regular file (mode 100644); hand-converted to a symlink in the hitachi checkout + amended before the PR, matching the registry's advisor-symlink convention (ben/057).
+
 ## 2026-07-22 — push
 
 - Files (12): `skills/task/{README.md, SKILL.md, scripts/task_summary.py (new)}`, `skills/project-console/{README.md, SKILL.md, VERSION, console/app.py, console/web/templates/_base.html, console/tasks_view/{__init__.py, loader.py, router.py} (new), console/web/templates/tasks_view.html (new)}`
