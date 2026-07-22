@@ -1,0 +1,49 @@
+{
+ "bq": "BQ-06",
+ "edition": "2026-07-22",
+ "generated_at": "2026-07-22T22:32:31+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [
+   "L22: estimation language without [assume: A-NNN]: corpus dataset. The series is marked no-data rather than estimated."
+  ]
+ },
+ "references": [
+  {
+   "kind": "derived",
+   "value": "cycle-by-applicant",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cycle-by-year",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "verifications": []
+}

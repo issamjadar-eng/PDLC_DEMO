@@ -161,14 +161,21 @@ def find_edition(root: Path, bq: str, edition: str = None):
 # ---------------------------------------------------------------- lint
 
 def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
-    """Returns (errors, warnings). Deterministic; no LLM judgment."""
+    """Returns (errors, warnings, detail). Deterministic; no LLM judgment.
+    detail = {"references": [...], "freshness": [...]} — the audit inventory."""
     errors, warnings = [], []
+    detail = {"references": [], "freshness": []}
+    _refs = {}
+
+    def _ref(kind, value, resolved, note):
+        _refs[(kind, value)] = {"kind": kind, "value": value, "resolved": resolved, "note": note}
+
     edir = bq_dir(root, bq) / ed["edition"]
     report, datap = edir / "report.md", edir / "data.json"
     if not report.exists():
-        return [f"{bq}@{ed['edition']}: report.md missing"], warnings
+        return [f"{bq}@{ed['edition']}: report.md missing"], warnings, detail
     if not datap.exists():
-        return [f"{bq}@{ed['edition']}: data.json missing"], warnings
+        return [f"{bq}@{ed['edition']}: data.json missing"], warnings, detail
     data = json.loads(datap.read_text())
     series_ids = {s["id"] for s in data.get("series", [])} | {v["id"] for v in data.get("verdicts", [])}
     pins = ed.get("pins", {})
@@ -196,33 +203,51 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
             if kind == "src":
                 if "@" not in val:
                     errors.append(f"L{n}: malformed src marker: {val}")
+                    _ref(kind, val, False, "malformed marker")
                     continue
                 ds, snap = val.rsplit("@", 1)
                 if ds not in pins:
                     errors.append(f"L{n}: [src: {val}] cites unpinned dataset {ds}")
+                    _ref(kind, val, False, "dataset not pinned by this edition")
                 elif pins[ds] != snap:
                     errors.append(f"L{n}: [src: {val}] cites snapshot {snap} but edition pins {pins[ds]}")
+                    _ref(kind, val, False, f"edition pins {pins[ds]}")
                 elif not (corpus_root / ds / "snapshots" / snap).is_dir():
                     errors.append(f"L{n}: [src: {val}] snapshot does not exist on disk")
+                    _ref(kind, val, False, "snapshot missing on disk")
+                else:
+                    _ref(kind, val, True, "pinned immutable snapshot present on disk")
             elif kind == "assume":
                 rec = assumption_record(corpus_root, val)
                 if rec is None:
                     errors.append(f"L{n}: [assume: {val}] record not found in corpus")
+                    _ref(kind, val, False, "record not found")
                 elif rec.get("status") != "active":
                     errors.append(f"L{n}: [assume: {val}] status is {rec.get('status')} (must be active)")
+                    _ref(kind, val, False, f"status {rec.get('status')}")
+                else:
+                    _ref(kind, val, True, f"active assumption ({rec.get('confidence', '?')} confidence)")
             elif kind == "derived":
                 if val not in series_ids:
                     errors.append(f"L{n}: [derived: {val}] not present in data.json series/verdicts")
+                    _ref(kind, val, False, "not in data.json")
+                else:
+                    _ref(kind, val, True, "computed series/verdict in this edition's data.json")
             elif kind == "config":
                 if not (Path(val).exists() or (root / val).exists()):
                     errors.append(f"L{n}: [config: {val}] file not found")
+                    _ref(kind, val, False, "file not found")
+                else:
+                    _ref(kind, val, True, "versioned configuration file present")
             elif kind == "waived":
                 rec = waiver_record(corpus_root, val)
                 if rec is None or rec.get("status") != "active" or \
                         dt.date.fromisoformat(str(rec["expires"])) < dt.date.today():
                     errors.append(f"L{n}: [waived: {val}] waiver missing, inactive, or expired")
+                    _ref(kind, val, False, "waiver missing/inactive/expired")
                 else:
                     waived_ids.add(val)
+                    _ref(kind, val, True, f"active waiver, expires {rec.get('expires')}")
         # numeric-claim rule: strip markers + exempt tokens; leftover digits need a marker
         stripped = MARKER_RE.sub("", line)
         stripped = EXEMPT_TOKEN_RE.sub("", stripped)
@@ -236,6 +261,10 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
     for ds, snap in pins.items():
         max_age = int(corpus_dataset_cfg(corpus_root, ds).get("max_age_days", 90))
         age = snapshot_age_days(snap)
+        band = "stale" if age > max_age else ("aging" if age > max_age * 0.75 else "fresh")
+        detail["freshness"].append({"dataset": ds, "snapshot": snap, "age_days": age,
+                                    "max_age_days": max_age, "band": band,
+                                    "waived": bool(waived_ids and band == "stale")})
         if age > max_age and not waived_ids:
             errors.append(f"pin {ds}@{snap} is STALE ({age}d > {max_age}d) and report carries no [waived: W-NNN]")
 
@@ -245,7 +274,33 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
             errors.append(f"data.json series {s.get('id')}: bad evidence_class {s.get('evidence_class')!r}")
         if not s.get("provenance"):
             errors.append(f"data.json series {s.get('id')}: missing provenance")
-    return errors, warnings
+    detail["references"] = sorted(_refs.values(), key=lambda r: (r["kind"], r["value"]))
+    return errors, warnings, detail
+
+
+def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
+                  errors, warnings, detail):
+    """Write/refresh the edition's quality.json audit surface. Machine-generated
+    lint/reference/freshness sections are replaced; agent-recorded verifications
+    are preserved across rewrites."""
+    edir = bq_dir(root, bq) / ed["edition"]
+    qpath = edir / "quality.json"
+    existing = {}
+    if qpath.exists():
+        try:
+            existing = json.loads(qpath.read_text())
+        except json.JSONDecodeError:
+            existing = {}
+    q = {
+        "bq": bq, "edition": ed["edition"], "generated_at": now_iso(),
+        "lint": {"status": "fail" if errors else "pass",
+                 "errors": errors, "warnings": warnings},
+        "references": detail.get("references", []),
+        "freshness": detail.get("freshness", []),
+        "verifications": existing.get("verifications", []),
+    }
+    qpath.write_text(json.dumps(q, indent=1))
+    return q
 
 
 # ---------------------------------------------------------------- commands
@@ -287,7 +342,8 @@ def cmd_answer(args):
             raise CommercialError(f"computation did not produce {req}")
     ed = {"bq": args.bq, "edition": edition, "status": "draft", "created_at": now_iso(), "pins": pins}
     dump_yaml(ed, edir / "edition.yml")
-    errors, warnings = lint_edition(root, corpus_root, args.bq, ed)
+    errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
+    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
     print(f"[{args.bq}@{edition}] draft written; lint: {len(errors)} error(s), {len(warnings)} warning(s)")
     for e in errors:
         print(f"  ERROR {e}")
@@ -301,7 +357,8 @@ def cmd_lint(args):
     ed = find_edition(root, args.bq, args.edition)
     if not ed:
         raise CommercialError(f"{args.bq}: no editions")
-    errors, warnings = lint_edition(root, corpus_root, args.bq, ed)
+    errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
+    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
     print(f"[{args.bq}@{ed['edition']}] lint: {len(errors)} error(s), {len(warnings)} warning(s)")
     for e in errors:
         print(f"  ERROR {e}")
@@ -317,7 +374,8 @@ def cmd_approve(args):
         raise CommercialError(f"{args.bq}: no editions")
     if ed["status"] == "approved":
         raise CommercialError(f"{args.bq}@{ed['edition']} already approved")
-    errors, warnings = lint_edition(root, corpus_root, args.bq, ed)
+    errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
+    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
     if errors:
         print(f"APPROVAL BLOCKED — {len(errors)} lint error(s):")
         for e in errors:
@@ -429,7 +487,7 @@ def cmd_check(args):
                     elif sha256_file(edir / fname) != h:
                         failures.append(f"{q['id']}@{ed['edition']}: {fname} hash mismatch (MUTATED after approval?)")
             if ed["status"] == "approved":
-                errors, _ = lint_edition(root, corpus_root, q["id"], ed)
+                errors, _, _ = lint_edition(root, corpus_root, q["id"], ed)
                 failures.extend(f"{q['id']}@{ed['edition']}: {e}" for e in errors)
     # corpus health is part of the chain
     corpus_script = Path(".claude/skills/corpus/scripts/corpus.py")
@@ -444,6 +502,44 @@ def cmd_check(args):
             print(f"  - {f}")
         return 1
     print("commercial check: GREEN (editions integrity + approved lint + corpus chain)")
+    return 0
+
+
+def cmd_audit(args):
+    """(Re)generate quality.json for an edition without recomputing the answer."""
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    ed = find_edition(root, args.bq, args.edition)
+    if not ed:
+        raise CommercialError(f"{args.bq}: no editions")
+    errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
+    q = write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
+    print(f"[{args.bq}@{ed['edition']}] quality.json written — lint {q['lint']['status']}, "
+          f"{len(q['references'])} reference(s), {len(q['freshness'])} pin(s), "
+          f"{len(q['verifications'])} verification(s) on record")
+    return 0
+
+
+def cmd_record_verification(args):
+    """Record an agent-produced verification / red-team verdict into quality.json.
+    The engine can't generate this deterministically — an independent agent re-derives
+    or attacks the report; this files the outcome as auditable evidence."""
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    ed = find_edition(root, args.bq, args.edition)
+    if not ed:
+        raise CommercialError(f"{args.bq}: no editions")
+    edir = bq_dir(root, args.bq) / ed["edition"]
+    qpath = edir / "quality.json"
+    if not qpath.exists():
+        errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
+        write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
+    q = json.loads(qpath.read_text())
+    q.setdefault("verifications", []).append({
+        "type": args.type, "verdict": args.verdict, "by": args.by,
+        "at": now_iso(), "summary": args.summary,
+        "detail_ref": args.detail_ref,
+    })
+    qpath.write_text(json.dumps(q, indent=1))
+    print(f"[{args.bq}@{ed['edition']}] recorded {args.type}: {args.verdict} (by {args.by})")
     return 0
 
 
@@ -484,6 +580,22 @@ def main(argv=None):
 
     s = sub.add_parser("check", help="editions integrity + approved lint + corpus chain")
     s.set_defaults(fn=cmd_check)
+
+    s = sub.add_parser("audit", help="(re)generate an edition's quality.json audit surface")
+    s.add_argument("bq")
+    s.add_argument("--edition")
+    s.set_defaults(fn=cmd_audit)
+
+    s = sub.add_parser("record-verification", help="file an agent-produced verification/red-team verdict")
+    s.add_argument("bq")
+    s.add_argument("--edition")
+    s.add_argument("--type", required=True,
+                   choices=["adversarial-verify", "red-team", "reference-audit", "human-review"])
+    s.add_argument("--verdict", required=True)
+    s.add_argument("--by", required=True)
+    s.add_argument("--summary", required=True)
+    s.add_argument("--detail-ref", help="path to the full dossier/report")
+    s.set_defaults(fn=cmd_record_verification)
 
     s = sub.add_parser("catalog", help="question roster with answer status")
     s.set_defaults(fn=cmd_catalog)

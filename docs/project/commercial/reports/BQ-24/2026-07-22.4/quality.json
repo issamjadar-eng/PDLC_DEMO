@@ -1,0 +1,53 @@
+{
+ "bq": "BQ-24",
+ "edition": "2026-07-22.4",
+ "generated_at": "2026-07-22T22:32:31+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": []
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "failure-by-cohort",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-retry-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "verifications": []
+}

@@ -1,0 +1,75 @@
+{
+ "bq": "BQ-19",
+ "edition": "2026-07-22.3",
+ "generated_at": "2026-07-22T22:32:31+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [
+   "L21: estimation language without [assume: A-NNN]: establish incidence rates. A per-manufacturer rate requires an installed-base es"
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-001",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "config",
+   "value": "entity-aliases.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "total-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-infusion-mfr@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-infusion-monthly@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/openfda-maude-infusion-mfr",
+   "snapshot": "2026-07-22",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-maude-infusion-monthly",
+   "snapshot": "2026-07-22",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "verifications": []
+}

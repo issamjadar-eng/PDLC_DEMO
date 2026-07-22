@@ -378,7 +378,7 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
-           "references": [], "team": team_names(cfg.repo_root),
+           "references": [], "quality": None, "team": team_names(cfg.repo_root),
            "approved_qp": request.query_params.get("approved"),
            "pr_url": request.query_params.get("pr"),
            "approve_error": request.query_params.get("approve_error"),
@@ -426,6 +426,20 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
         if ed["status"] == "approved" and q.get("draft_edition") \
                 and q["draft_edition"] > ed["edition"]:
             ctx["newer_draft"] = q["draft_edition"]
+        # quality & audit tab — machine-generated lint/reference/freshness audit
+        # plus agent-recorded verification/red-team verdicts
+        VER_META = {"CONFIRMED": "vx-met", "PASS": "vx-met",
+                    "CONFIRMED-WITH-CAVEAT": "vx-risk", "REFUTED": "vx-notmet"}
+        quality = ed.get("quality")
+        if quality:
+            quality = dict(quality)
+            for f in quality.get("freshness", []):
+                f["_band"] = FRESH_META.get(f.get("band"), FRESH_META["fresh"])
+            for v in quality.get("verifications", []):
+                v["_cls"] = VER_META.get(str(v.get("verdict", "")).upper(), "vx-none")
+                if v.get("detail_ref"):
+                    v["_detail_link"] = f"/documents#path={v['detail_ref']}"
+        ctx["quality"] = quality
         abs_report = cfg.repo_root / ed["report_path"]
         if abs_report.is_file():
             try:
