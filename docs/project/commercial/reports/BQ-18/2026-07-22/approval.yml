@@ -1,0 +1,12 @@
+bq: BQ-18
+edition: '2026-07-22'
+approved_by: Ben Xavier
+approved_at: '2026-07-22T22:19:35+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: approved via console UI button (first exercise of the UI gate)
+content_hashes:
+  report.md: 358a849489fbfa107d9b1798e25df8e0e682cefe9f4c579b248780215744dfb8
+  data.json: fdd02371c52d5bac9c2127a6603bdaa46813a9def11510e68f3d5984efe325e2
