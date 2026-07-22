@@ -1,0 +1,6 @@
+bq: BQ-24
+edition: 2026-07-22.2
+status: draft
+created_at: '2026-07-22T20:58:23+00:00'
+pins:
+  commercial/internal-upgrade-campaign: 2026-07-22.2

@@ -16,6 +16,32 @@ _Demo sample data — not for clinical use._
 | other | 7 | 0.79 | 2.0 | 3 | [src: commercial/internal-complaints@2026-07-22] [config: commercial.yml] |
 | dose-programming | 4 | 0.45 | 2.0 | 6 | [src: commercial/internal-complaints@2026-07-22] [config: commercial.yml] |
 
+## Assumptions & expectations — plan vs actual
+
+_`unvalidated` means the expectation itself is a stand-in that has not been grounded
+in a plan of record or the risk file — challenge the assumption, not just the actual._
+
+| ID | Expectation | Expected | Actual | Verdict | Basis | Evidence |
+|---|---|---|---|---|---|---|
+| E-18.1 | Complaint rates stay within the per-category thresholds | <= 2.0 per 100 devices per 90d (occlusion-alarm <= 3.0) | occlusion-alarm 3.39 vs 3.0; connectivity 2.26 vs 2.0 | not-met (unvalidated) | demo stand-ins [VERIFY] — must be re-derived from the risk file's acceptability criteria before real use | [derived: rate-by-category] [config: commercial.yml] |
+| E-18.2 | Complaint volume is not trending upward window-over-window | current 90d window <= 130% of prior window | current 101 vs prior 71 | not-met (unvalidated) | generic trend heuristic; no documented commitment | [derived: window-trend] [config: commercial.yml] |
+
+## Narrative — Risks / Mitigations / Issues
+
+### Issues (materialized — needs action)
+
+- **I1 (high)** — occlusion-alarm at 3.39 per 100 devices exceeds its threshold of 3.0 in the trailing 90d window [derived: rate-by-category] [src: commercial/internal-complaints@2026-07-22] [config: commercial.yml]
+  - _Action_: Open a CAPA review; stratify by site, firmware version, and device age; check correlation with the upgrade campaign's rollback sites
+- **I2 (high)** — connectivity at 2.26 per 100 devices exceeds its threshold of 2.0 in the trailing 90d window [derived: rate-by-category] [src: commercial/internal-complaints@2026-07-22] [config: commercial.yml]
+  - _Action_: Open a CAPA review; stratify by site, firmware version, and device age; check correlation with the upgrade campaign's rollback sites
+
+### Risks (potential — mitigation identified)
+
+- **R1 (medium)** — Total complaint volume is rising window-over-window (101 vs 71) [derived: window-trend]
+  - _Mitigation_: Trend-analyze monthly by category; if the rise persists a second window, escalate to management review
+- **R2 (medium)** — The category thresholds are demo stand-ins, not the risk file's documented acceptability criteria — a breach verdict is only as good as its threshold [config: commercial.yml]
+  - _Mitigation_: Re-derive thresholds from the risk file and mark the expectation validated
+
 ## Method & provenance
 
 - Complaint counts measured from [src: commercial/internal-complaints@2026-07-22]; denominator is the installed-base registry

@@ -67,6 +67,13 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 2 (2026-07-22): Plan expectations as first-class records — per-question `expectations:`
+  in the catalog (statement / expected / basis / set_by / `validated:` flag for
+  stand-ins), evaluated every edition into `data.json.expectations[]` with
+  met | at-risk | not-met | not-evaluable verdicts. data.json extensions:
+  `narrative {issues/risks/watch}` (deterministic Risks/Mitigations/Issues from
+  computed facts, mirrored into the linted report) and `kind: timeseries` series
+  (`lines[]` of dated points, zero-filled) for trend charts.
 - 1 (2026-07-22): Initial version — answer/lint/approve/render/check/catalog; edition
   lifecycle (draft/approved/superseded) with same-day suffixing; claim lint (marker
   resolution, numeric-claim rule, estimation-language rule, pin freshness with waivers,

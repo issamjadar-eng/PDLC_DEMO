@@ -27,6 +27,20 @@
     register a computation in <code>commercial.yml</code> and run <code>answer {{ q.id }}</code>.</p></div>
   {% else %}
 
+  <div class="cm-shell">
+    {# Editions tree — left rail, Setup-shell style. Newest first; the shown edition is highlighted. #}
+    <aside class="cm-edrail" aria-label="Editions">
+      <h3>Editions</h3>
+      {% for e in editions | reverse %}
+      <a class="cm-ednode {{ 'is-active' if ed and e.edition == ed.edition }}" href="/commercial/{{ q.id }}?edition={{ e.edition }}">
+        <span class="cm-ednode-id">{{ e.edition }}</span>
+        <span class="cm-chip {{ EDITION_META.get(e.status, EDITION_META['draft']).cls }}">{{ e.status }}</span>
+      </a>
+      {% endfor %}
+      <p class="cm-edrail-hint">A refresh opens a new draft; approved editions are immutable and stay reproducible against their pinned snapshots.</p>
+    </aside>
+    <div class="cm-main">
+
   {% for v in verdicts %}
   <div class="cm-verdict">
     <span class="cm-verdict-k">Verdict</span>
@@ -38,6 +52,32 @@
   <div class="cm-banner cm-banner-draft">This edition is a <strong>draft</strong> — computed and claim-linted, but not approved.
     Approve via <code>commercial.py approve {{ q.id }} --by &lt;name&gt;</code> (gated on lint + freshness).</div>
   {% endif %}
+  {% if newer_draft %}
+  <div class="cm-banner cm-banner-draft">A newer <strong>draft</strong> edition exists —
+    <a href="/commercial/{{ q.id }}?edition={{ newer_draft }}">view {{ newer_draft }}</a> (shown: approved {{ ed.edition }}).</div>
+  {% endif %}
+
+  {% if expectations %}
+  <section class="cm-expect">
+    <h2>Assumptions &amp; expectations <span class="cm-muted">— plan vs actual; <em>unvalidated</em> means the expectation itself is a stand-in to challenge</span></h2>
+    <table class="cm-expect-table">
+      <thead><tr><th>ID</th><th>Expectation</th><th>Expected</th><th>Actual</th><th>Verdict</th><th>Basis</th></tr></thead>
+      <tbody>
+        {% for e in expectations %}
+        <tr>
+          <td class="cm-mono">{{ e.id }}</td>
+          <td>{{ e.statement }}</td>
+          <td class="cm-muted">{{ e.expected }}</td>
+          <td>{{ e.actual }}</td>
+          <td><span class="cm-chip {{ e._verdict.cls }}">{{ e._verdict.glyph }} {{ e._verdict.label }}</span>
+            {% if not e.validated %}<span class="cm-chip vx-unvalidated" title="This expectation has not been grounded in a plan of record or the risk file — challenge the assumption, not just the actual">unvalidated</span>{% endif %}</td>
+          <td class="cm-muted cm-basis">{{ e.basis }}<br><span class="cm-mono-sm">set by {{ e.set_by }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
 
   <div class="cm-charts {% if ed.status == 'draft' %}cm-draftmark{% endif %}">
     {% for s in series %}
@@ -46,7 +86,26 @@
         <span class="cm-chart-title">{{ s.label }}</span>
         <span class="cm-badge {{ s._evidence.cls }}" title="{{ s._evidence.tip }}">{{ s._evidence.glyph }} {{ s._evidence.label }}</span>
       </figcaption>
-      {% if s._rows %}
+      {% if s._ts %}
+      <div class="cm-ts">
+        <svg viewBox="0 0 {{ s._ts.w }} {{ s._ts.h }}" role="img" aria-label="{{ s.label }}" preserveAspectRatio="xMidYMid meet">
+          <line x1="{{ s._ts.left }}" y1="{{ s._ts.y0_y }}" x2="{{ s._ts.right }}" y2="{{ s._ts.y0_y }}" class="cm-ts-axis"/>
+          {% for ln in s._ts.lines %}
+          <polyline points="{{ ln.path }}" fill="none" stroke="{{ ln.color }}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="4.5" class="cm-ts-hit"><title>{{ d0.tip }}</title></circle>{% endfor %}
+          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="2" fill="{{ ln.color }}"/>{% endfor %}
+          <text x="{{ ln.end_x + 6 }}" y="{{ ln.end_y + 3 }}" class="cm-ts-label">{{ ln.label }}</text>
+          {% endfor %}
+          <text x="{{ s._ts.left }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick">{{ s._ts.x0 }}</text>
+          <text x="{{ s._ts.right }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick" text-anchor="end">{{ s._ts.x1 }}</text>
+          <text x="{{ s._ts.left }}" y="{{ s._ts.ymax_y - 3 }}" class="cm-ts-tick">{{ s._ts.ymax }}</text>
+        </svg>
+        <div class="cm-ts-legend">
+          {% for ln in s._ts.lines %}<span class="cm-ts-key"><span class="cm-ts-swatch" style="background: {{ ln.color }}"></span>{{ ln.label }}</span>{% endfor %}
+          {% if s.unit %}<span class="cm-muted">· {{ s.unit }}</span>{% endif %}
+        </div>
+      </div>
+      {% elif s._rows %}
         {% if s._numeric %}
         <div class="cm-bars" role="img" aria-label="{{ s.label }}">
           {% for r in s._rows %}
@@ -74,6 +133,29 @@
     {% endfor %}
   </div>
 
+  {% if narrative %}
+  <section class="cm-narrative">
+    <h2>Narrative <span class="cm-muted">— risks / mitigations / issues, generated from the computed facts (marker-cited in the report)</span></h2>
+    {% for g in narrative %}
+    <div class="cm-nar-group cm-nar-{{ g.key }}">
+      <h3>{{ g.title }}</h3>
+      {% for it in g.entries %}
+      <div class="cm-nar-item">
+        <div class="cm-nar-head">
+          <span class="cm-mono">{{ it.id }}</span>
+          <span class="cm-chip {{ it._sev.cls }}">{{ it._sev.label }}</span>
+          <span class="cm-nar-statement">{{ it.statement }}</span>
+        </div>
+        {% if it.mitigation %}<p class="cm-nar-mit"><strong>Mitigation:</strong> {{ it.mitigation }}</p>{% endif %}
+        {% if it.action %}<p class="cm-nar-mit"><strong>Action:</strong> {{ it.action }}</p>{% endif %}
+        {% if it.evidence %}<p class="cm-nar-ev">{% for e in it.evidence %}<code>[{{ e }}]</code> {% endfor %}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
   <details class="cm-pins">
     <summary>Provenance — pinned snapshots{% if ed.approval %} · approval record{% endif %}</summary>
     <ul>
@@ -88,25 +170,12 @@
     {% endif %}
   </details>
 
-  {% if editions | length > 1 %}
-  <details class="cm-history">
-    <summary>History — {{ editions | length }} editions</summary>
-    <ul>
-      {% for e in editions | reverse %}
-      <li>
-        <a href="/commercial/{{ q.id }}?edition={{ e.edition }}">{{ e.edition }}</a>
-        <span class="cm-chip {{ EDITION_META.get(e.status, EDITION_META['draft']).cls }}">{{ e.status }}</span>
-        {% if ed and e.edition == ed.edition %}<span class="cm-muted">(shown)</span>{% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </details>
-  {% endif %}
-
   <section class="cm-report">
     <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
     <div class="cm-report-body md-body">{{ report_html | safe }}</div>
   </section>
+    </div><!-- /.cm-main -->
+  </div><!-- /.cm-shell -->
   {% endif %}
 </section>
 

@@ -276,7 +276,12 @@ in-console bar charts with per-series evidence badges (measured / derived / assu
 no-data, icon + label) and provenance lines linking pinned `dataset@snapshot`, a
 **DRAFT — NOT APPROVED watermark** over unapproved editions, the pinned-snapshots +
 approval-record panel, edition history (`?edition=`), and the full marker-cited report
-via the documents renderer. `POST /commercial/render` shells to the skill's `render`;
+via the documents renderer. Commercial-skill v2 extensions render as first-class
+panels: **Assumptions & expectations** (plan vs actual, met/not-met verdicts, an
+`unvalidated` chip on stand-in expectations), **Narrative** (Risks / Mitigations /
+Issues with severity + evidence), and **timeseries line charts** (`kind: timeseries`
+series; server-computed SVG geometry — pixels, never data), plus a newer-draft banner
+on approved answers. `POST /commercial/render` shells to the skill's `render`;
 the assistant drawer grounds in `/commercial/{bq}/grounding`. Full contract lives in
 the `commercial` skill's SKILL.md.
 
