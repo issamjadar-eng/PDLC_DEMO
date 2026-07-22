@@ -47,13 +47,30 @@
     {% endfor %}
   </div>
 
+  <div class="cm-controls">
+    <input type="search" id="cm-search" class="cm-search" placeholder="Search questions, verdicts, personas…" aria-label="Search questions">
+    <select id="cm-recency" class="cm-recency" aria-label="Answered within" title="Filter by when the latest edition was computed">
+      <option value="">All time</option>
+      <option value="30">Answered ≤ 30 days</option>
+      <option value="60">Answered ≤ 60 days</option>
+      <option value="90">Answered ≤ 90 days</option>
+    </select>
+    <div class="cm-viewtoggle" role="group" aria-label="View">
+      <button type="button" id="cm-view-cards" class="cm-cat is-active" title="Card view">▦ Cards</button>
+      <button type="button" id="cm-view-rows" class="cm-cat" title="Compact row view">☰ Rows</button>
+    </div>
+    <span id="cm-filter-count" class="cm-muted"></span>
+  </div>
+
   {% for c in by_cat %}
   <section class="cm-cat-block" data-cat-block="{{ c.key }}">
     <h2 class="cm-cat-title">{{ c.name }}</h2>
     <div class="cm-grid">
       {% for q in c.rows %}
       {% set answered = q.status in ("answered", "draft-only") %}
-      {% if answered %}<a class="cm-card" href="/commercial/{{ q.id }}">{% else %}<div class="cm-card cm-card-planned">{% endif %}
+      {% set qtext = (q.id ~ ' ' ~ q.question ~ ' ' ~ (q.verdict_headline or '') ~ ' ' ~ (q.personas | join(' ')) ~ ' ' ~ q.status) | lower %}
+      {% set qlatest = (q.latest_edition or '')[:10] %}
+      {% if answered %}<a class="cm-card" href="/commercial/{{ q.id }}" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% else %}<div class="cm-card cm-card-planned" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% endif %}
         <div class="cm-card-top">
           <span class="cm-bqid">{{ q.id }}</span>
           <span class="cm-chip {{ q._status.cls }}">{{ q._status.label }}</span>
@@ -96,18 +113,70 @@
 {% include "_assistant_launcher.html" %}
 <script>
 (function () {
+  var state = { cat: 'all', search: '', days: '' };
+
+  function applyFilters() {
+    var cutoff = null;
+    if (state.days) {
+      cutoff = new Date(Date.now() - parseInt(state.days, 10) * 86400000).toISOString().slice(0, 10);
+    }
+    var shown = 0, total = 0;
+    document.querySelectorAll('.cm-cat-block').forEach(function (blk) {
+      var inCat = (state.cat === 'all' || blk.getAttribute('data-cat-block') === state.cat);
+      var visibleInBlock = 0;
+      blk.querySelectorAll('.cm-card').forEach(function (card) {
+        total++;
+        var ok = inCat;
+        if (ok && state.search &&
+            (card.getAttribute('data-text') || '').indexOf(state.search) < 0) ok = false;
+        if (ok && cutoff) {
+          var latest = card.getAttribute('data-latest') || '';
+          if (!latest || latest < cutoff) ok = false;
+        }
+        card.style.display = ok ? '' : 'none';
+        if (ok) { visibleInBlock++; shown++; }
+      });
+      blk.style.display = visibleInBlock ? '' : 'none';
+    });
+    var counter = document.getElementById('cm-filter-count');
+    if (counter) counter.textContent = 'showing ' + shown + ' of ' + total + ' questions';
+  }
+
   var rail = document.querySelector('.cm-cat-rail');
-  if (!rail) return;
-  rail.addEventListener('click', function (e) {
-    var btn = e.target.closest('.cm-cat');
-    if (!btn) return;
+  rail && rail.addEventListener('click', function (e) {
+    var btn = e.target.closest('.cm-cat'); if (!btn) return;
     rail.querySelectorAll('.cm-cat').forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    var key = btn.getAttribute('data-cat');
-    document.querySelectorAll('.cm-cat-block').forEach(function (blk) {
-      blk.style.display = (key === 'all' || blk.getAttribute('data-cat-block') === key) ? '' : 'none';
-    });
+    state.cat = btn.getAttribute('data-cat');
+    applyFilters();
   });
+  var search = document.getElementById('cm-search');
+  search && search.addEventListener('input', function () {
+    state.search = search.value.trim().toLowerCase();
+    applyFilters();
+  });
+  var recency = document.getElementById('cm-recency');
+  recency && recency.addEventListener('change', function () {
+    state.days = recency.value;
+    applyFilters();
+  });
+
+  // cards / rows view — remembered per browser
+  function setView(mode) {
+    document.querySelectorAll('.cm-grid').forEach(function (g) {
+      g.classList.toggle('cm-rows', mode === 'rows');
+    });
+    document.getElementById('cm-view-cards').classList.toggle('is-active', mode === 'cards');
+    document.getElementById('cm-view-rows').classList.toggle('is-active', mode === 'rows');
+    try { localStorage.setItem('cm-view', mode); } catch (e) {}
+  }
+  var vc = document.getElementById('cm-view-cards'), vr = document.getElementById('cm-view-rows');
+  vc && vc.addEventListener('click', function () { setView('cards'); });
+  vr && vr.addEventListener('click', function () { setView('rows'); });
+  var saved = null;
+  try { saved = localStorage.getItem('cm-view'); } catch (e) {}
+  if (saved === 'rows') setView('rows');
+  applyFilters();
 })();
 </script>
 {% endblock %}

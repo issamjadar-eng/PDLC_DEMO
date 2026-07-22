@@ -57,8 +57,26 @@ body.commercial-page main { max-width: none; }
 .cm-cat-n { color: var(--body-text-muted, #64748b); font-weight: 500; margin-left: .2rem; }
 .cm-cat-title { font-size: 1rem; margin: 1.4rem 0 .7rem; }
 
+/* catalog controls: search + recency + view toggle */
+.cm-controls { display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; margin: 0 0 1.1rem; }
+.cm-search { flex: 0 1 340px; padding: .45rem .75rem; border-radius: 99px; border: 1px solid var(--border, #e2e8f0);
+  background: var(--surface, #fff); color: inherit; font-size: .84rem; }
+.cm-recency { padding: .42rem .6rem; border-radius: 99px; border: 1px solid var(--border, #e2e8f0);
+  background: var(--surface, #fff); color: inherit; font-size: .8rem; }
+.cm-viewtoggle { display: inline-flex; gap: .3rem; }
+#cm-filter-count { font-size: .76rem; margin-left: auto; }
+
 /* cards */
 .cm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: .9rem; }
+
+/* compact row view — for large catalogs */
+.cm-grid.cm-rows { grid-template-columns: 1fr; gap: .35rem; }
+.cm-grid.cm-rows .cm-card { flex-direction: row; align-items: center; gap: .9rem; padding: .5rem .9rem; border-radius: 10px; }
+.cm-grid.cm-rows .cm-card-top { flex: 0 0 auto; order: 3; margin-left: auto; }
+.cm-grid.cm-rows .cm-card-q { flex: 0 1 38%; font-size: .84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-grid.cm-rows .cm-card-verdict { flex: 1 1 40%; border-left-width: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .78rem; }
+.cm-grid.cm-rows .cm-card-foot { display: none; }
+.cm-grid.cm-rows a.cm-card:hover { transform: none; }
 .cm-card { display: flex; flex-direction: column; gap: .45rem; background: var(--surface, #fff);
   border: 1px solid var(--border, #e2e8f0); border-radius: 14px; padding: 1rem 1.1rem; text-decoration: none;
   color: inherit; position: relative; overflow: hidden; box-shadow: 0 1px 2px rgba(15,23,42,.04);
