@@ -169,6 +169,26 @@ a.cm-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgb
 @media (max-width: 900px) { .cm-shell { grid-template-columns: 1fr; } .cm-edrail { position: static; display: flex;
   flex-wrap: wrap; gap: .3rem; } .cm-edrail h3, .cm-edrail-hint { display: none; } }
 
+/* data view — sortable/filterable tables */
+.cm-dt-panel { margin-top: .4rem; }
+.cm-dt-meta { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin: 0 0 .6rem; font-size: .78rem; }
+.cm-dt-controls { display: flex; gap: .6rem; align-items: center; margin: 0 0 .6rem; }
+.cm-dt-search { flex: 0 1 320px; padding: .45rem .7rem; border-radius: 8px; border: 1px solid var(--border, #e2e8f0);
+  background: var(--surface, #fff); color: inherit; font-size: .84rem; }
+.cm-dt-count { font-size: .76rem; }
+.cm-dt-scroll { overflow-x: auto; border: 1px solid var(--border, #e2e8f0); border-radius: 12px; background: var(--surface, #fff); }
+.cm-dt { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.cm-dt th, .cm-dt td { padding: .45rem .65rem; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--border, #e2e8f0); }
+.cm-dt thead tr:first-child th { cursor: pointer; user-select: none; font-size: .7rem; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--body-text-muted, #64748b); position: sticky; top: 0; background: var(--surface, #fff); }
+.cm-dt thead tr:first-child th:hover { color: var(--body-text, #1f2937); }
+.cm-dt-filters th { padding: .25rem .4rem; background: color-mix(in srgb, var(--body-text-muted, #64748b) 5%, transparent); }
+.cm-dt-filter { width: 100%; min-width: 5.5rem; padding: .25rem .4rem; border-radius: 6px; font-size: .74rem;
+  border: 1px solid var(--border, #e2e8f0); background: var(--surface, #fff); color: inherit; }
+.cm-dt tbody tr:hover { background: color-mix(in srgb, var(--body-text-muted, #64748b) 7%, transparent); }
+.cm-dt td { font-variant-numeric: tabular-nums; }
+.cm-dt-arrow { font-size: .7rem; }
+
 /* formal reference layer — superscript numbers + References section */
 sup.cm-ref { line-height: 0; font-size: .68em; margin-left: .12em; }
 sup.cm-ref a { text-decoration: none; color: var(--brand-primary, #4f46e5); font-weight: 600; }
@@ -191,3 +211,4 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-empty { border: 1px dashed var(--border, #cbd5e1); border-radius: 12px; padding: 1.4rem; color: var(--body-text-muted, #64748b); }
 
 @media (max-width: 720px) { .cm-head { flex-direction: column; } .cm-charts { grid-template-columns: 1fr; } }
+.cm-data-chip { --c: #2a78d6; text-decoration: none; }

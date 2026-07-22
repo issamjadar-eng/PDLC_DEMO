@@ -18,6 +18,7 @@
           {% if a.link %}<a class="cm-chip cm-assume-chip" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">≈ {{ a.id }} ↗</a>
           {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
         {% endfor %}
+        {% if ed %}<a class="cm-chip cm-data-chip" href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>{% endif %}
       </div>
     </div>
   </header>
@@ -170,7 +171,7 @@
   </details>
 
   <section class="cm-report">
-    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
+    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}">Data view — tables &amp; filters</a> · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
     <div class="cm-report-body md-body">{{ report_html | safe }}</div>
   </section>
 
