@@ -1,6 +1,6 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
+ "bq": "BQ-18",
+ "edition": "2026-07-22.3",
  "generated_at": "2026-07-22T22:47:42+00:00",
  "lint": {
   "status": "pass",
@@ -67,23 +67,49 @@
   },
   {
    "kind": "derived",
+   "value": "rate-by-category",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
    "value": "v-main",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
+   "kind": "derived",
+   "value": "window-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-complaints@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-22",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
+   "dataset": "commercial/internal-complaints",
    "snapshot": "2026-07-22",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-22",
+   "age_days": 0,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -91,22 +117,28 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Monthly complaints \u2014 top 3 categories",
+    "series": "monthly-trend",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-complaints@2026-07-22"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "Complaints per 100 devices (trailing 90d)",
+    "series": "rate-by-category",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-complaints@2026-07-22"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
-    "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "what": "Complaints: current vs prior window",
+    "series": "window-trend",
+    "evidence_class": "derived",
+    "source": "commercial/internal-complaints@2026-07-22",
+    "derivation": {
+     "method": "complaint counts summed over the trailing 90-day window vs the preceding 90-day window",
+     "inputs": [
+      "src: commercial/internal-complaints@2026-07-22"
+     ]
+    }
    }
   ],
   "assumed": [],

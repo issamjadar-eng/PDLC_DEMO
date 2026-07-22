@@ -378,7 +378,8 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
-           "references": [], "quality": None, "team": team_names(cfg.repo_root),
+           "references": [], "quality": None, "tables": [], "unstructured": [],
+           "team": team_names(cfg.repo_root),
            "approved_qp": request.query_params.get("approved"),
            "pr_url": request.query_params.get("pr"),
            "approve_error": request.query_params.get("approve_error"),
@@ -433,6 +434,11 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
         quality = ed.get("quality")
         if quality:
             quality = dict(quality)
+            CHECK_META = {"pass": {"cls": "vx-met", "label": "✓ pass"},
+                          "warn": {"cls": "vx-risk", "label": "! warnings"},
+                          "fail": {"cls": "vx-notmet", "label": "✗ fail"}}
+            for chk in quality.get("lint", {}).get("checks", []):
+                chk["_meta"] = CHECK_META.get(chk.get("status"), CHECK_META["pass"])
             for f in quality.get("freshness", []):
                 f["_band"] = FRESH_META.get(f.get("band"), FRESH_META["fresh"])
             for v in quality.get("verifications", []):
@@ -440,6 +446,9 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
                 if v.get("detail_ref"):
                     v["_detail_link"] = f"/documents#path={v['detail_ref']}"
         ctx["quality"] = quality
+        # Data tab: structured tables + unstructured artifact inventory
+        ctx["tables"] = _build_tables(cfg.repo_root, ed)
+        ctx["unstructured"] = _build_unstructured(cfg.repo_root, ed)
         abs_report = cfg.repo_root / ed["report_path"]
         if abs_report.is_file():
             try:
@@ -460,28 +469,17 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
     return templates.TemplateResponse(request, "commercial_view.html", ctx)
 
 
-@router.get("/commercial/{bq}/data", response_class=HTMLResponse)
-async def commercial_data(request: Request, bq: str, edition: str | None = None):
-    """Dedicated tabular view: the pinned snapshots' normalized rows (the data
-    behind the charts) plus each series' points — sortable, filterable, searchable.
-    The console still computes nothing; it displays pinned rows verbatim."""
-    cfg = get_config()
-    q = question_row(cfg.repo_root, bq)
-    if q is None:
-        raise HTTPException(404, f"Unknown question '{bq}'.")
-    show_id = edition or q.get("approved_edition") or q.get("draft_edition")
-    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
-    if ed is None:
-        raise HTTPException(404, f"No edition for {bq} — nothing to tabulate.")
+def _build_tables(repo_root: Path, ed: dict) -> list:
+    """Structured tables behind an answer: pinned snapshot rows + each series'
+    table form. Shared by the standalone data view and the answer Data tab."""
     tables = []
     for ds, snap in ed.get("pins", {}).items():
-        t = load_pinned_table(cfg.repo_root, ds, snap)
+        t = load_pinned_table(repo_root, ds, snap)
         if t:
             t["id"] = f"ds-{len(tables)}"
             t["title"] = f"{ds.split('/')[-1]} @ {snap}"
             t["kind"] = "Pinned corpus snapshot"
             tables.append(t)
-    # series points as tables (the table form of every chart)
     for s in ed["data"].get("series", []):
         if s.get("kind") == "timeseries":
             cols, rows = ["series", "date", "value"], []
@@ -498,9 +496,53 @@ async def commercial_data(request: Request, bq: str, edition: str | None = None)
         tables.append({"id": f"s-{s.get('id')}", "title": s.get("label", s.get("id")),
                        "kind": f"Series ({s.get('evidence_class')})", "columns": cols,
                        "rows": rows, "dataset": None, "snapshot": None, "file": "data.json"})
+    return tables
+
+
+def _build_unstructured(repo_root: Path, ed: dict) -> list:
+    """Unstructured artifacts behind an answer: per pinned dataset — raw payloads,
+    provenance.yml, dataset config/README, assumption + waiver records. Listed with
+    sizes and Documents-viewer links; the console never parses them."""
+    groups = []
+    for ds, snap in ed.get("pins", {}).items():
+        base = repo_root / "docs" / "project" / "corpus" / ds
+        sdir = base / "snapshots" / snap
+        artifacts = []  # key name "artifacts" — g.items in Jinja resolves dict.items
+
+        def add(p: Path, label: str):
+            if p.exists():
+                rel = p.relative_to(repo_root)
+                artifacts.append({"label": label, "name": p.name,
+                              "size_kb": round(p.stat().st_size / 1024, 1),
+                              "href": f"/documents#path={rel}"})
+
+        for raw in sorted((sdir / "raw").glob("*")) if (sdir / "raw").is_dir() else []:
+            add(raw, "raw payload (as acquired)")
+        add(sdir / "provenance.yml", "provenance hash chain")
+        add(base / "dataset.yml", "dataset config (schema, acquisition, cadence)")
+        add(base / "README.md", "dataset README")
+        for a in sorted((base / "assumptions").glob("A-*.yml")) if (base / "assumptions").is_dir() else []:
+            add(a, "assumption record")
+        for w in sorted((base / "waivers").glob("W-*.yml")) if (base / "waivers").is_dir() else []:
+            add(w, "freshness waiver")
+        groups.append({"dataset": ds, "snapshot": snap, "artifacts": artifacts})
+    return groups
+
+
+@router.get("/commercial/{bq}/data", response_class=HTMLResponse)
+async def commercial_data(request: Request, bq: str, edition: str | None = None):
+    """Dedicated tabular view (deep-linkable twin of the answer's Data tab)."""
+    cfg = get_config()
+    q = question_row(cfg.repo_root, bq)
+    if q is None:
+        raise HTTPException(404, f"Unknown question '{bq}'.")
+    show_id = edition or q.get("latest_edition") or q.get("approved_edition")
+    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    if ed is None:
+        raise HTTPException(404, f"No edition for {bq} — nothing to tabulate.")
     return templates.TemplateResponse(
         request, "commercial_data.html",
-        {"config": cfg, "q": q, "ed": ed, "tables": tables},
+        {"config": cfg, "q": q, "ed": ed, "tables": _build_tables(cfg.repo_root, ed)},
     )
 
 

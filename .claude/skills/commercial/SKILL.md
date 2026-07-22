@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 6
+version: 7
 updated: 2026-07-22
 dependencies:
   skills:
@@ -183,6 +183,14 @@ pair every hue with a label). **Every answered question should carry, where the 
 allows: a headline `stat`, the categorical/comparison form, and a `timeseries`
 history** — a report without a historical view should say why (data gap), not just
 omit it.
+
+**Derivation chains (required for derived series).** A series with
+`evidence_class: derived` must declare `derivation: {method: "<one-line formula>",
+inputs: ["src: ds@snap", "derived: other-series", "config: path", ...]}` — the lint's
+`derivation-chain` check fails a derived series without one. Inputs use the marker
+vocabulary, so the chain plugs into the reference layer and walks onward through corpus
+provenance to raw sources. New lint rules grandfather already-approved (immutable)
+editions in `check` — full enforcement applies at the next approval.
 
 **Answer-edition data.json extensions** (all optional, consoles degrade gracefully):
 - `narrative: {issues[], risks[], watch[]}` — decision-ready Risks / Mitigations /

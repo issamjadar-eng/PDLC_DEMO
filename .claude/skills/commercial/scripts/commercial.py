@@ -160,22 +160,63 @@ def find_edition(root: Path, bq: str, edition: str = None):
 
 # ---------------------------------------------------------------- lint
 
+LINT_CHECKS = [
+    ("artifacts", "Edition artifacts",
+     "report.md and data.json exist for this edition"),
+    ("numeric-coverage", "Numeric-claim coverage",
+     "every numeric claim in the report carries a resolvable marker on its line"),
+    ("marker-resolution", "Marker resolution",
+     "every cited marker resolves — pinned snapshot on disk, active assumption, computed series, config file, active waiver"),
+    ("estimation-language", "Estimation language",
+     "estimation words (estimated / likely / modeled / approximately …) cite a stated assumption record"),
+    ("pin-freshness", "Pin freshness",
+     "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active"),
+    ("series-hygiene", "Series hygiene",
+     "every data.json series declares a valid evidence class and its provenance"),
+    ("derivation-chain", "Derivation chain",
+     "every derived series declares HOW it was derived — a method and its inputs (src/derived/config markers), so the data chain is walkable"),
+]
+
+
 def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
     """Returns (errors, warnings, detail). Deterministic; no LLM judgment.
-    detail = {"references": [...], "freshness": [...]} — the audit inventory."""
+    detail = {"references": [...], "freshness": [...], "checks": [...]} — the audit
+    inventory, with findings itemized per named check."""
     errors, warnings = [], []
     detail = {"references": [], "freshness": []}
     _refs = {}
+    _findings = {cid: [] for cid, _, _ in LINT_CHECKS}
+
+    def err(cid, msg):
+        errors.append(msg)
+        _findings[cid].append({"severity": "error", "message": msg})
+
+    def warn(cid, msg):
+        warnings.append(msg)
+        _findings[cid].append({"severity": "warning", "message": msg})
 
     def _ref(kind, value, resolved, note):
         _refs[(kind, value)] = {"kind": kind, "value": value, "resolved": resolved, "note": note}
 
+    def _finish():
+        detail["references"] = sorted(_refs.values(), key=lambda r: (r["kind"], r["value"]))
+        detail["checks"] = []
+        for cid, name, desc in LINT_CHECKS:
+            fs = _findings[cid]
+            status = "fail" if any(f["severity"] == "error" for f in fs) else \
+                ("warn" if fs else "pass")
+            detail["checks"].append({"id": cid, "name": name, "description": desc,
+                                     "status": status, "findings": fs})
+        return errors, warnings, detail
+
     edir = bq_dir(root, bq) / ed["edition"]
     report, datap = edir / "report.md", edir / "data.json"
     if not report.exists():
-        return [f"{bq}@{ed['edition']}: report.md missing"], warnings, detail
+        err("artifacts", f"{bq}@{ed['edition']}: report.md missing")
     if not datap.exists():
-        return [f"{bq}@{ed['edition']}: data.json missing"], warnings, detail
+        err("artifacts", f"{bq}@{ed['edition']}: data.json missing")
+    if errors:
+        return _finish()
     data = json.loads(datap.read_text())
     series_ids = {s["id"] for s in data.get("series", [])} | {v["id"] for v in data.get("verdicts", [])}
     pins = ed.get("pins", {})
@@ -202,40 +243,40 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
         for kind, val in markers:
             if kind == "src":
                 if "@" not in val:
-                    errors.append(f"L{n}: malformed src marker: {val}")
+                    err("marker-resolution", f"L{n}: malformed src marker: {val}")
                     _ref(kind, val, False, "malformed marker")
                     continue
                 ds, snap = val.rsplit("@", 1)
                 if ds not in pins:
-                    errors.append(f"L{n}: [src: {val}] cites unpinned dataset {ds}")
+                    err("marker-resolution", f"L{n}: [src: {val}] cites unpinned dataset {ds}")
                     _ref(kind, val, False, "dataset not pinned by this edition")
                 elif pins[ds] != snap:
-                    errors.append(f"L{n}: [src: {val}] cites snapshot {snap} but edition pins {pins[ds]}")
+                    err("marker-resolution", f"L{n}: [src: {val}] cites snapshot {snap} but edition pins {pins[ds]}")
                     _ref(kind, val, False, f"edition pins {pins[ds]}")
                 elif not (corpus_root / ds / "snapshots" / snap).is_dir():
-                    errors.append(f"L{n}: [src: {val}] snapshot does not exist on disk")
+                    err("marker-resolution", f"L{n}: [src: {val}] snapshot does not exist on disk")
                     _ref(kind, val, False, "snapshot missing on disk")
                 else:
                     _ref(kind, val, True, "pinned immutable snapshot present on disk")
             elif kind == "assume":
                 rec = assumption_record(corpus_root, val)
                 if rec is None:
-                    errors.append(f"L{n}: [assume: {val}] record not found in corpus")
+                    err("marker-resolution", f"L{n}: [assume: {val}] record not found in corpus")
                     _ref(kind, val, False, "record not found")
                 elif rec.get("status") != "active":
-                    errors.append(f"L{n}: [assume: {val}] status is {rec.get('status')} (must be active)")
+                    err("marker-resolution", f"L{n}: [assume: {val}] status is {rec.get('status')} (must be active)")
                     _ref(kind, val, False, f"status {rec.get('status')}")
                 else:
                     _ref(kind, val, True, f"active assumption ({rec.get('confidence', '?')} confidence)")
             elif kind == "derived":
                 if val not in series_ids:
-                    errors.append(f"L{n}: [derived: {val}] not present in data.json series/verdicts")
+                    err("marker-resolution", f"L{n}: [derived: {val}] not present in data.json series/verdicts")
                     _ref(kind, val, False, "not in data.json")
                 else:
                     _ref(kind, val, True, "computed series/verdict in this edition's data.json")
             elif kind == "config":
                 if not (Path(val).exists() or (root / val).exists()):
-                    errors.append(f"L{n}: [config: {val}] file not found")
+                    err("marker-resolution", f"L{n}: [config: {val}] file not found")
                     _ref(kind, val, False, "file not found")
                 else:
                     _ref(kind, val, True, "versioned configuration file present")
@@ -243,7 +284,7 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
                 rec = waiver_record(corpus_root, val)
                 if rec is None or rec.get("status") != "active" or \
                         dt.date.fromisoformat(str(rec["expires"])) < dt.date.today():
-                    errors.append(f"L{n}: [waived: {val}] waiver missing, inactive, or expired")
+                    err("marker-resolution", f"L{n}: [waived: {val}] waiver missing, inactive, or expired")
                     _ref(kind, val, False, "waiver missing/inactive/expired")
                 else:
                     waived_ids.add(val)
@@ -252,10 +293,11 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
         stripped = MARKER_RE.sub("", line)
         stripped = EXEMPT_TOKEN_RE.sub("", stripped)
         if re.search(r"\d", stripped) and not markers:
-            errors.append(f"L{n}: numeric claim without a [src|assume|derived|config] marker: {line.strip()[:80]}")
+            err("numeric-coverage",
+                f"L{n}: numeric claim without a [src|assume|derived|config] marker: {line.strip()[:80]}")
         # estimation language rule
         if ESTIMATION_RE.search(MARKER_RE.sub("", line)) and not any(k == "assume" for k, _ in markers):
-            warnings.append(f"L{n}: estimation language without [assume: A-NNN]: {line.strip()[:80]}")
+            warn("estimation-language", f"L{n}: estimation language without [assume: A-NNN]: {line.strip()[:80]}")
 
     # freshness of pins
     for ds, snap in pins.items():
@@ -266,16 +308,46 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
                                     "max_age_days": max_age, "band": band,
                                     "waived": bool(waived_ids and band == "stale")})
         if age > max_age and not waived_ids:
-            errors.append(f"pin {ds}@{snap} is STALE ({age}d > {max_age}d) and report carries no [waived: W-NNN]")
+            err("pin-freshness",
+                f"pin {ds}@{snap} is STALE ({age}d > {max_age}d) and report carries no [waived: W-NNN]")
 
-    # data.json series must carry evidence_class + provenance
+    # data.json series must carry evidence_class + provenance; while here, build the
+    # data-availability inventory — what we HAVE, what rests on a stated ASSUMPTION,
+    # and what is MISSING (the gap stated, never papered over)
+    avail = {"have": [], "assumed": [], "missing": []}
     for s in data.get("series", []):
-        if s.get("evidence_class") not in ("measured", "derived", "assumed", "unavailable"):
-            errors.append(f"data.json series {s.get('id')}: bad evidence_class {s.get('evidence_class')!r}")
+        ec = s.get("evidence_class")
+        if ec not in ("measured", "derived", "assumed", "unavailable"):
+            err("series-hygiene", f"data.json series {s.get('id')}: bad evidence_class {s.get('evidence_class')!r}")
         if not s.get("provenance"):
-            errors.append(f"data.json series {s.get('id')}: missing provenance")
-    detail["references"] = sorted(_refs.values(), key=lambda r: (r["kind"], r["value"]))
-    return errors, warnings, detail
+            err("series-hygiene", f"data.json series {s.get('id')}: missing provenance")
+        prov = s.get("provenance") or {}
+        src = (f"{prov['dataset']}@{prov.get('snapshot', '?')}" if prov.get("dataset")
+               else prov.get("assumption") or prov.get("note", ""))
+        entry = {"what": s.get("label", s.get("id", "")), "series": s.get("id"),
+                 "evidence_class": ec, "source": src}
+        deriv = s.get("derivation")
+        if ec == "derived":
+            if not (deriv and deriv.get("method") and deriv.get("inputs")):
+                err("derivation-chain",
+                    f"data.json series {s.get('id')}: evidence_class 'derived' without a derivation "
+                    f"{{method, inputs[]}} — the chain must be stated")
+            else:
+                entry["derivation"] = deriv
+        if ec in ("measured", "derived"):
+            avail["have"].append(entry)
+        elif ec == "assumed":
+            avail["assumed"].append(entry)
+        elif ec == "unavailable":
+            entry["note"] = prov.get("note", "no data acquired")
+            avail["missing"].append(entry)
+    # assumptions cited anywhere in the report also count as substituted data
+    for (kind, val), r in _refs.items():
+        if kind == "assume" and not any(a.get("source") == val for a in avail["assumed"]):
+            avail["assumed"].append({"what": f"figure(s) citing {val}", "series": None,
+                                     "evidence_class": "assumed", "source": val})
+    detail["data_availability"] = avail
+    return _finish()
 
 
 def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
@@ -294,9 +366,11 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
     q = {
         "bq": bq, "edition": ed["edition"], "generated_at": now_iso(),
         "lint": {"status": "fail" if errors else "pass",
-                 "errors": errors, "warnings": warnings},
+                 "errors": errors, "warnings": warnings,
+                 "checks": detail.get("checks", [])},
         "references": detail.get("references", []),
         "freshness": detail.get("freshness", []),
+        "data_availability": detail.get("data_availability", {"have": [], "assumed": [], "missing": []}),
         "verifications": existing.get("verifications", []),
     }
     qpath.write_text(json.dumps(q, indent=1))
@@ -487,8 +561,14 @@ def cmd_check(args):
                     elif sha256_file(edir / fname) != h:
                         failures.append(f"{q['id']}@{ed['edition']}: {fname} hash mismatch (MUTATED after approval?)")
             if ed["status"] == "approved":
-                errors, _, _ = lint_edition(root, corpus_root, q["id"], ed)
-                failures.extend(f"{q['id']}@{ed['edition']}: {e}" for e in errors)
+                errors, _, detail = lint_edition(root, corpus_root, q["id"], ed)
+                # grandfather: lint rules added AFTER an edition was approved must not
+                # retroactively fail the immutable record — new rules gate the NEXT
+                # approval. derivation-chain (added post-launch) is advisory here.
+                grandfathered = {f["message"] for c in detail.get("checks", [])
+                                 if c["id"] in ("derivation-chain",) for f in c["findings"]}
+                failures.extend(f"{q['id']}@{ed['edition']}: {e}" for e in errors
+                                if e not in grandfathered)
     # corpus health is part of the chain
     corpus_script = Path(".claude/skills/corpus/scripts/corpus.py")
     if corpus_script.exists():
