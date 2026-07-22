@@ -110,6 +110,18 @@ def load_pinned_table(repo_root: Path, dataset: str, snapshot: str) -> dict | No
             "columns": columns, "rows": rows}
 
 
+def team_names(repo_root: Path) -> list[str]:
+    """Active roster names from project.yml — the approver choices for the UI
+    approve action (who-may-approve: any rostered member, recorded by name)."""
+    if yaml is None:
+        return []
+    try:
+        data = yaml.safe_load((repo_root / "project.yml").read_text(encoding="utf-8"))
+        return [m.get("name") for m in (data.get("team", {}).get("active") or []) if m.get("name")]
+    except Exception:
+        return []
+
+
 def skill_render_script(repo_root: Path) -> Path | None:
     p = repo_root / ".claude" / "skills" / "commercial" / "scripts" / "commercial.py"
     return p if p.is_file() else None

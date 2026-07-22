@@ -31,6 +31,7 @@ from console.commercial.loader import (
     load_pinned_table,
     question_row,
     skill_render_script,
+    team_names,
 )
 from console.config import get_config
 from console.documents import renderer as doc_renderer
@@ -377,7 +378,11 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
-           "references": []}
+           "references": [], "team": team_names(cfg.repo_root),
+           "approved_qp": request.query_params.get("approved"),
+           "pr_url": request.query_params.get("pr"),
+           "approve_error": request.query_params.get("approve_error"),
+           "push_error": request.query_params.get("push_error")}
     if ed:
         refbook = RefBook(cfg.repo_root, bq, ed["edition"])
         ctx["ed_meta"] = EDITION_META.get(ed["status"], EDITION_META["draft"])
@@ -483,6 +488,79 @@ async def commercial_data(request: Request, bq: str, edition: str | None = None)
         request, "commercial_data.html",
         {"config": cfg, "q": q, "ed": ed, "tables": tables},
     )
+
+
+def _run(cmd: list, cwd: Path, timeout: int = 120):
+    try:
+        p = subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True, timeout=timeout)
+        return p.returncode, (p.stdout or "") + (p.stderr or "")
+    except subprocess.TimeoutExpired:
+        return 1, f"timed out: {' '.join(str(c) for c in cmd)}"
+
+
+def _push_approval(repo_root: Path, bq: str, edition: str, approver: str):
+    """The project's push sequence for the approved edition: branch -> stage only
+    the answer + sidecar paths -> commit -> PR -> auto-merge -> back to main.
+    Returns (pr_url or None, error or None). Approval itself already happened —
+    a push failure leaves it approved locally and reports honestly."""
+    branch = f"console/approve-{bq}-{edition}".replace(" ", "")
+    paths = [f"docs/project/commercial/reports/{bq}", "docs/project/commercial/.console"]
+    title = f"approve {bq}@{edition} via console ({approver})"
+    body = (f"Answer edition {bq}@{edition} approved by {approver} via the project-console "
+            f"approve action (gate: claim lint + pin freshness; content hash-pinned in "
+            f"approval.yml).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)")
+    steps = [
+        (["git", "checkout", "-B", branch], "create branch"),
+        (["git", "add", *paths], "stage"),
+        (["git", "commit", "-m", title + "\n\n" + body.split("\n\n")[0]], "commit"),
+        (["git", "push", "-u", "origin", branch, "--force-with-lease"], "push"),
+    ]
+    for cmd, label in steps:
+        rc, out = _run(cmd, repo_root)
+        if rc != 0:
+            _run(["git", "checkout", "main"], repo_root)
+            return None, f"{label} failed: {out[-800:]}"
+    rc, out = _run(["gh", "pr", "create", "--title", title, "--body", body], repo_root)
+    pr_url = next((ln.strip() for ln in out.splitlines() if ln.strip().startswith("http")), None)
+    if rc != 0 and not pr_url:
+        _run(["git", "checkout", "main"], repo_root)
+        return None, f"PR create failed: {out[-800:]}"
+    rc, out = _run(["gh", "pr", "merge", branch, "--merge", "--delete-branch"], repo_root, timeout=180)
+    _run(["git", "checkout", "main"], repo_root)
+    _run(["git", "pull", "--ff-only"], repo_root)
+    _run(["git", "branch", "-D", branch], repo_root)
+    if rc != 0:
+        return pr_url, f"PR created but merge failed: {out[-800:]}"
+    return pr_url, None
+
+
+@router.post("/commercial/{bq}/approve")
+async def commercial_approve(request: Request, bq: str):
+    """UI approval: run the gated approve (lint + freshness enforced by the skill),
+    refresh the sidecar, then push to the repo per the project's git workflow."""
+    cfg = get_config()
+    form = await request.form()
+    edition = str(form.get("edition") or "")
+    approver = str(form.get("approver") or "").strip()
+    note = str(form.get("verify_note") or "").strip() or "approved via console UI (no independent verification recorded)"
+    if not approver:
+        return RedirectResponse(f"/commercial/{bq}?approve_error=" + quote("pick an approver", safe=""), status_code=303)
+    script = skill_render_script(cfg.repo_root)
+    if script is None:
+        return RedirectResponse(f"/commercial/{bq}?approve_error=" + quote("commercial skill not installed", safe=""), status_code=303)
+    rc, out = _run([sys.executable, str(script), "approve", bq, "--edition", edition,
+                    "--by", approver, "--verify-note", note], cfg.repo_root)
+    if rc != 0:
+        return RedirectResponse(
+            f"/commercial/{bq}?edition={edition}&approve_error=" + quote(out[-1200:], safe=""), status_code=303)
+    _run([sys.executable, str(script), "render"], cfg.repo_root)
+    pr_url, err = _push_approval(cfg.repo_root, bq, edition, approver)
+    q = f"/commercial/{bq}?approved={quote(edition, safe='')}"
+    if pr_url:
+        q += "&pr=" + quote(pr_url, safe="")
+    if err:
+        q += "&push_error=" + quote(err, safe="")
+    return RedirectResponse(q, status_code=303)
 
 
 @router.get("/commercial/{bq}/raw", response_class=JSONResponse)
