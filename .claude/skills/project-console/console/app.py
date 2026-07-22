@@ -11,6 +11,8 @@ from console.assistant.router import invalidate_index as rebuild_assistant_index
 from console.assistant.router import router as assistant_router
 from console.auth import preflight
 from console.chat.router import router as chat_router
+from console.commercial.loader import discover as discover_commercial
+from console.commercial.router import router as commercial_router
 from console.config import get_config
 from console.dashboards.router import router as dashboards_router
 from console.documents.router import router as documents_router
@@ -110,6 +112,9 @@ async def theme_context(request: Request, call_next):
     request.state.submission_nav = discover_submission(cfg.repo_root)["has_any"]
     # Gap Analysis nav visibility — shows when sidecars exist under docs/_analysis/.
     request.state.gap_analysis_nav = discover_gap_analysis(cfg.repo_root)["has_any"]
+    # Commercial nav visibility — shows when the commercial skill has published
+    # docs/project/commercial/.console/commercial-index.json.
+    request.state.commercial_nav = discover_commercial(cfg.repo_root)["has_any"]
     # Metrics nav visibility — shows when the usage-metrics skill has published
     # tools/usage-metrics/usage.json.
     request.state.metrics_nav = discover_metrics(cfg.repo_root)["has_any"]
@@ -125,6 +130,7 @@ app.include_router(dashboards_router)
 app.include_router(overview_router)
 app.include_router(strategy_router)
 app.include_router(submission_router)
+app.include_router(commercial_router)
 app.include_router(trace_matrix_router)
 app.include_router(gap_analysis_router)
 app.include_router(assistant_router)

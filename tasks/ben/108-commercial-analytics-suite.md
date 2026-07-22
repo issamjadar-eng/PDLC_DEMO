@@ -125,8 +125,8 @@ _Phase 3 (`commercial` skill v1 + field slice):_
 - [x] Six draft editions computed + linted GREEN — DONE 2026-07-22: BQ-23 (62.5% complete; all regions miss 2026-09-30 close at run-rate), BQ-24 (PAUSE TRIGGER: hw B/3.1.2 at 23.1% vs 15% threshold), BQ-25 (EMEA 23.0 tickets/100; 4 rollback sites; customer cost $7.2k–$16.3k on A-002), BQ-26 (capacity gap all regions; FSE-roster data gap stated as `unavailable` series), BQ-27 (56.7% of PP3500 fleet ≥1 version behind), BQ-19 (MAUDE counts published, RATE CHART MECHANICALLY BLOCKED pending A-001 quantification — the honesty showcase working). Lint caught 3 real defects in first-pass reports (header-row false positives → lint improved; prose digit → reworded). Sidecar rendered; `commercial check` GREEN.
 - [x] Adversarial verification — DONE 2026-07-22: independent agent (pins-only, no reports) recomputed all six; 4 CONFIRMED + 2 CONFIRMED-WITH-CAVEAT. Dossier: `tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md`. **All three findings actioned same day**: (1) generator date artifact fixed → corpus refreshed to `internal-upgrade-campaign@2026-07-22.2` w/ delta report; (2) BQ-24 switched to per-attempted-device basis (31.4%, was understating at 23.1%); (3) BQ-25 basis made consistent → hotspot is actually NA 21.7 tickets/100 attempted (EMEA claim retracted). BQ-23/26 re-answered: APAC now on-track, EMEA+NA miss. All lint green; commercial check GREEN.
 - [ ] Approvals — LEFT TO BEN deliberately (who-may-approve is an open sub-decision; approving in a human's name is a human act): `python3 .claude/skills/commercial/scripts/commercial.py approve BQ-NN --by "Ben Xavier" --verify-note "tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md ..."`
-- [ ] Field dashboard / console section (viz tier) — next
-- [ ] Push Phase-3 via PR
+- [x] Console Commercial section (viz tier) — DONE 2026-07-22 (project-console 1.41.0→1.42.0): new `console/commercial/{loader,router}.py` + `commercial_index.html`/`commercial_view.html`/`commercial.css`; discovery-gated topnav item (`ic-commercial`); question-centric catalog (category rail, rollup, cards w/ verdict + status/evidence/freshness badges + assumption chips, Planned cards visible); answer view (verdict banner, in-console single-hue bar charts plotted verbatim from sidecar series w/ per-series evidence badge + provenance link, `unavailable` series as designed-absence cards, DRAFT watermark, pins+approval panel, edition history via ?edition=, full marker-cited report via documents renderer, assistant drawer grounded in /commercial/{bq}/grounding). Dataviz skill loaded first (palette slot-1 single hue, direct labels, icon+label badges). Tested: TestClient 7 routes 200 + all probes; live console restarted + browser-verified (catalog, BQ-24 pause-trigger page w/ watermark, BQ-19 honesty page w/ blocked-rate card sourced to A-001). SKILL.md topline docs + README 1.42.0 changelog updated.
+- [x] Push Phase-3 via PR — DONE 2026-07-22: PR #129 merged (`164b02f`); branches deleted; local main synced; commercial check GREEN on main. Note: Ben's pre-session edits to `.claude/sync-log.md` + `tasks/ben/SECOPS.md` rode along in this commit (they were index-staged by the Phase-2 stash-restore; content is Ben's own, now preserved on main).
 
 _Later phases (4–6): see Plan (expand into todos when reached)._
 
@@ -358,6 +358,13 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
         "basis": "software anchor (20-25 LOC/day): ~450 LOC engine with lifecycle state machine, claim-lint parser, hash-pinned approvals, sidecar serialization -> ~2.5-5 dev-days; internal tooling"
       },
       {
+        "todo": "Console Commercial section: loader/router + 2 templates + CSS + nav wiring + docs (project-console 1.42.0), TestClient + live-browser verified",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 16, "max": 30},
+        "confidence": "med",
+        "basis": "software anchor (20-25 LOC/day): ~700 LOC across loader/router/templates/CSS in an existing FastAPI codebase incl. chart rendering + lifecycle UI states -> ~2-4 dev-days; frontend iteration typically mid-range"
+      },
+      {
         "todo": "Project catalog + six deterministic computations + entity aliases + A-002 + six lint-green draft editions",
         "personas": ["rd-lead", "program-manager"],
         "manual_hours": {"min": 20, "max": 36},
@@ -371,6 +378,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 
 ## Changelog
 
+- 2026-07-22: Console Commercial section built + verified live (project-console 1.42.0): catalog + answer views consuming the sidecar, draft watermarks, evidence/freshness badges, provenance panels, edition history, advisor drawer. Browser-verified on the running console (BQ-24 + BQ-19 pages). Not yet committed; PR next.
 - 2026-07-22: Adversarial verification round complete + all findings actioned (dossier in `_work/`); campaign corpus refreshed to 2026-07-22.2; BQ-23/24/25/26 re-answered with corrected bases; verification lesson captured. Ready to push Phase 3 (dashboard/console view deferred to next chunk).
 - 2026-07-22: Phase 3 GREEN-LIT and largely built same day: commercial skill v1 + docs/project/commercial/ (catalog 30 BQs, 6 computations, entity aliases, A-002) + six lint-green draft editions + sidecar + commercial check GREEN. Corpus engine fix: globally-unique A/W record ids (collision caught in real use). Adversarial verify agent in flight; approvals deliberately left to Ben; dashboard + PR pending. Nothing committed yet this phase.
 - 2026-07-22: **Phase 2 COMPLETE** — PR #128 merged (`9ed0a7c`); corpus skill + 6 corpora on main; corpus check GREEN post-merge. Next: Phase 3 — `commercial` skill v1 + field-performance vertical slice (computation library, `field` action, claim lint, dashboard + console sidecar).

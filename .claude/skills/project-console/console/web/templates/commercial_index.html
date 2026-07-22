@@ -1,0 +1,96 @@
+{% extends "_base.html" %}
+{% block title %}Commercial · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}commercial-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
+{% block content %}
+<section class="cm-wrap">
+  <header class="cm-head">
+    <div>
+      <p class="cm-eyebrow">Business questions, answered with data</p>
+      <h1>Commercial</h1>
+      <p class="cm-sub">The question catalog is the navigation: each card is a business question a real
+        decision-maker asks, answered by deterministic computation over provenance-pinned corpus snapshots.
+        Every figure is substantiated — <span class="cm-badge ev-measured" title="Read directly from a pinned snapshot">✓ Measured</span>
+        <span class="cm-badge ev-derived" title="Computed from pinned snapshots">ƒ Derived</span>
+        <span class="cm-badge ev-assumed" title="Rests on a stated A-NNN assumption record">≈ Assumed</span> —
+        and where data doesn't exist, the assumption is stated, never invented.</p>
+    </div>
+    {% if has_skill %}
+    <form method="post" action="/commercial/render" class="cm-refresh">
+      <button type="submit" class="btn-secondary" title="Re-derive the console sidecar from the answer editions">↻ Refresh</button>
+    </form>
+    {% endif %}
+  </header>
+
+  {% if render_error %}
+  <div class="cm-banner cm-banner-warn"><strong>Render failed.</strong><pre>{{ render_error }}</pre></div>
+  {% endif %}
+
+  {% if not by_cat %}
+  <div class="cm-empty">
+    <p><strong>No commercial sidecar yet.</strong></p>
+    <p>Run <code>python3 .claude/skills/commercial/scripts/commercial.py render</code> (or ask Claude:
+      <em>“render the commercial sidecars”</em>) to publish the index this view reads.</p>
+  </div>
+  {% else %}
+  <div class="cm-rollup">
+    <div class="cm-stat"><span class="n">{{ counts.total }}</span><span class="l">questions</span></div>
+    <div class="cm-stat"><span class="n">{{ counts.answered }}</span><span class="l">approved</span></div>
+    <div class="cm-stat"><span class="n">{{ counts.draft }}</span><span class="l">drafts</span></div>
+    <div class="cm-stat"><span class="n">{{ counts.planned }}</span><span class="l">planned</span></div>
+  </div>
+
+  <div class="cm-cat-rail" role="tablist" aria-label="Category">
+    <button type="button" class="cm-cat is-active" data-cat="all">All</button>
+    {% for c in by_cat %}
+    <button type="button" class="cm-cat" data-cat="{{ c.key }}">{{ c.name }} <span class="cm-cat-n">{{ c.rows | length }}</span></button>
+    {% endfor %}
+  </div>
+
+  {% for c in by_cat %}
+  <section class="cm-cat-block" data-cat-block="{{ c.key }}">
+    <h2 class="cm-cat-title">{{ c.name }}</h2>
+    <div class="cm-grid">
+      {% for q in c.rows %}
+      {% set answered = q.status in ("answered", "draft-only") %}
+      {% if answered %}<a class="cm-card" href="/commercial/{{ q.id }}">{% else %}<div class="cm-card cm-card-planned">{% endif %}
+        <div class="cm-card-top">
+          <span class="cm-bqid">{{ q.id }}</span>
+          <span class="cm-chip {{ q._status.cls }}">{{ q._status.label }}</span>
+          {% if q._evidence %}<span class="cm-badge {{ q._evidence.cls }}" title="{{ q._evidence.tip }}">{{ q._evidence.glyph }} {{ q._evidence.label }}</span>{% endif %}
+          {% if q._fresh %}<span class="cm-badge {{ q._fresh.cls }}" title="{{ q._fresh.tip }}">{{ q._fresh.label }}</span>{% endif %}
+        </div>
+        <p class="cm-card-q">{{ q.question }}</p>
+        {% if q.verdict_headline %}
+        <p class="cm-card-verdict">{{ q.verdict_headline }}</p>
+        {% elif not answered %}
+        <p class="cm-card-verdict cm-muted">On the roadmap — no computation registered yet.</p>
+        {% endif %}
+        <div class="cm-card-foot">
+          <span class="cm-muted">{{ q.personas | join(', ') }} · {{ q.cadence }}</span>
+          {% if q.assumptions %}<span class="cm-chip cm-assume-chip" title="Rests on stated assumption record(s)">≈ {{ q.assumptions | join(', ') }}</span>{% endif %}
+        </div>
+      {% if answered %}</a>{% else %}</div>{% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  {% endif %}
+</section>
+<script>
+(function () {
+  var rail = document.querySelector('.cm-cat-rail');
+  if (!rail) return;
+  rail.addEventListener('click', function (e) {
+    var btn = e.target.closest('.cm-cat');
+    if (!btn) return;
+    rail.querySelectorAll('.cm-cat').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    var key = btn.getAttribute('data-cat');
+    document.querySelectorAll('.cm-cat-block').forEach(function (blk) {
+      blk.style.display = (key === 'all' || blk.getAttribute('data-cat-block') === key) ? '' : 'none';
+    });
+  });
+})();
+</script>
+{% endblock %}
