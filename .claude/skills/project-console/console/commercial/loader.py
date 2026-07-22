@@ -88,6 +88,28 @@ def load_edition(repo_root: Path, bq: str, edition: str) -> dict | None:
     }
 
 
+def load_pinned_table(repo_root: Path, dataset: str, snapshot: str) -> dict | None:
+    """Rows of a pinned snapshot's normalized CSV — the tabular truth behind an
+    answer's charts. Read-only; the console never mutates corpus data."""
+    import csv as _csv
+
+    ndir = repo_root / "docs" / "project" / "corpus" / dataset / "snapshots" / snapshot / "normalized"
+    if not ndir.is_dir():
+        return None
+    csvs = sorted(ndir.glob("*.csv"))
+    if not csvs:
+        return None
+    try:
+        with open(csvs[0], newline="", encoding="utf-8") as f:
+            reader = _csv.DictReader(f)
+            columns = reader.fieldnames or []
+            rows = [dict(r) for r in reader]
+    except OSError:
+        return None
+    return {"dataset": dataset, "snapshot": snapshot, "file": csvs[0].name,
+            "columns": columns, "rows": rows}
+
+
 def skill_render_script(repo_root: Path) -> Path | None:
     p = repo_root / ".claude" / "skills" / "commercial" / "scripts" / "commercial.py"
     return p if p.is_file() else None

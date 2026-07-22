@@ -28,6 +28,7 @@ from fastapi.templating import Jinja2Templates
 from console.commercial.loader import (
     load_edition,
     load_index,
+    load_pinned_table,
     question_row,
     skill_render_script,
 )
@@ -402,6 +403,50 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
             chips.append({"id": aid, "link": link})
         ctx["assumption_chips"] = chips
     return templates.TemplateResponse(request, "commercial_view.html", ctx)
+
+
+@router.get("/commercial/{bq}/data", response_class=HTMLResponse)
+async def commercial_data(request: Request, bq: str, edition: str | None = None):
+    """Dedicated tabular view: the pinned snapshots' normalized rows (the data
+    behind the charts) plus each series' points — sortable, filterable, searchable.
+    The console still computes nothing; it displays pinned rows verbatim."""
+    cfg = get_config()
+    q = question_row(cfg.repo_root, bq)
+    if q is None:
+        raise HTTPException(404, f"Unknown question '{bq}'.")
+    show_id = edition or q.get("approved_edition") or q.get("draft_edition")
+    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    if ed is None:
+        raise HTTPException(404, f"No edition for {bq} — nothing to tabulate.")
+    tables = []
+    for ds, snap in ed.get("pins", {}).items():
+        t = load_pinned_table(cfg.repo_root, ds, snap)
+        if t:
+            t["id"] = f"ds-{len(tables)}"
+            t["title"] = f"{ds.split('/')[-1]} @ {snap}"
+            t["kind"] = "Pinned corpus snapshot"
+            tables.append(t)
+    # series points as tables (the table form of every chart)
+    for s in ed["data"].get("series", []):
+        if s.get("kind") == "timeseries":
+            cols, rows = ["series", "date", "value"], []
+            for ln in s.get("lines", []):
+                rows += [{"series": ln.get("label", ""), "date": p["x"], "value": str(p["y"])}
+                         for p in ln.get("points", [])]
+        else:
+            pts = s.get("points", [])
+            if not pts:
+                continue
+            extra = sorted({k for p in pts for k in p} - {"label", "value"})
+            cols = ["label", "value", *extra]
+            rows = [{c: str(p.get(c, "")) for c in cols} for p in pts]
+        tables.append({"id": f"s-{s.get('id')}", "title": s.get("label", s.get("id")),
+                       "kind": f"Series ({s.get('evidence_class')})", "columns": cols,
+                       "rows": rows, "dataset": None, "snapshot": None, "file": "data.json"})
+    return templates.TemplateResponse(
+        request, "commercial_data.html",
+        {"config": cfg, "q": q, "ed": ed, "tables": tables},
+    )
 
 
 @router.get("/commercial/{bq}/raw", response_class=JSONResponse)
