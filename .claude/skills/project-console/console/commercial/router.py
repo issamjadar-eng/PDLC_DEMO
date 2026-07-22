@@ -182,6 +182,69 @@ def _decorate_series(series: list) -> list:
     return out
 
 
+class RefBook:
+    """Formal-document reference layer: every citation marker becomes a numbered
+    superscript pointing at a References list — the display face of the machine
+    layer (the raw report keeps the lint-checked markers)."""
+
+    MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]<]+?)\s*\]")
+
+    def __init__(self, repo_root: Path, bq: str, edition: str | None):
+        self.repo_root = repo_root
+        self.bq = bq
+        self.edition = edition
+        self.refs: list[dict] = []
+        self.index: dict[tuple, int] = {}
+
+    def _entry(self, kind: str, value: str) -> dict:
+        if kind == "src":
+            ds, _, snap = value.rpartition("@")
+            return {"kind": "Corpus dataset", "label": f"{ds} — snapshot {snap}",
+                    "href": f"/documents#path=docs/project/corpus/{ds}/README.md",
+                    "detail": f"immutable snapshot pinned by this edition; provenance in snapshots/{snap}/provenance.yml"}
+        if kind == "assume":
+            hits = list((self.repo_root / "docs" / "project" / "corpus").glob(f"*/*/assumptions/{value}.yml"))
+            href = f"/documents#path={hits[0].relative_to(self.repo_root)}" if hits else None
+            return {"kind": "Assumption record", "label": value, "href": href,
+                    "detail": "stated estimate where data does not exist — method, confidence, and refresh trigger in the record"}
+        if kind == "waived":
+            hits = list((self.repo_root / "docs" / "project" / "corpus").glob(f"*/*/waivers/{value}.yml"))
+            href = f"/documents#path={hits[0].relative_to(self.repo_root)}" if hits else None
+            return {"kind": "Freshness waiver", "label": value, "href": href,
+                    "detail": "stale-data acknowledgment with owner and expiry"}
+        if kind == "derived":
+            href = f"/commercial/{self.bq}/raw" + (f"?edition={self.edition}" if self.edition else "")
+            return {"kind": "Computed series", "label": value, "href": href,
+                    "detail": "deterministic computation output in this edition's data.json"}
+        # config
+        rel = value if value.startswith("docs/") else f"docs/project/commercial/{value}"
+        return {"kind": "Declared configuration", "label": value,
+                "href": f"/documents#path={rel}",
+                "detail": "plan constant / threshold declared in versioned project configuration"}
+
+    def number(self, kind: str, value: str) -> int:
+        key = (kind, value)
+        if key not in self.index:
+            self.index[key] = len(self.refs) + 1
+            self.refs.append({"n": len(self.refs) + 1, **self._entry(kind, value)})
+        return self.index[key]
+
+    def sup(self, kind: str, value: str) -> str:
+        n = self.number(kind, value)
+        return f'<sup class="cm-ref"><a href="#cm-ref-{n}" title="{kind}: {value}">{n}</a></sup>'
+
+    def referencize_html(self, html: str) -> str:
+        return self.MARKER_RE.sub(lambda m: self.sup(m.group(1), m.group(2)), html)
+
+    def for_strings(self, evidence: list) -> list[int]:
+        out = []
+        for e in evidence or []:
+            kind, _, value = str(e).partition(":")
+            if value:
+                out.append(self.number(kind.strip(), value.strip()))
+        return out
+
+
 def _doc_link_rewriter(doc_repo_rel: str):
     """Rewrite relative links in the rendered report so they open in the
     Documents viewer (same approach as the Submission view)."""
@@ -276,10 +339,22 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
     ctx = {"config": cfg, "q": q, "ed": ed, "series": [], "verdicts": [],
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
-           "expectations": [], "narrative": None, "newer_draft": None}
+           "expectations": [], "narrative": None, "newer_draft": None,
+           "references": []}
     if ed:
+        refbook = RefBook(cfg.repo_root, bq, ed["edition"])
         ctx["ed_meta"] = EDITION_META.get(ed["status"], EDITION_META["draft"])
-        ctx["series"] = _decorate_series(ed["data"].get("series", []))
+        series = _decorate_series(ed["data"].get("series", []))
+        # formal reference numbers for each series' source line
+        for s in series:
+            prov = s.get("provenance") or {}
+            if prov.get("dataset"):
+                s["_ref_n"] = refbook.number("src", f"{prov['dataset']}@{prov.get('snapshot', '?')}")
+            elif prov.get("assumption"):
+                s["_ref_n"] = refbook.number("assume", prov["assumption"])
+            else:
+                s["_ref_n"] = None
+        ctx["series"] = series
         ctx["verdicts"] = ed["data"].get("verdicts", [])
         # expectations panel (plan vs actual, with met/not-met verdicts)
         exps = []
@@ -299,6 +374,7 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
                 for it in nar.get(key, []):
                     it = dict(it)
                     it["_sev"] = SEV_META.get(it.get("severity", "medium"), SEV_META["medium"])
+                    it["_refs"] = refbook.for_strings(it.get("evidence"))
                     items.append(it)
                 if items:
                     # key name "entries" (not "items") — g.items in Jinja resolves dict.items
@@ -312,9 +388,12 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
         if abs_report.is_file():
             try:
                 rendered = doc_renderer.render(abs_report)
-                ctx["report_html"] = _doc_link_rewriter(ed["report_path"])(rendered.body_html or "")
+                html = _doc_link_rewriter(ed["report_path"])(rendered.body_html or "")
+                # formal-document reference layer: markers -> superscript numbers
+                ctx["report_html"] = refbook.referencize_html(html)
             except Exception:
                 ctx["report_html"] = ""
+        ctx["references"] = refbook.refs
         # assumption chips → open the record in the Documents viewer when possible
         chips = []
         for aid in q.get("assumptions", []):

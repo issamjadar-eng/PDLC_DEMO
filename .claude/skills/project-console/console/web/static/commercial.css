@@ -169,6 +169,18 @@ a.cm-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgb
 @media (max-width: 900px) { .cm-shell { grid-template-columns: 1fr; } .cm-edrail { position: static; display: flex;
   flex-wrap: wrap; gap: .3rem; } .cm-edrail h3, .cm-edrail-hint { display: none; } }
 
+/* formal reference layer — superscript numbers + References section */
+sup.cm-ref { line-height: 0; font-size: .68em; margin-left: .12em; }
+sup.cm-ref a { text-decoration: none; color: var(--brand-primary, #4f46e5); font-weight: 600; }
+sup.cm-ref a:hover { text-decoration: underline; }
+.cm-refs { margin-top: 1.4rem; border-top: 1px solid var(--border, #e2e8f0); padding-top: 1rem; }
+.cm-refs h2 { font-size: 1rem; }
+.cm-refs ol { margin: .5rem 0 0 1.2rem; padding: 0; display: grid; gap: .35rem; font-size: .8rem; }
+.cm-refs li { line-height: 1.5; }
+.cm-refs li:target { background: color-mix(in srgb, var(--brand-primary, #4f46e5) 12%, transparent); border-radius: 6px; padding: .15rem .3rem; }
+.cm-refs-kind { font-weight: 600; }
+.cm-refs a { color: inherit; }
+
 /* provenance + report */
 .cm-pins { margin: 0 0 1rem; font-size: .85rem; }
 .cm-pins summary { cursor: pointer; font-weight: 600; }
