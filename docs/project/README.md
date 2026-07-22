@@ -10,6 +10,7 @@ What we're building — the deliverables and analysis that make up the regulator
 | `strategies/` | Shared cross-component strategy briefs — one file per domain (regulatory, architecture, development, testing, risk, postmarket, commercial, operations) |
 | `dhfs/` | Per-DHF Design History Files — each DHF carries its own `design-controls/`, `risk-management/`, `cybersecurity/`, `clinical/`, `postmarket/` |
 | `submissions/` | Packages assembled for regulatory body — Q-Sub, 510(k)/De Novo/PMA, PCCP |
+| `corpus/` | Versioned evidence grounding (corpus skill) — immutable provenance-pinned data snapshots (external openFDA + internal exports) + stated assumption records, cited by analyses as `dataset@snapshot` |
 
 ## Information Flow
 
@@ -40,3 +41,4 @@ submissions/           → Assembled from per-DHF design controls; references in
 | YYYY-MM-DD | XX | Initial version — created by /medtech-docs init |
 | 2026-04-12 | clinical/postmarket ingestion | Added `clinical/` and `postmarket/` branches to the project structure. |
 | 2026-04-13 | BX | task 009: structure now reflects unified `dhfs/<dhf>/` shape (clinical/postmarket/risk live per-DHF) plus shared `strategies/` location. |
+| 2026-07-22 | BX / AI Assistant | task 108: added `corpus/` — versioned evidence-grounding data tier for the commercial analytics suite (immutable snapshots + provenance + assumption records). |

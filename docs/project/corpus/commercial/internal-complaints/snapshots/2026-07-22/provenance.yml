@@ -1,0 +1,26 @@
+dataset: commercial/internal-complaints
+snapshot: '2026-07-22'
+created_at: '2026-07-22T19:58:01+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for complaint-handling system export)
+  retrieved_at: '2026-07-22T19:58:01+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 0b4db062585b323575e6ff47f12d6efd2279bf62148d19b78437ab2be1951c65
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: e31882b297e5720d220da2aa46df5d208ce5b1188c4e492e50d454f5fdce2f6c
+    parents:
+    - 0b4db062585b323575e6ff47f12d6efd2279bf62148d19b78437ab2be1951c65
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 430

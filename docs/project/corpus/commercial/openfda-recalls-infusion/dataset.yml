@@ -1,0 +1,42 @@
+dataset: commercial/openfda-recalls-infusion
+title: Infusion-pump recalls (openFDA device/recall)
+description: >-
+  Real FDA device-recall records for infusion-pump product code FRN posted since 2021,
+  acquired from openFDA. Consumed by competitor field-benchmark and disruption-window
+  questions (BQ-09 win-rate windows, BQ-19 class safety context, BQ-21 exposure framing)
+  and the competitor-recall response playbook (overflow).
+internal: false
+max_age_days: 30
+acquisition:
+  type: openfda
+  endpoint: /device/recall.json
+  search: 'product_code:FRN AND event_date_posted:[2021-01-01 TO 2030-01-01]'
+  limit: 100
+  max_records: 1000
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+normalize:
+  type: openfda-flatten
+  output: records.csv
+  fields:
+    - cfres_id
+    - recalling_firm
+    - product_description
+    - reason_for_recall
+    - recall_status
+    - event_date_initiated
+    - event_date_posted
+    - product_code
+    - res_event_number
+schema:
+  file: records.csv
+  key: [cfres_id]
+  columns:
+    - {name: cfres_id, type: str, required: true}
+    - {name: recalling_firm, type: str, required: true}
+    - {name: reason_for_recall, type: str, required: true}
+    - {name: recall_status, type: str}
+    - {name: event_date_initiated, type: date}
+    - {name: event_date_posted, type: date}
+    - {name: product_code, type: str, required: true}
+asserts:
+  min_rows: 10

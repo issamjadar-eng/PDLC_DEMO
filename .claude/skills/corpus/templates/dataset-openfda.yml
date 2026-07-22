@@ -1,0 +1,38 @@
+# Example dataset.yml — external openFDA-acquired dataset (real public data).
+# Copy into <corpus-root>/<domain>/<dataset>/dataset.yml and adjust.
+dataset: <domain>/openfda-510k-infusion
+title: Competitor 510(k) clearances — infusion pumps
+description: >-
+  510(k) clearance records for infusion-pump product codes, acquired from openFDA.
+  Consumed by roadmap-comparison and R&D-productivity questions.
+internal: false
+max_age_days: 90            # match the source's real cadence
+acquisition:
+  type: openfda
+  endpoint: /device/510k.json
+  search: 'product_code:FRN'          # openFDA search syntax; quote Lucene specials
+  limit: 100                          # page size (openFDA max 1000)
+  max_records: 2000                   # hard cap across pages
+  usage_rights: public-domain (openFDA)
+normalize:
+  type: openfda-flatten               # built-in: flattens results[] via dot-paths
+  output: records.csv
+  fields:
+    - k_number
+    - applicant
+    - device_name
+    - decision_code
+    - decision_date
+    - date_received
+    - product_code
+    - openfda.device_class
+schema:
+  file: records.csv
+  key: [k_number]
+  columns:
+    - {name: k_number, type: str, required: true}
+    - {name: applicant, type: str, required: true}
+    - {name: decision_date, type: date}
+    - {name: product_code, type: str}
+asserts:
+  min_rows: 10

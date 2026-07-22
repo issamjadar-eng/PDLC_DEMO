@@ -1,0 +1,15 @@
+id: A-001
+title: Competitor installed-base estimates for MAUDE rate normalization
+needed_for:
+- BQ-19
+- BQ-06
+why_unavailable: Competitor installed-base unit counts are not public; MAUDE counts carry no denominator
+estimation_method: 'Share-based model: analyst market-share figures (BD ~35%, Baxter ~25%, B.Braun ~15%
+  per competitive-product-assessment.md) applied to estimated total US smart-pump installed base'
+value_or_range: TODO — to be modeled in the commercial skill tier before any rate chart ships
+confidence: low
+sources_consulted: []
+refresh_trigger: any new public installed-base disclosure, GPO award data, or annual competitive assessment
+  refresh
+created: '2026-07-22'
+status: active

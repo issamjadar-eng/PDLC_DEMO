@@ -1,0 +1,40 @@
+dataset: commercial/openfda-510k-infusion
+title: Infusion-pump 510(k) clearances (openFDA)
+description: >-
+  Real 510(k) clearance records for infusion-pump product code FRN since 2021, acquired
+  from openFDA. The public signal for competitor roadmap/pipeline questions (BQ-06 R&D
+  cycle time, BQ-12 clearance sweep, BQ-13 predictive-monitoring runway, BQ-14 parity).
+internal: false
+max_age_days: 90
+acquisition:
+  type: openfda
+  endpoint: /device/510k.json
+  search: 'product_code:FRN AND decision_date:[2021-01-01 TO 2030-01-01]'
+  limit: 100
+  max_records: 2000
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+normalize:
+  type: openfda-flatten
+  output: records.csv
+  fields:
+    - k_number
+    - applicant
+    - device_name
+    - decision_code
+    - decision_date
+    - date_received
+    - product_code
+    - clearance_type
+    - openfda.device_class
+schema:
+  file: records.csv
+  key: [k_number]
+  columns:
+    - {name: k_number, type: str, required: true}
+    - {name: applicant, type: str, required: true}
+    - {name: device_name, type: str, required: true}
+    - {name: decision_date, type: date}
+    - {name: date_received, type: date}
+    - {name: product_code, type: str, required: true}
+asserts:
+  min_rows: 20
