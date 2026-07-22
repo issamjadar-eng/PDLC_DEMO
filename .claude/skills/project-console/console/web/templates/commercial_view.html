@@ -3,7 +3,7 @@
 {% block body_class %}commercial-page{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
-<section class="cm-wrap" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
+<section class="cm-wrap cm-wrap-wide" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
   <nav class="cm-crumb"><a href="/commercial">← Commercial</a></nav>
 
   <header class="cm-head cm-head-detail">
