@@ -1,0 +1,100 @@
+{
+ "bq": "BQ-12",
+ "series": [
+  {
+   "id": "clearances-by-quarter",
+   "label": "FRN clearances per quarter",
+   "unit": "clearances",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "2021-Q4",
+     "value": 2
+    },
+    {
+     "label": "2022-Q1",
+     "value": 2
+    },
+    {
+     "label": "2022-Q2",
+     "value": 2
+    },
+    {
+     "label": "2022-Q3",
+     "value": 2
+    },
+    {
+     "label": "2023-Q1",
+     "value": 3
+    },
+    {
+     "label": "2023-Q3",
+     "value": 2
+    },
+    {
+     "label": "2023-Q4",
+     "value": 2
+    },
+    {
+     "label": "2024-Q1",
+     "value": 1
+    },
+    {
+     "label": "2024-Q2",
+     "value": 1
+    },
+    {
+     "label": "2024-Q3",
+     "value": 1
+    },
+    {
+     "label": "2024-Q4",
+     "value": 2
+    },
+    {
+     "label": "2025-Q1",
+     "value": 2
+    },
+    {
+     "label": "2025-Q2",
+     "value": 4
+    },
+    {
+     "label": "2025-Q3",
+     "value": 2
+    },
+    {
+     "label": "2026-Q1",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "window-flagged",
+   "label": "Window clearances (2025-10-30 \u2192 2026-01-28)",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "K252015",
+     "value": "Koru Medical Systems, Inc. \u2014 no flags"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "1 infusion-pump clearance(s) in the 90-day window ending 2026-01-28; 0 flag roadmap-relevant keywords \u2014 review against the roadmap lanes",
+   "evidence_class": "measured"
+  }
+ ]
+}

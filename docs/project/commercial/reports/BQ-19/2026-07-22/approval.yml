@@ -1,0 +1,14 @@
+bq: BQ-19
+edition: '2026-07-22'
+approved_by: Ben Xavier
+approved_at: '2026-07-22T20:41:39+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 1
+  freshness: pass
+  verify_note: tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md (methodology verified
+    4xCONFIRMED+2xWITH-CAVEAT; caveats actioned; values recomputed by the same deterministic pipeline
+    post-fix)
+content_hashes:
+  report.md: 5e5cd9e7f1c297cdfec6490597ebd29607836429a5a4886c3eaf08266239ed6b
+  data.json: 1936c07a2b4a89926eda51c4dcc5156a5622dbbbee33e7b398ebbc2cc194289b

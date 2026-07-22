@@ -1,0 +1,64 @@
+{
+ "bq": "BQ-06",
+ "series": [
+  {
+   "id": "cycle-by-applicant",
+   "label": "Median review days (frequent filers)",
+   "unit": "days",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "Baxter Healthcare Corporation",
+     "value": 74,
+     "clearances": 9
+    },
+    {
+     "label": "Icu Medical, Inc.",
+     "value": 257,
+     "clearances": 3
+    },
+    {
+     "label": "Fresenius Kabi AG",
+     "value": 413.0,
+     "clearances": 2
+    },
+    {
+     "label": "Carefusion 303, Inc.",
+     "value": 474.5,
+     "clearances": 2
+    },
+    {
+     "label": "Repro-Medical System, Inc., Dba Koru Medical Systems",
+     "value": 162.0,
+     "clearances": 2
+    },
+    {
+     "label": "Zevex, Inc.",
+     "value": 139.0,
+     "clearances": 2
+    }
+   ]
+  },
+  {
+   "id": "our-cycle-time",
+   "label": "Our received\u2192decision history",
+   "unit": "days",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "internal regulatory log not yet a corpus dataset (demo K-numbers are fabricated)"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Competitor 510(k) review runs a median 213 days received\u2192decision across 29 infusion-pump clearances since 2021; fastest frequent filer is Baxter Healthcare Corporation at 74 days median",
+   "evidence_class": "measured"
+  }
+ ]
+}

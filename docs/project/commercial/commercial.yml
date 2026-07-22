@@ -41,6 +41,9 @@ questions:
     category: board
     personas: [independent-director-rd]
     cadence: annual
+    corpus_deps: [commercial/openfda-510k-infusion]
+    computation: "python3 computations.py BQ-06 --corpus-root {corpus_root} --out {out}"
+    params: {top_n: 6}
   # --- B. Market & Competitive ---------------------------------------------
   - id: BQ-07
     question: "What is our actual share of the US PCA/smart-pump segment — taking share from BD/Baxter or growing with the market?"
@@ -73,6 +76,17 @@ questions:
     category: roadmap
     personas: [vp-product]
     cadence: quarterly
+    corpus_deps: [commercial/openfda-510k-infusion]
+    computation: "python3 computations.py BQ-12 --corpus-root {corpus_root} --out {out}"
+    params:
+      window_days: 90
+      # roadmap-relevance keyword map — device_name matches flag a clearance for
+      # analyst review against the F1-F9 roadmap lanes (cited as [config: commercial.yml])
+      watch_keywords:
+        ambulatory-lane: [AMBULATORY, WEARABLE, PORTABLE]
+        software-lane: [SOFTWARE, REMOTE, APP, WIRELESS, CONNECT]
+        pca-lane: [PCA, PATIENT-CONTROLLED, ANALGES]
+        syringe-lane: [SYRINGE]
   - id: BQ-13
     question: "How much runway before someone closes the predictive-monitoring gap — is our Y3 timing defensible, and what if an incumbent buys an AI entrant?"
     category: roadmap
@@ -104,6 +118,13 @@ questions:
     category: field-safety
     personas: [vp-quality, ceo]
     cadence: quarterly
+    corpus_deps: [commercial/internal-complaints, commercial/internal-fleet]
+    computation: "python3 computations.py BQ-18 --corpus-root {corpus_root} --out {out}"
+    params:
+      window_days: 90
+      # demo thresholds standing in for risk-file complaint-rate commitments
+      # (complaints per 100 fleet devices per trailing-90d window)
+      rate_threshold_per_100: {default: 2.0, occlusion-alarm: 3.0}
   - id: BQ-19
     question: "How does our adverse-event profile compare to competitors — and what denominator did you use, because MAUDE doesn't have one?"
     category: field-safety

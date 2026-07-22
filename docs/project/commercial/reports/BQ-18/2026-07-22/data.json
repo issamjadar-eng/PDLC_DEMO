@@ -1,0 +1,79 @@
+{
+ "bq": "BQ-18",
+ "series": [
+  {
+   "id": "rate-by-category",
+   "label": "Complaints per 100 devices (trailing 90d)",
+   "unit": "per 100 devices",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "occlusion-alarm",
+     "value": 3.39,
+     "count": 30
+    },
+    {
+     "label": "connectivity",
+     "value": 2.26,
+     "count": 20
+    },
+    {
+     "label": "battery",
+     "value": 1.81,
+     "count": 16
+    },
+    {
+     "label": "screen-display",
+     "value": 1.47,
+     "count": 13
+    },
+    {
+     "label": "mechanical",
+     "value": 1.24,
+     "count": 11
+    },
+    {
+     "label": "other",
+     "value": 0.79,
+     "count": 7
+    },
+    {
+     "label": "dose-programming",
+     "value": 0.45,
+     "count": 4
+    }
+   ]
+  },
+  {
+   "id": "window-trend",
+   "label": "Complaints: current vs prior window",
+   "unit": "complaints",
+   "evidence_class": "derived",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "current",
+     "value": 101
+    },
+    {
+     "label": "prior",
+     "value": 71
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "CAPA-review trigger: occlusion-alarm at 3.39 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
+   "evidence_class": "measured"
+  }
+ ]
+}
