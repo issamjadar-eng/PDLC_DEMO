@@ -125,7 +125,7 @@
       {% else %}
       <p class="cm-chart-none">{{ s._evidence.label }} — {{ s._prov_label or 'no data points' }}</p>
       {% endif %}
-      <p class="cm-prov">Source:
+      <p class="cm-prov">Source{% if s._ref_n %}<sup class="cm-ref"><a href="#cm-ref-{{ s._ref_n }}">{{ s._ref_n }}</a></sup>{% endif %}:
         {% if s._prov_link %}<a href="{{ s._prov_link }}" target="_blank" rel="noopener">{{ s._prov_label }} ↗</a>
         {% else %}{{ s._prov_label }}{% endif %}
       </p>
@@ -144,11 +144,10 @@
         <div class="cm-nar-head">
           <span class="cm-mono">{{ it.id }}</span>
           <span class="cm-chip {{ it._sev.cls }}">{{ it._sev.label }}</span>
-          <span class="cm-nar-statement">{{ it.statement }}</span>
+          <span class="cm-nar-statement">{{ it.statement }}{% for n in it._refs %}<sup class="cm-ref"><a href="#cm-ref-{{ n }}">{{ n }}</a></sup>{% endfor %}</span>
         </div>
         {% if it.mitigation %}<p class="cm-nar-mit"><strong>Mitigation:</strong> {{ it.mitigation }}</p>{% endif %}
         {% if it.action %}<p class="cm-nar-mit"><strong>Action:</strong> {{ it.action }}</p>{% endif %}
-        {% if it.evidence %}<p class="cm-nar-ev">{% for e in it.evidence %}<code>[{{ e }}]</code> {% endfor %}</p>{% endif %}
       </div>
       {% endfor %}
     </div>
@@ -174,6 +173,21 @@
     <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
     <div class="cm-report-body md-body">{{ report_html | safe }}</div>
   </section>
+
+  {% if references %}
+  <section class="cm-refs">
+    <h2>References</h2>
+    <ol>
+      {% for r in references %}
+      <li id="cm-ref-{{ r.n }}">
+        <span class="cm-refs-kind">{{ r.kind }}</span> —
+        {% if r.href %}<a href="{{ r.href }}" target="_blank" rel="noopener">{{ r.label }} ↗</a>{% else %}{{ r.label }}{% endif %}
+        <span class="cm-muted">· {{ r.detail }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
     </div><!-- /.cm-main -->
   </div><!-- /.cm-shell -->
   {% endif %}

@@ -137,7 +137,8 @@ _Ben's BQ-26 review round (2026-07-22):_
 - [x] New draft editions (.2/.3) computed lint-green; approved editions untouched (newer-draft banner links from approved view); lint caught + fixed a narrative-mitigation uncited figure; Jinja g.items→entries fix; project-console 1.42.0→1.43.0; browser-verified full BQ-26 page.
 - [x] Editions tree as left rail (Ben mid-review) — DONE: Setup-shell-style sticky rail replacing the history drawer; status chips per edition, active highlighted, immutability hint; responsive collapse. Browser-verified.
 - [x] Ask-the-Advisor on the catalog (Ben mid-review) — DONE: detail pages already had the drawer; added board-level drawer on /commercial grounded in new `/commercial/catalog/grounding` (whole-board roll-up incl. verdicts, assumptions, freshness; route declared before /{bq} to win matching). Example prompt: "Which current verdicts are judged against unvalidated expectations?"
-- [ ] Push review-round via PR
+- [x] Push review-round via PR — DONE 2026-07-22: PR #132 (`0342e1e`) + width fix PR #133 (`ef2e669`).
+- [x] Formal reference layer (Ben follow-up) — DONE 2026-07-22 (project-console 1.44.0): citation markers render as numbered superscripts + a formal References section (typed entries w/ links + detail; first-appearance numbering; :target highlight); chart source lines + narrative statements carry the numbers. Display-only — raw report keeps machine-checkable markers (lint contract unchanged). `RefBook` in console/commercial/router.py. Verified: 38 superscripts, 0 raw markers in display, all ref kinds present; browser-checked full page.
 
 _Later phases (4–6): see Plan (expand into todos when reached)._
 
