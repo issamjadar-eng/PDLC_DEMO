@@ -2,7 +2,7 @@
 
 **ID**: 109
 **Created**: 2026-07-22
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -44,12 +44,17 @@ Close the commercial persona gap in the advisors bundle. The project has a full 
 - [x] Regenerate the discovery index — all 3 new roles resolve (commercial_analysis: 32 report.md files)
 - [x] Run `render-grounding.py --agent commercial` — GROUNDING block rendered; loader smoke-test loads `Commercial Assistant` (solo, core-team); advisors tests 88 passed; dhf-manifest discovery-index tests 48 passed
 - [x] Version bookkeeping: advisors v11→v12 (+README changelog row), dhf-manifest v13→v15 (v14 note had shipped without a frontmatter bump — documented in the v15 note)
-- [ ] Push to main (commit → PR → auto-merge) when user says push; consider `/sync-skills push` for advisors + dhf-manifest registry changes
+- [x] Push to main — PDLC_DEMO PR #149 merged (`6658d48` on branch, ff'd to main); only task-109 files committed, other sessions' in-flight files untouched
+- [x] `/sync-skills push` advisors + dhf-manifest only — hitachi PR #280 squash-merged (`4eed64e`), clone ff'd, sync branch deleted; commercial/corpus/project-console LOCAL rows deliberately excluded (in-flight elsewhere); staged agents/commercial.md hand-converted to symlink (push-stage copied it as 100644 — see lessons)
 - [x] Update task doc + index; remind user new subagents need a session restart
 
 <!-- STRATEGY CONTENT: operations, advisor roster -->
 **Decision — commercial advisor added to the persona bundle (2026-07-22).** The project had a full commercial stack (commercial skill BQ editions, corpus data tier, `commercial-strategy.md`, market-research/competitive-landscape input analysis) with no advisor grounding on any of it; `commercial-strategy.md` was referenced nowhere in the canonical-roles catalog. Tier 1 deliberately deviates from the default (`architecture_strategy` + system SAD) to `commercial_strategy` + `regulatory_strategy` — commercial questions gate on filing pathway/timing, not system architecture. Catalog gaps were closed by extending `canonical-roles.yaml` (per advisors SKILL.md L43 — never papered over with literal globs). Deferred candidates, revisit if demo scope grows: manufacturing/design-transfer persona (hardware device, no owner for production readiness); reimbursement/health-economics folded into commercial rather than split out.
 <!-- /STRATEGY CONTENT -->
+
+<!-- LESSONS LEARNED: tooling -->
+**sync-skills push-stage flattens local symlinks.** Staging `agents/commercial.md` (a local symlink into `skills/advisors/agents/`) copied it into the hitachi checkout as a regular file (mode 100644), breaking the registry's advisor-symlink convention (ben/057; the v8.3 guard protects the *pull/detect* path, not push-stage symlink creation). Fixed by hand-replacing with a symlink in the checkout + `git commit --amend` before opening the PR. If this recurs, teach `push-stage` to recreate local symlinks as symlinks — candidate upstream fix for sync-skills.
+<!-- /LESSONS LEARNED -->
 
 <!-- LESSONS LEARNED: process -->
 **Strategy-domain ↔ canonical-role drift.** `project.yml strategy_domains[]` had 8 domains with strategy docs on disk, but the canonical-roles catalog only carried roles for 5 of them — `commercial-strategy.md` and `risk-strategy.md` had no role at all (testing-strategy was covered only as a `verification_plan` pattern). Consequence: existing advisors (risk-management) silently never grounded on their own domain's strategy doc. Rule of thumb: when a strategy domain is added to `project.yml` (or a strategy doc lands in `docs/project/strategies/`), add the matching `<domain>_strategy` canonical role in dhf-manifest's catalog in the same change — the discovery index only serves what the catalog names.
@@ -70,7 +75,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": {"min": 0.3, "max": 0.6},
+    "agentic_hours": {"min": 0.4, "max": 0.8},
     "todos": [
       {
         "todo": "Gap analysis: advisor roster vs project footprint (commercial stack, catalog cross-check)",
@@ -99,6 +104,13 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
         "manual_hours": {"min": 1, "max": 2},
         "confidence": "high",
         "basis": "software: mechanical install steps + running existing test suites"
+      },
+      {
+        "todo": "Selective push to main + registry sync (scoped staging around 3 other sessions' in-flight files, symlink-mode fix, PR bodies, sync log)",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 1, "max": 2},
+        "confidence": "high",
+        "basis": "software: two-repo PR workflow with selective staging + convention verification"
       }
     ]
   }
@@ -108,4 +120,5 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 ## Changelog
 
 - 2026-07-22: Task created — build commercial advisor persona (gap confirmed: no commercial persona; commercial-strategy.md unreferenced in canonical-roles catalog; risk-strategy.md same catalog gap).
+- 2026-07-22: Landed + synced; task Complete. PDLC_DEMO PR #149 merged (10 files, only task-109 scope; discovery index re-regenerated against advanced main first). Registry: hitachi PR #280 squash-merged `4eed64e` (6 files: advisors v12 + dhf-manifest v15 + agents/commercial.md symlink); clone ff'd, sync branch deleted; sync-log entry written. Excluded from both pushes: commercial/corpus/project-console in-flight files from other sessions. Residual: new subagent usable in fresh sessions (already discovered in this one); console shows Commercial Assistant after restart.
 - 2026-07-22: Built end-to-end, uncommitted. Catalog: `canonical-roles.yaml` +`commercial_strategy`/`risk_strategy`/`commercial_analysis` roles, `commercial` consumer label on header + market_research/competitive_landscape/kol_feedback (dhf-manifest v15). Agent: `.claude/skills/advisors/agents/commercial.md` authored + symlinked into `.claude/agents/` (advisors v12). project.yml: enabled + overlay stub + approved_agents. Discovery index regenerated (all 3 roles resolve; commercial_analysis = 32 report files); grounding rendered; loader loads "Commercial Assistant"; advisors tests 88/88, discovery-index tests 48/48. Awaiting user push decision; new subagent needs session restart.
