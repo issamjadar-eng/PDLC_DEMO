@@ -1,6 +1,9 @@
 bq: BQ-06
 edition: '2026-07-22'
 status: draft
-created_at: '2026-07-22T22:47:03+00:00'
+created_at: '2026-07-22T23:04:30+00:00'
 pins:
   commercial/openfda-510k-infusion: '2026-07-22'
+plan:
+  path: plans/BQ-06.md
+  sha256: 366d10ed88b672919c9d450e3279afb6130d025e05116efa8b013d2f3c41ef07

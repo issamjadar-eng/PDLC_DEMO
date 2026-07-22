@@ -1,6 +1,6 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
+ "bq": "BQ-24",
+ "edition": "2026-07-22.6",
  "generated_at": "2026-07-22T23:04:30+00:00",
  "lint": {
   "status": "pass",
@@ -74,23 +74,35 @@
   },
   {
    "kind": "derived",
+   "value": "failure-by-cohort",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
    "value": "v-main",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
+   "kind": "derived",
+   "value": "weekly-retry-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
-   "snapshot": "2026-07-22",
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -98,32 +110,32 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Worst qualifying cohort",
+    "series": "worst-cohort",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "Per-attempt failure rate",
+    "series": "failure-by-cohort",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
+    "what": "Weekly completions vs needed-retry",
+    "series": "weekly-retry-trend",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    }
   ],
   "assumed": [],
   "missing": []
  },
  "plan": {
-  "path": "plans/BQ-12.md",
+  "path": "plans/BQ-24.md",
   "status": "in-sync",
-  "pinned": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0",
-  "current": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0"
+  "pinned": "7e4f741d13160b94c0e2c32dcce8302d4478051c08e9a7324d384581dba99745",
+  "current": "7e4f741d13160b94c0e2c32dcce8302d4478051c08e9a7324d384581dba99745"
  },
  "verifications": []
 }

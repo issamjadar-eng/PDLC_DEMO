@@ -1,13 +1,12 @@
 {
  "bq": "BQ-06",
  "edition": "2026-07-22",
- "generated_at": "2026-07-22T22:57:10+00:00",
+ "generated_at": "2026-07-22T23:04:30+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
   "warnings": [
-   "L22: estimation language without [assume: A-NNN]: corpus dataset. The series is marked no-data rather than estimated.",
-   "edition predates plan pinning \u2014 re-answer to pin the plan version"
+   "L22: estimation language without [assume: A-NNN]: corpus dataset. The series is marked no-data rather than estimated."
   ],
   "checks": [
    {
@@ -68,13 +67,8 @@
     "id": "plan-currency",
     "name": "Plan currency",
     "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
-    "status": "warn",
-    "findings": [
-     {
-      "severity": "warning",
-      "message": "edition predates plan pinning \u2014 re-answer to pin the plan version"
-     }
-    ]
+    "status": "pass",
+    "findings": []
    }
   ]
  },
@@ -148,9 +142,9 @@
  },
  "plan": {
   "path": "plans/BQ-06.md",
-  "status": "unpinned",
-  "pinned": null,
-  "current": "0a6092d0b44ae1ccc7dc75c63a7bd37c0cfa768fcd877c40eeb1a70c4e8d76d1"
+  "status": "in-sync",
+  "pinned": "366d10ed88b672919c9d450e3279afb6130d025e05116efa8b013d2f3c41ef07",
+  "current": "366d10ed88b672919c9d450e3279afb6130d025e05116efa8b013d2f3c41ef07"
  },
  "verifications": []
 }

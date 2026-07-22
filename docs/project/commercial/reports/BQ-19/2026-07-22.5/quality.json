@@ -1,11 +1,13 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
+ "bq": "BQ-19",
+ "edition": "2026-07-22.5",
  "generated_at": "2026-07-22T23:04:30+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
-  "warnings": [],
+  "warnings": [
+   "L21: estimation language without [assume: A-NNN]: establish incidence rates. A per-manufacturer rate requires an installed-base es"
+  ],
   "checks": [
    {
     "id": "artifacts",
@@ -32,8 +34,13 @@
     "id": "estimation-language",
     "name": "Estimation language",
     "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
-    "status": "pass",
-    "findings": []
+    "status": "warn",
+    "findings": [
+     {
+      "severity": "warning",
+      "message": "L21: estimation language without [assume: A-NNN]: establish incidence rates. A per-manufacturer rate requires an installed-base es"
+     }
+    ]
    },
    {
     "id": "pin-freshness",
@@ -67,10 +74,28 @@
  },
  "references": [
   {
+   "kind": "assume",
+   "value": "A-001",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
    "kind": "config",
-   "value": "commercial.yml",
+   "value": "entity-aliases.yml",
    "resolved": true,
    "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "total-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
@@ -80,17 +105,31 @@
   },
   {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/openfda-maude-infusion-mfr@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-infusion-monthly@2026-07-22",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
+   "dataset": "commercial/openfda-maude-infusion-mfr",
    "snapshot": "2026-07-22",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-maude-infusion-monthly",
+   "snapshot": "2026-07-22",
+   "age_days": 0,
+   "max_age_days": 30,
    "band": "fresh",
    "waived": false
   }
@@ -98,32 +137,47 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Class-wide MAUDE events (charted window)",
+    "series": "total-events",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/openfda-maude-infusion-monthly@2026-07-22"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "Class-wide MAUDE events per month",
+    "series": "monthly-events",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/openfda-maude-infusion-monthly@2026-07-22"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
+    "what": "MAUDE events by manufacturer (canonical)",
+    "series": "events-by-mfr",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/openfda-maude-infusion-mfr@2026-07-22"
    }
   ],
-  "assumed": [],
-  "missing": []
+  "assumed": [
+   {
+    "what": "figure(s) citing A-001",
+    "series": null,
+    "evidence_class": "assumed",
+    "source": "A-001"
+   }
+  ],
+  "missing": [
+   {
+    "what": "Event rate per installed device",
+    "series": "rate-by-mfr",
+    "evidence_class": "unavailable",
+    "source": "A-001",
+    "note": "blocked until A-001 quantifies installed-base denominators"
+   }
+  ]
  },
  "plan": {
-  "path": "plans/BQ-12.md",
+  "path": "plans/BQ-19.md",
   "status": "in-sync",
-  "pinned": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0",
-  "current": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0"
+  "pinned": "9ae6a18d4979ddae3528de2371d2d78f623d7a4f2e5299f7a251285198cf54d4",
+  "current": "9ae6a18d4979ddae3528de2371d2d78f623d7a4f2e5299f7a251285198cf54d4"
  },
  "verifications": []
 }

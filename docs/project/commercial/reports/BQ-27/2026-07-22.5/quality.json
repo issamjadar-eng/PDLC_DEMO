@@ -1,7 +1,7 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
- "generated_at": "2026-07-22T23:04:30+00:00",
+ "bq": "BQ-27",
+ "edition": "2026-07-22.5",
+ "generated_at": "2026-07-22T23:04:31+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -74,23 +74,35 @@
   },
   {
    "kind": "derived",
+   "value": "currency-by-connectivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "currency-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
    "value": "v-main",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-fleet@2026-07-22",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
+   "dataset": "commercial/internal-fleet",
    "snapshot": "2026-07-22",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -98,32 +110,40 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Fleet currency",
+    "series": "behind-stat",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-fleet@2026-07-22"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "% \u22651 version behind",
+    "series": "behind-by-region",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-fleet@2026-07-22"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
+    "what": "Current-version % by connectivity",
+    "series": "currency-by-connectivity",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-fleet@2026-07-22"
    }
   ],
   "assumed": [],
-  "missing": []
+  "missing": [
+   {
+    "what": "Fleet currency over time",
+    "series": "currency-history",
+    "evidence_class": "unavailable",
+    "source": "one fleet snapshot exists \u2014 history accumulates as the 7-day refresh cadence produces more; a single point is not a trend",
+    "note": "one fleet snapshot exists \u2014 history accumulates as the 7-day refresh cadence produces more; a single point is not a trend"
+   }
+  ]
  },
  "plan": {
-  "path": "plans/BQ-12.md",
+  "path": "plans/BQ-27.md",
   "status": "in-sync",
-  "pinned": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0",
-  "current": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0"
+  "pinned": "48f0072321a41fdda89aed2044814bffba91bbfbbb155e1a56eea3f34abf08be",
+  "current": "48f0072321a41fdda89aed2044814bffba91bbfbbb155e1a56eea3f34abf08be"
  },
  "verifications": []
 }

@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "generated": "2026-07-22T23:00:03+00:00",
+ "generated": "2026-07-22T23:04:31+00:00",
  "categories": [
   {
    "key": "board",
@@ -396,40 +396,6 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.3",
-   "latest_edition": "2026-07-22.3",
-   "editions": [
-    {
-     "edition": "2026-07-22",
-     "status": "approved"
-    },
-    {
-     "edition": "2026-07-22.2",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.3",
-     "status": "draft"
-    }
-   ],
-   "assumptions": [],
-   "freshness": "fresh",
-   "verdict_headline": "CAPA-review trigger: occlusion-alarm at 3.39 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
-   "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-22.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-22.3/data.json"
-  },
-  {
-   "id": "BQ-19",
-   "question": "How does our adverse-event profile compare to competitors \u2014 and what denominator did you use, because MAUDE doesn't have one?",
-   "category": "field-safety",
-   "personas": [
-    "ceo",
-    "vp-quality"
-   ],
-   "cadence": "quarterly",
-   "status": "answered",
-   "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.4",
    "latest_edition": "2026-07-22.4",
    "editions": [
@@ -450,14 +416,56 @@
      "status": "draft"
     }
    ],
+   "assumptions": [],
+   "freshness": "fresh",
+   "verdict_headline": "CAPA-review trigger: occlusion-alarm at 3.39 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-22.4/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-22.4/data.json"
+  },
+  {
+   "id": "BQ-19",
+   "question": "How does our adverse-event profile compare to competitors \u2014 and what denominator did you use, because MAUDE doesn't have one?",
+   "category": "field-safety",
+   "personas": [
+    "ceo",
+    "vp-quality"
+   ],
+   "cadence": "quarterly",
+   "status": "answered",
+   "approved_edition": "2026-07-22",
+   "draft_edition": "2026-07-22.5",
+   "latest_edition": "2026-07-22.5",
+   "editions": [
+    {
+     "edition": "2026-07-22",
+     "status": "approved"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.4",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
+    }
+   ],
    "assumptions": [
     "A-001"
    ],
    "freshness": "fresh",
    "verdict_headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-22.4/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-22.4/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-22.5/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-22.5/data.json"
   },
   {
    "id": "BQ-20",
@@ -530,8 +538,8 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-22.5",
+   "draft_edition": "2026-07-22.6",
+   "latest_edition": "2026-07-22.6",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -552,14 +560,18 @@
     {
      "edition": "2026-07-22.5",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.6",
+     "status": "draft"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-22.5/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-22.5/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-22.6/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-22.6/data.json"
   },
   {
    "id": "BQ-24",
@@ -571,8 +583,8 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-22.5",
+   "draft_edition": "2026-07-22.6",
+   "latest_edition": "2026-07-22.6",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -593,14 +605,18 @@
     {
      "edition": "2026-07-22.5",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.6",
+     "status": "draft"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-22.5/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-22.5/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-22.6/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-22.6/data.json"
   },
   {
    "id": "BQ-25",
@@ -613,8 +629,8 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-22.4",
+   "draft_edition": "2026-07-22.5",
+   "latest_edition": "2026-07-22.5",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -631,6 +647,10 @@
     {
      "edition": "2026-07-22.4",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
     }
    ],
    "assumptions": [
@@ -639,8 +659,8 @@
    "freshness": "fresh",
    "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-22.4/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-22.4/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-22.5/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-22.5/data.json"
   },
   {
    "id": "BQ-26",
@@ -697,8 +717,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-22.4",
+   "draft_edition": "2026-07-22.5",
+   "latest_edition": "2026-07-22.5",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -715,14 +735,18 @@
     {
      "edition": "2026-07-22.4",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-22.4/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-22.4/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-22.5/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-22.5/data.json"
   },
   {
    "id": "BQ-28",
