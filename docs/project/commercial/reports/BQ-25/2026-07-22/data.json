@@ -1,0 +1,103 @@
+{
+ "bq": "BQ-25",
+ "series": [
+  {
+   "id": "tickets-per-100",
+   "label": "Tickets per 100 attempted upgrades",
+   "unit": "tickets/100",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 17.6
+    },
+    {
+     "label": "EMEA",
+     "value": 21.5
+    },
+    {
+     "label": "NA",
+     "value": 21.7
+    }
+   ]
+  },
+  {
+   "id": "tickets-by-method",
+   "label": "Tickets per 100 attempted, by method",
+   "unit": "tickets/100",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "remote",
+     "value": 22.3
+    },
+    {
+     "label": "onsite",
+     "value": 19.4
+    }
+   ]
+  },
+  {
+   "id": "rollback-sites",
+   "label": "Sites with rollbacks",
+   "unit": "sites",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "S-EMEA-15",
+     "value": 1
+    },
+    {
+     "label": "S-NA-13",
+     "value": 1
+    },
+    {
+     "label": "S-NA-18",
+     "value": 1
+    },
+    {
+     "label": "S-NA-23",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "customer-cost-range",
+   "label": "Estimated customer-side cost (on-site portion)",
+   "unit": "USD",
+   "evidence_class": "assumed",
+   "provenance": {
+    "assumption": "A-002"
+   },
+   "points": [
+    {
+     "label": "low",
+     "value": 7272
+    },
+    {
+     "label": "high",
+     "value": 16412
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
+   "evidence_class": "assumed"
+  }
+ ]
+}

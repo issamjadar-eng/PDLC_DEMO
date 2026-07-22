@@ -708,8 +708,10 @@ def cmd_list(args):
     return 0
 
 
-def next_record_id(dirpath: Path, prefix: str) -> str:
-    ids = [int(m.group(1)) for p in dirpath.glob(f"{prefix}-*.yml")
+def next_record_id(root: Path, prefix: str, subdir: str) -> str:
+    """Globally unique across the whole corpus root — assumption/waiver ids are cited
+    bare (A-NNN) by downstream analyses, so per-dataset numbering would collide."""
+    ids = [int(m.group(1)) for p in root.glob(f"*/*/{subdir}/{prefix}-*.yml")
            if (m := re.match(rf"{prefix}-(\d+)$", p.stem))]
     return f"{prefix}-{(max(ids) + 1) if ids else 1:03d}"
 
@@ -718,7 +720,7 @@ def cmd_assume(args):
     root = Path(args.root)
     ds = dataset_dir(root, args.dataset)
     (ds / "assumptions").mkdir(exist_ok=True)
-    aid = next_record_id(ds / "assumptions", "A")
+    aid = next_record_id(root, "A", "assumptions")
     rec = {
         "id": aid,
         "title": args.title,
@@ -741,7 +743,7 @@ def cmd_waive(args):
     root = Path(args.root)
     ds = dataset_dir(root, args.dataset)
     (ds / "waivers").mkdir(exist_ok=True)
-    wid = next_record_id(ds / "waivers", "W")
+    wid = next_record_id(root, "W", "waivers")
     rec = {
         "id": wid,
         "reason": args.reason,

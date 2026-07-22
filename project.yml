@@ -255,6 +255,7 @@ security:
   - advisors
   - best-practices
   - change-control
+  - commercial
   - corpus
   - dhf-manifest
   - digest

@@ -1,0 +1,84 @@
+{
+ "bq": "BQ-23",
+ "series": [
+  {
+   "id": "coverage-by-region",
+   "label": "Coverage %",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 44.7
+    },
+    {
+     "label": "EMEA",
+     "value": 50.8
+    },
+    {
+     "label": "NA",
+     "value": 77.2
+    }
+   ]
+  },
+  {
+   "id": "weekly-run-rate",
+   "label": "Completions per week (trailing 4w)",
+   "unit": "devices/week",
+   "evidence_class": "derived",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 4.5
+    },
+    {
+     "label": "EMEA",
+     "value": 0.2
+    },
+    {
+     "label": "NA",
+     "value": 0.0
+    }
+   ]
+  },
+  {
+   "id": "projected-finish",
+   "label": "Projected finish date",
+   "unit": "date",
+   "evidence_class": "derived",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": "2026-09-21"
+    },
+    {
+     "label": "EMEA",
+     "value": "2031-01-25"
+    },
+    {
+     "label": "NA",
+     "value": "no-recent-completions"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
+   "evidence_class": "derived"
+  }
+ ]
+}

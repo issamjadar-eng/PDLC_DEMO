@@ -63,7 +63,10 @@ def main():
             failed_once = rng3.random() < p_fail
             if done:
                 status = "completed-after-retry" if failed_once else "completed"
-                cdate = (wstart + dt.timedelta(days=rng3.randint(0, 70))).isoformat()
+                # completion dates never post-date the export as-of date
+                as_of = dt.date(2026, 7, 20)
+                span = min(70, max(1, (as_of - wstart).days))
+                cdate = (wstart + dt.timedelta(days=rng3.randint(0, span))).isoformat()
             else:
                 status = "failed-pending-retry" if failed_once else "scheduled"
                 cdate = ""

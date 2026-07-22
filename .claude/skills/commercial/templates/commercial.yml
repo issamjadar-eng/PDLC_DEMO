@@ -1,0 +1,24 @@
+# Starter question catalog for the commercial skill. Copy to <root>/commercial.yml.
+# Questions without a `computation` are visible as not-implemented (roadmap, not silence).
+categories:
+  - {key: board, name: Board & Portfolio}
+  - {key: market, name: Market & Competitive}
+  - {key: roadmap, name: Roadmap & State of the Art}
+  - {key: field-safety, name: "Field: Complaints & Safety"}
+  - {key: field-ops, name: "Field: Upgrades & Service Ops"}
+  - {key: economics, name: Economics & Plan-vs-Actual}
+questions:
+  - id: BQ-01
+    question: "Which product lines fund the company and which consume it?"
+    category: board
+    personas: [board]
+    cadence: quarterly
+    # no computation yet -> not-implemented
+  - id: BQ-23
+    question: "Where do we stand on field-update campaign coverage vs plan?"
+    category: field-ops
+    personas: [field-service]
+    cadence: weekly
+    corpus_deps: [<domain>/upgrade-campaign-dataset]
+    computation: "python3 computations.py BQ-23 --corpus-root {corpus_root} --out {out}"
+    params: {close_date: "YYYY-MM-DD", target_pct: 95}
