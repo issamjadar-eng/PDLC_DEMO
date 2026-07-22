@@ -2,6 +2,66 @@
  "bq": "BQ-06",
  "series": [
   {
+   "id": "overall-median",
+   "label": "Overall median review interval",
+   "unit": "days",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "median days received\u2192decision, all clearances since 2021",
+     "value": 213
+    }
+   ]
+  },
+  {
+   "id": "cycle-by-year",
+   "label": "Median review days by decision year",
+   "unit": "days",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "lines": [
+    {
+     "label": "FRN clearances",
+     "points": [
+      {
+       "x": "2021-01-01",
+       "y": 446.0
+      },
+      {
+       "x": "2022-01-01",
+       "y": 268.0
+      },
+      {
+       "x": "2023-01-01",
+       "y": 265
+      },
+      {
+       "x": "2024-01-01",
+       "y": 103
+      },
+      {
+       "x": "2025-01-01",
+       "y": 171.5
+      },
+      {
+       "x": "2026-01-01",
+       "y": 215
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
    "id": "cycle-by-applicant",
    "label": "Median review days (frequent filers)",
    "unit": "days",

@@ -273,7 +273,8 @@ def normalize_openfda_count(norm: dict, raw_dir: Path, normalized_dir: Path, log
     rows, skipped = [], 0
     for page in sorted(raw_dir.glob("page-*.json")):
         for rec in json.loads(page.read_text()).get("results", []):
-            term = str(rec.get("term", "")).strip()
+            # term-counts use "term"; date-field counts use "time" (YYYYMMDD)
+            term = str(rec.get("term", rec.get("time", ""))).strip()
             if not term:
                 skipped += 1  # openFDA count buckets can include an empty term — unusable as a key
                 continue

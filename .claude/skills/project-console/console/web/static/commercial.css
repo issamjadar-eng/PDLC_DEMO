@@ -145,6 +145,20 @@ a.cm-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgb
 .sv-med { --c: #c98500; }
 .sv-low { --c: #64748b; }
 
+/* stat tiles — headline numbers (form: single headline, not a chart) */
+.cm-stats-row { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+.cm-stat-tile { display: flex; flex-direction: column; gap: .15rem; }
+.cm-stat-n { font-size: 1.9rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cm-stat-l { font-size: .76rem; color: var(--body-text-muted, #64748b); }
+.cm-stat-sub { font-size: .7rem; color: var(--body-text-muted, #64748b); }
+
+/* paired bars — two measures per category (plan vs actual) */
+.cm-pair-row { display: grid; grid-template-columns: minmax(70px, auto) 1fr auto; gap: .6rem; align-items: center; padding: .3rem 0; }
+.cm-pair-tracks { display: grid; gap: 3px; }
+.cm-pair-a { background: #3987e5; }
+.cm-pair-b { background: #d95926; }
+span.cm-ts-swatch.cm-pair-a, span.cm-ts-swatch.cm-pair-b { width: 10px; height: 10px; }
+
 /* timeseries line charts */
 .cm-ts svg { width: 100%; height: auto; display: block; }
 .cm-ts-axis { stroke: color-mix(in srgb, var(--body-text-muted, #64748b) 35%, transparent); stroke-width: 1; }

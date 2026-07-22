@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "generated": "2026-07-22T20:59:03+00:00",
+ "generated": "2026-07-22T21:34:43+00:00",
  "categories": [
   {
    "key": "board",
@@ -404,11 +404,15 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": null,
+   "draft_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
      "status": "approved"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
     }
    ],
    "assumptions": [
@@ -488,7 +492,7 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.2",
+   "draft_edition": "2026-07-22.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -496,6 +500,10 @@
     },
     {
      "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
      "status": "draft"
     }
    ],
@@ -516,7 +524,7 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.2",
+   "draft_edition": "2026-07-22.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -524,6 +532,10 @@
     },
     {
      "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
      "status": "draft"
     }
    ],
@@ -545,11 +557,15 @@
    "cadence": "weekly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": null,
+   "draft_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
      "status": "approved"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
     }
    ],
    "assumptions": [
@@ -578,6 +594,10 @@
      "status": "approved"
     },
     {
+     "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
      "edition": "2026-07-22.3",
      "status": "draft"
     }
@@ -599,11 +619,15 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": null,
+   "draft_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
      "status": "approved"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
     }
    ],
    "assumptions": [],

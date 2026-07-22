@@ -1,7 +1,7 @@
 ---
 name: corpus
 description: "Versioned evidence-corpus grounding engine — acquire external data (openFDA, web, APIs) and internal exports into immutable, provenance-pinned snapshots that analyses can cite as dataset@snapshot. Owns the corpus tree (default docs/project/corpus/): dated snapshots (raw byte-pinned payloads + schema-validated normalized CSV + provenance.yml with hash-chained lineage), first-class A-NNN assumption records (where data doesn't exist, the assumption is stated, never silently invented), W-NNN freshness waivers with expiry, per-dataset max_age_days freshness enforcement, and refresh delta reports ('what changed since last snapshot'). TRIGGER when the user wants to: acquire / snapshot / pull / pin / version external or internal data for grounding ('snapshot the openFDA 510(k) data', 'pull competitor recalls into the corpus', 'set up a dataset for X'); refresh a corpus or ask what changed since the last refresh; record or review an assumption where data is unavailable; check corpus health, freshness, staleness, or provenance integrity; waive a stale dataset; or diff two snapshots. Also trigger on any edit under a corpus tree (dataset.yml, snapshots/, assumptions/, waivers/) — snapshots are immutable and hand-edits break hash pins; route changes through the actions. Downstream analysis skills (e.g. a commercial-analytics skill) declare corpus datasets as dependencies and cite snapshots — this skill owns the data tier only, no analysis, no visualization."
-version: 1
+version: 2
 updated: 2026-07-22
 ---
 

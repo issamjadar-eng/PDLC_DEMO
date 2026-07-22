@@ -87,7 +87,35 @@
         <span class="cm-chart-title">{{ s.label }}</span>
         <span class="cm-badge {{ s._evidence.cls }}" title="{{ s._evidence.tip }}">{{ s._evidence.glyph }} {{ s._evidence.label }}</span>
       </figcaption>
-      {% if s._ts %}
+      {% if s._stat %}
+      <div class="cm-stats-row">
+        {% for t in s._stat %}
+        <div class="cm-stat-tile">
+          <span class="cm-stat-n">{{ t.value }}{% if s.unit == '%' %}%{% endif %}</span>
+          <span class="cm-stat-l">{{ t.label }}{% if s.unit and s.unit != '%' %} ({{ s.unit }}){% endif %}</span>
+          {% if t.sub %}<span class="cm-stat-sub">{{ t.sub }}</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% elif s._paired %}
+      <div class="cm-bars" role="img" aria-label="{{ s.label }}">
+        {% for r in s._paired.rows %}
+        <div class="cm-pair-row" title="{{ r.tip }}">
+          <span class="cm-bar-label">{{ r.label }}</span>
+          <span class="cm-pair-tracks">
+            <span class="cm-bar-track"><span class="cm-bar-fill cm-pair-a" style="width: {{ r.a_pct }}%"></span></span>
+            <span class="cm-bar-track"><span class="cm-bar-fill cm-pair-b" style="width: {{ r.b_pct }}%"></span></span>
+          </span>
+          <span class="cm-bar-value">{{ r.a }} / {{ r.b }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="cm-ts-legend">
+        <span class="cm-ts-key"><span class="cm-ts-swatch cm-pair-a"></span>{{ s._paired.a_label }}</span>
+        <span class="cm-ts-key"><span class="cm-ts-swatch cm-pair-b"></span>{{ s._paired.b_label }}</span>
+        {% if s.unit %}<span class="cm-muted">· {{ s.unit }}</span>{% endif %}
+      </div>
+      {% elif s._ts %}
       <div class="cm-ts">
         <svg viewBox="0 0 {{ s._ts.w }} {{ s._ts.h }}" role="img" aria-label="{{ s.label }}" preserveAspectRatio="xMidYMid meet">
           <line x1="{{ s._ts.left }}" y1="{{ s._ts.y0_y }}" x2="{{ s._ts.right }}" y2="{{ s._ts.y0_y }}" class="cm-ts-axis"/>

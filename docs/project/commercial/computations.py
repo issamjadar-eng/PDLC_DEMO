@@ -22,6 +22,7 @@ BANNER = "_Demo sample data — not for clinical use._"
 CAMPAIGN_DS = "commercial/internal-upgrade-campaign"
 FLEET_DS = "commercial/internal-fleet"
 MAUDE_DS = "commercial/openfda-maude-infusion-mfr"
+MAUDE_MONTHLY_DS = "commercial/openfda-maude-infusion-monthly"
 
 COMPLETED = ("completed", "completed-after-retry")
 ATTEMPT_FAIL = ("completed-after-retry", "failed-pending-retry", "rolled-back")
@@ -272,6 +273,11 @@ def bq23(corpus_root, out, pins):
     data = {
         "bq": "BQ-23",
         "series": [
+            {"id": "coverage-stat", "label": "Campaign coverage", "unit": "%",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": f"of {total} targeted devices completed",
+                         "value": pct(total_done, total)}]},
             {"id": "cumulative-coverage", "label": "Cumulative coverage % by region", "unit": "%",
              "kind": "timeseries", "evidence_class": "measured",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "lines": cum_lines,
@@ -378,11 +384,40 @@ def bq24(corpus_root, out, pins):
         f"- Attempt failure = status in `completed-after-retry`, `failed-pending-retry`, `rolled-back`,",
         f"  measured from [src: {src}].",
     ]
+    # historical view: weekly completions vs completions-that-needed-retry
+    dated = [r for r in rows if r["completed_date"]]
+    wk_all, wk_retry = {}, {}
+    for r in dated:
+        w = week_start(r["completed_date"])
+        wk_all[w] = wk_all.get(w, 0) + 1
+        if r["status"] in ("completed-after-retry", "rolled-back"):
+            wk_retry[w] = wk_retry.get(w, 0) + 1
+    weeks = week_range(min(r["completed_date"] for r in dated), max(r["completed_date"] for r in dated)) \
+        if dated else []
+    worst = max(flagged, key=lambda s: s["rate"]) if flagged else None
+    lines.insert(-3, f"- Historical view: weekly completions vs completions that needed a retry are "
+                     f"charted [derived: weekly-retry-trend] [src: {src}] (only dated events; "
+                     f"still-pending failures have no date and are excluded — stated, not hidden).")
     data = {
         "bq": "BQ-24",
-        "series": [{"id": "failure-by-cohort", "label": "Per-attempt failure rate", "unit": "%",
-                    "evidence_class": "measured",
-                    "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": pts}],
+        "series": [
+            {"id": "worst-cohort", "label": "Worst qualifying cohort", "unit": "%",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": (f"per-attempt failure — hw {worst['hw']} / from {worst['fv']}"
+                                   if worst else "per-attempt failure (no cohort over threshold)"),
+                         "value": worst["rate"] if worst else overall}]},
+            {"id": "failure-by-cohort", "label": "Per-attempt failure rate", "unit": "%",
+             "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": pts},
+            {"id": "weekly-retry-trend", "label": "Weekly completions vs needed-retry", "unit": "devices/week",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "lines": [
+                 {"label": "completions", "points": [{"x": w, "y": wk_all.get(w, 0)} for w in weeks]},
+                 {"label": "needed retry", "points": [{"x": w, "y": wk_retry.get(w, 0)} for w in weeks]},
+             ], "points": []},
+        ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
         "narrative": narrative,
         "expectations": exps,
@@ -453,9 +488,30 @@ def bq25(corpus_root, out, pins):
         "- Customer cost is an assumed estimate [assume: A-002] — revisit when reference-account",
         "  validation lands (A-002 refresh trigger).",
     ]
+    # historical view: weekly tickets by region (dated = completed rows; stated limitation)
+    dated = [r for r in rows if r["completed_date"]]
+    t_weeks = week_range(min(r["completed_date"] for r in dated), max(r["completed_date"] for r in dated)) \
+        if dated else []
+    t_lines = []
+    for reg in regions:
+        wk = {}
+        for r in dated:
+            if r["region"] == reg:
+                w = week_start(r["completed_date"])
+                wk[w] = wk.get(w, 0) + int(r["tickets_opened"])
+        t_lines.append({"label": reg, "points": [{"x": w, "y": wk.get(w, 0)} for w in t_weeks]})
+
     data = {
         "bq": "BQ-25",
         "series": [
+            {"id": "rollback-stat", "label": "Rollbacks", "unit": "sites",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": "sites with a rolled-back update", "value": len(rollback_sites)}]},
+            {"id": "weekly-tickets", "label": "Weekly tickets by region (dated events only)",
+             "unit": "tickets/week", "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "lines": t_lines, "points": []},
             {"id": "tickets-per-100", "label": "Tickets per 100 attempted upgrades", "unit": "tickets/100",
              "evidence_class": "measured",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": tick_pts},
@@ -603,9 +659,11 @@ def bq26(corpus_root, out, pins):
              "kind": "timeseries", "evidence_class": "measured",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "lines": trend_lines,
              "points": []},
-            {"id": "required-rate", "label": "Required vs current completions/week", "unit": "devices/week",
+            {"id": "required-rate", "label": "Current vs required completions/week", "unit": "devices/week",
+             "kind": "paired-bars", "pairs": {"a_label": "current rate", "b_label": "required rate"},
              "evidence_class": "derived",
-             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": pts},
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": q["label"], "a": q["current_rate"], "b": q["value"]} for q in pts]},
             {"id": "fse-capacity", "label": "FSE capacity (roster/utilization)", "unit": "FSE-days",
              "evidence_class": "unavailable",
              "provenance": {"note": "no corpus dataset acquired yet — needed for hire/contract/slip"},
@@ -668,9 +726,22 @@ def bq27(corpus_root, out, pins):
         "- An outdated drug-error-reduction library is a patient-safety exposure, not just an ops",
         "  metric — currency lag feeds the risk conversation.",
     ]
+    lines.insert(-3, "- Historical view: currency-over-time needs MULTIPLE fleet snapshots — the "
+                     "dataset's 7-day cadence will accumulate them; until then the history series is "
+                     "marked no-data rather than faked [derived: currency-history].")
     data = {
         "bq": "BQ-27",
         "series": [
+            {"id": "behind-stat", "label": "Fleet currency", "unit": "%",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": FLEET_DS, "snapshot": snap},
+             "points": [{"label": "of PP3500 fleet ≥1 firmware version behind",
+                         "value": pct(len(behind1), len(pp))}]},
+            {"id": "currency-history", "label": "Fleet currency over time", "unit": "%",
+             "kind": "timeseries", "evidence_class": "unavailable",
+             "provenance": {"note": "one fleet snapshot exists — history accumulates as the 7-day "
+                                    "refresh cadence produces more; a single point is not a trend"},
+             "lines": [], "points": []},
             {"id": "behind-by-region", "label": "% ≥1 version behind", "unit": "%",
              "evidence_class": "measured",
              "provenance": {"dataset": FLEET_DS, "snapshot": snap}, "points": reg_pts},
@@ -707,6 +778,19 @@ def bq19(corpus_root, out, pins):
     a001 = yaml.safe_load(open(corpus_root / MAUDE_DS / "assumptions" / "A-001.yml"))
     rate_ready = isinstance(a001.get("model"), dict)
 
+    # class-wide monthly history (daily date-count buckets -> months); the trailing
+    # ~2 months are excluded: MAUDE reporting lag makes them artificially low
+    mrows, msnap = load_pin_csv(corpus_root, pins, MAUDE_MONTHLY_DS)
+    msrc = f"{MAUDE_MONTHLY_DS}@{msnap}"
+    monthly = {}
+    for r in mrows:
+        t = r["term"]
+        monthly[f"{t[:4]}-{t[4:6]}"] = monthly.get(f"{t[:4]}-{t[4:6]}", 0) + int(r["count"])
+    months_sorted = sorted(monthly)
+    lag_cut = months_sorted[-2:] if len(months_sorted) > 2 else []
+    hist_pts = [{"x": m + "-01", "y": monthly[m]} for m in months_sorted if m not in lag_cut]
+    total_events = sum(monthly[m] for m in months_sorted if m not in lag_cut)
+
     headline = ("MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED — "
                 "the installed-base denominator (A-001) is not yet quantified")
 
@@ -733,14 +817,28 @@ def bq19(corpus_root, out, pins):
         "- Manufacturer identity is normalized via the versioned alias map",
         "  [config: entity-aliases.yml]; unmatched names stay raw and visible.",
         "",
+        f"## Class-wide history", "",
+        f"- Monthly class-wide event counts since 2023 are charted [derived: monthly-events] "
+        f"[src: {msrc}]; the trailing two months are excluded — MAUDE reporting lag makes them "
+        f"artificially low, and charting them would fake a decline.",
+        f"- {total_events:,} events in the charted window [derived: total-events] [src: {msrc}].",
+        "",
         "## Method & provenance", "",
-        f"- Counts measured from openFDA's count API [src: {src}] (public domain).",
+        f"- Counts measured from openFDA's count API [src: {src}] and [src: {msrc}] (public domain).",
         "- No comparative-safety claim is substantiated by this data alone — see the assumption",
         "  record [assume: A-001] for what would be required.",
     ]
     data = {
         "bq": "BQ-19",
         "series": [
+            {"id": "total-events", "label": "Class-wide MAUDE events (charted window)", "unit": "events",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": MAUDE_MONTHLY_DS, "snapshot": msnap},
+             "points": [{"label": "FRN events since 2023 (excl. lag tail)", "value": total_events}]},
+            {"id": "monthly-events", "label": "Class-wide MAUDE events per month", "unit": "events",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": MAUDE_MONTHLY_DS, "snapshot": msnap},
+             "lines": [{"label": "FRN class", "points": hist_pts}], "points": []},
             {"id": "events-by-mfr", "label": "MAUDE events by manufacturer (canonical)", "unit": "events",
              "evidence_class": "measured",
              "provenance": {"dataset": MAUDE_DS, "snapshot": snap},
@@ -814,9 +912,29 @@ def bq06(corpus_root, out, pins):
         "## Method & provenance", "",
         f"- Intervals computed from public `date_received` / `decision_date` in [src: {src}].",
     ]
+    # historical view: median review interval per decision year
+    by_year = {}
+    for r in rows:
+        if r["decision_date"] and r["date_received"]:
+            y = r["decision_date"][:4]
+            d = (dt.date.fromisoformat(r["decision_date"]) - dt.date.fromisoformat(r["date_received"])).days
+            by_year.setdefault(y, []).append(d)
+    year_pts = [{"x": f"{y}-01-01", "y": _median(ds)} for y, ds in sorted(by_year.items())]
+
+    lines.insert(-4, f"- Historical view: median review interval per decision year is charted "
+                     f"[derived: cycle-by-year] [src: {src}].")
     data = {
         "bq": "BQ-06",
         "series": [
+            {"id": "overall-median", "label": "Overall median review interval", "unit": "days",
+             "kind": "stat", "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "points": [{"label": "median days received→decision, all clearances since 2021",
+                         "value": overall}]},
+            {"id": "cycle-by-year", "label": "Median review days by decision year", "unit": "days",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "lines": [{"label": "FRN clearances", "points": year_pts}], "points": []},
             {"id": "cycle-by-applicant", "label": "Median review days (frequent filers)", "unit": "days",
              "evidence_class": "measured",
              "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
@@ -886,13 +1004,22 @@ def bq12(corpus_root, out, pins):
         "- Scope: product code FRN only; adjacent SaMD/monitoring codes need a wider corpus dataset",
         "  before concluding no entrant activity (dataset README notes this limitation).",
     ]
+    q_start = {"1": "01", "2": "04", "3": "07", "4": "10"}
     data = {
         "bq": "BQ-12",
         "series": [
-            {"id": "clearances-by-quarter", "label": "FRN clearances per quarter", "unit": "clearances",
-             "evidence_class": "measured",
+            {"id": "window-count", "label": "Clearances in the sweep window", "unit": "clearances",
+             "kind": "stat", "evidence_class": "measured",
              "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
-             "points": [{"label": q, "value": n} for q, n in sorted(quarters.items())]},
+             "points": [{"label": f"{window}-day window ending {as_of}", "value": len(recent)},
+                        {"label": "flagged for roadmap review", "value": len(flagged)}]},
+            {"id": "clearances-by-quarter", "label": "FRN clearances per quarter", "unit": "clearances",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "lines": [{"label": "FRN clearances",
+                        "points": [{"x": f"{q[:4]}-{q_start[q[-1]]}-01", "y": n}
+                                   for q, n in sorted(quarters.items())]}],
+             "points": []},
             {"id": "window-flagged", "label": f"Window clearances ({start} → {as_of})", "unit": "",
              "evidence_class": "measured",
              "provenance": {"dataset": FDA510K_DS, "snapshot": snap},

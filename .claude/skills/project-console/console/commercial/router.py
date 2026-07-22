@@ -168,6 +168,34 @@ def _decorate_series(series: list) -> list:
             d["_numeric"] = False
             out.append(d)
             continue
+        if s.get("kind") == "stat":
+            # headline numbers — a stat tile row, not a chart
+            d["_stat"] = [{"label": p.get("label", ""), "value": p.get("value", ""),
+                           "sub": p.get("sub", "")} for p in s.get("points", [])]
+            d["_rows"] = []
+            d["_numeric"] = False
+            out.append(d)
+            continue
+        if s.get("kind") == "paired-bars":
+            # two measures per category (plan vs actual) — grouped thin bars, legend required
+            pairs = s.get("pairs", {})
+            pts = s.get("points", [])
+            mx = max((max(abs(p.get("a", 0)), abs(p.get("b", 0))) for p in pts), default=0) or 1
+            d["_paired"] = {
+                "a_label": pairs.get("a_label", "actual"),
+                "b_label": pairs.get("b_label", "plan"),
+                "rows": [{"label": p.get("label", ""),
+                          "a": p.get("a", 0), "b": p.get("b", 0),
+                          "a_pct": round(100.0 * abs(p.get("a", 0)) / mx, 1),
+                          "b_pct": round(100.0 * abs(p.get("b", 0)) / mx, 1),
+                          "tip": f"{p.get('label')}: {pairs.get('a_label', 'a')} {p.get('a')} · "
+                                 f"{pairs.get('b_label', 'b')} {p.get('b')} {s.get('unit', '')}".strip()}
+                         for p in pts],
+            }
+            d["_rows"] = []
+            d["_numeric"] = False
+            out.append(d)
+            continue
         pts = s.get("points", [])
         numeric = [p for p in pts if _is_number(p.get("value"))]
         d["_numeric"] = bool(numeric) and len(numeric) == len(pts)

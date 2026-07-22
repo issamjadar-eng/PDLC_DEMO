@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 2
+version: 3
 updated: 2026-07-22
 dependencies:
   skills:
@@ -138,6 +138,29 @@ not-evaluable), and `evidence[]`; the same table renders into the linted report.
 expectation the computation didn't evaluate surfaces as `not-evaluable` — a finding,
 not a silent omission. This answers "the actuals come from data — but are the
 assumptions being met, and are they even correct?"
+
+**Choosing the series form — the diagram follows the data's job.** A computation
+declares each series' `kind`; consoles render it. Pick by what the data is FOR, not by
+habit (the form heuristic from the dataviz method):
+
+| The data's job | `kind` | Shape |
+|---|---|---|
+| One headline number (a KPI the verdict hangs on) | `stat` | points: `[{label, value, sub?}]` — rendered as hero-number tiles, not a chart |
+| Magnitude across categories (which is biggest?) | *(default — omit kind)* | points: `[{label, value, ...extras}]` — thin horizontal bars, direct labels |
+| Plan vs actual / two measures per category | `paired-bars` | `pairs: {a_label, b_label}` + points `[{label, a, b}]` — grouped bars + legend (a = actual first) |
+| Change over time (trend, history, stalls) | `timeseries` | `lines: [{label, points: [{x: ISO-date, y}]}]` — ≤4 lines, zero-fill gaps so stalls flatline |
+| Per-category dates or verdicts (non-numeric) | *(default)* with non-numeric values | key-value list |
+| Data that does not exist | any, `evidence_class: unavailable` + provenance `note` | designed-absence card — state the gap, never fake the form |
+
+Form rules that always hold (dataviz non-negotiables): one axis — never a dual-axis
+chart (two measures of different scale = two series/charts or `paired-bars`); a
+history series that has only one snapshot behind it is NOT a trend — publish the
+point-in-time form plus an `unavailable` history series naming what would build the
+history (e.g. recurring corpus snapshots); identity is never color-alone (consoles
+pair every hue with a label). **Every answered question should carry, where the data
+allows: a headline `stat`, the categorical/comparison form, and a `timeseries`
+history** — a report without a historical view should say why (data gap), not just
+omit it.
 
 **Answer-edition data.json extensions** (all optional, consoles degrade gracefully):
 - `narrative: {issues[], risks[], watch[]}` — decision-ready Risks / Mitigations /
