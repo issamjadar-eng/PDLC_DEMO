@@ -1,0 +1,186 @@
+# Business-question catalog — consumed by the commercial skill engine.
+# Full question text + selection rationale: tasks/ben/108 Business-Question Catalog.
+# Questions without `computation` render as not-implemented (roadmap, not silence).
+categories:
+  - {key: board, name: Board & Portfolio}
+  - {key: market, name: Market & Competitive}
+  - {key: roadmap, name: Roadmap & State of the Art}
+  - {key: field-safety, name: "Field: Complaints & Safety"}
+  - {key: field-ops, name: "Field: Upgrades & Service Ops"}
+  - {key: economics, name: Economics & Plan-vs-Actual}
+
+questions:
+  # --- A. Board & Portfolio -------------------------------------------------
+  - id: BQ-01
+    question: "Which of our five device lines fund the company and which consume it — revenue, margin, trajectory by line?"
+    category: board
+    personas: [board-chair]
+    cadence: quarterly
+  - id: BQ-02
+    question: "How concentrated are we — PCA franchise, top-3 GPOs, single systems — and what does losing one anchor GPO do to the 5-year plan?"
+    category: board
+    personas: [lead-independent-director]
+    cadence: annual
+  - id: BQ-03
+    question: "What share of revenue is recurring today vs the Y5 plan — and which parts of the $350M target are contracted, modeled, or aspiration?"
+    category: board
+    personas: [board-chair, cfo]
+    cadence: annual
+  - id: BQ-04
+    question: "Does the subscription model work at unit level — LTV per connected pump vs cost-to-serve, and is Cloud Suite cannibalizing hardware ASP?"
+    category: board
+    personas: [finance-committee]
+    cadence: quarterly
+  - id: BQ-05
+    question: "How much plan revenue sits behind FDA decisions we haven't received — by regulatory dependency, with slip triggers?"
+    category: board
+    personas: [audit-committee, cfo]
+    cadence: annual
+  - id: BQ-06
+    question: "Is the concept pipeline converting, and how does our clearance cycle time compare with our own history and with BD/Baxter?"
+    category: board
+    personas: [independent-director-rd]
+    cadence: annual
+  # --- B. Market & Competitive ---------------------------------------------
+  - id: BQ-07
+    question: "What is our actual share of the US PCA/smart-pump segment — taking share from BD/Baxter or growing with the market?"
+    category: market
+    personas: [cco]
+    cadence: quarterly
+  - id: BQ-08
+    question: "What are we winning and losing on — and how many recent losses cite predictive monitoring we don't have?"
+    category: market
+    personas: [cco]
+    cadence: quarterly
+  - id: BQ-09
+    question: "Are we winning displaced accounts where an incumbent has an open recall or integration disruption — and how long does the window stay open?"
+    category: market
+    personas: [board-chair, cco]
+    cadence: quarterly
+  - id: BQ-10
+    question: "Where do we sit vs Alaris/Spectrum IQ/Plum 360 on 5-year TCO per pump — the buyer's spreadsheet?"
+    category: market
+    personas: [cco, cfo]
+    cadence: quarterly
+  - id: BQ-11
+    question: "Where are pumps sold but underused — accounts whose utilization/telemetry diverges from what they bought?"
+    category: market
+    personas: [cco, customer-success]
+    cadence: monthly
+  # --- C. Roadmap & State of the Art ---------------------------------------
+  - id: BQ-12
+    question: "What did competitors clear in the last 90 days, laid against our Y1–Y5 roadmap — anything landing on a feature we scheduled two years out?"
+    category: roadmap
+    personas: [vp-product]
+    cadence: quarterly
+  - id: BQ-13
+    question: "How much runway before someone closes the predictive-monitoring gap — is our Y3 timing defensible, and what if an incumbent buys an AI entrant?"
+    category: roadmap
+    personas: [vp-product, board]
+    cadence: quarterly
+  - id: BQ-14
+    question: "Where exactly do we sit on PCA feature parity, line by line — which gaps are on the roadmap vs silently unaddressed?"
+    category: roadmap
+    personas: [vp-product]
+    cadence: quarterly
+  - id: BQ-15
+    question: "Is the state-of-the-art analysis still current (EU MDR), and are our headline spec differentiators still ahead?"
+    category: roadmap
+    personas: [vp-product, regulatory-affairs]
+    cadence: annual
+  - id: BQ-16
+    question: "For each roadmap feature: documented KOL evidence on file? Which ride on a single voice, and does current sentiment still order the waves?"
+    category: roadmap
+    personas: [vp-product]
+    cadence: annual
+  - id: BQ-17
+    question: "Stacked against clearances, KOL data, and attach actuals — which roadmap bet do we kill, and which do we pull forward a year?"
+    category: roadmap
+    personas: [vp-product]
+    cadence: annual
+  # --- D. Field: Complaints & Safety ---------------------------------------
+  - id: BQ-18
+    question: "Top three complaint categories this quarter, rate-normalized with a stated denominator — any trending above the risk-file commitment?"
+    category: field-safety
+    personas: [vp-quality, ceo]
+    cadence: quarterly
+  - id: BQ-19
+    question: "How does our adverse-event profile compare to competitors — and what denominator did you use, because MAUDE doesn't have one?"
+    category: field-safety
+    personas: [ceo, vp-quality]
+    cadence: quarterly
+    corpus_deps: [commercial/openfda-maude-infusion-mfr]
+    computation: "python3 computations.py BQ-19 --corpus-root {corpus_root} --out {out}"
+    params: {aliases: entity-aliases.yml, top_n: 6}
+  - id: BQ-20
+    question: "Any field signal — complaints, near-misses, alarm data — around opioid over-delivery or PCA-by-proxy?"
+    category: field-safety
+    personas: [cmo]
+    cadence: monthly
+  - id: BQ-21
+    question: "What's open on the field-action docket, how timely are our MDRs, and what's the exposure if FDA walks in tomorrow?"
+    category: field-safety
+    personas: [ceo, audit-committee]
+    cadence: monthly
+  - id: BQ-22
+    question: "Of last year's field signals, how many landed as design inputs or upgrade-pipeline items — and how many died in a spreadsheet?"
+    category: field-safety
+    personas: [vp-quality]
+    cadence: quarterly
+  # --- E. Field: Upgrades & Service Ops ------------------------------------
+  - id: BQ-23
+    question: "Where do we stand on the current field-update campaign — planned vs actual coverage by region and site, and will we hit the close date?"
+    category: field-ops
+    personas: [vp-field-service]
+    cadence: weekly
+    corpus_deps: [commercial/internal-upgrade-campaign]
+    computation: "python3 computations.py BQ-23 --corpus-root {corpus_root} --out {out}"
+    params: {close_date: "2026-09-30", target_pct: 95}
+  - id: BQ-24
+    question: "What are our update failure and retry rates — is any hardware rev, firmware baseline, or site profile failing at a rate that says pause and escalate?"
+    category: field-ops
+    personas: [vp-field-service]
+    cadence: weekly
+    corpus_deps: [commercial/internal-upgrade-campaign]
+    computation: "python3 computations.py BQ-24 --corpus-root {corpus_root} --out {out}"
+    params: {pause_threshold_pct: 15, min_cohort: 20}
+  - id: BQ-25
+    question: "Are customers struggling with this upgrade — tickets per 100 upgraded pumps, rollbacks — and what does an upgrade cost the customer?"
+    category: field-ops
+    personas: [customer-success, cfo]
+    cadence: weekly
+    corpus_deps: [commercial/internal-upgrade-campaign]
+    computation: "python3 computations.py BQ-25 --corpus-root {corpus_root} --out {out}"
+    params: {customer_cost_assumption: A-002}
+  - id: BQ-26
+    question: "Do we have the capacity to execute the remaining waves on schedule — or do we add headcount, contract labor, or slip?"
+    category: field-ops
+    personas: [vp-field-service]
+    cadence: monthly
+    corpus_deps: [commercial/internal-upgrade-campaign]
+    computation: "python3 computations.py BQ-26 --corpus-root {corpus_root} --out {out}"
+    params: {close_date: "2026-09-30"}
+  - id: BQ-27
+    question: "How far behind current is the fleet — % of pumps more than one firmware version behind, at which accounts, and connected vs not?"
+    category: field-ops
+    personas: [customer-success]
+    cadence: quarterly
+    corpus_deps: [commercial/internal-fleet]
+    computation: "python3 computations.py BQ-27 --corpus-root {corpus_root} --out {out}"
+    params: {current_version: "3.4.0", behind_map: {"3.4.0": 0, "3.2.0": 1, "3.1.2": 2}}
+  # --- F. Economics & Plan-vs-Actual ---------------------------------------
+  - id: BQ-28
+    question: "Where are we against plan on revenue — by line and region, volume vs price vs timing?"
+    category: economics
+    personas: [cfo]
+    cadence: monthly
+  - id: BQ-29
+    question: "Is the Cloud Suite attach-rate stage-gate holding — the gate that releases the $24M predictive-monitoring spend?"
+    category: economics
+    personas: [cfo, board, cco]
+    cadence: quarterly
+  - id: BQ-30
+    question: "What's our fully-loaded cost per update, remote vs on-site — and the business case for a remote-first campaign at the top non-connected accounts?"
+    category: economics
+    personas: [vp-field-service, cfo]
+    cadence: monthly

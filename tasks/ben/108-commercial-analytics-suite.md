@@ -116,9 +116,19 @@ _Phase 2 (`corpus` skill v1):_
   - [x] `commercial/openfda-maude-infusion-mfr` — DONE 2026-07-22: count-mode acquisition (row-level MAUDE = 80k+ events for the window → added openFDA `count:` aggregation + `openfda-count` normalizer to the engine); 99 manufacturer count buckets (CareFusion 56k+5k, Baxter 8k, ICU 7.3k, Smiths 7.3k); **A-001 denominator assumption created FIRST** (dataset declares `assumptions_referenced: [A-001]` — acquire refuses to land without it); README documents the 3 epistemic constraints (no denominator / reporting propensity / name variants)
 - [x] First internal corpora — DONE 2026-07-22: three demo-fabricated datasets through the same machinery (seeded gen.py per dataset, shared embedded fleet model so serials align, banner-stamped raw exports): `internal-fleet` (884 devices, 48 sites, 3 regions), `internal-complaints` (430 records, 18 months), `internal-upgrade-campaign` (389 rows, campaign C-2026-02 with narrative knobs verified in data: EMEA 50% vs NA 77% completion; hw_rev B/3.1.2 failure cluster 23% vs 4% baseline)
 - [x] `corpus check` GREEN end-to-end — DONE 2026-07-22: all 6 datasets fresh, validated, hash-chains intact. Two engine fixes from real use: relative-root path doubling in command acquisition (absolutize before substitution) and empty-term openFDA count buckets (skipped with log, caught by schema key validation exactly as designed)
-- [ ] Push Phase-2 via PR
+- [x] Push Phase-2 via PR — DONE 2026-07-22: PR #128 merged to main (branch commit `8bd892d`, merge `9ed0a7c`); remote + local branch deleted; local main fast-forwarded to `98cb626` after stashing tool-managed usage-metrics locals (stash retains them; pre-session sync-log/SECOPS edits restored to worktree). `corpus check` GREEN on main.
 
-_Later phases (3–6): see Plan (expand into todos when reached)._
+_Phase 3 (`commercial` skill v1 + field slice):_
+
+- [x] Build the `commercial` skill via /skill-creator — DONE 2026-07-22: `.claude/skills/commercial/` v1 (SKILL.md w/ corpus dependency frontmatter, README, `scripts/commercial.py` ~450 LOC, 2 templates). Actions: answer/lint/approve/render/check/catalog. Editions lifecycle (draft→approved→superseded, same-day .2 suffix, drafts re-generable, approved hash-pinned via approval.yml); claim lint (marker resolution [src|assume|derived|config|waived], numeric-claim rule w/ exempt tokens + table-header detection, estimation-language rule, pin freshness vs max_age_days, data.json evidence-class hygiene); sidecar render (schema_version 1.0); check chains to corpus check. Registered in project.yml approved_skills.
+- [x] Project-side catalog + computations — DONE 2026-07-22: `docs/project/commercial/` (README, `commercial.yml` all 30 BQs — 6 implemented, 24 visible as not-implemented, `entity-aliases.yml` per the normalization lesson, `computations.py` ~430 LOC deterministic: as-of dates derive from data, no clocks). A-002 customer-cost assumption created (structured model block); corpus engine fixed to allocate GLOBALLY unique A/W ids (collision found when campaign dataset minted a second A-001).
+- [x] Six draft editions computed + linted GREEN — DONE 2026-07-22: BQ-23 (62.5% complete; all regions miss 2026-09-30 close at run-rate), BQ-24 (PAUSE TRIGGER: hw B/3.1.2 at 23.1% vs 15% threshold), BQ-25 (EMEA 23.0 tickets/100; 4 rollback sites; customer cost $7.2k–$16.3k on A-002), BQ-26 (capacity gap all regions; FSE-roster data gap stated as `unavailable` series), BQ-27 (56.7% of PP3500 fleet ≥1 version behind), BQ-19 (MAUDE counts published, RATE CHART MECHANICALLY BLOCKED pending A-001 quantification — the honesty showcase working). Lint caught 3 real defects in first-pass reports (header-row false positives → lint improved; prose digit → reworded). Sidecar rendered; `commercial check` GREEN.
+- [x] Adversarial verification — DONE 2026-07-22: independent agent (pins-only, no reports) recomputed all six; 4 CONFIRMED + 2 CONFIRMED-WITH-CAVEAT. Dossier: `tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md`. **All three findings actioned same day**: (1) generator date artifact fixed → corpus refreshed to `internal-upgrade-campaign@2026-07-22.2` w/ delta report; (2) BQ-24 switched to per-attempted-device basis (31.4%, was understating at 23.1%); (3) BQ-25 basis made consistent → hotspot is actually NA 21.7 tickets/100 attempted (EMEA claim retracted). BQ-23/26 re-answered: APAC now on-track, EMEA+NA miss. All lint green; commercial check GREEN.
+- [ ] Approvals — LEFT TO BEN deliberately (who-may-approve is an open sub-decision; approving in a human's name is a human act): `python3 .claude/skills/commercial/scripts/commercial.py approve BQ-NN --by "Ben Xavier" --verify-note "tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md ..."`
+- [ ] Field dashboard / console section (viz tier) — next
+- [ ] Push Phase-3 via PR
+
+_Later phases (4–6): see Plan (expand into todos when reached)._
 
 ## Business-Question Catalog (Phase 1 deliverable — v1 for review)
 
@@ -273,6 +283,11 @@ latest                      # pointer to newest valid snapshot
 **How to apply**: New analytics capabilities = new `commercial` actions + new corpora under `docs/project/corpus/`; any skill needing versioned external grounding should consume `corpus`, not roll its own snapshotting; every published figure must be script-computed and citation-carrying.
 <!-- /STRATEGY CONTENT -->
 
+<!-- LESSONS LEARNED: verification -->
+**Lesson (2026-07-22, ben/108): pins-only adversarial verification catches what claim-lint structurally cannot — denominator choices.**
+The claim lint proves every figure resolves to a source; it cannot ask "is this the RIGHT denominator?" The independent verifier (given pinned data + headlines, NOT the reports) caught two denominator defects the lint passed clean: a failure rate diluted by never-attempted devices (23.1% reported vs 35.3% per-attempt) and a mixed-basis ratio that flipped which region looked worst. Both numbers were arithmetically correct and fully cited — and still misleading. **How to apply**: the verify pass is not optional ceremony for substantive answers; prompt verifiers to recompute under alternative reasonable denominators/bases, not just reproduce the claimed one. Report basis choices explicitly in the report body.
+<!-- /LESSONS LEARNED -->
+
 <!-- LESSONS LEARNED: external-data-quality -->
 **Lesson (2026-07-22, ben/108): openFDA identity fields are not normalized — plan entity resolution into the analysis tier from day one.**
 Real acquisition immediately surfaced manufacturer/firm-name variants ("Fresenius Kabi USA, LLC" vs "USA LLC"; "ICU Medical, Inc." vs "Inc"; CareFusion split across "SD" and "303, Inc."), plus empty-term count buckets. Any per-firm aggregation over openFDA data without an entity-normalization map silently splits one company's totals across variants — the numbers look precise and are wrong. **How to apply**: the commercial skill's computation layer must carry an explicit firm-alias map (itself corpus-versioned, so normalization choices are provenance-tracked), and cross-checks like "top-N firms" should be run pre- and post-normalization during development.
@@ -334,6 +349,20 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
         "manual_hours": {"min": 16, "max": 32},
         "confidence": "med",
         "basis": "software anchor for ~400 LOC generators/configs (~2-3 dev-days) + judgment for openFDA endpoint research, schema design against real payload shapes, and MAUDE epistemics documentation (post-market specialist input, no external norm)"
+      },
+      {
+        "todo": "Commercial skill v1: editions/lint/approve/render engine (~450 LOC) + skill docs + templates",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 20, "max": 40},
+        "confidence": "med",
+        "basis": "software anchor (20-25 LOC/day): ~450 LOC engine with lifecycle state machine, claim-lint parser, hash-pinned approvals, sidecar serialization -> ~2.5-5 dev-days; internal tooling"
+      },
+      {
+        "todo": "Project catalog + six deterministic computations + entity aliases + A-002 + six lint-green draft editions",
+        "personas": ["rd-lead", "program-manager"],
+        "manual_hours": {"min": 20, "max": 36},
+        "confidence": "med",
+        "basis": "software anchor for ~430 LOC computations + ~250-line catalog config (~2-3 dev-days) + judgment for analytical design of six answers w/ evidence-classing and assumption modeling (BI-analyst work, no external norm)"
       }
     ]
   }
@@ -342,6 +371,9 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 
 ## Changelog
 
+- 2026-07-22: Adversarial verification round complete + all findings actioned (dossier in `_work/`); campaign corpus refreshed to 2026-07-22.2; BQ-23/24/25/26 re-answered with corrected bases; verification lesson captured. Ready to push Phase 3 (dashboard/console view deferred to next chunk).
+- 2026-07-22: Phase 3 GREEN-LIT and largely built same day: commercial skill v1 + docs/project/commercial/ (catalog 30 BQs, 6 computations, entity aliases, A-002) + six lint-green draft editions + sidecar + commercial check GREEN. Corpus engine fix: globally-unique A/W record ids (collision caught in real use). Adversarial verify agent in flight; approvals deliberately left to Ben; dashboard + PR pending. Nothing committed yet this phase.
+- 2026-07-22: **Phase 2 COMPLETE** — PR #128 merged (`9ed0a7c`); corpus skill + 6 corpora on main; corpus check GREEN post-merge. Next: Phase 3 — `commercial` skill v1 + field-performance vertical slice (computation library, `field` action, claim lint, dashboard + console sidecar).
 - 2026-07-22: All six first corpora landed; corpus check GREEN. External (real): recalls (136 since 2021) + MAUDE manufacturer counts (99 buckets; engine gained openFDA count-mode + openfda-count normalizer; A-001 denominator assumption gated the acquire). Internal (fabricated, seeded, banner-stamped): fleet (884 devices) / complaints (430) / upgrade-campaign (389; EMEA-behind + hw_rev-B failure-cluster narrative verified in data). Engine fixes: absolute-path substitution for command acquisition; empty-term count buckets skipped w/ log. 2 lessons captured (entity normalization; invocation-shape testing). 5 dataset READMEs written. Nothing committed yet; PR next.
 - 2026-07-22: First REAL corpus acquired: `commercial/openfda-510k-infusion` snapshot 2026-07-22 (29 FRN 510(k) records live from api.fda.gov, hash-pinned provenance, corpus check GREEN). Nothing committed to git yet.
 - 2026-07-22: Phase 2 GREEN-LIT by Ben; corpus skill v1 BUILT: `.claude/skills/corpus/` (SKILL.md, README, `scripts/corpus.py`, 3 templates) via /skill-creator conventions; smoke-tested full lifecycle (init→acquire→validate→check→refresh w/ .2-suffix immutable snapshot + delta report→assume/waive→tamper-detection fail); `docs/project/corpus/` scaffolded (README + parent README row/changelog); `corpus` added to `project.yml approved_skills`. NOT yet committed. Next: first corpora (openFDA external + fabricated internal generators).

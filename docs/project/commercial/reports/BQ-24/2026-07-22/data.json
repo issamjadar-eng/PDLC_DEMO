@@ -1,0 +1,44 @@
+{
+ "bq": "BQ-24",
+ "series": [
+  {
+   "id": "failure-by-cohort",
+   "label": "Per-attempt failure rate",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "hw A / from 3.1.2",
+     "value": 9.2,
+     "n_attempted": 65
+    },
+    {
+     "label": "hw A / from 3.2.0",
+     "value": 3.4,
+     "n_attempted": 88
+    },
+    {
+     "label": "hw B / from 3.1.2",
+     "value": 31.4,
+     "n_attempted": 35
+    },
+    {
+     "label": "hw B / from 3.2.0",
+     "value": 6.3,
+     "n_attempted": 63
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
+   "evidence_class": "measured"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+# Entity-normalization map for public FDA data (MAUDE manufacturer_d_name, recall
+# recalling_firm). openFDA identity fields are NOT normalized — variants of one company
+# appear as separate buckets and silently split totals (lesson: ben/108). This map is the
+# versioned, reviewable normalization decision — cited in reports as [config: entity-aliases.yml].
+#
+# Matching: case-insensitive prefix match on the raw name, first hit wins, top-down.
+# Unmatched names keep their raw value (visible, never silently dropped).
+canonical:
+  - name: BD (CareFusion)
+    prefixes: [CAREFUSION, "BECTON DICKINSON", "BD "]
+  - name: Baxter
+    prefixes: [BAXTER]
+  - name: ICU Medical
+    prefixes: ["ICU MEDICAL"]
+  - name: Smiths Medical
+    prefixes: [SMITHS]
+  - name: Fresenius Kabi
+    prefixes: [FRESENIUS]
+  - name: Medtronic
+    prefixes: [MEDTRONIC]
+  - name: B. Braun
+    prefixes: ["B. BRAUN", "B.BRAUN", "B BRAUN"]
+  - name: Moog
+    prefixes: [MOOG, CURLIN]
+  - name: Eitan Medical
+    prefixes: [EITAN, "Q CORE"]

@@ -1,0 +1,59 @@
+{
+ "bq": "BQ-19",
+ "series": [
+  {
+   "id": "events-by-mfr",
+   "label": "MAUDE events by manufacturer (canonical)",
+   "unit": "events",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-infusion-mfr",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "BD (CareFusion)",
+     "value": 61390
+    },
+    {
+     "label": "Baxter",
+     "value": 9548
+    },
+    {
+     "label": "Smiths Medical",
+     "value": 9229
+    },
+    {
+     "label": "ICU Medical",
+     "value": 8824
+    },
+    {
+     "label": "Fresenius Kabi",
+     "value": 6499
+    },
+    {
+     "label": "Medtronic",
+     "value": 5474
+    }
+   ]
+  },
+  {
+   "id": "rate-by-mfr",
+   "label": "Event rate per installed device",
+   "unit": "events/device",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "assumption": "A-001",
+    "note": "blocked until A-001 quantifies installed-base denominators"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
+   "evidence_class": "measured"
+  }
+ ]
+}

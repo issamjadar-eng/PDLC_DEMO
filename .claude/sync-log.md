@@ -4,6 +4,32 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-22 — push
+
+- Files (12): `skills/task/{README.md, SKILL.md, scripts/task_summary.py (new)}`, `skills/project-console/{README.md, SKILL.md, VERSION, console/app.py, console/web/templates/_base.html, console/tasks_view/{__init__.py, loader.py, router.py} (new), console/web/templates/tasks_view.html (new)}`
+- Branch: `sync/pdlc-demo-tasks-view-2026-07-22`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/277
+- Commit: "task v34 + project-console 1.41.0: task summary action + console Tasks tab"
+- Status: merged (user approved push + merge)
+- Merge commit: `17bc833`
+- Hitachi HEAD after sync: `17bc833` (clone ff'd, sync branch deleted local+remote)
+- Post-check: zero drift rows — full lockstep across both skills.
+
+## 2026-07-22 — pull
+
+- Hitachi HEAD after sync: `e9a318e`
+- Pulled: 6 files (all UPSTREAM_ONLY — new reference/template material from upstream PR #276)
+  - `skills/medtech-docs/references/fda-guidance/source-md/sw-functions-webinar-transcript.md` (+ source PDF)
+  - `skills/regulatory-authoring/references/readability-in-register.md`
+  - `skills/submissions/references/pccp-authorized-exemplars.md`
+  - `skills/submissions/references/pccp-full-document-structure.md`
+  - `skills/submissions/templates/pccp/pccp-plan.md` (new PCCP scaffold template — existing scaffolded PCCP docs unaffected; template applies at next scaffold)
+- Impact analysis: no SKILL.md changes upstream or locally; files are standalone on-demand references — no project updates, no setup re-runs, no allowlist changes required.
+- project.yml: no changes
+- Skipped (LOCAL_AHEAD, kept local — push candidates): `skills/project-console/{README.md, SKILL.md, VERSION, console/app.py, console/web/templates/_base.html}`, `skills/task/{README.md, SKILL.md}`
+- LOCAL_ONLY push candidates: `skills/project-console/console/tasks_view/{__init__.py, loader.py, router.py}`, `skills/project-console/console/web/templates/tasks_view.html`, `skills/task/scripts/task_summary.py`
+- Follow-ups: push the project-console tasks-view + task-summary work upstream
+
 ## 2026-07-21 — push
 
 - Files: `skills/md-deck/SKILL.md`, `skills/md-deck/scripts/build.py`, `skills/md-deck/README.md` (new)

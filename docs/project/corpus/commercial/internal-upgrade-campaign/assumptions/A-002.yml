@@ -1,0 +1,17 @@
+id: A-002
+title: Customer-side biomed cost per on-site update
+needed_for:
+- BQ-25
+- BQ-30
+why_unavailable: Customer biomed staff time and internal labor rates are not in our systems
+estimation_method: 'Modeled: hours-per-device range x benchmark biomed labor rate; to be validated
+  against reference accounts. Benchmark rate flagged [VERIFY] pending a citable salary source.'
+value_or_range: 'USD 72-163 per on-site update (1.5-2.5 h x USD 48-65/h, modeled)'
+model:
+  hours_per_device: [1.5, 2.5]
+  labor_rate_usd_hr: [48, 65]
+confidence: low
+sources_consulted: []
+refresh_trigger: reference-account validation or updated biomed salary benchmark
+created: '2026-07-22'
+status: active
