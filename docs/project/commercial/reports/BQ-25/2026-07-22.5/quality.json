@@ -1,7 +1,7 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
- "generated_at": "2026-07-22T23:04:30+00:00",
+ "bq": "BQ-25",
+ "edition": "2026-07-22.5",
+ "generated_at": "2026-07-22T23:04:31+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -67,10 +67,22 @@
  },
  "references": [
   {
-   "kind": "config",
-   "value": "commercial.yml",
+   "kind": "assume",
+   "value": "A-002",
    "resolved": true,
-   "note": "versioned configuration file present"
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "derived",
+   "value": "rollback-sites",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "tickets-by-method",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
@@ -80,17 +92,17 @@
   },
   {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
-   "snapshot": "2026-07-22",
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -98,32 +110,51 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Rollbacks",
+    "series": "rollback-stat",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "Weekly tickets by region (dated events only)",
+    "series": "weekly-tickets",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
+    "what": "Tickets per 100 attempted upgrades",
+    "series": "tickets-per-100",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   },
+   {
+    "what": "Tickets per 100 attempted, by method",
+    "series": "tickets-by-method",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   },
+   {
+    "what": "Sites with rollbacks",
+    "series": "rollback-sites",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    }
   ],
-  "assumed": [],
+  "assumed": [
+   {
+    "what": "Estimated customer-side cost (on-site portion)",
+    "series": "customer-cost-range",
+    "evidence_class": "assumed",
+    "source": "A-002"
+   }
+  ],
   "missing": []
  },
  "plan": {
-  "path": "plans/BQ-12.md",
+  "path": "plans/BQ-25.md",
   "status": "in-sync",
-  "pinned": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0",
-  "current": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0"
+  "pinned": "e0c1ac9bbea7ea2c6c487d61ed63c606aec0f21ffec9be8abd9cae04d126c696",
+  "current": "e0c1ac9bbea7ea2c6c487d61ed63c606aec0f21ffec9be8abd9cae04d126c696"
  },
  "verifications": []
 }

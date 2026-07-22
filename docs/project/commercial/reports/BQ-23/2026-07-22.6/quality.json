@@ -1,6 +1,6 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
+ "bq": "BQ-23",
+ "edition": "2026-07-22.6",
  "generated_at": "2026-07-22T23:04:30+00:00",
  "lint": {
   "status": "pass",
@@ -74,23 +74,47 @@
   },
   {
    "kind": "derived",
+   "value": "coverage-by-region",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cumulative-coverage",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "projected-finish",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
    "value": "v-main",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
+   "kind": "derived",
+   "value": "weekly-run-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
-   "snapshot": "2026-07-22",
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -98,32 +122,57 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Campaign coverage",
+    "series": "coverage-stat",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
+    "what": "Cumulative coverage % by region",
+    "series": "cumulative-coverage",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
+    "what": "Coverage %",
+    "series": "coverage-by-region",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   },
+   {
+    "what": "Completions per week (trailing 4w)",
+    "series": "weekly-run-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "count of completions with completed_date in the 28-day window ending at the snapshot's latest completion, divided by 4",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2"
+     ]
+    }
+   },
+   {
+    "what": "Projected finish date",
+    "series": "projected-finish",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "remaining devices \u00f7 weekly run-rate, projected forward from the window anchor",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "derived: weekly-run-rate"
+     ]
+    }
    }
   ],
   "assumed": [],
   "missing": []
  },
  "plan": {
-  "path": "plans/BQ-12.md",
+  "path": "plans/BQ-23.md",
   "status": "in-sync",
-  "pinned": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0",
-  "current": "b4e254b550315917163a148b4580ee2c9bffe0a13f220183cb11d1017851bce0"
+  "pinned": "6c9ddde15ed04bf8316f8e1d7613592c70147e203cade13bf6b44e80379d503b",
+  "current": "6c9ddde15ed04bf8316f8e1d7613592c70147e203cade13bf6b44e80379d503b"
  },
  "verifications": []
 }
