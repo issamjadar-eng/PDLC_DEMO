@@ -253,6 +253,15 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-report { margin-top: 1.4rem; }
 .cm-report h2 { font-size: 1.05rem; }
 .cm-report-body { background: var(--surface, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: 12px; padding: 1.2rem 1.4rem; overflow-x: auto; }
+/* report tables: visible structure — ruled lines, distinct headers */
+.cm-report-body table { border-collapse: collapse; width: 100%; margin: .6rem 0 1rem; font-size: .84rem; }
+.cm-report-body th { text-align: left; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--body-text-muted, #64748b); background: color-mix(in srgb, var(--body-text-muted, #64748b) 9%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--body-text-muted, #64748b) 40%, transparent); }
+.cm-report-body th, .cm-report-body td { padding: .5rem .7rem; border: 1px solid color-mix(in srgb, var(--body-text-muted, #64748b) 18%, transparent); }
+.cm-report-body td { font-variant-numeric: tabular-nums; }
+.cm-report-body tbody tr:nth-child(even) { background: color-mix(in srgb, var(--body-text-muted, #64748b) 5%, transparent); }
+.cm-report-body tbody tr:hover { background: color-mix(in srgb, var(--body-text-muted, #64748b) 10%, transparent); }
 .cm-empty { border: 1px dashed var(--border, #cbd5e1); border-radius: 12px; padding: 1.4rem; color: var(--body-text-muted, #64748b); }
 
 @media (max-width: 720px) { .cm-head { flex-direction: column; } .cm-charts { grid-template-columns: 1fr; } }
