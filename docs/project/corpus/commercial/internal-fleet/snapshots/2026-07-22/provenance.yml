@@ -1,0 +1,26 @@
+dataset: commercial/internal-fleet
+snapshot: '2026-07-22'
+created_at: '2026-07-22T19:58:01+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for fleet-management export)
+  retrieved_at: '2026-07-22T19:58:00+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: f5ec1654f935efb50e7086b26a25e1c6f325175673388cbb276f5bb2f81dad7a
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 0ecc2b9887291c17bdfe962887ae0573b1bb6dda3da3665f705336cd5fd2c0ee
+    parents:
+    - f5ec1654f935efb50e7086b26a25e1c6f325175673388cbb276f5bb2f81dad7a
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 884

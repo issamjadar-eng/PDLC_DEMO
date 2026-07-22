@@ -1,0 +1,30 @@
+k_number,applicant,device_name,decision_code,decision_date,date_received,product_code,clearance_type,device_class
+K250357,Deka Research & Development Corp.,RemunityPRO Pump for Remodulin® (treprostinil) Injection,SESE,2025-03-11,2025-02-07,FRN,Special,2
+K251640,Baxter Healthcare Corporation,SIGMA Spectrum Infusion Pump with Master Drug Library,SESE,2025-07-28,2025-05-29,FRN,Traditional,2
+K242735,Belmont Medical Technologies,"Belmont Rapid Infuser, RI-2 (Rapid Infuser RI-2, 1000 ml/min); Belmont Rapid Infuser, RI-2 (Rapid Infuser RI-2, 750 ml/min)",SESE,2024-12-23,2024-09-11,FRN,Traditional,2
+K210073,Fresenius Kabi AG,"Agilia VP Infusion System, Agilia VP MC WIFI Infusion Pump, Volumat Lines Administration Sets, Agilia Link, Agilia Duo",SESE,2022-03-01,2021-01-12,FRN,Traditional,2
+K222048,Baxter Healthcare Corporation,Spectrum IQ Infusion System with Dose IQ Safety Software,SESE,2022-09-06,2022-07-12,FRN,Traditional,2
+K211218,"Carefusion 303, Inc.",BD Alaris System with Guardrails Suite MX v12.1.2,SESE,2023-07-21,2021-04-23,FRN,Traditional,2
+K211206,"Repro-Medical System, Inc., Dba Koru Medical Systems",FreedomEdge(R) Syringe Infusion System,SESE,2021-11-09,2021-04-22,FRN,Traditional,2
+K230041,Baxter Healthcare Corporation,Spectrum IQ Infusion System with Dose IQ Safety Software,SESE,2023-03-31,2023-01-06,FRN,Traditional,2
+K230022,Baxter Healthcare Corporation,Baxter SIGMA Spectrum Infusion Pump with Master Drug Library,SESE,2023-03-31,2023-01-04,FRN,Traditional,2
+K211122,Baxter Healthcare Corporation,Novum IQ Large Volume Pump,SESE,2024-03-29,2021-04-15,FRN,Traditional,2
+K223607,"Icu Medical, Inc.",Plum Duo Infusion System,SESE,2023-08-24,2022-12-02,FRN,Traditional,2
+K251636,Baxter Healthcare Corporation,Spectrum IQ Infusion System with Dose IQ Safety Software (3570009),SESE,2025-07-28,2025-05-29,FRN,Traditional,2
+K231918,Koru Medical Systems,Freedom60 Infusion Pump; High-Flo Subcutaneous Needle Sets; Precision Flow Rate Tubing; High-Flo Super26 Subcutaneous Needle Sets; Freedom60 Pre-Filled Syringe Adapter,SESE,2023-11-03,2023-06-29,FRN,Traditional,2
+K211125,Baxter Healthcare Corporation,Novum IQ Syringe Pump,SESE,2022-08-30,2021-04-15,FRN,Traditional,2
+K230083,Medovate Limited,SAFIRA,SESE,2023-10-31,2023-01-11,FRN,Traditional,2
+K242114,"Icu Medical, Inc.",Plum Solo Precision IV Pump,SESE,2025-04-02,2024-07-19,FRN,Traditional,2
+K210074,Fresenius Kabi AG,"Agilia SP Infusion System, Agilia SP MC WIFI Infusion Pump, Agilia Link, Agilia Duo, Agilia USB Cable",SESE,2022-03-01,2021-01-12,FRN,Traditional,2
+K213744,"Eitan Medical , Ltd.",Avoset Infusion Pump System,SESE,2023-03-10,2021-11-29,FRN,Traditional,2
+K232793,"Zevex, Inc.",Curlin 8000 Ambulatory Infusion System; Enterprise Solution (ES) Software; Curlin 380-Series Adminstration Sets,SESE,2024-05-17,2023-09-11,FRN,Traditional,2
+K242390,Baxter Healthcare Corporation,Novum IQ Syringe Pump (40800BAXUS),SESE,2024-09-05,2024-08-12,FRN,Special,2
+K200176,"Repro-Med Systems, Inc. Dba Koru Medical Systems",FREEDOM Integrated Syringe Infusion System,SESE,2021-12-15,2020-01-24,FRN,Traditional,2
+K242752,Iradimed Corporation,MRidium 3870 MRI Infusion Pump System (3870),SESE,2025-05-28,2024-09-12,FRN,Traditional,2
+K214045,"Repro-Medical System, Inc., Dba Koru Medical Systems",FreedomEdge Syringe Infusion System,SESE,2022-04-29,2021-12-27,FRN,Traditional,2
+K242115,"Icu Medical, Inc.",Plum Duo Precision IV Pump,SESE,2025-04-02,2024-07-19,FRN,Traditional,2
+K252015,"Koru Medical Systems, Inc.",FreedomEdge Infusion System; High-Flo SubQ Needle Set; Precision Flow Rate Tubing,SESE,2026-01-28,2025-06-27,FRN,Traditional,2
+K220417,Baxter Healthcare Corporation,Spectrum IQ Infusion System with Dose IQ Safety Software,SESE,2022-04-29,2022-02-14,FRN,Traditional,2
+K243855,"Carefusion 303, Inc.",BD Alaris Infusion System with Guardrails Suite MX,SESE,2025-04-25,2024-12-16,FRN,Traditional,2
+K241736,Deka Research and Development Corp.,Remunity 2.0 Pump for Remodulin (treprostinil) Injection,SESE,2025-01-16,2024-06-17,FRN,Traditional,2
+K242660,"Zevex, Inc.",Curlin 8000 Ambulatory Infusion System; Enterprise Solution (ES) Software; Curlin 380-series Administration Sets,SESE,2024-10-03,2024-09-04,FRN,Special,2

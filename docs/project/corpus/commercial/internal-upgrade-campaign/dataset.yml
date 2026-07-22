@@ -1,0 +1,33 @@
+dataset: commercial/internal-upgrade-campaign
+title: Field-update campaign telemetry (internal, demo-fabricated)
+description: >-
+  Per-device telemetry for campaign C-2026-02 (PP3500 firmware -> 3.4.0): wave, method
+  (remote/onsite), status, completion date, duration, tickets. DEMO-FABRICATED by seeded
+  generator gen.py with deliberate narrative: EMEA behind plan, failure cluster on
+  hw_rev B upgrading from 3.1.2, remote-only-where-connected. Consumed by BQ-23/24/25/26
+  campaign questions and BQ-30 upgrade economics.
+internal: true
+max_age_days: 7
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for campaign-management export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [campaign_id, device_serial]
+  columns:
+    - {name: campaign_id, type: str, required: true}
+    - {name: device_serial, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: from_version, type: str, required: true}
+    - {name: to_version, type: str, required: true}
+    - {name: method, type: str, required: true}
+    - {name: status, type: str, required: true}
+    - {name: completed_date, type: date}
+    - {name: duration_min, type: int}
+    - {name: tickets_opened, type: int}
+asserts:
+  min_rows: 300

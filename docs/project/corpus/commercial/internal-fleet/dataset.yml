@@ -1,0 +1,30 @@
+dataset: commercial/internal-fleet
+title: Installed-base fleet registry (internal, demo-fabricated)
+description: >-
+  Per-device installed-base registry (model, site, region, hw rev, firmware, Cloud Suite
+  connectivity). DEMO-FABRICATED by seeded generator gen.py — stand-in for a Fleet
+  Management / ERP export. Consumed by BQ-11 adoption divergence, BQ-23/27 campaign
+  coverage + fleet currency, BQ-29 attach rate, and as the ONLY sanctioned denominator
+  source for internal complaint rates (BQ-18).
+internal: true
+max_age_days: 7
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for fleet-management export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [device_serial]
+  columns:
+    - {name: device_serial, type: str, required: true}
+    - {name: model, type: str, required: true}
+    - {name: site_id, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: firmware_version, type: str, required: true}
+    - {name: connected, type: str, required: true}
+    - {name: last_seen, type: date}
+asserts:
+  min_rows: 500

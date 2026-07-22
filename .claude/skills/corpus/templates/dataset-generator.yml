@@ -1,0 +1,32 @@
+# Example dataset.yml — internal dataset produced by a generator script (demo projects)
+# or exported from an internal system (real deployments: swap the command for the export).
+# Copy into <corpus-root>/<domain>/<dataset>/dataset.yml; put generator.py next to it.
+dataset: <domain>/fleet-telemetry
+title: Installed-base fleet telemetry (internal)
+description: >-
+  Per-device fleet snapshot (firmware version, connectivity, campaign status).
+  Fabricated by generator.py for demo use — the generator stamps every output with the
+  project's demo-data banner. In a real deployment this dataset is an ERP/fleet export.
+internal: true
+max_age_days: 7             # internal telemetry moves fast
+acquisition:
+  type: command
+  # {raw_dir} and {dataset_dir} are substituted; command runs with cwd = dataset dir.
+  # Generators MUST be seeded (deterministic) so re-runs are explainable.
+  command: python3 generator.py --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for fleet-management export)
+  usage_rights: internal
+normalize:
+  command: python3 normalize.py {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [device_serial]
+  columns:
+    - {name: device_serial, type: str, required: true}
+    - {name: site_id, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: firmware_version, type: str, required: true}
+    - {name: connected, type: str}
+    - {name: last_seen, type: date}
+asserts:
+  min_rows: 50

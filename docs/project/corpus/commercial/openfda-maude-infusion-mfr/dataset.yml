@@ -1,0 +1,30 @@
+dataset: commercial/openfda-maude-infusion-mfr
+title: MAUDE adverse-event COUNTS by manufacturer (openFDA device/event)
+description: >-
+  Real MAUDE adverse-event COUNTS for infusion-pump product code FRN (received 2024-07 ->
+  present), aggregated by manufacturer via openFDA's count API. Row-level MAUDE is 80k+
+  events for this window — counts are the honest, tractable shape. Consumed by BQ-19
+  (cross-manufacturer comparison). WARNING: counts have NO denominator — any RATE use
+  requires the installed-base assumption A-001 in this dataset's assumptions/, and
+  reporting-propensity differences across manufacturers remain an unmodeled bias.
+internal: false
+max_age_days: 30
+assumptions_referenced: [A-001]
+acquisition:
+  type: openfda
+  endpoint: /device/event.json
+  search: 'device.device_report_product_code:FRN AND date_received:[20240701 TO 20301231]'
+  count: device.manufacturer_d_name.exact
+  count_limit: 100
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+normalize:
+  type: openfda-count
+  output: records.csv
+schema:
+  file: records.csv
+  key: [term]
+  columns:
+    - {name: term, type: str, required: true}
+    - {name: count, type: int, required: true}
+asserts:
+  min_rows: 5

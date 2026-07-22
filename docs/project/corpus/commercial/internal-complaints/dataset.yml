@@ -1,0 +1,30 @@
+dataset: commercial/internal-complaints
+title: Complaint log (internal, demo-fabricated)
+description: >-
+  18-month complaint log with category, severity, device linkage, and MDR-filed flag.
+  DEMO-FABRICATED by seeded generator gen.py — stand-in for the complaint-handling
+  system export. Consumed by BQ-18 complaint trends vs thresholds, BQ-20 signal watch,
+  BQ-21 MDR posture, BQ-22 closed loop, BQ-25 upgrade-struggle correlation.
+internal: true
+max_age_days: 7
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for complaint-handling system export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [complaint_id]
+  columns:
+    - {name: complaint_id, type: str, required: true}
+    - {name: date_opened, type: date, required: true}
+    - {name: device_serial, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: category, type: str, required: true}
+    - {name: severity, type: int, required: true}
+    - {name: status, type: str, required: true}
+    - {name: mdr_filed, type: str, required: true}
+asserts:
+  min_rows: 300
