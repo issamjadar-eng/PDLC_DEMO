@@ -16,6 +16,8 @@ body.commercial-page main { max-width: none; }
 .cm-head h1 { margin: 0 0 .4rem; }
 .cm-sub { color: var(--body-text-muted, #64748b); max-width: 62rem; margin: 0; }
 .cm-question { font-size: 1.35rem; line-height: 1.35; max-width: 56rem; }
+/* wide (answer/data) pages: the title spans to the same margins as the content */
+.cm-wrap-wide .cm-question, .cm-wrap-wide .cm-sub { max-width: none; }
 .cm-crumb { margin-bottom: .8rem; }
 .cm-crumb a { color: var(--body-text-muted, #64748b); text-decoration: none; }
 .cm-muted { color: var(--body-text-muted, #64748b); font-weight: 400; }

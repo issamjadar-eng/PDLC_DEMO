@@ -367,7 +367,9 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
     if q is None:
         raise HTTPException(404, f"Unknown question '{bq}'. Run `/commercial render` to refresh the sidecar.")
     q = _decorate_row(dict(q))
-    show_id = edition or q.get("approved_edition") or q.get("draft_edition")
+    # default: the NEWEST edition (draft included, clearly watermarked) — reviewers see
+    # the latest work; the approved record is one click away in the editions rail
+    show_id = edition or q.get("latest_edition") or q.get("approved_edition") or q.get("draft_edition")
     ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
     if ed is None and show_id:
         raise HTTPException(404, f"No edition '{show_id}' for {bq}.")

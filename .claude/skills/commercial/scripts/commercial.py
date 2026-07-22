@@ -140,6 +140,9 @@ def list_editions(root: Path, bq: str):
             meta = e / "edition.yml"
             if meta.exists():
                 out.append(load_yaml(meta))
+    # recency = creation time, NOT name: suffix reuse after a discarded draft can
+    # make lexicographic order lie about which edition is newest
+    out.sort(key=lambda e: (e.get("created_at") or "", e.get("edition") or ""))
     return out
 
 
@@ -152,8 +155,7 @@ def find_edition(root: Path, bq: str, edition: str = None):
             if e["edition"] == edition:
                 return e
         raise CommercialError(f"{bq}: no edition {edition}")
-    drafts = [e for e in eds if e["status"] == "draft"]
-    return (drafts or eds)[-1]
+    return eds[-1]  # newest by created_at (draft or approved)
 
 
 # ---------------------------------------------------------------- lint
@@ -262,10 +264,11 @@ def cmd_answer(args):
     if edir.exists():
         existing = load_yaml(edir / "edition.yml") if (edir / "edition.yml").exists() else None
         if existing and existing["status"] != "draft":
-            n = 2
-            while (bq_dir(root, args.bq) / f"{edition}.{n}").exists():
-                n += 1
-            edition = f"{edition}.{n}"
+            # never reuse a freed suffix — max+1 keeps name order = recency order
+            used = [int(p.name.rsplit(".", 1)[1]) for p in bq_dir(root, args.bq).iterdir()
+                    if p.is_dir() and p.name.startswith(edition + ".")
+                    and p.name.rsplit(".", 1)[1].isdigit()]
+            edition = f"{edition}.{(max(used) + 1) if used else 2}"
             edir = bq_dir(root, args.bq) / edition
         else:
             shutil.rmtree(edir)  # drafts are re-generable until approved
@@ -361,11 +364,12 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict):
         "status": status,
         "approved_edition": approved["edition"] if approved else None,
         "draft_edition": draft["edition"] if draft else None,
+        "latest_edition": eds[-1]["edition"] if eds else None,
         "editions": [{"edition": e["edition"], "status": e["status"]} for e in eds],
         "assumptions": [], "freshness": None, "verdict_headline": None,
         "evidence_class": None, "report_path": None, "data_path": None,
     }
-    show = approved or draft
+    show = eds[-1] if eds else None  # newest edition carries the card's verdict/badges
     if show:
         edir = bq_dir(root, bq) / show["edition"]
         row["report_path"] = str((edir / "report.md").relative_to(root.parent.parent.parent))

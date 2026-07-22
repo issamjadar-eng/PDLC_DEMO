@@ -67,6 +67,11 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 4 (2026-07-22): Edition recency is creation-time, not name — suffix allocation is
+  max+1 (never reuses a freed suffix, which made lexicographic order lie about
+  newest), `list_editions` sorts by `created_at`, default edition resolution returns
+  the newest edition regardless of status, and the sidecar row gains
+  `latest_edition` (cards' verdict/badges now reflect the newest edition).
 - 3 (2026-07-22): Form-selection guidance in SKILL.md — the diagram follows the data's
   job (stat = headline number; default bars = magnitude; paired-bars = plan vs actual;
   timeseries = change over time; kv = non-numeric; unavailable = stated gap), with the
