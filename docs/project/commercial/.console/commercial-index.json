@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "generated": "2026-07-22T21:34:43+00:00",
+ "generated": "2026-07-22T21:44:45+00:00",
  "categories": [
   {
    "key": "board",
@@ -39,6 +39,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -58,6 +59,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -78,6 +80,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -97,6 +100,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -117,6 +121,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -136,6 +141,7 @@
    "status": "draft-only",
    "approved_edition": null,
    "draft_edition": "2026-07-22",
+   "latest_edition": "2026-07-22",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -160,6 +166,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -179,6 +186,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -199,6 +207,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -219,6 +228,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -239,6 +249,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -258,6 +269,7 @@
    "status": "draft-only",
    "approved_edition": null,
    "draft_edition": "2026-07-22",
+   "latest_edition": "2026-07-22",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -283,6 +295,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -302,6 +315,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -322,6 +336,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -341,6 +356,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -360,6 +376,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -380,6 +397,7 @@
    "status": "draft-only",
    "approved_edition": null,
    "draft_edition": "2026-07-22",
+   "latest_edition": "2026-07-22",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -405,6 +423,7 @@
    "status": "answered",
    "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.2",
+   "latest_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -421,8 +440,8 @@
    "freshness": "fresh",
    "verdict_headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-22.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-22.2/data.json"
   },
   {
    "id": "BQ-20",
@@ -435,6 +454,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -455,6 +475,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -474,6 +495,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -493,6 +515,7 @@
    "status": "answered",
    "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.3",
+   "latest_edition": "2026-07-22.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -511,8 +534,8 @@
    "freshness": "fresh",
    "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-22.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-22.3/data.json"
   },
   {
    "id": "BQ-24",
@@ -525,6 +548,7 @@
    "status": "answered",
    "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.3",
+   "latest_edition": "2026-07-22.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -543,8 +567,8 @@
    "freshness": "fresh",
    "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-22.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-22.3/data.json"
   },
   {
    "id": "BQ-25",
@@ -558,6 +582,7 @@
    "status": "answered",
    "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.2",
+   "latest_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -574,8 +599,8 @@
    "freshness": "fresh",
    "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-22.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-22.2/data.json"
   },
   {
    "id": "BQ-26",
@@ -587,7 +612,8 @@
    "cadence": "monthly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.3",
+   "draft_edition": "2026-07-22.2",
+   "latest_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -596,18 +622,14 @@
     {
      "edition": "2026-07-22.2",
      "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.3",
-     "status": "draft"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA: needs 5.6/wk vs current 0.2/wk (34 on-site remaining); NA: needs 4.2/wk vs current 0.0/wk (25 on-site remaining)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-22.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-22.2/data.json"
   },
   {
    "id": "BQ-27",
@@ -620,6 +642,7 @@
    "status": "answered",
    "approved_edition": "2026-07-22",
    "draft_edition": "2026-07-22.2",
+   "latest_edition": "2026-07-22.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -634,8 +657,8 @@
    "freshness": "fresh",
    "verdict_headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-22/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-22/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-22.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-22.2/data.json"
   },
   {
    "id": "BQ-28",
@@ -648,6 +671,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -669,6 +693,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
@@ -689,6 +714,7 @@
    "status": "not-implemented",
    "approved_edition": null,
    "draft_edition": null,
+   "latest_edition": null,
    "editions": [],
    "assumptions": [],
    "freshness": null,
