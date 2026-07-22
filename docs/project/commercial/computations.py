@@ -486,9 +486,244 @@ def bq19(corpus_root, out, pins):
     write(out, lines, data)
 
 
+# ---------------------------------------------------------------- BQ-06 clearance cycle time
+
+FDA510K_DS = "commercial/openfda-510k-infusion"
+
+
+def _median(vals):
+    vals = sorted(vals)
+    n = len(vals)
+    if not n:
+        return None
+    return vals[n // 2] if n % 2 else round((vals[n // 2 - 1] + vals[n // 2]) / 2, 1)
+
+
+def bq06(corpus_root, out, pins):
+    p = params_for("BQ-06")
+    rows, snap = load_pin_csv(corpus_root, pins, FDA510K_DS)
+    src = f"{FDA510K_DS}@{snap}"
+    ivs = []
+    for r in rows:
+        if r["decision_date"] and r["date_received"]:
+            d = (dt.date.fromisoformat(r["decision_date"]) - dt.date.fromisoformat(r["date_received"])).days
+            ivs.append((r["applicant"], d))
+    by_app = {}
+    for app, d in ivs:
+        by_app.setdefault(app, []).append(d)
+    top = sorted(by_app.items(), key=lambda kv: -len(kv[1]))[: int(p["top_n"])]
+    overall = _median([d for _, d in ivs])
+    frequent = [(a, len(ds), _median(ds)) for a, ds in top if len(ds) >= 2]
+    fastest = min(frequent, key=lambda t: t[2]) if frequent else None
+
+    headline = (f"Competitor 510(k) review runs a median {overall} days received→decision across "
+                f"{len(ivs)} infusion-pump clearances since 2021"
+                + (f"; fastest frequent filer is {fastest[0]} at {fastest[2]} days median" if fastest else ""))
+
+    lines = [
+        "# BQ-06 — Clearance cycle time: competitors vs our history", "",
+        f"**Verdict**: {headline} [derived: v-main] [src: {src}]", "",
+        "## Review interval by frequent filer (public FDA dates)", "",
+        "| Applicant | Clearances | Median days received→decision | Evidence |",
+        "|---|---|---|---|",
+    ]
+    for app, ds in top:
+        lines.append(f"| {app} | {len(ds)} | {_median(ds)} | [src: {src}] |")
+    lines += [
+        "",
+        f"- Overall: median {overall} days across {len(ivs)} clearances [derived: cycle-by-applicant] "
+        f"[src: {src}]",
+        "",
+        "## Our own history (stated gap)", "",
+        "- Our program's K-numbers are demo-fabricated, so OUR received→decision intervals cannot be",
+        "  read from public data — the comparison's left side needs the internal regulatory log as a",
+        "  corpus dataset. The series is marked no-data rather than estimated.",
+        "- Note the metric's scope: received→decision measures FDA review, not develop-to-market —",
+        "  concept-pipeline conversion needs the internal concept register (also a stated gap).",
+        "",
+        "## Method & provenance", "",
+        f"- Intervals computed from public `date_received` / `decision_date` in [src: {src}].",
+    ]
+    data = {
+        "bq": "BQ-06",
+        "series": [
+            {"id": "cycle-by-applicant", "label": "Median review days (frequent filers)", "unit": "days",
+             "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "points": [{"label": a, "value": _median(ds), "clearances": len(ds)} for a, ds in top]},
+            {"id": "our-cycle-time", "label": "Our received→decision history", "unit": "days",
+             "evidence_class": "unavailable",
+             "provenance": {"note": "internal regulatory log not yet a corpus dataset (demo K-numbers are fabricated)"},
+             "points": []},
+        ],
+        "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
+    }
+    write(out, lines, data)
+
+
+# ---------------------------------------------------------------- BQ-12 clearance sweep
+
+def bq12(corpus_root, out, pins):
+    p = params_for("BQ-12")
+    rows, snap = load_pin_csv(corpus_root, pins, FDA510K_DS)
+    src = f"{FDA510K_DS}@{snap}"
+    window = int(p["window_days"])
+    dated = [r for r in rows if r["decision_date"]]
+    as_of = max(r["decision_date"] for r in dated)
+    start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=window)).isoformat()
+    recent = sorted((r for r in dated if start <= r["decision_date"] <= as_of),
+                    key=lambda r: r["decision_date"], reverse=True)
+
+    def flags(name):
+        u = name.upper()
+        return [lane for lane, kws in p["watch_keywords"].items() if any(k in u for k in kws)]
+
+    flagged = [(r, flags(r["device_name"])) for r in recent]
+    flagged = [(r, f) for r, f in flagged if f]
+    quarters = {}
+    for r in dated:
+        y, m = r["decision_date"][:4], int(r["decision_date"][5:7])
+        q = f"{y}-Q{(m - 1) // 3 + 1}"
+        quarters[q] = quarters.get(q, 0) + 1
+
+    if recent:
+        headline = (f"{len(recent)} infusion-pump clearance(s) in the {window}-day window ending {as_of}; "
+                    f"{len(flagged)} flag roadmap-relevant keywords — review against the roadmap lanes")
+    else:
+        headline = f"No new infusion-pump clearances in the {window}-day window ending {as_of}"
+
+    lines = [
+        "# BQ-12 — Competitor clearance sweep vs the roadmap", "",
+        f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
+        f"## Clearances in the window ({start} → {as_of})", "",
+    ]
+    if recent:
+        lines += ["| K-number | Applicant | Device | Decision | Roadmap flags | Evidence |",
+                  "|---|---|---|---|---|---|"]
+        for r in recent:
+            fl = ", ".join(flags(r["device_name"])) or "—"
+            lines.append(f"| {r['k_number']} | {r['applicant']} | {r['device_name'][:60]} | "
+                         f"{r['decision_date']} | {fl} | [src: {src}] |")
+    else:
+        lines.append(f"- None in window [src: {src}]")
+    lines += [
+        "",
+        "## Method & provenance", "",
+        f"- Window anchored to the newest decision date in the pinned snapshot ({as_of}) so the sweep",
+        f"  is deterministic against its pin [src: {src}].",
+        "- Roadmap flags are keyword matches on the public device name [config: commercial.yml] —",
+        "  a triage aid for analyst review against the roadmap lanes, not a capability judgment.",
+        "- Scope: product code FRN only; adjacent SaMD/monitoring codes need a wider corpus dataset",
+        "  before concluding no entrant activity (dataset README notes this limitation).",
+    ]
+    data = {
+        "bq": "BQ-12",
+        "series": [
+            {"id": "clearances-by-quarter", "label": "FRN clearances per quarter", "unit": "clearances",
+             "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "points": [{"label": q, "value": n} for q, n in sorted(quarters.items())]},
+            {"id": "window-flagged", "label": f"Window clearances ({start} → {as_of})", "unit": "",
+             "evidence_class": "measured",
+             "provenance": {"dataset": FDA510K_DS, "snapshot": snap},
+             "points": [{"label": r["k_number"], "value": f"{r['applicant']} — "
+                         + (", ".join(f) if f else "no flags")} for r, f in
+                        ([(r, flags(r["device_name"])) for r in recent] or [])]},
+        ],
+        "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
+    }
+    write(out, lines, data)
+
+
+# ---------------------------------------------------------------- BQ-18 complaints vs thresholds
+
+COMPLAINTS_DS = "commercial/internal-complaints"
+
+
+def bq18(corpus_root, out, pins):
+    p = params_for("BQ-18")
+    rows, snap = load_pin_csv(corpus_root, pins, COMPLAINTS_DS)
+    fleet, fsnap = load_pin_csv(corpus_root, pins, FLEET_DS)
+    src = f"{COMPLAINTS_DS}@{snap}"
+    fsrc = f"{FLEET_DS}@{fsnap}"
+    window = int(p["window_days"])
+    n_fleet = len(fleet)
+    as_of = max(r["date_opened"] for r in rows)
+    start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=window)).isoformat()
+    prev_start = (dt.date.fromisoformat(start) - dt.timedelta(days=window)).isoformat()
+
+    def counts(a, b):
+        out_c = {}
+        for r in rows:
+            if a <= r["date_opened"] < b:
+                out_c[r["category"]] = out_c.get(r["category"], 0) + 1
+        return out_c
+
+    cur = counts(start, "9999")
+    prev = counts(prev_start, start)
+    thr = p["rate_threshold_per_100"]
+
+    def rate(n):
+        return round(100.0 * n / n_fleet, 2)
+
+    ranked = sorted(cur.items(), key=lambda kv: -kv[1])
+    breaches = []
+    for cat, n in ranked:
+        t = float(thr.get(cat, thr["default"]))
+        if rate(n) > t:
+            breaches.append((cat, rate(n), t))
+    top3 = ranked[:3]
+
+    if breaches:
+        b = "; ".join(f"{c} at {r} per 100 devices vs threshold {t}" for c, r, t in breaches)
+        headline = f"CAPA-review trigger: {b} (trailing {window}d ending {as_of})"
+    else:
+        headline = (f"No complaint category exceeds its rate threshold in the trailing {window}d "
+                    f"ending {as_of}; top category is {top3[0][0]} at {rate(top3[0][1])} per 100 devices")
+
+    lines = [
+        "# BQ-18 — Complaint categories vs risk-file thresholds", "", BANNER, "",
+        f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
+        f"## Trailing window, rate-normalized (stated denominator: {n_fleet} fleet devices "
+        f"[src: {fsrc}])", "",
+        "| Category | Complaints | Rate per 100 devices | Threshold | Prior window | Evidence |",
+        "|---|---|---|---|---|---|",
+    ]
+    for cat, n in ranked:
+        t = float(thr.get(cat, thr["default"]))
+        mark = " ⚠️" if rate(n) > t else ""
+        lines.append(f"| {cat} | {n} | {rate(n)}{mark} | {t} | {prev.get(cat, 0)} | "
+                     f"[src: {src}] [config: commercial.yml] |")
+    lines += [
+        "",
+        "## Method & provenance", "",
+        f"- Complaint counts measured from [src: {src}]; denominator is the installed-base registry",
+        f"  [src: {fsrc}] — the ONLY sanctioned internal denominator (per the corpus conventions).",
+        "- Thresholds are demo stand-ins for risk-file complaint-rate commitments",
+        "  [config: commercial.yml]; a breach obligates a CAPA review, not automatically a CAPA.",
+    ]
+    data = {
+        "bq": "BQ-18",
+        "series": [
+            {"id": "rate-by-category", "label": f"Complaints per 100 devices (trailing {window}d)",
+             "unit": "per 100 devices", "evidence_class": "measured",
+             "provenance": {"dataset": COMPLAINTS_DS, "snapshot": snap},
+             "points": [{"label": c, "value": rate(n), "count": n} for c, n in ranked]},
+            {"id": "window-trend", "label": "Complaints: current vs prior window", "unit": "complaints",
+             "evidence_class": "derived",
+             "provenance": {"dataset": COMPLAINTS_DS, "snapshot": snap},
+             "points": [{"label": "current", "value": sum(cur.values())},
+                        {"label": "prior", "value": sum(prev.values())}]},
+        ],
+        "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
+    }
+    write(out, lines, data)
+
+
 # ---------------------------------------------------------------- main
 
-DISPATCH = {"BQ-19": bq19, "BQ-23": bq23, "BQ-24": bq24, "BQ-25": bq25, "BQ-26": bq26, "BQ-27": bq27}
+DISPATCH = {"BQ-06": bq06, "BQ-12": bq12, "BQ-18": bq18,
+            "BQ-19": bq19, "BQ-23": bq23, "BQ-24": bq24, "BQ-25": bq25, "BQ-26": bq26, "BQ-27": bq27}
 
 
 def main():
