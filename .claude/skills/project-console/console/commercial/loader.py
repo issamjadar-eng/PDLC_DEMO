@@ -78,6 +78,7 @@ def load_edition(repo_root: Path, bq: str, edition: str) -> dict | None:
     rel = edir.relative_to(repo_root)
     return {
         "quality": quality,
+        "plan_pin": meta.get("plan"),
         "bq": bq,
         "edition": edition,
         "status": meta.get("status", "draft"),

@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 7
+version: 8
 updated: 2026-07-22
 dependencies:
   skills:
@@ -103,6 +103,20 @@ The console is a pure consumer of this file.
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
 approved editions still lint green, and the corpus chain green (invokes the corpus
 skill's `check`). Run before demos and before rendering anything user-facing.
+
+### `plan-init <BQ-NN>`
+Scaffold the question's **analysis plan** — `plans/BQ-NN.md`, the user-owned prose
+contract: Goal (the decision served), Approach (committed definitions — windows,
+anchors, denominators), Data (have vs need, gaps stated), Assumptions & expectations,
+and Assertions & limits (what the answer does NOT claim). Templated from the catalog
+entry with category-specific approach hints, then **never overwritten** — users edit
+freely. `answer` pins the plan's hash into the edition; the `plan-currency` lint check
+calls out a missing plan, an unpinned edition, or a plan that **changed after the
+edition was computed** (drift). Whether the computed answer actually HONORS the plan's
+intent is an agent judgment: run an intent-check agent (give it the plan + the
+edition; strict — a committed definition not followed is a DEVIATION even if the
+numbers are right) and file the verdict via `record-verification --type intent-check`
+(HONORED | HONORED-WITH-NOTES | DEVIATION).
 
 ### `audit <BQ-NN> [--edition E]`
 (Re)generate the edition's `quality.json` — the machine-checked audit surface: lint
