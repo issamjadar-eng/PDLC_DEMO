@@ -133,6 +133,12 @@ def _timeseries_geometry(s: dict):
                      for p in pts],
             "end_x": round(X(pts[-1]["x"]), 1), "end_y": round(Y(pts[-1]["y"]), 1),
         })
+    # de-collide direct end labels: lines ending at similar values otherwise overlap
+    order = sorted(glines, key=lambda g: g["end_y"])
+    for i, g in enumerate(order):
+        g["label_y"] = g["end_y"]
+        if i and g["label_y"] - order[i - 1]["label_y"] < 13:
+            g["label_y"] = order[i - 1]["label_y"] + 13
     return {"w": W, "h": H, "lines": glines, "x0": xs[0][:10], "x1": xs[-1][:10],
             "ymax": ymax, "y0_y": round(Y(0), 1), "ymax_y": round(Y(ymax), 1), "left": L,
             "right": W - R}

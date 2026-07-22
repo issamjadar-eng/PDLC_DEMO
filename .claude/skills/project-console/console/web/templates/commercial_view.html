@@ -95,7 +95,7 @@
           <polyline points="{{ ln.path }}" fill="none" stroke="{{ ln.color }}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="4.5" class="cm-ts-hit"><title>{{ d0.tip }}</title></circle>{% endfor %}
           {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="2" fill="{{ ln.color }}"/>{% endfor %}
-          <text x="{{ ln.end_x + 6 }}" y="{{ ln.end_y + 3 }}" class="cm-ts-label">{{ ln.label }}</text>
+          <text x="{{ ln.end_x + 6 }}" y="{{ ln.label_y + 3 }}" class="cm-ts-label">{{ ln.label }}</text>
           {% endfor %}
           <text x="{{ s._ts.left }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick">{{ s._ts.x0 }}</text>
           <text x="{{ s._ts.right }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick" text-anchor="end">{{ s._ts.x1 }}</text>

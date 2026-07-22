@@ -4,9 +4,12 @@
    labels, thin marks, no legend needed for single series. Evidence/freshness
    badges always carry icon + label (never color alone). */
 
+/* console.css caps main at 1040px — commercial pages manage their own width
+   (same escape pattern as body.workflow-page) */
+body.commercial-page main { max-width: none; }
 .commercial-page .cm-wrap { max-width: 1100px; margin: 0 auto; padding: 1.6rem 1.4rem 3rem; --cm-series: #2a78d6; }
-/* answer views use the page width — the report tables + rail need the room */
-.commercial-page .cm-wrap.cm-wrap-wide { max-width: min(1720px, 97vw); }
+/* answer + data views use the page width — the rail, tables, and report need the room */
+.commercial-page .cm-wrap.cm-wrap-wide { max-width: min(1780px, 96vw); }
 
 .cm-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1.2rem; }
 .cm-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; font-weight: 700; color: var(--body-text-muted, #64748b); margin: 0 0 .2rem; }
