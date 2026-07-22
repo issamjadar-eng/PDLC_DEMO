@@ -74,8 +74,10 @@ def load_edition(repo_root: Path, bq: str, edition: str) -> dict | None:
     if data is None and not meta:
         return None
     approval = _read_yaml(edir / "approval.yml")
+    quality = _read_json(edir / "quality.json")
     rel = edir.relative_to(repo_root)
     return {
+        "quality": quality,
         "bq": bq,
         "edition": edition,
         "status": meta.get("status", "draft"),

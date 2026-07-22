@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 5
+version: 6
 updated: 2026-07-22
 dependencies:
   skills:
@@ -103,6 +103,21 @@ The console is a pure consumer of this file.
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
 approved editions still lint green, and the corpus chain green (invokes the corpus
 skill's `check`). Run before demos and before rendering anything user-facing.
+
+### `audit <BQ-NN> [--edition E]`
+(Re)generate the edition's `quality.json` — the machine-checked audit surface: lint
+status (errors/warnings), the resolved-reference inventory (every marker with a
+resolved/broken verdict and a one-line note), and per-pin freshness detail. Written
+automatically by `answer`, `lint`, and `approve`; run `audit` to refresh it standalone.
+Agent-recorded `verifications` entries are preserved across rewrites.
+
+### `record-verification <BQ-NN> --type <t> --verdict <v> --by <who> --summary <s> [--detail-ref <path>] [--edition E]`
+File an agent-produced verification into `quality.json` — the half of quality the
+engine cannot generate deterministically. Types: `adversarial-verify` (independent
+pins-only re-derivation), `red-team` (framing attack), `reference-audit`,
+`human-review`. **When you (Claude) run a verify/red-team agent over an answer, file
+the outcome here** — an unfiled verification is invisible to the audit surface.
+Consoles render these with verdict chips next to the machine checks.
 
 ### `catalog`
 The question roster with per-question answer status at a glance.

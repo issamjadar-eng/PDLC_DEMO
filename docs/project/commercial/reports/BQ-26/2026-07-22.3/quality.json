@@ -1,0 +1,76 @@
+{
+ "bq": "BQ-26",
+ "edition": "2026-07-22.3",
+ "generated_at": "2026-07-22T22:32:31+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": []
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "fse-capacity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "required-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "verifications": [
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "AI assistant (independent verifier)",
+   "at": "2026-07-22T22:36:14+00:00",
+   "summary": "Pins-only re-derivation from internal-upgrade-campaign@2026-07-22.2: all per-region remaining counts, on-site counts, and current/required rates reproduce exactly (EMEA 0.25/wk within rounding).",
+   "detail_ref": "tasks/ben/_work/108-redteam-BQ-26-2026-07-22.3.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "AI assistant (independent verifier)",
+   "at": "2026-07-22T22:36:14+00:00",
+   "summary": "Figures confirmed, framing caveats: EMEA stall understated as a Risk (4 zero weeks = the NA Issue criterion); run-rate anchor (latest completion, not snapshot as-of) is consistently optimistic and undisclosed; APAC's thin margin + largest on-site load absent from the verdict; remote-conversion mitigation unsized. 4 findings queued as computation refinements.",
+   "detail_ref": "tasks/ben/_work/108-redteam-BQ-26-2026-07-22.3.md"
+  }
+ ]
+}

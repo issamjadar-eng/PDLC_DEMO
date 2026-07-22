@@ -51,6 +51,14 @@
     <div class="cm-main">
   {{ qheader() }}
 
+  <div class="cm-toptabs" role="tablist" aria-label="View">
+    <button type="button" class="cm-toptab is-active" data-tab="cm-tab-report">Report</button>
+    <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
+      {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
+    </button>
+  </div>
+
+  <div id="cm-tab-report">
   {% for v in verdicts %}
   <div class="cm-verdict">
     <span class="cm-verdict-k">Verdict</span>
@@ -264,6 +272,79 @@
     </ol>
   </section>
   {% endif %}
+  </div><!-- /#cm-tab-report -->
+
+  <div id="cm-tab-quality" hidden>
+    {% if not quality %}
+    <div class="cm-empty"><p><strong>No quality record for this edition.</strong> Run
+      <code>commercial.py audit {{ q.id }}</code> (or re-answer) to generate it.</p></div>
+    {% else %}
+    <div class="cm-q-grid">
+      <section class="cm-q-card">
+        <h3>Claim lint <span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓ pass' if quality.lint.status == 'pass' else '✗ fail' }}</span></h3>
+        <p class="cm-muted">Every numeric claim must carry a resolvable marker; estimation language needs a stated
+          assumption; stale pins need a waiver. Machine-checked — {{ quality.lint.errors | length }} error(s),
+          {{ quality.lint.warnings | length }} warning(s).</p>
+        {% if quality.lint.errors %}<ul class="cm-q-list cm-q-bad">{% for e in quality.lint.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        {% if quality.lint.warnings %}<ul class="cm-q-list">{% for w in quality.lint.warnings %}<li>warn: {{ w }}</li>{% endfor %}</ul>{% endif %}
+      </section>
+
+      <section class="cm-q-card">
+        <h3>Reference checks <span class="cm-muted">({{ quality.references | length }})</span></h3>
+        <table class="cm-expect-table">
+          <thead><tr><th>Kind</th><th>Reference</th><th>Status</th><th>Note</th></tr></thead>
+          <tbody>
+            {% for r in quality.references %}
+            <tr><td class="cm-mono">{{ r.kind }}</td><td class="cm-mono">{{ r.value }}</td>
+              <td><span class="cm-chip {{ 'vx-met' if r.resolved else 'vx-notmet' }}">{{ '✓ resolved' if r.resolved else '✗ broken' }}</span></td>
+              <td class="cm-muted">{{ r.note }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="cm-q-card">
+        <h3>Pin freshness</h3>
+        <table class="cm-expect-table">
+          <thead><tr><th>Dataset</th><th>Snapshot</th><th>Age</th><th>Max</th><th>Band</th></tr></thead>
+          <tbody>
+            {% for f in quality.freshness %}
+            <tr><td class="cm-mono">{{ f.dataset }}</td><td class="cm-mono">{{ f.snapshot }}</td>
+              <td>{{ f.age_days }}d</td><td>{{ f.max_age_days }}d</td>
+              <td><span class="cm-badge {{ f._band.cls }}">{{ f._band.label }}</span>{% if f.waived %} <span class="cm-chip vx-unvalidated">waived</span>{% endif %}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="cm-q-card">
+        <h3>Verification &amp; red-team</h3>
+        {% if not quality.verifications %}
+        <p class="cm-muted">No independent verification recorded for this edition yet. Ask Claude to
+          <em>“verify {{ q.id }}”</em> — an independent agent re-derives the claims from the pinned snapshots
+          alone (and/or red-teams the framing), then files the verdict via
+          <code>record-verification</code>. The lint proves substantiation; verification proves the numbers
+          and framing survive independent scrutiny.</p>
+        {% else %}
+        {% for v in quality.verifications %}
+        <div class="cm-q-ver">
+          <div class="cm-nar-head">
+            <span class="cm-chip {{ v._cls }}">{{ v.verdict }}</span>
+            <span class="cm-mono">{{ v.type }}</span>
+            <span class="cm-muted">by {{ v.by }} · {{ v.at[:16] }}</span>
+          </div>
+          <p class="cm-q-ver-sum">{{ v.summary }}</p>
+          {% if v._detail_link %}<p class="cm-nar-ev"><a href="{{ v._detail_link }}" target="_blank" rel="noopener">full dossier ↗</a></p>{% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </section>
+    </div>
+    <p class="cm-muted cm-q-stamp">Audit generated {{ quality.generated_at[:16] }} · machine-checked sections
+      (lint / references / freshness) regenerate on every answer or lint; verification entries are
+      agent-recorded evidence and persist per edition.</p>
+    {% endif %}
+  </div><!-- /#cm-tab-quality -->
     </div><!-- /.cm-main -->
   </div><!-- /.cm-shell -->
   {% endif %}
@@ -286,4 +367,19 @@
 {% include "_assistant_drawer.html" %}
 {% set launcher = {"button_id": "cm-assistant-open"} %}
 {% include "_assistant_launcher.html" %}
+<script>
+(function () {
+  var tabs = document.querySelector('.cm-toptabs');
+  if (!tabs) return;
+  tabs.addEventListener('click', function (e) {
+    var btn = e.target.closest('.cm-toptab'); if (!btn) return;
+    tabs.querySelectorAll('.cm-toptab').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    ['cm-tab-report', 'cm-tab-quality'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = id !== btn.getAttribute('data-tab');
+    });
+  });
+})();
+</script>
 {% endblock %}

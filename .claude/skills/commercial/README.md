@@ -67,6 +67,12 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 6 (2026-07-22): Per-edition `quality.json` audit surface — lint status, resolved-
+  reference inventory (every marker with resolved/broken + note), per-pin freshness
+  detail; written by answer/lint/approve, refreshable via the new `audit` action.
+  New `record-verification` action files agent-produced verdicts (adversarial-verify /
+  red-team / reference-audit / human-review) into the same file, preserved across
+  machine rewrites. `lint_edition` now returns (errors, warnings, detail).
 - 5 (2026-07-22): Report-table citation convention — markers ride inline at the end of
   the row's label cell (consoles render them as compact superscripts), never in a
   dedicated Evidence column (guidance added to SKILL.md; the claim lint is line-based
