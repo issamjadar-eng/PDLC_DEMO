@@ -1,8 +1,8 @@
 ---
 name: advisors
-description: "Manage and ground a bundle of persona advisor subagents (Regulatory Affairs, Clinical Affairs, Risk Management, Cybersecurity, Quality Engineering, V&V, Human Factors, Post-Market, R&D, Systems Engineering, Program Manager) for a medtech project. Each advisor grounds itself in the project's DHF / strategy / standards / regulation documents via three-tier canonical-role grounding, and serves two runtimes from one source — Claude Code subagent delegation and the project-console browser UI. TRIGGER when the user wants to install, list, add, remove, enable, sync, or re-ground advisors / assistants; edit advisor grounding, overlays, or canonical-role tiers; regenerate the auto-rendered GROUNDING blocks; or wire advisor agents into the project or console. Actions: init, setup, list, add <name>, remove <name>, overlay <name> <op> <glob>, sync, help."
-version: 11
-updated: 2026-06-11
+description: "Manage and ground a bundle of persona advisor subagents (Regulatory Affairs, Clinical Affairs, Risk Management, Cybersecurity, Quality Engineering, V&V, Human Factors, Post-Market, R&D, Systems Engineering, Program Manager, Commercial) for a medtech project. Each advisor grounds itself in the project's DHF / strategy / standards / regulation documents via three-tier canonical-role grounding, and serves two runtimes from one source — Claude Code subagent delegation and the project-console browser UI. TRIGGER when the user wants to install, list, add, remove, enable, sync, or re-ground advisors / assistants; edit advisor grounding, overlays, or canonical-role tiers; regenerate the auto-rendered GROUNDING blocks; or wire advisor agents into the project or console. Actions: init, setup, list, add <name>, remove <name>, overlay <name> <op> <glob>, sync, help."
+version: 12
+updated: 2026-07-22
 ---
 
 # Advisors — Persona Subagents for Medtech Projects
@@ -68,7 +68,7 @@ Resolution: agent-file baseline (`context` + `sources`) → `project.yml` overla
 
 | File | Purpose |
 |------|---------|
-| `agents/*.md` | Bundled advisor agent files (CC-native frontmatter + `console:` extension block). Source of truth for every advisor the skill ships. Includes 11 domain advisors, 2 panels, and the `advisor-researcher` helper subagent. |
+| `agents/*.md` | Bundled advisor agent files (CC-native frontmatter + `console:` extension block). Source of truth for every advisor the skill ships. Includes 12 domain advisors, 2 panels, and the `advisor-researcher` helper subagent. |
 | `agents/advisor-researcher.md` | Helper subagent (Read/Glob/Grep only) invoked by domain advisors as the Tier 3 escape hatch when Tier 1 + Tier 2 grounding leaves the answer thin. No `console:` block — not user-facing; render-grounding skips it. |
 | `overlay-defaults.yml` | Seed `advisors:` section written into `project.yml` on `init`. Carries literal-glob-mode `overlays` for backward compat; new agents use canonical-role mode and ignore this file. |
 | `scripts/render-grounding.py` | CLI that regenerates the `<!-- BEGIN GROUNDING -->` block in each agent file from its frontmatter. Dispatches on grounding mode: canonical-role (reads role descriptions from `/dhf-manifest data/canonical-roles.yaml`) vs literal-glob (reads `context`/`sources` + project.yml overlay). Idempotent. PEP 723 inline deps (uv-managed). |
