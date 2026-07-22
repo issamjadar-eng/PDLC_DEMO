@@ -21,6 +21,10 @@
           {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
         {% endfor %}
         {% if ed %}<a class="cm-chip cm-data-chip" href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>{% endif %}
+        {% if ed and ed.status == 'draft' %}
+        <button type="button" class="cm-approve-open" onclick="document.getElementById('cm-approve-dialog').showModal()"
+                title="Approve this draft edition and push it to the repo">✓ Approve…</button>
+        {% endif %}
       </div>
     </div>
   </header>
@@ -64,27 +68,37 @@
   {% endif %}
 
   {% if ed.status == 'draft' %}
-  <div class="cm-approve">
-    <form method="post" action="/commercial/{{ q.id }}/approve" class="cm-approve-form"
+  <dialog id="cm-approve-dialog" class="cm-dialog">
+    <form method="post" action="/commercial/{{ q.id }}/approve"
           onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').textContent = 'Approving & pushing…';">
+      <div class="cm-dialog-head">
+        <h2>Approve {{ q.id }} <span class="cm-mono">{{ ed.edition }}</span></h2>
+        <button type="button" class="cm-dialog-x" aria-label="Close" onclick="this.closest('dialog').close()">✕</button>
+      </div>
+      <p class="cm-dialog-sub">Runs the gated approval — claim lint and pin freshness must pass — hash-pins the
+        content, supersedes the prior approved edition, then pushes to the repo (commit → PR → auto-merge).</p>
       <input type="hidden" name="edition" value="{{ ed.edition }}">
-      <span class="cm-chip ed-draft">Draft</span>
       <label class="cm-approve-l">Approved by
         <select name="approver" required>
           <option value="" disabled selected>choose…</option>
           {% for n in team %}<option>{{ n }}</option>{% endfor %}
         </select>
       </label>
-      <input type="text" name="verify_note" placeholder="verification note (optional)" class="cm-approve-note">
-      <button type="submit" class="btn-secondary cm-approve-btn" title="Runs the gated approval (claim lint + pin freshness must pass), hash-pins the content, then pushes to the repo (commit → PR → auto-merge)">✓ Approve &amp; push to repo</button>
+      <label class="cm-approve-l">Verification note <span class="cm-muted">(optional)</span>
+        <input type="text" name="verify_note" placeholder="e.g. dossier reference or review note" class="cm-approve-note">
+      </label>
+      <div class="cm-dialog-actions">
+        <button type="button" class="btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+        <button type="submit" class="btn-secondary cm-approve-btn">✓ Approve &amp; push to repo</button>
+      </div>
+      <details class="cm-approve-help">
+        <summary>Prefer Claude or the command line?</summary>
+        <p>Ask Claude to <em>“approve {{ q.id }}”</em>, or run
+          <code>python3 .claude/skills/commercial/scripts/commercial.py approve {{ q.id }} --edition {{ ed.edition }} --by "&lt;name&gt;" --verify-note "&lt;ref&gt;"</code>
+          then push. The gate is identical either way.</p>
+      </details>
     </form>
-    <details class="cm-approve-help">
-      <summary>Prefer Claude or the command line?</summary>
-      <p>Ask Claude to <em>“approve {{ q.id }}”</em>, or run
-        <code>python3 .claude/skills/commercial/scripts/commercial.py approve {{ q.id }} --edition {{ ed.edition }} --by "&lt;name&gt;" --verify-note "&lt;ref&gt;"</code>
-        then push. The gate is identical either way: lint + freshness must be green; approval hash-pins the content and supersedes the prior approved edition.</p>
-    </details>
-  </div>
+  </dialog>
   {% endif %}
   {% if newer_draft %}
   <div class="cm-banner cm-banner-draft">A newer <strong>draft</strong> edition exists —
