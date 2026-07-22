@@ -27,6 +27,7 @@
   <symbol id="ic-workflows" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M7 11v3a2 2 0 0 0 2 2h4"/></symbol>
   <symbol id="ic-agents" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
   <symbol id="ic-documents" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></symbol>
+  <symbol id="ic-commercial" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 13h20"/></symbol>
   <symbol id="ic-menu" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></symbol>
   <symbol id="ic-tasks" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l3 3 5-6"/></symbol>
   <symbol id="ic-value" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
@@ -45,6 +46,7 @@
     {% if request.state.overview_nav %}<a class="nav-item" href="/overview" title="Overview"><svg class="nav-svg" aria-hidden="true"><use href="#ic-overview"/></svg><span class="nav-tx">Overview</span></a>{% endif %}
     {% if request.state.strategy_nav %}<a class="nav-item" href="/strategy" title="Strategy"><svg class="nav-svg" aria-hidden="true"><use href="#ic-strategy"/></svg><span class="nav-tx">Strategy</span></a>{% endif %}
     {% if request.state.submission_nav %}<a class="nav-item" href="/submission" title="Submission"><svg class="nav-svg" aria-hidden="true"><use href="#ic-submission"/></svg><span class="nav-tx">Submission</span></a>{% endif %}
+    {% if request.state.commercial_nav %}<a class="nav-item" href="/commercial" title="Commercial (business questions answered with data)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-commercial"/></svg><span class="nav-tx">Commercial</span></a>{% endif %}
     <a class="nav-item" href="/dashboards" title="Dashboards"><svg class="nav-svg" aria-hidden="true"><use href="#ic-dashboards"/></svg><span class="nav-tx">Dashboards</span></a>
     <a class="nav-item" href="/trace-matrix" title="Trace Matrix"><svg class="nav-svg" aria-hidden="true"><use href="#ic-trace"/></svg><span class="nav-tx">Trace Matrix</span></a>
     {% if request.state.gap_analysis_nav %}<a class="nav-item" href="/gap-analysis" title="Gap Analysis"><svg class="nav-svg" aria-hidden="true"><use href="#ic-gap"/></svg><span class="nav-tx">Gap Analysis</span></a>{% endif %}

@@ -261,6 +261,25 @@ run `/submissions render`; a `POST /submission/render` button shells to the skil
 renderer using the repo-relative paths in the sidecar. The full contract lives in
 the `submissions` skill SKILL.md.
 
+## Topline section: Commercial (business questions answered with data)
+
+**Commercial** (`/commercial`) — the display tier of the corpus → commercial → console
+stack. Nav shows when the `commercial` skill has published
+`docs/project/commercial/.console/commercial-index.json` (`schema_version: 1.0`).
+
+The console is a **pure consumer** of that sidecar (same loose-coupling rule as
+Submission/Tasks): it plots each edition's `data.json` series verbatim and computes
+nothing — figures exist only because the skill's deterministic computation emitted and
+claim-linted them. The catalog page renders every question (unimplemented ones as
+"Planned" — roadmap, never silence); the answer view renders the verdict banner,
+in-console bar charts with per-series evidence badges (measured / derived / assumed /
+no-data, icon + label) and provenance lines linking pinned `dataset@snapshot`, a
+**DRAFT — NOT APPROVED watermark** over unapproved editions, the pinned-snapshots +
+approval-record panel, edition history (`?edition=`), and the full marker-cited report
+via the documents renderer. `POST /commercial/render` shells to the skill's `render`;
+the assistant drawer grounds in `/commercial/{bq}/grounding`. Full contract lives in
+the `commercial` skill's SKILL.md.
+
 ## Topline section: Tasks (activity summary)
 
 **Tasks** (`/tasks`) — an *activity summary*, deliberately not a task list: what's

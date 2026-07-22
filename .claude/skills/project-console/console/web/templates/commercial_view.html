@@ -1,0 +1,130 @@
+{% extends "_base.html" %}
+{% block title %}{{ q.id }} · Commercial · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}commercial-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
+{% block content %}
+<section class="cm-wrap" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
+  <nav class="cm-crumb"><a href="/commercial">← Commercial</a></nav>
+
+  <header class="cm-head cm-head-detail">
+    <div>
+      <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}</p>
+      <h1 class="cm-question">{{ q.question }}</h1>
+      <div class="cm-badges">
+        {% if ed_meta %}<span class="cm-chip {{ ed_meta.cls }}">{{ ed_meta.label }}</span>{% endif %}
+        {% if q._evidence %}<span class="cm-badge {{ q._evidence.cls }}" title="{{ q._evidence.tip }}">{{ q._evidence.glyph }} {{ q._evidence.label }}</span>{% endif %}
+        {% if q._fresh %}<span class="cm-badge {{ q._fresh.cls }}" title="{{ q._fresh.tip }}">{{ q._fresh.label }}</span>{% endif %}
+        {% for a in assumption_chips %}
+          {% if a.link %}<a class="cm-chip cm-assume-chip" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">≈ {{ a.id }} ↗</a>
+          {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </header>
+
+  {% if not ed %}
+  <div class="cm-empty"><p><strong>No computed answer yet.</strong> This question is in the catalog as roadmap —
+    register a computation in <code>commercial.yml</code> and run <code>answer {{ q.id }}</code>.</p></div>
+  {% else %}
+
+  {% for v in verdicts %}
+  <div class="cm-verdict">
+    <span class="cm-verdict-k">Verdict</span>
+    <p class="cm-verdict-h">{{ v.headline }}</p>
+  </div>
+  {% endfor %}
+
+  {% if ed.status == 'draft' %}
+  <div class="cm-banner cm-banner-draft">This edition is a <strong>draft</strong> — computed and claim-linted, but not approved.
+    Approve via <code>commercial.py approve {{ q.id }} --by &lt;name&gt;</code> (gated on lint + freshness).</div>
+  {% endif %}
+
+  <div class="cm-charts {% if ed.status == 'draft' %}cm-draftmark{% endif %}">
+    {% for s in series %}
+    <figure class="cm-chart">
+      <figcaption class="cm-chart-cap">
+        <span class="cm-chart-title">{{ s.label }}</span>
+        <span class="cm-badge {{ s._evidence.cls }}" title="{{ s._evidence.tip }}">{{ s._evidence.glyph }} {{ s._evidence.label }}</span>
+      </figcaption>
+      {% if s._rows %}
+        {% if s._numeric %}
+        <div class="cm-bars" role="img" aria-label="{{ s.label }}">
+          {% for r in s._rows %}
+          <div class="cm-bar-row" title="{{ r.tip }}">
+            <span class="cm-bar-label">{{ r.label }}</span>
+            <span class="cm-bar-track"><span class="cm-bar-fill" style="width: {{ r.pct }}%"></span></span>
+            <span class="cm-bar-value">{{ '{:,}'.format(r.value) if r.value is integer else r.value }}{% if s.unit == '%' %}%{% endif %}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% if s.unit and s.unit != '%' %}<p class="cm-unit">{{ s.unit }}</p>{% endif %}
+        {% else %}
+        <dl class="cm-kv">
+          {% for r in s._rows %}<div><dt>{{ r.label }}</dt><dd>{{ r.value }}</dd></div>{% endfor %}
+        </dl>
+        {% endif %}
+      {% else %}
+      <p class="cm-chart-none">{{ s._evidence.label }} — {{ s._prov_label or 'no data points' }}</p>
+      {% endif %}
+      <p class="cm-prov">Source:
+        {% if s._prov_link %}<a href="{{ s._prov_link }}" target="_blank" rel="noopener">{{ s._prov_label }} ↗</a>
+        {% else %}{{ s._prov_label }}{% endif %}
+      </p>
+    </figure>
+    {% endfor %}
+  </div>
+
+  <details class="cm-pins">
+    <summary>Provenance — pinned snapshots{% if ed.approval %} · approval record{% endif %}</summary>
+    <ul>
+      {% for ds, snap in ed.pins.items() %}
+      <li><code>{{ ds }}@{{ snap }}</code> — <a href="/documents#path=docs/project/corpus/{{ ds }}/README.md" target="_blank" rel="noopener">dataset ↗</a></li>
+      {% endfor %}
+    </ul>
+    {% if ed.approval %}
+    <p class="cm-muted">Approved by <strong>{{ ed.approval.approved_by }}</strong> at {{ ed.approval.approved_at }} —
+      checks: lint {{ ed.approval.checks.lint_errors }} errors, freshness {{ ed.approval.checks.freshness }},
+      verify: {{ ed.approval.checks.verify_note }}. Content hash-pinned.</p>
+    {% endif %}
+  </details>
+
+  {% if editions | length > 1 %}
+  <details class="cm-history">
+    <summary>History — {{ editions | length }} editions</summary>
+    <ul>
+      {% for e in editions | reverse %}
+      <li>
+        <a href="/commercial/{{ q.id }}?edition={{ e.edition }}">{{ e.edition }}</a>
+        <span class="cm-chip {{ EDITION_META.get(e.status, EDITION_META['draft']).cls }}">{{ e.status }}</span>
+        {% if ed and e.edition == ed.edition %}<span class="cm-muted">(shown)</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
+
+  <section class="cm-report">
+    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
+    <div class="cm-report-body md-body">{{ report_html | safe }}</div>
+  </section>
+  {% endif %}
+</section>
+
+{# Assistant drawer — grounded in this answer's compact rendition. #}
+{% set assistant = {
+  "scope": "cm:" ~ q.id,
+  "endpoint": "/assistant/chat/stream",
+  "default_agent": "post-market" if q.category in ("field-safety", "field-ops") else "program-manager",
+  "allowed_agents": [],
+  "grounding_label": "ANSWER CONTEXT",
+  "grounding_source": "active:.cm-wrap",
+  "title": "Commercial Advisor",
+  "subtitle": q.id,
+  "placeholder": "Ask about this answer…",
+  "empty_hint": "Ask about the verdict, what it rests on, or what would change it. The advisor sees the full marker-cited report, the pinned snapshots, and the assumption records. Example: <em>\"Which of these figures are assumptions rather than measurements?\"</em>",
+  "open_button_id": "cm-assistant-open"
+} %}
+{% include "_assistant_drawer.html" %}
+{% set launcher = {"button_id": "cm-assistant-open"} %}
+{% include "_assistant_launcher.html" %}
+{% endblock %}
