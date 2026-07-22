@@ -4,8 +4,10 @@
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
 <section class="cm-wrap cm-wrap-wide" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
+  {# Header lives INSIDE the content column so its left edge aligns with the verdict/
+     content and it spans to the right margin; only the editions tree sits left. #}
+  {% macro qheader() %}
   <nav class="cm-crumb"><a href="/commercial">← Commercial</a></nav>
-
   <header class="cm-head cm-head-detail">
     <div>
       <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}</p>
@@ -22,8 +24,10 @@
       </div>
     </div>
   </header>
+  {% endmacro %}
 
   {% if not ed %}
+  {{ qheader() }}
   <div class="cm-empty"><p><strong>No computed answer yet.</strong> This question is in the catalog as roadmap —
     register a computation in <code>commercial.yml</code> and run <code>answer {{ q.id }}</code>.</p></div>
   {% else %}
@@ -41,6 +45,7 @@
       <p class="cm-edrail-hint">A refresh opens a new draft; approved editions are immutable and stay reproducible against their pinned snapshots.</p>
     </aside>
     <div class="cm-main">
+  {{ qheader() }}
 
   {% for v in verdicts %}
   <div class="cm-verdict">
