@@ -5,6 +5,8 @@
    badges always carry icon + label (never color alone). */
 
 .commercial-page .cm-wrap { max-width: 1100px; margin: 0 auto; padding: 1.6rem 1.4rem 3rem; --cm-series: #2a78d6; }
+/* answer views use the page width — the report tables + rail need the room */
+.commercial-page .cm-wrap.cm-wrap-wide { max-width: min(1720px, 97vw); }
 
 .cm-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1.2rem; }
 .cm-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; font-weight: 700; color: var(--body-text-muted, #64748b); margin: 0 0 .2rem; }
