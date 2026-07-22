@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 1
+version: 2
 updated: 2026-07-22
 dependencies:
   skills:
@@ -127,6 +127,26 @@ compute ONLY from those snapshots); write `report.md` + `data.json` into `{out}`
 Questions without a `computation` are `not-implemented` — visible in the catalog and
 sidecar as roadmap, never silently missing. Plan constants (targets, close dates) live
 in `params` and are cited in reports as `[config: commercial.yml]`.
+
+**Plan expectations (first-class).** A question may declare `expectations:` — the plan
+assumptions its actuals are judged against, each with `id` (E-NN.N), `statement`,
+`expected`, `basis`, `set_by`, and `validated:` (false = the expectation itself is a
+stand-in not yet grounded in a plan of record / risk file — consoles flag it as
+challengeable). Computations evaluate every declared expectation and emit
+`data.json.expectations[]` with `actual`, `verdict` (met | at-risk | not-met |
+not-evaluable), and `evidence[]`; the same table renders into the linted report. An
+expectation the computation didn't evaluate surfaces as `not-evaluable` — a finding,
+not a silent omission. This answers "the actuals come from data — but are the
+assumptions being met, and are they even correct?"
+
+**Answer-edition data.json extensions** (all optional, consoles degrade gracefully):
+- `narrative: {issues[], risks[], watch[]}` — decision-ready Risks / Mitigations /
+  Issues, generated **deterministically from the computed facts** (each item: id,
+  severity, statement, mitigation|action, evidence[]). The narrative is mirrored into
+  the report body where the claim lint applies to it.
+- a series may set `kind: timeseries` with `lines: [{label, points: [{x: ISO-date,
+  y: number}]}]` (≤4 lines; zero-fill gaps so stalls render as flatlines, not holes) —
+  consoles render trend line charts from it.
 
 ## Dependencies
 

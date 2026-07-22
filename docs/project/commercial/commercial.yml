@@ -125,6 +125,19 @@ questions:
       # demo thresholds standing in for risk-file complaint-rate commitments
       # (complaints per 100 fleet devices per trailing-90d window)
       rate_threshold_per_100: {default: 2.0, occlusion-alarm: 3.0}
+    expectations:
+      - id: E-18.1
+        statement: "Complaint rates stay within the per-category thresholds"
+        expected: "<= 2.0 per 100 devices per 90d (occlusion-alarm <= 3.0)"
+        basis: "demo stand-ins [VERIFY] — must be re-derived from the risk file's acceptability criteria before real use"
+        set_by: vp-quality (demo)
+        validated: false
+      - id: E-18.2
+        statement: "Complaint volume is not trending upward window-over-window"
+        expected: "current 90d window <= 130% of prior window"
+        basis: "generic trend heuristic; no documented commitment"
+        set_by: vp-quality (demo)
+        validated: false
   - id: BQ-19
     question: "How does our adverse-event profile compare to competitors — and what denominator did you use, because MAUDE doesn't have one?"
     category: field-safety
@@ -157,6 +170,22 @@ questions:
     corpus_deps: [commercial/internal-upgrade-campaign]
     computation: "python3 computations.py BQ-23 --corpus-root {corpus_root} --out {out}"
     params: {close_date: "2026-09-30", target_pct: 95}
+    # Plan expectations — first-class, evaluated vs actuals every edition. `validated: false`
+    # means the expectation itself is a stand-in that has not been grounded in a plan of
+    # record — the console flags it as challengeable.
+    expectations:
+      - id: E-23.1
+        statement: "Campaign C-2026-02 reaches 95% coverage by the close date"
+        expected: "95% by 2026-09-30"
+        basis: "demo stand-in for the campaign plan of record [VERIFY]"
+        set_by: field-service (demo)
+        validated: false
+      - id: E-23.2
+        statement: "Every region sustains a completion run-rate sufficient to finish its wave"
+        expected: "run-rate >= required rate in each region"
+        basis: "implied by the wave schedule; never explicitly capacity-planned"
+        set_by: field-service (demo)
+        validated: false
   - id: BQ-24
     question: "What are our update failure and retry rates — is any hardware rev, firmware baseline, or site profile failing at a rate that says pause and escalate?"
     category: field-ops
@@ -165,6 +194,13 @@ questions:
     corpus_deps: [commercial/internal-upgrade-campaign]
     computation: "python3 computations.py BQ-24 --corpus-root {corpus_root} --out {out}"
     params: {pause_threshold_pct: 15, min_cohort: 20}
+    expectations:
+      - id: E-24.1
+        statement: "No cohort's per-attempt failure rate exceeds the pause threshold"
+        expected: "<= 15% per attempted device (cohort n >= 20)"
+        basis: "demo stand-in for an engineering quality threshold [VERIFY] — not yet derived from the risk file"
+        set_by: rd-lead (demo)
+        validated: false
   - id: BQ-25
     question: "Are customers struggling with this upgrade — tickets per 100 upgraded pumps, rollbacks — and what does an upgrade cost the customer?"
     category: field-ops
@@ -181,6 +217,13 @@ questions:
     corpus_deps: [commercial/internal-upgrade-campaign]
     computation: "python3 computations.py BQ-26 --corpus-root {corpus_root} --out {out}"
     params: {close_date: "2026-09-30"}
+    expectations:
+      - id: E-26.1
+        statement: "Existing field-service capacity absorbs the remaining waves without surge or slip"
+        expected: "current run-rate >= required rate through 2026-09-30 in every region"
+        basis: "implicit in the wave plan; never validated against an FSE roster (dataset gap)"
+        set_by: field-service (demo)
+        validated: false
   - id: BQ-27
     question: "How far behind current is the fleet — % of pumps more than one firmware version behind, at which accounts, and connected vs not?"
     category: field-ops

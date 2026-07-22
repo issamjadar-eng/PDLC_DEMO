@@ -81,6 +81,62 @@ def _is_number(v) -> bool:
     return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
+# Categorical slots 1-3 of the validated reference palette (dark-surface steps) —
+# three lines validate all-pairs; computations cap timeseries at <=4 lines.
+TS_COLORS = ["#3987e5", "#d95926", "#199e70", "#c98500"]
+
+VERDICT_META = {
+    "met": {"label": "Met", "cls": "vx-met", "glyph": "✓"},
+    "at-risk": {"label": "At risk", "cls": "vx-risk", "glyph": "!"},
+    "not-met": {"label": "Not met", "cls": "vx-notmet", "glyph": "✗"},
+    "not-evaluable": {"label": "Not evaluable", "cls": "vx-none", "glyph": "?"},
+}
+
+SEV_META = {
+    "high": {"label": "High", "cls": "sv-high"},
+    "medium": {"label": "Medium", "cls": "sv-med"},
+    "low": {"label": "Low", "cls": "sv-low"},
+}
+
+
+def _timeseries_geometry(s: dict):
+    """Server-side SVG geometry for a timeseries series (the console renders the
+    sidecar's values verbatim — this computes pixels, never data)."""
+    lines = s.get("lines") or []
+    all_pts = [(p["x"], p["y"]) for ln in lines for p in ln.get("points", [])]
+    if not all_pts:
+        return None
+    xs = sorted({x for x, _ in all_pts})
+    xi = {x: i for i, x in enumerate(xs)}
+    ymax = max(y for _, y in all_pts) or 1
+    W, H, L, R, T, B = 560, 180, 12, 96, 12, 24
+    span = max(1, len(xs) - 1)
+
+    def X(x):
+        return L + (W - L - R) * (xi[x] / span)
+
+    def Y(y):
+        return T + (H - T - B) * (1 - y / ymax)
+
+    glines = []
+    for i, ln in enumerate(lines):
+        pts = sorted(ln.get("points", []), key=lambda p: p["x"])
+        if not pts:
+            continue
+        glines.append({
+            "label": ln.get("label", f"series {i + 1}"),
+            "color": TS_COLORS[i % len(TS_COLORS)],
+            "path": " ".join(f"{X(p['x']):.1f},{Y(p['y']):.1f}" for p in pts),
+            "dots": [{"cx": round(X(p["x"]), 1), "cy": round(Y(p["y"]), 1),
+                      "tip": f"{ln.get('label')} · {p['x']}: {p['y']} {s.get('unit', '')}".strip()}
+                     for p in pts],
+            "end_x": round(X(pts[-1]["x"]), 1), "end_y": round(Y(pts[-1]["y"]), 1),
+        })
+    return {"w": W, "h": H, "lines": glines, "x0": xs[0][:10], "x1": xs[-1][:10],
+            "ymax": ymax, "y0_y": round(Y(0), 1), "ymax_y": round(Y(ymax), 1), "left": L,
+            "right": W - R}
+
+
 def _decorate_series(series: list) -> list:
     """Prepare sidecar series for template rendering: bar geometry for numeric
     points, key-value rows otherwise. The console plots values verbatim."""
@@ -99,6 +155,12 @@ def _decorate_series(series: list) -> list:
         else:
             d["_prov_label"] = prov.get("note", "")
             d["_prov_link"] = None
+        if s.get("kind") == "timeseries":
+            d["_ts"] = _timeseries_geometry(s)
+            d["_rows"] = []
+            d["_numeric"] = False
+            out.append(d)
+            continue
         pts = s.get("points", [])
         numeric = [p for p in pts if _is_number(p.get("value"))]
         d["_numeric"] = bool(numeric) and len(numeric) == len(pts)
@@ -176,6 +238,30 @@ async def commercial_index(request: Request, render_error: str | None = None):
     )
 
 
+@router.get("/commercial/catalog/grounding", response_class=PlainTextResponse)
+async def catalog_grounding():
+    """Compact rendition of the whole question board for the catalog's assistant
+    drawer. Declared before /commercial/{bq}/grounding so it wins the match."""
+    cfg = get_config()
+    index = load_index(cfg.repo_root) or {}
+    lines = ["# Commercial question board — status roll-up",
+             "Tiers: corpus (pinned data) -> commercial (deterministic answers, claim-linted, "
+             "draft->approved lifecycle) -> console (display). Evidence classes: measured / "
+             "derived / assumed / unavailable. 'unvalidated' expectations are stand-ins to challenge.", ""]
+    for q in index.get("questions", []):
+        lines.append(f"## {q.get('id')} [{q.get('category')}] — {q.get('question')}")
+        lines.append(f"status: {q.get('status')} · personas: {', '.join(q.get('personas', []))} · "
+                     f"cadence: {q.get('cadence')}")
+        if q.get("verdict_headline"):
+            lines.append(f"verdict: {q['verdict_headline']}")
+        if q.get("assumptions"):
+            lines.append(f"rests on assumptions: {', '.join(q['assumptions'])}")
+        if q.get("freshness"):
+            lines.append(f"freshness: {q['freshness']} · evidence class: {q.get('evidence_class')}")
+        lines.append("")
+    return PlainTextResponse("\n".join(lines))
+
+
 @router.get("/commercial/{bq}", response_class=HTMLResponse)
 async def commercial_view(request: Request, bq: str, edition: str | None = None):
     cfg = get_config()
@@ -189,11 +275,39 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
         raise HTTPException(404, f"No edition '{show_id}' for {bq}.")
     ctx = {"config": cfg, "q": q, "ed": ed, "series": [], "verdicts": [],
            "report_html": "", "editions": q.get("editions", []),
-           "ed_meta": None, "EDITION_META": EDITION_META}
+           "ed_meta": None, "EDITION_META": EDITION_META,
+           "expectations": [], "narrative": None, "newer_draft": None}
     if ed:
         ctx["ed_meta"] = EDITION_META.get(ed["status"], EDITION_META["draft"])
         ctx["series"] = _decorate_series(ed["data"].get("series", []))
         ctx["verdicts"] = ed["data"].get("verdicts", [])
+        # expectations panel (plan vs actual, with met/not-met verdicts)
+        exps = []
+        for e in ed["data"].get("expectations", []):
+            e = dict(e)
+            e["_verdict"] = VERDICT_META.get(e.get("verdict"), VERDICT_META["not-evaluable"])
+            exps.append(e)
+        ctx["expectations"] = exps
+        # narrative panel (issues / risks / watch)
+        nar = ed["data"].get("narrative")
+        if nar and any(nar.get(k) for k in ("issues", "risks", "watch")):
+            groups = []
+            for key, title in (("issues", "Issues — materialized, needs action"),
+                               ("risks", "Risks — potential, mitigation identified"),
+                               ("watch", "Watch")):
+                items = []
+                for it in nar.get(key, []):
+                    it = dict(it)
+                    it["_sev"] = SEV_META.get(it.get("severity", "medium"), SEV_META["medium"])
+                    items.append(it)
+                if items:
+                    # key name "entries" (not "items") — g.items in Jinja resolves dict.items
+                    groups.append({"key": key, "title": title, "entries": items})
+            ctx["narrative"] = groups
+        # a newer draft exists beyond the shown approved edition
+        if ed["status"] == "approved" and q.get("draft_edition") \
+                and q["draft_edition"] > ed["edition"]:
+            ctx["newer_draft"] = q["draft_edition"]
         abs_report = cfg.repo_root / ed["report_path"]
         if abs_report.is_file():
             try:

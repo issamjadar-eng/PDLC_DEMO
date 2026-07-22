@@ -1,0 +1,86 @@
+{
+ "bq": "BQ-24",
+ "series": [
+  {
+   "id": "failure-by-cohort",
+   "label": "Per-attempt failure rate",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-22.2"
+   },
+   "points": [
+    {
+     "label": "hw A / from 3.1.2",
+     "value": 9.2,
+     "n_attempted": 65
+    },
+    {
+     "label": "hw A / from 3.2.0",
+     "value": 3.4,
+     "n_attempted": 88
+    },
+    {
+     "label": "hw B / from 3.1.2",
+     "value": 31.4,
+     "n_attempted": 35
+    },
+    {
+     "label": "hw B / from 3.2.0",
+     "value": 6.3,
+     "n_attempted": 63
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
+   "evidence_class": "measured"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Cohort hw B / from 3.1.2 fails on 31.4% of attempted devices (11 of 35) \u2014 above the pause threshold",
+    "action": "Pause the wave for this cohort; open an engineering investigation on the hw-rev \u00d7 firmware interaction; resume only with a fixed package or a cohort-specific procedure",
+    "evidence": [
+     "derived: failure-by-cohort",
+     "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The pause threshold itself is a demo stand-in \u2014 not derived from the risk file, so the trigger level is unvalidated",
+    "mitigation": "Derive the threshold from the risk file's acceptability criteria and record it as a validated expectation",
+    "evidence": [
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": []
+ },
+ "expectations": [
+  {
+   "id": "E-24.1",
+   "statement": "No cohort's per-attempt failure rate exceeds the pause threshold",
+   "expected": "<= 15% per attempted device (cohort n >= 20)",
+   "basis": "demo stand-in for an engineering quality threshold [VERIFY] \u2014 not yet derived from the risk file",
+   "set_by": "rd-lead (demo)",
+   "validated": false,
+   "actual": "worst cohort 31.4% (hw B / from 3.1.2)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: failure-by-cohort"
+   ]
+  }
+ ]
+}

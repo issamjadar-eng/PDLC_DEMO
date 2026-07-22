@@ -34,12 +34,48 @@ def load_pin_csv(corpus_root, pins, dataset):
         return list(csv.DictReader(f)), snap
 
 
-def params_for(bq):
+def _entry(bq):
     cfg = yaml.safe_load(open("commercial.yml"))
     for q in cfg["questions"]:
         if q["id"] == bq:
-            return q.get("params", {})
+            return q
     return {}
+
+
+def params_for(bq):
+    return _entry(bq).get("params", {})
+
+
+def expectations_for(bq):
+    return _entry(bq).get("expectations", [])
+
+
+def evaluate_expectations(bq, results):
+    """Join catalog expectations with computed {id: (actual, verdict, evidence[])}.
+    Verdicts: met | at-risk | not-met | not-evaluable. Every expectation in the
+    catalog appears in the output — an unevaluated expectation is itself a finding."""
+    out = []
+    for e in expectations_for(bq):
+        actual, verdict, evidence = results.get(e["id"], ("not evaluated by this computation", "not-evaluable", []))
+        out.append({**e, "actual": actual, "verdict": verdict, "evidence": evidence})
+    return out
+
+
+def expectations_section(exps):
+    """Linted report rendering of the expectations table."""
+    if not exps:
+        return []
+    lines = ["", "## Assumptions & expectations — plan vs actual", "",
+             "_`unvalidated` means the expectation itself is a stand-in that has not been grounded",
+             "in a plan of record or the risk file — challenge the assumption, not just the actual._", "",
+             "| ID | Expectation | Expected | Actual | Verdict | Basis | Evidence |",
+             "|---|---|---|---|---|---|---|"]
+    for e in exps:
+        ev = " ".join(f"[{x}]" for x in e.get("evidence", [])) or "—"
+        val = "" if e.get("validated") else " (unvalidated)"
+        lines.append(f"| {e['id']} | {e['statement']} | {e['expected']} | {e['actual']} | "
+                     f"{e['verdict']}{val} | {e['basis']} | {ev} [config: commercial.yml] |")
+    return lines
 
 
 def write(out, report_lines, data):
@@ -49,6 +85,63 @@ def write(out, report_lines, data):
 
 def pct(n, d):
     return round(100.0 * n / d, 1) if d else 0.0
+
+
+def week_start(iso_date: str) -> str:
+    d = dt.date.fromisoformat(iso_date)
+    return (d - dt.timedelta(days=d.weekday())).isoformat()
+
+
+def week_range(a: str, b: str):
+    """Every Monday from week_start(a) to week_start(b) inclusive — zero-filled
+    trend lines make stalls VISIBLE instead of silently skipping empty weeks."""
+    cur, end = dt.date.fromisoformat(week_start(a)), dt.date.fromisoformat(week_start(b))
+    out = []
+    while cur <= end:
+        out.append(cur.isoformat())
+        cur += dt.timedelta(days=7)
+    return out
+
+
+def weekly_completion_lines(rows, regions):
+    """Timeseries lines: completions per week per region, zero-filled across the
+    full campaign span."""
+    dates = [r["completed_date"] for r in rows if r["completed_date"]]
+    if not dates:
+        return []
+    weeks = week_range(min(dates), max(dates))
+    lines = []
+    for reg in regions:
+        counts = {}
+        for r in rows:
+            if r["region"] == reg and r["completed_date"] and r["status"] in COMPLETED:
+                counts[week_start(r["completed_date"])] = counts.get(week_start(r["completed_date"]), 0) + 1
+        lines.append({"label": reg, "points": [{"x": w, "y": counts.get(w, 0)} for w in weeks]})
+    return lines
+
+
+def narrative_section(narrative):
+    """Render the narrative block into linted report lines (the report is the
+    linted surface; data.json mirrors it for the console panel)."""
+    lines = ["", "## Narrative — Risks / Mitigations / Issues", ""]
+    for grp, title in (("issues", "Issues (materialized — needs action)"),
+                       ("risks", "Risks (potential — mitigation identified)"),
+                       ("watch", "Watch")):
+        items = narrative.get(grp, [])
+        if not items:
+            continue
+        lines.append(f"### {title}")
+        lines.append("")
+        for it in items:
+            ev = " ".join(f"[{e}]" for e in it.get("evidence", []))
+            lines.append(f"- **{it['id']} ({it.get('severity', 'medium')})** — {it['statement']} {ev}")
+            # mitigation/action lines may carry figures — they cite the same evidence
+            if it.get("mitigation"):
+                lines.append(f"  - _Mitigation_: {it['mitigation']} {ev}")
+            if it.get("action"):
+                lines.append(f"  - _Action_: {it['action']} {ev}")
+        lines.append("")
+    return lines
 
 
 # ---------------------------------------------------------------- BQ-23 coverage
@@ -87,6 +180,67 @@ def bq23(corpus_root, out, pins):
     headline = (f"Campaign C-2026-02 is {pct(total_done, total)}% complete; at current run-rate "
                 f"{', '.join(misses) if misses else 'no region'} will miss the {close} close")
 
+    # cumulative coverage trend (% of regional target, zero-filled weekly)
+    dates = [r["completed_date"] for r in rows if r["completed_date"]]
+    weeks = week_range(min(dates), max(dates)) if dates else []
+    cum_lines = []
+    for reg in regions:
+        target = cov[reg][0]
+        per_week = {}
+        for r in rows:
+            if r["region"] == reg and r["completed_date"] and r["status"] in COMPLETED:
+                per_week[week_start(r["completed_date"])] = per_week.get(week_start(r["completed_date"]), 0) + 1
+        run, pts_c = 0, []
+        for w in weeks:
+            run += per_week.get(w, 0)
+            pts_c.append({"x": w, "y": pct(run, target)})
+        cum_lines.append({"label": reg, "points": pts_c})
+
+    # narrative
+    narrative = {"issues": [], "risks": [], "watch": []}
+    ni = nr = 0
+    for reg in regions:
+        w, rem, pdate = proj[reg]
+        if pdate == "no-recent-completions" and rem:
+            ni += 1
+            narrative["issues"].append({
+                "id": f"I{ni}", "severity": "high",
+                "statement": f"{reg} has zero completions in the trailing four-week window with "
+                             f"{rem} devices remaining — the wave is stalled, not slow",
+                "action": "Confirm scheduling vs technical root cause with the regional service "
+                          "lead; restart the wave or formally re-baseline",
+                "evidence": ["derived: projected-finish", f"src: {src}"],
+            })
+        elif pdate > close:
+            nr += 1
+            narrative["risks"].append({
+                "id": f"R{nr}", "severity": "medium",
+                "statement": f"{reg} projects to finish {pdate}, past the {close} close "
+                             f"({rem} remaining at {w}/wk)",
+                "mitigation": "Raise the completion rate (remote conversion, surge capacity) or "
+                              "re-baseline the close with customer notification — see the capacity "
+                              "outlook answer for the required-rate math",
+                "evidence": ["derived: projected-finish", "config: commercial.yml"],
+            })
+        else:
+            narrative["watch"].append({
+                "id": f"W{len(narrative['watch']) + 1}",
+                "statement": f"{reg} on track ({pdate} projected vs {close} close) — verify weekly",
+                "evidence": ["derived: projected-finish"],
+            })
+
+    # expectations vs actuals
+    exp_results = {
+        "E-23.1": (f"{pct(total_done, total)}% coverage as of the pin; projected finishes: "
+                   + ", ".join(f"{r} {proj[r][2]}" for r in regions),
+                   "not-met" if misses else "met",
+                   ["derived: projected-finish", "derived: coverage-by-region"]),
+        "E-23.2": (", ".join(f"{r}: {proj[r][0]}/wk" for r in regions),
+                   "not-met" if misses else "met",
+                   ["derived: weekly-run-rate"]),
+    }
+    exps = evaluate_expectations("BQ-23", exp_results)
+
     lines = [
         "# BQ-23 — Campaign coverage: planned vs actual", "", BANNER, "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
@@ -104,7 +258,12 @@ def bq23(corpus_root, out, pins):
         f"[config: commercial.yml]",
         f"- Run-rate window: 28 days ending {as_of} (as-of = latest completion in the pinned "
         f"snapshot) [derived: weekly-run-rate] [src: {src}]",
-        "",
+        f"- Cumulative coverage trend per region is charted weekly toward the {p['target_pct']}% "
+        f"target [derived: cumulative-coverage] [config: commercial.yml]",
+    ]
+    lines += expectations_section(exps)
+    lines += narrative_section(narrative)
+    lines += [
         "## Method & provenance", "",
         f"- Coverage counts measured from [src: {src}] (statuses `completed`, `completed-after-retry`).",
         "- Projected finish is derived: remaining ÷ trailing four-week completion rate — it",
@@ -113,6 +272,10 @@ def bq23(corpus_root, out, pins):
     data = {
         "bq": "BQ-23",
         "series": [
+            {"id": "cumulative-coverage", "label": "Cumulative coverage % by region", "unit": "%",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "lines": cum_lines,
+             "points": []},
             {"id": "coverage-by-region", "label": "Coverage %", "unit": "%",
              "evidence_class": "measured",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": series_pts},
@@ -124,6 +287,8 @@ def bq23(corpus_root, out, pins):
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": proj_pts},
         ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "derived"}],
+        "narrative": narrative,
+        "expectations": exps,
     }
     write(out, lines, data)
 
@@ -177,7 +342,38 @@ def bq24(corpus_root, out, pins):
         "",
         f"- Overall per-attempt failure rate: {overall}% [derived: failure-by-cohort] [src: {src}]",
         f"- Pause rule: per-attempt cohort rate > {thr}% with attempted n ≥ {min_n} [config: commercial.yml]",
-        "",
+    ]
+    narrative = {"issues": [], "risks": [], "watch": []}
+    for i, s in enumerate(flagged, 1):
+        narrative["issues"].append({
+            "id": f"I{i}", "severity": "high",
+            "statement": f"Cohort hw {s['hw']} / from {s['fv']} fails on {s['rate']}% of attempted "
+                         f"devices ({s['fails']} of {s['attempted']}) — above the pause threshold",
+            "action": "Pause the wave for this cohort; open an engineering investigation on the "
+                      "hw-rev × firmware interaction; resume only with a fixed package or a "
+                      "cohort-specific procedure",
+            "evidence": ["derived: failure-by-cohort", f"src: {src}", "config: commercial.yml"],
+        })
+    narrative["risks"].append({
+        "id": "R1", "severity": "medium",
+        "statement": "The pause threshold itself is a demo stand-in — not derived from the risk "
+                     "file, so the trigger level is unvalidated",
+        "mitigation": "Derive the threshold from the risk file's acceptability criteria and record "
+                      "it as a validated expectation",
+        "evidence": ["config: commercial.yml"],
+    })
+    exp_results = {
+        "E-24.1": ((f"worst cohort {max(flagged, key=lambda s: s['rate'])['rate']}% (hw "
+                    f"{max(flagged, key=lambda s: s['rate'])['hw']} / from "
+                    f"{max(flagged, key=lambda s: s['rate'])['fv']})") if flagged
+                   else f"worst qualifying cohort within threshold; overall {overall}%",
+                   "not-met" if flagged else "met",
+                   ["derived: failure-by-cohort"]),
+    }
+    exps = evaluate_expectations("BQ-24", exp_results)
+    lines += expectations_section(exps)
+    lines += narrative_section(narrative)
+    lines += [
         "## Method & provenance", "",
         f"- Attempt failure = status in `completed-after-retry`, `failed-pending-retry`, `rolled-back`,",
         f"  measured from [src: {src}].",
@@ -188,6 +384,8 @@ def bq24(corpus_root, out, pins):
                     "evidence_class": "measured",
                     "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": pts}],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
+        "narrative": narrative,
+        "expectations": exps,
     }
     write(out, lines, data)
 
@@ -311,6 +509,66 @@ def bq26(corpus_root, out, pins):
     else:
         headline = f"Current run-rates cover the remaining work before {close}"
 
+    # trend: weekly completions per region (zero-filled — stalls show as flatlines)
+    trend_lines = weekly_completion_lines(rows, regions)
+    stalled = [reg for reg in regions
+               if next((q for q in pts if q["label"] == reg), {}).get("current_rate", 0) == 0
+               and next((q for q in pts if q["label"] == reg), {}).get("remaining", 0) > 0]
+    last_completion = {reg: max((r["completed_date"] for r in rows
+                                 if r["region"] == reg and r["completed_date"]), default="never")
+                       for reg in regions}
+
+    # narrative — deterministic, from the computed facts
+    narrative = {"issues": [], "risks": [], "watch": []}
+    for i, reg in enumerate(stalled, 1):
+        narrative["issues"].append({
+            "id": f"I{i}", "severity": "high",
+            "statement": f"{reg} wave has stalled — zero completions in the trailing four weeks "
+                         f"(last completion {last_completion[reg]})",
+            "action": "Re-engage site scheduling this week; re-baseline the wave or assign surge "
+                      "FSE capacity; confirm root cause (scheduling vs the failure cluster)",
+            "evidence": [f"src: {src}", "derived: weekly-trend"],
+        })
+    rn = 0
+    for reg, cur_rate, req, ons in need:
+        if reg in stalled:
+            continue
+        rn += 1
+        narrative["risks"].append({
+            "id": f"R{rn}", "severity": "medium",
+            "statement": f"{reg} misses the {close} close at current rate "
+                         f"({cur_rate}/wk vs {req}/wk required)",
+            "mitigation": f"Convert on-site backlog to remote where connected ({ons} on-site "
+                          "remaining), add contract labor for the delta, or slip the close with "
+                          "customer notification",
+            "evidence": ["derived: required-rate", f"src: {src}", "config: commercial.yml"],
+        })
+    rn += 1
+    narrative["risks"].append({
+        "id": f"R{rn}", "severity": "medium",
+        "statement": "The hire/contract/slip decision is being made on run-rate projections alone — "
+                     "FSE roster, utilization, and visits-per-day are not yet a corpus dataset",
+        "mitigation": "Acquire an internal service-roster dataset; until then treat capacity "
+                      "conclusions as directional",
+        "evidence": ["derived: fse-capacity"],
+    })
+    narrative["watch"].append({
+        "id": "W1",
+        "statement": "Completion-rate trend by region (weekly, zero-filled) — a flatline is a stall, "
+                     "not missing data",
+        "evidence": ["derived: weekly-trend"],
+    })
+
+    # expectations vs actuals
+    exp_results = {
+        "E-26.1": (
+            ("; ".join(f"{r}: {c}/wk vs {q} required" for r, c, q, _ in need) or "all regions at/above required rate"),
+            "not-met" if need else "met",
+            ["derived: required-rate"],
+        ),
+    }
+    exps = evaluate_expectations("BQ-26", exp_results)
+
     lines = [
         "# BQ-26 — Service capacity outlook for the remaining waves", "", BANNER, "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
@@ -323,18 +581,28 @@ def bq26(corpus_root, out, pins):
                      f"{q['current_rate']} | {q['value']} | [derived: required-rate] [src: {src}] |")
     lines += [
         "",
+        f"- Weekly completion trend per region is charted (zero-filled) — stalls are visible as "
+        f"flatlines [derived: weekly-trend] [src: {src}]",
+    ]
+    lines += expectations_section(exps)
+    lines += narrative_section(narrative)
+    lines += [
         "## Data gap (stated, not papered over)", "",
         "- Field-service-engineer roster, utilization, and visits-per-day are NOT yet a corpus",
         "  dataset — the hire/contract/slip decision needs them. This outlook is a run-rate",
         "  projection only [derived: required-rate]; the FSE-capacity series is marked unavailable.",
         "",
         "## Method & provenance", "",
-        f"- Remaining counts measured, rates derived from [src: {src}]; close date "
+        f"- Remaining counts measured, rates derived from [src: {src}]; close date and expectations "
         f"[config: commercial.yml].",
     ]
     data = {
         "bq": "BQ-26",
         "series": [
+            {"id": "weekly-trend", "label": "Completions per week by region", "unit": "devices/week",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "lines": trend_lines,
+             "points": []},
             {"id": "required-rate", "label": "Required vs current completions/week", "unit": "devices/week",
              "evidence_class": "derived",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "points": pts},
@@ -344,6 +612,8 @@ def bq26(corpus_root, out, pins):
              "points": []},
         ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "derived"}],
+        "narrative": narrative,
+        "expectations": exps,
     }
     write(out, lines, data)
 
@@ -694,8 +964,57 @@ def bq18(corpus_root, out, pins):
         mark = " ⚠️" if rate(n) > t else ""
         lines.append(f"| {cat} | {n} | {rate(n)}{mark} | {t} | {prev.get(cat, 0)} | "
                      f"[src: {src}] [config: commercial.yml] |")
+    # monthly trend for the top-3 categories (zero-filled)
+    months = sorted({r["date_opened"][:7] for r in rows})
+    top3_cats = [c for c, _ in top3]
+    trend_lines = []
+    for cat in top3_cats:
+        by_m = {}
+        for r in rows:
+            if r["category"] == cat:
+                by_m[r["date_opened"][:7]] = by_m.get(r["date_opened"][:7], 0) + 1
+        trend_lines.append({"label": cat, "points": [{"x": m + "-01", "y": by_m.get(m, 0)} for m in months]})
+
+    rising = sum(cur.values()) > 1.3 * max(1, sum(prev.values()))
+    narrative = {"issues": [], "risks": [], "watch": []}
+    for i, (cat, r_, t) in enumerate(breaches, 1):
+        narrative["issues"].append({
+            "id": f"I{i}", "severity": "high",
+            "statement": f"{cat} at {r_} per 100 devices exceeds its threshold of {t} in the "
+                         f"trailing {window}d window",
+            "action": "Open a CAPA review; stratify by site, firmware version, and device age; "
+                      "check correlation with the upgrade campaign's rollback sites",
+            "evidence": ["derived: rate-by-category", f"src: {src}", "config: commercial.yml"],
+        })
+    if rising:
+        narrative["risks"].append({
+            "id": "R1", "severity": "medium",
+            "statement": f"Total complaint volume is rising window-over-window "
+                         f"({sum(cur.values())} vs {sum(prev.values())})",
+            "mitigation": "Trend-analyze monthly by category; if the rise persists a second "
+                          "window, escalate to management review",
+            "evidence": ["derived: window-trend"],
+        })
+    narrative["risks"].append({
+        "id": f"R{2 if rising else 1}", "severity": "medium",
+        "statement": "The category thresholds are demo stand-ins, not the risk file's documented "
+                     "acceptability criteria — a breach verdict is only as good as its threshold",
+        "mitigation": "Re-derive thresholds from the risk file and mark the expectation validated",
+        "evidence": ["config: commercial.yml"],
+    })
+    exp_results = {
+        "E-18.1": (("; ".join(f"{c} {r_} vs {t}" for c, r_, t in breaches)) if breaches
+                   else f"all categories within thresholds; top {top3[0][0]} at {rate(top3[0][1])}",
+                   "not-met" if breaches else "met",
+                   ["derived: rate-by-category"]),
+        "E-18.2": (f"current {sum(cur.values())} vs prior {sum(prev.values())}",
+                   "not-met" if rising else "met",
+                   ["derived: window-trend"]),
+    }
+    exps = evaluate_expectations("BQ-18", exp_results)
+    lines += expectations_section(exps)
+    lines += narrative_section(narrative)
     lines += [
-        "",
         "## Method & provenance", "",
         f"- Complaint counts measured from [src: {src}]; denominator is the installed-base registry",
         f"  [src: {fsrc}] — the ONLY sanctioned internal denominator (per the corpus conventions).",
@@ -705,6 +1024,10 @@ def bq18(corpus_root, out, pins):
     data = {
         "bq": "BQ-18",
         "series": [
+            {"id": "monthly-trend", "label": "Monthly complaints — top 3 categories", "unit": "complaints",
+             "kind": "timeseries", "evidence_class": "measured",
+             "provenance": {"dataset": COMPLAINTS_DS, "snapshot": snap}, "lines": trend_lines,
+             "points": []},
             {"id": "rate-by-category", "label": f"Complaints per 100 devices (trailing {window}d)",
              "unit": "per 100 devices", "evidence_class": "measured",
              "provenance": {"dataset": COMPLAINTS_DS, "snapshot": snap},
@@ -716,6 +1039,8 @@ def bq18(corpus_root, out, pins):
                         {"label": "prior", "value": sum(prev.values())}]},
         ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "measured"}],
+        "narrative": narrative,
+        "expectations": exps,
     }
     write(out, lines, data)
 
