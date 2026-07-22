@@ -1,6 +1,6 @@
 {
- "bq": "BQ-12",
- "edition": "2026-07-22",
+ "bq": "BQ-26",
+ "edition": "2026-07-22.4",
  "generated_at": "2026-07-22T22:47:42+00:00",
  "lint": {
   "status": "pass",
@@ -67,23 +67,41 @@
   },
   {
    "kind": "derived",
+   "value": "fse-capacity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "required-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
    "value": "v-main",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
+   "kind": "derived",
+   "value": "weekly-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
    "kind": "src",
-   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/openfda-510k-infusion",
-   "snapshot": "2026-07-22",
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
    "age_days": 0,
-   "max_age_days": 90,
+   "max_age_days": 7,
    "band": "fresh",
    "waived": false
   }
@@ -91,26 +109,35 @@
  "data_availability": {
   "have": [
    {
-    "what": "Clearances in the sweep window",
-    "series": "window-count",
+    "what": "Completions per week by region",
+    "series": "weekly-trend",
     "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "FRN clearances per quarter",
-    "series": "clearances-by-quarter",
-    "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
-   },
-   {
-    "what": "Window clearances (2025-10-30 \u2192 2026-01-28)",
-    "series": "window-flagged",
-    "evidence_class": "measured",
-    "source": "commercial/openfda-510k-infusion@2026-07-22"
+    "what": "Current vs required completions/week",
+    "series": "required-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "current = trailing-4-week completions \u00f7 4; required = remaining devices \u00f7 weeks from window anchor to the close date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "config: commercial.yml"
+     ]
+    }
    }
   ],
   "assumed": [],
-  "missing": []
+  "missing": [
+   {
+    "what": "FSE capacity (roster/utilization)",
+    "series": "fse-capacity",
+    "evidence_class": "unavailable",
+    "source": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip",
+    "note": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip"
+   }
+  ]
  },
  "verifications": []
 }

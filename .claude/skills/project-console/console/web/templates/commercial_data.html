@@ -31,6 +31,9 @@
     <div class="cm-dt-controls">
       <input type="search" class="cm-dt-search" placeholder="Search all columns…" aria-label="Search {{ t.title }}">
       <button type="button" class="cm-dt-clear btn-secondary">Clear filters</button>
+      <button type="button" class="cm-dt-prev btn-secondary">‹ Prev</button>
+      <span class="cm-dt-page cm-muted"></span>
+      <button type="button" class="cm-dt-next btn-secondary">Next ›</button>
       <span class="cm-dt-count cm-muted"></span>
     </div>
     <div class="cm-dt-scroll">
@@ -59,88 +62,7 @@
     });
   });
 
-  // one interactive table per panel: sort + per-column filters + global search
-  document.querySelectorAll('.cm-dt-panel').forEach(function (panel) {
-    var rows = JSON.parse(panel.querySelector('.cm-dt-data').textContent);
-    var table = panel.querySelector('.cm-dt');
-    var cols = Array.prototype.map.call(table.querySelectorAll('thead tr:first-child th'), function (th) { return th.getAttribute('data-col'); });
-    var tbody = table.querySelector('tbody');
-    var state = { sortCol: null, sortDir: 1, filters: {}, search: '' };
-
-    // per-column filter cells: <select> for low-cardinality columns, text input otherwise
-    panel.querySelectorAll('.cm-dt-filters th').forEach(function (th) {
-      var col = th.getAttribute('data-col');
-      var uniq = {}; rows.forEach(function (r) { uniq[r[col] || ''] = 1; });
-      var keys = Object.keys(uniq);
-      var el;
-      if (keys.length <= 14) {
-        el = document.createElement('select');
-        el.innerHTML = '<option value="">all</option>' + keys.sort().map(function (k) {
-          return '<option>' + String(k).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</option>';
-        }).join('');
-        el.addEventListener('change', function () { state.filters[col] = el.value; render(); });
-      } else {
-        el = document.createElement('input');
-        el.type = 'search'; el.placeholder = 'filter…';
-        el.addEventListener('input', function () { state.filters[col] = el.value; render(); });
-      }
-      el.className = 'cm-dt-filter';
-      th.appendChild(el);
-    });
-
-    table.querySelectorAll('thead tr:first-child th').forEach(function (th) {
-      th.addEventListener('click', function () {
-        var col = th.getAttribute('data-col');
-        state.sortDir = state.sortCol === col ? -state.sortDir : 1;
-        state.sortCol = col;
-        table.querySelectorAll('.cm-dt-arrow').forEach(function (a) { a.textContent = ''; });
-        th.querySelector('.cm-dt-arrow').textContent = state.sortDir > 0 ? ' ▲' : ' ▼';
-        render();
-      });
-    });
-
-    panel.querySelector('.cm-dt-search').addEventListener('input', function (e) { state.search = e.target.value; render(); });
-    panel.querySelector('.cm-dt-clear').addEventListener('click', function () {
-      state.filters = {}; state.search = ''; state.sortCol = null;
-      panel.querySelector('.cm-dt-search').value = '';
-      panel.querySelectorAll('.cm-dt-filter').forEach(function (el) { el.value = ''; });
-      table.querySelectorAll('.cm-dt-arrow').forEach(function (a) { a.textContent = ''; });
-      render();
-    });
-
-    function numeric(v) { var n = parseFloat(v); return (v !== '' && !isNaN(n) && /^-?[\d.,%]+$/.test(String(v).trim())) ? n : null; }
-    function render() {
-      var out = rows.filter(function (r) {
-        for (var c in state.filters) {
-          var f = state.filters[c]; if (!f) continue;
-          var v = String(r[c] || '');
-          var sel = panel.querySelector('.cm-dt-filters th[data-col="' + CSS.escape(c) + '"] select');
-          if (sel) { if (v !== f) return false; }
-          else if (v.toLowerCase().indexOf(f.toLowerCase()) < 0) return false;
-        }
-        if (state.search) {
-          var s = state.search.toLowerCase();
-          if (!cols.some(function (c) { return String(r[c] || '').toLowerCase().indexOf(s) >= 0; })) return false;
-        }
-        return true;
-      });
-      if (state.sortCol) {
-        var c = state.sortCol, d = state.sortDir;
-        out.sort(function (a, b) {
-          var na = numeric(a[c]), nb = numeric(b[c]);
-          if (na !== null && nb !== null) return (na - nb) * d;
-          return String(a[c] || '').localeCompare(String(b[c] || '')) * d;
-        });
-      }
-      tbody.innerHTML = out.map(function (r) {
-        return '<tr>' + cols.map(function (c) {
-          return '<td>' + String(r[c] === undefined ? '' : r[c]).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</td>';
-        }).join('') + '</tr>';
-      }).join('');
-      panel.querySelector('.cm-dt-count').textContent = 'showing ' + out.length + ' of ' + rows.length + ' rows';
-    }
-    render();
-  });
 })();
 </script>
+<script src="/static/commercial-tables.js?v={{ request.state.static_v }}"></script>
 {% endblock %}

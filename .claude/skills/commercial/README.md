@@ -67,6 +67,13 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 7 (2026-07-22): Lint itemized into named checks (artifacts / numeric-coverage /
+  marker-resolution / estimation-language / pin-freshness / series-hygiene /
+  derivation-chain), each with status + findings in quality.json. New
+  `derivation-chain` check: derived series must declare {method, inputs[]} — the data
+  chain is stated, not implied. quality.json gains `data_availability` (have / via
+  stated assumption / missing, derived from the edition's series). `check`
+  grandfathers post-approval lint rules for immutable approved editions.
 - 6 (2026-07-22): Per-edition `quality.json` audit surface — lint status, resolved-
   reference inventory (every marker with resolved/broken + note), per-pin freshness
   detail; written by answer/lint/approve, refreshable via the new `audit` action.

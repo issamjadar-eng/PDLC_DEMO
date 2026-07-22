@@ -56,6 +56,9 @@
     <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
       {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
     </button>
+    <button type="button" class="cm-toptab" data-tab="cm-tab-data">Data
+      <span class="cm-cat-n">{{ tables | length }} tables</span>
+    </button>
   </div>
 
   <div id="cm-tab-report">
@@ -281,12 +284,41 @@
     {% else %}
     <div class="cm-q-grid">
       <section class="cm-q-card">
-        <h3>Claim lint <span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓ pass' if quality.lint.status == 'pass' else '✗ fail' }}</span></h3>
-        <p class="cm-muted">Every numeric claim must carry a resolvable marker; estimation language needs a stated
-          assumption; stale pins need a waiver. Machine-checked — {{ quality.lint.errors | length }} error(s),
-          {{ quality.lint.warnings | length }} warning(s).</p>
-        {% if quality.lint.errors %}<ul class="cm-q-list cm-q-bad">{% for e in quality.lint.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
-        {% if quality.lint.warnings %}<ul class="cm-q-list">{% for w in quality.lint.warnings %}<li>warn: {{ w }}</li>{% endfor %}</ul>{% endif %}
+        <h3>Claim lint <span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓ pass' if quality.lint.status == 'pass' else '✗ fail' }}</span>
+          <span class="cm-muted">{{ quality.lint.errors | length }} error(s) · {{ quality.lint.warnings | length }} warning(s)</span></h3>
+        {% for chk in quality.lint.checks %}
+        <div class="cm-q-check">
+          <div class="cm-q-check-row">
+            <span class="cm-chip {{ chk._meta.cls }}">{{ chk._meta.label }}</span>
+            <span class="cm-q-check-name">{{ chk.name }}</span>
+            <span class="cm-muted cm-q-check-desc">{{ chk.description }}</span>
+          </div>
+          {% if chk.findings %}
+          <details class="cm-q-check-details">
+            <summary>{{ chk.findings | length }} finding(s)</summary>
+            <ul class="cm-q-list">{% for f in chk.findings %}<li class="{{ 'cm-q-bad-item' if f.severity == 'error' }}">{{ f.severity }}: {{ f.message }}</li>{% endfor %}</ul>
+          </details>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+
+      <section class="cm-q-card">
+        <h3>Data availability <span class="cm-muted">— what this answer has, what it substitutes, what is missing</span></h3>
+        {% set da = quality.data_availability %}
+        {% if da.have %}
+        <p class="cm-q-da-h"><span class="cm-badge ev-measured">✓ Have</span></p>
+        <ul class="cm-q-list">{% for e in da.have %}<li>{{ e.what }} <span class="cm-muted">· {{ e.evidence_class }} · {{ e.source }}</span></li>{% endfor %}</ul>
+        {% endif %}
+        {% if da.assumed %}
+        <p class="cm-q-da-h"><span class="cm-badge ev-assumed">≈ Via stated assumption</span></p>
+        <ul class="cm-q-list">{% for e in da.assumed %}<li>{{ e.what }} <span class="cm-muted">· {{ e.source }}</span></li>{% endfor %}</ul>
+        {% endif %}
+        {% if da.missing %}
+        <p class="cm-q-da-h"><span class="cm-badge ev-unavailable">∅ Missing</span></p>
+        <ul class="cm-q-list">{% for e in da.missing %}<li>{{ e.what }} <span class="cm-muted">· {{ e.note }}</span></li>{% endfor %}</ul>
+        {% else %}{% if not da.assumed %}<p class="cm-muted">No stated gaps or substitutions — everything this answer shows is measured or derived from pinned snapshots.</p>{% endif %}
+        {% endif %}
       </section>
 
       <section class="cm-q-card">
@@ -345,6 +377,55 @@
       agent-recorded evidence and persist per edition.</p>
     {% endif %}
   </div><!-- /#cm-tab-quality -->
+
+  <div id="cm-tab-data" hidden>
+    <p class="cm-muted">The data behind this edition — structured tables (pinned snapshot rows + each
+      series' table form; sortable, filterable, paginated) and the unstructured artifacts (raw payloads,
+      provenance, records). Rows render verbatim; the console computes nothing.
+      <a href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}">Open as a full page ↗</a></p>
+
+    <h3 class="cm-q-check-name">Structured</h3>
+    {% for t in tables %}
+    <details class="cm-data-fold" {% if loop.first %}open{% endif %}>
+      <summary><strong>{{ t.title }}</strong> <span class="cm-chip">{{ t.kind }}</span>
+        <span class="cm-muted">{{ t.rows | length }} rows · {{ t.file }}</span></summary>
+      <div class="cm-dt-panel" id="tab-{{ t.id }}">
+        <div class="cm-dt-controls">
+          <input type="search" class="cm-dt-search" placeholder="Search all columns…" aria-label="Search {{ t.title }}">
+          <button type="button" class="cm-dt-clear btn-secondary">Clear filters</button>
+          <button type="button" class="cm-dt-prev btn-secondary">‹ Prev</button>
+          <span class="cm-dt-page cm-muted"></span>
+          <button type="button" class="cm-dt-next btn-secondary">Next ›</button>
+          <span class="cm-dt-count cm-muted"></span>
+        </div>
+        <div class="cm-dt-scroll">
+          <table class="cm-dt">
+            <thead>
+              <tr>{% for c in t.columns %}<th data-col="{{ c }}" tabindex="0" title="Click to sort">{{ c }}<span class="cm-dt-arrow"></span></th>{% endfor %}</tr>
+              <tr class="cm-dt-filters">{% for c in t.columns %}<th data-col="{{ c }}"></th>{% endfor %}</tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <script type="application/json" class="cm-dt-data">{{ t.rows | tojson }}</script>
+      </div>
+    </details>
+    {% endfor %}
+
+    <h3 class="cm-q-check-name cm-data-unstr-h">Unstructured</h3>
+    {% for g in unstructured %}
+    <details class="cm-data-fold">
+      <summary><strong>{{ g.dataset }}</strong> <span class="cm-mono">@ {{ g.snapshot }}</span>
+        <span class="cm-muted">{{ g.artifacts | length }} artifacts</span></summary>
+      <ul class="cm-data-files">
+        {% for it in g.artifacts %}
+        <li><a href="{{ it.href }}" target="_blank" rel="noopener">{{ it.name }} ↗</a>
+          <span class="cm-muted">· {{ it.label }} · {{ it.size_kb }} KB</span></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endfor %}
+  </div><!-- /#cm-tab-data -->
     </div><!-- /.cm-main -->
   </div><!-- /.cm-shell -->
   {% endif %}
@@ -375,11 +456,13 @@
     var btn = e.target.closest('.cm-toptab'); if (!btn) return;
     tabs.querySelectorAll('.cm-toptab').forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    ['cm-tab-report', 'cm-tab-quality'].forEach(function (id) {
+    ['cm-tab-report', 'cm-tab-quality', 'cm-tab-data'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = id !== btn.getAttribute('data-tab');
     });
+    if (btn.getAttribute('data-tab') === 'cm-tab-data' && window.cmInitDataTables) window.cmInitDataTables();
   });
 })();
 </script>
+<script src="/static/commercial-tables.js?v={{ request.state.static_v }}"></script>
 {% endblock %}

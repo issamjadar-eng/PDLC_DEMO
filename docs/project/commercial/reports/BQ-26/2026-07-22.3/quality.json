@@ -1,11 +1,69 @@
 {
  "bq": "BQ-26",
  "edition": "2026-07-22.3",
- "generated_at": "2026-07-22T22:32:31+00:00",
+ "generated_at": "2026-07-22T22:46:44+00:00",
  "lint": {
-  "status": "pass",
-  "errors": [],
-  "warnings": []
+  "status": "fail",
+  "errors": [
+   "data.json series required-rate: evidence_class 'derived' without a derivation {method, inputs[]} \u2014 the chain must be stated"
+  ],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "fail",
+    "findings": [
+     {
+      "severity": "error",
+      "message": "data.json series required-rate: evidence_class 'derived' without a derivation {method, inputs[]} \u2014 the chain must be stated"
+     }
+    ]
+   }
+  ]
  },
  "references": [
   {
@@ -55,6 +113,32 @@
    "waived": false
   }
  ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Completions per week by region",
+    "series": "weekly-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   },
+   {
+    "what": "Current vs required completions/week",
+    "series": "required-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "FSE capacity (roster/utilization)",
+    "series": "fse-capacity",
+    "evidence_class": "unavailable",
+    "source": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip",
+    "note": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip"
+   }
+  ]
+ },
  "verifications": [
   {
    "type": "adversarial-verify",
