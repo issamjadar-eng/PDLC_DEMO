@@ -69,13 +69,13 @@ def expectations_section(exps):
     lines = ["", "## Assumptions & expectations — plan vs actual", "",
              "_`unvalidated` means the expectation itself is a stand-in that has not been grounded",
              "in a plan of record or the risk file — challenge the assumption, not just the actual._", "",
-             "| ID | Expectation | Expected | Actual | Verdict | Basis | Evidence |",
-             "|---|---|---|---|---|---|---|"]
+             "| ID | Expectation | Expected | Actual | Verdict | Basis |",
+             "|---|---|---|---|---|---|"]
     for e in exps:
-        ev = " ".join(f"[{x}]" for x in e.get("evidence", [])) or "—"
+        ev = " ".join(f"[{x}]" for x in e.get("evidence", []))
         val = "" if e.get("validated") else " (unvalidated)"
-        lines.append(f"| {e['id']} | {e['statement']} | {e['expected']} | {e['actual']} | "
-                     f"{e['verdict']}{val} | {e['basis']} | {ev} [config: commercial.yml] |")
+        lines.append(f"| {e['id']} | {e['statement']} {ev} [config: commercial.yml] | {e['expected']} | "
+                     f"{e['actual']} | {e['verdict']}{val} | {e['basis']} |")
     return lines
 
 
@@ -246,13 +246,13 @@ def bq23(corpus_root, out, pins):
         "# BQ-23 — Campaign coverage: planned vs actual", "", BANNER, "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
         "## Coverage by region", "",
-        "| Region | Target devices | Completed | Coverage | Weekly run-rate | Projected finish | Evidence |",
-        "|---|---|---|---|---|---|---|",
+        "| Region | Target devices | Completed | Coverage | Weekly run-rate | Projected finish |",
+        "|---|---|---|---|---|---|",
     ]
     for reg in regions:
         t, d, c = cov[reg]
         w, rem, pd = proj[reg]
-        lines.append(f"| {reg} | {t} | {d} | {c}% | {w}/wk | {pd} | [src: {src}] [derived: projected-finish] |")
+        lines.append(f"| {reg} [src: {src}] [derived: projected-finish] | {t} | {d} | {c}% | {w}/wk | {pd} |")
     lines += [
         "",
         f"- Plan reference: campaign close {close}, coverage target {p['target_pct']}% "
@@ -337,13 +337,13 @@ def bq24(corpus_root, out, pins):
         "_Primary metric is per **attempted** device (excludes still-scheduled); the whole-cohort",
         "rate is shown for context — including never-attempted devices understates severity",
         "(adversarial-verification finding)._", "",
-        "| Cohort | Devices | Attempted | Failures | Per-attempt rate | Whole-cohort rate | Evidence |",
-        "|---|---|---|---|---|---|---|",
+        "| Cohort | Devices | Attempted | Failures | Per-attempt rate | Whole-cohort rate |",
+        "|---|---|---|---|---|---|",
     ]
     for s in stats:
         flag = " ⚠️" if s in flagged else ""
-        lines.append(f"| hw {s['hw']} / from {s['fv']} | {s['n']} | {s['attempted']} | {s['fails']} | "
-                     f"{s['rate']}%{flag} | {s['rate_all']}% | [src: {src}] |")
+        lines.append(f"| hw {s['hw']} / from {s['fv']} [src: {src}] | {s['n']} | {s['attempted']} | "
+                     f"{s['fails']} | {s['rate']}%{flag} | {s['rate_all']}% |")
     lines += [
         "",
         f"- Overall per-attempt failure rate: {overall}% [derived: failure-by-cohort] [src: {src}]",
@@ -465,11 +465,11 @@ def bq25(corpus_root, out, pins):
         "## Tickets per 100 attempted upgrades", "",
         "_Basis: attempted devices (excludes still-scheduled) for both tickets and denominator —",
         "a consistent basis per the adversarial-verification finding._", "",
-        "| Region | Attempted | Tickets | Tickets per 100 | Evidence |",
-        "|---|---|---|---|---|",
+        "| Region | Attempted | Tickets | Tickets per 100 |",
+        "|---|---|---|---|",
     ]
     for reg, att_n, ticks, rate in lines_rows:
-        lines.append(f"| {reg} | {att_n} | {ticks} | {rate} | [src: {src}] |")
+        lines.append(f"| {reg} [src: {src}] | {att_n} | {ticks} | {rate} |")
     lines += [
         "",
         f"- By method: remote {method_pts[0]['value']} vs onsite {method_pts[1]['value']} tickets/100 "
@@ -629,12 +629,12 @@ def bq26(corpus_root, out, pins):
         "# BQ-26 — Service capacity outlook for the remaining waves", "", BANNER, "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
         "## Required vs current completion rate", "",
-        "| Region | Remaining | Of which on-site | Current rate/wk | Required rate/wk | Evidence |",
-        "|---|---|---|---|---|---|",
+        "| Region | Remaining | Of which on-site | Current rate/wk | Required rate/wk |",
+        "|---|---|---|---|---|",
     ]
     for q in pts:
-        lines.append(f"| {q['label']} | {q['remaining']} | {q['onsite_remaining']} | "
-                     f"{q['current_rate']} | {q['value']} | [derived: required-rate] [src: {src}] |")
+        lines.append(f"| {q['label']} [derived: required-rate] [src: {src}] | {q['remaining']} | "
+                     f"{q['onsite_remaining']} | {q['current_rate']} | {q['value']} |")
     lines += [
         "",
         f"- Weekly completion trend per region is charted (zero-filled) — stalls are visible as "
@@ -712,10 +712,10 @@ def bq27(corpus_root, out, pins):
         f"- Connected vs unconnected on current version: {conn_current}% vs {nonconn_current}% "
         f"[derived: currency-by-connectivity] [src: {src}]",
         "", "## % behind by region", "",
-        "| Region | % ≥1 version behind | Evidence |", "|---|---|---|",
+        "| Region | % ≥1 version behind |", "|---|---|",
     ]
     for q in reg_pts:
-        lines.append(f"| {q['label']} | {q['value']}% | [src: {src}] |")
+        lines.append(f"| {q['label']} [src: {src}] | {q['value']}% |")
     lines += [
         "",
         f"- Legacy PP3000 units still in service: {len(pp3000)} (all on 2.9.x line) [src: {src}] — "
@@ -800,10 +800,10 @@ def bq19(corpus_root, out, pins):
         "## Event counts by manufacturer (entity-normalized)", "",
         "_Real openFDA MAUDE data; reports received 2024-07 onward; infusion-pump product code "
         "only [src: " + src + "] [config: entity-aliases.yml]._", "",
-        "| Manufacturer (canonical) | MAUDE events | Evidence |", "|---|---|---|",
+        "| Manufacturer (canonical) | MAUDE events |", "|---|---|",
     ]
     for name, n in top:
-        lines.append(f"| {name} | {n:,} | [src: {src}] |")
+        lines.append(f"| {name} [src: {src}] | {n:,} |")
     lines += [
         "",
         "## Why there is no rate chart here", "",
@@ -892,11 +892,11 @@ def bq06(corpus_root, out, pins):
         "# BQ-06 — Clearance cycle time: competitors vs our history", "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}]", "",
         "## Review interval by frequent filer (public FDA dates)", "",
-        "| Applicant | Clearances | Median days received→decision | Evidence |",
-        "|---|---|---|---|",
+        "| Applicant | Clearances | Median days received→decision |",
+        "|---|---|---|",
     ]
     for app, ds in top:
-        lines.append(f"| {app} | {len(ds)} | {_median(ds)} | [src: {src}] |")
+        lines.append(f"| {app} [src: {src}] | {len(ds)} | {_median(ds)} |")
     lines += [
         "",
         f"- Overall: median {overall} days across {len(ivs)} clearances [derived: cycle-by-applicant] "
@@ -986,12 +986,12 @@ def bq12(corpus_root, out, pins):
         f"## Clearances in the window ({start} → {as_of})", "",
     ]
     if recent:
-        lines += ["| K-number | Applicant | Device | Decision | Roadmap flags | Evidence |",
-                  "|---|---|---|---|---|---|"]
+        lines += ["| K-number | Applicant | Device | Decision | Roadmap flags |",
+                  "|---|---|---|---|---|"]
         for r in recent:
             fl = ", ".join(flags(r["device_name"])) or "—"
-            lines.append(f"| {r['k_number']} | {r['applicant']} | {r['device_name'][:60]} | "
-                         f"{r['decision_date']} | {fl} | [src: {src}] |")
+            lines.append(f"| {r['k_number']} [src: {src}] | {r['applicant']} | {r['device_name'][:60]} | "
+                         f"{r['decision_date']} | {fl} |")
     else:
         lines.append(f"- None in window [src: {src}]")
     lines += [
@@ -1083,14 +1083,14 @@ def bq18(corpus_root, out, pins):
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
         f"## Trailing window, rate-normalized (stated denominator: {n_fleet} fleet devices "
         f"[src: {fsrc}])", "",
-        "| Category | Complaints | Rate per 100 devices | Threshold | Prior window | Evidence |",
-        "|---|---|---|---|---|---|",
+        "| Category | Complaints | Rate per 100 devices | Threshold | Prior window |",
+        "|---|---|---|---|---|",
     ]
     for cat, n in ranked:
         t = float(thr.get(cat, thr["default"]))
         mark = " ⚠️" if rate(n) > t else ""
-        lines.append(f"| {cat} | {n} | {rate(n)}{mark} | {t} | {prev.get(cat, 0)} | "
-                     f"[src: {src}] [config: commercial.yml] |")
+        lines.append(f"| {cat} [src: {src}] [config: commercial.yml] | {n} | {rate(n)}{mark} | {t} | "
+                     f"{prev.get(cat, 0)} |")
     # monthly trend for the top-3 categories (zero-filled)
     months = sorted({r["date_opened"][:7] for r in rows})
     top3_cats = [c for c, _ in top3]

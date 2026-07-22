@@ -4,9 +4,9 @@
 
 ## Clearances in the window (2025-10-30 → 2026-01-28)
 
-| K-number | Applicant | Device | Decision | Roadmap flags | Evidence |
-|---|---|---|---|---|---|
-| K252015 | Koru Medical Systems, Inc. | FreedomEdge Infusion System; High-Flo SubQ Needle Set; Preci | 2026-01-28 | — | [src: commercial/openfda-510k-infusion@2026-07-22] |
+| K-number | Applicant | Device | Decision | Roadmap flags |
+|---|---|---|---|---|
+| K252015 [src: commercial/openfda-510k-infusion@2026-07-22] | Koru Medical Systems, Inc. | FreedomEdge Infusion System; High-Flo SubQ Needle Set; Preci | 2026-01-28 | — |
 
 ## Method & provenance
 

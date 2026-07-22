@@ -4,14 +4,14 @@
 
 ## Review interval by frequent filer (public FDA dates)
 
-| Applicant | Clearances | Median days received→decision | Evidence |
-|---|---|---|---|
-| Baxter Healthcare Corporation | 9 | 74 | [src: commercial/openfda-510k-infusion@2026-07-22] |
-| Icu Medical, Inc. | 3 | 257 | [src: commercial/openfda-510k-infusion@2026-07-22] |
-| Fresenius Kabi AG | 2 | 413.0 | [src: commercial/openfda-510k-infusion@2026-07-22] |
-| Carefusion 303, Inc. | 2 | 474.5 | [src: commercial/openfda-510k-infusion@2026-07-22] |
-| Repro-Medical System, Inc., Dba Koru Medical Systems | 2 | 162.0 | [src: commercial/openfda-510k-infusion@2026-07-22] |
-| Zevex, Inc. | 2 | 139.0 | [src: commercial/openfda-510k-infusion@2026-07-22] |
+| Applicant | Clearances | Median days received→decision |
+|---|---|---|
+| Baxter Healthcare Corporation [src: commercial/openfda-510k-infusion@2026-07-22] | 9 | 74 |
+| Icu Medical, Inc. [src: commercial/openfda-510k-infusion@2026-07-22] | 3 | 257 |
+| Fresenius Kabi AG [src: commercial/openfda-510k-infusion@2026-07-22] | 2 | 413.0 |
+| Carefusion 303, Inc. [src: commercial/openfda-510k-infusion@2026-07-22] | 2 | 474.5 |
+| Repro-Medical System, Inc., Dba Koru Medical Systems [src: commercial/openfda-510k-infusion@2026-07-22] | 2 | 162.0 |
+| Zevex, Inc. [src: commercial/openfda-510k-infusion@2026-07-22] | 2 | 139.0 |
 
 - Overall: median 213 days across 29 clearances [derived: cycle-by-applicant] [src: commercial/openfda-510k-infusion@2026-07-22]
 

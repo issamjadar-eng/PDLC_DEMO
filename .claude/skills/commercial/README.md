@@ -67,6 +67,10 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 5 (2026-07-22): Report-table citation convention — markers ride inline at the end of
+  the row's label cell (consoles render them as compact superscripts), never in a
+  dedicated Evidence column (guidance added to SKILL.md; the claim lint is line-based
+  so one marker per row still satisfies it).
 - 4 (2026-07-22): Edition recency is creation-time, not name — suffix allocation is
   max+1 (never reuses a freed suffix, which made lexicographic order lie about
   newest), `list_editions` sorts by `created_at`, default edition resolution returns
