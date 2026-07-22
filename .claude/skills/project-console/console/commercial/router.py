@@ -429,8 +429,9 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
             ctx["newer_draft"] = q["draft_edition"]
         # quality & audit tab — machine-generated lint/reference/freshness audit
         # plus agent-recorded verification/red-team verdicts
-        VER_META = {"CONFIRMED": "vx-met", "PASS": "vx-met",
-                    "CONFIRMED-WITH-CAVEAT": "vx-risk", "REFUTED": "vx-notmet"}
+        VER_META = {"CONFIRMED": "vx-met", "PASS": "vx-met", "HONORED": "vx-met",
+                    "CONFIRMED-WITH-CAVEAT": "vx-risk", "HONORED-WITH-NOTES": "vx-risk",
+                    "REFUTED": "vx-notmet", "DEVIATION": "vx-notmet"}
         quality = ed.get("quality")
         if quality:
             quality = dict(quality)
@@ -449,6 +450,23 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
         # Data tab: structured tables + unstructured artifact inventory
         ctx["tables"] = _build_tables(cfg.repo_root, ed)
         ctx["unstructured"] = _build_unstructured(cfg.repo_root, ed)
+        # Plan tab: user-owned analysis contract, rendered; status from quality.json
+        PLAN_META = {"in-sync": {"label": "In sync — edition computed under this plan", "cls": "vx-met"},
+                     "drifted": {"label": "Plan changed since this edition — review intent, re-answer", "cls": "vx-risk"},
+                     "unpinned": {"label": "Edition predates plan pinning — re-answer to pin", "cls": "vx-risk"},
+                     "missing": {"label": "No plan yet — scaffold with plan-init", "cls": "vx-notmet"}}
+        plan_file = cfg.repo_root / "docs" / "project" / "commercial" / "plans" / f"{bq}.md"
+        ctx["plan_html"] = ""
+        ctx["plan_status"] = None
+        ctx["plan_path"] = f"docs/project/commercial/plans/{bq}.md"
+        if plan_file.is_file():
+            try:
+                ctx["plan_html"] = doc_renderer.render(plan_file).body_html or ""
+            except Exception:
+                ctx["plan_html"] = ""
+        pstatus = (quality or {}).get("plan") or {}
+        ctx["plan_status"] = PLAN_META.get(pstatus.get("status"),
+                                           PLAN_META["missing"] if not plan_file.is_file() else None)
         abs_report = cfg.repo_root / ed["report_path"]
         if abs_report.is_file():
             try:

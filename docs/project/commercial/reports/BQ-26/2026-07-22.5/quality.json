@@ -1,13 +1,11 @@
 {
- "bq": "BQ-25",
- "edition": "2026-07-22.4",
+ "bq": "BQ-26",
+ "edition": "2026-07-22.5",
  "generated_at": "2026-07-22T22:57:10+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
-  "warnings": [
-   "edition predates plan pinning \u2014 re-answer to pin the plan version"
-  ],
+  "warnings": [],
   "checks": [
    {
     "id": "artifacts",
@@ -62,38 +60,39 @@
     "id": "plan-currency",
     "name": "Plan currency",
     "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
-    "status": "warn",
-    "findings": [
-     {
-      "severity": "warning",
-      "message": "edition predates plan pinning \u2014 re-answer to pin the plan version"
-     }
-    ]
+    "status": "pass",
+    "findings": []
    }
   ]
  },
  "references": [
   {
-   "kind": "assume",
-   "value": "A-002",
+   "kind": "config",
+   "value": "commercial.yml",
    "resolved": true,
-   "note": "active assumption (low confidence)"
+   "note": "versioned configuration file present"
   },
   {
    "kind": "derived",
-   "value": "rollback-sites",
+   "value": "fse-capacity",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
-   "value": "tickets-by-method",
+   "value": "required-rate",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
    "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-trend",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
@@ -117,51 +116,41 @@
  "data_availability": {
   "have": [
    {
-    "what": "Rollbacks",
-    "series": "rollback-stat",
+    "what": "Completions per week by region",
+    "series": "weekly-trend",
     "evidence_class": "measured",
     "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
    },
    {
-    "what": "Weekly tickets by region (dated events only)",
-    "series": "weekly-tickets",
-    "evidence_class": "measured",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
-   },
-   {
-    "what": "Tickets per 100 attempted upgrades",
-    "series": "tickets-per-100",
-    "evidence_class": "measured",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
-   },
-   {
-    "what": "Tickets per 100 attempted, by method",
-    "series": "tickets-by-method",
-    "evidence_class": "measured",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
-   },
-   {
-    "what": "Sites with rollbacks",
-    "series": "rollback-sites",
-    "evidence_class": "measured",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+    "what": "Current vs required completions/week",
+    "series": "required-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "current = trailing-4-week completions \u00f7 4; required = remaining devices \u00f7 weeks from window anchor to the close date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "config: commercial.yml"
+     ]
+    }
    }
   ],
-  "assumed": [
+  "assumed": [],
+  "missing": [
    {
-    "what": "Estimated customer-side cost (on-site portion)",
-    "series": "customer-cost-range",
-    "evidence_class": "assumed",
-    "source": "A-002"
+    "what": "FSE capacity (roster/utilization)",
+    "series": "fse-capacity",
+    "evidence_class": "unavailable",
+    "source": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip",
+    "note": "no corpus dataset acquired yet \u2014 needed for hire/contract/slip"
    }
-  ],
-  "missing": []
+  ]
  },
  "plan": {
-  "path": "plans/BQ-25.md",
-  "status": "unpinned",
-  "pinned": null,
-  "current": "a749dbb75baaad02aababcf3886b8d66276473694326160697d4df31c54ffa97"
+  "path": "plans/BQ-26.md",
+  "status": "in-sync",
+  "pinned": "672fde79b4c1d9519461f133918d5f82d0dde46d5cefcb599babce955c9957d0",
+  "current": "672fde79b4c1d9519461f133918d5f82d0dde46d5cefcb599babce955c9957d0"
  },
  "verifications": []
 }

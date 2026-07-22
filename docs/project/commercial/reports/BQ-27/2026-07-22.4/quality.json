@@ -1,11 +1,13 @@
 {
  "bq": "BQ-27",
  "edition": "2026-07-22.4",
- "generated_at": "2026-07-22T22:47:42+00:00",
+ "generated_at": "2026-07-22T22:57:10+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
-  "warnings": [],
+  "warnings": [
+   "edition predates plan pinning \u2014 re-answer to pin the plan version"
+  ],
   "checks": [
    {
     "id": "artifacts",
@@ -55,6 +57,18 @@
     "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
     "status": "pass",
     "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "warn",
+    "findings": [
+     {
+      "severity": "warning",
+      "message": "edition predates plan pinning \u2014 re-answer to pin the plan version"
+     }
+    ]
    }
   ]
  },
@@ -131,6 +145,12 @@
     "note": "one fleet snapshot exists \u2014 history accumulates as the 7-day refresh cadence produces more; a single point is not a trend"
    }
   ]
+ },
+ "plan": {
+  "path": "plans/BQ-27.md",
+  "status": "unpinned",
+  "pinned": null,
+  "current": "d47d456f88056a6b82bef7d9ff23f7f6e7535b5bf881ab59f3308562f5ab45d7"
  },
  "verifications": []
 }

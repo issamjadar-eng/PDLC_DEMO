@@ -59,6 +59,9 @@
     <button type="button" class="cm-toptab" data-tab="cm-tab-data">Data
       <span class="cm-cat-n">{{ tables | length }} tables</span>
     </button>
+    <button type="button" class="cm-toptab" data-tab="cm-tab-plan">Plan
+      {% if plan_status %}<span class="cm-chip {{ plan_status.cls }}" title="{{ plan_status.label }}">{{ plan_status.label.split(' — ')[0] }}</span>{% endif %}
+    </button>
   </div>
 
   <div id="cm-tab-report">
@@ -426,6 +429,22 @@
     </details>
     {% endfor %}
   </div><!-- /#cm-tab-data -->
+
+  <div id="cm-tab-plan" hidden>
+    {% if plan_status %}<p><span class="cm-chip {{ plan_status.cls }}">{{ plan_status.label }}</span></p>{% endif %}
+    {% if plan_html %}
+    <p class="cm-muted">The analysis contract for this question — user-owned prose (goal, approach,
+      assumptions, data, assertions &amp; limits). Edit
+      <a href="/documents#path={{ plan_path }}" target="_blank" rel="noopener">{{ plan_path }} ↗</a>
+      freely, then re-answer to pin the new version; the quality audit calls out drift and an agent
+      <em>intent-check</em> verifies the answer honors this plan (verdicts on the Quality tab).</p>
+    <div class="cm-report-body md-body">{{ plan_html | safe }}</div>
+    {% else %}
+    <div class="cm-empty"><p><strong>No analysis plan yet.</strong> Scaffold one with
+      <code>commercial.py plan-init {{ q.id }}</code> (templated from the question, then user-owned) —
+      or ask Claude to <em>“create the plan for {{ q.id }}”</em>.</p></div>
+    {% endif %}
+  </div><!-- /#cm-tab-plan -->
     </div><!-- /.cm-main -->
   </div><!-- /.cm-shell -->
   {% endif %}
@@ -456,7 +475,7 @@
     var btn = e.target.closest('.cm-toptab'); if (!btn) return;
     tabs.querySelectorAll('.cm-toptab').forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    ['cm-tab-report', 'cm-tab-quality', 'cm-tab-data'].forEach(function (id) {
+    ['cm-tab-report', 'cm-tab-quality', 'cm-tab-data', 'cm-tab-plan'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = id !== btn.getAttribute('data-tab');
     });

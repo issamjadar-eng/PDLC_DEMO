@@ -67,6 +67,16 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 8 (2026-07-22): Analysis plans (Option A — prose contract, machine drift-detection,
+  agent intent-verification): `plan-init` scaffolds a user-owned `plans/BQ-NN.md`
+  (goal / approach with committed definitions / data have-vs-need / assumptions /
+  assertions & limits; category-specific approach hints; never overwritten); `answer`
+  pins the plan's hash into the edition; new `plan-currency` lint check calls out
+  missing / unpinned / drifted plans (warnings — plans are living docs); quality.json
+  gains a `plan` block; `record-verification` gains type `intent-check` for agent
+  verdicts on whether the answer honors the plan (HONORED / HONORED-WITH-NOTES /
+  DEVIATION — strict: an unfollowed committed definition is a deviation even with
+  correct numbers).
 - 7 (2026-07-22): Lint itemized into named checks (artifacts / numeric-coverage /
   marker-resolution / estimation-language / pin-freshness / series-hygiene /
   derivation-chain), each with status + findings in quality.json. New

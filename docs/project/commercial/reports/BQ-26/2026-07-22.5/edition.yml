@@ -1,0 +1,9 @@
+bq: BQ-26
+edition: 2026-07-22.5
+status: draft
+created_at: '2026-07-22T22:57:10+00:00'
+pins:
+  commercial/internal-upgrade-campaign: 2026-07-22.2
+plan:
+  path: plans/BQ-26.md
+  sha256: 672fde79b4c1d9519461f133918d5f82d0dde46d5cefcb599babce955c9957d0

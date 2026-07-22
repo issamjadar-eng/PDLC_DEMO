@@ -1,11 +1,13 @@
 {
  "bq": "BQ-24",
  "edition": "2026-07-22.5",
- "generated_at": "2026-07-22T22:47:42+00:00",
+ "generated_at": "2026-07-22T22:57:10+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
-  "warnings": [],
+  "warnings": [
+   "edition predates plan pinning \u2014 re-answer to pin the plan version"
+  ],
   "checks": [
    {
     "id": "artifacts",
@@ -55,6 +57,18 @@
     "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
     "status": "pass",
     "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "warn",
+    "findings": [
+     {
+      "severity": "warning",
+      "message": "edition predates plan pinning \u2014 re-answer to pin the plan version"
+     }
+    ]
    }
   ]
  },
@@ -123,6 +137,12 @@
   ],
   "assumed": [],
   "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-24.md",
+  "status": "unpinned",
+  "pinned": null,
+  "current": "fb433a21c296efd18ea0bb72aea0517231792ed776fa5fddff6dd24e7859be90"
  },
  "verifications": []
 }

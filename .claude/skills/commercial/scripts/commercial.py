@@ -175,7 +175,18 @@ LINT_CHECKS = [
      "every data.json series declares a valid evidence class and its provenance"),
     ("derivation-chain", "Derivation chain",
      "every derived series declares HOW it was derived — a method and its inputs (src/derived/config markers), so the data chain is walkable"),
+    ("plan-currency", "Plan currency",
+     "the question has an analysis plan and this edition was computed under its current version — a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check"),
 ]
+
+
+def plan_path(root: Path, bq: str) -> Path:
+    return root / "plans" / f"{bq}.md"
+
+
+def plan_hash(root: Path, bq: str):
+    p = plan_path(root, bq)
+    return sha256_file(p) if p.exists() else None
 
 
 def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
@@ -311,6 +322,23 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
             err("pin-freshness",
                 f"pin {ds}@{snap} is STALE ({age}d > {max_age}d) and report carries no [waived: W-NNN]")
 
+    # plan currency: does a plan exist, and was this edition computed under it?
+    pp = plan_path(root, bq)
+    pinned = (ed.get("plan") or {}).get("sha256")
+    if not pp.exists():
+        warn("plan-currency", f"no analysis plan at plans/{bq}.md — run plan-init to scaffold one")
+        detail["plan"] = {"path": f"plans/{bq}.md", "status": "missing", "pinned": pinned, "current": None}
+    else:
+        cur = sha256_file(pp)
+        if not pinned:
+            warn("plan-currency", "edition predates plan pinning — re-answer to pin the plan version")
+            detail["plan"] = {"path": f"plans/{bq}.md", "status": "unpinned", "pinned": None, "current": cur}
+        elif pinned != cur:
+            warn("plan-currency", "plan has CHANGED since this edition was computed — review intent and re-answer")
+            detail["plan"] = {"path": f"plans/{bq}.md", "status": "drifted", "pinned": pinned, "current": cur}
+        else:
+            detail["plan"] = {"path": f"plans/{bq}.md", "status": "in-sync", "pinned": pinned, "current": cur}
+
     # data.json series must carry evidence_class + provenance; while here, build the
     # data-availability inventory — what we HAVE, what rests on a stated ASSUMPTION,
     # and what is MISSING (the gap stated, never papered over)
@@ -371,6 +399,7 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
         "references": detail.get("references", []),
         "freshness": detail.get("freshness", []),
         "data_availability": detail.get("data_availability", {"have": [], "assumed": [], "missing": []}),
+        "plan": detail.get("plan"),
         "verifications": existing.get("verifications", []),
     }
     qpath.write_text(json.dumps(q, indent=1))
@@ -415,6 +444,9 @@ def cmd_answer(args):
             shutil.rmtree(edir)
             raise CommercialError(f"computation did not produce {req}")
     ed = {"bq": args.bq, "edition": edition, "status": "draft", "created_at": now_iso(), "pins": pins}
+    ph = plan_hash(root, args.bq)
+    if ph:
+        ed["plan"] = {"path": f"plans/{args.bq}.md", "sha256": ph}
     dump_yaml(ed, edir / "edition.yml")
     errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
     write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
@@ -623,6 +655,80 @@ def cmd_record_verification(args):
     return 0
 
 
+CATEGORY_APPROACH_HINTS = {
+    "field-ops": "State the operational definitions up front: what counts as completed / attempted / "
+                 "failed, which date anchors the trailing windows, and which denominator each rate uses.",
+    "field-safety": "State the denominator policy explicitly (installed-base source), the threshold "
+                    "provenance (risk file vs stand-in), and how reporting lag / propensity are handled.",
+    "board": "State which figures are contracted vs modeled vs aspiration, and the allocation "
+             "methodology behind any cross-line comparison.",
+    "market": "State the share/TCO estimation method and every place competitor data is assumed "
+              "rather than public.",
+    "roadmap": "State the public signals used (clearances, filings), the mapping judgment from signal "
+               "to roadmap lane, and the scope limits of the product codes searched.",
+    "economics": "State cost-allocation rules and which side (ours vs customer) each figure sits on.",
+}
+
+
+def cmd_plan_init(args):
+    """Scaffold the question's analysis plan (prose contract: goal / approach /
+    assumptions / data / assertions & limits). User-owned after creation — never
+    overwritten; editions pin the plan's hash so drift is visible."""
+    root = Path(args.root)
+    cfg = load_config(root)
+    q = bq_entry(cfg, args.bq)
+    pp = plan_path(root, args.bq)
+    if pp.exists():
+        print(f"plan already exists: {pp} (user-owned; not overwritten)")
+        return 0
+    pp.parent.mkdir(exist_ok=True)
+    hints = CATEGORY_APPROACH_HINTS.get(q.get("category", ""), "State definitions, windows, and denominators explicitly.")
+    deps = "".join(f"- `{d}`\n" for d in q.get("corpus_deps", [])) or "- (none registered yet)\n"
+    exps = "".join(f"- **{e['id']}** — {e['statement']} _(basis: {e['basis']})_\n"
+                   for e in q.get("expectations", [])) or "- (none declared yet)\n"
+    pp.write_text(f"""# Analysis plan — {args.bq}
+
+_The analysis contract for this question: what the answer is FOR, how it is computed,
+what it assumes, and what it does — and does not — assert. User-owned prose: edit
+freely. Editions pin this file's hash; the quality audit calls out drift, and an agent
+intent-check verifies the computed answer honors this plan._
+
+## Question
+
+{q.get('question')}
+
+**Asked by**: {', '.join(q.get('personas', []))} · **cadence**: {q.get('cadence', '')}
+
+## Goal — the decision this answer serves
+
+[Edit: what decision changes based on this answer, and who makes it.]
+
+## Approach
+
+{hints}
+
+[Edit: datasets, computations, definitions — the method a reviewer must know to judge the answer.]
+
+## Data
+
+Registered corpus dependencies:
+{deps}
+[Edit: data we have vs data we still need; how gaps are handled (stated, never faked).]
+
+## Assumptions & expectations
+
+{exps}
+[Edit: what we assume where data does not exist, and which expectations the actuals are judged against.]
+
+## Assertions & limits
+
+[Edit: what this answer claims to establish — and explicitly what it does NOT
+(comparisons it cannot support, precision it does not have, decisions it does not make).]
+""")
+    print(f"plan scaffolded: {pp} — edit freely; re-answer {args.bq} to pin it")
+    return 0
+
+
 def cmd_catalog(args):
     root, corpus_root = Path(args.root), Path(args.corpus_root)
     cfg = load_config(root)
@@ -670,12 +776,16 @@ def main(argv=None):
     s.add_argument("bq")
     s.add_argument("--edition")
     s.add_argument("--type", required=True,
-                   choices=["adversarial-verify", "red-team", "reference-audit", "human-review"])
+                   choices=["adversarial-verify", "red-team", "reference-audit", "human-review", "intent-check"])
     s.add_argument("--verdict", required=True)
     s.add_argument("--by", required=True)
     s.add_argument("--summary", required=True)
     s.add_argument("--detail-ref", help="path to the full dossier/report")
     s.set_defaults(fn=cmd_record_verification)
+
+    s = sub.add_parser("plan-init", help="scaffold a question's user-owned analysis plan")
+    s.add_argument("bq")
+    s.set_defaults(fn=cmd_plan_init)
 
     s = sub.add_parser("catalog", help="question roster with answer status")
     s.set_defaults(fn=cmd_catalog)
