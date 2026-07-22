@@ -143,7 +143,7 @@ questions:
     category: field-safety
     personas: [ceo, vp-quality]
     cadence: quarterly
-    corpus_deps: [commercial/openfda-maude-infusion-mfr]
+    corpus_deps: [commercial/openfda-maude-infusion-mfr, commercial/openfda-maude-infusion-monthly]
     computation: "python3 computations.py BQ-19 --corpus-root {corpus_root} --out {out}"
     params: {aliases: entity-aliases.yml, top_n: 6}
   - id: BQ-20

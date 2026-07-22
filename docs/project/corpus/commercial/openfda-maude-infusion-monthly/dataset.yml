@@ -1,0 +1,27 @@
+dataset: commercial/openfda-maude-infusion-monthly
+title: MAUDE adverse-event COUNTS by received date (openFDA device/event)
+description: >-
+  Real MAUDE event counts per received-date for infusion-pump product code FRN
+  (2023-01 -> present), via openFDA's date-count API. The class-wide HISTORICAL trend
+  behind BQ-19 — daily buckets, aggregated to months by the analysis tier. Same
+  epistemic constraints as the manufacturer-count dataset: counts, never rates (A-001),
+  and reporting lag inflates apparent recent declines.
+internal: false
+max_age_days: 30
+acquisition:
+  type: openfda
+  endpoint: /device/event.json
+  search: 'device.device_report_product_code:FRN AND date_received:[20230101 TO 20301231]'
+  count: date_received
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+normalize:
+  type: openfda-count
+  output: records.csv
+schema:
+  file: records.csv
+  key: [term]
+  columns:
+    - {name: term, type: str, required: true}
+    - {name: count, type: int, required: true}
+asserts:
+  min_rows: 200

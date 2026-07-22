@@ -22,6 +22,7 @@
   corpus dataset. The series is marked no-data rather than estimated.
 - Note the metric's scope: received→decision measures FDA review, not develop-to-market —
   concept-pipeline conversion needs the internal concept register (also a stated gap).
+- Historical view: median review interval per decision year is charted [derived: cycle-by-year] [src: commercial/openfda-510k-infusion@2026-07-22].
 
 ## Method & provenance
 

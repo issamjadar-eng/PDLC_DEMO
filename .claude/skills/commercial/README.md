@@ -67,6 +67,12 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 3 (2026-07-22): Form-selection guidance in SKILL.md — the diagram follows the data's
+  job (stat = headline number; default bars = magnitude; paired-bars = plan vs actual;
+  timeseries = change over time; kv = non-numeric; unavailable = stated gap), with the
+  every-answer-should-carry-a-history rule (a missing historical view must say why).
+  New series kinds in the contract: `stat` (points w/ label/value/sub) and
+  `paired-bars` (`pairs` labels + `{label, a, b}` points).
 - 2 (2026-07-22): Plan expectations as first-class records — per-question `expectations:`
   in the catalog (statement / expected / basis / set_by / `validated:` flag for
   stand-ins), evaluated every edition into `data.json.expectations[]` with

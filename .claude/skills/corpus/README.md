@@ -66,6 +66,10 @@ waivers mirror managed-TBD discipline in regulated docs.
 
 ## Changelog
 
+- 2 (2026-07-22): openfda-count normalizer accepts date-field count buckets (openFDA
+  returns `time` instead of `term` when counting on a date field) — enables historical
+  count datasets (e.g. events per received-date). Note: openFDA rejects a `limit` param
+  on date-field counts (403) — omit `count_limit` for those.
 - 1 (2026-07-22): Initial version — engine with init / acquire / refresh / validate /
   diff / check / list / assume / waive; openfda (paginated rows + count-aggregation
   mode) + command + file acquisition types; openfda-flatten (dot-paths incl. list
