@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "generated": "2026-06-02T06:26:43.408295+00:00",
+  "generated": "2026-07-22T23:07:35.906849+00:00",
   "project": "pdlc-demo",
   "project_roles": {
     "regulatory_strategy": {
@@ -38,6 +38,20 @@
       "tokens_estimate": 295,
       "matched_pattern": "docs/project/strategies/postmarket-strategy.md"
     },
+    "commercial_strategy": {
+      "path": "docs/project/strategies/commercial-strategy.md",
+      "exists": true,
+      "size_bytes": 20198,
+      "tokens_estimate": 5049,
+      "matched_pattern": "docs/project/strategies/commercial-strategy.md"
+    },
+    "risk_strategy": {
+      "path": "docs/project/strategies/risk-strategy.md",
+      "exists": true,
+      "size_bytes": 1460,
+      "tokens_estimate": 365,
+      "matched_pattern": "docs/project/strategies/risk-strategy.md"
+    },
     "kol_feedback": {
       "folder": "docs/project/input-analysis/kol-feedback",
       "exists": true,
@@ -60,6 +74,14 @@
       "file_count": 4,
       "patterns_used": [
         "**/*.md"
+      ]
+    },
+    "commercial_analysis": {
+      "folder": "docs/project/commercial/reports",
+      "exists": true,
+      "file_count": 39,
+      "patterns_used": [
+        "**/report.md"
       ]
     },
     "filing_strategy": {
@@ -106,6 +128,7 @@
         "matched_pattern": "software-requirements.md"
       },
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": {
         "path": "docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md",
         "exists": true,
@@ -244,6 +267,7 @@
         "matched_pattern": "software-requirements.md"
       },
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/protocols",
@@ -370,6 +394,7 @@
         "matched_pattern": "software-requirements.md"
       },
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/design-controls/vnv/protocols",
@@ -490,6 +515,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/protocols",
@@ -598,6 +624,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/protocols",
@@ -706,6 +733,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/protocols",
@@ -814,6 +842,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/protocols",
@@ -922,6 +951,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/protocols",
@@ -1030,6 +1060,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/protocols",
@@ -1138,6 +1169,7 @@
       "user_needs": null,
       "software_requirements": null,
       "software_design_specification": null,
+      "software_development_plan": null,
       "verification_plan": null,
       "verification_protocols": {
         "folder": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/protocols",
@@ -1253,14 +1285,20 @@
       "submission_package": null
     },
     "qsub": {
-      "submission_package": null
+      "submission_package": {
+        "path": "docs/project/submissions/qsub/composition-manifest.md",
+        "exists": true,
+        "size_bytes": 5938,
+        "tokens_estimate": 1484,
+        "matched_pattern": "composition-manifest.md"
+      }
     }
   },
   "external_roles": {
     "fda_guidance": {
       "folder": "docs/external/fda-guidance",
       "exists": true,
-      "file_count": 11,
+      "file_count": 12,
       "patterns_used": [
         "**/*.md"
       ]
@@ -1268,7 +1306,7 @@
     "standards": {
       "folder": "docs/external/standards",
       "exists": true,
-      "file_count": 7,
+      "file_count": 12,
       "patterns_used": [
         "**/*.md"
       ]
@@ -1284,7 +1322,7 @@
     "regulations": {
       "folder": "docs/external/regulations",
       "exists": true,
-      "file_count": 2,
+      "file_count": 3,
       "patterns_used": [
         "**/*.md"
       ]
@@ -1292,7 +1330,7 @@
     "registry_standards": {
       "folder": ".claude/skills/medtech-docs/references/standards",
       "exists": true,
-      "file_count": 6,
+      "file_count": 12,
       "patterns_used": [
         "*.md"
       ]
@@ -1300,7 +1338,7 @@
     "registry_fda_guidance": {
       "folder": ".claude/skills/medtech-docs/references/fda-guidance",
       "exists": true,
-      "file_count": 14,
+      "file_count": 21,
       "patterns_used": [
         "*.md"
       ]
@@ -1308,7 +1346,7 @@
     "registry_regulations": {
       "folder": ".claude/skills/medtech-docs/references/regulations",
       "exists": true,
-      "file_count": 5,
+      "file_count": 7,
       "patterns_used": [
         "*.md"
       ]
@@ -1793,6 +1831,136 @@
       "patterns_tried": [
         "*Software Design Specification*.md",
         "*-sds.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "pca-device",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "connectivity-adapter",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "cloud-suite",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "drug-library-manager",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "fleet-management",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "compliance-reports",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "analytics-dashboard",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "inventory-tracker",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "alerts-engine",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
+      ]
+    },
+    {
+      "scope": "per-dhf",
+      "dhf": "clinical-interface",
+      "role": "software_development_plan",
+      "reason": "no file matched any pattern in design-controls/plans",
+      "patterns_tried": [
+        "*Software Development Plan*.md",
+        "*-sdp.md",
+        "*Design and Development Plan*.md",
+        "* DDP.md",
+        "*-ddp.md"
       ]
     },
     {
@@ -3587,15 +3755,6 @@
       "submission": "pccp",
       "role": "submission_package",
       "reason": "no file matched any pattern in docs/project/submissions/pccp",
-      "patterns_tried": [
-        "composition-manifest.md"
-      ]
-    },
-    {
-      "scope": "per-submission",
-      "submission": "qsub",
-      "role": "submission_package",
-      "reason": "no file matched any pattern in docs/project/submissions/qsub",
       "patterns_tried": [
         "composition-manifest.md"
       ]

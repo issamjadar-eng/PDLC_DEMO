@@ -296,6 +296,7 @@ security:
   approved_agents:
   - advisors/agents/advisor-researcher
   - advisors/agents/clinical-affairs
+  - advisors/agents/commercial
   - advisors/agents/core-team-panel
   - advisors/agents/cybersecurity
   - advisors/agents/design-review-panel
@@ -572,7 +573,11 @@ advisors:
   - regulatory-affairs
   - clinical-affairs
   - risk-management
+  - commercial
   overlays:
+    commercial:
+      add: []
+      exclude: []
     regulatory-affairs:
       add: []
       exclude: []

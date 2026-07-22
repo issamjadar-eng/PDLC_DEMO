@@ -81,7 +81,7 @@ schema_version: "1.2"
 # Consumer-advisor labels used in `consumers:` (informational only; not enforced):
 #   regulatory-affairs, clinical-affairs, risk-management, vnv-lead, post-market,
 #   cybersecurity, human-factors, systems-engineering, quality-engineering,
-#   rd-lead, program-manager.
+#   rd-lead, program-manager, commercial.
 
 roles:
 
@@ -126,6 +126,22 @@ roles:
     patterns:
       - docs/project/strategies/postmarket-strategy.md
 
+  commercial_strategy:
+    scope: project
+    description: Commercial strategy — pricing, reimbursement, channel, launch sequencing, customer targeting, competitive positioning.
+    consumers: [commercial, program-manager, regulatory-affairs]
+    patterns:
+      - docs/project/strategies/commercial-strategy.md
+      - docs/project/strategies/commercial.md
+
+  risk_strategy:
+    scope: project
+    description: Risk strategy — risk management approach, acceptability thresholds, platform-level hazard chains, cross-component risk controls.
+    consumers: [risk-management, quality-engineering]
+    patterns:
+      - docs/project/strategies/risk-strategy.md
+      - docs/project/strategies/risk.md
+
   predicate_analysis:
     scope: project
     description: Predicate landscape, substantial-equivalence argument, comparison tables.
@@ -143,7 +159,7 @@ roles:
     scope: project
     multi_file: true
     description: KOL / SME interview reports, clinical needs synthesis, voice-of-surgeon evidence.
-    consumers: [clinical-affairs, regulatory-affairs, program-manager, human-factors]
+    consumers: [clinical-affairs, regulatory-affairs, program-manager, human-factors, commercial]
     folder: docs/project/input-analysis/kol-feedback
     patterns:
       - "**/*.md"
@@ -152,7 +168,7 @@ roles:
     scope: project
     multi_file: true
     description: Market sizing, commercial landscape, customer-segment analysis.
-    consumers: [program-manager, clinical-affairs, regulatory-affairs]
+    consumers: [commercial, program-manager, clinical-affairs, regulatory-affairs]
     folder: docs/project/input-analysis/market-research
     patterns:
       - "**/*.md"
@@ -161,10 +177,19 @@ roles:
     scope: project
     multi_file: true
     description: Competitor device analyses (non-predicate context for positioning).
-    consumers: [regulatory-affairs, program-manager]
+    consumers: [commercial, regulatory-affairs, program-manager]
     folder: docs/project/input-analysis/competitive-landscape
     patterns:
       - "**/*.md"
+
+  commercial_analysis:
+    scope: project
+    multi_file: true
+    description: Data-backed business-question answer editions — commercial reports with provenance-cited claims (report.md per edition; lifecycle + hash pins in sibling edition.yml).
+    consumers: [commercial, program-manager]
+    folder: docs/project/commercial/reports
+    patterns:
+      - "**/report.md"
 
   filing_strategy:
     scope: project
