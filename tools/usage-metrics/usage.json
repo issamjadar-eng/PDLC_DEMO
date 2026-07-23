@@ -5025,6 +5025,115 @@
         "output": 30185
       }
     },
+    "ben/108": {
+      "by_model": {},
+      "cost": 0.0,
+      "cost_allocated": 2.06,
+      "cost_basis": "allocated",
+      "estimate": {
+        "agentic_hours": 2.0,
+        "agentic_hours_range": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "by_persona": {
+          "post-market": {
+            "max": 28.0,
+            "min": 14.0
+          },
+          "program-manager": {
+            "max": 30.0,
+            "min": 16.0
+          },
+          "quality-engineering": {
+            "max": 8.0,
+            "min": 4.0
+          },
+          "rd-lead": {
+            "max": 176.0,
+            "min": 90.0
+          },
+          "systems-engineering": {
+            "max": 16.0,
+            "min": 8.0
+          }
+        },
+        "confidence_mix": {
+          "low": 1,
+          "med": 7
+        },
+        "hours_saved": {
+          "max": 257.0,
+          "min": 130.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 258.0,
+          "min": 132.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "program-manager",
+          "post-market",
+          "systems-engineering",
+          "quality-engineering"
+        ],
+        "retrospective": false,
+        "title": "Commercial Analytics Suite (skills + demo assets)",
+        "todos": 8,
+        "updated": "2026-09-30"
+      },
+      "sessions": 0,
+      "totals": {}
+    },
+    "ben/109": {
+      "by_model": {},
+      "cost": 0.0,
+      "cost_allocated": 2.06,
+      "cost_basis": "allocated",
+      "estimate": {
+        "agentic_hours": 0.8,
+        "agentic_hours_range": {
+          "max": 0.8,
+          "min": 0.4
+        },
+        "by_persona": {
+          "program-manager": {
+            "max": 4.0,
+            "min": 2.0
+          },
+          "rd-lead": {
+            "max": 8.0,
+            "min": 4.0
+          }
+        },
+        "confidence_mix": {
+          "high": 3,
+          "medium": 2
+        },
+        "hours_saved": {
+          "max": 11.6,
+          "min": 5.2
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 12.0,
+          "min": 6.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "program-manager"
+        ],
+        "retrospective": false,
+        "title": "Commercial Advisor Persona",
+        "todos": 5,
+        "updated": "2026-07-22"
+      },
+      "sessions": 0,
+      "totals": {}
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
@@ -5121,23 +5230,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 512.0,
-    "cost_allocated": 164.13,
+    "agentic_hours": 514.8,
+    "cost_allocated": 168.25,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 792.47,
     "cost_unattributed_measured": 250.14,
-    "cost_unattributed_residual": 86.0,
+    "cost_unattributed_residual": 81.88,
     "hours_saved": {
-      "max": 3183.2,
-      "min": 992.8
+      "max": 3451.8,
+      "min": 1128.0
     },
     "manual_hours": {
-      "max": 3676.0,
-      "min": 1504.0
+      "max": 3946.0,
+      "min": 1642.0
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 106
+    "tasks_with_estimate": 108
   }
 }
