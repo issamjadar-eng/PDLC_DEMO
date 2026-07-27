@@ -1,0 +1,26 @@
+dataset: commercial/internal-regulatory-docket
+snapshot: '2026-07-27'
+created_at: '2026-07-27T14:32:50+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for regulatory-affairs tracking export)
+  retrieved_at: '2026-07-27T14:32:50+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 7cfcd7059b751fff3942a28bd3ee8e8bb4306f1841ca45abb6af587bc754690e
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 550087748ef57c3a5399810c82e12b3953074c529cfad2a682361df44ce6a307
+    parents:
+    - 7cfcd7059b751fff3942a28bd3ee8e8bb4306f1841ca45abb6af587bc754690e
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 33

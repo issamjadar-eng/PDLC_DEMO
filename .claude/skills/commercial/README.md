@@ -67,6 +67,24 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 9 (2026-07-27): Battle-test hardening. Engine: (bug fix) same-day draft replacement
+  now carries filed `verifications` records forward from the replaced draft's
+  quality.json (each stamped `carried_from_replaced_draft: true`) — previously they
+  were silently dropped despite the preservation promise; project-extensible lint via
+  a commercial.yml `lint:` block (`exempt_patterns` regexes extend the numeric-claim
+  exempt tokens, `estimation_exempt_terms` words are skipped by the
+  estimation-language check — relax-only); built-in exempt tokens extended with
+  `E-N(.N)`, `FYNNNN`, `YYYY-Q[1-4]`, `YYYY-H[12]`, `510(k)`; `record-verification`
+  stamps the short sha256 of report.md into each entry (verdict tied to the byte-state
+  it judged); series hygiene accepts multi-dataset provenance
+  `{datasets: [{dataset, snapshot}, ...]}` for join-heavy series (validated:
+  non-empty, each entry needs dataset + snapshot). SKILL.md: documented the per-BQ
+  module layout (`bq_modules/bq_nn.py` with `run(corpus_root, out, pins)`), the
+  line-based marker rule + estimation word list + lint config, corpus-wide `[assume:]`
+  resolution caveat, snapshot-id-as-as-of convention, the no-string-literal-facts
+  rule (incl. computed sentence logic), same-day edition semantics + verification
+  carry, the verdict vocabulary + hash stamping, newest-edition sidecar-card
+  rationale, and shared-helper reuse.
 - 8 (2026-07-22): Analysis plans (Option A — prose contract, machine drift-detection,
   agent intent-verification): `plan-init` scaffolds a user-owned `plans/BQ-NN.md`
   (goal / approach with committed definitions / data have-vs-need / assumptions /

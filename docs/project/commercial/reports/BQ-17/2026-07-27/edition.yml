@@ -1,0 +1,13 @@
+bq: BQ-17
+edition: '2026-07-27'
+status: draft
+created_at: '2026-07-27T15:34:46+00:00'
+pins:
+  commercial/internal-kol-register: '2026-07-27'
+  commercial/external-competitor-features: '2026-07-27'
+  commercial/openfda-510k-infusion: '2026-07-22'
+  commercial/internal-subscriptions: 2026-07-27.2
+  commercial/internal-fleet: '2026-07-22'
+plan:
+  path: plans/BQ-17.md
+  sha256: 54f376e73dc36f119845f49fa073ece483bf090f7ba3afa38b0d3e0923993852

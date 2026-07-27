@@ -1,0 +1,391 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "attach_gap_sites": [
+  "S-NA-21",
+  "S-EMEA-08",
+  "S-APAC-08",
+  "S-EMEA-13"
+ ],
+ "rows": [
+  {
+   "site_id": "S-APAC-01",
+   "start_date": "2024-03-06",
+   "pumps_connected": "2",
+   "arr_usd": "860",
+   "cost_to_serve_usd": "7728",
+   "status": "active",
+   "hardware_discount_pct": "5.8"
+  },
+  {
+   "site_id": "S-APAC-02",
+   "start_date": "2025-01-16",
+   "pumps_connected": "8",
+   "arr_usd": "3680",
+   "cost_to_serve_usd": "7602",
+   "status": "active",
+   "hardware_discount_pct": "9.6"
+  },
+  {
+   "site_id": "S-APAC-03",
+   "start_date": "2024-06-19",
+   "pumps_connected": "3",
+   "arr_usd": "1320",
+   "cost_to_serve_usd": "7306",
+   "status": "active",
+   "hardware_discount_pct": "6.2"
+  },
+  {
+   "site_id": "S-APAC-04",
+   "start_date": "2025-10-01",
+   "pumps_connected": "1",
+   "arr_usd": "469",
+   "cost_to_serve_usd": "6444",
+   "status": "active",
+   "hardware_discount_pct": "7.0"
+  },
+  {
+   "site_id": "S-APAC-05",
+   "start_date": "2025-05-11",
+   "pumps_connected": "8",
+   "arr_usd": "3624",
+   "cost_to_serve_usd": "7488",
+   "status": "active",
+   "hardware_discount_pct": "6.4"
+  },
+  {
+   "site_id": "S-APAC-06",
+   "start_date": "2025-10-14",
+   "pumps_connected": "6",
+   "arr_usd": "2670",
+   "cost_to_serve_usd": "7692",
+   "status": "active",
+   "hardware_discount_pct": "5.7"
+  },
+  {
+   "site_id": "S-EMEA-01",
+   "start_date": "2025-04-06",
+   "pumps_connected": "7",
+   "arr_usd": "3276",
+   "cost_to_serve_usd": "7908",
+   "status": "active",
+   "hardware_discount_pct": "9.2"
+  },
+  {
+   "site_id": "S-EMEA-02",
+   "start_date": "2024-03-08",
+   "pumps_connected": "16",
+   "arr_usd": "7008",
+   "cost_to_serve_usd": "7788",
+   "status": "active",
+   "hardware_discount_pct": "6.6"
+  },
+  {
+   "site_id": "S-EMEA-03",
+   "start_date": "2025-08-16",
+   "pumps_connected": "4",
+   "arr_usd": "1796",
+   "cost_to_serve_usd": "7753",
+   "status": "active",
+   "hardware_discount_pct": "7.8"
+  },
+  {
+   "site_id": "S-EMEA-05",
+   "start_date": "2025-03-11",
+   "pumps_connected": "5",
+   "arr_usd": "2195",
+   "cost_to_serve_usd": "6967",
+   "status": "active",
+   "hardware_discount_pct": "11.9"
+  },
+  {
+   "site_id": "S-EMEA-06",
+   "start_date": "2025-07-11",
+   "pumps_connected": "7",
+   "arr_usd": "3185",
+   "cost_to_serve_usd": "7380",
+   "status": "active",
+   "hardware_discount_pct": "9.1"
+  },
+  {
+   "site_id": "S-EMEA-07",
+   "start_date": "2025-02-04",
+   "pumps_connected": "4",
+   "arr_usd": "1724",
+   "cost_to_serve_usd": "7543",
+   "status": "active",
+   "hardware_discount_pct": "6.0"
+  },
+  {
+   "site_id": "S-EMEA-09",
+   "start_date": "2025-02-24",
+   "pumps_connected": "6",
+   "arr_usd": "2664",
+   "cost_to_serve_usd": "7588",
+   "status": "active",
+   "hardware_discount_pct": "3.8"
+  },
+  {
+   "site_id": "S-EMEA-10",
+   "start_date": "2025-03-14",
+   "pumps_connected": "4",
+   "arr_usd": "1744",
+   "cost_to_serve_usd": "7365",
+   "status": "active",
+   "hardware_discount_pct": "5.6"
+  },
+  {
+   "site_id": "S-EMEA-11",
+   "start_date": "2024-02-13",
+   "pumps_connected": "4",
+   "arr_usd": "1808",
+   "cost_to_serve_usd": "8002",
+   "status": "active",
+   "hardware_discount_pct": "6.7"
+  },
+  {
+   "site_id": "S-EMEA-12",
+   "start_date": "2025-06-27",
+   "pumps_connected": "1",
+   "arr_usd": "433",
+   "cost_to_serve_usd": "6461",
+   "status": "active",
+   "hardware_discount_pct": "3.2"
+  },
+  {
+   "site_id": "S-EMEA-14",
+   "start_date": "2025-08-21",
+   "pumps_connected": "13",
+   "arr_usd": "5798",
+   "cost_to_serve_usd": "8014",
+   "status": "active",
+   "hardware_discount_pct": "4.7"
+  },
+  {
+   "site_id": "S-EMEA-15",
+   "start_date": "2025-03-18",
+   "pumps_connected": "2",
+   "arr_usd": "864",
+   "cost_to_serve_usd": "7063",
+   "status": "active",
+   "hardware_discount_pct": "7.3"
+  },
+  {
+   "site_id": "S-EMEA-16",
+   "start_date": "2024-07-16",
+   "pumps_connected": "6",
+   "arr_usd": "2712",
+   "cost_to_serve_usd": "6561",
+   "status": "active",
+   "hardware_discount_pct": "7.5"
+  },
+  {
+   "site_id": "S-NA-01",
+   "start_date": "2024-03-03",
+   "pumps_connected": "1",
+   "arr_usd": "448",
+   "cost_to_serve_usd": "7201",
+   "status": "churned",
+   "hardware_discount_pct": "6.3"
+  },
+  {
+   "site_id": "S-NA-02",
+   "start_date": "2025-05-25",
+   "pumps_connected": "3",
+   "arr_usd": "1296",
+   "cost_to_serve_usd": "6242",
+   "status": "active",
+   "hardware_discount_pct": "7.1"
+  },
+  {
+   "site_id": "S-NA-03",
+   "start_date": "2025-02-21",
+   "pumps_connected": "8",
+   "arr_usd": "3688",
+   "cost_to_serve_usd": "7981",
+   "status": "active",
+   "hardware_discount_pct": "2.2"
+  },
+  {
+   "site_id": "S-NA-04",
+   "start_date": "2024-05-09",
+   "pumps_connected": "3",
+   "arr_usd": "1365",
+   "cost_to_serve_usd": "6600",
+   "status": "churned",
+   "hardware_discount_pct": "5.3"
+  },
+  {
+   "site_id": "S-NA-05",
+   "start_date": "2025-11-14",
+   "pumps_connected": "9",
+   "arr_usd": "4167",
+   "cost_to_serve_usd": "7202",
+   "status": "active",
+   "hardware_discount_pct": "7.8"
+  },
+  {
+   "site_id": "S-NA-06",
+   "start_date": "2025-06-14",
+   "pumps_connected": "2",
+   "arr_usd": "918",
+   "cost_to_serve_usd": "7585",
+   "status": "active",
+   "hardware_discount_pct": "5.5"
+  },
+  {
+   "site_id": "S-NA-07",
+   "start_date": "2025-06-01",
+   "pumps_connected": "5",
+   "arr_usd": "2280",
+   "cost_to_serve_usd": "6427",
+   "status": "active",
+   "hardware_discount_pct": "6.0"
+  },
+  {
+   "site_id": "S-NA-08",
+   "start_date": "2024-12-12",
+   "pumps_connected": "16",
+   "arr_usd": "7504",
+   "cost_to_serve_usd": "7869",
+   "status": "active",
+   "hardware_discount_pct": "4.0"
+  },
+  {
+   "site_id": "S-NA-09",
+   "start_date": "2025-03-19",
+   "pumps_connected": "3",
+   "arr_usd": "1371",
+   "cost_to_serve_usd": "7016",
+   "status": "active",
+   "hardware_discount_pct": "7.3"
+  },
+  {
+   "site_id": "S-NA-10",
+   "start_date": "2025-06-20",
+   "pumps_connected": "17",
+   "arr_usd": "7429",
+   "cost_to_serve_usd": "9475",
+   "status": "active",
+   "hardware_discount_pct": "6.7"
+  },
+  {
+   "site_id": "S-NA-11",
+   "start_date": "2024-03-24",
+   "pumps_connected": "17",
+   "arr_usd": "7548",
+   "cost_to_serve_usd": "9113",
+   "status": "churned",
+   "hardware_discount_pct": "3.1"
+  },
+  {
+   "site_id": "S-NA-12",
+   "start_date": "2024-01-09",
+   "pumps_connected": "4",
+   "arr_usd": "1760",
+   "cost_to_serve_usd": "7084",
+   "status": "active",
+   "hardware_discount_pct": "4.5"
+  },
+  {
+   "site_id": "S-NA-13",
+   "start_date": "2024-11-24",
+   "pumps_connected": "5",
+   "arr_usd": "2210",
+   "cost_to_serve_usd": "6169",
+   "status": "active",
+   "hardware_discount_pct": "3.9"
+  },
+  {
+   "site_id": "S-NA-14",
+   "start_date": "2025-06-14",
+   "pumps_connected": "3",
+   "arr_usd": "1293",
+   "cost_to_serve_usd": "6536",
+   "status": "active",
+   "hardware_discount_pct": "7.3"
+  },
+  {
+   "site_id": "S-NA-15",
+   "start_date": "2025-01-05",
+   "pumps_connected": "5",
+   "arr_usd": "2310",
+   "cost_to_serve_usd": "7648",
+   "status": "active",
+   "hardware_discount_pct": "1.4"
+  },
+  {
+   "site_id": "S-NA-16",
+   "start_date": "2024-11-23",
+   "pumps_connected": "5",
+   "arr_usd": "2340",
+   "cost_to_serve_usd": "7318",
+   "status": "active",
+   "hardware_discount_pct": "8.0"
+  },
+  {
+   "site_id": "S-NA-17",
+   "start_date": "2024-02-23",
+   "pumps_connected": "16",
+   "arr_usd": "7248",
+   "cost_to_serve_usd": "8697",
+   "status": "active",
+   "hardware_discount_pct": "9.5"
+  },
+  {
+   "site_id": "S-NA-18",
+   "start_date": "2025-08-27",
+   "pumps_connected": "21",
+   "arr_usd": "9534",
+   "cost_to_serve_usd": "8319",
+   "status": "active",
+   "hardware_discount_pct": "7.1"
+  },
+  {
+   "site_id": "S-NA-19",
+   "start_date": "2024-10-10",
+   "pumps_connected": "3",
+   "arr_usd": "1398",
+   "cost_to_serve_usd": "6848",
+   "status": "active",
+   "hardware_discount_pct": "8.1"
+  },
+  {
+   "site_id": "S-NA-20",
+   "start_date": "2025-05-13",
+   "pumps_connected": "24",
+   "arr_usd": "10488",
+   "cost_to_serve_usd": "9308",
+   "status": "active",
+   "hardware_discount_pct": "7.0"
+  },
+  {
+   "site_id": "S-NA-22",
+   "start_date": "2025-06-08",
+   "pumps_connected": "19",
+   "arr_usd": "8398",
+   "cost_to_serve_usd": "8464",
+   "status": "active",
+   "hardware_discount_pct": "7.7"
+  },
+  {
+   "site_id": "S-NA-23",
+   "start_date": "2025-08-01",
+   "pumps_connected": "14",
+   "arr_usd": "6538",
+   "cost_to_serve_usd": "7994",
+   "status": "active",
+   "hardware_discount_pct": "9.2"
+  },
+  {
+   "site_id": "S-NA-24",
+   "start_date": "2024-04-03",
+   "pumps_connected": "6",
+   "arr_usd": "2766",
+   "cost_to_serve_usd": "7907",
+   "status": "active",
+   "hardware_discount_pct": "5.3"
+  }
+ ]
+}

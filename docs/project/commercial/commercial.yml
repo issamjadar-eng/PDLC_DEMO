@@ -1,6 +1,12 @@
 # Business-question catalog — consumed by the commercial skill engine.
 # Full question text + selection rationale: tasks/ben/108 Business-Question Catalog.
 # Questions without `computation` render as not-implemented (roadmap, not silence).
+# Project-side lint extensions (engine `lint:` block — relax-only, never adds findings).
+# "modeled" is a defined bucket label in the BQ-03 plan's contracted/modeled/aspiration
+# vocabulary, not estimation hedging — exempt it from the estimation-language check.
+lint:
+  estimation_exempt_terms: [modeled]
+
 categories:
   - {key: board, name: Board & Portfolio}
   - {key: market, name: Market & Competitive}
@@ -16,26 +22,107 @@ questions:
     category: board
     personas: [board-chair]
     cadence: quarterly
+    corpus_deps: [commercial/internal-financials]
+    computation: "python3 computations.py BQ-01 --corpus-root {corpus_root} --out {out}"
+    # timeseries_top_lines: chart the top-N lines by trailing-4Q revenue individually and
+    # aggregate the rest — keeps the trend chart within the <=4-line dataviz cap
+    params: {trailing_quarters: 4, timeseries_top_lines: 3}
+    expectations:
+      - id: E-01.1
+        statement: "Every product line is gross-margin positive over the trailing four quarters"
+        expected: "gross margin > 0 per line, trailing 4Q"
+        basis: "generic portfolio guardrail; no board-adopted floor"
+        set_by: cfo (demo)
+        validated: false
   - id: BQ-02
     question: "How concentrated are we — PCA franchise, top-3 GPOs, single systems — and what does losing one anchor GPO do to the 5-year plan?"
     category: board
     personas: [lead-independent-director]
     cadence: annual
+    # internal-financials is pinned for the basis-sensitivity disclosure: the direct book
+    # covers only part of total revenue, and E-02.1's verdict is basis-dependent (red-team
+    # finding, ben/108) — the module reports the coverage fraction and the anchor GPO's
+    # floor share of TOTAL revenue alongside the direct-book shares
+    corpus_deps: [commercial/internal-sales-accounts, commercial/internal-revenue-plan,
+                  commercial/internal-financials]
+    computation: "python3 computations.py BQ-02 --corpus-root {corpus_root} --out {out}"
+    # pca_franchise_lines: product lines counted as the PCA franchise in the direct book
+    # (Cloud Suite rides on the PCA installed base — see the BQ-02 plan)
+    params:
+      concentration_threshold_pct: 30
+      fy: FY2025
+      pca_franchise_lines: [PP3500, PP3000, cloud-suite]
+    expectations:
+      - id: E-02.1
+        statement: "No single GPO carries more than 30% of annual revenue"
+        expected: "<= 30% of FY revenue per GPO"
+        basis: "generic concentration guardrail; no board-adopted limit"
+        set_by: lead-independent-director (demo)
+        validated: false
   - id: BQ-03
     question: "What share of revenue is recurring today vs the Y5 plan — and which parts of the $350M target are contracted, modeled, or aspiration?"
     category: board
     personas: [board-chair, cfo]
     cadence: annual
+    corpus_deps: [commercial/internal-financials, commercial/internal-revenue-plan]
+    computation: "python3 computations.py BQ-03 --corpus-root {corpus_root} --out {out}"
+    # plan_recurring_proxy_line: the plan of record carries no revenue_type — planned
+    # recurring revenue is proxied by the cloud-suite product line (see the BQ-03 plan)
+    params: {y5_target_usd: 350000000, y5_period: FY2030, plan_recurring_proxy_line: cloud-suite}
+    expectations:
+      - id: E-03.1
+        statement: "Recurring (subscription) revenue share grows every fiscal year toward the Y5 model"
+        expected: "recurring share strictly increasing FY2024 -> FY2026"
+        basis: "implied by the razor+recurring strategy (D-COMM); no numeric milestone set"
+        set_by: cfo (demo)
+        validated: false
   - id: BQ-04
     question: "Does the subscription model work at unit level — LTV per connected pump vs cost-to-serve, and is Cloud Suite cannibalizing hardware ASP?"
     category: board
     personas: [finance-committee]
     cadence: quarterly
+    corpus_deps: [commercial/internal-subscriptions, commercial/internal-fleet]
+    computation: "python3 computations.py BQ-04 --corpus-root {corpus_root} --out {out}"
+    # size_bands: connected-pump count bands for the site-size profitability split
+    # (small <= small_max_pumps, large >= large_min_pumps, mid between)
+    params:
+      ltv_horizon_years: 5
+      min_ltv_cts_ratio: 3.0
+      max_asp_erosion_pct: 5
+      size_bands: {small_max_pumps: 6, large_min_pumps: 12}
+    expectations:
+      - id: E-04.1
+        statement: "Lifetime value per connected pump covers cost-to-serve at a healthy multiple"
+        expected: "LTV : cost-to-serve >= 3.0"
+        basis: "generic SaaS unit-economics heuristic; no underwritten target"
+        set_by: finance-committee (demo)
+        validated: false
+      - id: E-04.2
+        statement: "Cloud Suite attach does not erode hardware pricing beyond tolerance"
+        expected: "avg hardware discount at subscribed sites <= 5%"
+        basis: "stand-in tolerance; pricing policy sets no explicit cap"
+        set_by: cco (demo)
+        validated: false
   - id: BQ-05
     question: "How much plan revenue sits behind FDA decisions we haven't received — by regulatory dependency, with slip triggers?"
     category: board
     personas: [audit-committee, cfo]
     cadence: annual
+    corpus_deps: [commercial/internal-revenue-plan, commercial/openfda-510k-infusion]
+    computation: "python3 computations.py BQ-05 --corpus-root {corpus_root} --out {out}"
+    # dependent_categories: regulatory_dependency values counted as "behind FDA decisions
+    # not yet received" — letter-to-file needs no FDA decision, so it is NOT dependent
+    params:
+      slip_scenarios_months: [6, 12]
+      exposure_threshold_pct: 40
+      dependent_categories: [pccp-enabled, new-submission]
+    expectations:
+      - id: E-05.1
+        statement: "Regulatory-dependent revenue stays below the exposure threshold in every plan year"
+        expected: "<= 40% of plan-year revenue behind not-yet-received FDA decisions"
+        basis: "stand-in risk-appetite threshold; the plan of record sets none"
+        set_by: audit-committee (demo)
+        validated: false
   - id: BQ-06
     question: "Is the concept pipeline converting, and how does our clearance cycle time compare with our own history and with BD/Baxter?"
     category: board
@@ -50,26 +137,62 @@ questions:
     category: market
     personas: [cco]
     cadence: quarterly
+    corpus_deps: [commercial/internal-sales-accounts]
+    computation: "python3 computations.py BQ-07 --corpus-root {corpus_root} --out {out}"
+    params: {market_size_assumption: A-003}
   - id: BQ-08
     question: "What are we winning and losing on — and how many recent losses cite predictive monitoring we don't have?"
     category: market
     personas: [cco]
     cadence: quarterly
+    corpus_deps: [commercial/internal-winloss]
+    computation: "python3 computations.py BQ-08 --corpus-root {corpus_root} --out {out}"
+    params: {window_days: 365}
+    expectations:
+      - id: E-08.1
+        statement: "Competitive win rate holds at or above half of decided opportunities"
+        expected: ">= 50% of won+lost"
+        basis: "sales-plan stand-in; no documented target"
+        set_by: cco (demo)
+        validated: false
   - id: BQ-09
     question: "Are we winning displaced accounts where an incumbent has an open recall or integration disruption — and how long does the window stay open?"
     category: market
     personas: [board-chair, cco]
     cadence: quarterly
+    corpus_deps: [commercial/internal-winloss, commercial/openfda-recalls-infusion]
+    computation: "python3 computations.py BQ-09 --corpus-root {corpus_root} --out {out}"
+    params: {disruption_window_days: 180, sensitivity_window_days: 90, aliases: entity-aliases.yml}
   - id: BQ-10
     question: "Where do we sit vs Alaris/Spectrum IQ/Plum 360 on 5-year TCO per pump — the buyer's spreadsheet?"
     category: market
     personas: [cco, cfo]
     cadence: quarterly
+    corpus_deps: [commercial/external-competitor-features]
+    computation: "python3 computations.py BQ-10 --corpus-root {corpus_root} --out {out}"
+    params:
+      pricing_assumption: A-004
+      horizon_years: 5
+      # our own commercial constants (cited as [config: commercial.yml])
+      pp3500_capital_usd: 4200
+      cloud_suite_per_pump_annual_usd: 450
+      consumables_per_pump_annual_usd: 310
+      service_per_pump_annual_usd: 180
   - id: BQ-11
     question: "Where are pumps sold but underused — accounts whose utilization/telemetry diverges from what they bought?"
     category: market
     personas: [cco, customer-success]
     cadence: monthly
+    corpus_deps: [commercial/internal-telemetry-utilization, commercial/internal-fleet, commercial/internal-sales-accounts]
+    computation: "python3 computations.py BQ-11 --corpus-root {corpus_root} --out {out}"
+    params: {underuse_threshold_pct: 60, window_months: 3, min_devices: 10}
+    expectations:
+      - id: E-11.1
+        statement: "No material account runs its connected fleet below the utilization floor"
+        expected: ">= 60% of expected hours at every account with >= 10 connected devices"
+        basis: "stand-in utilization floor; contracts set no usage commitment"
+        set_by: customer-success (demo)
+        validated: false
   # --- C. Roadmap & State of the Art ---------------------------------------
   - id: BQ-12
     question: "What did competitors clear in the last 90 days, laid against our Y1–Y5 roadmap — anything landing on a feature we scheduled two years out?"
@@ -92,26 +215,146 @@ questions:
     category: roadmap
     personas: [vp-product, board]
     cadence: quarterly
+    corpus_deps: [commercial/openfda-510k-infusion, commercial/external-competitor-features]
+    computation: "python3 computations.py BQ-13 --corpus-root {corpus_root} --out {out}"
+    params:
+      lead_time_assumption: A-005
+      our_launch_period: "2028-H2"
+      our_launch_anchor: "2028-07-01"   # first day of our_launch_period (favorable-to-us reading; see plan)
+      our_launch_anchor_late: "2028-12-31"  # last day of our_launch_period (unfavorable-to-us reading).
+      # NOTE (red-team RT-13.1): the H2 refinement exists ONLY in this catalog — the
+      # strategy doc (commercial-strategy.md D-COMM-1.4) commits F6 to bare "Y3 (2028)".
+      # Reports must state both anchor readings and the hardware-scenario margin.
+      aliases: entity-aliases.yml
+      # A-005 lead-time bands in months (mirrored from the assumption record so the
+      # computation stays deterministic; cited [assume: A-005] in reports)
+      samd_lead_months: [18, 24]
+      hardware_lead_months: [30, 48]
+      # software/AI-adjacent watch keywords on public device names (triage aid, cited
+      # [config: commercial.yml]) — matches are analyst-review flags, not capability judgments
+      watch_keywords:
+        software: [SOFTWARE, DRUG LIBRARY, GUARDRAILS, DOSE IQ]
+        ai-predictive: [PREDICT, ALGORITHM, ANALYTIC, MACHINE LEARNING, NEURAL, EARLY WARNING, MONITORING]
+        connectivity: [WIFI, WIRELESS, REMOTE, CONNECT]
   - id: BQ-14
     question: "Where exactly do we sit on PCA feature parity, line by line — which gaps are on the roadmap vs silently unaddressed?"
     category: roadmap
     personas: [vp-product]
     cadence: quarterly
+    corpus_deps: [commercial/external-competitor-features]
+    computation: "python3 computations.py BQ-14 --corpus-root {corpus_root} --out {out}"
+    params:
+      # feature-attribute -> roadmap lane map (F1-F9 per commercial-strategy.md D-COMM-1.4),
+      # cited as [config: commercial.yml]; attributes with no lane are core-parity items
+      attribute_lane_map:
+        ders_drug_library: F1
+        wireless_connectivity: F2
+        remote_update_capability: F3
+        pca_pause_or_etco2: F4
+        integrated_etco2: F6
+        predictive_monitoring: F6
+        dose_personalization: F8
+      # lane relation (red-team RT-14.1): does the lane MECHANICALLY CLOSE the gap
+      # (ships the missing capability itself) or merely RESPOND to it with a different
+      # mechanism (roadmap-adjacent — the competitor's shipped capability may remain
+      # unanswered even after the lane lands)? closes | adjacent.
+      attribute_lane_relation:
+        ders_drug_library: closes        # F1 IS a DERS drug library
+        wireless_connectivity: closes    # F2 IS the connectivity adapter
+        remote_update_capability: closes # F3 fleet mgmt ships remote update
+        pca_pause_or_etco2: adjacent     # F4 is smart alarm filtering (software), NOT a hardware PCA-pause response
+        integrated_etco2: adjacent       # F6 is predictive monitoring (SaMD), NOT a capnography module
+        predictive_monitoring: closes    # F6 IS predictive monitoring
+        dose_personalization: closes     # F8 IS dose personalization
+      our_vendor: GlobalLogic
+      # scoring direction for numeric-typed attributes (see plans/BQ-14.md)
+      numeric_directions: {flow_accuracy_pct: lower, battery_hours: higher, weight_kg: lower}
+      # roadmap year per lane (from commercial-strategy.md D-COMM-1.4)
+      lane_years: {F1: "Y1 (2026)", F2: "Y1 (2026)", F3: "Y1 (2026)", F4: "Y2 (2027)",
+                   F5: "Y2 (2027)", F6: "Y3 (2028)", F7: "Y3-Y4 (2028-2029)",
+                   F8: "Y4 (2029)", F9: "Y5 (2030)"}
   - id: BQ-15
     question: "Is the state-of-the-art analysis still current (EU MDR), and are our headline spec differentiators still ahead?"
     category: roadmap
     personas: [vp-product, regulatory-affairs]
     cadence: annual
+    corpus_deps: [commercial/external-competitor-features, commercial/openfda-510k-infusion]
+    computation: "python3 computations.py BQ-15 --corpus-root {corpus_root} --out {out}"
+    params:
+      # headline differentiators per state-of-the-art-analysis.md (cited [config: commercial.yml])
+      # NOTE (red-team RT-15.1): 0.35 is the LABORATORY-standard spec ("±0.35% accuracy
+      # laboratory standard, ±2.5% market standard" — state-of-the-art-analysis.md);
+      # competitor matrix cells are nominal/field specs. The volumetric-basis alternative
+      # below (±0.5%, per competitive-product-assessment.md) is reported alongside so the
+      # headline multiple discloses its basis.
+      differentiators: {flow_accuracy_pct: 0.35, battery_hours: 150}
+      flow_accuracy_pct_volumetric: 0.5   # our volumetric-basis accuracy spec (alt basis for the margin)
+      sota_doc: docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md
+      # currency anchor = the SOTA doc's adoption date into project docs (its "Converted"
+      # date — the doc carries no separate authoring date); see plans/BQ-15.md
+      sota_doc_date: "2026-04-12"
+      review_cadence_months: 12   # stand-in for the QMS SOTA/PMS review cadence (challengeable)
+      trailing_context_days: 365
   - id: BQ-16
     question: "For each roadmap feature: documented KOL evidence on file? Which ride on a single voice, and does current sentiment still order the waves?"
     category: roadmap
     personas: [vp-product]
     cadence: annual
+    corpus_deps: [commercial/internal-kol-register]
+    computation: "python3 computations.py BQ-16 --corpus-root {corpus_root} --out {out}"
+    params:
+      min_voices_per_feature: 2
+      # committed feature universe + wave slots (commercial-strategy.md D-COMM-1.4) —
+      # every feature is evaluated even with zero register rows
+      feature_universe: [F1, F2, F3, F4, F5, F6, F7, F8, F9]
+      feature_years: {F1: "Y1 (2026)", F2: "Y1 (2026)", F3: "Y1 (2026)", F4: "Y2 (2027)",
+                      F5: "Y2 (2027)", F6: "Y3 (2028)", F7: "Y3-Y4 (2028-2029)",
+                      F8: "Y4 (2029)", F9: "Y5 (2030)"}
+      # wave-check scope: concern-majority features scheduled in these slots are flagged
+      wave_check_years: [Y2, Y3, Y4]
+    expectations:
+      - id: E-16.1
+        statement: "Every committed roadmap feature has at least two independent KOL voices on file"
+        expected: ">= 2 distinct KOLs per F1-F9 feature"
+        basis: "evidence-sufficiency stand-in; the KOL program sets no formal floor"
+        set_by: vp-product (demo)
+        validated: false
   - id: BQ-17
     question: "Stacked against clearances, KOL data, and attach actuals — which roadmap bet do we kill, and which do we pull forward a year?"
     category: roadmap
     personas: [vp-product]
     cadence: annual
+    corpus_deps: [commercial/internal-kol-register, commercial/external-competitor-features, commercial/openfda-510k-infusion, commercial/internal-subscriptions, commercial/internal-fleet]
+    computation: "python3 computations.py BQ-17 --corpus-root {corpus_root} --out {out}"
+    params:
+      aliases: entity-aliases.yml
+      # composite scoring config — method fully stated in plans/BQ-17.md
+      eligible: [F4, F5, F6, F7, F8, F9]     # F1-F3 are Y1 in-flight: context only
+      cloud_features: [F1, F2, F3, F4, F5, F6, F8]  # demand axis applies only to cloud-delivered features
+      feature_universe: [F1, F2, F3, F4, F5, F6, F7, F8, F9]
+      feature_years: {F1: "Y1 (2026)", F2: "Y1 (2026)", F3: "Y1 (2026)", F4: "Y2 (2027)",
+                      F5: "Y2 (2027)", F6: "Y3 (2028)", F7: "Y3-Y4 (2028-2029)",
+                      F8: "Y4 (2029)", F9: "Y5 (2030)"}
+      feature_rank_year: {F1: 2026, F2: 2026, F3: 2026, F4: 2027, F5: 2027, F6: 2028,
+                          F7: 2028, F8: 2029, F9: 2030}   # numeric year for tiebreaks
+      attribute_lane_map:   # same mapping as BQ-14 (D-COMM-1.4)
+        ders_drug_library: F1
+        wireless_connectivity: F2
+        remote_update_capability: F3
+        pca_pause_or_etco2: F4
+        integrated_etco2: F6
+        predictive_monitoring: F6
+        dose_personalization: F8
+      lane_watch_keywords:   # clearance-activity triage per lane (public device names)
+        F1: [DRUG LIBRARY, GUARDRAILS, DOSE IQ]
+        F2: [WIFI, WIRELESS, CONNECT]
+        F3: [REMOTE, FLEET, ENTERPRISE]
+        F4: [PCA PAUSE, ETCO2, CAPNO]
+        F5: [SURVEILLANCE, ANALYTIC]
+        F6: [PREDICT, EARLY WARNING, MONITORING]
+        F7: [AMBULATORY, WEARABLE]
+        F8: [PERSONALIZ]
+        F9: []
   # --- D. Field: Complaints & Safety ---------------------------------------
   - id: BQ-18
     question: "Top three complaint categories this quarter, rate-normalized with a stated denominator — any trending above the risk-file commitment?"
@@ -151,16 +394,46 @@ questions:
     category: field-safety
     personas: [cmo]
     cadence: monthly
+    corpus_deps: [commercial/internal-complaints, commercial/internal-signal-register, commercial/openfda-maude-pca-monthly, commercial/internal-regulatory-docket]
+    computation: "python3 computations.py BQ-20 --corpus-root {corpus_root} --out {out}"
+    params: {watch_categories: [over-delivery, pca-by-proxy-suspected]}
+    expectations:
+      - id: E-20.1
+        statement: "Zero confirmed over-delivery events in the field"
+        expected: "0 confirmed over-delivery complaints"
+        basis: "franchise-killer tolerance — any occurrence escalates to CMO; threshold not yet ratified in the risk file [VERIFY]"
+        set_by: cmo (demo)
+        validated: false
   - id: BQ-21
     question: "What's open on the field-action docket, how timely are our MDRs, and what's the exposure if FDA walks in tomorrow?"
     category: field-safety
     personas: [ceo, audit-committee]
     cadence: monthly
+    corpus_deps: [commercial/internal-regulatory-docket]
+    computation: "python3 computations.py BQ-21 --corpus-root {corpus_root} --out {out}"
+    params: {trailing_months: 12}
+    expectations:
+      - id: E-21.1
+        statement: "Every MDR is filed within its regulatory deadline"
+        expected: "0 late filings, trailing 12 months"
+        basis: "30-day MDR filing requirement (21 CFR 803) [VERIFY against docs/external distillation]"
+        set_by: vp-quality (demo)
+        validated: false
   - id: BQ-22
     question: "Of last year's field signals, how many landed as design inputs or upgrade-pipeline items — and how many died in a spreadsheet?"
     category: field-safety
     personas: [vp-quality]
     cadence: quarterly
+    corpus_deps: [commercial/internal-signal-register]
+    computation: "python3 computations.py BQ-22 --corpus-root {corpus_root} --out {out}"
+    params: {sla_days: 90}
+    expectations:
+      - id: E-22.1
+        statement: "Every field signal reaches a disposition within the review SLA"
+        expected: "100% dispositioned within 90 days of opening"
+        basis: "stand-in for the QMS signal-review SLA [VERIFY against the post-market SOP]"
+        set_by: vp-quality (demo)
+        validated: false
   # --- E. Field: Upgrades & Service Ops ------------------------------------
   - id: BQ-23
     question: "Where do we stand on the current field-update campaign — planned vs actual coverage by region and site, and will we hit the close date?"
@@ -214,9 +487,12 @@ questions:
     category: field-ops
     personas: [vp-field-service]
     cadence: monthly
-    corpus_deps: [commercial/internal-upgrade-campaign]
+    corpus_deps: [commercial/internal-upgrade-campaign, commercial/internal-fleet]
     computation: "python3 computations.py BQ-26 --corpus-root {corpus_root} --out {out}"
-    params: {close_date: "2026-09-30"}
+    # thin_margin_headroom_pct: on-track regions with current < required * (1 + pct/100)
+    # surface as a Watch item (red-team finding c). fse_day_minutes: productive minutes
+    # per FSE day for duration-basis workload sizing (red-team finding d).
+    params: {close_date: "2026-09-30", thin_margin_headroom_pct: 20, fse_day_minutes: 480}
     expectations:
       - id: E-26.1
         statement: "Existing field-service capacity absorbs the remaining waves without surge or slip"
@@ -238,13 +514,49 @@ questions:
     category: economics
     personas: [cfo]
     cadence: monthly
+    corpus_deps: [commercial/internal-financials, commercial/internal-revenue-plan]
+    computation: "python3 computations.py BQ-28 --corpus-root {corpus_root} --out {out}"
+    params: {fy: 2026, tolerance_pct: 5}
+    expectations:
+      - id: E-28.1
+        statement: "Year-to-date revenue tracks the 2026 plan within tolerance"
+        expected: "within +/- 5% of plan, YTD"
+        basis: "standard reforecast trigger; the plan of record names no tolerance [VERIFY]"
+        set_by: cfo (demo)
+        validated: false
   - id: BQ-29
     question: "Is the Cloud Suite attach-rate stage-gate holding — the gate that releases the $24M predictive-monitoring spend?"
     category: economics
     personas: [cfo, board, cco]
     cadence: quarterly
+    corpus_deps: [commercial/internal-subscriptions, commercial/internal-fleet]
+    computation: "python3 computations.py BQ-29 --corpus-root {corpus_root} --out {out}"
+    params: {gate_attach_pct: 40, gated_spend_usd: 24000000}
+    expectations:
+      - id: E-29.1
+        statement: "Installed-base Cloud Suite attach reaches the stage-gate level before the predictive-monitoring spend releases"
+        expected: ">= 40% of PP3500 installed base attached"
+        basis: "numeric stand-in — commercial-strategy.md gates the $24M on 'Y1/Y2 Cloud Suite traction' but sets NO number [VERIFY]"
+        set_by: cfo (demo)
+        validated: false
   - id: BQ-30
     question: "What's our fully-loaded cost per update, remote vs on-site — and the business case for a remote-first campaign at the top non-connected accounts?"
     category: economics
     personas: [vp-field-service, cfo]
     cadence: monthly
+    corpus_deps: [commercial/internal-upgrade-campaign, commercial/internal-fleet]
+    computation: "python3 computations.py BQ-30 --corpus-root {corpus_root} --out {out}"
+    params:
+      # internal cost constants (cited [config: commercial.yml]; demo stand-ins for finance-validated rates)
+      fse_day_rate_usd: 950
+      remote_session_cost_usd: 120
+      adapter_unit_cost_usd: 380
+      top_n_accounts: 50
+      fse_day_minutes: 480
+    expectations:
+      - id: E-30.1
+        statement: "A remote update costs a fraction of an on-site visit"
+        expected: "remote cost per completed update <= 25% of on-site"
+        basis: "business-case stand-in; not yet validated by finance"
+        set_by: vp-field-service (demo)
+        validated: false

@@ -1,0 +1,41 @@
+dataset: commercial/internal-kol-register
+title: KOL evidence register (internal, distilled from project KOL documents)
+description: >-
+  Per-feature KOL evidence register for the F1-F9 commercial-roadmap lanes
+  (commercial-strategy.md D-COMM-1.4). One row per (feature, KOL, evidence item)
+  documented in the project's KOL materials — currently the simulated 8-member KOL
+  persona panel of the ben/080 commercial-roadmap KOL review
+  (docs/_analysis/pca-device/commercial-roadmap-kol-review/). A feature with no
+  documented KOL evidence gets no rows; the gap is the finding. NOTE: the project's
+  8 KOL profiles are all "not yet contacted" (review finding F-1), so no
+  interview/survey/publication evidence exists yet — every current row is
+  evidence_type=advisory-board from the simulated panel. Demo-fabricated,
+  project-authored material. Consumed by BQ-16 (KOL evidence sufficiency),
+  BQ-17 (roadmap bet kill/pull-forward).
+internal: true
+max_age_days: 365
+acquisition:
+  type: file
+  path: curated.csv
+  system_of_record: >-
+    hand-distilled register — project KOL documents
+    (docs/project/input-analysis/kol-feedback/,
+    docs/_analysis/pca-device/commercial-roadmap-kol-review/); source_doc cited per row
+  usage_rights: internal
+normalize:
+  command: cp {raw_dir}/curated.csv {normalized_dir}/records.csv
+schema:
+  file: records.csv
+  key: [feature_id, kol_id, evidence_type, date]
+  columns:
+    - {name: feature_id, type: str, required: true}
+    - {name: feature_name, type: str, required: true}
+    - {name: kol_id, type: str, required: true}
+    - {name: kol_name, type: str, required: true}
+    - {name: role, type: str, required: true}
+    - {name: sentiment, type: str, required: true}
+    - {name: evidence_type, type: str, required: true}
+    - {name: date, type: date, required: true}
+    - {name: source_doc, type: str, required: true}
+asserts:
+  min_rows: 20

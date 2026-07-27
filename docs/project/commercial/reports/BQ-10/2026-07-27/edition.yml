@@ -1,0 +1,9 @@
+bq: BQ-10
+edition: '2026-07-27'
+status: draft
+created_at: '2026-07-27T15:29:26+00:00'
+pins:
+  commercial/external-competitor-features: '2026-07-27'
+plan:
+  path: plans/BQ-10.md
+  sha256: 59415e7bda6d65d4994080300ade70ea70ded2fc7a9ebef3c28b2ae1cb0c5ddf

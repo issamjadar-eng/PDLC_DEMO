@@ -49,8 +49,31 @@ MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]"
 # tokens that contain digits but are identifiers/dates, not numeric claims
 EXEMPT_TOKEN_RE = re.compile(
     r"BQ-\d+|A-\d{3}|W-\d{3}|C-\d{4}-\d{2}|\d{4}-\d{2}-\d{2}(?:\.\d+)?|PP\d+|PE-\d+|S-[A-Z]+-\d+|K\d{6}"
+    r"|E-\d+(?:\.\d+)?|FY\d{4}|\d{4}-Q[1-4]|\d{4}-H[12]|510\(k\)"
 )
 ESTIMATION_RE = re.compile(r"\b(estimated?|likely|approximately|roughly|assumed?|modeled)\b", re.I)
+
+
+def project_lint_cfg(root: Path) -> dict:
+    """Optional project-side lint extensions — commercial.yml `lint:` block:
+      lint:
+        exempt_patterns: ["<regex>", ...]        # extra digit-bearing identifier tokens
+        estimation_exempt_terms: [modeled, ...]  # plan-defined vocabulary the
+                                                 # estimation-language check ignores
+    Extensions only relax the lint (exempt more) — they can never add findings."""
+    try:
+        cfg = load_config(root)
+    except CommercialError:
+        return {}
+    lint = cfg.get("lint") or {}
+    out = {"exempt_res": [], "estimation_exempt": set()}
+    for pat in lint.get("exempt_patterns", []) or []:
+        try:
+            out["exempt_res"].append(re.compile(pat))
+        except re.error:
+            sys.stderr.write(f"warning: lint.exempt_patterns entry is not a valid regex, ignored: {pat}\n")
+    out["estimation_exempt"] = {str(w).lower() for w in lint.get("estimation_exempt_terms", []) or []}
+    return out
 
 
 def sha256_file(p: Path) -> str:
@@ -197,6 +220,9 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
     detail = {"references": [], "freshness": []}
     _refs = {}
     _findings = {cid: [] for cid, _, _ in LINT_CHECKS}
+    lint_cfg = project_lint_cfg(root)
+    exempt_res = [EXEMPT_TOKEN_RE] + lint_cfg.get("exempt_res", [])
+    est_exempt = lint_cfg.get("estimation_exempt", set())
 
     def err(cid, msg):
         errors.append(msg)
@@ -302,12 +328,15 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
                     _ref(kind, val, True, f"active waiver, expires {rec.get('expires')}")
         # numeric-claim rule: strip markers + exempt tokens; leftover digits need a marker
         stripped = MARKER_RE.sub("", line)
-        stripped = EXEMPT_TOKEN_RE.sub("", stripped)
+        for rx in exempt_res:
+            stripped = rx.sub("", stripped)
         if re.search(r"\d", stripped) and not markers:
             err("numeric-coverage",
                 f"L{n}: numeric claim without a [src|assume|derived|config] marker: {line.strip()[:80]}")
-        # estimation language rule
-        if ESTIMATION_RE.search(MARKER_RE.sub("", line)) and not any(k == "assume" for k, _ in markers):
+        # estimation language rule (project-exempt terms are plan-defined vocabulary)
+        est_hits = [m.group(1).lower() for m in ESTIMATION_RE.finditer(MARKER_RE.sub("", line))
+                    if m.group(1).lower() not in est_exempt]
+        if est_hits and not any(k == "assume" for k, _ in markers):
             warn("estimation-language", f"L{n}: estimation language without [assume: A-NNN]: {line.strip()[:80]}")
 
     # freshness of pins
@@ -350,8 +379,19 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
         if not s.get("provenance"):
             err("series-hygiene", f"data.json series {s.get('id')}: missing provenance")
         prov = s.get("provenance") or {}
-        src = (f"{prov['dataset']}@{prov.get('snapshot', '?')}" if prov.get("dataset")
-               else prov.get("assumption") or prov.get("note", ""))
+        # join-heavy series may pin multiple datasets: provenance {datasets: [{dataset, snapshot}, ...]}
+        # is accepted as an alternative to the single {dataset, snapshot} form
+        if prov.get("datasets") is not None:
+            items = prov.get("datasets") or []
+            if not items or any(not (isinstance(d, dict) and d.get("dataset") and d.get("snapshot"))
+                                for d in items):
+                err("series-hygiene",
+                    f"data.json series {s.get('id')}: provenance.datasets must be a non-empty "
+                    f"list of {{dataset, snapshot}} entries")
+            src = " + ".join(f"{d.get('dataset', '?')}@{d.get('snapshot', '?')}" for d in items)
+        else:
+            src = (f"{prov['dataset']}@{prov.get('snapshot', '?')}" if prov.get("dataset")
+                   else prov.get("assumption") or prov.get("note", ""))
         entry = {"what": s.get("label", s.get("id", "")), "series": s.get("id"),
                  "evidence_class": ec, "source": src}
         deriv = s.get("derivation")
@@ -379,10 +419,12 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
 
 
 def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
-                  errors, warnings, detail):
+                  errors, warnings, detail, carry_verifications=None):
     """Write/refresh the edition's quality.json audit surface. Machine-generated
     lint/reference/freshness sections are replaced; agent-recorded verifications
-    are preserved across rewrites."""
+    are preserved across rewrites. `carry_verifications` re-files verification
+    records rescued from a replaced same-day draft (each stamped
+    carried_from_replaced_draft: true) so filed verdicts survive a re-answer."""
     edir = bq_dir(root, bq) / ed["edition"]
     qpath = edir / "quality.json"
     existing = {}
@@ -391,6 +433,11 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
             existing = json.loads(qpath.read_text())
         except json.JSONDecodeError:
             existing = {}
+    verifications = existing.get("verifications", [])
+    for v in carry_verifications or []:
+        v = dict(v)
+        v.setdefault("carried_from_replaced_draft", True)
+        verifications.append(v)
     q = {
         "bq": bq, "edition": ed["edition"], "generated_at": now_iso(),
         "lint": {"status": "fail" if errors else "pass",
@@ -400,7 +447,7 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
         "freshness": detail.get("freshness", []),
         "data_availability": detail.get("data_availability", {"have": [], "assumed": [], "missing": []}),
         "plan": detail.get("plan"),
-        "verifications": existing.get("verifications", []),
+        "verifications": verifications,
     }
     qpath.write_text(json.dumps(q, indent=1))
     return q
@@ -419,6 +466,7 @@ def cmd_answer(args):
         raise CommercialError(f"{args.bq} declares no corpus_deps — an answer must pin data")
     edition = today()
     edir = bq_dir(root, args.bq) / edition
+    carried_verifications = []
     if edir.exists():
         existing = load_yaml(edir / "edition.yml") if (edir / "edition.yml").exists() else None
         if existing and existing["status"] != "draft":
@@ -429,7 +477,16 @@ def cmd_answer(args):
             edition = f"{edition}.{(max(used) + 1) if used else 2}"
             edir = bq_dir(root, args.bq) / edition
         else:
-            shutil.rmtree(edir)  # drafts are re-generable until approved
+            # drafts are re-generable until approved — but agent-filed verification
+            # records are evidence, not machine output: rescue them before the
+            # replaced draft's quality.json is deleted with the edition dir
+            old_q = edir / "quality.json"
+            if old_q.exists():
+                try:
+                    carried_verifications = json.loads(old_q.read_text()).get("verifications", [])
+                except json.JSONDecodeError:
+                    pass
+            shutil.rmtree(edir)
     edir.mkdir(parents=True)
     (edir / "pins.json").write_text(json.dumps(pins, indent=1))
     cmd = q["computation"].format(bq=args.bq, corpus_root=str(corpus_root.resolve()),
@@ -449,7 +506,11 @@ def cmd_answer(args):
         ed["plan"] = {"path": f"plans/{args.bq}.md", "sha256": ph}
     dump_yaml(ed, edir / "edition.yml")
     errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
-    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
+    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail,
+                  carry_verifications=carried_verifications)
+    if carried_verifications:
+        print(f"[{args.bq}@{edition}] carried {len(carried_verifications)} verification record(s) "
+              f"from the replaced same-day draft")
     print(f"[{args.bq}@{edition}] draft written; lint: {len(errors)} error(s), {len(warnings)} warning(s)")
     for e in errors:
         print(f"  ERROR {e}")
@@ -645,10 +706,13 @@ def cmd_record_verification(args):
         errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
         write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
     q = json.loads(qpath.read_text())
+    report = edir / "report.md"
     q.setdefault("verifications", []).append({
         "type": args.type, "verdict": args.verdict, "by": args.by,
         "at": now_iso(), "summary": args.summary,
         "detail_ref": args.detail_ref,
+        # tie the verdict to the byte-state it judged: short sha256 of report.md at filing time
+        "report_sha256": sha256_file(report)[:12] if report.exists() else None,
     })
     qpath.write_text(json.dumps(q, indent=1))
     print(f"[{args.bq}@{ed['edition']}] recorded {args.type}: {args.verdict} (by {args.by})")

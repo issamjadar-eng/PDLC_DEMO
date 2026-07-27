@@ -21,3 +21,6 @@ BQ-29 (attach rate), and as the ONLY sanctioned denominator for internal complai
 ## Changelog
 
 - 2026-07-22: Scaffolded; first snapshot (884 devices) — task 108.
+- 2026-07-27: Schema completed — declared `hw_rev` (carried by the CSV but previously
+  undeclared, so validation never covered it); config-only, no snapshot regeneration
+  (red-team data audit DA-1) — task 108.

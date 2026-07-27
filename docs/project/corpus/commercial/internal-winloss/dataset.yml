@@ -1,0 +1,38 @@
+dataset: commercial/internal-winloss
+title: CRM opportunity win/loss log (internal, demo-fabricated)
+description: >-
+  Per-opportunity CRM win/loss log, ~120 opportunities closing 2025-01-01..2026-07-25
+  (installed-base sites + PRO-NN prospects; real competitor vendor names inside fabricated
+  records). DEMO-FABRICATED by seeded generator gen.py — stand-in for a CRM opportunity
+  export. Narrative knobs: ~45% overall win rate; predictive-monitoring-gap primary or
+  cited in ~30% of losses; elevated (~65%) win rate vs Baxter / ICU Medical incumbents
+  from 2025-07-01 (recall/integration-disruption stand-in windows, joined downstream
+  against real openFDA recall dates). Consumed by BQ-08 (win/loss drivers) and BQ-09
+  (competitor-disruption conversion).
+internal: true
+max_age_days: 30
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for CRM opportunity export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [opp_id]
+  columns:
+    - {name: opp_id, type: str, required: true}
+    - {name: close_date, type: date, required: true}
+    - {name: account_id, type: str, required: true}
+    - {name: account_name, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: segment, type: str, required: true}
+    - {name: outcome, type: str, required: true}
+    - {name: competitor, type: str, required: true}
+    - {name: incumbent_vendor, type: str, required: true}
+    - {name: primary_reason, type: str, required: true}
+    - {name: cites_predictive_monitoring, type: str, required: true}
+    - {name: value_usd, type: int, required: true}
+asserts:
+  min_rows: 100

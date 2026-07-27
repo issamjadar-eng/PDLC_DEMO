@@ -1,0 +1,190 @@
+{
+ "bq": "BQ-14",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:11+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "parity-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "parity-matrix",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/external-competitor-features@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/external-competitor-features",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 180,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Parity position",
+    "series": "parity-stat",
+    "evidence_class": "derived",
+    "source": "commercial/external-competitor-features@2026-07-27",
+    "derivation": {
+     "method": "count of per-attribute verdicts (ahead/parity/behind) and routing of behind-gaps through the attribute-lane map + attribute-lane-relation (closes vs adjacent)",
+     "inputs": [
+      "src: commercial/external-competitor-features@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Verdict by attribute",
+    "series": "parity-matrix",
+    "evidence_class": "derived",
+    "source": "commercial/external-competitor-features@2026-07-27",
+    "derivation": {
+     "method": "per-attribute verdict per the committed classification rules (plans/BQ-14.md)",
+     "inputs": [
+      "src: commercial/external-competitor-features@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Parity position over time",
+    "series": "parity-history",
+    "evidence_class": "unavailable",
+    "source": "one curated snapshot exists; history accumulates as the matrix is re-curated (180-day cadence) \u2014 a single point is not a trend",
+    "note": "one curated snapshot exists; history accumulates as the matrix is re-curated (180-day cadence) \u2014 a single point is not a trend"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-14.md",
+  "status": "in-sync",
+  "pinned": "221d7c7f972d27d17e03b34a2785a410dcbb95044e8d7000cca1008fa310d953",
+  "current": "221d7c7f972d27d17e03b34a2785a410dcbb95044e8d7000cca1008fa310d953"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:30:06+00:00",
+   "summary": "RT-14.1 actioned: attribute_lane_relation config added (closes|adjacent); F4/pca_pause and F6/integrated_etco2 lane routings now labeled ADJACENCY (not closure) in matrix, headline qualifier, adjacency bullet, R1, and parity-stat; plan codifies closure-vs-adjacency semantics",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "intent-check",
+   "verdict": "HONORED-WITH-NOTES",
+   "by": "intent-check agent",
+   "at": "2026-07-27T15:37:02+00:00",
+   "summary": "Plan-vs-edition intent check on the pre-correction draft (re-filed after draft replacement); substantive notes were fixed and the draft regenerated same day",
+   "detail_ref": ""
+  }
+ ]
+}

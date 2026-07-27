@@ -1,0 +1,265 @@
+{
+ "bq": "BQ-26",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:11+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "anchor-sensitivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fse-capacity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fse-days-remaining",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "remote-convertible",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "required-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-22.2",
+   "age_days": 5,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Remaining campaign load",
+    "series": "capacity-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "remaining = targeted \u2212 completed per region, where completed = status \u2208 {completed, completed-after-retry} and remaining = status \u2208 {scheduled, failed-pending-retry, rolled-back}; stalled load = remaining in regions with zero completions in the trailing 28d window ending at the snapshot as-of date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2"
+     ]
+    }
+   },
+   {
+    "what": "Completions per week by region",
+    "series": "weekly-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+   },
+   {
+    "what": "Current vs required completions/week",
+    "series": "required-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "current = completions (status \u2208 {completed, completed-after-retry}) in the 28d window ending at the snapshot as-of date \u00f7 4; required = remaining devices (status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00f7 weeks from the as-of date to the close date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Run-rates under the alternative (latest-completion) anchor",
+    "series": "anchor-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "current and required rates recomputed with the 28d window anchored at the latest completed_date in the pin instead of the snapshot as-of date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "config: commercial.yml",
+      "derived: required-rate"
+     ]
+    }
+   },
+   {
+    "what": "On-site-remaining devices convertible to remote",
+    "series": "remote-convertible",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "on-site-remaining campaign devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back} \u2014 i.e. not completed/completed-after-retry) joined to the fleet registry by device_serial; convertible = connected == yes",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "src: commercial/internal-fleet@2026-07-22"
+     ]
+    }
+   },
+   {
+    "what": "On-site workload remaining (labor-time floor)",
+    "series": "fse-days-remaining",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "derivation": {
+     "method": "on-site-remaining devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00d7 mean completed (status \u2208 {completed, completed-after-retry}) on-site duration_min \u00f7 fse_day_minutes; labor time only \u2014 travel/overhead not in the campaign data (lower bound)",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "config: commercial.yml"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "FSE capacity (roster/utilization)",
+    "series": "fse-capacity",
+    "evidence_class": "unavailable",
+    "source": "no corpus dataset acquired yet \u2014 roster, utilization, travel, and visits-per-day are needed for hire/contract/slip; the duration-basis floor is a bridge, not a substitute",
+    "note": "no corpus dataset acquired yet \u2014 roster, utilization, travel, and visits-per-day are needed for hire/contract/slip; the duration-basis floor is a bridge, not a substitute"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-26.md",
+  "status": "in-sync",
+  "pinned": "38ab4f5b8e3455abd517e6bd48fd173b34abc42538ac4a4a1bcae15c74925a53",
+  "current": "38ab4f5b8e3455abd517e6bd48fd173b34abc42538ac4a4a1bcae15c74925a53"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:30:32+00:00",
+   "summary": "F26-1 actioned: derivation method strings of capacity-stat/required-rate/remote-convertible/fse-days-remaining now name the status sets (completed = completed|completed-after-retry; remaining = scheduled|failed-pending-retry|rolled-back; on-site-remaining = remaining with method onsite), echoed in the report intro and Method section; self-sufficiency codified in plans/BQ-26.md",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  }
+ ]
+}

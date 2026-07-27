@@ -1,0 +1,232 @@
+{
+ "bq": "BQ-05",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:10+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "exposure-by-year",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "exposure-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fda-review-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "slip-scenarios",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-revenue-plan@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-revenue-plan",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Regulatory exposure of the plan",
+    "series": "exposure-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "dependent (pccp-enabled + new-submission) revenue \u00f7 total plan revenue, per plan year and across the window",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Plan revenue by regulatory dependency ($M)",
+    "series": "plan-by-dependency",
+    "evidence_class": "measured",
+    "source": "commercial/internal-revenue-plan@2026-07-27"
+   },
+   {
+    "what": "Exposure % per plan year",
+    "series": "exposure-by-year",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "per plan year: (pccp-enabled + new-submission revenue) \u00f7 total plan revenue",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Plan totals under uniform slips ($M)",
+    "series": "slip-scenarios",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "uniform within-year earning; an M-month slip moves M/12 of each year's dependent revenue to the next year; past-final-year revenue leaves the window",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml",
+      "derived: exposure-by-year"
+     ]
+    }
+   },
+   {
+    "what": "FRN 510(k) review interval (public)",
+    "series": "fda-review-stat",
+    "evidence_class": "derived",
+    "source": "commercial/openfda-510k-infusion@2026-07-22",
+    "derivation": {
+     "method": "median of (decision_date \u2212 date_received) across FRN clearances with both dates in the pinned snapshot",
+     "inputs": [
+      "src: commercial/openfda-510k-infusion@2026-07-22"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Exposure % across plan versions",
+    "series": "exposure-history",
+    "evidence_class": "unavailable",
+    "source": "only plan version LRP-2026.1 is snapshotted \u2014 exposure history needs successive plan-of-record snapshots",
+    "note": "only plan version LRP-2026.1 is snapshotted \u2014 exposure history needs successive plan-of-record snapshots"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-05.md",
+  "status": "in-sync",
+  "pinned": "2c6d67388ff2f99d5dd3808ab13a631683449b599a10517d9ae76a9491f8ff09",
+  "current": "2c6d67388ff2f99d5dd3808ab13a631683449b599a10517d9ae76a9491f8ff09"
+ },
+ "verifications": [
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:18:05+00:00",
+   "summary": "$366M dependent, per-year exposure and both slip tables re-derived cell-exact; incl-letter-to-file alternative basis breaches the same two years (46.9%/63.4%) \u2014 verdict robust",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:18:05+00:00",
+   "summary": "Framing clean: real-vs-fabricated split bannered, per-year guardrail not overclaimed; low-severity notes only (FRN median hides a 1,079-day tail; survivorship of cleared-only intervals)",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  }
+ ]
+}

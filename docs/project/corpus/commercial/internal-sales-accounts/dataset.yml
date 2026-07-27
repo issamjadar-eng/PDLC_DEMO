@@ -1,0 +1,35 @@
+dataset: commercial/internal-sales-accounts
+title: Account-level sales (internal, demo-fabricated)
+description: >-
+  Account-level revenue and installed units for FY2024, FY2025, FY2026H1 across
+  fictional health-system accounts (mapped onto the 48-site fleet model, plus prospect
+  accounts with zero installed units), with fictional GPO affiliation, region, and
+  segment. DEMO-FABRICATED by seeded generator gen.py — stand-in for a CRM / sales-ops
+  export. Carries the direct (hardware + subscription) book; reconciles per FY with
+  internal-financials hardware+subscription within +/-5%. Concentration knobs: top GPO
+  ~35-40% of FY2025 revenue, top-3 accounts noticeably large. Consumed by BQ-02
+  (customer/GPO concentration), BQ-07 (segment mix), BQ-11 (adoption divergence).
+internal: true
+max_age_days: 90
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for CRM / sales-ops revenue-by-account export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [account_id, product_line, fy]
+  columns:
+    - {name: account_id, type: str, required: true}
+    - {name: account_name, type: str, required: true}
+    - {name: gpo, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: segment, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: fy, type: str, required: true}
+    - {name: revenue_usd, type: int, required: true}
+    - {name: units_installed, type: int, required: true}
+asserts:
+  min_rows: 300

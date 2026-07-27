@@ -72,9 +72,14 @@ def expectations_section(exps):
              "| ID | Expectation | Expected | Actual | Verdict | Basis |",
              "|---|---|---|---|---|---|"]
     for e in exps:
-        ev = " ".join(f"[{x}]" for x in e.get("evidence", []))
+        ev_items = list(e.get("evidence", []))
+        # the expectation row always cites the catalog it comes from — but only once
+        # (a module that already put "config: commercial.yml" in evidence isn't double-stamped)
+        if "config: commercial.yml" not in ev_items:
+            ev_items.append("config: commercial.yml")
+        ev = " ".join(f"[{x}]" for x in ev_items)
         val = "" if e.get("validated") else " (unvalidated)"
-        lines.append(f"| {e['id']} | {e['statement']} {ev} [config: commercial.yml] | {e['expected']} | "
+        lines.append(f"| {e['id']} | {e['statement']} {ev} | {e['expected']} | "
                      f"{e['actual']} | {e['verdict']}{val} | {e['basis']} |")
     return lines
 
@@ -541,79 +546,153 @@ def bq25(corpus_root, out, pins):
 def bq26(corpus_root, out, pins):
     p = params_for("BQ-26")
     rows, snap = load_pin_csv(corpus_root, pins, CAMPAIGN_DS)
+    fleet, fsnap = load_pin_csv(corpus_root, pins, FLEET_DS)
     src = f"{CAMPAIGN_DS}@{snap}"
+    fsrc = f"{FLEET_DS}@{fsnap}"
     close = p["close_date"]
-    as_of = max((r["completed_date"] for r in rows if r["completed_date"]), default="")
-    window_start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=27)).isoformat()
+    headroom = 1.0 + float(p["thin_margin_headroom_pct"]) / 100.0
+    day_min = int(p["fse_day_minutes"])
+    # Run-rate anchor = the pinned snapshot's as-of date (red-team finding b): anchoring
+    # at the latest completed_date silently drops trailing zero-completion days and is
+    # optimistic exactly when it matters. The latest-completion anchor is kept as the
+    # disclosed ALTERNATIVE for the sensitivity row.
+    as_of = snap.split(".")[0]
+    alt_anchor = max((r["completed_date"] for r in rows if r["completed_date"]), default=as_of)
+    conn = {r["device_serial"]: r["connected"] for r in fleet}
     regions = sorted({r["region"] for r in rows})
+    onsite_durs = [int(r["duration_min"]) for r in rows
+                   if r["method"] == "onsite" and r["status"] in COMPLETED and r["duration_min"]]
+    mean_onsite_min = round(sum(onsite_durs) / len(onsite_durs), 1) if onsite_durs else 0.0
 
-    pts, need = [], []
-    for reg in regions:
-        sub = [r for r in rows if r["region"] == reg]
-        done = [r for r in sub if r["status"] in COMPLETED]
-        remaining = len(sub) - len(done)
-        onsite_rem = sum(1 for r in sub if r["status"] not in COMPLETED and r["method"] == "onsite")
-        recent = [r for r in done if r["completed_date"] and window_start <= r["completed_date"] <= as_of]
-        weekly = len(recent) / 4.0
-        weeks_left = max(0.0, (dt.date.fromisoformat(close) - dt.date.fromisoformat(as_of)).days / 7.0)
-        required_rate = round(remaining / weeks_left, 1) if weeks_left else float(remaining)
-        pts.append({"label": reg, "value": required_rate, "current_rate": round(weekly, 1),
-                    "remaining": remaining, "onsite_remaining": onsite_rem})
-        if required_rate > weekly:
-            need.append((reg, round(weekly, 1), required_rate, onsite_rem))
+    def region_stats(anchor):
+        wstart = (dt.date.fromisoformat(anchor) - dt.timedelta(days=27)).isoformat()
+        weeks_left = max(0.0, (dt.date.fromisoformat(close) - dt.date.fromisoformat(anchor)).days / 7.0)
+        st = {}
+        for reg in regions:
+            sub = [r for r in rows if r["region"] == reg]
+            done = [r for r in sub if r["status"] in COMPLETED]
+            remaining = len(sub) - len(done)
+            recent = [r for r in done if r["completed_date"] and wstart <= r["completed_date"] <= anchor]
+            cur = round(len(recent) / 4.0, 1)
+            req = round(remaining / weeks_left, 1) if weeks_left else float(remaining)
+            rem_rows = [r for r in sub if r["status"] not in COMPLETED]
+            onsite_rem = sum(1 for r in rem_rows if r["method"] == "onsite")
+            convertible = sum(1 for r in rem_rows
+                              if r["method"] == "onsite" and conn.get(r["device_serial"]) == "yes")
+            st[reg] = {
+                "remaining": remaining, "onsite_rem": onsite_rem, "convertible": convertible,
+                "cur": cur, "req": req,
+                "last": max((r["completed_date"] for r in done if r["completed_date"]), default="never"),
+                # UNIFORM stall criterion (red-team finding a): zero completions in the
+                # trailing 28d window ending at the anchor, with work remaining — applied
+                # to every region identically.
+                "stalled": len(recent) == 0 and remaining > 0,
+                "fse_days": round(onsite_rem * mean_onsite_min / day_min, 1),
+            }
+        return st
 
-    if need:
-        gaps = "; ".join(f"{r}: needs {req}/wk vs current {cur}/wk ({ons} on-site remaining)"
-                         for r, cur, req, ons in need)
-        headline = f"Capacity gap to hit the {close} close — {gaps}"
+    prim = region_stats(as_of)
+    alt = region_stats(alt_anchor)
+    stalled = [reg for reg in regions if prim[reg]["stalled"]]
+    behind = [reg for reg in regions
+              if not prim[reg]["stalled"] and prim[reg]["cur"] < prim[reg]["req"]]
+    # Thin-margin watch (red-team finding c): on track, but headroom under the guard.
+    thin = [reg for reg in regions
+            if not prim[reg]["stalled"] and prim[reg]["remaining"] > 0
+            and prim[reg]["cur"] >= prim[reg]["req"] and prim[reg]["cur"] < prim[reg]["req"] * headroom]
+    short = stalled + behind
+    total_rem = sum(prim[reg]["remaining"] for reg in regions)
+    stalled_load = sum(prim[reg]["remaining"] for reg in stalled)
+    total_onsite_rem = sum(prim[reg]["onsite_rem"] for reg in regions)
+    total_conv = sum(prim[reg]["convertible"] for reg in regions)
+    total_fse_days = round(sum(prim[reg]["fse_days"] for reg in regions), 1)
+    # Does the shortfall verdict survive the alternative anchor?
+    verdict_stable = all((prim[reg]["cur"] < prim[reg]["req"]) == (alt[reg]["cur"] < alt[reg]["req"])
+                         for reg in regions)
+
+    parts = []
+    if stalled:
+        parts.append(", ".join(stalled) + " STALLED (zero completions in the four weeks to "
+                     f"{as_of}; " + "; ".join(f"{reg} needs {prim[reg]['req']}/wk" for reg in stalled) + ")")
+    for reg in behind:
+        parts.append(f"{reg} behind ({prim[reg]['cur']}/wk vs {prim[reg]['req']}/wk required)")
+    for reg in thin:
+        parts.append(f"{reg} on track but thin ({prim[reg]['cur']}/wk vs {prim[reg]['req']}/wk "
+                     f"required, {prim[reg]['onsite_rem']} on-site remaining)")
+    if short:
+        headline = (f"Capacity gap to hit the {close} close — " + "; ".join(parts)
+                    + f"; remote conversion covers {total_conv} of {total_onsite_rem} "
+                      f"on-site-remaining devices today")
     else:
-        headline = f"Current run-rates cover the remaining work before {close}"
+        headline = (f"Current run-rates cover the remaining work before {close}"
+                    + ("; " + "; ".join(parts) if parts else ""))
 
-    # trend: weekly completions per region (zero-filled — stalls show as flatlines)
     trend_lines = weekly_completion_lines(rows, regions)
-    stalled = [reg for reg in regions
-               if next((q for q in pts if q["label"] == reg), {}).get("current_rate", 0) == 0
-               and next((q for q in pts if q["label"] == reg), {}).get("remaining", 0) > 0]
-    last_completion = {reg: max((r["completed_date"] for r in rows
-                                 if r["region"] == reg and r["completed_date"]), default="never")
-                       for reg in regions}
 
     # narrative — deterministic, from the computed facts
     narrative = {"issues": [], "risks": [], "watch": []}
     for i, reg in enumerate(stalled, 1):
         narrative["issues"].append({
             "id": f"I{i}", "severity": "high",
-            "statement": f"{reg} wave has stalled — zero completions in the trailing four weeks "
-                         f"(last completion {last_completion[reg]})",
+            "statement": f"{reg} wave is stalled under the uniform criterion — zero completions in "
+                         f"the four weeks to {as_of} (last completion {prim[reg]['last']}, "
+                         f"{prim[reg]['remaining']} devices remaining, {prim[reg]['req']}/wk now required)",
             "action": "Re-engage site scheduling this week; re-baseline the wave or assign surge "
                       "FSE capacity; confirm root cause (scheduling vs the failure cluster)",
-            "evidence": [f"src: {src}", "derived: weekly-trend"],
+            "evidence": [f"src: {src}", "derived: weekly-trend", "derived: required-rate"],
         })
     rn = 0
-    for reg, cur_rate, req, ons in need:
-        if reg in stalled:
-            continue
+    for reg in behind:
         rn += 1
         narrative["risks"].append({
             "id": f"R{rn}", "severity": "medium",
             "statement": f"{reg} misses the {close} close at current rate "
-                         f"({cur_rate}/wk vs {req}/wk required)",
-            "mitigation": f"Convert on-site backlog to remote where connected ({ons} on-site "
-                          "remaining), add contract labor for the delta, or slip the close with "
-                          "customer notification",
-            "evidence": ["derived: required-rate", f"src: {src}", "config: commercial.yml"],
+                         f"({prim[reg]['cur']}/wk vs {prim[reg]['req']}/wk required)",
+            "mitigation": "Add contract labor for the delta, convert connected on-site backlog to "
+                          f"remote ({prim[reg]['convertible']} devices convertible), or slip the "
+                          "close with customer notification",
+            "evidence": ["derived: required-rate", "derived: remote-convertible", f"src: {src}",
+                         "config: commercial.yml"],
         })
     rn += 1
     narrative["risks"].append({
+        "id": f"R{rn}", "severity": "high" if total_conv == 0 else "medium",
+        "statement": f"The remote-conversion recovery lever is sized at {total_conv} of "
+                     f"{total_onsite_rem} on-site-remaining devices — the fleet connectivity join "
+                     "shows the on-site backlog is unconnected, so conversion first requires "
+                     "connectivity (adapters), it is not a scheduling change",
+        "mitigation": "Price the adapter retrofit against continued on-site visits (the BQ-30 "
+                      "upgrade-economics answer); otherwise the levers are contract labor or slip",
+        "evidence": ["derived: remote-convertible", f"src: {src}", f"src: {fsrc}"],
+    })
+    rn += 1
+    narrative["risks"].append({
         "id": f"R{rn}", "severity": "medium",
-        "statement": "The hire/contract/slip decision is being made on run-rate projections alone — "
-                     "FSE roster, utilization, and visits-per-day are not yet a corpus dataset",
+        "statement": "The hire/contract/slip decision is being made on run-rate projections plus a "
+                     f"labor-time-only workload floor ({total_fse_days} FSE-days) — FSE roster, "
+                     "utilization, travel, and visits-per-day are not yet a corpus dataset",
         "mitigation": "Acquire an internal service-roster dataset; until then treat capacity "
                       "conclusions as directional",
-        "evidence": ["derived: fse-capacity"],
+        "evidence": ["derived: fse-days-remaining", "derived: fse-capacity"],
     })
+    wn = 0
+    for reg in thin:
+        wn += 1
+        narrative["watch"].append({
+            "id": f"W{wn}", "severity": "medium",
+            "statement": f"{reg} is on track but thin — {prim[reg]['cur']}/wk vs "
+                         f"{prim[reg]['req']}/wk required is under the {p['thin_margin_headroom_pct']}% "
+                         f"headroom guard, and it carries the largest on-site load still open "
+                         f"({prim[reg]['onsite_rem']} of {total_onsite_rem} on-site-remaining devices)"
+                         if prim[reg]["onsite_rem"] == max(prim[r]["onsite_rem"] for r in regions) else
+                         f"{reg} is on track but thin — {prim[reg]['cur']}/wk vs "
+                         f"{prim[reg]['req']}/wk required is under the {p['thin_margin_headroom_pct']}% "
+                         f"headroom guard ({prim[reg]['onsite_rem']} on-site remaining)",
+            "evidence": ["derived: required-rate", "config: commercial.yml"],
+        })
+    wn += 1
     narrative["watch"].append({
-        "id": "W1",
+        "id": f"W{wn}",
         "statement": "Completion-rate trend by region (weekly, zero-filled) — a flatline is a stall, "
                      "not missing data",
         "evidence": ["derived: weekly-trend"],
@@ -622,43 +701,93 @@ def bq26(corpus_root, out, pins):
     # expectations vs actuals
     exp_results = {
         "E-26.1": (
-            ("; ".join(f"{r}: {c}/wk vs {q} required" for r, c, q, _ in need) or "all regions at/above required rate"),
-            "not-met" if need else "met",
-            ["derived: required-rate"],
+            ("; ".join([f"{reg}: stalled ({prim[reg]['req']}/wk required)" for reg in stalled]
+                       + [f"{reg}: {prim[reg]['cur']}/wk vs {prim[reg]['req']} required" for reg in behind])
+             or "all regions at/above required rate"),
+            "not-met" if short else ("at-risk" if thin else "met"),
+            ["derived: required-rate", "derived: weekly-trend"],
         ),
     }
     exps = evaluate_expectations("BQ-26", exp_results)
 
     lines = [
         "# BQ-26 — Service capacity outlook for the remaining waves", "", BANNER, "",
-        f"**Verdict**: {headline} [derived: v-main] [src: {src}] [config: commercial.yml]", "",
+        f"**Verdict**: {headline} [derived: v-main] [src: {src}] [src: {fsrc}] [config: commercial.yml]", "",
         "## Required vs current completion rate", "",
-        "| Region | Remaining | Of which on-site | Current rate/wk | Required rate/wk |",
-        "|---|---|---|---|---|",
+        f"_Anchor: {as_of}, the pinned snapshot's as-of date [src: {src}]. Status sets: completed = "
+        "`completed` | `completed-after-retry`; remaining = every other status (`scheduled` | "
+        "`failed-pending-retry` | `rolled-back`); on-site-remaining = remaining rows with method "
+        "`onsite`. Stall criterion, applied uniformly to every region: zero completions in the "
+        f"trailing four weeks with work remaining [derived: required-rate]._", "",
+        "| Region | Remaining | On-site rem. | Remote-convertible now | Current rate/wk | Required rate/wk | FSE-days left (labor-only) |",
+        "|---|---|---|---|---|---|---|",
     ]
-    for q in pts:
-        lines.append(f"| {q['label']} [derived: required-rate] [src: {src}] | {q['remaining']} | "
-                     f"{q['onsite_remaining']} | {q['current_rate']} | {q['value']} |")
+    for reg in regions:
+        q = prim[reg]
+        flag = " — STALLED" if q["stalled"] else ""
+        lines.append(f"| {reg}{flag} [derived: required-rate] [derived: remote-convertible] "
+                     f"[src: {src}] | {q['remaining']} | {q['onsite_rem']} | {q['convertible']} | "
+                     f"{q['cur']} | {q['req']} | {q['fse_days']} |")
     lines += [
         "",
         f"- Weekly completion trend per region is charted (zero-filled) — stalls are visible as "
         f"flatlines [derived: weekly-trend] [src: {src}]",
+        f"- Remote-convertible = on-site-remaining devices whose fleet record is connected: "
+        f"{total_conv} of {total_onsite_rem} across all regions [derived: remote-convertible] "
+        f"[src: {fsrc}]",
+        f"- FSE-days = on-site-remaining × mean completed on-site duration ({mean_onsite_min} min, "
+        f"n={len(onsite_durs)}) ÷ {day_min} min/day — labor time only, travel excluded (lower "
+        f"bound) [derived: fse-days-remaining] [src: {src}] [config: commercial.yml]",
+        "",
+        "## Anchor sensitivity (disclosed, not absorbed)", "",
+        f"_Primary anchor {as_of} (snapshot as-of) vs alternative {alt_anchor} (latest completion "
+        f"in the pin). The latest-completion anchor excludes trailing zero-completion days and is "
+        f"the optimistic choice [derived: anchor-sensitivity]._", "",
+        "| Region | Current rate/wk (as-of anchor) | Current (latest-completion anchor) | Required (as-of) | Required (latest-completion) |",
+        "|---|---|---|---|---|",
+    ]
+    for reg in regions:
+        lines.append(f"| {reg} [derived: anchor-sensitivity] | {prim[reg]['cur']} | {alt[reg]['cur']} | "
+                     f"{prim[reg]['req']} | {alt[reg]['req']} |")
+    lines += [
+        "",
+        ("- Verdict under the alternative anchor: UNCHANGED — the same regions fall short of their "
+         "required rate under both anchors [derived: anchor-sensitivity]."
+         if verdict_stable else
+         "- Verdict under the alternative anchor: CHANGES — anchor choice flips at least one "
+         "region's shortfall classification; treat the capacity verdict as anchor-sensitive "
+         "[derived: anchor-sensitivity]."),
     ]
     lines += expectations_section(exps)
     lines += narrative_section(narrative)
     lines += [
         "## Data gap (stated, not papered over)", "",
-        "- Field-service-engineer roster, utilization, and visits-per-day are NOT yet a corpus",
-        "  dataset — the hire/contract/slip decision needs them. This outlook is a run-rate",
-        "  projection only [derived: required-rate]; the FSE-capacity series is marked unavailable.",
+        "- Field-service-engineer roster, utilization, travel time, and visits-per-day are NOT yet",
+        "  a corpus dataset — the hire/contract/slip decision needs them. This outlook is a",
+        "  run-rate projection plus a labor-time-only workload floor [derived: fse-days-remaining];",
+        "  the FSE-capacity series stays marked unavailable.",
         "",
         "## Method & provenance", "",
-        f"- Remaining counts measured, rates derived from [src: {src}]; close date and expectations "
+        f"- Remaining counts and durations measured from [src: {src}]; connectivity joined from "
+        f"[src: {fsrc}] by device_serial; close date, headroom guard, and FSE-day length "
         f"[config: commercial.yml].",
+        f"- Anchor convention: trailing 28-day window ends at the snapshot as-of date "
+        f"[derived: anchor-sensitivity]; the sensitivity table shows the alternative.",
+        f"- Status sets (self-sufficient for re-derivation from the pin alone): completed = "
+        f"status `completed` or `completed-after-retry`; remaining = status `scheduled`, "
+        f"`failed-pending-retry`, or `rolled-back`; on-site-remaining = remaining with method "
+        f"`onsite` [src: {src}].",
     ]
     data = {
         "bq": "BQ-26",
         "series": [
+            {"id": "capacity-stat", "label": "Remaining campaign load", "unit": "devices",
+             "kind": "stat", "evidence_class": "derived",
+             "derivation": {"method": "remaining = targeted − completed per region, where completed = status ∈ {completed, completed-after-retry} and remaining = status ∈ {scheduled, failed-pending-retry, rolled-back}; stalled load = remaining in regions with zero completions in the trailing 28d window ending at the snapshot as-of date",
+                            "inputs": [f"src: {src}"]},
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": "devices remaining", "value": total_rem},
+                        {"label": "of which in stalled regions", "value": stalled_load}]},
             {"id": "weekly-trend", "label": "Completions per week by region", "unit": "devices/week",
              "kind": "timeseries", "evidence_class": "measured",
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap}, "lines": trend_lines,
@@ -666,13 +795,37 @@ def bq26(corpus_root, out, pins):
             {"id": "required-rate", "label": "Current vs required completions/week", "unit": "devices/week",
              "kind": "paired-bars", "pairs": {"a_label": "current rate", "b_label": "required rate"},
              "evidence_class": "derived",
-             "derivation": {"method": "current = trailing-4-week completions ÷ 4; required = remaining devices ÷ weeks from window anchor to the close date",
+             "derivation": {"method": "current = completions (status ∈ {completed, completed-after-retry}) in the 28d window ending at the snapshot as-of date ÷ 4; required = remaining devices (status ∈ {scheduled, failed-pending-retry, rolled-back}) ÷ weeks from the as-of date to the close date",
                             "inputs": [f"src: {src}", "config: commercial.yml"]},
              "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
-             "points": [{"label": q["label"], "a": q["current_rate"], "b": q["value"]} for q in pts]},
+             "points": [{"label": reg, "a": prim[reg]["cur"], "b": prim[reg]["req"]}
+                        for reg in regions]},
+            {"id": "anchor-sensitivity", "label": "Run-rates under the alternative (latest-completion) anchor",
+             "unit": "devices/week", "evidence_class": "derived",
+             "derivation": {"method": "current and required rates recomputed with the 28d window anchored at the latest completed_date in the pin instead of the snapshot as-of date",
+                            "inputs": [f"src: {src}", "config: commercial.yml", "derived: required-rate"]},
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": reg, "value": alt[reg]["cur"], "required_alt": alt[reg]["req"],
+                         "current_primary": prim[reg]["cur"], "required_primary": prim[reg]["req"]}
+                        for reg in regions]},
+            {"id": "remote-convertible", "label": "On-site-remaining devices convertible to remote",
+             "unit": "devices", "evidence_class": "derived",
+             "derivation": {"method": "on-site-remaining campaign devices (method = onsite, status ∈ {scheduled, failed-pending-retry, rolled-back} — i.e. not completed/completed-after-retry) joined to the fleet registry by device_serial; convertible = connected == yes",
+                            "inputs": [f"src: {src}", f"src: {fsrc}"]},
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": reg, "value": prim[reg]["convertible"],
+                         "onsite_remaining": prim[reg]["onsite_rem"]} for reg in regions]},
+            {"id": "fse-days-remaining", "label": "On-site workload remaining (labor-time floor)",
+             "unit": "FSE-days", "evidence_class": "derived",
+             "derivation": {"method": "on-site-remaining devices (method = onsite, status ∈ {scheduled, failed-pending-retry, rolled-back}) × mean completed (status ∈ {completed, completed-after-retry}) on-site duration_min ÷ fse_day_minutes; labor time only — travel/overhead not in the campaign data (lower bound)",
+                            "inputs": [f"src: {src}", "config: commercial.yml"]},
+             "provenance": {"dataset": CAMPAIGN_DS, "snapshot": snap},
+             "points": [{"label": reg, "value": prim[reg]["fse_days"]} for reg in regions]},
             {"id": "fse-capacity", "label": "FSE capacity (roster/utilization)", "unit": "FSE-days",
              "evidence_class": "unavailable",
-             "provenance": {"note": "no corpus dataset acquired yet — needed for hire/contract/slip"},
+             "provenance": {"note": "no corpus dataset acquired yet — roster, utilization, travel, "
+                                    "and visits-per-day are needed for hire/contract/slip; the "
+                                    "duration-basis floor is a bridge, not a substitute"},
              "points": []},
         ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "derived"}],
@@ -1186,6 +1339,17 @@ DISPATCH = {"BQ-06": bq06, "BQ-12": bq12, "BQ-18": bq18,
             "BQ-19": bq19, "BQ-23": bq23, "BQ-24": bq24, "BQ-25": bq25, "BQ-26": bq26, "BQ-27": bq27}
 
 
+def module_dispatch(bq):
+    """Per-BQ module fallback: bq_modules/bq_NN.py exposing run(corpus_root, out, pins).
+    Keeps each computation in its own file so they can be authored independently."""
+    mod_name = "bq_modules." + bq.lower().replace("-", "_")
+    try:
+        import importlib
+        return importlib.import_module(mod_name).run
+    except ModuleNotFoundError:
+        return None
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("bq")
@@ -1194,9 +1358,10 @@ def main():
     a = p.parse_args()
     out, corpus_root = Path(a.out), Path(a.corpus_root)
     pins = json.loads((out / "pins.json").read_text())
-    if a.bq not in DISPATCH:
+    fn = DISPATCH.get(a.bq) or module_dispatch(a.bq)
+    if fn is None:
         raise SystemExit(f"no computation for {a.bq}")
-    DISPATCH[a.bq](corpus_root, out, pins)
+    fn(corpus_root, out, pins)
 
 
 if __name__ == "__main__":

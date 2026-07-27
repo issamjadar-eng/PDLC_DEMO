@@ -1,0 +1,32 @@
+dataset: commercial/internal-subscriptions
+title: Cloud Suite subscription register (internal, demo-fabricated)
+description: >-
+  One row per Cloud Suite subscribed site: start date, connected-pump count (equals the
+  shared fleet model's connected count), ARR (~$450/connected pump/yr), annual cost to
+  serve, status, hardware discount. DEMO-FABRICATED by seeded generator gen.py — stand-in
+  for the subscription billing / entitlement export. Narrative knobs: small sites
+  disproportionately expensive to serve; subscribed sites average ~6% hardware discount
+  (cannibalization signal); 3 churned; 4 connected sites deliberately unsubscribed
+  (attach gap). Consumed by BQ-04 (subscription economics) and BQ-29 (attach rate).
+internal: true
+max_age_days: 90
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for subscription billing / entitlement export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [site_id]
+  columns:
+    - {name: site_id, type: str, required: true}
+    - {name: start_date, type: date, required: true}
+    - {name: pumps_connected, type: int, required: true}
+    - {name: arr_usd, type: int, required: true}
+    - {name: cost_to_serve_usd, type: int, required: true}
+    - {name: status, type: str, required: true}
+    - {name: hardware_discount_pct, type: float, required: true}
+asserts:
+  min_rows: 30

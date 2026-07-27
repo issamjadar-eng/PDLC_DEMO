@@ -7,7 +7,9 @@
 # Unmatched names keep their raw value (visible, never silently dropped).
 canonical:
   - name: BD (CareFusion)
-    prefixes: [CAREFUSION, "BECTON DICKINSON", "BD "]
+    # bare "BD" added for CRM incumbent_vendor values (internal-winloss carries the
+    # exact string "BD", which the trailing-space prefix cannot match) — task ben/108
+    prefixes: [CAREFUSION, "BECTON DICKINSON", "BD ", BD]
   - name: Baxter
     prefixes: [BAXTER]
   - name: ICU Medical

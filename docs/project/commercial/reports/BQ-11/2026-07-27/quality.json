@@ -1,0 +1,242 @@
+{
+ "bq": "BQ-11",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:10+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "account-revenue-at-risk",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "flagged-sites",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-utilization",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "site-utilization",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-sales-accounts@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-telemetry-utilization@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-telemetry-utilization",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-sales-accounts",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Underused connected sites",
+    "series": "flagged-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-telemetry-utilization@2026-07-27",
+    "derivation": {
+     "method": "sites with hours-weighted utilization < 60% over the trailing 3 months; material = \u226510 connected devices",
+     "inputs": [
+      "src: commercial/internal-telemetry-utilization@2026-07-27",
+      "src: commercial/internal-fleet@2026-07-22",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Window utilization \u2014 flagged sites vs fleet median",
+    "series": "site-utilization",
+    "evidence_class": "measured",
+    "source": "commercial/internal-telemetry-utilization@2026-07-27"
+   },
+   {
+    "what": "Flagged sites (tiered by materiality)",
+    "series": "flagged-sites",
+    "evidence_class": "derived",
+    "source": "commercial/internal-telemetry-utilization@2026-07-27",
+    "derivation": {
+     "method": "utilization threshold + connected-device materiality bar",
+     "inputs": [
+      "src: commercial/internal-telemetry-utilization@2026-07-27",
+      "src: commercial/internal-fleet@2026-07-22",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Monthly utilization \u2014 worst 3 flagged sites vs median",
+    "series": "monthly-utilization",
+    "evidence_class": "measured",
+    "source": "commercial/internal-telemetry-utilization@2026-07-27"
+   },
+   {
+    "what": "FY2026H1 direct-book revenue by region (context)",
+    "series": "region-revenue-context",
+    "evidence_class": "measured",
+    "source": "commercial/internal-sales-accounts@2026-07-27"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Account revenue tied to flagged sites",
+    "series": "account-revenue-at-risk",
+    "evidence_class": "unavailable",
+    "source": "no site\u2192account key in any pinned dataset (sales-accounts is account-level with no site list) \u2014 needs a CRM account-hierarchy export as a corpus dataset; regional revenue shown as context only",
+    "note": "no site\u2192account key in any pinned dataset (sales-accounts is account-level with no site list) \u2014 needs a CRM account-hierarchy export as a corpus dataset; regional revenue shown as context only"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-11.md",
+  "status": "in-sync",
+  "pinned": "641914aa30f96b48eb052c58fb8f34d90c4b2401961e2e0d4008d4c82c42130e",
+  "current": "641914aa30f96b48eb052c58fb8f34d90c4b2401961e2e0d4008d4c82c42130e"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:30:32+00:00",
+   "summary": "Median fixed: sorted[n//2] upper-middle-element replaced with statistics.median computed on unrounded site ratios (rounded once for display) in both the fleet stat and the monthly reference line; fleet median 89.7% -> 89.6%, monthly 2026-05 91.3% -> 90.5%. No verdict impact",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  }
+ ]
+}

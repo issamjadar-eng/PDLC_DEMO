@@ -21,9 +21,12 @@ schema:
   columns:
     - {name: campaign_id, type: str, required: true}
     - {name: device_serial, type: str, required: true}
+    - {name: site_id, type: str, required: true}
     - {name: region, type: str, required: true}
+    - {name: hw_rev, type: str, required: true}
     - {name: from_version, type: str, required: true}
     - {name: to_version, type: str, required: true}
+    - {name: wave, type: str, required: true}
     - {name: method, type: str, required: true}
     - {name: status, type: str, required: true}
     - {name: completed_date, type: date}

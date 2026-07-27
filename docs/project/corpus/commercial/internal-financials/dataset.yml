@@ -1,0 +1,32 @@
+dataset: commercial/internal-financials
+title: Quarterly financial actuals (internal, demo-fabricated)
+description: >-
+  Quarterly revenue/COGS/units actuals 2024-Q1..2026-Q2 by product line (five device
+  lines + cloud-suite), region, and revenue type (hardware|consumables|service|
+  subscription). DEMO-FABRICATED by seeded generator gen.py — stand-in for the ERP /
+  financial-reporting export. FY2025 sums to ~$80M with subscription ~8%; PP3500 ramp
+  funds the company, PP3000/IP5000 legacy margins thin, cloud-suite accelerates from a
+  small base. Consumed by BQ-01 (revenue composition), BQ-03 (plan vs actuals), BQ-28
+  (recurring-revenue trajectory).
+internal: true
+max_age_days: 90
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP / financial-reporting export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [period, product_line, region, revenue_type]
+  columns:
+    - {name: period, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: revenue_type, type: str, required: true}
+    - {name: revenue_usd, type: int, required: true}
+    - {name: cogs_usd, type: int, required: true}
+    - {name: units, type: int, required: true}
+asserts:
+  min_rows: 400

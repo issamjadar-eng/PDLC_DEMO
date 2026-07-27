@@ -1,7 +1,7 @@
 {
  "bq": "BQ-27",
  "edition": "2026-07-22.5",
- "generated_at": "2026-07-22T23:04:31+00:00",
+ "generated_at": "2026-07-27T15:45:11+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -101,7 +101,7 @@
   {
    "dataset": "commercial/internal-fleet",
    "snapshot": "2026-07-22",
-   "age_days": 0,
+   "age_days": 5,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false

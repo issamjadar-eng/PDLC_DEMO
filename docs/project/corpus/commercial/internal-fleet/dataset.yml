@@ -23,6 +23,7 @@ schema:
     - {name: model, type: str, required: true}
     - {name: site_id, type: str, required: true}
     - {name: region, type: str, required: true}
+    - {name: hw_rev, type: str, required: true}
     - {name: firmware_version, type: str, required: true}
     - {name: connected, type: str, required: true}
     - {name: last_seen, type: date}
