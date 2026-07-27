@@ -10,8 +10,8 @@ description: |
     - Path-based — ANY edit to a controlled DHF/submission document body (e.g., `_confluence/<dhf>/**`, `submissions/{qsub,510k,pccp}/**`).
 
   Actions: `setup`, `lint <file>`, `check <file>`, `copy-edit <file>`, `help`.
-version: 1
-updated: 2026-06-25
+version: 3
+updated: 2026-07-08
 dependencies:
   skills:
     - name: medtech-docs
@@ -34,6 +34,7 @@ Author and edit **controlled documents that a regulator or auditor reads** so th
 - `references/authoring-standard.md` carries the **full** rule + rationale + examples + corollaries — load it **on demand** for the specific rule in play, not all at once.
 - `references/rule-interactions.md` carries the precedence + routing map — load it when two rules touch one span.
 - `references/doctype-notes.md` carries the **per-document-type** layer — each doctype's register, characteristic form, the rules that bite hardest, and which supplementary-prose/slop signals transfer vs. are register false-positives. Load it when authoring/copy-editing a specific doctype (cover letter, IFU, SRS, risk file, SE argument, PCCP, …).
+- `references/readability-in-register.md` carries the **register-preserving readability** discipline — how to raise comprehension for a domain-newcomer without instructional/meta-discourse drift (in-register vs out-of-register table; define-the-concept-not-just-the-acronym; constantly-speaking present tense). Load it when a doc must be understandable to non-specialists but stay in the regulated register.
 - `references/lint-signals.yml` is read by the **lint script**, never into your reasoning context.
 
 ## Supporting Files
@@ -44,6 +45,7 @@ Author and edit **controlled documents that a regulator or auditor reads** so th
 | `references/authoring-standard.md` | The canonical standard — full rules (W/R/D), rationale, examples, corollaries. Loaded on demand |
 | `references/rule-interactions.md` | Consolidated precedence pairs + adjective/claim routing — load when rules collide on one span |
 | `references/doctype-notes.md` | Per-doctype authoring layer — register, form, dominant rules, and the register-safe vs false-positive slop signals per document type. Loaded on demand |
+| `references/readability-in-register.md` | Register-preserving readability discipline — comprehensible-to-a-newcomer without instructional/meta-discourse drift (in-register vs out-of-register table; define-the-concept W13 sharpening; present-tense R1; Terms-table R7). Loaded on demand |
 | `references/lint-signals.yml` | Single-source machine-lint patterns (`id, rule, kind, pattern, zone, jurisdiction, severity, message`). Read by the script |
 | `rules/regulatory-authoring.md` | The auto-loaded binding rule (symlinked into `.claude/rules/`). Makes the standard mandatory for DHF/submission edits |
 | `agents/regulatory-copy-editor.md` | Redline-first copy-editor subagent — applies prose/clarity/consistency edits, never substance |
@@ -73,7 +75,7 @@ Rules live in three layers (the extraction seam): **L1 `W` — universal writing
 - **R4** rationale = claim → named basis → consequence/fallback
 - **R5** limitations stated flatly; no hedging ("we believe", "it appears")
 - **R6** dated/attributable — pin "currently/now" to a date or version
-- **R7** every acronym defined + one consistent definition (consistency applies all tiers; Terms-completeness is filed-only)
+- **R7** every acronym defined + one consistent definition (consistency applies all tiers; Terms-completeness is filed-only); **R7.1** spell out collision-prone abbreviations (IFU = Indications vs Instructions for Use; DHR = Device vs Design History Record) — do not use the bare form
 - **R8** cross-record consistency — don't contradict the parent/sibling controlled record
 - **R9** unevidenced **property** claims are removed or TBD-gated, never re-voiced into confident prose — **requirements (R2) are kept**
 

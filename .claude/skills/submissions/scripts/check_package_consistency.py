@@ -9,7 +9,7 @@ Each side is internally clean; only the pair is wrong. See the companion note
 `references/pre-sub-package-consistency.md` for the principle and the tiering model.
 
 This checker is project-agnostic: it reads the transmitted set and the numbered contents
-list(s) from the package's own cover letter — nothing is hard-coded. Three checks:
+list(s) from the package's own cover letter — nothing is hard-coded. Checks:
 
   S1  cross-reference accuracy (WARN) — a filed-body pointer that DESCRIBES a linked
         package doc as the "full / complete / comprehensive" predicate/SE analysis while
@@ -26,6 +26,23 @@ list(s) from the package's own cover letter — nothing is hard-coded. Three che
         escapes the filing folder (`../`) with no on-request / internal / grounding-only
         disposition on its line (FAIL); a filed-body `../../` link reaching outside the
         filing folder (WARN — should be grounding-only; confirm it implies no attachment).
+  S4  stable-key liveness (WARN) — an anchor/support declaration naming a question key
+        the master map has since deferred or dropped (see the S4 block below).
+  S5  question↔support matrix — per transmitted question, which attachments mention/
+        support it; per attachment, which questions it serves. FAIL on an attachment
+        that supports no transmitted question AND carries no background disposition
+        (the guidance's "extraneous information" risk); WARN on a transmitted question
+        no attachment supports (confirm self-contained by design). The matrix itself is
+        emitted (text + JSON) — the generated per-question support map, replacing the
+        hand audit.
+  S6  enumeration-completeness (WARN) — the package deliberately restates enumerable
+        structures (category labels, rule sets, question lists) in multiple transmitted
+        docs for reviewer ergonomics; the cost of that duplication is LOCKSTEP DRIFT,
+        not pages. When one doc's enumeration of a label family (A1..A4 / B1..B2 /
+        C1..C7 / R1..R5 style) is a strict subset of the family's package-wide span —
+        e.g. a cover-letter recap enumerating C1..C6 after the package grew a C7 — that
+        is a stale enumeration. Checks CONSISTENCY between duplicate instances; does
+        NOT mandate deduplication (reader-serving duplication is a deliberate choice).
 
 Usage:
   python3 check_package_consistency.py <filing-dir> [--cover cover-letter.md]
@@ -347,6 +364,149 @@ def check_question_liveness(pkg_docs: dict[str, Path], registry: dict[str, dict]
     return findings
 
 
+# ── S5 question↔support matrix ──────────────────────────────────────────────────
+# The sponsor-level question this answers mechanically: "does each transmitted question
+# have distinct supporting substance, and does every attachment earn its place?" The
+# guidance requires background to be TARGETED, with question-relevance INDICATED —
+# an attachment serving no question is the "extraneous information" it warns about,
+# unless explicitly dispositioned as background.
+QDISP_REF = re.compile(r"\bQ\d+\.\d+\b")
+BACKGROUND_DISP = re.compile(r"background|anchors no question|context only|orientation only", re.I)
+# Content the Q-Sub guidance itself asks for (cover letter, device description, proposed
+# IFU/labeling, predicate comparison) is REQUIRED background — it earns its place without
+# anchoring a question, so it is exempt from the zero-anchor extraneous-information FAIL.
+REQUIRED_CONTENT = re.compile(r"intended.use|indications|device.description|labeling"
+                              r"|predicate|cover.letter", re.I)
+
+
+def build_support_matrix(transmitted: dict[str, Path], registry: dict[str, dict],
+                         cover_text: str, questions_file: str,
+                         cover_stem: str) -> tuple[list[dict], dict[str, list[str]]]:
+    live = {info["display"] for info in registry.values() if info["transmitted"]}
+    if not live:
+        return [], {}
+    matrix: dict[str, list[str]] = {q: [] for q in sorted(live)}
+    findings: list[dict] = []
+    cover_lines = cover_text.split("\n")
+    for stem, p in sorted(transmitted.items()):
+        if p.name == questions_file or stem == cover_stem:
+            continue  # the questions doc and the cover letter frame ALL questions
+        filed = strip_zones(p.read_text(encoding="utf-8"))[0]
+        body_txt = "\n".join(r.split("\t", 1)[1] for r in filed.split("\n") if "\t" in r)
+        # the attachment's own cover-letter row(s) may declare supports/background
+        row_txt = " ".join(l for l in cover_lines if p.name in l)
+        mentions = (set(QDISP_REF.findall(body_txt)) | set(QDISP_REF.findall(row_txt))) & live
+        for q in sorted(mentions):
+            matrix[q].append(stem)
+        if not mentions and not BACKGROUND_DISP.search(row_txt) and not REQUIRED_CONTENT.search(stem):
+            findings.append({"check": "S5", "sev": "FAIL", "file": p.name, "line": 0,
+                             "msg": f"attachment '{stem}' mentions/supports no transmitted question "
+                                    f"and its cover-letter row carries no background disposition — "
+                                    f"extraneous-information risk (guidance: targeted and focused; "
+                                    f"indicate which background is relevant to which question). "
+                                    f"Declare its question anchors or mark it background"})
+    for q, supporters in matrix.items():
+        if not supporters:
+            findings.append({"check": "S5", "sev": "WARN", "file": questions_file, "line": 0,
+                             "msg": f"transmitted question {q} is supported by no attachment beyond "
+                                    f"the questions document itself — confirm it is self-contained "
+                                    f"by design (its own context carries the full argument)"})
+    return findings, matrix
+
+
+# ── S6 enumeration-completeness across duplicate instances ──────────────────────
+# The package restates enumerable label sets (change-category labels, rule sets) in
+# several transmitted docs — deliberately, for reviewer ergonomics. The recurring,
+# proven failure mode is not the duplication but the DRIFT: the family grows in its
+# home doc (a new category label) and a sibling doc's recap enumeration silently stays
+# at the old span (the classic: a cover-letter recap listing C1..C6 after the package
+# grew a C7). Detection is deliberately narrow to stay high-signal:
+#   • families are single-capital-letter labels (A1, C7, R5) in a CATEGORY context —
+#     the ~80 chars around the labels must mention categor*/rule/principle/modification,
+#     which separates PCCP category labels from same-letter collisions (e.g. a security
+#     diagram's interface labels A1–A5);
+#   • a line is an ENUMERATION only if it carries ≥4 separately-written labels of the
+#     family (a range like C1–C7 counts as ONE token — naming a span is not recapping
+#     members, and a passing "C4 … C1–C3" reference pair is not an enumeration);
+#   • "e.g. / such as" partial lists are exempt;
+#   • WARN when an enumeration's member set is a strict subset of the family's
+#     package-wide span and stops short of its maximum.
+# Consistency check only — it never asks for deduplication.
+FAM_LABEL = re.compile(r"\b([A-Z])(\d{1,2})\b")
+FAM_RANGE = re.compile(r"\b([A-Z])(\d{1,2})\s*[–—-]\s*(?:([A-Z])?(\d{1,2}))\b")
+CATEGORY_CTX = re.compile(r"categor|\brules?\b|principle|modification", re.I)
+PARTIAL_CTX = re.compile(r"\be\.g\.|such as|for example|for instance|among (them|others)|notably\b", re.I)
+
+
+def _line_families(text: str) -> dict[str, tuple[set[int], int]]:
+    """Extract {family-letter: (member-numbers, separate-token-count)} from one line.
+    The context gate is LINE-level: the line must carry a category-ish word somewhere
+    (an enumeration's later members can sit hundreds of chars past the word) — this is
+    what separates category labels from same-letter collisions (a security diagram's
+    interface labels share no line with 'categor*'). A range contributes its expanded
+    members but only ONE token. Dotted labels (question IDs like `<L>1.4`) are a
+    different namespace and are excluded, as is the letter Q entirely."""
+    if not CATEGORY_CTX.search(text):
+        return {}
+    fams: dict[str, tuple[set[int], int]] = {}
+    consumed: list[tuple[int, int]] = []
+    for m in FAM_RANGE.finditer(text):
+        if m.group(1) == "Q" or (m.group(3) and m.group(3) != m.group(1)):
+            continue  # question namespace / cross-letter span — not a family range
+        lo, hi = int(m.group(2)), int(m.group(4))
+        if lo < hi <= lo + 30:
+            mem, tok = fams.get(m.group(1), (set(), 0))
+            fams[m.group(1)] = (mem | set(range(lo, hi + 1)), tok + 1)
+            consumed.append(m.span())
+    for m in FAM_LABEL.finditer(text):
+        if m.group(1) == "Q":
+            continue  # question IDs (Q1.4 / Q2.2) are S4/S5 territory, not a label family
+        if any(s <= m.start() < e for s, e in consumed):
+            continue
+        if text[m.end():m.end() + 1] == ".":  # dotted ID (X1.2-style) — different namespace
+            continue
+        mem, tok = fams.get(m.group(1), (set(), 0))
+        fams[m.group(1)] = (mem | {int(m.group(2))}, tok + 1)
+    return fams
+
+
+def check_enumeration_completeness(transmitted: dict[str, Path]) -> list[dict]:
+    # pass 1 — package-wide family spans, from FILED bodies only (changelog/metadata
+    # rows legitimately mention historical/superseded labels and must not define spans)
+    filed_docs: dict[str, tuple[Path, list[tuple[int, str]]]] = {}
+    family_span: dict[str, set[int]] = {}
+    for stem, p in sorted(transmitted.items()):
+        rows = [(int(r.split("\t", 1)[0]), r.split("\t", 1)[1])
+                for r in strip_zones(p.read_text(encoding="utf-8"))[0].split("\n") if "\t" in r]
+        filed_docs[stem] = (p, rows)
+        for _, text in rows:
+            for fam, (members, _tok) in _line_families(text).items():
+                family_span.setdefault(fam, set()).update(members)
+    # a real label family is contiguous-from-low with ≥3 members package-wide;
+    # anything else (isolated hits, § numbers) is noise, not a family
+    real = {f: s for f, s in family_span.items()
+            if len(s) >= 3 and min(s) <= 2 and s == set(range(min(s), max(s) + 1))}
+    findings: list[dict] = []
+    for stem, (p, rows) in filed_docs.items():
+        for n, text in rows:
+            if PARTIAL_CTX.search(text):
+                continue
+            for fam, (members, tokens) in _line_families(text).items():
+                span = real.get(fam)
+                if not span or tokens < 4:
+                    continue  # not an enumeration — a range or passing references
+                if members < span and max(members) < max(span):
+                    missing = sorted(span - members)
+                    findings.append({"check": "S6", "sev": "WARN", "file": p.name, "line": n,
+                                     "msg": f"enumeration of family '{fam}' lists "
+                                            f"{fam}{min(members)}..{fam}{max(members)} but the "
+                                            f"package-wide family spans up to {fam}{max(span)} "
+                                            f"(missing: {', '.join(f'{fam}{i}' for i in missing)}) — "
+                                            f"likely a stale recap that predates the family's growth; "
+                                            f"update the enumeration (duplication is fine; drift is not)"})
+    return findings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("filing_dir")
@@ -389,15 +549,24 @@ def main() -> int:
     findings += check_attachment_numbers(cover_text, entries)
     findings += check_folder_boundary(filing, cover_text, entries, transmitted)
     findings += check_question_liveness(pkg_docs, registry, a.questions)
+    s5_findings, matrix = build_support_matrix(transmitted, registry, cover_text,
+                                               a.questions, docid(a.cover))
+    findings += s5_findings
+    findings += check_enumeration_completeness(transmitted)
 
     fails = [f for f in findings if f["sev"] == "FAIL"]
     warns = [f for f in findings if f["sev"] == "WARN"]
     if a.json:
-        print(json.dumps({"findings": findings, "fails": len(fails), "warns": len(warns)}, indent=2))
+        print(json.dumps({"findings": findings, "fails": len(fails), "warns": len(warns),
+                          "support_matrix": matrix}, indent=2))
     else:
         for f in sorted(findings, key=lambda x: (x["check"], x.get("file", ""), x.get("line", 0))):
             loc = f"{f.get('file','')}:{f['line']}" if f.get("line") else f.get("file", "package")
             print(f"  [{f['sev']}] {f['check']} {loc} — {f['msg']}")
+        if matrix:
+            print("\n  question ↔ support matrix (S5, informational):")
+            for q, supporters in matrix.items():
+                print(f"    {q}: {', '.join(supporters) if supporters else '(questions doc only)'}")
         print(f"\ncheck-package-consistency: {len(fails)} FAIL, {len(warns)} WARN "
               f"({len(transmitted)} transmitted docs, {len(entries)} numbered entries)")
     if a.transmit_gate and fails:

@@ -159,6 +159,16 @@ signals:
     pattern: '\b[A-Z][A-Za-z]{1,7}[0-9.]*\b'
     message: "Capitalized token (candidate) — high-recall; subtract the packaged stop-word/defined-term/brand sets. A brand token is a D12 removal, not an R7 definition."
 
+  - id: R7.1-collision-abbrev
+    rule: R7.1
+    kind: regex
+    case_sensitive: true
+    zone: filed
+    jurisdiction: portable
+    severity: warn
+    pattern: '\b(IFU|DHR)\b'
+    message: "Collision-prone abbreviation in the filed body — spell it out. IFU = Indications for Use vs Instructions for Use (different regulatory objects: a cleared claim vs labeling content); DHR = Device vs Design History Record. Write the intended full term; do not use the bare abbreviation (R7.1)."
+
   # ---- L3 Medtech specifics ----
   - id: D2-summary-not-locked
     rule: D2
