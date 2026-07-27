@@ -6,6 +6,16 @@
 #   exempt_patterns: ["RPT-\\d+"]        # extra digit-bearing identifier regexes
 #   estimation_exempt_terms: [modeled]   # plan-defined vocabulary the estimation check ignores
 
+# Optional plain-language reader aids (rendered into the console sidecar, schema 1.1).
+# Top-level `terms:` defines each term ONCE; per-question `terms:` lists reference keys
+# into it. `explainers:` is keyed by a series id from the question's data.json or the
+# reserved keys question / verdict / expectations. AUTHORING RULE: text is TIMELESS —
+# defines the metric/term and its significance, never pin-dependent facts (no counts,
+# dates, or current values — those live in the marker-cited report).
+# terms:
+#   MAUDE: "FDA's public database of reports about medical devices that may have malfunctioned or contributed to a patient injury. Anyone can file a report, so it shows problem reports, not confirmed problem rates."
+#   "510(k)": "The standard FDA review route for most moderate-risk devices: the maker shows the new device is as safe and effective as one already on the market, and FDA 'clears' it for sale."
+
 categories:
   - {key: board, name: Board & Portfolio}
   - {key: market, name: Market & Competitive}

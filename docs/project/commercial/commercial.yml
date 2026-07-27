@@ -7,6 +7,233 @@
 lint:
   estimation_exempt_terms: [modeled]
 
+# ---------------------------------------------------------------------------
+# Plain-language terms dictionary (rendered into the console sidecar, schema 1.1).
+# Audience: a regulator or executive who knows neither analytics nor FDA
+# data-plumbing jargon. AUTHORING RULE (skill SKILL.md): definitions are TIMELESS —
+# they define the term and its significance, never pin-dependent facts (no counts,
+# no date ranges, no current values; those live in the marker-cited reports).
+# Per-question `terms:` lists reference keys here; inline {term: definition} maps
+# are allowed for one-offs. FDA-term definitions are grounded in glossary.md and
+# the corpus dataset registrations (docs/project/corpus/commercial/*/dataset.yml).
+# ---------------------------------------------------------------------------
+terms:
+  product code: >-
+    FDA sorts every type of medical device into a short letter code (a "product code").
+    All of FDA's public databases — clearances, recalls, adverse-event reports — are indexed
+    by these codes, so pulling every record for one code is how you look at a whole device
+    category at once.
+  FRN: >-
+    The FDA product code for general-purpose (large-volume) infusion pumps — the category
+    that includes our devices and our main competitors'. When an analysis says it searched
+    "FRN", it means: every FDA record filed under the infusion-pump category.
+  MEA: >-
+    The FDA product code for patient-controlled analgesia (PCA) infusion pumps — the
+    specific pump type a patient controls with a dose button. Narrower than FRN; used when
+    an analysis needs PCA-class records only.
+  "510(k)": >-
+    The standard FDA review route for most moderate-risk devices. The maker shows its new
+    device is as safe and effective as a similar device already legally on the market, and
+    FDA "clears" it for sale. Clearance records are public, so competitor clearances show
+    what rivals are now allowed to sell — and how fast they got there.
+  PCCP: >-
+    Predetermined Change Control Plan — a plan, authorized by FDA in advance, that lets a
+    company make specified future changes to a cleared device (especially software) without
+    filing a new submission each time. Revenue that depends on a PCCP still needs FDA to
+    authorize that plan first.
+  letter to file: >-
+    A documented internal decision that a device change is minor enough not to need a new
+    FDA submission. The rationale is recorded in the company's own files and the product
+    stays on the market — so revenue behind letter-to-file changes is not waiting on FDA.
+  MAUDE: >-
+    FDA's public database of adverse-event reports about medical devices. Hospitals,
+    manufacturers, and anyone else can file reports, so MAUDE counts what got REPORTED, not
+    confirmed device failures — and FDA publishes no count of devices in use, so MAUDE
+    alone can never give a failure rate, only report counts.
+  MDR: >-
+    Medical Device Report — the report a device maker must file with FDA when it learns its
+    device may have caused or contributed to a death or serious injury, or malfunctioned in
+    a way that could. Filing deadlines are set by regulation, so a late MDR is a compliance
+    finding waiting to be discovered. (Not the same as the EU regulation with the same
+    initials — see "EU MDR".)
+  EU MDR: >-
+    The European Union's Medical Device Regulation — the law governing how devices reach
+    and stay on the EU market. Among other things it expects manufacturers to keep
+    demonstrating their device against the current "state of the art", which is why the
+    state-of-the-art analysis has a shelf life.
+  FSCA: >-
+    Field Safety Corrective Action — an action taken on devices already at customer sites
+    (a fix, software update, recall, or added warnings) to reduce a safety risk. Regulators
+    track FSCAs to completion, so an open FSCA is unfinished safety work with regulatory
+    visibility.
+  recall: >-
+    In FDA vocabulary, a recall is any correction or removal of a marketed device to
+    address a safety problem or regulatory violation — from a labeling fix to physically
+    pulling units back. FDA posts device recalls publicly, so a competitor's recall is a
+    visible disruption at that competitor's customer sites.
+  complaint: >-
+    In a regulated device company, a complaint is any report — written or verbal — that a
+    marketed device failed to meet expectations for quality, reliability, safety, or
+    performance. Every complaint must be logged, investigated, and trended; complaint
+    rates are a core early-warning signal.
+  CAPA: >-
+    Corrective And Preventive Action — the quality-system process for formally
+    investigating a problem, fixing it, and preventing recurrence. A metric crossing a
+    "CAPA-review" threshold means the quality system now requires a formal investigation,
+    not just attention.
+  design input: >-
+    A formal requirement the device must meet, recorded in the design record. When a field
+    signal "lands as a design input", the lesson from the field has officially entered the
+    next design cycle — the loop from field experience back into the product is closed.
+  DERS: >-
+    Dose Error Reduction System — the safety software in a "smart" infusion pump that
+    checks each programmed dose against a hospital-configured drug library and warns or
+    blocks when the entry is outside safe limits.
+  drug library: >-
+    The hospital-configured list of drugs, concentrations, and dose limits that a smart
+    pump enforces. It is what makes a pump "smart": program a dose outside the library's
+    limits and the pump warns or refuses.
+  EtCO2 / capnography: >-
+    Measuring the carbon dioxide in a patient's exhaled breath — a fast, direct indicator
+    that breathing is slowing. It matters for PCA pumps because opioid overdose suppresses
+    breathing; a pump integrated with capnography can pause dosing when breathing
+    deteriorates.
+  PCA: >-
+    Patient-Controlled Analgesia — pain-medication (typically opioid) infusion where the
+    patient presses a button to receive a dose, within programmed safety limits. The
+    device class of our lead product, PP3500.
+  PCA-by-proxy: >-
+    Someone other than the patient — a family member or caregiver — pressing the PCA dose
+    button. It defeats the built-in safeguard that a patient sedated by the drug cannot
+    press for more, and is a recognized cause of opioid over-delivery.
+  SaMD: >-
+    Software as a Medical Device — software that performs a medical function on its own,
+    without being part of a hardware device. Commercially significant because a
+    software-only product can typically be built and cleared faster than hardware.
+  smart pump: >-
+    An infusion pump with dose-checking safety software (a drug library / DERS), as
+    opposed to a plain flow-setting pump. The market segment our share and competitive
+    analyses are scoped to.
+  SOTA: >-
+    "State of the art" — the level of technology currently available in a device category.
+    EU regulation expects manufacturers to periodically re-benchmark against it, so a
+    state-of-the-art analysis ages: the question is always whether the market has moved
+    since it was written.
+  KOL: >-
+    Key Opinion Leader — a clinician whose documented views carry weight with peers and
+    buyers. KOL evidence on file is the record that clinical demand for a planned feature
+    exists outside our own heads.
+  GPO: >-
+    Group Purchasing Organization — a buying intermediary that negotiates supply contracts
+    on behalf of many hospitals at once. One GPO agreement can control purchasing access
+    to dozens of hospital systems, which is why revenue concentrated in a single GPO is a
+    board-level risk.
+  IDN: >-
+    Integrated Delivery Network — a health system that operates multiple hospitals and
+    care sites under one ownership and, typically, one purchasing decision. One IDN
+    decision can switch every pump across the network.
+  CRM: >-
+    Customer Relationship Management system — the sales team's database of pursued deals:
+    the customer, the deal's dollar value, and whether it was won or lost. Win/loss
+    figures come from this log, so they are only as reliable as the sales team's
+    record-keeping.
+  FSE: >-
+    Field Service Engineer — a technician who travels to customer sites to install,
+    service, and update devices. FSE days are the scarce capacity behind every on-site
+    campaign; anything that avoids a site visit frees them.
+  ASP: >-
+    Average Selling Price — what customers actually pay per unit after discounts, as
+    opposed to list price. If hardware ASP falls as subscriptions rise, the subscription
+    may be quietly funded by hardware discounts ("cannibalization").
+  gross margin: >-
+    Revenue minus the direct cost of producing and delivering the product — what is left
+    to fund R&D, sales, and overhead. A product line can post healthy revenue and still
+    consume the company if its margin is thin.
+  recurring revenue: >-
+    Revenue that repeats without a new sale — subscriptions and service contracts — as
+    opposed to one-time hardware purchases. It is valued for predictability, which is why
+    the share of revenue that is recurring is tracked against plan.
+  ARR: >-
+    Annual Recurring Revenue — subscription revenue normalized to a yearly rate. The
+    standard measure of the size of a subscription business.
+  LTV: >-
+    Lifetime Value — the total revenue expected from one customer (here, one connected
+    pump's subscription) over the analysis horizon. Judged against cost-to-serve: if LTV
+    does not comfortably exceed it, the subscription loses money per pump.
+  cost-to-serve: >-
+    What it costs to keep one subscribed pump running over the analysis horizon —
+    support, cloud hosting, service visits. The unit-economics counterpart to LTV.
+  attach rate: >-
+    Of the devices in the field that could carry the companion subscription, the share
+    that actually do. The core adoption measure for software sold on top of hardware.
+  TCO: >-
+    Total Cost of Ownership — everything a buyer pays over an ownership period: purchase
+    price plus consumables, software, and service. Hospital buying committees compare
+    pumps on TCO, not sticker price — it is the buyer's spreadsheet.
+  fully-loaded cost: >-
+    A cost figure that counts everything actually consumed — labor time, travel, overhead —
+    not just the obvious out-of-pocket expense. Used so a "cheap" activity is not
+    undercosted by ignoring the labor behind it.
+  run-rate: >-
+    The current pace of an activity — completions per week, sign-ups per quarter —
+    projected forward. Comparing the run-rate against the pace required to hit a deadline
+    shows whether the deadline will be met if nothing changes.
+  installed base: >-
+    The count of our devices currently in service at customer sites. It is the "out of
+    how many" behind attach rates, complaint rates, and share estimates.
+  win rate: >-
+    Of the sales opportunities that reached a decision, the share we won. Deals still open
+    or abandoned without a decision are excluded. It can be counted by number of deals or
+    weighted by dollar value — and the two can disagree.
+  median: >-
+    The middle value when all values are lined up in order — half sit below it, half
+    above. Preferred to the average when a few extreme values would distort the picture.
+  denominator: >-
+    The "out of how many" underneath a rate. Every rate is a count divided by a
+    denominator, and a comparison is only fair when both sides use the same one — which is
+    why these answers state their denominator explicitly or say when none exists.
+  trailing window: >-
+    A measurement period that ends at the data's as-of date and reaches back a fixed span
+    (the last 90 days, the last four quarters). It keeps every edition's numbers current
+    and consistently sized, so editions are comparable.
+  stage-gate: >-
+    A pre-agreed checkpoint where a spending decision waits on a measurable result: the
+    money releases only when the metric clears the gate. The number the gate is set at
+    matters as much as the metric — an unratified gate number is a decision nobody
+    actually made.
+  pause trigger: >-
+    A threshold agreed in advance that, when crossed, stops an activity — here, pausing a
+    device-update wave for an affected group pending engineering investigation — rather
+    than leaving "how bad is too bad" to judgment in the moment.
+  evidence class: >-
+    Every charted series is tagged with where its numbers stand: "measured" (read directly
+    from pinned source data), "derived" (computed from measured data by a stated formula),
+    "assumed" (rests on a recorded assumption), or "unavailable" (the data does not exist,
+    so the gap is shown instead of a guess). A question's badge shows the WEAKEST class
+    used, so a dashboard cannot overstate how well-grounded an answer is.
+  snapshot / pin: >-
+    Answers are computed from frozen, dated copies of each source dataset ("snapshots"),
+    and each answer records ("pins") exactly which snapshot it used. That makes every
+    number reproducible and its as-of date explicit: the answer reflects its pinned data,
+    not whatever the data looks like today.
+  assumption record (A-NNN): >-
+    Where data the question needs does not exist, the analysis states an explicit,
+    numbered assumption (for example, a market-size estimate) and cites its id — A-001,
+    A-002, and so on — everywhere it is used. Conclusions built on an assumption are only
+    as strong as that record, and the id makes each one findable and challengeable.
+  telemetry: >-
+    Usage data that connected devices report back automatically — for example, infusion
+    hours per month. It shows what customers actually do with what they bought, not what
+    they purchased.
+  firmware: >-
+    The software installed on the pump itself. A device "behind" on firmware runs without
+    the newest fixes and features until someone updates it — which, unlike cloud software,
+    takes a field campaign.
+  rollback: >-
+    Reverting a device to its previous software version after an update caused problems at
+    a site. A strong signal of upgrade pain: sites do not roll back updates that are
+    working.
+
 categories:
   - {key: board, name: Board & Portfolio}
   - {key: market, name: Market & Competitive}
@@ -34,6 +261,54 @@ questions:
         basis: "generic portfolio guardrail; no board-adopted floor"
         set_by: cfo (demo)
         validated: false
+    terms:
+    - gross margin
+    - trailing window
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A profitability map of the product portfolio: for each product line, revenue and
+          gross margin over the trailing four quarters, plus the trend against the prior four.'
+        why: It answers the first board question about any portfolio — which lines pay for the
+          company and which are being carried — and is the factual basis for investment and divestment
+          arguments.
+      totals-stat:
+        label: Portfolio totals
+        what: 'The whole-portfolio headline over the trailing four quarters: total revenue, total
+          gross margin, and how much of that margin the flagship lines contribute.'
+        why: 'The concentration of margin in one or two lines is the risk headline: if most of
+          the profit engine is a single franchise, everything else rides on it.'
+      gm-by-line:
+        what: Each product line's revenue next to the gross margin it kept, over the same trailing
+          four quarters.
+        why: Revenue and margin rank lines differently — a big-revenue line with thin margin funds
+          less than it appears to. This is where that gap becomes visible.
+        how_to_read: 'For each line, compare the two bars: the wider the gap between revenue and
+          margin, the more of that line''s sales are eaten by direct costs.'
+      gm-share:
+        what: Each line's slice of total portfolio gross margin — margin dollars restated as shares
+          of the whole.
+        why: This is the "who funds the company" chart in one view; a line with a small slice
+          consumes management attention disproportionate to what it contributes.
+      gm-trend:
+        what: Each line's gross-margin percentage in the most recent four quarters, next to the
+          same figure for the four quarters before that.
+        why: 'Direction matters as much as level: a healthy-margin line that is eroding is a different
+          decision than a thin-margin line that is improving.'
+        how_to_read: For each line, if the recent bar is below the prior bar, margin is eroding.
+      revenue-trend:
+        what: Quarterly revenue over time for the largest lines, with the smaller lines combined
+          into one "other" series to keep the chart readable.
+        why: It shows whether the portfolio's growth is broad or riding a single line, and when
+          any line's trajectory changed.
+      opex-by-line:
+        what: Operating expense (R&D, sales, overhead) split by product line — data the finance
+          system does not currently track at line level, so the chart states the gap instead of
+          estimating it.
+        why: Gross margin alone can flatter a line that quietly consumes disproportionate engineering
+          and support effort. Until opex is attributable by line, "which lines consume the company"
+          is only half-answered.
   - id: BQ-02
     question: "How concentrated are we — PCA franchise, top-3 GPOs, single systems — and what does losing one anchor GPO do to the 5-year plan?"
     category: board
@@ -59,6 +334,64 @@ questions:
         basis: "generic concentration guardrail; no board-adopted limit"
         set_by: lead-independent-director (demo)
         validated: false
+    terms:
+    - GPO
+    - IDN
+    - PCA
+    - denominator
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A concentration analysis: how much of revenue depends on a single buying group
+          (GPO), the top few accounts, and the PCA product franchise — and what losing the anchor
+          buying group would do to the five-year plan.'
+        why: 'Concentration is the classic hidden fragility: strong totals can sit on one contract
+          or one franchise. Boards use this to judge whether the plan survives losing its biggest
+          dependency.'
+      concentration-stat:
+        label: Concentration headline
+        what: 'The three concentration measures in one place: the largest GPO''s share of directly
+          tracked revenue, the top accounts'' combined share, and the PCA franchise''s share.'
+        why: Each is a separate way the business could be hurt by a single event — one contract
+          loss, one account loss, or one franchise-level disruption.
+      share-by-gpo:
+        what: Directly tracked revenue split by the buying group (GPO) each account purchases
+          through.
+        why: A GPO relationship is a single commercial decision covering many hospitals; the bigger
+          one GPO's bar, the more revenue moves on that one decision.
+      top-accounts:
+        what: The largest individual customer accounts by directly tracked revenue.
+        why: Account-level concentration is the most concrete form of dependency — these are the
+          named customers whose renewals matter most.
+      franchise-share:
+        what: Directly tracked revenue cut by product franchise — how much rides on the PCA family
+          (including the subscription software that sells on top of it) versus everything else.
+        why: Franchise concentration means a single clinical or safety event in that category
+          can touch most of the revenue at once.
+      basis-sensitivity:
+        what: 'The same concentration measure computed on two different denominators: the directly
+          tracked ("direct book") revenue versus total company revenue.'
+        why: The direct book covers only part of total revenue, so a concentration verdict can
+          flip depending on which base is used. Showing both keeps the conclusion honest about
+          what the data can and cannot say.
+        how_to_read: If the two bars straddle the guardrail line, the verdict is basis-dependent
+          — treat it as unresolved rather than passed or failed.
+      gpo-share-trend:
+        what: Each major GPO's share of directly tracked revenue across fiscal years.
+        why: Whether concentration is building or unwinding matters more than any single year's
+          level.
+      plan-loss-scenario:
+        what: The revenue plan of record next to a modeled scenario in which the anchor GPO's
+          revenue is removed.
+        why: This is the "what does losing our biggest dependency actually cost" line — the gap
+          between the two curves is the size of the bet on that relationship.
+      verdict:
+        what: The verdict tests the largest GPO's share against a concentration guardrail — a
+          maximum share of revenue any single buying group should carry. The guardrail here is
+          a stand-in, not a board-adopted limit.
+        why: Until the board adopts a real limit, a breach is a conversation-starter, not a policy
+          violation — but the exposure it flags is real either way.
   - id: BQ-03
     question: "What share of revenue is recurring today vs the Y5 plan — and which parts of the $350M target are contracted, modeled, or aspiration?"
     category: board
@@ -76,6 +409,49 @@ questions:
         basis: "implied by the razor+recurring strategy (D-COMM); no numeric milestone set"
         set_by: cfo (demo)
         validated: false
+    terms:
+    - recurring revenue
+    - letter to file
+    - 510(k)
+    - PCCP
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A decomposition of the long-range revenue target: how much revenue is recurring
+          today versus planned, and how much of the plan is contracted, modeled, or aspiration
+          — including how much waits on FDA decisions.'
+        why: A headline target means little until you know what it is made of. This separates
+          the parts that are already earned or committed from the parts that are still a bet,
+          so the board can judge the plan's real risk.
+      recurring-stat:
+        label: Recurring share — today vs plan
+        what: The share of revenue that is recurring (subscriptions) today, the share the final
+          plan year assumes, and how much of the target sits behind FDA decisions not yet received.
+        why: The distance between today's recurring share and the plan's is the transformation
+          the company is betting on; the FDA-dependent slice is the part of that bet the company
+          does not fully control.
+      recurring-share-trend:
+        what: The recurring share of revenue over time — actuals against the trajectory the plan
+          assumes.
+        why: If actuals are not bending toward the planned curve, the end-state recurring mix
+          is drifting from plan years before the target date arrives.
+      plan-by-bucket:
+        what: 'Planned revenue per plan year, split into evidence buckets: contracted (signed),
+          modeled (projected from current run-rates by a stated method), and aspiration (targets
+          without a mechanism yet).'
+        why: Watching the bucket mix across years shows when the plan shifts from earned revenue
+          to hoped-for revenue — usually the later years.
+      y5-decomposition:
+        what: The final-year revenue target broken into the same contracted / modeled / aspiration
+          buckets.
+        why: 'This is the honest anatomy of the headline number: the aspiration slice is the part
+          with no mechanism behind it yet.'
+      y5-recurring-decomposition:
+        what: The recurring (subscription) portion of the final-year target, broken into the same
+          evidence buckets.
+        why: The recurring transformation is the plan's centerpiece, so it deserves its own anatomy
+          — a recurring target that is mostly aspiration is a strategy, not a forecast.
   - id: BQ-04
     question: "Does the subscription model work at unit level — LTV per connected pump vs cost-to-serve, and is Cloud Suite cannibalizing hardware ASP?"
     category: board
@@ -103,6 +479,62 @@ questions:
         basis: "stand-in tolerance; pricing policy sets no explicit cap"
         set_by: cco (demo)
         validated: false
+    terms:
+    - LTV
+    - cost-to-serve
+    - ARR
+    - ASP
+    - attach rate
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'Unit economics of the subscription: what one connected pump''s subscription earns
+          over the horizon (LTV) versus what it costs to serve, and whether subscription deals
+          are being bought with hardware discounts.'
+        why: A subscription business that loses money per unit gets worse as it grows. This is
+          the check that the razor-and-blades model actually works at the level of a single pump.
+      unit-econ-stat:
+        label: LTV vs cost-to-serve
+        what: 'The three-number unit-economics headline: revenue expected per connected pump over
+          the horizon, the cost to serve it over the same horizon, and their ratio.'
+        why: The ratio is the whole business model in one number — below 1.0 each connected pump
+          loses money; a healthy subscription business clears its cost several times over.
+        how_to_read: Higher is better. Compare the ratio against the floor the expectation sets;
+          the floor itself is a standard industry heuristic, not an underwritten target.
+      band-economics:
+        what: Subscription revenue versus cost-to-serve per pump, split by site size (small, mid,
+          large fleets).
+        why: Fixed per-site costs spread across few pumps can make small sites structurally unprofitable
+          — this shows whether the losses concentrate in a site profile rather than being uniform.
+      discount-by-band:
+        what: The average hardware discount granted, split by the same site-size bands.
+        why: If subscribed sites systematically get deeper hardware discounts, the subscription
+          revenue is partly a transfer from hardware, not new money.
+      discount-sensitivity:
+        what: How the hardware-discount finding moves under alternative readings — testing whether
+          an apparent breach is real or within sampling noise.
+        why: A threshold miss driven by a handful of deals should trigger a different response
+          than a systematic pattern; this chart separates the two.
+      attach-gap:
+        what: Sites whose pumps are connected (hardware capable) but carry no subscription.
+        why: These are the cheapest growth available — the hardware cost is already sunk, so converting
+          them is nearly pure subscription margin.
+      arr-build:
+        what: How annual recurring revenue accumulated as sites activated, built from each active
+          site's start date. Sites that later churned are not represented, so the curve is survivor-biased.
+        why: The build curve shows whether subscription momentum is accelerating or flattening
+          — with the stated caveat that it flatters by construction.
+      econ-history:
+        what: The LTV-to-cost-to-serve ratio tracked across successive analyses — history that
+          will only exist once this analysis has been recomputed over multiple periods.
+        why: The trajectory of unit economics matters more than any single reading; the chart
+          states the gap rather than faking a trend from one point.
+      verdict:
+        what: The verdict compares per-pump subscription economics against a minimum-ratio guardrail
+          and checks whether hardware discounts at subscribed sites exceed tolerance.
+        why: Together the two checks answer "does the subscription make money, and is it cannibalizing
+          the hardware business to do it?"
   - id: BQ-05
     question: "How much plan revenue sits behind FDA decisions we haven't received — by regulatory dependency, with slip triggers?"
     category: board
@@ -123,6 +555,60 @@ questions:
         basis: "stand-in risk-appetite threshold; the plan of record sets none"
         set_by: audit-committee (demo)
         validated: false
+    terms:
+    - 510(k)
+    - PCCP
+    - letter to file
+    - product code
+    - FRN
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A regulatory-exposure analysis of the revenue plan: how much planned revenue depends
+          on FDA decisions the company has not yet received, year by year, with modeled slip scenarios.'
+        why: Revenue that waits on a regulator is revenue the company does not control the timing
+          of. This quantifies how much of the plan is in that category and what a review delay
+          does to it.
+      exposure-stat:
+        label: Regulatory exposure
+        what: 'The headline exposure: total planned revenue sitting behind FDA decisions not yet
+          received, the peak-year share, and how many plan years exceed the exposure threshold.'
+        why: It sizes the plan's single largest external dependency in dollars and years, so the
+          risk conversation starts from a number instead of a feeling.
+      plan-by-dependency:
+        what: 'Planned revenue per year, split by regulatory dependency: no decision needed, minor
+          changes documented internally (letter to file), and revenue requiring a new FDA authorization
+          (new submissions or a PCCP).'
+        why: The split shows when the plan's center of gravity shifts from products already cleared
+          to products still awaiting FDA — usually the out-years, where risk quietly accumulates.
+      exposure-by-year:
+        what: The FDA-dependent share of each plan year's revenue, against the exposure threshold.
+        why: A single aggregate hides the shape; per-year exposure shows exactly which years the
+          plan bets on decisions not yet in hand.
+        how_to_read: Bars above the threshold line are the years driving the verdict.
+      slip-scenarios:
+        what: Plan totals recomputed under uniform FDA-decision slips of several months — modeled
+          revenue displacement, not a prediction.
+        why: Slips of months are routine in device review; the scenario lines show how much plan
+          revenue moves per unit of delay, which is the number contingency planning needs.
+      fda-review-stat:
+        label: FDA review interval (public data)
+        what: The median time from FDA receiving an infusion-pump 510(k) submission to clearing
+          it, measured from public clearance records for the device category.
+        why: It anchors the plan's regulatory timing assumptions to observed review reality rather
+          than internal optimism.
+      exposure-history:
+        what: Exposure tracked across successive plan versions — history that accumulates only
+          as future plan revisions are analyzed.
+        why: Whether each replanning cycle adds or retires regulatory dependency is a leading
+          indicator of plan quality; the gap is stated until the history exists.
+      verdict:
+        what: The verdict tests each plan year's FDA-dependent revenue share against an exposure
+          threshold — a maximum share of any year's revenue that should wait on decisions not
+          yet received. The threshold is a stand-in; the plan of record sets none.
+        why: Years over the threshold are where a single FDA delay does the most damage to the
+          plan; they are the years contingency planning should focus on.
   - id: BQ-06
     question: "Is the concept pipeline converting, and how does our clearance cycle time compare with our own history and with BD/Baxter?"
     category: board
@@ -131,6 +617,47 @@ questions:
     corpus_deps: [commercial/openfda-510k-infusion]
     computation: "python3 computations.py BQ-06 --corpus-root {corpus_root} --out {out}"
     params: {top_n: 6}
+    terms:
+    - 510(k)
+    - product code
+    - FRN
+    - median
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A speed-of-competition analysis built from public FDA clearance records for the
+          infusion-pump category: how long FDA review takes overall, by year, and by frequent
+          competitor.'
+        why: Review speed bounds how quickly a rival can turn a finished device into something
+          legally sellable — which is the clock our roadmap's head-start assumptions run on.
+      overall-median:
+        label: Overall median review interval
+        what: The middle value of the number of days between FDA receiving a competitor's 510(k)
+          submission and FDA clearing it, across the cleared infusion-pump submissions in the
+          pinned dataset. The median is used instead of the average so a few unusually slow reviews
+          don't distort the picture.
+        why: 'This is a speed-of-competition indicator: it approximates how quickly a rival can
+          turn a finished device into something they are legally allowed to sell. A short interval
+          means competitors can close feature gaps quickly, which shrinks the head start our roadmap
+          assumes.'
+        how_to_read: Lower is faster. Compare an individual firm's median against the overall
+          value to see who moves through FDA review fastest.
+      cycle-by-year:
+        what: The median review interval for clearances decided in each calendar year.
+        why: Whether FDA review is speeding up or slowing down changes how much runway any future
+          head start is worth.
+      cycle-by-applicant:
+        what: The median review interval per frequent filer — the companies that clear infusion-pump
+          devices often enough to have a track record.
+        why: 'Regulatory speed is a competitive capability: a firm that consistently clears fastest
+          can respond to our launches faster than the category average suggests.'
+        how_to_read: Shorter bars are faster competitors; compare each against the overall median.
+      our-cycle-time:
+        what: Our own received-to-decision history for past submissions — data not present in
+          this public-records dataset, so the gap is stated rather than estimated.
+        why: Without our own baseline, "are we faster or slower than the pack" cannot be answered;
+          the chart names the missing input rather than guessing it.
   # --- B. Market & Competitive ---------------------------------------------
   - id: BQ-07
     question: "What is our actual share of the US PCA/smart-pump segment — taking share from BD/Baxter or growing with the market?"
@@ -140,6 +667,57 @@ questions:
     corpus_deps: [commercial/internal-sales-accounts]
     computation: "python3 computations.py BQ-07 --corpus-root {corpus_root} --out {out}"
     params: {market_size_assumption: A-003}
+    terms:
+    - installed base
+    - smart pump
+    - PCA
+    - denominator
+    - assumption record (A-NNN)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: A market-share estimate for the US PCA / smart-pump segment, built from our installed-base
+          records and a stated market-size assumption — deliberately presented as a range, not
+          a point figure.
+        why: Share tells you whether growth is winning customers from competitors or just riding
+          market growth — but only if the estimate is honest about how soft its denominator is.
+      installed-units:
+        label: Our in-segment installed base
+        what: The count of our pumps in service in the segment, from our own fleet records.
+        why: This is the hard half of the share calculation — the numerator we actually measure,
+          independent of any market-size assumption.
+      share-range:
+        what: Our estimated share expressed as a range, produced by dividing our measured installed
+          base by a market-size assumption recorded as an assumption record.
+        why: The denominator is assumed, not measured, so a single share number would overstate
+          precision; the range width is an honest display of that uncertainty.
+        how_to_read: Treat the whole range as the answer. Narrowing it requires better market-size
+          data, not more computation.
+      units-by-line:
+        what: Our in-segment installed base split by product line.
+        why: It shows which products actually carry our market presence, and where the installed
+          base that future subscriptions attach to sits.
+      share-trend:
+        what: The share range tracked across fiscal years, holding the market-size assumption
+          constant.
+        why: With a constant denominator, movement in this trend reflects our own installed base
+          growth — the part of the share story the data actually supports.
+      growth-rate:
+        what: Our installed-base growth rate next to the assumed growth rate of the market.
+        why: Growing slower than the market means losing share even while unit counts rise — the
+          comparison catches that quiet failure mode.
+        how_to_read: If our bar is below the market's, we are diluting even as we grow.
+      competitor-unit-split:
+        what: Competitor installed-unit counts (the major incumbents' fleets) — data no public
+          source provides, so the gap is stated instead of estimated.
+        why: Without competitor unit counts, share can only be computed against an assumed market
+          total; this names the missing data that would harden the estimate.
+      verdict:
+        what: The verdict deliberately reports share as a range and labels its confidence, because
+          the denominator rests on a recorded assumption rather than measured market data.
+        why: A precise-looking share number would be false comfort; the range communicates both
+          the position and the quality of the evidence behind it.
   - id: BQ-08
     question: "What are we winning and losing on — and how many recent losses cite predictive monitoring we don't have?"
     category: market
@@ -155,6 +733,57 @@ questions:
         basis: "sales-plan stand-in; no documented target"
         set_by: cco (demo)
         validated: false
+    terms:
+    - win rate
+    - CRM
+    - trailing window
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A win/loss analysis from the sales team''s opportunity log: how often we win decided
+          deals, what we win and lose on, and how many losses cite a product capability we do
+          not ship.'
+        why: Win/loss reasons are the most direct market feedback available — they say what buyers
+          actually chose over us, which is evidence a roadmap can be steered by.
+      win-rate:
+        label: Win rate (deal count)
+        what: Of sales opportunities that reached a decision inside the trailing window, the share
+          we won. Open deals and no-decision outcomes are excluded.
+        why: This is the baseline competitiveness gauge — but counted by deals, it weights a small
+          clinic the same as a flagship health system.
+      value-win-rate:
+        label: Win rate (dollar-weighted)
+        what: 'The same win rate weighted by each deal''s dollar value: the share of decided deal
+          value we won.'
+        why: When the dollar-weighted rate runs below the count rate, we are winning the small
+          deals and losing the big ones — a pattern the count rate alone hides.
+        how_to_read: Compare against the deal-count win rate; a gap between them is itself the
+          finding.
+      pm-gap-losses:
+        label: Losses citing the predictive-monitoring gap
+        what: Losses in the window where the sales log cites our missing predictive-monitoring
+          capability as a reason, with their deal value.
+        why: This ties a roadmap investment decision to named lost revenue — the most concrete
+          demand evidence a future feature can have.
+      loss-reasons:
+        what: Lost deals in the window grouped by the primary reason recorded in the sales log.
+        why: The distribution shows whether losses concentrate on something fixable (a feature,
+          price) or diffuse across many causes.
+      win-reasons:
+        what: Won deals grouped the same way, by primary recorded reason.
+        why: Knowing what actually wins deals protects those strengths from being traded away
+          in pricing or roadmap decisions.
+      monthly-outcomes:
+        what: Decided outcomes (wins and losses) per month across the full data span.
+        why: The monthly rhythm reveals momentum shifts and seasonality that a single trailing-window
+          rate averages away.
+      verdict:
+        what: The verdict reads both win rates against a target share of decided deals, and sizes
+          the losses attributed to the known capability gap. Reasons come from the sales team's
+          own log — self-reported, one primary reason per deal.
+        why: It connects sales performance to the specific product decision (close the gap or
+          keep losing those deals) the analysis exists to inform.
   - id: BQ-09
     question: "Are we winning displaced accounts where an incumbent has an open recall or integration disruption — and how long does the window stay open?"
     category: market
@@ -163,6 +792,56 @@ questions:
     corpus_deps: [commercial/internal-winloss, commercial/openfda-recalls-infusion]
     computation: "python3 computations.py BQ-09 --corpus-root {corpus_root} --out {out}"
     params: {disruption_window_days: 180, sensitivity_window_days: 90, aliases: entity-aliases.yml}
+    terms:
+    - recall
+    - win rate
+    - CRM
+    - FRN
+    - product code
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A displacement analysis: do we win more often when the incumbent vendor at an account
+          has a recent public recall, and how long does that window of opportunity stay open?
+          Built by joining our sales log to real FDA recall dates.'
+        why: Competitor disruptions are the cheapest sales openings that exist. Knowing whether
+          we actually convert them — and how fast the advantage decays — tells sales where to
+          aim first.
+      inwindow-rate:
+        label: In-window win rate
+        what: Our win rate on decided deals where the incumbent vendor had a public recall posted
+          within the disruption window before the deal closed.
+        why: This is the direct measure of whether we capitalize on competitor trouble — compared
+          against our win rate everywhere else.
+      window-split:
+        what: Win rate inside the disruption window next to win rate outside it.
+        why: The gap between the two bars is the size of the displacement effect; no gap would
+          mean recalls are not actually converting into wins.
+        how_to_read: A higher in-window bar supports targeting recently disrupted accounts.
+      window-sensitivity:
+        what: The same split recomputed with a shorter disruption window.
+        why: If the effect only appears under one window choice, it is fragile; if it holds under
+          both, the finding is robust to the definition.
+      decay-buckets:
+        what: Win rate bucketed by how many months have passed since the incumbent's most recent
+          recall.
+        why: The decay shape says how perishable the opening is — how quickly sales must engage
+          a disrupted account before the advantage fades.
+      recalls-by-incumbent:
+        what: Public FDA recall counts for the infusion-pump category, per competitor firm.
+        why: It shows where disruption windows have been opening — which incumbents' customer
+          bases have been experiencing recall churn.
+      quarterly-outcomes:
+        what: Decided deal outcomes per quarter, split into in-window and out-of-window deals.
+        why: It shows how much of our deal flow actually touches a disruption window — context
+          for how much revenue the displacement play can realistically drive.
+      verdict:
+        what: 'The verdict is explicitly a METHOD DEMONSTRATION: the FDA recall dates are real,
+          but the sales records they are joined to are fabricated demo data. The pattern shows
+          how the analysis works, not a real conversion result.'
+        why: Rerun against the real sales log, this same method yields a decision-grade answer
+          on where displacement selling pays; until then the numbers illustrate mechanics only.
   - id: BQ-10
     question: "Where do we sit vs Alaris/Spectrum IQ/Plum 360 on 5-year TCO per pump — the buyer's spreadsheet?"
     category: market
@@ -178,6 +857,54 @@ questions:
       cloud_suite_per_pump_annual_usd: 450
       consumables_per_pump_annual_usd: 310
       service_per_pump_annual_usd: 180
+    terms:
+    - TCO
+    - assumption record (A-NNN)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A total-cost-of-ownership comparison: what one of our pumps costs a hospital over
+          the ownership horizon (hardware, software, consumables, service) against the range for
+          competitor pumps — on a stated, like-for-like basis.'
+        why: Hospital buying committees decide on the multi-year cost spreadsheet, not the sticker
+          price. Knowing where we land in that spreadsheet — and how solid the comparison is —
+          shapes pricing and deal strategy.
+      our-tco:
+        label: Our TCO per pump
+        what: 'Our pump''s ownership cost over the horizon, stated two ways: all-in (every cost
+          stream) and on the narrower basis competitor figures actually cover, so the comparison
+          is like-for-like.'
+        why: Quoting only the all-in figure against competitors' narrower figures would make us
+          look artificially expensive; the dual basis keeps the comparison honest.
+      tco-comparison:
+        what: Our pump against the class-wide competitor cost range on the comparable basis. Competitor
+          figures rest on a recorded pricing assumption, not published price lists.
+        why: This is the buyer's-eye view of our price position — with the range and the assumption
+          flag communicating how soft the competitor side of the ledger is.
+        how_to_read: 'Position within the range matters less than the basis note: the comparison
+          excludes cost streams competitor data does not cover.'
+      our-tco-components:
+        what: Our ownership cost broken into its parts — capital, software subscription, consumables,
+          service.
+        why: The component mix shows which lever moves our competitive cost position most, and
+          how much of the cost arrives as recurring streams after purchase.
+      feature-context:
+        what: The competitor feature-comparison cells behind this analysis, each labeled with
+          its verification status.
+        why: Cost comparisons only mean something between comparable products; this shows what
+          capability accompanies each price point and which cells are verified versus vendor-claimed.
+      tco-history:
+        what: Our cost position tracked over time — history that accumulates only as the analysis
+          is recomputed against refreshed competitor data.
+        why: Competitor pricing moves; a position that erodes across refreshes is the signal to
+          watch. The gap is stated until the history exists.
+      verdict:
+        what: 'The verdict is labeled indicative and assumption-bounded: competitor costs rest
+          on a recorded pricing assumption, and the comparable basis omits cost streams competitor
+          data does not report.'
+        why: It supports directional pricing conversations, not deal-level price setting — using
+          it beyond that would lend borrowed precision to an assumed number.
   - id: BQ-11
     question: "Where are pumps sold but underused — accounts whose utilization/telemetry diverges from what they bought?"
     category: market
@@ -193,6 +920,46 @@ questions:
         basis: "stand-in utilization floor; contracts set no usage commitment"
         set_by: customer-success (demo)
         validated: false
+    terms:
+    - telemetry
+    - installed base
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'An adoption-risk scan of connected sites: which customers run their pumps far below
+          the usage their purchase implies, based on the telemetry the devices report automatically.'
+        why: Underused equipment is the leading indicator of churn — a customer who stopped using
+          the pumps is a customer who will not renew, expand, or attach subscriptions. Catching
+          it early is what customer-success exists for.
+      flagged-stat:
+        label: Underused connected sites
+        what: The count of connected sites running below the utilization floor in the measurement
+          window, and how many of those are material (large enough fleets for the signal to be
+          trustworthy and the revenue to matter).
+        why: The materiality split keeps attention on sites where low usage is both statistically
+          meaningful and commercially consequential.
+      site-utilization:
+        what: Measured utilization for the flagged sites, next to the fleet's median for context.
+        why: Distance below the fleet norm distinguishes a site-specific adoption problem from
+          an expectation that is simply calibrated wrong for everyone.
+      flagged-sites:
+        what: The flagged sites listed individually, tiered by materiality.
+        why: A named-site list is what turns a metric into a call sheet — each row is a specific
+          account conversation to have.
+      monthly-utilization:
+        what: Month-by-month utilization for the worst flagged sites against the fleet median.
+        why: The trajectory separates sites that are declining (intervene now) from sites that
+          never ramped (a training or onboarding failure, not a loss of faith).
+      account-revenue-at-risk:
+        what: The revenue tied to each flagged site's parent account — a linkage the current data
+          does not carry, so the gap is stated rather than estimated.
+        why: Sizing the money behind each adoption problem is what would let the team triage by
+          dollars; the chart names the missing account-to-site mapping.
+      region-revenue-context:
+        what: Directly tracked revenue by region, as sizing context for the flagged sites.
+        why: It frames how much surrounding business sits near each adoption problem without claiming
+          the direct account linkage the data lacks.
   # --- C. Roadmap & State of the Art ---------------------------------------
   - id: BQ-12
     question: "What did competitors clear in the last 90 days, laid against our Y1–Y5 roadmap — anything landing on a feature we scheduled two years out?"
@@ -210,6 +977,39 @@ questions:
         software-lane: [SOFTWARE, REMOTE, APP, WIRELESS, CONNECT]
         pca-lane: [PCA, PATIENT-CONTROLLED, ANALGES]
         syringe-lane: [SYRINGE]
+    terms:
+    - 510(k)
+    - product code
+    - FRN
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: A recurring sweep of new FDA infusion-pump clearances in the most recent window,
+          with each clearance screened against keywords tied to our roadmap lanes.
+        why: A competitor clearance on a feature we scheduled years out is the earliest public
+          signal that our timing assumption broke. This sweep is the routine tripwire that catches
+          it.
+      window-count:
+        label: Clearances in the sweep window
+        what: How many infusion-pump devices FDA cleared in the sweep window, and how many of
+          those matched a roadmap-relevant keyword and were flagged for analyst review.
+        why: 'The flagged count is the action item: each flagged clearance needs a human judgment
+          on whether it collides with a roadmap commitment.'
+      clearances-by-quarter:
+        what: FDA infusion-pump clearances per quarter over recent years.
+        why: The baseline rhythm of category activity — a quarter that spikes above it means the
+          category is heating up and the sweep deserves closer attention.
+      window-flagged:
+        what: The individual clearances in the window, with any keyword flags.
+        why: The row-level detail is what an analyst actually reviews — device names and applicants,
+          not just counts.
+      verdict:
+        what: The verdict counts window clearances and keyword flags. A flag is a triage aid based
+          on public device names — a prompt for analyst review, not a judgment that a competitor
+          capability actually shipped.
+        why: Keyword screens are deliberately over-inclusive; the cost of reviewing a false flag
+          is minutes, while the cost of missing a real collision is a roadmap surprise.
   - id: BQ-13
     question: "How much runway before someone closes the predictive-monitoring gap — is our Y3 timing defensible, and what if an incumbent buys an AI entrant?"
     category: roadmap
@@ -236,6 +1036,64 @@ questions:
         software: [SOFTWARE, DRUG LIBRARY, GUARDRAILS, DOSE IQ]
         ai-predictive: [PREDICT, ALGORITHM, ANALYTIC, MACHINE LEARNING, NEURAL, EARLY WARNING, MONITORING]
         connectivity: [WIFI, WIRELESS, REMOTE, CONNECT]
+    terms:
+    - SaMD
+    - 510(k)
+    - product code
+    - FRN
+    - assumption record (A-NNN)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A runway analysis for our predictive-monitoring bet: given how long it takes an
+          entrant to build and clear a competing capability, could someone land it before our
+          planned launch — including the fast case where an incumbent buys an AI startup instead
+          of building.'
+        why: The value of arriving first decays to zero if a rival arrives sooner. This analysis
+          stress-tests the launch timing that the roadmap's differentiation claim depends on.
+      runway-margin:
+        label: Margin vs a software-only entrant
+        what: How many months before our planned launch a software-only (SaMD) entrant — starting
+          from the data's anchor date and taking the assumed development and review time — would
+          reach market.
+        why: Software-only is the fastest plausible attack on this feature; if even the slow version
+          of that entrant beats our date, the launch timing is not defensible.
+        how_to_read: Positive months mean the entrant lands first by that margin; the figure moves
+          with the stated lead-time assumption, so treat it with the assumption, not alone.
+      hardware-edge-margin:
+        label: Margin vs a fast hardware entrant
+        what: The same race run against a fast hardware-based entrant, under both readings of
+          our launch commitment (start versus end of the committed period).
+        why: Our launch date is committed as a period, not a day — and the conclusion can flip
+          depending on which end you read. Showing both readings makes that sensitivity explicit
+          rather than burying it.
+      predictive-shipping-check:
+        what: The competitor feature matrix's answer to whether anyone currently documents a shipping
+          predictive-monitoring capability.
+        why: The runway question only matters while nobody ships it — this is the check that the
+          field is still open as of the pinned data.
+      entry-scenarios:
+        what: The modeled clearance window for each entry scenario (software-only entrant, hardware
+          entrant, acquisition), built from recorded lead-time assumptions.
+        why: Each scenario is a different way we lose the race; laying them side by side shows
+          which one actually constrains our timing.
+      watch-flagged:
+        what: Recent FDA clearances whose public names matched software or AI-related watch keywords,
+          flagged for analyst review.
+        why: These are the early-warning candidates — the fastest public evidence that someone
+          has started closing the gap.
+      clearances-by-quarter:
+        what: FDA infusion-pump clearance activity per quarter, with software-related and AI-related
+          name matches broken out.
+        why: A rising software or AI line inside category clearances is the trend-level signal
+          that the space is being invested in — context for how urgent the scenario analysis is.
+      verdict:
+        what: The verdict weighs the modeled entry scenarios against both readings of our launch
+          commitment. It rests on recorded lead-time assumptions and on a launch refinement that
+          exists only in this catalog — the strategy document commits a coarser date.
+        why: The margin's sign can flip within the assumption bands, so the verdict is a risk
+          posture (how thin the runway is) rather than a prediction of who wins.
   - id: BQ-14
     question: "Where exactly do we sit on PCA feature parity, line by line — which gaps are on the roadmap vs silently unaddressed?"
     category: roadmap
@@ -273,6 +1131,45 @@ questions:
       lane_years: {F1: "Y1 (2026)", F2: "Y1 (2026)", F3: "Y1 (2026)", F4: "Y2 (2027)",
                    F5: "Y2 (2027)", F6: "Y3 (2028)", F7: "Y3-Y4 (2028-2029)",
                    F8: "Y4 (2029)", F9: "Y5 (2030)"}
+    terms:
+    - DERS
+    - drug library
+    - EtCO2 / capnography
+    - PCA
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A line-by-line feature-parity scorecard against competing PCA / smart pumps: for
+          each compared attribute, whether we are ahead, at parity, or behind — and for each gap,
+          whether a roadmap lane genuinely closes it or merely responds to it.'
+        why: '"It''s on the roadmap" can hide gaps the roadmap does not actually fix. The closes-versus-adjacent
+          distinction is the honesty check on our own plan.'
+      parity-stat:
+        label: Parity position
+        what: 'The gap headline: how many attributes we trail on, how many of those are routed
+          to a roadmap lane that only responds with a different mechanism (adjacent) rather than
+          shipping the missing capability (closes), and how many have no roadmap answer at all.'
+        why: Adjacency-only and silently unaddressed gaps are the ones leadership believes are
+          handled but are not — the most dangerous kind.
+      parity-matrix:
+        what: 'The full attribute-by-attribute verdict: ahead / parity / behind, and for each
+          behind-gap, its roadmap routing and whether the lane closes or is adjacent.'
+        why: This is the working scorecard — the row-level detail behind the headline, where each
+          gap's actual disposition can be challenged.
+        how_to_read: 'Focus on behind-rows marked adjacent or unrouted: those remain open competitor
+          advantages even after the roadmap executes.'
+      parity-history:
+        what: The parity position tracked across successive competitor-matrix refreshes — history
+          that accumulates as the comparison is recomputed.
+        why: Whether the gap count is shrinking or growing over refreshes is the real test of
+          whether the roadmap is keeping pace with the market.
+      verdict:
+        what: The verdict distinguishes gaps a roadmap lane mechanically closes from gaps where
+          the lane responds with a different mechanism ("adjacent") — the competitor's shipped
+          capability may remain unanswered even after our lane lands.
+        why: It forces the roadmap conversation to be about what actually gets fixed, not about
+          whether every gap has a lane number written next to it.
   - id: BQ-15
     question: "Is the state-of-the-art analysis still current (EU MDR), and are our headline spec differentiators still ahead?"
     category: roadmap
@@ -295,6 +1192,55 @@ questions:
       sota_doc_date: "2026-04-12"
       review_cadence_months: 12   # stand-in for the QMS SOTA/PMS review cadence (challengeable)
       trailing_context_days: 365
+    terms:
+    - SOTA
+    - EU MDR
+    - 510(k)
+    - product code
+    - FRN
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A currency check on the state-of-the-art analysis: has the market moved since that
+          document was adopted (new clearances, better competitor specs), and do our headline
+          differentiators still lead?'
+        why: EU regulation expects the state-of-the-art benchmark to be kept current, and our
+          marketing claims lean on the same document. This is the tripwire that says when it must
+          be redone.
+      differentiator-margins:
+        label: Differentiator margins
+        what: For each headline differentiator (flow accuracy, battery life), our advantage over
+          the best documented competitor value — with the accuracy margin shown on both of our
+          spec bases, since our laboratory-standard spec and volumetric spec differ.
+        why: These margins are the substance behind "industry-leading" claims; showing both bases
+          discloses how much of the margin depends on which of our own specs is quoted.
+      accuracy-by-product:
+        what: Documented flow-accuracy specifications across the compared products.
+        why: The full field shows how far ahead (or close behind) each competitor sits — and which
+          one to watch as the margin's nearest threat.
+        how_to_read: Lower is better — a tighter accuracy tolerance is the superior spec.
+      battery-by-product:
+        what: Documented battery life across the compared products.
+        why: Same purpose for the second differentiator; higher is better here.
+      since-doc-count:
+        what: FDA infusion-pump clearances recorded after the state-of-the-art document's adoption
+          date.
+        why: Each post-adoption clearance is market movement the document has not seen — the raw
+          material of staleness.
+      trailing-context:
+        what: Clearance activity in the trailing year, as pace context.
+        why: The category's current clearance pace calibrates how quickly the document ages —
+          a fast-moving category shortens the safe review interval.
+      clearances-by-quarter:
+        what: FDA infusion-pump clearances per quarter.
+        why: The long-run activity rhythm behind the currency judgment.
+      verdict:
+        what: 'The verdict is a ride/refresh call: either the differentiators still lead and no
+          refresh trigger fired (ride to the scheduled review), or the market moved and the state-of-the-art
+          analysis needs to be redone now.'
+        why: It converts "is our benchmark stale?" from an annual argument into a rule with named
+          triggers.
   - id: BQ-16
     question: "For each roadmap feature: documented KOL evidence on file? Which ride on a single voice, and does current sentiment still order the waves?"
     category: roadmap
@@ -319,6 +1265,44 @@ questions:
         basis: "evidence-sufficiency stand-in; the KOL program sets no formal floor"
         set_by: vp-product (demo)
         validated: false
+    terms:
+    - KOL
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'An evidence audit of the roadmap''s clinical backing: for each committed feature,
+          how many distinct clinical voices are on file, of what kind (real collected evidence
+          versus simulated panel output), and whether sentiment still supports the planned sequence.'
+        why: Features justified by "clinicians want this" should be able to show the clinicians.
+          Features riding on one voice — or on no real evidence — are roadmap bets with hidden
+          fragility.
+      evidence-type-census:
+        label: Evidence census
+        what: 'The register''s contents split by evidence type: real collected KOL evidence (interviews,
+          surveys, publications) versus simulated advisory-panel rows.'
+        why: This is the audit's threshold finding — the mix determines whether anything else
+          in the register can be treated as clinical validation or only as structured hypothesis.
+      voices-per-feature:
+        what: The count of distinct clinical voices on file per roadmap feature.
+        why: A feature backed by one voice inherits that one person's biases and blind spots;
+          a minimum-voices floor is basic evidence hygiene.
+        how_to_read: Features below the minimum-voices line are the single-voice risks.
+      sentiment-mix:
+        what: The balance of supportive versus concerned sentiment per feature.
+        why: Concern-heavy features scheduled in early waves deserve a second look at sequencing
+          — enthusiasm ordering is what the wave plan implicitly assumes.
+      sentiment-history:
+        what: Sentiment tracked over time — history that requires repeated evidence collection
+          rounds to exist.
+        why: Clinical opinion moves; without periodic re-collection the register decays into a
+          snapshot of an old conversation. The gap is stated until the rounds happen.
+      verdict:
+        what: The verdict leads with the register's meta-finding about evidence type — what share
+          of the KOL register is real collected evidence versus simulated panel output — before
+          any per-feature reading.
+        why: Findings from simulated evidence are hypotheses to test with real clinicians, not
+          validation; the verdict prevents the register from being cited as something it is not.
   - id: BQ-17
     question: "Stacked against clearances, KOL data, and attach actuals — which roadmap bet do we kill, and which do we pull forward a year?"
     category: roadmap
@@ -355,6 +1339,56 @@ questions:
         F7: [AMBULATORY, WEARABLE]
         F8: [PERSONALIZ]
         F9: []
+    terms:
+    - KOL
+    - attach rate
+    - 510(k)
+    - product code
+    - FRN
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A stack-ranking of the future roadmap bets: each candidate feature scored on the
+          evidence streams available (clinical voice, competitive activity, adoption actuals),
+          surfacing one pull-forward candidate and one kill candidate.'
+        why: Roadmaps accrete commitments; this is the periodic forcing function that asks which
+          bet the evidence has stopped supporting, and which it says to accelerate.
+      candidates:
+        label: Kill / pull-forward candidates
+        what: 'The top and bottom of the composite ranking: the feature the evidence most supports
+          accelerating, and the feature it least supports keeping, with their scores.'
+        why: These two names are the analysis's output — the specific portfolio moves the underlying
+          evidence points at.
+      composite:
+        what: Every eligible feature's composite score, combining the evidence axes by the method
+          committed in the analysis plan.
+        why: Seeing the whole ranking — not just the extremes — shows how far apart the candidates
+          really are and which features sit in the undecided middle.
+      robustness:
+        what: How the two candidate picks behave when the scoring weights are perturbed — whether
+          the same names keep surfacing.
+        why: A pick that survives weight changes reflects the evidence; a pick that flips with
+          the weights reflects the formula. Only the first kind should drive a decision.
+      attach-rate:
+        what: The subscription attach actual used as the demand axis for cloud-delivered features.
+        why: Attach is the hardest demand evidence available — customers paying for the platform
+          a feature ships on — which is why it anchors the demand axis.
+      subscribed-sites-history:
+        what: The cumulative build of subscribed sites over time (gross adds).
+        why: The adoption trajectory behind the demand axis — momentum context for how much weight
+          the attach signal deserves.
+      noncloud-demand:
+        what: A demand signal for the features that do not ride the cloud platform — an evidence
+          stream the current data does not carry, so the gap is stated.
+        why: Without it, non-cloud features compete in this ranking with one evidence axis missing;
+          the chart names that asymmetry instead of hiding it.
+      verdict:
+        what: The verdict names the pull-forward and kill candidates but is explicitly decision
+          support, not the decision — the composite is a structured reading of imperfect evidence
+          streams, with known gaps.
+        why: Portfolio calls of this size belong to leadership with context the score cannot see;
+          the analysis's job is to make the evidence legible, not to outsource the judgment.
   # --- D. Field: Complaints & Safety ---------------------------------------
   - id: BQ-18
     question: "Top three complaint categories this quarter, rate-normalized with a stated denominator — any trending above the risk-file commitment?"
@@ -381,6 +1415,47 @@ questions:
         basis: "generic trend heuristic; no documented commitment"
         set_by: vp-quality (demo)
         validated: false
+    terms:
+    - complaint
+    - CAPA
+    - denominator
+    - trailing window
+    - installed base
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The complaint dashboard: the top complaint categories, normalized to a rate per
+          100 fleet devices over the trailing window, tested against per-category thresholds.'
+        why: Raw complaint counts rise with fleet size and mean little; rates against a stated
+          denominator are what the quality system's commitments are written in — and what triggers
+          formal investigation when crossed.
+      monthly-trend:
+        what: Monthly complaint volume for the top categories.
+        why: The shape over time separates a step-change (an emerging problem) from noise — direction
+          is often more informative than any single window's level.
+      rate-by-category:
+        what: Complaints per 100 fleet devices over the trailing window, per category, against
+          each category's threshold.
+        why: 'This is the chart the verdict hangs on: rate versus commitment, category by category,
+          with the denominator stated.'
+        how_to_read: Bars above their threshold line are the CAPA-review triggers.
+      window-trend:
+        what: Complaint volume in the current window next to the prior window.
+        why: Window-over-window movement is the simple momentum check — a rising count can precede
+          a rate breach.
+      verdict:
+        what: The verdict names any category whose rate crossed its threshold, triggering CAPA
+          review. The thresholds are demo stand-ins for the risk file's acceptability criteria
+          and must be re-derived from it before real use.
+        why: A crossed threshold obligates a formal quality-system response — but the obligation
+          is only as legitimate as the threshold, which is why the stand-in status is flagged.
+      expectations:
+        what: 'The yardsticks the complaint actuals are judged against — a per-category rate ceiling
+          and a no-upward-trend check. Both are marked unvalidated: stand-ins awaiting ratification
+          against the risk file.'
+        why: An unvalidated expectation can fail the right way or pass the wrong way; the flag
+          says the yardstick itself still needs to be made official.
   - id: BQ-19
     question: "How does our adverse-event profile compare to competitors — and what denominator did you use, because MAUDE doesn't have one?"
     category: field-safety
@@ -389,6 +1464,56 @@ questions:
     corpus_deps: [commercial/openfda-maude-infusion-mfr, commercial/openfda-maude-infusion-monthly]
     computation: "python3 computations.py BQ-19 --corpus-root {corpus_root} --out {out}"
     params: {aliases: entity-aliases.yml, top_n: 6}
+    terms:
+    - MAUDE
+    - MDR
+    - denominator
+    - product code
+    - FRN
+    - installed base
+    - assumption record (A-NNN)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: A comparison of adverse-event report volumes across infusion-pump manufacturers
+          from FDA's public MAUDE database — with an explicit account of why report COUNTS can
+          be compared but event RATES cannot.
+        why: '"How does our safety profile compare?" is a fair executive question with a trap
+          inside: public data has no per-manufacturer count of devices in use, so any rate comparison
+          would be built on an invented denominator.'
+      total-events:
+        label: Class-wide event volume
+        what: The total adverse-event report volume for the whole infusion-pump category over
+          the charted period, with the most recent months excluded because reports reach the
+          database with a delay.
+        why: It sizes the category's overall reported-harm background — the environment every
+          manufacturer's own report volume sits inside.
+      monthly-events:
+        what: Class-wide adverse-event reports per month for the infusion-pump category — all
+          manufacturers combined.
+        why: The category's monthly rhythm gives the baseline against which any one
+          manufacturer's shift would be judged, and shows category-level changes worth
+          knowing about on their own.
+      events-by-mfr:
+        what: MAUDE adverse-event report counts per manufacturer, with name variants merged under
+          a versioned alias map.
+        why: Counts show the scale of each manufacturer's report volume — but a bigger installed
+          base produces more reports at the same underlying safety level, so counts alone must
+          not be read as relative safety.
+        how_to_read: Read as report volume, never as a safety ranking — the fleet-size denominator
+          that would make it one does not exist in public data.
+      rate-by-mfr:
+        what: Events per installed device per manufacturer — the chart everyone wants, shown as
+          a stated gap because the denominator (each manufacturer's fleet size) is not public.
+        why: Publishing the gap, rather than a rate built on a guessed denominator, is the analysis's
+          core honesty move; the gap names exactly what data (a defensible installed-base assumption)
+          would unlock the comparison.
+      verdict:
+        what: 'The verdict splits the question in two: report counts are comparable with caveats,
+          while the rate comparison is BLOCKED until the installed-base assumption record is quantified.'
+        why: Declaring the blockage is the deliverable — it prevents a plausible-looking but indefensible
+          safety comparison from reaching a board slide.
   - id: BQ-20
     question: "Any field signal — complaints, near-misses, alarm data — around opioid over-delivery or PCA-by-proxy?"
     category: field-safety
@@ -404,6 +1529,71 @@ questions:
         basis: "franchise-killer tolerance — any occurrence escalates to CMO; threshold not yet ratified in the risk file [VERIFY]"
         set_by: cmo (demo)
         validated: false
+    terms:
+    - PCA
+    - PCA-by-proxy
+    - MAUDE
+    - MDR
+    - product code
+    - MEA
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A standing watch on the franchise''s nightmare scenarios: any internal field signal
+          — complaints, near-misses, open regulatory items — around opioid over-delivery or PCA-by-proxy,
+          set against class-wide public adverse-event volumes for PCA pumps.'
+        why: Over-delivery is the harm a PCA pump exists to prevent; even one confirmed event
+          carries outsized clinical, regulatory, and franchise consequences. This watch exists
+          so the first signal is seen in a dashboard, not in a regulator's letter.
+      watch-stat:
+        label: Watch-category events (internal log)
+        what: The count of complaint records in the watched categories — over-delivery and suspected
+          PCA-by-proxy — on our internal log.
+        why: Against a zero-tolerance expectation, any non-zero count here is the headline; these
+          are the events that escalate directly to clinical leadership.
+      watch-events:
+        what: The watch-category events broken out by category.
+        why: Over-delivery and PCA-by-proxy have different mechanisms and different mitigations
+          — the split says which failure mode is actually appearing.
+      watch-monthly:
+        what: Internal watch-category events per month.
+        why: Timing reveals clustering — events bunched around a firmware version or campaign
+          period point at a common cause.
+      watch-signals:
+        what: The watch-category entries in the field-signal register, with their dispositions.
+        why: A watch event that never reached a disposition is a process failure layered on a
+          safety signal — this tracks whether each signal was actually run to ground.
+      docket-watch:
+        what: Open regulatory-docket items (such as filed MDRs) in the watched categories.
+        why: It connects the internal safety signal to its regulatory reporting posture — what
+          FDA has been told, and what is still open.
+      class-monthly-events:
+        what: Class-wide adverse-event reports per month for PCA pumps from FDA's public MAUDE
+          database — all manufacturers, not just us.
+        why: 'The class-wide rhythm is context: it shows the background level of reported harm
+          in this device category and any category-level shifts worth knowing about.'
+      total-class-events:
+        label: Class-wide event volume
+        what: The total public adverse-event report volume for the PCA pump class over the charted
+          period, with the most recent months excluded because reports arrive with a delay.
+        why: It sizes the category's overall reported-harm background — the environment any single
+          manufacturer's signal sits inside.
+      class-event-rate:
+        what: 'The PCA-class event rate per installed device — unavailable for the same reason
+          as every MAUDE rate: no public denominator exists.'
+        why: The stated gap guards against reading class volumes as class risk rates.
+      alarm-data-gap:
+        what: Event-level alarm analytics from the device fleet — a telemetry stream the current
+          data does not carry, stated as a gap.
+        why: Alarm data is where a near-miss shows up before a complaint does; naming the gap
+          is the case for building that pipeline.
+      verdict:
+        what: The verdict fires when any watch-category event appears on the internal log — a
+          zero-tolerance trigger — and reports the reporting posture of each event. The internal
+          log is demo-fabricated; the class-wide MAUDE volumes are real.
+        why: A zero-tolerance watch only works if a single event visibly trips it; the verdict
+          is designed to be impossible to miss rather than proportionate to volume.
   - id: BQ-21
     question: "What's open on the field-action docket, how timely are our MDRs, and what's the exposure if FDA walks in tomorrow?"
     category: field-safety
@@ -419,6 +1609,55 @@ questions:
         basis: "30-day MDR filing requirement (21 CFR 803) [VERIFY against docs/external distillation]"
         set_by: vp-quality (demo)
         validated: false
+    terms:
+    - MDR
+    - FSCA
+    - trailing window
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The regulatory-docket health check: what field actions and reports to FDA are open
+          right now, how timely our required MDR filings have been, and what an inspector arriving
+          unannounced would find.'
+        why: Late safety filings and stalled field actions are among the easiest findings for
+          an FDA inspector to establish — and among the most damaging. This keeps that exposure
+          visible before the inspection, not after.
+      ontime-stat:
+        label: MDR timeliness
+        what: The share of required MDR filings in the trailing window that met their regulatory
+          deadline, and the count of docket items still open.
+        why: The on-time rate is the compliance posture in one number; the open-item count is
+          the live exposure an inspection would walk into.
+      docket-rollup:
+        what: Everything on the regulatory docket, grouped by record type.
+        why: The inventory view — how much regulatory work of each kind the organization is carrying.
+      filing-trend:
+        what: MDR filings per month, with late filings marked.
+        why: A late filing shows whether it was a one-off or part of a period when the reporting
+          process was strained.
+      open-items:
+        what: Each open docket item against its deadline.
+        why: Open items nearest their deadline are the ones that become findings first — this
+          is the docket's triage list.
+      ontime-rate:
+        what: The on-time versus late split for the trailing window.
+        why: The at-a-glance form of the compliance rate behind the headline.
+      basis-sensitivity:
+        what: The on-time rate recomputed under alternative counting bases (what counts as filed,
+          which window).
+        why: A compliance rate that changes materially with the counting basis is a fragile talking
+          point; showing the alternatives keeps the reported number honest.
+      exposure-list:
+        what: The specific items an inspector could cite today — open and late items in one list.
+        why: 'This is the actionable output: each row is something to close or be prepared to
+          explain.'
+      verdict:
+        what: 'The verdict answers "if FDA walks in tomorrow": the open items and any late filings
+          in the trailing window, stated as inspection exposure. The deadline rule it tests against
+          is flagged for verification against the regulation''s distillation.'
+        why: Framing docket health as inspection exposure converts a routine metric into the executive
+          question it actually serves.
   - id: BQ-22
     question: "Of last year's field signals, how many landed as design inputs or upgrade-pipeline items — and how many died in a spreadsheet?"
     category: field-safety
@@ -434,6 +1673,61 @@ questions:
         basis: "stand-in for the QMS signal-review SLA [VERIFY against the post-market SOP]"
         set_by: vp-quality (demo)
         validated: false
+    terms:
+    - complaint
+    - design input
+    - trailing window
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'A closed-loop audit of field signals: of the signals raised from the field, how
+          many were run to a disposition — landing in design, an upgrade, or a documented no-action
+          call — and how many simply stalled ("died in a spreadsheet").'
+        why: Post-market surveillance only counts if field experience demonstrably feeds back
+          into the product. A signal that stalls unresolved is both a missed product improvement
+          and an audit finding in waiting.
+      died-stat:
+        label: Died in a spreadsheet
+        what: The share of signals that reached no disposition — lifetime, and over the trailing
+          window.
+        why: 'This is the loop-integrity headline: the fraction of field learning the organization
+          collected and then dropped.'
+        how_to_read: Lower is better. The trailing-window figure shows whether the process is
+          improving; the lifetime figure shows the accumulated backlog.
+      funnel:
+        what: The disposition funnel — raised, dispositioned, landed in design or upgrades — for
+          the trailing window next to lifetime.
+        why: 'The funnel shows where signals leak: between being raised and reviewed, or between
+          review and actually changing the product.'
+      disposition-distribution:
+        what: How long signals took to reach disposition.
+        why: A loop that closes slowly closes less reliably; the distribution shows whether the
+          review SLA reflects practice or aspiration.
+      sla-compliance:
+        what: The share of signals dispositioned within the review SLA, by cohort.
+        why: The SLA is the process's own promise; cohort-level compliance shows whether recent
+          practice is better or worse than the historical average.
+      signal-trend:
+        what: Signals opened versus dispositions closed, per month.
+        why: When openings persistently outrun closures, the backlog grows silently — the two-line
+          comparison makes that imbalance visible.
+      exemplars:
+        what: Signals that fully closed the loop, traced from field signal to a design or upgrade
+          reference.
+        why: Named end-to-end examples prove the loop works and give an auditor the trace they
+          will ask for.
+      ref-verification:
+        what: Cross-system verification that each claimed disposition reference actually exists
+          in the target system — a check the current data cannot perform, stated as a gap.
+        why: A disposition is only as real as the reference behind it; naming the verification
+          gap is the difference between claimed and demonstrated loop closure.
+      verdict:
+        what: The verdict reports the died-in-a-spreadsheet share and how many signals demonstrably
+          landed in the product. The review SLA it tests against is a stand-in pending verification
+          against the post-market procedure.
+        why: It converts "do we learn from the field?" from an assertion into a measured rate
+          with named leaks.
   # --- E. Field: Upgrades & Service Ops ------------------------------------
   - id: BQ-23
     question: "Where do we stand on the current field-update campaign — planned vs actual coverage by region and site, and will we hit the close date?"
@@ -459,6 +1753,53 @@ questions:
         basis: "implied by the wave schedule; never explicitly capacity-planned"
         set_by: field-service (demo)
         validated: false
+    terms:
+    - run-rate
+    - FSE
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The field-update campaign scoreboard: how much of the targeted device population
+          has been completed, by region and site, and whether the current pace reaches the close
+          date.'
+        why: A safety-relevant update campaign that quietly runs late extends the period in which
+          part of the fleet runs old software. The projection turns "are we on track?" into an
+          early answer while there is still time to act.
+      coverage-stat:
+        label: Campaign coverage
+        what: The share of targeted devices whose update is complete.
+        why: The single number the campaign is managed by — how much of the committed population
+          is done.
+        how_to_read: Compare against the campaign's target coverage; the gap is the remaining
+          work.
+      cumulative-coverage:
+        what: Coverage over time, by region.
+        why: 'The slope is the story: a flattening regional curve means that region''s progress
+          has stalled, whatever its current level.'
+      coverage-by-region:
+        what: Current coverage per region.
+        why: Campaigns fail regionally, not uniformly — this shows where the remaining work concentrates.
+      weekly-run-rate:
+        what: Completions per week over the recent trailing weeks, by region.
+        why: The run-rate is the forward-looking half of the scoreboard — it, not the coverage
+          achieved so far, determines whether the close date is reachable.
+      projected-finish:
+        what: Each region's projected finish date at its current run-rate.
+        why: Projection makes the miss visible before it happens, naming which regions need intervention
+          (more capacity, remote conversion, or a re-plan) now.
+        how_to_read: Regions projecting past the close date are the escalation list.
+      verdict:
+        what: 'The verdict is the on-track call: current coverage plus per-region run-rates, projected
+          against the close date.'
+        why: It answers the only campaign question that matters mid-flight — "will we make it
+          at this pace?" — early enough for the answer to change something.
+      expectations:
+        what: 'The campaign''s yardsticks: reaching target coverage by the close date, and each
+          region sustaining the pace its wave requires. Both are marked unvalidated — stand-ins
+          for a campaign plan of record.'
+        why: The pace expectation was never explicitly capacity-planned, so a region failing it
+          may reveal a plan problem as much as an execution problem.
   - id: BQ-24
     question: "What are our update failure and retry rates — is any hardware rev, firmware baseline, or site profile failing at a rate that says pause and escalate?"
     category: field-ops
@@ -474,6 +1815,45 @@ questions:
         basis: "demo stand-in for an engineering quality threshold [VERIFY] — not yet derived from the risk file"
         set_by: rd-lead (demo)
         validated: false
+    terms:
+    - pause trigger
+    - firmware
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'Update quality control: failure and retry rates for the field-update campaign,
+          split by device cohort (hardware revision and starting firmware version), with a pre-set
+          pause threshold per cohort.'
+        why: A failure pattern that concentrates in one cohort is an engineering defect surfacing
+          in the field. The pause rule stops the campaign from continuing to push a failing update
+          onto exactly the devices it fails on.
+      worst-cohort:
+        label: Worst qualifying cohort
+        what: The per-attempt failure rate of the worst-performing cohort large enough to judge
+          (minimum cohort size applies).
+        why: Campaign-wide averages hide cohort-specific defects; the worst qualifying cohort
+          is where a real engineering problem shows first.
+        how_to_read: 'Above the pause threshold means: stop that cohort''s wave and escalate.'
+      failure-by-cohort:
+        what: Per-attempt failure rates across all qualifying cohorts.
+        why: The full field separates a single bad cohort (a specific defect) from broad elevation
+          (a process or update problem).
+      weekly-retry-trend:
+        what: Completions versus attempts needing a retry, per week.
+        why: Retries consume field capacity even when they eventually succeed; a rising retry
+          share degrades the campaign's effective pace before failures do.
+      verdict:
+        what: 'The verdict applies the pause rule: if any qualifying cohort''s per-attempt failure
+          rate crosses the threshold, the call is to pause that cohort''s wave and escalate to
+          engineering. The threshold is a stand-in not yet derived from the risk file.'
+        why: Deciding the stopping rule before the data arrives is the discipline; the verdict
+          simply reports which side of the pre-agreed line the fleet is on.
+      expectations:
+        what: 'The quality yardstick: no cohort''s failure rate exceeds the pause threshold. Marked
+          unvalidated — an engineering stand-in awaiting derivation from the risk file.'
+        why: Until the threshold is ratified, a breach obligates judgment rather than automatic
+          action — but the cohort it names is worth engineering attention either way.
   - id: BQ-25
     question: "Are customers struggling with this upgrade — tickets per 100 upgraded pumps, rollbacks — and what does an upgrade cost the customer?"
     category: field-ops
@@ -482,6 +1862,44 @@ questions:
     corpus_deps: [commercial/internal-upgrade-campaign]
     computation: "python3 computations.py BQ-25 --corpus-root {corpus_root} --out {out}"
     params: {customer_cost_assumption: A-002}
+    terms:
+    - rollback
+    - assumption record (A-NNN)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The customer-experience view of the update campaign: support tickets per 100 attempted
+          upgrades, sites that rolled the update back, and an estimate of what the campaign costs
+          customers in their own staff time.'
+        why: A campaign can hit its coverage numbers while quietly burning customer goodwill.
+          Tickets and rollbacks are the earliest measurable forms of that damage.
+      rollback-stat:
+        label: Rollbacks
+        what: The count of sites that reverted the update after installing it.
+        why: A rollback is the strongest struggle signal a site can send — it chose the old software
+          over the new. Each one is a named account conversation.
+      weekly-tickets:
+        what: Upgrade-related support tickets per week, by region.
+        why: The ticket rhythm against the campaign's progress shows whether support load is a
+          launch spike or a persistent drag.
+      tickets-per-100:
+        what: Tickets per 100 attempted upgrades, by region.
+        why: Normalizing by attempts makes regions comparable — a region with more tickets may
+          simply be doing more upgrades.
+      tickets-by-method:
+        what: Tickets per 100 attempted upgrades, split by update method (remote versus on-site).
+        why: If one method generates disproportionate struggle, the campaign's method mix — not
+          just its pace — becomes a decision variable.
+      rollback-sites:
+        what: The specific sites that rolled back.
+        why: The account-level list behind the rollback count — who needs a visit, not just how
+          many.
+      customer-cost-range:
+        what: An estimate of what the campaign has cost customers in their own staff time, for
+          the on-site portion, built on a recorded cost assumption and shown as a range.
+        why: The customer's cost of our campaign is invisible in our own books but real in the
+          relationship; even a bounded estimate makes it discussable.
   - id: BQ-26
     question: "Do we have the capacity to execute the remaining waves on schedule — or do we add headcount, contract labor, or slip?"
     category: field-ops
@@ -500,6 +1918,67 @@ questions:
         basis: "implicit in the wave plan; never validated against an FSE roster (dataset gap)"
         set_by: field-service (demo)
         validated: false
+    terms:
+    - FSE
+    - run-rate
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The campaign capacity question: given each region''s current completion pace and
+          what remains, can existing field capacity finish the waves by the close date — or is
+          the real choice between adding capacity, converting work to remote, and slipping the
+          date?'
+        why: '"Work harder" is not a plan. Quantifying the gap between required and actual pace
+          turns the capacity decision into arithmetic leadership can act on.'
+      capacity-stat:
+        label: Remaining campaign load
+        what: The devices still to update, and how many of those sit in regions whose progress
+          has stalled.
+        why: Remaining load in a moving region is schedule; remaining load in a stalled region
+          is a problem — the split is the point.
+      weekly-trend:
+        what: Completions per week by region.
+        why: The observed pace each region can actually sustain — the evidence base under every
+          projection in this analysis.
+      required-rate:
+        what: Each region's current weekly pace next to the pace required to finish by the close
+          date.
+        why: The gap between the paired bars is the capacity shortfall, region by region — the
+          analysis's central comparison.
+        how_to_read: Where the required bar exceeds the current bar, that region misses the date
+          without intervention.
+      anchor-sensitivity:
+        what: The same run-rates recomputed under an alternative anchor for "current pace" (measuring
+          from the latest completion instead of the data date).
+        why: Stalled regions make rate arithmetic sensitive to where you anchor "now"; showing
+          both keeps the stall from being averaged away.
+      remote-convertible:
+        what: Of the devices still needing on-site visits, how many could be handled remotely
+          because the device is connected.
+        why: Remote conversion is the cheapest capacity lever available — it removes site visits
+          without adding headcount.
+      fse-days-remaining:
+        what: The remaining on-site workload converted into field-service days — a floor based
+          on productive labor time, excluding travel.
+        why: Workload in days is the unit staffing decisions are made in; the floor framing says
+          the true need is at least this much.
+      fse-capacity:
+        what: The field-service side of the equation — roster size and utilization — which the
+          current data does not carry, stated as a gap.
+        why: Workload without capacity is half a plan; the gap names the dataset needed to finish
+          the staffing math.
+      verdict:
+        what: The verdict names the capacity gap per region — stalled, behind, or on track against
+          the required pace — and sizes the remote-conversion lever.
+        why: 'It frames the leadership choice as it actually is: add capacity, convert to remote,
+          or slip the close date.'
+      expectations:
+        what: 'The yardstick: existing capacity absorbs the remaining waves without surge or slip.
+          Marked unvalidated — implicit in the wave plan and never checked against an actual field-service
+          roster.'
+        why: A capacity assumption nobody validated is a schedule risk wearing a plan's clothes;
+          the flag keeps that visible.
   - id: BQ-27
     question: "How far behind current is the fleet — % of pumps more than one firmware version behind, at which accounts, and connected vs not?"
     category: field-ops
@@ -508,6 +1987,38 @@ questions:
     corpus_deps: [commercial/internal-fleet]
     computation: "python3 computations.py BQ-27 --corpus-root {corpus_root} --out {out}"
     params: {current_version: "3.4.0", behind_map: {"3.4.0": 0, "3.2.0": 1, "3.1.2": 2}}
+    terms:
+    - firmware
+    - installed base
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The fleet software-currency census: what share of the installed fleet runs outdated
+          firmware, how far behind, where, and whether connected devices stay more current than
+          unconnected ones.'
+        why: Every device behind on firmware runs without the newest fixes — and each version
+          left behind makes the eventual catch-up campaign bigger. Fleet currency is the standing
+          measure of that accumulating debt.
+      behind-stat:
+        label: Fleet currency
+        what: The share of the fleet at least one firmware version behind current.
+        why: The single number that says how much of the field is running old software — and how
+          large the update debt has grown.
+      currency-history:
+        what: Fleet currency tracked over time — history that accumulates as this census is recomputed
+          across fleet snapshots.
+        why: One reading cannot say if currency is improving or decaying; the stated gap will
+          fill as successive snapshots accrue.
+      behind-by-region:
+        what: The share of devices behind, per region.
+        why: Regional concentration says where the next update campaign's work actually is.
+      currency-by-connectivity:
+        what: The share of devices on the current version, split by connected versus unconnected.
+        why: Connectivity's promise is cheap remote updates; if connected devices are no more
+          current than unconnected ones, that promise is not being collected on.
+        how_to_read: A small or absent gap between the two bars means connectivity is not yet
+          translating into fleet currency.
   # --- F. Economics & Plan-vs-Actual ---------------------------------------
   - id: BQ-28
     question: "Where are we against plan on revenue — by line and region, volume vs price vs timing?"
@@ -524,6 +2035,54 @@ questions:
         basis: "standard reforecast trigger; the plan of record names no tolerance [VERIFY]"
         set_by: cfo (demo)
         validated: false
+    terms:
+    - gross margin
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The revenue plan-versus-actual review: year-to-date performance against plan, decomposed
+          by product line, region, and quarter, with each line''s contribution to the total variance.'
+        why: An aggregate near plan can hide offsetting misses underneath. The decomposition shows
+          which specific businesses are off-plan and by how much — where a reforecast conversation
+          should start.
+      ytd-variance:
+        label: YTD vs plan
+        what: Year-to-date revenue variance against plan, as a percentage.
+        why: The headline health check, read against the reforecast tolerance band — inside the
+          band is noise, outside is a re-plan conversation.
+      quarterly-trend:
+        what: Quarterly revenue, actual against plan.
+        why: The quarter-by-quarter track shows whether a gap is stable, widening, or being recovered.
+      variance-by-line:
+        what: Actual versus plan per product line.
+        why: Line-level misses are where the aggregate's offsetting stories live — several lines
+          can breach individually while the total stays inside tolerance.
+      variance-by-region:
+        what: Actual versus plan per region.
+        why: The geographic cut distinguishes a product problem from a territory problem — different
+          owners, different fixes.
+      variance-by-quarter:
+        what: The variance percentage per quarter.
+        why: The momentum view — whether each successive quarter lands closer to or further from
+          plan.
+      variance-contribution:
+        what: Each line's dollar contribution to the total variance.
+        why: Percentage misses mislead when line sizes differ; dollar contribution ranks the misses
+          by what they actually cost the total.
+        how_to_read: The largest negative bars are the lines dragging the year; positives are
+          offsetting it.
+      price-volume-split:
+        what: The decomposition of variance into volume, price, and timing effects — a cut the
+          current data cannot support, stated as a gap.
+        why: Selling fewer units and discounting the same units need opposite responses; the gap
+          names the data needed to tell them apart.
+      verdict:
+        what: The verdict reads the aggregate against the tolerance band and names the lines breaching
+          it individually. The tolerance is a standard reforecast trigger; the plan of record
+          names none.
+        why: It stops an in-tolerance total from ending the conversation while individual businesses
+          are quietly missing their plans.
   - id: BQ-29
     question: "Is the Cloud Suite attach-rate stage-gate holding — the gate that releases the $24M predictive-monitoring spend?"
     category: economics
@@ -539,6 +2098,66 @@ questions:
         basis: "numeric stand-in — commercial-strategy.md gates the $24M on 'Y1/Y2 Cloud Suite traction' but sets NO number [VERIFY]"
         set_by: cfo (demo)
         validated: false
+    terms:
+    - attach rate
+    - stage-gate
+    - installed base
+    - denominator
+    - ARR
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The stage-gate check: the flagship fleet''s subscription attach rate against the
+          gate level that releases the next major investment — including how the rate moves under
+          alternative denominator choices.'
+        why: The gate exists so a large spend follows demonstrated demand rather than hope. This
+          is the standing measurement of whether that demonstration has happened.
+      attach-stat:
+        label: Attach rate
+        what: The share of the flagship installed base under an active subscription.
+        why: This is the gate metric itself — the adoption evidence the investment decision is
+          conditioned on.
+        how_to_read: Compare against the gate level — noting that the gate number itself is a
+          stand-in nobody has ratified.
+      denominator-sensitivity:
+        what: The attach rate recomputed under alternative denominator choices (which devices
+          count as the eligible base).
+        why: A gate decision that flips with the denominator definition is not a robust decision;
+          this shows how much the verdict depends on that choice.
+      cumulative-attach:
+        what: Pumps under currently-active subscriptions, over time.
+        why: The build curve shows momentum toward the gate — and whether progress is recent or
+          stalled.
+      attach-breakdown:
+        what: The installed base split by subscription segment (active, lapsed, never subscribed).
+        why: Lapsed and never-subscribed pools need different plays (win-back versus first sale);
+          the split sizes each.
+      attach-by-region:
+        what: Attach rate per region.
+        why: Regional spread shows whether adoption is a broad pattern or one strong region carrying
+          the average.
+      gap-sites:
+        what: Sites whose pumps are connected but not subscribed.
+        why: The named conversion targets — hardware-ready customers where attach can be won without
+          any install work.
+      attach-history:
+        what: The attach rate over time — a history that requires successive fleet-and- subscription
+          snapshots to build, stated as a gap until they accumulate.
+        why: Gate decisions should read a trajectory, not a single point; the gap names what is
+          needed to provide one.
+      verdict:
+        what: 'The verdict tests attach against the gate level and — just as important — flags
+          that the gate number itself is a stand-in: strategy conditions the spend on demonstrated
+          traction but never ratified a figure.'
+        why: A gate that no one formally set can release a major spend by default; the verdict
+          surfaces the unratified number as its own finding.
+      expectations:
+        what: 'The yardstick: attach reaches the gate level before the gated spend releases. Marked
+          unvalidated — the numeric gate is a stand-in for a strategy commitment that names no
+          number.'
+        why: Ratifying the gate number is the real decision this analysis keeps pointing back
+          to.
   - id: BQ-30
     question: "What's our fully-loaded cost per update, remote vs on-site — and the business case for a remote-first campaign at the top non-connected accounts?"
     category: economics
@@ -560,3 +2179,57 @@ questions:
         basis: "business-case stand-in; not yet validated by finance"
         set_by: vp-field-service (demo)
         validated: false
+    terms:
+    - FSE
+    - fully-loaded cost
+    - run-rate
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: 'The update-economics analysis: what one completed update actually costs by method
+          (remote versus on-site), and the investment case for equipping the largest unconnected
+          accounts with connectivity so future campaigns run remotely.'
+        why: The cost gap between a remote session and a truck roll is the economic engine behind
+          the connectivity strategy; this analysis prices that gap and the payback of closing
+          it.
+      cost-per-update:
+        label: Cost per completed update
+        what: The cost of one completed update by each method — remote at the session rate, on-site
+          at a labor-time floor that excludes travel and overhead.
+        why: The per-unit cost gap, multiplied across a campaign, is the money at stake in the
+          method mix.
+        how_to_read: The on-site figure is a floor; the true fully-loaded gap is wider than shown.
+      weekly-by-method:
+        what: Completed updates per week, split by method.
+        why: The realized method mix — whether the campaign is actually shifting toward the cheaper
+          channel or just could.
+      onsite-cost-bounds:
+        what: The on-site cost per update as an envelope, from the labor-time floor to a full-day
+          ceiling.
+        why: Without measured travel time, the honest answer is a range; decisions should survive
+          both ends of it.
+      method-connectivity:
+        what: Completions cross-tabulated by method and device connectivity.
+        why: Connected devices updated on-site are money left on the table — this finds the mismatch
+          between what the fleet allows and how the work was done.
+      adapter-case:
+        what: 'For the largest unconnected accounts: the one-time cost of connectivity hardware
+          against the recurring on-site cost each campaign incurs there.'
+        why: This is the remote-first business case at the account level — capital once versus
+          truck rolls forever.
+      adapter-payback:
+        what: How many update campaigns it takes for an account's connectivity hardware to pay
+          for itself.
+        why: 'Payback in campaigns is the deciding unit: short paybacks make conversion near-automatic;
+          long ones confine it to strategic accounts.'
+        how_to_read: Fewer campaigns is a faster payback — those accounts convert first.
+      finish-current-campaign:
+        what: The projected cost of completing the current campaign's remaining on-site backlog.
+        why: 'The near-term number: what the remaining truck rolls will cost if nothing is converted
+          before the campaign ends.'
+      fully-loaded-onsite:
+        what: The true fully-loaded on-site cost per update — including measured travel, scheduling
+          overhead, and repeat visits — which current data cannot support, stated as a gap.
+        why: Everything here prices on-site work at a floor; the missing time-and-motion data
+          would replace the envelope with a number.

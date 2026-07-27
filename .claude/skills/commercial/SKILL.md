@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 9
+version: 10
 updated: 2026-07-27
 dependencies:
   skills:
@@ -143,13 +143,22 @@ refreshes with unchanged methodology, the lint gate alone may suffice — say wh
 done.
 
 ### `render`
-Write `.console/commercial-index.json` (`schema_version: 1.0`) — per question: status
+Write `.console/commercial-index.json` (`schema_version: 1.1`) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
 **newest edition regardless of status** — a fresh draft supersedes an older approved
 answer on the card, because showing an out-of-date verdict as "the answer" is worse
 than showing an unapproved one (the status chip discloses draftness).
+
+Schema 1.1 adds two reader-aid fields per question row, both sourced from the catalog
+(see "Terms & explainers" below) and purely additive — 1.0 consumers degrade gracefully
+by ignoring them:
+
+- `"explainers": {…}` — the question's `explainers:` map, verbatim.
+- `"terms": [{"term", "definition"}, …]` — the question's `terms:` reference list
+  resolved against the catalog's top-level `terms:` dictionary. An unresolved key is a
+  render warning to stderr and is skipped — the engine never fabricates a definition.
 
 ### `check`
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
@@ -216,6 +225,48 @@ compute ONLY from those snapshots); write `report.md` + `data.json` into `{out}`
 Questions without a `computation` are `not-implemented` — visible in the catalog and
 sidecar as roadmap, never silently missing. Plan constants (targets, close dates) live
 in `params` and are cited in reports as `[config: commercial.yml]`.
+
+**Terms & explainers — plain-language reader aids (catalog-authored, sidecar-rendered).**
+Reports are written for analysts; consoles are read by regulators, executives, and
+other non-analyst readers. The catalog carries the decoding layer:
+
+```yaml
+terms:                      # top-level dictionary — define each term ONCE
+  "510(k)": "The standard FDA premarket route for most moderate-risk devices …"
+  MAUDE: "FDA's public database of medical-device adverse-event reports …"
+
+questions:
+  - id: BQ-23
+    # …
+    terms: [MAUDE, "510(k)", {one-off-term: "Inline definition for a term used only here."}]
+    explainers:
+      question:             # reserved key — whole-answer "About this analysis"
+        what: "What this analysis is, in plain words."
+        why: "The decision a reader should connect it to."
+      coverage-stat:        # a series id from the computation's data.json
+        label: "Campaign coverage"        # optional display label
+        what: "What this number is."
+        why: "Why it matters."
+        how_to_read: "Higher is better; compare against the 95% target."  # optional
+      verdict:              # reserved key — decodes the verdict concept (gate, trigger)
+        what: "…"
+        why: "…"
+```
+
+- Per-question `terms:` is a **reference list** of keys into the top-level dictionary
+  (define once, reference everywhere); an inline `{term: definition}` map entry is
+  accepted for one-off terms. Definitions are 1–3 sentences, plain language, written
+  for a reader who knows neither analytics nor FDA data-plumbing jargon.
+- `explainers:` is keyed by **target id** — a series id from the question's data.json
+  (a mis-keyed explainer renders nowhere: read the latest edition's data.json to get
+  the ids right), or the reserved keys `question`, `verdict`, `expectations`. Each
+  value: `{label?, what, why, how_to_read?}`.
+- **Authoring rule — explainer and term text is TIMELESS.** It defines the metric or
+  term and its significance; it must NEVER contain pin-dependent facts — no row
+  counts, no date ranges, no current values. Those live in the marker-cited report,
+  which is regenerated per edition; the explainer survives every re-answer unchanged.
+  Style: short sentences, no acronym left undefined, and the "why" states the decision
+  the reader should connect the number to.
 
 **Recommended layout at scale — per-BQ modules.** A single `computations.py` works for
 a handful of questions but becomes a merge bottleneck when many computations are

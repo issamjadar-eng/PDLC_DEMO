@@ -67,6 +67,18 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 10 (2026-07-27): Plain-language reader aids for non-analyst console readers. Catalog
+  schema: top-level `terms:` dictionary (term -> 1-3 sentence plain-language
+  definition, defined once) + per-question `terms:` reference lists (string keys into
+  the dictionary; inline `{term: definition}` accepted for one-offs) + per-question
+  `explainers:` maps keyed by data.json series id or the reserved keys
+  question / verdict / expectations, each `{label?, what, why, how_to_read?}`.
+  Engine `render`: sidecar `schema_version` 1.0 -> 1.1; each question row gains
+  `explainers` (verbatim) and `terms` (resolved; unresolved key = stderr warning +
+  skip, never fabricated) — purely additive, 1.0 consumers ignore the new fields.
+  SKILL.md documents the schema and the timeless-authoring rule (explainer/term text
+  defines the metric and its significance; never pin-dependent facts). Template gains
+  a commented example of both blocks.
 - 9 (2026-07-27): Battle-test hardening. Engine: (bug fix) same-day draft replacement
   now carries filed `verifications` records forward from the replaced draft's
   quality.json (each stamped `carried_from_replaced_draft: true`) — previously they
