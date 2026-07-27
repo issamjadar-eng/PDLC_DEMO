@@ -6,8 +6,8 @@ description: |
   TRIGGER when the user wants to **scaffold, build, author, seed, generate, assemble, or render** a Q-Submission / pre-submission / 510(k) / PCCP / PMA **content package** — phrasings include: "scaffold the Q-Sub package", "set up the qsub documents", "scaffold the 510(k)", "create the FDA questions doc", "build the cover letter / device description / intended-use / substantial-equivalence / PCCP summary", "seed submission content", "assemble the composition manifest", "render the submission console view", "refresh the submission sidecars", "what's in the Q-Sub package", "is the qsub package ready to transmit". Also fire on any edit/write under `docs/project/submissions/<filing>/` content docs or `_provenance/`.
 
   Sibling boundaries — this skill owns submission **content** + its console sidecars. It is NOT `/tracker` (deliverable × phase readiness dashboard), NOT `/change-control` (publish to Confluence/Windchill), NOT `/medtech-docs` (DHF scaffolding), NOT `/dhf-manifest` (deliverable-coverage projection). When a fact is canonical elsewhere (regulatory-strategy.md D-REG-* blocks, the system SAD, project.yml), submission docs reference it — they do not redeclare it.
-version: 6
-updated: 2026-07-07
+version: 10
+updated: 2026-07-08
 ---
 
 # Submissions
@@ -74,7 +74,7 @@ cross-reference and in history, any reorder or trim churns hundreds of reference
 floods internal reviewers with noise. Decouple the two:
 
 1. **Each question carries one permanent, unique stable key** — a `QK-<slug>`
-   (e.g. `QK-PCCP-PREOP-AI`) that **never renumbers**. The slug is semantic so it
+   (e.g. `QK-PCCP-ALGO-UPDATE`) that **never renumbers**. The slug is semantic so it
    self-documents in history.
 2. **Zone rule.** **FDA-transmitted filed bodies** (what the reviewer reads) show the
    human **display number** (`Q1.1`, `Q2.2`, …; deferred questions live in the deferred
@@ -131,7 +131,10 @@ defect, not compliance.
 | `scripts/provenance_reconcile.py` | `provenance {check,stamp}` — source-drift pinning (git blob SHA) **and** claim↔primary-source grounding (`ungrounded-claim`). PyYAML for read; `pypdf` for PDF quote grounding. |
 | `references/claim-grounding.md` | Rule — a factual claim about an external primary source (predicate/cleared filing) must be grounded in that source with a verbatim `quote`, not paraphrased from a sibling summary while the source sits un-consulted. |
 | `templates/_shared/` | Filing-agnostic templates: `composition-manifest.template.md` (the manifest skeleton — its section/column contract is documented below) + `provenance.template.yml`. |
-| `templates/qsub/` | Q-Sub profile: cover letter, device description, intended-use, FDA questions, PCCP summary. |
+| `templates/qsub/` | Q-Sub profile: cover letter, device description, intended-use, FDA questions, PCCP **summary** (abbreviated, for the pre-sub). |
+| `templates/pccp/` | Full **filed** PCCP profile: `pccp-plan.md` — the complete 510(k)-embedded PCCP at filing depth (Document Control · Description of Modifications · four-sub-component Modification Protocols w/ worked SAP · required Traceability table · Impact Assessment · ISO 14971 gate · routing · monitoring · reporting). Depth contract in `references/pccp-full-document-structure.md`. |
+| `references/pccp-full-document-structure.md` | Finding aid — the structure + depth FDA expects in a **filed** PCCP (§ VI/VII.B(1)–(4)/VII.C/VIII), the Performance-Evaluation **SAP checklist**, the required Traceability table, the Impact-Assessment elements, document-control apparatus, and the methodology-complete-vs-value-locked distinction. Read before scaffolding/authoring a full PCCP. |
+| `references/pccp-authorized-exemplars.md` | Finding aid — **empirical** companion to the structure contract: real FDA-**authorized** PCCPs in the public 510(k) record (K250369 Axial3D INSIGHT, K241561 MammoScreen BD, K242807 HeartFocus, K242551 Syngo Auto-EF, K233955 Clarius OB AI, K233030 BoneMRI), the reusable modification-table schema, the Verification/Validation split, quantified acceptance-criteria patterns, scope-fence boilerplate, and the documentation-completeness bar (post-market drift monitoring is the top differentiator). This is our source-of-truth for "what good actually looks like," beyond the hypothetical guidance examples. |
 | `templates/510k/` | 510(k) profile: cover letter, indications-for-use (Form FDA 3881), 510(k) summary, substantial-equivalence discussion + predicate comparison, device description, performance-testing summary, truthful-&-accuracy statement. |
 | `templates/pma/` | PMA profile — **placeholder stubs only** (cover letter, SSED, device description, nonclinical/clinical studies, manufacturing info, labeling). Marked `🚧 PLACEHOLDER`; scaffolds the folder shape, not built-out content. |
 | `README.md` | Design rationale, architecture/boundaries, Best Practices (consumed by `/best-practices`), Changelog. |
@@ -149,7 +152,7 @@ get `templates/_shared/` (manifest + provenance).
 |---|---|---|---|
 | `qsub` | Q-Sub (Pre-Submission) | `templates/qsub/` | cover letter · device description · intended-use · FDA questions · PCCP summary |
 | `510k` | 510(k) | `templates/510k/` | cover letter · indications-for-use (FDA 3881) · 510(k) summary · substantial-equivalence + predicate comparison · device description · performance-testing summary · truthful-&-accuracy statement |
-| `pccp` | PCCP | `templates/qsub/` (PCCP subset) | PCCP summary + cover letter (the PCCP rides inside a Q-Sub/510(k); a standalone `pccp` filing reuses the Q-Sub profile's PCCP-relevant docs) |
+| `pccp` | PCCP | `templates/pccp/` (+ `qsub/` cover letter) | **Full filed PCCP** (`pccp-plan.md`) — Document Control header · Description of Modifications (§ VI) · four-sub-component Modification Protocols with a worked SAP (§ VII.B(1)–(4)) · **Traceability table** (§ VII.C, required) · Impact Assessment (§ VIII) · ISO 14971 gate · routing · monitoring · reporting. **Distinct from the Q-Sub `pccp-summary.md`** (the abbreviated PCCP *summary* for a pre-sub); the full profile is the 510(k)-embedded filed document. Depth contract: [`references/pccp-full-document-structure.md`](references/pccp-full-document-structure.md). |
 | `pma` | PMA (Premarket Approval) | `templates/pma/` | **🚧 placeholder stubs** — cover letter · SSED · device description · nonclinical studies · clinical investigations · manufacturing info · labeling |
 
 The set is also encoded in `render_sidecars.py` `FILING_META` (type labels) and
@@ -207,12 +210,33 @@ filing gets the 510(k) document set, not the Q-Sub one.
    first — the "modify an existing output vs add a new output" distinction (a new
    output dressed as an improvement of an existing one is a scope over-claim, and
    generally needs its own bounded category + regulator agreement, not an existing
-   retrain/refine category).
+   retrain/refine category). **When scaffolding or authoring a FULL filed PCCP**
+   (`pccp` filing, or a `pccp-plan.md` under any filing), also read
+   [`references/pccp-full-document-structure.md`](references/pccp-full-document-structure.md)
+   first — it is the filing-depth contract (the three components worked *per
+   modification*, the required § VII.C Traceability table, the Performance-Evaluation
+   **SAP checklist**, and the methodology-complete-vs-value-locked rule that keeps a
+   filed PCCP from reading like a Q-Sub summary). **If a Q-Sub was already
+   transmitted for this device, the filed PCCP is NOT done until it is reconciled
+   against that transmitted Q-Sub** — every Q-Sub commitment (summary position,
+   question framing, brief provision) must have a home in the plan, nothing may
+   contradict/narrow a transmitted position, and no filed claim may assert an "FDA
+   agreement" only requested. The transmitted document sets the floor; the filed one
+   may exceed but not fall below it. See the depth-contract reference's **"Reconcile
+   the filed PCCP against the transmitted pre-submission"** gate — this is the class
+   of defect (under-delivered/contradicted Q-Sub commitments) a per-document lint
+   cannot see.
 2. **Resolve the profile.** Map `<filing>` to its profile via the **Filing-type
    profiles** registry below (`qsub` → `templates/qsub/`, `510k` → `templates/510k/`,
-   `pccp` → `templates/qsub/` PCCP-subset, `pma` → `templates/pma/`). If `<filing>`
-   is not a known type, stop and report the supported set — do not silently fall
-   back to the Q-Sub profile (that's the bug this profile model fixes).
+   `pccp` → `templates/pccp/` (the full filed-PCCP profile — **not** the Q-Sub
+   `pccp-summary`; the summary is a Q-Sub-profile doc), `pma` → `templates/pma/`).
+   If `<filing>` is not a known type, stop and report the supported set — do not
+   silently fall back to the Q-Sub profile (that's the bug this profile model fixes).
+   **Altitude choice (PCCP):** a *Q-Sub* wants the abbreviated `pccp-summary.md`
+   (+ the worked Modification-Protocol templates); a *filed 510(k)* wants the full
+   `pccp-plan.md`. Confirm the intended consumer before building every per-modification
+   protocol — see the scope-vs-effort note in the depth-contract reference (the Q-Sub
+   questions exist to let FDA prune the category set before full depth is invested).
 3. Instantiate the profile's content templates **plus** `templates/_shared/`
    (`composition-manifest.template.md`, `provenance.template.yml`) into the filing
    folder: substitute the `{{PLACEHOLDER}}` tokens from `project.yml` + the strategy
@@ -294,13 +318,15 @@ python3 .claude/skills/submissions/scripts/qsub_scope_lint.py docs/project/submi
 The linter is **tag-based** (strips 🔒 `<details>…</details>` by *balanced tag*, nesting-safe
 — never by the fragile visible marker) and **prose-aware**, and it lints **only what actually
 ships** (the transmitted set is read from the cover-letter `## Attachments` list, so a doc
-moved to the 510(k) drops off the worklist automatically). Five checks:
+moved to the 510(k) drops off the worklist automatically). Seven checks:
 
 - **C1 container-integrity** (BLOCK) — `<details>`/`</details>` balanced; every `🔒 END INTERNAL` adjacent to a `</details>`.
 - **C2 reference-availability** (WARN → BLOCK under `--transmit-gate`) — filed-body prose references to non-transmitted doctypes, minus the forward-reference allowlist ("… part of the 510(k) …", "… on request").
 - **C3 blocking-brief-anchor** (BLOCK) — a transmission-blocking brief must anchor an **active** (non-`DQ-*`) question.
 - **C4 manifest ⇄ cover-letter reconciliation** (BLOCK / WARN) — section-aware three-state match (`transmitted` / `on-request` / `grounding-only`, via a `### Grounding — not transmitted` manifest sub-bucket) on path-aware doc identity; flags a transmitted manifest piece not attached, an attachment with no manifest entry, or an unmarked grounding row.
 - **C5 altitude** (WARN) — a raw controlled DHF doc (a `_confluence/**` path) attached with no Q-Sub scoping note/extract adjacent to its attachment line.
+- **C6 effective-ask-count** (WARN; `--ask-ceiling`, default 10) — the FDA Q-Sub guidance heuristic is "no more than **7-10 questions (including sub-questions)**". The failure mode: a deliberate primary-question trim executes, then later scope additions **embed** new asks inside existing question bodies (a bolded `**Question**: Does FDA agree…` paragraph, another conditional follow-up) — the primary count holds while the *effective* ask count silently re-inflates, and nothing watches it. Counts interrogative sentences per transmitted question section of the **filed body**; WARNs on the package total over the ceiling and on any single question packing ≥4 asks (dependent asks invite fragmented FDA feedback — label them as sub-questions so each is individually answerable). Heuristic → always WARN, never BLOCK (the guidance says "typically", and deep-single-topic packages are explicitly sanctioned).
+- **C7 ambiguous-commitment-terminology** (WARN) — bare **"IFU"** inside a filed-body **commitment or boundary phrase** ("no IFU change", "IFU unchanged", "within-IFU", "IFU update/change procedure", "existing IFU"). "IFU" has two industry-standard expansions — **Indications for Use** (the cleared-indication statement; changing it routes to a new 510(k) per 21 CFR 807.81(a)(3)) and **Instructions for Use** (the labeling document; its updates routinely accompany UI/software changes and do **not** negate PCCP / letter-to-file eligibility). A commitment written with the bare acronym silently promises the wrong thing to one of the two readers — "no IFU change" on a UI-change category is *unrealistic* under one reading and *load-bearing* under the other. This exact confusion has produced a fix-then-counter-fix cycle in a real package (a reviewer pass corrected the acronym the wrong way before a second pass corrected the correction). Lines that spell out the expansion (or name the labeling document, e.g. DFU) on the same line pass; casual non-commitment mentions ("the proposed IFU") are not flagged.
 
 WARN advisory by default; `--transmit-gate` makes any BLOCK a non-zero exit. **Run before any `qsub` transmit.**
 
@@ -330,19 +356,31 @@ between two documents** — a pointer in one document that *describes*, *numbers
 for* another. Each side is internally clean; only the pair is wrong. Full principle + the
 predicate/SE tiering model: [`references/pre-sub-package-consistency.md`](references/pre-sub-package-consistency.md).
 
+> **Scope note — S1–S4 are *within-package* seams; the *cross-filing* Q-Sub→PCCP/510(k)
+> reconciliation is NOT covered here** (no script yet). A filed PCCP that under-delivers or
+> contradicts a commitment made in the already-**transmitted** Q-Sub is a distinct, high-cost
+> defect class (deficiency-letter fodder) that this `check` does not catch. Run the manual
+> **"Reconcile the filed PCCP against the transmitted pre-submission"** walk from
+> [`references/pccp-full-document-structure.md`](references/pccp-full-document-structure.md)
+> before any filed PCCP/510(k) is declared done — best executed as a `quality-engineering` +
+> `regulatory-affairs` agent pass over (transmitted Q-Sub set) × (filed plan). Automating it as
+> an S5 cross-filing check is a tracked future enhancement.
+
 ```bash
 python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub [--transmit-gate] [--json]
 ```
 
 Project-agnostic (transmitted set + numbered lists read from the package's own cover letter;
-the filed-body scans cover only what ships — internal assembly artifacts are excluded). Three checks:
+the filed-body scans cover only what ships — internal assembly artifacts are excluded). Six checks:
 
 - **S1 cross-reference accuracy** (WARN) — a filed-body pointer that calls a linked package doc the "full/complete/comprehensive" predicate/SE analysis while that target self-describes as an **abbreviated/summary** treatment (tier confusion). Deferral and contrastive sentences ("the full analysis is a 510(k) deliverable"; "abbreviated … gates full analysis") are exempt.
 - **S2 attachment-number consistency** (FAIL / WARN) — a prose "attachment N" whose number matches **none** of the package's numbered lists for the doc it links (FAIL), plus per-list contiguity (gaps/dupes → FAIL); two lists numbering the same doc by a **uniform** offset (one counts the cover letter, the other doesn't) collapse to one WARN, a **non-uniform** offset lists each drift.
 - **S3 folder-boundary compliance** (FAIL / WARN) — a **transmitted** attachment whose path escapes the filing folder (`../`) with no on-request/internal/grounding disposition on its line (FAIL); a filed-body `../../` link reaching outside the filing folder (WARN — confirm grounding-only).
 - **S4 stable-key liveness** (WARN) — an *anchor/support* declaration (in a transmitted doc or the manifest) that names a stable question key (`QK-*`) which the questions master map has since **deferred or dropped**. This is the **semantic seam** the structural checks (S1–S3) cannot see: a "spine" fact (a question's number or transmit status) changes in its home doc, and sibling docs that declare they anchor/support it are not updated in lockstep — the root cause of recurring "stale reference" drift. Reads the `QK → display → transmitted?` master map from `fda-questions.md`; disposition-guarded (a "QK-X was deferred → DQ-N" note is not flagged) and skips changelog/metadata rows. Prefer stable `QK-*` keys over bare display numbers (`Q1.3`) in apparatus — display numbers churn on every renumber; the master map is the drift-resistant anchor.
+- **S5 question↔support matrix** (FAIL / WARN + informational matrix) — mechanizes the sponsor-level question "does each transmitted question have distinct supporting substance, and does every attachment earn its place?" Per transmitted question: which attachments mention/support it (emitted as a matrix in text + JSON — the generated per-question support map, replacing a hand audit). **FAIL** on an attachment that supports no transmitted question AND carries no `background` disposition on its cover-letter row — the guidance's "extraneous information" risk (guidance-**required** content — cover letter, device description, IFU/labeling, predicate comparison — is exempt: it earns its place without anchoring a question). **WARN** on a transmitted question no attachment supports (confirm self-contained by design).
+- **S6 enumeration-completeness** (WARN) — a package deliberately restates enumerable label sets (change-category labels, rule sets) across transmitted docs for **reviewer ergonomics**; the cost of that duplication is **lockstep drift, not pages** — the family grows in its home doc (a new category label) and a sibling doc's recap silently stays at the old span (the classic: a cover-letter recap enumerating categories 1..6 after the package grew a 7th). Deliberately narrow to stay high-signal: single-letter label families in a category-context line only (separates category labels from same-letter collisions like a security diagram's interface labels); a line counts as an *enumeration* only with ≥4 separately-written labels (a range like `C1–C7` is ONE token — naming a span is not recapping members); "e.g./such as" partial lists exempt. **Checks consistency between duplicate instances; never asks for deduplication** — reader-serving duplication is a deliberate authoring choice (duplication is fine; drift is not).
 
-WARN advisory by default; `--transmit-gate` makes any FAIL a non-zero (2) exit. **Run before any transmit**, alongside `scope-lint`. This check earned its keep on the seam defects that a per-document lint cannot see: a summary attachment described as the "full" analysis (S1), a prose "attachment N" off-by-one against the contents table (S2), a transmitted piece sourced from an out-of-package folder (S3), and a filed/apparatus claim to anchor a since-deferred question (S4 — found in the cyber brief, the cover letter, and the separation argument after a question-set renumber).
+WARN advisory by default; `--transmit-gate` makes any FAIL a non-zero (2) exit. **Run before any transmit**, alongside `scope-lint`. This check earned its keep on the seam defects that a per-document lint cannot see: a summary attachment described as the "full" analysis (S1), a prose "attachment N" off-by-one against the contents table (S2), a transmitted piece sourced from an out-of-package folder (S3), a filed/apparatus claim to anchor a since-deferred question (S4 — found in the cyber brief, the cover letter, and the separation argument after a question-set renumber), and a cover-letter question recap that omitted a later-added change category while the questions doc carried it (S6 — regression-verified against that exact historical defect).
 
 ### `provenance {check,stamp}` — source-drift reconciliation + claim grounding
 
@@ -358,7 +396,7 @@ python3 .claude/skills/submissions/scripts/provenance_reconcile.py stamp <doc-ba
 - Each `_provenance/<doc>.provenance.yml` already records the upstream sources a doc reproduces/summarizes (`path` + `sections`/`decisions`/`terms` + `how_used`). **`stamp`** pins each *content* source (an entry naming `sections`/`decisions`/`terms`; framing files like a root README/CLAUDE are skipped) to its `git hash-object` SHA in a **generated** `<doc>.sources-lock.json` beside the sidecar — kept separate so the churny hashes never force a fragile edit of the comment-carrying human sidecar.
 - **`check`** compares each pinned SHA against the source's current SHA and emits: **drift** (source changed since the doc was last reconciled — re-check the derived content, with the `how_used` note printed so you know *what* to re-check, then re-stamp); **unbaselined** (source not pinned yet); **unresolved-path** (a recorded source path no longer resolves — the source moved or its tree was retired, i.e. the provenance itself has rotted); **malformed-yaml** (sidecar unparseable). It also runs **claim grounding**: **ungrounded-claim** (a `claims_to_source[]` row with `source_path`+`quote` whose quote does not resolve in the source), **unresolved-source** (its `source_path` doesn't resolve), **grounding-skipped** (a NOTE when `pypdf` is absent so PDF quotes can't be verified).
 - **Workflow:** after reconciling a document against its sources (or authoring a new version), run `stamp <doc>`. Run `check` before transmit and whenever a canonical source (e.g., the system SAD) changes — `check` is the trigger that turns a silent source edit into an explicit "re-reconcile these documents" worklist. `--transmit-gate` makes **drift** *and* **ungrounded-claim** a non-zero (2) exit.
-- This catches two classes a reference check can't — **(a)** the SAD §4 Pre-Op cell changing to "bone segmentation only" while a device-description copy still said "anatomy segmentation" (drift); **(b)** a predicate-comparison stating a predicate's software level from a sibling `.md` while the cleared-filing PDF that would confirm it sat un-consulted in the repo (ungrounded-claim). Keep the content in the doc (readability); let the hashes watch the source **and** the claims.
+- This catches two classes a reference check can't — **(a)** the SAD § 4 processing-module cell narrowing to "single-modality input only" while a device-description copy still said "multi-modality input" (drift); **(b)** a predicate-comparison stating a predicate's software level from a sibling `.md` while the cleared-filing PDF that would confirm it sat un-consulted in the repo (ungrounded-claim). Keep the content in the doc (readability); let the hashes watch the source **and** the claims.
 
 ## Console JSON contract (`schema_version: "1.0"`)
 

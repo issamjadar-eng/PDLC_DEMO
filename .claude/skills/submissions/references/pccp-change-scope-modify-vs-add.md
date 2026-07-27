@@ -39,3 +39,23 @@ The first step is often true (same family). The error is the second step: it use
 - Substantial-equivalence: don't assert predicate coverage of an output the predicate isn't cleared for (SE over-claim).
 
 All three are the same root error viewed from different documents: a **new output** dressed as an **improvement of an existing one**.
+
+## FDA's boundary grammar — mirror it in the change-routing logic
+
+FDA's Appendix B examples close every modification scenario with one of **two verbatim conclusion patterns**. Mirroring them in a PCCP's change-routing tree makes the in/out boundary auditable:
+
+- **In-scope:** "Because the device modification was **specified in the PCCP**, and it was **implemented in conformance with the PCCP**, the device modification **would not require a new marketing submission**. The manufacturer should document the modification … in accordance with their quality system."
+- **Out-of-scope:** "Because this modification **that was not included in the PCCP** could **significantly affect the safety or effectiveness** of the device, **a new marketing submission would be required**."
+
+## Out-of-scope trigger catalog (concrete, from Appendix B)
+
+Sharper than the abstract "affects intended use" test — these concrete triggers route a change **out** of any PCCP to a new submission:
+
+- A **new performance claim** not pre-specified in the PCCP (e.g., predicting a condition in advance where only detection was cleared).
+- A **new input modality / cross-imaging-class** input (the Appendix B "thermographic camera" case — the direct analog of adding MRI/ultrasound where only CT was cleared).
+- A **new patient population** whose data / reference standard the model was **not built for** (e.g., pediatric where training + reference standard were adult-only).
+- An **added second function/output** alongside the cleared one (the "pneumothorax alongside feeding-tube" case — the analog of adding a new measurement/claim).
+- A **significant software-architecture change** (rule-based ↔ AI, foundation-model substitution, alarm/control-mechanism redesign).
+- A change made in response to a **recall or reported failure**.
+
+The General PCCP draft frames the same decision as **Figure 3** (major change to intended use? → affects safety/effectiveness? → minor/manufacturing change?) with paired "generally may be appropriate / generally not appropriate" lists (Examples 4 & 5). *(General PCCP guidance is draft — flag draft-reliance.)*

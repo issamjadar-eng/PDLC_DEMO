@@ -25,10 +25,35 @@ Checks (each: PASS / WARN advisory / BLOCK under --transmit-gate):
                              grounding-only) reconciliation on path-aware doc identity.
   C5  altitude — a raw controlled DHF doc (`_confluence/**`) attached with no Q-Sub
                              scoping note/extract adjacent to its attachment line (WARN).
+  C6  effective-ask-count (tightness) — FDA Q-Sub guidance: "no more than 7-10
+                             questions (including sub-questions)". A primary-question
+                             trim silently re-inflates when later edits embed extra asks
+                             (bolded `**Question**:` paragraphs, conditional follow-ups)
+                             inside existing question bodies — nothing watches the
+                             sub-question count after the trim. Counts interrogative
+                             sentences in each transmitted question section of the FILED
+                             body; WARNs when the package total exceeds `--ask-ceiling`
+                             (default 10) and when a single question packs ≥4 asks
+                             (invites fragmented FDA feedback on dependent asks).
+  C7  ambiguous-commitment-terminology — bare "IFU" inside a filed-body COMMITMENT or
+                             BOUNDARY phrase ("no IFU change", "IFU unchanged",
+                             "within-IFU", "IFU update/change procedure"). "IFU" has two
+                             industry-standard expansions — Indications for Use (the
+                             cleared-indication statement; changing it routes to a new
+                             510(k)) and Instructions for Use (the labeling document;
+                             changes routinely accompany UI/software updates and do NOT
+                             negate PCCP / letter-to-file eligibility). A commitment
+                             written with the bare acronym silently promises the wrong
+                             thing to one of the two readers. WARN: spell out which is
+                             meant (and name the instructions document explicitly, e.g.
+                             DFU, when the labeling artifact is intended). Casual
+                             non-commitment mentions ("the IFU document", "proposed
+                             IFU") are not flagged.
 
 Usage:
   python3 qsub_scope_lint.py <qsub-dir> [--cover cover-letter.md] [--manifest composition-manifest.md]
-                             [--questions fda-questions.md] [--transmit-gate] [--json]
+                             [--questions fda-questions.md] [--ask-ceiling 10]
+                             [--transmit-gate] [--json]
 Exit: 0 clean; 1 WARN present (advisory); 2 BLOCK present under --transmit-gate.
 """
 from __future__ import annotations
@@ -128,19 +153,66 @@ def check_container_integrity(text: str) -> list[dict]:
 
 
 # ── T1 reference-availability ──────────────────────────────────────────────────
-# Non-transmitted doctype patterns (generic medtech vocabulary — project-agnostic).
+# Non-transmitted DOCTYPE patterns — generic medtech vocabulary, project-agnostic.
+# Module-name-specific arms (e.g. "<Module> SAD") are NOT hardcoded here; they are
+# derived at runtime from the consuming project's own DHF roster
+# (project.yml dhfs[].architecture_name / marketed_name) via load_module_patterns(),
+# so this registry script carries no project-specific module names.
 NONTRANSMITTED_PATTERNS = [
-    (r"child\s+(Pre-?Op|Intra-?Op|Management Services|Mgmt Services)?\s*SADs?", "child SAD"),
-    (r"(Management Services|Mgmt Services|Pre-?Op|Intra-?Op)\s+(Software\s+)?Architecture Document", "child SAD"),
-    (r"\((?:Management Services|Mgmt Services|Pre-?Op|Intra-?Op)\s+SAD\)", "child SAD"),
-    (r"\b(?:Management Services|Mgmt Services|Pre-?Op|Intra-?Op)\s+SADs?\b", "child SAD"),
+    (r"\bchild\s+SADs?\b", "child SAD"),
     (r"per-module\s+(Software Risk Assessment|SRA)s?", "per-module SRA"),
     (r"\bper-module\s+SBOMs?\b", "per-module SBOM"),
     (r"per-module\s+threat models?", "per-module threat model"),
-    (r"item\s+SRSs?\b|\b(Intra-?Op|Pre-?Op|Mgmt Services)\s+SRS\b", "item SRS"),
+    (r"\bitem\s+SRSs?\b", "item SRS"),
     (r"\bSOP-\d{4,}\b", "internal QMS SOP id"),
     (r"\bFORM-\d{4,}\b", "internal QMS FORM id"),
 ]
+
+
+def _module_flex(name: str) -> str:
+    """Hyphen/space-flexible regex fragment for a module display-name:
+    'AlphaCore' -> 'Alpha-?Core'; 'Data Gateway' -> 'Data[-\\s]?Gateway'."""
+    frag = re.sub(r"(?<=[a-z])(?=[A-Z])", "-?", name.strip())   # camel-case boundary
+    frag = re.sub(r"[-\s]+", r"[-\\s]?", frag)                   # existing separators -> flexible
+    return frag
+
+
+def load_module_patterns(start_dir: str) -> list:
+    """Module-name-specific non-transmitted patterns, derived from the consuming
+    project's own DHF roster in project.yml (walking up from start_dir). Returns []
+    when project.yml is absent/unreadable or lists no modules — so this registry
+    script stays project-agnostic and degrades to doctype-only matching."""
+    import os
+    d, text = os.path.abspath(start_dir), None
+    for _ in range(10):
+        cand = os.path.join(d, "project.yml")
+        if os.path.isfile(cand):
+            try:
+                text = open(cand, encoding="utf-8").read()
+            except OSError:
+                return []
+            break
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    if not text:
+        return []
+    names = set()
+    for m in re.finditer(
+            r'^\s*(?:architecture_name|marketed_name)\s*:\s*"?([^"#\n]+?)"?\s*$', text, re.M):
+        v = m.group(1).strip()
+        if v and "suite" not in v.lower():   # the system umbrella is not a sub-module
+            names.add(v)
+    if not names:
+        return []
+    alt = "|".join(sorted({_module_flex(n) for n in names}, key=len, reverse=True))
+    return [
+        (rf"(?:{alt})\s+(?:Software\s+)?Architecture Documents?", "child SAD"),
+        (rf"\b(?:{alt})\s+SADs?\b", "child SAD"),
+        (rf"\((?:{alt})\s+SAD\)", "child SAD"),
+        (rf"\b(?:{alt})\s+SRSs?\b", "item SRS"),
+    ]
 # Approved forward-reference phrasing that dispositions a T1 hit (same line).
 ALLOWLIST = re.compile(
     r"510\(k\)\s+(technical\s+file|deliverable|submission)|part of the 510\(k\)"
@@ -148,9 +220,11 @@ ALLOWLIST = re.compile(
     re.I)
 
 
-def check_reference_availability(filed_body: str, extra_targets: list[str]) -> list[dict]:
+def check_reference_availability(filed_body: str, extra_targets: list[str],
+                                 module_pats: list = ()) -> list[dict]:
     findings = []
     pats = [(re.compile(p, re.I), lbl) for p, lbl in NONTRANSMITTED_PATTERNS]
+    pats += [(re.compile(p, re.I), lbl) for p, lbl in module_pats]  # project-derived module arms
     for tgt in extra_targets:  # grounding-only manifest stems
         pats.append((re.compile(re.escape(tgt), re.I), f"grounding-only doc ({tgt})"))
     for row in filed_body.split("\n"):
@@ -275,12 +349,107 @@ def check_altitude(attachments: list[tuple[str, str]], cover: str) -> list[dict]
     return findings
 
 
+# ── C6 effective-ask-count (tightness) ─────────────────────────────────────────
+# FDA Q-Sub guidance: "The most effective Pre-Subs typically have no more than 7-10
+# questions (including sub-questions)." The failure mode this catches: a deliberate
+# primary-question trim executes, then later scope additions embed NEW asks inside
+# existing question bodies (a bolded `**Question**: Does FDA agree…` paragraph, an
+# extra conditional follow-up) — the primary count stays constant while the effective
+# ask count re-inflates, and no check watches it. Counting method: interrogative
+# sentences ('?') in the FILED body of each transmitted question section. Heuristic →
+# WARN only (the guidance says "typically"; deep-single-topic packages are sanctioned).
+QUESTION_HEADING = re.compile(r"^###\s+.*?\b(Q\d+\.\d+)\b")
+DEFERRED_HEADING = re.compile(r"^###\s+DQ-\d+|^##\s+Former\b", re.I)
+
+
+def check_ask_count(questions_text: str, ceiling: int) -> list[dict]:
+    findings: list[dict] = []
+    filed, _ = strip_zones(questions_text)
+    per_q: dict[str, int] = {}
+    q_line: dict[str, int] = {}
+    current: str | None = None
+    for row in filed.split("\n"):
+        if "\t" not in row:
+            continue
+        n, text = row.split("\t", 1)
+        m = QUESTION_HEADING.match(text)
+        if m:
+            current = m.group(1)
+            per_q.setdefault(current, 0)
+            q_line[current] = int(n)
+            continue
+        if DEFERRED_HEADING.match(text) or text.startswith("## "):
+            current = None  # left the transmitted-question region / entered a new topic
+            continue
+        if current and not text.lstrip().startswith("|"):
+            per_q[current] += text.count("?")
+    if not per_q:
+        return findings
+    total = sum(per_q.values())
+    detail = ", ".join(f"{q}={c}" for q, c in sorted(per_q.items()))
+    if total > ceiling:
+        findings.append({"check": "C6", "sev": "WARN", "line": 0,
+                         "msg": f"effective ask count is {total} across {len(per_q)} transmitted "
+                                f"questions — exceeds the {ceiling}-ask guidance heuristic "
+                                f"('no more than 7-10 questions (including sub-questions)'). "
+                                f"Per question: {detail}. Label embedded asks as formal "
+                                f"sub-questions or consolidate follow-ups"})
+    for q, c in sorted(per_q.items()):
+        if c >= 4:
+            findings.append({"check": "C6", "sev": "WARN", "line": q_line.get(q, 0),
+                             "msg": f"{q} packs {c} interrogative asks in one question — "
+                                    f"dependent asks invite fragmented FDA feedback; label "
+                                    f"them as sub-questions ({q}a, {q}b…) so each is "
+                                    f"individually answerable"})
+    return findings
+
+
+# ── C7 ambiguous-commitment-terminology ─────────────────────────────────────────
+# "IFU" expands two ways in medtech — Indications for Use (the cleared-indication
+# statement) vs Instructions for Use (the labeling document). In a COMMITMENT or
+# BOUNDARY phrase the bare acronym silently promises the wrong thing to one of the two
+# readers: "no IFU change" as instructions-for-use is unrealistic (UI changes routinely
+# update user documentation, and a labeling change does not negate PCCP/letter-to-file
+# eligibility); as indications-for-use it is the load-bearing PCCP boundary. This exact
+# confusion has produced a fix-then-counter-fix cycle in real packages — spell it out.
+AMBIG_IFU = re.compile(
+    r"\bno\s+IFU\b|\bIFU\s+unchanged\b|\bwithin[- ]IFU\b|\bIFU[- ](change|update)s?\b"
+    r"|\bIFU\s+(change|update)\s+procedure\b|\bexisting\s+IFU\b",
+    re.I)
+
+
+def check_ambiguous_ifu(filed_body: str) -> list[dict]:
+    findings = []
+    for row in filed_body.split("\n"):
+        if "\t" not in row:
+            continue
+        n, text = row.split("\t", 1)
+        m = AMBIG_IFU.search(text)
+        if not m:
+            continue
+        # already disambiguated on the same line → fine
+        if re.search(r"Indications?[- ]for[- ]Use|Instructions?\s+for\s+Use|Directions\s+for\s+Use|\bDFU\b",
+                     text, re.I):
+            continue
+        findings.append({"check": "C7", "sev": "WARN", "line": int(n),
+                         "msg": f"bare 'IFU' in a commitment/boundary phrase: "
+                                f"…{text[max(0, m.start() - 30):m.end() + 30].strip()}… — ambiguous "
+                                f"between Indications for Use (PCCP/510(k) boundary) and Instructions "
+                                f"for Use (labeling document; changes routinely accompany software "
+                                f"updates and do not negate PCCP eligibility). Spell out which is "
+                                f"meant; name the labeling document (e.g. DFU) if that is the intent"})
+    return findings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("qsub_dir")
     ap.add_argument("--cover", default="cover-letter.md")
     ap.add_argument("--manifest", default="composition-manifest.md")
     ap.add_argument("--questions", default="fda-questions.md")
+    ap.add_argument("--ask-ceiling", type=int, default=10,
+                    help="C6 WARN threshold for the package's effective ask count "
+                         "(FDA guidance heuristic: 7-10 including sub-questions)")
     ap.add_argument("--transmit-gate", action="store_true")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
@@ -290,21 +459,26 @@ def main() -> int:
     questions = (d / a.questions).read_text(encoding="utf-8") if (d / a.questions).exists() else ""
     attachments = parse_attachments(cover)
     transmitted = {s for s, _ in attachments} | {docid(a.cover)}
+    module_pats = load_module_patterns(a.qsub_dir)  # project-agnostic: derived from project.yml
 
     all_findings: list[dict] = []
-    # C3 / C4 / C5 (package-level)
+    # C3 / C4 / C5 / C6 (package-level)
     all_findings += check_blocking_anchors(manifest, questions)
     all_findings += check_manifest_alignment(manifest, transmitted)
     all_findings += check_altitude(attachments, cover)
-    # C1 + C2 per transmitted filed doc
+    for f in check_ask_count(questions, a.ask_ceiling):
+        f["file"] = a.questions
+        all_findings.append(f)
+    # C1 + C2 + C7 per transmitted filed doc
     for md in sorted(d.glob("*.md")):
         if docid(str(md)) not in transmitted and md.stem not in transmitted:
             continue  # only lint what actually ships
         text = md.read_text(encoding="utf-8")
         c1 = check_container_integrity(text)
         filed, _ = strip_zones(text)
-        c2 = check_reference_availability(filed, [])
-        for f in c1 + c2:
+        c2 = check_reference_availability(filed, [], module_pats)
+        c7 = check_ambiguous_ifu(filed)
+        for f in c1 + c2 + c7:
             f["file"] = md.name
             all_findings.append(f)
 

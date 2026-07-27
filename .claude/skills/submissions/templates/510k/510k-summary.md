@@ -46,3 +46,15 @@ Summary of the comparison and the SE conclusion (developed in [`substantial-equi
 ## 7. Performance Data Summary 📤
 
 Brief summary of the nonclinical (and clinical, if any) testing that supports SE — detail in [`performance-testing.md`](./performance-testing.md).
+
+## 8. Predetermined Change Control Plan 📤
+
+_Include this section **only if a PCCP is co-filed** with this 510(k); delete it otherwise._
+
+The device is cleared with an authorized Predetermined Change Control Plan (PCCP). Per the General PCCP draft § V.C, the public 510(k) Summary discloses the PCCP's public-facing content:
+
+- the **planned modifications** authorized under the PCCP (the Description-of-Modifications categories, at summary altitude);
+- the **testing methods and validation activities**, and the **performance requirements** each modification must meet;
+- the **means by which users are informed** of implemented modifications (labeling / version history).
+
+Full detail lives in the filed PCCP (`pccp-plan.md`). This is a **required, assembly-time** disclosure — a PCCP-bearing 510(k) whose Summary omits it is a deficiency. Keep it in lockstep with the PCCP body's public-summary commitment and the General PCCP § IX summary-table format (`Planned Modifications | Test Methods and Validation Activities | Communication to users`). `[VERIFY draft-vs-final status of the General PCCP guidance.]`

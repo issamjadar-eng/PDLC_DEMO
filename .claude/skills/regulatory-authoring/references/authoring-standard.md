@@ -97,7 +97,7 @@ Every rule carries: **Rule** (one normative sentence) · **Why** · **Applies** 
 **Rule:** Lead each paragraph with its load-bearing claim; support it afterward.
 **Why:** Reviewers skim; a conclusion buried in sentence four is missed.
 **Lint (judgment):** the paragraph's load-bearing claim is not in the first sentence.
-**Example:** ❌ "The platform was developed over three release cycles. The team evaluated several architectures. After stakeholder review, a modular approach was chosen. Management Services is a non-device software function." ✅ "Management Services is a non-device software function. It was developed over three release cycles using a modular architecture chosen after stakeholder review."
+**Example:** ❌ "The platform was developed over three release cycles. The team evaluated several architectures. After stakeholder review, a modular approach was chosen. The data-management module is a non-device software function." ✅ "The data-management module is a non-device software function. It was developed over three release cycles using a modular architecture chosen after stakeholder review."
 
 ### W6 — Given-then-new information flow
 **Rule:** Open each sentence on known information; close on the new point.
@@ -207,12 +207,18 @@ Every rule carries: **Rule** (one normative sentence) · **Why** · **Applies** 
 **Lint (regex, partial):** capitalized tokens `\b[A-Z][A-Za-z]{1,7}[0-9.]*\b` in filed body, **minus** the packaged stop-word list, defined terms, and proper/brand nouns (the exclusion sets ship in `lint-signals.yml`). The pattern runs without the sets but is high-recall / low-precision — treat matches as candidates; a brand/vendor token is a **D12 removal**, not an R7 definition (precedence above).
 **Example:** ❌ "forwards them to the PACS" (PACS never defined). ✅ add a Terms row "PACS — Picture Archiving and Communication System" and use it consistently.
 
+**Corollary R7.1 (collision-prone abbreviations are spelled out) `[filed-only]`:** An abbreviation whose letters plausibly expand to **more than one common regulatory term** is *collision-prone*: spell out the intended full term in the filed body and do **not** use the bare abbreviation. The canonical landmine is **IFU** — it reads as *Indications for Use* to one reader and *Instructions for Use* to another; write "**Indications for Use**" (or "Instructions for Use") in full. (Other collisions: **DHR** — Device History Record vs Design History Record.)
+**Why:** the two expansions are **different regulatory objects**. *Indications for Use* are the cleared clinical claims — changing them routes to a new marketing submission; *Instructions for Use* are labeling content — routinely updated. A reader who resolves "IFU" to the wrong expansion **misreads a scope gate**: "no IFU change" reads as forbidding any labeling edit rather than forbidding an indications change (the real, observed confusion). A Terms-table entry does **not** cure this — the collision happens at the point of *reading*, not the point of *definition* — so R7 completeness is necessary but not sufficient; spell the term out. Which expansion a project intends is a project fact (its glossary); the rule to spell it out is universal.
+**Precedence:** refines R7 / W8; where a project deliberately abbreviates a *non-colliding* term, R7 (define once) governs and R7.1 does not apply.
+**Lint (regex):** bare `\bIFU\b` / `\bDHR\b` in the filed body (registered collision-prone set in `lint-signals.yml`).
+**Example:** ❌ "no clinical-claims/IFU change." ✅ "no clinical-claims change; no Indications-for-Use change." (labeling / Directions-for-Use updates are permitted and stated separately, so the two are never conflated.)
+
 ### R8 — Cross-record consistency `[supports AUDIT]`
 **Rule:** A claim must not contradict the governing/parent record or a sibling controlled document — classification, intended use, and interface facts must agree across the record set.
 **Why:** Cross-record contradiction is a high-value audit/review finding (it proves the process didn't catch a divergence). Generalizes the intended-use-boundary rule (D13) to every controlled cross-reference.
 **Scope of the obligation:** before asserting conformance, load the parent/manifest record; an agent editing one file in isolation **cannot** verify R8 and must flag it **unverified** rather than declare pass.
 **Lint (dependency-gated / judgment):** cross-doc check — needs the parent/manifest loaded; not an in-file regex.
-**Example:** ❌ system doc: "IntraOp requires a Pre-Op plan." / IFU: "IntraOp operates standalone." (two records disagree on an interface fact) ✅ both records state: "IntraOp operates standalone; a Pre-Op plan enhances guidance when available."
+**Example:** ❌ system doc: "The analysis module requires a calibration file." / IFU: "The analysis module operates standalone." (two records disagree on an interface fact) ✅ both records state: "The analysis module operates standalone; a calibration file enhances results when available."
 
 ### R9 — Unevidenced property claims are removed or gated, not re-voiced `[filed-only]`
 **Rule:** If a **claim of an achieved property or a performed activity** — a performance, safety, security, or quality assertion — has **no supporting evidence and none planned**, the fix is to **remove it or convert it to a managed TBD (D10)** — never to rephrase it into confident declarative voice. Declarative voice on an unevidenced property claim is a worse finding than a hedge.
@@ -274,7 +280,7 @@ Every rule carries: **Rule** (one normative sentence) · **Why** · **Applies** 
 **Rule:** Each version bump records *what changed and why* in auditor-legible terms, not "updated". (The AI-changelog is internal provenance only and does **not** satisfy the controlled change-history obligation.)
 **Why:** Change control requires the nature of the change and its approval to be identifiable. ⟦ground later: ISO 13485 §4.2.4; 21 CFR 820.40(b)⟧
 **Lint (regex):** change-history cells matching `^(updated|changes|edits|revised)\.?$` (bare, no substance).
-**Example:** ❌ "| v1.1 | 2026-06-25 | Updated. |" ✅ "| v1.1 | 2026-06-25 | Revised § 5 module boundary to add the standalone-IntraOp interface fact; approved by RA lead. |"
+**Example:** ❌ "| v1.1 | 2026-06-25 | Updated. |" ✅ "| v1.1 | 2026-06-25 | Revised § 5 module boundary to add the standalone-operation interface fact; approved by RA lead. |"
 
 ### D5 — Contiguous filed section numbering `[PORTABLE]`
 **Rule:** The filed body's section numbers read contiguously (1…N) with no gaps. A gap has two causes — a section was internalized/removed (renumber the rest + move content to the tail as a 🔒 container) **or** a mis-numbering typo (relabel only). The agent detects the gap; the author confirms which case. **In-file action is mandatory; cross-document `§ N` pointer sweeps the agent cannot edit are listed/flagged for cross-doc tooling, not silently assumed done.**
@@ -319,7 +325,7 @@ Every rule carries: **Rule** (one normative sentence) · **Why** · **Applies** 
 **Rule:** Non-device software (Non-Device-MDDS, administrative "other functions") owes FDA no IEC 62304 class — FDA reviews its *impact* on device functions (MFD / §520(o)(2)), not its lifecycle rigor. If a 62304 class is stated for non-device software, label it explicitly as the manufacturer's QMS lifecycle-rigor assignment, orthogonal to device status; keep classification deliberations in internal rationale. Originating risk does not bar Class A (IEC 62304 §4.3(a) external-control limb); determination-first is legitimate with (a) documented basis, (b) defined fallback, (c) risk-file consistency, (d) awareness of the EU Rule 11 companion (D15) — (a)–(d) are judgment + cross-doc, not lintable in-file.
 **Why:** Classification churn in a filed body invites questions FDA wasn't going to ask; a class with no documented basis or fallback is the actual audit finding — not the class value.
 **Lint (regex):** `candidat(e|cy)|reclassif|pending (formal )?(risk assessment|decomposition)` in filed body; 62304 class cells for non-device rows without the orthogonality note nearby.
-**Example:** ❌ "Management Services is IEC 62304 Class A; class is candidate pending the formal risk decomposition." ✅ "FDA reviews Management Services for its impact on device functions under the multiple-function-device framework (§ 520(o)). The IEC 62304 Class A designation is the manufacturer's QMS lifecycle-rigor assignment, orthogonal to device status." (basis + fallback live in internal rationale)
+**Example:** ❌ "The data-management module is IEC 62304 Class A; class is candidate pending the formal risk decomposition." ✅ "FDA reviews the data-management module for its impact on device functions under the multiple-function-device framework (§ 520(o)). The IEC 62304 Class A designation is the manufacturer's QMS lifecycle-rigor assignment, orthogonal to device status." (basis + fallback live in internal rationale)
 
 ## Naming & specificity
 

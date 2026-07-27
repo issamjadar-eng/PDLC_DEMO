@@ -5,15 +5,15 @@
 **Full Title**: Content of Premarket Submissions for Device Software Functions
 **Document Date**: June 14, 2023
 **Status**: Final
-**PDF Source**: https://www.fda.gov/media/170714/download
-**Issuing Body**: CDRH
+**PDF Source**: https://www.fda.gov/media/153781/download
+**Issuing Bodies**: CDRH, CBER, CDER, Office of Combination Products
 **Replaces**: 2005 guidance "Content of Premarket Submissions for Software Contained in Medical Devices" (May 11, 2005)
 
 ## Scope
 
 This guidance identifies the software documentation recommended for inclusion in **premarket submissions** to evaluate the safety and effectiveness of device software functions. It applies to:
 
-- All premarket submission types (510(k), PMA, De Novo, HDE, IDE) containing one or more device software functions
+- All premarket submission types (510(k), PMA, De Novo, HDE, IDE, BLA) containing one or more device software functions
 - Device constituent parts of combination products that include device software functions
 
 It does **not** apply to:
@@ -21,7 +21,7 @@ It does **not** apply to:
 - Software excluded under 21st Century Cures Act section 520(o) (non-device software)
 - Automated manufacturing and quality system software
 - Post-market software device issues
-- Cybersecurity-specific documentation (covered in separate guidance)
+- Detailed cybersecurity documentation (deferred to the separate Cybersecurity guidance — though cybersecurity risk still informs the risk assessment and Documentation Level determination here)
 
 The guidance does **not** prescribe how software should be developed -- only what documentation to submit. Developers are free to use any software lifecycle model or methodology.
 
@@ -41,11 +41,11 @@ Also generally recommended for:
 
 #### Basic Documentation
 
-Applies when enhanced documentation does not apply. Many devices previously classified as "moderate level of concern" will now be basic.
+Applies when enhanced documentation does not apply. Many devices previously classified as "moderate level of concern" under the retired three-tier scheme now fall under basic.
 
 **Key Clarifications:**
-- Class II devices can be either basic or enhanced -- Class II is too broad for a single default
-- Class III is "likely enhanced" but not automatically so
+- Device class alone does not determine the level; a Class II device may be basic or enhanced depending on its risk
+- Class III devices and device constituents of combination products are generally recommended for enhanced documentation
 - The sponsor determines the level based on risk assessment and must provide a rationale
 
 ### Required Documentation Elements
@@ -95,7 +95,7 @@ Applies when enhanced documentation does not apply. Many devices previously clas
 - History of tested software revisions: date, version number, brief description of changes
 - Begin with the version subject to design controls (21 CFR 820.30)
 - Last entry = final released version, including differences from tested version and safety/effectiveness assessment
-- Does not need every commit -- major milestones (usability testing, standards testing, clinical testing)
+- Does not need every revision -- focus on milestones associated with bench, animal, and clinical testing
 
 #### 10. Unresolved Software Anomalies (Basic and Enhanced)
 - List of remaining unresolved anomalies in tabular format
@@ -139,12 +139,10 @@ Applies when enhanced documentation does not apply. Many devices previously clas
 ### IEC 62304 Mapping
 
 - The guidance was harmonized with IEC 62304 but intentional differences remain
-- IEC 62304 software safety classes A, B, C do **not** map directly to basic/enhanced:
-  - For SW development/config management: A and B roughly align with basic; C with enhanced
-  - Otherwise, direct mapping is unreliable
+- IEC 62304 software safety classes A, B, C do **not** map to basic/enhanced; the guidance deliberately declines to equate the two schemes, citing known differences in how device software functions are categorized
 - A Declaration of Conformity to IEC 62304 can substitute for the SW development practices section
 - Risk terminology harmonized with ISO 14971
-- A traceability matrix (per IEC 62304) is no longer explicitly required in the submission, but traceability must be evidenced throughout and maintained in the DHF
+- Traceability must be evidenced throughout the documentation; the guidance notes it may be presented in a separate traceability document and is maintained in the DHF
 
 ## Submission Requirements
 
@@ -154,10 +152,10 @@ All elements listed in the documentation summary table above are expected in pre
 
 - **Multiple Function Device Products**: "Multiple Function Device Products: Policy and Considerations" -- for handling device + non-device functions
 - **Clinical Decision Support**: "Clinical Decision Support Software" -- for determining if a software function is a device
-- **Software Changes**: "Deciding When to Submit a 510(k) for a Software Change to an Existing Device"
 - **Cybersecurity**: "Cybersecurity in Medical Devices" -- for cybersecurity-specific documentation
 - **Policy for Device Software Functions**: "Policy for Device Software Functions and Mobile Medical Applications"
+- **Software Changes**: "Deciding When to Submit a 510(k) for a Software Change to an Existing Device"
+- **Digital Health Policy Navigator**: FDA interactive tool for determining whether a software function is a device
 - **IEC 62304**: Medical device software -- Software life cycle processes
 - **ISO 14971**: Risk management for medical devices
 - **ANSI/AAMI SW91**: Guidance on medical device software defect classification
-- **Digital Health Policy Navigator**: FDA tool for determining if a software function is a device

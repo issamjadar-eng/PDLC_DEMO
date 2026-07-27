@@ -4,6 +4,18 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-27 — pull + push (full-catalog stack)
+
+- **Pull** (16 files, all UPSTREAM_ADVANCE — safe fast-forwards): `skills/medtech-docs/references/fda-guidance/{README.md, source-md/sw-functions.md, source/sw-functions.pdf, sw-functions-distilled.md}`, `skills/regulatory-authoring/{README.md, SKILL.md, references/authoring-standard.md, references/lint-signals.yml}`, `skills/submissions/{README.md, SKILL.md, references/pccp-change-scope-modify-vs-add.md, scripts/check_package_consistency.py, scripts/qsub_scope_lint.py, scripts/render_sidecars.py, templates/510k/510k-summary.md, templates/_shared/composition-manifest.template.md}`. Impact analysis: no post-update blocks; submissions v8–v10 are this project's own ben/109-era fixes propagated to the skill layer round-tripping back (project 510(k) manifest already tracks PCCP; no scaffolded 510k-summary doc to patch) — no local action. Pre-session untracked sibling files (sw-functions-webinar-transcript.*, readability-in-register.md, pccp-authorized-exemplars.md, pccp-full-document-structure.md, templates/pccp/) match upstream byte-identically; committed to the project repo with this sync.
+- **Push** (24 files): NEW `skills/corpus/**` (v3, 6 files) + NEW `skills/commercial/**` (v9, 5 files) + `skills/project-console/**` Commercial section + 1.42.0→1.52.0 core (13 files: 8 LOCAL_ONLY + 5 LOCAL_AHEAD)
+- Branch: `sync/pdlc-demo-corpus-commercial-console-2026-07-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/281
+- Commit: "Add corpus + commercial skills; project-console Commercial section (1.52.0)"
+- Status: merged (user asked "push and do a skill sync"; precedent per 2026-07-22 entry)
+- Merge commit / Hitachi HEAD after sync: `dac7237` (clone ff'd, sync branch deleted local+remote)
+- project.yml: no changes (corpus + commercial already in approved_skills)
+- Follow-ups: none
+
 ## 2026-07-22 — push (commercial advisor)
 
 - Files (6): `skills/advisors/{SKILL.md, README.md, agents/commercial.md (new)}`, `agents/commercial.md (new symlink, mode 120000)`, `skills/dhf-manifest/{SKILL.md, data/canonical-roles.yaml}`

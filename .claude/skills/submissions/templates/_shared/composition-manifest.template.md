@@ -28,7 +28,13 @@ _Snapshot of which pieces of which DHF(s) are included in this filing. Source of
      DHF-derived exhibits (proposed labeling PDF, consensus-standards list /
      declarations of conformity) are listed in the "attached from DHF" table
      below — they are controlled-record PDFs, not ./<file>.md docs. The cover
-     letter's Attachments section must align 1:1 with this list. -->
+     letter's Attachments section must align 1:1 with this list.
+     PCCP co-filing: if this 510(k) co-files a PCCP, the 510(k)-Summary row MUST
+     note it carries the public-facing PCCP content (planned modifications,
+     testing methods, validation activities + performance requirements, user-
+     communication means — General PCCP draft § V.C; 510k-summary template § 8).
+     This is a cross-filing handoff (authored in the PCCP, delivered in the 510(k)
+     Summary) — track it here so it can't fall through at assembly time. -->
 
 **Formal FDA submission deliverables** (authored in this filing folder)
 
