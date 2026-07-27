@@ -1,0 +1,293 @@
+{
+ "bq": "BQ-17",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:11+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "attach-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "composite",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "robustness",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "subscribed-sites-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/external-competitor-features@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-kol-register@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-subscriptions@2026-07-27.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-kol-register",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/external-competitor-features",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 180,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-subscriptions",
+   "snapshot": "2026-07-27.2",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Kill / pull-forward candidates",
+    "series": "candidates",
+    "evidence_class": "derived",
+    "source": "commercial/internal-kol-register@2026-07-27",
+    "derivation": {
+     "method": "argmax/argmin of the composite over eligible features; ties broken by earliest wave (pull) / fewest voices (kill)",
+     "inputs": [
+      "derived: composite",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Composite score by feature",
+    "series": "composite",
+    "evidence_class": "derived",
+    "source": "commercial/external-competitor-features@2026-07-27",
+    "derivation": {
+     "method": "mean(pressure, rescaled net sentiment, attach-for-cloud-features) per plans/BQ-17.md",
+     "inputs": [
+      "src: commercial/external-competitor-features@2026-07-27",
+      "src: commercial/openfda-510k-infusion@2026-07-22",
+      "src: commercial/internal-kol-register@2026-07-27",
+      "derived: attach-rate",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Robustness of the two picks",
+    "series": "robustness",
+    "evidence_class": "derived",
+    "source": "commercial/internal-kol-register@2026-07-27",
+    "derivation": {
+     "method": "tie-vector identity check (an identical-axis-vector tie survives any weighting); composite recomputed without the sentiment axis (mean of pressure + demand); smallest pressure-to-sentiment weight transfer (0.25-pp scan to 10 pp) that flips the pull-forward pick",
+     "inputs": [
+      "derived: composite",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Cloud Suite attach (demand actual)",
+    "series": "attach-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "active subscribed connected sites \u00f7 all connected sites",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2",
+      "src: commercial/internal-fleet@2026-07-22"
+     ]
+    }
+   },
+   {
+    "what": "Cumulative subscribed-site adds (gross)",
+    "series": "subscribed-sites-history",
+    "evidence_class": "measured",
+    "source": "commercial/internal-subscriptions@2026-07-27.2"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Demand signal for non-cloud features (F7, F9)",
+    "series": "noncloud-demand",
+    "evidence_class": "unavailable",
+    "source": "no demand dataset exists for the home-infusion channel (F7) or international pipeline (F9) \u2014 their zero demand score is a data gap by construction, not measured absence",
+    "note": "no demand dataset exists for the home-infusion channel (F7) or international pipeline (F9) \u2014 their zero demand score is a data gap by construction, not measured absence"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-17.md",
+  "status": "in-sync",
+  "pinned": "54f376e73dc36f119845f49fa073ece483bf090f7ba3afa38b0d3e0923993852",
+  "current": "54f376e73dc36f119845f49fa073ece483bf090f7ba3afa38b0d3e0923993852"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:35:03+00:00",
+   "summary": "RT-17.1 (HIGH) actioned: F9 kill candidate's sole voice direction (Kuitunen: too late and too thin - start EU evidence EARLIER) now stated in verdict headline, candidates section, and I1 (high); robustness section + series added computing tie-vector invariance (F4/F6 and F7/F9 identical vectors - picks 100% tie-break-decided under any weighting), sentiment-axis drop (both picks unchanged), and weight-sensitivity scan (~2.25 pp pressure-to-sentiment transfer flips pull-forward to F5); all codified in plans/BQ-17.md",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+  },
+  {
+   "type": "intent-check",
+   "verdict": "HONORED-WITH-NOTES",
+   "by": "intent-check agent",
+   "at": "2026-07-27T15:37:02+00:00",
+   "summary": "Plan-vs-edition intent check on the pre-correction draft (re-filed after draft replacement); substantive notes were fixed and the draft regenerated same day",
+   "detail_ref": ""
+  }
+ ]
+}

@@ -1,0 +1,36 @@
+id: A-004
+title: Competitor realized pricing / 5-yr TCO inputs
+needed_for:
+- BQ-10
+why_unavailable: >-
+  Realized (transacted) pump prices are negotiated under confidential GPO/IDN
+  contracts and never published; vendor list prices for Alaris / Spectrum IQ /
+  Plum 360 are not posted publicly, and per-pump software-subscription and
+  consumables pricing is disclosed only inside contract awards.
+estimation_method: >-
+  Compiled from public procurement/analyst commentary and resale price points
+  (consulted 2026-07-27): Healthcare Finance News purchasing insight — new
+  large-volume pumps $2,184-$6,865 (cost "more than doubles" when networked into
+  hospital/pharmacy/EMR systems), PCA pumps $1,800-$4,500, syringe pumps
+  $2,380-$5,982, service contracts $150-$250 per pump/yr, smart-pump software
+  requires annual licenses (magnitude not disclosed). Refurbished-market anchors
+  from the project's own state-of-the-art analysis: $895-$995 refurb Baxter Sigma
+  Spectrum, $1,295 ICU Medical Plum 360 (refurb), $6,185 device-family average
+  revenue per device. Competitor consumables pricing is not publicly disclosed and
+  is deliberately excluded from the range (our own consumables/service constants
+  live in commercial.yml BQ-10 params and are cited as [config], not from this
+  record).
+value_or_range: >-
+  Competitor new-pump capital: LVP $2.2k-$6.9k standalone, effectively ~$4.4k-$13.7k
+  once networked/EMR-integrated; PCA pumps $1.8k-$4.5k. Service: $150-$250 per
+  pump/yr. Software subscription: required annually, magnitude unquantified.
+  Indicative 5-yr TCO per connected competitor pump, capital + service only
+  (consumables and software subscription excluded as undisclosed): ~$3.0k-$15k.
+confidence: low
+sources_consulted:
+- https://www.healthcarefinancenews.com/medtech-blog/purchasing-insight-watch-infusion-pump-prices-market-surges-intraveneous-therapy
+- docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md
+- docs/project/commercial/commercial.yml (BQ-10 params — our own cost constants, cited as config)
+refresh_trigger: new public procurement award, GPO pricing disclosure, or analyst pricing commentary
+created: '2026-07-27'
+status: active

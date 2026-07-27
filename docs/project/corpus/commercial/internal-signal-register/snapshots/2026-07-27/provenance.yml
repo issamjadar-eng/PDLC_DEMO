@@ -1,0 +1,26 @@
+dataset: commercial/internal-signal-register
+snapshot: '2026-07-27'
+created_at: '2026-07-27T14:34:44+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for signal-management register export)
+  retrieved_at: '2026-07-27T14:34:44+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 628d8a48ccb7f75f6b704b7a96ef6d2d9cde7a6dcdaeb32422b029db46f805dd
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 5b354aec7511a88c574f1c291dcd831d58e945da5d8f162f1a2cc3422c3b0c0b
+    parents:
+    - 628d8a48ccb7f75f6b704b7a96ef6d2d9cde7a6dcdaeb32422b029db46f805dd
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 40

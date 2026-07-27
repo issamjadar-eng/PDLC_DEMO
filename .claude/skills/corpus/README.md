@@ -66,6 +66,19 @@ waivers mirror managed-TBD discipline in regulated docs.
 
 ## Changelog
 
+- 3 (2026-07-27): Battle-test hardening. Engine: extended asserts (`max_rows`, per-column
+  `enums`, dataset-local `command:` check seam with normalize-style substitutions — how a
+  dataset proves its generator/narrative knobs); `acquire --dry-run` (full pipeline in
+  staging, results printed, nothing lands — no snapshot slot consumed); `validate` success
+  output names each `dataset@snapshot`; optional `data_through:` dataset field recorded
+  into provenance.yml as `as_of`; `assume --source` repeatable flag fills
+  `sources_consulted` at scaffold time; `check` warns (never fails) on active A-records
+  with TODO fields or empty `sources_consulted`; `init` stub gains
+  `acquisition.system_of_record`. Docs: curated-file pattern (`file`-type +
+  curated.csv), corpus-global A-NNN/W-NNN numbering, command execution contract
+  (cwd = dataset dir, absolute substituted paths), file-type internal banner placement
+  (README + description, never a CSV row), refresh-over-acquire for knob changes,
+  shared-model coherence risk + recommendation.
 - 2 (2026-07-22): openfda-count normalizer accepts date-field count buckets (openFDA
   returns `time` instead of `term` when counting on a date field) — enables historical
   count datasets (e.g. events per received-date). Note: openFDA rejects a `limit` param

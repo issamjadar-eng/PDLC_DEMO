@@ -1,0 +1,10 @@
+bq: BQ-30
+edition: '2026-07-27'
+status: draft
+created_at: '2026-07-27T15:30:08+00:00'
+pins:
+  commercial/internal-upgrade-campaign: 2026-07-22.2
+  commercial/internal-fleet: '2026-07-22'
+plan:
+  path: plans/BQ-30.md
+  sha256: d7ab330ef66b8771dba4a4dd47d8692596e168df73ffd0b0d1436eaa6c88b5e5

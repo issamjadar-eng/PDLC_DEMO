@@ -1,0 +1,34 @@
+dataset: commercial/internal-signal-register
+title: Field-signal disposition register (internal, demo-fabricated)
+description: >-
+  Field-signal disposition register — 40 signals opened 2025-01 -> 2026-06 with source,
+  category, disposition (design-input / requirement-change / upgrade-item / monitoring /
+  open / no-action) and disposition refs. DEMO-FABRICATED by seeded generator gen.py —
+  stand-in for the post-market signal-management register export. Consumed by BQ-22
+  (closed-loop: do field signals actually reach design inputs, or die in a spreadsheet?).
+internal: true
+max_age_days: 90
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for signal-management register export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [signal_id]
+  columns:
+    - {name: signal_id, type: str, required: true}
+    - {name: opened_date, type: date, required: true}
+    - {name: source, type: str, required: true}
+    - {name: category, type: str, required: true}
+    - {name: disposition, type: str, required: true}
+    - {name: disposition_ref, type: str}
+    - {name: closed_date, type: date}
+asserts:
+  min_rows: 40
+  max_rows: 500
+  enums:
+    disposition: [design-input, requirement-change, upgrade-item, monitoring, open, no-action]
+    source: [alarm-analytics, complaint-trend, field-service, maude-screen, near-miss]

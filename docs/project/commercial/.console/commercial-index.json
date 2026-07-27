@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "generated": "2026-07-22T23:04:31+00:00",
+ "generated": "2026-07-27T15:52:43+00:00",
  "categories": [
   {
    "key": "board",
@@ -36,17 +36,22 @@
     "board-chair"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "PP3500 and cloud-suite fund the company \u2014 59.7% of trailing-4Q gross margin ($27.0M of the portfolio's $45.2M GM on $88.2M revenue, window 2025-Q3..2026-Q2); all six lines gross-margin positive; margins compressing on IP5000, PP3000",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-01/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-01/2026-07-27/data.json"
   },
   {
    "id": "BQ-02",
@@ -56,17 +61,22 @@
     "lead-independent-director"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Meridian Health Alliance carries 38.4% of FY2025 direct-book revenue \u2014 above the 30% guardrail on the direct-book basis, and basis-sensitive: the direct book covers 50.6% of total FY2025 revenue, and Meridian Health Alliance's floor share of TOTAL revenue is 19.4% (under the guardrail); top-3 accounts 25.5%, PCA franchise 74.5%; losing the anchor GPO dents every plan year by $15.6M (14.9% of the FY2026 plan) under the stated constant-dent scenario",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-02/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-02/2026-07-27/data.json"
   },
   {
    "id": "BQ-03",
@@ -77,17 +87,22 @@
     "cfo"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Recurring revenue is 10.8% of revenue today (FY2026H1) vs 68.6% planned for FY2030; of the $350.0M target, $128.0M rides on already-cleared products, $12.0M on letter-to-file changes, and $210.0M (60.0%) sits behind FDA decisions not yet received \u2014 and within the $240.0M recurring proxy itself, $210.0M (87.5%) is behind those decisions",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-03/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-03/2026-07-27/data.json"
   },
   {
    "id": "BQ-04",
@@ -97,17 +112,22 @@
     "finance-committee"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Unit economics fail the guardrail: LTV per connected pump $2,237 vs $2,720 cost-to-serve over the same 5-year horizon (ratio 0.82 vs the 3.0 floor); 28 of 39 active sites run ARR below cost-to-serve \u2014 concentrated in small sites \u2014 and the mean hardware discount at subscribed sites is 5.8% vs the 5% tolerance",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-04/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-04/2026-07-27/data.json"
   },
   {
    "id": "BQ-05",
@@ -118,17 +138,22 @@
     "cfo"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "$366.0M of the $1,000.0M five-year plan sits behind FDA decisions not yet received; exposure crosses the 40% threshold in FY2029, FY2030 (peak 60.0% in FY2030)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-05/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-05/2026-07-27/data.json"
   },
   {
    "id": "BQ-06",
@@ -163,17 +188,24 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
-   "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
+   "assumptions": [
+    "A-003"
+   ],
+   "freshness": "fresh",
+   "verdict_headline": "US (NA-proxy) PCA/LVP smart-pump share is a RANGE, not a number: ~0.029%\u20130.047% of installed base and ~0.55%\u20131.1% of annual segment dollars (A-003 denominator, LOW confidence); our installed base grew ~16.0%/yr vs the assumed market ~7.3%/yr \u2014 directionally gaining, from a tiny base (mismatched bases: ours is UNIT growth of our NA in-segment book; A-003's rate is the DOLLAR CAGR of the total US infusion-pump market \u2014 directional comparison only)",
+   "evidence_class": "assumed",
+   "report_path": "docs/project/commercial/reports/BQ-07/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-07/2026-07-27/data.json"
   },
   {
    "id": "BQ-08",
@@ -183,17 +215,22 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Trailing-365d win rate is 50.7% of decided opportunities (37 won / 36 lost; 10 no-decision excluded) vs the 50% stand-in target; dollar-weighted we win 42.9% of decided CRM value ($23,682,000 won vs $31,550,000 lost \u2014 we lose bigger deals than we win); 11 of 36 losses (30.6%) have the predictive-monitoring gap primary or cited \u2014 $9,961,000 in CRM value",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-08/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-08/2026-07-27/data.json"
   },
   {
    "id": "BQ-09",
@@ -204,17 +241,22 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 53.7% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=54) vs 22.2% outside the window (n=9); the 0-3 months bucket wins at the highest rate (56.2%) while the interior buckets are flat (~50.0%) \u2014 not a smooth decay; the >12 months / no prior recall tail is far lower (14.3%, n=7 \u2014 small n)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-09/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-09/2026-07-27/data.json"
   },
   {
    "id": "BQ-10",
@@ -225,17 +267,24 @@
     "cfo"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
-   "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
+   "assumptions": [
+    "A-004"
+   ],
+   "freshness": "fresh",
+   "verdict_headline": "Indicative, assumption-bounded: our 5-yr TCO is $8,900/pump all-in ($5,100 on the capital+service basis) vs a class-wide competitor range of ~$3,000\u2013$15,000 on capital+service ONLY \u2014 competitor consumables and software subscription are undisclosed and excluded, so their true all-in TCO sits ABOVE that range; the ranges overlap and no hard we-win claim is supportable",
+   "evidence_class": "assumed",
+   "report_path": "docs/project/commercial/reports/BQ-10/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-10/2026-07-27/data.json"
   },
   {
    "id": "BQ-11",
@@ -246,17 +295,22 @@
     "customer-success"
    ],
    "cadence": "monthly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the \u226510-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked \u2014 no site\u2192account key exists in any pinned dataset",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-11/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-11/2026-07-27/data.json"
   },
   {
    "id": "BQ-12",
@@ -292,17 +346,24 @@
     "board"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
-   "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
+   "assumptions": [
+    "A-005"
+   ],
+   "freshness": "fresh",
+   "verdict_headline": "Nobody in the competitive matrix documents predictive monitoring today, but the runway is assumption-thin: a SaMD-only entrant starting at the data anchor (2026-01-28) could clear 2027-07-28 to 2028-01-28 \u2014 about 5 months before our F6 2028-H2 launch anchor; an incumbent acquisition inherits the same clock; 0 ai/predictive-flagged clearance(s) in the trailing-12-month watch. The hardware-scenario reassurance is FRAGILE: its fast edge clears the favorable launch anchor by only 27 days and beats an end-of-2028-H2 launch reading by ~5 months \u2014 and the H2 anchor refinement is a catalog config choice, not a strategy-doc commitment",
+   "evidence_class": "assumed",
+   "report_path": "docs/project/commercial/reports/BQ-13/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-13/2026-07-27/data.json"
   },
   {
    "id": "BQ-14",
@@ -312,17 +373,22 @@
     "vp-product"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "10 attributes compared: 2 ahead, 4 parity, 4 behind \u2014 3 behind-gaps have a roadmap lane (of which 2 adjacency-only: integrated_etco2, pca_pause_or_etco2 \u2014 the lane responds but does not mechanically close the gap), 1 SILENTLY UNADDRESSED (weight_kg)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-14/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-14/2026-07-27/data.json"
   },
   {
    "id": "BQ-15",
@@ -333,17 +399,22 @@
     "regulatory-affairs"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "ride to scheduled review (2027-04-12): both differentiators remain ahead of every documented competitor value and no refresh trigger fired. Accuracy margin ~6.6x vs best documented competitor on our LAB-basis spec (~4.6x on our volumetric-basis spec \u2014 ahead on either basis; competitor cells are nominal/field specs), battery ~2.1x; 0 FRN clearance(s) observed after the SOTA anchor date (2026-04-12) in a snapshot whose coverage ends 2026-01-28",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-15/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-15/2026-07-27/data.json"
   },
   {
    "id": "BQ-16",
@@ -353,17 +424,22 @@
     "vp-product"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "META-GAP: all 38 evidence rows are a simulated advisory panel \u2014 zero real collected KOL evidence exists (no interviews, surveys, or publications). Within the simulated register: F9 rides on a single voice (E-16.1 floor not met), and the F4, F6, F7, F8 wave slots carry concern-majority sentiment \u2014 read as NO documented endorsement of those slots, not as opposition: the register's 3-value vocabulary collapses conditional support into `concern` (stated limitation)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-16/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-16/2026-07-27/data.json"
   },
   {
    "id": "BQ-17",
@@ -373,17 +449,22 @@
     "vp-product"
    ],
    "cadence": "annual",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "Decision support, not the decision: pull-forward candidate F4 Alerts Engine v1 (smart alarm filtering) (composite 0.616, tie with F6 broken on earliest wave); kill candidate F9 International expansion (EU MDR / Canada) (composite 0.0, tie with F7 broken on weakest evidence base) \u2014 sentiment axis is simulated-panel only, demand axis is Cloud attach 84.8%. CAUTION on the kill read: the single F9 voice argues the slot is too LATE and too THIN \u2014 a voice FOR earlier EU investment, arithmetically converted into kill support by the 3-value sentiment vocabulary",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-17/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-17/2026-07-27/data.json"
   },
   {
    "id": "BQ-18",
@@ -475,17 +556,24 @@
     "cmo"
    ],
    "cadence": "monthly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
-   "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
+   "assumptions": [
+    "A-001"
+   ],
+   "freshness": "fresh",
+   "verdict_headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-20/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-20/2026-07-27/data.json"
   },
   {
    "id": "BQ-21",
@@ -496,17 +584,22 @@
     "audit-committee"
    ],
    "cadence": "monthly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "If FDA walks in tomorrow: 2 open docket item(s) (MDR-2026-0005 due in 2 days at the pin date; FSCA-2026-001 rollout incomplete) and 1 late MDR filing(s) in the trailing 12 months \u2014 on-time rate 94.7% (18 of 19); E-21.1 NOT met",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-21/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-21/2026-07-27/data.json"
   },
   {
    "id": "BQ-22",
@@ -516,17 +609,22 @@
     "vp-quality"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "16 of 40 lifetime signals (40.0%) died in a spreadsheet (no-action or open past the 90-day SLA); trailing 12 months: 6 of 21 (28.6%) died vs 9 landed in design/upgrade \u2014 and only 36.8% of adjudicated cohort signals met the SLA, so E-22.1 is NOT met",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-22/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-22/2026-07-27/data.json"
   },
   {
    "id": "BQ-23",
@@ -672,8 +770,8 @@
    "cadence": "monthly",
    "status": "answered",
    "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-22.6",
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -698,14 +796,18 @@
     {
      "edition": "2026-07-22.6",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
-   "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA: needs 5.6/wk vs current 0.2/wk (34 on-site remaining); NA: needs 4.2/wk vs current 0.0/wk (25 on-site remaining)",
+   "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-22; EMEA needs 5.9/wk; NA needs 4.4/wk); APAC on track but thin (4.5/wk vs 4.2/wk required, 38 on-site remaining); remote conversion covers 0 of 97 on-site-remaining devices today",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-22.6/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-22.6/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-27/data.json"
   },
   {
    "id": "BQ-27",
@@ -756,17 +858,22 @@
     "cfo"
    ],
    "cadence": "monthly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "H1 2026 revenue $46.3M vs plan $48.3M (-4.1%, within the \u00b15% tolerance overall; 4 of 6 lines breach the band individually on the downside); under plan: cloud-suite -16.4%, SP6500 -15.7%, SP6000 -9.1%, PP3500 -6.3%; masked by IP5000 +24.3%, PP3000 +16.1%; 2026-Q2 alone breached at -5.5%",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-28/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-28/2026-07-27/data.json"
   },
   {
    "id": "BQ-29",
@@ -778,17 +885,22 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "The attach stage-gate HOLDS at the stand-in level: 43.0% of the PP3500 installed base (295 of 686 pumps) vs the 40% gate \u2014 but the $24M releases on a gate NUMBER nobody has ratified; the strategy of record says 'traction' and sets no threshold \u2014 and the verdict is denominator-definition-sensitive: under a whole-PCA denominator (884 pumps incl. 198 unconnectable PP3000) attach reads 33.4%, BELOW the stand-in gate; the metric definition is as unratified as the gate number",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-29/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-29/2026-07-27/data.json"
   },
   {
    "id": "BQ-30",
@@ -799,17 +911,22 @@
     "cfo"
    ],
    "cadence": "monthly",
-   "status": "not-implemented",
+   "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": null,
-   "latest_edition": null,
-   "editions": [],
+   "draft_edition": "2026-07-27",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-27",
+     "status": "draft"
+    }
+   ],
    "assumptions": [],
-   "freshness": null,
-   "verdict_headline": null,
-   "evidence_class": null,
-   "report_path": null,
-   "data_path": null
+   "freshness": "fresh",
+   "verdict_headline": "A remote update costs $120 vs an on-site update between $193 (labor-time floor) and $950 (full-day ceiling) \u2014 remote is 12.6\u201362.1% of on-site depending on unmeasured travel; a $380 adapter pays back in 0.5\u20135.2 update campaigns at the top non-connected accounts",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-30/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-30/2026-07-27/data.json"
   }
  ]
 }

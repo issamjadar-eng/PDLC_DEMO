@@ -1,0 +1,9 @@
+bq: BQ-07
+edition: '2026-07-27'
+status: draft
+created_at: '2026-07-27T15:26:47+00:00'
+pins:
+  commercial/internal-sales-accounts: '2026-07-27'
+plan:
+  path: plans/BQ-07.md
+  sha256: fc785e31664d1dc2d4a4323014132a3fd1fa389732d8335b3d71d186320e3e85

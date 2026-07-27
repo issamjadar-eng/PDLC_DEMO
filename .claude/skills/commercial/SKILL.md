@@ -1,8 +1,8 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 8
-updated: 2026-07-22
+version: 9
+updated: 2026-07-27
 dependencies:
   skills:
     - name: corpus
@@ -70,11 +70,18 @@ python3 .claude/skills/commercial/scripts/commercial.py <subcommand> ...
 
 ### `answer <BQ-NN>`
 Pin the question's `corpus_deps` at their current `latest`, run the registered
-computation into a NEW draft edition, then lint it. Drafts are re-generable (same-day
-re-answer replaces the draft); an approved edition is never touched — re-answering that
-day suffixes (`.2`). A computation must write both `report.md` and `data.json` or the
-edition is discarded whole. After answering, read the report and surface the verdict and
-any lint findings to the user — the computation's verdict headline is the answer.
+computation into a NEW draft edition, then lint it. A computation must write both
+`report.md` and `data.json` or the edition is discarded whole. After answering, read the
+report and surface the verdict and any lint findings to the user — the computation's
+verdict headline is the answer.
+
+**Same-day edition semantics.** Re-answering on the same day REPLACES an unapproved
+draft in place — same edition id, regenerated content. The `.2` suffix mints only when
+the same-day edition is already approved (approved editions are never touched). Filed
+`verifications` records survive the replacement: the engine rescues them from the
+replaced draft's quality.json and re-files each with `carried_from_replaced_draft: true`
+— but the carried verdict was rendered against the OLD bytes (compare its
+`report_sha256` stamp), so a substantive re-answer still warrants a fresh verification.
 
 ### `lint <BQ-NN> [--edition E]`
 The claim lint, standalone (also runs automatically inside `answer` and `approve`):
@@ -83,6 +90,48 @@ unexpired waivers), the numeric-claim rule (digits outside exempt tokens require
 marker on the line), estimation-language-needs-an-assumption (warning), pin freshness vs
 each dataset's `max_age_days` (stale without `[waived: W-NNN]` = error), and data.json
 series hygiene (evidence_class ∈ measured|derived|assumed|unavailable + provenance).
+
+Mechanics report authors must know (each one caused real friction when learned the
+hard way):
+
+- **The numeric-claim rule is LINE-based.** A figure and its marker must share a
+  physical line — a marker on the next line, or on the sentence's earlier line after a
+  hard wrap, does not cover it. One marker anywhere on a line covers every figure on
+  that line (this is what makes inline table-row citations work). Wrap prose so the
+  digits and their marker stay together.
+- **Built-in exempt tokens** (digit-bearing identifiers, not claims): `BQ-NN`, `A-NNN`,
+  `W-NNN`, `C-YYYY-NN`, ISO dates / edition ids (`YYYY-MM-DD(.N)`), `PPNNNN`, `PE-N`,
+  `S-XX-N`, `KNNNNNN`, expectation ids `E-N(.N)`, `FYNNNN`, `YYYY-Q[1-4]`,
+  `YYYY-H[12]`, and `510(k)`.
+- **Projects extend the lint via a `lint:` block in commercial.yml** — relax-only, it
+  can never add findings:
+  ```yaml
+  lint:
+    exempt_patterns: ["RPT-\\d+"]          # extra identifier regexes for the numeric rule
+    estimation_exempt_terms: [modeled]     # plan-defined vocabulary, not hedging
+  ```
+- **The estimation-language word list** (case-insensitive, warning-level):
+  `estimate(d)`, `likely`, `approximately`, `roughly`, `assume(d)`, `modeled`. A line
+  using one without an `[assume: A-NNN]` warns. When a word is a committed **defined
+  term** in the analysis plan (e.g. a `modeled` bucket label in a
+  contracted/modeled/aspiration decomposition), exempt it via
+  `estimation_exempt_terms` rather than contorting the prose — and define it in the
+  plan so the exemption is auditable.
+- **`[assume: A-NNN]` resolution is corpus-WIDE, not pin-scoped.** The lint finds the
+  record anywhere under the corpus tree, which is convenient for shared assumptions
+  (e.g. a market-size record living in a neutral dataset) — but it also means a typo'd
+  or lookalike id can resolve against the wrong dataset's record. Convention: the
+  plan's Assumptions section names each assumption's home dataset, so a reviewer can
+  check the citation is the intended record.
+- **Snapshot-id date = data as-of date.** For urgency/recency computations (days
+  remaining, staleness, trailing windows), anchor on the pinned snapshot's id date (or
+  the snapshot's corpus `as_of` provenance field when present) — never on the
+  machine's "today", which makes an answer non-reproducible and silently shifts
+  verdicts every time it is re-run.
+- **Join-heavy series pin multiple datasets.** Series hygiene accepts
+  `provenance: {datasets: [{dataset, snapshot}, ...]}` as an alternative to the single
+  `{dataset, snapshot}` form — use it when a series is computed from a join across two
+  pins instead of attributing the join to one side.
 
 ### `approve <BQ-NN> --by <name> [--edition E] [--verify-note <ref>]`
 The gate. Lint errors block approval outright. On success: `approval.yml` with approver,
@@ -97,7 +146,10 @@ done.
 Write `.console/commercial-index.json` (`schema_version: 1.0`) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
-The console is a pure consumer of this file.
+The console is a pure consumer of this file. The card's verdict/badges come from the
+**newest edition regardless of status** — a fresh draft supersedes an older approved
+answer on the card, because showing an out-of-date verdict as "the answer" is worse
+than showing an unapproved one (the status chip discloses draftness).
 
 ### `check`
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
@@ -129,9 +181,17 @@ Agent-recorded `verifications` entries are preserved across rewrites.
 File an agent-produced verification into `quality.json` — the half of quality the
 engine cannot generate deterministically. Types: `adversarial-verify` (independent
 pins-only re-derivation), `red-team` (framing attack), `reference-audit`,
-`human-review`. **When you (Claude) run a verify/red-team agent over an answer, file
-the outcome here** — an unfiled verification is invisible to the audit surface.
-Consoles render these with verdict chips next to the machine checks.
+`human-review`, `intent-check`. **When you (Claude) run a verify/red-team agent over an
+answer, file the outcome here** — an unfiled verification is invisible to the audit
+surface. Consoles render these with verdict chips next to the machine checks.
+
+`--verdict` is free text, but use the established vocabulary so verdicts aggregate
+across editions: `CONFIRMED` | `CONFIRMED-WITH-CAVEAT` | `REFUTED` (adversarial
+re-derivation); `ACTIONED` (a prior finding has been addressed by a re-answer);
+`HONORED` | `HONORED-WITH-NOTES` | `DEVIATION` (intent-check vs the plan). Each filed
+entry is stamped with the short sha256 of the edition's report.md **at filing time** —
+the verdict is tied to the byte-state it judged, so a later regeneration is detectable
+by comparing the stamp against the current report.
 
 ### `catalog`
 The question roster with per-question answer status at a glance.
@@ -156,6 +216,31 @@ compute ONLY from those snapshots); write `report.md` + `data.json` into `{out}`
 Questions without a `computation` are `not-implemented` — visible in the catalog and
 sidecar as roadmap, never silently missing. Plan constants (targets, close dates) live
 in `params` and are cited in reports as `[config: commercial.yml]`.
+
+**Recommended layout at scale — per-BQ modules.** A single `computations.py` works for
+a handful of questions but becomes a merge bottleneck when many computations are
+authored in parallel (e.g. by concurrent agents). The proven layout: keep shared
+helpers + a dispatch table in `computations.py`, and give each question its own module
+at `bq_modules/bq_nn.py` exposing `run(corpus_root, out, pins)`. The dispatcher falls
+back to `importlib.import_module("bq_modules.bq_nn").run` when the BQ isn't in its
+table — `bq_modules/` works as a namespace package, no `__init__.py` required. One
+file per question means parallel authors never touch the same file.
+
+**Reuse the shared helpers before re-implementing.** Statistical primitives (median,
+percentile, rate calculations) belong in `computations.py` and get imported by every
+module — two independently hand-rolled `sorted(vals)[n//2]` "medians" (wrong for even
+n) is the canonical failure this prevents. If a helper doesn't exist yet, add it to
+the shared file, don't inline it.
+
+**No string-literal facts (a verified failure class).** A computation module may only
+interpolate values it READ from a pin, a `params` entry, or a derivation it computed —
+never a fact typed into the source as a string literal. A hardcoded record id, count,
+or docket number is invisible to the lint (the surrounding line carries a marker) but
+rots silently the moment the snapshot refreshes. This includes **sentence logic**:
+qualifiers like "most favorable basis", "decays", or "worst region" are claims — they
+must be computed from the data (compare the bases, test the bucket shape), not
+narrated. And a cross-dataset id (e.g. a docket number matched against a complaints
+record) requires that dataset in `corpus_deps` so the id is pinned, not assumed.
 
 **Plan expectations (first-class).** A question may declare `expectations:` — the plan
 assumptions its actuals are judged against, each with `id` (E-NN.N), `statement`,

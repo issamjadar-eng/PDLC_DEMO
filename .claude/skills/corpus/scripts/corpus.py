@@ -306,19 +306,26 @@ def normalize_command(norm: dict, raw_dir: Path, normalized_dir: Path, ds_dir: P
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
+def schema_target(cfg: dict, normalized_dir: Path):
+    """Resolve the schema's target CSV (declared file, or the single CSV present)."""
+    schema = cfg.get("schema") or {}
+    target = normalized_dir / schema.get("file", "records.csv")
+    if not target.exists():
+        csvs = list(normalized_dir.glob("*.csv"))
+        if len(csvs) == 1:
+            return csvs[0]
+    return target
+
+
 def validate_schema(cfg: dict, normalized_dir: Path, errors: list):
     schema = cfg.get("schema")
     if not schema:
         errors.append("dataset.yml has no schema: block (schema validation is mandatory)")
         return 0
-    target = normalized_dir / schema.get("file", "records.csv")
+    target = schema_target(cfg, normalized_dir)
     if not target.exists():
-        csvs = list(normalized_dir.glob("*.csv"))
-        if len(csvs) == 1:
-            target = csvs[0]
-        else:
-            errors.append(f"schema target not found: {target.name}")
-            return 0
+        errors.append(f"schema target not found: {target.name}")
+        return 0
     with open(target, newline="") as f:
         reader = csv.DictReader(f)
         header = reader.fieldnames or []
@@ -349,11 +356,58 @@ def validate_schema(cfg: dict, normalized_dir: Path, errors: list):
     return nrows
 
 
-def run_asserts(cfg: dict, nrows: int, errors: list):
-    asserts = cfg.get("asserts", {})
+def run_asserts(cfg: dict, nrows: int, normalized_dir: Path, ds_dir: Path, errors: list):
+    """Dataset-declared asserts, re-run on every acquire AND every validate.
+
+    Supported keys under `asserts:`:
+      min_rows / max_rows — row-count bounds on the schema target CSV.
+      enums: {<col>: [allowed, ...]} — closed value sets per column (empty cells pass;
+        use `required: true` in the schema to forbid empties).
+      command: "<shell cmd>" — dataset-local check seam, run with the same substitution
+        conventions as normalize ({raw_dir} / {normalized_dir} / {dataset_dir}, absolute
+        paths, cwd = dataset dir); non-zero exit = failure. This is how a dataset proves
+        its narrative/generator knobs actually landed in the data.
+    """
+    asserts = cfg.get("asserts") or {}
     min_rows = int(asserts.get("min_rows", 1))
     if nrows < min_rows:
         errors.append(f"assert min_rows: {nrows} < {min_rows}")
+    if "max_rows" in asserts and nrows > int(asserts["max_rows"]):
+        errors.append(f"assert max_rows: {nrows} > {asserts['max_rows']}")
+    normalized_dir = normalized_dir.resolve()
+    ds_dir = ds_dir.resolve()
+    enums = asserts.get("enums") or {}
+    if enums:
+        target = schema_target(cfg, normalized_dir)
+        if not target.exists():
+            errors.append("assert enums: schema target CSV not found")
+        else:
+            with open(target, newline="") as f:
+                reader = csv.DictReader(f)
+                header = reader.fieldnames or []
+                for col in enums:
+                    if col not in header:
+                        errors.append(f"assert enums: column not in CSV: {col}")
+                bad = {col: {} for col in enums}
+                for row in reader:
+                    for col, allowed in enums.items():
+                        v = row.get(col, "")
+                        if v != "" and v not in allowed:
+                            bad[col][v] = bad[col].get(v, 0) + 1
+            for col, viol in bad.items():
+                if viol:
+                    detail = ", ".join(f"{v!r} x{n}" for v, n in sorted(viol.items())[:10])
+                    errors.append(f"assert enums[{col}]: {sum(viol.values())} row(s) outside "
+                                  f"allowed values: {detail}")
+    if "command" in asserts:
+        cmd = asserts["command"].format(raw_dir=str(normalized_dir.parent / "raw"),
+                                        normalized_dir=str(normalized_dir),
+                                        dataset_dir=str(ds_dir))
+        proc = subprocess.run(cmd, shell=True, cwd=str(ds_dir), capture_output=True, text=True)
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "").strip()[-500:]
+            errors.append(f"assert command failed ({proc.returncode}): {cmd}" +
+                          (f"\n    {tail}" if tail else ""))
 
 
 # ---------------------------------------------------------------- commands
@@ -380,6 +434,7 @@ def cmd_init(args):
         "acquisition": {
             "type": "command",
             "command": "echo TODO configure acquisition && exit 1",
+            "system_of_record": "TODO — the source system this stands in for (internal datasets)",
             "usage_rights": "TODO — public-domain | licensed (no redistribution) | internal",
         },
         "normalize": {"command": "echo TODO configure normalization && exit 1"},
@@ -405,7 +460,7 @@ def cmd_init(args):
     return 0
 
 
-def _acquire(root: Path, name: str, log=log_print):
+def _acquire(root: Path, name: str, log=log_print, dry_run=False):
     # resolve absolute: command/file acquisition runs subprocesses with cwd=dataset dir,
     # so substituted {raw_dir}/{normalized_dir} paths must not be cwd-relative
     ds = dataset_dir(root, name).resolve()
@@ -443,11 +498,24 @@ def _acquire(root: Path, name: str, log=log_print):
 
         errors = []
         nrows = validate_schema(cfg, normalized_dir, errors)
-        run_asserts(cfg, nrows, errors)
+        run_asserts(cfg, nrows, normalized_dir, ds, errors)
         # referenced assumptions must exist
         for aid in cfg.get("assumptions_referenced", []) or []:
             if not (ds / "assumptions" / f"{aid}.yml").exists():
                 errors.append(f"referenced assumption record missing: {aid}")
+        if dry_run:
+            log(f"[{name}] DRY RUN — snapshot {snap_id} would contain {nrows} rows")
+            if errors:
+                log("  checks FAILED:")
+                for e in errors[:20]:
+                    log(f"    - {e}")
+            else:
+                log("  schema + asserts: all checks passed")
+            shutil.rmtree(staging)
+            log(f"[{name}] dry run complete — staging discarded, nothing landed")
+            if errors:
+                raise CorpusError("dry run: validation failed (see above)")
+            return None
         if errors:
             raise CorpusError("validation failed:\n  - " + "\n  - ".join(errors[:20]))
 
@@ -463,6 +531,12 @@ def _acquire(root: Path, name: str, log=log_print):
             "dataset": name,
             "snapshot": snap_id,
             "created_at": now_iso(),
+        }
+        if cfg.get("data_through"):
+            # machine-readable "data reflects the world through this date" — distinct
+            # from the snapshot id (which is the acquisition date)
+            provenance["as_of"] = str(cfg["data_through"])
+        provenance.update({
             "sources": sources,
             "transforms": [{
                 "step": "normalize",
@@ -471,7 +545,7 @@ def _acquire(root: Path, name: str, log=log_print):
             }],
             "assumptions_referenced": cfg.get("assumptions_referenced", []) or [],
             "checks": {"schema_valid": True, "asserts_passed": True, "row_count": nrows},
-        }
+        })
         dump_yaml(provenance, staging / "provenance.yml")
         final = ds / "snapshots" / snap_id
         final.parent.mkdir(exist_ok=True)
@@ -487,7 +561,7 @@ def _acquire(root: Path, name: str, log=log_print):
 
 def cmd_acquire(args):
     try:
-        _acquire(Path(args.root), args.dataset)
+        _acquire(Path(args.root), args.dataset, dry_run=getattr(args, "dry_run", False))
         return 0
     except CorpusError as e:
         print(f"ERROR: {e}", file=sys.stderr)
@@ -527,7 +601,7 @@ def _validate_snapshot(ds: Path, name: str, snap_id: str, errors: list):
     cfg = load_yaml(ds / "dataset.yml")
     verrors = []
     nrows = validate_schema(cfg, sdir / "normalized", verrors)
-    run_asserts(cfg, nrows, verrors)
+    run_asserts(cfg, nrows, sdir / "normalized", ds, verrors)
     errors.extend(f"{name}@{snap_id}: {e}" for e in verrors)
 
 
@@ -535,18 +609,22 @@ def cmd_validate(args):
     root = Path(args.root)
     errors = []
     targets = [(args.dataset, dataset_dir(root, args.dataset))] if args.dataset else list(iter_datasets(root))
+    validated = []
     for name, ds in targets:
         snap = args.snapshot or read_latest(ds)
         if not snap:
             errors.append(f"{name}: no snapshots")
             continue
         _validate_snapshot(ds, name, snap, errors)
+        validated.append(f"{name}@{snap}")
     if errors:
         print("VALIDATION ERRORS:")
         for e in errors:
             print(f"  - {e}")
         return 1
-    print(f"validate OK ({len(targets)} dataset(s))")
+    print(f"validate OK ({len(validated)} dataset(s)):")
+    for t in validated:
+        print(f"  - {t}")
     return 0
 
 
@@ -571,7 +649,7 @@ def active_waiver(ds: Path, today_d: dt.date):
 
 def cmd_check(args):
     root = Path(args.root)
-    errors, rows = [], []
+    errors, warnings, rows = [], [], []
     today_d = dt.date.today()
     datasets = list(iter_datasets(root))
     if not datasets:
@@ -594,9 +672,26 @@ def cmd_check(args):
                 note = f"waived ({wid})"
             else:
                 errors.append(f"{name}: STALE ({age}d > {cfg.get('max_age_days', 90)}d) and no active waiver")
-        n_assum = len(list((ds / "assumptions").glob("A-*.yml"))) if (ds / "assumptions").is_dir() else 0
-        contradicted = [a.stem for a in (ds / "assumptions").glob("A-*.yml")
-                        if load_yaml(a).get("status") == "contradicted"] if n_assum else []
+        a_files = sorted((ds / "assumptions").glob("A-*.yml")) if (ds / "assumptions").is_dir() else []
+        n_assum = len(a_files)
+        contradicted = []
+        for af in a_files:
+            ad = load_yaml(af) or {}
+            status = ad.get("status", "active")
+            if status == "contradicted":
+                contradicted.append(af.stem)
+            elif status == "active":
+                # warn (never fail) on active-but-unfilled records: a deliberately
+                # unquantified assumption may be doing its job by blocking a chart,
+                # but it should stay visible until its TODOs are resolved
+                probs = []
+                todo = [k for k, v in ad.items() if isinstance(v, str) and "TODO" in v]
+                if todo:
+                    probs.append(f"TODO field(s): {', '.join(todo)}")
+                if not ad.get("sources_consulted"):
+                    probs.append("empty sources_consulted")
+                if probs:
+                    warnings.append(f"{name}: {af.stem} is active with {'; '.join(probs)}")
         if contradicted:
             errors.append(f"{name}: contradicted assumption(s) need review: {', '.join(contradicted)}")
         rows.append((name, latest, band, f"{age}d", note or (f"{n_assum} assumption(s)" if n_assum else "")))
@@ -604,6 +699,10 @@ def cmd_check(args):
     print(f"{'dataset'.ljust(w)}{'latest'.ljust(15)}{'freshness'.ljust(11)}{'age'.ljust(6)}notes")
     for r in rows:
         print(f"{r[0].ljust(w)}{r[1].ljust(15)}{r[2].ljust(11)}{r[3].ljust(6)}{r[4]}")
+    if warnings:
+        print("\nCHECK WARNINGS (non-blocking):")
+        for wmsg in warnings:
+            print(f"  - {wmsg}")
     if errors:
         print("\nCHECK FAILURES:")
         for e in errors:
@@ -730,7 +829,7 @@ def cmd_assume(args):
         "estimation_method": args.method or "TODO",
         "value_or_range": args.value or "TODO",
         "confidence": args.confidence,
-        "sources_consulted": [],
+        "sources_consulted": list(args.source or []),
         "refresh_trigger": args.refresh_trigger or "next corpus refresh",
         "created": today(),
         "status": "active",
@@ -771,6 +870,9 @@ def main(argv=None):
 
     s = sub.add_parser("acquire", help="acquire a new immutable snapshot")
     s.add_argument("dataset")
+    s.add_argument("--dry-run", action="store_true",
+                   help="run the full acquire->normalize->validate pipeline in staging, "
+                        "report results, then discard — nothing lands (no snapshot slot used)")
     s.set_defaults(fn=cmd_acquire)
 
     s = sub.add_parser("refresh", help="acquire + delta report vs previous latest")
@@ -804,6 +906,8 @@ def main(argv=None):
     s.add_argument("--confidence", default="low", choices=["high", "med", "low"])
     s.add_argument("--needed-for", help="comma-separated BQ ids / dataset names")
     s.add_argument("--refresh-trigger")
+    s.add_argument("--source", action="append", default=[],
+                   help="repeatable: URL or path consulted (fills sources_consulted at scaffold time)")
     s.set_defaults(fn=cmd_assume)
 
     s = sub.add_parser("waive", help="scaffold a W-NNN freshness waiver (expires!)")

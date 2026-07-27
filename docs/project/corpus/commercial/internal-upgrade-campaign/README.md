@@ -20,3 +20,6 @@ trigger), BQ-25 (customer struggle), BQ-26 (capacity), BQ-30 (upgrade economics)
 ## Changelog
 
 - 2026-07-22: Scaffolded; first snapshot (389 campaign rows) — task 108.
+- 2026-07-27: Schema completed — declared `site_id`, `hw_rev`, `wave` (carried by the CSV
+  and consumed by BQ-23/24/26/30 but previously undeclared, so validation never covered
+  them); config-only, no snapshot regeneration (red-team data audit DA-1) — task 108.

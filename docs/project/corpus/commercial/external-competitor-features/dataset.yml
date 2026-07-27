@@ -1,0 +1,38 @@
+dataset: commercial/external-competitor-features
+title: Competitor feature / spec matrix (curated, real public + project-doc data)
+description: >-
+  Curated competitor feature and specification matrix for the PCA / smart-pump
+  competitive set (BD Alaris, Baxter Spectrum IQ / Sigma Spectrum / Novum IQ, ICU
+  Medical Plum 360, Smiths Medical CADD-Solis / CADD Legacy, B.Braun Infusomat Space)
+  plus PainEase PP3500 rows sourced from the project's own competitive-landscape docs.
+  One row per (vendor, product, attribute); every value carries a source (project doc
+  path or public URL) — attributes with no source are omitted, never guessed. Curated
+  by hand in curated.csv (next to this file); snapshots are engine-written copies.
+  Consumed by BQ-10 (TCO), BQ-13 (predictive runway), BQ-14 (feature parity),
+  BQ-15 (SOTA currency).
+internal: false
+max_age_days: 180
+acquisition:
+  type: file
+  path: curated.csv
+  system_of_record: >-
+    hand-curated compilation — project competitive-landscape docs
+    (docs/project/input-analysis/competitive-landscape/, strategies/) + public
+    vendor/web sources cited per row in source_ref
+  usage_rights: "public information, compiled — verify before external use"
+normalize:
+  command: cp {raw_dir}/curated.csv {normalized_dir}/records.csv
+schema:
+  file: records.csv
+  key: [vendor, product, attribute]
+  columns:
+    - {name: vendor, type: str, required: true}
+    - {name: product, type: str, required: true}
+    - {name: attribute, type: str, required: true}
+    - {name: value, type: str, required: true}
+    - {name: unit, type: str}
+    - {name: source_type, type: str, required: true}
+    - {name: source_ref, type: str, required: true}
+    - {name: verified, type: str, required: true}
+asserts:
+  min_rows: 40

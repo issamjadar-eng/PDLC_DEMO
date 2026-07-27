@@ -1,0 +1,39 @@
+id: A-005
+title: Develop-to-clear lead time for predictive-monitoring entrants
+needed_for:
+- BQ-13
+why_unavailable: >-
+  Competitors do not disclose internal development timelines, and no
+  predictive-monitoring infusion SaMD has yet published a concept-to-clearance
+  duration for the PCA/opioid context; only the FDA review segment is directly
+  observable.
+estimation_method: >-
+  Two-part build (consulted 2026-07-27): (a) REAL review-time floor from our own
+  corpus — median 213 days (~7.0 months; IQR 84-293 days ~2.8-9.6 months) from
+  date_received to decision_date across the 29 product-code-FRN infusion-pump 510(k)
+  clearances since 2021 in commercial/openfda-510k-infusion@2026-07-22; (b) public
+  development-time estimates for AI/ML SaMD 510(k) programs — fastest published
+  end-to-end examples ~12-14 months concept to clearance, AI/ML average review ~140
+  days, typical 510(k) review 3-9 months (Innolitics, IntuitionLabs summaries).
+  Hardware-integrated predictive monitoring additionally requires clinical-evidence
+  generation; upper bound anchored to the project's own market-analysis benchmark of
+  a $24M / 42-month predictive-monitoring build (competitive-product-assessment.md,
+  strategic-market-ai-infusion.md).
+value_or_range: >-
+  Software-only (SaMD) predictive-monitoring entrant, concept to 510(k) clearance:
+  ~18-24 months (~12-17 mo development + submission prep, plus ~7 mo median FRN
+  review). Hardware-integrated or clinical-evidence-heavy predictive program:
+  ~30-48 months (the 42-month internal benchmark sits inside this band). Read
+  against our F6 Y3 (2028-H2) launch slot for BQ-13 runway math.
+confidence: med
+sources_consulted:
+- commercial/openfda-510k-infusion@2026-07-22 (median/IQR recomputed 2026-07-27 from normalized/records.csv)
+- https://innolitics.com/articles/year-in-review-ai-ml-medical-device-k-clearances/
+- https://innolitics.com/services/ai510ks/
+- https://intuitionlabs.ai/articles/fda-samd-pathways-510k-de-novo-pma-ai
+- docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md
+- docs/project/input-analysis/market-research/strategic-market-ai-infusion.md
+refresh_trigger: each openfda-510k-infusion refresh (median review time recompute), or a predictive-monitoring
+  510(k)/De Novo announcement by an incumbent or entrant
+created: '2026-07-27'
+status: active

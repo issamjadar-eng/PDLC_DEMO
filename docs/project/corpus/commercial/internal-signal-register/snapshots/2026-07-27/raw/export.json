@@ -1,0 +1,368 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "data_through": "2026-07-25",
+ "rows": [
+  {
+   "signal_id": "SIG-2025-001",
+   "opened_date": "2025-01-05",
+   "source": "near-miss",
+   "category": "occlusion-alarm",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2025-04-27"
+  },
+  {
+   "signal_id": "SIG-2025-002",
+   "opened_date": "2025-01-11",
+   "source": "near-miss",
+   "category": "keypad-wear",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-03-22"
+  },
+  {
+   "signal_id": "SIG-2025-003",
+   "opened_date": "2025-02-01",
+   "source": "maude-screen",
+   "category": "tubing-set",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-07-24"
+  },
+  {
+   "signal_id": "SIG-2025-004",
+   "opened_date": "2025-02-06",
+   "source": "near-miss",
+   "category": "alarm-fatigue",
+   "disposition": "design-input",
+   "disposition_ref": "DI-0045",
+   "closed_date": "2025-05-27"
+  },
+  {
+   "signal_id": "SIG-2025-005",
+   "opened_date": "2025-03-13",
+   "source": "field-service",
+   "category": "keypad-wear",
+   "disposition": "requirement-change",
+   "disposition_ref": "REQ-0046",
+   "closed_date": "2025-06-05"
+  },
+  {
+   "signal_id": "SIG-2025-006",
+   "opened_date": "2025-03-19",
+   "source": "field-service",
+   "category": "dose-programming",
+   "disposition": "design-input",
+   "disposition_ref": "DI-0042",
+   "closed_date": "2025-05-31"
+  },
+  {
+   "signal_id": "SIG-2025-007",
+   "opened_date": "2025-03-23",
+   "source": "near-miss",
+   "category": "tubing-set",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2025-008",
+   "opened_date": "2025-03-24",
+   "source": "maude-screen",
+   "category": "alarm-fatigue",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2025-009",
+   "opened_date": "2025-04-04",
+   "source": "complaint-trend",
+   "category": "occlusion-alarm",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-08-20"
+  },
+  {
+   "signal_id": "SIG-2025-010",
+   "opened_date": "2025-04-10",
+   "source": "maude-screen",
+   "category": "tubing-set",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-07-04"
+  },
+  {
+   "signal_id": "SIG-2025-011",
+   "opened_date": "2025-04-10",
+   "source": "maude-screen",
+   "category": "battery",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2025-012",
+   "opened_date": "2025-04-19",
+   "source": "near-miss",
+   "category": "battery",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-06-11"
+  },
+  {
+   "signal_id": "SIG-2025-013",
+   "opened_date": "2025-04-23",
+   "source": "field-service",
+   "category": "dose-programming",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2025-08-07"
+  },
+  {
+   "signal_id": "SIG-2025-014",
+   "opened_date": "2025-04-29",
+   "source": "alarm-analytics",
+   "category": "dose-programming",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-06-04"
+  },
+  {
+   "signal_id": "SIG-2025-015",
+   "opened_date": "2025-05-03",
+   "source": "near-miss",
+   "category": "battery",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2025-016",
+   "opened_date": "2025-05-31",
+   "source": "maude-screen",
+   "category": "dose-programming",
+   "disposition": "requirement-change",
+   "disposition_ref": "REQ-0048",
+   "closed_date": "2025-09-05"
+  },
+  {
+   "signal_id": "SIG-2025-017",
+   "opened_date": "2025-06-10",
+   "source": "near-miss",
+   "category": "battery",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0052",
+   "closed_date": "2025-08-19"
+  },
+  {
+   "signal_id": "SIG-2025-018",
+   "opened_date": "2025-06-10",
+   "source": "maude-screen",
+   "category": "tubing-set",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2025-10-13"
+  },
+  {
+   "signal_id": "SIG-2025-019",
+   "opened_date": "2025-06-21",
+   "source": "near-miss",
+   "category": "alarm-fatigue",
+   "disposition": "design-input",
+   "disposition_ref": "DI-0043",
+   "closed_date": "2025-11-16"
+  },
+  {
+   "signal_id": "SIG-2025-020",
+   "opened_date": "2025-08-10",
+   "source": "near-miss",
+   "category": "screen-display",
+   "disposition": "requirement-change",
+   "disposition_ref": "REQ-0047",
+   "closed_date": "2026-01-14"
+  },
+  {
+   "signal_id": "SIG-2025-021",
+   "opened_date": "2025-08-17",
+   "source": "complaint-trend",
+   "category": "dose-programming",
+   "disposition": "design-input",
+   "disposition_ref": "DI-0044",
+   "closed_date": "2025-12-08"
+  },
+  {
+   "signal_id": "SIG-2025-022",
+   "opened_date": "2025-08-21",
+   "source": "complaint-trend",
+   "category": "tubing-set",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-10-25"
+  },
+  {
+   "signal_id": "SIG-2025-023",
+   "opened_date": "2025-09-19",
+   "source": "complaint-trend",
+   "category": "battery",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2026-03-09"
+  },
+  {
+   "signal_id": "SIG-2025-024",
+   "opened_date": "2025-10-01",
+   "source": "near-miss",
+   "category": "drug-library",
+   "disposition": "requirement-change",
+   "disposition_ref": "REQ-0049",
+   "closed_date": "2026-03-29"
+  },
+  {
+   "signal_id": "SIG-2025-025",
+   "opened_date": "2025-10-01",
+   "source": "maude-screen",
+   "category": "tubing-set",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2026-03-08"
+  },
+  {
+   "signal_id": "SIG-2025-026",
+   "opened_date": "2025-10-05",
+   "source": "complaint-trend",
+   "category": "alarm-fatigue",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2026-01-30"
+  },
+  {
+   "signal_id": "SIG-2025-027",
+   "opened_date": "2025-10-16",
+   "source": "maude-screen",
+   "category": "keypad-wear",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2025-12-24"
+  },
+  {
+   "signal_id": "SIG-2025-028",
+   "opened_date": "2025-11-10",
+   "source": "maude-screen",
+   "category": "over-delivery",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0051",
+   "closed_date": "2026-02-06"
+  },
+  {
+   "signal_id": "SIG-2025-029",
+   "opened_date": "2025-12-08",
+   "source": "alarm-analytics",
+   "category": "keypad-wear",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2025-030",
+   "opened_date": "2025-12-21",
+   "source": "maude-screen",
+   "category": "battery",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2026-001",
+   "opened_date": "2026-01-07",
+   "source": "field-service",
+   "category": "alarm-fatigue",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2026-05-05"
+  },
+  {
+   "signal_id": "SIG-2026-002",
+   "opened_date": "2026-01-10",
+   "source": "maude-screen",
+   "category": "tubing-set",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0050",
+   "closed_date": "2026-04-06"
+  },
+  {
+   "signal_id": "SIG-2026-003",
+   "opened_date": "2026-01-19",
+   "source": "maude-screen",
+   "category": "alarm-fatigue",
+   "disposition": "design-input",
+   "disposition_ref": "DI-0041",
+   "closed_date": "2026-05-19"
+  },
+  {
+   "signal_id": "SIG-2026-004",
+   "opened_date": "2026-02-03",
+   "source": "field-service",
+   "category": "screen-display",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0053",
+   "closed_date": "2026-06-10"
+  },
+  {
+   "signal_id": "SIG-2026-005",
+   "opened_date": "2026-02-17",
+   "source": "complaint-trend",
+   "category": "over-delivery",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0052",
+   "closed_date": "2026-05-29"
+  },
+  {
+   "signal_id": "SIG-2026-006",
+   "opened_date": "2026-03-10",
+   "source": "near-miss",
+   "category": "alarm-fatigue",
+   "disposition": "no-action",
+   "disposition_ref": "",
+   "closed_date": "2026-06-04"
+  },
+  {
+   "signal_id": "SIG-2026-007",
+   "opened_date": "2026-03-26",
+   "source": "near-miss",
+   "category": "occlusion-alarm",
+   "disposition": "monitoring",
+   "disposition_ref": "",
+   "closed_date": "2026-06-04"
+  },
+  {
+   "signal_id": "SIG-2026-008",
+   "opened_date": "2026-05-25",
+   "source": "alarm-analytics",
+   "category": "screen-display",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  },
+  {
+   "signal_id": "SIG-2026-009",
+   "opened_date": "2026-05-25",
+   "source": "complaint-trend",
+   "category": "battery",
+   "disposition": "upgrade-item",
+   "disposition_ref": "UPG-0051",
+   "closed_date": "2026-07-17"
+  },
+  {
+   "signal_id": "SIG-2026-010",
+   "opened_date": "2026-06-10",
+   "source": "alarm-analytics",
+   "category": "connectivity",
+   "disposition": "open",
+   "disposition_ref": "",
+   "closed_date": ""
+  }
+ ]
+}

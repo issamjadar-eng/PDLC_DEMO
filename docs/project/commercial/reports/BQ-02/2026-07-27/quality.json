@@ -1,0 +1,277 @@
+{
+ "bq": "BQ-02",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:10+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "basis-sensitivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "franchise-share",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "gpo-share-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "plan-loss-scenario",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "share-by-gpo",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "top-accounts",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-financials@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-revenue-plan@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-sales-accounts@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-sales-accounts",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-revenue-plan",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-financials",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Concentration headline",
+    "series": "concentration-stat",
+    "evidence_class": "measured",
+    "source": "commercial/internal-sales-accounts@2026-07-27"
+   },
+   {
+    "what": "FY2025 direct-book revenue share by GPO",
+    "series": "share-by-gpo",
+    "evidence_class": "derived",
+    "source": "commercial/internal-sales-accounts@2026-07-27",
+    "derivation": {
+     "method": "GPO revenue \u00f7 total direct-book revenue in the basis year",
+     "inputs": [
+      "src: commercial/internal-sales-accounts@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Top-3 accounts, FY2025 direct book ($M)",
+    "series": "top-accounts",
+    "evidence_class": "measured",
+    "source": "commercial/internal-sales-accounts@2026-07-27"
+   },
+   {
+    "what": "FY2025 direct-book share by franchise cut",
+    "series": "franchise-share",
+    "evidence_class": "derived",
+    "source": "commercial/internal-sales-accounts@2026-07-27",
+    "derivation": {
+     "method": "revenue of the configured franchise lines \u00f7 total direct-book revenue in the basis year",
+     "inputs": [
+      "src: commercial/internal-sales-accounts@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "E-02.1 basis sensitivity \u2014 direct book vs total FY2025 revenue",
+    "series": "basis-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "direct-book coverage = direct-book total \u00f7 total calendar-year revenue from the financial ledger; anchor floor-of-total = anchor GPO direct-book revenue \u00f7 total revenue (lower bound \u2014 distributor-routed book unattributed)",
+     "inputs": [
+      "src: commercial/internal-sales-accounts@2026-07-27",
+      "src: commercial/internal-financials@2026-07-27",
+      "derived: share-by-gpo"
+     ]
+    }
+   },
+   {
+    "what": "GPO share of direct-book revenue by FY",
+    "series": "gpo-share-trend",
+    "evidence_class": "derived",
+    "source": "commercial/internal-sales-accounts@2026-07-27",
+    "derivation": {
+     "method": "per fiscal year on file: GPO revenue \u00f7 that year's total direct-book revenue",
+     "inputs": [
+      "src: commercial/internal-sales-accounts@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Plan of record vs minus-anchor-GPO scenario ($M)",
+    "series": "plan-loss-scenario",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "plan-year total minus the anchor GPO's FY2025 direct-book revenue held constant (stated floor scenario)",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "src: commercial/internal-sales-accounts@2026-07-27",
+      "derived: share-by-gpo"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-02.md",
+  "status": "in-sync",
+  "pinned": "118e9fcb0ee837aa94e1b2fd4bae1d4b5e0f2c20b447723007bed7af84eaad86",
+  "current": "118e9fcb0ee837aa94e1b2fd4bae1d4b5e0f2c20b447723007bed7af84eaad86"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:29:24+00:00",
+   "summary": "Actioned: basis sensitivity disclosed prominently (verdict line, dedicated report section, R3 narrative risk, derived basis-sensitivity series) \u2014 direct book covers 50.6% of total FY2025 revenue, Meridian floor-of-total 19.4% does not breach; E-02.1 actual now states the verdict is basis-sensitive; internal-financials added to corpus_deps for the total-revenue denominator; basis choice + sensitivity codified in plans/BQ-02.md.",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  }
+ ]
+}

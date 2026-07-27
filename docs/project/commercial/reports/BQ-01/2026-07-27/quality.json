@@ -1,0 +1,231 @@
+{
+ "bq": "BQ-01",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:10+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "gm-by-line",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "gm-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "opex-by-line",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "revenue-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "totals-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-financials@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-financials",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Trailing-4Q portfolio totals",
+    "series": "totals-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "portfolio totals = \u03a3 line revenue and \u03a3 (revenue \u2212 COGS) over the trailing window; funder-pair GM and its share = pair GM \u00f7 total GM",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "derived: gm-by-line"
+     ]
+    }
+   },
+   {
+    "what": "Trailing-4Q revenue vs gross margin by line ($M)",
+    "series": "gm-by-line",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "per line over the trailing four quarters: revenue = \u03a3 revenue_usd (measured); gross margin = revenue \u2212 COGS",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Share of total gross margin by line",
+    "series": "gm-share",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "line trailing-4Q gross margin \u00f7 total trailing-4Q gross margin",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "derived: gm-by-line"
+     ]
+    }
+   },
+   {
+    "what": "GM% \u2014 prior 4Q vs trailing 4Q by line",
+    "series": "gm-trend",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "per line: (revenue \u2212 COGS) \u00f7 revenue over the trailing four quarters vs the four quarters before them",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Quarterly revenue by line ($M; top 3 + other)",
+    "series": "revenue-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-financials@2026-07-27"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Operating expense by line",
+    "series": "opex-by-line",
+    "evidence_class": "unavailable",
+    "source": "no opex-allocation dataset in the corpus \u2014 funds/consumes is a gross-margin statement until one exists",
+    "note": "no opex-allocation dataset in the corpus \u2014 funds/consumes is a gross-margin statement until one exists"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-01.md",
+  "status": "in-sync",
+  "pinned": "9d7442e7e9c89e952758fb49d21ad2b40b0b30087eb7771e582843375e25d5f0",
+  "current": "9d7442e7e9c89e952758fb49d21ad2b40b0b30087eb7771e582843375e25d5f0"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:27:24+00:00",
+   "summary": "Actioned: verdict parenthetical restructured to bind the pair GM ($27.0M) distinctly from portfolio GM ($45.2M); gm-by-line and totals-stat reclassified evidence_class=derived with derivation chains; pair-GM point added to totals-stat.",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-board-2026-07-27.md"
+  }
+ ]
+}

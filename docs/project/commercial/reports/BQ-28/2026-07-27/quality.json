@@ -1,0 +1,273 @@
+{
+ "bq": "BQ-28",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:11+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "price-volume-split",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "quarterly-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-by-line",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-by-quarter",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-contribution",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ytd-variance",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-financials@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-revenue-plan@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-financials",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-revenue-plan",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "YTD revenue vs plan",
+    "series": "ytd-variance",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "(sum of actual revenue \u2212 sum of plan revenue) \u00f7 plan revenue over the closed quarters of the fiscal year",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Quarterly revenue: actual vs 2026 plan",
+    "series": "quarterly-trend",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "quarterly totals of actual revenue (all history in the pin) and of the fiscal-year plan rows",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Actual vs plan by product line",
+    "series": "variance-by-line",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "revenue summed per product line over the closed quarters, actual and plan",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Actual vs plan by region",
+    "series": "variance-by-region",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "revenue summed per region over the closed quarters, actual and plan",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Variance vs plan by quarter",
+    "series": "variance-by-quarter",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "(actual \u2212 plan) \u00f7 plan per closed quarter",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Variance contribution ($M) by line",
+    "series": "variance-contribution",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "actual \u2212 plan in dollars per product line \u2014 the netting inside the composite",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Volume vs price variance bridge",
+    "series": "price-volume-split",
+    "evidence_class": "unavailable",
+    "source": "the plan of record (internal-revenue-plan) carries no planned units \u2014 a volume/price bridge needs plan-side units; actuals alone cannot attribute the variance. Acquire planned units in the LRP export to unlock this.",
+    "note": "the plan of record (internal-revenue-plan) carries no planned units \u2014 a volume/price bridge needs plan-side units; actuals alone cannot attribute the variance. Acquire planned units in the LRP export to unlock this."
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-28.md",
+  "status": "in-sync",
+  "pinned": "f4eb4b8790e9ab12f187b97db45b3ae6aff0eff59d399a77ff44968e97b54728",
+  "current": "f4eb4b8790e9ab12f187b97db45b3ae6aff0eff59d399a77ff44968e97b54728"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:30:32+00:00",
+   "summary": "F28-1 actioned: compact per-line breach count (4 of 6 lines breach individually on the downside) folded into the verdict headline and E-28.1 actual so it survives verdict-only rollups; rollup-survival rule codified in plans/BQ-28.md",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+  }
+ ]
+}

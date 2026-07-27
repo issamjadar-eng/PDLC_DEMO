@@ -1,0 +1,33 @@
+id: A-003
+title: US smart-pump segment size (installed base + annual market)
+needed_for:
+- BQ-07
+why_unavailable: >-
+  No public per-segment unit census exists for US large-volume + PCA smart pumps:
+  vendors do not disclose US installed base by segment, and analyst reports carrying
+  unit-level splits are paywalled — only headline dollar figures and coarse ratios are
+  visible in public report summaries.
+estimation_method: >-
+  Triangulation from public analyst-report summaries (consulted 2026-07-27): US
+  infusion-pump market ~$8.26B (2025) growing ~7.3% CAGR to ~$11.8B (2030)
+  (MarketsandMarkets US summary); ~6,000 US hospitals / ~920,000 staffed beds using
+  infusion systems (Mordor Intelligence summary); >30M pumps deployed worldwide with
+  smart pumps ~55% of installations (Global Growth Insights summary). US LVP+PCA
+  smart-pump installed base estimated as staffed beds x assumed 1.2-2.0 LVP+PCA pumps
+  per staffed bed (assumed fleet ratio — the widest-error term); annual unit demand
+  from a 7-10 year replacement cycle plus market growth; segment dollar share taken as
+  the LVP+PCA smart-pump slice of the total US infusion-pump dollar market.
+value_or_range: >-
+  US installed base of large-volume + PCA smart pumps: ~1.1M-1.8M units. Annual US
+  unit demand (replacement + growth): ~130k-230k units/yr. US LVP+PCA smart-pump
+  segment dollar market: ~$1.5B-$3.0B/yr of the ~$8.3B (2025) total US infusion-pump
+  market. Treat as an order-of-magnitude denominator only.
+confidence: low
+sources_consulted:
+- https://www.marketsandmarkets.com/Market-Reports/geography/infusion-pumps-accessories-market/us
+- https://www.mordorintelligence.com/industry-reports/intravenous-infusion-pump-market
+- https://www.globalgrowthinsights.com/market-reports/infusion-pump-market-120921
+- https://www.skyquestt.com/report/infusion-pump-market
+refresh_trigger: annual, or on publication of a new smart-pump/infusion-pump market report
+created: '2026-07-27'
+status: active

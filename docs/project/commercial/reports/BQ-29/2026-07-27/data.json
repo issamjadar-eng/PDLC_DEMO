@@ -1,0 +1,367 @@
+{
+ "bq": "BQ-29",
+ "series": [
+  {
+   "id": "attach-stat",
+   "label": "Cloud Suite attach",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "sum(pumps_connected) over active subscription rows \u00f7 count of PP3500 devices in the fleet registry",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "of PP3500 installed base under active subscription",
+     "value": 43.0,
+     "sub": "295 of 686 pumps; gate 40% (stand-in)"
+    }
+   ]
+  },
+  {
+   "id": "denominator-sensitivity",
+   "label": "Attach % under alternative denominator bases",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "attached = sum(pumps_connected) over active subscription rows; attach % computed under two denominator bases from the fleet registry: PP3500-only count (primary) vs whole-PCA count (PP3500 + PP3000)",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "PP3500 installed base (primary)",
+     "value": 43.0,
+     "denominator": 686
+    },
+    {
+     "label": "whole PCA installed base (PP3500 + PP3000)",
+     "value": 33.4,
+     "denominator": 884,
+     "pp3000_connected": 0
+    }
+   ]
+  },
+  {
+   "id": "cumulative-attach",
+   "label": "Pumps under currently-active subscriptions",
+   "unit": "pumps",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "lines": [
+    {
+     "label": "cumulative by start month",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 11
+      },
+      {
+       "x": "2024-02-01",
+       "y": 11
+      },
+      {
+       "x": "2024-03-01",
+       "y": 13
+      },
+      {
+       "x": "2024-04-01",
+       "y": 13
+      },
+      {
+       "x": "2024-05-01",
+       "y": 48
+      },
+      {
+       "x": "2024-06-01",
+       "y": 53
+      },
+      {
+       "x": "2024-07-01",
+       "y": 56
+      },
+      {
+       "x": "2024-08-01",
+       "y": 70
+      },
+      {
+       "x": "2024-09-01",
+       "y": 100
+      },
+      {
+       "x": "2024-10-01",
+       "y": 125
+      },
+      {
+       "x": "2024-11-01",
+       "y": 152
+      },
+      {
+       "x": "2024-12-01",
+       "y": 155
+      },
+      {
+       "x": "2025-01-01",
+       "y": 171
+      },
+      {
+       "x": "2025-02-01",
+       "y": 171
+      },
+      {
+       "x": "2025-03-01",
+       "y": 189
+      },
+      {
+       "x": "2025-04-01",
+       "y": 197
+      },
+      {
+       "x": "2025-05-01",
+       "y": 213
+      },
+      {
+       "x": "2025-06-01",
+       "y": 273
+      },
+      {
+       "x": "2025-07-01",
+       "y": 273
+      },
+      {
+       "x": "2025-08-01",
+       "y": 273
+      },
+      {
+       "x": "2025-09-01",
+       "y": 273
+      },
+      {
+       "x": "2025-10-01",
+       "y": 292
+      },
+      {
+       "x": "2025-11-01",
+       "y": 292
+      },
+      {
+       "x": "2025-12-01",
+       "y": 295
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "attach-breakdown",
+   "label": "PP3500 base by subscription segment",
+   "unit": "pumps",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "PP3500 devices split into active-subscription / connected-without-active-subscription / not-connected via the site-level subscription join",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "under active subscription",
+     "value": 295
+    },
+    {
+     "label": "connected, no active subscription",
+     "value": 36
+    },
+    {
+     "label": "not connected",
+     "value": 355
+    }
+   ]
+  },
+  {
+   "id": "attach-by-region",
+   "label": "Attach % by region",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "active-subscription pumps (site mapped to region via the fleet registry) \u00f7 PP3500 installed per region",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 19.2,
+     "attached": 28,
+     "installed": 146
+    },
+    {
+     "label": "EMEA",
+     "value": 39.3,
+     "attached": 79,
+     "installed": 201
+    },
+    {
+     "label": "NA",
+     "value": 55.5,
+     "attached": 188,
+     "installed": 339
+    }
+   ]
+  },
+  {
+   "id": "gap-sites",
+   "label": "Connected-but-unsubscribed pumps by site",
+   "unit": "pumps",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "connected PP3500 devices at sites with no active subscription row, counted per site",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "S-NA-11",
+     "value": 17,
+     "history": "churned"
+    },
+    {
+     "label": "S-APAC-08",
+     "value": 5,
+     "history": "never-subscribed"
+    },
+    {
+     "label": "S-NA-21",
+     "value": 4,
+     "history": "never-subscribed"
+    },
+    {
+     "label": "S-EMEA-08",
+     "value": 3,
+     "history": "never-subscribed"
+    },
+    {
+     "label": "S-EMEA-13",
+     "value": 3,
+     "history": "never-subscribed"
+    },
+    {
+     "label": "S-NA-04",
+     "value": 3,
+     "history": "churned"
+    },
+    {
+     "label": "S-NA-01",
+     "value": 1,
+     "history": "churned"
+    }
+   ]
+  },
+  {
+   "id": "attach-history",
+   "label": "Attach % over time",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "attach-% history needs historical fleet snapshots (denominator over time) and churn end-dates (numerator over time) \u2014 neither exists yet; today's denominator must not be projected backward"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "The attach stage-gate HOLDS at the stand-in level: 43.0% of the PP3500 installed base (295 of 686 pumps) vs the 40% gate \u2014 but the $24M releases on a gate NUMBER nobody has ratified; the strategy of record says 'traction' and sets no threshold \u2014 and the verdict is denominator-definition-sensitive: under a whole-PCA denominator (884 pumps incl. 198 unconnectable PP3000) attach reads 33.4%, BELOW the stand-in gate; the metric definition is as unratified as the gate number",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The $24M release decision references a gate with no number of record \u2014 the 40% is a stand-in, and at 43.0% attach the reading sits 3.0 points from it; any ratified threshold in that neighborhood flips the verdict \u2014 and the metric DEFINITION is equally unratified: the whole-PCA denominator reads 33.4%, below the gate, so the denominator choice alone spans the gate",
+    "mitigation": "Have the board/CFO ratify a numeric gate AND the metric definition (denominator basis) in the commercial strategy or plan of record and mark E-29.1 validated before the spend decision",
+    "evidence": [
+     "derived: attach-stat",
+     "derived: denominator-sensitivity",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Go-get gap: 36 connected-but-unsubscribed pumps across 7 sites (S-NA-11, S-APAC-08, S-NA-21, S-EMEA-08, S-EMEA-13, S-NA-04, S-NA-01) \u2014 3 of those sites are churn-losses (S-NA-01, S-NA-04, S-NA-11), the rest never subscribed; this is the nearest-term attach growth and winback territory",
+    "evidence": [
+     "derived: gap-sites",
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "355 of 686 PP3500 pumps are not connected at all \u2014 attach beyond the connected base runs through the connectivity/adapter path (the BQ-30 business case), not sales motion alone",
+    "evidence": [
+     "derived: attach-breakdown",
+     "src: commercial/internal-fleet@2026-07-22"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-29.1",
+   "statement": "Installed-base Cloud Suite attach reaches the stage-gate level before the predictive-monitoring spend releases",
+   "expected": ">= 40% of PP3500 installed base attached",
+   "basis": "numeric stand-in \u2014 commercial-strategy.md gates the $24M on 'Y1/Y2 Cloud Suite traction' but sets NO number [VERIFY]",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "43.0% attach vs the 40% stand-in (+3.0 points); no gate number is ratified in the strategy of record; denominator-sensitive \u2014 the whole-PCA basis reads 33.4%, below the gate",
+   "verdict": "met",
+   "evidence": [
+    "derived: attach-stat",
+    "derived: denominator-sensitivity"
+   ]
+  }
+ ]
+}

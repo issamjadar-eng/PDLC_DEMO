@@ -1,0 +1,205 @@
+{
+ "bq": "BQ-10",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:10+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-004",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "our-tco",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "tco-comparison",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "tco-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/external-competitor-features@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/external-competitor-features",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 180,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Our 5-yr TCO per pump",
+    "series": "our-tco",
+    "evidence_class": "derived",
+    "source": "declared plan constants in commercial.yml (demo stand-ins for finance-validated rates)",
+    "derivation": {
+     "method": "capital + 5 \u00d7 (cloud + consumables + service) over the declared per-pump constants",
+     "inputs": [
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Our 5-yr TCO components",
+    "series": "our-tco-components",
+    "evidence_class": "derived",
+    "source": "declared plan constants in commercial.yml",
+    "derivation": {
+     "method": "per-pump constants \u00d7 5-yr horizon (capital one-time)",
+     "inputs": [
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Feature cells (value + verification status)",
+    "series": "feature-context",
+    "evidence_class": "measured",
+    "source": "commercial/external-competitor-features@2026-07-27"
+   }
+  ],
+  "assumed": [
+   {
+    "what": "5-yr TCO, capital+service basis: us vs class-wide competitor range",
+    "series": "tco-comparison",
+    "evidence_class": "assumed",
+    "source": "A-004"
+   }
+  ],
+  "missing": [
+   {
+    "what": "TCO position over time",
+    "series": "tco-history",
+    "evidence_class": "unavailable",
+    "source": "single A-004 vintage and single curated-matrix snapshot \u2014 a history needs dated assumption refreshes (procurement disclosures, GPO pricing, analyst commentary); not faked",
+    "note": "single A-004 vintage and single curated-matrix snapshot \u2014 a history needs dated assumption refreshes (procurement disclosures, GPO pricing, analyst commentary); not faked"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-10.md",
+  "status": "in-sync",
+  "pinned": "59415e7bda6d65d4994080300ade70ea70ded2fc7a9ebef3c28b2ae1cb0c5ddf",
+  "current": "59415e7bda6d65d4994080300ade70ea70ded2fc7a9ebef3c28b2ae1cb0c5ddf"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:29:26+00:00",
+   "summary": "Demo banner added at top of report (was the only one of the five without it), plus an explicit line marking our cost constants as demo stand-ins vs the real-compiled A-004 competitor range",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:00+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+  }
+ ]
+}

@@ -28,5 +28,15 @@ schema:
     - {name: firmware_version, type: str, required: true}
     - {name: connected, type: str}
     - {name: last_seen, type: date}
+# Asserts re-run on every acquire AND validate. Beyond row bounds, prove the generator's
+# narrative knobs actually landed: enums pin closed value sets; command is a free-form
+# check seam (same substitutions as normalize; non-zero exit = failure).
 asserts:
   min_rows: 50
+  max_rows: 5000
+  enums:
+    connected: ["yes", "no"]
+  # command: python3 check_knobs.py {normalized_dir}/records.csv
+# Optional: the date the data reflects the world through (recorded as as_of in
+# provenance.yml) — set when it differs from the acquisition date.
+# data_through: 2026-06-30

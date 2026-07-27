@@ -1,0 +1,31 @@
+dataset: commercial/internal-revenue-plan
+title: Revenue plan of record (internal, demo-fabricated)
+description: >-
+  The plan of record — FY2026 quarterly rows (product line x region) plus FY2027..FY2030
+  annual rows (product line, region ALL), each tagged with its regulatory dependency
+  (cleared|letter-to-file|pccp-enabled|new-submission). DEMO-FABRICATED by seeded
+  generator gen.py — stand-in for the FP&A long-range-plan export. FY2026 ~$105M mostly
+  cleared; FY2030 ~$350M of which $210M cloud-suite predictive-monitoring revenue sits
+  behind future regulatory events (pccp-enabled + new-submission). Consumed by BQ-03
+  (plan vs actuals), BQ-05 (regulatory-dependent revenue at risk), BQ-28
+  (recurring-revenue trajectory).
+internal: true
+max_age_days: 365
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for FP&A long-range-plan export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [period, product_line, region, regulatory_dependency]
+  columns:
+    - {name: period, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: revenue_usd, type: int, required: true}
+    - {name: regulatory_dependency, type: str, required: true}
+asserts:
+  min_rows: 100

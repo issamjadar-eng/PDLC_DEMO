@@ -1,7 +1,7 @@
 {
  "bq": "BQ-19",
  "edition": "2026-07-22.5",
- "generated_at": "2026-07-22T23:04:30+00:00",
+ "generated_at": "2026-07-27T15:45:11+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -120,7 +120,7 @@
   {
    "dataset": "commercial/openfda-maude-infusion-mfr",
    "snapshot": "2026-07-22",
-   "age_days": 0,
+   "age_days": 5,
    "max_age_days": 30,
    "band": "fresh",
    "waived": false
@@ -128,7 +128,7 @@
   {
    "dataset": "commercial/openfda-maude-infusion-monthly",
    "snapshot": "2026-07-22",
-   "age_days": 0,
+   "age_days": 5,
    "max_age_days": 30,
    "band": "fresh",
    "waived": false

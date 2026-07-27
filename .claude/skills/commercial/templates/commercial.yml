@@ -1,5 +1,11 @@
 # Starter question catalog for the commercial skill. Copy to <root>/commercial.yml.
 # Questions without a `computation` are visible as not-implemented (roadmap, not silence).
+
+# Optional project-side lint extensions (relax-only — can never add findings):
+# lint:
+#   exempt_patterns: ["RPT-\\d+"]        # extra digit-bearing identifier regexes
+#   estimation_exempt_terms: [modeled]   # plan-defined vocabulary the estimation check ignores
+
 categories:
   - {key: board, name: Board & Portfolio}
   - {key: market, name: Market & Competitive}

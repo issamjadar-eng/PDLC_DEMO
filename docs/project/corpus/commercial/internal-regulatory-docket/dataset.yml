@@ -1,0 +1,31 @@
+dataset: commercial/internal-regulatory-docket
+title: Regulatory docket — MDR + field-action log (internal, demo-fabricated)
+description: >-
+  MDR and field-action (FSCA / correction) log 2025-01 -> 2026-07 with regulatory
+  deadlines, filing dates, and status. DEMO-FABRICATED by seeded generator gen.py —
+  stand-in for the regulatory-affairs tracking system export. Consumed by BQ-21
+  (MDR filing posture: on-time rate, open items vs deadline, field-action rollout).
+internal: true
+max_age_days: 30
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for regulatory-affairs tracking export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [record_id]
+  columns:
+    - {name: record_id, type: str, required: true}
+    - {name: type, type: str, required: true}
+    - {name: opened_date, type: date, required: true}
+    - {name: regulatory_deadline, type: date, required: true}
+    - {name: filed_date, type: date}
+    - {name: status, type: str, required: true}
+    - {name: category, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: description, type: str, required: true}
+asserts:
+  min_rows: 30

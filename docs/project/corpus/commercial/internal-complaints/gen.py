@@ -65,6 +65,30 @@ def main():
                 "status": rng2.choices(["closed", "open", "under-investigation"], weights=[70, 18, 12])[0],
                 "mdr_filed": "yes" if (sev == 3 and rng2.random() < 0.6) else "no",
             })
+        # Rare high-severity categories (BQ-20 franchise-killer signal watch).
+        # Separate rng stream (seed+2) so the 430 records above keep their exact draws;
+        # appended with continuing ids (i = 430..434). Severity 3 = severe, matching this
+        # dataset's convention above (mdr_filed only occurs at sev 3).
+        rng3 = random.Random(a.seed + 2)
+        pp3500 = [x for x in fleet if x["model"] == "PP3500"]
+        rare = [
+            # over-delivery: ~3 records, at least one MDR-filed
+            ("over-delivery", "2025-08-14", "closed", "yes"),
+            ("over-delivery", "2026-03-05", "closed", "no"),
+            ("over-delivery", "2026-06-27", "under-investigation", "yes"),  # ties to docket MDR-2026-0005
+            # pca-by-proxy-suspected: ~2 records (unauthorized bolus by family/visitor suspected)
+            ("pca-by-proxy-suspected", "2025-11-20", "closed", "no"),
+            ("pca-by-proxy-suspected", "2026-05-16", "open", "no"),
+        ]
+        for j, (cat, day, status, mdr) in enumerate(rare):
+            d = rng3.choice(pp3500)
+            rows.append({
+                "complaint_id": f"C-{day[:4]}-{430 + j + 1:04d}",
+                "date_opened": day, "device_serial": d["device_serial"],
+                "site_id": d["site_id"], "region": d["region"], "model": d["model"],
+                "firmware_version": d["firmware_version"], "category": cat,
+                "severity": "3", "status": status, "mdr_filed": mdr,
+            })
         rows.sort(key=lambda r: r["date_opened"])
         json.dump({"banner": BANNER, "generator": "gen.py", "seed": a.seed, "rows": rows},
                   open(f"{a.out}/export.json", "w"), indent=1)

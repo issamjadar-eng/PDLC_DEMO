@@ -1,0 +1,26 @@
+dataset: commercial/internal-subscriptions
+snapshot: 2026-07-27.2
+created_at: '2026-07-27T14:34:41+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for subscription billing / entitlement export)
+  retrieved_at: '2026-07-27T14:34:41+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 4633f4b004cfbd5f521035a30a2edded281d26c3f2048cf49992958847f05614
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: bb5b1c9e32edfd32d3c15021825ac3aefc0285063cb7c5ccdcfc7e7b94dfd644
+    parents:
+    - 4633f4b004cfbd5f521035a30a2edded281d26c3f2048cf49992958847f05614
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 42

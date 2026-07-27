@@ -1,0 +1,237 @@
+{
+ "bq": "BQ-21",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T15:45:11+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "basis-sensitivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "docket-rollup",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "exposure-list",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "filing-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ontime-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "open-items",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-regulatory-docket@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-regulatory-docket",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "MDR on-time rate (trailing 12 months)",
+    "series": "ontime-stat",
+    "evidence_class": "measured",
+    "source": "commercial/internal-regulatory-docket@2026-07-27"
+   },
+   {
+    "what": "Docket records by type",
+    "series": "docket-rollup",
+    "evidence_class": "measured",
+    "source": "commercial/internal-regulatory-docket@2026-07-27"
+   },
+   {
+    "what": "MDR filings vs late filings per month",
+    "series": "filing-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-regulatory-docket@2026-07-27"
+   },
+   {
+    "what": "Open items vs deadline",
+    "series": "open-items",
+    "evidence_class": "measured",
+    "source": "commercial/internal-regulatory-docket@2026-07-27"
+   },
+   {
+    "what": "On-time vs late (trailing window)",
+    "series": "ontime-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "derivation": {
+     "method": "MDRs with filed_date in the 365 days ending at the latest event date in the pin, split by filed_date <= regulatory_deadline",
+     "inputs": [
+      "src: commercial/internal-regulatory-docket@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "On-time rate under alternative bases",
+    "series": "basis-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "derivation": {
+     "method": "on-time rate recomputed under the pin-date-anchored filed-date window, the opened-date window, and lifetime \u2014 alongside the published filed-date/latest-event basis",
+     "inputs": [
+      "src: commercial/internal-regulatory-docket@2026-07-27",
+      "config: commercial.yml",
+      "derived: ontime-rate"
+     ]
+    }
+   },
+   {
+    "what": "Exposure list (open + late items)",
+    "series": "exposure-list",
+    "evidence_class": "derived",
+    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "derivation": {
+     "method": "union of open docket items and late filings inside the trailing window, enumerated by record id",
+     "inputs": [
+      "src: commercial/internal-regulatory-docket@2026-07-27",
+      "derived: ontime-rate",
+      "derived: open-items"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-21.md",
+  "status": "in-sync",
+  "pinned": "71398ea1e69caf17bebeb3bf975a7e3ef5d6ea739784a7323bafeeadbdfefb01",
+  "current": "71398ea1e69caf17bebeb3bf975a7e3ef5d6ea739784a7323bafeeadbdfefb01"
+ },
+ "verifications": [
+  {
+   "type": "red-team",
+   "verdict": "ACTIONED",
+   "by": "corrections pass (AI assistant)",
+   "at": "2026-07-27T15:30:58+00:00",
+   "summary": "RT-21-1: FSCA rollout summary now parsed from the pinned description (regex on 'Rollout status:'), category phrasing from the record's category field, over-delivery clause gated on category, and the predates-window clause computed from filed_date vs window. Pass-1 caveat: basis-sensitivity section added \u2014 published 94.7% shown against pin-date 93.3% / opened-date 93.3% / lifetime 93.1%, most-favorable flag and no-verdict-flip statement computed from the pin. RT-21-2: v-main evidence_class corrected measured->derived.",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-fieldsafety-2026-07-27.md"
+  },
+  {
+   "type": "adversarial-verify",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "independent verify agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-fieldsafety-2026-07-27.md"
+  },
+  {
+   "type": "red-team",
+   "verdict": "CONFIRMED-WITH-CAVEAT",
+   "by": "red-team agent",
+   "at": "2026-07-27T15:37:01+00:00",
+   "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-fieldsafety-2026-07-27.md"
+  }
+ ]
+}

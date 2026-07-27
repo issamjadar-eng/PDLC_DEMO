@@ -1,0 +1,237 @@
+{
+ "bq": "BQ-16",
+ "series": [
+  {
+   "id": "evidence-type-census",
+   "label": "Evidence rows by type",
+   "unit": "rows",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "row counts by evidence_type; real = interview + survey + publication",
+    "inputs": [
+     "src: commercial/internal-kol-register@2026-07-27"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-kol-register",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "real collected KOL evidence rows",
+     "value": 0
+    },
+    {
+     "label": "simulated advisory-panel rows",
+     "value": 38
+    }
+   ]
+  },
+  {
+   "id": "voices-per-feature",
+   "label": "Distinct voices per feature (simulated panel)",
+   "unit": "voices",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-kol-register",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "F1 Drug Library Manager GA",
+     "value": 5
+    },
+    {
+     "label": "F2 Connectivity Adapter GA",
+     "value": 3
+    },
+    {
+     "label": "F3 Fleet Management + Telemetry dashboards",
+     "value": 3
+    },
+    {
+     "label": "F4 Alerts Engine v1 (smart alarm filtering)",
+     "value": 6
+    },
+    {
+     "label": "F5 Clinical Surveillance",
+     "value": 4
+    },
+    {
+     "label": "F6 Predictive monitoring (occlusion/infiltration/deterioration)",
+     "value": 5
+    },
+    {
+     "label": "F7 Ambulatory PP3500-A (home PCA)",
+     "value": 5
+    },
+    {
+     "label": "F8 Dose personalization decision-support",
+     "value": 6
+    },
+    {
+     "label": "F9 International expansion (EU MDR / Canada)",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "sentiment-mix",
+   "label": "Sentiment mix per feature (simulated panel)",
+   "unit": "rows",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-kol-register",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "F1",
+     "value": 2,
+     "support": 2,
+     "neutral": 1,
+     "concern": 2
+    },
+    {
+     "label": "F2",
+     "value": 1,
+     "support": 1,
+     "neutral": 1,
+     "concern": 1
+    },
+    {
+     "label": "F3",
+     "value": 1,
+     "support": 1,
+     "neutral": 1,
+     "concern": 1
+    },
+    {
+     "label": "F4",
+     "value": 6,
+     "support": 0,
+     "neutral": 0,
+     "concern": 6
+    },
+    {
+     "label": "F5",
+     "value": 0,
+     "support": 3,
+     "neutral": 1,
+     "concern": 0
+    },
+    {
+     "label": "F6",
+     "value": 5,
+     "support": 0,
+     "neutral": 0,
+     "concern": 5
+    },
+    {
+     "label": "F7",
+     "value": 5,
+     "support": 0,
+     "neutral": 0,
+     "concern": 5
+    },
+    {
+     "label": "F8",
+     "value": 6,
+     "support": 0,
+     "neutral": 0,
+     "concern": 6
+    },
+    {
+     "label": "F9",
+     "value": 1,
+     "support": 0,
+     "neutral": 0,
+     "concern": 1
+    }
+   ]
+  },
+  {
+   "id": "sentiment-history",
+   "label": "Sentiment over time",
+   "unit": "rows",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "all register rows carry the single simulated-panel date \u2014 a history needs dated real engagements, which do not exist yet"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "META-GAP: all 38 evidence rows are a simulated advisory panel \u2014 zero real collected KOL evidence exists (no interviews, surveys, or publications). Within the simulated register: F9 rides on a single voice (E-16.1 floor not met), and the F4, F6, F7, F8 wave slots carry concern-majority sentiment \u2014 read as NO documented endorsement of those slots, not as opposition: the register's 3-value vocabulary collapses conditional support into `concern` (stated limitation)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Zero real collected KOL evidence exists behind any of the 9 committed roadmap features \u2014 the entire register (38 rows) is simulated panel material",
+    "action": "Commission actual KOL engagement (interviews/advisory board) before the next roadmap commit; re-populate the register from collected evidence and re-answer",
+    "evidence": [
+     "derived: evidence-type-census",
+     "src: commercial/internal-kol-register@2026-07-27"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "F9 fails even the simulated-panel two-voice floor (E-16.1) \u2014 the weakest-evidenced committed bet(s)",
+    "action": "Add voices for the below-floor feature(s) in the next engagement round, or surface the thin base at the roadmap council",
+    "evidence": [
+     "derived: voices-per-feature",
+     "config: commercial.yml",
+     "src: commercial/internal-kol-register@2026-07-27"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The committed middle-wave slots (F4, F6, F7, F8) carry concern-majority sentiment \u2014 no documented endorsement of those slots exists. Caveat: the 3-value vocabulary flattens conditional support into concern (source docs show conditional-yes voices on F4 and F7), so this is an evidence-absence signal, not measured opposition",
+    "mitigation": "Feed the flagged features into BQ-17's composite, prioritize them in the real-KOL engagement plan, and capture stance + timing direction (not just 3-value sentiment) when real evidence is collected",
+    "evidence": [
+     "derived: sentiment-mix",
+     "src: commercial/internal-kol-register@2026-07-27",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Voice independence is overstated by construction: all voices come from one simulated panel session on one date \u2014 distinct kol_id is a weaker notion of independence than E-16.1 intends",
+    "evidence": [
+     "src: commercial/internal-kol-register@2026-07-27"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-16.1",
+   "statement": "Every committed roadmap feature has at least two independent KOL voices on file",
+   "expected": ">= 2 distinct KOLs per F1-F9 feature",
+   "basis": "evidence-sufficiency stand-in; the KOL program sets no formal floor",
+   "set_by": "vp-product (demo)",
+   "validated": false,
+   "actual": "distinct simulated-panel voices per feature \u2014 F1: 5; F2: 3; F3: 3; F4: 6; F5: 4; F6: 5; F7: 5; F8: 6; F9: 1; features below the floor: F9 (and zero REAL voices everywhere \u2014 see meta-gap)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: voices-per-feature",
+    "src: commercial/internal-kol-register@2026-07-27"
+   ]
+  }
+ ]
+}

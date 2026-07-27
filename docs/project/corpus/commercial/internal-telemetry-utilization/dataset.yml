@@ -1,0 +1,30 @@
+dataset: commercial/internal-telemetry-utilization
+title: Monthly device-utilization telemetry (internal, demo-fabricated)
+description: >-
+  Monthly infusion-hours utilization for Cloud Suite CONNECTED devices only, months
+  2026-02..2026-07, with a per-segment expected-hours norm. DEMO-FABRICATED by seeded
+  generator gen.py — stand-in for the Cloud Suite telemetry warehouse export. Narrative
+  knob: 6 specific sites run <50% of expected hours (sold-but-underused early warning);
+  all other connected devices 70-110%. Consumed by BQ-11 (adoption divergence /
+  underutilization early warning).
+internal: true
+max_age_days: 30
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for Cloud Suite telemetry warehouse export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [device_serial, month]
+  columns:
+    - {name: device_serial, type: str, required: true}
+    - {name: month, type: str, required: true}
+    - {name: site_id, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: infusion_hours, type: int, required: true}
+    - {name: expected_hours, type: int, required: true}
+asserts:
+  min_rows: 1200
