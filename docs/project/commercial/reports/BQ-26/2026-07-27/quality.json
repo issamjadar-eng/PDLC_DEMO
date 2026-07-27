@@ -1,7 +1,7 @@
 {
  "bq": "BQ-26",
  "edition": "2026-07-27",
- "generated_at": "2026-07-27T15:45:11+00:00",
+ "generated_at": "2026-07-27T16:11:42+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -116,13 +116,13 @@
   },
   {
    "kind": "src",
-   "value": "commercial/internal-fleet@2026-07-22",
+   "value": "commercial/internal-fleet@2026-07-27",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
   {
    "kind": "src",
-   "value": "commercial/internal-upgrade-campaign@2026-07-22.2",
+   "value": "commercial/internal-upgrade-campaign@2026-07-27",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
@@ -130,16 +130,16 @@
  "freshness": [
   {
    "dataset": "commercial/internal-upgrade-campaign",
-   "snapshot": "2026-07-22.2",
-   "age_days": 5,
+   "snapshot": "2026-07-27",
+   "age_days": 0,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false
   },
   {
    "dataset": "commercial/internal-fleet",
-   "snapshot": "2026-07-22",
-   "age_days": 5,
+   "snapshot": "2026-07-27",
+   "age_days": 0,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false
@@ -151,11 +151,11 @@
     "what": "Remaining campaign load",
     "series": "capacity-stat",
     "evidence_class": "derived",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
     "derivation": {
      "method": "remaining = targeted \u2212 completed per region, where completed = status \u2208 {completed, completed-after-retry} and remaining = status \u2208 {scheduled, failed-pending-retry, rolled-back}; stalled load = remaining in regions with zero completions in the trailing 28d window ending at the snapshot as-of date",
      "inputs": [
-      "src: commercial/internal-upgrade-campaign@2026-07-22.2"
+      "src: commercial/internal-upgrade-campaign@2026-07-27"
      ]
     }
    },
@@ -163,17 +163,17 @@
     "what": "Completions per week by region",
     "series": "weekly-trend",
     "evidence_class": "measured",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2"
+    "source": "commercial/internal-upgrade-campaign@2026-07-27"
    },
    {
     "what": "Current vs required completions/week",
     "series": "required-rate",
     "evidence_class": "derived",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
     "derivation": {
      "method": "current = completions (status \u2208 {completed, completed-after-retry}) in the 28d window ending at the snapshot as-of date \u00f7 4; required = remaining devices (status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00f7 weeks from the as-of date to the close date",
      "inputs": [
-      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
       "config: commercial.yml"
      ]
     }
@@ -182,11 +182,11 @@
     "what": "Run-rates under the alternative (latest-completion) anchor",
     "series": "anchor-sensitivity",
     "evidence_class": "derived",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
     "derivation": {
      "method": "current and required rates recomputed with the 28d window anchored at the latest completed_date in the pin instead of the snapshot as-of date",
      "inputs": [
-      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
       "config: commercial.yml",
       "derived: required-rate"
      ]
@@ -196,12 +196,12 @@
     "what": "On-site-remaining devices convertible to remote",
     "series": "remote-convertible",
     "evidence_class": "derived",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
     "derivation": {
      "method": "on-site-remaining campaign devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back} \u2014 i.e. not completed/completed-after-retry) joined to the fleet registry by device_serial; convertible = connected == yes",
      "inputs": [
-      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -209,11 +209,11 @@
     "what": "On-site workload remaining (labor-time floor)",
     "series": "fse-days-remaining",
     "evidence_class": "derived",
-    "source": "commercial/internal-upgrade-campaign@2026-07-22.2",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
     "derivation": {
      "method": "on-site-remaining devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00d7 mean completed (status \u2208 {completed, completed-after-retry}) on-site duration_min \u00f7 fse_day_minutes; labor time only \u2014 travel/overhead not in the campaign data (lower bound)",
      "inputs": [
-      "src: commercial/internal-upgrade-campaign@2026-07-22.2",
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
       "config: commercial.yml"
      ]
     }
@@ -243,7 +243,8 @@
    "by": "corrections pass (AI assistant)",
    "at": "2026-07-27T15:30:32+00:00",
    "summary": "F26-1 actioned: derivation method strings of capacity-stat/required-rate/remote-convertible/fse-days-remaining now name the status sets (completed = completed|completed-after-retry; remaining = scheduled|failed-pending-retry|rolled-back; on-site-remaining = remaining with method onsite), echoed in the report intro and Method section; self-sufficiency codified in plans/BQ-26.md",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "adversarial-verify",
@@ -251,7 +252,8 @@
    "by": "independent verify agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "red-team",
@@ -259,7 +261,8 @@
    "by": "red-team agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   }
  ]
 }

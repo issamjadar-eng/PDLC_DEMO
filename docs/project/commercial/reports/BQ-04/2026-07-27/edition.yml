@@ -1,10 +1,10 @@
 bq: BQ-04
 edition: '2026-07-27'
-status: draft
-created_at: '2026-07-27T15:33:11+00:00'
+status: approved
+created_at: '2026-07-27T16:11:18+00:00'
 pins:
   commercial/internal-subscriptions: 2026-07-27.2
-  commercial/internal-fleet: '2026-07-22'
+  commercial/internal-fleet: '2026-07-27'
 plan:
   path: plans/BQ-04.md
   sha256: 25c731b6d432b8b28459174751ac64b2bcff342b6d96ee30d97758b8be90bd30

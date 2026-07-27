@@ -1,7 +1,7 @@
 {
  "bq": "BQ-11",
  "edition": "2026-07-27",
- "generated_at": "2026-07-27T15:45:10+00:00",
+ "generated_at": "2026-07-27T16:11:41+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -104,7 +104,7 @@
   },
   {
    "kind": "src",
-   "value": "commercial/internal-fleet@2026-07-22",
+   "value": "commercial/internal-fleet@2026-07-27",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
@@ -132,8 +132,8 @@
   },
   {
    "dataset": "commercial/internal-fleet",
-   "snapshot": "2026-07-22",
-   "age_days": 5,
+   "snapshot": "2026-07-27",
+   "age_days": 0,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false
@@ -158,7 +158,7 @@
      "method": "sites with hours-weighted utilization < 60% over the trailing 3 months; material = \u226510 connected devices",
      "inputs": [
       "src: commercial/internal-telemetry-utilization@2026-07-27",
-      "src: commercial/internal-fleet@2026-07-22",
+      "src: commercial/internal-fleet@2026-07-27",
       "config: commercial.yml"
      ]
     }
@@ -178,7 +178,7 @@
      "method": "utilization threshold + connected-device materiality bar",
      "inputs": [
       "src: commercial/internal-telemetry-utilization@2026-07-27",
-      "src: commercial/internal-fleet@2026-07-22",
+      "src: commercial/internal-fleet@2026-07-27",
       "config: commercial.yml"
      ]
     }
@@ -220,7 +220,8 @@
    "by": "corrections pass (AI assistant)",
    "at": "2026-07-27T15:30:32+00:00",
    "summary": "Median fixed: sorted[n//2] upper-middle-element replaced with statistics.median computed on unrounded site ratios (rounded once for display) in both the fleet stat and the monthly reference line; fleet median 89.7% -> 89.6%, monthly 2026-05 91.3% -> 90.5%. No verdict impact",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "adversarial-verify",
@@ -228,7 +229,8 @@
    "by": "independent verify agent",
    "at": "2026-07-27T15:37:00+00:00",
    "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "red-team",
@@ -236,7 +238,8 @@
    "by": "red-team agent",
    "at": "2026-07-27T15:37:00+00:00",
    "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-market-2026-07-27.md",
+   "carried_from_replaced_draft": true
   }
  ]
 }

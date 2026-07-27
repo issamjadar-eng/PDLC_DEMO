@@ -1,7 +1,7 @@
 {
  "bq": "BQ-29",
  "edition": "2026-07-27",
- "generated_at": "2026-07-27T15:45:12+00:00",
+ "generated_at": "2026-07-27T16:11:42+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -122,7 +122,7 @@
   },
   {
    "kind": "src",
-   "value": "commercial/internal-fleet@2026-07-22",
+   "value": "commercial/internal-fleet@2026-07-27",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
@@ -144,8 +144,8 @@
   },
   {
    "dataset": "commercial/internal-fleet",
-   "snapshot": "2026-07-22",
-   "age_days": 5,
+   "snapshot": "2026-07-27",
+   "age_days": 0,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false
@@ -162,7 +162,7 @@
      "method": "sum(pumps_connected) over active subscription rows \u00f7 count of PP3500 devices in the fleet registry",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -170,12 +170,12 @@
     "what": "Attach % under alternative denominator bases",
     "series": "denominator-sensitivity",
     "evidence_class": "derived",
-    "source": "commercial/internal-fleet@2026-07-22",
+    "source": "commercial/internal-fleet@2026-07-27",
     "derivation": {
      "method": "attached = sum(pumps_connected) over active subscription rows; attach % computed under two denominator bases from the fleet registry: PP3500-only count (primary) vs whole-PCA count (PP3500 + PP3000)",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -189,12 +189,12 @@
     "what": "PP3500 base by subscription segment",
     "series": "attach-breakdown",
     "evidence_class": "derived",
-    "source": "commercial/internal-fleet@2026-07-22",
+    "source": "commercial/internal-fleet@2026-07-27",
     "derivation": {
      "method": "PP3500 devices split into active-subscription / connected-without-active-subscription / not-connected via the site-level subscription join",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -202,12 +202,12 @@
     "what": "Attach % by region",
     "series": "attach-by-region",
     "evidence_class": "derived",
-    "source": "commercial/internal-fleet@2026-07-22",
+    "source": "commercial/internal-fleet@2026-07-27",
     "derivation": {
      "method": "active-subscription pumps (site mapped to region via the fleet registry) \u00f7 PP3500 installed per region",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -215,12 +215,12 @@
     "what": "Connected-but-unsubscribed pumps by site",
     "series": "gap-sites",
     "evidence_class": "derived",
-    "source": "commercial/internal-fleet@2026-07-22",
+    "source": "commercial/internal-fleet@2026-07-27",
     "derivation": {
      "method": "connected PP3500 devices at sites with no active subscription row, counted per site",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    }
@@ -249,7 +249,8 @@
    "by": "corrections pass (AI assistant)",
    "at": "2026-07-27T15:30:32+00:00",
    "summary": "F29-1 actioned: denominator sensitivity printed \u2014 whole-PCA basis 295/884 = 33.4% (BELOW the 40% stand-in) vs primary PP3500-only 43.0% \u2014 as a report table, a derived series (denominator-sensitivity), a verdict clause, R1 and E-29.1 clauses; basis defense + committed disclosure codified in plans/BQ-29.md",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "adversarial-verify",
@@ -257,7 +258,8 @@
    "by": "independent verify agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "red-team",
@@ -265,7 +267,8 @@
    "by": "red-team agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md",
+   "carried_from_replaced_draft": true
   }
  ]
 }

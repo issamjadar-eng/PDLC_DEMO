@@ -13,7 +13,7 @@ but counted below; their existence means the no-churn horizon OVERSTATES LTV._
 - ARR per connected pump: $447/yr; cost-to-serve per pump: $544/yr [derived: unit-econ-stat] [src: commercial/internal-subscriptions@2026-07-27.2]
 - LTV over 5 years: $2,237 vs $2,720 cost — ratio 0.82 (guardrail 3.0) [derived: unit-econ-stat] [config: commercial.yml]
 - Basis: 39 active sites, 295 connected pumps; 3 churned sites (7.1% of register rows) [src: commercial/internal-subscriptions@2026-07-27.2]
-- Fleet context: 331 connected devices in the installed base; 4 connected sites with no subscription (attach gap) [derived: attach-gap] [src: commercial/internal-fleet@2026-07-22]
+- Fleet context: 331 connected devices in the installed base; 4 connected sites with no subscription (attach gap) [derived: attach-gap] [src: commercial/internal-fleet@2026-07-27]
 
 ## Site-size profitability split
 
@@ -60,12 +60,12 @@ in a plan of record or the risk file — challenge the assumption, not just the 
 
 ### Watch
 
-- **W1 (medium)** — Attach gap: 4 connected sites carry no subscription (S-APAC-08, S-EMEA-08, S-EMEA-13, S-NA-21) — expansion revenue that needs no new hardware [derived: attach-gap] [src: commercial/internal-fleet@2026-07-22] [src: commercial/internal-subscriptions@2026-07-27.2]
+- **W1 (medium)** — Attach gap: 4 connected sites carry no subscription (S-APAC-08, S-EMEA-08, S-EMEA-13, S-NA-21) — expansion revenue that needs no new hardware [derived: attach-gap] [src: commercial/internal-fleet@2026-07-27] [src: commercial/internal-subscriptions@2026-07-27.2]
 - **W2 (medium)** — Churn on file: 3 of 42 register rows (7.1%) — direct evidence that the no-churn 5-year horizon overstates LTV [derived: unit-econ-stat] [src: commercial/internal-subscriptions@2026-07-27.2]
 - **W3 (medium)** — E-04.2 is a knife-edge: the mean hardware discount misses the 5% stand-in tolerance by +0.8pp on an n=39 mean (SE ≈ 0.4pp — the miss is ≈2 standard errors from the line) — the verdict is fragile to the unvalidated stand-in threshold choice; treat it as a watch signal, not a breach finding, until pricing policy sets a real cap [derived: discount-sensitivity] [derived: discount-by-band] [config: commercial.yml] [src: commercial/internal-subscriptions@2026-07-27.2]
 
 ## Method & provenance
 
-- ARR, cost-to-serve, status, and discounts measured from [src: commercial/internal-subscriptions@2026-07-27.2]; connectivity and the attach gap from [src: commercial/internal-fleet@2026-07-22].
+- ARR, cost-to-serve, status, and discounts measured from [src: commercial/internal-subscriptions@2026-07-27.2]; connectivity and the attach gap from [src: commercial/internal-fleet@2026-07-27].
 - LTV, ratios, bands, and means are arithmetic derivations with methods declared per series [derived: unit-econ-stat] [derived: band-economics].
 - The ARR-build history is derived from active sites' start dates at current ARR — survivor-biased (churned sites' past ARR is absent) and stated as such [derived: arr-build] [src: commercial/internal-subscriptions@2026-07-27.2]. True economics history needs recurring register snapshots (stated gap).

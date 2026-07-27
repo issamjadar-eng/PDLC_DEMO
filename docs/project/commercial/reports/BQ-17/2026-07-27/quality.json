@@ -1,7 +1,7 @@
 {
  "bq": "BQ-17",
  "edition": "2026-07-27",
- "generated_at": "2026-07-27T15:45:11+00:00",
+ "generated_at": "2026-07-27T16:11:41+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -110,7 +110,7 @@
   },
   {
    "kind": "src",
-   "value": "commercial/internal-fleet@2026-07-22",
+   "value": "commercial/internal-fleet@2026-07-27",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
@@ -168,8 +168,8 @@
   },
   {
    "dataset": "commercial/internal-fleet",
-   "snapshot": "2026-07-22",
-   "age_days": 5,
+   "snapshot": "2026-07-27",
+   "age_days": 0,
    "max_age_days": 7,
    "band": "fresh",
    "waived": false
@@ -228,7 +228,7 @@
      "method": "active subscribed connected sites \u00f7 all connected sites",
      "inputs": [
       "src: commercial/internal-subscriptions@2026-07-27.2",
-      "src: commercial/internal-fleet@2026-07-22"
+      "src: commercial/internal-fleet@2026-07-27"
      ]
     }
    },
@@ -263,7 +263,8 @@
    "by": "corrections pass (AI assistant)",
    "at": "2026-07-27T15:35:03+00:00",
    "summary": "RT-17.1 (HIGH) actioned: F9 kill candidate's sole voice direction (Kuitunen: too late and too thin - start EU evidence EARLIER) now stated in verdict headline, candidates section, and I1 (high); robustness section + series added computing tie-vector invariance (F4/F6 and F7/F9 identical vectors - picks 100% tie-break-decided under any weighting), sentiment-axis drop (both picks unchanged), and weight-sensitivity scan (~2.25 pp pressure-to-sentiment transfer flips pull-forward to F5); all codified in plans/BQ-17.md",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "adversarial-verify",
@@ -271,7 +272,8 @@
    "by": "independent verify agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Pins-only re-derivation of the pre-correction same-day draft (re-filed: draft replacement dropped the record); all headline figures reproduced",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "red-team",
@@ -279,7 +281,8 @@
    "by": "red-team agent",
    "at": "2026-07-27T15:37:01+00:00",
    "summary": "Framing red-team of the pre-correction same-day draft (re-filed after draft replacement); findings actioned in this edition per the ACTIONED record",
-   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md"
+   "detail_ref": "tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md",
+   "carried_from_replaced_draft": true
   },
   {
    "type": "intent-check",
@@ -287,7 +290,8 @@
    "by": "intent-check agent",
    "at": "2026-07-27T15:37:02+00:00",
    "summary": "Plan-vs-edition intent check on the pre-correction draft (re-filed after draft replacement); substantive notes were fixed and the draft regenerated same day",
-   "detail_ref": ""
+   "detail_ref": "",
+   "carried_from_replaced_draft": true
   }
  ]
 }

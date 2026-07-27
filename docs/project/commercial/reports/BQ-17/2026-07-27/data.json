@@ -168,7 +168,7 @@
     "method": "active subscribed connected sites \u00f7 all connected sites",
     "inputs": [
      "src: commercial/internal-subscriptions@2026-07-27.2",
-     "src: commercial/internal-fleet@2026-07-22"
+     "src: commercial/internal-fleet@2026-07-27"
     ]
    },
    "provenance": {
