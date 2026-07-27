@@ -150,13 +150,13 @@
    "derivation": {
     "method": "sites with >= 1 connected device in the fleet registry minus sites present in the subscription register",
     "inputs": [
-     "src: commercial/internal-fleet@2026-07-22",
+     "src: commercial/internal-fleet@2026-07-27",
      "src: commercial/internal-subscriptions@2026-07-27.2"
     ]
    },
    "provenance": {
     "dataset": "commercial/internal-fleet",
-    "snapshot": "2026-07-22"
+    "snapshot": "2026-07-27"
    },
    "points": [
     {
@@ -360,7 +360,7 @@
     "statement": "Attach gap: 4 connected sites carry no subscription (S-APAC-08, S-EMEA-08, S-EMEA-13, S-NA-21) \u2014 expansion revenue that needs no new hardware",
     "evidence": [
      "derived: attach-gap",
-     "src: commercial/internal-fleet@2026-07-22",
+     "src: commercial/internal-fleet@2026-07-27",
      "src: commercial/internal-subscriptions@2026-07-27.2"
     ]
    },

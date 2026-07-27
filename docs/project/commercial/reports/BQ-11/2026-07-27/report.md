@@ -2,14 +2,14 @@
 
 _Demo sample data — not for clinical use._
 
-**Verdict**: 6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the ≥10-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked — no site→account key exists in any pinned dataset [derived: v-main] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22] [config: commercial.yml]
+**Verdict**: 6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the ≥10-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked — no site→account key exists in any pinned dataset [derived: v-main] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27] [config: commercial.yml]
 
 ## Flagged sites (trailing 3 months: 2026-05..2026-07) [config: commercial.yml]
 
 _Scope: Cloud Suite CONNECTED devices only — unconnected fleet utilization is
 unobservable and is a stated gap, not an extrapolation. Site utilization is
 hours-weighted: total infusion hours ÷ total expected hours over the window
-[src: commercial/internal-telemetry-utilization@2026-07-27]. Materiality = ≥10 connected devices per the fleet registry [src: commercial/internal-fleet@2026-07-22] [config: commercial.yml]._
+[src: commercial/internal-telemetry-utilization@2026-07-27]. Materiality = ≥10 connected devices per the fleet registry [src: commercial/internal-fleet@2026-07-27] [config: commercial.yml]._
 
 | Site | Region | Utilization (window) | Connected devices | Tier |
 |---|---|---|---|---|
@@ -40,16 +40,16 @@ in a plan of record or the risk file — challenge the assumption, not just the 
 
 | ID | Expectation | Expected | Actual | Verdict | Basis |
 |---|---|---|---|---|---|
-| E-11.1 | No material account runs its connected fleet below the utilization floor [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22] [config: commercial.yml] | >= 60% of expected hours at every account with >= 10 connected devices | site-level proxy (account join unavailable): 2 site(s) with >= 10 connected devices below 60%: S-NA-22 35.3%; S-EMEA-02 36.6% | not-met (unvalidated) | stand-in utilization floor; contracts set no usage commitment |
+| E-11.1 | No material account runs its connected fleet below the utilization floor [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27] [config: commercial.yml] | >= 60% of expected hours at every account with >= 10 connected devices | site-level proxy (account join unavailable): 2 site(s) with >= 10 connected devices below 60%: S-NA-22 35.3%; S-EMEA-02 36.6% | not-met (unvalidated) | stand-in utilization floor; contracts set no usage commitment |
 
 ## Narrative — Risks / Mitigations / Issues
 
 ### Issues (materialized — needs action)
 
-- **I1 (high)** — S-NA-22 runs at 35.3% of expected hours across 19 connected devices over 2026-05..2026-07 — sold-but-underused at material scale (early churn warning) [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22]
-  - _Action_: Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22]
-- **I2 (high)** — S-EMEA-02 runs at 36.6% of expected hours across 16 connected devices over 2026-05..2026-07 — sold-but-underused at material scale (early churn warning) [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22]
-  - _Action_: Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-22]
+- **I1 (high)** — S-NA-22 runs at 35.3% of expected hours across 19 connected devices over 2026-05..2026-07 — sold-but-underused at material scale (early churn warning) [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27]
+  - _Action_: Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27]
+- **I2 (high)** — S-EMEA-02 runs at 36.6% of expected hours across 16 connected devices over 2026-05..2026-07 — sold-but-underused at material scale (early churn warning) [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27]
+  - _Action_: Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline [derived: flagged-sites] [src: commercial/internal-telemetry-utilization@2026-07-27] [src: commercial/internal-fleet@2026-07-27]
 
 ### Risks (potential — mitigation identified)
 
@@ -60,11 +60,11 @@ in a plan of record or the risk file — challenge the assumption, not just the 
 
 ### Watch
 
-- **W1 (medium)** — 4 additional site(s) below the floor but under the 10-device materiality bar: S-NA-13 (34.0%, 5 devices), S-NA-03 (36.4%, 8 devices), S-NA-16 (36.5%, 5 devices), S-APAC-06 (37.0%, 6 devices) — materiality filters priority, not visibility [derived: flagged-sites] [src: commercial/internal-fleet@2026-07-22]
+- **W1 (medium)** — 4 additional site(s) below the floor but under the 10-device materiality bar: S-NA-13 (34.0%, 5 devices), S-NA-03 (36.4%, 8 devices), S-NA-16 (36.5%, 5 devices), S-APAC-06 (37.0%, 6 devices) — materiality filters priority, not visibility [derived: flagged-sites] [src: commercial/internal-fleet@2026-07-27]
 
 ## Method & provenance
 
-- Utilization measured from [src: commercial/internal-telemetry-utilization@2026-07-27]; connected-device counts from the fleet registry [src: commercial/internal-fleet@2026-07-22]; thresholds and window from [config: commercial.yml].
+- Utilization measured from [src: commercial/internal-telemetry-utilization@2026-07-27]; connected-device counts from the fleet registry [src: commercial/internal-fleet@2026-07-27]; thresholds and window from [config: commercial.yml].
 - Regional revenue context from [src: commercial/internal-sales-accounts@2026-07-27] (demo-fabricated direct book).
 - E-11.1 is account-scoped but evaluated at site level as a proxy [derived: flagged-sites]
   — the site→account join gap is the reason, and closing it is the named fix.

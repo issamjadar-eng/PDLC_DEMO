@@ -11,7 +11,7 @@
     "method": "sites with hours-weighted utilization < 60% over the trailing 3 months; material = \u226510 connected devices",
     "inputs": [
      "src: commercial/internal-telemetry-utilization@2026-07-27",
-     "src: commercial/internal-fleet@2026-07-22",
+     "src: commercial/internal-fleet@2026-07-27",
      "config: commercial.yml"
     ]
    },
@@ -85,7 +85,7 @@
     "method": "utilization threshold + connected-device materiality bar",
     "inputs": [
      "src: commercial/internal-telemetry-utilization@2026-07-27",
-     "src: commercial/internal-fleet@2026-07-22",
+     "src: commercial/internal-fleet@2026-07-27",
      "config: commercial.yml"
     ]
    },
@@ -302,7 +302,7 @@
     "evidence": [
      "derived: flagged-sites",
      "src: commercial/internal-telemetry-utilization@2026-07-27",
-     "src: commercial/internal-fleet@2026-07-22"
+     "src: commercial/internal-fleet@2026-07-27"
     ]
    },
    {
@@ -313,7 +313,7 @@
     "evidence": [
      "derived: flagged-sites",
      "src: commercial/internal-telemetry-utilization@2026-07-27",
-     "src: commercial/internal-fleet@2026-07-22"
+     "src: commercial/internal-fleet@2026-07-27"
     ]
    }
   ],
@@ -343,7 +343,7 @@
     "statement": "4 additional site(s) below the floor but under the 10-device materiality bar: S-NA-13 (34.0%, 5 devices), S-NA-03 (36.4%, 8 devices), S-NA-16 (36.5%, 5 devices), S-APAC-06 (37.0%, 6 devices) \u2014 materiality filters priority, not visibility",
     "evidence": [
      "derived: flagged-sites",
-     "src: commercial/internal-fleet@2026-07-22"
+     "src: commercial/internal-fleet@2026-07-27"
     ]
    }
   ]
@@ -361,7 +361,7 @@
    "evidence": [
     "derived: flagged-sites",
     "src: commercial/internal-telemetry-utilization@2026-07-27",
-    "src: commercial/internal-fleet@2026-07-22"
+    "src: commercial/internal-fleet@2026-07-27"
    ]
   }
  ]

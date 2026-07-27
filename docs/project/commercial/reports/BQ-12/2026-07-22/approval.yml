@@ -1,0 +1,12 @@
+bq: BQ-12
+edition: '2026-07-22'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:41+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: lint gate + Ben's browser review 2026-07-22; methodology unchanged since
+content_hashes:
+  report.md: b68ddcc62c0daecc54a0034cf85e2fd4b9d89e753da3c5d5614465788e83ef7f
+  data.json: 4ea6778c88569767db95c0ea7aa3c6221f98fef98bc67848801d807aa347ffa1

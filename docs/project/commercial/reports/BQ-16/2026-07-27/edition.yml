@@ -1,6 +1,6 @@
 bq: BQ-16
 edition: '2026-07-27'
-status: draft
+status: approved
 created_at: '2026-07-27T15:32:20+00:00'
 pins:
   commercial/internal-kol-register: '2026-07-27'

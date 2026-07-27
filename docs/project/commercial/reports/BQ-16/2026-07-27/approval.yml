@@ -1,0 +1,13 @@
+bq: BQ-16
+edition: '2026-07-27'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:41+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'adversarial-verify + red-team (blinded pins-only re-derivation, zero refutations) with
+    corrections actioned: tasks/ben/_work/108-verify-redteam-roadmap-2026-07-27.md'
+content_hashes:
+  report.md: 8c0f73f437738c07a08d37fe6e0d19bf5f035e5c095b167a709b6215278c2299
+  data.json: 7e20d32e8dfbcff1c2f5f67b13c5bb634d49ce0c6cda5e39770a5411bf7ba40d

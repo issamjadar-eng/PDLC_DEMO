@@ -1,0 +1,13 @@
+bq: BQ-08
+edition: '2026-07-27'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:41+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'adversarial-verify + red-team (blinded pins-only re-derivation, zero refutations) with
+    corrections actioned: tasks/ben/_work/108-verify-redteam-market-2026-07-27.md'
+content_hashes:
+  report.md: 818f0ab17b44cb500529ad469e3ff245d22a309da55f8d0a851487442c8ed551
+  data.json: 5e24b352d267831ec6869fb439325b7d8be8696f4c8c696a492e6da0694a84f8

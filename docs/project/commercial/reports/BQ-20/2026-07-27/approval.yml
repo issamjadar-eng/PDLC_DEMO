@@ -1,0 +1,13 @@
+bq: BQ-20
+edition: '2026-07-27'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:41+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'adversarial-verify + red-team (blinded pins-only re-derivation, zero refutations) with
+    corrections actioned: tasks/ben/_work/108-verify-redteam-fieldsafety-2026-07-27.md'
+content_hashes:
+  report.md: 0309a303822a26b3b3ff6089ee67524a3a45125e0f222b0c9ab87c9c98a1420d
+  data.json: 6ee2bb51996192c75c2aec39588a5793cebfce62b70095f2b4f972e05f763c8f

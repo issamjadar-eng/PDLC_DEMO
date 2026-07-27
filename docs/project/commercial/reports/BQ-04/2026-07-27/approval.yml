@@ -1,0 +1,13 @@
+bq: BQ-04
+edition: '2026-07-27'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:40+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'adversarial-verify + red-team (blinded pins-only re-derivation, zero refutations) with
+    corrections actioned: tasks/ben/_work/108-verify-redteam-board-2026-07-27.md'
+content_hashes:
+  report.md: 5e3aa212f9202c865cae9a4c04375179e7c788bda4ad3eb70b37e7000be39172
+  data.json: ed61965b5c1dd5f5a5eac4343672342987e983d63bead44be85a1478260defaa

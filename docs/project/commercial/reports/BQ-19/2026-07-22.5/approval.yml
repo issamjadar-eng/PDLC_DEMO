@@ -1,0 +1,13 @@
+bq: BQ-19
+edition: 2026-07-22.5
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:41+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 1
+  freshness: pass
+  verify_note: 'routine refresh/feature drafts, methodology unchanged; original adversarial verification:
+    tasks/ben/_work/108-adversarial-verify-field-slice-2026-07-22.md'
+content_hashes:
+  report.md: b77a4da7d91d040f722c8ed1e127b3029553c51e1ee8497a7d2555dd39eccafb
+  data.json: e015663c068ddaca0317ac7d125003307ecf4e048975611325c28de9ec310ce9

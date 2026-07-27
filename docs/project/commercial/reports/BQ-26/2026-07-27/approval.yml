@@ -1,0 +1,13 @@
+bq: BQ-26
+edition: '2026-07-27'
+approved_by: Ben Xavier
+approved_at: '2026-07-27T16:11:42+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'refit independently confirmed as fully actioning all four prior findings: tasks/ben/_work/108-verify-redteam-economics-2026-07-27.md;
+    routine pin refresh after'
+content_hashes:
+  report.md: 5510c9dc934f163a3ac470d2692136c75ce95db057c638fab3e790ed296a8f90
+  data.json: 45526128bf9cf9304b731bd5ecb56e9794d1ed8e5e2449b869f479719b889ce9

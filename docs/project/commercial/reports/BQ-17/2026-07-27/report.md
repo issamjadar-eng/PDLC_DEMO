@@ -22,7 +22,7 @@ _Three components in [0, 1], unweighted mean (config choice) [config: commercial
 
 - Pressure inputs: lane-mapped parity states from [src: commercial/external-competitor-features@2026-07-27]; trailing-12-month lane keyword hits 2025-01-28 → 2026-01-28 from [src: commercial/openfda-510k-infusion@2026-07-22] [config: commercial.yml]. Keyword hits: F1: K251640, K251636, K243855.
 - Sentiment inputs: distinct-voice net sentiment from [src: commercial/internal-kol-register@2026-07-27] — SIMULATED panel, zero real collected KOL evidence (BQ-16 meta-gap); this third of every composite is assumption-class.
-- Demand input: Cloud Suite attach 84.8% = 39 active subscribed connected sites of 46 connected sites [derived: attach-rate] [src: commercial/internal-subscriptions@2026-07-27.2] [src: commercial/internal-fleet@2026-07-22]. Non-cloud features (F7, F9) score zero on this axis BY CONSTRUCTION — no demand dataset exists for them; zero is a data gap, not measured absence of demand [config: commercial.yml].
+- Demand input: Cloud Suite attach 84.8% = 39 active subscribed connected sites of 46 connected sites [derived: attach-rate] [src: commercial/internal-subscriptions@2026-07-27.2] [src: commercial/internal-fleet@2026-07-27]. Non-cloud features (F7, F9) score zero on this axis BY CONSTRUCTION — no demand dataset exists for them; zero is a data gap, not measured absence of demand [config: commercial.yml].
 
 ## The two candidates (derived rankings, council judgment pending)
 
@@ -57,6 +57,6 @@ _Three components in [0, 1], unweighted mean (config choice) [config: commercial
 
 ## Method & provenance
 
-- Components computed from the five pins: parity states [src: commercial/external-competitor-features@2026-07-27], clearance keyword activity [src: commercial/openfda-510k-infusion@2026-07-22], sentiment [src: commercial/internal-kol-register@2026-07-27], attach [src: commercial/internal-subscriptions@2026-07-27.2] + [src: commercial/internal-fleet@2026-07-22]; all maps, weights, and eligibility from [config: commercial.yml].
+- Components computed from the five pins: parity states [src: commercial/external-competitor-features@2026-07-27], clearance keyword activity [src: commercial/openfda-510k-infusion@2026-07-22], sentiment [src: commercial/internal-kol-register@2026-07-27], attach [src: commercial/internal-subscriptions@2026-07-27.2] + [src: commercial/internal-fleet@2026-07-27]; all maps, weights, and eligibility from [config: commercial.yml].
 - Historical view: gross cumulative subscribed-site adds by start month are charted as the demand-signal history [derived: subscribed-sites-history] [src: commercial/internal-subscriptions@2026-07-27.2]; churn dates are not recorded in the register, so the line shows gross adds, not net — stated, not hidden.
 - A composite-score history needs successive editions of this answer — none exist yet; re-answers will accumulate it [derived: composite].

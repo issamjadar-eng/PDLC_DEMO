@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "generated": "2026-07-27T15:52:43+00:00",
+ "generated": "2026-07-27T16:11:50+00:00",
  "categories": [
   {
    "key": "board",
@@ -36,14 +36,14 @@
     "board-chair"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -61,14 +61,14 @@
     "lead-independent-director"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -87,14 +87,14 @@
     "cfo"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -112,14 +112,14 @@
     "finance-committee"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -138,14 +138,14 @@
     "cfo"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -163,14 +163,14 @@
     "independent-director-rd"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-22",
+   "status": "answered",
+   "approved_edition": "2026-07-22",
+   "draft_edition": null,
    "latest_edition": "2026-07-22",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -188,14 +188,14 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [
@@ -215,14 +215,14 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -241,14 +241,14 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -267,14 +267,14 @@
     "cfo"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [
@@ -295,14 +295,14 @@
     "customer-success"
    ],
    "cadence": "monthly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -320,14 +320,14 @@
     "vp-product"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-22",
+   "status": "answered",
+   "approved_edition": "2026-07-22",
+   "draft_edition": null,
    "latest_edition": "2026-07-22",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -346,14 +346,14 @@
     "board"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [
@@ -373,14 +373,14 @@
     "vp-product"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -399,14 +399,14 @@
     "regulatory-affairs"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -424,14 +424,14 @@
     "vp-product"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -449,14 +449,14 @@
     "vp-product"
    ],
    "cadence": "annual",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -476,13 +476,13 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-22",
+   "approved_edition": "2026-07-27",
    "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-22.4",
+   "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "approved"
+     "status": "superseded"
     },
     {
      "edition": "2026-07-22.2",
@@ -495,14 +495,18 @@
     {
      "edition": "2026-07-22.4",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "approved"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "CAPA-review trigger: occlusion-alarm at 3.39 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-22.4/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-22.4/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-27/data.json"
   },
   {
    "id": "BQ-19",
@@ -514,13 +518,13 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.5",
+   "approved_edition": "2026-07-22.5",
+   "draft_edition": "2026-07-22.4",
    "latest_edition": "2026-07-22.5",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "approved"
+     "status": "superseded"
     },
     {
      "edition": "2026-07-22.2",
@@ -536,7 +540,7 @@
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [
@@ -556,14 +560,14 @@
     "cmo"
    ],
    "cadence": "monthly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [
@@ -584,14 +588,14 @@
     "audit-committee"
    ],
    "cadence": "monthly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -609,14 +613,14 @@
     "vp-quality"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -635,147 +639,13 @@
    ],
    "cadence": "weekly",
    "status": "answered",
-   "approved_edition": "2026-07-22",
+   "approved_edition": "2026-07-27",
    "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-22.6",
-   "editions": [
-    {
-     "edition": "2026-07-22",
-     "status": "approved"
-    },
-    {
-     "edition": "2026-07-22.2",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.3",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.4",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.5",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.6",
-     "status": "draft"
-    }
-   ],
-   "assumptions": [],
-   "freshness": "fresh",
-   "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
-   "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-22.6/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-22.6/data.json"
-  },
-  {
-   "id": "BQ-24",
-   "question": "What are our update failure and retry rates \u2014 is any hardware rev, firmware baseline, or site profile failing at a rate that says pause and escalate?",
-   "category": "field-ops",
-   "personas": [
-    "vp-field-service"
-   ],
-   "cadence": "weekly",
-   "status": "answered",
-   "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-22.6",
-   "editions": [
-    {
-     "edition": "2026-07-22",
-     "status": "approved"
-    },
-    {
-     "edition": "2026-07-22.2",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.3",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.4",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.5",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.6",
-     "status": "draft"
-    }
-   ],
-   "assumptions": [],
-   "freshness": "fresh",
-   "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
-   "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-22.6/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-22.6/data.json"
-  },
-  {
-   "id": "BQ-25",
-   "question": "Are customers struggling with this upgrade \u2014 tickets per 100 upgraded pumps, rollbacks \u2014 and what does an upgrade cost the customer?",
-   "category": "field-ops",
-   "personas": [
-    "customer-success",
-    "cfo"
-   ],
-   "cadence": "weekly",
-   "status": "answered",
-   "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-22.5",
-   "editions": [
-    {
-     "edition": "2026-07-22",
-     "status": "approved"
-    },
-    {
-     "edition": "2026-07-22.2",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.3",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.4",
-     "status": "draft"
-    },
-    {
-     "edition": "2026-07-22.5",
-     "status": "draft"
-    }
-   ],
-   "assumptions": [
-    "A-002"
-   ],
-   "freshness": "fresh",
-   "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
-   "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-22.5/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-22.5/data.json"
-  },
-  {
-   "id": "BQ-26",
-   "question": "Do we have the capacity to execute the remaining waves on schedule \u2014 or do we add headcount, contract labor, or slip?",
-   "category": "field-ops",
-   "personas": [
-    "vp-field-service"
-   ],
-   "cadence": "monthly",
-   "status": "answered",
-   "approved_edition": "2026-07-22",
-   "draft_edition": "2026-07-27",
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "approved"
+     "status": "superseded"
     },
     {
      "edition": "2026-07-22.2",
@@ -799,12 +669,158 @@
     },
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
-   "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-22; EMEA needs 5.9/wk; NA needs 4.4/wk); APAC on track but thin (4.5/wk vs 4.2/wk required, 38 on-site remaining); remote conversion covers 0 of 97 on-site-remaining devices today",
+   "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
+   "evidence_class": "derived",
+   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-27/data.json"
+  },
+  {
+   "id": "BQ-24",
+   "question": "What are our update failure and retry rates \u2014 is any hardware rev, firmware baseline, or site profile failing at a rate that says pause and escalate?",
+   "category": "field-ops",
+   "personas": [
+    "vp-field-service"
+   ],
+   "cadence": "weekly",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": "2026-07-22.6",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-22",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.4",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.6",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "approved"
+    }
+   ],
+   "assumptions": [],
+   "freshness": "fresh",
+   "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
+   "evidence_class": "measured",
+   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-27/data.json"
+  },
+  {
+   "id": "BQ-25",
+   "question": "Are customers struggling with this upgrade \u2014 tickets per 100 upgraded pumps, rollbacks \u2014 and what does an upgrade cost the customer?",
+   "category": "field-ops",
+   "personas": [
+    "customer-success",
+    "cfo"
+   ],
+   "cadence": "weekly",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": "2026-07-22.5",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-22",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.4",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "approved"
+    }
+   ],
+   "assumptions": [
+    "A-002"
+   ],
+   "freshness": "fresh",
+   "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
+   "evidence_class": "assumed",
+   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-27/data.json"
+  },
+  {
+   "id": "BQ-26",
+   "question": "Do we have the capacity to execute the remaining waves on schedule \u2014 or do we add headcount, contract labor, or slip?",
+   "category": "field-ops",
+   "personas": [
+    "vp-field-service"
+   ],
+   "cadence": "monthly",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": "2026-07-22.6",
+   "latest_edition": "2026-07-27",
+   "editions": [
+    {
+     "edition": "2026-07-22",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-22.2",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.3",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.4",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.5",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-22.6",
+     "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "approved"
+    }
+   ],
+   "assumptions": [],
+   "freshness": "fresh",
+   "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-27; EMEA needs 6.4/wk; NA needs 4.7/wk); APAC behind (3.5/wk vs 4.5/wk required); remote conversion covers 0 of 97 on-site-remaining devices today",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-26/2026-07-27/report.md",
    "data_path": "docs/project/commercial/reports/BQ-26/2026-07-27/data.json"
@@ -818,13 +834,13 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-22",
+   "approved_edition": "2026-07-27",
    "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-22.5",
+   "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "approved"
+     "status": "superseded"
     },
     {
      "edition": "2026-07-22.2",
@@ -841,14 +857,18 @@
     {
      "edition": "2026-07-22.5",
      "status": "draft"
+    },
+    {
+     "edition": "2026-07-27",
+     "status": "approved"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-22.5/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-22.5/data.json"
+   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-27/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-27/data.json"
   },
   {
    "id": "BQ-28",
@@ -858,14 +878,14 @@
     "cfo"
    ],
    "cadence": "monthly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -885,14 +905,14 @@
     "cco"
    ],
    "cadence": "quarterly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
@@ -911,14 +931,14 @@
     "cfo"
    ],
    "cadence": "monthly",
-   "status": "draft-only",
-   "approved_edition": null,
-   "draft_edition": "2026-07-27",
+   "status": "answered",
+   "approved_edition": "2026-07-27",
+   "draft_edition": null,
    "latest_edition": "2026-07-27",
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "draft"
+     "status": "approved"
     }
    ],
    "assumptions": [],
