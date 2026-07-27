@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-27 — push (reader aids + code quality)
+
+- **Push** (13 files, all LOCAL_AHEAD; nothing to pull): `skills/commercial/{README.md, SKILL.md, scripts/commercial.py, templates/commercial.yml}` (v10 terms/explainers + v11 code-quality soft gate), `skills/corpus/{README.md, SKILL.md, scripts/corpus.py}` (v4 script_sha256 provenance), `skills/project-console/{README.md, SKILL.md, VERSION, console/commercial/router.py, console/web/static/commercial.css, console/web/templates/commercial_view.html}` (1.53.0→1.55.1: explainer UI, terms fold, data-tab summaries, chart tooltips/labels, Computation code panel + normalizer fix)
+- Branch: `sync/pdlc-demo-reader-aids-code-quality-2026-07-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/283
+- Status: merged (user standing directive "…land it, then skill sync")
+- Merge commit / Hitachi HEAD after sync: `07215a2` (clone ff'd, sync branch deleted local+remote)
+- project.yml: no changes
+- Follow-ups: none. Note: PR #282 (tasks-chip fix, another session) merged upstream between our pushes — its `skills/task/*` + `tasks_view.html` files are upstream-side; a future pull will bring them here if this clone lacks them.
+
 ## 2026-07-27 — push (tasks-tab chip fix)
 
 - Files (7, all LOCAL_AHEAD): `skills/task/{SKILL.md, README.md, scripts/task_summary.py}` (v35 — `open_tasks[].status` contractually canonical, decorations → clamped `status_note`), `skills/project-console/{SKILL.md, README.md, VERSION, console/web/templates/tasks_view.html}` (1.53.1 — chip clamp + CSS hover/focus tooltip; SKILL.md frontmatter version reconciled from lagging 1.41.0)
