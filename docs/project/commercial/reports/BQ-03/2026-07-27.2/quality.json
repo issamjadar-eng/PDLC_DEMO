@@ -1,0 +1,334 @@
+{
+ "bq": "BQ-03",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:32:57+00:00",
+ "lint": {
+  "status": "fail",
+  "errors": [
+   "L47: numeric claim without a [src|assume|derived|config] marker: _The blended decomposition above spans all 6 lines; the question is about recurr"
+  ],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "fail",
+    "findings": [
+     {
+      "severity": "error",
+      "message": "L47: numeric claim without a [src|assume|derived|config] marker: _The blended decomposition above spans all 6 lines; the question is about recurr"
+     }
+    ]
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "recurring-share-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "y5-decomposition",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "y5-recurring-decomposition",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-financials@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-revenue-plan@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-financials",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-revenue-plan",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Recurring share \u2014 today vs Y5 plan",
+    "series": "recurring-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "subscription revenue \u00f7 total revenue (actuals); cloud-suite proxy \u00f7 plan total (plan)",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Recurring share \u2014 actuals vs plan trajectory",
+    "series": "recurring-share-trend",
+    "evidence_class": "derived",
+    "source": "commercial/internal-financials@2026-07-27",
+    "derivation": {
+     "method": "actual: subscription \u00f7 total per fiscal year; plan: cloud-suite proxy \u00f7 plan total per plan year",
+     "inputs": [
+      "src: commercial/internal-financials@2026-07-27",
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Plan revenue by bucket per plan year ($M)",
+    "series": "plan-by-bucket",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "per plan year: contracted = cleared; modeled = letter-to-file; aspiration = pccp-enabled + new-submission",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "FY2030 target by bucket ($M)",
+    "series": "y5-decomposition",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "FY2030 plan revenue summed by regulatory_dependency, grouped into the three plan-defined buckets",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "FY2030 recurring proxy (cloud-suite) by bucket ($M)",
+    "series": "y5-recurring-decomposition",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "FY2030 plan revenue of the cloud-suite line (the recurring proxy) summed by regulatory_dependency, grouped into the three plan-defined buckets; dependent share = (pccp-enabled + new-submission) \u00f7 proxy-line total",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml",
+      "derived: y5-decomposition"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-03.md",
+  "status": "in-sync",
+  "pinned": "53873f5e25afccb51c68a84a29d929dca65078a0d662f350aa077031dec8edca",
+  "current": "53873f5e25afccb51c68a84a29d929dca65078a0d662f350aa077031dec8edca"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_03.py",
+    "sha256_12": "896553e15d23",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-03"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-board-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-financials/gen.py",
+    "sha256_12": "9eff72abc582",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-revenue-plan/gen.py",
+    "sha256_12": "e9ee93796a07",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "REGION_SHARE values duplicate the FINANCIAL MODEL constants outside any marked shared block",
+       "disposition": "accept: joins are region-insensitive; add keep-in-sync comment at next touch"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

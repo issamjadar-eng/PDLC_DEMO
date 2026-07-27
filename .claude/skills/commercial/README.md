@@ -67,6 +67,25 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 11 (2026-07-27): Code-quality audit layer for project-side analysis code (soft gate —
+  badges, never blocks; AI review is the review record; engines out of scope, reviewed
+  at registry level). `answer` pins `code_artifacts:` (path + sha256 of the per-BQ
+  module, `computations.py`, and dep generators as `corpus:<ds>/gen.py`) into
+  edition.yml. New engine-managed store `code-quality/records.yml`: per-artifact
+  entries keyed by sha with deterministic check results + filed reviews (newest entry
+  per sha wins). New `code-audit <BQ|--path|--all>` action — static lint (pyflakes,
+  py_compile fallback), poison-pattern scan with line numbers (clocks, unseeded
+  randomness — seeded generator usage passes, network imports, absolute-path `open`
+  warning), determinism replay (double-run byte-compare of report.md+data.json against
+  latest-edition pins; `n/a` for generators; inline BQs aggregate onto
+  computations.py). New `record-code-review <path>` action files structured AI-review
+  verdicts (`--finding "sev|summary|disposition"`) against the file's current sha.
+  quality.json + sidecar gain a per-question `code:` block (schema_version 1.2,
+  additive): per pinned artifact checks + newest review with `current` sha-match flag;
+  question status ladder checks-failed > review-outdated > unreviewed >
+  reviewed-current. `approve` prints the code status (never blocks); `check` adds a
+  non-fatal status count line. Graceful degradation: missing store → unreviewed;
+  pre-pinning editions → status from current file hashes with a note.
 - 10 (2026-07-27): Plain-language reader aids for non-analyst console readers. Catalog
   schema: top-level `terms:` dictionary (term -> 1-3 sentence plain-language
   definition, defined once) + per-question `terms:` reference lists (string keys into

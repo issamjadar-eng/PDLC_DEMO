@@ -21,7 +21,10 @@ schema:
     - {name: complaint_id, type: str, required: true}
     - {name: date_opened, type: date, required: true}
     - {name: device_serial, type: str, required: true}
+    - {name: site_id, type: str, required: true}
     - {name: region, type: str, required: true}
+    - {name: model, type: str, required: true}
+    - {name: firmware_version, type: str, required: true}
     - {name: category, type: str, required: true}
     - {name: severity, type: int, required: true}
     - {name: status, type: str, required: true}

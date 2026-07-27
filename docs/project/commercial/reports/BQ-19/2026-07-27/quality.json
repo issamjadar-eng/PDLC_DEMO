@@ -1,0 +1,214 @@
+{
+ "bq": "BQ-19",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T18:33:50+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [
+   "L21: estimation language without [assume: A-NNN]: establish incidence rates. A per-manufacturer rate requires an installed-base es"
+  ],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "warn",
+    "findings": [
+     {
+      "severity": "warning",
+      "message": "L21: estimation language without [assume: A-NNN]: establish incidence rates. A per-manufacturer rate requires an installed-base es"
+     }
+    ]
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-001",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "config",
+   "value": "entity-aliases.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "total-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-infusion-mfr@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-infusion-monthly@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/openfda-maude-infusion-mfr",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-maude-infusion-monthly",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Class-wide MAUDE events (charted window)",
+    "series": "total-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-infusion-monthly@2026-07-22"
+   },
+   {
+    "what": "Class-wide MAUDE events per month",
+    "series": "monthly-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-infusion-monthly@2026-07-22"
+   },
+   {
+    "what": "MAUDE events by manufacturer (canonical)",
+    "series": "events-by-mfr",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-infusion-mfr@2026-07-22"
+   }
+  ],
+  "assumed": [
+   {
+    "what": "figure(s) citing A-001",
+    "series": null,
+    "evidence_class": "assumed",
+    "source": "A-001"
+   }
+  ],
+  "missing": [
+   {
+    "what": "Event rate per installed device",
+    "series": "rate-by-mfr",
+    "evidence_class": "unavailable",
+    "source": "A-001",
+    "note": "blocked until A-001 quantifies installed-base denominators"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-19.md",
+  "status": "in-sync",
+  "pinned": "9ae6a18d4979ddae3528de2371d2d78f623d7a4f2e5299f7a251285198cf54d4",
+  "current": "9ae6a18d4979ddae3528de2371d2d78f623d7a4f2e5299f7a251285198cf54d4"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

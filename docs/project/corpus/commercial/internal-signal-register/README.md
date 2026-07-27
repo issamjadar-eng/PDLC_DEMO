@@ -18,10 +18,12 @@ a spreadsheet?).
   `open` more than 90 days at the 2026-07-25 horizon = 16/40. (2 further `open`
   signals are recent — opened 2026-05/06 — and not counted.)
 - **2 over-delivery signals DID close the loop** into upgrade-items:
-  `SIG-2025-028` → `UPG-0051` (maude-screen source) and `SIG-2026-005` → `UPG-0052`
-  (complaint-trend source). The counter-beat to BQ-20's franchise-killer watch — ties
-  to the over-delivery categories in `internal-complaints` and the open over-delivery
-  MDR in `internal-regulatory-docket`.
+  `SIG-2025-028` → `UPG-0101` (maude-screen source) and `SIG-2026-005` → `UPG-0102`
+  (complaint-trend source). The planted refs are numbered outside the generator's
+  counter range (UPG-0050..0053) so they are unique to the over-delivery beat. The
+  counter-beat to BQ-20's franchise-killer watch — ties to the over-delivery categories
+  in `internal-complaints` and the open over-delivery MDR in
+  `internal-regulatory-docket`.
 - `closed_date` is empty only for `disposition: open`; all dispositioned signals carry
   a closure date 30–180 days after opening (capped at 2026-07-20).
 
@@ -36,3 +38,7 @@ a spreadsheet?).
 ## Changelog
 
 - 2026-07-27: Scaffolded; first snapshot (40 signals) with planted BQ-22 knobs — task 108.
+- 2026-07-27: Planted over-delivery refs renumbered `UPG-0051/0052` → `UPG-0101/0102` —
+  the old ids collided with counter-generated refs (each was shared with an unrelated
+  battery signal), so ref-level traces picked up the wrong signals (code-review finding
+  F-SR-1). Snapshot 2026-07-27.2 via refresh; task 108.

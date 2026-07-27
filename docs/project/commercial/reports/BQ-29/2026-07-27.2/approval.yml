@@ -1,0 +1,13 @@
+bq: BQ-29
+edition: 2026-07-27.2
+approved_by: Ben Xavier
+approved_at: '2026-07-27T18:33:53+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: AI code review + fix pass over the computation code (dossier tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md);
+    deterministic code checks green; prior adversarial-verify/red-team verdicts carried in quality.json
+content_hashes:
+  report.md: b12e1ce89a8d668185447fcc6300b59753e9290f9fce44386eab8c0f02cae1eb
+  data.json: ebc852eb07096abe024a6abafff0d8d723366f882f2b8837f3f2e00b508d452a

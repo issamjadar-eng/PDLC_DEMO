@@ -1,0 +1,416 @@
+{
+ "bq": "BQ-04",
+ "series": [
+  {
+   "id": "unit-econ-stat",
+   "label": "LTV vs cost-to-serve per connected pump",
+   "unit": "USD",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per-pump ARR and cost rates over active sites \u00d7 5-year undiscounted horizon; ratio = \u03a3 ARR \u00f7 \u03a3 cost_to_serve on raw sums (horizon cancels), rounded for display only",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "LTV per connected pump, 5-yr undiscounted",
+     "value": 2237
+    },
+    {
+     "label": "cost-to-serve per pump over the same horizon",
+     "value": 2720
+    },
+    {
+     "label": "LTV : cost-to-serve ratio",
+     "value": 0.82
+    }
+   ]
+  },
+  {
+   "id": "band-economics",
+   "label": "ARR vs cost-to-serve per pump by site size",
+   "unit": "USD/pump/yr",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "ARR/pump",
+    "b_label": "cost/pump"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per size band over active sites: \u03a3 ARR \u00f7 \u03a3 pumps and \u03a3 cost_to_serve \u00f7 \u03a3 pumps",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "small (<= 6 pumps)",
+     "a": 453,
+     "b": 913,
+     "sites": 24
+    },
+    {
+     "label": "mid (7-11 pumps)",
+     "a": 452,
+     "b": 516,
+     "sites": 6
+    },
+    {
+     "label": "large (>= 12 pumps)",
+     "a": 443,
+     "b": 334,
+     "sites": 9
+    }
+   ]
+  },
+  {
+   "id": "discount-by-band",
+   "label": "Mean hardware discount by site size",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "simple mean of hardware_discount_pct across active subscribed sites, per band and overall",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "small (<= 6 pumps)",
+     "value": 5.6
+    },
+    {
+     "label": "mid (7-11 pumps)",
+     "value": 6.4
+    },
+    {
+     "label": "large (>= 12 pumps)",
+     "value": 5.6
+    },
+    {
+     "label": "all active sites",
+     "value": 5.8
+    }
+   ]
+  },
+  {
+   "id": "discount-sensitivity",
+   "label": "E-04.2 threshold sensitivity \u2014 miss vs sampling noise",
+   "unit": "pp",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "margin = raw mean hardware_discount_pct \u2212 tolerance; SE = sample standard deviation (n\u22121) \u00f7 \u221an over active sites; knife-edge flagged when |margin| \u2264 1pp or |margin| \u2264 2 \u00d7 SE",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml",
+     "derived: discount-by-band"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "miss vs tolerance (pp)",
+     "value": 0.75
+    },
+    {
+     "label": "standard error of the mean (pp)",
+     "value": 0.37
+    },
+    {
+     "label": "knife-edge (|miss| <= 1pp or <= 2 SE)",
+     "value": "yes"
+    }
+   ]
+  },
+  {
+   "id": "attach-gap",
+   "label": "Connected sites with no subscription",
+   "unit": "sites",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "sites with >= 1 connected device in the fleet registry minus sites present in the subscription register",
+    "inputs": [
+     "src: commercial/internal-fleet@2026-07-27",
+     "src: commercial/internal-subscriptions@2026-07-27.2"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "S-APAC-08",
+     "value": 1
+    },
+    {
+     "label": "S-EMEA-08",
+     "value": 1
+    },
+    {
+     "label": "S-EMEA-13",
+     "value": 1
+    },
+    {
+     "label": "S-NA-21",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "arr-build",
+   "label": "ARR build from active-site start dates ($K, survivor-biased)",
+   "unit": "$K",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "cumulative current ARR of active sites by subscription start month \u2014 churned sites' past ARR absent (survivor bias stated)",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-07-27.2"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-07-27.2"
+   },
+   "lines": [
+    {
+     "label": "cumulative ARR (active sites)",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 4.9
+      },
+      {
+       "x": "2024-02-01",
+       "y": 4.9
+      },
+      {
+       "x": "2024-03-01",
+       "y": 5.7
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5.7
+      },
+      {
+       "x": "2024-05-01",
+       "y": 22.1
+      },
+      {
+       "x": "2024-06-01",
+       "y": 24.3
+      },
+      {
+       "x": "2024-07-01",
+       "y": 25.6
+      },
+      {
+       "x": "2024-08-01",
+       "y": 32.1
+      },
+      {
+       "x": "2024-09-01",
+       "y": 45.2
+      },
+      {
+       "x": "2024-10-01",
+       "y": 56.4
+      },
+      {
+       "x": "2024-11-01",
+       "y": 68.8
+      },
+      {
+       "x": "2024-12-01",
+       "y": 70.1
+      },
+      {
+       "x": "2025-01-01",
+       "y": 77.5
+      },
+      {
+       "x": "2025-02-01",
+       "y": 77.5
+      },
+      {
+       "x": "2025-03-01",
+       "y": 85.4
+      },
+      {
+       "x": "2025-04-01",
+       "y": 89.1
+      },
+      {
+       "x": "2025-05-01",
+       "y": 96.1
+      },
+      {
+       "x": "2025-06-01",
+       "y": 122.4
+      },
+      {
+       "x": "2025-07-01",
+       "y": 122.4
+      },
+      {
+       "x": "2025-08-01",
+       "y": 122.4
+      },
+      {
+       "x": "2025-09-01",
+       "y": 122.4
+      },
+      {
+       "x": "2025-10-01",
+       "y": 130.6
+      },
+      {
+       "x": "2025-11-01",
+       "y": 130.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 132.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "econ-history",
+   "label": "LTV / cost-to-serve history",
+   "unit": "USD",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "one register snapshot exists \u2014 unit-economics history accumulates as recurring snapshots land; a single point is not a trend"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Unit economics fail the guardrail: LTV per connected pump $2,237 vs $2,720 cost-to-serve over the same 5-year horizon (ratio 0.82 vs the 3.0 floor); 28 of 39 active sites run ARR below cost-to-serve \u2014 concentrated in small sites \u2014 and the mean hardware discount at subscribed sites is 5.8% vs the 5% tolerance",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Small sites are negative at unit level: 24 sites (<= 6 pumps) run $460/pump/yr below water (24 of them ARR-below-cost individually)",
+    "action": "Set a minimum-deal-size or platform-fee floor for new subscriptions; review the serve model (remote-first) for the existing small-site tail",
+    "evidence": [
+     "derived: band-economics",
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "Mean hardware discount at subscribed sites is 5.8%, over the 5% tolerance \u2014 the subscription may be being bought with hardware price",
+    "action": "Pull deal-level pricing for subscribed vs unsubscribed sites; without an unsubscribed baseline in the corpus, causality stays unproven either way",
+    "evidence": [
+     "derived: discount-by-band",
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "Fleet-wide LTV:cost-to-serve is 0.82, under the 3.0 floor \u2014 and the LTV side is flattered by the model (no churn decrement, no discounting) while 3 churned sites already exist",
+    "mitigation": "Fix the cost side (serve model) before growing the small-site tail; re-underwrite the floor once a churn-adjusted LTV is possible",
+    "evidence": [
+     "derived: unit-econ-stat",
+     "src: commercial/internal-subscriptions@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Attach gap: 4 connected sites carry no subscription (S-APAC-08, S-EMEA-08, S-EMEA-13, S-NA-21) \u2014 expansion revenue that needs no new hardware",
+    "evidence": [
+     "derived: attach-gap",
+     "src: commercial/internal-fleet@2026-07-27",
+     "src: commercial/internal-subscriptions@2026-07-27.2"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Churn on file: 3 of 42 register rows (7.1%) \u2014 direct evidence that the no-churn 5-year horizon overstates LTV",
+    "evidence": [
+     "derived: unit-econ-stat",
+     "src: commercial/internal-subscriptions@2026-07-27.2"
+    ]
+   },
+   {
+    "id": "W3",
+    "statement": "E-04.2 is a knife-edge: the mean hardware discount misses the 5% stand-in tolerance by +0.8pp on an n=39 mean (SE \u2248 0.4pp; the miss is 2.1 standard errors from the line; flagged on |miss| \u2264 1pp) \u2014 the verdict is fragile to the unvalidated stand-in threshold choice; treat it as a watch signal, not a breach finding, until pricing policy sets a real cap",
+    "evidence": [
+     "derived: discount-sensitivity",
+     "derived: discount-by-band",
+     "config: commercial.yml",
+     "src: commercial/internal-subscriptions@2026-07-27.2"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-04.1",
+   "statement": "Lifetime value per connected pump covers cost-to-serve at a healthy multiple",
+   "expected": "LTV : cost-to-serve >= 3.0",
+   "basis": "generic SaaS unit-economics heuristic; no underwritten target",
+   "set_by": "finance-committee (demo)",
+   "validated": false,
+   "actual": "ratio 0.82 (ARR $447/pump/yr vs cost $544/pump/yr, active sites; ratio computed on raw sums, rounded for display)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: unit-econ-stat"
+   ]
+  },
+  {
+   "id": "E-04.2",
+   "statement": "Cloud Suite attach does not erode hardware pricing beyond tolerance",
+   "expected": "avg hardware discount at subscribed sites <= 5%",
+   "basis": "stand-in tolerance; pricing policy sets no explicit cap",
+   "set_by": "cco (demo)",
+   "validated": false,
+   "actual": "mean hardware discount 5.8% across 39 active subscribed sites \u2014 +0.8pp vs the 5% stand-in line; KNIFE-EDGE on |miss| \u2264 1pp (miss = 2.1 SE, SE \u2248 0.4pp, n=39) against an unvalidated threshold \u2014 verdict fragile to the stand-in choice",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: discount-by-band",
+    "derived: discount-sensitivity"
+   ]
+  }
+ ]
+}

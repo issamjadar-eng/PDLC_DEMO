@@ -114,6 +114,20 @@ def snapshot_date(snap_id: str) -> dt.date:
     return dt.date.fromisoformat(snap_id.split(".")[0])
 
 
+def command_script_sha(cmd: str, ds_dir: Path):
+    """If a command: references a dataset-local script (the gen.py pattern), return
+    its sha256 so provenance records the exact code bytes that produced the
+    snapshot. First .py/.sh token that resolves to a file in the dataset dir wins;
+    None when the command references no local script."""
+    for tok in (cmd or "").split():
+        if tok.startswith(("-", "{", "'", '"')):
+            continue
+        cand = ds_dir / tok
+        if cand.suffix in (".py", ".sh") and cand.is_file():
+            return sha256_file(cand)
+    return None
+
+
 # ---------------------------------------------------------------- acquisition
 
 def acquire_openfda(acq: dict, raw_dir: Path, log):
@@ -536,13 +550,21 @@ def _acquire(root: Path, name: str, log=log_print, dry_run=False):
             # machine-readable "data reflects the world through this date" — distinct
             # from the snapshot id (which is the acquisition date)
             provenance["as_of"] = str(cfg["data_through"])
+        # pin the dataset-local script (gen.py pattern) that the acquisition or
+        # normalize command ran — additive field; absent for non-script datasets
+        # and for old snapshots, and validate never fails on its absence
+        transform = {
+            "step": "normalize",
+            "spec": cfg.get("normalize"),
+            "outputs": norm_entries,
+        }
+        script_sha = (command_script_sha(acq.get("command", ""), ds)
+                      or command_script_sha(norm.get("command", ""), ds))
+        if script_sha:
+            transform["script_sha256"] = script_sha
         provenance.update({
             "sources": sources,
-            "transforms": [{
-                "step": "normalize",
-                "spec": cfg.get("normalize"),
-                "outputs": norm_entries,
-            }],
+            "transforms": [transform],
             "assumptions_referenced": cfg.get("assumptions_referenced", []) or [],
             "checks": {"schema_valid": True, "asserts_passed": True, "row_count": nrows},
         })

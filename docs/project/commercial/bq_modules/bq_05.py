@@ -7,6 +7,7 @@ truncation; FRN review-interval stat as public context only).
 """
 
 import datetime as dt
+import sys
 
 import computations as C
 
@@ -35,16 +36,35 @@ def run(corpus_root, out, pins):
     slips = [int(m) for m in p["slip_scenarios_months"]]
     dep_cats = set(p["dependent_categories"])
 
-    # per-year totals by dependency (FY2026 = sum of quarterly rows)
-    by_year = {y: {d: 0 for d in DEP_ORDER} for y in PLAN_YEARS}
+    # per-year totals by dependency (FY2026 = sum of quarterly rows). Dependency columns
+    # are derived from observed tags ∪ DEP_ORDER so a fifth tag lands in a visible extra
+    # column instead of raising KeyError; rows outside the plan window are counted, not
+    # silently skipped (code-review findings, ben/108)
+    observed_tags = sorted({r["regulatory_dependency"] for r in plan})
+    dep_cols = DEP_ORDER + [d for d in observed_tags if d not in DEP_ORDER]
+    unknown_tags = [d for d in dep_cols if d not in DEP_ORDER]
+    by_year = {y: {d: 0 for d in dep_cols} for y in PLAN_YEARS}
+    plan_unmatched = 0
     for r in plan:
         y = "FY2026" if r["period"].startswith("2026-Q") else r["period"]
         if y in by_year:
             by_year[y][r["regulatory_dependency"]] += int(r["revenue_usd"])
+        else:
+            plan_unmatched += 1
+    if plan_unmatched:
+        print(f"bq_05: WARNING — {plan_unmatched} plan rows fall outside the configured "
+              f"plan window {PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are excluded", file=sys.stderr)
+    if unknown_tags:
+        print(f"bq_05: WARNING — unclassified regulatory_dependency value(s) {unknown_tags} "
+              f"in the pinned plan; reported in their own column and NOT counted as "
+              f"dependent until classified against dependent_categories", file=sys.stderr)
     tot = {y: sum(by_year[y].values()) for y in PLAN_YEARS}
     dep = {y: sum(v for d, v in by_year[y].items() if d in dep_cats) for y in PLAN_YEARS}
     expo = {y: C.pct(dep[y], tot[y]) for y in PLAN_YEARS}
-    breaches = [y for y in PLAN_YEARS if expo[y] > thr]
+    # threshold comparisons run on raw fractions; C.pct is display-only (knife-edge at
+    # 40.0x — code-review finding, ben/108)
+    expo_raw = {y: (100.0 * dep[y] / tot[y] if tot[y] else 0.0) for y in PLAN_YEARS}
+    breaches = [y for y in PLAN_YEARS if expo_raw[y] > thr]
     total_dep = sum(dep.values())
     window_total = sum(tot.values())
 
@@ -61,15 +81,22 @@ def run(corpus_root, out, pins):
             prev_in = dep[y] * frac
         scen[m] = {"years": adj, "lost": prev_in}  # prev_in after FY2030 = fell out of window
 
-    # FRN review-interval context (real public data)
-    ivs = []
+    # FRN review-interval context (real public data). The acquisition-window year is
+    # derived from the pinned decision dates ("clearances since YYYY" = earliest decision
+    # year), never typed as a literal (code-review finding, ben/108)
+    ivs, dec_dates = [], []
     for r in fda:
         if r["decision_date"] and r["date_received"]:
             ivs.append((dt.date.fromisoformat(r["decision_date"])
                         - dt.date.fromisoformat(r["date_received"])).days)
+            dec_dates.append(r["decision_date"])
     med = C._median(ivs)
+    earliest_yr = min(dec_dates)[:4] if dec_dates else None
+    med_ok = bool(ivs) and med is not None
+    min_slip = min(slips)
+    min_slip_days = round(min_slip * 365 / 12)
 
-    peak = max(PLAN_YEARS, key=lambda y: expo[y])
+    peak = max(PLAN_YEARS, key=lambda y: expo_raw[y])
     headline = (f"{_musd(total_dep)} of the {_musd(window_total)} five-year plan sits behind FDA "
                 f"decisions not yet received; exposure crosses the {thr:.0f}% threshold in "
                 f"{', '.join(breaches)} (peak {expo[peak]}% in {peak})"
@@ -107,10 +134,15 @@ def run(corpus_root, out, pins):
         })
     narrative["watch"].append({
         "id": "W1",
-        "statement": f"Public base rate: median FRN 510(k) review runs {med} days "
-                     f"received-to-decision across {len(ivs)} clearances since 2021 — one review "
-                     f"cycle is on the order of the smaller slip scenario, and that measures "
-                     f"cleared traditional/special 510(k)s, not PCCP or novel pathways",
+        "statement": (f"Public base rate: median FRN 510(k) review runs {med} days "
+                      f"received-to-decision across {len(ivs)} clearances since {earliest_yr} — "
+                      f"one review cycle ({med} days) vs ≈{min_slip_days} days for the smallest "
+                      f"({min_slip}-month) slip scenario, and that measures "
+                      f"cleared traditional/special 510(k)s, not PCCP or novel pathways"
+                      if med_ok else
+                      "Public base rate unavailable: the pinned FDA snapshot has no records "
+                      "with both received and decision dates — no review-interval context "
+                      "is computed (reported, not faked)"),
         "evidence": ["derived: fda-review-stat", f"src: {fsrc}"],
     })
     narrative["watch"].append({
@@ -138,16 +170,32 @@ def run(corpus_root, out, pins):
         "_Dependent = pccp-enabled + new-submission per [config: commercial.yml] — revenue behind",
         "an FDA decision not yet received. letter-to-file needs internal documentation, not an",
         "FDA decision, and is deliberately not counted (see the analysis plan)._", "",
-        "| Plan year | cleared | letter-to-file | pccp-enabled | new-submission | Total | Dependent | Exposure |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Plan year | " + " | ".join(dep_cols) + " | Total | Dependent | Exposure |",
+        "|---|" + "---|" * (len(dep_cols) + 3),
     ]
     for y in PLAN_YEARS:
         b = by_year[y]
-        flag = " ⚠️" if expo[y] > thr else ""
-        rl.append(f"| {y} [src: {psrc}] [derived: exposure-by-year] | {_musd(b['cleared'])} | "
-                  f"{_musd(b['letter-to-file'])} | {_musd(b['pccp-enabled'])} | "
-                  f"{_musd(b['new-submission'])} | {_musd(tot[y])} | {_musd(dep[y])} | "
+        flag = " ⚠️" if expo_raw[y] > thr else ""
+        rl.append(f"| {y} [src: {psrc}] [derived: exposure-by-year] | "
+                  + " | ".join(_musd(b[d]) for d in dep_cols)
+                  + f" | {_musd(tot[y])} | {_musd(dep[y])} | "
                   f"{expo[y]}%{flag} |")
+    if unknown_tags:
+        rl += [
+            "",
+            f"- ⚠ UNCLASSIFIED dependency tag(s) in the pinned plan: "
+            f"{', '.join(unknown_tags)} ({_musd(sum(by_year[y][d] for y in PLAN_YEARS for d in unknown_tags))} "
+            f"across the window) — shown in their own column(s) above and NOT counted as "
+            f"dependent; classify them in dependent_categories before trusting the exposure "
+            f"read [src: {psrc}] [config: commercial.yml]",
+        ]
+    if plan_unmatched:
+        rl += [
+            "",
+            f"- ⚠ {plan_unmatched} plan rows fall outside the configured plan window "
+            f"{PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are NOT in the table above — extend the "
+            f"window before trusting the exposure read on a refreshed plan [src: {psrc}]",
+        ]
     rl += [
         "",
         f"- Threshold: {thr:.0f}% of plan-year revenue [config: commercial.yml]; five-year "
@@ -173,12 +221,22 @@ def run(corpus_root, out, pins):
         + " [derived: slip-scenarios]",
         "",
         "## Context: how long one FDA review cycle runs (real public data)", "",
-        f"- Median FRN infusion-pump 510(k) review interval, received to decision: {med} days "
-        f"across {len(ivs)} clearances since 2021 [derived: fda-review-stat] [src: {fsrc}]",
-        f"- Scope stated: traditional/special 510(k) clearances for product code FRN only "
-        f"[src: {fsrc}] — NOT a PCCP or",
-        "  De Novo/PMA timeline, and not our own history (our demo K-numbers are fabricated).",
     ]
+    if med_ok:
+        rl += [
+            f"- Median FRN infusion-pump 510(k) review interval, received to decision: {med} days "
+            f"across {len(ivs)} clearances since {earliest_yr} "
+            f"[derived: fda-review-stat] [src: {fsrc}]",
+            f"- Scope stated: traditional/special 510(k) clearances for product code FRN only "
+            f"[src: {fsrc}] — NOT a PCCP or",
+            "  De Novo/PMA timeline, and not our own history (our demo K-numbers are fabricated).",
+        ]
+    else:
+        rl += [
+            f"- Median review interval unavailable — the pinned FDA snapshot has no records "
+            f"with both received and decision dates; the context stat is reported as "
+            f"unavailable, not faked [derived: fda-review-stat] [src: {fsrc}]",
+        ]
     rl += C.expectations_section(exps)
     rl += C.narrative_section(narrative)
     rl += [
@@ -211,7 +269,7 @@ def run(corpus_root, out, pins):
              "provenance": {"dataset": PLAN_DS, "snapshot": psnap},
              "lines": [{"label": d,
                         "points": [{"x": _fy_iso(y), "y": round(by_year[y][d] / 1e6, 1)}
-                                   for y in PLAN_YEARS]} for d in DEP_ORDER],
+                                   for y in PLAN_YEARS]} for d in dep_cols],
              "points": []},
             {"id": "exposure-by-year", "label": "Exposure % per plan year", "unit": "%",
              "evidence_class": "derived",
@@ -235,13 +293,20 @@ def run(corpus_root, out, pins):
                           "points": [{"x": _fy_iso(y), "y": round(scen[m]["years"][y] / 1e6, 1)}
                                      for y in PLAN_YEARS]} for m in slips],
              "points": []},
-            {"id": "fda-review-stat", "label": "FRN 510(k) review interval (public)", "unit": "days",
-             "kind": "stat", "evidence_class": "derived",
-             "derivation": {"method": "median of (decision_date − date_received) across FRN "
-                                      "clearances with both dates in the pinned snapshot",
-                            "inputs": [f"src: {fsrc}"]},
-             "provenance": {"dataset": FDA_DS, "snapshot": fsnap},
-             "points": [{"label": f"median days, {len(ivs)} clearances since 2021", "value": med}]},
+            ({"id": "fda-review-stat", "label": "FRN 510(k) review interval (public)", "unit": "days",
+              "kind": "stat", "evidence_class": "derived",
+              "derivation": {"method": "median of (decision_date − date_received) across FRN "
+                                       "clearances with both dates in the pinned snapshot",
+                             "inputs": [f"src: {fsrc}"]},
+              "provenance": {"dataset": FDA_DS, "snapshot": fsnap},
+              "points": [{"label": f"median days, {len(ivs)} clearances since {earliest_yr}",
+                          "value": med}]}
+             if med_ok else
+             {"id": "fda-review-stat", "label": "FRN 510(k) review interval (public)", "unit": "days",
+              "kind": "stat", "evidence_class": "unavailable",
+              "provenance": {"note": "no records with both received and decision dates in the "
+                                     "pinned snapshot — the median is not computable"},
+              "points": []}),
             {"id": "exposure-history", "label": "Exposure % across plan versions", "unit": "%",
              "kind": "timeseries", "evidence_class": "unavailable",
              "provenance": {"note": "only plan version LRP-2026.1 is snapshotted — exposure "

@@ -101,6 +101,89 @@ SEV_META = {
     "low": {"label": "Low", "cls": "sv-low"},
 }
 
+# --- Computation-code quality layer (sidecar schema 1.2 `code` per question row).
+# SOFT GATE: badges only — nothing here blocks approval or rendering. Rows
+# without the field (schema ≤1.1) degrade to an honest empty state.
+
+CODE_STATUS_META = {
+    "reviewed-current": {"label": "Reviewed — current", "glyph": "✓", "cls": "vx-met"},
+    "review-outdated": {"label": "Review outdated", "glyph": "⟳", "cls": "vx-risk"},
+    "unreviewed": {"label": "Unreviewed", "glyph": "○", "cls": "vx-none"},
+    "checks-failed": {"label": "Checks failed", "glyph": "✗", "cls": "vx-notmet"},
+}
+
+# pass = ok tone, fail = danger, n/a = muted — icon + label, never color alone
+CODE_CHECK_META = {
+    "pass": {"glyph": "✓", "cls": "vx-met"},
+    "fail": {"glyph": "✗", "cls": "vx-notmet"},
+    "n/a": {"glyph": "—", "cls": "vx-none"},
+}
+
+CODE_ROLE_META = {
+    "computation": {"glyph": "ƒ", "label": "Computation — produces this answer's figures"},
+    "shared": {"glyph": "⧉", "label": "Shared module — used by several computations"},
+    "generator": {"glyph": "⚙", "label": "Generator — emits report/sidecar structure"},
+}
+
+CODE_CHECKS = (("static_lint", "lint"), ("poison_scan", "poison scan"),
+               ("determinism", "determinism"))
+
+
+def _decorate_code(q: dict) -> dict | None:
+    """Normalize a question row's schema-1.2 `code` block for the Quality tab's
+    Computation code panel. Absent/malformed → None (the panel renders its
+    empty state). The console renders the audit verbatim — it never re-runs a
+    check or re-derives a status."""
+    raw = q.get("code")
+    if not isinstance(raw, dict):
+        return None
+    arts = []
+    for a in raw.get("artifacts") or []:
+        if not isinstance(a, dict):
+            continue
+        d = dict(a)
+        d["_role"] = CODE_ROLE_META.get(a.get("role") or "", CODE_ROLE_META["computation"])
+
+        def _status(key):
+            # engine emits either a bare string or a structured {status, ...} object
+            v = a.get(key, "n/a")
+            if isinstance(v, dict):
+                v = v.get("status", "n/a")
+            return v if v in CODE_CHECK_META else "n/a"
+
+        d["_checks"] = [{"name": name, "value": _status(key),
+                         **CODE_CHECK_META[_status(key)]}
+                        for key, name in CODE_CHECKS]
+        review = a.get("review") if isinstance(a.get("review"), dict) else None
+        d["review"] = review
+        # soft-gate badge per artifact: deterministic fail > review outdated > unreviewed
+        if any(_status(k) == "fail" for k, _ in CODE_CHECKS):
+            d["_badge"] = CODE_STATUS_META["checks-failed"]
+        elif review is None:
+            d["_badge"] = CODE_STATUS_META["unreviewed"]
+        elif not review.get("current", False):
+            d["_badge"] = CODE_STATUS_META["review-outdated"]
+        else:
+            d["_badge"] = None  # reviewed + current — the verdict chip carries it
+        if review:
+            d["_review_cls"] = "vx-met" if review.get("current") else "vx-risk"
+            ref = review.get("detail_ref")
+            if isinstance(ref, str) and ref and not ref.startswith(("http://", "https://", "/")):
+                d["_detail_link"] = f"/documents#path={ref}"
+            findings = []
+            for f in review.get("findings") or []:
+                if isinstance(f, dict):
+                    f = dict(f)
+                    f["_sev"] = SEV_META.get(f.get("severity", "medium"), SEV_META["medium"])
+                    findings.append(f)
+            d["_findings"] = findings
+        arts.append(d)
+    return {
+        "status": raw.get("status"),
+        "_status": CODE_STATUS_META.get(raw.get("status") or "", CODE_STATUS_META["unreviewed"]),
+        "artifacts": arts,
+    }
+
 # Reserved explainer targets (schema 1.1) → default labels when the sidecar
 # author omits one. Series targets default to the series' own label.
 EXPLAINER_DEFAULT_LABELS = {
@@ -572,7 +655,8 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
-           "references": [], "quality": None, "tables": [], "unstructured": [],
+           "references": [], "quality": None, "code": _decorate_code(q),
+           "tables": [], "unstructured": [],
            "explainers": _explainers_for(q, []), "terms": _terms_for(q),
            "kind_glossary": KIND_GLOSSARY,
            "explain_json": {}, "team": team_names(cfg.repo_root),

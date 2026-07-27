@@ -1,0 +1,181 @@
+{
+ "bq": "BQ-06",
+ "edition": "2026-07-27",
+ "generated_at": "2026-07-27T18:33:47+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [
+   "L22: estimation language without [assume: A-NNN]: corpus dataset. The series is marked no-data rather than estimated."
+  ],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "warn",
+    "findings": [
+     {
+      "severity": "warning",
+      "message": "L22: estimation language without [assume: A-NNN]: corpus dataset. The series is marked no-data rather than estimated."
+     }
+    ]
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "derived",
+   "value": "cycle-by-applicant",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cycle-by-year",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Overall median review interval",
+    "series": "overall-median",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-510k-infusion@2026-07-22"
+   },
+   {
+    "what": "Median review days by decision year",
+    "series": "cycle-by-year",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-510k-infusion@2026-07-22"
+   },
+   {
+    "what": "Median review days (frequent filers)",
+    "series": "cycle-by-applicant",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-510k-infusion@2026-07-22"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Our received\u2192decision history",
+    "series": "our-cycle-time",
+    "evidence_class": "unavailable",
+    "source": "internal regulatory log not yet a corpus dataset (demo K-numbers are fabricated)",
+    "note": "internal regulatory log not yet a corpus dataset (demo K-numbers are fabricated)"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-06.md",
+  "status": "in-sync",
+  "pinned": "366d10ed88b672919c9d450e3279afb6130d025e05116efa8b013d2f3c41ef07",
+  "current": "366d10ed88b672919c9d450e3279afb6130d025e05116efa8b013d2f3c41ef07"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

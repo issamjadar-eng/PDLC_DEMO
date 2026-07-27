@@ -1,0 +1,295 @@
+{
+ "bq": "BQ-22",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:51+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "disposition-distribution",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "exemplars",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "funnel",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "signal-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "sla-compliance",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-signal-register@2026-07-27.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-signal-register",
+   "snapshot": "2026-07-27.2",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Died in a spreadsheet",
+    "series": "died-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-signal-register@2026-07-27.2",
+    "derivation": {
+     "method": "no-action signals + signals open past the SLA at the as-of anchor, over the signal population",
+     "inputs": [
+      "src: commercial/internal-signal-register@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Disposition funnel: trailing 12 months vs lifetime",
+    "series": "funnel",
+    "evidence_class": "derived",
+    "source": "commercial/internal-signal-register@2026-07-27.2",
+    "derivation": {
+     "method": "signals bucketed by disposition; died = no-action + open past SLA at the as-of anchor; cohort = opened in the 365 days ending at the anchor",
+     "inputs": [
+      "src: commercial/internal-signal-register@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Time to disposition (days)",
+    "series": "disposition-distribution",
+    "evidence_class": "derived",
+    "source": "commercial/internal-signal-register@2026-07-27.2",
+    "derivation": {
+     "method": "closed_date \u2212 opened_date for every dispositioned signal, bucketed 0\u201330/31\u201360/61\u201390/91\u2013120/121\u2013180/>180",
+     "inputs": [
+      "src: commercial/internal-signal-register@2026-07-27.2"
+     ]
+    }
+   },
+   {
+    "what": "Cohort SLA compliance (90 days)",
+    "series": "sla-compliance",
+    "evidence_class": "derived",
+    "source": "commercial/internal-signal-register@2026-07-27.2",
+    "derivation": {
+     "method": "adjudicated cohort signals split by (closed_date \u2212 opened_date) <= SLA; stale-open counted as breach; recent-open excluded as pending",
+     "inputs": [
+      "src: commercial/internal-signal-register@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Signals opened vs dispositions closed per month",
+    "series": "signal-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-signal-register@2026-07-27.2"
+   },
+   {
+    "what": "Loop-closed exemplars (signal \u2192 ref)",
+    "series": "exemplars",
+    "evidence_class": "measured",
+    "source": "commercial/internal-signal-register@2026-07-27.2"
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Cross-system verification of disposition refs",
+    "series": "ref-verification",
+    "evidence_class": "unavailable",
+    "source": "register \u2194 DHF \u2194 upgrade-campaign trace not yet built \u2014 landed dispositions are trusted from the register's refs",
+    "note": "register \u2194 DHF \u2194 upgrade-campaign trace not yet built \u2014 landed dispositions are trusted from the register's refs"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-22.md",
+  "status": "in-sync",
+  "pinned": "c30182bddaeaae67e01dbef88867f765e40903b5966732bb5f60987f5fcd7ad1",
+  "current": "c30182bddaeaae67e01dbef88867f765e40903b5966732bb5f60987f5fcd7ad1"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_22.py",
+    "sha256_12": "1e82df979eab",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-22"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-signal-register/gen.py",
+    "sha256_12": "7e77638cf3c4",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

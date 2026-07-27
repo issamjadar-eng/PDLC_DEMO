@@ -47,12 +47,16 @@ def run(corpus_root, out, pins):
     window = int(p["disruption_window_days"])
     aliases = yaml.safe_load(open(p["aliases"]))["canonical"]
 
-    def canon(name):
+    def canon_match(name):
+        """(canonical_name, matched) — matched=False means no alias prefix hit."""
         u = name.upper()
         for c in aliases:
             if any(u.startswith(pref.upper()) for pref in c["prefixes"]):
-                return c["name"]
-        return name
+                return c["name"], True
+        return name, False
+
+    def canon(name):
+        return canon_match(name)[0]
 
     recall_dates = {}
     undated = 0
@@ -66,6 +70,16 @@ def run(corpus_root, out, pins):
                and r["incumbent_vendor"] not in NON_COMPETITOR]
     excluded_nodec = sum(1 for r in rows if r["outcome"] == "no-decision"
                          and r["incumbent_vendor"] not in NON_COMPETITOR)
+
+    # Alias-coverage guard: an incumbent_vendor matching NO alias would keep its raw
+    # name, join ZERO recalls (its postings live under a different raw variant), and
+    # silently inflate the no-prior/out-of-window buckets. Fail loudly instead — add
+    # the alias to entity-aliases.yml before answering.
+    unmatched = sorted({r["incumbent_vendor"] for r in decided
+                        if not canon_match(r["incumbent_vendor"])[1]})
+    assert not unmatched, (
+        "incumbent_vendor value(s) match no entity-aliases.yml prefix and would silently "
+        f"join zero recalls — add alias entries first: {', '.join(unmatched)}")
 
     def days_since_recall(r):
         """Days from the incumbent's most recent prior recall posting to close (None = no prior)."""
@@ -102,17 +116,29 @@ def run(corpus_root, out, pins):
     # never hardcode a data-shape claim like "decays".
     bstats = [(label, wr(sub), len(sub)) for label, sub in bucket_rows]
     inner, tail = bstats[:-1], bstats[-1]
+    # an empty bucket carries no rate (C.pct renders 0.0) — exclude n=0 buckets from the
+    # shape derivation so a fake 0% cliff can't drive the wording; they stay visible in
+    # the table, annotated "(empty)".
+    inner = [(label, r, n) for label, r, n in inner if n > 0]
     ir = [r for _, r, _n in inner]
-    if all(ir[i] - ir[i + 1] > 1.0 for i in range(len(ir) - 1)):
+    if len(ir) < 2:
+        shape = ("too few populated interior buckets to describe a decay shape ("
+                 + " → ".join(f"{r}%" for r in ir) + ")")
+    elif all(ir[i] - ir[i + 1] > 1.0 for i in range(len(ir) - 1)):
         shape = ("the win rate decays across the months-since-recall buckets ("
                  + " → ".join(f"{r}%" for r in ir) + ")")
     elif ir[0] > max(ir[1:]) and max(ir[1:]) - min(ir[1:]) <= 2.0:
         shape = (f"the {inner[0][0]} bucket wins at the highest rate ({ir[0]}%) while the "
                  f"interior buckets are flat (~{ir[1]}%) — not a smooth decay")
+    elif all(ir[i] >= ir[i + 1] for i in range(len(ir) - 1)):
+        shape = ("the win rate declines weakly across the months-since-recall buckets ("
+                 + " → ".join(f"{r}%" for r in ir) + " — not every step is a clear drop)")
     else:
-        shape = ("the bucket profile is not a monotone decay ("
-                 + " → ".join(f"{r}%" for r in ir) + " across the interior buckets)")
-    if tail[1] < min(ir):
+        shape = ("there is no uniform decay across the interior buckets ("
+                 + " → ".join(f"{r}%" for r in ir) + ")")
+    if tail[2] == 0:
+        shape += f"; the {tail[0]} bucket is empty (n=0)"
+    elif ir and min(ir) - tail[1] >= 10.0:
         shape += f"; the {tail[0]} tail is far lower ({tail[1]}%, n={tail[2]} — small n)"
     else:
         shape += f"; the {tail[0]} tail sits at {tail[1]}% (n={tail[2]})"
@@ -160,7 +186,8 @@ def run(corpus_root, out, pins):
         "- Firm names on both sides are canonicalized through the versioned alias map",
         "  [config: entity-aliases.yml]; unmatched firms keep their raw name.",
         "",
-        f"## Win rate in vs out of the {window}-day post-recall window [config: commercial.yml]", "",
+        f"## Win rate in vs out of the {window}-day post-recall window "
+        f"(demo of method, not market evidence) [config: commercial.yml]", "",
         "| Population | Decided opps | Won | Win rate |",
         "|---|---|---|---|",
         f"| Incumbent recall posted ≤{window}d before close [derived: window-split] [src: {src}] | "
@@ -183,13 +210,18 @@ def run(corpus_root, out, pins):
     ]
     for label, sub in bucket_rows:
         wins = sum(1 for r in sub if r["outcome"] == "won")
-        small = " (small n — indicative only)" if 0 < len(sub) < 10 else ""
+        small = (" (empty)" if len(sub) == 0 else
+                 " (small n — indicative only)" if len(sub) < 10 else "")
         lines.append(f"| {label} [derived: decay-buckets] [src: {src}] | {len(sub)}{small} | "
                      f"{wins} | {wr(sub)}% |")
+    # dataset span derived from the joined recall dates, not typed — a re-cut snapshot
+    # (e.g. 2019→) can never silently falsify the header
+    recall_start_year = min((d[:4] for ds in recall_dates.values() for d in ds),
+                            default="n/a")
     lines += [
         "",
         "## Recall pressure by incumbent (canonicalized)", "",
-        "| Firm (canonical) | FRN recalls posted since 2021 |",
+        f"| Firm (canonical) | FRN recalls posted since {recall_start_year} |",
         "|---|---|",
     ]
     incumbent_firms = sorted({canon(r["incumbent_vendor"]) for r in decided})
@@ -269,7 +301,8 @@ def run(corpus_root, out, pins):
              "provenance": {"dataset": WINLOSS_DS, "snapshot": snap},
              "points": [{"label": label, "value": wr(sub), "n": len(sub)}
                         for label, sub in bucket_rows]},
-            {"id": "recalls-by-incumbent", "label": "FRN recalls posted since 2021, by canonical firm",
+            {"id": "recalls-by-incumbent",
+             "label": f"FRN recalls posted since {recall_start_year}, by canonical firm",
              "unit": "recalls", "evidence_class": "measured",
              "provenance": {"dataset": RECALLS_DS, "snapshot": rsnap},
              "points": [{"label": firm, "value": len(recall_dates.get(firm, []))}

@@ -1,9 +1,10 @@
 bq: BQ-01
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T15:27:13+00:00'
 pins:
   commercial/internal-financials: '2026-07-27'
 plan:
   path: plans/BQ-01.md
   sha256: 9d7442e7e9c89e952758fb49d21ad2b40b0b30087eb7771e582843375e25d5f0
+superseded_by: 2026-07-27.2

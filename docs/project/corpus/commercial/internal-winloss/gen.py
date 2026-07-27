@@ -83,9 +83,15 @@ def main():
                 segment = site_segment(acct_id)
             else:
                 acct_id = f"PRO-{rng2.randint(1, 30):02d}"
-                region = rng2.choices(["NA", "EMEA", "APAC"], weights=[50, 30, 20])[0]
-                segment = rng2.choices(["academic", "community", "idn", "home-infusion"],
-                                       weights=[25, 40, 25, 10])[0]
+                # One stable identity per prospect id: region/segment come from a
+                # dedicated rng stream keyed by the id (seeded str -> sha512, fully
+                # deterministic), so repeated opportunities at the same prospect can
+                # never carry conflicting attributes and the cached account_name always
+                # matches its segment (code-review finding F-WL-1, task 108).
+                pro_rng = random.Random(f"{a.seed}:pro:{acct_id}")
+                region = pro_rng.choices(["NA", "EMEA", "APAC"], weights=[50, 30, 20])[0]
+                segment = pro_rng.choices(["academic", "community", "idn", "home-infusion"],
+                                          weights=[25, 40, 25, 10])[0]
             incumbent = ("PainEase" if installed and rng2.random() < 0.45 else
                          rng2.choices(VENDORS + ["none"],
                                       weights=[15, 22, 16, 10, 8, 9, 20])[0])

@@ -27,10 +27,14 @@ def run(corpus_root, out, pins):
     src = f"{FIN_DS}@{snap}"
     n_trail = int(p["trailing_quarters"])
     top_n_lines = int(p["timeseries_top_lines"])
+    comp_thr = float(p["gm_compression_threshold_pts"])
 
     periods = sorted({r["period"] for r in rows})
     window = periods[-n_trail:]
     prior = periods[-2 * n_trail:-n_trail]
+    # guard (code-review finding, ben/108): with fewer than 2×n_trail periods on file the
+    # prior window is partial or empty — drift is then not evaluable, not silently wrong
+    prior_ok = len(prior) == n_trail
     lines_all = sorted({r["product_line"] for r in rows})
 
     def agg(line, prds):
@@ -45,27 +49,44 @@ def run(corpus_root, out, pins):
         stats[ln] = {
             "rev": rev, "gm": gm, "gm_pct": C.pct(gm, rev),
             "prior_gm_pct": C.pct(prev_gm, prev_rev),
+            # raw (unrounded) fractions — comparisons run on these; C.pct is display-only
+            # (code-review finding, ben/108: threshold compares on rounded values are the
+            # knife-edge class)
+            "gm_pct_raw": 100.0 * gm / rev if rev else 0.0,
+            "prior_gm_pct_raw": 100.0 * prev_gm / prev_rev if prev_rev else 0.0,
         }
     total_rev = sum(s["rev"] for s in stats.values())
     total_gm = sum(s["gm"] for s in stats.values())
     for ln in lines_all:
         stats[ln]["gm_share"] = C.pct(stats[ln]["gm"], total_gm)
-        stats[ln]["gm_pct_delta"] = round(stats[ln]["gm_pct"] - stats[ln]["prior_gm_pct"], 1)
+        if prior_ok:
+            d_raw = stats[ln]["gm_pct_raw"] - stats[ln]["prior_gm_pct_raw"]
+            d = round(d_raw, 1)
+            stats[ln]["gm_pct_delta_raw"] = d_raw
+            stats[ln]["gm_pct_delta"] = d if d != 0 else 0.0  # normalize -0.0 for display
+        else:
+            stats[ln]["gm_pct_delta_raw"] = None
+            stats[ln]["gm_pct_delta"] = None
 
     ranked = sorted(lines_all, key=lambda ln: -stats[ln]["gm"])
     negatives = [ln for ln in lines_all if stats[ln]["gm"] < 0]
     funders = ranked[:2]
-    funders_share = round(sum(stats[ln]["gm_share"] for ln in funders), 1)
     pair_gm = sum(stats[ln]["gm"] for ln in funders)
-    compressing = sorted((ln for ln in lines_all if stats[ln]["gm_pct_delta"] <= -1.0),
-                         key=lambda ln: stats[ln]["gm_pct_delta"])
+    # share of the summed pair GM, rounded once at render — not a sum of rounded shares
+    funders_share = C.pct(pair_gm, total_gm)
+    # compare on raw drift vs the configured threshold; order by displayed drift then name
+    # (deterministic, stable against sub-0.1pt noise)
+    compressing = sorted((ln for ln in lines_all
+                          if prior_ok and stats[ln]["gm_pct_delta_raw"] <= comp_thr),
+                         key=lambda ln: (stats[ln]["gm_pct_delta"], ln))
 
     headline = (f"{funders[0]} and {funders[1]} fund the company — {funders_share}% of "
                 f"trailing-4Q gross margin ({_musd(pair_gm)} of the portfolio's "
                 f"{_musd(total_gm)} GM on {_musd(total_rev)} revenue, "
                 f"window {window[0]}..{window[-1]}); "
-                + (f"{', '.join(negatives)} gross-margin NEGATIVE"
-                   if negatives else "all six lines gross-margin positive")
+                + (f"{len(negatives)} of {len(lines_all)} lines gross-margin NEGATIVE "
+                   f"({', '.join(negatives)})"
+                   if negatives else f"all {len(lines_all)} lines gross-margin positive")
                 + (f"; margins compressing on {', '.join(compressing)}" if compressing else ""))
 
     # trend chart: top-N lines by trailing-4Q revenue individually, rest aggregated
@@ -102,7 +123,7 @@ def run(corpus_root, out, pins):
                          f"({stats[ln]['gm_pct_delta']} pts)",
             "mitigation": "Review pricing and COGS drivers for the line; set a floor at which "
                           "the phase-out conversation formally opens",
-            "evidence": ["derived: gm-trend", f"src: {src}"],
+            "evidence": ["derived: gm-trend", f"src: {src}", "config: commercial.yml"],
         })
     if stats[ranked[0]]["gm_share"] > 50:
         rn += 1
@@ -140,8 +161,16 @@ def run(corpus_root, out, pins):
     ]
     for ln in ranked:
         s = stats[ln]
+        drift_cell = f"{s['gm_pct_delta']:+.1f} pts" if prior_ok else "n/a"
         rl.append(f"| {ln} [src: {src}] [derived: gm-by-line] | {_musd(s['rev'])} | {_musd(s['gm'])} | "
-                  f"{s['gm_pct']}% | {s['gm_share']}% | {s['gm_pct_delta']:+.1f} pts |")
+                  f"{s['gm_pct']}% | {s['gm_share']}% | {drift_cell} |")
+    rl += ([] if prior_ok else [
+        "",
+        f"- ⚠ GM% drift not evaluated: only {len(prior)} of the {n_trail} prior-window quarters "
+        f"are on file — the prior window is incomplete, so drift and the compressing flag are "
+        f"reported n/a rather than computed against a partial window [derived: gm-trend] "
+        f"[src: {src}]",
+    ])
     rl += [
         "",
         f"- Window = trailing {n_trail} quarters anchored at the latest period in the pinned "
@@ -208,7 +237,8 @@ def run(corpus_root, out, pins):
                                       "quarters vs the four quarters before them",
                             "inputs": [f"src: {src}", "config: commercial.yml"]},
              "provenance": {"dataset": FIN_DS, "snapshot": snap},
-             "points": [{"label": ln, "a": stats[ln]["gm_pct"], "b": stats[ln]["prior_gm_pct"]}
+             "points": [{"label": ln, "a": stats[ln]["gm_pct"],
+                         "b": stats[ln]["prior_gm_pct"] if prior_ok else None}
                         for ln in ranked]},
             {"id": "revenue-trend", "label": f"Quarterly revenue by line ($M; top {top_n_lines} + other)",
              "unit": "$M", "kind": "timeseries", "evidence_class": "measured",

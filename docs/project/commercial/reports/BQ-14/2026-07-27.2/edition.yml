@@ -1,0 +1,14 @@
+bq: BQ-14
+edition: 2026-07-27.2
+status: approved
+created_at: '2026-07-27T18:32:44+00:00'
+pins:
+  commercial/external-competitor-features: '2026-07-27'
+plan:
+  path: plans/BQ-14.md
+  sha256: 221d7c7f972d27d17e03b34a2785a410dcbb95044e8d7000cca1008fa310d953
+code_artifacts:
+- path: bq_modules/bq_14.py
+  sha256: ac80a069a6c20d3217a50d24cce6893032957e969c39d368ac48c6db431e0bb6
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

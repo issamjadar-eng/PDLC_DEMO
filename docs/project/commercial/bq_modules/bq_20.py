@@ -97,19 +97,34 @@ def run(corpus_root, out, pins):
         watch_lines.append({"label": w,
                             "points": [{"x": m + "-01", "y": per_m.get(m, 0)} for m in span]})
 
-    headline = (f"WATCH TRIGGERED on our internal log (demo-fabricated): {len(over)} over-delivery "
-                f"and {len(proxy)} PCA-by-proxy-suspected complaint records ({len(mdr_filed)} MDR-filed, "
-                f"{len(under_inv)} under investigation) — E-20.1 zero-tolerance NOT met; the "
-                f"signal→upgrade loop closed for {len(closed_loop)} watch-category signals; real "
-                f"class-wide MAUDE context is counts-only (no denominator)")
+    # Verdict computed once and reused by headline + E-20.1 — the headline's state word
+    # and met/NOT-met clause are branch-computed, never narrated (review finding F-20-1):
+    # the zero-event month is the EXPECTED steady state of a franchise-killer watch and
+    # must render as a clean armed-watch verdict, not a false trigger.
+    e201_met = not over
+    if events:
+        headline = (f"WATCH TRIGGERED on our internal log (demo-fabricated): {len(over)} over-delivery "
+                    f"and {len(proxy)} PCA-by-proxy-suspected complaint records ({len(mdr_filed)} MDR-filed, "
+                    f"{len(under_inv)} under investigation) — E-20.1 zero-tolerance "
+                    f"{'met' if e201_met else 'NOT met'}; the "
+                    f"signal→upgrade loop closed for {len(closed_loop)} watch-category signals; real "
+                    f"class-wide MAUDE context is counts-only (no denominator)")
+    else:
+        headline = (f"No franchise-killer events on file: zero watch-category complaint records on "
+                    f"the internal log (demo-fabricated) this period — E-20.1 zero-tolerance met; "
+                    f"the watch remains armed on every declared category; the signal→upgrade loop "
+                    f"closed for {len(closed_loop)} watch-category signals historically; real "
+                    f"class-wide MAUDE context is counts-only (no denominator)")
 
     # --- expectations --------------------------------------------------------
     exp_results = {
         "E-20.1": (f"{len(over)} over-delivery complaint records on the log "
                    f"({sum(1 for r in over if r['mdr_filed'] == 'yes')} MDR-filed, "
                    f"{sum(1 for r in over if r['status'] == 'under-investigation')} under "
-                   f"investigation) — zero-tolerance breached per the plan's 'confirmed' definition",
-                   "not-met" if over else "met",
+                   f"investigation) — zero-tolerance "
+                   + ("holds" if e201_met else "breached")
+                   + " per the plan's 'confirmed' definition",
+                   "met" if e201_met else "not-met",
                    ["derived: watch-events", f"src: {csrc}"]),
     }
     exps = C.evaluate_expectations("BQ-20", exp_results)
@@ -152,9 +167,14 @@ def run(corpus_root, out, pins):
     })
     narrative["watch"].append({
         "id": "W1",
+        # Closure claim gated on closed_loop — with zero closed signals the clause must
+        # say the loop is NOT closing, not assert closure over a zero (finding F-20-3).
         "statement": f"Loop-closing counter-beat: {len(closed_loop)} watch-category signals reached "
                      f"the corrective pipeline ({loop_pairs or 'none with refs'}) — "
-                     f"the signal→corrective loop is demonstrably closing for this category (see BQ-22)",
+                     + ("the signal→corrective loop is demonstrably closing for this category"
+                        if closed_loop else
+                        "no watch-category signal has yet closed the loop into the corrective "
+                        "pipeline") + " (see BQ-22)",
         "evidence": ["derived: watch-signals", f"src: {ssrc}"],
     })
     narrative["watch"].append({
@@ -199,10 +219,22 @@ def run(corpus_root, out, pins):
         lines.append(f"| {r['signal_id']} [src: {ssrc}] | {r['opened_date']} | {r['source']} | "
                      f"{r['category']} | {r['disposition']} | {r['disposition_ref'] or '—'} | "
                      f"{r['closed_date'] or 'open'} |")
+    # Over-delivery closure note derived from the closed-loop rows (count + disposition),
+    # never a string literal beside the computed count (review finding F-20-2).
+    over_closed = [r for r in closed_loop if r["category"] == "over-delivery"]
+    over_disp = sorted({r["disposition"] for r in over_closed})
+    if over_closed:
+        oc_qty = "both" if len(over_closed) == 2 else str(len(over_closed))
+        oc_noun = "signal" if len(over_closed) == 1 else "signals"
+        oc_plural = "s" if len(over_closed) > 1 and len(over_disp) == 1 else ""
+        over_note = (f" ({oc_qty} over-delivery {oc_noun} landed as "
+                     f"{', '.join(over_disp)}{oc_plural})")
+    else:
+        over_note = ""
     lines += [
         "",
         f"- {len(closed_loop)} of {len(wsignals)} watch-category signals reached the corrective "
-        f"pipeline (both over-delivery signals landed as upgrade-items) [derived: watch-signals] "
+        f"pipeline{over_note} [derived: watch-signals] "
         f"[src: {ssrc}]",
         "",
         "## Class-wide context — real PCA MAUDE trend (counts only)", "",

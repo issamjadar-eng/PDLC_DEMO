@@ -1,0 +1,1830 @@
+artifacts:
+  bq_modules/bq_01.py:
+    entries:
+    - sha256: f7c71e5031db0223e2eae91a1c7becb0e672f44b6cc439d3be005e1bd80af081
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Plan-conformant; prior fixes verified; hardcoded 'six lines' count and rounded-compare
+          hygiene remain.
+        findings:
+        - id: F-1
+          severity: med
+          summary: Headline literal 'all six lines' - count asserted, not len(lines_all); rots on new
+            line
+          disposition: 'fix: interpolate len(lines_all)'
+        - id: F-2
+          severity: low
+          summary: funders_share sums rounded shares (59.7 vs 59.8 raw-basis); violates raw-then-round
+          disposition: 'fix: C.pct(pair_gm, total_gm)'
+        - id: F-3
+          severity: low
+          summary: GM% drift computed/compared on rounded pcts vs -1.0 threshold; knife-edge flips
+          disposition: 'fix: raw fractions, round for display'
+        - id: F-4
+          severity: low
+          summary: Compressing threshold -1.0pt is a bare code constant absent from plan/params
+          disposition: 'fix: move to params or state in plan'
+        - id: F-5
+          severity: low
+          summary: prior window periods[-8:-4] silently partial/empty when <8 periods on file
+          disposition: 'fix: emit drift n/a when prior window incomplete'
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-01
+    - sha256: c6a7a090dee2fadef0cccea83c07712d69eac982466c3d37b306f6a746fe5ed7
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 5 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-01
+  bq_modules/bq_02.py:
+    entries:
+    - sha256: e7f42f06e3803357b0e3cc21d86c90afd56db56cdb97bca5216cff3fcd3aa84c
+      date: '2026-07-27'
+      reviews:
+      - verdict: CHANGES-REQUIRED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Basis-sensitivity disclosure correctly implemented, but headline hardcodes 'above the
+          guardrail' unconditionally.
+        findings:
+        - id: F-1
+          severity: high
+          summary: Headline asserts 'above the 30% guardrail' as string literal, not conditioned; wrong
+            verdict if anchor drops
+          disposition: 'fix: branch on raw share vs thr like L210-214'
+        - id: F-2
+          severity: med
+          summary: '''PP3500 + PP3000 + cloud-suite'' literal + hardcoded pumps tuple; rots if franchise
+            config changes'
+          disposition: 'fix: interpolate pca_lines; config the pump subset'
+        - id: F-3
+          severity: low
+          summary: Guardrail comparisons on C.pct-rounded values (anchor, floor, per-GPO flags)
+          disposition: 'fix: compare raw 100*v/total'
+        - id: F-4
+          severity: low
+          summary: top3_share sums rounded shares instead of share of summed revenue
+          disposition: 'fix: C.pct(sum(top3 values), total)'
+        - id: F-5
+          severity: low
+          summary: Narrative gate top3_share > 25 is a magic constant in neither plan nor params
+          disposition: 'fix: move to params or tie to concentration threshold'
+        - id: F-6
+          severity: low
+          summary: PLAN_YEARS hardcoded; unknown plan periods silently dropped
+          disposition: 'fix: count and surface unmatched rows'
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-02
+    - sha256: af181c3da46c2bf2afbd284ca7a32699807bfb7564e0febbc2e6322fbd1e5317
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 6 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-02
+  bq_modules/bq_03.py:
+    entries:
+    - sha256: c30b4acde8f45ab46aa08821a0b53f7f4001222193a40b3887cf59c7cf7bfd70
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Recurring-specific decomposition correctly implemented; H1 labeling and 'mostly' qualifier
+          are refresh-fragile.
+        findings:
+        - id: F-1
+          severity: med
+          summary: H1 label only when exactly 2 quarters; static 'half-year of actuals' prose rots at
+            1 or 3 quarters
+          disposition: 'fix: generic partial-year label + conditional sentence'
+        - id: F-2
+          severity: med
+          summary: '''cleared cushion mostly sits outside recurring'' - ''mostly'' narrated, not computed
+            (77% today)'
+          disposition: 'fix: compute share, interpolate or branch qualifier'
+        - id: F-3
+          severity: med
+          summary: New regulatory_dependency value raises KeyError (DEP_ORDER pre-seeded dicts); crash
+            on refresh
+          disposition: 'fix: reported ''unclassified'' bucket'
+        - id: F-4
+          severity: low
+          summary: E-03.1 strict-increase tested on rounded shares; ties at 1dp flip verdict
+          disposition: 'fix: compare raw rec/tot fractions'
+        - id: F-5
+          severity: low
+          summary: Narrative gate asp_share > 40 magic constant, unlinked to BQ-05 exposure threshold
+          disposition: 'fix: read from config'
+        - id: F-6
+          severity: low
+          summary: '''spans all six lines'' hardcoded count in report prose'
+          disposition: 'fix: interpolate computed count'
+        - id: F-7
+          severity: low
+          summary: PLAN_YEARS hardcode + silent continue on unknown periods
+          disposition: 'fix: shared guard'
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-03
+    - sha256: 896553e15d23775dc5b0583c9c34d61c94bab645745c44b46712e509fffc7b7c
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 7 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-03
+    - sha256: 21e55a07be994f5e85d862ed954d1cb2c020d27cc857ec44a69ffb86e0b0c30d
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 7 fixed (marker added to interpolated line-count sentence post-lint);
+          deterministic checks pass'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-03
+  bq_modules/bq_04.py:
+    entries:
+    - sha256: 85ba2f2ed64bb4bd7eee49735e5fd08a119130781d2573b2427447b5a733ff6d
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Committed raw-sums rounding and knife-edge disclosure implemented correctly; two narrated/status-set
+          frailties remain.
+        findings:
+        - id: F-1
+          severity: med
+          summary: Headline hardcodes 'concentrated in small sites' - qualifier narrated, not computed
+            from band split
+          disposition: 'fix: compute max-neg band, emit conditionally'
+        - id: F-2
+          severity: med
+          summary: Status set {active,churned} hardcoded; new status silently drops sites from rates and
+            churn count
+          disposition: 'fix: report unrecognized-status count loudly'
+        - id: F-3
+          severity: low
+          summary: Knife-edge prose asserts '~2 standard errors' statically; 1pp branch can fire at other
+            SE multiples
+          disposition: 'fix: compute and interpolate miss/SE; name fired condition'
+        - id: F-4
+          severity: low
+          summary: data.json knife-edge label omits the 1pp branch of the actual rule
+          disposition: 'fix: label both conditions'
+        - id: F-5
+          severity: low
+          summary: starts[0] IndexError when zero active sites (ARR-build history)
+          disposition: 'fix: guard empty actives, emit series unavailable'
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-04
+    - sha256: 993a96ea3b4340b148bc4d92731a7b0c7c130480a9cbf740e1a2d3ff91c693ac
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 5 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-04
+  bq_modules/bq_05.py:
+    entries:
+    - sha256: f3c7064d6a7dd516746f539d41e212eb503555c36b3015e891ff8394f65f1b4c
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Slip/exposure arithmetic exactly per plan; 'since 2021' literals and dependency-tag KeyError
+          are the residual risks.
+        findings:
+        - id: F-1
+          severity: med
+          summary: New regulatory_dependency value raises KeyError; table columns hardcoded to four known
+            tags
+          disposition: 'fix: ''unclassified'' bucket + derive columns'
+        - id: F-2
+          severity: low
+          summary: '''since 2021'' string literal in W1, report, data.json label; rots if acquisition
+            window changes'
+          disposition: 'fix: derive earliest year from pinned dates'
+        - id: F-3
+          severity: low
+          summary: '''on the order of the smaller slip scenario'' narrated comparative; assumes slips[0]
+            smallest'
+          disposition: 'fix: compute med-days vs min(slips) months, interpolate'
+        - id: F-4
+          severity: low
+          summary: Breach test expo[y] > thr on rounded pct; knife-edge at 40.0
+          disposition: 'fix: compare raw 100*dep/tot'
+        - id: F-5
+          severity: low
+          summary: Empty/dateless FDA snapshot renders 'runs None days' (C._median returns None)
+          disposition: 'fix: guard, emit context stat unavailable'
+        - id: F-6
+          severity: low
+          summary: PLAN_YEARS hardcode + silent skip of unknown plan periods
+          disposition: 'fix: shared guard'
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-05
+    - sha256: bfbb12641af3dc6ee6c4d10b1e714c3fdd79c745f52e89889455ba68553538ab
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'all 6 findings fixed (one documented deviation: ''since 2021'' derived from decision-date
+          year, not received-date — received-min is 2020 and would falsify the sentence)'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-board-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-05
+  bq_modules/bq_07.py:
+    entries:
+    - sha256: 57c265d7dd482c395b2ac75c50ffdc59fc307eaeb252cdfae08b84bf447b9a26
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; honesty posture and A-003 guards verified. One guard gap: the 130k-230k
+          annual-demand transcription is unprotected by the asserts.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: A-003 '130k-230k units/yr' typed as literal in growth bullet; not covered by the guard
+            asserts — can drift silently
+          disposition: 'fix: extend the assert to require ''130k-230k'' in value_or_range'
+        - id: F-2
+          severity: low
+          summary: Zero FY2024 units would raise ZeroDivisionError in growth exponent; empty-snapshot
+            paths unguarded
+          disposition: 'accept: demo data non-empty; failure mode is a crash, not a wrong number'
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-07
+    - sha256: a9972473e8367eb2158ef75356b41e1b865357ffcc0e15cdce7029c736e6e0e0
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 1 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-07
+  bq_modules/bq_08.py:
+    entries:
+    - sha256: 216f2de028326fba40a9e11ac7816353d453df856f78be108537d0821ffd6a75
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Plan-conformant; value-win-rate and ND-sensitivity fixes verified implemented. E-08.1
+          floor is hardcoded 50.0 instead of wired to the catalog.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: target=50.0 hardcoded; catalog E-08.1 change would silently diverge computed verdict
+            from printed expectation
+          disposition: 'fix: read floor from params or assert the catalog expected string'
+        - id: F-2
+          severity: low
+          summary: '''at-risk'' band (target-2) is a module-invented threshold committed nowhere'
+          disposition: 'accept: sanctioned verdict vocabulary, conservative, fragility disclosed in Watch'
+        - id: F-3
+          severity: low
+          summary: val_note phrasing compares 0.1pp-rounded rates; sub-0.05pp difference prints 'mirrors'
+          disposition: 'accept: immaterial at this granularity'
+        - id: F-4
+          severity: low
+          summary: Empty snapshot/window crashes max(); unguarded
+          disposition: 'accept: crash-not-wrong-number on impossible demo input'
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-08
+    - sha256: ab31a3c8a35118b50c2df158704fa23c2de2a7ebf09bcbcde68b37185d917841
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 1 finding(s) fixed, 3 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-08
+  bq_modules/bq_09.py:
+    entries:
+    - sha256: 74a149768025a1cd3ef401e4c340d94ffe2c48f82546b1b7ceb59567a49a7197
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; computed decay phrasing and 90d sensitivity fixes verified. Gaps: no
+          alias-coverage guard for new incumbents; two shape-phrase branches can contradict their own
+          printed rates; split-table demo caption from prior dossier not implemented.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: Unaliased incumbent_vendor silently joins zero recalls and lands in no-prior/out-of-window
+            — no coverage guard
+          disposition: 'fix: warn/assert when canon() returns an incumbent unchanged, or report unmatched
+            incumbents'
+        - id: F-2
+          severity: medium
+          summary: Shape branch C prints 'not a monotone decay' for weakly-monotone declining profiles
+            — a false claim vs its own rates
+          disposition: 'fix: add weakly-monotone branch or reword to ''no uniform decay'''
+        - id: F-3
+          severity: low
+          summary: Tail clause claims 'far lower' for any tail below min interior rate, even by 0.1pt
+          disposition: 'fix: require a margin before ''far lower'''
+        - id: F-4
+          severity: low
+          summary: Empty bucket feeds shape logic as 0.0% and escapes the small-n annotation (0<n<10)
+          disposition: 'fix: exclude n=0 buckets from shape derivation; annotate ''(empty)'''
+        - id: F-5
+          severity: low
+          summary: '''FRN recalls posted since 2021'' table header is a typed dataset-span literal'
+          disposition: 'fix: derive start year from the joined recall dates'
+        - id: F-6
+          severity: low
+          summary: Prior-dossier fix (demo-of-method note in split-table caption) not implemented; caveats
+            stay outside the table
+          disposition: 'fix: add the caption note or record an explicit accept'
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-09
+    - sha256: bd7a743b959eab91f9766c5ea354f1aff42d5d142be988ed29a07ffd2ba3dcbc
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 6 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-09
+  bq_modules/bq_10.py:
+    entries:
+    - sha256: 7fe245ad782a9ca1d769c90678472d26d56e7dbfe7bd724fdf546c874a3fcad6
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; demo banner fix verified; verdict correctly capped. Guard gap: networked-capital
+          range ($4.4k-$13.7k) transcribed outside the A-004 asserts; horizon not pinned to the 5-yr range.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: CAP_NET_LO/HI ($4.4k-$13.7k) transcribed from A-004 but not covered by the guard assert
+            — can drift silently
+          disposition: 'fix: add ''$4.4k-$13.7k'' to the assert'
+        - id: F-2
+          severity: low
+          summary: COMP_TCO range is A-004's 5-yr figure but horizon_years is free — horizon!=5 would
+            mislabel the comparison
+          disposition: 'fix: assert horizon == 5 beside the A-004 asserts'
+        - id: F-3
+          severity: low
+          summary: cell() treats any verified value other than 'verify' as settled fact — unexpected status
+            renders unmarked
+          disposition: 'fix: assert verified in (''yes'',''verify'') per row'
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-10
+    - sha256: 7af29884d75a9f051e2f95a1b8e1c90a8253872028ae983e4a28a46e048fe8db
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-10
+  bq_modules/bq_11.py:
+    entries:
+    - sha256: 11776269df64751a1c3daf3c97fe9cc9dab417ebf1998a660ee6db232cb92369
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; statistics.median-on-raw-ratios fix verified implemented. One numeric
+          trap: flagging compares rounded utilization against the threshold.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: Underuse flag compares 1dp-rounded utilization vs threshold — a 59.95-59.99% site escapes
+            flagging (latent)
+          disposition: 'fix: flag and sort on util_raw, round only for display'
+        - id: F-2
+          severity: low
+          summary: '''flagged sites sit far below the fleet norm'' is an unconditional literal data-shape
+            claim'
+          disposition: 'fix: gate on a computed gap or interpolate the gap'
+        - id: F-3
+          severity: low
+          summary: Monthly ratio timeseries zero-fills missing site-months as 0%, conflating missing with
+            catastrophic
+          disposition: 'accept: pinned snapshot is complete; revisit if telemetry gains gaps'
+        - id: F-4
+          severity: low
+          summary: Headline renders '()' when flagged is non-empty but material is empty
+          disposition: 'accept: cosmetic edge; branches otherwise computed'
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-11
+    - sha256: e5c1ec64eac8482ba9e4851a83a72a0d5fa733a99203b0fe5acbe91916233e52
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 2 finding(s) fixed, 2 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-market-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-11
+  bq_modules/bq_13.py:
+    entries:
+    - sha256: 15d70d7be7e93c1f453005f442fb5322f9764a876d4202731c191bd6198e4918
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant and deterministic on current pins; RT-13.1 margin/provenance disclosure
+          implemented. Main risk: direction words in the verdict are literals, not branches - the ''months
+          before our launch'' claim inverts when the data anchor advances past mid-2026.'
+        findings:
+        - id: F-1
+          severity: high
+          summary: Headline+bullet hardcode 'months before our launch'; abs() hides sign - inverts on
+            next 510(k) anchor advance
+          disposition: 'fix: branch before/after on sign of margin; drop abs()'
+        - id: F-2
+          severity: medium
+          summary: hw_edge_days sign unhandled; 'by only N days'/'RAZOR-THIN' emitted regardless of sign
+            or magnitude
+          disposition: 'fix: branch on sign; fragility qualifier only under smallness threshold'
+        - id: F-3
+          severity: medium
+          summary: '''Every documented row reads no'' bullet unconditional - false and self-contradicting
+            in the RUNWAY-MOOT branch'
+          disposition: 'fix: conditionalize on shipping'
+        - id: F-4
+          severity: low
+          summary: max() over decision_date raises on a snapshot with zero dated rows (also bq_15/17)
+          disposition: 'accept: snapshot contract guarantees dated rows; loud crash beats silent wrong
+            anchor'
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-13
+    - sha256: c02dde49c75ec9720cc8ad66520990ad6c4084f691384d77f2538436666d7bac
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-13
+  bq_modules/bq_14.py:
+    entries:
+    - sha256: c734b591d0038ec692d6415fcceb81f9a61ca57f723f98ca7ce82bfc97d3e31b
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; RT-14.1 closure-vs-adjacency routing correctly implemented with conservative
+          ''adjacent'' fallback. Main risk: silent ''higher'' default for numeric attributes missing from
+          numeric_directions can invert a future verdict.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: numeric_directions.get(attr,'higher') silently assumes direction for unmapped numeric
+            attributes - can invert verdict
+          disposition: 'fix: no default - emit ''no direction configured'' verdict or raise'
+        - id: F-2
+          severity: low
+          summary: Our-row ranges score at OUR favorable end; plan commits competitor-favorable end (latent
+            - our cells are points)
+          disposition: 'fix: take direction-unfavorable end for our_vendor rows'
+        - id: F-3
+          severity: low
+          summary: Headline breakdown omits no-comparison verdict class; counts stop summing if one appears
+          disposition: 'accept: none exists in matrix; add class to count string if it ever does'
+        - id: F-4
+          severity: low
+          summary: our_display 40-char mid-word truncation persists (prior friction-log note)
+          disposition: 'fix: widen or ellipsize'
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-14
+    - sha256: ac80a069a6c20d3217a50d24cce6893032957e969c39d368ac48c6db431e0bb6
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-14
+  bq_modules/bq_15.py:
+    entries:
+    - sha256: 5a9568bcf13a1df1059fbd28579226abfa49e30d76551d7130cbe7a423722ece
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; RT-15.1 dual-basis margins and either-basis refresh trigger correctly
+          computed. Main risks: ''ahead on either basis'' is an unconditional headline literal that contradicts
+          its own eroded-margin branch, and empty competitor coverage crashes.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: Headline literal 'ahead on either basis' unconditional - contradicts verdict when volumetric-basis
+            trigger fires
+          disposition: 'fix: condition phrase on acc_ahead and acc_ahead_vol, mirroring body bullet'
+        - id: F-2
+          severity: medium
+          summary: Zero documented competitor cells crashes (acc_best['label'] on None) or renders '~Nonex'
+            in headline
+          disposition: 'fix: guard margin/best-label rendering; explicit ''no documented cells'' sentence'
+        - id: F-3
+          severity: low
+          summary: Our vendor 'GlobalLogic' + product label hardcoded (also bq_17) while bq_14 reads our_vendor
+            config
+          disposition: 'fix: read our_vendor/display name from config in bq_15 and bq_17'
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-15
+    - sha256: 122d02a44a414c8e8ad9eb4485393ca7c4b7cb209e6ca0d8211e86583b0bf367
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-15
+  bq_modules/bq_16.py:
+    entries:
+    - sha256: 970a31a686fb61ba4787a777a3ec1e5e493a5e409ed94a83a5f1cbfa49facec4
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Plan-conformant; meta-gap leads, E-16.1 honest, RT-16.1 evidence-absence framing implemented.
+          Main risk: unknown sentiment vocabulary values silently vanish from mixes and the concern-majority
+          rule.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: Unknown sentiment values create stray keys, silently excluded from mixes and concern-majority
+            rule (latent vocab drift)
+          disposition: 'fix: validate against 3-value vocabulary; surface strays as data-quality line'
+        - id: F-2
+          severity: low
+          summary: Flag label hardcodes 'below 2-voice floor' while floor is config min_voices_per_feature
+          disposition: 'fix: interpolate floor into label'
+        - id: F-3
+          severity: low
+          summary: Giuliano/Gorski spot-check sentence is an unconditional curated literal with no self-retire
+            condition
+          disposition: 'fix: gate on cited rows still present-and-concern, or mark ''at curation time'''
+        - id: F-4
+          severity: low
+          summary: sentiment-mix series primary value duplicates concern count (unlabeled-axis chart risk;
+            carried from prior dossier)
+          disposition: 'fix: set primary value to total rows or omit'
+        - id: F-5
+          severity: low
+          summary: Register rows outside the F1-F9 universe counted in census but invisible in per-feature
+            table
+          disposition: 'accept: universe is the committed roadmap; add stray-row count line if register
+            grows'
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-16
+    - sha256: 6de8a0427b3d541982b9b9982495b24133651ab5d6e8a16cf5432ed050dafddb
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 4 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-16
+  bq_modules/bq_17.py:
+    entries:
+    - sha256: e7a6790757940f476b52408286d18a2ea06fc5d7b2719400ec0ed0a0ab89e078
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: 'Composite arithmetic, robustness checks, and disclosures verified correct; weight-scan
+          rival tiebreak is genuinely deterministic ((score, id) tuple max). Main risks: pick tie-break
+          sorts lack a final key over set iteration (rank_year and voice counts can tie), and the Kuitunen
+          caution checks voice count but not voice identity.'
+        findings:
+        - id: F-1
+          severity: medium
+          summary: pull/kill tie-break sorts iterate sets with tie-able keys (rank_year F4=F5, F6=F7;
+            voice counts) and no final key
+          disposition: 'fix: append feature id as final sort key at all four sort sites'
+        - id: F-2
+          severity: medium
+          summary: Kuitunen caution keyed on kill==F9 and voices==1, not voice identity - a changed single
+            F9 voice is misattributed
+          disposition: 'fix: require sent[''F9''][''voices''] == {''KOL-0004''} so identity change retires
+            the curated text'
+        - id: F-3
+          severity: medium
+          summary: 'Sentiment component unclamped: 2+ rows per (kol,feature) pushes it outside plan-committed
+            [0,1] (latent; max 1 today)'
+          disposition: 'fix: clamp net to [-1,1] or assert one row per (kol,feature)'
+        - id: F-4
+          severity: low
+          summary: Plan's single-voice-kill direction rule implemented only for F9; other single-voice
+            kill candidates get no statement
+          disposition: 'fix: generalize to any single-voice kill, or document F9-only scope'
+        - id: F-5
+          severity: low
+          summary: Zero-voice features silently score 0.5 sentiment, undisclosed; zero_voice list is dead
+            code; L89 comment confused
+          disposition: 'fix: disclose/mark zero-voice handling via the zero_voice list; delete confused
+            comment'
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-17
+    - sha256: f55abac8d6773821408d63cb371f67ba66113806c252dc4ad76c157e556f558f
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 5 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-roadmap-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-17
+  bq_modules/bq_20.py:
+    entries:
+    - sha256: 2a5b45cf34fcf3f303b6b4afbcfd0cd28677d35c23017bd7fb66dad402587b77
+      date: '2026-07-27'
+      reviews:
+      - verdict: changes-requested
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: All prior fixes landed (derived docket join, 3-month lag trim + caveat); but the headline
+          hardcodes WATCH TRIGGERED / E-20.1 NOT met, so the zero-event steady state renders a false triggered
+          watch contradicting the computed verdict.
+        findings:
+        - id: F-1
+          severity: high
+          summary: Headline hardcodes 'WATCH TRIGGERED' + 'E-20.1 NOT met'; zero watch events still renders
+            a triggered watch
+          disposition: 'fix: branch headline on events; derive met/NOT-met from computed verdict'
+        - id: F-2
+          severity: medium
+          summary: Report body literal '(both over-delivery signals landed as upgrade-items)' beside a
+            computed count
+          disposition: 'fix: derive from watch-signal rows or drop; table already shows the facts'
+        - id: F-3
+          severity: low
+          summary: W1 'loop is demonstrably closing' unconditional even when closed_loop == 0
+          disposition: 'fix: gate the clause on closed_loop'
+        - id: F-4
+          severity: low
+          summary: Lag trim degrades to no trim when MAUDE series has <= LAG_TRIM_MONTHS months
+          disposition: 'accept: unreachable on the 40-month pin; note for reuse'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-20
+    - sha256: f93cdd0f18f754e58b419afdabd2f9744474ef0bd68e4cb3e0a389063b72c044
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-20
+  bq_modules/bq_21.py:
+    entries:
+    - sha256: e8ad2aa2ffa606ff4d9e800d40b58529b61c4b6205cbbde0f3851aa872ff46c0
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Plan-conformant; FSCA regex parse degrades honestly and both basis-sensitivity qualifier
+          sentences are computed in every branch; residual findings are low (rounded-rate comparison,
+          hardcoded status set, single-FSCA assumption, empty-input crash guarded only by the corpus contract).
+        findings:
+        - id: F-1
+          severity: low
+          summary: most_favorable compares rounded rates; near-tie bases can flip the published qualifier
+          disposition: 'fix: compare unrounded ok/n fractions, round for display'
+        - id: F-2
+          severity: low
+          summary: fsca_pending regex '(\w+) pending' under-parses variant phrasings; silent partial parse
+          disposition: 'accept: verbatim description always quoted; tighten if docket format varies'
+        - id: F-3
+          severity: low
+          summary: Hardcoded status set [open,filed,closed]; unknown status silently drops from roll-up
+            and Total
+          disposition: 'fix: derive statuses from data or assert observed subset'
+        - id: F-4
+          severity: low
+          summary: Single-FSCA assumption via next(); a second FSCA gets no narrative or quote
+          disposition: 'accept: one FSCA in pin; generalize to a loop if seeded'
+        - id: F-5
+          severity: low
+          summary: Empty docket / no filed MDRs crashes on max()/min() instead of degrading
+          disposition: 'accept: min_rows corpus contract guards it; add guard if touched'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-21
+    - sha256: bd7de6b1d6fd828cac39061986382de77c3da97fe91eaeafaff006ab554fd1c6
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 2 finding(s) fixed, 3 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-21
+  bq_modules/bq_22.py:
+    entries:
+    - sha256: 07fc838894491e54edf6760fb7267d2e65ebe465b0b3d157ca803b8b20911e86
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Median fix landed via shared C._median and W1 exemplars are derived, but the headline
+          hardcodes 'E-22.1 is NOT met' and a body line duplicates the derived over-delivery claim as
+          a literal — the same class RT-22-2 was meant to close.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: Headline hardcodes 'so E-22.1 is NOT met' while the verdict is computed; breach-free
+            refresh self-contradicts
+          disposition: 'fix: derive met/NOT-met word from the computed verdict'
+        - id: F-2
+          severity: medium
+          summary: Body literal 'Both over-delivery signals closed the loop into upgrade items' duplicates
+            W1's derived claim
+          disposition: 'fix: render from over_ex (reuse W1 logic) or delete; W1 covers it'
+        - id: F-3
+          severity: low
+          summary: No exhaustiveness check on disposition vocabulary; a new value silently escapes every
+            funnel bucket
+          disposition: 'fix: assert observed dispositions subset of known set, or render an ''other''
+            bucket'
+        - id: F-4
+          severity: low
+          summary: Bucket edges and 'between third and fourth buckets' sentence assume sla_days == 90
+          disposition: 'accept: plan constant; derive buckets from sla if it ever changes'
+        - id: F-5
+          severity: low
+          summary: I2 can render 'median ... None days' if all breaches are stale-open (no closed rows)
+          disposition: 'accept: unreachable on a realistic register; guard if reused'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-22
+    - sha256: 1e82df979eabf1765bd2354633025e69caac91025720a111428e81b80fbe4888
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 2 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-22
+  bq_modules/bq_28.py:
+    entries:
+    - sha256: f3de5b6973a0c6398941c83bcdb57f95b701fe325829430cdeee2105f1f6509e
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Plan-conformant with the F28-1 rollup-survival rule in headline and E-28.1; two medium
+          numeric traps — zero-plan cells render 0.0% variance unflagged, and tolerance/verdict comparisons
+          run on display-rounded values.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: '_var(a, 0) returns 0.0: line/region/quarter with actuals but no plan rows shows 0.0%
+            unflagged'
+          disposition: 'fix: render ''n/a — no plan row'', exclude from breach logic, warn on period-set
+            mismatch'
+        - id: F-2
+          severity: medium
+          summary: Breach flags and E-28.1 verdict compare round(v,1) against tolerance; -5.04% YTD reads
+            met
+          disposition: 'fix: compare unrounded ratios; round only for display'
+        - id: F-3
+          severity: low
+          summary: '''deteriorating'' tests last-vs-first quarter but R1 claims quarter-over-quarter deterioration'
+          disposition: 'accept: equivalent for the 2-quarter H1 window; revisit predicate when Q3 lands'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-28
+    - sha256: 326e194a31a94b4dc0ee3afc2b10803b4b6eac66458805da1bd58749b5ca59bd
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 2 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-28
+  bq_modules/bq_29.py:
+    entries:
+    - sha256: 258c22b3c77d9b6c3d06f5e8035831911bbc7d6e010c23ed9790ab0990de93e1
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: F29-1 denominator-sensitivity fix fully landed (table, series, verdict clause — every
+          above/below branch computed) and F29-2 wording corrected; main residual is the $24M gate verdict
+          being decided on a 0.1-rounded attach percentage.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: 'gate_met compares rounded attach_pct to gate: true 39.96% rounds to 40.0% and HOLDS'
+          disposition: 'fix: compare attached/len(pp) unrounded against gate/100; round for display'
+        - id: F-2
+          severity: low
+          summary: W1 counts/lists ALL churned sites, not churned intersect gap; breaks if a churned site
+            re-subscribes
+          disposition: 'fix: intersect churned_sites with gap_by_site keys'
+        - id: F-3
+          severity: low
+          summary: Subscription site missing from fleet silently drops from regional attach numerators
+          disposition: 'accept: reconcile-by-construction contract verified; a sum-check assert would
+            make drift loud'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-29
+    - sha256: aebd47df946c500ca653abde71c67c73ac97efe1be7bbe46a173a3b02284a352
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 2 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-29
+  bq_modules/bq_30.py:
+    entries:
+    - sha256: e9b1c008ddcbbed31865fc36b2fabb4ddd83585d9bb39245e2fc88872970cf72
+      date: '2026-07-27'
+      reviews:
+      - verdict: approve-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: F30-1 breakeven-position fix landed (computed, matches independent re-derivation at 40.5%
+          / upper 59.5%); E-30.1 bound rule implemented exactly per plan on unrounded comparisons; residual
+          findings are low rendering/edge guards plus one computable cross-BQ literal.
+        findings:
+        - id: F-1
+          severity: low
+          summary: payback None (remote >= on-site floor) renders 'None-None campaigns' in headline and
+            report
+          disposition: 'fix: guard rendering with a ''no payback at this bound'' branch'
+        - id: F-2
+          severity: low
+          summary: 'be_pos unclamped: breakeven outside the bound or a zero-width bound renders negative/nonsense
+            percentages in W1'
+          disposition: 'fix: clamp to [0,100] and branch the sentence for out-of-bound breakeven'
+        - id: F-3
+          severity: low
+          summary: W1 hardcodes BQ-26's 'zero remote-convertible' number though it is computable from
+            this module's own pins
+          disposition: 'fix: compute the join over on-site-remaining locally; keep the BQ-26 attribution'
+        - id: F-4
+          severity: low
+          summary: mean_dur guard tests the wrong list; all-empty duration_min for a method raises ZeroDivisionError
+          disposition: 'accept: campaign generator populates durations; swap guard to the filtered list
+            if touched'
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-30
+    - sha256: c2a4bfba042a426f547f8956bb9a609bb231daaec0da85016b3b48721d3e5747
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 3 finding(s) fixed, 1 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-30
+  computations.py:
+    entries:
+    - sha256: bf7fb8fa4263cc290a938eb0eb99fe39c1a5cc094393d2a041d8446319a28710
+      date: '2026-07-27'
+      reviews:
+      - verdict: approved-with-findings
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Shared helpers sound (median/dedupe/windows/determinism verified; loud pin errors); BQ-26
+          refit commitments all implemented; findings are latent hazards and literal-fact rot risks, none
+          invalidates a current published number.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: 'helper/pct: thresholds compared on rounded rates (bq24 pause, bq18 breach, bq26 verdicts)
+            — knife-edge risk'
+          disposition: 'fix: compare unrounded, round only at render'
+        - id: F-2
+          severity: medium
+          summary: 'helper/module_dispatch: ModuleNotFoundError inside an existing bq module swallowed
+            as ''no computation'''
+          disposition: 'fix: re-raise unless e.name is the dispatched module'
+        - id: F-3
+          severity: low
+          summary: 'helper/evaluate_expectations: computed results with unknown E-ids silently dropped'
+          disposition: 'fix: loud check on unknown result ids'
+        - id: F-4
+          severity: low
+          summary: 'helper/pct: zero denominator renders 0.0 not n/a'
+          disposition: 'accept: no caller stratum currently empties; revisit if one can'
+        - id: F-5
+          severity: low
+          summary: 'helper/expectations_section: unescaped pipes in catalog text break markdown tables'
+          disposition: 'accept: catalog-controlled input'
+        - id: F-6
+          severity: medium
+          summary: 'bq06: ''fastest frequent filer'' computed from top_n-truncated set; exact today by
+            coincidence (6 of 15 >=2)'
+          disposition: 'fix: filter >=2 clearances before top_n'
+        - id: F-7
+          severity: low
+          summary: 'bq06: ''since 2021'' scope literal rides on dataset acquisition scope (true vs pin)'
+          disposition: 'accept: plan-stated dataset scope'
+        - id: F-8
+          severity: low
+          summary: 'bq18: current window 91d inclusive vs prior 90d — slight upward bias on 130% rising
+            test; bq12 label same +1d'
+          disposition: 'fix: half-open windows'
+        - id: F-9
+          severity: low
+          summary: 'bq18: window-trend derivation string hardcodes ''90-day'' instead of window param'
+          disposition: 'fix: interpolate the param'
+        - id: F-10
+          severity: medium
+          summary: 'bq19: BLOCKED/''not yet quantified'' headline is a literal; rate_ready computed but
+            unused - rots if A-001 quantifies'
+          disposition: 'fix: branch headline on rate_ready; fail loud when True'
+        - id: F-11
+          severity: low
+          summary: 'bq19: unmatched manufacturer names .title()-cased; plan says ''stay raw'''
+          disposition: 'accept: cosmetic, note for plan/code sync'
+        - id: F-12
+          severity: low
+          summary: 'bq23: E-23.1 95% target judged by 100%-completion projection; target_pct unused in
+            math (conservative)'
+          disposition: 'accept: plan defines projection as remaining/rate'
+        - id: F-13
+          severity: medium
+          summary: 'bq24/25/26: complement status sets (!= scheduled / not in COMPLETED) absorb vocabulary
+            drift, diluting the pause trigger'
+          disposition: 'fix: assert observed statuses subset of known vocabulary'
+        - id: F-14
+          severity: low
+          summary: 'bq26: F26-2 residual — R1 mitigation lacks remote-path-rollback caveat (moot while
+            convertible=0)'
+          disposition: 'fix: one clause at next re-answer'
+        - id: F-15
+          severity: medium
+          summary: 'bq27: ''(all on 2.9.x line)'' narrated string-literal fact — true vs both pins, rots
+            on refresh'
+          disposition: 'fix: compute the qualifier from the data'
+        - id: F-16
+          severity: medium
+          summary: 'bq27: behind_map.get(fw,0) counts unmapped firmware as current — optimistic default
+            on safety-framed metric'
+          disposition: 'fix: surface or fail on unmapped versions'
+        - id: F-17
+          severity: low
+          summary: 'bq24/06/27/25: fragile lines.insert(-N) tail arithmetic + unused assume_path var —
+            cosmetic'
+          disposition: 'accept: fold into next touch'
+        detail_ref: tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06,
+          BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27
+    - sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 11 finding(s) fixed, 6 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06,
+          BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27
+  corpus:commercial/internal-complaints/gen.py:
+    entries:
+    - sha256: 557b73673e877da905cb61f6a69005cbbec546b4cfb1d7907ebe765cd0f90a3b
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: make_fleet byte-identical and called first; clean seed+1/seed+2 stream split keeps base
+          430 draws stable; all rare-record README claims verified on snapshot.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: CSV emits site_id, model, firmware_version but dataset.yml does not declare them -
+            DA-1 under-declaration class, missed here
+          disposition: 'fix: declare site_id, model, firmware_version in dataset.yml schema (config-only,
+            no regeneration)'
+        - id: F-2
+          severity: low
+          summary: Battery-reroll PP3000 filter crashes on empty list if model-mix knob approaches 1.0
+          disposition: 'accept: ~198 PP3000 devices at locked seed; note for future knob edits'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: schema under-declaration fixed in dataset.yml (site_id/model/firmware_version declared);
+          battery-reroll edge accepted
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-financials/gen.py:
+    entries:
+    - sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: FINANCIAL MODEL canonical; deterministic trend + noise on one seeded stream; schema exact;
+          FY2025 $80.5M / 7.9% subscription / FY2026H1 $46.3M verified.
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-fleet/gen.py:
+    entries:
+    - sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Canonical shared-model owner; deterministic, no clocks, banner stamped, schema exact;
+          884/686/198/331 counts verified on snapshot.
+        findings:
+        - id: F-1
+          severity: low
+          summary: No mechanical drift detection for the 6 embedded make_fleet copies; SKILL.md recommends
+            checksum assert or shared fixture
+          disposition: 'fix: add asserts.command checksum cross-check (or shared fixture) in consuming
+            datasets'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'F-FL-1 closed at dataset level: asserts.command shared-model drift check (check_shared_model.py)
+          now fails validate on any make_fleet/REGIONS byte-drift across 6 embedding generators; gen.py
+          itself unchanged'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-regulatory-docket/gen.py:
+    entries:
+    - sha256: 2e32cc4e73c7519c7b6a5ec4a2b24e2a0f90033744cc8939822f20886925b667
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Deterministic, no clocks, fixed DATA_THROUGH; exactly-2-late and open MDR-2026-0005 knobs
+          verified, including the complaints cross-dataset id tie.
+        findings:
+        - id: F-1
+          severity: low
+          summary: Knob record ids (MDR-2025-0007/0018, MDR-2026-0005) are emergent from seed-42 draws,
+            not pinned; re-knobbing renumbers them
+          disposition: 'accept: verified at locked seed; re-verify README + complaints tie on any regeneration'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-revenue-plan/gen.py:
+    entries:
+    - sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Literal plan table, no rng draws (documented); all plan totals and regulatory-dependency
+          splits re-derived and correct; schema exact, 120 rows.
+        findings:
+        - id: F-1
+          severity: low
+          summary: REGION_SHARE values duplicate the FINANCIAL MODEL constants outside any marked shared
+            block
+          disposition: 'accept: joins are region-insensitive; add keep-in-sync comment at next touch'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-sales-accounts/gen.py:
+    entries:
+    - sha256: 3c19b25f857fab77d1bcc3fc6e52c3cab92ace34fa598acac1c0598c61216c70
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Both shared blocks byte-identical; fleet burned first, accounts on seed+1; reconciliation
+          and concentration knobs reproduced exactly on snapshot.
+        findings:
+        - id: F-1
+          severity: low
+          summary: Segments are beds-derived, not the shared site_segment hash - not row-comparable with
+            winloss/telemetry segments
+          disposition: 'accept: account-level vs site-level entities differ by design; add README sentence
+            for BQ authors'
+        - id: F-2
+          severity: low
+          summary: NAME_STEMS indexing has no wraparound guard (56 stems, 39 used)
+          disposition: 'accept: ample headroom at locked REGIONS'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-signal-register/gen.py:
+    entries:
+    - sha256: 9f26045d0ddf346a640ab58921e045635a76fc3e179922124b649589c6dc5afd
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: Deterministic; literal planted rows consume no rng (sound append hygiene); 16/40 died-in-spreadsheet
+          knob verified; but planted UPG refs collide with generated ones.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: 'UPG-0051/0052 each assigned to two signals: planted literals collide with counter-generated
+            refs UPG-0050..0053'
+          disposition: 'fix: renumber planted refs outside generated range (e.g. UPG-0061/0062) or start
+            refno above 53; land via refresh'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+    - sha256: 7e77638cf3c4b8115093a0e7b860ee8f3cfc2a5f5943e277268dd6b57ea1d2a7
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 1 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-subscriptions/gen.py:
+    entries:
+    - sha256: 9c3b5bba0710cf54829155dbd2c0e98161c700c8a311494af32b6f5966da6fc7
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: make_fleet byte-identical, burned first; churned/attach-gap sites and per-site pumps_connected
+          verified against fleet row-for-row on snapshot.
+        findings:
+        - id: F-1
+          severity: low
+          summary: rng2.sample pools (gap 4, churn 3) raise ValueError if knob changes shrink them below
+            k
+          disposition: 'accept: pools ~40+ at locked seed; note for knob edits'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-telemetry-utilization/gen.py:
+    entries:
+    - sha256: a5241bffcb6858480fcd3543b2e1558fc3ba62b9acd1a5d74669ca6ea3ee8fe7
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: make_fleet + site_segment byte-identical; device set equals fleet connected exactly;
+          all six underused sites and utilization bands verified to the decimal.
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-upgrade-campaign/gen.py:
+    entries:
+    - sha256: 90b0d06b9503e9ee2aae6ba5e0b74ebad2513893d6ac8f8866c73bcdb4976e3b
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: make_fleet byte-identical and first; 389 targets equal fleet PP3500 non-3.4.0 exactly;
+          EMEA-lag and hw_rev-B/3.1.2 cluster knobs verified on snapshot.
+        findings:
+        - id: F-1
+          severity: low
+          summary: All 4 rolled-back rows keep completed_date and duration_min; date-based completion
+            counts would over-count
+          disposition: 'accept: status-based consumers correct; document in README or blank the date at
+            next refresh'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-winloss/gen.py:
+    entries:
+    - sha256: 46183f0bc94b7452e8b84f1436f4ba8b251747f9daa4ee45dcb8136707e910c7
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED-WITH-FINDINGS
+        by: AI code reviewer
+        date: '2026-07-27'
+        summary: make_fleet + site_segment byte-identical; fleet burned first; win-rate, pm-gap, and disruption-window
+          knobs reproduced exactly on snapshot 2026-07-27.2.
+        findings:
+        - id: F-1
+          severity: medium
+          summary: 'PRO-NN prospect ids redrawn per opportunity: 14 accounts carry conflicting segments,
+            11 conflicting regions across rows'
+          disposition: 'fix: cache region/segment per PRO id (as names are) or make prospect ids unique;
+            land via refresh'
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+    - sha256: acf035fcd572920d60a50f4137ce600a96bff951e70f234a0e71d286986bb8fb
+      date: '2026-07-27'
+      reviews:
+      - verdict: APPROVED
+        by: AI code reviewer (fix-verification)
+        date: '2026-07-27'
+        summary: 'fix-pass verified: 1 finding(s) fixed, 0 accepted with rationale; deterministic checks
+          pass on this hash'
+        findings: []
+        detail_ref: tasks/ben/_work/108-code-review-generators-2026-07-27.md
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit

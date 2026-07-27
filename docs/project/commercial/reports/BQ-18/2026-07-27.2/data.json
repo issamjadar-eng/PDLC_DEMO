@@ -1,0 +1,415 @@
+{
+ "bq": "BQ-18",
+ "series": [
+  {
+   "id": "monthly-trend",
+   "label": "Monthly complaints \u2014 top 3 categories",
+   "unit": "complaints",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-07-27.2"
+   },
+   "lines": [
+    {
+     "label": "occlusion-alarm",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 5
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-05-01",
+       "y": 5
+      },
+      {
+       "x": "2025-06-01",
+       "y": 10
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8
+      },
+      {
+       "x": "2025-08-01",
+       "y": 10
+      },
+      {
+       "x": "2025-09-01",
+       "y": 7
+      },
+      {
+       "x": "2025-10-01",
+       "y": 10
+      },
+      {
+       "x": "2025-11-01",
+       "y": 6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 7
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6
+      },
+      {
+       "x": "2026-02-01",
+       "y": 5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 6
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 9
+      },
+      {
+       "x": "2026-06-01",
+       "y": 10
+      },
+      {
+       "x": "2026-07-01",
+       "y": 6
+      }
+     ]
+    },
+    {
+     "label": "connectivity",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-05-01",
+       "y": 1
+      },
+      {
+       "x": "2025-06-01",
+       "y": 2
+      },
+      {
+       "x": "2025-07-01",
+       "y": 4
+      },
+      {
+       "x": "2025-08-01",
+       "y": 6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 7
+      },
+      {
+       "x": "2025-11-01",
+       "y": 2
+      },
+      {
+       "x": "2025-12-01",
+       "y": 4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 4
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 4
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 7
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6
+      },
+      {
+       "x": "2026-07-01",
+       "y": 4
+      }
+     ]
+    },
+    {
+     "label": "battery",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1
+      },
+      {
+       "x": "2025-05-01",
+       "y": 3
+      },
+      {
+       "x": "2025-06-01",
+       "y": 5
+      },
+      {
+       "x": "2025-07-01",
+       "y": 6
+      },
+      {
+       "x": "2025-08-01",
+       "y": 4
+      },
+      {
+       "x": "2025-09-01",
+       "y": 5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 5
+      },
+      {
+       "x": "2025-11-01",
+       "y": 4
+      },
+      {
+       "x": "2025-12-01",
+       "y": 2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6
+      },
+      {
+       "x": "2026-02-01",
+       "y": 10
+      },
+      {
+       "x": "2026-03-01",
+       "y": 7
+      },
+      {
+       "x": "2026-04-01",
+       "y": 4
+      },
+      {
+       "x": "2026-05-01",
+       "y": 6
+      },
+      {
+       "x": "2026-06-01",
+       "y": 2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 6
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "rate-by-category",
+   "label": "Complaints per 100 devices (trailing 90d)",
+   "unit": "per 100 devices",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "occlusion-alarm",
+     "value": 3.17,
+     "count": 28
+    },
+    {
+     "label": "connectivity",
+     "value": 2.26,
+     "count": 20
+    },
+    {
+     "label": "battery",
+     "value": 1.81,
+     "count": 16
+    },
+    {
+     "label": "screen-display",
+     "value": 1.47,
+     "count": 13
+    },
+    {
+     "label": "mechanical",
+     "value": 1.24,
+     "count": 11
+    },
+    {
+     "label": "other",
+     "value": 0.79,
+     "count": 7
+    },
+    {
+     "label": "dose-programming",
+     "value": 0.45,
+     "count": 4
+    },
+    {
+     "label": "pca-by-proxy-suspected",
+     "value": 0.11,
+     "count": 1
+    },
+    {
+     "label": "over-delivery",
+     "value": 0.11,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "window-trend",
+   "label": "Complaints: current vs prior window",
+   "unit": "complaints",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "complaint counts summed over the trailing 90-day window vs the preceding 90-day window",
+    "inputs": [
+     "src: commercial/internal-complaints@2026-07-27.2"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-07-27.2"
+   },
+   "points": [
+    {
+     "label": "current",
+     "value": 101
+    },
+    {
+     "label": "prior",
+     "value": 74
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "CAPA-review trigger: occlusion-alarm at 3.17 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
+   "evidence_class": "measured"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "occlusion-alarm at 3.17 per 100 devices exceeds its threshold of 3.0 in the trailing 90d window",
+    "action": "Open a CAPA review; stratify by site, firmware version, and device age; check correlation with the upgrade campaign's rollback sites",
+    "evidence": [
+     "derived: rate-by-category",
+     "src: commercial/internal-complaints@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "connectivity at 2.26 per 100 devices exceeds its threshold of 2.0 in the trailing 90d window",
+    "action": "Open a CAPA review; stratify by site, firmware version, and device age; check correlation with the upgrade campaign's rollback sites",
+    "evidence": [
+     "derived: rate-by-category",
+     "src: commercial/internal-complaints@2026-07-27.2",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "Total complaint volume is rising window-over-window (101 vs 74)",
+    "mitigation": "Trend-analyze monthly by category; if the rise persists a second window, escalate to management review",
+    "evidence": [
+     "derived: window-trend"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "The category thresholds are demo stand-ins, not the risk file's documented acceptability criteria \u2014 a breach verdict is only as good as its threshold",
+    "mitigation": "Re-derive thresholds from the risk file and mark the expectation validated",
+    "evidence": [
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": []
+ },
+ "expectations": [
+  {
+   "id": "E-18.1",
+   "statement": "Complaint rates stay within the per-category thresholds",
+   "expected": "<= 2.0 per 100 devices per 90d (occlusion-alarm <= 3.0)",
+   "basis": "demo stand-ins [VERIFY] \u2014 must be re-derived from the risk file's acceptability criteria before real use",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "occlusion-alarm 3.17 vs 3.0; connectivity 2.26 vs 2.0",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: rate-by-category"
+   ]
+  },
+  {
+   "id": "E-18.2",
+   "statement": "Complaint volume is not trending upward window-over-window",
+   "expected": "current 90d window <= 130% of prior window",
+   "basis": "generic trend heuristic; no documented commitment",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "current 101 vs prior 74",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: window-trend"
+   ]
+  }
+ ]
+}

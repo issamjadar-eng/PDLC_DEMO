@@ -29,3 +29,7 @@ schema:
     - {name: last_seen, type: date}
 asserts:
   min_rows: 500
+  # F-FL-1 (code review 2026-07-27): the shared-model convention is honor-system —
+  # this check fails acquire/validate if any embedding generator's make_fleet/REGIONS
+  # copy drifts byte-wise from this dataset's canonical copy.
+  command: python3 check_shared_model.py

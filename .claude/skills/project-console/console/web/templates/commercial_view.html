@@ -66,6 +66,7 @@
     <button type="button" class="cm-toptab is-active" data-tab="cm-tab-report">Report</button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
       {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
+      {% if code %}<span class="cm-chip {{ code._status.cls }}" title="Computation code: {{ code._status.label }}">{{ code._status.glyph }} code</span>{% endif %}
     </button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-data">Data
       <span class="cm-cat-n">{{ tables | length }} tables</span>
@@ -404,6 +405,51 @@
       (lint / references / freshness) regenerate on every answer or lint; verification entries are
       agent-recorded evidence and persist per edition.</p>
     {% endif %}
+
+    {# Computation code — the code-quality layer behind this answer's figures.
+       SOFT GATE: badges only, nothing blocks. Sidecar schema 1.2 per-question
+       `code` block; absent (schema ≤1.1) → honest empty state, zero errors. #}
+    <section class="cm-q-card cm-code">
+      <h3>Computation code
+        {% if code %}<span class="cm-chip {{ code._status.cls }}">{{ code._status.glyph }} {{ code._status.label }}</span>{% endif %}
+        <span class="cm-muted">— the code that produced this answer's figures · soft gate: badges only, nothing blocks</span></h3>
+      {% if not code %}
+      <p class="cm-muted">No code-quality record — run <code>/commercial code-audit</code>.</p>
+      {% else %}
+      {% for a in code.artifacts %}
+      <div class="cm-code-art">
+        <div class="cm-code-art-row">
+          <span class="cm-code-role" title="{{ a._role.label }}" aria-label="{{ a._role.label }}">{{ a._role.glyph }}</span>
+          <span class="cm-mono cm-code-path">{{ a.path }}</span>
+          <span class="cm-code-hash" title="sha256 (first 12 hex) of the audited file">{{ a.sha256_12 }}</span>
+          {% for c in a._checks %}<span class="cm-chip {{ c.cls }}" title="{{ c.name }}: {{ c.value }}">{{ c.glyph }} {{ c.name }}</span>{% endfor %}
+          {% if a.review %}
+          <span class="cm-chip {{ a._review_cls }}" title="Review verdict">{{ a.review.verdict }}</span>
+          <span class="cm-muted cm-code-by">by {{ a.review.by }} · {{ a.review.date }}</span>
+          {% endif %}
+          {% if a._badge %}<span class="cm-chip {{ a._badge.cls }}">{{ a._badge.glyph }} {{ a._badge.label | lower }}</span>{% endif %}
+        </div>
+        {% if a._findings %}
+        <details class="cm-q-check-details">
+          <summary>{{ a._findings | length }} finding(s)</summary>
+          <table class="cm-expect-table cm-code-findings">
+            <thead><tr><th>ID</th><th>Severity</th><th>Summary</th><th>Disposition</th></tr></thead>
+            <tbody>
+              {% for f in a._findings %}
+              <tr><td class="cm-mono">{{ f.id }}</td>
+                <td><span class="cm-chip {{ f._sev.cls }}">{{ f._sev.label }}</span></td>
+                <td>{{ f.summary }}</td><td class="cm-muted">{{ f.disposition }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </details>
+        {% endif %}
+        {% if a._detail_link %}<p class="cm-nar-ev"><a href="{{ a._detail_link }}" target="_blank" rel="noopener">review detail ↗</a></p>{% endif %}
+      </div>
+      {% endfor %}
+      {% if not code.artifacts %}<p class="cm-muted">Code-quality record present but lists no artifacts.</p>{% endif %}
+      {% endif %}
+    </section>
   </div><!-- /#cm-tab-quality -->
 
   <div id="cm-tab-data" hidden>

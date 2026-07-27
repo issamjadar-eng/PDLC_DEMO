@@ -1,0 +1,128 @@
+{
+ "bq": "BQ-12",
+ "series": [
+  {
+   "id": "window-count",
+   "label": "Clearances in the sweep window",
+   "unit": "clearances",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "90-day window ending 2026-01-28",
+     "value": 1
+    },
+    {
+     "label": "flagged for roadmap review",
+     "value": 0
+    }
+   ]
+  },
+  {
+   "id": "clearances-by-quarter",
+   "label": "FRN clearances per quarter",
+   "unit": "clearances",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "lines": [
+    {
+     "label": "FRN clearances",
+     "points": [
+      {
+       "x": "2021-10-01",
+       "y": 2
+      },
+      {
+       "x": "2022-01-01",
+       "y": 2
+      },
+      {
+       "x": "2022-04-01",
+       "y": 2
+      },
+      {
+       "x": "2022-07-01",
+       "y": 2
+      },
+      {
+       "x": "2023-01-01",
+       "y": 3
+      },
+      {
+       "x": "2023-07-01",
+       "y": 2
+      },
+      {
+       "x": "2023-10-01",
+       "y": 2
+      },
+      {
+       "x": "2024-01-01",
+       "y": 1
+      },
+      {
+       "x": "2024-04-01",
+       "y": 1
+      },
+      {
+       "x": "2024-07-01",
+       "y": 1
+      },
+      {
+       "x": "2024-10-01",
+       "y": 2
+      },
+      {
+       "x": "2025-01-01",
+       "y": 2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 1
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "window-flagged",
+   "label": "Window clearances (2025-10-31 \u2192 2026-01-28)",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-07-22"
+   },
+   "points": [
+    {
+     "label": "K252015",
+     "value": "Koru Medical Systems, Inc. \u2014 no flags"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "1 infusion-pump clearance(s) in the 90-day window ending 2026-01-28; 0 flag roadmap-relevant keywords \u2014 review against the roadmap lanes",
+   "evidence_class": "measured"
+  }
+ ]
+}

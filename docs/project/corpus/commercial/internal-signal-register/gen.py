@@ -57,13 +57,17 @@ def main():
                 rows.append({"opened_date": opened,
                              "source": rng.choice(SOURCES), "category": rng.choice(CATEGORIES),
                              "disposition": dispo, "disposition_ref": ref, "closed_date": closed})
-        # knob: 2 over-delivery signals that DID become upgrade-items
+        # knob: 2 over-delivery signals that DID become upgrade-items. Planted refs sit
+        # OUTSIDE the counter-generated range (refno starts at 40 and reaches the low
+        # 50s across DI/REQ/UPG buckets) so they can never collide with generated refs —
+        # UPG-0051/0052 previously collided with counter-emitted UPG-0050..0053
+        # (code-review finding F-SR-1, task 108).
         rows.append({"opened_date": dt.date(2025, 11, 10), "source": "maude-screen",
                      "category": "over-delivery", "disposition": "upgrade-item",
-                     "disposition_ref": "UPG-0051", "closed_date": "2026-02-06"})
+                     "disposition_ref": "UPG-0101", "closed_date": "2026-02-06"})
         rows.append({"opened_date": dt.date(2026, 2, 17), "source": "complaint-trend",
                      "category": "over-delivery", "disposition": "upgrade-item",
-                     "disposition_ref": "UPG-0052", "closed_date": "2026-05-29"})
+                     "disposition_ref": "UPG-0102", "closed_date": "2026-05-29"})
         rows.sort(key=lambda r: r["opened_date"])
         counters, out = {}, []
         for r in rows:

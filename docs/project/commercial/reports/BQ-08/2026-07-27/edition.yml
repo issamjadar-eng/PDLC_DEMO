@@ -1,9 +1,10 @@
 bq: BQ-08
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T15:27:47+00:00'
 pins:
   commercial/internal-winloss: 2026-07-27.2
 plan:
   path: plans/BQ-08.md
   sha256: 6939be3ec5b448a0ae9b6097ea681e145430564bfad41c1112991d7a72c418b6
+superseded_by: 2026-07-27.2

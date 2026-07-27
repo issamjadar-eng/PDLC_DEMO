@@ -1,0 +1,269 @@
+{
+ "bq": "BQ-15",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:49+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "config",
+   "value": "docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "clearances-by-quarter",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "differentiator-margins",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "since-doc-count",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "trailing-context",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-refresh",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/external-competitor-features@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/external-competitor-features",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 180,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Differentiator margin vs best documented competitor",
+    "series": "differentiator-margins",
+    "evidence_class": "derived",
+    "source": "commercial/external-competitor-features@2026-07-27",
+    "derivation": {
+     "method": "accuracy: best competitor value / ours, on both our lab-basis and volumetric-basis specs (lower is better; competitor cells are nominal/field specs \u2014 basis stated); battery: ours / best competitor value (higher is better)",
+     "inputs": [
+      "src: commercial/external-competitor-features@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Flow accuracy (\u00b1 pct) by product",
+    "series": "accuracy-by-product",
+    "evidence_class": "measured",
+    "source": "commercial/external-competitor-features@2026-07-27"
+   },
+   {
+    "what": "Battery (hours) by product",
+    "series": "battery-by-product",
+    "evidence_class": "measured",
+    "source": "commercial/external-competitor-features@2026-07-27"
+   },
+   {
+    "what": "FRN clearances after the SOTA anchor date",
+    "series": "since-doc-count",
+    "evidence_class": "derived",
+    "source": "commercial/openfda-510k-infusion@2026-07-22",
+    "derivation": {
+     "method": "count of pinned FRN records with decision_date > sota_doc_date",
+     "inputs": [
+      "src: commercial/openfda-510k-infusion@2026-07-22",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "FRN clearances, trailing 12 months of the pin",
+    "series": "trailing-context",
+    "evidence_class": "derived",
+    "source": "commercial/openfda-510k-infusion@2026-07-22",
+    "derivation": {
+     "method": "count of pinned FRN records in the trailing_context_days window ending at the snapshot's newest decision date",
+     "inputs": [
+      "src: commercial/openfda-510k-infusion@2026-07-22",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "FRN clearances per quarter",
+    "series": "clearances-by-quarter",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-510k-infusion@2026-07-22"
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-15.md",
+  "status": "in-sync",
+  "pinned": "605bc667ef6ae0dc767eac979e053a3be3acba93b66856145e507154bd1f02ed",
+  "current": "605bc667ef6ae0dc767eac979e053a3be3acba93b66856145e507154bd1f02ed"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_15.py",
+    "sha256_12": "122d02a44a41",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-15"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-roadmap-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

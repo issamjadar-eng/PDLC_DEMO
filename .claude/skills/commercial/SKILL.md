@@ -1,7 +1,7 @@
 ---
 name: commercial
-description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 10
+description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
+version: 11
 updated: 2026-07-27
 dependencies:
   skills:
@@ -55,8 +55,10 @@ Core guarantees downstream consumers rely on:
     report.md                # the narrative answer — every figure marker-cited
     data.json                # chart series + verdicts, each with evidence_class + provenance
     pins.json                # dataset -> snapshot pins (written by the engine pre-compute)
-    edition.yml              # status: draft | approved | superseded (engine-owned)
+    edition.yml              # status: draft | approved | superseded (engine-owned);
+                             #   pins plan hash + code_artifacts (the code bytes that computed it)
     approval.yml             # who/when/checks/content-hashes (written by approve)
+  code-quality/records.yml   # engine-managed code-quality store (checks + AI reviews per artifact sha)
   .console/commercial-index.json   # sidecar consumed by the project console
 ```
 
@@ -140,10 +142,11 @@ timestamp, check evidence, and content hashes; prior approved edition → supers
 independent subagent that re-derives the headline claims from the pinned snapshots alone
 (it gets the pins, not the report) and pass its verdict via `--verify-note`. For routine
 refreshes with unchanged methodology, the lint gate alone may suffice — say which was
-done.
+done. `approve` also prints the edition's code-quality status (see "Code quality"
+below) — informational only, never a blocker.
 
 ### `render`
-Write `.console/commercial-index.json` (`schema_version: 1.1`) — per question: status
+Write `.console/commercial-index.json` (`schema_version: 1.2`) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
@@ -159,6 +162,9 @@ by ignoring them:
 - `"terms": [{"term", "definition"}, …]` — the question's `terms:` reference list
   resolved against the catalog's top-level `terms:` dictionary. An unresolved key is a
   render warning to stderr and is skipped — the engine never fabricates a definition.
+
+Schema 1.2 adds a per-question `"code": {…}` block — the code-quality soft-gate badge
+surface (see "Code quality" below). Purely additive; older consumers ignore it.
 
 ### `check`
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
@@ -201,6 +207,41 @@ re-derivation); `ACTIONED` (a prior finding has been addressed by a re-answer);
 entry is stamped with the short sha256 of the edition's report.md **at filing time** —
 the verdict is tied to the byte-state it judged, so a later regeneration is detectable
 by comparing the stamp against the current report.
+
+### `code-audit <BQ-NN | --path P | --all>`
+Run the DETERMINISTIC code-quality checks over the target's code artifacts and upsert
+the store (`code-quality/records.yml`), keyed by each file's current sha256:
+
+- **static lint** — `pyflakes` when importable, else a `py_compile` syntax check; the
+  tool used is recorded.
+- **poison-pattern scan** — regex rules with line numbers: clocks
+  (`datetime.now` / `date.today` / `time.time` — answers must anchor on pinned data,
+  never "today"), unseeded randomness (`random.Random()` with no seed, bare
+  `random.random/choice/randint/...` calls — a file that seeds the global RNG is not
+  flagged, so seeded generators pass), network imports
+  (`requests` / `urllib` / `http.client` / `socket` — computations read pins only), and
+  `open(` on absolute paths (heuristic, warning only).
+- **determinism replay** (computation modules only; `n/a` for generators, which run at
+  acquisition time) — the BQ's computation runs twice against the latest edition's
+  pins into two temp dirs; `report.md` + `data.json` are byte-compared. A diff is a
+  fail — there should be no timestamp fields to exclude.
+
+Targets: a BQ id audits that question's artifacts (module + `computations.py` + dep
+generators); `--path` audits one artifact; `--all` sweeps every implemented question.
+Inline computations (no per-BQ module) attribute their determinism verdict to
+`computations.py`, aggregated across the BQs it owns.
+
+### `record-code-review <path> --verdict V --by B --summary S [--finding "sev|summary|disposition" ...] [--detail-ref R]`
+File an **AI review as the review record** against the artifact's CURRENT sha
+(creating the store entry if the deterministic checks haven't run yet — noted as
+pending). Reviews target the failure classes the deterministic checks cannot see:
+**plan conformance** (does the code compute what the analysis plan committed to),
+**denominator/basis choices**, **string-literal facts** (including computed-sentence
+logic — qualifiers like "worst region" must be computed, not narrated),
+**median/rounding traps**, **status-set assumptions** (which status values count as
+completed/failed), and **determinism** reasoning the replay can't reach. Findings are
+structured (`severity|summary|disposition`); park the full dossier behind
+`--detail-ref`.
 
 ### `catalog`
 The question roster with per-question answer status at a glance.
@@ -350,6 +391,50 @@ editions in `check` — full enforcement applies at the next approval.
 - a series may set `kind: timeseries` with `lines: [{label, points: [{x: ISO-date,
   y: number}]}]` (≤4 lines; zero-fill gaps so stalls render as flatlines, not holes) —
   consoles render trend line charts from it.
+
+## Code quality — the soft-gate audit layer for project analysis code
+
+The numbers are only as good as the code that computed them. This layer audits the
+PROJECT-SIDE analysis code — per-BQ modules (`bq_modules/bq_nn.py`), the shared
+`computations.py`, and corpus dataset generators (`gen.py`) — with **AI review as the
+review record**. The engines themselves (this skill's and the corpus skill's scripts)
+are out of scope: they are reviewed at registry level, not per project.
+
+**Code pinning.** `answer` records `code_artifacts:` into `edition.yml` — `{path,
+sha256}` for the question's module (when present), `computations.py` (always — shared
+helpers and inline computations), and each corpus dep's generator (as
+`corpus:<domain>/<dataset>/gen.py`). An edition therefore names the exact code bytes
+that produced it, the same way it pins its data snapshots.
+
+**The store** (`code-quality/records.yml`, engine-managed): per artifact path, a list
+of entries keyed by sha256 — deterministic check results (`static_lint`,
+`poison_scan`, `determinism`) written by `code-audit`, plus `reviews[]` filed by
+`record-code-review` (`{verdict, by, date, summary, findings[], detail_ref}`). Newest
+entry per sha wins; reviews stay attached to the exact bytes they judged.
+
+**The badge surface.** `answer` / `lint` / `audit` write a `code:` block into
+quality.json, and `render` mirrors it into the sidecar (schema 1.2): per pinned
+artifact `{path, sha256_12, role: module|shared|generator, static_lint, poison_scan,
+determinism, review: {verdict, by, date, current, findings, detail_ref} | null}` —
+`current` is true only when the review was filed against the edition-pinned sha. The
+question-level `status` ladder (worst wins):
+
+1. `checks-failed` — a pinned artifact has a failing deterministic check
+2. `review-outdated` — the pinned sha lacks a review but an older sha of the same file
+   has one (the code changed since it was last reviewed)
+3. `unreviewed` — some pinned artifact has never been reviewed
+4. `reviewed-current` — every pinned artifact has a review for its exact pinned bytes
+
+**SOFT GATE — never blocks.** `approve` prints the code status but approves
+regardless; `check` prints a one-line status count, never failing on it. The badges
+create review pressure without making code review a deploy gate. Degradation is
+graceful everywhere: no store file → `unreviewed` (no errors); editions predating
+code pinning → status computed from current file hashes, with a note saying so.
+
+**Review workflow (Claude-orchestrated).** After substantive computation changes, run
+an independent review agent over the changed module(s) — give it the analysis plan +
+the module + the shared helpers — and file the verdict via `record-code-review`. An
+unfiled review is invisible to the audit surface, exactly like unfiled verifications.
 
 ## Dependencies
 

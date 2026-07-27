@@ -6,6 +6,8 @@ internal-revenue-plan snapshots. See plans/BQ-03.md for the committed definition
 line; contracted / modeled / aspiration defined against regulatory_dependency).
 """
 
+import sys
+
 import computations as C
 
 FIN_DS = "commercial/internal-financials"
@@ -38,41 +40,74 @@ def run(corpus_root, out, pins):
     years = sorted({q[:4] for q in periods})
     last_year = years[-1]
     n_last_q = len([q for q in periods if q.startswith(last_year)])
-    actuals = []  # (label, total, recurring, share)
+    # partial-year labeling handles ANY 1..3-quarter current year, not only exactly two
+    # quarters (code-review finding, ben/108); "H1" kept as the two-quarter special case
+    actuals = []  # (label, total, recurring, share, share_raw)
     for y in years:
         yr_rows = [r for r in fin if r["period"].startswith(y)]
         tot = sum(int(r["revenue_usd"]) for r in yr_rows)
         rec = sum(int(r["revenue_usd"]) for r in yr_rows if r["revenue_type"] == "subscription")
-        label = f"FY{y}" + ("H1" if y == last_year and n_last_q == 2 else "")
-        actuals.append((label, tot, rec, C.pct(rec, tot)))
+        label = f"FY{y}"
+        if y == last_year and n_last_q < 4:
+            label += ("H1" if n_last_q == 2 else
+                      " (Q1)" if n_last_q == 1 else f" (Q1–Q{n_last_q})")
+        actuals.append((label, tot, rec, C.pct(rec, tot),
+                        100.0 * rec / tot if tot else 0.0))
 
     # ---- plan recurring-proxy share per plan year
+    # Unknown regulatory_dependency values collect into a reported "unclassified" bucket
+    # instead of raising KeyError; rows outside the plan window are counted, not silently
+    # dropped (code-review findings, ben/108)
     plan_tot, plan_rec, plan_dep = {y: 0 for y in PLAN_YEARS}, {y: 0 for y in PLAN_YEARS}, {}
     proxy_dep = {}
+    plan_unknown = {y: 0 for y in PLAN_YEARS}   # unknown-dependency revenue per year
+    proxy_unknown = {y: 0 for y in PLAN_YEARS}  # ... within the recurring proxy line
+    unknown_tags = set()
+    plan_unmatched = 0
     for r in plan:
         y = "FY2026" if r["period"].startswith("2026-Q") else r["period"]
         if y not in plan_tot:
+            plan_unmatched += 1
             continue
         v = int(r["revenue_usd"])
+        d = r["regulatory_dependency"]
+        known = d in DEP_ORDER
+        if not known:
+            unknown_tags.add(d)
+            plan_unknown[y] += v
         plan_tot[y] += v
         if r["product_line"] == proxy_line:
             plan_rec[y] += v
-            proxy_dep.setdefault(y, {d: 0 for d in DEP_ORDER})
-            proxy_dep[y][r["regulatory_dependency"]] += v
-        plan_dep.setdefault(y, {d: 0 for d in DEP_ORDER})
-        plan_dep[y][r["regulatory_dependency"]] += v
+            proxy_dep.setdefault(y, {dd: 0 for dd in DEP_ORDER})
+            if known:
+                proxy_dep[y][d] += v
+            else:
+                proxy_unknown[y] += v
+        plan_dep.setdefault(y, {dd: 0 for dd in DEP_ORDER})
+        if known:
+            plan_dep[y][d] += v
+    if plan_unmatched:
+        print(f"bq_03: WARNING — {plan_unmatched} plan rows fall outside the configured "
+              f"plan window {PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are excluded", file=sys.stderr)
+    if unknown_tags:
+        print(f"bq_03: WARNING — unclassified regulatory_dependency value(s) "
+              f"{sorted(unknown_tags)} in the pinned plan; revenue reported in an "
+              f"'unclassified' bucket, not assigned to contracted/modeled/aspiration",
+              file=sys.stderr)
 
     # ---- FY2030 decomposition into the three buckets
     d30 = plan_dep[y5]
     contracted = d30["cleared"]
     ltf = d30["letter-to-file"]
     aspiration = d30["pccp-enabled"] + d30["new-submission"]
+    unclass30 = plan_unknown[y5]
     t30 = plan_tot[y5]
     target_delta = t30 - y5_target
 
-    today_label, _, _, today_share = actuals[-1]
+    today_label, _, _, today_share, _ = actuals[-1]
     y5_share = C.pct(plan_rec[y5], t30)
     asp_share = C.pct(aspiration, t30)
+    asp_share_raw = 100.0 * aspiration / t30 if t30 else 0.0
 
     # ---- recurring-specific decomposition (red-team finding, ben/108): the blended
     # share understates the bet on the very revenue the question is about, so the
@@ -84,10 +119,20 @@ def run(corpus_root, out, pins):
     rec_aspiration = r30["pccp-enabled"] + r30["new-submission"]
     rec_asp_share = C.pct(rec_aspiration, rec_total)
     cleared_nonproxy = contracted - rec_cleared
+    # computed qualifier for the "cleared cushion" sentence (code-review finding, ben/108:
+    # "mostly" was narrated, not derived) — branch on the raw non-proxy share of cleared
+    nonproxy_share_raw = 100.0 * cleared_nonproxy / contracted if contracted else 0.0
+    if nonproxy_share_raw > 50:
+        cushion_clause = "the cleared cushion mostly sits outside the recurring story"
+    elif nonproxy_share_raw > 0:
+        cushion_clause = "the cleared cushion partly sits outside the recurring story"
+    else:
+        cushion_clause = "the cleared cushion sits entirely inside the recurring story"
 
-    # E-03.1: strictly increasing actual share
-    shares = [a[3] for a in actuals]
-    increasing = all(b > a for a, b in zip(shares, shares[1:]))
+    # E-03.1: strictly increasing actual share — evaluated on RAW fractions; two years
+    # that tie only after rounding must not flip the verdict (code-review finding, ben/108)
+    shares_raw = [a[4] for a in actuals]
+    increasing = all(b > a for a, b in zip(shares_raw, shares_raw[1:]))
 
     headline = (f"Recurring revenue is {today_share}% of revenue today ({today_label}) vs "
                 f"{y5_share}% planned for {y5}; of the {_musd(t30)} target, "
@@ -107,7 +152,10 @@ def run(corpus_root, out, pins):
                       "(BQ-29) and bring the variance to the next board review",
             "evidence": ["derived: recurring-share-trend", f"src: {src}"],
         })
-    if asp_share > 40:
+    # gate on BQ-05's configured exposure threshold (code-review finding, ben/108: the
+    # bare 40 numerically coincided with it but was unlinked), compared on the raw share
+    expo_thr = float(C.params_for("BQ-05")["exposure_threshold_pct"])
+    if asp_share_raw > expo_thr:
         narrative["risks"].append({
             "id": "R1", "severity": "high",
             "statement": f"{asp_share}% of the {y5} target ({_musd(aspiration)}) is aspiration — "
@@ -149,13 +197,29 @@ def run(corpus_root, out, pins):
         "", C.BANNER, "",
         f"**Verdict**: {headline} [derived: v-main] [src: {src}] [src: {psrc}]", "",
         "## Recurring share — actuals by fiscal year", "",
-        "_Recurring = subscription revenue only (consumables re-order but are not counted;",
-        "conservative, per the analysis plan). The current fiscal year is a half-year of",
-        "actuals and is labeled as such, never annualized._", "",
+    ]
+    # the partial-year disclosure is computed from the actual quarter count — the static
+    # "half-year" sentence rotted on any 1- or 3-quarter refresh (code-review, ben/108)
+    if n_last_q == 2:
+        rl += ["_Recurring = subscription revenue only (consumables re-order but are not counted;",
+               "conservative, per the analysis plan). The current fiscal year is a half-year of",
+               "actuals and is labeled as such, never annualized._"]
+    elif n_last_q < 4:
+        rl += ["_Recurring = subscription revenue only (consumables re-order but are not counted;",
+               f"conservative, per the analysis plan). The current fiscal year is a partial year "
+               f"({n_last_q}",
+               f"quarter{'s' if n_last_q != 1 else ''} of actuals) and is labeled as such, "
+               f"never annualized._"]
+    else:
+        rl += ["_Recurring = subscription revenue only (consumables re-order but are not counted;",
+               "conservative, per the analysis plan). The current fiscal year is a complete four",
+               "quarters of actuals._"]
+    rl += [
+        "",
         "| Fiscal year | Total revenue | Subscription revenue | Recurring share |",
         "|---|---|---|---|",
     ]
-    for label, tot, rec, share in actuals:
+    for label, tot, rec, share, _raw in actuals:
         rl.append(f"| {label} [src: {src}] | {_musd(tot)} | {_musd(rec)} | {share}% |")
     rl += [
         "",
@@ -169,6 +233,13 @@ def run(corpus_root, out, pins):
     for y in PLAN_YEARS:
         rl.append(f"| {y} [src: {psrc}] | {_musd(plan_tot[y])} | {_musd(plan_rec[y])} | "
                   f"{C.pct(plan_rec[y], plan_tot[y])}% |")
+    if plan_unmatched:
+        rl += [
+            "",
+            f"- ⚠ {plan_unmatched} plan rows fall outside the configured plan window "
+            f"{PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are NOT in the trajectory or the "
+            f"decomposition below — extend the window before trusting either [src: {psrc}]",
+        ]
     rl += [
         "",
         f"## The {y5} target decomposed — contracted / modeled / aspiration", "",
@@ -183,12 +254,27 @@ def run(corpus_root, out, pins):
         f"{C.pct(ltf, t30)}% |",
         f"| aspiration [src: {psrc}] [derived: y5-decomposition] | pccp-enabled + new-submission | "
         f"{_musd(aspiration)} | {asp_share}% |",
+    ]
+    if unclass30 or unknown_tags:
+        rl += [
+            f"| ⚠ UNCLASSIFIED [src: {psrc}] [derived: y5-decomposition] | "
+            f"{', '.join(sorted(unknown_tags)) or 'n/a'} | {_musd(unclass30)} | "
+            f"{C.pct(unclass30, t30)}% |",
+            "",
+            f"- ⚠ The pinned plan carries regulatory_dependency value(s) not covered by the "
+            f"committed bucket mapping ({', '.join(sorted(unknown_tags))}) — that revenue is "
+            f"reported above as UNCLASSIFIED, not silently assigned to a bucket; extend the "
+            f"bucket mapping in the analysis plan before trusting the decomposition "
+            f"[src: {psrc}] [config: commercial.yml]",
+        ]
+    rl += [
         "",
         f"- Pinned {y5} plan total {_musd(t30)} vs catalog target constant {_musd(y5_target)} "
         f"(delta {_musd(target_delta)}) [derived: y5-decomposition] [config: commercial.yml]",
         "",
         f"### The recurring bet specifically — the same buckets within the {proxy_line} proxy", "",
-        "_The blended decomposition above spans all six lines; the question is about recurring",
+        f"_The blended decomposition above spans all "
+        f"{len(sorted({r['product_line'] for r in plan}))} lines [src: {psrc}]; the question is about recurring",
         "revenue, so the same cut is shown for the recurring proxy line alone — both figures",
         "stand together, neither replaces the other._", "",
         f"- Within the {y5} recurring proxy ({proxy_line}, {_musd(rec_total)}): "
@@ -196,9 +282,10 @@ def run(corpus_root, out, pins):
         f"vs {asp_share}% blended across all lines — {_musd(rec_cleared)} cleared and "
         f"{_musd(rec_ltf)} letter-to-file [derived: y5-recurring-decomposition] [src: {psrc}] "
         f"[config: commercial.yml]",
-        f"- Of the blended {_musd(contracted)} cleared bucket, {_musd(cleared_nonproxy)} is "
-        f"non-recurring (device) revenue — the cleared cushion mostly sits outside the recurring "
-        f"story [derived: y5-recurring-decomposition] [derived: y5-decomposition] [src: {psrc}]",
+        f"- Of the blended {_musd(contracted)} cleared bucket, {_musd(cleared_nonproxy)} "
+        f"({C.pct(cleared_nonproxy, contracted)}%) is "
+        f"non-recurring (device) revenue — {cushion_clause} "
+        f"[derived: y5-recurring-decomposition] [derived: y5-decomposition] [src: {psrc}]",
     ]
     rl += C.expectations_section(exps)
     rl += C.narrative_section(narrative)
@@ -234,7 +321,10 @@ def run(corpus_root, out, pins):
                             "inputs": [f"src: {src}", f"src: {psrc}", "config: commercial.yml"]},
              "provenance": {"dataset": FIN_DS, "snapshot": fsnap},
              "lines": [
-                 {"label": "actual (current FY = H1)",
+                 {"label": ("actual (current FY = H1)" if n_last_q == 2 else
+                            "actual (current FY = Q1 only)" if n_last_q == 1 else
+                            f"actual (current FY = Q1–Q{n_last_q})" if n_last_q < 4 else
+                            "actual"),
                   "points": [{"x": _fy_iso(a[0]), "y": a[3]} for a in actuals]},
                  {"label": "plan (cloud-suite proxy)",
                   "points": [{"x": _fy_iso(y), "y": C.pct(plan_rec[y], plan_tot[y])}
@@ -269,7 +359,8 @@ def run(corpus_root, out, pins):
                  {"label": "contracted (cleared)", "value": round(contracted / 1e6, 1)},
                  {"label": "modeled (letter-to-file)", "value": round(ltf / 1e6, 1)},
                  {"label": "aspiration (pccp + new-submission)", "value": round(aspiration / 1e6, 1)},
-             ]},
+             ] + ([{"label": "⚠ unclassified (unknown dependency tags)",
+                    "value": round(unclass30 / 1e6, 1)}] if unclass30 else [])},
             {"id": "y5-recurring-decomposition",
              "label": f"{y5} recurring proxy ({proxy_line}) by bucket ($M)", "unit": "$M",
              "evidence_class": "derived",
@@ -285,7 +376,9 @@ def run(corpus_root, out, pins):
                  {"label": "modeled (letter-to-file)", "value": round(rec_ltf / 1e6, 1)},
                  {"label": "aspiration (pccp + new-submission)",
                   "value": round(rec_aspiration / 1e6, 1), "share_pct": rec_asp_share},
-             ]},
+             ] + ([{"label": "⚠ unclassified (unknown dependency tags)",
+                    "value": round(proxy_unknown[y5] / 1e6, 1)}]
+                  if proxy_unknown[y5] else [])},
         ],
         "verdicts": [{"id": "v-main", "headline": headline, "evidence_class": "derived"}],
         "narrative": narrative,

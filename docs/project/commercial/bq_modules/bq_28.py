@@ -19,7 +19,15 @@ def _musd(v):
 
 
 def _var(a, p):
-    return round(100.0 * (a - p) / p, 1) if p else 0.0
+    # UNROUNDED variance %, or None when the plan side is absent/zero. None makes a
+    # missing plan row surface as "n/a — no plan row" instead of masquerading as 0.0%
+    # (review finding F-28-1); rounding happens only at render so tolerance/flag/verdict
+    # comparisons run on the true ratio (review finding F-28-2).
+    return 100.0 * (a - p) / p if p else None
+
+
+def _vfmt(v):
+    return "n/a — no plan row" if v is None else f"{v:+.1f}%"
 
 
 def run(corpus_root, out, pins):
@@ -54,24 +62,38 @@ def run(corpus_root, out, pins):
                 for g in regions]
     q_rows = [(q, a_q.get(q, 0), p_q.get(q, 0), _var(a_q.get(q, 0), p_q.get(q, 0)))
               for q in quarters]
-    under = sorted([r for r in line_rows if r[3] < -tol], key=lambda r: r[3])
-    over = sorted([r for r in line_rows if r[3] > tol], key=lambda r: -r[3])
-    reg_breach = [r for r in reg_rows if abs(r[3]) > tol]
+    # Cells with no plan side (variance None) are excluded from all breach logic —
+    # incomparability must never read as a breach OR as on-plan (finding F-28-1).
+    under = sorted([r for r in line_rows if r[3] is not None and r[3] < -tol],
+                   key=lambda r: r[3])
+    over = sorted([r for r in line_rows if r[3] is not None and r[3] > tol],
+                  key=lambda r: -r[3])
+    reg_breach = [r for r in reg_rows if r[3] is not None and abs(r[3]) > tol]
     last_q = q_rows[-1] if q_rows else None
-    deteriorating = len(q_rows) >= 2 and q_rows[-1][3] < q_rows[0][3] and q_rows[-1][3] < -tol
+    deteriorating = (len(q_rows) >= 2 and q_rows[-1][3] is not None
+                     and q_rows[0][3] is not None
+                     and q_rows[-1][3] < q_rows[0][3] and q_rows[-1][3] < -tol)
+    # Actual-vs-plan period-set mismatch: surfaced explicitly, never silent (F-28-1).
+    no_plan = {"line": [l for l, _, pl, _ in line_rows if not pl],
+               "region": [g for g, _, pl, _ in reg_rows if not pl],
+               "quarter": [q for q, _, pl, _ in q_rows if not pl]}
+    no_plan_bits = [f"{kind}(s) {', '.join(ks)}" for kind, ks in no_plan.items() if ks]
 
     window_name = ("H1 " + fy) if quarters == [f"{fy}-Q1", f"{fy}-Q2"] else \
         (fy + " " + "+".join(q[-2:] for q in quarters))
-    within = abs(tv) <= tol
-    parts = [f"{window_name} revenue ${_musd(ta)}M vs plan ${_musd(tp)}M ({tv:+.1f}%, "
+    within = tv is not None and abs(tv) <= tol
+    parts = [f"{window_name} revenue ${_musd(ta)}M vs plan ${_musd(tp)}M ({_vfmt(tv)}, "
              f"{'within' if within else 'OUTSIDE'} the ±{tol:.0f}% tolerance overall; "
              f"{len(under)} of {len(line_rows)} lines breach the band individually on the "
              f"downside)"]
+    if no_plan_bits:
+        parts.append("no plan rows for " + "; ".join(no_plan_bits)
+                     + " — those cells are n/a, excluded from breach logic")
     if under:
         parts.append("under plan: " + ", ".join(f"{l} {v:+.1f}%" for l, _, _, v in under))
     if over:
         parts.append("masked by " + ", ".join(f"{l} {v:+.1f}%" for l, _, _, v in over))
-    if last_q and last_q[3] < -tol:
+    if last_q and last_q[3] is not None and last_q[3] < -tol:
         parts.append(f"{last_q[0]} alone breached at {last_q[3]:+.1f}%")
     headline = "; ".join(parts)
 
@@ -114,7 +136,7 @@ def run(corpus_root, out, pins):
         narrative["risks"].append({
             "id": f"R{rn}", "severity": "medium",
             "statement": f"Quarter-over-quarter timing is deteriorating: "
-                         + " → ".join(f"{q} {v:+.1f}%" for q, _, _, v in q_rows)
+                         + " → ".join(f"{q} {_vfmt(v)}" for q, _, _, v in q_rows)
                          + f" — the latest quarter breaches the ±{tol:.0f}% band on its own",
             "mitigation": "Treat the next monthly close as the reforecast trigger check; do not "
                           "wait for the YTD composite to breach",
@@ -147,7 +169,7 @@ def run(corpus_root, out, pins):
         })
 
     exp_results = {
-        "E-28.1": (f"{tv:+.1f}% YTD ({window_name}) — "
+        "E-28.1": (f"{_vfmt(tv)} YTD ({window_name}) — "
                    f"{'within' if within else 'OUTSIDE'} tolerance overall; "
                    f"{len(under)} of {len(line_rows)} lines breach the ±{tol:.0f}% band "
                    f"individually on the downside",
@@ -168,9 +190,14 @@ def run(corpus_root, out, pins):
         "|---|---|---|---|---|",
     ]
     for l, a, pl, v in line_rows:
-        flag = " ⚠️" if abs(v) > tol else ""
-        lines.append(f"| {l} [src: {asrc}] [src: {psrc}] | {_musd(a)} | {_musd(pl)} | "
-                     f"{v:+.1f}%{flag} | {_musd(a - pl):+.1f} |")
+        flag = " ⚠️" if v is not None and abs(v) > tol else ""
+        lines.append(f"| {l} [src: {asrc}] [src: {psrc}] | {_musd(a)} | "
+                     f"{_musd(pl) if pl else '—'} | {_vfmt(v)}{flag} | "
+                     f"{f'{_musd(a - pl):+.1f}' if pl else 'n/a'} |")
+    if no_plan_bits:
+        lines += ["", "- ⚠️ No plan rows for " + "; ".join(no_plan_bits) + " — variance shown "
+                  "as n/a and excluded from breach logic; actual and plan period/line sets "
+                  f"differ in the pins [src: {asrc}] [src: {psrc}]"]
     lines += [
         "",
         "## Variance by region", "",
@@ -178,9 +205,10 @@ def run(corpus_root, out, pins):
         "|---|---|---|---|---|",
     ]
     for g, a, pl, v in reg_rows:
-        flag = " ⚠️" if abs(v) > tol else ""
-        lines.append(f"| {g} [src: {asrc}] [src: {psrc}] | {_musd(a)} | {_musd(pl)} | "
-                     f"{v:+.1f}%{flag} | {_musd(a - pl):+.1f} |")
+        flag = " ⚠️" if v is not None and abs(v) > tol else ""
+        lines.append(f"| {g} [src: {asrc}] [src: {psrc}] | {_musd(a)} | "
+                     f"{_musd(pl) if pl else '—'} | {_vfmt(v)}{flag} | "
+                     f"{f'{_musd(a - pl):+.1f}' if pl else 'n/a'} |")
     lines += [
         "",
         "## Timing — variance by quarter", "",
@@ -188,8 +216,9 @@ def run(corpus_root, out, pins):
         "|---|---|---|---|",
     ]
     for q, a, pl, v in q_rows:
-        flag = " ⚠️" if abs(v) > tol else ""
-        lines.append(f"| {q} [src: {asrc}] [src: {psrc}] | {_musd(a)} | {_musd(pl)} | {v:+.1f}%{flag} |")
+        flag = " ⚠️" if v is not None and abs(v) > tol else ""
+        lines.append(f"| {q} [src: {asrc}] [src: {psrc}] | {_musd(a)} | "
+                     f"{_musd(pl) if pl else '—'} | {_vfmt(v)}{flag} |")
     lines += [
         "",
         "## Volume vs price: not computable (stated, not approximated)", "",
@@ -220,7 +249,7 @@ def run(corpus_root, out, pins):
                             "inputs": [f"src: {asrc}", f"src: {psrc}", "config: commercial.yml"]},
              "provenance": {"dataset": FIN_DS, "snapshot": asnap},
              "points": [{"label": f"{window_name} variance vs plan",
-                         "value": tv,
+                         "value": round(tv, 1) if tv is not None else None,
                          "sub": f"actual ${_musd(ta)}M vs plan ${_musd(tp)}M"}]},
             {"id": "quarterly-trend", "label": f"Quarterly revenue: actual vs {fy} plan", "unit": "USD M",
              "kind": "timeseries", "evidence_class": "derived",
@@ -234,7 +263,8 @@ def run(corpus_root, out, pins):
              "derivation": {"method": "revenue summed per product line over the closed quarters, actual and plan",
                             "inputs": [f"src: {asrc}", f"src: {psrc}"]},
              "provenance": {"dataset": FIN_DS, "snapshot": asnap},
-             "points": [{"label": l, "a": _musd(a), "b": _musd(pl), "variance_pct": v}
+             "points": [{"label": l, "a": _musd(a), "b": _musd(pl),
+                         "variance_pct": round(v, 1) if v is not None else None}
                         for l, a, pl, v in line_rows]},
             {"id": "variance-by-region", "label": "Actual vs plan by region", "unit": "USD M",
              "kind": "paired-bars", "pairs": {"a_label": "actual", "b_label": "plan"},
@@ -242,14 +272,16 @@ def run(corpus_root, out, pins):
              "derivation": {"method": "revenue summed per region over the closed quarters, actual and plan",
                             "inputs": [f"src: {asrc}", f"src: {psrc}"]},
              "provenance": {"dataset": FIN_DS, "snapshot": asnap},
-             "points": [{"label": g, "a": _musd(a), "b": _musd(pl), "variance_pct": v}
+             "points": [{"label": g, "a": _musd(a), "b": _musd(pl),
+                         "variance_pct": round(v, 1) if v is not None else None}
                         for g, a, pl, v in reg_rows]},
             {"id": "variance-by-quarter", "label": "Variance vs plan by quarter", "unit": "%",
              "evidence_class": "derived",
              "derivation": {"method": "(actual − plan) ÷ plan per closed quarter",
                             "inputs": [f"src: {asrc}", f"src: {psrc}"]},
              "provenance": {"dataset": FIN_DS, "snapshot": asnap},
-             "points": [{"label": q, "value": v} for q, _, _, v in q_rows]},
+             "points": [{"label": q, "value": round(v, 1) if v is not None else None}
+                        for q, _, _, v in q_rows]},
             {"id": "variance-contribution", "label": "Variance contribution ($M) by line", "unit": "USD M",
              "evidence_class": "derived",
              "derivation": {"method": "actual − plan in dollars per product line — the netting inside the composite",

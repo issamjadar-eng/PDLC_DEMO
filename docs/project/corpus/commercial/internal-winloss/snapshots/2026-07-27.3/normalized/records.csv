@@ -1,0 +1,121 @@
+opp_id,close_date,account_id,account_name,region,segment,outcome,competitor,incumbent_vendor,primary_reason,cites_predictive_monitoring,value_usd
+OPP-0022,2025-01-06,S-APAC-08,Elm Hollow University Medical Center,APAC,academic,lost,none,PainEase,contract-timing,no,953000
+OPP-0005,2025-01-07,PRO-22,Blue Heron Community Hospital,NA,community,won,B.Braun,B.Braun,service,no,425000
+OPP-0095,2025-01-12,S-APAC-03,Stonebridge Community Hospital,APAC,community,lost,none,PainEase,price,no,313000
+OPP-0093,2025-01-20,S-EMEA-02,Eastfield Health System,EMEA,idn,lost,B.Braun,none,predictive-monitoring-gap,yes,1372000
+OPP-0014,2025-02-04,S-APAC-02,Eastfield Community Hospital,APAC,community,no-decision,Baxter,PainEase,other,yes,515000
+OPP-0092,2025-02-05,S-NA-10,Willow Creek Community Hospital,NA,community,won,none,none,features,no,709000
+OPP-0028,2025-02-10,PRO-14,Lakeshore Community Hospital,NA,community,lost,Smiths Medical,Smiths Medical,clinical-evidence,no,260000
+OPP-0003,2025-02-13,S-EMEA-08,Lakeshore Health System,EMEA,idn,no-decision,none,PainEase,price,no,1402000
+OPP-0072,2025-02-14,PRO-29,Meadowbrook University Medical Center,EMEA,academic,won,B.Braun,Smiths Medical,features,no,674000
+OPP-0118,2025-03-03,PRO-26,Kestrel Park University Medical Center,EMEA,academic,lost,ICU Medical,none,service,no,763000
+OPP-0116,2025-03-05,PRO-12,Cedar Grove Community Hospital,APAC,community,won,ICU Medical,ICU Medical,contract-timing,no,429000
+OPP-0041,2025-03-18,S-NA-11,Falcon Crest University Medical Center,NA,academic,won,none,PainEase,service,no,778000
+OPP-0049,2025-03-20,PRO-17,Granite Peak Home Infusion Services,NA,home-infusion,lost,Baxter,Smiths Medical,service,no,183000
+OPP-0065,2025-03-22,S-EMEA-16,Lakeshore Health System,EMEA,idn,won,Fresenius Kabi,PainEase,contract-timing,yes,1085000
+OPP-0102,2025-04-01,S-EMEA-09,Ashford Community Hospital,EMEA,community,lost,Smiths Medical,B.Braun,predictive-monitoring-gap,yes,697000
+OPP-0086,2025-04-10,S-NA-05,Stonebridge Health System,NA,idn,won,Fresenius Kabi,PainEase,service,no,619000
+OPP-0026,2025-04-20,PRO-24,Riverbend Health System,NA,idn,lost,Fresenius Kabi,Fresenius Kabi,predictive-monitoring-gap,yes,1015000
+OPP-0052,2025-04-20,S-NA-03,Elm Hollow Health System,NA,idn,won,ICU Medical,PainEase,service,no,1157000
+OPP-0034,2025-04-22,S-NA-01,Silver Birch Home Infusion Services,NA,home-infusion,lost,Smiths Medical,PainEase,features,no,430000
+OPP-0115,2025-04-25,S-EMEA-03,Cedar Grove University Medical Center,EMEA,academic,lost,Baxter,BD,incumbent-relationship,yes,955000
+OPP-0084,2025-05-07,S-NA-23,Summit Ridge University Medical Center,NA,academic,won,BD,BD,service,no,679000
+OPP-0106,2025-05-10,PRO-05,Marble Bay Community Hospital,NA,community,won,BD,none,contract-timing,no,359000
+OPP-0030,2025-05-11,PRO-08,Blue Heron University Medical Center,EMEA,academic,lost,Smiths Medical,Smiths Medical,incumbent-relationship,yes,934000
+OPP-0027,2025-05-13,S-APAC-04,Cedar Grove Home Infusion Services,APAC,home-infusion,lost,ICU Medical,PainEase,price,no,481000
+OPP-0059,2025-06-08,S-APAC-02,Eastfield Community Hospital,APAC,community,lost,none,PainEase,incumbent-relationship,no,342000
+OPP-0085,2025-06-13,S-NA-06,Amber Valley Home Infusion Services,NA,home-infusion,won,BD,BD,other,no,436000
+OPP-0011,2025-07-03,S-NA-14,Northgate Community Hospital,NA,community,no-decision,ICU Medical,PainEase,contract-timing,yes,446000
+OPP-0109,2025-07-03,S-EMEA-03,Cedar Grove University Medical Center,EMEA,academic,won,Baxter,PainEase,service,no,1207000
+OPP-0018,2025-07-04,S-NA-16,Ashford University Medical Center,NA,academic,won,B.Braun,B.Braun,clinical-evidence,no,926000
+OPP-0042,2025-07-08,PRO-30,Willow Creek University Medical Center,NA,academic,lost,none,none,features,no,1342000
+OPP-0076,2025-07-13,PRO-25,Oakdale Health System,APAC,idn,no-decision,Fresenius Kabi,none,contract-timing,no,1409000
+OPP-0117,2025-07-14,PRO-18,Elm Hollow Community Hospital,APAC,community,lost,B.Braun,B.Braun,incumbent-relationship,no,516000
+OPP-0067,2025-07-21,S-NA-23,Summit Ridge University Medical Center,NA,academic,won,Baxter,Baxter,service,no,891000
+OPP-0075,2025-08-03,S-APAC-03,Stonebridge Community Hospital,APAC,community,lost,ICU Medical,PainEase,features,no,278000
+OPP-0063,2025-08-05,S-APAC-06,Amber Valley Community Hospital,APAC,community,no-decision,Fresenius Kabi,PainEase,price,no,366000
+OPP-0046,2025-08-14,S-APAC-01,Copper Hill Community Hospital,APAC,community,no-decision,ICU Medical,PainEase,price,no,385000
+OPP-0099,2025-08-14,PRO-04,Meadowbrook University Medical Center,EMEA,academic,lost,Fresenius Kabi,Fresenius Kabi,clinical-evidence,no,1567000
+OPP-0007,2025-08-15,PRO-07,Harborview University Medical Center,NA,academic,no-decision,BD,BD,contract-timing,no,1678000
+OPP-0073,2025-09-01,PRO-06,Silver Birch University Medical Center,EMEA,academic,no-decision,BD,BD,price,yes,1138000
+OPP-0009,2025-09-02,PRO-29,Meadowbrook University Medical Center,EMEA,academic,won,BD,BD,contract-timing,yes,1369000
+OPP-0068,2025-09-05,PRO-27,Blue Heron Community Hospital,NA,community,won,Baxter,Baxter,service,no,349000
+OPP-0108,2025-09-07,PRO-13,Foxglove Community Hospital,NA,community,won,Baxter,Baxter,features,no,390000
+OPP-0082,2025-09-09,S-EMEA-16,Lakeshore Health System,EMEA,idn,won,Baxter,Baxter,contract-timing,no,1485000
+OPP-0079,2025-09-13,PRO-02,Riverbend Community Hospital,APAC,community,won,Fresenius Kabi,Baxter,service,no,326000
+OPP-0025,2025-09-18,S-NA-06,Amber Valley Home Infusion Services,NA,home-infusion,lost,Baxter,PainEase,contract-timing,no,246000
+OPP-0061,2025-09-22,S-NA-07,Foxglove Community Hospital,NA,community,won,Fresenius Kabi,PainEase,clinical-evidence,no,762000
+OPP-0040,2025-09-23,PRO-16,Foxglove Health System,EMEA,idn,won,Fresenius Kabi,Fresenius Kabi,price,no,582000
+OPP-0074,2025-09-24,PRO-04,Meadowbrook University Medical Center,EMEA,academic,lost,Smiths Medical,Smiths Medical,price,no,1729000
+OPP-0119,2025-09-27,PRO-30,Willow Creek University Medical Center,NA,academic,no-decision,Smiths Medical,Smiths Medical,contract-timing,no,1714000
+OPP-0010,2025-10-02,S-APAC-03,Stonebridge Community Hospital,APAC,community,lost,Baxter,PainEase,clinical-evidence,no,502000
+OPP-0015,2025-10-09,PRO-20,Pinehurst Health System,NA,idn,lost,none,none,price,yes,1021000
+OPP-0081,2025-10-11,S-NA-03,Elm Hollow Health System,NA,idn,no-decision,Fresenius Kabi,Fresenius Kabi,other,no,932000
+OPP-0024,2025-10-15,S-EMEA-13,Larkspur University Medical Center,EMEA,academic,won,Baxter,PainEase,price,yes,1463000
+OPP-0090,2025-10-20,PRO-05,Marble Bay Community Hospital,NA,community,no-decision,ICU Medical,Baxter,contract-timing,no,720000
+OPP-0077,2025-10-22,PRO-01,Meadowbrook Health System,EMEA,idn,won,BD,none,clinical-evidence,no,1433000
+OPP-0080,2025-10-23,S-NA-01,Silver Birch Home Infusion Services,NA,home-infusion,no-decision,ICU Medical,Baxter,price,no,453000
+OPP-0078,2025-11-06,PRO-24,Riverbend Health System,NA,idn,lost,Baxter,Baxter,price,no,533000
+OPP-0033,2025-11-10,PRO-02,Riverbend Community Hospital,APAC,community,lost,ICU Medical,ICU Medical,price,no,668000
+OPP-0101,2025-11-25,S-NA-16,Ashford University Medical Center,NA,academic,no-decision,BD,PainEase,contract-timing,yes,1634000
+OPP-0111,2025-11-25,S-NA-06,Amber Valley Home Infusion Services,NA,home-infusion,won,BD,BD,contract-timing,yes,212000
+OPP-0051,2025-11-28,S-NA-07,Foxglove Community Hospital,NA,community,no-decision,BD,BD,contract-timing,no,710000
+OPP-0058,2025-12-04,S-APAC-06,Amber Valley Community Hospital,APAC,community,won,BD,PainEase,features,yes,252000
+OPP-0012,2025-12-06,S-NA-21,Falcon Crest Community Hospital,NA,community,won,ICU Medical,PainEase,features,no,299000
+OPP-0031,2025-12-06,S-EMEA-04,Oakdale Health System,EMEA,idn,won,ICU Medical,ICU Medical,service,no,699000
+OPP-0043,2025-12-08,S-APAC-04,Cedar Grove Home Infusion Services,APAC,home-infusion,won,Fresenius Kabi,Fresenius Kabi,clinical-evidence,no,263000
+OPP-0032,2025-12-11,PRO-15,Harborview Community Hospital,EMEA,community,lost,Fresenius Kabi,none,price,no,250000
+OPP-0017,2025-12-15,S-EMEA-10,Marble Bay Community Hospital,EMEA,community,no-decision,Baxter,Baxter,contract-timing,no,442000
+OPP-0013,2025-12-18,S-NA-12,Willow Creek Community Hospital,NA,community,lost,Baxter,Baxter,price,no,742000
+OPP-0069,2025-12-20,S-NA-13,Oakdale Health System,NA,idn,lost,Baxter,Baxter,incumbent-relationship,no,899000
+OPP-0064,2025-12-26,S-EMEA-03,Cedar Grove University Medical Center,EMEA,academic,lost,BD,BD,predictive-monitoring-gap,yes,1496000
+OPP-0062,2025-12-27,PRO-07,Harborview University Medical Center,NA,academic,no-decision,BD,Baxter,price,no,1122000
+OPP-0104,2025-12-28,S-NA-13,Oakdale Health System,NA,idn,no-decision,B.Braun,none,contract-timing,no,1246000
+OPP-0016,2026-01-02,S-NA-08,Copper Hill University Medical Center,NA,academic,lost,ICU Medical,ICU Medical,price,no,990000
+OPP-0112,2026-01-03,PRO-24,Riverbend Health System,NA,idn,lost,ICU Medical,ICU Medical,price,no,926000
+OPP-0006,2026-01-07,PRO-25,Oakdale Health System,APAC,idn,won,Baxter,Baxter,service,no,1262000
+OPP-0036,2026-01-08,PRO-15,Harborview Community Hospital,EMEA,community,lost,Baxter,Baxter,price,yes,545000
+OPP-0100,2026-01-08,PRO-05,Marble Bay Community Hospital,NA,community,lost,Baxter,Smiths Medical,predictive-monitoring-gap,yes,417000
+OPP-0035,2026-01-09,PRO-29,Meadowbrook University Medical Center,EMEA,academic,no-decision,Baxter,Baxter,contract-timing,no,1576000
+OPP-0039,2026-01-09,S-NA-17,Northgate Home Infusion Services,NA,home-infusion,won,B.Braun,Baxter,contract-timing,no,490000
+OPP-0094,2026-01-11,PRO-19,Pinehurst University Medical Center,NA,academic,won,ICU Medical,ICU Medical,contract-timing,no,1435000
+OPP-0097,2026-01-16,S-NA-15,Marble Bay Health System,NA,idn,lost,Baxter,PainEase,incumbent-relationship,no,655000
+OPP-0096,2026-01-17,S-EMEA-14,Copper Hill Community Hospital,EMEA,community,no-decision,Baxter,PainEase,incumbent-relationship,yes,550000
+OPP-0113,2026-01-17,PRO-17,Granite Peak Home Infusion Services,NA,home-infusion,won,Baxter,Baxter,features,yes,293000
+OPP-0057,2026-01-19,S-NA-24,Larkspur University Medical Center,NA,academic,won,Baxter,Baxter,features,no,664000
+OPP-0020,2026-01-21,PRO-16,Foxglove Health System,EMEA,idn,lost,Fresenius Kabi,none,other,no,813000
+OPP-0008,2026-01-22,PRO-28,Silver Birch University Medical Center,APAC,academic,lost,Smiths Medical,Smiths Medical,features,no,686000
+OPP-0114,2026-01-27,PRO-19,Pinehurst University Medical Center,NA,academic,no-decision,ICU Medical,ICU Medical,contract-timing,no,1483000
+OPP-0054,2026-01-28,PRO-30,Willow Creek University Medical Center,NA,academic,won,ICU Medical,ICU Medical,service,no,1044000
+OPP-0050,2026-02-02,S-NA-06,Amber Valley Home Infusion Services,NA,home-infusion,lost,none,PainEase,price,no,423000
+OPP-0091,2026-02-14,PRO-25,Oakdale Health System,APAC,idn,won,ICU Medical,ICU Medical,features,no,1049000
+OPP-0048,2026-02-21,S-EMEA-06,Ashford Community Hospital,EMEA,community,won,B.Braun,PainEase,price,yes,301000
+OPP-0107,2026-02-27,S-EMEA-13,Larkspur University Medical Center,EMEA,academic,won,ICU Medical,ICU Medical,price,no,847000
+OPP-0002,2026-03-01,PRO-12,Cedar Grove Community Hospital,APAC,community,won,ICU Medical,ICU Medical,contract-timing,no,530000
+OPP-0056,2026-03-07,PRO-12,Cedar Grove Community Hospital,APAC,community,no-decision,Fresenius Kabi,none,price,yes,712000
+OPP-0037,2026-03-11,PRO-04,Meadowbrook University Medical Center,EMEA,academic,won,BD,ICU Medical,contract-timing,no,1497000
+OPP-0045,2026-04-04,S-NA-20,Pinehurst Community Hospital,NA,community,lost,B.Braun,PainEase,features,no,689000
+OPP-0023,2026-04-09,S-EMEA-01,Kestrel Park University Medical Center,EMEA,academic,lost,Smiths Medical,Smiths Medical,price,no,1460000
+OPP-0087,2026-04-14,S-EMEA-11,Northgate University Medical Center,EMEA,academic,won,BD,BD,service,yes,1046000
+OPP-0120,2026-04-21,S-EMEA-12,Stonebridge University Medical Center,EMEA,academic,lost,B.Braun,PainEase,price,no,1122000
+OPP-0083,2026-04-24,PRO-02,Riverbend Community Hospital,APAC,community,won,Smiths Medical,none,features,no,629000
+OPP-0001,2026-05-12,PRO-02,Riverbend Community Hospital,APAC,community,lost,Baxter,none,price,no,672000
+OPP-0089,2026-05-12,S-NA-04,Falcon Crest Community Hospital,NA,community,no-decision,Smiths Medical,PainEase,other,no,435000
+OPP-0029,2026-05-13,S-NA-22,Summit Ridge Community Hospital,NA,community,won,BD,BD,price,no,262000
+OPP-0055,2026-05-17,PRO-29,Meadowbrook University Medical Center,EMEA,academic,no-decision,BD,BD,contract-timing,no,891000
+OPP-0038,2026-05-22,S-EMEA-12,Stonebridge University Medical Center,EMEA,academic,lost,Smiths Medical,Smiths Medical,clinical-evidence,yes,1060000
+OPP-0004,2026-05-23,S-NA-09,Summit Ridge Home Infusion Services,NA,home-infusion,lost,BD,PainEase,predictive-monitoring-gap,yes,366000
+OPP-0103,2026-05-24,S-NA-19,Granite Peak Community Hospital,NA,community,won,Fresenius Kabi,PainEase,contract-timing,no,685000
+OPP-0053,2026-05-28,PRO-03,Kestrel Park Community Hospital,EMEA,community,lost,BD,BD,contract-timing,no,275000
+OPP-0066,2026-06-05,PRO-08,Blue Heron University Medical Center,EMEA,academic,lost,BD,BD,other,no,609000
+OPP-0021,2026-06-13,PRO-28,Silver Birch University Medical Center,APAC,academic,won,B.Braun,Fresenius Kabi,clinical-evidence,no,1697000
+OPP-0088,2026-06-20,S-NA-20,Pinehurst Community Hospital,NA,community,no-decision,none,PainEase,price,yes,405000
+OPP-0019,2026-06-21,PRO-11,Granite Peak Health System,EMEA,idn,won,Baxter,Baxter,features,no,1354000
+OPP-0105,2026-06-22,PRO-22,Blue Heron Community Hospital,NA,community,won,Fresenius Kabi,Fresenius Kabi,contract-timing,no,315000
+OPP-0098,2026-07-05,S-APAC-01,Copper Hill Community Hospital,APAC,community,won,B.Braun,PainEase,features,no,523000
+OPP-0044,2026-07-07,PRO-21,Eastfield University Medical Center,APAC,academic,no-decision,Smiths Medical,Smiths Medical,other,no,1196000
+OPP-0110,2026-07-11,PRO-28,Silver Birch University Medical Center,APAC,academic,won,Fresenius Kabi,Fresenius Kabi,contract-timing,no,798000
+OPP-0060,2026-07-12,S-EMEA-07,Riverbend Community Hospital,EMEA,community,won,BD,BD,features,no,363000
+OPP-0071,2026-07-16,S-APAC-02,Eastfield Community Hospital,APAC,community,no-decision,B.Braun,PainEase,price,no,383000
+OPP-0047,2026-07-20,PRO-05,Marble Bay Community Hospital,NA,community,lost,B.Braun,none,clinical-evidence,no,330000
+OPP-0070,2026-07-25,PRO-23,Harborview University Medical Center,NA,academic,lost,BD,BD,features,no,634000

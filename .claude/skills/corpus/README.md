@@ -66,6 +66,11 @@ waivers mirror managed-TBD discipline in regulated docs.
 
 ## Changelog
 
+- 4 (2026-07-27): Generator provenance pinning — when an acquisition or normalize
+  `command:` references a dataset-local script (`gen.py` pattern), the snapshot's
+  provenance.yml `transforms[]` entry gains an additive `script_sha256` field pinning
+  the exact script bytes that produced the snapshot. Old snapshots untouched;
+  `validate` does not fail on its absence.
 - 3 (2026-07-27): Battle-test hardening. Engine: extended asserts (`max_rows`, per-column
   `enums`, dataset-local `command:` check seam with normalize-style substitutions — how a
   dataset proves its generator/narrative knobs); `acquire --dry-run` (full pipeline in

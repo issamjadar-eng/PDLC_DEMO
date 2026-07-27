@@ -1,0 +1,363 @@
+{
+ "bq": "BQ-04",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:46+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "arr-build",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "attach-gap",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "band-economics",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "discount-by-band",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "discount-sensitivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "unit-econ-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-subscriptions@2026-07-27.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-subscriptions",
+   "snapshot": "2026-07-27.2",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "LTV vs cost-to-serve per connected pump",
+    "series": "unit-econ-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "per-pump ARR and cost rates over active sites \u00d7 5-year undiscounted horizon; ratio = \u03a3 ARR \u00f7 \u03a3 cost_to_serve on raw sums (horizon cancels), rounded for display only",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "ARR vs cost-to-serve per pump by site size",
+    "series": "band-economics",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "per size band over active sites: \u03a3 ARR \u00f7 \u03a3 pumps and \u03a3 cost_to_serve \u00f7 \u03a3 pumps",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Mean hardware discount by site size",
+    "series": "discount-by-band",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "simple mean of hardware_discount_pct across active subscribed sites, per band and overall",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "E-04.2 threshold sensitivity \u2014 miss vs sampling noise",
+    "series": "discount-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "margin = raw mean hardware_discount_pct \u2212 tolerance; SE = sample standard deviation (n\u22121) \u00f7 \u221an over active sites; knife-edge flagged when |margin| \u2264 1pp or |margin| \u2264 2 \u00d7 SE",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2",
+      "config: commercial.yml",
+      "derived: discount-by-band"
+     ]
+    }
+   },
+   {
+    "what": "Connected sites with no subscription",
+    "series": "attach-gap",
+    "evidence_class": "derived",
+    "source": "commercial/internal-fleet@2026-07-27",
+    "derivation": {
+     "method": "sites with >= 1 connected device in the fleet registry minus sites present in the subscription register",
+     "inputs": [
+      "src: commercial/internal-fleet@2026-07-27",
+      "src: commercial/internal-subscriptions@2026-07-27.2"
+     ]
+    }
+   },
+   {
+    "what": "ARR build from active-site start dates ($K, survivor-biased)",
+    "series": "arr-build",
+    "evidence_class": "derived",
+    "source": "commercial/internal-subscriptions@2026-07-27.2",
+    "derivation": {
+     "method": "cumulative current ARR of active sites by subscription start month \u2014 churned sites' past ARR absent (survivor bias stated)",
+     "inputs": [
+      "src: commercial/internal-subscriptions@2026-07-27.2"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "LTV / cost-to-serve history",
+    "series": "econ-history",
+    "evidence_class": "unavailable",
+    "source": "one register snapshot exists \u2014 unit-economics history accumulates as recurring snapshots land; a single point is not a trend",
+    "note": "one register snapshot exists \u2014 unit-economics history accumulates as recurring snapshots land; a single point is not a trend"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-04.md",
+  "status": "in-sync",
+  "pinned": "25c731b6d432b8b28459174751ac64b2bcff342b6d96ee30d97758b8be90bd30",
+  "current": "25c731b6d432b8b28459174751ac64b2bcff342b6d96ee30d97758b8be90bd30"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_04.py",
+    "sha256_12": "993a96ea3b43",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-04"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-board-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-subscriptions/gen.py",
+    "sha256_12": "9c3b5bba0710",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "rng2.sample pools (gap 4, churn 3) raise ValueError if knob changes shrink them below k",
+       "disposition": "accept: pools ~40+ at locked seed; note for knob edits"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-fleet/gen.py",
+    "sha256_12": "165e3ad1d985",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

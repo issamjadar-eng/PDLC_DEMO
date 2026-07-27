@@ -1,0 +1,271 @@
+{
+ "bq": "BQ-07",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:47+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-003",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "derived",
+   "value": "competitor-unit-split",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "growth-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "share-range",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-sales-accounts@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-sales-accounts",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Our NA in-segment installed base (FY2026H1)",
+    "series": "installed-units",
+    "evidence_class": "measured",
+    "source": "commercial/internal-sales-accounts@2026-07-27"
+   },
+   {
+    "what": "NA in-segment units by product line (FY2026H1)",
+    "series": "units-by-line",
+    "evidence_class": "measured",
+    "source": "commercial/internal-sales-accounts@2026-07-27"
+   },
+   {
+    "what": "Installed-base growth vs assumed market growth",
+    "series": "growth-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-sales-accounts@2026-07-27",
+    "derivation": {
+     "method": "our rate = (units_FY2026H1 / units_FY2024)^(1/1.5yr) - 1; market rate transcribed from the assumption record",
+     "inputs": [
+      "src: commercial/internal-sales-accounts@2026-07-27",
+      "assume: A-003"
+     ]
+    }
+   }
+  ],
+  "assumed": [
+   {
+    "what": "FY2026H1 share range (A-003 denominator)",
+    "series": "share-range",
+    "evidence_class": "assumed",
+    "source": "A-003"
+   },
+   {
+    "what": "Unit-share range by FY (constant A-003 denominator)",
+    "series": "share-trend",
+    "evidence_class": "assumed",
+    "source": "A-003"
+   }
+  ],
+  "missing": [
+   {
+    "what": "Competitor US unit split (BD / Baxter / ICU)",
+    "series": "competitor-unit-split",
+    "evidence_class": "unavailable",
+    "source": "no public competitor unit census; would require purchased analyst unit data or vendor disclosures \u2014 never estimated here",
+    "note": "no public competitor unit census; would require purchased analyst unit data or vendor disclosures \u2014 never estimated here"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-07.md",
+  "status": "in-sync",
+  "pinned": "fc785e31664d1dc2d4a4323014132a3fd1fa389732d8335b3d71d186320e3e85",
+  "current": "fc785e31664d1dc2d4a4323014132a3fd1fa389732d8335b3d71d186320e3e85"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_07.py",
+    "sha256_12": "a9972473e836",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-07"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-market-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-sales-accounts/gen.py",
+    "sha256_12": "3c19b25f857f",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED-WITH-FINDINGS",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "Segments are beds-derived, not the shared site_segment hash - not row-comparable with winloss/telemetry segments",
+       "disposition": "accept: account-level vs site-level entities differ by design; add README sentence for BQ authors"
+      },
+      {
+       "id": "F-2",
+       "severity": "low",
+       "summary": "NAME_STEMS indexing has no wraparound guard (56 stems, 39 used)",
+       "disposition": "accept: ample headroom at locked REGIONS"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}
