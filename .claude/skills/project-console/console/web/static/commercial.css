@@ -233,17 +233,26 @@ span.cm-ts-swatch.cm-pair-a, span.cm-ts-swatch.cm-pair-b { width: 10px; height: 
 
 /* timeseries line charts */
 .cm-ts svg { width: 100%; height: auto; display: block; }
-/* direct value labels on points — halo in the surface color keeps them readable
-   over the line in both light and dark themes; pointer-events off so the
-   enlarged hover targets underneath still work */
-.cm-ts-vlabel { font-size: 10px; fill: var(--body-text, #1f2937); font-variant-numeric: tabular-nums;
-  paint-order: stroke; stroke: var(--surface, #fff); stroke-width: 3px; stroke-linejoin: round;
+/* direct value labels on points — deliberately smaller than the 10px axis ticks
+   so they annotate rather than dominate; halo in the surface color keeps them
+   readable over the line in both light and dark themes; pointer-events off so
+   the enlarged hover targets underneath still work */
+.cm-ts-vlabel { font-size: 8.5px; fill: color-mix(in srgb, var(--body-text, #1f2937) 82%, transparent);
+  font-variant-numeric: tabular-nums;
+  paint-order: stroke; stroke: var(--surface, #fff); stroke-width: 2.5px; stroke-linejoin: round;
   pointer-events: none; }
 .cm-ts-axis { stroke: color-mix(in srgb, var(--body-text-muted, #64748b) 35%, transparent); stroke-width: 1; }
-.cm-ts-label { font-size: 11px; fill: var(--body-text, #1f2937); }
 .cm-ts-tick { font-size: 10px; fill: var(--body-text-muted, #64748b); }
-.cm-ts-hit { fill: transparent; cursor: pointer; outline: none; }
+/* hit targets: fill kept transparent (NOT none — `none` is unpainted and captures
+   no pointer events) + explicit pointer-events so hover/focus always fire */
+.cm-ts-hit { fill: transparent; pointer-events: all; cursor: pointer; outline: none; }
 .cm-ts-hit:hover, .cm-ts-hit:focus-visible { fill: color-mix(in srgb, var(--body-text-muted, #64748b) 25%, transparent); }
+/* JS-driven tooltip for timeseries points — fixed-position, theme-aware,
+   pointer-events off so it never traps the cursor */
+.cm-ts-tooltip { position: fixed; z-index: 70; pointer-events: none; white-space: nowrap;
+  background: var(--surface, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px;
+  padding: .35rem .6rem; font-size: .74rem; line-height: 1.4; color: var(--body-text, #1f2937);
+  font-variant-numeric: tabular-nums; box-shadow: 0 10px 26px -10px rgba(0,0,0,.4); }
 .cm-ts-legend { display: flex; gap: .9rem; flex-wrap: wrap; margin-top: .4rem; font-size: .74rem; }
 .cm-ts-key { display: inline-flex; align-items: center; gap: .35rem; }
 .cm-ts-swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
