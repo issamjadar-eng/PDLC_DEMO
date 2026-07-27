@@ -26,6 +26,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Red
 from fastapi.templating import Jinja2Templates
 
 from console.commercial.loader import (
+    _read_yaml,
     load_edition,
     load_index,
     load_pinned_table,
@@ -100,6 +101,96 @@ SEV_META = {
     "low": {"label": "Low", "cls": "sv-low"},
 }
 
+# Reserved explainer targets (schema 1.1) → default labels when the sidecar
+# author omits one. Series targets default to the series' own label.
+EXPLAINER_DEFAULT_LABELS = {
+    "question": "About this analysis",
+    "verdict": "The verdict",
+    "expectations": "Assumptions & expectations",
+}
+
+# Kind glossary — console-owned chrome for the Data tab's artifact inventory.
+# Static plain-language copy explaining what each artifact KIND is; generic and
+# project-agnostic (the per-file summaries come from authored metadata instead).
+KIND_GLOSSARY = {
+    "raw": {
+        "label": "Raw acquisition payload",
+        "what": "The exact bytes fetched from the source system when the snapshot was taken, kept unmodified.",
+        "why": "It is the ground truth everything else derives from — if a number is ever questioned, this file settles what the source actually said at acquisition time.",
+        "how_to_read": "You rarely read it directly; its checksum in provenance.yml proves the normalized data came from these exact bytes.",
+    },
+    "normalized": {
+        "label": "Normalized data",
+        "what": "The raw payload reshaped into a clean, consistent table (CSV) with declared columns.",
+        "why": "Analyses run against this tidy form, not the raw payload, so every answer uses the same well-defined fields.",
+        "how_to_read": "Column meanings are declared in dataset.yml; the rows appear under Structured above.",
+    },
+    "provenance": {
+        "label": "Provenance record",
+        "what": "A hash-chain audit trail for the snapshot: where each file came from, when, and the checksum of every step from raw bytes to normalized table.",
+        "why": "It makes the data tamper-evident — any change to any file breaks the recorded checksums, so you can trust the numbers were not quietly edited.",
+        "how_to_read": "Each source lists its origin and retrieval time; each transform links its output hash back to its input hash.",
+    },
+    "dataset-config": {
+        "label": "Dataset configuration",
+        "what": "The dataset's declared contract: what it contains, where it is acquired from, how it is normalized, its column schema, and how old it may get before it counts as stale.",
+        "why": "It is the single place that defines what this data IS — analyses and freshness checks both read it.",
+        "how_to_read": "The description says what the data covers; max_age_days sets the freshness bar; the schema block names each column.",
+    },
+    "readme": {
+        "label": "Dataset README",
+        "what": "The human-facing overview of the dataset — what it covers, which questions consume it, and known limitations.",
+        "why": "It carries the caveats that numbers alone cannot: what the data does NOT capture and how it should (and should not) be used.",
+        "how_to_read": "Read the limitation notes before leaning on any conclusion drawn from this dataset.",
+    },
+    "assumption": {
+        "label": "Assumption record",
+        "what": "A stated estimate used where real data does not exist — with the estimation method, the value or range used, a confidence level, and a trigger for revisiting it.",
+        "why": "It keeps guesses honest: every assumed figure in an answer traces to one of these records instead of hiding inside the analysis.",
+        "how_to_read": "Check the confidence level and the refresh trigger — a low-confidence assumption is an invitation to challenge the number.",
+    },
+    "waiver": {
+        "label": "Freshness waiver",
+        "what": "A time-boxed, owner-signed acknowledgment that a dataset is older than its freshness limit but is knowingly being used anyway.",
+        "why": "Stale data can silently mislead — a waiver makes the staleness a visible, expiring decision rather than an accident.",
+        "how_to_read": "Note the reason and the expiry date; an expired waiver means the data must be re-acquired before reuse.",
+    },
+    "delta": {
+        "label": "Delta report",
+        "what": "A machine-generated diff between this snapshot and the previous one: how many rows were added, removed, or changed.",
+        "why": "It shows at a glance whether a refresh actually moved the data — and flags unexpected churn worth investigating.",
+        "how_to_read": "The rows line reads added / removed / changed; the sections below list the affected record ids.",
+    },
+}
+
+
+def _explainers_for(q: dict, series: list) -> dict:
+    """Normalize the sidecar's schema-1.1 `explainers` map (absent on 1.0 rows
+    → {}). Keys are series ids or the reserved question/verdict/expectations."""
+    raw = q.get("explainers")
+    if not isinstance(raw, dict):
+        return {}
+    labels_by_series = {s.get("id"): s.get("label") for s in series}
+    out = {}
+    for key, ex in raw.items():
+        if not isinstance(ex, dict) or not ex.get("what"):
+            continue
+        default = EXPLAINER_DEFAULT_LABELS.get(key) or labels_by_series.get(key) or key
+        out[key] = {"label": ex.get("label") or default,
+                    "what": ex.get("what", ""),
+                    "why": ex.get("why", ""),
+                    "how_to_read": ex.get("how_to_read", "")}
+    return out
+
+
+def _terms_for(q: dict) -> list:
+    """Sidecar `terms` list (schema 1.1) — absent/malformed → []."""
+    out = []
+    for t in q.get("terms") or []:
+        if isinstance(t, dict) and t.get("term") and t.get("definition"):
+            out.append({"term": str(t["term"]), "definition": str(t["definition"])})
+    return out
+
 
 def _timeseries_geometry(s: dict):
     """Server-side SVG geometry for a timeseries series (the console renders the
@@ -132,6 +223,8 @@ def _timeseries_geometry(s: dict):
             "dots": [{"cx": round(X(p["x"]), 1), "cy": round(Y(p["y"]), 1),
                       "tip": f"{ln.get('label')} · {p['x']}: {p['y']} {s.get('unit', '')}".strip()}
                      for p in pts],
+            "_pts": [{"cx": round(X(p["x"]), 1), "cy": round(Y(p["y"]), 1), "v": p["y"]}
+                     for p in pts],
             "end_x": round(X(pts[-1]["x"]), 1), "end_y": round(Y(pts[-1]["y"]), 1),
         })
     # de-collide direct end labels: lines ending at similar values otherwise overlap
@@ -140,9 +233,58 @@ def _timeseries_geometry(s: dict):
         g["label_y"] = g["end_y"]
         if i and g["label_y"] - order[i - 1]["label_y"] < 13:
             g["label_y"] = order[i - 1]["label_y"] + 13
+    _place_point_labels(glines, spacing=(W - L - R) / span, h=H, bottom=B)
+    for g in glines:
+        g.pop("_pts", None)
     return {"w": W, "h": H, "lines": glines, "x0": xs[0][:10], "x1": xs[-1][:10],
             "ymax": ymax, "y0_y": round(Y(0), 1), "ymax_y": round(Y(ymax), 1), "left": L,
             "right": W - R}
+
+
+def _fmt_point(v) -> str:
+    if isinstance(v, float) and v.is_integer():
+        return f"{int(v):,}"
+    if isinstance(v, int):
+        return f"{v:,}"
+    return str(v)
+
+
+def _place_point_labels(glines: list, spacing: float, h: int, bottom: int) -> None:
+    """Direct value labels on timeseries points (dataviz: direct labels beat
+    hover-only). Density heuristic: ≤2 lines AND comfortable horizontal room
+    (≥60px between points at viewbox scale) → label every point; otherwise
+    label only the decision-relevant points (endpoints + min/max per line) and
+    leave the rest to the hover tooltips. Labels sit above the point, flip
+    below when the line crowds the space above, and are skipped rather than
+    overlapped."""
+    dense_ok = len(glines) <= 2 and spacing >= 60
+    placed: list[tuple[float, float]] = []
+    for g in glines:
+        pp = g["_pts"]
+        if dense_ok:
+            idxs = list(range(len(pp)))
+        else:
+            vals = [p["v"] for p in pp]
+            idxs = sorted({0, len(pp) - 1, vals.index(min(vals)), vals.index(max(vals))})
+        labels = []
+        for j in idxs:
+            p = pp[j]
+            above, below = p["cy"] - 8, p["cy"] + 16
+            # a neighboring point noticeably higher on screen means the line
+            # slopes through the space above this point — label below instead
+            crowded_above = any(
+                0 <= k < len(pp) and pp[k]["cy"] < p["cy"] - 12
+                for k in (j - 1, j + 1))
+            cand = [below, above] if crowded_above else [above, below]
+            ly = next((c for c in cand
+                       if not any(abs(px - p["cx"]) < 34 and abs(py - c) < 11
+                                  for px, py in placed)), None)
+            if ly is None:
+                continue  # skip rather than overlap
+            ly = min(max(ly, 9.0), float(h - bottom + 12))
+            placed.append((p["cx"], ly))
+            labels.append({"x": p["cx"], "y": round(ly, 1), "v": _fmt_point(p["v"])})
+        g["labels"] = labels
 
 
 def _decorate_series(series: list) -> list:
@@ -379,7 +521,9 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
            "references": [], "quality": None, "tables": [], "unstructured": [],
-           "team": team_names(cfg.repo_root),
+           "explainers": _explainers_for(q, []), "terms": _terms_for(q),
+           "kind_glossary": KIND_GLOSSARY,
+           "explain_json": {}, "team": team_names(cfg.repo_root),
            "approved_qp": request.query_params.get("approved"),
            "pr_url": request.query_params.get("pr"),
            "approve_error": request.query_params.get("approve_error"),
@@ -399,6 +543,10 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
                 s["_ref_n"] = None
         ctx["series"] = series
         ctx["verdicts"] = ed["data"].get("verdicts", [])
+        # plain-language explainer layer (sidecar schema 1.1; absent on 1.0 → {})
+        ctx["explainers"] = _explainers_for(q, series)
+        for s in series:
+            s["_explainer"] = ctx["explainers"].get(s.get("id"))
         # expectations panel (plan vs actual, with met/not-met verdicts)
         exps = []
         for e in ed["data"].get("expectations", []):
@@ -484,6 +632,10 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
             link = f"/documents#path={hits[0].relative_to(cfg.repo_root)}" if hits else None
             chips.append({"id": aid, "link": link})
         ctx["assumption_chips"] = chips
+    # one shared modal payload: authored explainers + the console-owned kind
+    # glossary (Data tab), namespaced so keys can never collide
+    ctx["explain_json"] = {**ctx["explainers"],
+                           **{f"kind:{k}": v for k, v in KIND_GLOSSARY.items()}}
     return templates.TemplateResponse(request, "commercial_view.html", ctx)
 
 
@@ -517,32 +669,151 @@ def _build_tables(repo_root: Path, ed: dict) -> list:
     return tables
 
 
+def _truncate(text: str, n: int = 140) -> str:
+    text = " ".join(str(text).split())
+    return text if len(text) <= n else text[: n - 1].rstrip() + "…"
+
+
+def _first_sentence(text: str) -> str:
+    text = " ".join(str(text).split())
+    m = re.search(r"[.!?](?:\s|$)", text)
+    return text[: m.end()].strip() if m else _truncate(text)
+
+
+def _readme_first_para(p: Path) -> str:
+    """First non-banner paragraph of a README — skips headings, italic demo
+    banners, blockquotes, HTML comments, and list bullets."""
+    try:
+        lines = p.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return ""
+    para: list[str] = []
+    for ln in lines:
+        st = ln.strip()
+        if not st:
+            if para:
+                break
+            continue
+        if not para and st.startswith(("#", "_", ">", "-", "*", "<!--", "|")):
+            continue
+        para.append(st)
+    return _truncate(" ".join(para)) if para else ""
+
+
+def _raw_source_summary(prov: dict | None, fname: str) -> str:
+    """Summary for a raw payload file from the snapshot's authored provenance
+    sources[] — never invented; empty string when provenance is silent."""
+    from urllib.parse import urlparse
+
+    for src in (prov or {}).get("sources", []) or []:
+        files = {Path(f.get("path", "")).name for f in src.get("files", []) or []}
+        if files and fname not in files:
+            continue
+        origin = src.get("system") or ""
+        if not origin and src.get("url"):
+            origin = urlparse(str(src["url"])).netloc
+        bits = ["Byte-pinned acquisition payload"]
+        head = " · ".join(x for x in (str(src.get("type", "")).strip(), origin) if x)
+        if head:
+            bits.append(head)
+        if src.get("retrieved_at"):
+            bits.append(f"retrieved {str(src['retrieved_at'])[:10]}")
+        out = " — ".join(bits[:2]) + (f", {bits[2]}" if len(bits) > 2 else "")
+        if src.get("notes"):
+            out += f" · {_truncate(src['notes'], 80)}"
+        return out
+    return ""
+
+
+def _provenance_summary(prov: dict | None) -> str:
+    if not prov:
+        return ""
+    checks = prov.get("checks") or {}
+    if "schema_valid" not in checks and "asserts_passed" not in checks:
+        status = "not recorded"
+    elif checks.get("schema_valid", True) and checks.get("asserts_passed", True):
+        status = "passed"
+    else:
+        status = "failed"
+    n_src = len(prov.get("sources") or [])
+    n_tr = len(prov.get("transforms") or [])
+    return f"Hash-chain provenance: {n_src} source(s), {n_tr} transform(s), schema checks {status}"
+
+
+def _assumption_summary(rec: dict | None) -> str:
+    if not rec:
+        return ""
+    bits = [str(rec.get("title") or "assumption record")]
+    meta = " · ".join(x for x in (
+        f"status {rec['status']}" if rec.get("status") else "",
+        f"confidence {rec['confidence']}" if rec.get("confidence") else "") if x)
+    if meta:
+        bits.append(meta)
+    out = " — ".join(bits)
+    if rec.get("value_or_range"):
+        out += f": {_truncate(rec['value_or_range'], 110)}"
+    return out
+
+
+def _waiver_summary(rec: dict | None) -> str:
+    if not rec:
+        return ""
+    out = _truncate(rec.get("reason") or "freshness waiver", 110)
+    meta = " · ".join(x for x in (
+        f"expires {rec['expires']}" if rec.get("expires") else "",
+        f"status {rec['status']}" if rec.get("status") else "") if x)
+    return f"{out} — {meta}" if meta else out
+
+
+def _delta_summary(p: Path) -> str:
+    try:
+        for ln in p.read_text(encoding="utf-8").splitlines():
+            st = ln.strip()
+            if st.startswith("- rows:"):
+                return "Snapshot delta vs prior: " + st[2:].strip()
+    except OSError:
+        pass
+    return ""
+
+
 def _build_unstructured(repo_root: Path, ed: dict) -> list:
     """Unstructured artifacts behind an answer: per pinned dataset — raw payloads,
-    provenance.yml, dataset config/README, assumption + waiver records. Listed with
-    sizes and Documents-viewer links; the console never parses them."""
+    provenance.yml, dataset config/README, delta report, assumption + waiver
+    records. Each carries a one-line human summary derived ONLY from authored
+    metadata (provenance sources, dataset description, record fields — the
+    console invents nothing) plus a kind key into the static KIND_GLOSSARY."""
     groups = []
     for ds, snap in ed.get("pins", {}).items():
         base = repo_root / "docs" / "project" / "corpus" / ds
         sdir = base / "snapshots" / snap
+        prov = _read_yaml(sdir / "provenance.yml")
         artifacts = []  # key name "artifacts" — g.items in Jinja resolves dict.items
 
-        def add(p: Path, label: str):
+        def add(p: Path, label: str, kind: str, summary: str = ""):
             if p.exists():
                 rel = p.relative_to(repo_root)
-                artifacts.append({"label": label, "name": p.name,
+                artifacts.append({"label": label, "name": p.name, "kind": kind,
+                              "summary": summary,
                               "size_kb": round(p.stat().st_size / 1024, 1),
                               "href": f"/documents#path={rel}"})
 
         for raw in sorted((sdir / "raw").glob("*")) if (sdir / "raw").is_dir() else []:
-            add(raw, "raw payload (as acquired)")
-        add(sdir / "provenance.yml", "provenance hash chain")
-        add(base / "dataset.yml", "dataset config (schema, acquisition, cadence)")
-        add(base / "README.md", "dataset README")
+            add(raw, "raw payload (as acquired)", "raw",
+                _raw_source_summary(prov, raw.name))
+        add(sdir / "provenance.yml", "provenance hash chain", "provenance",
+            _provenance_summary(prov))
+        add(sdir / "delta-report.md", "delta vs prior snapshot", "delta",
+            _delta_summary(sdir / "delta-report.md"))
+        dcfg = _read_yaml(base / "dataset.yml")
+        add(base / "dataset.yml", "dataset config (schema, acquisition, cadence)",
+            "dataset-config",
+            _first_sentence((dcfg or {}).get("description") or ""))
+        add(base / "README.md", "dataset README", "readme",
+            _readme_first_para(base / "README.md"))
         for a in sorted((base / "assumptions").glob("A-*.yml")) if (base / "assumptions").is_dir() else []:
-            add(a, "assumption record")
+            add(a, "assumption record", "assumption", _assumption_summary(_read_yaml(a)))
         for w in sorted((base / "waivers").glob("W-*.yml")) if (base / "waivers").is_dir() else []:
-            add(w, "freshness waiver")
+            add(w, "freshness waiver", "waiver", _waiver_summary(_read_yaml(w)))
         groups.append({"dataset": ds, "snapshot": snap, "artifacts": artifacts})
     return groups
 

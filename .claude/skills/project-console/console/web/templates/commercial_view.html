@@ -4,6 +4,14 @@
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
 <section class="cm-wrap cm-wrap-wide" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
+  {# Explainer ⓘ — hover/focus shows the compact "what" card; click opens the
+     shared plain-language dialog. Renders nothing when the sidecar carries no
+     explainer for the target (schema 1.0 degrades to no icons). #}
+  {% macro info(key) %}{% set ex = explainers.get(key) %}{% if ex %}<span class="cm-info"><button type="button" class="cm-info-btn" data-explain="{{ key }}" aria-label="Explain: {{ ex.label }}" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ ex.what }}</span></span>{% endif %}{% endmacro %}
+
+  {# Kind-glossary ⓘ — console-owned plain-language copy for artifact kinds. #}
+  {% macro kindinfo(kind) %}{% set g = kind_glossary.get(kind) %}{% if g %}<span class="cm-info"><button type="button" class="cm-info-btn" data-explain="kind:{{ kind }}" aria-label="What is a {{ g.label | lower }}?" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ g.what }}</span></span>{% endif %}{% endmacro %}
+
   {# Header lives INSIDE the content column so its left edge aligns with the verdict/
      content and it spans to the right margin; only the editions tree sits left. #}
   {% macro qheader() %}
@@ -13,6 +21,9 @@
       <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}</p>
       <h1 class="cm-question">{{ q.question }}</h1>
       <div class="cm-badges">
+        {% if explainers.get('question') %}
+        <span class="cm-info"><button type="button" class="cm-chip cm-about-btn" data-explain="question" aria-haspopup="dialog">ⓘ About this analysis</button><span class="cm-info-card" role="tooltip">{{ explainers['question'].what }}</span></span>
+        {% endif %}
         {% if ed_meta %}<span class="cm-chip {{ ed_meta.cls }}">{{ ed_meta.label }}</span>{% endif %}
         {% if q._evidence %}<span class="cm-badge {{ q._evidence.cls }}" title="{{ q._evidence.tip }}">{{ q._evidence.glyph }} {{ q._evidence.label }}</span>{% endif %}
         {% if q._fresh %}<span class="cm-badge {{ q._fresh.cls }}" title="{{ q._fresh.tip }}">{{ q._fresh.label }}</span>{% endif %}
@@ -67,7 +78,7 @@
   <div id="cm-tab-report">
   {% for v in verdicts %}
   <div class="cm-verdict">
-    <span class="cm-verdict-k">Verdict</span>
+    <span class="cm-verdict-k">Verdict{{ info('verdict') }}</span>
     <p class="cm-verdict-h">{{ v.headline }}</p>
   </div>
   {% endfor %}
@@ -121,7 +132,7 @@
 
   {% if expectations %}
   <section class="cm-expect">
-    <h2>Assumptions &amp; expectations <span class="cm-muted">— plan vs actual; <em>unvalidated</em> means the expectation itself is a stand-in to challenge</span></h2>
+    <h2>Assumptions &amp; expectations{{ info('expectations') }} <span class="cm-muted">— plan vs actual; <em>unvalidated</em> means the expectation itself is a stand-in to challenge</span></h2>
     <table class="cm-expect-table">
       <thead><tr><th>ID</th><th>Expectation</th><th>Expected</th><th>Actual</th><th>Verdict</th><th>Basis</th></tr></thead>
       <tbody>
@@ -145,7 +156,7 @@
     {% for s in series %}
     <figure class="cm-chart">
       <figcaption class="cm-chart-cap">
-        <span class="cm-chart-title">{{ s.label }}</span>
+        <span class="cm-chart-title">{{ s.label }}{% if s._explainer %}{{ info(s.id) }}{% endif %}</span>
         <span class="cm-badge {{ s._evidence.cls }}" title="{{ s._evidence.tip }}">{{ s._evidence.glyph }} {{ s._evidence.label }}</span>
       </figcaption>
       {% if s._stat %}
@@ -182,8 +193,9 @@
           <line x1="{{ s._ts.left }}" y1="{{ s._ts.y0_y }}" x2="{{ s._ts.right }}" y2="{{ s._ts.y0_y }}" class="cm-ts-axis"/>
           {% for ln in s._ts.lines %}
           <polyline points="{{ ln.path }}" fill="none" stroke="{{ ln.color }}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="4.5" class="cm-ts-hit"><title>{{ d0.tip }}</title></circle>{% endfor %}
+          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="9" class="cm-ts-hit" tabindex="0" aria-label="{{ d0.tip }}"><title>{{ d0.tip }}</title></circle>{% endfor %}
           {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="2" fill="{{ ln.color }}"/>{% endfor %}
+          {% for lb in ln.labels %}<text x="{{ lb.x }}" y="{{ lb.y }}" class="cm-ts-vlabel" text-anchor="middle">{{ lb.v }}</text>{% endfor %}
           <text x="{{ ln.end_x + 6 }}" y="{{ ln.label_y + 3 }}" class="cm-ts-label">{{ ln.label }}</text>
           {% endfor %}
           <text x="{{ s._ts.left }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick">{{ s._ts.x0 }}</text>
@@ -277,6 +289,20 @@
       {% endfor %}
     </ol>
   </section>
+  {% endif %}
+
+  {% if terms %}
+  <details class="cm-terms">
+    <summary>Terms &amp; definitions ({{ terms | length }})</summary>
+    <table class="cm-expect-table cm-terms-table">
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        {% for t in terms %}
+        <tr><td class="cm-term-t">{{ t.term }}</td><td>{{ t.definition }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
   {% endif %}
   </div><!-- /#cm-tab-report -->
 
@@ -423,7 +449,8 @@
       <ul class="cm-data-files">
         {% for it in g.artifacts %}
         <li><a href="{{ it.href }}" target="_blank" rel="noopener">{{ it.name }} ↗</a>
-          <span class="cm-muted">· {{ it.label }} · {{ it.size_kb }} KB</span></li>
+          <span class="cm-muted">· {{ it.label }} · {{ it.size_kb }} KB</span>{{ kindinfo(it.kind) }}
+          {% if it.summary %}<span class="cm-art-sum">{{ it.summary }}</span>{% endif %}</li>
         {% endfor %}
       </ul>
     </details>
@@ -449,6 +476,54 @@
   </div><!-- /.cm-shell -->
   {% endif %}
 </section>
+
+{# Shared plain-language explainer dialog — one <dialog>, fed per-target from the
+   JSON payload (authored explainers + console-owned kind glossary). Native modal:
+   ESC closes; a click on the backdrop closes; same pattern as the approve dialog. #}
+{% if explain_json %}
+<script type="application/json" id="cm-explain-data">{{ explain_json | tojson }}</script>
+<dialog id="cm-explain-dialog" class="cm-dialog cm-explain-dialog" aria-labelledby="cm-explain-title">
+  <div class="cm-dialog-head">
+    <h2 id="cm-explain-title"></h2>
+    <button type="button" class="cm-dialog-x" aria-label="Close" onclick="this.closest('dialog').close()">✕</button>
+  </div>
+  <div class="cm-explain-body">
+    <div data-explain-slot="what"><h3>What this shows</h3><p></p></div>
+    <div data-explain-slot="why"><h3>Why it matters</h3><p></p></div>
+    <div data-explain-slot="how"><h3>How to read it</h3><p></p></div>
+  </div>
+</dialog>
+<script>
+(function () {
+  var dataEl = document.getElementById('cm-explain-data');
+  var dlg = document.getElementById('cm-explain-dialog');
+  if (!dataEl || !dlg) return;
+  var M; try { M = JSON.parse(dataEl.textContent); } catch (e) { return; }
+  function slot(k, v) {
+    var el = dlg.querySelector('[data-explain-slot="' + k + '"]');
+    if (!el) return;
+    el.hidden = !v;
+    el.querySelector('p').textContent = v || '';
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-explain]');
+    if (!btn) return;
+    var ex = M[btn.getAttribute('data-explain')];
+    if (!ex) return;
+    dlg.querySelector('#cm-explain-title').textContent = ex.label || '';
+    slot('what', ex.what);
+    slot('why', ex.why);
+    slot('how', ex.how_to_read);
+    dlg.showModal();
+  });
+  // click on the backdrop (outside the dialog box) closes — ESC is native
+  dlg.addEventListener('click', function (e) {
+    var r = dlg.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+  });
+})();
+</script>
+{% endif %}
 
 {# Assistant drawer — grounded in this answer's compact rendition. #}
 {% set assistant = {

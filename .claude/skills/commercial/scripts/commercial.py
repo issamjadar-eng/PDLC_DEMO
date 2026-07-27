@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
@@ -570,7 +570,26 @@ def cmd_approve(args):
     return 0
 
 
-def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict):
+def _resolve_terms(bq: str, refs, catalog: dict):
+    """Resolve a question's `terms:` reference list against the catalog's top-level
+    `terms:` dictionary (define once, reference per question). Each entry is either
+    a string key into the dictionary or a one-off inline `{term: definition}` map.
+    An unresolved key warns to stderr and is skipped — a definition is never
+    fabricated by the engine."""
+    out = []
+    for ref in refs or []:
+        if isinstance(ref, dict):
+            for term, definition in ref.items():
+                out.append({"term": str(term), "definition": str(definition)})
+        elif ref in catalog:
+            out.append({"term": str(ref), "definition": str(catalog[ref])})
+        else:
+            sys.stderr.write(f"warning: [{bq}] terms entry '{ref}' not found in the "
+                             f"top-level terms dictionary — skipped\n")
+    return out
+
+
+def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict, terms_catalog: dict = None):
     bq = q["id"]
     eds = list_editions(root, bq)
     approved = next((e for e in reversed(eds) if e["status"] == "approved"), None)
@@ -593,6 +612,12 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict):
         "editions": [{"edition": e["edition"], "status": e["status"]} for e in eds],
         "assumptions": [], "freshness": None, "verdict_headline": None,
         "evidence_class": None, "report_path": None, "data_path": None,
+        # schema 1.1 reader aids (plain-language, timeless — see SKILL.md):
+        # explainers keyed by series id or reserved keys question/verdict/expectations,
+        # copied verbatim from the catalog; terms resolved against the top-level
+        # `terms:` dictionary. Purely additive — 1.0 consumers ignore unknown fields.
+        "explainers": q.get("explainers") or {},
+        "terms": _resolve_terms(bq, q.get("terms"), terms_catalog or {}),
     }
     show = eds[-1] if eds else None  # newest edition carries the card's verdict/badges
     if show:
@@ -623,7 +648,8 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict):
 def cmd_render(args):
     root, corpus_root = Path(args.root), Path(args.corpus_root)
     cfg = load_config(root)
-    rows = [_bq_sidecar_row(root, corpus_root, q) for q in cfg.get("questions", [])]
+    terms_catalog = cfg.get("terms") or {}
+    rows = [_bq_sidecar_row(root, corpus_root, q, terms_catalog) for q in cfg.get("questions", [])]
     out = {
         "schema_version": SCHEMA_VERSION, "generated": now_iso(),
         "categories": cfg.get("categories", []),
@@ -796,8 +822,9 @@ Registered corpus dependencies:
 def cmd_catalog(args):
     root, corpus_root = Path(args.root), Path(args.corpus_root)
     cfg = load_config(root)
+    terms_catalog = cfg.get("terms") or {}
     for q in cfg.get("questions", []):
-        row = _bq_sidecar_row(root, corpus_root, q)
+        row = _bq_sidecar_row(root, corpus_root, q, terms_catalog)
         mark = {"answered": "✓", "draft-only": "◐", "no-answer": "○", "not-implemented": "·"}[row["status"]]
         print(f"{mark} {q['id']:6s} [{q['category']}] {row['status']:15s} {q['question'][:80]}")
     return 0

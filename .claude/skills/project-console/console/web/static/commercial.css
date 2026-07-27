@@ -233,11 +233,17 @@ span.cm-ts-swatch.cm-pair-a, span.cm-ts-swatch.cm-pair-b { width: 10px; height: 
 
 /* timeseries line charts */
 .cm-ts svg { width: 100%; height: auto; display: block; }
+/* direct value labels on points — halo in the surface color keeps them readable
+   over the line in both light and dark themes; pointer-events off so the
+   enlarged hover targets underneath still work */
+.cm-ts-vlabel { font-size: 10px; fill: var(--body-text, #1f2937); font-variant-numeric: tabular-nums;
+  paint-order: stroke; stroke: var(--surface, #fff); stroke-width: 3px; stroke-linejoin: round;
+  pointer-events: none; }
 .cm-ts-axis { stroke: color-mix(in srgb, var(--body-text-muted, #64748b) 35%, transparent); stroke-width: 1; }
 .cm-ts-label { font-size: 11px; fill: var(--body-text, #1f2937); }
 .cm-ts-tick { font-size: 10px; fill: var(--body-text-muted, #64748b); }
-.cm-ts-hit { fill: transparent; }
-.cm-ts-hit:hover { fill: color-mix(in srgb, var(--body-text-muted, #64748b) 25%, transparent); }
+.cm-ts-hit { fill: transparent; cursor: pointer; outline: none; }
+.cm-ts-hit:hover, .cm-ts-hit:focus-visible { fill: color-mix(in srgb, var(--body-text-muted, #64748b) 25%, transparent); }
 .cm-ts-legend { display: flex; gap: .9rem; flex-wrap: wrap; margin-top: .4rem; font-size: .74rem; }
 .cm-ts-key { display: inline-flex; align-items: center; gap: .35rem; }
 .cm-ts-swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
@@ -318,3 +324,38 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-data-files { margin: .2rem 0 .3rem 1.1rem; padding: 0; display: grid; gap: .25rem; font-size: .8rem; }
 .cm-dt-prev, .cm-dt-next { padding: .25rem .6rem; font-size: .74rem; }
 .cm-dt-page { font-size: .74rem; }
+
+/* explainer ⓘ — hover/focus shows the compact "what" card; click opens the
+   shared plain-language dialog. Real buttons, keyboard-focusable. */
+.cm-info { position: relative; display: inline-flex; vertical-align: baseline; }
+.cm-info-btn { border: none; background: none; cursor: pointer; padding: 0 .18rem; line-height: 1;
+  font-size: .9em; color: var(--body-text-muted, #64748b); border-radius: 99px; }
+.cm-info-btn:hover, .cm-info-btn:focus-visible { color: var(--brand-primary, #4f46e5); }
+.cm-info-btn:focus-visible { outline: 2px solid color-mix(in srgb, var(--brand-primary, #4f46e5) 55%, transparent); outline-offset: 1px; }
+.cm-info-card { position: absolute; top: calc(100% + 7px); left: 50%; transform: translateX(-50%); z-index: 40;
+  display: none; width: max-content; max-width: 21rem; white-space: normal; text-align: left;
+  background: var(--surface, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: 10px;
+  padding: .55rem .75rem; font-size: .75rem; font-weight: 400; line-height: 1.5;
+  color: var(--body-text, #1f2937); box-shadow: 0 12px 30px -12px rgba(0,0,0,.4);
+  text-transform: none; letter-spacing: normal; }
+.cm-info-btn:hover + .cm-info-card, .cm-info-btn:focus-visible + .cm-info-card { display: block; }
+.cm-about-btn { --c: #2a78d6; border: none; cursor: pointer; }
+.cm-about-btn:hover, .cm-about-btn:focus-visible { background: color-mix(in srgb, var(--c) 24%, transparent); }
+
+/* shared explainer dialog */
+.cm-explain-dialog { max-width: 31rem; }
+.cm-explain-body { display: grid; gap: .2rem; }
+.cm-explain-body h3 { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--body-text-muted, #64748b); margin: .55rem 0 .2rem; }
+.cm-explain-body p { margin: 0; font-size: .86rem; line-height: 1.55; }
+
+/* Terms & definitions — collapsed fold at the bottom of the Report tab */
+.cm-terms { margin-top: 1.3rem; border-top: 1px solid var(--border, #e2e8f0); padding-top: .9rem; }
+.cm-terms summary { cursor: pointer; font-weight: 600; font-size: .92rem; }
+.cm-terms-table { margin-top: .7rem; }
+.cm-term-t { font-weight: 600; white-space: nowrap; }
+
+/* Data tab — artifact summary lines (from authored metadata only) */
+.cm-data-files li { line-height: 1.5; }
+.cm-art-sum { display: block; font-size: .76rem; color: var(--body-text-muted, #64748b);
+  margin: .05rem 0 .3rem; max-width: 62rem; }
