@@ -2,24 +2,24 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 141.81,
-    "2026-06-16": 47.8,
-    "2026-06-22": 21.17,
-    "2026-06-23": 11.09,
-    "2026-06-29": 1.22,
-    "2026-06-30": 216.13,
-    "2026-07-01": 221.1,
-    "2026-07-02": 26.51,
-    "2026-07-03": 9.74,
-    "2026-07-05": 3.18,
-    "2026-07-08": 1.35,
-    "2026-07-14": 38.07,
-    "2026-07-15": 241.49,
-    "2026-07-16": 52.09,
-    "2026-07-20": 17.3,
-    "2026-07-21": 104.41,
-    "2026-07-22": 243.61,
-    "2026-07-27": 173.03
+    "2026-06-15": 142.3,
+    "2026-06-16": 47.96,
+    "2026-06-22": 21.24,
+    "2026-06-23": 11.13,
+    "2026-06-29": 1.23,
+    "2026-06-30": 216.88,
+    "2026-07-01": 221.86,
+    "2026-07-02": 26.6,
+    "2026-07-03": 9.78,
+    "2026-07-05": 3.19,
+    "2026-07-08": 1.36,
+    "2026-07-14": 38.2,
+    "2026-07-15": 242.33,
+    "2026-07-16": 52.27,
+    "2026-07-20": 17.36,
+    "2026-07-21": 104.77,
+    "2026-07-22": 244.44,
+    "2026-07-27": 194.1
   },
   "members": 1,
   "months": {
@@ -220,25 +220,25 @@
             "output": 633166
           },
           "2026-07-27": {
-            "cache_creation": 3948324,
-            "cache_read": 118147980,
-            "cache_write_1h": 274318,
-            "cache_write_5m": 3674006,
-            "input": 1650,
-            "messages": 826,
-            "output": 942055
+            "cache_creation": 4345783,
+            "cache_read": 133834854,
+            "cache_write_1h": 369548,
+            "cache_write_5m": 3976235,
+            "input": 1864,
+            "messages": 933,
+            "output": 1032244
           }
         },
         "by_model": {
           "claude-fable-5": {
-            "cache_creation": 13333759,
-            "cache_read": 757286603,
-            "cache_write_1h": 5237315,
-            "cache_write_5m": 8096444,
-            "cost": 1109.68,
-            "input": 5940,
-            "messages": 2971,
-            "output": 2927547
+            "cache_creation": 13731218,
+            "cache_read": 772973477,
+            "cache_write_1h": 5332545,
+            "cache_write_5m": 8398673,
+            "cost": 1135.56,
+            "input": 6154,
+            "messages": 3078,
+            "output": 3017736
           },
           "claude-opus-4-8": {
             "cache_creation": 4429255,
@@ -261,17 +261,17 @@
             "output": 795
           }
         },
-        "cost": 1284.14,
+        "cost": 1310.02,
         "name": "Member 1",
-        "sessions": 17,
+        "sessions": 18,
         "totals": {
-          "cache_creation": 18027739,
-          "cache_read": 988166486,
-          "cache_write_1h": 8256525,
-          "cache_write_5m": 9771214,
-          "input": 289926,
-          "messages": 3636,
-          "output": 3647987
+          "cache_creation": 18425198,
+          "cache_read": 1003853360,
+          "cache_write_1h": 8351755,
+          "cache_write_5m": 10073443,
+          "input": 290140,
+          "messages": 3743,
+          "output": 3738176
         }
       }
     }
@@ -5038,17 +5038,17 @@
     "ben/108": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 5306665,
-          "cache_read": 355933110,
-          "cache_write_1h": 1002381,
-          "cache_write_5m": 4304284,
-          "cost": 504.99,
-          "input": 2560,
-          "messages": 1281,
-          "output": 1503600
+          "cache_creation": 5631486,
+          "cache_read": 370548912,
+          "cache_write_1h": 1024973,
+          "cache_write_5m": 4606513,
+          "cost": 528.14,
+          "input": 2748,
+          "messages": 1375,
+          "output": 1589632
         }
       },
-      "cost": 504.99,
+      "cost": 528.14,
       "cost_allocated": 6.41,
       "cost_basis": "measured+allocated",
       "estimate": {
@@ -5107,13 +5107,13 @@
       },
       "sessions": 2,
       "totals": {
-        "cache_creation": 5306665,
-        "cache_read": 355933110,
-        "cache_write_1h": 1002381,
-        "cache_write_5m": 4304284,
-        "input": 2560,
-        "messages": 1281,
-        "output": 1503600
+        "cache_creation": 5631486,
+        "cache_read": 370548912,
+        "cache_write_1h": 1024973,
+        "cache_write_5m": 4606513,
+        "input": 2748,
+        "messages": 1375,
+        "output": 1589632
       }
     },
     "ben/109": {
@@ -5185,14 +5185,14 @@
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 1116930,
-          "cache_read": 14732024,
-          "cache_write_1h": 1116930,
+          "cache_creation": 1189568,
+          "cache_read": 15803096,
+          "cache_write_1h": 1189568,
           "cache_write_5m": 0,
-          "cost": 41.44,
-          "input": 276,
-          "messages": 138,
-          "output": 87363
+          "cost": 44.17,
+          "input": 302,
+          "messages": 151,
+          "output": 91520
         },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
@@ -5225,16 +5225,16 @@
           "output": 795
         }
       },
-      "cost": 261.06,
-      "sessions": 24,
+      "cost": 263.79,
+      "sessions": 25,
       "totals": {
-        "cache_creation": 5960086,
-        "cache_read": 306422845,
-        "cache_write_1h": 5367136,
+        "cache_creation": 6032724,
+        "cache_read": 307493917,
+        "cache_write_1h": 5439774,
         "cache_write_5m": 592950,
-        "input": 362578,
-        "messages": 1207,
-        "output": 1216726
+        "input": 362604,
+        "messages": 1220,
+        "output": 1220883
       }
     },
     "dmytro/001": {
@@ -5281,9 +5281,9 @@
     "agentic_hours": 514.8,
     "cost_allocated": 176.94,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 1310.06,
-    "cost_unattributed_measured": 261.06,
-    "cost_unattributed_residual": 84.12,
+    "cost_measured_attributed": 1333.21,
+    "cost_unattributed_measured": 263.79,
+    "cost_unattributed_residual": 86.85,
     "hours_saved": {
       "max": 3451.8,
       "min": 1128.0
