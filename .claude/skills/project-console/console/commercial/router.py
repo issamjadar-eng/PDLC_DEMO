@@ -128,11 +128,30 @@ CODE_ROLE_META = {
 CODE_CHECKS = (("static_lint", "lint"), ("poison_scan", "poison scan"),
                ("determinism", "determinism"))
 
+# Review verdict → chip class (code reviews + superseded history entries).
+REVIEW_VERDICT_CLS = {
+    "APPROVED": "vx-met",
+    "APPROVED-WITH-FINDINGS": "vx-risk",
+    "CHANGES-REQUIRED": "vx-notmet",
+}
+
+
+def _inline_md_ref(ref) -> str | None:
+    """A detail_ref the console may render INLINE: a repo-relative markdown
+    path (never a URL, never absolute). Anything else → None (external link
+    affordance only)."""
+    if isinstance(ref, str) and ref and ref.endswith(".md") \
+            and not ref.startswith(("http://", "https://", "/")) \
+            and ".." not in Path(ref).parts:
+        return ref
+    return None
+
 
 def _decorate_code(q: dict) -> dict | None:
-    """Normalize a question row's schema-1.2 `code` block for the Quality tab's
-    Computation code panel. Absent/malformed → None (the panel renders its
-    empty state). The console renders the audit verbatim — it never re-runs a
+    """Normalize a question row's schema-1.2/1.3 `code` block for the Quality
+    tab's Computation code panel. Absent/malformed → None (the panel renders its
+    empty state); rows without `review_history` (schema ≤1.2) degrade to no
+    history chrome. The console renders the audit verbatim — it never re-runs a
     check or re-derives a status."""
     raw = q.get("code")
     if not isinstance(raw, dict):
@@ -170,6 +189,7 @@ def _decorate_code(q: dict) -> dict | None:
             ref = review.get("detail_ref")
             if isinstance(ref, str) and ref and not ref.startswith(("http://", "https://", "/")):
                 d["_detail_link"] = f"/documents#path={ref}"
+            d["_detail_md"] = _inline_md_ref(ref)
             findings = []
             for f in review.get("findings") or []:
                 if isinstance(f, dict):
@@ -177,6 +197,28 @@ def _decorate_code(q: dict) -> dict | None:
                     f["_sev"] = SEV_META.get(f.get("severity", "medium"), SEV_META["medium"])
                     findings.append(f)
             d["_findings"] = findings
+        # schema 1.3: reviews filed against superseded shas of the same file —
+        # the original (pre-fix) findings stay inspectable in place. Absent
+        # (schema ≤1.2) or malformed → no history chrome, zero errors.
+        history = []
+        for h in a.get("review_history") or []:
+            if not isinstance(h, dict) or not h.get("verdict"):
+                continue
+            h = dict(h)
+            h["_cls"] = REVIEW_VERDICT_CLS.get(str(h.get("verdict", "")).upper(), "vx-none")
+            hf = []
+            for f in h.get("findings") or []:
+                if isinstance(f, dict):
+                    f = dict(f)
+                    f["_sev"] = SEV_META.get(f.get("severity", "medium"), SEV_META["medium"])
+                    hf.append(f)
+            h["_findings"] = hf
+            ref = h.get("detail_ref")
+            if isinstance(ref, str) and ref and not ref.startswith(("http://", "https://", "/")):
+                h["_detail_link"] = f"/documents#path={ref}"
+            h["_detail_md"] = _inline_md_ref(ref)
+            history.append(h)
+        d["_history"] = history
         arts.append(d)
     return {
         "status": raw.get("status"),
@@ -638,6 +680,39 @@ async def catalog_grounding():
     return PlainTextResponse("\n".join(lines))
 
 
+@router.get("/commercial/review-detail", response_class=HTMLResponse)
+async def commercial_review_detail(path: str = ""):
+    """Render a repo-relative markdown dossier (review / verification
+    detail_ref) to an HTML fragment for in-place expansion on the Quality tab.
+    Lazy-loaded by the template's dossier folds; cached client-side.
+
+    SECURITY — strict resolution: the path must be repo-relative, resolve
+    strictly INSIDE the repo root, and name an existing `.md` file. Absolute
+    paths, `..` traversal, and non-markdown files are rejected (403/404).
+    Declared before /commercial/{bq} so the literal segment wins the match."""
+    cfg = get_config()
+    rel = (path or "").strip()
+    if not rel or rel.startswith(("/", "\\")) or "\\" in rel or ":" in rel.split("/", 1)[0]:
+        raise HTTPException(403, "path must be repo-relative")
+    if ".." in Path(rel).parts:
+        raise HTTPException(403, "path traversal rejected")
+    if not rel.endswith(".md"):
+        raise HTTPException(403, "only markdown dossiers render inline")
+    repo = cfg.repo_root.resolve()
+    target = (repo / rel).resolve()
+    try:
+        target.relative_to(repo)
+    except ValueError:
+        raise HTTPException(403, "path escapes the repo root")
+    if not target.is_file():
+        raise HTTPException(404, f"no such dossier: {rel}")
+    try:
+        html = doc_renderer.render(target).body_html or ""
+    except Exception:
+        raise HTTPException(500, "dossier failed to render")
+    return HTMLResponse(html)
+
+
 @router.get("/commercial/{bq}", response_class=HTMLResponse)
 async def commercial_view(request: Request, bq: str, edition: str | None = None):
     cfg = get_config()
@@ -730,6 +805,7 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
                 v["_cls"] = VER_META.get(str(v.get("verdict", "")).upper(), "vx-none")
                 if v.get("detail_ref"):
                     v["_detail_link"] = f"/documents#path={v['detail_ref']}"
+                    v["_detail_md"] = _inline_md_ref(v.get("detail_ref"))
         ctx["quality"] = quality
         # Data tab: structured tables + unstructured artifact inventory
         ctx["tables"] = _build_tables(cfg.repo_root, ed)

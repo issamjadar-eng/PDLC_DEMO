@@ -386,3 +386,17 @@ sup.cm-ref a:hover { text-decoration: underline; }
   border-radius: 6px; padding: .08rem .4rem; }
 .cm-code-by { font-size: .74rem; }
 .cm-code-findings { margin-top: .4rem; }
+
+/* Review history (sidecar schema 1.3) + inline dossier folds (1.56.0).
+   Theme-aware via existing tokens; superseded reviews reuse the chip vocabulary. */
+.cm-code-prev { margin-top: .45rem; }
+.cm-code-prev > summary { display: flex; gap: .45rem; align-items: baseline; flex-wrap: wrap; }
+.cm-code-prev .cm-chip { font-size: .68rem; }
+.cm-dossier { margin: .35rem 0 0 .4rem; font-size: .8rem; }
+.cm-dossier > summary { cursor: pointer; color: var(--body-text-muted, #64748b); }
+.cm-dossier[open] > summary { color: var(--body-text, #0f172a); }
+.cm-dossier-body { max-height: 60vh; overflow: auto; margin-top: .4rem;
+  padding: .65rem .85rem; border: 1px solid var(--border, #e2e8f0); border-radius: 8px;
+  background: color-mix(in srgb, var(--body-text-muted, #64748b) 5%, transparent);
+  font-size: .82rem; }
+.cm-dossier-body > :first-child { margin-top: 0; }

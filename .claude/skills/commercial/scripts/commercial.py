@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.2"
+SCHEMA_VERSION = "1.3"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
@@ -290,6 +290,29 @@ def cq_entry_for(store: dict, path: str, sha: str):
     return None
 
 
+def cq_review_history(store: dict, path: str, current_sha: str, cap: int = 5):
+    """Prior reviews of the same artifact path filed against OTHER shas —
+    superseded code generations (schema 1.3, purely additive). Newest first
+    (store entries append in time order), newest review per entry, capped.
+    This is where the original pre-fix review findings stay visible after the
+    code moves to a new (approved) sha."""
+    entries = ((store.get("artifacts") or {}).get(path) or {}).get("entries") or []
+    hist = []
+    for e in reversed(entries):
+        if e.get("sha256") == current_sha or not e.get("reviews"):
+            continue
+        rv = e["reviews"][-1]
+        hist.append({"sha256_12": (e.get("sha256") or "")[:12],
+                     "date": rv.get("date") or e.get("date"),
+                     "verdict": rv.get("verdict"), "by": rv.get("by"),
+                     "summary": rv.get("summary"),
+                     "findings": rv.get("findings", []),
+                     "detail_ref": rv.get("detail_ref"), "superseded": True})
+        if len(hist) >= cap:
+            break
+    return hist
+
+
 def cq_upsert(store: dict, path: str, sha: str, **fields):
     """Update the entry for (path, sha), creating it if absent. Only non-None
     fields are written, so a partial run never clobbers earlier check results."""
@@ -379,9 +402,10 @@ def cq_determinism(root: Path, corpus_root: Path, q: dict) -> dict:
 
 
 def code_quality_block(root: Path, corpus_root: Path, q: dict, ed):
-    """The per-question `code:` block (quality.json + sidecar, schema 1.2).
+    """The per-question `code:` block (quality.json + sidecar, schema 1.3).
     Per edition-pinned artifact: checks + the newest review (current = review filed
-    against the pinned sha). Question-level status ladder:
+    against the pinned sha) + `review_history` — prior reviews filed against
+    superseded shas of the same path (schema 1.3, additive). Question-level status ladder:
     checks-failed > review-outdated > unreviewed > reviewed-current.
     SOFT GATE — consumed as badges only; nothing blocks on it."""
     store = load_cq_store(root)
@@ -415,7 +439,8 @@ def code_quality_block(root: Path, corpus_root: Path, q: dict, ed):
             any_unreviewed = True
         rows.append({"path": path, "sha256_12": sha[:12], "role": artifact_role(path),
                      "static_lint": checks["static_lint"], "poison_scan": checks["poison_scan"],
-                     "determinism": checks["determinism"], "review": review})
+                     "determinism": checks["determinism"], "review": review,
+                     "review_history": cq_review_history(store, path, sha)})
     status = ("checks-failed" if any_fail else "review-outdated" if any_outdated
               else "unreviewed" if any_unreviewed else "reviewed-current")
     block = {"status": status, "artifacts": rows}
@@ -693,7 +718,7 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
         "plan": detail.get("plan"),
         "verifications": verifications,
     }
-    # code-quality soft-gate block (schema 1.2) — degrades to None if the catalog
+    # code-quality soft-gate block (schema 1.3) — degrades to None if the catalog
     # can't be read or the question is unknown
     try:
         centry = bq_entry(load_config(root), bq)
@@ -904,7 +929,8 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict, terms_catalog: dict 
             bands.append("stale" if age > max_age else ("aging" if age > max_age * 0.75 else "fresh"))
         row["freshness"] = ("stale" if "stale" in bands else "aging" if "aging" in bands else "fresh") \
             if bands else None
-    # schema 1.2: per-question code-quality block (soft gate — badges only)
+    # schema 1.2+: per-question code-quality block (soft gate — badges only;
+    # 1.3 adds per-artifact review_history — reviews on superseded shas)
     row["code"] = code_quality_block(root, corpus_root, q, show) \
         if (show or q.get("computation")) else None
     return row

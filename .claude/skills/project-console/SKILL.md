@@ -1,7 +1,7 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.55.1
+version: 1.56.0
 updated: 2026-07-27
 ---
 
@@ -287,9 +287,19 @@ audit tab — per-artifact role/path/hash rows, static-lint / poison-scan / dete
 chips, review verdict + findings folds, and SOFT-GATE badges (checks failed / review
 outdated / unreviewed — badges only, nothing blocks) plus a compact question-level
 code chip on the tab header; rows without the field (schema ≤1.1) degrade to an honest
-empty state. `POST /commercial/render` shells to the skill's `render`;
-the assistant drawer grounds in `/commercial/{bq}/grounding`. Full contract lives in
-the `commercial` skill's SKILL.md.
+empty state. Sidecar schema 1.3 adds per-artifact `review_history` — reviews filed
+against earlier, now-superseded hashes of the same file — rendered as expandable
+**Previous review** folds (verdict + date + superseded-sha pill + findings table);
+rows without it (schema ≤1.2) degrade to no history chrome. Any repo-relative
+markdown `detail_ref` (reviews, history entries, verification records) additionally
+renders as an in-place **Full review dossier** fold, lazy-loaded on first expand via
+`GET /commercial/review-detail?path=…` (documents-renderer HTML fragment, client-side
+cached, scrolling body) — the endpoint resolves paths strictly inside the repo root
+and serves only `.md` files (traversal / absolute / non-markdown → 403/404); the
+Documents-viewer link stays as a secondary affordance. `POST /commercial/render`
+shells to the skill's `render`; the assistant drawer grounds in
+`/commercial/{bq}/grounding`. Full contract lives in the `commercial` skill's
+SKILL.md.
 
 ## Topline section: Tasks (activity summary)
 
