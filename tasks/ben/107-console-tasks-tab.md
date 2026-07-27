@@ -50,6 +50,10 @@ Required adaptations (sister fork ≠ our registry conventions):
 **Lesson — porting from a diverged sister fork is adaptation, not copying (category: skills/registry-sync).** The sister project's console is a fork with different template blocks, nav machinery, and CSS conventions, and its `task_summary.py` had project vocabulary ("tetris", "unity") hardcoded into a registry-shared skill — exactly the project-leakage failure the sentinel-blocks guardrail describes. **Why:** a fork's code embeds its project's conventions invisibly; a byte-copy would have imported both the leakage and a changelog-format mismatch (their task docs use `| date | msg |` tables, ours use `- date: …` bullets — their regex would have silently found zero activity here, an empty-but-plausible Tasks tab). **How to apply:** before porting anything from a sister fork, diff the *conventions* (data formats, template contracts, config homes), route project-specific vocabulary into project-owned data files (here `tasks/task-summary-config.json`), and verify the port against real project data — the "12 closed in last 30d" number was the tell that parsing actually worked.
 <!-- /LESSONS LEARNED -->
 
+<!-- LESSONS LEARNED: skills, contracts -->
+**Lesson — derived-artifact fields that reach a UI need a normalization contract at the producer AND a clamp at the consumer (category: skills/contracts).** The Tasks tab shipped rendering `open_tasks[].status` raw; task authors decorate status lines freely ("Not Started — captured during ben/045 …"), and one long decoration rendered as a giant nowrap chip overlaying the next column. **Why:** free-text doc fields have no length/shape guarantee, and a `white-space: nowrap` badge is the worst consumer for one; testing only against well-formed rows missed the decorated form that already existed in the tree. **How to apply:** when a script projects doc fields into a JSON artifact, normalize enum-like fields to a canonical closed set at the producer (decoration → a separate clamped note field, contract stated in the script docstring), AND give the rendering element a defensive max-width/ellipsis so a stale or foreign artifact still can't break layout. Fixed in task v35 + project-console 1.53.0.
+<!-- /LESSONS LEARNED -->
+
 ## Open Questions
 
 - Should the economics footnote also read the usage-metrics v12 `economics.json` sidecar (where ben/100 migrated 94 retrospective blocks)? v1 reads task-doc blocks only — the Metrics ▸ Value tab already owns the full economics story. Deferred.
@@ -94,6 +98,13 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
         "basis": "port of a reviewed view to different template/theme conventions + docs; software anchor low end + judgment"
       },
       {
+        "todo": "status-chip overflow fix: producer normalization contract (task v35) + consumer clamp (console 1.53.0) + regen/verify",
+        "personas": ["rd-lead"],
+        "manual_hours": {"min": 1.5, "max": 3},
+        "confidence": "high",
+        "basis": "defect fixing anchor ~4-6h/defect scaled down — small UI defect, two-file fix + contract doc + verification (Capers Jones per-defect, low end)"
+      },
+      {
         "todo": "project data: category config, summary generation, narrative/watch, verification",
         "personas": ["rd-lead", "program-manager"],
         "manual_hours": {"min": 1.5, "max": 3},
@@ -107,5 +118,7 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 
 ## Changelog
 
+- 2026-07-27 (later): project-console **1.53.1** — styled hover tooltip on the status chip (user follow-up: the clamp can ellipsize on narrow screens). CSS-only bubble via `::after content: attr(data-full)` showing full status + note on hover and keyboard focus; ellipsis moved to inner `.tk-chip-tx` span (chip's `overflow: hidden` would have clipped the pseudo-element); native `title` removed to avoid double tooltip. Verified live: data-full carries ben/046's full text, tabindex present.
+- 2026-07-27: **Status-chip overflow bug fixed both-layers** (reported via screenshot: ben/046's decorated status rendered as a giant pill over the timeline). Producer: task v35 — `open_tasks[].status` contractually canonical, decoration → clamped `status_note`. Consumer: project-console 1.53.0 — chip renders leading clause only, full text on hover, `max-width: 11em` + ellipsis; note shown in card meta. Also reconciled project-console SKILL.md frontmatter (lagged at 1.41.0 vs VERSION 1.52.0) → 1.53.0. Regenerated summary (all 10 open statuses assert canonical; narrative preserved); console restarted and verified via HTML chip extraction.
 - 2026-07-20: All four build phases delivered in one session. task skill v34 (`scripts/task_summary.py` + `summary` action); project-console 1.41.0 (`console/tasks_view/` + `tasks_view.html` + nav); project data seeded (`tasks/task-summary-config.json`, `tasks/task-summary.json` with composed narrative + ben/046 watch). Verified live: `/tasks` 200 with cards/timeline/narrative, doc links resolve via explorer redirect, sibling routes regression-free. Uncommitted; remaining = push + upstream sync push.
 - 2026-07-20: Task created; spec-gaming source reviewed (task_summary.py, tasks_view module, template, mdlite) and the five required adaptations recorded in Goals.
