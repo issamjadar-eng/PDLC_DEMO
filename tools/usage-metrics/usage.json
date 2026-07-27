@@ -4983,13 +4983,13 @@
         }
       },
       "cost": 10.51,
-      "cost_allocated": 0.91,
+      "cost_allocated": 3.4,
       "cost_basis": "measured+allocated",
       "estimate": {
-        "agentic_hours": 0.7,
+        "agentic_hours": 1.0,
         "agentic_hours_range": {
-          "max": 0.7,
-          "min": 0.3
+          "max": 1.0,
+          "min": 0.5
         },
         "by_persona": {
           "program-manager": {
@@ -4997,22 +4997,22 @@
             "min": 0.8
           },
           "rd-lead": {
-            "max": 16.5,
-            "min": 8.8
+            "max": 19.5,
+            "min": 10.2
           }
         },
         "confidence_mix": {
-          "high": 1,
+          "high": 2,
           "med": 2
         },
         "hours_saved": {
-          "max": 17.7,
-          "min": 8.8
+          "max": 20.5,
+          "min": 10.0
         },
         "inverted": false,
         "manual_hours": {
-          "max": 18.0,
-          "min": 9.5
+          "max": 21.0,
+          "min": 11.0
         },
         "method_version": 1,
         "personas": [
@@ -5021,8 +5021,8 @@
         ],
         "retrospective": false,
         "title": "Console Tasks Tab (port from spec-gaming sister project)",
-        "todos": 3,
-        "updated": "2026-07-20"
+        "todos": 4,
+        "updated": "2026-07-27"
       },
       "sessions": 1,
       "totals": {
@@ -5049,60 +5049,66 @@
         }
       },
       "cost": 528.14,
-      "cost_allocated": 6.41,
+      "cost_allocated": 8.89,
       "cost_basis": "measured+allocated",
       "estimate": {
-        "agentic_hours": 2.0,
+        "agentic_hours": 4.0,
         "agentic_hours_range": {
-          "max": 2.0,
-          "min": 1.0
+          "max": 4.0,
+          "min": 2.0
         },
         "by_persona": {
+          "commercial": {
+            "max": 114.0,
+            "min": 57.0
+          },
           "post-market": {
             "max": 28.0,
             "min": 14.0
           },
           "program-manager": {
-            "max": 30.0,
-            "min": 16.0
+            "max": 34.0,
+            "min": 18.0
           },
           "quality-engineering": {
-            "max": 8.0,
-            "min": 4.0
+            "max": 65.0,
+            "min": 32.5
           },
           "rd-lead": {
-            "max": 176.0,
-            "min": 90.0
+            "max": 333.0,
+            "min": 168.5
           },
           "systems-engineering": {
-            "max": 16.0,
-            "min": 8.0
+            "max": 58.0,
+            "min": 29.0
           }
         },
         "confidence_mix": {
+          "high": 1,
           "low": 1,
-          "med": 7
+          "med": 12
         },
         "hours_saved": {
-          "max": 257.0,
-          "min": 130.0
+          "max": 630.0,
+          "min": 315.0
         },
         "inverted": false,
         "manual_hours": {
-          "max": 258.0,
-          "min": 132.0
+          "max": 632.0,
+          "min": 319.0
         },
         "method_version": 1,
         "personas": [
           "rd-lead",
-          "program-manager",
-          "post-market",
+          "commercial",
+          "quality-engineering",
           "systems-engineering",
-          "quality-engineering"
+          "program-manager",
+          "post-market"
         ],
         "retrospective": false,
         "title": "Commercial Analytics Suite (skills + demo assets)",
-        "todos": 8,
+        "todos": 14,
         "updated": "2026-09-30"
       },
       "sessions": 2,
@@ -5278,19 +5284,19 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 514.8,
-    "cost_allocated": 176.94,
+    "agentic_hours": 517.1,
+    "cost_allocated": 181.91,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 1333.21,
     "cost_unattributed_measured": 263.79,
-    "cost_unattributed_residual": 86.85,
+    "cost_unattributed_residual": 81.88,
     "hours_saved": {
-      "max": 3451.8,
-      "min": 1128.0
+      "max": 3827.6,
+      "min": 1314.2
     },
     "manual_hours": {
-      "max": 3946.0,
-      "min": 1642.0
+      "max": 4323.0,
+      "min": 1830.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
