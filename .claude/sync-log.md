@@ -4,6 +4,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-27 — push (inline review details)
+
+- **Push** (10 files, all LOCAL_AHEAD): `skills/commercial/{README.md, SKILL.md, scripts/commercial.py}` (v12 — review_history in the code-quality block, sidecar 1.3), `skills/project-console/{README.md, SKILL.md, VERSION, console/commercial/router.py, console/web/static/commercial.css, console/web/templates/commercial_view.html, tests/test_commercial_review_history.py}` (1.56.0 — Previous-review folds + hardened inline dossier endpoint)
+- Branch: `sync/pdlc-demo-review-details-2026-07-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/285 — merged; Hitachi HEAD `6b8392b` (clone ff'd, branch deleted local+remote)
+- project.yml: no changes
+- **Not pulled (user decision pending)**: new registry skill `skills/public-doc/**` (13 files, UPSTREAM_ONLY) — installing requires a `security.approved_skills` allowlist decision; left for Ben.
+
 ## 2026-07-27 — push (reader aids + code quality)
 
 - **Push** (13 files, all LOCAL_AHEAD; nothing to pull): `skills/commercial/{README.md, SKILL.md, scripts/commercial.py, templates/commercial.yml}` (v10 terms/explainers + v11 code-quality soft gate), `skills/corpus/{README.md, SKILL.md, scripts/corpus.py}` (v4 script_sha256 provenance), `skills/project-console/{README.md, SKILL.md, VERSION, console/commercial/router.py, console/web/static/commercial.css, console/web/templates/commercial_view.html}` (1.53.0→1.55.1: explainer UI, terms fold, data-tab summaries, chart tooltips/labels, Computation code panel + normalizer fix)
