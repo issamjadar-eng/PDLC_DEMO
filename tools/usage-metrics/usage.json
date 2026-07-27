@@ -2,29 +2,341 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 127.72,
-    "2026-06-16": 43.14,
-    "2026-06-22": 19.32,
-    "2026-06-23": 10.07,
-    "2026-06-29": 1.15,
-    "2026-06-30": 194.27,
-    "2026-07-01": 198.89,
-    "2026-07-02": 24.22,
-    "2026-07-03": 8.81,
-    "2026-07-05": 2.91,
-    "2026-07-08": 1.27,
-    "2026-07-14": 34.43,
-    "2026-07-15": 217.09,
-    "2026-07-16": 46.94,
-    "2026-07-20": 15.8,
-    "2026-07-21": 93.77,
-    "2026-07-22": 2.79
+    "2026-04-17": 0.79,
+    "2026-04-20": 53.62,
+    "2026-04-21": 32.44,
+    "2026-04-22": 45.36,
+    "2026-04-24": 0.4,
+    "2026-04-27": 0.4,
+    "2026-04-28": 107.63,
+    "2026-04-29": 118.34,
+    "2026-04-30": 81.03,
+    "2026-05-01": 18.8,
+    "2026-05-02": 267.17,
+    "2026-05-04": 0.38,
+    "2026-05-05": 0.49,
+    "2026-05-15": 3.97,
+    "2026-05-16": 70.49,
+    "2026-05-17": 0.47,
+    "2026-05-26": 0.59,
+    "2026-05-30": 66.13,
+    "2026-05-31": 53.64,
+    "2026-06-01": 2.93,
+    "2026-06-08": 24.62,
+    "2026-06-10": 3.75,
+    "2026-06-11": 7.21,
+    "2026-06-12": 12.27,
+    "2026-06-15": 93.5,
+    "2026-06-16": 31.88,
+    "2026-06-22": 14.17,
+    "2026-06-23": 7.52,
+    "2026-06-29": 0.91,
+    "2026-06-30": 142.58,
+    "2026-07-01": 143.17,
+    "2026-07-02": 18.14,
+    "2026-07-05": 3.26
   },
   "members": 1,
   "months": {
+    "2026-04": {
+      "Member 1": {
+        "by_day": {
+          "2026-04-17": {
+            "cache_creation": 42452,
+            "cache_read": 502543,
+            "cache_write_1h": 42452,
+            "cache_write_5m": 0,
+            "input": 26,
+            "messages": 16,
+            "output": 3833
+          },
+          "2026-04-20": {
+            "cache_creation": 1651195,
+            "cache_read": 61661149,
+            "cache_write_1h": 1515089,
+            "cache_write_5m": 136106,
+            "input": 3658,
+            "messages": 249,
+            "output": 250950
+          },
+          "2026-04-21": {
+            "cache_creation": 914543,
+            "cache_read": 32929780,
+            "cache_write_1h": 914543,
+            "cache_write_5m": 0,
+            "input": 326,
+            "messages": 212,
+            "output": 258394
+          },
+          "2026-04-22": {
+            "cache_creation": 1360425,
+            "cache_read": 53431149,
+            "cache_write_1h": 1360425,
+            "cache_write_5m": 0,
+            "input": 454,
+            "messages": 285,
+            "output": 179138
+          },
+          "2026-04-24": {
+            "cache_creation": 28142,
+            "cache_read": 182133,
+            "cache_write_1h": 28142,
+            "cache_write_5m": 0,
+            "input": 15,
+            "messages": 5,
+            "output": 684
+          },
+          "2026-04-27": {
+            "cache_creation": 28296,
+            "cache_read": 186052,
+            "cache_write_1h": 28296,
+            "cache_write_5m": 0,
+            "input": 15,
+            "messages": 5,
+            "output": 675
+          },
+          "2026-04-28": {
+            "cache_creation": 2615574,
+            "cache_read": 134763631,
+            "cache_write_1h": 2078850,
+            "cache_write_5m": 536724,
+            "input": 14594,
+            "messages": 667,
+            "output": 620731
+          },
+          "2026-04-29": {
+            "cache_creation": 2228597,
+            "cache_read": 164181663,
+            "cache_write_1h": 2064029,
+            "cache_write_5m": 164568,
+            "input": 2639,
+            "messages": 383,
+            "output": 544478
+          },
+          "2026-04-30": {
+            "cache_creation": 1490759,
+            "cache_read": 106235984,
+            "cache_write_1h": 1490759,
+            "cache_write_5m": 0,
+            "input": 569,
+            "messages": 364,
+            "output": 489584
+          }
+        },
+        "by_model": {
+          "claude-haiku-4-5-20251001": {
+            "cache_creation": 701292,
+            "cache_read": 9759830,
+            "cache_write_1h": 0,
+            "cache_write_5m": 701292,
+            "cost": 2.14,
+            "input": 13777,
+            "messages": 140,
+            "output": 55139
+          },
+          "claude-opus-4-7": {
+            "cache_creation": 9634363,
+            "cache_read": 544294531,
+            "cache_write_1h": 9498257,
+            "cache_write_5m": 136106,
+            "cost": 425.35,
+            "input": 8515,
+            "messages": 2044,
+            "output": 2293136
+          },
+          "claude-sonnet-4-6": {
+            "cache_creation": 24328,
+            "cache_read": 19723,
+            "cache_write_1h": 24328,
+            "cache_write_5m": 0,
+            "cost": 0.15,
+            "input": 4,
+            "messages": 2,
+            "output": 192
+          }
+        },
+        "cost": 427.65,
+        "name": "Member 1",
+        "sessions": 20,
+        "totals": {
+          "cache_creation": 10359983,
+          "cache_read": 554074084,
+          "cache_write_1h": 9522585,
+          "cache_write_5m": 837398,
+          "input": 22296,
+          "messages": 2186,
+          "output": 2348467
+        }
+      }
+    },
+    "2026-05": {
+      "Member 1": {
+        "by_day": {
+          "2026-05-01": {
+            "cache_creation": 61931,
+            "cache_read": 33642679,
+            "cache_write_1h": 61931,
+            "cache_write_5m": 0,
+            "input": 80,
+            "messages": 55,
+            "output": 49532
+          },
+          "2026-05-02": {
+            "cache_creation": 5246080,
+            "cache_read": 370741615,
+            "cache_write_1h": 5246080,
+            "cache_write_5m": 0,
+            "input": 1996,
+            "messages": 1000,
+            "output": 1066435
+          },
+          "2026-05-04": {
+            "cache_creation": 25445,
+            "cache_read": 181798,
+            "cache_write_1h": 25445,
+            "cache_write_5m": 0,
+            "input": 15,
+            "messages": 5,
+            "output": 933
+          },
+          "2026-05-05": {
+            "cache_creation": 44678,
+            "cache_read": 44524,
+            "cache_write_1h": 44678,
+            "cache_write_5m": 0,
+            "input": 7,
+            "messages": 2,
+            "output": 156
+          },
+          "2026-05-15": {
+            "cache_creation": 171205,
+            "cache_read": 2761921,
+            "cache_write_1h": 171205,
+            "cache_write_5m": 0,
+            "input": 101,
+            "messages": 52,
+            "output": 32679
+          },
+          "2026-05-16": {
+            "cache_creation": 1411933,
+            "cache_read": 91801075,
+            "cache_write_1h": 1380615,
+            "cache_write_5m": 31318,
+            "input": 710,
+            "messages": 357,
+            "output": 397012
+          },
+          "2026-05-17": {
+            "cache_creation": 39222,
+            "cache_read": 95188,
+            "cache_write_1h": 39222,
+            "cache_write_5m": 0,
+            "input": 5,
+            "messages": 3,
+            "output": 625
+          },
+          "2026-05-26": {
+            "cache_creation": 43499,
+            "cache_read": 245548,
+            "cache_write_1h": 43499,
+            "cache_write_5m": 0,
+            "input": 15,
+            "messages": 5,
+            "output": 833
+          },
+          "2026-05-30": {
+            "cache_creation": 1226769,
+            "cache_read": 94479204,
+            "cache_write_1h": 689393,
+            "cache_write_5m": 537376,
+            "input": 574,
+            "messages": 466,
+            "output": 346008
+          },
+          "2026-05-31": {
+            "cache_creation": 1399078,
+            "cache_read": 69995090,
+            "cache_write_1h": 1399078,
+            "cache_write_5m": 0,
+            "input": 261,
+            "messages": 196,
+            "output": 161383
+          }
+        },
+        "by_model": {
+          "claude-opus-4-7": {
+            "cache_creation": 9669840,
+            "cache_read": 663988642,
+            "cache_write_1h": 9101146,
+            "cache_write_5m": 568694,
+            "cost": 477.97,
+            "input": 3764,
+            "messages": 2141,
+            "output": 2055596
+          }
+        },
+        "cost": 477.97,
+        "name": "Member 1",
+        "sessions": 102,
+        "totals": {
+          "cache_creation": 9669840,
+          "cache_read": 663988642,
+          "cache_write_1h": 9101146,
+          "cache_write_5m": 568694,
+          "input": 3764,
+          "messages": 2141,
+          "output": 2055596
+        }
+      }
+    },
     "2026-06": {
       "Member 1": {
         "by_day": {
+          "2026-06-01": {
+            "cache_creation": 133574,
+            "cache_read": 2335308,
+            "cache_write_1h": 133574,
+            "cache_write_5m": 0,
+            "input": 16619,
+            "messages": 27,
+            "output": 11623
+          },
+          "2026-06-08": {
+            "cache_creation": 1276885,
+            "cache_read": 22156869,
+            "cache_write_1h": 444424,
+            "cache_write_5m": 832461,
+            "input": 186133,
+            "messages": 254,
+            "output": 140628
+          },
+          "2026-06-10": {
+            "cache_creation": 287310,
+            "cache_read": 1263149,
+            "cache_write_1h": 287310,
+            "cache_write_5m": 0,
+            "input": 17907,
+            "messages": 10,
+            "output": 2529
+          },
+          "2026-06-11": {
+            "cache_creation": 253626,
+            "cache_read": 7258424,
+            "cache_write_1h": 253626,
+            "cache_write_5m": 0,
+            "input": 31464,
+            "messages": 66,
+            "output": 31385
+          },
+          "2026-06-12": {
+            "cache_creation": 481672,
+            "cache_read": 12899133,
+            "cache_write_1h": 481672,
+            "cache_write_5m": 0,
+            "input": 1661,
+            "messages": 62,
+            "output": 32827
+          },
           "2026-06-15": {
             "cache_creation": 1841645,
             "cache_read": 128467735,
@@ -81,6 +393,16 @@
           }
         },
         "by_model": {
+          "claude-fable-5": {
+            "cache_creation": 788814,
+            "cache_read": 20420337,
+            "cache_write_1h": 788814,
+            "cache_write_5m": 0,
+            "cost": 39.95,
+            "input": 50849,
+            "messages": 133,
+            "output": 64996
+          },
           "claude-haiku-4-5-20251001": {
             "cache_creation": 132462,
             "cache_read": 1069352,
@@ -91,28 +413,38 @@
             "messages": 33,
             "output": 16172
           },
+          "claude-opus-4-7": {
+            "cache_creation": 88191,
+            "cache_read": 2156996,
+            "cache_write_1h": 88191,
+            "cache_write_5m": 0,
+            "cost": 2.21,
+            "input": 33,
+            "messages": 23,
+            "output": 10092
+          },
           "claude-opus-4-8": {
-            "cache_creation": 5326277,
-            "cache_read": 401292190,
-            "cache_write_1h": 4865789,
-            "cache_write_5m": 460488,
-            "cost": 286.62,
-            "input": 305945,
-            "messages": 1115,
-            "output": 1316294
+            "cache_creation": 6882339,
+            "cache_read": 424627740,
+            "cache_write_1h": 5589390,
+            "cache_write_5m": 1292949,
+            "cost": 315.34,
+            "input": 508847,
+            "messages": 1378,
+            "output": 1460198
           }
         },
-        "cost": 286.97,
+        "cost": 357.86,
         "name": "Member 1",
-        "sessions": 8,
+        "sessions": 14,
         "totals": {
-          "cache_creation": 5458739,
-          "cache_read": 402361542,
-          "cache_write_1h": 4865789,
-          "cache_write_5m": 592950,
-          "input": 306586,
-          "messages": 1148,
-          "output": 1332466
+          "cache_creation": 7891806,
+          "cache_read": 448274425,
+          "cache_write_1h": 6466395,
+          "cache_write_5m": 1425411,
+          "input": 560370,
+          "messages": 1567,
+          "output": 1551458
         }
       }
     },
@@ -137,131 +469,39 @@
             "messages": 27,
             "output": 43967
           },
-          "2026-07-03": {
-            "cache_creation": 155194,
-            "cache_read": 7342204,
-            "cache_write_1h": 155194,
-            "cache_write_5m": 0,
-            "input": 24229,
-            "messages": 55,
-            "output": 45291
-          },
           "2026-07-05": {
-            "cache_creation": 86298,
-            "cache_read": 1804247,
-            "cache_write_1h": 86298,
+            "cache_creation": 113329,
+            "cache_read": 2886886,
+            "cache_write_1h": 113329,
             "cache_write_5m": 0,
-            "input": 25145,
-            "messages": 20,
-            "output": 11537
-          },
-          "2026-07-08": {
-            "cache_creation": 64918,
-            "cache_read": 402534,
-            "cache_write_1h": 64918,
-            "cache_write_5m": 0,
-            "input": 18989,
-            "messages": 6,
-            "output": 1107
-          },
-          "2026-07-14": {
-            "cache_creation": 913341,
-            "cache_read": 24712331,
-            "cache_write_1h": 607944,
-            "cache_write_5m": 305397,
-            "input": 346,
-            "messages": 173,
-            "output": 180426
-          },
-          "2026-07-15": {
-            "cache_creation": 4586845,
-            "cache_read": 203895165,
-            "cache_write_1h": 1616873,
-            "cache_write_5m": 2969972,
-            "input": 1714,
-            "messages": 857,
-            "output": 724497
-          },
-          "2026-07-16": {
-            "cache_creation": 609172,
-            "cache_read": 50416477,
-            "cache_write_1h": 609172,
-            "cache_write_5m": 0,
-            "input": 348,
-            "messages": 173,
-            "output": 118504
-          },
-          "2026-07-20": {
-            "cache_creation": 474273,
-            "cache_read": 11756212,
-            "cache_write_1h": 474273,
-            "cache_write_5m": 0,
-            "input": 96,
-            "messages": 48,
-            "output": 41099
-          },
-          "2026-07-21": {
-            "cache_creation": 1364225,
-            "cache_read": 97379239,
-            "cache_write_1h": 708844,
-            "cache_write_5m": 655381,
-            "input": 716,
-            "messages": 358,
-            "output": 305689
-          },
-          "2026-07-22": {
-            "cache_creation": 90220,
-            "cache_read": 1791750,
-            "cache_write_1h": 90220,
-            "cache_write_5m": 0,
-            "input": 38,
-            "messages": 19,
-            "output": 10553
+            "input": 30753,
+            "messages": 30,
+            "output": 19182
           }
         },
         "by_model": {
-          "claude-fable-5": {
-            "cache_creation": 7634761,
-            "cache_read": 388733868,
-            "cache_write_1h": 3842601,
-            "cache_write_5m": 3792160,
-            "cost": 581.16,
-            "input": 3216,
-            "messages": 1608,
-            "output": 1362879
-          },
           "claude-opus-4-8": {
-            "cache_creation": 4429255,
-            "cache_read": 230879883,
-            "cache_write_1h": 2754485,
-            "cache_write_5m": 1674770,
-            "cost": 172.86,
-            "input": 283980,
-            "messages": 663,
-            "output": 719645
-          },
-          "claude-sonnet-4-6": {
-            "cache_creation": 264725,
-            "cache_read": 0,
-            "cache_write_1h": 264725,
-            "cache_write_5m": 0,
-            "cost": 1.6,
-            "input": 6,
-            "messages": 2,
-            "output": 795
+            "cache_creation": 4097584,
+            "cache_read": 223000478,
+            "cache_write_1h": 2561404,
+            "cache_write_5m": 1536180,
+            "cost": 164.54,
+            "input": 246334,
+            "messages": 594,
+            "output": 663798
           }
         },
-        "cost": 755.63,
+        "cost": 164.54,
         "name": "Member 1",
-        "sessions": 14,
+        "sessions": 2,
         "totals": {
-          "cache_creation": 12328741,
-          "cache_read": 619613751,
-          "cache_write_1h": 6861811,
-          "cache_write_5m": 5466930,
-          "input": 287202,
-          "messages": 2273,
-          "output": 2083319
+          "cache_creation": 4097584,
+          "cache_read": 223000478,
+          "cache_write_1h": 2561404,
+          "cache_write_5m": 1536180,
+          "input": 246334,
+          "messages": 594,
+          "output": 663798
         }
       }
     }
@@ -1265,6 +1505,8 @@
     "ben/022": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 8.03,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 16.0,
         "agentic_hours_range": {
@@ -1314,6 +1556,8 @@
     "ben/023": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 8.03,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 8.0,
         "agentic_hours_range": {
@@ -1353,6 +1597,8 @@
     "ben/024": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 8.03,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -1392,6 +1638,8 @@
     "ben/025": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 8.03,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -1553,6 +1801,8 @@
     "ben/029": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 81.62,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -1753,6 +2003,8 @@
     "ben/034": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 90.34,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 8.0,
         "agentic_hours_range": {
@@ -1880,6 +2132,8 @@
     "ben/037": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 39.59,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -1919,6 +2173,8 @@
     "ben/038": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 88.71,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -1958,6 +2214,8 @@
     "ben/039": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 179.55,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -1997,6 +2255,8 @@
     "ben/040": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 132.99,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -2036,6 +2296,8 @@
     "ben/041": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 8.6,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 6.0,
         "agentic_hours_range": {
@@ -2197,6 +2459,8 @@
     "ben/045": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 0.12,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -2773,6 +3037,8 @@
     "ben/059": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 1.82,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -2812,6 +3078,8 @@
     "ben/060": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 1.82,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -2851,6 +3119,8 @@
     "ben/061": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 1.82,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -2890,6 +3160,8 @@
     "ben/062": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 17.07,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -2929,6 +3201,8 @@
     "ben/063": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 17.07,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -2968,6 +3242,8 @@
     "ben/064": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 17.07,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -3007,6 +3283,8 @@
     "ben/065": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 17.07,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -3212,6 +3490,8 @@
     "ben/070": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 20.53,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -3251,6 +3531,8 @@
     "ben/071": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 20.53,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 2.0,
         "agentic_hours_range": {
@@ -3295,6 +3577,8 @@
     "ben/072": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 0.96,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -3334,6 +3618,8 @@
     "ben/073": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 0.96,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 5.0,
         "agentic_hours_range": {
@@ -3373,6 +3659,8 @@
     "ben/074": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 0.96,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 4.0,
         "agentic_hours_range": {
@@ -3749,6 +4037,8 @@
     "ben/085": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 9.87,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 3.0,
         "agentic_hours_range": {
@@ -3788,6 +4078,8 @@
     "ben/086": {
       "by_model": {},
       "cost": 0.0,
+      "cost_allocated": 26.44,
+      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 5.0,
         "agentic_hours_range": {
@@ -4526,19 +4818,8 @@
       }
     },
     "ben/101": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 24322,
-          "cache_read": 5229850,
-          "cache_write_1h": 24322,
-          "cache_write_5m": 0,
-          "cost": 6.51,
-          "input": 66,
-          "messages": 33,
-          "output": 15824
-        }
-      },
-      "cost": 6.51,
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 0.8,
         "agentic_hours_range": {
@@ -4572,31 +4853,12 @@
         "todos": 4,
         "updated": "2026-07-14"
       },
-      "sessions": 1,
-      "totals": {
-        "cache_creation": 24322,
-        "cache_read": 5229850,
-        "cache_write_1h": 24322,
-        "cache_write_5m": 0,
-        "input": 66,
-        "messages": 33,
-        "output": 15824
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/102": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 624454,
-          "cache_read": 10814507,
-          "cache_write_1h": 319057,
-          "cache_write_5m": 305397,
-          "cost": 26.49,
-          "input": 138,
-          "messages": 69,
-          "output": 109463
-        }
-      },
-      "cost": 26.49,
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 2.0,
         "agentic_hours_range": {
@@ -4656,31 +4918,12 @@
         "todos": 7,
         "updated": "2026-07-14"
       },
-      "sessions": 1,
-      "totals": {
-        "cache_creation": 624454,
-        "cache_read": 10814507,
-        "cache_write_1h": 319057,
-        "cache_write_5m": 305397,
-        "input": 138,
-        "messages": 69,
-        "output": 109463
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/103": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 924658,
-          "cache_read": 31207281,
-          "cache_write_1h": 924658,
-          "cache_write_5m": 0,
-          "cost": 55.69,
-          "input": 230,
-          "messages": 115,
-          "output": 119837
-        }
-      },
-      "cost": 55.69,
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -4720,43 +4963,12 @@
         "todos": 4,
         "updated": "2026-07-14"
       },
-      "sessions": 2,
-      "totals": {
-        "cache_creation": 924658,
-        "cache_read": 31207281,
-        "cache_write_1h": 924658,
-        "cache_write_5m": 0,
-        "input": 230,
-        "messages": 115,
-        "output": 119837
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/104": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 3170167,
-          "cache_read": 173422965,
-          "cache_write_1h": 877797,
-          "cache_write_5m": 2292370,
-          "cost": 246.86,
-          "input": 1356,
-          "messages": 678,
-          "output": 544261
-        },
-        "claude-opus-4-8": {
-          "cache_creation": 38968,
-          "cache_read": 177231,
-          "cache_write_1h": 0,
-          "cache_write_5m": 38968,
-          "cost": 0.37,
-          "input": 10,
-          "messages": 5,
-          "output": 1485
-        }
-      },
-      "cost": 247.23,
-      "cost_allocated": 5.52,
-      "cost_basis": "measured+allocated",
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -4801,43 +5013,12 @@
         "todos": 12,
         "updated": "2026-07-16"
       },
-      "sessions": 2,
-      "totals": {
-        "cache_creation": 3209135,
-        "cache_read": 173600196,
-        "cache_write_1h": 877797,
-        "cache_write_5m": 2331338,
-        "input": 1366,
-        "messages": 683,
-        "output": 545746
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/105": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 619426,
-          "cache_read": 27816305,
-          "cache_write_1h": 80414,
-          "cache_write_5m": 539012,
-          "cost": 42.4,
-          "input": 248,
-          "messages": 124,
-          "output": 124634
-        },
-        "claude-opus-4-8": {
-          "cache_creation": 99622,
-          "cache_read": 1040075,
-          "cache_write_1h": 0,
-          "cache_write_5m": 99622,
-          "cost": 1.53,
-          "input": 26,
-          "messages": 13,
-          "output": 15609
-        }
-      },
-      "cost": 43.93,
-      "cost_allocated": 1.66,
-      "cost_basis": "measured+allocated",
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 2.0,
         "agentic_hours_range": {
@@ -4882,33 +5063,12 @@
         "todos": 3,
         "updated": "2026-07-15"
       },
-      "sessions": 1,
-      "totals": {
-        "cache_creation": 719048,
-        "cache_read": 28856380,
-        "cache_write_1h": 80414,
-        "cache_write_5m": 638634,
-        "input": 274,
-        "messages": 137,
-        "output": 140243
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/106": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 1417521,
-          "cache_read": 120817341,
-          "cache_write_1h": 762140,
-          "cache_write_5m": 655381,
-          "cost": 162.19,
-          "input": 906,
-          "messages": 453,
-          "output": 358542
-        }
-      },
-      "cost": 162.19,
-      "cost_allocated": 9.13,
-      "cost_basis": "measured+allocated",
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 5.5,
         "agentic_hours_range": {
@@ -4948,33 +5108,12 @@
         "todos": 10,
         "updated": "2026-07-21"
       },
-      "sessions": 2,
-      "totals": {
-        "cache_creation": 1417521,
-        "cache_read": 120817341,
-        "cache_write_1h": 762140,
-        "cache_write_5m": 655381,
-        "input": 906,
-        "messages": 453,
-        "output": 358542
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/107": {
-      "by_model": {
-        "claude-fable-5": {
-          "cache_creation": 47878,
-          "cache_read": 8040091,
-          "cache_write_1h": 47878,
-          "cache_write_5m": 0,
-          "cost": 10.51,
-          "input": 60,
-          "messages": 30,
-          "output": 30185
-        }
-      },
-      "cost": 10.51,
-      "cost_allocated": 0.91,
-      "cost_basis": "measured+allocated",
+      "by_model": {},
+      "cost": 0.0,
       "estimate": {
         "agentic_hours": 0.7,
         "agentic_hours_range": {
@@ -5014,22 +5153,12 @@
         "todos": 3,
         "updated": "2026-07-20"
       },
-      "sessions": 1,
-      "totals": {
-        "cache_creation": 47878,
-        "cache_read": 8040091,
-        "cache_write_1h": 47878,
-        "cache_write_5m": 0,
-        "input": 60,
-        "messages": 30,
-        "output": 30185
-      }
+      "sessions": 0,
+      "totals": {}
     },
     "ben/108": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 2.06,
-      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 2.0,
         "agentic_hours_range": {
@@ -5090,8 +5219,6 @@
     "ben/109": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 2.06,
-      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": 0.8,
         "agentic_hours_range": {
@@ -5137,56 +5264,66 @@
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 806335,
-          "cache_read": 11385528,
-          "cache_write_1h": 806335,
+          "cache_creation": 788814,
+          "cache_read": 20420337,
+          "cache_write_1h": 788814,
           "cache_write_5m": 0,
-          "cost": 30.52,
-          "input": 212,
-          "messages": 106,
-          "output": 60133
+          "cost": 39.95,
+          "input": 50849,
+          "messages": 133,
+          "output": 64996
         },
         "claude-haiku-4-5-20251001": {
-          "cache_creation": 132462,
-          "cache_read": 1069352,
+          "cache_creation": 833754,
+          "cache_read": 10829182,
           "cache_write_1h": 0,
-          "cache_write_5m": 132462,
-          "cost": 0.35,
-          "input": 641,
-          "messages": 33,
-          "output": 16172
+          "cache_write_5m": 833754,
+          "cost": 2.5,
+          "input": 14418,
+          "messages": 173,
+          "output": 71311
+        },
+        "claude-opus-4-7": {
+          "cache_creation": 19392394,
+          "cache_read": 1210440169,
+          "cache_write_1h": 18687594,
+          "cache_write_5m": 704800,
+          "cost": 905.53,
+          "input": 12312,
+          "messages": 4208,
+          "output": 4358824
         },
         "claude-opus-4-8": {
-          "cache_creation": 4445969,
-          "cache_read": 290621469,
-          "cache_write_1h": 3985481,
-          "cache_write_5m": 460488,
-          "cost": 217.66,
-          "input": 361655,
-          "messages": 1034,
-          "output": 1112396
+          "cache_creation": 5808950,
+          "cache_read": 307294920,
+          "cache_write_1h": 4516001,
+          "cache_write_5m": 1292949,
+          "cost": 239.96,
+          "input": 526947,
+          "messages": 1246,
+          "output": 1217547
         },
         "claude-sonnet-4-6": {
-          "cache_creation": 264725,
-          "cache_read": 0,
-          "cache_write_1h": 264725,
+          "cache_creation": 24328,
+          "cache_read": 19723,
+          "cache_write_1h": 24328,
           "cache_write_5m": 0,
-          "cost": 1.6,
-          "input": 6,
+          "cost": 0.15,
+          "input": 4,
           "messages": 2,
-          "output": 795
+          "output": 192
         }
       },
-      "cost": 250.14,
-      "sessions": 21,
+      "cost": 1188.1,
+      "sessions": 137,
       "totals": {
-        "cache_creation": 5649491,
-        "cache_read": 303076349,
-        "cache_write_1h": 5056541,
-        "cache_write_5m": 592950,
-        "input": 362514,
-        "messages": 1175,
-        "output": 1189496
+        "cache_creation": 26848240,
+        "cache_read": 1549004331,
+        "cache_write_1h": 24016737,
+        "cache_write_5m": 2831503,
+        "input": 604530,
+        "messages": 5762,
+        "output": 5712870
       }
     },
     "dmytro/001": {
@@ -5231,11 +5368,11 @@
   },
   "value_summary": {
     "agentic_hours": 514.8,
-    "cost_allocated": 168.25,
+    "cost_allocated": 954.51,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 792.47,
-    "cost_unattributed_measured": 250.14,
-    "cost_unattributed_residual": 81.88,
+    "cost_measured_attributed": 239.92,
+    "cost_unattributed_measured": 1188.1,
+    "cost_unattributed_residual": 233.54,
     "hours_saved": {
       "max": 3451.8,
       "min": 1128.0
