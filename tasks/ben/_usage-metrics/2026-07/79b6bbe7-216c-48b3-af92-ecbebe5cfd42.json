@@ -1,0 +1,50 @@
+{
+  "by_day": {
+    "2026-07-05": {
+      "cache_creation": 113329,
+      "cache_read": 2886886,
+      "cache_write_1h": 113329,
+      "cache_write_5m": 0,
+      "input": 30753,
+      "messages": 30,
+      "output": 19182
+    }
+  },
+  "by_model": {
+    "claude-opus-4-8": {
+      "cache_creation": 113329,
+      "cache_read": 2886886,
+      "cache_write_1h": 113329,
+      "cache_write_5m": 0,
+      "input": 30753,
+      "messages": 30,
+      "output": 19182
+    }
+  },
+  "by_task": {
+    "_unattributed": {
+      "claude-opus-4-8": {
+        "cache_creation": 113329,
+        "cache_read": 2886886,
+        "cache_write_1h": 113329,
+        "cache_write_5m": 0,
+        "input": 30753,
+        "messages": 30,
+        "output": 19182
+      }
+    }
+  },
+  "month": "2026-07",
+  "session_id": "79b6bbe7-216c-48b3-af92-ecbebe5cfd42",
+  "source": "transcript",
+  "task_folder": "ben",
+  "totals": {
+    "cache_creation": 113329,
+    "cache_read": 2886886,
+    "cache_write_1h": 113329,
+    "cache_write_5m": 0,
+    "input": 30753,
+    "messages": 30,
+    "output": 19182
+  }
+}
