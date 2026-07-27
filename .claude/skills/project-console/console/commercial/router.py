@@ -202,7 +202,9 @@ def _timeseries_geometry(s: dict):
     xs = sorted({x for x, _ in all_pts})
     xi = {x: i for i, x in enumerate(xs)}
     ymax = max(y for _, y in all_pts) or 1
-    W, H, L, R, T, B = 560, 180, 12, 96, 12, 24
+    # no right-side series end-labels (the bottom legend carries series identity)
+    # — the full right margin belongs to the data
+    W, H, L, R, T, B = 560, 180, 12, 14, 12, 24
     span = max(1, len(xs) - 1)
 
     def X(x):
@@ -225,15 +227,9 @@ def _timeseries_geometry(s: dict):
                      for p in pts],
             "_pts": [{"cx": round(X(p["x"]), 1), "cy": round(Y(p["y"]), 1), "v": p["y"]}
                      for p in pts],
-            "end_x": round(X(pts[-1]["x"]), 1), "end_y": round(Y(pts[-1]["y"]), 1),
         })
-    # de-collide direct end labels: lines ending at similar values otherwise overlap
-    order = sorted(glines, key=lambda g: g["end_y"])
-    for i, g in enumerate(order):
-        g["label_y"] = g["end_y"]
-        if i and g["label_y"] - order[i - 1]["label_y"] < 13:
-            g["label_y"] = order[i - 1]["label_y"] + 13
-    _place_point_labels(glines, spacing=(W - L - R) / span, h=H, bottom=B)
+    _place_point_labels(glines, spacing=(W - L - R) / span, w=W, h=H, left=L,
+                        right=R, bottom=B, ymax_y=round(Y(ymax), 1), ymax=ymax)
     for g in glines:
         g.pop("_pts", None)
     return {"w": W, "h": H, "lines": glines, "x0": xs[0][:10], "x1": xs[-1][:10],
@@ -249,42 +245,98 @@ def _fmt_point(v) -> str:
     return str(v)
 
 
-def _place_point_labels(glines: list, spacing: float, h: int, bottom: int) -> None:
+def _text_w(s, size: float) -> float:
+    """Rough SVG text width estimate at viewbox scale (avg glyph ≈ 0.62em)."""
+    return len(str(s)) * size * 0.62 + 3
+
+
+VLABEL_FS = 8.5  # value-label font size at viewbox scale — subordinate to 10px axis ticks
+
+
+def _place_point_labels(glines: list, spacing: float, w: int, h: int, left: int,
+                        right: int, bottom: int, ymax_y: float, ymax) -> None:
     """Direct value labels on timeseries points (dataviz: direct labels beat
-    hover-only). Density heuristic: ≤2 lines AND comfortable horizontal room
-    (≥60px between points at viewbox scale) → label every point; otherwise
-    label only the decision-relevant points (endpoints + min/max per line) and
-    leave the rest to the hover tooltips. Labels sit above the point, flip
-    below when the line crowds the space above, and are skipped rather than
-    overlapped."""
+    hover-only), placed by ONE global collision pass across all lines.
+
+    Candidate selection — conservative as line count grows:
+      ≤2 lines, ≥60px point spacing → every point;
+      ≤2 lines, denser            → endpoints + min/max per line;
+      ≥3 lines                    → last point per line + global min/max only.
+    Priority when two candidates want the same space: line-endpoint value (3)
+    > min/max extremum (2) > interior value (1); one label per point (dedupe
+    by keeping the highest priority). Placement tries above the point, flips
+    below when a neighboring point crowds the space above, clamps inside the
+    viewbox, and DROPS the label rather than overlap — the hover tooltip
+    always carries the number. The three axis tick labels are pre-seeded as
+    occupied boxes so value labels never sit on them."""
     dense_ok = len(glines) <= 2 and spacing >= 60
-    placed: list[tuple[float, float]] = []
-    for g in glines:
-        pp = g["_pts"]
-        if dense_ok:
-            idxs = list(range(len(pp)))
-        else:
+    sel: dict[tuple[int, int], int] = {}
+
+    def bump(key, pr):
+        sel[key] = max(sel.get(key, 0), pr)
+
+    if len(glines) >= 3:
+        flat = [(gi, pi, p["v"]) for gi, g in enumerate(glines)
+                for pi, p in enumerate(g["_pts"])]
+        for gi, g in enumerate(glines):
+            bump((gi, len(g["_pts"]) - 1), 3)
+        if flat:
+            gmax = max(flat, key=lambda t: t[2])
+            gmin = min(flat, key=lambda t: t[2])
+            bump((gmax[0], gmax[1]), 2)
+            bump((gmin[0], gmin[1]), 2)
+    else:
+        for gi, g in enumerate(glines):
+            pp = g["_pts"]
             vals = [p["v"] for p in pp]
-            idxs = sorted({0, len(pp) - 1, vals.index(min(vals)), vals.index(max(vals))})
-        labels = []
-        for j in idxs:
-            p = pp[j]
-            above, below = p["cy"] - 8, p["cy"] + 16
-            # a neighboring point noticeably higher on screen means the line
-            # slopes through the space above this point — label below instead
-            crowded_above = any(
-                0 <= k < len(pp) and pp[k]["cy"] < p["cy"] - 12
-                for k in (j - 1, j + 1))
-            cand = [below, above] if crowded_above else [above, below]
-            ly = next((c for c in cand
-                       if not any(abs(px - p["cx"]) < 34 and abs(py - c) < 11
-                                  for px, py in placed)), None)
-            if ly is None:
-                continue  # skip rather than overlap
-            ly = min(max(ly, 9.0), float(h - bottom + 12))
-            placed.append((p["cx"], ly))
-            labels.append({"x": p["cx"], "y": round(ly, 1), "v": _fmt_point(p["v"])})
-        g["labels"] = labels
+            if dense_ok:
+                for pi in range(len(pp)):
+                    bump((gi, pi), 1)
+            bump((gi, vals.index(max(vals))), 2)
+            bump((gi, vals.index(min(vals))), 2)
+            bump((gi, 0), 3)
+            bump((gi, len(pp) - 1), 3)
+
+    # occupied boxes, seeded with the three axis tick labels (10px font)
+    boxes = [
+        (left, h - 16.0, left + _text_w("0000-00-00", 10), float(h)),      # x0 tick
+        (w - right - _text_w("0000-00-00", 10), h - 16.0, float(w - right), float(h)),  # x1 tick
+        (float(left), ymax_y - 13.0, left + _text_w(ymax, 10), ymax_y),    # ymax tick
+    ]
+
+    def collides(b):
+        return any(b[0] < o[2] + 2 and b[2] > o[0] - 2 and
+                   b[1] < o[3] + 2 and b[3] > o[1] - 2 for o in boxes)
+
+    for g in glines:
+        g["labels"] = []
+    # highest priority places first; ties resolve left-to-right
+    order = sorted(sel.items(),
+                   key=lambda kv: (-kv[1], glines[kv[0][0]]["_pts"][kv[0][1]]["cx"]))
+    for (gi, pi), _pr in order:
+        pp = glines[gi]["_pts"]
+        p = pp[pi]
+        text = _fmt_point(p["v"])
+        tw = _text_w(text, VLABEL_FS)
+        # clamp horizontally inside the viewbox — never clip at an edge
+        x = max(tw / 2 + 2, min(p["cx"], w - tw / 2 - 2))
+        # a neighboring point noticeably higher on screen means the line slopes
+        # through the space above this point — prefer below
+        crowded_above = any(0 <= k < len(pp) and pp[k]["cy"] < p["cy"] - 12
+                            for k in (pi - 1, pi + 1))
+        above, below = p["cy"] - 7, p["cy"] + 15
+        placed = None
+        for cy in ((below, above) if crowded_above else (above, below)):
+            y = min(max(cy, 9.0), h - bottom + 8.0)  # clamp inside viewbox / off ticks
+            b = (x - tw / 2, y - VLABEL_FS, x + tw / 2, y + 2)
+            if not collides(b):
+                placed = (x, y, b)
+                break
+        if placed is None:
+            continue  # drop rather than overlap — hover carries the number
+        boxes.append(placed[2])
+        glines[gi]["labels"].append({"x": round(placed[0], 1),
+                                     "y": round(placed[1], 1), "v": text})
 
 
 def _decorate_series(series: list) -> list:

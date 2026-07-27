@@ -193,10 +193,9 @@
           <line x1="{{ s._ts.left }}" y1="{{ s._ts.y0_y }}" x2="{{ s._ts.right }}" y2="{{ s._ts.y0_y }}" class="cm-ts-axis"/>
           {% for ln in s._ts.lines %}
           <polyline points="{{ ln.path }}" fill="none" stroke="{{ ln.color }}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="9" class="cm-ts-hit" tabindex="0" aria-label="{{ d0.tip }}"><title>{{ d0.tip }}</title></circle>{% endfor %}
+          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="9" fill="transparent" class="cm-ts-hit" tabindex="0" data-tip="{{ d0.tip }}" aria-label="{{ d0.tip }}"/>{% endfor %}
           {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="2" fill="{{ ln.color }}"/>{% endfor %}
           {% for lb in ln.labels %}<text x="{{ lb.x }}" y="{{ lb.y }}" class="cm-ts-vlabel" text-anchor="middle">{{ lb.v }}</text>{% endfor %}
-          <text x="{{ ln.end_x + 6 }}" y="{{ ln.label_y + 3 }}" class="cm-ts-label">{{ ln.label }}</text>
           {% endfor %}
           <text x="{{ s._ts.left }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick">{{ s._ts.x0 }}</text>
           <text x="{{ s._ts.right }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick" text-anchor="end">{{ s._ts.x1 }}</text>
@@ -476,6 +475,43 @@
   </div><!-- /.cm-shell -->
   {% endif %}
 </section>
+
+{# Timeseries tooltip — one positioned HTML element driven by JS on hover/focus of
+   the SVG hit targets (native SVG <title> is delayed/unreliable). Series identity
+   lives in the tooltip + bottom legend; there are no right-side end-labels. #}
+<div id="cm-ts-tooltip" class="cm-ts-tooltip" role="status" hidden></div>
+<script>
+(function () {
+  var tip = document.getElementById('cm-ts-tooltip');
+  if (!tip) return;
+  function show(t) {
+    var txt = t.getAttribute('data-tip');
+    if (!txt) return;
+    tip.textContent = txt;
+    tip.hidden = false;
+    var r = t.getBoundingClientRect();
+    tip.style.left = '0px'; tip.style.top = '0px';   // reset before measuring
+    var tr = tip.getBoundingClientRect();
+    var left = Math.min(Math.max(r.left + r.width / 2 - tr.width / 2, 4),
+                        window.innerWidth - tr.width - 4);
+    var top = r.top - tr.height - 8;
+    if (top < 4) top = r.bottom + 8;                 // flip below near viewport top
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function hide() { tip.hidden = true; }
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target.closest ? e.target.closest('[data-tip]') : null;
+    if (t) show(t); else if (!tip.hidden) hide();
+  });
+  document.addEventListener('focusin', function (e) {
+    var t = e.target.closest ? e.target.closest('[data-tip]') : null;
+    if (t) show(t);
+  });
+  document.addEventListener('focusout', hide);
+  window.addEventListener('scroll', hide, true);
+})();
+</script>
 
 {# Shared plain-language explainer dialog — one <dialog>, fed per-target from the
    JSON payload (authored explainers + console-owned kind glossary). Native modal:
