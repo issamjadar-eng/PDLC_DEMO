@@ -60,8 +60,25 @@
   .tk-open-top { display: flex; align-items: baseline; gap: 8px; }
   .tk-cat { flex: 0 0 auto; }
   .tk-open-title { font-weight: 700; font-size: 14px; }
-  .tk-chip { margin-left: auto; flex: 0 0 auto; font-size: 10px; font-weight: 700;
-      padding: 2px 8px; border-radius: 99px; background: var(--surface-2,#20242e); white-space: nowrap; }
+  /* max-width + ellipsis: defensive clamp — even if a summary artifact ever
+     carries a long status again, the chip truncates instead of overlaying
+     the neighboring column. The ellipsis lives on the inner .tk-chip-tx span
+     (not the chip) so the chip can anchor the hover tooltip without its
+     overflow clipping the bubble. */
+  .tk-chip { margin-left: auto; flex: 0 1 auto; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 99px; background: var(--surface-2,#20242e);
+      white-space: nowrap; max-width: 11em; display: inline-flex; min-width: 0;
+      position: relative; cursor: default; }
+  .tk-chip-tx { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Hover/focus tooltip expanding the full status — the chip can be shortened
+     by the width clamp, so the complete text must stay one hover away. */
+  .tk-chip[data-full]:hover::after, .tk-chip[data-full]:focus-visible::after {
+      content: attr(data-full); position: absolute; right: 0; top: calc(100% + 6px);
+      z-index: 40; width: max-content; max-width: 340px; white-space: normal;
+      font-weight: 500; font-size: 11px; line-height: 1.5; text-align: left;
+      background: var(--surface-2,#20242e); color: var(--body-text,#e6e9ef);
+      border: 1px solid var(--border,#2a2f3a); border-radius: 8px; padding: 8px 10px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.35); }
   .tk-chip.is-progress { color: var(--brand-primary,#6ea8fe); }
   .tk-chip.is-queued { color: var(--body-text-muted,#8b93a7); }
   .tk-open-sum { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5;
@@ -144,10 +161,10 @@
           <span class="tk-cat" title="{{ t.category }}">{{ t._icon }}</span>
           {% if t.path %}<a class="tk-open-title tk-doclink" href="/documents/view/{{ t.path }}" title="Open task doc">{{ t.title }}</a>
           {% else %}<span class="tk-open-title">{{ t.title }}</span>{% endif %}
-          <span class="tk-chip {{ 'is-progress' if 'Progress' in t.status else 'is-queued' }}">{{ t.status.split('(')[0].strip() }}</span>
+          <span class="tk-chip {{ 'is-progress' if 'Progress' in t.status else 'is-queued' }}" data-full="{{ t.status }}{% if t.status_note %} — {{ t.status_note }}{% endif %}" tabindex="0"><span class="tk-chip-tx">{{ t.status.split('—')[0].split('(')[0].strip() }}</span></span>
         </div>
         {% if t._summary_html %}<p class="tk-open-sum">{{ t._summary_html | safe }}</p>{% endif %}
-        <p class="tk-open-meta">{{ t.id }}{% if t.age_days is not none %} · open {{ t.age_days }}d{% endif %}{% if t.priority in ('High', 'Critical') %} · <span class="tk-prio">{{ t.priority }}</span>{% endif %}{% if '(' in t.status %} · {{ t.status.split('(', 1)[1].rstrip(')') }}{% endif %}</p>
+        <p class="tk-open-meta">{{ t.id }}{% if t.age_days is not none %} · open {{ t.age_days }}d{% endif %}{% if t.priority in ('High', 'Critical') %} · <span class="tk-prio">{{ t.priority }}</span>{% endif %}{% if t.status_note %} · {{ t.status_note }}{% endif %}</p>
       </div>
       {% endfor %}
       {% if s.categories %}

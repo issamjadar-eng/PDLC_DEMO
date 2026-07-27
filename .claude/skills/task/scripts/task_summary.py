@@ -13,9 +13,11 @@ column (the curated one-liners). Emits tasks/task-summary.json:
                            --watch; the script never writes prose and
                            preserves the previous values when omitted)
   counts                 — by status, total
-  open_tasks             — every non-Complete task: id, title, status,
-                           priority, category, summary (from the index),
-                           age_days, doc path
+  open_tasks             — every non-Complete task: id, title, status
+                           (ALWAYS a canonical key: In Progress / Blocked /
+                           Not Started — decorations go to status_note,
+                           clamped), priority, category, summary (from the
+                           index), age_days, doc path
   categories             — category -> open-task count
   category_icons         — category -> icon (from config; console fallback 📌)
   recent                 — last-N-days window: tasks touched, created, closed,
@@ -241,8 +243,21 @@ def build(root: Path, window_days: int, narrative: str | None) -> dict:
             if status_key in ("In Progress", "Blocked", "Not Started"):
                 age = ((today - datetime.date.fromisoformat(created_m.group(1))).days
                        if created_m else None)
+                # CONTRACT: `status` is ALWAYS one of the canonical keys — never
+                # the raw doc line. Authors decorate status lines freely
+                # ("Not Started — captured during …", "Active (awaiting X)"),
+                # and a raw pass-through blew up the console's status chip
+                # (one giant nowrap pill). The decoration survives in
+                # `status_note`, clamped to a rendering-safe length.
+                note = ""
+                if "—" in status:
+                    note = status.split("—", 1)[1].strip()
+                elif "(" in status:
+                    pm = re.search(r"\((.*?)\)\s*$", status)
+                    note = pm.group(1).strip() if pm else ""
                 open_tasks.append({
-                    "id": tid, "title": title, "status": status,
+                    "id": tid, "title": title, "status": status_key,
+                    "status_note": (note[:140] + "…") if len(note) > 140 else note,
                     "priority": (prio_m.group(1).strip() if prio_m else "—"),
                     "category": cat, "summary": summary, "age_days": age,
                     "path": f.relative_to(root).as_posix(),

@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `summary`, `setup` tasks organized by team member with index tracking. The `summary` action derives `tasks/task-summary.json` (counts, categorized open work, recent-activity digest, economics rollup) for the project console's Tasks tab — use it when the user says 'refresh the task summary', 'update the tasks tab', or the console shows a stale/missing task summary. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
-version: 34
-updated: 2026-07-20
+version: 35
+updated: 2026-07-27
 ---
 
 # Task Management
