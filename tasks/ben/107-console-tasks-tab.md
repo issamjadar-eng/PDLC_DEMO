@@ -2,7 +2,7 @@
 
 **ID**: 107
 **Created**: 2026-07-20
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -44,7 +44,7 @@ Required adaptations (sister fork ≠ our registry conventions):
 - [x] Phase 2 — project-console 1.41.0: `console/tasks_view/{__init__,loader,router}.py`, `tasks_view.html` (theme-var CSS, `/documents/view/` links, `md_inline` ported into router), app.py nav flag + router, `_base.html` `ic-tasks` icon + gated nav item, SKILL.md "Topline section: Tasks", README changelog
 - [x] Phase 3 — seeded `tasks/task-summary-config.json` (5 medtech categories + icons); generated `tasks/task-summary.json` (107 tasks, 10 open, 12 closed/30d, econ rollup over 11 in-doc blocks); composed + stamped narrative and watch (ben/046 filing-entity gap)
 - [x] Phase 4 — console restarted; `/tasks` + `/tasks/summary.json` 200, cards/timeline/narrative render, task-doc links redirect 307→200 into the explorer, no regressions on `/`, `/setup`, `/metrics`, `/documents`
-- [ ] Phase 5 — push per git-workflow when user asks (+ candidate `/sync-skills push` upstream for both skills)
+- [x] Phase 5 — pushed: PDLC_DEMO PR #155 (`3859857`); `/sync-skills push` → hitachi PR #282 merged (`e9a4a05`), clone ff'd, sync branch cleaned, drift 0 both sides
 
 <!-- LESSONS LEARNED: skills, sync -->
 **Lesson — porting from a diverged sister fork is adaptation, not copying (category: skills/registry-sync).** The sister project's console is a fork with different template blocks, nav machinery, and CSS conventions, and its `task_summary.py` had project vocabulary ("tetris", "unity") hardcoded into a registry-shared skill — exactly the project-leakage failure the sentinel-blocks guardrail describes. **Why:** a fork's code embeds its project's conventions invisibly; a byte-copy would have imported both the leakage and a changelog-format mismatch (their task docs use `| date | msg |` tables, ours use `- date: …` bullets — their regex would have silently found zero activity here, an empty-but-plausible Tasks tab). **How to apply:** before porting anything from a sister fork, diff the *conventions* (data formats, template contracts, config homes), route project-specific vocabulary into project-owned data files (here `tasks/task-summary-config.json`), and verify the port against real project data — the "12 closed in last 30d" number was the tell that parsing actually worked.
@@ -81,7 +81,7 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
   "economics": {
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
-    "agentic_hours": {"min": 0.3, "max": 0.7},
+    "agentic_hours": {"min": 0.5, "max": 1.0},
     "todos": [
       {
         "todo": "task skill v34 summary action (adapted script + SKILL.md + README)",
@@ -118,6 +118,7 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 
 ## Changelog
 
+- 2026-07-27 (close): **Task Complete.** Project landing PR #155 (`3859857`); registry landing hitachi PR #282 (`e9a4a05`); sync-log entry written; drift 0. Economics reconciled at completion (`agentic_hours` 0.5–1.0 supervised).
 - 2026-07-27 (later): project-console **1.53.1** — styled hover tooltip on the status chip (user follow-up: the clamp can ellipsize on narrow screens). CSS-only bubble via `::after content: attr(data-full)` showing full status + note on hover and keyboard focus; ellipsis moved to inner `.tk-chip-tx` span (chip's `overflow: hidden` would have clipped the pseudo-element); native `title` removed to avoid double tooltip. Verified live: data-full carries ben/046's full text, tabindex present.
 - 2026-07-27: **Status-chip overflow bug fixed both-layers** (reported via screenshot: ben/046's decorated status rendered as a giant pill over the timeline). Producer: task v35 — `open_tasks[].status` contractually canonical, decoration → clamped `status_note`. Consumer: project-console 1.53.0 — chip renders leading clause only, full text on hover, `max-width: 11em` + ellipsis; note shown in card meta. Also reconciled project-console SKILL.md frontmatter (lagged at 1.41.0 vs VERSION 1.52.0) → 1.53.0. Regenerated summary (all 10 open statuses assert canonical; narrative preserved); console restarted and verified via HTML chip extraction.
 - 2026-07-20: All four build phases delivered in one session. task skill v34 (`scripts/task_summary.py` + `summary` action); project-console 1.41.0 (`console/tasks_view/` + `tasks_view.html` + nav); project data seeded (`tasks/task-summary-config.json`, `tasks/task-summary.json` with composed narrative + ben/046 watch). Verified live: `/tasks` 200 with cards/timeline/narrative, doc links resolve via explorer redirect, sibling routes regression-free. Uncommitted; remaining = push + upstream sync push.

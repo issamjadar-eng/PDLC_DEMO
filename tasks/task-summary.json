@@ -3,10 +3,10 @@
   "window_days": 30,
   "narrative": "A tooling-heavy month: the usage-metrics value story went from raw token counts to a red-teamed Value & ROI view in the console — collection, retrospective cost allocation, and the honest modeled-not-measured framing all landed — while the console itself kept growing: the Setup tab arrived and expanded into a full project-settings surface, now joined by this Tasks view. On the regulatory side the reference registry gained the 21 CFR 820 QMSR set and the accessories guidance, and routine registry syncs kept skills in lockstep with hitachi. The open board is small and mostly console/skills work; the one substantive DHF workstream in flight is the PP3500 risk-file backfill with trace-matrix risk mapping (ben/102).",
   "counts": {
-    "Complete": 89,
+    "Complete": 90,
     "Abandoned": 10,
     "Not Started": 3,
-    "In Progress": 7,
+    "In Progress": 6,
     "total": 109
   },
   "open_tasks": [
@@ -57,18 +57,6 @@
       "age_days": 13,
       "path": "tasks/ben/104-console-setup-redesign.md",
       "last_activity": "2026-07-16"
-    },
-    {
-      "id": "ben/107",
-      "title": "Console Tasks Tab (port from spec-gaming sister project)",
-      "status": "In Progress",
-      "status_note": "",
-      "priority": "Medium",
-      "category": "Console & Tooling",
-      "summary": "Port the sister project's console Tasks tab: `/task summary` action (task skill) derives `tasks/task-summary.json` (counts, categorized open work, recent highlights, economics rollup, Claude-composed narrative) and a new console `tasks_view` section renders it. Adaptations: project-agnostic categories via `tasks/task-summary-config.json`, bullet-changelog parsing, `/documents/view/` links, our template conventions.",
-      "age_days": 7,
-      "path": "tasks/ben/107-console-tasks-tab.md",
-      "last_activity": "2026-07-20"
     },
     {
       "id": "ben/108",
@@ -132,7 +120,7 @@
     }
   ],
   "categories": {
-    "Console & Tooling": 5,
+    "Console & Tooling": 4,
     "Skills & Registry": 3,
     "Other": 1,
     "Docs & Narrative": 1
@@ -149,7 +137,7 @@
     "since": "2026-06-27",
     "tasks_touched": 17,
     "created": 16,
-    "closed": 13,
+    "closed": 14,
     "highlights": [
       {
         "task": "ben/109",
@@ -250,10 +238,10 @@
     ]
   },
   "economics": {
-    "manual_min": 582.0,
-    "manual_max": 1158.0,
-    "agentic_min": 24.2,
-    "agentic_max": 45.0,
+    "manual_min": 583.5,
+    "manual_max": 1161.0,
+    "agentic_min": 24.4,
+    "agentic_max": 45.3,
     "tasks_with_economics": 14,
     "note": "manual hours are MODELED (retrospective rubric estimates, order-of-magnitude — lead with min); agentic hours are self-reported supervised attention; sums cover only task docs carrying an in-doc Economics block"
   },

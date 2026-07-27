@@ -4,6 +4,17 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-27 — push (tasks-tab chip fix)
+
+- Files (7, all LOCAL_AHEAD): `skills/task/{SKILL.md, README.md, scripts/task_summary.py}` (v35 — `open_tasks[].status` contractually canonical, decorations → clamped `status_note`), `skills/project-console/{SKILL.md, README.md, VERSION, console/web/templates/tasks_view.html}` (1.53.1 — chip clamp + CSS hover/focus tooltip; SKILL.md frontmatter version reconciled from lagging 1.41.0)
+- Branch: `sync/pdlc-demo-tasks-chip-fix-2026-07-27`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/282
+- Commit: "task v35 + project-console 1.53.1: Tasks-tab status contract + chip tooltip"
+- Status: merged (user asked "push and do a skill sync"; precedent per entries below)
+- Merge commit / Hitachi HEAD after sync: `e9a4a05` (clone ff'd, sync branch deleted local+remote)
+- Project-side landing: PDLC_DEMO PR #155 (`3859857`)
+- Follow-ups: none
+
 ## 2026-07-27 — pull + push (full-catalog stack)
 
 - **Pull** (16 files, all UPSTREAM_ADVANCE — safe fast-forwards): `skills/medtech-docs/references/fda-guidance/{README.md, source-md/sw-functions.md, source/sw-functions.pdf, sw-functions-distilled.md}`, `skills/regulatory-authoring/{README.md, SKILL.md, references/authoring-standard.md, references/lint-signals.yml}`, `skills/submissions/{README.md, SKILL.md, references/pccp-change-scope-modify-vs-add.md, scripts/check_package_consistency.py, scripts/qsub_scope_lint.py, scripts/render_sidecars.py, templates/510k/510k-summary.md, templates/_shared/composition-manifest.template.md}`. Impact analysis: no post-update blocks; submissions v8–v10 are this project's own ben/109-era fixes propagated to the skill layer round-tripping back (project 510(k) manifest already tracks PCCP; no scaffolded 510k-summary doc to patch) — no local action. Pre-session untracked sibling files (sw-functions-webinar-transcript.*, readability-in-register.md, pccp-authorized-exemplars.md, pccp-full-document-structure.md, templates/pccp/) match upstream byte-identically; committed to the project repo with this sync.
