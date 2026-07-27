@@ -43,6 +43,13 @@ def run(corpus_root, out, pins):
     # --- docket roll-up: type × status --------------------------------------
     types = sorted({r["type"] for r in rows})
     statuses = ["open", "filed", "closed"]
+    # Fail loudly if the docket ever carries a status outside the roll-up vocabulary —
+    # an unknown value would otherwise silently drop from every cell AND the Total
+    # column while len(rows) still counts it (review finding F-21-3).
+    unknown_status = sorted({r["status"] for r in rows} - set(statuses))
+    if unknown_status:
+        raise SystemExit(f"BQ-21: unexpected docket status value(s) {unknown_status} — "
+                         f"extend the roll-up status vocabulary before publishing")
     roll = {t: {s: sum(1 for r in rows if r["type"] == t and r["status"] == s)
                 for s in statuses} for t in types}
 
@@ -77,8 +84,11 @@ def run(corpus_root, out, pins):
     ]
     basis_rows = [(lbl, C.pct(len(w) - len(lt), len(w)), len(w) - len(lt), len(w), len(lt))
                   for lbl, w, lt in bases]
-    alt_rates = [rate for _, rate, _, _, _ in basis_rows[1:]]
-    most_favorable = ontime_rate >= max(alt_rates) if alt_rates else True
+    # "Most favorable" compared on UNROUNDED fractions — C.pct rounds to 0.1 and a
+    # near-tie basis pair could flip the published qualifier on display rounding
+    # (review finding F-21-1); the table still shows rounded rates.
+    basis_fracs = [((len(w) - len(lt)) / len(w) if w else 0.0) for _, w, lt in bases]
+    most_favorable = basis_fracs[0] >= max(basis_fracs[1:]) if basis_fracs[1:] else True
     # E-21.1 flips iff any basis disagrees with the published basis on "any late filing"
     basis_flips = [lbl for lbl, _, _, _, n_late in basis_rows
                    if (n_late > 0) != (len(late_win) > 0)]

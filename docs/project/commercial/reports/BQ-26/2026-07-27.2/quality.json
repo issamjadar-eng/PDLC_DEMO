@@ -1,0 +1,330 @@
+{
+ "bq": "BQ-26",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:52+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "anchor-sensitivity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fse-capacity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fse-days-remaining",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "remote-convertible",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "required-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-upgrade-campaign@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Remaining campaign load",
+    "series": "capacity-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
+    "derivation": {
+     "method": "remaining = targeted \u2212 completed per region, where completed = status \u2208 {completed, completed-after-retry} and remaining = status \u2208 {scheduled, failed-pending-retry, rolled-back}; stalled load = remaining in regions with zero completions in the trailing 28d window ending at the snapshot as-of date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "Completions per week by region",
+    "series": "weekly-trend",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27"
+   },
+   {
+    "what": "Current vs required completions/week",
+    "series": "required-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
+    "derivation": {
+     "method": "current = completions (status \u2208 {completed, completed-after-retry}) in the 28d window ending at the snapshot as-of date \u00f7 4; required = remaining devices (status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00f7 weeks from the as-of date to the close date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Run-rates under the alternative (latest-completion) anchor",
+    "series": "anchor-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
+    "derivation": {
+     "method": "current and required rates recomputed with the 28d window anchored at the latest completed_date in the pin instead of the snapshot as-of date",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
+      "config: commercial.yml",
+      "derived: required-rate"
+     ]
+    }
+   },
+   {
+    "what": "On-site-remaining devices convertible to remote",
+    "series": "remote-convertible",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
+    "derivation": {
+     "method": "on-site-remaining campaign devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back} \u2014 i.e. not completed/completed-after-retry) joined to the fleet registry by device_serial; convertible = connected == yes",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
+      "src: commercial/internal-fleet@2026-07-27"
+     ]
+    }
+   },
+   {
+    "what": "On-site workload remaining (labor-time floor)",
+    "series": "fse-days-remaining",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-07-27",
+    "derivation": {
+     "method": "on-site-remaining devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00d7 mean completed (status \u2208 {completed, completed-after-retry}) on-site duration_min \u00f7 fse_day_minutes; labor time only \u2014 travel/overhead not in the campaign data (lower bound)",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "FSE capacity (roster/utilization)",
+    "series": "fse-capacity",
+    "evidence_class": "unavailable",
+    "source": "no corpus dataset acquired yet \u2014 roster, utilization, travel, and visits-per-day are needed for hire/contract/slip; the duration-basis floor is a bridge, not a substitute",
+    "note": "no corpus dataset acquired yet \u2014 roster, utilization, travel, and visits-per-day are needed for hire/contract/slip; the duration-basis floor is a bridge, not a substitute"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-26.md",
+  "status": "in-sync",
+  "pinned": "38ab4f5b8e3455abd517e6bd48fd173b34abc42538ac4a4a1bcae15c74925a53",
+  "current": "38ab4f5b8e3455abd517e6bd48fd173b34abc42538ac4a4a1bcae15c74925a53"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-upgrade-campaign/gen.py",
+    "sha256_12": "90b0d06b9503",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED-WITH-FINDINGS",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "All 4 rolled-back rows keep completed_date and duration_min; date-based completion counts would over-count",
+       "disposition": "accept: status-based consumers correct; document in README or blank the date at next refresh"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-fleet/gen.py",
+    "sha256_12": "165e3ad1d985",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

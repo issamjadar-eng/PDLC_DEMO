@@ -11,6 +11,8 @@ KOL_DS = "commercial/internal-kol-register"
 
 REAL_TYPES = ("interview", "survey", "publication")
 
+SENTIMENT_VOCAB = ("support", "neutral", "concern")
+
 
 def run(corpus_root, out, pins):
     p = C.params_for("BQ-16")
@@ -33,14 +35,25 @@ def run(corpus_root, out, pins):
     names = {}
     for f in universe:
         feat[f] = {"voices": set(), "support": 0, "neutral": 0, "concern": 0, "rows": 0}
+    unknown_sent = {}  # F16-2: out-of-vocabulary sentiment values must surface, not vanish
     for r in rows:
         f = r["feature_id"]
         if f not in feat:
             feat[f] = {"voices": set(), "support": 0, "neutral": 0, "concern": 0, "rows": 0}
         feat[f]["voices"].add(r["kol_id"])
-        feat[f][r["sentiment"]] = feat[f].get(r["sentiment"], 0) + 1
+        if r["sentiment"] in SENTIMENT_VOCAB:
+            feat[f][r["sentiment"]] += 1
+        else:
+            unknown_sent[r["sentiment"]] = unknown_sent.get(r["sentiment"], 0) + 1
         feat[f]["rows"] += 1
         names[f] = r["feature_name"]
+
+    # F16-3: the curated Giuliano/Gorski spot-check sentence self-retires when the
+    # cited register rows are no longer present-and-concern in the pin
+    def _concern_row(fid, kid):
+        return any(r["feature_id"] == fid and r["kol_id"] == kid and r["sentiment"] == "concern"
+                   for r in rows)
+    spot_checks_hold = _concern_row("F4", "KOL-0001") and _concern_row("F7", "KOL-0007")
 
     single = [f for f in universe if len(feat[f]["voices"]) == 1]
     zero = [f for f in universe if len(feat[f]["voices"]) == 0]
@@ -90,7 +103,7 @@ def run(corpus_root, out, pins):
         d = feat[f]
         flags = []
         if f in below:
-            flags.append("below 2-voice floor")
+            flags.append(f"below {floor}-voice floor")
         if f in concern_major:
             flags.append("concern-majority")
         if f in wave_flagged:
@@ -102,6 +115,17 @@ def run(corpus_root, out, pins):
         "",
         f"- Single-voice features: {', '.join(single) if single else 'none'}; zero-voice features: "
         f"{', '.join(zero) if zero else 'none'} [derived: voices-per-feature] [src: {src}].",
+    ]
+    if unknown_sent:
+        # F16-2: surface out-of-vocabulary sentiment values as a data-quality finding
+        lines += [
+            f"- DATA QUALITY: {sum(unknown_sent.values())} register row(s) carry a sentiment value "
+            f"outside the support|neutral|concern vocabulary "
+            f"({'; '.join(f'`{k}`: {v}' for k, v in sorted(unknown_sent.items()))}) — these rows are "
+            f"EXCLUDED from every sentiment mix and from the concern-majority rule; fix the register "
+            f"before trusting the mixes [src: {src}].",
+        ]
+    lines += [
         "",
         "## Wave check — do the committed wave slots have documented endorsement?", "",
         f"- Rule: a concern-majority feature scheduled in a "
@@ -113,11 +137,14 @@ def run(corpus_root, out, pins):
         f"- Vocabulary-flattening limitation (stated): the register's 3-value sentiment scale "
         f"(support | neutral | concern) cannot represent conditional support — per the dataset "
         f"README's mapping convention, a 'conditional yes' encodes as `concern` [src: {src}]. "
-        f"Source-doc spot checks show flagged-slot concern voices that explicitly endorse the "
-        f"sequencing while demanding conditions (Giuliano on F4: conditional support pending a "
-        f"pre-specified suppressed-true-alarm bound; Gorski on F7: 'sequencing is right', deferral "
-        f"endorsed) [src: {src}] — check the per-KOL source doc before reading any concern row as "
-        f"slot opposition.",
+        + (f"Source-doc spot checks show flagged-slot concern voices that explicitly endorse the "
+           f"sequencing while demanding conditions (Giuliano on F4: conditional support pending a "
+           f"pre-specified suppressed-true-alarm bound; Gorski on F7: 'sequencing is right', deferral "
+           f"endorsed) [src: {src}] — check the per-KOL source doc before reading any concern row as "
+           f"slot opposition." if spot_checks_hold else
+           f"The curated spot-check examples (Giuliano on F4, Gorski on F7) no longer match the "
+           f"pinned register rows and are retired from this edition [src: {src}] — re-verify the "
+           f"per-KOL source docs before reading any concern row as slot opposition."),
     ]
 
     narrative = {"issues": [], "risks": [], "watch": []}
@@ -189,7 +216,10 @@ def run(corpus_root, out, pins):
             {"id": "sentiment-mix", "label": "Sentiment mix per feature (simulated panel)", "unit": "rows",
              "evidence_class": "measured",
              "provenance": {"dataset": KOL_DS, "snapshot": snap},
-             "points": [{"label": f, "value": feat[f]["concern"],
+             # F16-4: the primary value is the mix TOTAL — a generic chart of `value`
+             # must not silently plot the concern count under an unlabeled axis
+             "points": [{"label": f,
+                         "value": feat[f]["support"] + feat[f]["neutral"] + feat[f]["concern"],
                          "support": feat[f]["support"], "neutral": feat[f]["neutral"],
                          "concern": feat[f]["concern"]} for f in universe]},
             {"id": "sentiment-history", "label": "Sentiment over time", "unit": "rows",

@@ -1,0 +1,27 @@
+dataset: commercial/internal-winloss
+snapshot: 2026-07-27.4
+created_at: '2026-07-27T18:26:52+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for CRM opportunity export)
+  retrieved_at: '2026-07-27T18:26:52+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: d5cdf465d6e313bbf19356efb6a45dec2c3352787cb8cd2728315716d1ab8d2a
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 9a0a9a364df61165073e271e233a44aa9199f415fbc07516852f16bd8ae2ad8f
+    parents:
+    - d5cdf465d6e313bbf19356efb6a45dec2c3352787cb8cd2728315716d1ab8d2a
+  script_sha256: acf035fcd572920d60a50f4137ce600a96bff951e70f234a0e71d286986bb8fb
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 120

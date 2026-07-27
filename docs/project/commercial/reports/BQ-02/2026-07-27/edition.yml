@@ -1,6 +1,6 @@
 bq: BQ-02
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T15:29:11+00:00'
 pins:
   commercial/internal-sales-accounts: '2026-07-27'
@@ -9,3 +9,4 @@ pins:
 plan:
   path: plans/BQ-02.md
   sha256: 118e9fcb0ee837aa94e1b2fd4bae1d4b5e0f2c20b447723007bed7af84eaad86
+superseded_by: 2026-07-27.2

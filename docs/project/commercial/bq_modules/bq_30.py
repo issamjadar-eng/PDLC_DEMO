@@ -76,14 +76,44 @@ def run(corpus_root, out, pins):
     # true on-site cost per update exceeds adapter + remote session — state WHERE that
     # point sits in the floor–ceiling bound instead of a directional adverb.
     breakeven = round(adapter + remote_cost)
-    be_pos = C.pct(breakeven - onsite_floor, onsite_ceiling - onsite_floor)
+    # Breakeven position clamped to [0, 100]; the sentence branches when breakeven
+    # falls outside the bound or the bound is degenerate — an unclamped position would
+    # render negative / >100 "position in the bound" nonsense (review finding F-30-2).
+    bound_width = onsite_ceiling - onsite_floor
+    be_pos = min(100.0, max(0.0, C.pct(breakeven - onsite_floor, bound_width)))
+    if bound_width > 0 and onsite_floor < breakeven < onsite_ceiling:
+        be_clause = (f"a point {be_pos}% of the way up the ${onsite_floor:.0f}–"
+                     f"${onsite_ceiling:.0f} bound, so conversion wins across the upper "
+                     f"{round(100 - be_pos, 1)}% of it")
+    elif bound_width > 0 and breakeven <= onsite_floor:
+        be_clause = (f"a point at or below the ${onsite_floor:.0f} floor of the bound, so "
+                     f"conversion wins across the whole bound")
+    elif bound_width > 0:
+        be_clause = (f"a point at or above the ${onsite_ceiling:.0f} ceiling of the bound, so "
+                     f"conversion wins nowhere in the bound")
+    else:
+        be_clause = (f"a bound that is degenerate (floor equals ceiling at "
+                     f"${onsite_floor:.0f}), so no position within it exists")
+
+    # Payback rendering guarded — with saving ≤ 0 the payback is None and must render
+    # as an explicit no-payback clause, never "None–None campaigns" (finding F-30-1).
+    if payback_floor is not None:
+        payback_clause = (f"a ${adapter:.0f} adapter pays back in "
+                          f"{payback_ceiling}–{payback_floor} update campaigns at the top "
+                          f"non-connected accounts")
+    elif payback_ceiling is not None:
+        payback_clause = (f"a ${adapter:.0f} adapter pays back only toward the travel-heavy end "
+                          f"of the bound ({payback_ceiling} campaigns at the full-day ceiling; "
+                          f"no payback at the labor floor, where remote does not undercut "
+                          f"on-site)")
+    else:
+        payback_clause = (f"a ${adapter:.0f} adapter has NO payback at this bound — the remote "
+                          f"session rate does not undercut on-site at either end")
 
     headline = (f"A remote update costs ${remote_cost:.0f} vs an on-site update between "
                 f"${onsite_floor:.0f} (labor-time floor) and ${onsite_ceiling:.0f} (full-day "
                 f"ceiling) — remote is {ratio_at_ceiling}–{ratio_at_floor}% of on-site depending "
-                f"on unmeasured travel; a ${adapter:.0f} adapter pays back in "
-                f"{payback_ceiling}–{payback_floor} update campaigns at the top non-connected "
-                f"accounts")
+                f"on unmeasured travel; {payback_clause}")
 
     # narrative — deterministic from computed facts
     narrative = {"issues": [], "risks": [], "watch": []}
@@ -91,9 +121,12 @@ def run(corpus_root, out, pins):
         "id": "R1", "severity": "high",
         "statement": f"The fully-loaded on-site cost is unresolvable from campaign data — the "
                      f"${onsite_floor:.0f}–${onsite_ceiling:.0f} bound spans {ratio_at_ceiling}% "
-                     f"to {ratio_at_floor}% on the remote-vs-onsite ratio, and the adapter payback "
-                     f"spans {payback_ceiling} to {payback_floor} campaigns — the remote-first "
-                     "decision flips inside that band",
+                     f"to {ratio_at_floor}% on the remote-vs-onsite ratio, and "
+                     + (f"the adapter payback spans {payback_ceiling} to {payback_floor} "
+                        f"campaigns" if payback_floor is not None else
+                        "the adapter payback is undefined across part or all of it (remote does "
+                        "not undercut on-site everywhere in the bound)")
+                     + " — the remote-first decision flips inside that band",
         "mitigation": "Acquire FSE travel/visit data (the same roster dataset BQ-26 needs) to "
                       "collapse the bound before committing adapter capex",
         "evidence": ["derived: onsite-cost-bounds", "derived: adapter-payback",
@@ -110,17 +143,21 @@ def run(corpus_root, out, pins):
                       "campaign export; mark E-30.1 validated when done",
         "evidence": ["config: commercial.yml", f"src: {src}"],
     })
+    # Remote-convertible share of the on-site backlog computed from THIS module's own
+    # pins (same device_serial↔connected join used for completions) instead of quoting
+    # BQ-26's number as a literal (review finding F-30-3); the BQ-26 pointer stays.
+    rem_convertible = sum(1 for r in rem
+                          if r["method"] == "onsite" and conn.get(r["device_serial"]) == "yes")
+    conv_word = "zero" if rem_convertible == 0 else str(rem_convertible)
     narrative["watch"].append({
         "id": "W1",
         "statement": f"Finishing the current campaign's {onsite_rem} on-site-remaining devices "
                      f"costs ${fin_floor:,}–${fin_ceiling:,} on-site vs ${fin_convert:,} to "
                      f"adapter-convert and run remote — within this campaign conversion breaks "
                      f"even where on-site cost exceeds ${breakeven}/update (adapter + remote "
-                     f"session), a point {be_pos}% of the way up the ${onsite_floor:.0f}–"
-                     f"${onsite_ceiling:.0f} bound, so conversion wins across the upper "
-                     f"{round(100 - be_pos, 1)}% of it — and the adapters persist for every "
-                     "future campaign (BQ-26 shows zero of the on-site backlog is "
-                     "remote-convertible today)",
+                     f"session), {be_clause} — and the adapters persist for every "
+                     f"future campaign ({conv_word} of the {onsite_rem} on-site-remaining "
+                     f"device(s) are remote-convertible today per this pin — see BQ-26)",
         "evidence": ["derived: finish-current-campaign", "derived: onsite-cost-bounds",
                      f"src: {src}", f"src: {fsrc}", "config: commercial.yml"],
     })
@@ -178,9 +215,17 @@ def run(corpus_root, out, pins):
         f"[config: commercial.yml] | {top_devices} | ${top_capex:,} | ${top_onsite_floor:,}–"
         f"${top_onsite_ceiling:,} |",
         "",
-        f"- Payback per device: ${adapter:.0f} adapter ÷ (on-site − remote per-update saving) = "
-        f"{payback_floor} campaigns at the labor floor, {payback_ceiling} at the full-day ceiling "
-        f"[derived: adapter-payback] [config: commercial.yml]",
+        ("- Payback per device: ${:.0f} adapter ÷ (on-site − remote per-update saving) = "
+         "{} campaigns at the labor floor, {} at the full-day ceiling "
+         "[derived: adapter-payback] [config: commercial.yml]"
+         .format(adapter, payback_floor, payback_ceiling) if payback_floor is not None else
+         (f"- Payback per device: no payback at the labor floor — remote (${remote_cost:.0f}) "
+          f"does not undercut the on-site floor (${onsite_floor:.0f})"
+          + (f"; at the full-day ceiling the ${adapter:.0f} adapter pays back in "
+             f"{payback_ceiling} campaigns" if payback_ceiling is not None else
+             f" or the full-day ceiling (${onsite_ceiling:.0f}) — the adapter never pays back "
+             f"on update-labor savings alone")
+          + " [derived: adapter-payback] [config: commercial.yml]")),
         f"- Once converted, each campaign over the top accounts runs ${top_remote:,} remote vs "
         f"${top_onsite_floor:,}–${top_onsite_ceiling:,} on-site [derived: adapter-case] "
         f"[config: commercial.yml]",

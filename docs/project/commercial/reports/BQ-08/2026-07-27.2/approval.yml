@@ -1,0 +1,13 @@
+bq: BQ-08
+edition: 2026-07-27.2
+approved_by: Ben Xavier
+approved_at: '2026-07-27T18:33:47+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: AI code review + fix pass over the computation code (dossier tasks/ben/_work/108-code-review-market-2026-07-27.md);
+    deterministic code checks green; prior adversarial-verify/red-team verdicts carried in quality.json
+content_hashes:
+  report.md: d983c6373d3117922f0573f45b155dd59b7bf0c3f5113f308a194b43bf3209e1
+  data.json: c731b62a3562ec28df2caa563a1ec7c039089fca73f56a77cdc5292e135d685d

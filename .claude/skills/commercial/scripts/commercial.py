@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.1"
+SCHEMA_VERSION = "1.2"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
@@ -179,6 +179,250 @@ def find_edition(root: Path, bq: str, edition: str = None):
                 return e
         raise CommercialError(f"{bq}: no edition {edition}")
     return eds[-1]  # newest by created_at (draft or approved)
+
+
+# ---------------------------------------------------------------- code quality (soft gate)
+#
+# Audit layer for the PROJECT-SIDE analysis code: per-BQ modules, the shared
+# computations.py, and corpus dataset generators (gen.py). Deterministic checks
+# (static lint, poison-pattern scan, determinism replay) plus AI-review records
+# live in an engine-managed store; `answer` pins the exact code bytes an edition
+# was computed by. The gate is SOFT: statuses render as badges in quality.json /
+# the sidecar and are printed by approve/check, but nothing ever blocks on them.
+# The engines themselves (commercial.py, corpus.py) are out of scope — they are
+# reviewed at registry level, not per project.
+
+CQ_STORE_REL = "code-quality/records.yml"
+
+CQ_POISON_RULES = [
+    # (rule id, severity, regex) — poison patterns for deterministic analysis code.
+    # error-severity hits fail the scan; warning-severity hits surface but don't.
+    ("no-clocks", "error",
+     re.compile(r"datetime\.now\s*\(|\bdate\.today\s*\(|\btime\.time\s*\(")),
+    ("unseeded-random-ctor", "error", re.compile(r"\brandom\.Random\(\s*\)")),
+    ("unseeded-random-call", "error",
+     re.compile(r"\brandom\.(?:random|randint|choice|choices|shuffle|uniform|randrange|sample|gauss)\s*\(")),
+    ("no-network", "error",
+     re.compile(r"^\s*(?:import|from)\s+[\w., ]*\b(?:requests|urllib|http\.client|socket)\b")),
+    ("abs-path-open", "warning", re.compile(r"open\(\s*[\"']/")),
+]
+
+CQ_STATUS_ORDER = ["checks-failed", "review-outdated", "unreviewed", "reviewed-current"]
+
+
+def cq_store_path(root: Path) -> Path:
+    return root / CQ_STORE_REL
+
+
+def load_cq_store(root: Path) -> dict:
+    """No store file is a valid state (nothing audited yet) — never an error."""
+    p = cq_store_path(root)
+    if not p.exists():
+        return {"artifacts": {}}
+    try:
+        d = load_yaml(p) or {}
+    except yaml.YAMLError:
+        sys.stderr.write(f"warning: unreadable {p} — treating as empty store\n")
+        return {"artifacts": {}}
+    d.setdefault("artifacts", {})
+    return d
+
+
+def save_cq_store(root: Path, store: dict):
+    p = cq_store_path(root)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    dump_yaml(store, p)
+
+
+def artifact_role(path: str) -> str:
+    if path.startswith("corpus:"):
+        return "generator"
+    if path == "computations.py":
+        return "shared"
+    return "module"
+
+
+def resolve_artifact_file(root: Path, corpus_root: Path, path: str) -> Path:
+    if path.startswith("corpus:"):
+        return corpus_root / path[len("corpus:"):]
+    return root / path
+
+
+def bq_module_relpath(bq: str) -> str:
+    return "bq_modules/" + bq.lower().replace("-", "_") + ".py"
+
+
+def compute_code_artifacts(root: Path, corpus_root: Path, q: dict):
+    """The code artifacts behind a question's computation, at their CURRENT hashes:
+    the per-BQ module (when it exists), the shared computations.py (always — helpers
+    and inline computations), and each corpus dep's generator gen.py (when present).
+    Paths are commercial-root-relative; generators use the corpus:<ds>/gen.py form."""
+    out = []
+    mod = root / bq_module_relpath(q["id"])
+    if mod.exists():
+        out.append({"path": bq_module_relpath(q["id"]), "sha256": sha256_file(mod)})
+    comp = root / "computations.py"
+    if comp.exists():
+        out.append({"path": "computations.py", "sha256": sha256_file(comp)})
+    for ds in q.get("corpus_deps", []) or []:
+        g = corpus_root / ds / "gen.py"
+        if g.exists():
+            out.append({"path": f"corpus:{ds}/gen.py", "sha256": sha256_file(g)})
+    return out
+
+
+def edition_code_artifacts(root: Path, corpus_root: Path, q: dict, ed):
+    """(artifacts, derived_from_current_files). Editions pinned by `answer` carry
+    code_artifacts in edition.yml; older editions (and no-edition questions)
+    degrade to current file hashes — flagged with a note, never an error."""
+    arts = (ed or {}).get("code_artifacts")
+    if arts:
+        return arts, False
+    return compute_code_artifacts(root, corpus_root, q), True
+
+
+def cq_entry_for(store: dict, path: str, sha: str):
+    """Newest store entry for (path, sha) — newest entry per sha wins."""
+    entries = ((store.get("artifacts") or {}).get(path) or {}).get("entries") or []
+    for e in reversed(entries):
+        if e.get("sha256") == sha:
+            return e
+    return None
+
+
+def cq_upsert(store: dict, path: str, sha: str, **fields):
+    """Update the entry for (path, sha), creating it if absent. Only non-None
+    fields are written, so a partial run never clobbers earlier check results."""
+    art = store.setdefault("artifacts", {}).setdefault(path, {"entries": []})
+    entry = None
+    for e in reversed(art["entries"]):
+        if e.get("sha256") == sha:
+            entry = e
+            break
+    if entry is None:
+        entry = {"sha256": sha, "date": today(), "reviews": []}
+        art["entries"].append(entry)
+    entry["date"] = today()
+    for k, v in fields.items():
+        if v is not None:
+            entry[k] = v
+    return entry
+
+
+def cq_static_lint(f: Path, label: str) -> dict:
+    """pyflakes when importable, else a py_compile syntax check — tool recorded."""
+    import importlib.util
+    tool = "pyflakes" if importlib.util.find_spec("pyflakes") else "py_compile"
+    proc = subprocess.run([sys.executable, "-m", tool, str(f)],
+                          capture_output=True, text=True)
+    findings = [ln.replace(str(f), label) for ln in (proc.stdout + proc.stderr).splitlines()
+                if ln.strip()]
+    return {"status": "fail" if proc.returncode else "pass", "tool": tool, "findings": findings}
+
+
+def cq_poison_scan(f: Path) -> dict:
+    """Regex scan for the project poison patterns, with line numbers. Generators
+    legitimately use SEEDED randomness — a file that seeds the global RNG
+    (random.seed(...)) is not flagged for bare random.* calls; random.Random()
+    with no seed argument is always flagged."""
+    text = f.read_text()
+    seeded = "random.seed(" in text
+    hits, worst = [], "pass"
+    for n, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("#"):
+            continue
+        for rid, sev, rx in CQ_POISON_RULES:
+            if rid == "unseeded-random-call" and seeded:
+                continue
+            if rx.search(line):
+                hits.append({"rule": rid, "severity": sev, "line": n,
+                             "text": line.strip()[:100]})
+                if sev == "error":
+                    worst = "fail"
+                elif worst == "pass":
+                    worst = "warn"
+    return {"status": worst, "hits": hits}
+
+
+def cq_determinism(root: Path, corpus_root: Path, q: dict) -> dict:
+    """Replay the question's computation twice against the latest edition's pins
+    into two temp dirs and byte-compare report.md + data.json. Proof, not vibes.
+    (There should be no timestamp fields in either file — a diff is a failure.)"""
+    import tempfile
+    ed = find_edition(root, q["id"])
+    if not ed or not ed.get("pins"):
+        return {"status": "not-run", "method": "no edition pins available to replay"}
+    method = (f"double-run byte-compare of report.md+data.json replaying "
+              f"edition {ed['edition']} pins")
+    try:
+        with tempfile.TemporaryDirectory() as t1, tempfile.TemporaryDirectory() as t2:
+            for t in (t1, t2):
+                (Path(t) / "pins.json").write_text(json.dumps(ed["pins"], indent=1))
+                cmd = q["computation"].format(bq=q["id"],
+                                              corpus_root=str(corpus_root.resolve()),
+                                              out=str(Path(t)))
+                proc = subprocess.run(cmd, shell=True, cwd=str(root),
+                                      capture_output=True, text=True)
+                if proc.returncode != 0:
+                    return {"status": "fail",
+                            "method": method + f" — replay run failed ({proc.returncode}): "
+                                               f"{(proc.stderr or '').strip()[-200:]}"}
+            for fname in ("report.md", "data.json"):
+                a, b = Path(t1) / fname, Path(t2) / fname
+                if not (a.exists() and b.exists()):
+                    return {"status": "fail", "method": method + f" — replay did not produce {fname}"}
+                if a.read_bytes() != b.read_bytes():
+                    return {"status": "fail", "method": method + f" — {fname} differs between runs"}
+    except (KeyError, OSError) as e:
+        return {"status": "not-run", "method": method + f" — replay error: {e}"}
+    return {"status": "pass", "method": method}
+
+
+def code_quality_block(root: Path, corpus_root: Path, q: dict, ed):
+    """The per-question `code:` block (quality.json + sidecar, schema 1.2).
+    Per edition-pinned artifact: checks + the newest review (current = review filed
+    against the pinned sha). Question-level status ladder:
+    checks-failed > review-outdated > unreviewed > reviewed-current.
+    SOFT GATE — consumed as badges only; nothing blocks on it."""
+    store = load_cq_store(root)
+    arts, derived = edition_code_artifacts(root, corpus_root, q, ed)
+    if not arts:
+        return None
+    rows = []
+    any_fail = any_outdated = any_unreviewed = False
+    for a in arts:
+        path, sha = a["path"], a["sha256"]
+        entry = cq_entry_for(store, path, sha)
+        checks = {k: (entry or {}).get(k) for k in ("static_lint", "poison_scan", "determinism")}
+        if any(c and c.get("status") == "fail" for c in checks.values()):
+            any_fail = True
+        review, current, rv = None, False, None
+        if entry and entry.get("reviews"):
+            rv, current = entry["reviews"][-1], True
+        else:
+            entries = ((store.get("artifacts") or {}).get(path) or {}).get("entries") or []
+            for e in reversed(entries):
+                if e.get("reviews"):
+                    rv = e["reviews"][-1]
+                    break
+        if rv:
+            review = {"verdict": rv.get("verdict"), "by": rv.get("by"), "date": rv.get("date"),
+                      "current": current, "findings": rv.get("findings", []),
+                      "detail_ref": rv.get("detail_ref")}
+            if not current:
+                any_outdated = True
+        else:
+            any_unreviewed = True
+        rows.append({"path": path, "sha256_12": sha[:12], "role": artifact_role(path),
+                     "static_lint": checks["static_lint"], "poison_scan": checks["poison_scan"],
+                     "determinism": checks["determinism"], "review": review})
+    status = ("checks-failed" if any_fail else "review-outdated" if any_outdated
+              else "unreviewed" if any_unreviewed else "reviewed-current")
+    block = {"status": status, "artifacts": rows}
+    if derived:
+        block["note"] = ("no edition — status computed from current file hashes" if not ed
+                         else "edition predates code pinning — status computed from current file hashes")
+    return block
 
 
 # ---------------------------------------------------------------- lint
@@ -449,6 +693,13 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
         "plan": detail.get("plan"),
         "verifications": verifications,
     }
+    # code-quality soft-gate block (schema 1.2) — degrades to None if the catalog
+    # can't be read or the question is unknown
+    try:
+        centry = bq_entry(load_config(root), bq)
+        q["code"] = code_quality_block(root, corpus_root, centry, ed)
+    except CommercialError:
+        q["code"] = None
     qpath.write_text(json.dumps(q, indent=1))
     return q
 
@@ -504,6 +755,9 @@ def cmd_answer(args):
     ph = plan_hash(root, args.bq)
     if ph:
         ed["plan"] = {"path": f"plans/{args.bq}.md", "sha256": ph}
+    # pin the code bytes this edition was computed by (module, shared helpers,
+    # dep generators) — purely additive; the code-quality layer resolves against it
+    ed["code_artifacts"] = compute_code_artifacts(root, corpus_root, q)
     dump_yaml(ed, edir / "edition.yml")
     errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
     write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail,
@@ -543,6 +797,14 @@ def cmd_approve(args):
         raise CommercialError(f"{args.bq}@{ed['edition']} already approved")
     errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
     write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
+    # code-quality status is printed but NEVER gates approval (soft gate)
+    try:
+        cb = code_quality_block(root, corpus_root, bq_entry(load_config(root), args.bq), ed)
+    except CommercialError:
+        cb = None
+    if cb:
+        print(f"[{args.bq}@{ed['edition']}] code-quality: {cb['status']} "
+              f"({len(cb['artifacts'])} artifact(s)) — soft gate, informational only")
     if errors:
         print(f"APPROVAL BLOCKED — {len(errors)} lint error(s):")
         for e in errors:
@@ -642,6 +904,9 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict, terms_catalog: dict 
             bands.append("stale" if age > max_age else ("aging" if age > max_age * 0.75 else "fresh"))
         row["freshness"] = ("stale" if "stale" in bands else "aging" if "aging" in bands else "fresh") \
             if bands else None
+    # schema 1.2: per-question code-quality block (soft gate — badges only)
+    row["code"] = code_quality_block(root, corpus_root, q, show) \
+        if (show or q.get("computation")) else None
     return row
 
 
@@ -688,6 +953,17 @@ def cmd_check(args):
                                  if c["id"] in ("derivation-chain",) for f in c["findings"]}
                 failures.extend(f"{q['id']}@{ed['edition']}: {e}" for e in errors
                                 if e not in grandfathered)
+    # code-quality soft-gate summary — informational count line, never a failure
+    cq_counts = {}
+    for q in cfg.get("questions", []):
+        if not q.get("computation"):
+            continue
+        cb = code_quality_block(root, corpus_root, q, find_edition(root, q["id"]))
+        if cb:
+            cq_counts[cb["status"]] = cq_counts.get(cb["status"], 0) + 1
+    if cq_counts:
+        print("code-quality (soft gate, non-blocking): " +
+              ", ".join(f"{cq_counts[s]} {s}" for s in CQ_STATUS_ORDER if s in cq_counts))
     # corpus health is part of the chain
     corpus_script = Path(".claude/skills/corpus/scripts/corpus.py")
     if corpus_script.exists():
@@ -742,6 +1018,119 @@ def cmd_record_verification(args):
     })
     qpath.write_text(json.dumps(q, indent=1))
     print(f"[{args.bq}@{ed['edition']}] recorded {args.type}: {args.verdict} (by {args.by})")
+    return 0
+
+
+def cmd_code_audit(args):
+    """Run the DETERMINISTIC code-quality checks (static lint, poison-pattern scan,
+    determinism replay) over a target's artifacts and upsert store entries keyed by
+    each file's CURRENT sha. AI reviews are filed separately via record-code-review.
+    Soft gate: findings are recorded and printed, exit stays 0."""
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    cfg = load_config(root)
+    questions = [q for q in cfg.get("questions", []) if q.get("computation")]
+    targets = {}   # path -> resolved file
+    det_jobs = []  # (question, owner artifact path for the determinism verdict)
+    if args.all:
+        qs = questions
+    elif args.path:
+        qs = []
+        f = resolve_artifact_file(root, corpus_root, args.path)
+        if not f.exists():
+            raise CommercialError(f"artifact not found: {args.path}")
+        targets[args.path] = f
+        # a per-BQ module maps back to its question for the determinism replay;
+        # for shared/generator paths only lint + poison run here
+        for q in questions:
+            if bq_module_relpath(q["id"]) == args.path:
+                det_jobs.append((q, args.path))
+    elif args.bq:
+        qs = [bq_entry(cfg, args.bq)]
+    else:
+        raise CommercialError("code-audit needs a BQ id, --path, or --all")
+    for q in qs:
+        for a in compute_code_artifacts(root, corpus_root, q):
+            targets.setdefault(a["path"], resolve_artifact_file(root, corpus_root, a["path"]))
+        owner = bq_module_relpath(q["id"])
+        if not (root / owner).exists():
+            owner = "computations.py"  # inline computation — shared file owns the verdict
+        det_jobs.append((q, owner))
+    # determinism replays, aggregated per owner artifact (computations.py may own many)
+    det_acc = {}
+    for q, owner in det_jobs:
+        r = cq_determinism(root, corpus_root, q)
+        acc = det_acc.setdefault(owner, {"bqs": [], "fails": [], "notruns": []})
+        acc["bqs"].append(q["id"])
+        if r["status"] == "fail":
+            acc["fails"].append(f"{q['id']}: {r['method']}")
+        elif r["status"] == "not-run":
+            acc["notruns"].append(f"{q['id']}: {r['method']}")
+    det_results = {}
+    for owner, acc in det_acc.items():
+        status = "fail" if acc["fails"] else ("not-run" if acc["notruns"] else "pass")
+        method = ("double-run byte-compare of report.md+data.json replaying "
+                  "latest-edition pins for " + ", ".join(acc["bqs"]))
+        for msg in acc["fails"] + acc["notruns"]:
+            method += f"; {msg}"
+        det_results[owner] = {"status": status, "method": method}
+    store = load_cq_store(root)
+    rows = []
+    for path in sorted(targets):
+        f = targets[path]
+        sha = sha256_file(f)
+        lint = cq_static_lint(f, path)
+        poison = cq_poison_scan(f)
+        det = det_results.get(path)
+        if det is None and artifact_role(path) == "generator":
+            # generators run at acquisition time, not per answer — determinism of
+            # their outputs is the corpus tier's concern (seeded gen + hash pins)
+            det = {"status": "n/a",
+                   "method": "generator — replayed at acquisition time, not by code-audit"}
+        cq_upsert(store, path, sha, static_lint=lint, poison_scan=poison, determinism=det)
+        rows.append((path, sha[:12], lint, poison, det))
+    save_cq_store(root, store)
+    print(f"code-audit: {len(rows)} artifact(s) checked — store: {CQ_STORE_REL}")
+    for path, sha12, lint, poison, det in rows:
+        d = det["status"] if det else "-"
+        print(f"  {path:60s} {sha12}  lint:{lint['status']:5s} poison:{poison['status']:5s} "
+              f"determinism:{d}")
+        for fl in lint["findings"][:5]:
+            print(f"      lint: {fl}")
+        for h in poison["hits"][:8]:
+            print(f"      poison[{h['rule']}/{h['severity']}] L{h['line']}: {h['text']}")
+    return 0
+
+
+def cmd_record_code_review(args):
+    """File an AI (or human) code review for an artifact's CURRENT bytes into the
+    code-quality store — the review record for the failure classes deterministic
+    checks can't see (plan conformance, denominator/basis choices, string-literal
+    facts, median/rounding traps, status-set assumptions)."""
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    f = resolve_artifact_file(root, corpus_root, args.path)
+    if not f.exists():
+        raise CommercialError(f"artifact not found: {args.path}")
+    sha = sha256_file(f)
+    store = load_cq_store(root)
+    findings = []
+    for i, spec in enumerate(args.finding or [], 1):
+        parts = [s.strip() for s in spec.split("|", 2)]
+        if len(parts) != 3:
+            raise CommercialError(f"--finding must be 'severity|summary|disposition': {spec}")
+        findings.append({"id": f"F-{i}", "severity": parts[0], "summary": parts[1],
+                         "disposition": parts[2]})
+    checks_pending = not (cq_entry_for(store, args.path, sha) or {}).get("static_lint")
+    entry = cq_upsert(store, args.path, sha)
+    entry.setdefault("reviews", []).append({
+        "verdict": args.verdict, "by": args.by, "date": today(),
+        "summary": args.summary, "findings": findings, "detail_ref": args.detail_ref,
+    })
+    save_cq_store(root, store)
+    print(f"[{args.path}@{sha[:12]}] review filed: {args.verdict} (by {args.by}, "
+          f"{len(findings)} finding(s))")
+    if checks_pending:
+        print("  note: deterministic checks have not run for this sha — run code-audit "
+              "to complete the entry")
     return 0
 
 
@@ -873,6 +1262,23 @@ def main(argv=None):
     s.add_argument("--summary", required=True)
     s.add_argument("--detail-ref", help="path to the full dossier/report")
     s.set_defaults(fn=cmd_record_verification)
+
+    s = sub.add_parser("code-audit",
+                       help="deterministic code-quality checks (lint/poison/determinism) -> store (soft gate)")
+    s.add_argument("bq", nargs="?")
+    s.add_argument("--path", help="single artifact: commercial-root-relative, or corpus:<ds>/gen.py")
+    s.add_argument("--all", action="store_true", help="audit every implemented question's artifacts")
+    s.set_defaults(fn=cmd_code_audit)
+
+    s = sub.add_parser("record-code-review", help="file an AI code-review verdict into the code-quality store")
+    s.add_argument("path", help="artifact path: commercial-root-relative, or corpus:<ds>/gen.py")
+    s.add_argument("--verdict", required=True)
+    s.add_argument("--by", required=True)
+    s.add_argument("--summary", required=True)
+    s.add_argument("--finding", action="append",
+                   help="repeatable: 'severity|summary|disposition'")
+    s.add_argument("--detail-ref", help="path to the full review dossier")
+    s.set_defaults(fn=cmd_record_code_review)
 
     s = sub.add_parser("plan-init", help="scaffold a question's user-owned analysis plan")
     s.add_argument("bq")

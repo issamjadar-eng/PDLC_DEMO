@@ -35,8 +35,13 @@ def run(corpus_root, out, pins):
     a004 = yaml.safe_load(open(corpus_root / A004_PATH))
     assert a004.get("status") == "active", "A-004 is not active — refresh before answering"
     vr = a004["value_or_range"]
-    assert "$3.0k-$15k" in vr and "$2.2k-$6.9k" in vr and "$150-$250" in vr, \
+    assert "$3.0k-$15k" in vr and "$2.2k-$6.9k" in vr and "$150-$250" in vr \
+        and "$4.4k-$13.7k" in vr, \
         "A-004 ranges changed — update the transcribed constants in bq_10.py"
+    # COMP_TCO_LO/HI transcribe A-004's 5-YEAR figure — a different horizon would
+    # relabel that range and compare mismatched horizons
+    assert horizon == 5, \
+        "horizon_years != 5 but the A-004 TCO range is horizon-specific (5-yr) — retranscribe"
 
     capital = int(p["pp3500_capital_usd"])
     cloud = int(p["cloud_suite_per_pump_annual_usd"])
@@ -48,6 +53,10 @@ def run(corpus_root, out, pins):
 
     cells = {}   # (product, attribute) -> (value, verified)
     for r in rows:
+        # cell() renders only the "verify" status specially — any other unexpected
+        # status would silently render as settled fact, so guard the vocabulary
+        assert r["verified"] in ("yes", "verify"), \
+            f"unexpected verified status {r['verified']!r} for {r['product']}/{r['attribute']} — update bq_10.py's cell rendering"
         cells[(r["product"], r["attribute"])] = (r["value"], r["verified"])
 
     headline = (f"Indicative, assumption-bounded: our {horizon}-yr TCO is ${our_full:,}/pump all-in "

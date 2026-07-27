@@ -368,3 +368,21 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-data-files li { line-height: 1.5; }
 .cm-art-sum { display: block; font-size: .76rem; color: var(--body-text-muted, #64748b);
   margin: .05rem 0 .3rem; max-width: 62rem; }
+
+/* Computation code panel (Quality tab) — soft-gate badges only, nothing blocks.
+   Tones reuse the existing chip vocabulary (vx-met / vx-risk / vx-notmet / vx-none). */
+.cm-code { margin-top: 1rem; }
+.cm-code-art { border-top: 1px dashed var(--border, #e2e8f0); padding: .5rem 0; }
+.cm-code-art:first-of-type { border-top: none; }
+.cm-code-art-row { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; }
+.cm-code-role { flex: none; width: 1.35rem; height: 1.35rem; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 6px; font-size: .78rem; font-weight: 700; align-self: center;
+  background: color-mix(in srgb, var(--body-text-muted, #64748b) 12%, transparent);
+  color: var(--body-text-muted, #64748b); cursor: help; }
+.cm-code-path { font-weight: 600; }
+.cm-code-hash { font-family: ui-monospace, monospace; font-size: .7rem;
+  color: var(--body-text-muted, #64748b);
+  background: color-mix(in srgb, var(--body-text-muted, #64748b) 9%, transparent);
+  border-radius: 6px; padding: .08rem .4rem; }
+.cm-code-by { font-size: .74rem; }
+.cm-code-findings { margin-top: .4rem; }

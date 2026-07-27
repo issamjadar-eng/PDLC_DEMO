@@ -1,0 +1,408 @@
+{
+ "bq": "BQ-20",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:51+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-001",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "alarm-data-gap",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "class-monthly-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "docket-watch",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "total-class-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "watch-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "watch-signals",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-complaints@2026-07-27.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-regulatory-docket@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-signal-register@2026-07-27.2",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-pca-monthly@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-complaints",
+   "snapshot": "2026-07-27.2",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-signal-register",
+   "snapshot": "2026-07-27.2",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-maude-pca-monthly",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-regulatory-docket",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Watch-category field events (internal log)",
+    "series": "watch-stat",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-07-27.2"
+   },
+   {
+    "what": "Watch-category events by category",
+    "series": "watch-events",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-07-27.2"
+   },
+   {
+    "what": "Internal watch-category events per month (demo)",
+    "series": "watch-monthly",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-07-27.2"
+   },
+   {
+    "what": "Watch-category signals and dispositions",
+    "series": "watch-signals",
+    "evidence_class": "measured",
+    "source": "commercial/internal-signal-register@2026-07-27.2"
+   },
+   {
+    "what": "Open docket MDR items in watch categories",
+    "series": "docket-watch",
+    "evidence_class": "derived",
+    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "derivation": {
+     "method": "open MDR-type docket records whose category is on the declared watch list; joined to complaints by category only (no shared key between the two logs)",
+     "inputs": [
+      "src: commercial/internal-regulatory-docket@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Class-wide PCA MAUDE events per month (REAL)",
+    "series": "class-monthly-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-pca-monthly@2026-07-27"
+   },
+   {
+    "what": "Class-wide PCA MAUDE events (charted window)",
+    "series": "total-class-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-pca-monthly@2026-07-27"
+   }
+  ],
+  "assumed": [
+   {
+    "what": "figure(s) citing A-001",
+    "series": null,
+    "evidence_class": "assumed",
+    "source": "A-001"
+   }
+  ],
+  "missing": [
+   {
+    "what": "PCA-class event rate per installed device",
+    "series": "class-event-rate",
+    "evidence_class": "unavailable",
+    "source": "A-001",
+    "note": "MAUDE has no denominator; blocked until A-001 quantifies installed bases \u2014 never published as a rate"
+   },
+   {
+    "what": "Alarm-analytics event-level data",
+    "series": "alarm-data-gap",
+    "evidence_class": "unavailable",
+    "source": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register",
+    "note": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-20.md",
+  "status": "in-sync",
+  "pinned": "5e97179b8737ca44d5ac3c56bdefcb6062caf489e8a9ae286eb4e59c9d47a2b7",
+  "current": "5e97179b8737ca44d5ac3c56bdefcb6062caf489e8a9ae286eb4e59c9d47a2b7"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_20.py",
+    "sha256_12": "f93cdd0f18f7",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-20"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-complaints/gen.py",
+    "sha256_12": "557b73673e87",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-signal-register/gen.py",
+    "sha256_12": "7e77638cf3c4",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-regulatory-docket/gen.py",
+    "sha256_12": "2e32cc4e73c7",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "Knob record ids (MDR-2025-0007/0018, MDR-2026-0005) are emergent from seed-42 draws, not pinned; re-knobbing renumbers them",
+       "disposition": "accept: verified at locked seed; re-verify README + complaints tie on any regeneration"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

@@ -4,6 +4,12 @@ pressure, KOL sentiment (meta-gap caveated), and Cloud Suite attach actuals.
 Contract: run(corpus_root, out, pins) — the scoring method is fully stated in
 plans/BQ-17.md and mirrored in the derivation chains. Decision support, not the
 decision. Deterministic from the five pinned snapshots + config.
+
+Scope note (F17-3): the plan's single-voice-kill direction rule ("state that
+voice's actual position") is implemented ONLY for the F9/Kuitunen case, pinned to
+the voice's identity (KOL-0004). A different single-voice kill candidate — or a
+different single F9 voice — surfaces with no direction statement; extend the
+curated note (from the per-KOL source doc) before relying on it for other cases.
 """
 
 import datetime as dt
@@ -28,6 +34,7 @@ def run(corpus_root, out, pins):
     src510, srcs, srcfl = f"{FDA_DS}@{snap510}", f"{SUBS_DS}@{ssnap}", f"{FLEET_DS}@{flsnap}"
 
     universe = p["feature_universe"]
+    our_vendor = p["our_vendor"]  # F15-3: vendor identity from config, not a literal
     eligible = set(p["eligible"])
     cloud = set(p["cloud_features"])
     years = p["feature_years"]
@@ -42,12 +49,12 @@ def run(corpus_root, out, pins):
         rows = [r for r in feats if r["attribute"] == attr]
         if not rows or lane not in lane_state:
             continue  # zero rows for every vendor -> contributes nothing (stated)
-        ours = [r for r in rows if r["vendor"] == "GlobalLogic"]
+        ours = [r for r in rows if r["vendor"] == our_vendor]
         our_val = ours[0]["value"].strip().lower() if ours else ""
         our_ships = our_val.startswith("yes")
         our_planned = our_val.startswith("planned")
         comp_ships = any(r["value"].strip().lower().startswith("yes")
-                         for r in rows if r["vendor"] != "GlobalLogic")
+                         for r in rows if r["vendor"] != our_vendor)
         if comp_ships and not our_ships:
             if our_planned:
                 lane_state[lane]["behind_planned"] = True
@@ -86,8 +93,12 @@ def run(corpus_root, out, pins):
     for f in universe:
         v = len(sent[f]["voices"])
         net = (sent[f]["support"] - sent[f]["concern"]) / v if v else 0.0
-        sentiment[f] = round((net + 1) / 2, 3)  # [-1,1] -> [0,1]; zero voices -> 0.5 neutral? no: 0 voices -> net 0 -> 0.5
-    # zero-voice features get no sentiment signal; mark them explicitly
+        # F17-4: clamp to [-1, 1] — a KOL filing 2+ rows on one feature would
+        # otherwise push the rescaled component outside the plan-committed [0, 1]
+        net = max(-1.0, min(1.0, net))
+        sentiment[f] = round((net + 1) / 2, 3)  # rescale [-1,1] -> [0,1]
+    # F17-5: a zero-voice feature has NO sentiment signal; net 0 rescales to the
+    # neutral midpoint 0.5 — a modeling choice, disclosed in the report when it occurs
     zero_voice = [f for f in universe if not sent[f]["voices"]]
 
     # ---- component 3: demand actual — Cloud Suite attach
@@ -97,14 +108,18 @@ def run(corpus_root, out, pins):
     demand = {f: (attach if f in cloud else 0.0) for f in universe}
 
     # ---- composite + verdicts
+    # F17-1: every sort over the eligible SET carries the feature id as the final
+    # key — rank years and voice counts can tie, and without it the pick would be
+    # hash-seed-dependent
     comp = {f: round((pressure[f] + sentiment[f] + demand[f]) / 3, 3) for f in universe}
-    elig = sorted(eligible, key=lambda f: (-comp[f], rank_year[f]))
+    elig = sorted(eligible, key=lambda f: (-comp[f], rank_year[f], f))
     top_score = comp[elig[0]]
-    pull_ties = sorted((f for f in eligible if comp[f] == top_score), key=lambda f: rank_year[f])
+    pull_ties = sorted((f for f in eligible if comp[f] == top_score),
+                       key=lambda f: (rank_year[f], f))
     pull = pull_ties[0]
     low_score = min(comp[f] for f in eligible)
     kill_ties = sorted((f for f in eligible if comp[f] == low_score),
-                       key=lambda f: len(sent[f]["voices"]))
+                       key=lambda f: (len(sent[f]["voices"]), f))
     kill = kill_ties[0]
 
     # ---- robustness of the two picks (plan-committed checks, red-team RT-17.1)
@@ -114,10 +129,11 @@ def run(corpus_root, out, pins):
     # (a) drop the simulated sentiment axis entirely: mean(pressure, demand)
     comp2 = {f: round((pressure[f] + demand[f]) / 2, 3) for f in universe}
     top2 = max(comp2[f] for f in eligible)
-    pull2 = sorted((f for f in eligible if comp2[f] == top2), key=lambda f: rank_year[f])[0]
+    pull2 = sorted((f for f in eligible if comp2[f] == top2),
+                   key=lambda f: (rank_year[f], f))[0]  # F17-1: id as final key
     low2 = min(comp2[f] for f in eligible)
     kill2 = sorted((f for f in eligible if comp2[f] == low2),
-                   key=lambda f: len(sent[f]["voices"]))[0]
+                   key=lambda f: (len(sent[f]["voices"]), f))[0]
     nosent_same = (pull2 == pull) and (kill2 == kill)
     # (b) smallest weight transfer pressure -> sentiment that flips the pull-forward pick
     flip_pp, flip_feat = None, None
@@ -133,9 +149,11 @@ def run(corpus_root, out, pins):
     attach_pct = round(100 * attach, 1)
     # RT-17.1: the F9 kill candidate's single voice argues the OPPOSITE direction
     # (source doc: F9 is "too late and too thin" — start EU evidence EARLIER); the
-    # 3-value vocabulary encodes it as bare `concern`. Curated note — re-verify against
-    # the register's source docs if the F9 row set changes.
-    kill_direction_note = (kill == "F9" and len(sent["F9"]["voices"]) == 1)
+    # 3-value vocabulary encodes it as bare `concern`. Curated note, pinned to the
+    # voice's IDENTITY (F17-2): the text hardcodes Kuitunen/KOL-0004 and the quote,
+    # so a different single F9 voice retires the note instead of firing a
+    # misattributed quote.
+    kill_direction_note = (kill == "F9" and sent["F9"]["voices"] == {"KOL-0004"})
     headline = (f"Decision support, not the decision: pull-forward candidate {pull} "
                 f"{names.get(pull, '')} (composite {comp[pull]}"
                 + (f", tie with {', '.join(x for x in pull_ties[1:])} broken on earliest wave"
@@ -174,7 +192,11 @@ def run(corpus_root, out, pins):
                              or "none") + ".",
         f"- Sentiment inputs: distinct-voice net sentiment from [src: {srck}] — SIMULATED panel, "
         f"zero real collected KOL evidence (BQ-16 meta-gap); this third of every composite is "
-        f"assumption-class.",
+        f"assumption-class."
+        # F17-5: zero-voice features are disclosed, not silently scored neutral
+        + (f" Zero-voice feature(s) {', '.join(zero_voice)}: NO sentiment signal exists — scored at "
+           f"the neutral midpoint (0.5), a modeling choice, not evidence [src: {srck}]."
+           if zero_voice else ""),
         f"- Demand input: Cloud Suite attach {attach_pct}% = {len(active_sub_sites)} active "
         f"subscribed connected sites of {len(conn_sites)} connected sites "
         f"[derived: attach-rate] [src: {srcs}] [src: {srcfl}]. Non-cloud features "

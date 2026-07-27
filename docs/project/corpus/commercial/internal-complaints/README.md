@@ -54,3 +54,7 @@ docketed). Do not "fix" either generator to close the gap.
   list to the actual `commercial.yml` consumers (BQ-18, BQ-20); documented the
   intentional C-2025-0431 ↔ docket under-docketing seam. Config/README text only —
   snapshots untouched.
+- 2026-07-27: Schema completion — declared the emitted-but-undeclared `site_id`,
+  `model`, `firmware_version` columns in `dataset.yml` (DA-1 under-declaration class,
+  code-review finding F-CO-1). Config-only; validate OK against snapshot 2026-07-27.2,
+  no regeneration. Task 108.

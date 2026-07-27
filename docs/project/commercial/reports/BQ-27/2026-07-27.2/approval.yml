@@ -1,0 +1,13 @@
+bq: BQ-27
+edition: 2026-07-27.2
+approved_by: Ben Xavier
+approved_at: '2026-07-27T18:33:53+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: AI code review + fix pass over the computation code (dossier tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md);
+    deterministic code checks green; prior adversarial-verify/red-team verdicts carried in quality.json
+content_hashes:
+  report.md: f1d44c746ae27527bad3e22b868cfde99c2ed72f8cba8aaff6658cb9ab555026
+  data.json: f92274b16910f378b5a804e8469279fafa43d881334747bdaf362164d2af1649

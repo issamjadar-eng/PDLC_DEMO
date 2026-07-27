@@ -1,0 +1,13 @@
+bq: BQ-17
+edition: 2026-07-27.2
+approved_by: Ben Xavier
+approved_at: '2026-07-27T18:33:50+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: AI code review + fix pass over the computation code (dossier tasks/ben/_work/108-code-review-roadmap-2026-07-27.md);
+    deterministic code checks green; prior adversarial-verify/red-team verdicts carried in quality.json
+content_hashes:
+  report.md: 05cf3d7bb36c0dc5a28ee148209af5e301340107e224f062118ccbd8b8f69796
+  data.json: baccf1da08bec9121307f63d52d01bc9760aa459ed10a21660d20836e176faf7

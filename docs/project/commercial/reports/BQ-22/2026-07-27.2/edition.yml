@@ -1,0 +1,16 @@
+bq: BQ-22
+edition: 2026-07-27.2
+status: approved
+created_at: '2026-07-27T18:32:47+00:00'
+pins:
+  commercial/internal-signal-register: 2026-07-27.2
+plan:
+  path: plans/BQ-22.md
+  sha256: c30182bddaeaae67e01dbef88867f765e40903b5966732bb5f60987f5fcd7ad1
+code_artifacts:
+- path: bq_modules/bq_22.py
+  sha256: 1e82df979eabf1765bd2354633025e69caac91025720a111428e81b80fbe4888
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-signal-register/gen.py
+  sha256: 7e77638cf3c4b8115093a0e7b860ee8f3cfc2a5f5943e277268dd6b57ea1d2a7

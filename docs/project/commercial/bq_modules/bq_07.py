@@ -30,7 +30,7 @@ def run(corpus_root, out, pins):
     a003 = yaml.safe_load(open(corpus_root / A003_PATH))
     assert a003.get("status") == "active", "A-003 is not active — refresh before answering"
     vr = a003["value_or_range"]
-    assert "1.1M-1.8M" in vr and "$1.5B-$3.0B" in vr, \
+    assert "1.1M-1.8M" in vr and "$1.5B-$3.0B" in vr and "130k-230k" in vr, \
         "A-003 ranges changed — update the transcribed constants in bq_07.py"
     assert "7.3% CAGR" in a003["estimation_method"], \
         "A-003 market-growth figure changed — update bq_07.py"

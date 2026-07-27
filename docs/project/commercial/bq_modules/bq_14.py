@@ -13,14 +13,24 @@ FEAT_DS = "commercial/external-competitor-features"
 
 CAP_PREFIXES = ("yes", "no", "planned")
 
+DISPLAY_MAX = 80
 
-def parse_numeric(value, direction):
+
+def display_value(v):
+    """Ellipsize a long cell value instead of a mid-word hard cut (F14-4)."""
+    return v if len(v) <= DISPLAY_MAX else v[:DISPLAY_MAX - 1].rstrip() + "…"
+
+
+def parse_numeric(value, direction, favorable=True):
     """Parse a numeric cell; a range a-b scores as the end most favorable to the
-    row's owner given the direction (higher|lower)."""
+    row's owner given the direction (higher|lower). With favorable=False the
+    OWNER-UNFAVORABLE end is taken instead — used for our own rows, which the
+    plan commits to the competitor-favorable (conservative-against-us) end (F14-2)."""
     nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", value)[:2]]
     if not nums:
         return None
-    return (max(nums) if direction == "higher" else min(nums))
+    take_max = (direction == "higher") if favorable else (direction != "higher")
+    return max(nums) if take_max else min(nums)
 
 
 def classify(feats, our_vendor, numeric_directions):
@@ -46,10 +56,24 @@ def classify(feats, our_vendor, numeric_directions):
             else:
                 verdict = "behind" if comp_ship else "parity"
             best_comp = f"{len(comp_ship)} competitor product(s) shipping"
-            our_display = ours[0]["value"][:40] if ours else "(no row — undocumented)"
+            our_display = display_value(ours[0]["value"]) if ours else "(no row — undocumented)"
         else:
-            direction = numeric_directions.get(attr, "higher")
-            our_num = parse_numeric(ours[0]["value"], direction) if ours else None
+            direction = numeric_directions.get(attr)
+            if direction is None:
+                # F14-1: a numeric attribute absent from numeric_directions must NOT
+                # silently default to higher-is-better — an unmapped direction can
+                # invert a verdict, so the row is surfaced unscored instead
+                out.append({"attribute": attr, "our_state": "not-scored",
+                            "our_display": display_value(ours[0]["value"]) if ours
+                            else "(no row — undocumented)",
+                            "best_comp": "not scored — direction unconfigured",
+                            "verdict": "direction-unconfigured",
+                            "provisional": provisional, "n_rows": len(rows)})
+                continue
+            # F14-2: our own rows score a range at the direction-UNFAVORABLE end
+            # (competitor-favorable, per the plan); competitor rows keep their
+            # owner-favorable end
+            our_num = parse_numeric(ours[0]["value"], direction, favorable=False) if ours else None
             comp_nums = [(parse_numeric(r["value"], direction), r) for r in comps]
             comp_nums = [(v, r) for v, r in comp_nums if v is not None]
             if comp_nums:
@@ -98,6 +122,8 @@ def run(corpus_root, out, pins):
                 r["routing"] = f"{tag} — {lane}, {lane_years[lane]} ({rel_txt})"
             else:
                 r["routing"] = "SILENTLY UNADDRESSED — no roadmap lane owns this gap"
+        elif r["verdict"] == "direction-unconfigured":
+            r["routing"] = "NOT SCORED — add the attribute to numeric_directions [config: commercial.yml]"
         else:
             r["routing"] = "—"
 
@@ -112,6 +138,7 @@ def run(corpus_root, out, pins):
     ahead = [r for r in results if r["verdict"] == "ahead"]
     parity = [r for r in results if r["verdict"] == "parity"]
     provisional = [r for r in results if r["provisional"]]
+    unconfigured = [r for r in results if r["verdict"] == "direction-unconfigured"]
 
     headline = (f"{len(results)} attributes compared: {len(ahead)} ahead, {len(parity)} parity, "
                 f"{len(behind)} behind — {len(covered)} behind-gaps have a roadmap lane"
@@ -119,7 +146,10 @@ def run(corpus_root, out, pins):
                    f"{', '.join(r['attribute'] for r in adjacent)} — the lane responds but does not "
                    f"mechanically close the gap)" if adjacent else "")
                 + f", {len(silent)} SILENTLY UNADDRESSED"
-                + (f" ({', '.join(r['attribute'] for r in silent)})" if silent else ""))
+                + (f" ({', '.join(r['attribute'] for r in silent)})" if silent else "")
+                # F14-1: an unscored numeric attribute is loud, never silent
+                + (f"; {len(unconfigured)} numeric attribute(s) NOT SCORED — direction unconfigured "
+                   f"({', '.join(r['attribute'] for r in unconfigured)})" if unconfigured else ""))
 
     lines = [
         "# BQ-14 — PCA feature parity: roadmap-covered vs silently unaddressed", "",

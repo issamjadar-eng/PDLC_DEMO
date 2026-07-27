@@ -25,9 +25,13 @@ def run(corpus_root, out, pins):
     active = [r for r in subs if r["status"] == "active"]
     churned_sites = sorted({r["site_id"] for r in subs if r["status"] == "churned"})
     attached = sum(int(r["pumps_connected"]) for r in active)
+    # Gate compared on the UNROUNDED fraction — C.pct rounds to 0.1, and a $24M release
+    # verdict must not move with display rounding (review finding F-29-1); the rounded
+    # attach_pct is display-only.
+    attach_frac = attached / len(pp) if pp else 0.0
     attach_pct = C.pct(attached, len(pp))
-    gate_met = attach_pct >= gate
-    margin = round(attach_pct - gate, 1)
+    gate_met = attach_frac >= gate / 100.0
+    margin = round(100.0 * attach_frac - gate, 1)
 
     # Denominator sensitivity (red-team finding F29-1): the whole-PCA installed base
     # (PP3500 + PP3000) is the one reasonable alternative denominator — Cloud Suite
@@ -35,8 +39,9 @@ def run(corpus_root, out, pins):
     pp3000 = [r for r in fleet if r["model"] == "PP3000"]
     pca_base = len(pp) + len(pp3000)
     pp3000_conn = sum(1 for r in pp3000 if r["connected"] == "yes")
+    attach_pca_frac = attached / pca_base if pca_base else 0.0
     attach_pca_pct = C.pct(attached, pca_base)
-    pca_gate_met = attach_pca_pct >= gate
+    pca_gate_met = attach_pca_frac >= gate / 100.0  # unrounded (finding F-29-1)
 
     active_sites = {r["site_id"] for r in active}
     conn_pp = [r for r in pp if r["connected"] == "yes"]
@@ -110,13 +115,17 @@ def run(corpus_root, out, pins):
                       "commercial effort at the connected-but-unsubscribed sites",
             "evidence": ["derived: attach-stat", "config: commercial.yml"],
         })
+    # "Of those sites" = churned ∩ gap, not all churned sites — a churned site that
+    # re-subscribed or has zero connected pumps must not be counted or listed in the
+    # gap narrative (review finding F-29-2).
+    churned_gap = [s for s in churned_sites if s in gap_by_site]
     narrative["watch"].append({
         "id": "W1",
         "statement": f"Go-get gap: {len(gap_rows)} connected-but-unsubscribed pumps across "
                      f"{len(gap_sites)} sites (" + ", ".join(s for s, _ in gap_sites) + ") — "
-                     f"{len(churned_sites)} of those sites are churn-losses "
-                     f"(" + ", ".join(churned_sites) + "), the rest never subscribed; this is the "
-                     "nearest-term attach growth and winback territory",
+                     f"{len(churned_gap)} of those sites are churn-losses "
+                     f"(" + (", ".join(churned_gap) or "none") + "), the rest never subscribed; "
+                     "this is the nearest-term attach growth and winback territory",
         "evidence": ["derived: gap-sites", f"src: {ssrc}", f"src: {fsrc}"],
     })
     narrative["watch"].append({
@@ -147,7 +156,7 @@ def run(corpus_root, out, pins):
         f"- Gate level: {gate:.0f}% releases the ${spend_m}M predictive-monitoring spend "
         f"[config: commercial.yml] — a numeric stand-in; commercial-strategy.md conditions the "
         f"spend on 'Y1/Y2 Cloud Suite traction' and sets NO number [config: commercial.yml]",
-        f"- Churned subscriptions count zero: {len(churned_sites)} churned sites are in the gap "
+        f"- Churned subscriptions count zero: {len(churned_gap)} churned sites are in the gap "
         f"pool, not the numerator [src: {ssrc}]",
         "",
         "## Denominator sensitivity (disclosed, not absorbed)", "",

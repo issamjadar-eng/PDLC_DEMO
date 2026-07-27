@@ -1,0 +1,549 @@
+{
+ "bq": "BQ-26",
+ "series": [
+  {
+   "id": "capacity-stat",
+   "label": "Remaining campaign load",
+   "unit": "devices",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "remaining = targeted \u2212 completed per region, where completed = status \u2208 {completed, completed-after-retry} and remaining = status \u2208 {scheduled, failed-pending-retry, rolled-back}; stalled load = remaining in regions with zero completions in the trailing 28d window ending at the snapshot as-of date",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "devices remaining",
+     "value": 145
+    },
+    {
+     "label": "of which in stalled regions",
+     "value": 103
+    }
+   ]
+  },
+  {
+   "id": "weekly-trend",
+   "label": "Completions per week by region",
+   "unit": "devices/week",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "lines": [
+    {
+     "label": "APAC",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 0
+      },
+      {
+       "x": "2026-03-09",
+       "y": 0
+      },
+      {
+       "x": "2026-03-16",
+       "y": 0
+      },
+      {
+       "x": "2026-03-23",
+       "y": 0
+      },
+      {
+       "x": "2026-03-30",
+       "y": 0
+      },
+      {
+       "x": "2026-04-06",
+       "y": 0
+      },
+      {
+       "x": "2026-04-13",
+       "y": 0
+      },
+      {
+       "x": "2026-04-20",
+       "y": 0
+      },
+      {
+       "x": "2026-04-27",
+       "y": 0
+      },
+      {
+       "x": "2026-05-04",
+       "y": 0
+      },
+      {
+       "x": "2026-05-11",
+       "y": 0
+      },
+      {
+       "x": "2026-05-18",
+       "y": 0
+      },
+      {
+       "x": "2026-05-25",
+       "y": 0
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6
+      },
+      {
+       "x": "2026-06-08",
+       "y": 3
+      },
+      {
+       "x": "2026-06-15",
+       "y": 7
+      },
+      {
+       "x": "2026-06-22",
+       "y": 1
+      },
+      {
+       "x": "2026-06-29",
+       "y": 7
+      },
+      {
+       "x": "2026-07-06",
+       "y": 4
+      },
+      {
+       "x": "2026-07-13",
+       "y": 6
+      }
+     ]
+    },
+    {
+     "label": "EMEA",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 0
+      },
+      {
+       "x": "2026-03-09",
+       "y": 0
+      },
+      {
+       "x": "2026-03-16",
+       "y": 0
+      },
+      {
+       "x": "2026-03-23",
+       "y": 0
+      },
+      {
+       "x": "2026-03-30",
+       "y": 0
+      },
+      {
+       "x": "2026-04-06",
+       "y": 0
+      },
+      {
+       "x": "2026-04-13",
+       "y": 4
+      },
+      {
+       "x": "2026-04-20",
+       "y": 5
+      },
+      {
+       "x": "2026-04-27",
+       "y": 4
+      },
+      {
+       "x": "2026-05-04",
+       "y": 8
+      },
+      {
+       "x": "2026-05-11",
+       "y": 4
+      },
+      {
+       "x": "2026-05-18",
+       "y": 10
+      },
+      {
+       "x": "2026-05-25",
+       "y": 5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6
+      },
+      {
+       "x": "2026-06-08",
+       "y": 8
+      },
+      {
+       "x": "2026-06-15",
+       "y": 6
+      },
+      {
+       "x": "2026-06-22",
+       "y": 1
+      },
+      {
+       "x": "2026-06-29",
+       "y": 0
+      },
+      {
+       "x": "2026-07-06",
+       "y": 0
+      },
+      {
+       "x": "2026-07-13",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "NA",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 20
+      },
+      {
+       "x": "2026-03-09",
+       "y": 14
+      },
+      {
+       "x": "2026-03-16",
+       "y": 10
+      },
+      {
+       "x": "2026-03-23",
+       "y": 10
+      },
+      {
+       "x": "2026-03-30",
+       "y": 18
+      },
+      {
+       "x": "2026-04-06",
+       "y": 12
+      },
+      {
+       "x": "2026-04-13",
+       "y": 16
+      },
+      {
+       "x": "2026-04-20",
+       "y": 16
+      },
+      {
+       "x": "2026-04-27",
+       "y": 13
+      },
+      {
+       "x": "2026-05-04",
+       "y": 18
+      },
+      {
+       "x": "2026-05-11",
+       "y": 2
+      },
+      {
+       "x": "2026-05-18",
+       "y": 0
+      },
+      {
+       "x": "2026-05-25",
+       "y": 0
+      },
+      {
+       "x": "2026-06-01",
+       "y": 0
+      },
+      {
+       "x": "2026-06-08",
+       "y": 0
+      },
+      {
+       "x": "2026-06-15",
+       "y": 0
+      },
+      {
+       "x": "2026-06-22",
+       "y": 0
+      },
+      {
+       "x": "2026-06-29",
+       "y": 0
+      },
+      {
+       "x": "2026-07-06",
+       "y": 0
+      },
+      {
+       "x": "2026-07-13",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "required-rate",
+   "label": "Current vs required completions/week",
+   "unit": "devices/week",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "current rate",
+    "b_label": "required rate"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "current = completions (status \u2208 {completed, completed-after-retry}) in the 28d window ending at the snapshot as-of date \u00f7 4; required = remaining devices (status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00f7 weeks from the as-of date to the close date",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "a": 3.5,
+     "b": 4.5
+    },
+    {
+     "label": "EMEA",
+     "a": 0.0,
+     "b": 6.4
+    },
+    {
+     "label": "NA",
+     "a": 0.0,
+     "b": 4.7
+    }
+   ]
+  },
+  {
+   "id": "anchor-sensitivity",
+   "label": "Run-rates under the alternative (latest-completion) anchor",
+   "unit": "devices/week",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "current and required rates recomputed with the 28d window anchored at the latest completed_date in the pin instead of the snapshot as-of date",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "config: commercial.yml",
+     "derived: required-rate"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 4.5,
+     "required_alt": 4.0,
+     "current_primary": 3.5,
+     "required_primary": 4.5
+    },
+    {
+     "label": "EMEA",
+     "value": 0.2,
+     "required_alt": 5.6,
+     "current_primary": 0.0,
+     "required_primary": 6.4
+    },
+    {
+     "label": "NA",
+     "value": 0.0,
+     "required_alt": 4.2,
+     "current_primary": 0.0,
+     "required_primary": 4.7
+    }
+   ]
+  },
+  {
+   "id": "remote-convertible",
+   "label": "On-site-remaining devices convertible to remote",
+   "unit": "devices",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "on-site-remaining campaign devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back} \u2014 i.e. not completed/completed-after-retry) joined to the fleet registry by device_serial; convertible = connected == yes",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "src: commercial/internal-fleet@2026-07-27"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 0,
+     "onsite_remaining": 38
+    },
+    {
+     "label": "EMEA",
+     "value": 0,
+     "onsite_remaining": 34
+    },
+    {
+     "label": "NA",
+     "value": 0,
+     "onsite_remaining": 25
+    }
+   ]
+  },
+  {
+   "id": "fse-days-remaining",
+   "label": "On-site workload remaining (labor-time floor)",
+   "unit": "FSE-days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "on-site-remaining devices (method = onsite, status \u2208 {scheduled, failed-pending-retry, rolled-back}) \u00d7 mean completed (status \u2208 {completed, completed-after-retry}) on-site duration_min \u00f7 fse_day_minutes; labor time only \u2014 travel/overhead not in the campaign data (lower bound)",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 7.7
+    },
+    {
+     "label": "EMEA",
+     "value": 6.9
+    },
+    {
+     "label": "NA",
+     "value": 5.1
+    }
+   ]
+  },
+  {
+   "id": "fse-capacity",
+   "label": "FSE capacity (roster/utilization)",
+   "unit": "FSE-days",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "no corpus dataset acquired yet \u2014 roster, utilization, travel, and visits-per-day are needed for hire/contract/slip; the duration-basis floor is a bridge, not a substitute"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-27; EMEA needs 6.4/wk; NA needs 4.7/wk); APAC behind (3.5/wk vs 4.5/wk required); remote conversion covers 0 of 97 on-site-remaining devices today",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "EMEA wave is stalled under the uniform criterion \u2014 zero completions in the four weeks to 2026-07-27 (last completion 2026-06-22, 59 devices remaining, 6.4/wk now required)",
+    "action": "Re-engage site scheduling this week; re-baseline the wave or assign surge FSE capacity; confirm root cause (scheduling vs the failure cluster)",
+    "evidence": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "derived: weekly-trend",
+     "derived: required-rate"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "NA wave is stalled under the uniform criterion \u2014 zero completions in the four weeks to 2026-07-27 (last completion 2026-05-11, 44 devices remaining, 4.7/wk now required)",
+    "action": "Re-engage site scheduling this week; re-baseline the wave or assign surge FSE capacity; confirm root cause (scheduling vs the failure cluster)",
+    "evidence": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "derived: weekly-trend",
+     "derived: required-rate"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "APAC misses the 2026-09-30 close at current rate (3.5/wk vs 4.5/wk required)",
+    "mitigation": "Add contract labor for the delta, convert connected on-site backlog to remote (0 devices convertible), or slip the close with customer notification",
+    "evidence": [
+     "derived: required-rate",
+     "derived: remote-convertible",
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "high",
+    "statement": "The remote-conversion recovery lever is sized at 0 of 97 on-site-remaining devices \u2014 the fleet connectivity join shows the on-site backlog is unconnected, so conversion first requires connectivity (adapters), it is not a scheduling change",
+    "mitigation": "Price the adapter retrofit against continued on-site visits (the BQ-30 upgrade-economics answer); otherwise the levers are contract labor or slip \u2014 noting the remote path carried the implicated failure mode (4 of 4 rollbacks were remote installs), so converted devices inherit that exposure until the failure cluster is resolved",
+    "evidence": [
+     "derived: remote-convertible",
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "src: commercial/internal-fleet@2026-07-27"
+    ]
+   },
+   {
+    "id": "R3",
+    "severity": "medium",
+    "statement": "The hire/contract/slip decision is being made on run-rate projections plus a labor-time-only workload floor (19.7 FSE-days) \u2014 FSE roster, utilization, travel, and visits-per-day are not yet a corpus dataset",
+    "mitigation": "Acquire an internal service-roster dataset; until then treat capacity conclusions as directional",
+    "evidence": [
+     "derived: fse-days-remaining",
+     "derived: fse-capacity"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Completion-rate trend by region (weekly, zero-filled) \u2014 a flatline is a stall, not missing data",
+    "evidence": [
+     "derived: weekly-trend"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-26.1",
+   "statement": "Existing field-service capacity absorbs the remaining waves without surge or slip",
+   "expected": "current run-rate >= required rate through 2026-09-30 in every region",
+   "basis": "implicit in the wave plan; never validated against an FSE roster (dataset gap)",
+   "set_by": "field-service (demo)",
+   "validated": false,
+   "actual": "EMEA: stalled (6.4/wk required); NA: stalled (4.7/wk required); APAC: 3.5/wk vs 4.5 required",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: required-rate",
+    "derived: weekly-trend"
+   ]
+  }
+ ]
+}

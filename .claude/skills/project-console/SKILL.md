@@ -1,7 +1,7 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.54.1
+version: 1.55.1
 updated: 2026-07-27
 ---
 
@@ -281,7 +281,13 @@ panels: **Assumptions & expectations** (plan vs actual, met/not-met verdicts, an
 `unvalidated` chip on stand-in expectations), **Narrative** (Risks / Mitigations /
 Issues with severity + evidence), and **timeseries line charts** (`kind: timeseries`
 series; server-computed SVG geometry — pixels, never data), plus a newer-draft banner
-on approved answers. `POST /commercial/render` shells to the skill's `render`;
+on approved answers. Sidecar schema 1.2's per-question `code` block (the commercial
+skill's code-quality layer) renders as a **Computation code** panel on the Quality &
+audit tab — per-artifact role/path/hash rows, static-lint / poison-scan / determinism
+chips, review verdict + findings folds, and SOFT-GATE badges (checks failed / review
+outdated / unreviewed — badges only, nothing blocks) plus a compact question-level
+code chip on the tab header; rows without the field (schema ≤1.1) degrade to an honest
+empty state. `POST /commercial/render` shells to the skill's `render`;
 the assistant drawer grounds in `/commercial/{bq}/grounding`. Full contract lives in
 the `commercial` skill's SKILL.md.
 

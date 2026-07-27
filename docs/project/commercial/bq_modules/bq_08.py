@@ -6,6 +6,7 @@ close_date. Definitions committed in plans/BQ-08.md.
 """
 
 import datetime as dt
+import re
 
 import computations as C
 
@@ -61,7 +62,14 @@ def run(corpus_root, out, pins):
         win_reasons[r["primary_reason"]] = win_reasons.get(r["primary_reason"], 0) + 1
     win_ranked = sorted(win_reasons.items(), key=lambda kv: (-kv[1], kv[0]))
 
-    target = 50.0  # E-08.1 expected floor (config expectation, cited [config: commercial.yml])
+    # E-08.1 floor read from the catalog's expected string (">= NN% of won+lost"), not
+    # hardcoded — a catalog re-set of the floor changes the verdict here too, and a
+    # reshaped expected string trips loudly instead of silently diverging.
+    exp_cat = {e["id"]: e for e in C.expectations_for("BQ-08")}
+    assert "E-08.1" in exp_cat, "E-08.1 missing from the commercial.yml catalog — update bq_08.py"
+    m = re.match(r"^>=\s*(\d+(?:\.\d+)?)%", exp_cat["E-08.1"]["expected"])
+    assert m, "E-08.1 expected string changed shape — update the floor parsing in bq_08.py"
+    target = float(m.group(1))  # cited [config: commercial.yml]
     headline = (f"Trailing-365d win rate is {rate}% of decided opportunities "
                 f"({len(won)} won / {len(lost)} lost; {len(nodec)} no-decision excluded) vs the "
                 f"{target:.0f}% stand-in target; dollar-weighted we win {val_rate}% of decided CRM "

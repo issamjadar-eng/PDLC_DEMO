@@ -15,6 +15,10 @@ import computations as C
 FDA_DS = "commercial/openfda-510k-infusion"
 FEAT_DS = "commercial/external-competitor-features"
 
+# Smallness threshold (days) under which the hardware-edge margin is called
+# RAZOR-THIN / "by only N days" — above it, the qualifier is dropped (F13-2)
+FRAGILE_EDGE_DAYS = 90
+
 
 def add_months(d: dt.date, months: int) -> dt.date:
     y = d.year + (d.month - 1 + months) // 12
@@ -74,6 +78,16 @@ def run(corpus_root, out, pins):
          samd_lo, samd_hi, posture(samd_lo, samd_hi)),
     ]
     margin = months_between(samd_hi, launch)  # months our launch trails a worst-case-for-us SaMD clearance
+    # F13-1: the direction word is computed from the sign of the margin — never a literal
+    if margin > 0:
+        samd_rel = f"about {margin} months before"
+    elif margin < 0:
+        samd_rel = f"about {-margin} months after"
+    else:
+        samd_rel = "in the same month as"
+    # F13-2: the hardware-edge sentence branches on the sign of the margin, and the
+    # fragility qualifier applies only when the (positive) margin is actually small
+    hw_edge_small = 0 <= hw_edge_days <= FRAGILE_EDGE_DAYS
 
     # 3) Recent-clearance watch: trailing 12 months ending at the anchor, keyword-flagged
     win_start = (anchor_d - dt.timedelta(days=365)).isoformat()
@@ -123,13 +137,21 @@ def run(corpus_root, out, pins):
         headline = (f"RUNWAY MOOT: {len(shipping)} competitor product(s) already document shipping "
                     f"predictive monitoring — the gap is closed, not closing")
     else:
+        if hw_edge_days < 0:
+            hw_head = (f"The hardware scenario is NO reassurance: its fast edge beats even the "
+                       f"favorable launch anchor by {-hw_edge_days} days")
+        elif hw_edge_small:
+            hw_head = (f"The hardware-scenario reassurance is FRAGILE: its fast "
+                       f"edge clears the favorable launch anchor by only {hw_edge_days} days")
+        else:
+            hw_head = (f"The hardware-scenario reassurance holds: its fast edge clears the "
+                       f"favorable launch anchor by {hw_edge_days} days")
         headline = (f"Nobody in the competitive matrix documents predictive monitoring today, but the "
                     f"runway is assumption-thin: a SaMD-only entrant starting at the data anchor "
-                    f"({anchor}) could clear {samd_lo} to {samd_hi} — about {abs(margin)} months before "
+                    f"({anchor}) could clear {samd_lo} to {samd_hi} — {samd_rel} "
                     f"our F6 {p['our_launch_period']} launch anchor; an incumbent acquisition inherits "
                     f"the same clock; {len(ai_flagged)} ai/predictive-flagged clearance(s) in the "
-                    f"trailing-12-month watch. The hardware-scenario reassurance is FRAGILE: its fast "
-                    f"edge clears the favorable launch anchor by only {hw_edge_days} days"
+                    f"trailing-12-month watch. {hw_head}"
                     + (f" and beats an end-of-{p['our_launch_period']} launch reading by ~{hw_late_margin} "
                        f"months" if hw_beats_late else "")
                     + " — and the H2 anchor refinement is a catalog config choice, not a strategy-doc "
@@ -145,11 +167,19 @@ def run(corpus_root, out, pins):
     ]
     for r in pred_rows:
         lines.append(f"| {r['vendor']} {r['product']} [src: {srcf}] | {r['value']} | {r['verified']} |")
+    # F13-3: the universal ("every row reads no") is only claimed when it is true
+    if shipping:
+        premise_bullet = (f"- {len(shipping)} of {len(pred_rows)} documented rows read `yes` — the "
+                          f"premise fails [derived: predictive-shipping-check] [src: {srcf}]. Products "
+                          f"absent from the matrix are absent, not cleared — the matrix cannot prove "
+                          f"entrant absence.")
+    else:
+        premise_bullet = (f"- Every documented row reads `no` — {len(pred_rows)} products checked, "
+                          f"{len(shipping)} shipping [derived: predictive-shipping-check] [src: {srcf}]. Products "
+                          f"absent from the matrix are absent, not cleared — the matrix cannot prove entrant absence.")
     lines += [
         "",
-        f"- Every documented row reads `no` — {len(pred_rows)} products checked, "
-        f"{len(shipping)} shipping [derived: predictive-shipping-check] [src: {srcf}]. Products "
-        f"absent from the matrix are absent, not cleared — the matrix cannot prove entrant absence.",
+        premise_bullet,
         "",
         "## Runway model — A-005 lead-time bands from the data anchor", "",
         f"_Data anchor = newest decision date in the pinned snapshot ({anchor}); our launch anchor = "
@@ -164,15 +194,31 @@ def run(corpus_root, out, pins):
     ]
     for name, lo, hi, post in scen:
         lines.append(f"| {name} [assume: A-005] [derived: entry-scenarios] | {lo} → {hi} | {post} |")
+    # F13-1: the slow-end bullet's framing branches on the sign of the margin
+    if margin > 0:
+        slow_bullet = (f"- Best-case-for-us reading: even the SLOW end of the SaMD band ({samd_hi}) lands about "
+                       f"{margin} months before our launch anchor [derived: runway-margin] [assume: A-005].")
+    else:
+        slow_bullet = (f"- The SLOW end of the SaMD band ({samd_hi}) lands {samd_rel} our launch "
+                       f"anchor — the worst-case-for-us SaMD entrant no longer beats our date; only the "
+                       f"FAST end ({samd_lo}) does [derived: runway-margin] [assume: A-005].")
+    # F13-2: the hardware-edge bullet branches on sign + smallness
+    if hw_edge_days < 0:
+        hw_bullet_mid = (f"— NO reassurance under any reading: the fast edge beats even the favorable "
+                         f"anchor ({p['our_launch_anchor']}) by {-hw_edge_days} days")
+    elif hw_edge_small:
+        hw_bullet_mid = (f"— but that reassurance is RAZOR-THIN and anchor-reading-dependent: "
+                         f"the fast edge clears the favorable anchor ({p['our_launch_anchor']}) by only {hw_edge_days} days")
+    else:
+        hw_bullet_mid = (f"— anchor-reading-dependent: the fast edge clears the favorable anchor "
+                         f"({p['our_launch_anchor']}) by {hw_edge_days} days")
     lines += [
         "",
-        f"- Best-case-for-us reading: even the SLOW end of the SaMD band ({samd_hi}) lands about "
-        f"{abs(margin)} months before our launch anchor [derived: runway-margin] [assume: A-005].",
+        slow_bullet,
         f"- The hardware-integrated / clinical-evidence band ({hw_lo} → {hw_hi}) "
-        f"{posture(hw_lo, hw_hi)} — but that reassurance is RAZOR-THIN and anchor-reading-dependent: "
-        f"the fast edge clears the favorable anchor ({p['our_launch_anchor']}) by only {hw_edge_days} "
-        f"days" + (f", and under the end-of-period reading ({p['our_launch_anchor_late']}) it BEATS "
-                   f"our launch by ~{hw_late_margin} months" if hw_beats_late else "")
+        f"{posture(hw_lo, hw_hi)} {hw_bullet_mid}"
+        + (f", and under the end-of-period reading ({p['our_launch_anchor_late']}) it BEATS "
+           f"our launch by ~{hw_late_margin} months" if hw_beats_late else "")
         + " [derived: hardware-edge-margin] [assume: A-005] [config: commercial.yml]. 'A hardware "
           "incumbent building in-house is not the fast threat' holds only under the favorable anchor "
           "reading; an acquisition converting an incumbent to the SaMD clock remains the fast threat "
@@ -218,12 +264,21 @@ def run(corpus_root, out, pins):
                       "collapses the runway to the SaMD band immediately",
         "evidence": ["assume: A-005", "derived: entry-scenarios", "config: commercial.yml"],
     })
+    # F13-2: R3 restates the hardware-edge facts — same sign/smallness branches
+    if hw_edge_days < 0:
+        r3_margin = (f"fails even under the favorable anchor reading (the fast edge beats our launch "
+                     f"by {-hw_edge_days} days)")
+        r3_late = ""
+    else:
+        r3_margin = (f"holds by {'only ' if hw_edge_small else ''}{hw_edge_days} days at the fast edge "
+                     f"under the favorable anchor reading")
+        r3_late = (f", and flips under the end-of-period reading ({p['our_launch_anchor_late']}: the "
+                   f"fast edge beats our launch by ~{hw_late_margin} months)" if hw_beats_late
+                   else f", and holds under the end-of-period reading ({p['our_launch_anchor_late']}) as well")
     narrative["risks"].append({
         "id": "R3", "severity": "medium",
-        "statement": f"The hardware-scenario reassurance ('clears after our launch anchor') holds by "
-                     f"only {hw_edge_days} days at the fast edge under the favorable anchor reading, "
-                     f"and flips under the end-of-period reading ({p['our_launch_anchor_late']}: the "
-                     f"fast edge beats our launch by ~{hw_late_margin} months); the H2 anchor "
+        "statement": f"The hardware-scenario reassurance ('clears after our launch anchor') "
+                     f"{r3_margin}{r3_late}; the H2 anchor "
                      f"refinement itself is a catalog config choice — the strategy doc commits only "
                      f"'Y3 (2028)'",
         "mitigation": "Ground the launch anchor in the plan of record (commit a half-year or a date "
@@ -267,7 +322,8 @@ def run(corpus_root, out, pins):
              "derivation": {"method": "our launch anchor minus (data anchor + slow end of the A-005 SaMD band), in months",
                             "inputs": ["assume: A-005", f"src: {src510}", "config: commercial.yml"]},
              "provenance": {"dataset": FDA_DS, "snapshot": snap510},
-             "points": [{"label": f"months before our {p['our_launch_period']} anchor a slow "
+             "points": [{"label": f"months {'before' if margin >= 0 else 'after'} our "
+                                  f"{p['our_launch_period']} anchor a slow "
                                   f"({p['samd_lead_months'][1]}-month) SaMD entrant starting {anchor} would clear",
                          "value": abs(margin)}]},
             {"id": "hardware-edge-margin", "label": "Hardware-scenario margin vs our launch anchor",

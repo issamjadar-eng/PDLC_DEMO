@@ -26,6 +26,21 @@ MAUDE_MONTHLY_DS = "commercial/openfda-maude-infusion-monthly"
 
 COMPLETED = ("completed", "completed-after-retry")
 ATTEMPT_FAIL = ("completed-after-retry", "failed-pending-retry", "rolled-back")
+# The full campaign status vocabulary. Populations below are defined by COMPLEMENT
+# (e.g. attempted = status != "scheduled"), so an unexpected upstream status would
+# silently join a population in the optimistic direction — assert_vocab makes that
+# drift fail loud instead (code-review finding B24-1).
+CAMPAIGN_STATUSES = ("completed", "completed-after-retry", "scheduled",
+                     "failed-pending-retry", "rolled-back")
+
+
+def assert_vocab(rows, field, known, dataset):
+    """Fail loud when a column carries values outside the known vocabulary —
+    complement-defined populations must not silently absorb new upstream values."""
+    unknown = {r[field] for r in rows} - set(known)
+    if unknown:
+        raise SystemExit(f"{dataset}: unexpected {field} value(s) {sorted(unknown)} — "
+                         f"update the status sets and derivation strings before answering")
 
 
 def load_pin_csv(corpus_root, pins, dataset):
@@ -54,9 +69,16 @@ def expectations_for(bq):
 def evaluate_expectations(bq, results):
     """Join catalog expectations with computed {id: (actual, verdict, evidence[])}.
     Verdicts: met | at-risk | not-met | not-evaluable. Every expectation in the
-    catalog appears in the output — an unevaluated expectation is itself a finding."""
+    catalog appears in the output — an unevaluated expectation is itself a finding.
+    The inverse also fails loud: a computed result whose id is not in the catalog
+    (a typo'd E-id) must not silently vanish."""
+    exps = expectations_for(bq)
+    unknown = set(results) - {e["id"] for e in exps}
+    if unknown:
+        raise SystemExit(f"{bq}: computed expectation result id(s) {sorted(unknown)} not in "
+                         f"the commercial.yml catalog — fix the id or declare the expectation")
     out = []
-    for e in expectations_for(bq):
+    for e in exps:
         actual, verdict, evidence = results.get(e["id"], ("not evaluated by this computation", "not-evaluable", []))
         out.append({**e, "actual": actual, "verdict": verdict, "evidence": evidence})
     return out
@@ -90,7 +112,16 @@ def write(out, report_lines, data):
 
 
 def pct(n, d):
+    """RENDER-side percentage (rounded 1dp). Convention (round-before-compare fix):
+    verdict/threshold decisions must compare UNROUNDED values (pct_raw or the raw
+    quotient); rounding happens only at render time. A true 15.04% must trip a 15%
+    threshold even though it renders as 15.0."""
     return round(100.0 * n / d, 1) if d else 0.0
+
+
+def pct_raw(n, d):
+    """COMPARE-side percentage — unrounded fraction*100 for threshold/verdict tests."""
+    return 100.0 * n / d if d else 0.0
 
 
 def week_start(iso_date: str) -> str:
@@ -155,6 +186,7 @@ def narrative_section(narrative):
 def bq23(corpus_root, out, pins):
     p = params_for("BQ-23")
     rows, snap = load_pin_csv(corpus_root, pins, CAMPAIGN_DS)
+    assert_vocab(rows, "status", CAMPAIGN_STATUSES, CAMPAIGN_DS)
     src = f"{CAMPAIGN_DS}@{snap}"
     close = p["close_date"]
     regions = sorted({r["region"] for r in rows})
@@ -313,6 +345,7 @@ def bq23(corpus_root, out, pins):
 def bq24(corpus_root, out, pins):
     p = params_for("BQ-24")
     rows, snap = load_pin_csv(corpus_root, pins, CAMPAIGN_DS)
+    assert_vocab(rows, "status", CAMPAIGN_STATUSES, CAMPAIGN_DS)
     src = f"{CAMPAIGN_DS}@{snap}"
     thr, min_n = float(p["pause_threshold_pct"]), int(p["min_cohort"])
 
@@ -323,16 +356,19 @@ def bq24(corpus_root, out, pins):
     for (hw, fv), sub in sorted(cohorts.items()):
         attempted = [r for r in sub if r["status"] != "scheduled"]
         fails = sum(1 for r in attempted if r["status"] in ATTEMPT_FAIL)
-        rate = pct(fails, len(attempted))          # primary: per attempted device
+        rate = pct(fails, len(attempted))          # primary: per attempted device (render)
         rate_all = pct(fails, len(sub))            # secondary: over the whole cohort
         stats.append({"hw": hw, "fv": fv, "n": len(sub), "attempted": len(attempted),
-                      "fails": fails, "rate": rate, "rate_all": rate_all})
+                      "fails": fails, "rate": rate, "rate_all": rate_all,
+                      # compare-side value: the pause trigger tests the UNROUNDED rate
+                      # (round-before-compare fix H-1) — rounding happens only at render
+                      "rate_raw": pct_raw(fails, len(attempted))})
         pts.append({"label": f"hw {hw} / from {fv}", "value": rate, "n_attempted": len(attempted)})
-    flagged = [s for s in stats if s["attempted"] >= min_n and s["rate"] > thr]
+    flagged = [s for s in stats if s["attempted"] >= min_n and s["rate_raw"] > thr]
     all_attempted = [r for r in rows if r["status"] != "scheduled"]
     overall = pct(sum(1 for r in all_attempted if r["status"] in ATTEMPT_FAIL), len(all_attempted))
     if flagged:
-        worst = max(flagged, key=lambda s: s["rate"])
+        worst = max(flagged, key=lambda s: s["rate_raw"])
         headline = (f"PAUSE TRIGGER: cohort hw {worst['hw']} upgrading from {worst['fv']} fails on "
                     f"{worst['rate']}% of attempted devices (threshold {thr}%) — pause the wave for "
                     f"this cohort and escalate")
@@ -378,9 +414,9 @@ def bq24(corpus_root, out, pins):
         "evidence": ["config: commercial.yml"],
     })
     exp_results = {
-        "E-24.1": ((f"worst cohort {max(flagged, key=lambda s: s['rate'])['rate']}% (hw "
-                    f"{max(flagged, key=lambda s: s['rate'])['hw']} / from "
-                    f"{max(flagged, key=lambda s: s['rate'])['fv']})") if flagged
+        "E-24.1": ((f"worst cohort {max(flagged, key=lambda s: s['rate_raw'])['rate']}% (hw "
+                    f"{max(flagged, key=lambda s: s['rate_raw'])['hw']} / from "
+                    f"{max(flagged, key=lambda s: s['rate_raw'])['fv']})") if flagged
                    else f"worst qualifying cohort within threshold; overall {overall}%",
                    "not-met" if flagged else "met",
                    ["derived: failure-by-cohort"]),
@@ -403,7 +439,7 @@ def bq24(corpus_root, out, pins):
             wk_retry[w] = wk_retry.get(w, 0) + 1
     weeks = week_range(min(r["completed_date"] for r in dated), max(r["completed_date"] for r in dated)) \
         if dated else []
-    worst = max(flagged, key=lambda s: s["rate"]) if flagged else None
+    worst = max(flagged, key=lambda s: s["rate_raw"]) if flagged else None
     lines.insert(-3, f"- Historical view: weekly completions vs completions that needed a retry are "
                      f"charted [derived: weekly-retry-trend] [src: {src}] (only dated events; "
                      f"still-pending failures have no date and are excluded — stated, not hidden).")
@@ -438,6 +474,7 @@ def bq24(corpus_root, out, pins):
 
 def bq25(corpus_root, out, pins):
     rows, snap = load_pin_csv(corpus_root, pins, CAMPAIGN_DS)
+    assert_vocab(rows, "status", CAMPAIGN_STATUSES, CAMPAIGN_DS)
     src = f"{CAMPAIGN_DS}@{snap}"
     assume_path = corpus_root / MAUDE_DS  # placeholder; A-002 lives on the campaign dataset
     a002 = yaml.safe_load(open(corpus_root / CAMPAIGN_DS / "assumptions" / "A-002.yml"))
@@ -546,6 +583,7 @@ def bq25(corpus_root, out, pins):
 def bq26(corpus_root, out, pins):
     p = params_for("BQ-26")
     rows, snap = load_pin_csv(corpus_root, pins, CAMPAIGN_DS)
+    assert_vocab(rows, "status", CAMPAIGN_STATUSES, CAMPAIGN_DS)
     fleet, fsnap = load_pin_csv(corpus_root, pins, FLEET_DS)
     src = f"{CAMPAIGN_DS}@{snap}"
     fsrc = f"{FLEET_DS}@{fsnap}"
@@ -573,15 +611,19 @@ def bq26(corpus_root, out, pins):
             done = [r for r in sub if r["status"] in COMPLETED]
             remaining = len(sub) - len(done)
             recent = [r for r in done if r["completed_date"] and wstart <= r["completed_date"] <= anchor]
-            cur = round(len(recent) / 4.0, 1)
-            req = round(remaining / weeks_left, 1) if weeks_left else float(remaining)
+            # compare-side (raw) vs render-side (rounded) rates — shortfall/thin/stability
+            # verdicts test the UNROUNDED values (round-before-compare fix H-1)
+            cur_raw = len(recent) / 4.0
+            req_raw = remaining / weeks_left if weeks_left else float(remaining)
+            cur = round(cur_raw, 1)
+            req = round(req_raw, 1)
             rem_rows = [r for r in sub if r["status"] not in COMPLETED]
             onsite_rem = sum(1 for r in rem_rows if r["method"] == "onsite")
             convertible = sum(1 for r in rem_rows
                               if r["method"] == "onsite" and conn.get(r["device_serial"]) == "yes")
             st[reg] = {
                 "remaining": remaining, "onsite_rem": onsite_rem, "convertible": convertible,
-                "cur": cur, "req": req,
+                "cur": cur, "req": req, "cur_raw": cur_raw, "req_raw": req_raw,
                 "last": max((r["completed_date"] for r in done if r["completed_date"]), default="never"),
                 # UNIFORM stall criterion (red-team finding a): zero completions in the
                 # trailing 28d window ending at the anchor, with work remaining — applied
@@ -595,19 +637,21 @@ def bq26(corpus_root, out, pins):
     alt = region_stats(alt_anchor)
     stalled = [reg for reg in regions if prim[reg]["stalled"]]
     behind = [reg for reg in regions
-              if not prim[reg]["stalled"] and prim[reg]["cur"] < prim[reg]["req"]]
+              if not prim[reg]["stalled"] and prim[reg]["cur_raw"] < prim[reg]["req_raw"]]
     # Thin-margin watch (red-team finding c): on track, but headroom under the guard.
     thin = [reg for reg in regions
             if not prim[reg]["stalled"] and prim[reg]["remaining"] > 0
-            and prim[reg]["cur"] >= prim[reg]["req"] and prim[reg]["cur"] < prim[reg]["req"] * headroom]
+            and prim[reg]["cur_raw"] >= prim[reg]["req_raw"]
+            and prim[reg]["cur_raw"] < prim[reg]["req_raw"] * headroom]
     short = stalled + behind
     total_rem = sum(prim[reg]["remaining"] for reg in regions)
     stalled_load = sum(prim[reg]["remaining"] for reg in stalled)
     total_onsite_rem = sum(prim[reg]["onsite_rem"] for reg in regions)
     total_conv = sum(prim[reg]["convertible"] for reg in regions)
     total_fse_days = round(sum(prim[reg]["fse_days"] for reg in regions), 1)
-    # Does the shortfall verdict survive the alternative anchor?
-    verdict_stable = all((prim[reg]["cur"] < prim[reg]["req"]) == (alt[reg]["cur"] < alt[reg]["req"])
+    # Does the shortfall verdict survive the alternative anchor? (raw compare — H-1)
+    verdict_stable = all((prim[reg]["cur_raw"] < prim[reg]["req_raw"])
+                         == (alt[reg]["cur_raw"] < alt[reg]["req_raw"])
                          for reg in regions)
 
     parts = []
@@ -655,6 +699,14 @@ def bq26(corpus_root, out, pins):
                          "config: commercial.yml"],
         })
     rn += 1
+    # F26-2 (economics dossier): the remote path carried the implicated failure mode —
+    # computed from the pin (rollbacks by method), never narrated as a literal.
+    rollbacks = [r for r in rows if r["status"] == "rolled-back"]
+    rb_remote = sum(1 for r in rollbacks if r["method"] == "remote")
+    rb_caveat = (f" — noting the remote path carried the implicated failure mode "
+                 f"({rb_remote} of {len(rollbacks)} rollbacks were remote installs), so "
+                 f"converted devices inherit that exposure until the failure cluster is resolved"
+                 if rb_remote else "")
     narrative["risks"].append({
         "id": f"R{rn}", "severity": "high" if total_conv == 0 else "medium",
         "statement": f"The remote-conversion recovery lever is sized at {total_conv} of "
@@ -662,7 +714,8 @@ def bq26(corpus_root, out, pins):
                      "shows the on-site backlog is unconnected, so conversion first requires "
                      "connectivity (adapters), it is not a scheduling change",
         "mitigation": "Price the adapter retrofit against continued on-site visits (the BQ-30 "
-                      "upgrade-economics answer); otherwise the levers are contract labor or slip",
+                      "upgrade-economics answer); otherwise the levers are contract labor or slip"
+                      + rb_caveat,
         "evidence": ["derived: remote-convertible", f"src: {src}", f"src: {fsrc}"],
     })
     rn += 1
@@ -844,13 +897,27 @@ def bq27(corpus_root, out, pins):
     behind_map = {k: int(v) for k, v in p["behind_map"].items()}
 
     pp = [r for r in rows if r["model"] == "PP3500"]
+    # A firmware version absent from the behind-by map is UNKNOWN currency, not current —
+    # defaulting it to 0-behind was the optimistic direction on a safety-framed metric
+    # (code-review finding B27-2). Unmapped devices are surfaced as their own bucket and
+    # never counted as current.
+    unmapped = [r for r in pp if r["firmware_version"] not in behind_map]
+    unmapped_versions = sorted({r["firmware_version"] for r in unmapped})
+
+    def is_current(r):
+        return r["firmware_version"] in behind_map and behind_map[r["firmware_version"]] == 0
+
     behind1 = [r for r in pp if behind_map.get(r["firmware_version"], 0) >= 1]
     behind2 = [r for r in pp if behind_map.get(r["firmware_version"], 0) >= 2]
     conn = [r for r in pp if r["connected"] == "yes"]
-    conn_current = pct(sum(1 for r in conn if behind_map.get(r["firmware_version"], 0) == 0), len(conn))
+    conn_current = pct(sum(1 for r in conn if is_current(r)), len(conn))
     nonconn = [r for r in pp if r["connected"] == "no"]
-    nonconn_current = pct(sum(1 for r in nonconn if behind_map.get(r["firmware_version"], 0) == 0), len(nonconn))
+    nonconn_current = pct(sum(1 for r in nonconn if is_current(r)), len(nonconn))
     pp3000 = [r for r in rows if r["model"] == "PP3000"]
+    # computed qualifier, not a narrated literal (code-review finding B27-1)
+    pp3000_fw = sorted({r["firmware_version"] for r in pp3000})
+    pp3000_note = ("all on 2.9.x line" if pp3000_fw and all(v.startswith("2.9") for v in pp3000_fw)
+                   else "versions: " + ", ".join(pp3000_fw) if pp3000_fw else "none observed")
 
     regions = sorted({r["region"] for r in pp})
     reg_pts = []
@@ -861,7 +928,9 @@ def bq27(corpus_root, out, pins):
 
     headline = (f"{pct(len(behind1), len(pp))}% of the PP3500 fleet is ≥1 firmware version behind "
                 f"({pct(len(behind2), len(pp))}% two behind); connected devices are current at "
-                f"{conn_current}% vs {nonconn_current}% for unconnected")
+                f"{conn_current}% vs {nonconn_current}% for unconnected"
+                + (f"; {len(unmapped)} device(s) on unmapped firmware — currency unknown"
+                   if unmapped else ""))
 
     lines = [
         "# BQ-27 — Fleet currency: how far behind is the installed base", "", BANNER, "",
@@ -870,6 +939,10 @@ def bq27(corpus_root, out, pins):
         f"- Fleet size {len(pp)}; ≥1 behind {len(behind1)}; two behind {len(behind2)} [src: {src}]",
         f"- Connected vs unconnected on current version: {conn_current}% vs {nonconn_current}% "
         f"[derived: currency-by-connectivity] [src: {src}]",
+    ] + ([f"- ⚠️ {len(unmapped)} device(s) report unmapped firmware version(s) "
+          f"({', '.join(unmapped_versions)}) — currency unknown, excluded from the "
+          f"current-version counts; extend the behind-by map before trusting the currency "
+          f"figures [src: {src}] [config: commercial.yml]"] if unmapped else []) + [
         "", "## % behind by region", "",
         "| Region | % ≥1 version behind |", "|---|---|",
     ]
@@ -877,7 +950,7 @@ def bq27(corpus_root, out, pins):
         lines.append(f"| {q['label']} [src: {src}] | {q['value']}% |")
     lines += [
         "",
-        f"- Legacy PP3000 units still in service: {len(pp3000)} (all on 2.9.x line) [src: {src}] — "
+        f"- Legacy PP3000 units still in service: {len(pp3000)} ({pp3000_note}) [src: {src}] — "
         "phase-out drift is a board-tier question (see catalog overflow).",
         "",
         "## Method & provenance", "",
@@ -895,7 +968,9 @@ def bq27(corpus_root, out, pins):
              "kind": "stat", "evidence_class": "measured",
              "provenance": {"dataset": FLEET_DS, "snapshot": snap},
              "points": [{"label": "of PP3500 fleet ≥1 firmware version behind",
-                         "value": pct(len(behind1), len(pp))}]},
+                         "value": pct(len(behind1), len(pp))}]
+             + ([{"label": "devices on unmapped firmware (currency unknown)",
+                  "value": len(unmapped)}] if unmapped else [])},
             {"id": "currency-history", "label": "Fleet currency over time", "unit": "%",
              "kind": "timeseries", "evidence_class": "unavailable",
              "provenance": {"note": "one fleet snapshot exists — history accumulates as the 7-day "
@@ -936,6 +1011,14 @@ def bq19(corpus_root, out, pins):
     top = sorted(counts.items(), key=lambda kv: -kv[1])[: int(p["top_n"])]
     a001 = yaml.safe_load(open(corpus_root / MAUDE_DS / "assumptions" / "A-001.yml"))
     rate_ready = isinstance(a001.get("model"), dict)
+    if rate_ready:
+        # The BLOCKED headline below is only true while A-001 carries no quantified model.
+        # If A-001 quantifies, this computation must be extended with the actual rate path —
+        # silently flipping an evidence class while the narrative still says "blocked"
+        # would self-contradict the edition (code-review finding B19-1). Fail loud instead.
+        raise SystemExit("BQ-19: A-001 now carries a quantified model, but the rate "
+                         "computation is not implemented — implement the rate path (and "
+                         "re-word the blocked narrative) before answering")
 
     # class-wide monthly history (daily date-count buckets -> months); the trailing
     # ~2 months are excluded: MAUDE reporting lag makes them artificially low
@@ -950,6 +1033,8 @@ def bq19(corpus_root, out, pins):
     hist_pts = [{"x": m + "-01", "y": monthly[m]} for m in months_sorted if m not in lag_cut]
     total_events = sum(monthly[m] for m in months_sorted if m not in lag_cut)
 
+    # Guarded by the rate_ready gate above: reaching this line means A-001 is NOT quantified,
+    # so the BLOCKED phrasing is a computed state, not a narrated literal.
     headline = ("MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED — "
                 "the installed-base denominator (A-001) is not yet quantified")
 
@@ -1003,7 +1088,7 @@ def bq19(corpus_root, out, pins):
              "provenance": {"dataset": MAUDE_DS, "snapshot": snap},
              "points": [{"label": k, "value": v} for k, v in top]},
             {"id": "rate-by-mfr", "label": "Event rate per installed device", "unit": "events/device",
-             "evidence_class": "unavailable" if not rate_ready else "assumed",
+             "evidence_class": "unavailable",  # rate_ready == True fails loud above
              "provenance": {"assumption": "A-001",
                             "note": "blocked until A-001 quantifies installed-base denominators"},
              "points": []},
@@ -1038,9 +1123,15 @@ def bq06(corpus_root, out, pins):
     by_app = {}
     for app, d in ivs:
         by_app.setdefault(app, []).append(d)
-    top = sorted(by_app.items(), key=lambda kv: -len(kv[1]))[: int(p["top_n"])]
+    # "Frequent filer" = ≥2 clearances over the WHOLE applicant set; the ≥2 filter is
+    # applied BEFORE the top_n truncation (code-review finding B06-1 — filtering after
+    # truncation could seat 1-clearance applicants in the table and miss the true
+    # fastest frequent filer). top_n limits the display only.
+    eligible = sorted(((a, ds) for a, ds in by_app.items() if len(ds) >= 2),
+                      key=lambda kv: -len(kv[1]))
+    top = eligible[: int(p["top_n"])]
     overall = _median([d for _, d in ivs])
-    frequent = [(a, len(ds), _median(ds)) for a, ds in top if len(ds) >= 2]
+    frequent = [(a, len(ds), _median(ds)) for a, ds in eligible]
     fastest = min(frequent, key=lambda t: t[2]) if frequent else None
 
     headline = (f"Competitor 510(k) review runs a median {overall} days received→decision across "
@@ -1117,7 +1208,9 @@ def bq12(corpus_root, out, pins):
     window = int(p["window_days"])
     dated = [r for r in rows if r["decision_date"]]
     as_of = max(r["decision_date"] for r in dated)
-    start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=window)).isoformat()
+    # inclusive span of exactly `window` days (start = as_of − (window−1)); the previous
+    # `as_of − window` start made the "{window}-day" label a 91-day window (finding B18-1)
+    start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=window - 1)).isoformat()
     recent = sorted((r for r in dated if start <= r["decision_date"] <= as_of),
                     key=lambda r: r["decision_date"], reverse=True)
 
@@ -1205,7 +1298,11 @@ def bq18(corpus_root, out, pins):
     window = int(p["window_days"])
     n_fleet = len(fleet)
     as_of = max(r["date_opened"] for r in rows)
-    start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=window)).isoformat()
+    # Symmetric half-open windows [start, end) of exactly `window` days each: the previous
+    # inclusive current window covered window+1 days vs a half-open prior — a built-in
+    # upward bias on the window-over-window rising test (finding B18-1).
+    end = (dt.date.fromisoformat(as_of) + dt.timedelta(days=1)).isoformat()
+    start = (dt.date.fromisoformat(end) - dt.timedelta(days=window)).isoformat()
     prev_start = (dt.date.fromisoformat(start) - dt.timedelta(days=window)).isoformat()
 
     def counts(a, b):
@@ -1215,18 +1312,19 @@ def bq18(corpus_root, out, pins):
                 out_c[r["category"]] = out_c.get(r["category"], 0) + 1
         return out_c
 
-    cur = counts(start, "9999")
+    cur = counts(start, end)
     prev = counts(prev_start, start)
     thr = p["rate_threshold_per_100"]
 
     def rate(n):
+        """Render-side rate (2dp) — breach decisions use rate_raw (H-1)."""
         return round(100.0 * n / n_fleet, 2)
 
     ranked = sorted(cur.items(), key=lambda kv: -kv[1])
     breaches = []
     for cat, n in ranked:
         t = float(thr.get(cat, thr["default"]))
-        if rate(n) > t:
+        if pct_raw(n, n_fleet) > t:
             breaches.append((cat, rate(n), t))
     top3 = ranked[:3]
 
@@ -1247,7 +1345,7 @@ def bq18(corpus_root, out, pins):
     ]
     for cat, n in ranked:
         t = float(thr.get(cat, thr["default"]))
-        mark = " ⚠️" if rate(n) > t else ""
+        mark = " ⚠️" if pct_raw(n, n_fleet) > t else ""
         lines.append(f"| {cat} [src: {src}] [config: commercial.yml] | {n} | {rate(n)}{mark} | {t} | "
                      f"{prev.get(cat, 0)} |")
     # monthly trend for the top-3 categories (zero-filled)
@@ -1320,7 +1418,7 @@ def bq18(corpus_root, out, pins):
              "points": [{"label": c, "value": rate(n), "count": n} for c, n in ranked]},
             {"id": "window-trend", "label": "Complaints: current vs prior window", "unit": "complaints",
              "evidence_class": "derived",
-             "derivation": {"method": "complaint counts summed over the trailing 90-day window vs the preceding 90-day window",
+             "derivation": {"method": f"complaint counts summed over the trailing {window}-day window vs the preceding {window}-day window",
                             "inputs": [f"src: {src}"]},
              "provenance": {"dataset": COMPLAINTS_DS, "snapshot": snap},
              "points": [{"label": "current", "value": sum(cur.values())},
@@ -1346,7 +1444,12 @@ def module_dispatch(bq):
     try:
         import importlib
         return importlib.import_module(mod_name).run
-    except ModuleNotFoundError:
+    except ModuleNotFoundError as e:
+        # Only "the dispatched module itself does not exist" means no computation.
+        # A ModuleNotFoundError raised INSIDE an existing bq module (e.g. a missing
+        # third-party import) must fail loud, not masquerade as "no computation" (H-2).
+        if e.name != mod_name and not (e.name and mod_name.startswith(e.name + ".")):
+            raise
         return None
 
 

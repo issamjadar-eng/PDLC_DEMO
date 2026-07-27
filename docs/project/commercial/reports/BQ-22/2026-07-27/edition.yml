@@ -1,9 +1,10 @@
 bq: BQ-22
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T15:31:24+00:00'
 pins:
   commercial/internal-signal-register: '2026-07-27'
 plan:
   path: plans/BQ-22.md
   sha256: c30182bddaeaae67e01dbef88867f765e40903b5966732bb5f60987f5fcd7ad1
+superseded_by: 2026-07-27.2

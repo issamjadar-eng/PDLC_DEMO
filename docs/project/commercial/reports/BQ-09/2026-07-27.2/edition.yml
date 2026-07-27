@@ -1,0 +1,17 @@
+bq: BQ-09
+edition: 2026-07-27.2
+status: approved
+created_at: '2026-07-27T18:32:42+00:00'
+pins:
+  commercial/internal-winloss: 2026-07-27.4
+  commercial/openfda-recalls-infusion: '2026-07-22'
+plan:
+  path: plans/BQ-09.md
+  sha256: 091fa19da36467daffe0a9e8edf9b477fbb5c22eeeef245a9013b8b8e8ad98a6
+code_artifacts:
+- path: bq_modules/bq_09.py
+  sha256: bd7a743b959eab91f9766c5ea354f1aff42d5d142be988ed29a07ffd2ba3dcbc
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-winloss/gen.py
+  sha256: acf035fcd572920d60a50f4137ce600a96bff951e70f234a0e71d286986bb8fb

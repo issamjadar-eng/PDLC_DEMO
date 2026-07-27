@@ -37,6 +37,15 @@ def run(corpus_root, out, pins):
     rows, snap = C.load_pin_csv(corpus_root, pins, SIGNALS_DS)
     src = f"{SIGNALS_DS}@{snap}"
 
+    # Fail loudly if the register ever carries a disposition outside the funnel
+    # vocabulary — a new value would silently escape every bucket (and both "died"
+    # and "landed") while the printed Total still counts it (review finding F-22-3).
+    known_disp = set(LANDED_DESIGN) | set(LANDED_UPGRADE) | {"monitoring", "no-action", "open"}
+    unknown_disp = sorted({r["disposition"] for r in rows} - known_disp)
+    if unknown_disp:
+        raise SystemExit(f"BQ-22: unexpected disposition value(s) {unknown_disp} — "
+                         f"extend the funnel buckets before publishing")
+
     as_of = max([r["opened_date"] for r in rows] +
                 [r["closed_date"] for r in rows if r["closed_date"]])
     win_start = (dt.date.fromisoformat(as_of) - dt.timedelta(days=365)).isoformat()
@@ -89,11 +98,17 @@ def run(corpus_root, out, pins):
                        key=lambda r: r["opened_date"])
     over_ex = [r for r in exemplars if r["category"] == "over-delivery"]
 
+    # E-22.1 verdict computed once; the headline's met/NOT-met clause derives from it —
+    # never narrated (review finding F-22-1: a breach-free refresh must not render a
+    # self-contradicting report).
+    e221_met = not breach
     headline = (f"{len(fl['died'])} of {len(rows)} lifetime signals ({died_pct_l}%) died in a "
                 f"spreadsheet (no-action or open past the {sla}-day SLA); trailing 12 months: "
                 f"{len(fc['died'])} of {len(cohort)} ({died_pct_c}%) died vs {landed_c} landed in "
-                f"design/upgrade — and only {sla_pct}% of adjudicated cohort signals met the SLA, "
-                f"so E-22.1 is NOT met")
+                f"design/upgrade — "
+                + (f"and only {sla_pct}% of adjudicated cohort signals met the SLA, so E-22.1 is "
+                   f"NOT met" if not e221_met else
+                   f"and {sla_pct}% of adjudicated cohort signals met the SLA, so E-22.1 is met"))
 
     # --- monthly trend: opened vs dispositioned (zero-filled) ----------------
     span = month_range(min(r["opened_date"] for r in rows)[:7], as_of[:7])
@@ -114,7 +129,7 @@ def run(corpus_root, out, pins):
         "E-22.1": (f"{sla_pct}% of adjudicated cohort signals dispositioned within {sla} days "
                    f"({len(within)} within, {len(breach)} breached incl. {len(fc['stale_open'])} "
                    f"stale-open; {len(pending)} recent-open pending, excluded)",
-                   "not-met" if breach else "met",
+                   "met" if e221_met else "not-met",
                    ["derived: sla-compliance", f"src: {src}"]),
     }
     exps = C.evaluate_expectations("BQ-22", exp_results)
@@ -216,11 +231,23 @@ def run(corpus_root, out, pins):
     for r in exemplars:
         lines.append(f"| {r['signal_id']} [src: {src}] | {r['opened_date']} | {r['category']} | "
                      f"{r['disposition']} | {r['disposition_ref']} | {disp_days(r)} |")
+    # Over-delivery closure sentence derived from the same computed exemplar set as W1
+    # (count- and disposition-aware), never a duplicate string literal (finding F-22-2).
+    if over_ex:
+        oe_disp = sorted({r["disposition"].replace("-", " ") for r in over_ex})
+        oe_qty = "Both" if len(over_ex) == 2 else str(len(over_ex))
+        oe_noun = "signal" if len(over_ex) == 1 else "signals"
+        oe_plural = "s" if len(over_ex) > 1 and len(oe_disp) == 1 else ""
+        over_body = (f"- {oe_qty} over-delivery {oe_noun} closed the loop into "
+                     f"{', '.join(oe_disp)}{oe_plural} "
+                     f"({', '.join(r['signal_id'] + ' → ' + r['disposition_ref'] for r in over_ex)}) — "
+                     f"see BQ-20's franchise-killer watch [derived: exemplars] [src: {src}]")
+    else:
+        over_body = (f"- No over-delivery signal appears among the loop-closed exemplars — "
+                     f"see BQ-20's franchise-killer watch [derived: exemplars] [src: {src}]")
     lines += [
         "",
-        f"- Both over-delivery signals closed the loop into upgrade items "
-        f"({', '.join(r['signal_id'] + ' → ' + r['disposition_ref'] for r in over_ex)}) — "
-        f"see BQ-20's franchise-killer watch [derived: exemplars] [src: {src}]",
+        over_body,
         "- Refs are trusted from the register; a cross-system trace (register ↔ DHF ↔ upgrade",
         "  campaign) has not yet verified them (stated gap, per the plan).",
     ]

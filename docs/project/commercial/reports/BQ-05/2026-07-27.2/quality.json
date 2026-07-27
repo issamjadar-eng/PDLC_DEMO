@@ -1,0 +1,305 @@
+{
+ "bq": "BQ-05",
+ "edition": "2026-07-27.2",
+ "generated_at": "2026-07-27T18:33:46+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "exposure-by-year",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "exposure-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fda-review-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "slip-scenarios",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-revenue-plan@2026-07-27",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-510k-infusion@2026-07-22",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-revenue-plan",
+   "snapshot": "2026-07-27",
+   "age_days": 0,
+   "max_age_days": 365,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-510k-infusion",
+   "snapshot": "2026-07-22",
+   "age_days": 5,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Regulatory exposure of the plan",
+    "series": "exposure-stat",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "dependent (pccp-enabled + new-submission) revenue \u00f7 total plan revenue, per plan year and across the window",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Plan revenue by regulatory dependency ($M)",
+    "series": "plan-by-dependency",
+    "evidence_class": "measured",
+    "source": "commercial/internal-revenue-plan@2026-07-27"
+   },
+   {
+    "what": "Exposure % per plan year",
+    "series": "exposure-by-year",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "per plan year: (pccp-enabled + new-submission revenue) \u00f7 total plan revenue",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Plan totals under uniform slips ($M)",
+    "series": "slip-scenarios",
+    "evidence_class": "derived",
+    "source": "commercial/internal-revenue-plan@2026-07-27",
+    "derivation": {
+     "method": "uniform within-year earning; an M-month slip moves M/12 of each year's dependent revenue to the next year; past-final-year revenue leaves the window",
+     "inputs": [
+      "src: commercial/internal-revenue-plan@2026-07-27",
+      "config: commercial.yml",
+      "derived: exposure-by-year"
+     ]
+    }
+   },
+   {
+    "what": "FRN 510(k) review interval (public)",
+    "series": "fda-review-stat",
+    "evidence_class": "derived",
+    "source": "commercial/openfda-510k-infusion@2026-07-22",
+    "derivation": {
+     "method": "median of (decision_date \u2212 date_received) across FRN clearances with both dates in the pinned snapshot",
+     "inputs": [
+      "src: commercial/openfda-510k-infusion@2026-07-22"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Exposure % across plan versions",
+    "series": "exposure-history",
+    "evidence_class": "unavailable",
+    "source": "only plan version LRP-2026.1 is snapshotted \u2014 exposure history needs successive plan-of-record snapshots",
+    "note": "only plan version LRP-2026.1 is snapshotted \u2014 exposure history needs successive plan-of-record snapshots"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-05.md",
+  "status": "in-sync",
+  "pinned": "2c6d67388ff2f99d5dd3808ab13a631683449b599a10517d9ae76a9491f8ff09",
+  "current": "2c6d67388ff2f99d5dd3808ab13a631683449b599a10517d9ae76a9491f8ff09"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_05.py",
+    "sha256_12": "bfbb12641af3",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-05"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-board-2026-07-27.md"
+    }
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    }
+   },
+   {
+    "path": "corpus:commercial/internal-revenue-plan/gen.py",
+    "sha256_12": "e9ee93796a07",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "REGION_SHARE values duplicate the FINANCIAL MODEL constants outside any marked shared block",
+       "disposition": "accept: joins are region-insensitive; add keep-in-sync comment at next touch"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    }
+   }
+  ]
+ }
+}

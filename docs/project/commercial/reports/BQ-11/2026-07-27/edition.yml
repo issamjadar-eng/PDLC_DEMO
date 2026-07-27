@@ -1,6 +1,6 @@
 bq: BQ-11
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T16:11:18+00:00'
 pins:
   commercial/internal-telemetry-utilization: '2026-07-27'
@@ -9,3 +9,4 @@ pins:
 plan:
   path: plans/BQ-11.md
   sha256: 641914aa30f96b48eb052c58fb8f34d90c4b2401961e2e0d4008d4c82c42130e
+superseded_by: 2026-07-27.2

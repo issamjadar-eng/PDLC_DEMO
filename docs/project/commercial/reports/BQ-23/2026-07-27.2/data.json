@@ -1,0 +1,447 @@
+{
+ "bq": "BQ-23",
+ "series": [
+  {
+   "id": "coverage-stat",
+   "label": "Campaign coverage",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "of 389 targeted devices completed",
+     "value": 62.7
+    }
+   ]
+  },
+  {
+   "id": "cumulative-coverage",
+   "label": "Cumulative coverage % by region",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "lines": [
+    {
+     "label": "APAC",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-09",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-16",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-23",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-30",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-06",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-13",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-20",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-27",
+       "y": 0.0
+      },
+      {
+       "x": "2026-05-04",
+       "y": 0.0
+      },
+      {
+       "x": "2026-05-11",
+       "y": 0.0
+      },
+      {
+       "x": "2026-05-18",
+       "y": 0.0
+      },
+      {
+       "x": "2026-05-25",
+       "y": 0.0
+      },
+      {
+       "x": "2026-06-01",
+       "y": 7.9
+      },
+      {
+       "x": "2026-06-08",
+       "y": 11.8
+      },
+      {
+       "x": "2026-06-15",
+       "y": 21.1
+      },
+      {
+       "x": "2026-06-22",
+       "y": 22.4
+      },
+      {
+       "x": "2026-06-29",
+       "y": 31.6
+      },
+      {
+       "x": "2026-07-06",
+       "y": 36.8
+      },
+      {
+       "x": "2026-07-13",
+       "y": 44.7
+      }
+     ]
+    },
+    {
+     "label": "EMEA",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-09",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-16",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-23",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-30",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-06",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-13",
+       "y": 3.3
+      },
+      {
+       "x": "2026-04-20",
+       "y": 7.5
+      },
+      {
+       "x": "2026-04-27",
+       "y": 10.8
+      },
+      {
+       "x": "2026-05-04",
+       "y": 17.5
+      },
+      {
+       "x": "2026-05-11",
+       "y": 20.8
+      },
+      {
+       "x": "2026-05-18",
+       "y": 29.2
+      },
+      {
+       "x": "2026-05-25",
+       "y": 33.3
+      },
+      {
+       "x": "2026-06-01",
+       "y": 38.3
+      },
+      {
+       "x": "2026-06-08",
+       "y": 45.0
+      },
+      {
+       "x": "2026-06-15",
+       "y": 50.0
+      },
+      {
+       "x": "2026-06-22",
+       "y": 50.8
+      },
+      {
+       "x": "2026-06-29",
+       "y": 50.8
+      },
+      {
+       "x": "2026-07-06",
+       "y": 50.8
+      },
+      {
+       "x": "2026-07-13",
+       "y": 50.8
+      }
+     ]
+    },
+    {
+     "label": "NA",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 10.4
+      },
+      {
+       "x": "2026-03-09",
+       "y": 17.6
+      },
+      {
+       "x": "2026-03-16",
+       "y": 22.8
+      },
+      {
+       "x": "2026-03-23",
+       "y": 28.0
+      },
+      {
+       "x": "2026-03-30",
+       "y": 37.3
+      },
+      {
+       "x": "2026-04-06",
+       "y": 43.5
+      },
+      {
+       "x": "2026-04-13",
+       "y": 51.8
+      },
+      {
+       "x": "2026-04-20",
+       "y": 60.1
+      },
+      {
+       "x": "2026-04-27",
+       "y": 66.8
+      },
+      {
+       "x": "2026-05-04",
+       "y": 76.2
+      },
+      {
+       "x": "2026-05-11",
+       "y": 77.2
+      },
+      {
+       "x": "2026-05-18",
+       "y": 77.2
+      },
+      {
+       "x": "2026-05-25",
+       "y": 77.2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 77.2
+      },
+      {
+       "x": "2026-06-08",
+       "y": 77.2
+      },
+      {
+       "x": "2026-06-15",
+       "y": 77.2
+      },
+      {
+       "x": "2026-06-22",
+       "y": 77.2
+      },
+      {
+       "x": "2026-06-29",
+       "y": 77.2
+      },
+      {
+       "x": "2026-07-06",
+       "y": 77.2
+      },
+      {
+       "x": "2026-07-13",
+       "y": 77.2
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "coverage-by-region",
+   "label": "Coverage %",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 44.7
+    },
+    {
+     "label": "EMEA",
+     "value": 50.8
+    },
+    {
+     "label": "NA",
+     "value": 77.2
+    }
+   ]
+  },
+  {
+   "id": "weekly-run-rate",
+   "label": "Completions per week (trailing 4w)",
+   "unit": "devices/week",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "count of completions with completed_date in the 28-day window ending at the snapshot's latest completion, divided by 4",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 4.5
+    },
+    {
+     "label": "EMEA",
+     "value": 0.2
+    },
+    {
+     "label": "NA",
+     "value": 0.0
+    }
+   ]
+  },
+  {
+   "id": "projected-finish",
+   "label": "Projected finish date",
+   "unit": "date",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "remaining devices \u00f7 weekly run-rate, projected forward from the window anchor",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-07-27",
+     "derived: weekly-run-rate"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-07-27"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": "2026-09-21"
+    },
+    {
+     "label": "EMEA",
+     "value": "2031-01-25"
+    },
+    {
+     "label": "NA",
+     "value": "no-recent-completions"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "NA has zero completions in the trailing four-week window with 44 devices remaining \u2014 the wave is stalled, not slow",
+    "action": "Confirm scheduling vs technical root cause with the regional service lead; restart the wave or formally re-baseline",
+    "evidence": [
+     "derived: projected-finish",
+     "src: commercial/internal-upgrade-campaign@2026-07-27"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "EMEA projects to finish 2031-01-25, past the 2026-09-30 close (59 remaining at 0.2/wk)",
+    "mitigation": "Raise the completion rate (remote conversion, surge capacity) or re-baseline the close with customer notification \u2014 see the capacity outlook answer for the required-rate math",
+    "evidence": [
+     "derived: projected-finish",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "APAC on track (2026-09-21 projected vs 2026-09-30 close) \u2014 verify weekly",
+    "evidence": [
+     "derived: projected-finish"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-23.1",
+   "statement": "Campaign C-2026-02 reaches 95% coverage by the close date",
+   "expected": "95% by 2026-09-30",
+   "basis": "demo stand-in for the campaign plan of record [VERIFY]",
+   "set_by": "field-service (demo)",
+   "validated": false,
+   "actual": "62.7% coverage as of the pin; projected finishes: APAC 2026-09-21, EMEA 2031-01-25, NA no-recent-completions",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: projected-finish",
+    "derived: coverage-by-region"
+   ]
+  },
+  {
+   "id": "E-23.2",
+   "statement": "Every region sustains a completion run-rate sufficient to finish its wave",
+   "expected": "run-rate >= required rate in each region",
+   "basis": "implied by the wave schedule; never explicitly capacity-planned",
+   "set_by": "field-service (demo)",
+   "validated": false,
+   "actual": "APAC: 4.5/wk, EMEA: 0.2/wk, NA: 0.0/wk",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: weekly-run-rate"
+   ]
+  }
+ ]
+}

@@ -45,7 +45,10 @@ def run(corpus_root, out, pins):
     util_raw = {sid: 100.0 * s["hours"] / s["expected"] for sid, s in site.items()}
     util = {sid: round(u, 1) for sid, u in util_raw.items()}
 
-    flagged = sorted([sid for sid, u in util.items() if u < thr], key=lambda sid: util[sid])
+    # flag and sort on the UNROUNDED ratio — a 59.95-59.99% site must not escape the
+    # threshold via display rounding; util (1dp) is display-only
+    flagged = sorted([sid for sid, u in util_raw.items() if u < thr],
+                     key=lambda sid: util_raw[sid])
     material = [sid for sid in flagged if conn_by_site.get(sid, 0) >= min_dev]
     watch_tier = [sid for sid in flagged if sid not in material]
 
@@ -125,11 +128,20 @@ def run(corpus_root, out, pins):
                      f"{util[sid]}% | {conn_by_site.get(sid, 0)} | {tier} |")
     # true median (statistics.median handles even counts); computed on unrounded
     # ratios, rounded once for display
-    fleet_median = round(statistics.median(util_raw.values()), 1)
+    med_raw = statistics.median(util_raw.values())
+    fleet_median = round(med_raw, 1)
+    # "far below the fleet norm" is asserted only when computed (least-bad flagged site
+    # ≥20pp under the median); otherwise the computed gap is stated instead
+    if flagged:
+        gap = round(med_raw - util_raw[flagged[-1]], 1)
+        norm_note = (" — the flagged sites sit far below the fleet norm" if gap >= 20 else
+                     f" — the flagged sites sit ≥{gap}pp below the fleet median")
+    else:
+        norm_note = ""
     lines += [
         "",
         f"- Connected-site median utilization over the window: {fleet_median}% across "
-        f"{len(util)} sites — the flagged sites sit far below the fleet norm "
+        f"{len(util)} sites{norm_note} "
         f"[derived: site-utilization] [src: {tsrc}]",
         "",
         "## Churn-risk framing — what the data allows", "",

@@ -24,10 +24,12 @@ def run(corpus_root, out, pins):
     src510 = f"{FDA_DS}@{snap510}"
     diffs = p["differentiators"]
     sota_date = p["sota_doc_date"]
+    our_vendor = p["our_vendor"]          # F15-3: vendor identity from config, not a literal
+    our_label = p["our_product_label"]
 
     # --- differentiator comparison (direction per attribute; range = competitor-favorable end)
     def compare(attr, our_val, direction):
-        comps = [r for r in feats if r["attribute"] == attr and r["vendor"] != "GlobalLogic"]
+        comps = [r for r in feats if r["attribute"] == attr and r["vendor"] != our_vendor]
         vals = []
         for r in comps:
             v = parse_numeric(r["value"], direction)
@@ -54,7 +56,7 @@ def run(corpus_root, out, pins):
     acc_ahead_vol = all(acc_vol < v["value"] for v in acc_vals) if acc_vals else None
 
     # products in the matrix with NO value for a compared attribute (stated coverage gap)
-    products = sorted({(r["vendor"], r["product"]) for r in feats if r["vendor"] != "GlobalLogic"})
+    products = sorted({(r["vendor"], r["product"]) for r in feats if r["vendor"] != our_vendor})
     def missing(attr):
         have = {(r["vendor"], r["product"]) for r in feats if r["attribute"] == attr}
         return [f"{v} {pr}" for v, pr in products if (v, pr) not in have]
@@ -87,10 +89,23 @@ def run(corpus_root, out, pins):
     else:
         verdict_txt = (f"ride to scheduled review ({next_review.isoformat()}): both differentiators "
                        f"remain ahead of every documented competitor value and no refresh trigger fired")
-    headline = (f"{verdict_txt}. Accuracy margin ~{acc_margin}x vs best documented competitor on our "
-                f"LAB-basis spec (~{acc_margin_vol}x on our volumetric-basis spec — ahead on either "
-                f"basis; competitor cells are nominal/field specs), battery "
-                f"~{bat_margin}x; {len(since_doc)} FRN clearance(s) observed after the SOTA anchor date "
+    # F15-1: the basis phrase is computed from the trigger states, never a literal;
+    # F15-2: empty competitor coverage renders an explicit no-documented-cells
+    # fragment instead of "~Nonex" / a crash
+    if acc_vals:
+        basis_txt = ("ahead on either basis" if (acc_ahead and acc_ahead_vol)
+                     else "ahead on the LAB basis only" if acc_ahead
+                     else "ahead on the volumetric basis only" if acc_ahead_vol
+                     else "NOT ahead on either basis")
+        acc_head = (f"Accuracy margin ~{acc_margin}x vs best documented competitor on our "
+                    f"LAB-basis spec (~{acc_margin_vol}x on our volumetric-basis spec — {basis_txt}"
+                    f"; competitor cells are nominal/field specs)")
+    else:
+        acc_head = "Accuracy: NO documented competitor cells — no margin computable"
+    bat_head = (f"battery ~{bat_margin}x" if bat_vals
+                else "battery: NO documented competitor cells")
+    headline = (f"{verdict_txt}. {acc_head}, {bat_head}"
+                f"; {len(since_doc)} FRN clearance(s) observed after the SOTA anchor date "
                 f"({sota_date}) in a snapshot whose coverage ends {anchor}")
 
     # --- history: clearances per quarter (context for the currency signal)
@@ -127,17 +142,29 @@ def run(corpus_root, out, pins):
     ]
     for v in acc_vals:
         lines.append(f"| {v['label']} [src: {srcf}] | {v['raw']} | {v['verified']} |")
+    # F15-2: margin/best-label bullets render only when documented cells exist
+    if acc_vals:
+        lines += [
+            "",
+            f"- {'Ahead of' if acc_ahead else 'NOT ahead of'} all {len(acc_vals)} documented values "
+            f"({acc_ver} verified); margin vs best ({acc_best['label']}) ~{acc_margin}x "
+            f"[derived: differentiator-margins] [src: {srcf}].",
+            f"- Spec-basis disclosure: our {diffs['flow_accuracy_pct']} is the LABORATORY-standard spec, "
+            f"while competitor cells are nominal/field specs — a basis-mixed comparison. On our "
+            f"volumetric-basis spec ({acc_vol}) the margin is ~{acc_margin_vol}x, and we are "
+            f"{'still ahead of' if acc_ahead_vol else 'NOT ahead of'} every documented value — 'ahead' "
+            f"{'survives either basis' if acc_ahead and acc_ahead_vol else 'does NOT survive both bases'}"
+            f"; the headline multiple is basis-sensitive "
+            f"[derived: differentiator-margins] [config: commercial.yml] [src: {srcf}].",
+        ]
+    else:
+        lines += [
+            "",
+            f"- No documented competitor accuracy cells in the matrix — no margin or best-competitor "
+            f"comparison is computable; superiority over undocumented specs is NOT claimed "
+            f"[derived: differentiator-margins] [src: {srcf}].",
+        ]
     lines += [
-        "",
-        f"- {'Ahead of' if acc_ahead else 'NOT ahead of'} all {len(acc_vals)} documented values "
-        f"({acc_ver} verified); margin vs best ({acc_best['label']}) ~{acc_margin}x "
-        f"[derived: differentiator-margins] [src: {srcf}].",
-        f"- Spec-basis disclosure: our {diffs['flow_accuracy_pct']} is the LABORATORY-standard spec, "
-        f"while competitor cells are nominal/field specs — a basis-mixed comparison. On our "
-        f"volumetric-basis spec ({acc_vol}) the margin is ~{acc_margin_vol}x, and we are "
-        f"{'still ahead of' if acc_ahead_vol else 'NOT ahead of'} every documented value — 'ahead' "
-        f"survives either basis; the headline multiple is basis-sensitive "
-        f"[derived: differentiator-margins] [config: commercial.yml] [src: {srcf}].",
         f"- No documented accuracy value for: {', '.join(acc_missing) if acc_missing else 'none'} "
         f"[src: {srcf}] — the comparison covers only documented cells; superiority over undocumented "
         f"specs is NOT claimed.",
@@ -149,11 +176,21 @@ def run(corpus_root, out, pins):
     ]
     for v in bat_vals:
         lines.append(f"| {v['label']} [src: {srcf}] | {v['raw']} | {v['verified']} |")
+    if bat_vals:
+        lines += [
+            "",
+            f"- {'Ahead of' if bat_ahead else 'NOT ahead of'} all {len(bat_vals)} documented values "
+            f"({bat_ver} verified); margin vs best ({bat_best['label']}) ~{bat_margin}x "
+            f"[derived: differentiator-margins] [src: {srcf}].",
+        ]
+    else:
+        lines += [
+            "",
+            f"- No documented competitor battery cells in the matrix — no margin or best-competitor "
+            f"comparison is computable; superiority over undocumented specs is NOT claimed "
+            f"[derived: differentiator-margins] [src: {srcf}].",
+        ]
     lines += [
-        "",
-        f"- {'Ahead of' if bat_ahead else 'NOT ahead of'} all {len(bat_vals)} documented values "
-        f"({bat_ver} verified); margin vs best ({bat_best['label']}) ~{bat_margin}x "
-        f"[derived: differentiator-margins] [src: {srcf}].",
         f"- No documented battery value for: {', '.join(bat_missing) if bat_missing else 'none'} "
         f"[src: {srcf}].",
         "",
@@ -170,9 +207,11 @@ def run(corpus_root, out, pins):
         "## Refresh verdict (deterministic rule, plan-committed)", "",
         f"- Rule: refresh now if a margin erodes, a predictive_monitoring row turns `yes`, or the "
         f"doc exceeds its {p['review_cadence_months']}-month review cadence [config: commercial.yml].",
-        f"- Trigger check — margins: accuracy {'ahead' if acc_ahead else 'ERODED'} (lab basis) / "
-        f"{'ahead' if acc_ahead_vol else 'ERODED'} (volumetric basis), battery "
-        f"{'ahead' if bat_ahead else 'ERODED'} [derived: differentiator-margins]; "
+        # F15-2: a None trigger state (no documented cells) is neither ahead nor eroded
+        f"- Trigger check — margins: accuracy "
+        f"{'ahead' if acc_ahead else 'no documented cells' if acc_ahead is None else 'ERODED'} (lab basis) / "
+        f"{'ahead' if acc_ahead_vol else 'no documented cells' if acc_ahead_vol is None else 'ERODED'} (volumetric basis), battery "
+        f"{'ahead' if bat_ahead else 'no documented cells' if bat_ahead is None else 'ERODED'} [derived: differentiator-margins]; "
         f"predictive_monitoring rows reading `yes`: {len(pred_yes)} [src: {srcf}]; doc age at "
         f"snapshot acquisition {doc_age_days} days vs cadence [derived: v-refresh] "
         f"[config: commercial.yml].",
@@ -237,13 +276,13 @@ def run(corpus_root, out, pins):
             {"id": "accuracy-by-product", "label": "Flow accuracy (± pct) by product", "unit": "± pct",
              "evidence_class": "measured",
              "provenance": {"dataset": FEAT_DS, "snapshot": fsnap},
-             "points": [{"label": "GlobalLogic PainEase PCA Advanced (PP3500)",
+             "points": [{"label": our_label,
                          "value": diffs["flow_accuracy_pct"]}]
                        + [{"label": v["label"], "value": v["value"]} for v in acc_vals]},
             {"id": "battery-by-product", "label": "Battery (hours) by product", "unit": "hours",
              "evidence_class": "measured",
              "provenance": {"dataset": FEAT_DS, "snapshot": fsnap},
-             "points": [{"label": "GlobalLogic PainEase PCA Advanced (PP3500)",
+             "points": [{"label": our_label,
                          "value": diffs["battery_hours"]}]
                        + [{"label": v["label"], "value": v["value"]} for v in bat_vals]},
             {"id": "since-doc-count", "label": "FRN clearances after the SOTA anchor date", "unit": "clearances",

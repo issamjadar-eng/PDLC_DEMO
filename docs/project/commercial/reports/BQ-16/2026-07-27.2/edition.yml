@@ -1,0 +1,14 @@
+bq: BQ-16
+edition: 2026-07-27.2
+status: approved
+created_at: '2026-07-27T18:32:45+00:00'
+pins:
+  commercial/internal-kol-register: '2026-07-27'
+plan:
+  path: plans/BQ-16.md
+  sha256: c99346defcad6a562418eea3cc2286fbee0555ce2779770ad36ea69881e04dab
+code_artifacts:
+- path: bq_modules/bq_16.py
+  sha256: 6de8a0427b3d541982b9b9982495b24133651ab5d6e8a16cf5432ed050dafddb
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

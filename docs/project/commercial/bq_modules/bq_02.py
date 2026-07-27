@@ -6,6 +6,8 @@ committed definitions (direct-book basis + the basis-sensitivity disclosure agai
 total revenue, anchor-GPO selection, constant-dent loss-scenario method).
 """
 
+import sys
+
 import computations as C
 
 ACC_DS = "commercial/internal-sales-accounts"
@@ -24,13 +26,18 @@ def _fy_iso(fy):
 
 
 def _plan_year_totals(plan_rows):
-    """Per-year plan totals; FY2026 = sum of its quarterly rows."""
+    """Per-year plan totals; FY2026 = sum of its quarterly rows. Also counts rows whose
+    period falls outside the configured plan window — silent drops rot the scenario
+    table on a refreshed plan (code-review finding, ben/108)."""
     tot = {y: 0 for y in PLAN_YEARS}
+    unmatched = 0
     for r in plan_rows:
         y = "FY2026" if r["period"].startswith("2026-Q") else r["period"]
         if y in tot:
             tot[y] += int(r["revenue_usd"])
-    return tot
+        else:
+            unmatched += 1
+    return tot, unmatched
 
 
 def run(corpus_root, out, pins):
@@ -44,6 +51,8 @@ def run(corpus_root, out, pins):
     fy = p["fy"]
     thr = float(p["concentration_threshold_pct"])
     pca_lines = list(p["pca_franchise_lines"])
+    pump_lines = list(p["pca_pump_lines"])
+    top3_gate = float(p["top3_narrative_gate_pct"])
 
     fy_rows = [r for r in acc if r["fy"] == fy]
     total = sum(int(r["revenue_usd"]) for r in fy_rows)
@@ -56,20 +65,29 @@ def run(corpus_root, out, pins):
     anchor = max(gpos_only, key=gpos_only.get)
     anchor_rev = gpos_only[anchor]
     anchor_share = C.pct(anchor_rev, total)
+    # guardrail comparisons run on raw fractions; C.pct is display-only (code-review
+    # finding, ben/108: rounded compares are the knife-edge class at 30.0x)
+    def _raw_share(v):
+        return 100.0 * v / total if total else 0.0
+    anchor_share_raw = _raw_share(anchor_rev)
+    direct_breaches = anchor_share_raw > thr
     over = [(g, C.pct(v, total)) for g, v in sorted(gpos_only.items(), key=lambda kv: -kv[1])
-            if C.pct(v, total) > thr]
+            if _raw_share(v) > thr]
 
     # top-3 accounts
     by_acct = {}
     for r in fy_rows:
         by_acct[r["account_name"]] = by_acct.get(r["account_name"], 0) + int(r["revenue_usd"])
     top3 = sorted(by_acct.items(), key=lambda kv: -kv[1])[:3]
-    top3_share = round(sum(C.pct(v, total) for _, v in top3), 1)
+    # share of the summed top-3 revenue, rounded once at render — not a sum of rounded shares
+    top3_rev = sum(v for _, v in top3)
+    top3_share_raw = _raw_share(top3_rev)
+    top3_share = C.pct(top3_rev, total)
 
-    # PCA franchise share
+    # PCA franchise share (franchise and pumps-only rosters both from config)
     pca_rev = sum(int(r["revenue_usd"]) for r in fy_rows if r["product_line"] in pca_lines)
     pumps_rev = sum(int(r["revenue_usd"]) for r in fy_rows
-                    if r["product_line"] in ("PP3500", "PP3000"))
+                    if r["product_line"] in pump_lines)
     pca_share = C.pct(pca_rev, total)
     pumps_share = C.pct(pumps_rev, total)
 
@@ -92,15 +110,21 @@ def run(corpus_root, out, pins):
     total_rev_cy = sum(int(r["revenue_usd"]) for r in fin if r["period"].startswith(cy))
     coverage_pct = C.pct(total, total_rev_cy)
     anchor_floor_pct = C.pct(anchor_rev, total_rev_cy)
-    floor_breaches = anchor_floor_pct > thr
+    floor_breaches = (100.0 * anchor_rev / total_rev_cy > thr) if total_rev_cy else False
 
     # anchor-loss scenario: constant FY-basis dent off each plan year
-    plan_tot = _plan_year_totals(plan)
+    plan_tot, plan_unmatched = _plan_year_totals(plan)
+    if plan_unmatched:
+        print(f"bq_02: WARNING — {plan_unmatched} plan rows fall outside the configured "
+              f"plan window {PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are excluded from the "
+              f"loss-scenario table", file=sys.stderr)
     scenario = [{"x": _fy_iso(y), "y": round((plan_tot[y] - anchor_rev) / 1e6, 1)} for y in PLAN_YEARS]
     baseline = [{"x": _fy_iso(y), "y": round(plan_tot[y] / 1e6, 1)} for y in PLAN_YEARS]
     dent_fy26_pct = C.pct(anchor_rev, plan_tot["FY2026"])
 
-    headline = (f"{anchor} carries {anchor_share}% of {fy} direct-book revenue — above the "
+    headline = (f"{anchor} carries {anchor_share}% of {fy} direct-book revenue — "
+                + ("above" if direct_breaches else "under")
+                + f" the "
                 f"{thr:.0f}% guardrail on the direct-book basis, and basis-sensitive: the direct "
                 f"book covers {coverage_pct}% of total {fy} revenue, and {anchor}'s floor share "
                 f"of TOTAL revenue is {anchor_floor_pct}%"
@@ -122,7 +146,7 @@ def run(corpus_root, out, pins):
             "evidence": ["derived: share-by-gpo", f"src: {src}", "config: commercial.yml"],
         })
     rn = 0
-    if top3_share > 25:
+    if top3_share_raw > top3_gate:
         rn += 1
         narrative["risks"].append({
             "id": f"R{rn}", "severity": "medium",
@@ -148,10 +172,14 @@ def run(corpus_root, out, pins):
         "id": f"R{rn}", "severity": "medium",
         "statement": f"The E-02.1 verdict is basis-sensitive: the guardrail is worded against "
                      f"annual revenue but tested on the direct book, which covers {coverage_pct}% "
-                     f"of total {fy} revenue — {anchor} breaches on the direct book "
+                     f"of total {fy} revenue — {anchor} "
+                     + ("breaches" if direct_breaches else "does not breach")
+                     + f" on the direct book "
                      f"({anchor_share}%) while its floor share of total revenue "
                      f"({anchor_floor_pct}%) "
-                     + ("also breaches" if floor_breaches else "does not breach"),
+                     + (("also breaches" if floor_breaches else "does not breach")
+                        if direct_breaches else
+                        ("breaches" if floor_breaches else "also does not breach")),
         "mitigation": "Acquire account-attributed consumables/service revenue (or GPO attribution "
                       "on the distributor book) to close the denominator gap; until then read the "
                       "verdict on both bases, not one",
@@ -190,7 +218,7 @@ def run(corpus_root, out, pins):
         "|---|---|---|",
     ]
     for g, v in sorted(by_gpo.items(), key=lambda kv: -kv[1]):
-        flag = " ⚠️" if g != "independent" and C.pct(v, total) > thr else ""
+        flag = " ⚠️" if g != "independent" and _raw_share(v) > thr else ""
         rl.append(f"| {g} [src: {src}] | {_musd(v)} | {C.pct(v, total)}%{flag} |")
     rl += [
         "",
@@ -208,7 +236,7 @@ def run(corpus_root, out, pins):
         f"attribution does not exist in the corpus; the true share is unknowable above that floor "
         f"[derived: basis-sensitivity] [src: {fin_src}]",
         f"- Verdict by basis: direct book {anchor_share}% — "
-        + ("BREACHES" if anchor_share > thr else "within")
+        + ("BREACHES" if direct_breaches else "within")
         + f" the {thr:.0f}% guardrail; floor-of-total {anchor_floor_pct}% — "
         + ("BREACHES" if floor_breaches else "does NOT breach")
         + " it [derived: basis-sensitivity] [config: commercial.yml]",
@@ -224,8 +252,8 @@ def run(corpus_root, out, pins):
         f"- Top-3 combined: {top3_share}% of {fy} direct-book revenue [derived: top-accounts]",
         "",
         "## Franchise concentration", "",
-        f"- PCA franchise (PP3500 + PP3000 + cloud-suite per [config: commercial.yml]): "
-        f"{pca_share}% of {fy} direct book; pumps alone {pumps_share}% "
+        f"- PCA franchise ({' + '.join(pca_lines)} per [config: commercial.yml]): "
+        f"{pca_share}% of {fy} direct book; pumps alone ({' + '.join(pump_lines)}) {pumps_share}% "
         f"[derived: franchise-share] [src: {src}]",
         "",
         "## Anchor-GPO loss scenario vs the plan trajectory", "",
@@ -239,6 +267,13 @@ def run(corpus_root, out, pins):
     for y in PLAN_YEARS:
         rl.append(f"| {y} [src: {psrc}] [derived: plan-loss-scenario] | {_musd(plan_tot[y])} | "
                   f"{_musd(plan_tot[y] - anchor_rev)} | {C.pct(anchor_rev, plan_tot[y])}% |")
+    if plan_unmatched:
+        rl += [
+            "",
+            f"- ⚠ {plan_unmatched} plan rows fall outside the configured plan window "
+            f"{PLAN_YEARS[0]}..{PLAN_YEARS[-1]} and are NOT in the table above — extend the "
+            f"window before trusting the scenario on a refreshed plan [src: {psrc}]",
+        ]
     rl += C.expectations_section(exps)
     rl += C.narrative_section(narrative)
     rl += [

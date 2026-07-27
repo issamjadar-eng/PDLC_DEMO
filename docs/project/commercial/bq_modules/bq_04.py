@@ -8,6 +8,7 @@ simple undiscounted LTV model and its stated limits, size bands, discount mean).
 
 import datetime as dt
 import math
+import sys
 
 import computations as C
 
@@ -29,6 +30,15 @@ def run(corpus_root, out, pins):
 
     active = [r for r in subs if r["status"] == "active"]
     churned = [r for r in subs if r["status"] == "churned"]
+    # a register status outside {active, churned} must surface loudly, not silently drop
+    # from both the rates and the churn count (code-review finding, ben/108)
+    other_status = [r for r in subs if r["status"] not in ("active", "churned")]
+    other_statuses = sorted({r["status"] for r in other_status})
+    if other_status:
+        print(f"bq_04: WARNING — {len(other_status)} register rows carry unrecognized "
+              f"status value(s) {other_statuses}; they are excluded from the active rates "
+              f"and the churn count but still sit in the register-row denominators",
+              file=sys.stderr)
     pumps = sum(int(r["pumps_connected"]) for r in active)
     arr = sum(int(r["arr_usd"]) for r in active)
     cts = sum(int(r["cost_to_serve_usd"]) for r in active)
@@ -82,8 +92,16 @@ def run(corpus_root, out, pins):
         if len(discounts) > 1 else 0.0
     disc_se = disc_sd / math.sqrt(len(discounts)) if discounts else 0.0
     disc_margin = disc_raw - max_disc
-    disc_knife_edge = abs(disc_margin) <= 1.0 or \
-        (disc_se > 0 and abs(disc_margin) <= 2 * disc_se)
+    # the two knife-edge conditions are tracked separately so the prose can name which
+    # fired and the actual SE multiple, instead of asserting "≈2 standard errors"
+    # statically (code-review finding, ben/108)
+    disc_within_1pp = abs(disc_margin) <= 1.0
+    disc_within_2se = disc_se > 0 and abs(disc_margin) <= 2 * disc_se
+    disc_knife_edge = disc_within_1pp or disc_within_2se
+    disc_conds = (["|miss| ≤ 1pp"] if disc_within_1pp else []) + \
+        (["|miss| ≤ 2 SE"] if disc_within_2se else [])
+    disc_fired = " and ".join(disc_conds)
+    disc_n_se = round(abs(disc_margin) / disc_se, 1) if disc_se > 0 else None
 
     # fleet context: connected universe + attach gap
     connected = [r for r in fleet if r["connected"] == "yes"]
@@ -91,27 +109,42 @@ def run(corpus_root, out, pins):
     sub_sites = {r["site_id"] for r in subs}  # active + churned
     gap_sites = sorted(conn_sites - sub_sites)
 
-    # ARR build from active-site start dates (survivor-biased; stated)
+    # ARR build from active-site start dates (survivor-biased; stated). Guard: zero
+    # active sites must degrade to an unavailable series, not an IndexError on starts[0]
+    # (code-review finding, ben/108)
     starts = sorted((r["start_date"], int(r["arr_usd"])) for r in active)
-    months = []
-    cur = dt.date.fromisoformat(starts[0][0]).replace(day=1)
-    end = dt.date.fromisoformat(starts[-1][0]).replace(day=1)
-    while cur <= end:
-        months.append(cur.isoformat())
-        cur = (cur.replace(day=28) + dt.timedelta(days=4)).replace(day=1)
-    run_total, arr_pts, si = 0, [], 0
-    for m in months:
-        nxt = (dt.date.fromisoformat(m).replace(day=28) + dt.timedelta(days=4)).replace(day=1)
-        while si < len(starts) and starts[si][0] < nxt.isoformat():
-            run_total += starts[si][1]
-            si += 1
-        arr_pts.append({"x": m, "y": round(run_total / 1000, 1)})
+    arr_pts = []
+    if starts:
+        months = []
+        cur = dt.date.fromisoformat(starts[0][0]).replace(day=1)
+        end = dt.date.fromisoformat(starts[-1][0]).replace(day=1)
+        while cur <= end:
+            months.append(cur.isoformat())
+            cur = (cur.replace(day=28) + dt.timedelta(days=4)).replace(day=1)
+        run_total, si = 0, 0
+        for m in months:
+            nxt = (dt.date.fromisoformat(m).replace(day=28) + dt.timedelta(days=4)).replace(day=1)
+            while si < len(starts) and starts[si][0] < nxt.isoformat():
+                run_total += starts[si][1]
+                si += 1
+            arr_pts.append({"x": m, "y": round(run_total / 1000, 1)})
 
     small_label = band_order[0]
+    # "concentrated in <band> sites" is computed from the band split of ARR-below-cost
+    # sites, not narrated (code-review finding, ben/108): the clause names the band only
+    # when it holds a strict majority of the negative sites
+    if neg_sites_total:
+        worst_neg_band = max(band_order, key=lambda b: bstats[b]["neg_sites"])
+        if bstats[worst_neg_band]["neg_sites"] * 2 > neg_sites_total:
+            neg_clause = f" — concentrated in {worst_neg_band.split(' ')[0]} sites — "
+        else:
+            neg_clause = " — spread across the size bands — "
+    else:
+        neg_clause = " "
     headline = (f"Unit economics fail the guardrail: LTV per connected pump ${ltv:,} vs "
                 f"${ltv_cost:,} cost-to-serve over the same {horizon}-year horizon "
                 f"(ratio {ratio} vs the {min_ratio} floor); {neg_sites_total} of {len(active)} "
-                f"active sites run ARR below cost-to-serve — concentrated in small sites — and the "
+                f"active sites run ARR below cost-to-serve{neg_clause}and the "
                 f"mean hardware discount at subscribed sites is {disc_mean}% vs the {max_disc:.0f}% "
                 f"tolerance" if ratio_raw < min_ratio else
                 f"LTV per connected pump ${ltv:,} covers ${ltv_cost:,} cost-to-serve at "
@@ -172,8 +205,9 @@ def run(corpus_root, out, pins):
             "id": "W3",
             "statement": f"E-04.2 is a knife-edge: the mean hardware discount misses the "
                          f"{max_disc:.0f}% stand-in tolerance by {disc_margin:+.1f}pp on an "
-                         f"n={len(active)} mean (SE ≈ {round(disc_se, 1)}pp — the miss is ≈2 "
-                         f"standard errors from the line) — the verdict is fragile to the "
+                         f"n={len(active)} mean (SE ≈ {round(disc_se, 1)}pp; the miss is "
+                         f"{disc_n_se} standard errors from the line; flagged on {disc_fired}) "
+                         f"— the verdict is fragile to the "
                          f"unvalidated stand-in threshold choice; treat it as a watch signal, "
                          f"not a breach finding, until pricing policy sets a real cap",
             "evidence": ["derived: discount-sensitivity", "derived: discount-by-band",
@@ -187,8 +221,9 @@ def run(corpus_root, out, pins):
                    ["derived: unit-econ-stat"]),
         "E-04.2": (f"mean hardware discount {disc_mean}% across {len(active)} active subscribed "
                    f"sites — {disc_margin:+.1f}pp vs the {max_disc:.0f}% stand-in line"
-                   + (f"; KNIFE-EDGE: within 1pp (≈2 standard errors, SE ≈ {round(disc_se, 1)}pp, "
-                      f"n={len(active)}) of an unvalidated threshold — verdict fragile to the "
+                   + (f"; KNIFE-EDGE on {disc_fired} (miss = {disc_n_se} SE, "
+                      f"SE ≈ {round(disc_se, 1)}pp, "
+                      f"n={len(active)}) against an unvalidated threshold — verdict fragile to the "
                       f"stand-in choice" if disc_knife_edge else ""),
                    "met" if disc_raw <= max_disc else "not-met",
                    ["derived: discount-by-band", "derived: discount-sensitivity"]),
@@ -209,6 +244,10 @@ def run(corpus_root, out, pins):
         f"(guardrail {min_ratio}) [derived: unit-econ-stat] [config: commercial.yml]",
         f"- Basis: {len(active)} active sites, {pumps} connected pumps; {len(churned)} churned "
         f"sites ({churn_pct}% of register rows) [src: {src}]",
+        *([f"- ⚠ {len(other_status)} register rows carry unrecognized status value(s) "
+           f"({', '.join(other_statuses)}) — excluded from the active rates AND the churn "
+           f"count while still in the register-row denominators; classify them before "
+           f"trusting the basis [src: {src}]"] if other_status else []),
         f"- Fleet context: {len(connected)} connected devices in the installed base; "
         f"{len(gap_sites)} connected sites with no subscription (attach gap) "
         f"[derived: attach-gap] [src: {fsrc}]",
@@ -234,7 +273,8 @@ def run(corpus_root, out, pins):
         f"[src: {src}]",
         f"- Threshold sensitivity (disclosed): the miss is {disc_margin:+.1f}pp on an "
         f"n={len(active)} mean with SE ≈ {round(disc_se, 1)}pp"
-        + (" — a knife-edge within 1pp (≈2 standard errors) of the stand-in tolerance; the "
+        + (f" — a knife-edge flagged on {disc_fired} (the miss is {disc_n_se} standard "
+           f"errors from the stand-in tolerance); the "
            "verdict is fragile to the unvalidated threshold choice (see W3)"
            if disc_knife_edge else "")
         + " [derived: discount-sensitivity] [config: commercial.yml]",
@@ -302,7 +342,7 @@ def run(corpus_root, out, pins):
              "points": [
                  {"label": "miss vs tolerance (pp)", "value": round(disc_margin, 2)},
                  {"label": "standard error of the mean (pp)", "value": round(disc_se, 2)},
-                 {"label": "knife-edge (|miss| <= 2 SE)",
+                 {"label": "knife-edge (|miss| <= 1pp or <= 2 SE)",
                   "value": "yes" if disc_knife_edge else "no"},
              ]},
             {"id": "attach-gap", "label": "Connected sites with no subscription", "unit": "sites",
@@ -312,15 +352,21 @@ def run(corpus_root, out, pins):
                             "inputs": [f"src: {fsrc}", f"src: {src}"]},
              "provenance": {"dataset": FLEET_DS, "snapshot": fsnap},
              "points": [{"label": s, "value": 1} for s in gap_sites]},
-            {"id": "arr-build", "label": "ARR build from active-site start dates ($K, survivor-biased)",
-             "unit": "$K", "kind": "timeseries", "evidence_class": "derived",
-             "derivation": {"method": "cumulative current ARR of active sites by subscription "
-                                      "start month — churned sites' past ARR absent (survivor "
-                                      "bias stated)",
-                            "inputs": [f"src: {src}"]},
-             "provenance": {"dataset": SUB_DS, "snapshot": ssnap},
-             "lines": [{"label": "cumulative ARR (active sites)", "points": arr_pts}],
-             "points": []},
+            ({"id": "arr-build", "label": "ARR build from active-site start dates ($K, survivor-biased)",
+              "unit": "$K", "kind": "timeseries", "evidence_class": "derived",
+              "derivation": {"method": "cumulative current ARR of active sites by subscription "
+                                       "start month — churned sites' past ARR absent (survivor "
+                                       "bias stated)",
+                             "inputs": [f"src: {src}"]},
+              "provenance": {"dataset": SUB_DS, "snapshot": ssnap},
+              "lines": [{"label": "cumulative ARR (active sites)", "points": arr_pts}],
+              "points": []}
+             if arr_pts else
+             {"id": "arr-build", "label": "ARR build from active-site start dates ($K, survivor-biased)",
+              "unit": "$K", "kind": "timeseries", "evidence_class": "unavailable",
+              "provenance": {"note": "no active sites in the pinned register — the ARR-build "
+                                     "history cannot be derived from an empty roster"},
+              "lines": [], "points": []}),
             {"id": "econ-history", "label": "LTV / cost-to-serve history", "unit": "USD",
              "evidence_class": "unavailable",
              "provenance": {"note": "one register snapshot exists — unit-economics history "

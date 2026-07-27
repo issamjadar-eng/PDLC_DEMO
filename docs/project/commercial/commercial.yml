@@ -253,7 +253,10 @@ questions:
     computation: "python3 computations.py BQ-01 --corpus-root {corpus_root} --out {out}"
     # timeseries_top_lines: chart the top-N lines by trailing-4Q revenue individually and
     # aggregate the rest — keeps the trend chart within the <=4-line dataviz cap
-    params: {trailing_quarters: 4, timeseries_top_lines: 3}
+    # gm_compression_threshold_pts: GM% drift (trailing vs prior window, raw fractions)
+    # at or below this flags a line as "compressing" — was a bare code constant
+    # (code-review finding, ben/108)
+    params: {trailing_quarters: 4, timeseries_top_lines: 3, gm_compression_threshold_pts: -1.0}
     expectations:
       - id: E-01.1
         statement: "Every product line is gross-margin positive over the trailing four quarters"
@@ -323,10 +326,16 @@ questions:
     computation: "python3 computations.py BQ-02 --corpus-root {corpus_root} --out {out}"
     # pca_franchise_lines: product lines counted as the PCA franchise in the direct book
     # (Cloud Suite rides on the PCA installed base — see the BQ-02 plan)
+    # pca_pump_lines: the pumps-only cut of the franchise — was hardcoded in the module
+    # (code-review finding, ben/108)
+    # top3_narrative_gate_pct: top-3-account share above which the "compounds the GPO
+    # concentration" narrative risk is raised — was a bare code constant (ben/108)
     params:
       concentration_threshold_pct: 30
       fy: FY2025
       pca_franchise_lines: [PP3500, PP3000, cloud-suite]
+      pca_pump_lines: [PP3500, PP3000]
+      top3_narrative_gate_pct: 25
     expectations:
       - id: E-02.1
         statement: "No single GPO carries more than 30% of annual revenue"
@@ -1186,6 +1195,8 @@ questions:
       # headline multiple discloses its basis.
       differentiators: {flow_accuracy_pct: 0.35, battery_hours: 150}
       flow_accuracy_pct_volumetric: 0.5   # our volumetric-basis accuracy spec (alt basis for the margin)
+      our_vendor: GlobalLogic             # matrix vendor identity (same as BQ-14; F15-3 — no hardcoded literal)
+      our_product_label: GlobalLogic PainEase PCA Advanced (PP3500)  # display label for our product in series
       sota_doc: docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md
       # currency anchor = the SOTA doc's adoption date into project docs (its "Converted"
       # date — the doc carries no separate authoring date); see plans/BQ-15.md
@@ -1312,6 +1323,7 @@ questions:
     computation: "python3 computations.py BQ-17 --corpus-root {corpus_root} --out {out}"
     params:
       aliases: entity-aliases.yml
+      our_vendor: GlobalLogic   # matrix vendor identity (same as BQ-14; F15-3 — no hardcoded literal)
       # composite scoring config — method fully stated in plans/BQ-17.md
       eligible: [F4, F5, F6, F7, F8, F9]     # F1-F3 are Y1 in-flight: context only
       cloud_features: [F1, F2, F3, F4, F5, F6, F8]  # demand axis applies only to cloud-delivered features

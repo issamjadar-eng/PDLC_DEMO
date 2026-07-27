@@ -15,7 +15,8 @@ figure carries a machine-resolvable marker (`[src: dataset@snapshot]`, `[assume:
 | `commercial.yml` | The 30-question catalog (id, question, category, personas, cadence; corpus deps + computation for implemented ones) |
 | `computations.py` | Project-owned deterministic computations — the ONLY place numbers are produced |
 | `entity-aliases.yml` | Versioned entity-normalization map for public FDA identity fields |
-| `reports/BQ-NN/<edition>/` | Answer editions: report.md, data.json, pins.json, edition.yml, approval.yml |
+| `reports/BQ-NN/<edition>/` | Answer editions: report.md, data.json, pins.json, edition.yml (pins plan + code artifacts), approval.yml |
+| `code-quality/` | Engine-managed code-quality store (`records.yml`) — deterministic check results + AI code reviews per artifact sha (soft gate; see its README) |
 | `.console/commercial-index.json` | Sidecar consumed by the project console (pure consumer) |
 
 ## Conventions
@@ -37,4 +38,5 @@ figure carries a machine-resolvable marker (`[src: dataset@snapshot]`, `[assume:
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-07-27 | BX / AI Assistant | task 108: code-quality layer added (commercial skill v11) — `code-quality/records.yml` store scaffolded with its README, structure table gains the folder, deterministic sweep run over all analysis code (21 BQ modules + computations.py + 11 generators), sidecar re-rendered at schema 1.2. |
 | 2026-07-22 | BX / AI Assistant | task 108: tree scaffolded (commercial skill v1) — 30-question catalog, six field-slice computations (BQ-19, 23–27), first draft editions, sidecar rendered. |
