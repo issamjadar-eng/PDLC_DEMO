@@ -67,6 +67,17 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 12 (2026-07-27): Review history on the code-quality surface (sidecar schema
+  1.2 → 1.3, purely additive). Review feedback: once a module's fixes landed on a new
+  approved sha, the original review findings disappeared from the console — they sit
+  in the store on the superseded sha. `code_quality_block` now emits, per artifact,
+  `review_history: [{sha256_12, date, verdict, by, summary, findings[], detail_ref,
+  superseded: true}, …]` — the newest review of each other sha of the same path,
+  newest first, capped at 5 (new helper `cq_review_history`). Flows into BOTH
+  quality.json (via `answer`/`lint`/`audit`) and the console sidecar (via `render`).
+  ≤1.2 consumers ignore the field; the store format is unchanged. Pairs with
+  project-console 1.56.0, which renders the history as expandable "Previous review"
+  folds and lazy-loads markdown `detail_ref` dossiers in place.
 - 11 (2026-07-27): Code-quality audit layer for project-side analysis code (soft gate —
   badges, never blocks; AI review is the review record; engines out of scope, reviewed
   at registry level). `answer` pins `code_artifacts:` (path + sha256 of the per-BQ

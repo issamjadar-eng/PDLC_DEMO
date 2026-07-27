@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 11
+version: 12
 updated: 2026-07-27
 dependencies:
   skills:
@@ -146,7 +146,7 @@ done. `approve` also prints the edition's code-quality status (see "Code quality
 below) — informational only, never a blocker.
 
 ### `render`
-Write `.console/commercial-index.json` (`schema_version: 1.2`) — per question: status
+Write `.console/commercial-index.json` (`schema_version: 1.3`) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
@@ -165,6 +165,12 @@ by ignoring them:
 
 Schema 1.2 adds a per-question `"code": {…}` block — the code-quality soft-gate badge
 surface (see "Code quality" below). Purely additive; older consumers ignore it.
+
+Schema 1.3 adds, per code artifact, `"review_history": […]` — reviews filed against
+earlier, now-superseded shas of the same path, so the original (pre-fix) findings stay
+visible after the code moves to a new hash. Each entry: `{sha256_12, date, verdict,
+by, summary, findings[], detail_ref, superseded: true}`, newest first, capped at 5.
+Purely additive; ≤1.2 consumers ignore it. The same block flows into quality.json.
 
 ### `check`
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
@@ -413,10 +419,13 @@ of entries keyed by sha256 — deterministic check results (`static_lint`,
 entry per sha wins; reviews stay attached to the exact bytes they judged.
 
 **The badge surface.** `answer` / `lint` / `audit` write a `code:` block into
-quality.json, and `render` mirrors it into the sidecar (schema 1.2): per pinned
+quality.json, and `render` mirrors it into the sidecar (schema 1.3): per pinned
 artifact `{path, sha256_12, role: module|shared|generator, static_lint, poison_scan,
-determinism, review: {verdict, by, date, current, findings, detail_ref} | null}` —
-`current` is true only when the review was filed against the edition-pinned sha. The
+determinism, review: {verdict, by, date, current, findings, detail_ref} | null,
+review_history: […]}` — `current` is true only when the review was filed against the
+edition-pinned sha; `review_history` (schema 1.3, additive) carries the newest review
+of each OTHER sha of the same path (newest first, cap 5, each flagged
+`superseded: true`) so pre-fix findings remain on the audit surface. The
 question-level `status` ladder (worst wins):
 
 1. `checks-failed` — a pinned artifact has a failing deterministic check

@@ -12,6 +12,21 @@
   {# Kind-glossary ⓘ — console-owned plain-language copy for artifact kinds. #}
   {% macro kindinfo(kind) %}{% set g = kind_glossary.get(kind) %}{% if g %}<span class="cm-info"><button type="button" class="cm-info-btn" data-explain="kind:{{ kind }}" aria-label="What is a {{ g.label | lower }}?" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ g.what }}</span></span>{% endif %}{% endmacro %}
 
+  {# Inline dossier fold — a detail_ref that is a repo-relative markdown path
+     renders IN PLACE: lazy-loaded on first expand from /commercial/review-detail
+     (rendered by the documents renderer, cached client-side), body scrolls.
+     The Documents-viewer link stays as a secondary affordance. When only a
+     link exists (non-markdown / external ref) the fold degrades to the link. #}
+  {% macro dossier(md, link, label='Full review dossier') %}
+    {% if md %}
+    <details class="cm-dossier" data-md="{{ md }}">
+      <summary>{{ label }} <span class="cm-muted">— rendered in place</span></summary>
+      <div class="cm-dossier-body md-body" data-dossier-body><p class="cm-muted">Loading…</p></div>
+    </details>
+    {% endif %}
+    {% if link %}<p class="cm-nar-ev"><a href="{{ link }}" target="_blank" rel="noopener">{{ 'open in Documents ↗' if md else label ~ ' ↗' }}</a></p>{% endif %}
+  {% endmacro %}
+
   {# Header lives INSIDE the content column so its left edge aligns with the verdict/
      content and it spans to the right margin; only the editions tree sits left. #}
   {% macro qheader() %}
@@ -395,7 +410,7 @@
             <span class="cm-muted">by {{ v.by }} · {{ v.at[:16] }}</span>
           </div>
           <p class="cm-q-ver-sum">{{ v.summary }}</p>
-          {% if v._detail_link %}<p class="cm-nar-ev"><a href="{{ v._detail_link }}" target="_blank" rel="noopener">full dossier ↗</a></p>{% endif %}
+          {{ dossier(v._detail_md, v._detail_link, 'Full dossier') }}
         </div>
         {% endfor %}
         {% endif %}
@@ -444,7 +459,32 @@
           </table>
         </details>
         {% endif %}
-        {% if a._detail_link %}<p class="cm-nar-ev"><a href="{{ a._detail_link }}" target="_blank" rel="noopener">review detail ↗</a></p>{% endif %}
+        {{ dossier(a._detail_md, a._detail_link) }}
+        {# Review history (sidecar schema 1.3) — reviews filed against earlier,
+           now-superseded hashes of this file. This is where the original
+           pre-fix findings stay inspectable. Absent (schema ≤1.2) → nothing. #}
+        {% for h in a._history %}
+        <details class="cm-q-check-details cm-code-prev">
+          <summary>Previous review <span class="cm-code-hash" title="superseded sha256 (first 12 hex)">{{ h.sha256_12 }}</span>
+            <span class="cm-chip {{ h._cls }}">{{ h.verdict }}</span>
+            <span class="cm-muted">{{ h.date }}{% if h.by %} · by {{ h.by }}{% endif %} · {{ h._findings | length }} finding(s)</span>
+            <span class="cm-chip vx-none" title="This review judged an earlier hash of the file — the code has since changed">superseded</span></summary>
+          {% if h.summary %}<p class="cm-q-ver-sum">{{ h.summary }}</p>{% endif %}
+          {% if h._findings %}
+          <table class="cm-expect-table cm-code-findings">
+            <thead><tr><th>ID</th><th>Severity</th><th>Summary</th><th>Disposition</th></tr></thead>
+            <tbody>
+              {% for f in h._findings %}
+              <tr><td class="cm-mono">{{ f.id }}</td>
+                <td><span class="cm-chip {{ f._sev.cls }}">{{ f._sev.label }}</span></td>
+                <td>{{ f.summary }}</td><td class="cm-muted">{{ f.disposition }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+          {{ dossier(h._detail_md, h._detail_link) }}
+        </details>
+        {% endfor %}
       </div>
       {% endfor %}
       {% if not code.artifacts %}<p class="cm-muted">Code-quality record present but lists no artifacts.</p>{% endif %}
@@ -638,6 +678,35 @@
     });
     if (btn.getAttribute('data-tab') === 'cm-tab-data' && window.cmInitDataTables) window.cmInitDataTables();
   });
+})();
+</script>
+{# Inline dossier lazy-loader — first expand of a details[data-md] fetches the
+   repo-relative markdown from /commercial/review-detail (rendered server-side
+   by the documents renderer) and injects it; responses are cached per path so
+   several folds pointing at the same dossier fetch once. Vanilla JS; 'toggle'
+   does not bubble, so listen in the capture phase. #}
+<script>
+(function () {
+  var cache = {};
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (!d || !d.matches || !d.matches('details[data-md]') || !d.open || d.dataset.loaded) return;
+    var body = d.querySelector('[data-dossier-body]');
+    if (!body) return;
+    d.dataset.loaded = '1';
+    var p = d.getAttribute('data-md');
+    if (cache[p]) { body.innerHTML = cache[p]; return; }
+    fetch('/commercial/review-detail?path=' + encodeURIComponent(p))
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (html) { cache[p] = html; body.innerHTML = html; })
+      .catch(function (err) {
+        delete d.dataset.loaded;   // allow a retry on next expand
+        body.innerHTML = '<p class="cm-muted">Could not load the dossier (' + err.message + ').</p>';
+      });
+  }, true);
 })();
 </script>
 <script src="/static/commercial-tables.js?v={{ request.state.static_v }}"></script>
