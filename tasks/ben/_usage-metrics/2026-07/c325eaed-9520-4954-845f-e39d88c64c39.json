@@ -1,36 +1,36 @@
 {
   "by_day": {
     "2026-07-27": {
-      "cache_creation": 72638,
-      "cache_read": 1071072,
-      "cache_write_1h": 72638,
+      "cache_creation": 76036,
+      "cache_read": 1261422,
+      "cache_write_1h": 76036,
       "cache_write_5m": 0,
-      "input": 26,
-      "messages": 13,
-      "output": 4157
+      "input": 30,
+      "messages": 15,
+      "output": 4705
     }
   },
   "by_model": {
     "claude-fable-5": {
-      "cache_creation": 72638,
-      "cache_read": 1071072,
-      "cache_write_1h": 72638,
+      "cache_creation": 76036,
+      "cache_read": 1261422,
+      "cache_write_1h": 76036,
       "cache_write_5m": 0,
-      "input": 26,
-      "messages": 13,
-      "output": 4157
+      "input": 30,
+      "messages": 15,
+      "output": 4705
     }
   },
   "by_task": {
     "_unattributed": {
       "claude-fable-5": {
-        "cache_creation": 72638,
-        "cache_read": 1071072,
-        "cache_write_1h": 72638,
+        "cache_creation": 76036,
+        "cache_read": 1261422,
+        "cache_write_1h": 76036,
         "cache_write_5m": 0,
-        "input": 26,
-        "messages": 13,
-        "output": 4157
+        "input": 30,
+        "messages": 15,
+        "output": 4705
       }
     }
   },
@@ -39,12 +39,12 @@
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 72638,
-    "cache_read": 1071072,
-    "cache_write_1h": 72638,
+    "cache_creation": 76036,
+    "cache_read": 1261422,
+    "cache_write_1h": 76036,
     "cache_write_5m": 0,
-    "input": 26,
-    "messages": 13,
-    "output": 4157
+    "input": 30,
+    "messages": 15,
+    "output": 4705
   }
 }
