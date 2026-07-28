@@ -2,24 +2,25 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (updated ?). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 142.3,
-    "2026-06-16": 47.96,
-    "2026-06-22": 21.24,
-    "2026-06-23": 11.13,
-    "2026-06-29": 1.23,
-    "2026-06-30": 216.88,
-    "2026-07-01": 221.86,
-    "2026-07-02": 26.6,
-    "2026-07-03": 9.78,
-    "2026-07-05": 3.19,
-    "2026-07-08": 1.36,
-    "2026-07-14": 38.2,
-    "2026-07-15": 242.33,
-    "2026-07-16": 52.27,
-    "2026-07-20": 17.36,
-    "2026-07-21": 104.77,
-    "2026-07-22": 244.44,
-    "2026-07-27": 194.1
+    "2026-06-15": 148.7,
+    "2026-06-16": 50.15,
+    "2026-06-22": 22.25,
+    "2026-06-23": 11.66,
+    "2026-06-29": 1.29,
+    "2026-06-30": 226.5,
+    "2026-07-01": 231.65,
+    "2026-07-02": 27.91,
+    "2026-07-03": 10.23,
+    "2026-07-05": 3.34,
+    "2026-07-08": 1.43,
+    "2026-07-14": 40.0,
+    "2026-07-15": 253.04,
+    "2026-07-16": 54.63,
+    "2026-07-20": 18.22,
+    "2026-07-21": 109.39,
+    "2026-07-22": 255.06,
+    "2026-07-27": 433.06,
+    "2026-07-28": 103.09
   },
   "members": 1,
   "months": {
@@ -220,25 +221,34 @@
             "output": 633166
           },
           "2026-07-27": {
-            "cache_creation": 4345783,
-            "cache_read": 133834854,
-            "cache_write_1h": 369548,
-            "cache_write_5m": 3976235,
-            "input": 1864,
-            "messages": 933,
-            "output": 1032244
+            "cache_creation": 8952539,
+            "cache_read": 304015510,
+            "cache_write_1h": 1359975,
+            "cache_write_5m": 7592564,
+            "input": 3456,
+            "messages": 1730,
+            "output": 1910861
+          },
+          "2026-07-28": {
+            "cache_creation": 3176774,
+            "cache_read": 63170224,
+            "cache_write_1h": 1155343,
+            "cache_write_5m": 2021431,
+            "input": 513,
+            "messages": 257,
+            "output": 278272
           }
         },
         "by_model": {
           "claude-fable-5": {
-            "cache_creation": 13731218,
-            "cache_read": 772973477,
-            "cache_write_1h": 5332545,
-            "cache_write_5m": 8398673,
-            "cost": 1135.56,
-            "input": 6154,
-            "messages": 3078,
-            "output": 3017736
+            "cache_creation": 21514748,
+            "cache_read": 1006324357,
+            "cache_write_1h": 7478315,
+            "cache_write_5m": 14036433,
+            "cost": 1540.16,
+            "input": 8259,
+            "messages": 4132,
+            "output": 4174625
           },
           "claude-opus-4-8": {
             "cache_creation": 4429255,
@@ -261,17 +271,17 @@
             "output": 795
           }
         },
-        "cost": 1310.02,
+        "cost": 1714.62,
         "name": "Member 1",
         "sessions": 18,
         "totals": {
-          "cache_creation": 18425198,
-          "cache_read": 1003853360,
-          "cache_write_1h": 8351755,
-          "cache_write_5m": 10073443,
-          "input": 290140,
-          "messages": 3743,
-          "output": 3738176
+          "cache_creation": 26208728,
+          "cache_read": 1237204240,
+          "cache_write_1h": 10497525,
+          "cache_write_5m": 15711203,
+          "input": 292245,
+          "messages": 4797,
+          "output": 4895065
         }
       }
     }
@@ -4680,17 +4690,17 @@
     "ben/103": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 924658,
-          "cache_read": 31207281,
-          "cache_write_1h": 924658,
+          "cache_creation": 926335,
+          "cache_read": 31909591,
+          "cache_write_1h": 926335,
           "cache_write_5m": 0,
-          "cost": 55.69,
-          "input": 230,
-          "messages": 115,
-          "output": 119837
+          "cost": 56.46,
+          "input": 234,
+          "messages": 117,
+          "output": 120500
         }
       },
-      "cost": 55.69,
+      "cost": 56.46,
       "estimate": {
         "agentic_hours": 1.0,
         "agentic_hours_range": {
@@ -4732,13 +4742,13 @@
       },
       "sessions": 2,
       "totals": {
-        "cache_creation": 924658,
-        "cache_read": 31207281,
-        "cache_write_1h": 924658,
+        "cache_creation": 926335,
+        "cache_read": 31909591,
+        "cache_write_1h": 926335,
         "cache_write_5m": 0,
-        "input": 230,
-        "messages": 115,
-        "output": 119837
+        "input": 234,
+        "messages": 117,
+        "output": 120500
       }
     },
     "ben/104": {
@@ -4917,7 +4927,7 @@
         }
       },
       "cost": 162.19,
-      "cost_allocated": 9.13,
+      "cost_allocated": 8.9,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 5.5,
@@ -4972,18 +4982,18 @@
     "ben/107": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 47878,
-          "cache_read": 8040091,
-          "cache_write_1h": 47878,
+          "cache_creation": 379016,
+          "cache_read": 18313446,
+          "cache_write_1h": 379016,
           "cache_write_5m": 0,
-          "cost": 10.51,
-          "input": 60,
-          "messages": 30,
-          "output": 30185
+          "cost": 28.79,
+          "input": 124,
+          "messages": 62,
+          "output": 57827
         }
       },
-      "cost": 10.51,
-      "cost_allocated": 3.4,
+      "cost": 28.79,
+      "cost_allocated": 3.64,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 1.0,
@@ -5026,30 +5036,30 @@
       },
       "sessions": 1,
       "totals": {
-        "cache_creation": 47878,
-        "cache_read": 8040091,
-        "cache_write_1h": 47878,
+        "cache_creation": 379016,
+        "cache_read": 18313446,
+        "cache_write_1h": 379016,
         "cache_write_5m": 0,
-        "input": 60,
-        "messages": 30,
-        "output": 30185
+        "input": 124,
+        "messages": 62,
+        "output": 57827
       }
     },
     "ben/108": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 5631486,
-          "cache_read": 370548912,
-          "cache_write_1h": 1024973,
-          "cache_write_5m": 4606513,
-          "cost": 528.14,
-          "input": 2748,
-          "messages": 1375,
-          "output": 1589632
+          "cache_creation": 13078803,
+          "cache_read": 592733777,
+          "cache_write_1h": 2834530,
+          "cache_write_5m": 10244273,
+          "cost": 913.41,
+          "input": 4781,
+          "messages": 2393,
+          "output": 2717668
         }
       },
-      "cost": 528.14,
-      "cost_allocated": 8.89,
+      "cost": 913.41,
+      "cost_allocated": 9.36,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 4.0,
@@ -5059,8 +5069,12 @@
         },
         "by_persona": {
           "commercial": {
-            "max": 114.0,
-            "min": 57.0
+            "max": 127.3,
+            "min": 63.7
+          },
+          "human-factors": {
+            "max": 13.3,
+            "min": 6.7
           },
           "post-market": {
             "max": 28.0,
@@ -5071,12 +5085,12 @@
             "min": 18.0
           },
           "quality-engineering": {
-            "max": 65.0,
-            "min": 32.5
+            "max": 120.0,
+            "min": 62.5
           },
           "rd-lead": {
-            "max": 333.0,
-            "min": 168.5
+            "max": 401.3,
+            "min": 205.2
           },
           "systems-engineering": {
             "max": 58.0,
@@ -5086,16 +5100,16 @@
         "confidence_mix": {
           "high": 1,
           "low": 1,
-          "med": 12
+          "med": 14
         },
         "hours_saved": {
-          "max": 630.0,
-          "min": 315.0
+          "max": 780.0,
+          "min": 395.0
         },
         "inverted": false,
         "manual_hours": {
-          "max": 632.0,
-          "min": 319.0
+          "max": 782.0,
+          "min": 399.0
         },
         "method_version": 1,
         "personas": [
@@ -5104,22 +5118,23 @@
           "quality-engineering",
           "systems-engineering",
           "program-manager",
-          "post-market"
+          "post-market",
+          "human-factors"
         ],
         "retrospective": false,
         "title": "Commercial Analytics Suite (skills + demo assets)",
-        "todos": 14,
+        "todos": 16,
         "updated": "2026-09-30"
       },
       "sessions": 2,
       "totals": {
-        "cache_creation": 5631486,
-        "cache_read": 370548912,
-        "cache_write_1h": 1024973,
-        "cache_write_5m": 4606513,
-        "input": 2748,
-        "messages": 1375,
-        "output": 1589632
+        "cache_creation": 13078803,
+        "cache_read": 592733777,
+        "cache_write_1h": 2834530,
+        "cache_write_5m": 10244273,
+        "input": 4781,
+        "messages": 2393,
+        "output": 2717668
       }
     },
     "ben/109": {
@@ -5191,14 +5206,14 @@
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
-          "cache_creation": 1189568,
-          "cache_read": 15803096,
-          "cache_write_1h": 1189568,
+          "cache_creation": 1192966,
+          "cache_read": 15993446,
+          "cache_write_1h": 1192966,
           "cache_write_5m": 0,
-          "cost": 44.17,
-          "input": 302,
-          "messages": 151,
-          "output": 91520
+          "cost": 44.46,
+          "input": 306,
+          "messages": 153,
+          "output": 92068
         },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
@@ -5231,16 +5246,16 @@
           "output": 795
         }
       },
-      "cost": 263.79,
+      "cost": 264.08,
       "sessions": 25,
       "totals": {
-        "cache_creation": 6032724,
-        "cache_read": 307493917,
-        "cache_write_1h": 5439774,
+        "cache_creation": 6036122,
+        "cache_read": 307684267,
+        "cache_write_1h": 5443172,
         "cache_write_5m": 592950,
-        "input": 362604,
-        "messages": 1220,
-        "output": 1220883
+        "input": 362608,
+        "messages": 1222,
+        "output": 1221431
       }
     },
     "dmytro/001": {
@@ -5285,18 +5300,18 @@
   },
   "value_summary": {
     "agentic_hours": 517.1,
-    "cost_allocated": 181.91,
+    "cost_allocated": 182.39,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 1333.21,
-    "cost_unattributed_measured": 263.79,
-    "cost_unattributed_residual": 81.88,
+    "cost_measured_attributed": 1737.53,
+    "cost_unattributed_measured": 264.08,
+    "cost_unattributed_residual": 81.69,
     "hours_saved": {
-      "max": 3827.6,
-      "min": 1314.2
+      "max": 3977.6,
+      "min": 1394.2
     },
     "manual_hours": {
-      "max": 4323.0,
-      "min": 1830.5
+      "max": 4473.0,
+      "min": 1910.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
