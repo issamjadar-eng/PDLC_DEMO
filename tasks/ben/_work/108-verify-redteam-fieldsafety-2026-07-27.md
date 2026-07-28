@@ -11,6 +11,39 @@ scripts outside the repo (session scratchpad: `verify_bq20.py`, `verify_bq21_22.
 `commercial.yml` — no report.md, no bq_modules read. Pass 2 then attacked framing, plans,
 modules, and the datasets themselves.
 
+## Plain-language summary
+
+This is an independent double-check of the three field-safety business answers (the
+franchise-killer safety watch, regulatory filing exposure, and the field-signal
+closed-loop). An independent checker recomputed every published number from the raw pinned
+data files alone — without reading the reports or the programs that produced them — and
+then compared. Nearly every figure reproduced exactly; the one exception was a
+time-to-disposition median published as 106 days where the correct value is 103.5 (a
+calculation bug that picked the upper of the two middle values), and the on-time filing
+rate, while exactly reproduced, turned out to be the most favorable of four defensible
+ways to compute it. The framing challenge raised 10 concerns in total: 1 serious (a
+regulatory-docket reference stated as fact without being grounded in this answer's pinned
+data), 3 moderate (a data-lag adjustment shallower than the dataset's own warning, summary
+sentences typed as fixed text rather than computed from the data, and a complaint
+marked as MDR-filed with no matching record in the MDR docket — a demo-data seam the two
+reports read together would expose), and the rest minor.
+All the concerns — including the median correction — were subsequently corrected in the
+published answers the same day, and each answer's quality record carries the ACTIONED
+entries documenting the changes.
+
+## Terms used
+
+- **Pins-only re-derivation** — recomputing every published number from the raw, dated
+  data files alone, without reading the report or its code, so agreement is independent
+  confirmation rather than circular checking.
+- **Basis sensitivity** — testing whether a conclusion still holds under a defensible
+  alternative definition (e.g. anchoring the filing window on filed dates vs opened
+  dates); the on-time rate here was checked under four bases.
+- **Denominator** — the "out of what" in any rate; e.g. which filings count in the
+  on-time-rate calculation.
+- **CONFIRMED-WITH-CAVEAT** — the numbers reproduce exactly, but the verdict depends on a
+  definitional choice (or carries a small correction) the reader should know about.
+
 ---
 
 ## BQ-20 — Franchise-killer watch (over-delivery / PCA-by-proxy)

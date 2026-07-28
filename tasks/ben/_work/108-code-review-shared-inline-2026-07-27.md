@@ -1,351 +1,414 @@
-# Code review — `computations.py` shared helpers + nine inline computations (ben/108, 2026-07-27)
+# Code review — shared helpers and nine inline analysis computations, 2026-07-27
 
-_Personal work artifact (task-support, not a controlled deliverable). Independent AI-assistant
-code review, READ-ONLY: no file besides this dossier was modified. Filed via
-`record-code-review` by the main session._
+_Demo sample data — not for clinical use._
+_Personal work artifact (task-support, not a controlled deliverable)._
 
-**Artifact under review**: `docs/project/commercial/computations.py` (1368 lines)
-**sha256**: `bf7fb8fa4263cc290a938eb0eb99fe39c1a5cc094393d2a041d8446319a28710`
-(deterministic checks on this sha: static_lint pass · poison_scan pass · determinism pass; no prior review on file)
+**What was reviewed**: the shared engine file that all thirty business-question answers
+depend on — its common helper functions (data loading, percentage math, expectation
+scoring, report rendering, date/window logic, module dispatch) and the nine analysis
+computations written inline in the same file (clearance cycle time, clearance sweep,
+complaints vs thresholds, adverse-event profile, campaign coverage, failure clusters,
+customer struggle and cost, capacity outlook, fleet currency).
 
-**Scope**: shared helpers (`load_pin_csv`, `params_for`/`_entry`, `evaluate_expectations`,
-`expectations_section`, `narrative_section`, `write`, `pct`, `_median`, `week_start`,
-`week_range`, `weekly_completion_lines`, `module_dispatch`, `DISPATCH`/`main`) and the nine
-inline computations bq06, bq12, bq18, bq19, bq23, bq24, bq25, bq26, bq27.
+- **Artifact**: `docs/project/commercial/computations.py`, reviewed against the
+  commercial skill's computation contract, the nine analysis plans
+  (`docs/project/commercial/plans/BQ-{06,12,18,19,23,24,25,26,27}.md`), the pinned data
+  snapshots, and two assumption records (A-001, A-002)
+- **Reviewer**: AI code reviewer (read-only review; task ben/108; filed via
+  `record-code-review`)
+- **Date**: 2026-07-27
+- **Verdict in one line**: approved with findings — the shared helpers every answer
+  leans on are correct; 17 issues raised (no serious ones, 7 moderate, 10 minor);
+  **11 have since been fixed and 6 were explicitly accepted with rationale** — every
+  outcome re-verified in the current code before this report was written.
 
-**Grounding read before review**: `.claude/skills/commercial/SKILL.md` v11 (§ computation
-contract, § Code quality, no-string-literal-facts rule, shared-helper rule); the nine plans
-`plans/BQ-{06,12,18,19,23,24,25,26,27}.md`; prior dossiers
-`108-adversarial-verify-field-slice-2026-07-22.md`, `108-redteam-BQ-26-2026-07-22.3.md`,
-`108-verify-redteam-{fieldsafety,economics}-2026-07-27.md`. Settled items (BQ-24/25 basis
-switch, BQ-26 refit findings 1–4, F26-1 derivation strings) were **verified as implemented,
-not re-flagged**. Data-facing claims were checked against the pinned snapshots
-(`internal-fleet@{2026-07-22,2026-07-27}`, `internal-upgrade-campaign@{2026-07-22.2,2026-07-27}`,
-`openfda-510k-infusion@2026-07-22`) and the corpus assumption records A-001/A-002.
+## Plain-language summary
 
----
+This is a code review of the shared engine behind the business-question answers: the
+common helper functions that all thirty answers use, plus nine analyses written directly
+in the same file. The helpers got extra scrutiny because a bug there would taint every
+answer at once — and they were found correct: the statistics, the date and window logic,
+the pass/fail scoring, and the guarantee that the same input always produces the same
+output all check out. The review raised 17 issues, none of which invalidates a number
+published today: seven moderate ones (values rounded before being compared to decision
+thresholds, a broken analysis module that could be mistaken for a missing one, sentences
+typed as fixed text that would quietly become false on new data, and unexpected data
+categories being absorbed silently in the optimistic direction) and ten minor ones.
+Eleven of the issues have since been fixed in the code and six were consciously accepted,
+each with a written reason. Every fix and every acceptance was re-verified against the
+current code before this report was written.
 
-## Shared helpers (extra scrutiny — a bug here taints all 30 questions)
+## What we checked
 
-### Verified correct (checked, not assumed)
+- The shared helper functions, line by line — because a defect there would corrupt all
+  thirty answers at once (statistics, percentage math, expectation scoring, date and
+  window arithmetic, report rendering, error behavior on missing data).
+- Repeatability: same input, same output — no clocks, no randomness, no
+  order-dependent iteration reaching any published line.
+- Whether each of the nine inline analyses implements exactly what its written plan
+  commits to.
+- Whether verdict sentences are computed from the data or typed as fixed text.
+- Whether values are rounded before or after being compared to decision thresholds.
+- What happens when the data grows a new category or status value the code has never
+  seen — loud failure, visible bucket, or silent absorption.
+- Whether items promised by earlier reviews were actually implemented.
 
-- **`_median`** (L1021–1026): correct for odd n (`vals[n//2]`, true middle) and even n
-  (mean of the two middles, rounded 1dp); `None` on empty. The shared median the SKILL.md
-  mandates is right. Two cosmetic asymmetries, no numeric error: odd-n returns the raw
-  (unrounded) value while even-n rounds; and the helper sits mid-file at L1021 next to bq06
-  rather than with the other helpers — module authors scanning the top of the file may miss
-  it (`bq_11.py` independently uses `statistics.median` instead; correct, but the
-  one-median-to-rule-them-all intent is already fraying).
-- **`evaluate_expectations` + `expectations_section` `[config]` dedupe** (L74–80): the
-  recently-added dedupe is exact-string membership (`"config: commercial.yml" not in
-  ev_items`) with a single conditional append on a fresh `list(...)` copy — no off-by-one,
-  no double marker, no mutation of the caller's list. Checked against every inline caller:
-  none currently passes `config: commercial.yml` in expectation evidence, so the append
-  fires exactly once per row; a module that does pass it is not double-stamped. Correct.
-- **Catalog-side coverage**: every expectation declared in `commercial.yml` for the nine BQs
+## Findings
+
+All resolutions below were verified against the current code on 2026-07-27. Line
+references and the legacy finding IDs (H-*, B*-*) that the code comments cite live in
+the technical appendix.
+
+### F-1 (medium) — Percentages were rounded before being compared to thresholds (shared helper + three analyses)
+
+- **What's wrong:** the shared percentage helper rounds to one decimal, and three
+  analyses compared its output against decision thresholds: the update-campaign pause
+  trigger, the complaint-rate breach test, and the capacity shortfall/thin/stability
+  verdicts. A true rate of 15.04% rounds to 15.0 and would not trip a 15% threshold that
+  the unrounded value trips. Today's data sits far from every boundary, so no current
+  verdict is wrong — but the pause trigger is safety-adjacent.
+- **Why it matters:** for values near a line, rounding — not the data — would decide a
+  verdict that can pause a field campaign.
+- **Resolution:** FIXED — a compare-side helper (`pct_raw`, unrounded) was added and
+  documented; the pause trigger, the breach test, and all three capacity verdicts now
+  compare unrounded values, with rounding applied only when displaying.
+
+### F-2 (medium) — A broken analysis module was indistinguishable from a missing one (module dispatch)
+
+- **What's wrong:** the dispatcher that loads per-question analysis modules caught
+  "module not found" around the entire import. A module that exists but whose own code
+  imports a missing dependency raises the same error type — it was swallowed, and the
+  engine reported "no computation for this question" instead of surfacing the breakage.
+- **Why it matters:** a real defect would be mislabeled as "not implemented" and could
+  sit unnoticed indefinitely.
+- **Resolution:** FIXED — the dispatcher now re-raises the error unless the missing
+  module is literally the one being dispatched, so a broken module fails loudly with its
+  real error.
+
+### F-3 (low) — A mistyped expectation ID would silently vanish (expectation scoring)
+
+- **What's wrong:** the pass/fail scorer joined computed results to the catalog's
+  expectations by ID, iterating the catalog only — a result keyed by a mistyped ID
+  simply disappeared with no signal.
+- **Why it matters:** a typo would silently drop a pass/fail result from the published
+  scorecard.
+- **Resolution:** FIXED — the scorer now halts with a clear message naming any
+  computed result whose ID is not in the catalog.
+
+### F-4 (low) — A zero denominator renders as "0%" instead of "not applicable" (percentage helper)
+
+- **What's wrong:** dividing by an empty group displays 0% — a truthless number — rather
+  than an honest "n/a".
+- **Why it matters:** a "0%" where "not applicable" belongs reads as a real measurement.
+- **Resolution:** ACCEPTED — no group in the current data can be empty (the fleet has
+  hundreds of rows on both sides of every split); revisit with a
+  none-propagating variant if a genuinely emptiable group appears.
+
+### F-5 (low) — A vertical-bar character in catalog text would break the report tables (rendering)
+
+- **What's wrong:** catalog text is inserted into markdown tables without escaping; a
+  pipe character in it would break the table layout.
+- **Why it matters:** a broken table would garble the published report for every reader.
+- **Resolution:** ACCEPTED — the catalog is project-owned, reviewed input and is
+  currently clean.
+
+### F-6 (medium) — The "fastest frequent filer" was picked from a pre-trimmed list (BQ-06, clearance cycle time)
+
+- **What's wrong:** the plan defines a frequent filer as any applicant with two or more
+  clearances; the code first trimmed to the top six applicants by volume and only then
+  filtered — coincidentally exact today (exactly six of fifteen applicants qualify), but
+  the moment a seventh qualifies, the true fastest frequent filer could fall outside the
+  trimmed list and the headline would be silently wrong.
+- **Why it matters:** a headline claim resting on a coincidence between two numbers.
+- **Resolution:** FIXED — the two-or-more filter now runs over the whole applicant
+  set first; the top-N cut limits only what the table displays, and the "fastest" pick
+  is computed over all qualifying applicants.
+
+### F-7 (low) — "Since 2021" rides on the dataset's acquisition scope (BQ-06)
+
+- **What's wrong:** the headline says "since 2021" with no year filter in the code — true
+  because the dataset's committed scope starts in 2021, but it would rot if the scope
+  ever widened.
+- **Why it matters:** the claim would silently falsify if the dataset's scope ever
+  widened.
+- **Resolution:** ACCEPTED — the scope is committed in the plan's data section and
+  carried by the dataset itself; noted for the dataset's next reviewer.
+
+### F-8 (low) — The "90-day" windows were actually 91 days, unevenly (BQ-18 complaints, BQ-12 sweep)
+
+- **What's wrong:** the complaints analysis compared a current window of 91 days
+  (inclusive on both ends) against a prior window of 90 — giving the "rising volume"
+  test a built-in upward bias of about one day. The clearance sweep had the same
+  one-extra-day label mismatch (harmless there — no cross-window comparison).
+- **Why it matters:** the extra day nudges the rising-volume test toward firing when it
+  should not.
+- **Resolution:** FIXED — the complaints windows are now symmetric half-open spans of
+  exactly the configured length; the sweep window was corrected to exactly the labeled
+  number of days.
+
+### F-9 (low) — A chart's method note had "90-day" typed in (BQ-18)
+
+- **What's wrong:** the window-trend series' method description said "trailing 90-day
+  window" as fixed text while the width is a configuration parameter.
+- **Why it matters:** the note would misdescribe the chart after a configuration change.
+- **Resolution:** FIXED — the description now interpolates the configured window
+  length.
+
+### F-10 (medium) — The "rate comparison is BLOCKED" sentence was fixed text (BQ-19, adverse events)
+
+- **What's wrong:** the analysis correctly refuses to publish adverse-event *rates* until
+  the installed-base assumption is quantified — but the "BLOCKED / not yet quantified"
+  wording was typed text. The code computed whether the assumption had been quantified
+  and used it only to flip a data-classification field; if the assumption were ever
+  quantified, the edition would contradict itself (a "ready" classification under a
+  headline still saying "blocked").
+- **Why it matters:** this question is the project's honesty showcase; a
+  self-contradicting edition there is maximally embarrassing.
+- **Resolution:** FIXED — if the assumption is quantified while the rate calculation
+  remains unimplemented, the program now halts loudly with instructions, before writing
+  anything. The blocked wording is reachable only in the genuinely blocked state, making
+  it a computed condition rather than a narration.
+
+### F-11 (low) — Unmatched manufacturer names get cosmetically re-cased (BQ-19)
+
+- **What's wrong:** the plan says unmatched names "stay raw and visible"; the code
+  title-cases them — a cosmetic transform that could in principle merge two case-variant
+  spellings.
+- **Why it matters:** two spelling variants of one company could merge or split
+  incorrectly in the counts.
+- **Resolution:** ACCEPTED — harmless today; noted for the next plan/code sync.
+
+### F-12 (low) — The 95% coverage target is judged by a 100%-completion projection (BQ-23, campaign coverage)
+
+- **What's wrong:** the expectation asks whether each region reaches 95% coverage by the
+  close date, but the projection computes when *all* remaining devices finish — a region
+  could hit 95% in time yet be flagged as missing.
+- **Why it matters:** a region could be flagged as missing its target when it actually
+  meets it — a false alarm, never a false pass.
+- **Resolution:** ACCEPTED — the direction is conservative (never optimistic), and
+  the plan itself defines projected finish as remaining ÷ rate. Noted: if the 95%
+  distinction ever matters, project the 95% date explicitly.
+
+### F-13 (medium) — A new status value would be silently absorbed in the optimistic direction (BQ-24/25/26, campaign analyses)
+
+- **What's wrong:** three campaign analyses define their populations by complement
+  ("attempted = everything not scheduled"; "remaining = everything not completed"). The
+  data's status vocabulary is exactly five known values today — but a new upstream status
+  (say "cancelled") would silently join "attempted" as a non-failure, diluting the pause
+  trigger, and join "remaining" in the capacity outlook. No guard existed.
+- **Why it matters:** silent vocabulary drift would bias a safety-adjacent trigger
+  toward not firing.
+- **Resolution:** FIXED — a shared vocabulary guard (`assert_vocab`) was added and is
+  called by all four campaign-data consumers immediately after loading; any unknown
+  status halts the run with a message naming the values.
+
+### F-14 (low) — A promised one-clause caveat from the earlier economics review was missing (BQ-26, capacity outlook)
+
+- **What's wrong:** the remote-conversion mitigation lacked the caveat that the remote
+  path carried the implicated failure mode (all the rollbacks were remote installs) —
+  moot while zero devices are convertible, live the moment adapters convert the backlog.
+- **Why it matters:** without the caveat, the recommended recovery lever hides a known
+  exposure.
+- **Resolution:** FIXED — the caveat is now computed from the pinned data (rollbacks
+  by method) and appended to the mitigation text whenever remote rollbacks exist, with
+  the counts interpolated — not typed as a fixed sentence.
+
+### F-15 (medium) — "(All on the 2.9.x line)" was a typed fact (BQ-27, fleet currency)
+
+- **What's wrong:** the legacy-fleet firmware posture was asserted as prose. True against
+  both pinned snapshots today, but invisible to the claim lint and silently false the
+  first time a legacy device reports anything else.
+- **Why it matters:** a typed fact invisible to the claim lint silently falsifies on the
+  next fleet refresh.
+- **Resolution:** FIXED — the qualifier is now computed from the observed firmware
+  versions: it prints "all on 2.9.x line" only when that is true, otherwise lists the
+  actual versions.
+
+### F-16 (medium) — Unrecognized firmware versions counted as up-to-date (BQ-27)
+
+- **What's wrong:** a firmware version missing from the how-far-behind map defaulted to
+  "zero versions behind" — the optimistic direction on a metric the report itself frames
+  as patient-safety exposure. Today the map covers every observed version, so nothing is
+  misclassified — but a new release or a data typo would understate "behind" with no
+  signal.
+- **Why it matters:** an optimistic silent default on a safety-framed metric is the worst
+  combination this review looks for.
+- **Resolution:** FIXED — unmapped versions are now their own surfaced bucket:
+  excluded from the "current" counts, called out in the verdict sentence, given a warning
+  line in the report telling the reader to extend the map, and included as a data point.
+
+### F-17 (low) — Fragile report-assembly arithmetic and one unused variable (BQ-24/06/27, BQ-25)
+
+- **What's wrong:** three analyses insert a bullet into the report by counting lines
+  backwards from the end — valid output today, brittle to reordering; one analysis
+  assigns a variable it never uses.
+- **Why it matters:** brittle assembly code risks misplacing report lines on a future
+  edit; cosmetic today.
+- **Resolution:** ACCEPTED — cosmetic; fold into the next touch of the file.
+
+## Terms used
+
+- **Shared helpers** — the common functions in `computations.py` every business-question
+  answer calls; a defect there affects all thirty answers at once.
+- **Narrated, not computed** — a sentence typed as fixed text rather than derived from
+  the data, so it can silently become false when the data changes.
+- **Knife-edge / round-before-compare** — comparing a rounded value to a threshold, so
+  rounding (not data) decides the verdict for values near the line.
+- **Complement-defined population** — a group defined as "everything that is not X",
+  which silently absorbs any new category the data grows.
+- **Pause trigger** — the configured rule that flags an update-campaign cohort for
+  pausing when its failure rate crosses a threshold.
+- **Pinned snapshot (pin)** — the frozen copy of a dataset an answer is computed from,
+  so the same answer is reproducible later.
+- **Assumption record (A-NNN)** — a versioned file documenting an estimate (e.g.,
+  installed base) with its confidence and refresh triggers; analyses cite it instead of
+  burying the estimate in code.
+- **Expectation (E-NN.N)** — a catalog-declared pass/fail commitment an answer is scored
+  against.
+- **Evidence class** — each published figure's label: measured, derived, assumed, or
+  unavailable.
+- **Denominator** — the base a rate is computed against (e.g., installed devices);
+  without one, counts cannot honestly become rates.
+- **Determinism** — the guarantee that the same pinned input always produces
+  byte-identical output (no clocks, no randomness, no order-dependent iteration).
+
+## Technical appendix
+
+### Reviewed artifact and scope
+
+Reviewed at sha256 `bf7fb8fa4263cc290a938eb0eb99fe39c1a5cc094393d2a041d8446319a28710`
+(1368 lines; deterministic checks on that sha: static_lint pass, poison_scan pass,
+determinism pass). The fix pass landed after the review, so the current file (1471
+lines) differs from the reviewed sha; every resolution below was verified in the current
+working tree on 2026-07-27. Scope: shared helpers (`load_pin_csv`, `params_for`/`_entry`,
+`evaluate_expectations`, `expectations_section`, `narrative_section`, `write`, `pct`,
+`_median`, `week_start`, `week_range`, `weekly_completion_lines`, `module_dispatch`,
+`DISPATCH`/`main`) plus the nine inline computations bq06, bq12, bq18, bq19, bq23, bq24,
+bq25, bq26, bq27. Grounding read before review: commercial SKILL.md v11 (computation
+contract, code-quality rules), the nine plans, the prior dossiers
+(`108-adversarial-verify-field-slice-2026-07-22.md`, `108-redteam-BQ-26-2026-07-22.3.md`,
+`108-verify-redteam-{fieldsafety,economics}-2026-07-27.md`), the pinned snapshots
+(`internal-fleet@{2026-07-22,2026-07-27}`,
+`internal-upgrade-campaign@{2026-07-22.2,2026-07-27}`,
+`openfda-510k-infusion@2026-07-22`), and assumption records A-001/A-002. Settled items
+(BQ-24/25 basis switch, BQ-26 refit findings 1–4, F26-1 derivation strings) were
+verified as implemented, not re-flagged.
+
+### Shared helpers verified correct (checked, not assumed)
+
+- **`_median`** (now L1106–1111): correct for odd n (true middle) and even n (mean of the
+  two middles, rounded 1dp); returns nothing on empty input. Cosmetic asymmetries only
+  (odd-n unrounded vs even-n rounded; mid-file location; `bq_11.py` independently uses
+  `statistics.median` — also correct).
+- **Expectation scoring + `[config]` dedupe** (L69–106): exact-string membership on a
+  fresh list copy — no off-by-one, no double marker, no caller-list mutation; verified
+  against every inline caller. Every catalog expectation for the nine questions
   (E-18.1/2, E-23.1/2, E-24.1, E-26.1) is evaluated by its computation; the
-  `not-evaluable` fallback path is correct for future catalog additions.
-- **Week/date logic**: `week_start` = ISO-Monday bucket; `week_range` inclusive Monday walk;
-  `weekly_completion_lines` zero-fills across the full span so stalls flatline (the
-  dataviz rule). 28-day trailing windows are `[anchor−27d, anchor]` inclusive = exactly
-  28 days ÷ 4. ISO-string date comparisons are used only where both sides are ISO dates
-  (safe). Correct.
-- **`load_pin_csv` error behavior**: a missing pin key raises `KeyError`, a missing
-  snapshot file raises `FileNotFoundError` — both are **loud** (non-zero exit; the engine
-  discards the edition when report/data are not written). Not silent. The messages are
-  cryptic (`KeyError: 'commercial/...'`) but the failure mode is safe. Accept.
-- **`write` / determinism**: `json.dumps` without `sort_keys` is deterministic on 3.7+
-  insertion order; all groupings iterate `sorted(...)` sets/dicts (regions, cohorts,
-  months, rollback sites) or CSV row order; YAML list order (aliases, watch_keywords) is
-  stable. No clocks, no RNG, no network. The replay-pass result is corroborated by reading.
+  `not-evaluable` fallback is correct for future catalog additions.
+- **Week/date logic** (L127–157): ISO-Monday buckets; inclusive Monday walk; zero-filled
+  spans so stalls flatline visibly; 28-day trailing windows are exactly 28 days ÷ 4;
+  ISO-string comparisons used only between ISO dates.
+- **`load_pin_csv` error behavior** (L46–50): missing pin key → KeyError; missing
+  snapshot file → FileNotFoundError — both loud (non-zero exit; edition discarded).
+  Messages are terse but the failure mode is safe.
+- **`write` / determinism** (L109–111): insertion-ordered JSON is deterministic on
+  Python 3.7+; all groupings iterate sorted sets/dicts or CSV row order; alias/keyword
+  list order is stable; no clocks, no randomness, no network.
 
-### Findings
+### Finding-by-finding verification detail
 
-- **H-1 (medium) — `pct`/rounding: round-before-compare exported to callers.** `pct` and
-  the inline `round(x,1)` rates are compared *after* rounding at every decision boundary:
-  bq24's pause trigger (`s["rate"] > thr`, L331 — rate is `pct`-rounded), bq18's threshold
-  breach (`rate(n) > t`, L1230 — 2dp-rounded), and bq26's shortfall/thin/stability
-  classifications (`cur < req`, `cur < req*headroom`, `verdict_stable`, L596–611 — both
-  sides rounded 1dp in `region_stats`). A true rate of 15.04% rounds to 15.0 and does NOT
-  trip a 15% pause threshold that the unrounded value trips. Today's data sits far from
-  every boundary (worst cohort 31.4% vs 15; complaint rates vs 2.0/3.0), so no current
-  verdict is wrong — but the pattern puts a safety-adjacent trigger (bq24) on the wrong
-  side of a knife-edge by up to 0.05pp. Disposition — **fix**: compare unrounded values;
-  round only at render time.
-- **H-2 (medium) — `module_dispatch` swallows real ModuleNotFoundErrors as "no
-  computation".** L1346–1350 catches `ModuleNotFoundError` around the *entire* import. A
-  `bq_modules/bq_nn.py` that EXISTS but whose body imports a missing dependency (e.g.
-  `import pandas` on a machine without it) raises the same exception type — swallowed,
-  `None` returned, and `main` reports `no computation for BQ-NN`. A broken module is
-  indistinguishable from an absent one; the failure is mis-labeled, not surfaced.
-  Disposition — **fix**: re-raise unless `e.name` is the module being dispatched
-  (`except ModuleNotFoundError as e: if e.name != mod_name and not mod_name.startswith(e.name): raise; return None`),
-  or probe `importlib.util.find_spec(mod_name)` first and never catch during the real import.
-- **H-3 (low) — `evaluate_expectations` silently drops computed results with unknown
-  ids.** The join iterates catalog expectations only; a result keyed by a typo'd id
-  (`"E-23.3"`) vanishes with no signal — the inverse of the deliberate `not-evaluable`
-  path. All nine inline callers currently match the catalog exactly (checked). Disposition
-  — **fix** (cheap): after the loop, raise/print on `set(results) − {e["id"] for e in exps}`.
-- **H-4 (low) — `pct(n, 0) == 0.0` renders a truthless "0%".** A zero denominator
-  (e.g. bq27's connected/unconnected splits if a stratum empties, bq24's all-scheduled
-  cohort) displays as 0% instead of n/a. No current population is empty (fleet has 389/884
-  rows both sides of every split). Disposition — **accept** with note: revisit if any
-  caller's stratum can genuinely empty; a `None`-propagating variant would be the fix.
-- **H-5 (low) — markdown-table injection surface in `expectations_section` /
-  `narrative_section`.** `statement`/`expected`/`basis` are interpolated into `|`-delimited
-  rows unescaped; a pipe in catalog text breaks the table. Catalog text is project-owned
-  and currently clean. Disposition — **accept** (catalog-controlled input).
+Legacy IDs are the ones cited in the code comments and prior dossiers.
 
-## Inline computations — per-BQ verdicts
+| ID (legacy) | Sev | Fix location | Outcome |
+|---|---|---|---|
+| F-1 (H-1) | med | L114–124; bq24 L363–367; bq18 L1319–1321, L1327, L1348; bq26 L614–619, L653–655 | fixed: `pct_raw` compare-side helper; pause/breach/capacity verdicts compare unrounded |
+| F-2 (H-2) | med | L1447–1453 | fixed: re-raise unless `e.name` is the dispatched module |
+| F-3 (H-3) | low | L76–79 | fixed: SystemExit naming unknown computed expectation IDs |
+| F-4 (H-4) | low | L119 (unchanged) | accepted: no caller stratum currently empties |
+| F-5 (H-5) | low | L96–106 (unchanged) | accepted: catalog-controlled input |
+| F-6 (B06-1) | med | L1126–1135 | fixed: ≥2-clearance filter before top-N; fastest picked over all eligible |
+| F-7 (B06-2) | low | L1138, L1182 (unchanged) | accepted: plan-committed dataset scope |
+| F-8 (B18-1) | low | bq18 L1302–1313; bq12 L1211–1213 | fixed: symmetric half-open windows; sweep window exactly N days |
+| F-9 (B18-2) | low | L1421 | fixed: derivation string interpolates `{window}` |
+| F-10 (B19-1) | med | L1013–1021, L1036–1039 | fixed: quantified-model state fails loud pre-output; BLOCKED wording gated |
+| F-11 (B19-2) | low | L1006 (unchanged) | accepted: cosmetic; note for plan/code sync |
+| F-12 (B23-1) | low | bq23 (unchanged) | accepted: plan defines projection as remaining ÷ rate; conservative direction |
+| F-13 (B24-1) | med | L29–43; called at L189, L348, L477, L586 | fixed: `assert_vocab` guard in all four campaign consumers |
+| F-14 (B26-1) | low | L702–709, L718 | fixed: rollback-path caveat computed from pin, appended to mitigation |
+| F-15 (B27-1) | med | L917–920, L953 | fixed: qualifier computed from observed firmware versions |
+| F-16 (B27-2) | med | L900–908, L929–933, L942–945, L970–973 | fixed: unmapped-firmware bucket — excluded from current, in headline, ⚠ line, data point |
+| F-17 (cleanup) | low | L443, L961, L1174; L479 (unchanged) | accepted: fold `lines.insert(-N)` + unused `assume_path` into next touch |
 
-### bq06 — clearance cycle time · CONFORMS-WITH-FINDINGS
+### Per-computation plan-conformance summary (review verdicts at review time)
 
-Interval = `decision_date − date_received` in days, per-applicant + overall medians
-(median not mean, per plan), per-decision-year history: all as the plan commits. Stated-gap
-series (`our-cycle-time`) correctly `unavailable`. Findings:
+- **bq06 — clearance cycle time · CONFORMS-WITH-FINDINGS.** Interval = decision −
+  received in days; per-applicant + overall medians (median not mean, per plan);
+  per-decision-year history; our-side series honestly `unavailable`. Findings F-6, F-7.
+- **bq12 — clearance sweep · CONFORMS.** Window anchored at newest pinned decision date;
+  roadmap flags are computed keyword matches, stated as triage not capability judgment;
+  empty-window branches handled; no findings of its own (window-length label fixed under
+  F-8).
+- **bq18 — complaints vs thresholds · CONFORMS-WITH-FINDINGS.** Rates per 100 fleet
+  devices with the sanctioned denominator stated; thresholds from config with the
+  stand-in risk emitted; 130% trend rule with sane zero-prior guard; zero-filled top-3
+  trend. Findings F-8, F-9 (+ F-1 call site). Noted, not flagged: an empty current
+  window would crash loudly — acceptable for a fail-loud demo pipeline.
+- **bq19 — adverse-event profile · CONFORMS-WITH-FINDINGS.** Counts-never-rates enforced
+  structurally; versioned alias normalization; lag-trimmed monthly history; no internal
+  vs MAUDE numeric juxtaposition. Findings F-10, F-11. Noted: with ≤2 months of data the
+  lag trim is skipped — unreachable against a 2023-onward dataset.
+- **bq23 — campaign coverage · CONFORMS-WITH-FINDINGS.** Latest-completion anchor is
+  plan-committed for this question (deliberately different from BQ-26); stall → Issue
+  with labeled projection, never a fake date; misses computed with safe short-circuit
+  ordering. Finding F-12.
+- **bq24 — failure clusters / pause trigger · CONFORMS-WITH-FINDINGS.** Per-attempted
+  rate with whole-cohort context (adversarial-verification remedy verified); pause rule
+  fully config-driven; dated-events-only retry trend with the exclusion stated; "worst"
+  computed via max. Findings F-13 (+ F-1's highest-stakes call site), F-17.
+- **bq25 — customer struggle & cost · CONFORMS.** Tickets and denominator both over
+  attempted devices (remedy verified); customer cost read from assumption record A-002
+  (nothing hardcoded), presented as assumed with confidence interpolated; "highest in
+  region" computed via max. Nit folded into F-17.
+- **bq26 — capacity outlook (2026-07-27 refit) · CONFORMS.** All five refit commitments
+  verified in code: uniform 28-day stall rule; snapshot-as-of anchor + latest-completion
+  sensitivity with a computed CHANGED/UNCHANGED sentence; thin-margin watch rule with
+  computed largest-load qualifier; FSE-days + connectivity join (join miss counts as NOT
+  convertible — conservative); status-set-explicit derivation strings (F26-1 actioned).
+  Residual F-14 (F26-2) now fixed. Edge accepted: zero weeks left degenerates the
+  required rate to the remaining count — odd units, loud in context.
+- **bq27 — fleet currency · CONFORMS-WITH-FINDINGS.** Behind-by mapping from config;
+  PP3500 scope with PP3000 counted separately, never mixed; connectivity comparison
+  descriptive only; history honestly `unavailable`. Findings F-15, F-16, F-17.
 
-- **B06-1 (medium) — "fastest frequent filer" universe is truncated to `top_n` before the
-  ≥2 filter.** `frequent` (L1043) filters `top` — the top-`top_n` applicants *by clearance
-  count* — not all applicants. The plan defines frequent filer as "applicant with ≥ 2
-  clearances in the window" over the whole set. Verified against the pin: 15 applicants,
-  exactly 6 with ≥2, `top_n = 6` — today the two sets coincide and the headline is right.
-  But the moment a 7th applicant reaches 2 clearances, the true fastest frequent filer can
-  fall outside `top` and the headline claim becomes silently wrong; and in sparse data the
-  "frequent filer" table can seat 1-clearance applicants under a "frequent filer" heading.
-  Disposition — **fix**: filter `len(ds) >= 2` first, then apply `top_n` for display.
-- **B06-2 (low) — "since 2021" is a dataset-scope literal.** No year filter exists in the
-  code; the claim is true because the acquisition scope starts 2021 (pin min decision
-  2021-11-09) and the plan states the scope. Rots only if the dataset scope widens.
-  Disposition — **accept**: plan-committed scope carried by the dataset; note for the
-  dataset README's next reviewer.
+### Review-wide observations
 
-### bq12 — clearance sweep · CONFORMS
-
-Window anchored at newest `decision_date` in the pin (deterministic, end stated in the
-headline per plan); roadmap flags are computed keyword matches from `commercial.yml` (never
-a capability judgment — the report says so); empty-window headline + table branches both
-handled; quarter bucketing correct; no demo banner on real public data (correct). The flag
-logic string in the headline interpolates computed counts only. One shared nit: the
-"90-day" window is `[as_of−90d, as_of]` inclusive = **91 days** (see B18-1). No own findings.
-
-### bq18 — complaints vs thresholds · CONFORMS-WITH-FINDINGS
-
-Trailing-window rates per 100 fleet devices with the denominator stated in the section
-header (`n_fleet` from the fleet pin — the sanctioned denominator, per plan); thresholds
-from config with the unvalidated-stand-in risk emitted; 130% trend rule implemented
-(`max(1, prev)` guards the zero-prior edge sanely); top-3 monthly trend zero-filled.
-E-18.1/E-18.2 evaluated. Findings:
-
-- **B18-1 (low) — window asymmetry biases the rising test.** Current window =
-  `counts(start, "9999")` covers `[as_of−90d, as_of]` = **91 days** inclusive; prior =
-  `counts(prev_start, start)` = 90 days half-open. The 130% comparison therefore gives the
-  current window one extra day (~1.1% upward bias on the rising verdict). Same +1-day
-  inclusive pattern exists in bq12's "90-day" sweep (internally consistent there — no
-  comparison across windows). Disposition — **fix**: half-open windows
-  (`start <= d < end`) with `start = as_of − 89d` or label as 91-day.
-- **B18-2 (low) — `window-trend` derivation string hardcodes "90-day".** The method string
-  (L1323) narrates "trailing 90-day window" while the width is a param (`window_days`) — a
-  config change rots the string. Disposition — **fix** (trivial): interpolate `{window}`.
-- Round-before-compare on the breach test: covered by **H-1**.
-- Edge noted, not flagged: an empty current window (no complaints in 90d) would IndexError
-  on `top3[0]` — unreachable while the no-breach headline needs a top category and the
-  dataset is non-empty; acceptable for a demo pipeline that fails loud.
-
-### bq19 — MAUDE honesty showcase · CONFORMS-WITH-FINDINGS
-
-Counts-never-rates enforced structurally (rate series `unavailable`, empty points, no rate
-figure anywhere); entity normalization via the versioned alias map with prefix matching
-(deterministic in YAML order); monthly history lag-trims exactly the trailing 2 months and
-`total_events` sums the charted window only; no demo banner on real data (correct); no
-numeric juxtaposition of internal vs MAUDE counts. Findings:
-
-- **B19-1 (medium) — the honesty-showcase phrasing is a string literal, not a computed
-  sentence.** The headline "RATE comparison is BLOCKED — the installed-base denominator
-  (A-001) is not yet quantified" (L953–954) and the body's "whose model is not yet
-  quantified" are narrated. The code *computes* `rate_ready = isinstance(a001.get("model"),
-  dict)` (L938 — currently False; verified A-001 carries no `model:` block) but uses it
-  only to flip `rate-by-mfr.evidence_class` to `"assumed"`. If A-001 is ever quantified,
-  the edition self-contradicts: an "assumed" series with empty points whose provenance note
-  and headline still say "blocked / not yet quantified". This is exactly the SKILL.md
-  sentence-logic failure class (qualifiers must be computed, not narrated). Disposition —
-  **fix**: branch the headline/body on `rate_ready`, and until the rate path is actually
-  implemented, `rate_ready == True` should be a loud failure ("A-001 quantified but the
-  rate computation is not implemented"), not a silent evidence-class flip.
-- **B19-2 (low) — unmatched manufacturers get `.title()`, not "raw and visible".** The plan
-  commits "unmatched names stay raw and visible"; `canon()` title-cases them (L931), which
-  is a cosmetic transform and could in principle merge case-variant raws. Harmless today.
-  Disposition — **accept**: note for the next plan/code sync; or return `name` unchanged.
-- Edge noted: with ≤2 months of monthly data the lag trim is skipped entirely (`len > 2`
-  guard) and lag-suppressed months would chart — unreachable against a 2023-onward dataset.
-
-### bq23 — campaign coverage · CONFORMS-WITH-FINDINGS
-
-Anchor = latest `completed_date` — **plan-committed for BQ-23** (deliberately different
-from BQ-26's as-of anchor; the plan owns the optimism note and the report states the
-anchor). Completed set, 28d/4 run-rate, stall→Issue (projection labeled
-"no-recent-completions", never a fake date), risks/watch split, cumulative-coverage trend
-toward the target, misses computed (`no-recent-completions` OR projected past close — the
-`or` short-circuits before the string/date compare, correct). Headline qualifiers all
-computed. E-23.1/E-23.2 evaluated. Finding:
-
-- **B23-1 (low) — E-23.1's 95% target is judged by the 100%-completion projection.**
-  `target_pct` (95) appears in prose and the trend chart but never enters the projection
-  math; `misses` tests whether *all remaining* devices land by close. Direction is
-  conservative (a region can hit 95% before close yet be flagged not-met), and the plan's
-  own definition of projected finish is remaining ÷ rate — so this is a expectation-vs-
-  metric mismatch, not a code error. Disposition — **accept** with note: if the 95%
-  distinction ever matters, project the 95%-coverage date explicitly.
-
-### bq24 — failure clusters / pause trigger · CONFORMS-WITH-FINDINGS
-
-Per-ATTEMPTED-device primary rate with whole-cohort context (the adversarial-verification
-remedy — verified present and labeled in the report); pause rule = rate > threshold AND
-attempted ≥ min_cohort, both from config; retry trend charts dated events only with the
-exclusion stated; `worst` qualifier computed via `max`. E-24.1 evaluated. Findings:
-
-- Round-before-compare on the pause trigger: covered by **H-1** (this is its
-  highest-stakes call site).
-- **B24-1 (medium, shared with bq25/bq26) — complement-based status sets silently absorb
-  vocabulary drift.** `attempted = status != "scheduled"` (bq24 L324/332, bq25 L452/459),
-  and bq26's `remaining = status not in COMPLETED`, define populations by complement. The
-  pinned vocabulary is exactly {completed, completed-after-retry, scheduled,
-  failed-pending-retry, rolled-back} (verified, both snapshots) and the derivation strings
-  enumerate the sets (F26-1 actioned ✓) — but a new upstream status (e.g. `cancelled`)
-  would silently join "attempted" in bq24/25 (counting as an attempt that did NOT fail —
-  diluting the pause trigger, the optimistic direction) and "remaining" in bq26. No guard
-  asserts observed ⊆ known. Disposition — **fix** (one place): assert the status vocabulary
-  after `load_pin_csv` of the campaign dataset (or a tiny shared
-  `assert_vocab(rows, "status", KNOWN)` helper) so drift fails loud.
-- Cosmetic, not flagged as a finding: `lines.insert(-3, ...)` (L407) drops the
-  historical-view bullet directly under the "## Method & provenance" heading with no blank
-  line (verified in the rendered 2026-07-27 report) — valid markdown, fragile tail
-  arithmetic; same pattern at bq06 L1083 / bq27 L888. Fold into cleanup.
-
-### bq25 — customer struggle & cost · CONFORMS
-
-Tickets AND denominator both over attempted devices (the adversarial-verification remedy —
-verified, and the report states the basis); rollback sites = distinct sorted site ids;
-customer cost = completed-onsite × A-002 model read from the corpus record (verified
-`hours_per_device: [1.5, 2.5]` × `labor_rate_usd_hr: [48, 65]` — nothing hardcoded),
-presented as assumed with confidence interpolated from the record; weekly tickets trend
-dated-events-only with the limitation stated. "Highest in {region}" is computed via `max`;
-the near-tie fragility was disclosed in the 07-22 verification and the plan does not
-require tie disclosure — accept. No catalog expectations declared, none rendered
-(consistent). Nit folded into cleanup: `assume_path` (L442) is assigned and never used.
-
-### bq26 — capacity outlook (the 2026-07-27 refit) · CONFORMS (refit verified in code)
-
-The five refit commitments were each verified in the code, not assumed:
-
-1. **Uniform 28d stall rule**: `stalled = len(recent) == 0 and remaining > 0` inside
-   `region_stats`, applied identically to every region; stalled regions become
-   high-severity Issues, never Risks. ✓
-2. **Snapshot-as-of anchor + sensitivity**: primary anchor `snap.split(".")[0]` (the
-   snapshot id's date part — the SKILL.md-documented as-of convention; `.2`-suffix ids
-   handled), alternative = latest `completed_date`; both fed through the same
-   `region_stats`; the sensitivity table renders both and `verdict_stable` drives a
-   computed CHANGED/UNCHANGED sentence (not narrated). ✓ (Rounded-compare inside
-   `verdict_stable` → H-1.)
-3. **Thin-margin watch rule**: `cur >= req and cur < req * headroom` with the guard from
-   `thin_margin_headroom_pct` config; thin regions named in the verdict and Watch, with the
-   "carries the largest on-site load" qualifier **computed** via `max(...)` comparison. ✓
-4. **FSE-days + connectivity join**: global mean completed-onsite `duration_min` (plan
-   commits the global mean) ÷ `fse_day_minutes`; join by `device_serial` with
-   `conn.get(...) == "yes"` — a join miss counts as NOT convertible (conservative;
-   dossier confirmed zero misses); labor-time-only lower bound stated everywhere it
-   appears; `fse-capacity` stays `unavailable`. ✓
-5. **Status-set-explicit derivation strings** (F26-1): all four derived series
-   (`capacity-stat`, `required-rate`, `remote-convertible`, `fse-days-remaining`) name the
-   completed/remaining/on-site-remaining status sets inside `derivation.method`, and the
-   report's anchor preamble + Method restate them for pins-only re-derivation. ✓ Actioned.
-
-Residual finding:
-
-- **B26-1 (low) — F26-2 from the economics dossier remains unactioned.** R1's
-  remote-conversion mitigation still lacks the one-clause caveat that the remote path
-  carried the implicated failure mode (all 3 NA rollbacks were remote installs) — moot
-  while remote-convertible = 0, live the moment adapters convert the backlog. Disposition
-  — **fix** (one clause in R1's mitigation string) at the next re-answer.
-- Edge noted, accepted: `weeks_left == 0` (anchor ≥ close) degenerates `req` to
-  `float(remaining)` — a stand-in with odd units, loud enough in context.
-
-### bq27 — fleet currency · CONFORMS-WITH-FINDINGS
-
-Behind-by mapping from config; PP3500 scope with PP3000 counted separately and never mixed
-(verified: model filter, separate count); connectivity comparison descriptive only (no
-causal language — plan-conformant); history correctly `unavailable` with the
-one-snapshot-is-not-a-trend note. Findings:
-
-- **B27-1 (medium) — "(all on 2.9.x line)" is a narrated string-literal fact.** L880
-  asserts the PP3000 firmware posture as prose. Verified TRUE against both fleet pins
-  (198 = 107×2.9.1 + 91×2.9.3) — but it is typed into source, invisible to the lint (the
-  line carries a `[src:]` marker), and rots silently the first time a PP3000 reports
-  anything else. The SKILL.md names this exact pattern a verified failure class.
-  Disposition — **fix**: compute it (`all(fw.startswith("2.9") for ...)`) and emit either
-  the qualified sentence or the actual version set.
-- **B27-2 (medium) — unmapped firmware versions silently count as CURRENT.**
-  `behind_map.get(fw, 0)` defaults an unknown version to 0-behind — the optimistic
-  direction on a patient-safety-framed metric (the report itself says currency lag is a
-  safety exposure). Today the map covers exactly the three observed PP3500 versions
-  (verified), so nothing is misclassified — but a new firmware release or a data typo
-  understates "behind" with no signal. Disposition — **fix**: treat unmapped as its own
-  bucket (surface the count) or fail loud on `fw not in behind_map`.
-
----
-
-## Findings table (consolidated)
-
-| ID | Sev | Where | Finding | Disposition |
-|---|---|---|---|---|
-| H-1 | med | pct + callers (bq18/24/26) | Thresholds/classifications compared on rounded rates — knife-edge misclassification exported to the pause trigger, breach test, capacity verdicts | fix: compare unrounded, round at render |
-| H-2 | med | module_dispatch | ModuleNotFoundError raised *inside* an existing bq module is swallowed as "no computation" | fix: re-raise unless `e.name` == dispatched module (or find_spec probe) |
-| H-3 | low | evaluate_expectations | Computed results with ids not in the catalog are silently dropped (typo'd E-id vanishes) | fix: loud check on unknown result ids |
-| H-4 | low | pct | Zero denominator renders 0.0 ("0%") instead of n/a | accept: no current empty stratum; revisit if one can empty |
-| H-5 | low | expectations/narrative sections | Unescaped `\|` in catalog text breaks markdown tables | accept: catalog-controlled input |
-| B06-1 | med | bq06 | "Fastest frequent filer" universe truncated to top_n before the ≥2 filter — latent wrong-headline; coincidentally exact today (6 of 15 applicants ≥2, top_n=6) | fix: filter ≥2 first, then top_n for display |
-| B06-2 | low | bq06 | "since 2021" scope is a literal riding on dataset acquisition scope (true: pin min 2021-11-09) | accept: plan-stated scope; note |
-| B18-1 | low | bq18 (also bq12 label) | Current window 91 days inclusive vs prior 90 half-open — slight upward bias on the 130% rising test | fix: half-open windows |
-| B18-2 | low | bq18 | window-trend derivation string hardcodes "90-day" instead of the window param | fix: interpolate |
-| B19-1 | med | bq19 | BLOCKED/"not yet quantified" headline+body are literals; computed `rate_ready` only flips evidence_class → self-contradicting state if A-001 quantifies | fix: branch on rate_ready; fail loud when True |
-| B19-2 | low | bq19 | Unmatched manufacturers `.title()`-cased, plan says "stay raw" | accept: cosmetic; note for plan/code sync |
-| B23-1 | low | bq23 | E-23.1 (95% by close) judged via 100%-completion projection; target_pct unused in math — conservative direction | accept: plan defines projection as remaining÷rate; note |
-| B24-1 | med | bq24/25/26 | Complement-based status sets (`!= "scheduled"`, `not in COMPLETED`) absorb vocabulary drift; new status dilutes the pause trigger optimistically | fix: assert observed status ⊆ known vocabulary |
-| B26-1 | low | bq26 | F26-2 residual: R1 mitigation lacks the remote-path-rollback caveat from the prior dossier | fix: one clause at next re-answer |
-| B27-1 | med | bq27 | "(all on 2.9.x line)" narrated string-literal fact (true today against both pins) | fix: compute the qualifier |
-| B27-2 | med | bq27 | `behind_map.get(fw, 0)` — unmapped firmware silently counts as current (optimistic on a safety-framed metric) | fix: surface/fail on unmapped versions |
-| — | low | bq24/06/27, bq25 | Cleanup: fragile `lines.insert(-N)` tail arithmetic (bullet renders under Method heading); unused `assume_path` in bq25 | accept: cosmetic; fold into next touch |
-
-## Overall verdict
-
-**approved-with-findings.** No finding invalidates a published number in the current
-editions — every medium finding is either a knife-edge/latent hazard (H-1, H-2, B06-1,
-B24-1, B27-2) or a narrated-fact rot risk that is true against today's pins (B19-1, B27-1).
-The shared helpers the whole catalog leans on (`_median`, the expectations join + `[config]`
-dedupe, week/window logic, determinism posture, loud pin errors) are correct. The BQ-26
-refit implements all five commitments from the red-team/verification chain; F26-1 is
-actioned, F26-2 remains open (low). The two fixes worth doing before the next approval
-cycle: unrounded threshold comparisons (H-1 — the bq24 pause trigger is the stakes) and the
-`module_dispatch` exception discrimination (H-2 — it can mislabel a broken module as
-unimplemented).
+- No finding invalidated a published number in the current editions — every moderate
+  finding was a latent hazard or a narrated fact still true against today's pins.
+- The two fixes the review ranked most important — unrounded threshold comparisons
+  (F-1, the pause trigger being the stakes) and the module-dispatch exception
+  discrimination (F-2) — are both in place.
+- The engine-level note from a prior friction log (population exclusions missing from
+  one series' derivation method) remains open at the engine level and was not re-flagged
+  here.
 
 ```json
-{"reviews": [{"path": "computations.py", "verdict": "approved-with-findings", "summary": "Shared helpers sound (median/dedupe/windows/determinism verified; loud pin errors); BQ-26 refit commitments all implemented; findings are latent hazards and literal-fact rot risks, none invalidates a current published number.", "findings": [
-  {"severity": "medium", "summary": "helper/pct: thresholds compared on rounded rates (bq24 pause, bq18 breach, bq26 verdicts) — knife-edge risk", "disposition": "fix: compare unrounded, round only at render"},
-  {"severity": "medium", "summary": "helper/module_dispatch: ModuleNotFoundError inside an existing bq module swallowed as 'no computation'", "disposition": "fix: re-raise unless e.name is the dispatched module"},
-  {"severity": "low", "summary": "helper/evaluate_expectations: computed results with unknown E-ids silently dropped", "disposition": "fix: loud check on unknown result ids"},
-  {"severity": "low", "summary": "helper/pct: zero denominator renders 0.0 not n/a", "disposition": "accept: no caller stratum currently empties; revisit if one can"},
-  {"severity": "low", "summary": "helper/expectations_section: unescaped pipes in catalog text break markdown tables", "disposition": "accept: catalog-controlled input"},
-  {"severity": "medium", "summary": "bq06: 'fastest frequent filer' computed from top_n-truncated set; exact today by coincidence (6 of 15 >=2)", "disposition": "fix: filter >=2 clearances before top_n"},
-  {"severity": "low", "summary": "bq06: 'since 2021' scope literal rides on dataset acquisition scope (true vs pin)", "disposition": "accept: plan-stated dataset scope"},
-  {"severity": "low", "summary": "bq18: current window 91d inclusive vs prior 90d — slight upward bias on 130% rising test; bq12 label same +1d", "disposition": "fix: half-open windows"},
-  {"severity": "low", "summary": "bq18: window-trend derivation string hardcodes '90-day' instead of window param", "disposition": "fix: interpolate the param"},
-  {"severity": "medium", "summary": "bq19: BLOCKED/'not yet quantified' headline is a literal; rate_ready computed but unused - rots if A-001 quantifies", "disposition": "fix: branch headline on rate_ready; fail loud when True"},
-  {"severity": "low", "summary": "bq19: unmatched manufacturer names .title()-cased; plan says 'stay raw'", "disposition": "accept: cosmetic, note for plan/code sync"},
-  {"severity": "low", "summary": "bq23: E-23.1 95% target judged by 100%-completion projection; target_pct unused in math (conservative)", "disposition": "accept: plan defines projection as remaining/rate"},
-  {"severity": "medium", "summary": "bq24/25/26: complement status sets (!= scheduled / not in COMPLETED) absorb vocabulary drift, diluting the pause trigger", "disposition": "fix: assert observed statuses subset of known vocabulary"},
-  {"severity": "low", "summary": "bq26: F26-2 residual — R1 mitigation lacks remote-path-rollback caveat (moot while convertible=0)", "disposition": "fix: one clause at next re-answer"},
-  {"severity": "medium", "summary": "bq27: '(all on 2.9.x line)' narrated string-literal fact — true vs both pins, rots on refresh", "disposition": "fix: compute the qualifier from the data"},
-  {"severity": "medium", "summary": "bq27: behind_map.get(fw,0) counts unmapped firmware as current — optimistic default on safety-framed metric", "disposition": "fix: surface or fail on unmapped versions"},
-  {"severity": "low", "summary": "bq24/06/27/25: fragile lines.insert(-N) tail arithmetic + unused assume_path var — cosmetic", "disposition": "accept: fold into next touch"}
+{"reviews": [{"path": "computations.py", "verdict": "approved-with-findings", "summary": "Shared helpers sound (median/dedupe/windows/determinism verified; loud pin errors); BQ-26 refit commitments all implemented; findings were latent hazards and literal-fact rot risks, none invalidated a current published number. All 17 findings dispositioned: 11 fixed, 6 accepted (verified in current code 2026-07-27).", "findings": [
+  {"severity": "medium", "summary": "helper/pct: thresholds compared on rounded rates (bq24 pause, bq18 breach, bq26 verdicts) — knife-edge risk", "disposition": "fixed: pct_raw compare-side helper added; bq24/bq18/bq26 decision sites compare unrounded, round at render"},
+  {"severity": "medium", "summary": "helper/module_dispatch: ModuleNotFoundError inside an existing bq module swallowed as 'no computation'", "disposition": "fixed: re-raises unless e.name is the dispatched module"},
+  {"severity": "low", "summary": "helper/evaluate_expectations: computed results with unknown E-ids silently dropped", "disposition": "fixed: SystemExit names any computed result id not in the catalog"},
+  {"severity": "low", "summary": "helper/pct: zero denominator renders 0.0 not n/a", "disposition": "accepted: no caller stratum currently empties; revisit if one can"},
+  {"severity": "low", "summary": "helper/expectations_section: unescaped pipes in catalog text break markdown tables", "disposition": "accepted: catalog-controlled input"},
+  {"severity": "medium", "summary": "bq06: 'fastest frequent filer' computed from top_n-truncated set; exact today by coincidence (6 of 15 >=2)", "disposition": "fixed: >=2-clearance filter applied before top_n; fastest picked over all eligible applicants"},
+  {"severity": "low", "summary": "bq06: 'since 2021' scope literal rides on dataset acquisition scope (true vs pin)", "disposition": "accepted: plan-stated dataset scope"},
+  {"severity": "low", "summary": "bq18: current window 91d inclusive vs prior 90d — slight upward bias on 130% rising test; bq12 label same +1d", "disposition": "fixed: symmetric half-open windows in bq18; bq12 window exactly the labeled length"},
+  {"severity": "low", "summary": "bq18: window-trend derivation string hardcodes '90-day' instead of window param", "disposition": "fixed: derivation string interpolates the window param"},
+  {"severity": "medium", "summary": "bq19: BLOCKED/'not yet quantified' headline is a literal; rate_ready computed but unused - rots if A-001 quantifies", "disposition": "fixed: rate_ready==True now fails loud before output; BLOCKED wording reachable only in the truly blocked state"},
+  {"severity": "low", "summary": "bq19: unmatched manufacturer names .title()-cased; plan says 'stay raw'", "disposition": "accepted: cosmetic, note for plan/code sync"},
+  {"severity": "low", "summary": "bq23: E-23.1 95% target judged by 100%-completion projection; target_pct unused in math (conservative)", "disposition": "accepted: plan defines projection as remaining/rate"},
+  {"severity": "medium", "summary": "bq24/25/26: complement status sets (!= scheduled / not in COMPLETED) absorb vocabulary drift, diluting the pause trigger", "disposition": "fixed: assert_vocab guard asserts observed statuses subset of known vocabulary in all four campaign consumers"},
+  {"severity": "low", "summary": "bq26: F26-2 residual — R1 mitigation lacks remote-path-rollback caveat (moot while convertible=0)", "disposition": "fixed: caveat computed from rollbacks-by-method in the pin and appended to the mitigation"},
+  {"severity": "medium", "summary": "bq27: '(all on 2.9.x line)' narrated string-literal fact — true vs both pins, rots on refresh", "disposition": "fixed: qualifier computed from observed PP3000 firmware versions; lists actual versions otherwise"},
+  {"severity": "medium", "summary": "bq27: behind_map.get(fw,0) counts unmapped firmware as current — optimistic default on safety-framed metric", "disposition": "fixed: unmapped firmware surfaced as its own bucket — excluded from current counts, named in headline, warning line, data point"},
+  {"severity": "low", "summary": "bq24/06/27/25: fragile lines.insert(-N) tail arithmetic + unused assume_path var — cosmetic", "disposition": "accepted: fold into next touch"}
 ]}]}
 ```

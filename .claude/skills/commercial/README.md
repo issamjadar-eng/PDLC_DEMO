@@ -67,6 +67,32 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 13 (2026-07-27): Dossier authoring standard. Any file a `--detail-ref` points at
+  (`record-code-review` / `record-verification`) is now a structured review dossier
+  authored to the new `templates/review-dossier.md` (skeleton + filled mini-example):
+  title block, mandatory plain-language Summary first, What-we-checked bullets,
+  per-finding entries (never wide tables) with What's wrong / Why it matters /
+  Resolution carrying ACTUAL outcomes (`FIXED —` / `ACCEPTED —`; "Proposed
+  resolution" only pre-fix and updated when outcomes are known), Terms-used
+  definitions, and a technical appendix (line refs + JSON block) last. Whole-document
+  display constraint: tables ≤4 columns, cells ≤~25 words (dossiers render inline in
+  a console fold). Motivation: dossiers written engineer-to-engineer (jargon,
+  line-ref soup, ultra-wide tables, standing "proposed disposition") were unreadable
+  on the audit surface and silent on whether fixes actually landed. SKILL.md "Code
+  quality" now instructs review agents to author to the template and orchestrators to
+  update Resolution lines once dispositions land. New deterministic
+  `scripts/dossier_lint.py` (stdlib + PyYAML) mechanically bounds the AI-authored
+  prose: errors on missing/misordered sections (Summary must open the dossier),
+  finding entries missing a labeled line, Resolution lines not beginning
+  FIXED / ACCEPTED / NOT YET FIXED (the word "proposed" is an error), tables over 4
+  columns, and a missing/unparseable machine json block (`reviews`/`artifacts`
+  array); warns on dossier↔store verdict mismatches (`--store records.yml`) and on
+  reviewer jargon used in a finding but undefined under Terms used. Soft like the
+  code-quality gate — exit 1 on errors, warnings never block, filing is not gated.
+  SKILL.md adds a "Linting the dossier" note and an "Epistemics & guarantees"
+  paragraph (what a rerun reproduces: checks/hashes/records yes, prose no; the lint
+  bounds variance, fix-verification against current code is the control on
+  Resolution truth). No engine (`commercial.py`) change.
 - 12 (2026-07-27): Review history on the code-quality surface (sidecar schema
   1.2 → 1.3, purely additive). Review feedback: once a module's fixes landed on a new
   approved sha, the original review findings disappeared from the console — they sit
