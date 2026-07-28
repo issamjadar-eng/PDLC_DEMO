@@ -1,0 +1,75 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070523Z
+case:        TC-10 — Change-control round-trip + review-tier machinery (12-module pytest suite)
+UUT:         change-control@0.14.0
+user needs:  WUN-15
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   900
+started:     2026-07-28T07:05:29Z (UTC)
+exit_code:   1
+duration_s:  0.91
+judged by:   exit code
+status:      FAIL (exit code 1)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+........................................................................ [ 51%]
+................................................F..................      [100%]
+=================================== FAILURES ===================================
+____________ test_c_jira_renderer_graceful_degrades_on_auth_failure ____________
+
+    def test_c_jira_renderer_graceful_degrades_on_auth_failure() -> None:
+        from actions.adopt_helper import _expand_jira_macros
+    
+        md = (
+            "Before\n\n"
+            "<!-- AUTO:JIRA-LIST source=jira jql=project%3DX position=0 -->\n"
+            "<!-- /AUTO:JIRA-LIST position=0 -->\n\n"
+            "After\n"
+        )
+        report = NormalizationReport()
+        report.jira_macros.append({
+            "position": 0, "jql": "project=X",
+            "columns": None, "count": None, "server_id": None,
+            "max_issues": None, "raw_params": {},
+        })
+        # No cookies available → graceful-degrade comment expected. We don't
+        # mock urllib here; we monkey-patch attachments.extract_confluence_cookies
+        # to raise. If web-control isn't available the import fails the same
+        # way and we still fall through.
+        import lib.attachments as attachments_mod  # type: ignore
+        orig = attachments_mod.extract_confluence_cookies
+        try:
+            attachments_mod.extract_confluence_cookies = (
+                lambda *a, **kw: (_ for _ in ()).throw(
+                    RuntimeError("no cookies")
+                )
+            )
+            new_md, warnings = _expand_jira_macros(
+                md, "https://example.atlassian.net", report
+            )
+        finally:
+            attachments_mod.extract_confluence_cookies = orig
+        assert "jira-list render deferred" in new_md, new_md
+>       assert any("cookie bridge failed" in w for w in warnings), warnings
+E       AssertionError: ['jira position=0: HTTP Error 404: Not Found']
+E       assert False
+E        +  where False = any(<generator object test_c_jira_renderer_graceful_degrades_on_auth_failure.<locals>.<genexpr> at 0x107760860>)
+
+.claude/skills/change-control/tests/test_v010_bundle.py:243: AssertionError
+=============================== warnings summary ===============================
+.claude/skills/change-control/lib/config.py:63
+  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_config.py)
+    @dataclass
+
+.claude/skills/change-control/lib/config.py:63
+  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_verify.py)
+    @dataclass
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED .claude/skills/change-control/tests/test_v010_bundle.py::test_c_jira_renderer_graceful_degrades_on_auth_failure
+1 failed, 138 passed, 2 warnings in 0.65s
+

@@ -13,6 +13,8 @@ grounding:
   extra_roots:
     - .claude/skills/medtech-docs/references
     - .claude/skills/dhf-manifest/data
+    - tools/workbench-validation
+    - .claude/skills
 
 models:
   default: claude-sonnet-4-6

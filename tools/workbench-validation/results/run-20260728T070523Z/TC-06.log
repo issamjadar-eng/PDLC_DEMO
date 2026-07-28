@@ -1,0 +1,32 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070523Z
+case:        TC-06 — DHF-manifest discovery index (48 scenarios)
+UUT:         dhf-manifest@15
+user needs:  WUN-06
+command:     bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+timeout_s:   600
+started:     2026-07-28T07:05:27Z (UTC)
+exit_code:   0
+duration_s:  1.51
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+── discovery-index tests ──
+case1: clean resolution across mixed naming conventions
+case2: ambiguity — higher-ranked pattern wins, alternative recorded
+case3: L3 override via patterns_extra prepends to ranking
+case4: external_data roles count files and surface missing-folder gaps
+case5: external-mode DHF — nested sub-convention (folder/v*.md)
+case6: external-mode DHF — flat sub-convention (folder.md)
+case7: project-scoped multi_file role — folder pointer with file_count
+case8: per-dhf multi_file role (internal mode) — folder pointer
+case9: multi-match no-winner — ambiguity_notes + paired gap (was silently lost pre-fix)
+case10: frontmatter canonical_role: opt-in outranks filename patterns
+case11: external CLIENT-SLUG override — client slug, nested path, multi-file, governance
+
+Results: 48 passed, 0 failed
+

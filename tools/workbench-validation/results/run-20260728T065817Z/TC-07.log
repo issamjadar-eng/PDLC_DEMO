@@ -1,0 +1,19 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T065817Z
+case:        TC-07 — Trace-matrix graph integrity: bidirectional edges + Jira mirror (pytest)
+user needs:  WUN-06
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   600
+started:     2026-07-28T06:58:23Z (UTC)
+exit_code:   0
+duration_s:  0.31
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+.......................                                                  [100%]
+23 passed in 0.02s
+

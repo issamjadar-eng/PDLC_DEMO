@@ -1,0 +1,20 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070523Z
+case:        TC-03 — Sentinel renderer: idempotency + merge/preserve + guardrails (medtech-docs pytest)
+UUT:         medtech-docs@35
+user needs:  WUN-09
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   600
+started:     2026-07-28T07:05:25Z (UTC)
+exit_code:   0
+duration_s:  0.42
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+...........                                                              [100%]
+11 passed in 0.01s
+

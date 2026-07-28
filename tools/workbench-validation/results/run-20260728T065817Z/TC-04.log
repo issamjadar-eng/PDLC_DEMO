@@ -1,0 +1,20 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T065817Z
+case:        TC-04 — Advisor grounding renderer: loader + GROUNDING-block render + file-locator wiring (advisors pytest)
+user needs:  WUN-09
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   600
+started:     2026-07-28T06:58:20Z (UTC)
+exit_code:   0
+duration_s:  0.47
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+........................................................................ [ 81%]
+................                                                         [100%]
+88 passed in 0.09s
+

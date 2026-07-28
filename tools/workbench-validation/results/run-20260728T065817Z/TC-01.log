@@ -1,0 +1,116 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T065817Z
+case:        TC-01 — Task gate block/permit matrix (63 scenarios)
+user needs:  WUN-07
+command:     bash .claude/skills/task/tests/test-task-gate.sh
+cwd:         .
+env_unset:   CLAUDE_SESSION_ID
+env_set:     —
+requires:    jq
+timeout_s:   300
+started:     2026-07-28T06:58:17Z (UTC)
+exit_code:   0
+duration_s:  2.5
+judged by:   pass_pattern='ALL TESTS PASSED'; exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+
+Task Gate Hook — Test Suite
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Hook:      /Users/benxavier/projects/PDLC_DEMO/.claude/hooks/check-active-task.sh
+Activate:  /Users/benxavier/projects/PDLC_DEMO/.claude/hooks/task-activate.sh
+State dir: /Users/benxavier/projects/PDLC_DEMO/.state
+Session:   test-session-1785221897
+
+1. Activation Script — Basic Operations
+  PASS  add task → success message
+  PASS  add second task → success message
+  PASS  list shows both tasks
+  PASS  add duplicate → no error (idempotent)
+  PASS  duplicate add does not create duplicate line
+  PASS  remove task → success message
+  PASS  list after remove shows only 024
+  PASS  025 no longer in state file after remove
+  PASS  clear → success message
+  PASS  list after clear → no active tasks
+
+2. Activation Script — Edge Cases
+  PASS  list nonexistent session → no active tasks
+  PASS  add with no task_id → usage error
+  PASS  unknown action → error
+  PASS  help → usage info
+
+3. Activation Script — State File Location
+  PASS  state file created in .state/
+  PASS  no state file leaked into .claude/hooks/
+
+4. Hook — Core Gate (allow/deny)
+  PASS  Active task, non-exempt path → ALLOW
+  PASS  No task (fake session), non-exempt path → DENY
+
+5. Hook — Exempt Paths (allow without task)
+  PASS  tasks/* (task doc) → ALLOW
+  PASS  tasks/* (index) → ALLOW
+  PASS  tasks/* (SECOPS.md) → ALLOW
+  PASS  .state/* → ALLOW
+  PASS  .claude/settings.json → ALLOW
+  PASS  .claude/settings.local.json → ALLOW
+  PASS  .claude/sync-log.md → ALLOW
+  PASS  .claude/MEMORY.md → ALLOW
+  PASS  .claude/memory/*.md → ALLOW
+
+6. Hook — Non-Exempt Paths (deny without task)
+  PASS  CLAUDE.md → DENY
+  PASS  .gitignore → DENY
+  PASS  project.yml → DENY
+  PASS  docs/ file → DENY
+  PASS  setup.sh → DENY
+  PASS  glossary.md → DENY
+  PASS  .claude/skills/*/SKILL.md → DENY
+  PASS  .claude/skills/*/README.md → DENY
+  PASS  .claude/skills/*/VERSION → DENY
+  PASS  .claude/skills/*/agents/*.md (source) → DENY
+  PASS  .claude/skills/*/hooks/*.sh (source) → DENY
+  PASS  .claude/skills/*/scripts/* → DENY
+  PASS  .claude/hooks/* regular file → DENY
+  PASS  .claude/rules/* → DENY
+
+6b. Hook — Symlink resolution (can't bypass the gate via a symlink)
+  PASS  tasks/* symlink → skill SKILL.md → DENY (resolves)
+  PASS  .claude/agents/* symlink → skill SKILL.md → DENY (resolves)
+
+7. Hook — Multi-Task Lifecycle
+  PASS  Two tasks (024+025) → ALLOW
+  PASS  After removing 025, 024 still active → ALLOW
+  PASS  All tasks removed → DENY
+
+8. Hook — Denial Message Contains Session ID
+  PASS  Denial includes session ID
+  PASS  Denial includes activation command
+  PASS  Denial includes /task create hint
+
+9. Hook — Edge Cases
+  PASS  Empty target path → DENY (no exempt match)
+  PASS  Empty state file (cleared) → DENY
+  PASS  State file deleted → DENY
+  PASS  Empty session ID → DENY (no state file match)
+
+10. End-to-End — Activate Script + Hook
+  PASS  E2E: fresh session → DENY
+  PASS  E2E: after activate → ALLOW
+  PASS  E2E: after complete → DENY
+  PASS  E2E: two tasks active → ALLOW
+  PASS  E2E: one task remaining → ALLOW
+  PASS  E2E: all completed → DENY
+
+11. Session Isolation
+  PASS  Session A has task → ALLOW
+  PASS  Session B has task → ALLOW
+  PASS  Session A completed → DENY
+  PASS  Session B still active → ALLOW
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+ALL TESTS PASSED  (63/63)
+
+

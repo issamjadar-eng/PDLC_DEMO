@@ -1,0 +1,61 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070932Z
+case:        TC-08 — Submission-tracker wiring works
+purpose:     Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents.
+approach:    Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations.
+UUT:         tracker@14
+user needs:  WUN-06
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   600
+started:     2026-07-28T07:09:38Z (UTC)
+exit_code:   1
+duration_s:  0.36
+judged by:   exit code
+status:      FAIL (exit code 1)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+..........F                                                              [100%]
+=================================== FAILURES ===================================
+____ TestBuildDraftContextScript.test_script_emits_bundle_for_existing_row _____
+
+self = <test_create_draft_wiring.TestBuildDraftContextScript testMethod=test_script_emits_bundle_for_existing_row>
+
+    def test_script_emits_bundle_for_existing_row(self) -> None:
+        # Find the project root by walking up for CLAUDE.md
+        d = _SKILL_DIR
+        for _ in range(8):
+            if (d / "CLAUDE.md").exists():
+                break
+            if d.parent == d:
+                self.skipTest("could not find project CLAUDE.md")
+                return
+            d = d.parent
+        project_dir = d
+        # Pick any row from submission-tracker.md (use Q4 if present)
+        tracker_md = project_dir / "docs/project/submissions/submission-tracker.md"
+        if not tracker_md.is_file():
+            self.skipTest("no submission-tracker.md in this project")
+            return
+        # Find first row id
+        import re
+        m = re.search(r"^\|\s*([A-Z][A-Z0-9-]+)\s*\|", tracker_md.read_text(encoding="utf-8"), re.MULTILINE)
+        if not m:
+            self.skipTest("no rows found in tracker md")
+            return
+        row_id = m.group(1)
+        script = _SKILL_DIR / "scripts" / "build-draft-context.py"
+        r = subprocess.run(
+            [sys.executable, str(script), "--row", row_id, "--json", "--project-dir", str(project_dir)],
+            capture_output=True, text=True, timeout=30,
+        )
+>       self.assertEqual(r.returncode, 0, msg=f"stderr: {r.stderr}")
+E       AssertionError: 1 != 0 : stderr: ERROR: row 'DHF' not found in inventory
+
+.claude/skills/tracker/tests/test_create_draft_wiring.py:138: AssertionError
+=========================== short test summary info ============================
+FAILED .claude/skills/tracker/tests/test_create_draft_wiring.py::TestBuildDraftContextScript::test_script_emits_bundle_for_existing_row
+1 failed, 10 passed in 0.08s
+

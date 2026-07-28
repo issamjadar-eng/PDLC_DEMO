@@ -220,6 +220,11 @@
         {% if setup.environment.stale or not setup.environment.last_check %}<span class="su-dot" title="environment check needed"></span>
         {% elif setup.environment.last_check.counts.warn or setup.environment.last_check.counts.error %}<span class="su-dot" title="environment warnings"></span>{% endif %}</a>
       {% endif %}
+      {% if setup.workbench.available %}
+      <a href="#workbench" data-sec="workbench"><svg class="su-ico"><use href="#su-ic-check"/></svg>Validation
+        {% if not setup.workbench.data or setup.workbench.stale %}<span class="su-dot" title="validation run needed"></span>
+        {% elif setup.workbench.data.summary.verdict != 'PASS' %}<span class="su-dot" title="validation verdict: {{ setup.workbench.data.summary.verdict }}"></span>{% endif %}</a>
+      {% endif %}
     </nav>
     <div class="su-side-foot">
       Read from <code>project.yml</code>, <code>.mcp.json</code>, and
@@ -1027,6 +1032,165 @@
       </p>
     </section>
     {% endif %}
+
+    {# ========================= WORKBENCH VALIDATION ===================== #}
+    {% if setup.workbench.available %}
+    {% set wb = setup.workbench %}
+    {% set wbd = wb.data %}
+    <section class="su-sec" id="sec-workbench" data-title="Workbench Validation">
+      <div class="su-head">
+        <h1>Workbench Validation</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search needs & tests…" data-filter="workbench"></div>
+      </div>
+      <p class="su-sub">
+        Tool validation of the AI workbench itself — the <code>.claude/</code> toolchain
+        (skills, agents, hooks, scripts) used to author and manage controlled artifacts.
+        Three components: a <strong>user-needs register</strong> (intended use + risk tier),
+        an <strong>executable test run</strong> over the toolchain's own suites and audits,
+        and the generated <strong>validation report</strong>. Owned by the
+        <code>workbench-validation</code> skill; this page is a read-only view of its sidecar.
+        Validates the toolchain, not the device.
+      </p>
+
+      {% if not wbd %}
+      <div class="su-list"><div class="su-empty">No validation run recorded yet — run one below,
+        or in a terminal: <code>python3 .claude/skills/workbench-validation/scripts/run_validation.py --root . --render</code></div></div>
+      <div class="su-actions" style="margin-top:14px">
+        <button class="su-btn" id="su-wb-run" onclick="suWbRender()">Run first validation (~1–2 min)</button>
+      </div>
+      {% else %}
+      {% if wbd.banner %}<div class="su-warn">{{ wbd.banner }}</div>{% endif %}
+      {% if wb.stale %}
+      <div class="su-warn">The repository has moved since this run (baseline
+        <code>{{ wbd.baseline.git_sha_short }}</code> vs HEAD <code>{{ wb.head_sha }}</code>) —
+        the configuration baseline is stale. Re-run the validation.</div>
+      {% endif %}
+
+      <div class="su-h2">Status</div>
+      <div class="su-tiles">
+        <div class="su-tile">
+          <div class="su-tile-n">{{ wbd.summary.verdict }}</div>
+          <div class="su-tile-l">overall verdict{{ ' · partial run' if wbd.run.partial }}</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n">{{ wbd.run.started[:10] if wbd.run.started else '—' }}</div>
+          <div class="su-tile-l">last run{{ ' · ' + wbd.run.started[11:16] + ' UTC' if wbd.run.started }} · {{ wbd.run.duration_s }}s</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n">{{ wbd.summary.tests.PASS or 0 }}/{{ wbd.summary.tests.total }}</div>
+          <div class="su-tile-l">test cases passed</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n">{{ wbd.summary.needs.total }}</div>
+          <div class="su-tile-l">user needs · {{ wbd.summary.needs.pass or 0 }} pass / {{ wbd.summary.needs.fail or 0 }} fail / {{ (wbd.summary.needs.process_control or 0) + (wbd.summary.needs.exploratory or 0) }} process-assured</div>
+        </div>
+        <div class="su-tile">
+          <div class="su-tile-n"><code>{{ wbd.baseline.git_sha_short }}</code>{{ ' ±' if wbd.baseline.git_dirty }}</div>
+          <div class="su-tile-l">config baseline · {{ wbd.baseline.skills_total }} skills · {{ wbd.baseline.hooks_total }} hooks</div>
+        </div>
+      </div>
+      {% set op = wbd.run.operator or {} %}
+      <p class="su-sub" style="margin-top:10px">
+        <strong>Setup record:</strong>
+        run by {{ op.git_user or op.os_user or 'unknown' }}{% if op.os_user %} ({{ op.os_user }}@{{ op.hostname or '?' }}){% endif %}
+        · invoked via {{ wbd.run.invoked_via or 'cli' }}
+        · {{ wbd.run.started }} → {{ wbd.run.finished or '…' }}
+        {% if wbd.run.pinned_manifest %} · test-case definitions pinned:
+        <a href="/documents#path={{ wbd.run.pinned_manifest.path }}" target="_blank" rel="noopener">{{ wbd.run.pinned_manifest.path.split('/')[-1] }} ↗</a>
+        (sha256 <code>{{ wbd.run.pinned_manifest.sha256[:12] }}…</code>){% endif %}
+        — per-case test sources are copied ("pinned") into this run's evidence folder, so the exact
+        versions tested stay reviewable across validation runs.
+      </p>
+
+      <div class="su-actions" style="margin-top:14px">
+        <button class="su-btn" id="su-wb-run" onclick="suWbRender()">Re-run validation (~1–2 min)</button>
+        {% if wbd.report_path %}<a class="su-btn" href="/documents#path={{ wbd.report_path }}" target="_blank" rel="noopener">Open validation report ↗</a>{% endif %}
+        {% if wbd.plan_path %}<a class="su-btn" href="/documents#path={{ wbd.plan_path }}" target="_blank" rel="noopener">Open validation plan ↗</a>{% endif %}
+      </div>
+
+      <div class="su-h2">User needs (WUN register)</div>
+      <div class="su-list" data-list="workbench">
+        <div class="su-cols" style="grid-template-columns:64px 145px 1fr 36px 118px 110px">
+          <span>ID</span><span>Role</span><span>Need</span><span>Tier</span><span>Coverage</span><span>Verdict</span></div>
+        {% for n in wbd.needs %}
+        <div class="su-row" style="grid-template-columns:64px 145px 1fr 36px 118px 110px;align-items:start"
+             data-search="{{ n.id | lower }} {{ n.role | lower }} {{ n.class }} {{ n.need | lower }} {{ n.verdict | lower }}"
+             title="{{ n.need }}{% if n.implemented_by %} — implemented by: {{ n.implemented_by }}{% endif %}{% if n.process_controls %} — controls: {{ n.process_controls | join('; ') }}{% endif %}{% if n.tests %} — evidence: {{ n.tests | join(', ') }}{% endif %}">
+          <span class="su-type">{{ n.id }}</span>
+          <span class="su-type" style="overflow-wrap:break-word">{{ n.role or n.class }}</span>
+          <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.need }}</span>
+          <span class="su-type">{{ n.tier }}</span>
+          <span class="su-type">{{ n.coverage }}</span>
+          <span class="su-status">
+            {% if n.verdict == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
+            {% elif n.verdict == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
+            {% elif n.verdict in ('PARTIAL', 'NO-EVIDENCE') %}<span class="su-badge warning">{{ n.verdict | lower }}</span>
+            {% else %}<span class="su-badge info">{{ n.verdict | lower }}</span>{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="su-h2">Test results — run <code>{{ wbd.run.run_id }}</code></div>
+      <p class="su-sub">Click a row for a plain-language explanation of what the case checks
+        and how. The ID links to the actual test source; the Log column opens the case's
+        full execution evidence (command, environment, timestamps, exit code, judgment
+        rule, complete captured output).</p>
+      <div class="su-list" data-list="workbench">
+        <div class="su-cols" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 92px 52px 48px;column-gap:12px">
+          <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span>Status</span><span>Time</span><span>Log</span></div>
+        {% for t in wbd.tests %}
+        <div class="su-row" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 92px 52px 48px;column-gap:12px;align-items:start;cursor:pointer"
+             onclick="suWbTog('su-wbx-{{ t.id }}')"
+             data-search="{{ t.id | lower }} {{ t.title | lower }} {{ t.uut | join(' ') | lower }} {{ t.status | lower }} {{ (t.description or '') | lower }}"
+             {% if t.reason %}title="{{ t.reason }}"{% endif %}>
+          <span class="su-type">{% if t.source %}<a href="/documents#path={{ t.source }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="open the actual test source">{{ t.id }}</a>{% else %}{{ t.id }}{% endif %}</span>
+          <span style="color:var(--body-text,#e6e9ef);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.title }}</span>
+          <span class="su-type" style="overflow-wrap:break-word;white-space:normal"
+                title="unit(s) under test, at the version exercised in this run">
+            {%- for u in t.uut or [] -%}
+              {{ u }}{% if t.uut_versions and t.uut_versions[u] %}@{{ t.uut_versions[u] }}{% endif %}{{ ", " if not loop.last }}
+            {%- else -%}—{%- endfor -%}
+          </span>
+          <span class="su-type">{{ t.wun | join(', ') }}</span>
+          <span class="su-status">
+            {% if t.status == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
+            {% elif t.status == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
+            {% elif t.status == 'SKIPPED' %}<span class="su-badge warning">skipped</span>
+            {% else %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">error</span>{% endif %}
+          </span>
+          <span class="su-type">{{ t.duration_s }}s</span>
+          <span class="su-type">{% if t.log %}<a href="/documents#path={{ t.log }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">log ↗</a>{% else %}—{% endif %}</span>
+        </div>
+        <div id="su-wbx-{{ t.id }}" style="display:none;padding:10px 14px 14px 68px;border-bottom:1px solid var(--border,rgba(255,255,255,.07));font-size:.82rem;line-height:1.55;color:var(--body-text,#e6e9ef)">
+          {% if t.description %}<p style="margin:0 0 8px">{{ t.description }}</p>{% endif %}
+          {% if t.approach %}<p style="margin:0 0 8px"><strong>How it's tested:</strong> {{ t.approach }}</p>{% endif %}
+          {% if t.judged_by %}<p style="margin:0 0 8px"><strong>Pass rule:</strong> {{ t.judged_by }}.</p>{% endif %}
+          {% if t.reason %}<p style="margin:0 0 8px"><strong>This run:</strong> {{ t.reason }}.</p>{% endif %}
+          <p class="su-type" style="margin:0;overflow-wrap:anywhere">
+            <strong>Command:</strong> <code>{{ t.cmd }}</code>
+            {% if t.source %} · <a href="/documents#path={{ t.source }}" target="_blank" rel="noopener">test source ↗</a>{% endif %}
+            {% if t.pinned %} · <a href="/documents#path={{ t.pinned }}" target="_blank" rel="noopener">pinned copy (this run) ↗</a>{% endif %}
+            {% if t.log %} · <a href="/documents#path={{ t.log }}" target="_blank" rel="noopener">evidence log ↗</a>{% endif %}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="su-h2">Validation report</div>
+      <p class="su-sub">
+        The single generated report — needs × tests × results → per-need verdicts, known
+        anomalies (including the LLM non-determinism statement), and the fitness-for-use
+        conclusion — lives at <code>{{ wbd.report_path }}</code>
+        {% if wbd.report_path %}(<a class="su-btn" style="display:inline;padding:2px 8px" href="/documents#path={{ wbd.report_path }}" target="_blank" rel="noopener">open ↗</a>){% endif %}.
+        Sources of truth: the plan (<code>{{ wbd.plan_path }}</code>) and the manifest
+        (<code>{{ wbd.manifest_path }}</code>) — edit those, then re-run; the report and
+        this page are generated projections.
+      </p>
+      {% endif %}
+    </section>
+    {% endif %}
   </section>
 </div>
 
@@ -1177,6 +1341,28 @@ async function suEnvCheck() {
     suToast('Check complete — ' + j.report.counts.ok + ' OK, '
       + (j.report.counts.warn + j.report.counts.error) + ' warnings/errors.');
     setTimeout(function () { location.reload(); }, 900);
+  } catch (e) {
+    suToast(String(e), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+function suWbTog(id) {
+  var el = document.getElementById(id);
+  if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+}
+async function suWbRender() {
+  var btn = document.getElementById('su-wb-run');
+  btn.disabled = true;
+  var original = btn.textContent;
+  btn.textContent = 'Running validation… (executes the manifest server-side, 1–2 min)';
+  try {
+    var res = await fetch('/setup/workbench/render', { method: 'POST' });
+    var j = await res.json();
+    if (!res.ok || !j.ok) { suToast((j && j.detail) || j.summary || 'Validation run failed', true); return; }
+    suToast('Validation complete — ' + (j.summary || 'report refreshed') + '.');
+    setTimeout(function () { location.reload(); }, 1200);
   } catch (e) {
     suToast(String(e), true);
   } finally {
