@@ -67,6 +67,30 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 14 (2026-07-27): Verification plan — declared gates, computed done-marks (sidecar
+  schema 1.3 → 1.4, purely additive). A plan's new `## Verification plan` section
+  itemizes the quality/audit checks the analysis commits to as checkbox lines
+  `- [ ] <gate-token> — <note>`. Vocabulary: machine gates `claim-lint`,
+  `pin-freshness`, `plan-currency`, `code-audit`; agent gates `adversarial-verify`,
+  `red-team`, `intent-check`, `reference-audit`, `human-review`; unknown tokens carry
+  as `custom` (declared, done unknown → informational). The literal checkbox stays
+  `[ ]` forever — done state is COMPUTED per edition from actual records (plans are
+  hash-pinned; hand-ticking would register as artificial plan drift; mirrors the
+  expectations declared-vs-actual pattern). Engine: tolerant section parse (absent →
+  `verification_plan: null`, grandfathered, no error); `answer`/`lint`/`audit`/
+  `approve` emit `verification_plan: [{gate, kind, note, done, evidence}]` into
+  quality.json (claim-lint from lint errors, pin-freshness from unwaived-stale pins,
+  plan-currency from the plan status, code-audit from the code block status, agent
+  gates from filed verification records incl. carried ones — evidence "verdict by
+  whom, date"); `record-verification` recomputes the block after filing so a new
+  record flips its gate; `render` mirrors the shown edition's checklist into the
+  sidecar row (schema 1.4). Soft gate: `approve` prints "verification plan: X of Y
+  declared gates satisfied" + the unmet list — never blocks (consistent with
+  code-quality); the `plan-currency` lint check gains a WARNING (not error) when a
+  plan lacks the section. `plan-init` scaffolds the section pre-seeded with the four
+  machine gates + adversarial-verify + red-team, each with a one-line note. Pairs
+  with project-console 1.57.0 (Plan-tab checklist with ✓/○/• computed marks +
+  evidence per gate; "verification N/M" chip on the Quality & audit tab header).
 - 13 (2026-07-27): Dossier authoring standard. Any file a `--detail-ref` points at
   (`record-code-review` / `record-verification`) is now a structured review dossier
   authored to the new `templates/review-dossier.md` (skeleton + filled mini-example):

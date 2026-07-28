@@ -1,0 +1,13 @@
+bq: BQ-07
+edition: 2026-07-27.3
+approved_by: Ben Xavier
+approved_at: '2026-07-28T01:14:39+00:00'
+checks:
+  lint_errors: 0
+  lint_warnings: 0
+  freshness: pass
+  verify_note: 'verification-plan re-pin cycle: methodology unchanged; prior adversarial-verify/red-team
+    verdicts carried in quality.json; declared-gate state on the audit surface'
+content_hashes:
+  report.md: 5622281d4e7ba40eb6c79501bdd8323a40953ae6bbd076a8f035e8f4228d85c1
+  data.json: 82c773f70576ba5f79e039ee4ff3d6a52ded995109d0e7c42e9f2678d6e9b4d7

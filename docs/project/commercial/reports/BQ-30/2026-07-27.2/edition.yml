@@ -1,6 +1,6 @@
 bq: BQ-30
 edition: 2026-07-27.2
-status: approved
+status: superseded
 created_at: '2026-07-27T18:32:51+00:00'
 pins:
   commercial/internal-upgrade-campaign: '2026-07-27'
@@ -17,3 +17,4 @@ code_artifacts:
   sha256: 90b0d06b9503e9ee2aae6ba5e0b74ebad2513893d6ac8f8866c73bcdb4976e3b
 - path: corpus:commercial/internal-fleet/gen.py
   sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961
+superseded_by: 2026-07-27.3

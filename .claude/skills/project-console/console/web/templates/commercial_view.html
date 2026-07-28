@@ -82,6 +82,7 @@
     <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
       {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
       {% if code %}<span class="cm-chip {{ code._status.cls }}" title="Computation code: {{ code._status.label }}">{{ code._status.glyph }} code</span>{% endif %}
+      {% if vplan %}<span class="cm-chip {{ vplan._cls }}" title="Verification plan: {{ vplan.met }} of {{ vplan.total }} computable declared gates satisfied (checklist on the Plan tab)">verification {{ vplan.met }}/{{ vplan.total }}</span>{% endif %}
     </button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-data">Data
       <span class="cm-cat-n">{{ tables | length }} tables</span>
@@ -544,6 +545,31 @@
 
   <div id="cm-tab-plan" hidden>
     {% if plan_status %}<p><span class="cm-chip {{ plan_status.cls }}">{{ plan_status.label }}</span></p>{% endif %}
+    {# Verification-plan checklist (sidecar schema 1.4) — the plan DECLARES the
+       gates; done-marks are COMPUTED by the engine from this edition's records
+       (lint, filed verifications, code-quality). The literal plan checkbox
+       stays [ ] forever — hand-ticking would register as plan drift. Absent
+       (schema ≤1.3 or no section) → nothing renders, zero errors. #}
+    {% if vplan %}
+    <section class="cm-q-card cm-vplan">
+      <h3>Verification plan
+        <span class="cm-chip {{ vplan._cls }}">{{ vplan.met }}/{{ vplan.total }} satisfied</span>
+        <span class="cm-muted">— gates declared in the plan; done-marks computed from this edition's records, never hand-ticked · soft gate, nothing blocks</span></h3>
+      {% for g in vplan.gates %}
+      <div class="cm-vplan-row">
+        <span class="cm-vp-mark {{ g._mark.cls }}" title="{{ g._mark.label }}" aria-label="{{ g._mark.label }}">{{ g._mark.glyph }}</span>
+        <div class="cm-vp-body">
+          <div class="cm-vp-head">
+            <span class="cm-mono cm-vp-gate">{{ g.gate }}</span>
+            {% if g.kind == 'custom' %}<span class="cm-chip vx-none" title="Not in the engine's gate vocabulary — declared, completion not machine-computed">custom</span>{% endif %}
+            {% if g.note %}<span class="cm-muted cm-vp-note">{{ g.note }}</span>{% endif %}
+          </div>
+          {% if g.evidence %}<div class="cm-vp-ev">{{ g.evidence }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
     {% if plan_html %}
     <p class="cm-muted">The analysis contract for this question — user-owned prose (goal, approach,
       assumptions, data, assertions &amp; limits). Edit

@@ -441,6 +441,25 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-dossier-body tbody tr:nth-child(even) { background: color-mix(in srgb, var(--body-text-muted, #64748b) 5%, transparent); }
 .cm-dossier-body tbody tr:hover { background: color-mix(in srgb, var(--body-text-muted, #64748b) 10%, transparent); }
 
+/* Verification-plan checklist (Plan tab; sidecar schema 1.4; console 1.57.0).
+   Declared gates with COMPUTED done-marks — ✓ done / ○ not done / • informational.
+   Tones reuse the existing chip vocabulary (vx-met / vx-risk / vx-none); the mark
+   is a colored disc with a glyph, never color alone. */
+.cm-vplan { margin: 0 0 1rem; }
+.cm-vplan-row { display: grid; grid-template-columns: 1.45rem minmax(0, 1fr); gap: .55rem;
+  align-items: start; border-top: 1px dashed var(--border, #e2e8f0); padding: .45rem 0; }
+.cm-vplan-row:first-of-type { border-top: none; }
+.cm-vp-mark { display: inline-flex; align-items: center; justify-content: center;
+  width: 1.3rem; height: 1.3rem; border-radius: 50%; font-size: .82rem; font-weight: 700;
+  --c: var(--body-text-muted, #64748b); margin-top: .05rem;
+  background: color-mix(in srgb, var(--c) 15%, transparent);
+  color: color-mix(in srgb, var(--c) 70%, var(--body-text, #1f2937)); cursor: help; }
+.cm-vp-head { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; }
+.cm-vp-gate { font-weight: 600; }
+.cm-vp-note { font-size: .8rem; }
+.cm-vp-ev { font-size: .74rem; color: var(--body-text-muted, #64748b); margin-top: .1rem;
+  font-variant-numeric: tabular-nums; }
+
 /* Inline code + fenced blocks — code look via tokens; the machine-summary JSON
    fence at the dossier's end keeps its own bounded scroll instead of stretching
    the fold. Blockquotes read as asides, consistent with the verdict accent. */

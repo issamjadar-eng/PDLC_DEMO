@@ -4,7 +4,7 @@ The console never computes a business answer and never parses answer markdown fo
 structure. It reads only what the `commercial` skill publishes under
 `docs/project/commercial/`:
 
-    .console/commercial-index.json         — question roster + per-BQ statuses (schema 1.0)
+    .console/commercial-index.json         — question roster + per-BQ statuses (schema 1.x)
     reports/BQ-NN/<edition>/data.json      — chart series + verdicts (evidence-classed)
     reports/BQ-NN/<edition>/edition.yml    — lifecycle metadata (draft/approved/superseded, pins)
     reports/BQ-NN/<edition>/approval.yml   — approver, checks, content hashes (approved editions)

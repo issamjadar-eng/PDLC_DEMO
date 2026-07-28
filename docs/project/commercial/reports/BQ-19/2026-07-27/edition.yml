@@ -1,6 +1,6 @@
 bq: BQ-19
 edition: '2026-07-27'
-status: approved
+status: superseded
 created_at: '2026-07-27T18:32:46+00:00'
 pins:
   commercial/openfda-maude-infusion-mfr: '2026-07-22'
@@ -11,3 +11,4 @@ plan:
 code_artifacts:
 - path: computations.py
   sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+superseded_by: 2026-07-27.2

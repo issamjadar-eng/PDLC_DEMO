@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.3"
+SCHEMA_VERSION = "1.4"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
@@ -481,6 +481,116 @@ def plan_hash(root: Path, bq: str):
     return sha256_file(p) if p.exists() else None
 
 
+# ------------------------------------------------------- verification plan (declared gates)
+#
+# A plan's `## Verification plan` section DECLARES the quality/audit checks the
+# analysis commits to, as checkbox lines `- [ ] <gate> — <note>`. The literal
+# checkbox stays `[ ]` forever: done-marks are COMPUTED from the edition's actual
+# records (lint results, filed verification records, code-quality status) — never
+# hand-ticked. Plans are hash-pinned by editions, so ticking a box would register
+# as artificial plan drift; this mirrors the expectations declared-vs-actual
+# pattern. A plan without the section is grandfathered: verification_plan: null.
+
+VP_MACHINE_GATES = ("claim-lint", "pin-freshness", "plan-currency", "code-audit")
+VP_AGENT_GATES = ("adversarial-verify", "red-team", "intent-check",
+                  "reference-audit", "human-review")
+
+VP_HEADING_RE = re.compile(r"^##\s+verification\s+plan\s*$", re.I)
+# `- [ ] gate-token — free-text note` (checkbox state tolerated but ignored;
+# em/en dash, colon, or hyphen accepted as the token/note separator)
+VP_ITEM_RE = re.compile(r"^\s*[-*]\s*\[[ xX]\]\s*`?([A-Za-z0-9][\w-]*)`?\s*(?:[—–:-]+\s*(.*?))?\s*$")
+
+
+def parse_verification_plan(root: Path, bq: str):
+    """Parse the plan's `## Verification plan` section. Tolerant by design:
+    no plan file or no section -> None (grandfathered, never an error);
+    section present -> [{gate, note}] in declaration order."""
+    pp = plan_path(root, bq)
+    if not pp.exists():
+        return None
+    in_section, out = False, None
+    for line in pp.read_text().splitlines():
+        stripped = line.strip()
+        if re.match(r"^#{1,2}\s", stripped):
+            if VP_HEADING_RE.match(stripped):
+                in_section, out = True, []
+            elif in_section:
+                break  # next h1/h2 ends the section
+            continue
+        if in_section:
+            m = VP_ITEM_RE.match(line)
+            if m:
+                out.append({"gate": m.group(1), "note": (m.group(2) or "").strip()})
+    return out
+
+
+def vp_gate_kind(gate: str) -> str:
+    if gate in VP_MACHINE_GATES:
+        return "machine"
+    if gate in VP_AGENT_GATES:
+        return "agent"
+    return "custom"
+
+
+def verification_plan_block(root: Path, bq: str, quality):
+    """The computed checklist for quality.json + the sidecar (schema 1.4):
+    [{gate, kind, note, done, evidence}]. `done` is derived from the edition's
+    quality record — machine gates from the lint/freshness/plan/code sections,
+    agent gates from filed verification records (carried ones included), custom
+    gates done: null (declared, completion not machine-computable). Computed
+    against the CURRENT plan file; plan drift is separately surfaced by the
+    plan-currency check. SOFT everywhere — never blocks anything."""
+    gates = parse_verification_plan(root, bq)
+    if gates is None:
+        return None
+    lint = (quality or {}).get("lint") or {}
+    vers = (quality or {}).get("verifications") or []
+    out = []
+    for g in gates:
+        gate, kind = g["gate"], vp_gate_kind(g["gate"])
+        done, evidence = None, ""
+        if kind == "custom":
+            evidence = "custom gate — completion not machine-computed (informational)"
+        elif quality is None:
+            evidence = "no quality record for this edition — run audit"
+        elif kind == "machine":
+            if gate == "claim-lint":
+                done = lint.get("status") == "pass"
+                evidence = (f"{len(lint.get('errors', []))} error(s) / "
+                            f"{len(lint.get('warnings', []))} warning(s)")
+            elif gate == "pin-freshness":
+                fr = quality.get("freshness") or []
+                done = not any(f.get("band") == "stale" and not f.get("waived") for f in fr)
+                bands = {}
+                for f in fr:
+                    bands[f.get("band")] = bands.get(f.get("band"), 0) + 1
+                evidence = ", ".join(f"{n} pin(s) {b}" for b, n in bands.items()) or "no pins"
+                if any(f.get("waived") for f in fr):
+                    evidence += " (waived)"
+            elif gate == "plan-currency":
+                st = (quality.get("plan") or {}).get("status")
+                done = st == "in-sync"
+                evidence = f"plan {st}" if st else "plan status not recorded"
+            elif gate == "code-audit":
+                st = (quality.get("code") or {}).get("status")
+                done = st == "reviewed-current"
+                evidence = f"code {st}" if st else "no code-quality record — run code-audit"
+        else:  # agent gate: a filed verification record of this type on this edition
+            recs = [v for v in vers if v.get("type") == gate]
+            if recs:
+                v = max(recs, key=lambda r: r.get("at") or "")
+                done = True
+                evidence = f"{v.get('verdict')} by {v.get('by')}, {(v.get('at') or '')[:10]}"
+                if v.get("carried_from_replaced_draft"):
+                    evidence += " (carried from replaced draft)"
+            else:
+                done = False
+                evidence = f"no {gate} record filed on this edition"
+        out.append({"gate": gate, "kind": kind, "note": g["note"],
+                    "done": done, "evidence": evidence})
+    return out
+
+
 def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
     """Returns (errors, warnings, detail). Deterministic; no LLM judgment.
     detail = {"references": [...], "freshness": [...], "checks": [...]} — the audit
@@ -636,6 +746,14 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
             detail["plan"] = {"path": f"plans/{bq}.md", "status": "drifted", "pinned": pinned, "current": cur}
         else:
             detail["plan"] = {"path": f"plans/{bq}.md", "status": "in-sync", "pinned": pinned, "current": cur}
+        # a plan without a `## Verification plan` section is grandfathered
+        # (verification_plan: null) but nudged — declared gates are the contract
+        # the computed done-marks hang on. WARNING, never an error.
+        if parse_verification_plan(root, bq) is None:
+            warn("plan-currency",
+                 f"plans/{bq}.md has no '## Verification plan' section — declare the "
+                 f"quality gates this analysis commits to (done-marks are computed, "
+                 f"never hand-ticked; see SKILL.md)")
 
     # data.json series must carry evidence_class + provenance; while here, build the
     # data-availability inventory — what we HAVE, what rests on a stated ASSUMPTION,
@@ -725,6 +843,10 @@ def write_quality(root: Path, corpus_root: Path, bq: str, ed: dict,
         q["code"] = code_quality_block(root, corpus_root, centry, ed)
     except CommercialError:
         q["code"] = None
+    # verification-plan checklist (schema 1.4) — declared gates from the plan's
+    # `## Verification plan` section with done-marks computed from this record;
+    # null when the plan has no section (grandfathered)
+    q["verification_plan"] = verification_plan_block(root, bq, q)
     qpath.write_text(json.dumps(q, indent=1))
     return q
 
@@ -821,7 +943,7 @@ def cmd_approve(args):
     if ed["status"] == "approved":
         raise CommercialError(f"{args.bq}@{ed['edition']} already approved")
     errors, warnings, detail = lint_edition(root, corpus_root, args.bq, ed)
-    write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
+    qrec = write_quality(root, corpus_root, args.bq, ed, errors, warnings, detail)
     # code-quality status is printed but NEVER gates approval (soft gate)
     try:
         cb = code_quality_block(root, corpus_root, bq_entry(load_config(root), args.bq), ed)
@@ -830,6 +952,21 @@ def cmd_approve(args):
     if cb:
         print(f"[{args.bq}@{ed['edition']}] code-quality: {cb['status']} "
               f"({len(cb['artifacts'])} artifact(s)) — soft gate, informational only")
+    # verification-plan status is printed but NEVER gates approval (soft gate,
+    # consistent with code-quality): X of Y computable gates satisfied + unmet list
+    vp = qrec.get("verification_plan")
+    if vp:
+        computable = [g for g in vp if g.get("done") is not None]
+        met = [g for g in computable if g["done"]]
+        line = (f"[{args.bq}@{ed['edition']}] verification plan: {len(met)} of "
+                f"{len(computable)} declared gates satisfied")
+        n_info = len(vp) - len(computable)
+        if n_info:
+            line += f" (+{n_info} informational)"
+        print(line + " — soft gate, informational only")
+        for g in computable:
+            if not g["done"]:
+                print(f"  unmet {g['gate']}: {g['evidence']}")
     if errors:
         print(f"APPROVAL BLOCKED — {len(errors)} lint error(s):")
         for e in errors:
@@ -933,6 +1070,20 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict, terms_catalog: dict 
     # 1.3 adds per-artifact review_history — reviews on superseded shas)
     row["code"] = code_quality_block(root, corpus_root, q, show) \
         if (show or q.get("computation")) else None
+    # schema 1.4: verification-plan checklist for the shown edition — declared
+    # gates + done-marks read off the edition's quality.json audit surface
+    # (regenerated by answer/lint/audit); null when there is no shown edition
+    # or the plan has no `## Verification plan` section (grandfathered)
+    row["verification_plan"] = None
+    if show:
+        qp = bq_dir(root, bq) / show["edition"] / "quality.json"
+        quality = None
+        if qp.exists():
+            try:
+                quality = json.loads(qp.read_text())
+            except json.JSONDecodeError:
+                quality = None
+        row["verification_plan"] = verification_plan_block(root, bq, quality)
     return row
 
 
@@ -1042,6 +1193,9 @@ def cmd_record_verification(args):
         # tie the verdict to the byte-state it judged: short sha256 of report.md at filing time
         "report_sha256": sha256_file(report)[:12] if report.exists() else None,
     })
+    # a newly filed record can flip a declared agent gate to done — recompute the
+    # verification-plan checklist so quality.json stays self-consistent
+    q["verification_plan"] = verification_plan_block(root, args.bq, q)
     qpath.write_text(json.dumps(q, indent=1))
     print(f"[{args.bq}@{ed['edition']}] recorded {args.type}: {args.verdict} (by {args.by})")
     return 0
@@ -1229,6 +1383,23 @@ Registered corpus dependencies:
 
 [Edit: what this answer claims to establish — and explicitly what it does NOT
 (comparisons it cannot support, precision it does not have, decisions it does not make).]
+
+## Verification plan
+
+_The quality gates this analysis commits to. Each line declares a gate; the
+checkbox stays `[ ]` forever — done-marks are COMPUTED per edition from actual
+records (lint results, filed verification records, code-quality status), never
+hand-ticked (this plan is hash-pinned; ticking a box would register as plan
+drift). Machine gates: claim-lint, pin-freshness, plan-currency, code-audit.
+Agent gates: adversarial-verify, red-team, intent-check, reference-audit,
+human-review. Any other token is carried as a custom (informational) gate._
+
+- [ ] claim-lint — every numeric claim marker-cited; zero lint errors (every edition)
+- [ ] pin-freshness — all pinned snapshots within max_age_days, or a cited active waiver (every edition)
+- [ ] plan-currency — the edition was computed under the current version of this plan (every edition)
+- [ ] code-audit — deterministic code checks green and the computation reviewed at its pinned bytes (each code change)
+- [ ] adversarial-verify — independent pins-only re-derivation of the headline claims (each substantive re-answer)
+- [ ] red-team — framing attack on the answer's presentation and emphasis (each substantive re-answer)
 """)
     print(f"plan scaffolded: {pp} — edit freely; re-answer {args.bq} to pin it")
     return 0

@@ -1,7 +1,7 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.56.1
+version: 1.57.0
 updated: 2026-07-27
 ---
 
@@ -296,7 +296,14 @@ renders as an in-place **Full review dossier** fold, lazy-loaded on first expand
 `GET /commercial/review-detail?path=…` (documents-renderer HTML fragment, client-side
 cached, scrolling body) — the endpoint resolves paths strictly inside the repo root
 and serves only `.md` files (traversal / absolute / non-markdown → 403/404); the
-Documents-viewer link stays as a secondary affordance. `POST /commercial/render`
+Documents-viewer link stays as a secondary affordance. Sidecar schema 1.4 adds a
+per-question `verification_plan` — the plan's declared gate checklist with
+engine-COMPUTED done-marks — rendered on the **Plan tab** as a checklist (✓ done /
+○ not done / • informational for custom gates, evidence line per gate; marks are
+rendered verbatim, the console never re-derives them — the plan's literal `[ ]`
+checkboxes are never hand-ticked) plus a compact "verification N/M" chip next to the
+lint + code chips on the Quality & audit tab header; rows without the field
+(schema ≤1.3) render no chip and no checklist, zero errors. `POST /commercial/render`
 shells to the skill's `render`; the assistant drawer grounds in
 `/commercial/{bq}/grounding`. Full contract lives in the `commercial` skill's
 SKILL.md.

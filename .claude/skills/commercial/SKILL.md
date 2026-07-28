@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 13
+version: 14
 updated: 2026-07-27
 dependencies:
   skills:
@@ -145,10 +145,11 @@ independent subagent that re-derives the headline claims from the pinned snapsho
 (it gets the pins, not the report) and pass its verdict via `--verify-note`. For routine
 refreshes with unchanged methodology, the lint gate alone may suffice — say which was
 done. `approve` also prints the edition's code-quality status (see "Code quality"
-below) — informational only, never a blocker.
+below) and its verification-plan tally — "X of Y declared gates satisfied" plus the
+unmet list (see "Verification plan" below) — both informational only, never blockers.
 
 ### `render`
-Write `.console/commercial-index.json` (`schema_version: 1.3`) — per question: status
+Write `.console/commercial-index.json` (`schema_version: 1.4`) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
@@ -174,6 +175,11 @@ visible after the code moves to a new hash. Each entry: `{sha256_12, date, verdi
 by, summary, findings[], detail_ref, superseded: true}`, newest first, capped at 5.
 Purely additive; ≤1.2 consumers ignore it. The same block flows into quality.json.
 
+Schema 1.4 adds, per question row, `"verification_plan": […]` — the plan's declared
+verification checklist with done-marks computed off the shown edition's quality.json
+(see "Verification plan" below). `null` when there is no shown edition or the plan has
+no `## Verification plan` section. Purely additive; ≤1.3 consumers ignore it.
+
 ### `check`
 Whole-chain integrity: approved/superseded content hashes intact (mutation detection),
 approved editions still lint green, and the corpus chain green (invokes the corpus
@@ -183,8 +189,10 @@ skill's `check`). Run before demos and before rendering anything user-facing.
 Scaffold the question's **analysis plan** — `plans/BQ-NN.md`, the user-owned prose
 contract: Goal (the decision served), Approach (committed definitions — windows,
 anchors, denominators), Data (have vs need, gaps stated), Assumptions & expectations,
-and Assertions & limits (what the answer does NOT claim). Templated from the catalog
-entry with category-specific approach hints, then **never overwritten** — users edit
+Assertions & limits (what the answer does NOT claim), and a **Verification plan**
+section pre-seeded with the standard machine gates + adversarial-verify + red-team
+(see "Verification plan" below). Templated from the catalog entry with
+category-specific approach hints, then **never overwritten** — users edit
 freely. `answer` pins the plan's hash into the edition; the `plan-currency` lint check
 calls out a missing plan, an unpinned edition, or a plan that **changed after the
 edition was computed** (drift). Whether the computed answer actually HONORS the plan's
@@ -192,6 +200,49 @@ intent is an agent judgment: run an intent-check agent (give it the plan + the
 edition; strict — a committed definition not followed is a DEVIATION even if the
 numbers are right) and file the verdict via `record-verification --type intent-check`
 (HONORED | HONORED-WITH-NOTES | DEVIATION).
+
+## Verification plan — declared gates, computed done-marks
+
+Each question's analysis plan itemizes the quality/audit checks and red-teaming it
+commits to, as a checklist in a `## Verification plan` section:
+
+```markdown
+## Verification plan
+
+- [ ] claim-lint — every numeric claim marker-cited; zero lint errors (every edition)
+- [ ] adversarial-verify — pins-only re-derivation (each substantive re-answer)
+- [ ] finance-signoff — quarterly CFO review (custom — informational)
+```
+
+Line contract: `- [ ] <gate-token> — <free-text note>` (the note is optional and may
+carry a cadence; em/en dash, colon, or hyphen separate token from note; a backticked
+token is accepted). **The literal checkbox stays `[ ]` forever** — done state is
+COMPUTED per edition from actual records, never hand-ticked. Plans are hash-pinned by
+editions, so ticking a box would register as artificial plan drift; this mirrors the
+expectations declared-vs-actual pattern (the plan declares, the records decide).
+
+**Gate vocabulary** and how each done-mark is computed:
+
+| Gate | Kind | `done` when | Evidence |
+|---|---|---|---|
+| `claim-lint` | machine | lint errors == 0 | "N error(s) / M warning(s)" |
+| `pin-freshness` | machine | no stale unwaived pin | per-band pin counts (+ waived) |
+| `plan-currency` | machine | plan status `in-sync` | "plan in-sync / drifted / unpinned" |
+| `code-audit` | machine | code status `reviewed-current` | "code <status>" |
+| `adversarial-verify` / `red-team` / `intent-check` / `reference-audit` / `human-review` | agent | a verification record of that type exists on this edition (carried records count) | "VERDICT by whom, date" |
+| anything else | custom | `null` — declared, completion unknown | informational |
+
+Parsing is tolerant and grandfathered: no plan or no section → `verification_plan:
+null`, never an error (the `plan-currency` lint check adds a WARNING nudging the
+section into existence). `answer` / `lint` / `audit` / `approve` emit the computed
+checklist — `[{gate, kind, note, done, evidence}]` — into the edition's quality.json;
+`record-verification` recomputes it after filing (a new record can flip an agent gate
+to done); `render` mirrors it into the sidecar question row (schema 1.4) from the
+shown edition's quality.json. Done-marks are computed against the CURRENT plan
+section; drift vs the pinned plan is `plan-currency`'s job. **SOFT GATE — never
+blocks** (consistent with code-quality): `approve` prints
+"verification plan: X of Y declared gates satisfied" and lists unmet ones, then
+approves regardless.
 
 ### `audit <BQ-NN> [--edition E]`
 (Re)generate the edition's `quality.json` — the machine-checked audit surface: lint

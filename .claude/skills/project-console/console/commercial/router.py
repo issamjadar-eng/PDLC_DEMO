@@ -226,6 +226,43 @@ def _decorate_code(q: dict) -> dict | None:
         "artifacts": arts,
     }
 
+# --- Verification-plan checklist (sidecar schema 1.4 `verification_plan` per
+# question row). The plan DECLARES the gates; done-marks are COMPUTED by the
+# engine from the edition's actual records — the console renders them verbatim
+# and never re-derives a mark. Marks: ✓ done / ○ not done / • informational
+# (custom or not-computable). Rows without the field (schema ≤1.3) → None.
+
+VP_MARK_META = {
+    True: {"glyph": "✓", "cls": "vx-met", "label": "Done — computed from this edition's records"},
+    False: {"glyph": "○", "cls": "vx-risk", "label": "Not done yet — computed from this edition's records"},
+    None: {"glyph": "•", "cls": "vx-none", "label": "Informational — completion not machine-computed"},
+}
+
+
+def _decorate_vplan(q: dict) -> dict | None:
+    """Normalize a question row's schema-1.4 `verification_plan` list for the
+    Plan tab checklist + the Quality-tab header chip. Absent/malformed → None
+    (no chip, no checklist — schema ≤1.3 degrades cleanly)."""
+    raw = q.get("verification_plan")
+    if not isinstance(raw, list):
+        return None
+    gates, met, total = [], 0, 0
+    for g in raw:
+        if not isinstance(g, dict) or not g.get("gate"):
+            continue
+        d = dict(g)
+        done = d.get("done") if isinstance(d.get("done"), bool) else None
+        d["_mark"] = VP_MARK_META[done]
+        if done is not None:
+            total += 1
+            met += 1 if done else 0
+        gates.append(d)
+    if not gates:
+        return None
+    return {"gates": gates, "met": met, "total": total,
+            "_cls": "vx-met" if total and met == total else "vx-risk"}
+
+
 # Reserved explainer targets (schema 1.1) → default labels when the sidecar
 # author omits one. Series targets default to the series' own label.
 EXPLAINER_DEFAULT_LABELS = {
@@ -731,6 +768,7 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
            "references": [], "quality": None, "code": _decorate_code(q),
+           "vplan": _decorate_vplan(q),
            "tables": [], "unstructured": [],
            "explainers": _explainers_for(q, []), "terms": _terms_for(q),
            "kind_glossary": KIND_GLOSSARY,

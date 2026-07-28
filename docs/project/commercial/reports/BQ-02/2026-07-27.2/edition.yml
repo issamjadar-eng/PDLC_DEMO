@@ -1,6 +1,6 @@
 bq: BQ-02
 edition: 2026-07-27.2
-status: approved
+status: superseded
 created_at: '2026-07-27T18:32:39+00:00'
 pins:
   commercial/internal-sales-accounts: '2026-07-27'
@@ -20,3 +20,4 @@ code_artifacts:
   sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4
 - path: corpus:commercial/internal-financials/gen.py
   sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+superseded_by: 2026-07-27.3
