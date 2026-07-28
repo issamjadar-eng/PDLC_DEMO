@@ -3,6 +3,38 @@
 _Task ben/108 · verifier: adversarial-verify + red-team agent (AI, independent) · date 2026-07-27_
 _Method: strict two-pass. Pass 1 re-derived every verdict/series from `pins.json` + `data.json` + pinned snapshot CSVs only (throwaway scripts in the session scratchpad, outside the repo tree; params from `commercial.yml`; A-005 from the dataset's `assumptions/`). Pass 2 read report.md / plans / quality.json and audited the underlying data against source documents. No repo artifacts modified._
 
+## Plain-language summary
+
+This is an independent double-check of the five roadmap business answers (competitive
+runway, feature parity, state-of-the-art currency, expert-advisor evidence, and the
+kill/pull-forward ranking). An independent checker recomputed every published number and
+ranking from the raw pinned data files alone — without reading the reports or the programs
+that produced them — and every figure reproduced exactly, including the full composite
+scoring table. The checker also audited the underlying expert-advisor register against the
+original source documents and found no fabricated rows. The framing challenge raised 5
+substantive concerns: 1 serious (the sole expert voice behind the "kill" candidate
+actually argues for investing earlier, but the register's coarse three-value vocabulary
+converted that position into arithmetic support for killing the feature), 3 moderate (a
+reassuring competitive margin that is really only 27 days and rests on a configuration
+choice no strategy document commits to; roadmap lanes credited with closing gaps they only
+respond to; a wave-slot flag that reads conditional support as opposition), and 1
+low-to-moderate (a headline advantage that mixes two different measurement bases), plus a
+handful of minor notes. All the concerns were subsequently corrected in the published
+answers the same day, and each answer's quality record carries the ACTIONED entries
+documenting the changes.
+
+## Terms used
+
+- **Pins-only re-derivation** — recomputing every published number from the raw, dated
+  data files alone, without reading the report or its code, so agreement is independent
+  confirmation rather than circular checking.
+- **Basis sensitivity** — testing whether a conclusion still holds under a defensible
+  alternative definition (e.g. which reading of the launch anchor, or which spec basis a
+  margin is computed on).
+- **Denominator** — the "out of what" in any rate or share figure.
+- **CONFIRMED-WITH-CAVEAT** — the numbers reproduce exactly, but the verdict depends on a
+  definitional or framing choice the reader should know about.
+
 ## Summary verdicts
 
 | BQ | Pass 1 (adversarial re-derivation) | Pass 2 (red-team) most serious finding |

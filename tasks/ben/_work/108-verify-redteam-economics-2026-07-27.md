@@ -12,6 +12,36 @@ Pins verified on disk: `internal-upgrade-campaign@2026-07-22.2` (389 rows),
 `internal-revenue-plan@2026-07-27` (120 rows), `internal-subscriptions@2026-07-27.2`
 (42 rows).
 
+## Plain-language summary
+
+This is an independent double-check of the four economics business answers (service
+capacity, revenue vs plan, the Cloud Suite attach stage-gate, and update-cost economics).
+An independent checker recomputed every published number from the raw pinned data files
+alone — without reading the reports or the programs that produced them — and every figure
+reproduced exactly, including the full regional capacity table, all variance percentages,
+the attach rate, and the cost bounds. The check also confirmed that all four fixes agreed
+in the previous round of review of the service-capacity answer were genuinely carried out,
+one of them beyond what was asked. The framing challenge raised 8 new concerns: 2
+moderate (the published data files do not state which statuses count as "completed", so
+an independent re-check has to guess a definition; and the attach-gate answer defended its
+denominator choice without showing the reading under the alternative denominator, which
+moves the result across the gate) and 6 minor (wording that overstates, labels, and a
+dashboard-badge risk where a pass verdict could hide the per-line breaches behind it).
+All the concerns were subsequently corrected in the published answers the same day, and
+each answer's quality record carries the ACTIONED entries documenting the changes.
+
+## Terms used
+
+- **Pins-only re-derivation** — recomputing every published number from the raw, dated
+  data files alone, without reading the report or its code, so agreement is independent
+  confirmation rather than circular checking.
+- **Basis sensitivity** — testing whether a conclusion still holds under a defensible
+  alternative definition (a different anchor date, window, or measure).
+- **Denominator** — the "out of what" in any rate; the attach-gate concern here is
+  exactly a denominator choice (PP3500-only vs the whole PCA fleet).
+- **CONFIRMED-WITH-CAVEAT** — the numbers reproduce exactly, but the verdict depends on a
+  definitional choice the reader should know about.
+
 ---
 
 ## BQ-26 — Service capacity (2026-07-27 refit) — Pass 1: **CONFIRMED** · Pass 2: **CONFIRMED-WITH-CAVEAT**

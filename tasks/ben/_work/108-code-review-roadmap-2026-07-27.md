@@ -1,134 +1,337 @@
-# Code review — Roadmap computation modules bq_13–bq_17, editions 2026-07-27
+# Code review — the five roadmap analysis programs (BQ-13 to BQ-17)
 
-_Task ben/108 · reviewer: AI assistant (independent code-review pass) · date 2026-07-27_
-_Scope: `docs/project/commercial/bq_modules/bq_{13,14,15,16,17}.py` (read-only). Context read: commercial SKILL.md "Code quality" + computation contract; plans/BQ-13..17.md; computations.py shared helpers; the prior output-verification dossier (`108-verify-redteam-roadmap-2026-07-27.md`, already actioned — its settled findings are not re-flagged; the code implementing the fixes IS verified below). Lens: plan conformance, string-literal claim branches, numeric traps, config vs hardcoding, composite arithmetic, determinism, robustness, marker discipline. No style nits._
+**What was reviewed**: the five small computer programs that calculate the answers to
+business questions BQ-13 through BQ-17 (competitive runway, feature parity, state-of-the-art
+currency, KOL evidence, and the roadmap kill/pull-forward ranking).
+Files: `docs/project/commercial/bq_modules/bq_13.py` … `bq_17.py`.
 
-## Method
+- **Date**: 2026-07-27 (findings resolved same day)
+- **Reviewer**: AI assistant (independent code-review pass, task ben/108)
+- **Verdict in one line**: all five programs compute their published answers correctly
+  today; the review found wording and safety-margin defects that would surface on future
+  data refreshes — all have since been fixed or explicitly accepted.
 
-- Read all five modules end-to-end against their plans and the `commercial.yml` params (attribute_lane_map, attribute_lane_relation, numeric_directions, feature_rank_year, lane_watch_keywords, differentiators, wave_check_years).
-- **Empirical determinism test**: each module run twice against the pinned edition inputs under `PYTHONHASHSEED=1` and `=42` into scratch dirs; `report.md` + `data.json` byte-compared — **all five identical across seeds**, and all five **byte-identical to the committed 2026-07-27 editions**.
-- Register data inspected to validate latent-input assumptions (sentiment vocabulary is exactly {support, neutral, concern}; max 1 row per (kol_id, feature_id); the sole F9 voice is KOL-0004 Kuitunen).
-- Latent tie hazard demonstrated by simulation (an F4/F5 composite tie yields order-dependent picks under shuffled set order — see F17-1).
+## Plain-language summary
 
-## Verification of the previously-actioned fixes (as tasked)
+We reviewed the five programs that produce the roadmap-related business answers, checking
+that each one follows its written analysis plan, produces the same result every time it
+runs, and cannot quietly say something untrue when the underlying data changes. Every
+number in the published answers was confirmed correct. The review raised 21 issues: 1
+serious (a headline sentence that would state the opposite of the truth after a routine
+data update), 9 moderate (mostly sentences whose wording was fixed text rather than
+computed from the data, plus a few places where a future data change could silently skew a
+result), and 11 minor. Since the review, 18 of the 21 have been fixed in the code and
+verified by re-reading it; the remaining 3 were consciously accepted with a written reason
+(for example, preferring a loud crash over a silently wrong answer when data is missing).
+Nothing remains unresolved.
 
-| Fix | Verdict | Evidence |
+## What we checked
+
+- Each program against its committed analysis plan — does the code do what the plan says?
+- Repeatability — run twice with different randomization settings, results byte-identical,
+  and identical to the published 2026-07-27 answers.
+- "Fixed wording" hazards — sentences that are only true for today's data and would become
+  false, without warning, after a data refresh.
+- Arithmetic traps — sign handling, rounding, division by zero, empty-data behavior.
+- Configuration discipline — values read from the shared configuration file rather than
+  typed into the code.
+- Earlier red-team findings — confirming the previously agreed fixes really exist in code.
+
+## Findings
+
+### F-13-1 (high) — the runway headline could state "before" when the truth is "after"
+
+**What's wrong:** BQ-13's headline said a rival's projected clearance lands "about N months
+**before** our launch" using fixed wording that discarded the direction of the calculation
+(an `abs()` call hid the sign of the computed margin).
+**Why it matters:** the launch-runway verdict is the single most-quoted sentence of this
+answer. After the next routine refresh of the FDA clearance data, the sentence would have
+inverted its own fact — claiming a rival beats us to market when the numbers say the
+opposite.
+**Resolution:** FIXED — the direction word ("before" / "after" / "same month") is now
+computed from the sign of the margin, in the headline, the supporting bullet, and the data
+series label.
+
+### F-13-2 (medium) — "razor-thin" was hard-wired regardless of the actual margin
+
+**What's wrong:** the sentence describing the hardware-competitor margin always said the
+edge "clears … by only N days" and called it fragile, whatever N was, and could not express
+a negative margin (competitor ahead of us).
+**Why it matters:** a 300-day cushion would still have been called razor-thin, and a
+competitor actually beating our date would have been reported as us being safely ahead.
+**Resolution:** FIXED — the sentence now branches on the sign of the margin, and the
+fragility wording applies only below a declared 90-day threshold (a named constant in the
+module).
+
+### F-13-3 (medium) — "every documented row reads no" printed even when untrue
+
+**What's wrong:** a bullet asserting that no competitor documents shipping the capability
+was printed unconditionally, including in the branch where competitors do ship it.
+**Why it matters:** the report could contradict its own headline while stating a false
+universal.
+**Resolution:** FIXED — the bullet is now chosen from two computed variants depending on
+whether any shipping rows exist.
+
+### F-13-4 (low) — crash on a dataset with no dated records
+
+**What's wrong:** finding the newest decision date crashes if a data snapshot ever arrived
+with zero dated rows (same pattern in BQ-15 and BQ-17).
+**Why it matters:** an abrupt failure instead of a graceful message.
+**Resolution:** ACCEPTED — the data-acquisition contract guarantees dated records, and a
+loud crash is preferable to silently computing a wrong anchor date.
+
+### F-14-1 (medium) — an unconfigured attribute silently got a "higher is better" guess
+
+**What's wrong:** for numeric comparisons, an attribute missing from the direction
+configuration defaulted to "higher is better" with no warning.
+**Why it matters:** a new column added to the comparison data without a configuration row
+could invert a published ahead/behind verdict, invisibly.
+**Resolution:** FIXED — there is no default any more; an unconfigured attribute is surfaced
+as "NOT SCORED — direction unconfigured" in both the table and the headline.
+
+### F-14-2 (low) — our own ranged values scored at our favorable end
+
+**What's wrong:** when a value is a range (e.g. "4–6"), the code scored our rows at the end
+most favorable to us, while the plan commits to the conservative-against-us end.
+**Why it matters:** latent optimism bias — immaterial today because all our cells are
+single values, but wrong the day a range appears.
+**Resolution:** FIXED — our rows are now scored at the direction-unfavorable end via an
+explicit parameter on the parsing helper.
+
+### F-14-3 (low) — headline count could stop adding up
+
+**What's wrong:** the headline breakdown ("N compared: a ahead, p parity, b behind") omits
+the rare "no comparison possible" category.
+**Why it matters:** if such a row ever appears, the counts stop summing to N.
+**Resolution:** ACCEPTED — no such row exists in the curated data; revisit if the headline
+arithmetic ever stops summing.
+
+### F-14-4 (low) — values cut off mid-word in the display
+
+**What's wrong:** long cell values were truncated at 40 characters mid-word.
+**Why it matters:** cosmetic; unprofessional-looking tables.
+**Resolution:** FIXED — a display helper now allows 80 characters and ellipsizes cleanly on
+a word boundary.
+
+### F-15-1 (medium) — "ahead on either basis" was fixed text that could contradict the verdict
+
+**What's wrong:** BQ-15's headline always asserted our accuracy lead holds on both
+measurement bases, even in the branch where the computed verdict says the lead is eroded.
+**Why it matters:** the same sentence would simultaneously call for a refresh because the
+lead eroded and claim the lead holds — a direct self-contradiction in the verdict line.
+**Resolution:** FIXED — the phrase is now computed from the two per-basis results ("either
+basis" / "LAB basis only" / "volumetric basis only" / "NOT ahead on either basis").
+
+### F-15-2 (medium) — a comparison with zero documented competitor values crashed
+
+**What's wrong:** with no competitor cells for an attribute, the code crashed (or would
+have rendered "~Nonex") instead of degrading cleanly.
+**Why it matters:** thin data coverage is a real possibility the plan contemplates; the
+report must say "no documented cells" rather than fail.
+**Resolution:** FIXED — every margin/best-competitor rendering is guarded; the empty case
+now renders an explicit "no documented competitor cells — no margin computable" sentence,
+and the refresh-trigger check treats the no-data state as neither ahead nor eroded.
+
+### F-15-3 (low) — company name typed into the code instead of read from configuration
+
+**What's wrong:** our vendor name and product label were string literals in BQ-15 (and
+BQ-17) while sibling BQ-14 read them from configuration.
+**Why it matters:** a vendor rename in the configuration would silently split behavior
+across modules.
+**Resolution:** FIXED — both modules now read the vendor identity (and BQ-15 the product
+display label) from configuration.
+
+### F-16-1 (low) — the "2-voice floor" label ignored the configurable floor
+
+**What's wrong:** the flag text hard-coded "below 2-voice floor" while the floor is a
+configuration value.
+**Why it matters:** raising the floor to 3 would make the label lie.
+**Resolution:** FIXED — the label interpolates the configured floor.
+
+### F-16-2 (medium) — an unexpected sentiment value would silently vanish
+
+**What's wrong:** a register row with a sentiment outside the three-value vocabulary
+(support / neutral / concern) would be silently dropped from every mix and from the
+concern-majority rule.
+**Why it matters:** silent data loss in the input to a roadmap-level flag.
+**Resolution:** FIXED — sentiments are validated against the vocabulary; out-of-vocabulary
+rows are counted and surfaced as a visible DATA QUALITY line in the report.
+
+### F-16-3 (low) — a curated example sentence had no retirement condition
+
+**What's wrong:** the sentence citing two specific advisors' source-document positions
+(the Giuliano/F4 and Gorski/F7 spot checks) printed unconditionally even if those register
+rows changed.
+**Why it matters:** the report could keep asserting spot checks that no longer match the
+data.
+**Resolution:** FIXED — the sentence now self-retires: the code checks both cited rows are
+still present with "concern" sentiment, and otherwise prints a retirement notice telling
+the reader to re-verify.
+
+### F-16-4 (low) — a chart's primary value was misleading
+
+**What's wrong:** the sentiment-mix data series carried the concern count as its primary
+value, so a generic chart would plot concern under an unlabeled axis.
+**Why it matters:** console-side misreading risk.
+**Resolution:** FIXED — the primary value is now the row total; support/neutral/concern
+ride as named fields.
+
+### F-16-5 (low) — register rows outside the feature universe are invisible in the table
+
+**What's wrong:** rows for features outside the committed roadmap are counted in the
+census but appear in no per-feature table.
+**Why it matters:** minor discoverability gap.
+**Resolution:** ACCEPTED — the universe is the committed roadmap; add a stray-row count
+line if the register ever grows beyond it.
+
+### F-17-1 (medium) — ranking tie-breaks could depend on the computer's memory layout
+
+**What's wrong:** the sorts that pick the pull-forward and kill candidates iterated over an
+unordered set with keys that can tie (two features share a rank year; voice counts can
+tie), with no final deterministic key.
+**Why it matters:** on a genuine tie, the published pick could differ from run to run —
+breaking the reproducibility guarantee the whole pipeline is built on. (Demonstrated by
+simulation; today's data has no such tie.)
+**Resolution:** FIXED — the feature id is appended as the final sort key at all five sort
+sites (eligibility ranking, both tie lists, and both sentiment-axis-drop re-picks).
+
+### F-17-2 (medium) — a named-person caution could fire with the wrong person's words
+
+**What's wrong:** the caution quoting the single dissenting advisor (Kuitunen) checked only
+that one voice existed, not whose voice it was; a register change swapping in a different
+advisor would print the old name and quote.
+**Why it matters:** misattributing a quoted expert position in a decision-support report.
+**Resolution:** FIXED — the condition now pins the voice's identity (the exact advisor id,
+KOL-0004); a different voice retires the curated text instead of misattributing it.
+
+### F-17-3 (low) — the single-voice rule was implemented for one case only
+
+**What's wrong:** the plan's rule "when a kill candidate rests on a single voice, state
+that voice's actual position" existed only for the F9/Kuitunen case.
+**Why it matters:** a different single-voice kill candidate would get no direction
+statement.
+**Resolution:** FIXED — the F9-only scope is now declared in the module's docstring (the
+dossier's accepted alternative to generalizing), with instructions to extend the curated
+note before relying on it for other cases.
+
+### F-17-4 (medium) — a scoring component could drift outside its committed range
+
+**What's wrong:** the sentiment component was not clamped to the plan-committed 0-to-1
+range; an advisor filing two rows on one feature would push it outside.
+**Why it matters:** an out-of-range component silently distorts the composite ranking.
+**Resolution:** FIXED — the net sentiment is clamped to [-1, 1] before rescaling.
+
+### F-17-5 (low) — features with no voices silently scored "neutral"
+
+**What's wrong:** a feature with zero advisor voices received the neutral midpoint score
+with no disclosure, and the list built to mark such features was dead code.
+**Why it matters:** absence of evidence was silently treated as lukewarm evidence.
+**Resolution:** FIXED — the zero-voice list is now used: when any zero-voice feature
+exists, the report states it has no sentiment signal and that the midpoint is a modeling
+choice, not evidence; the contradictory comment was removed.
+
+## Terms used
+
+- **Analysis plan** — the written, committed description of how a business question must
+  be computed; the code is reviewed against it.
+- **Pin / pinned snapshot** — the exact, dated copy of a dataset an answer was computed
+  from, so the answer can be reproduced byte-for-byte later.
+- **Headline / verdict** — the one-sentence answer at the top of each published report.
+- **Composite** — BQ-17's combined score (competition + sentiment + demand) used to rank
+  roadmap features.
+- **Basis** — the definitional choice a comparison or rate is computed under (which
+  specification standard, window, or population); "ahead on either basis" means the lead
+  survives both defensible choices.
+- **Deterministic** — same inputs always produce the same output, byte for byte.
+- **KOL** — key opinion leader; a clinical expert advisor.
+- **Fixed-wording (string-literal) defect** — a sentence typed as constant text whose truth
+  actually depends on the data; the dominant defect class in this review.
+
+## Technical appendix
+
+Empirical checks performed at review time: each module run twice under
+`PYTHONHASHSEED=1` and `=42`; `report.md` + `data.json` byte-compared — all five identical
+across seeds and byte-identical to the committed 2026-07-27 editions. Register data
+inspected to validate latent-input assumptions (sentiment vocabulary exactly
+{support, neutral, concern}; max 1 row per (kol_id, feature_id); sole F9 voice is
+KOL-0004). The F-17-1 tie hazard was demonstrated by simulation on a synthetic F4/F5 tie.
+
+Fix verification (2026-07-27, current code):
+
+| Finding | Resolution | Where (current code) |
 |---|---|---|
-| **BQ-17 deterministic rival tiebreak** (weight-sensitivity scan) | **Correctly deterministic.** | `bq_17.py` L128: `max((score[g], g) for g in eligible if g != pull)` — tuple comparison breaks score ties on the feature-id string, independent of set/dict iteration order. Weights sum to 1 (`(1/3−d, 1/3+d, 1/3)`); 0.25-pp granularity honestly reported as "~{flip_pp} pp"; scan uses the same rounded components as the composite (consistent). **But** the *pull/kill tie-break sorts themselves* retain a latent order dependence — see F17-1. |
-| **BQ-17 conditional Kuitunen caution** | **Partially correct.** | L138: `kill_direction_note = (kill == "F9" and len(sent["F9"]["voices"]) == 1)` — self-retires when the kill pick changes or F9 gains a second voice ✓. It does **not** pin the voice's identity: the emitted text hardcodes Kuitunen and the "too late and too thin" quote, so a register change replacing the single F9 voice with a *different* KOL would misattribute — see F17-2. |
-| **BQ-14 adjacency-vs-closure routing** (RT-14.1) | **Correctly implemented.** | Reads `attribute_lane_relation` with conservative `adjacent` fallback for unmapped attributes (L94); adjacency labeled in the matrix routing column, in the headline (branch computed — emitted only when `adjacent` non-empty), a dedicated bullet, and R1. Config labels `pca_pause_or_etco2` and `integrated_etco2` `adjacent`, `predictive_monitoring→F6` `closes` — matches the finding's intent. |
-| **BQ-13 anchor-fragility disclosure** (RT-13.1) | **Implemented for the current data shape; not branch-safe** — see F13-1/F13-2. | Both anchor readings computed (`hw_edge_days`, `hw_beats_late`, `hw_late_margin`); margin stated in headline, runway bullet, R3, and the `hardware-edge-margin` series; H2 config-only provenance caveated in headline, section intro, R3, and method ✓. |
-| **BQ-15 dual-basis margins** (RT-15.1) | **Correctly implemented in the computation; one unconditional headline literal** — see F15-1. | `acc_margin_vol` + `acc_ahead_vol` computed; refresh trigger fires on **either** basis (`acc_ahead is False or … acc_ahead_vol is False`, L78); both margins in report body + `differentiator-margins` series with basis stated in the derivation method ✓. |
-| **BQ-16 evidence-absence framing** (RT-16.1) | **Correctly implemented.** | Headline: "read as NO documented endorsement of those slots, not as opposition"; flag renamed "no documented slot endorsement"; wave-check section + R1 restate the vocabulary-flattening limitation with source-doc spot checks ✓ (the spot-check sentence is itself an unconditional curated literal — F16-3). |
+| F-13-1 | fixed | `bq_13.py` L81–87 (`samd_rel`), L197–204 (slow bullet) |
+| F-13-2 | fixed | L19–20 (`FRAGILE_EDGE_DAYS`), L88–90, L140–148, L205–214, L267–277 |
+| F-13-3 | fixed | L170–179 (`premise_bullet` branches) |
+| F-13-4 | accepted | L56 (`max()` over decision dates; loud crash by contract) |
+| F-14-1 | fixed | `bq_14.py` L61–71 (unscored row), L150–152 (headline) |
+| F-14-2 | fixed | L24–33 (`favorable=False`), L73–76 |
+| F-14-3 | accepted | headline count omits `no-comparison` (none exists) |
+| F-14-4 | fixed | L17–21 (`display_value`, 80 chars, ellipsis) |
+| F-15-1 | fixed | `bq_15.py` L92–104 (`basis_txt` computed) |
+| F-15-2 | fixed | L95–106, L145–166, L179–192, L210–214 (guards + None states) |
+| F-15-3 | fixed | L27–28 (config `our_vendor` / `our_product_label`); `bq_17.py` L37 |
+| F-16-1 | fixed | `bq_16.py` L106 (floor interpolated) |
+| F-16-2 | fixed | L14, L38, L44–47, L119–127 (vocabulary check + DATA QUALITY line) |
+| F-16-3 | fixed | L51–56 (`spot_checks_hold`), L140–147 (retire branch) |
+| F-16-4 | fixed | L219–224 (primary value = total) |
+| F-16-5 | accepted | out-of-universe rows census-only |
+| F-17-1 | fixed | `bq_17.py` L114–136 (id as final key at all five sorts) |
+| F-17-2 | fixed | L156 (`voices == {"KOL-0004"}`) |
+| F-17-3 | fixed | L8–13 (docstring scope note) |
+| F-17-4 | fixed | L96–98 (clamp) |
+| F-17-5 | fixed | L100–102, L196–199 (zero-voice disclosure) |
 
----
+Prior red-team fixes re-verified in code at review time: RT-13.1 (both anchor readings +
+margin disclosure), RT-14.1 (closure-vs-adjacency routing with conservative `adjacent`
+fallback), RT-15.1 (dual-basis margins, either-basis trigger), RT-16.1 (evidence-absence
+framing), RT-17.1 (deterministic rival tiebreak via `(score, id)` tuple max; weights sum
+to 1; scan granularity honestly reported).
 
-## bq_13.py — verdict: approve-with-findings
-
-Plan conformance: **conforms** on current data — premise check, data anchor, both launch-anchor readings, A-005 bands, acquisition scenario (assumption-class, `evidence_class: assumed`), watch keywords via config + entity aliases, quarterly zero-filled series. Markers resolve (`v-main`, `runway-margin`, `hardware-edge-margin`, `entry-scenarios`, `predictive-shipping-check`, `watch-flagged`, `clearances-by-quarter`). Deterministic (alias list and YAML dict orders are stable; recent-clearance sort key can tie on date but falls back to stable CSV order).
-
-| ID | Sev | Finding | Disposition |
-|---|---|---|---|
-| F13-1 | high | Headline (L128) and slow-end bullet (L169-170) hardcode "about {abs(margin)} months **before** our … launch anchor". `abs()` discards the sign of `months_between(samd_hi, launch)`. The data anchor advances with every 510(k) refresh: once the newest decision date passes ~2026-07-01, `samd_hi` lands **after** the launch anchor and the verdict sentence inverts its own fact ("N months before" when it is N months after) while the scenario table says "straddles" — an internal contradiction in the most-quoted string. | fix: branch the phrase on the sign (before/after) and drop `abs()`; the "even the SLOW end lands before us" bullet needs its own branch. |
-| F13-2 | medium | `hw_edge_days = (hw_lo - launch).days` sign unhandled: if the hardware fast edge ever precedes the favorable anchor, the headline reads "clears the favorable launch anchor by only −N days"; conversely "RAZOR-THIN"/"only" are emitted regardless of magnitude (a 300-day margin would still print "by only 300 days"). | fix: branch on sign (clears/beats) and apply the fragility qualifier only under a smallness threshold. |
-| F13-3 | medium | Bullet L150 "Every documented row reads `no` — … {len(shipping)} shipping" is emitted unconditionally. In the RUNWAY-MOOT branch (`shipping > 0`) it directly contradicts the headline while stating a false universal. | fix: conditionalize the sentence on `shipping`. |
-| F13-4 | low | `max(r["decision_date"] for r in rows510 if r["decision_date"])` raises ValueError on a snapshot with zero dated rows (same pattern in bq_15, bq_17). | accept: the corpus snapshot contract guarantees dated FRN records; a crash (loud) is preferable to a silent wrong anchor. |
-
-## bq_14.py — verdict: approve-with-findings
-
-Plan conformance: **conforms** — attribute typing, our-status vocabulary incl. `undocumented`-scored-conservative, verdict rules, closure-vs-adjacency routing (verified above), provisional flags, lane-mapped no-data attributes (dose_personalization) reported unscored. Ties/counts deterministic (attrs sorted; row order stable).
-
-| ID | Sev | Finding | Disposition |
-|---|---|---|---|
-| F14-1 | medium | `numeric_directions.get(attr, "higher")` (L51): a numeric attribute absent from config silently gets higher-is-better. A new weight-like column added to the matrix without a config row would silently invert its verdict — no flag, no lint hit. | fix: no default — emit a "no direction configured" verdict (or raise) so the gap is visible. |
-| F14-2 | low | Latent plan deviation: `parse_numeric` scores a range at the end favorable to the **row's owner**, so an OUR-row range would score at OUR favorable end; the plan commits ranges to the **competitor-favorable** (conservative-against-us) end. Immaterial today — all our cells are point values. | fix: for `our_vendor` rows take the direction-unfavorable end. |
-| F14-3 | low | Headline "N attributes compared: a ahead, p parity, b behind" omits the `no-comparison` verdict class (our numeric value undocumented); if one appears the breakdown stops summing to N with no signal. | accept: no such row exists in the curated matrix; revisit if headline math ever stops summing — or add the class to the count string. |
-| F14-4 | low | `our_display` truncates at 40 chars mid-word ("patient-controlled analges…" per the prior dossier's friction log; still present). | fix: widen or ellipsize — cosmetic, one-line. |
-
-## bq_15.py — verdict: approve-with-findings
-
-Plan conformance: **conforms** — differentiators from config, competitor-favorable range ends, verified-cell coverage stated, absence lists derived from the pin, dual-basis margins + either-basis trigger (verified above), calendar-month cadence rule exactly as committed (`acq_date > next_review`, strict), publication-lag caveat, FRN-scope caveat. Deterministic (sorted product sets; stable row order).
-
-| ID | Sev | Finding | Disposition |
-|---|---|---|---|
-| F15-1 | medium | Headline literal "— ahead on either basis;" (L91-92) is **unconditional**. If a pinned competitor value ever beats our volumetric spec, `verdict_txt` correctly says "refresh WARRANTED … margin is eroded" while the *same headline* still asserts "ahead on either basis". The body bullet (L138) branches correctly; the verdict string does not. | fix: make the phrase conditional on `acc_ahead and acc_ahead_vol`, mirroring the body bullet. |
-| F15-2 | medium | Zero-competitor-cell branch crashes: with `acc_vals` empty, `acc_best` is None → `acc_best['label']` (L134) raises TypeError; even before that the headline would render "~Nonex". Same for battery. The plan's "comparison covers only documented cells" contemplates thin coverage; the code does not survive empty coverage. | fix: guard the margin/best-label rendering behind a `vals`-present branch with an explicit "no documented cells" sentence. |
-| F15-3 | low | Our vendor is hardcoded as `"GlobalLogic"` (L30) and the product label as a string literal in two series (L240, L246), while sibling bq_14 reads `our_vendor` from config (bq_17 hardcodes it too, L45/L50). A vendor rename in config would silently split behavior across modules. | fix: read `our_vendor` (and a display-name param) from config in bq_15/bq_17. |
-
-## bq_16.py — verdict: approve-with-findings
-
-Plan conformance: **conforms** — feature universe from config (zero-row features evaluated), distinct-kol_id voices, sentiment mix + concern-majority rule exactly as committed, E-16.1 evaluated honestly (not-met, unvalidated), wave check with evidence-absence framing (verified above), meta-gap leads the verdict and the report body, history marked unavailable rather than faked. `startswith(tuple(wave_check_years))` handles the F7 "Y3-Y4" slot correctly. Deterministic.
-
-| ID | Sev | Finding | Disposition |
-|---|---|---|---|
-| F16-1 | low | Flag label hardcodes "below 2-voice floor" (L93) while the floor is config `min_voices_per_feature` — a config change to 3 makes the label lie. | fix: `f"below {floor}-voice floor"`. |
-| F16-2 | medium | Latent vocabulary drift is silent: `feat[f][r["sentiment"]] = feat[f].get(...)` accepts any sentiment string, creating a stray key that is excluded from support/neutral/concern and from the concern-majority rule — a register row with e.g. `conditional` would silently vanish from every mix. Current snapshot vocabulary is exactly {support, neutral, concern} (verified). | fix: validate against the 3-value vocabulary and surface unknown values as a data-quality line. |
-| F16-3 | low | The Giuliano/F4 + Gorski/F7 spot-check sentence (L117-119) is an unconditional curated literal with no self-retire condition — if those register rows change, the sentence still asserts the spot-checks. | fix: gate on the cited rows still being present-and-concern, or mark the sentence "at curation time (2026-07)". |
-| F16-4 | low | `sentiment-mix` series primary `value` duplicates the concern count (support/neutral/concern ride as extra fields) — a console chart plotting `value` shows concern under a generic axis (carried over from the prior dossier's low-severity list; not in the actioned set). | fix: rename/omit the primary value or set it to total rows; console-side risk only. |
-| F16-5 | low | Register rows whose `feature_id` is outside the universe are counted in the evidence census but appear nowhere in the per-feature table — silently ignored rather than surfaced. | accept: universe is the committed roadmap; suggest a one-line "rows outside F1-F9: N" if the register ever grows. |
-
-## bq_17.py — verdict: approve-with-findings
-
-Plan conformance: **conforms** — pressure rules (1.0/0.5/0.0) exactly as committed incl. zero-row lane attributes contributing nothing and `lane_watch_keywords` empty-list fallback (`F9: []` → no hits); demand = attach ∩ connected sites (denominator-safe, ≤1 by construction); unweighted mean; eligibility F4–F9; ties and tiebreaks reported; all three plan-committed robustness checks computed and reported (tie-vector invariance, sentiment-axis drop, weight-sensitivity scan); kill-direction caution at verdict level; decision-language discipline held. Markers resolve; composite arithmetic verified previously against pins and reproduced here byte-for-byte.
-
-| ID | Sev | Finding | Disposition |
-|---|---|---|---|
-| F17-1 | medium | Latent nondeterminism in the pick tie-breaks: `pull_ties`/`kill_ties` (and `pull2`/`kill2`, `elig`) sort generators over a **set** with tie-able keys and no final key. `feature_rank_year` has ties (F4=F5=2027, F6=F7=2028) and voice counts can tie. Today's ties (F4/F6: 2027≠2028; F7/F9: 5≠1 voices) have distinct keys — outputs verified byte-identical across PYTHONHASHSEED 1/42 — but a plausible F4/F5 composite tie makes the pull pick hash-seed-dependent (demonstrated by simulation), which the determinism replay would then flag intermittently. | fix: append the feature id as the final sort key at all four sites, e.g. `key=lambda f: (rank_year[f], f)` / `(len(sent[f]["voices"]), f)`. |
-| F17-2 | medium | The Kuitunen caution condition (L138) checks `kill == "F9" and voices == 1` but not **which** voice: the emitted text hardcodes Kuitunen and the quote, so replacing the single F9 row with a different KOL's concern would fire the caution with a false attribution. The sole F9 voice today is KOL-0004 Kuitunen (verified in the pinned register). | fix: tighten to `sent["F9"]["voices"] == {"KOL-0004"}` so an identity change retires the curated text instead of misattributing it. |
-| F17-3 | low | The plan's general rule — "where the kill candidate's evidence base is a single voice, state that voice's actual position" — is implemented only for the F9/Kuitunen case. A different single-voice kill candidate would get no direction statement at all. | fix: generalize (fire on any single-voice kill with a "read the per-KOL source doc" pointer) or state the F9-only scope in the module docstring. |
-| F17-4 | medium | Sentiment component is not clamped to [0, 1]: `net = (support − concern) / distinct voices` exceeds ±1 if any KOL ever files 2+ rows on one feature (plan commits every component to [0, 1]). Current register has max 1 row per (kol_id, feature_id) — verified — so latent. | fix: clamp `net` to [−1, 1] (or assert one row per pair) so a register append can't silently push a component out of range. |
-| F17-5 | low | Zero-voice features silently receive sentiment 0.5 (the neutral midpoint) — a modeling choice the plan/report never disclose; the `zero_voice` list (L91) built to "mark them explicitly" is dead code, and the L89 comment contradicts itself about this exact behavior. No zero-voice feature exists today. | fix: use `zero_voice` to annotate affected rows (or score 0 with a stated data-gap note, symmetric with the demand axis); delete the confused comment. |
-
----
-
-## Cross-module summary
-
-**Positives (verified, not assumed):** all five modules reproduce their committed 2026-07-27 editions byte-for-byte and are hash-seed deterministic on current pins; no clocks, randomness, or network; every numeric claim in the reports carries resolvable markers and every cited `derived:` id exists in `data.json`; the previously-actioned red-team fixes (RT-13.1/14.1/15.1/16.1/17.1) are genuinely implemented in code, not just in prose — with the two qualifications above (F13-1/F13-2 branch-safety; F17-2 identity pinning).
-
-**The dominant defect class** is *unconditional qualifier literals*: sentences whose truth depends on the data ("months **before**", "ahead on **either** basis", "**Every** documented row reads `no`", "by **only** N days", named spot-checks) are string constants rather than computed branches. All are true on today's pins; several invert under routine data refresh (F13-1 triggers on the next 510(k) anchor advance past 2026-07). The composite arithmetic, config plumbing, and disclosure machinery are otherwise sound.
+Machine-readable record (dispositions reflect actual outcomes):
 
 ```json
 {"reviews": [
   {"path": "bq_modules/bq_13.py", "verdict": "approve-with-findings",
-   "summary": "Plan-conformant and deterministic on current pins; RT-13.1 margin/provenance disclosure implemented. Main risk: direction words in the verdict are literals, not branches - the 'months before our launch' claim inverts when the data anchor advances past mid-2026.",
+   "summary": "Plan-conformant and deterministic on current pins; RT-13.1 disclosure implemented. All direction-word literals now branch-computed.",
    "findings": [
-     {"severity": "high", "summary": "Headline+bullet hardcode 'months before our launch'; abs() hides sign - inverts on next 510(k) anchor advance", "disposition": "fix: branch before/after on sign of margin; drop abs()"},
-     {"severity": "medium", "summary": "hw_edge_days sign unhandled; 'by only N days'/'RAZOR-THIN' emitted regardless of sign or magnitude", "disposition": "fix: branch on sign; fragility qualifier only under smallness threshold"},
-     {"severity": "medium", "summary": "'Every documented row reads no' bullet unconditional - false and self-contradicting in the RUNWAY-MOOT branch", "disposition": "fix: conditionalize on shipping"},
-     {"severity": "low", "summary": "max() over decision_date raises on a snapshot with zero dated rows (also bq_15/17)", "disposition": "accept: snapshot contract guarantees dated rows; loud crash beats silent wrong anchor"}
+     {"id": "F-13-1", "severity": "high", "summary": "Headline+bullet hardcoded 'months before our launch'; abs() hid sign", "disposition": "fixed: direction word computed from sign of margin in headline, bullet, and series label"},
+     {"id": "F-13-2", "severity": "medium", "summary": "hw_edge_days sign unhandled; 'by only N days'/'RAZOR-THIN' emitted regardless of sign or magnitude", "disposition": "fixed: sign branches + FRAGILE_EDGE_DAYS=90 smallness threshold"},
+     {"id": "F-13-3", "severity": "medium", "summary": "'Every documented row reads no' bullet unconditional", "disposition": "fixed: bullet branches on shipping"},
+     {"id": "F-13-4", "severity": "low", "summary": "max() over decision_date raises on zero dated rows (also bq_15/17)", "disposition": "accepted: snapshot contract guarantees dated rows; loud crash beats silent wrong anchor"}
    ]},
   {"path": "bq_modules/bq_14.py", "verdict": "approve-with-findings",
-   "summary": "Plan-conformant; RT-14.1 closure-vs-adjacency routing correctly implemented with conservative 'adjacent' fallback. Main risk: silent 'higher' default for numeric attributes missing from numeric_directions can invert a future verdict.",
+   "summary": "Plan-conformant; RT-14.1 routing correct. Unmapped numeric attributes now surface loudly instead of defaulting.",
    "findings": [
-     {"severity": "medium", "summary": "numeric_directions.get(attr,'higher') silently assumes direction for unmapped numeric attributes - can invert verdict", "disposition": "fix: no default - emit 'no direction configured' verdict or raise"},
-     {"severity": "low", "summary": "Our-row ranges score at OUR favorable end; plan commits competitor-favorable end (latent - our cells are points)", "disposition": "fix: take direction-unfavorable end for our_vendor rows"},
-     {"severity": "low", "summary": "Headline breakdown omits no-comparison verdict class; counts stop summing if one appears", "disposition": "accept: none exists in matrix; add class to count string if it ever does"},
-     {"severity": "low", "summary": "our_display 40-char mid-word truncation persists (prior friction-log note)", "disposition": "fix: widen or ellipsize"}
+     {"id": "F-14-1", "severity": "medium", "summary": "numeric_directions.get(attr,'higher') silently assumed direction", "disposition": "fixed: no default - 'direction-unconfigured' verdict surfaced in table and headline"},
+     {"id": "F-14-2", "severity": "low", "summary": "Our-row ranges scored at OUR favorable end; plan commits competitor-favorable end", "disposition": "fixed: favorable=False for our_vendor rows in parse_numeric"},
+     {"id": "F-14-3", "severity": "low", "summary": "Headline breakdown omits no-comparison verdict class", "disposition": "accepted: none exists in matrix; revisit if counts stop summing"},
+     {"id": "F-14-4", "severity": "low", "summary": "our_display 40-char mid-word truncation", "disposition": "fixed: display_value ellipsizes at 80 chars on word boundary"}
    ]},
   {"path": "bq_modules/bq_15.py", "verdict": "approve-with-findings",
-   "summary": "Plan-conformant; RT-15.1 dual-basis margins and either-basis refresh trigger correctly computed. Main risks: 'ahead on either basis' is an unconditional headline literal that contradicts its own eroded-margin branch, and empty competitor coverage crashes.",
+   "summary": "Plan-conformant; RT-15.1 dual-basis margins correct. Basis phrase now computed; empty-coverage branch degrades cleanly; vendor identity from config.",
    "findings": [
-     {"severity": "medium", "summary": "Headline literal 'ahead on either basis' unconditional - contradicts verdict when volumetric-basis trigger fires", "disposition": "fix: condition phrase on acc_ahead and acc_ahead_vol, mirroring body bullet"},
-     {"severity": "medium", "summary": "Zero documented competitor cells crashes (acc_best['label'] on None) or renders '~Nonex' in headline", "disposition": "fix: guard margin/best-label rendering; explicit 'no documented cells' sentence"},
-     {"severity": "low", "summary": "Our vendor 'GlobalLogic' + product label hardcoded (also bq_17) while bq_14 reads our_vendor config", "disposition": "fix: read our_vendor/display name from config in bq_15 and bq_17"}
+     {"id": "F-15-1", "severity": "medium", "summary": "Headline literal 'ahead on either basis' unconditional", "disposition": "fixed: basis_txt computed from acc_ahead and acc_ahead_vol across all four states"},
+     {"id": "F-15-2", "severity": "medium", "summary": "Zero documented competitor cells crashed (acc_best['label'] on None) or rendered '~Nonex'", "disposition": "fixed: guarded rendering + explicit 'no documented cells' sentences + None trigger states"},
+     {"id": "F-15-3", "severity": "low", "summary": "Vendor 'GlobalLogic' + product label hardcoded (also bq_17)", "disposition": "fixed: our_vendor / our_product_label read from config in bq_15 and bq_17"}
    ]},
   {"path": "bq_modules/bq_16.py", "verdict": "approve-with-findings",
-   "summary": "Plan-conformant; meta-gap leads, E-16.1 honest, RT-16.1 evidence-absence framing implemented. Main risk: unknown sentiment vocabulary values silently vanish from mixes and the concern-majority rule.",
+   "summary": "Plan-conformant; meta-gap leads; RT-16.1 framing implemented. Vocabulary drift now loud; curated spot-check sentence self-retires.",
    "findings": [
-     {"severity": "medium", "summary": "Unknown sentiment values create stray keys, silently excluded from mixes and concern-majority rule (latent vocab drift)", "disposition": "fix: validate against 3-value vocabulary; surface strays as data-quality line"},
-     {"severity": "low", "summary": "Flag label hardcodes 'below 2-voice floor' while floor is config min_voices_per_feature", "disposition": "fix: interpolate floor into label"},
-     {"severity": "low", "summary": "Giuliano/Gorski spot-check sentence is an unconditional curated literal with no self-retire condition", "disposition": "fix: gate on cited rows still present-and-concern, or mark 'at curation time'"},
-     {"severity": "low", "summary": "sentiment-mix series primary value duplicates concern count (unlabeled-axis chart risk; carried from prior dossier)", "disposition": "fix: set primary value to total rows or omit"},
-     {"severity": "low", "summary": "Register rows outside the F1-F9 universe counted in census but invisible in per-feature table", "disposition": "accept: universe is the committed roadmap; add stray-row count line if register grows"}
+     {"id": "F-16-1", "severity": "low", "summary": "Flag label hardcoded 'below 2-voice floor' while floor is config", "disposition": "fixed: floor interpolated into label"},
+     {"id": "F-16-2", "severity": "medium", "summary": "Unknown sentiment values silently vanished from mixes and concern-majority rule", "disposition": "fixed: validated against 3-value vocabulary; strays surfaced as DATA QUALITY line"},
+     {"id": "F-16-3", "severity": "low", "summary": "Giuliano/Gorski spot-check sentence unconditional, no self-retire", "disposition": "fixed: spot_checks_hold gate on present-and-concern rows; retirement notice otherwise"},
+     {"id": "F-16-4", "severity": "low", "summary": "sentiment-mix series primary value duplicated concern count", "disposition": "fixed: primary value is row total; components as named fields"},
+     {"id": "F-16-5", "severity": "low", "summary": "Register rows outside F1-F9 universe counted in census but invisible in table", "disposition": "accepted: universe is the committed roadmap; add stray-row line if register grows"}
    ]},
   {"path": "bq_modules/bq_17.py", "verdict": "approve-with-findings",
-   "summary": "Composite arithmetic, robustness checks, and disclosures verified correct; weight-scan rival tiebreak is genuinely deterministic ((score, id) tuple max). Main risks: pick tie-break sorts lack a final key over set iteration (rank_year and voice counts can tie), and the Kuitunen caution checks voice count but not voice identity.",
+   "summary": "Composite arithmetic and robustness checks verified; tie-break sorts now carry a final id key; Kuitunen caution pinned to voice identity; component clamped; zero-voice case disclosed.",
    "findings": [
-     {"severity": "medium", "summary": "pull/kill tie-break sorts iterate sets with tie-able keys (rank_year F4=F5, F6=F7; voice counts) and no final key", "disposition": "fix: append feature id as final sort key at all four sort sites"},
-     {"severity": "medium", "summary": "Kuitunen caution keyed on kill==F9 and voices==1, not voice identity - a changed single F9 voice is misattributed", "disposition": "fix: require sent['F9']['voices'] == {'KOL-0004'} so identity change retires the curated text"},
-     {"severity": "medium", "summary": "Sentiment component unclamped: 2+ rows per (kol,feature) pushes it outside plan-committed [0,1] (latent; max 1 today)", "disposition": "fix: clamp net to [-1,1] or assert one row per (kol,feature)"},
-     {"severity": "low", "summary": "Plan's single-voice-kill direction rule implemented only for F9; other single-voice kill candidates get no statement", "disposition": "fix: generalize to any single-voice kill, or document F9-only scope"},
-     {"severity": "low", "summary": "Zero-voice features silently score 0.5 sentiment, undisclosed; zero_voice list is dead code; L89 comment confused", "disposition": "fix: disclose/mark zero-voice handling via the zero_voice list; delete confused comment"}
+     {"id": "F-17-1", "severity": "medium", "summary": "pull/kill tie-break sorts iterated sets with tie-able keys and no final key", "disposition": "fixed: feature id appended as final sort key at all five sort sites"},
+     {"id": "F-17-2", "severity": "medium", "summary": "Kuitunen caution keyed on count not identity; changed voice would be misattributed", "disposition": "fixed: condition requires voices == {KOL-0004}; identity change retires the text"},
+     {"id": "F-17-4", "severity": "medium", "summary": "Sentiment component unclamped; 2+ rows per (kol,feature) pushes it outside [0,1]", "disposition": "fixed: net clamped to [-1,1] before rescale"},
+     {"id": "F-17-3", "severity": "low", "summary": "Single-voice-kill direction rule implemented only for F9", "disposition": "fixed: F9-only scope documented in module docstring with extension instructions"},
+     {"id": "F-17-5", "severity": "low", "summary": "Zero-voice features silently scored 0.5; zero_voice list dead code", "disposition": "fixed: zero-voice disclosure rendered when present; dead comment removed"}
    ]}
 ]}
 ```

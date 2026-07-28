@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 12
+version: 13
 updated: 2026-07-27
 dependencies:
   skills:
@@ -43,6 +43,8 @@ Core guarantees downstream consumers rely on:
 | `scripts/commercial.py` | The engine — answer / lint / approve / render / check / catalog (Python 3.9+, PyYAML) |
 | `templates/commercial.yml` | Starter question-catalog config for a new project |
 | `templates/computation-example.py` | Example computation script showing the contract |
+| `templates/review-dossier.md` | Mandatory dossier structure (skeleton + example) for any file a `--detail-ref` points at |
+| `scripts/dossier_lint.py` | Deterministic structure lint for review dossiers (run before filing a `--detail-ref`) |
 
 ## The commercial tree (project-side)
 
@@ -214,6 +216,10 @@ entry is stamped with the short sha256 of the edition's report.md **at filing ti
 the verdict is tied to the byte-state it judged, so a later regeneration is detectable
 by comparing the stamp against the current report.
 
+A `--detail-ref` dossier is an audit surface — author it to the **dossier authoring
+standard** (see "Review dossiers" under Code quality; template
+`templates/review-dossier.md`), and update its Resolution lines when outcomes land.
+
 ### `code-audit <BQ-NN | --path P | --all>`
 Run the DETERMINISTIC code-quality checks over the target's code artifacts and upsert
 the store (`code-quality/records.yml`), keyed by each file's current sha256:
@@ -247,7 +253,8 @@ logic — qualifiers like "worst region" must be computed, not narrated),
 **median/rounding traps**, **status-set assumptions** (which status values count as
 completed/failed), and **determinism** reasoning the replay can't reach. Findings are
 structured (`severity|summary|disposition`); park the full dossier behind
-`--detail-ref`.
+`--detail-ref` — authored to the dossier standard ("Review dossiers" below), never as
+a raw reviewer worksheet.
 
 ### `catalog`
 The question roster with per-question answer status at a glance.
@@ -444,6 +451,78 @@ code pinning → status computed from current file hashes, with a note saying so
 an independent review agent over the changed module(s) — give it the analysis plan +
 the module + the shared helpers — and file the verdict via `record-code-review`. An
 unfiled review is invisible to the audit surface, exactly like unfiled verifications.
+Tell the review agent to author its dossier to `templates/review-dossier.md` (the
+standard below) and to RETURN the dossier, not just a verdict. Then close the loop:
+when findings are fixed or accepted, UPDATE each finding's Resolution line in the
+dossier to the actual outcome — a dossier still reading "proposed" after dispositions
+are known is a stale audit surface.
+
+### Review dossiers — the authoring standard
+
+Any file a `--detail-ref` points at — from `record-code-review` OR
+`record-verification` — is a **review dossier**. Dossiers are not reviewer worksheets:
+consoles render them inline in a fold, where executives, quality reviewers, and
+regulators read them next to the badges. A dossier written engineer-to-engineer —
+reviewer jargon, line-ref soup, ultra-wide finding tables, "proposed disposition" with
+no outcome — fails that reader. Author every dossier to `templates/review-dossier.md`
+(skeleton + filled example). The structure is mandatory, in this order:
+
+1. **Title block** — what was reviewed in plain words + the artifact paths, date,
+   reviewer, one-line verdict.
+2. **Summary** (MUST open the dossier) — 3–6 sentences a non-engineer reads
+   standalone: what was reviewed, the verdict in plain words, how many issues of what
+   consequence, and what has since happened to them. No code identifiers, no jargon.
+3. **What we checked** — plain-language bullets of the review dimensions.
+4. **Findings** — one entry per finding, NEVER a wide table. Entry shape: an h3
+   heading that MUST begin `### F-` (the lint keys on this prefix — `F-1`,
+   `F-13-2`, `F-CO-1` all conform): `### F-N (severity) — plain-language title`,
+   then three labeled lines (required on EVERY entry, low severity included) —
+   **What's wrong** (plain language first; code terms in parentheses after),
+   **Why it matters** (the consequence in business/quality terms — what could go
+   wrong for a reader of the reports), and **Resolution** (the ACTUAL outcome, never
+   "proposed": `FIXED — <what changed, verified in current code>` or
+   `ACCEPTED — <rationale>`). A dossier written before fixes land uses
+   `NOT YET FIXED — <planned change>` and is UPDATED when outcomes are known; a
+   dossier displayed on an audit surface must carry outcomes.
+5. **Terms used** — one-line plain definitions of the reviewer vocabulary the dossier
+   actually uses (e.g. "narrated, not computed — the sentence is typed as fixed text
+   rather than generated from the data, so it can silently become false when the data
+   changes"). Only terms used — no glossary padding.
+6. **Technical appendix** — line refs, per-artifact detail tables, and the
+   machine-readable JSON block LAST. Everything above the appendix serves the
+   non-engineer; the appendix serves the next reviewer.
+
+**Display constraint (whole document):** no table anywhere in the dossier may exceed
+4 columns or ~25 words per cell — dossiers render inline in a console fold, where wide
+tables shear. Wider content becomes stacked definition-list entries (the Findings
+shape is the model).
+
+**Linting the dossier.** Before filing a `--detail-ref`, run the structure lint:
+
+```bash
+python3 .claude/skills/commercial/scripts/dossier_lint.py <dossier.md> \
+  [--store <commercial-root>/code-quality/records.yml]
+```
+
+Errors (exit 1): missing/misordered sections, Summary not first, a finding entry
+missing one of its three labeled lines, a Resolution line not beginning
+FIXED / ACCEPTED / NOT YET FIXED (or containing "proposed"), any table over 4
+columns, or a missing/unparseable machine-readable json block (`reviews` or
+`artifacts` array). Warnings (never block): dossier↔store verdict mismatches (with
+`--store`) and reviewer jargon used in a finding but not defined under Terms used.
+The lint is soft in the same sense as the code-quality gate — it creates pressure,
+it does not gate `record-*` filing.
+
+**Epistemics & guarantees — what a rerun would and would not reproduce.** The
+deterministic layers are byte-reproducible: `code-audit` checks, filed store records,
+content hashes, and this structure lint give the same result on every run over the
+same bytes. Dossier PROSE is AI-authored — a rerun words findings differently and may
+notice a different marginal issue; the structure lint bounds that variance
+mechanically (same sections, same finding shape, same resolution vocabulary), it
+cannot make two reviews identical. The control that a Resolution claim is TRUE is
+fix-verification against the current code (re-read the fixed lines before writing
+`FIXED`), not the lint; and confidence at the findings level comes from independent
+re-review converging on the same defects, not from determinism.
 
 ## Dependencies
 

@@ -2,6 +2,35 @@
 
 _Task ben/108 · 2026-07-27 · Pass 1 (adversarial re-derivation, pins-only) run before Pass 2 (red-team of reports/plans/modules/data). All recomputation done with throwaway scripts outside the repo against the pinned snapshots; no repo artifact modified except `quality.json` verification appends via `commercial.py record-verification`._
 
+## Plain-language summary
+
+This is an independent double-check of the five market-side business answers (market
+share, win/loss drivers, the recall disruption window, pricing posture, and deal cycle
+times). An independent checker recomputed every published number from the raw pinned data
+files alone — without reading the reports or the programs that produced them — including
+re-implementing the trickiest piece (the company-name matching behind the recall analysis)
+from scratch. Every published figure reproduced exactly. The checker then challenged how
+the correct numbers are framed and raised 10 concerns: 3 moderate (the win rate looks
+better counted by deals than weighted by dollars, and that dollar view was nowhere shown;
+one verdict word was fixed text rather than computed; one pass/fail verdict sits within a
+definitional choice of who counts in the denominator) and 7 minor (labeling, a
+close-but-not-exact "median", a missing demo banner). Eight further notes were positive —
+places the reports were unusually honest. All the concerns were subsequently corrected in
+the published answers the same day, and each answer's quality record carries the ACTIONED
+entries documenting the changes.
+
+## Terms used
+
+- **Pins-only re-derivation** — recomputing every published number from the raw, dated
+  data files alone, without reading the report or its code, so agreement is independent
+  confirmation rather than circular checking.
+- **Basis sensitivity** — testing whether a conclusion still holds under a defensible
+  alternative definition (different window, population, or measure).
+- **Denominator** — the "out of what" in any rate; e.g. whether undecided deals count in
+  the win-rate denominator.
+- **CONFIRMED-WITH-CAVEAT** — the numbers reproduce exactly, but the verdict depends on a
+  definitional choice the reader should know about.
+
 **Verdict summary**
 
 | BQ | Pass-1 verdict | Pass-2 worst finding |

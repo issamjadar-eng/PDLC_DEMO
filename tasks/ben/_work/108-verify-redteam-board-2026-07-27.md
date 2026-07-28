@@ -12,6 +12,36 @@ internal-subscriptions, internal-fleet).
 
 **By**: independent verify agent · **Task**: ben/108 · **Date**: 2026-07-27
 
+## Plain-language summary
+
+This is an independent double-check of the five board-level business answers (funding
+map, customer concentration, recurring-revenue mix, plan credibility, and launch-slip
+exposure). An independent checker recomputed every published number from scratch, using
+only the raw pinned data files — without looking at the published reports or the programs
+that produced them — and then compared results. Every published figure reproduced exactly;
+no number was wrong. The checker then attacked the framing and found 14 concerns about how
+the correct numbers are presented: 1 moderate (a guardrail about customer concentration is
+tested against a revenue base covering only about half of total revenue, and the verdict
+could flip on the fuller base) and 13 minor (sentences a skimming reader could take the
+wrong way, "measured" labels on figures that are really calculations, and rounding
+presented as exactly zero). Seven further notes were positive — places where the reports
+were unusually honest about their own limits. All the concerns were subsequently corrected
+in the published answers the same day, and each affected answer's quality record carries
+the ACTIONED entries documenting what was changed (the fifth answer, BQ-05, had nothing to
+correct).
+
+## Terms used
+
+- **Pins-only re-derivation** — recomputing every published number from the raw, dated
+  data files alone, without reading the report or its code, so agreement is independent
+  confirmation rather than circular checking.
+- **Basis sensitivity** — testing whether a conclusion still holds when a defensible
+  alternative definition (a different window, population, or measure) is used.
+- **Denominator** — the "out of what" in any percentage; many concerns here are about
+  which denominator a rate is computed against.
+- **CONFIRMED-WITH-CAVEAT** — the numbers reproduce exactly, but the verdict depends on a
+  definitional choice the reader should know about.
+
 **Verdict summary**
 
 | BQ | Pass 1 (adversarial re-derivation) | Pass 2 (red-team) | Most serious finding |

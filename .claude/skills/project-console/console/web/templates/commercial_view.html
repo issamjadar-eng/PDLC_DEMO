@@ -684,10 +684,33 @@
    repo-relative markdown from /commercial/review-detail (rendered server-side
    by the documents renderer) and injects it; responses are cached per path so
    several folds pointing at the same dossier fetch once. Vanilla JS; 'toggle'
-   does not bubble, so listen in the capture phase. #}
+   does not bubble, so listen in the capture phase.
+   After injection (1.56.1) each table is wrapped in a .cm-dossier-scroll div —
+   the renderer emits bare <table> elements, so CSS alone has no wrapper to hang
+   per-table overflow-x on — and columns whose every cell is short (≤28 chars)
+   are marked .is-compact so label-ish columns (Sev / Location / IDs) stay on
+   one line while long-text columns wrap. #}
 <script>
 (function () {
   var cache = {};
+  function enhance(body) {
+    body.querySelectorAll('table').forEach(function (t) {
+      if (t.parentNode.classList.contains('cm-dossier-scroll')) return;
+      var rows = t.rows, n = rows.length ? rows[0].cells.length : 0, uniform = n > 1, i, j;
+      for (i = 0; i < rows.length; i++) if (rows[i].cells.length !== n) { uniform = false; break; }
+      if (uniform) {  // skip ragged tables (colspans) — wrapper still applies
+        for (j = 0; j < n; j++) {
+          var max = 0;
+          for (i = 0; i < rows.length; i++) max = Math.max(max, rows[i].cells[j].textContent.trim().length);
+          if (max <= 28) for (i = 0; i < rows.length; i++) rows[i].cells[j].classList.add('is-compact');
+        }
+      }
+      var w = document.createElement('div');
+      w.className = 'cm-dossier-scroll';
+      t.parentNode.insertBefore(w, t);
+      w.appendChild(t);
+    });
+  }
   document.addEventListener('toggle', function (e) {
     var d = e.target;
     if (!d || !d.matches || !d.matches('details[data-md]') || !d.open || d.dataset.loaded) return;
@@ -695,13 +718,13 @@
     if (!body) return;
     d.dataset.loaded = '1';
     var p = d.getAttribute('data-md');
-    if (cache[p]) { body.innerHTML = cache[p]; return; }
+    if (cache[p]) { body.innerHTML = cache[p]; enhance(body); return; }
     fetch('/commercial/review-detail?path=' + encodeURIComponent(p))
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();
       })
-      .then(function (html) { cache[p] = html; body.innerHTML = html; })
+      .then(function (html) { cache[p] = html; body.innerHTML = html; enhance(body); })
       .catch(function (err) {
         delete d.dataset.loaded;   // allow a retry on next expand
         body.innerHTML = '<p class="cm-muted">Could not load the dossier (' + err.message + ').</p>';
