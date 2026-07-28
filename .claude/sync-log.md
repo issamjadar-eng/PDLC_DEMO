@@ -4,6 +4,12 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-07-27 — push (dossier standard + lint)
+
+- **Push** (9 files, LOCAL_AHEAD): `skills/commercial/{README.md, SKILL.md, scripts/dossier_lint.py (new), templates/review-dossier.md (new)}` (v13 — dossier authoring standard + deterministic lint + epistemics statement), `skills/project-console/{README.md, SKILL.md, VERSION, console/web/static/commercial.css, console/web/templates/commercial_view.html}` (1.56.1 — inline-dossier display pass)
+- Branch: `sync/pdlc-demo-dossier-standard-2026-07-27` → PR https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/286 — merged; Hitachi HEAD `d4dc351` (clone ff'd, branch deleted local+remote)
+- project.yml: no changes. `public-doc` pull decision still pending (see #285 entry).
+
 ## 2026-07-27 — push (inline review details)
 
 - **Push** (10 files, all LOCAL_AHEAD): `skills/commercial/{README.md, SKILL.md, scripts/commercial.py}` (v12 — review_history in the code-quality block, sidecar 1.3), `skills/project-console/{README.md, SKILL.md, VERSION, console/commercial/router.py, console/web/static/commercial.css, console/web/templates/commercial_view.html, tests/test_commercial_review_history.py}` (1.56.0 — Previous-review folds + hardened inline dossier endpoint)
