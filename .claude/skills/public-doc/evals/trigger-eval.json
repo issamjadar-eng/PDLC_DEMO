@@ -1,0 +1,23 @@
+[
+  {"query": "write a white paper on agentic PDLC for our healthcare customers", "should_trigger": true},
+  {"query": "draft an external-facing article about our platform for the company blog", "should_trigger": true},
+  {"query": "turn this markdown draft into a client-facing PDF", "should_trigger": true},
+  {"query": "strip the internal notes and supporting evidence before we publish this", "should_trigger": true},
+  {"query": "create a one-pager our sales team can hand to prospects", "should_trigger": true},
+  {"query": "lint this whitepaper against our brand and style guidelines", "should_trigger": true},
+  {"query": "I need to publish this doc externally — make sure none of the internal evidence leaks into the public version", "should_trigger": true},
+  {"query": "set up a draft for a thought-leadership piece with its goals, target audience, and campaign", "should_trigger": true},
+  {"query": "we're writing a customer-facing brief — help me author it", "should_trigger": true},
+  {"query": "build the public version of this paper and remove the INTERNAL blocks", "should_trigger": true},
+
+  {"query": "create a slide deck for the all-hands meeting", "should_trigger": false},
+  {"query": "convert this pptx into an HTML presentation", "should_trigger": false},
+  {"query": "build a slide deck from this markdown file", "should_trigger": false},
+  {"query": "write an internal design doc for the new microservice", "should_trigger": false},
+  {"query": "update the README.md in the repo root", "should_trigger": false},
+  {"query": "write a unit test for the payment module", "should_trigger": false},
+  {"query": "fix the bug in src/api/handler.py", "should_trigger": false},
+  {"query": "draft a Jira ticket describing the regression", "should_trigger": false},
+  {"query": "summarize this PDF for me in an email", "should_trigger": false},
+  {"query": "create a task for the data migration work", "should_trigger": false}
+]

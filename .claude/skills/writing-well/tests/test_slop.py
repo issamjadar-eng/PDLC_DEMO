@@ -85,6 +85,30 @@ refs = lint("Short clean body sentence with no dashes at all here.\n\n## Referen
             "1. A — B — C — D — E — F — G — H — I — J — K\n")
 check("em-dashes in References not counted", refs["em_per_1k"] == 0.0, f"em/1k={refs['em_per_1k']}")
 
+# flourish / pretension tier
+print("\nflourish tier")
+fl = lint("The gate works. The practice: settings declare rules. The residue: drift happens anyway.")
+check("repeated colon-label scaffold flagged",
+      any("colon-label" in f["message"] for f in fl["findings"]), f"tags={sorted(tags(fl))}")
+fl_one = lint("The gate works. The practice: settings declare the rules and hooks enforce them.")
+check("single colon-label NOT flagged (repeat-gated)",
+      not any("colon-label" in f["message"] for f in fl_one["findings"]))
+dem = lint("Nothing about the trio is exotic — that is its qualification. The rest is plain.")
+check("demonstrative flourish flagged",
+      any("demonstrative" in f["message"] for f in dem["findings"]), f"tags={sorted(tags(dem))}")
+epi = lint("It is a control, not a proof. A swap is continuity, not hope. "
+           "The pin is a disclosure, not ceremony. Verdicts are findings, not facts.")
+check("epigram stacking flagged at density",
+      any("epigram" in f["message"] for f in epi["findings"]), f"tags={sorted(tags(epi))}")
+epi_one = lint("It is a control, not a proof. " + "The team shipped the release on time and the "
+               "customer was satisfied with the result. " * 30)
+check("single contrast NOT flagged (density-gated)",
+      not any("epigram" in f["message"] for f in epi_one["findings"]))
+nest = lint(("The plan — which took months — finally shipped — late. " * 3) +
+            "A short closing sentence sits here.")
+check("nested em-dash asides flagged when clustered",
+      any("nested em-dash" in f["message"] for f in nest["findings"]), f"tags={sorted(tags(nest))}")
+
 # --------------------------------------------------------------------------- #
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

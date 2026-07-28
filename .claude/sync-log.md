@@ -1350,3 +1350,23 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Status: merged (--merge requested)
 - Merge commit / hitachi HEAD after sync: `bbee8e9`
 - Resolves the ben/094 LOCAL_AHEAD divergence — local and registry collect.py now identical; skill drift = 0 (SYNCED).
+
+## 2026-07-28 — pull
+
+- Hitachi HEAD after sync: `933ffad`
+- Pulled: 19 files
+  - `skills/writing-well/**` (6 files, v3→v5 — unearned-terminology/grounding judgment lens + flourish/pretension slop tier; no post-update actions)
+  - `skills/public-doc/**` (13 files, NEW skill — external-facing prose docs: draft state, INTERNAL-block strip-for-publish, brand/style lint; no setup action, no deps, no agents)
+- project.yml: `security.approved_skills` += public-doc
+- Follow-ups: none (prose-editor agent symlink already installed; UNDETERMINED on `agents/prose-editor.md` was symlink-probe race noise, content identical)
+
+## 2026-07-28 — push
+
+- Files: `skills/workbench-validation/**` (7 files, NEW skill v3), `skills/project-console/{README.md,SKILL.md,VERSION,console/commercial/loader.py,console/setup/loader.py,console/setup/router.py,console/web/templates/setup_view.html}` (1.57.0→1.58.0)
+- Branch: `sync/pdlc-demo-workbench-validation-2026-07-28`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/290
+- Commit: "Add workbench-validation skill (v3) + project-console 1.58.0 Validation view"
+- Status: merged (--merge requested via "do a skill sync")
+- Merge commit: `933ffad`
+- Hitachi HEAD after sync: `933ffad`
+- Drift after sync: 0 (both directions)
