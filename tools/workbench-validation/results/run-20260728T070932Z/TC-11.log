@@ -1,0 +1,23 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070932Z
+case:        TC-11 — The project console works end to end
+purpose:     Checks the team's browser console — the pages, data loaders, and workflows this very Validation view lives in — so what the team sees reflects repo truth.
+approach:    Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would.
+UUT:         project-console@1.58.0
+user needs:  WUN-10
+command:     uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+timeout_s:   900
+started:     2026-07-28T07:09:39Z (UTC)
+exit_code:   0
+duration_s:  2.7
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 2.28s
+

@@ -1,0 +1,307 @@
+# Workbench validation manifest — PDLC_DEMO AI workbench.
+# Authored source of truth (paired with validation-plan.md). The report, results,
+# and sidecar are generated projections; edit here, then run
+# `/workbench-validation validate`.
+schema_version: "1.0"
+
+banner: "_Demo sample data — not for clinical use._ Illustrative of method only — not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text."
+
+# Authored sources live here in docs/; GENERATED outputs (results, evidence
+# logs, report, sidecar) live under tools/workbench-validation/ — same pattern
+# as tools/usage-metrics (generated tool output, not authored documentation).
+plan: docs/project/workbench-validation/validation-plan.md
+results_dir: tools/workbench-validation/results
+sidecar: tools/workbench-validation/workbench-validation-index.json
+report:
+  title: "Workbench Validation Report — PDLC_DEMO AI Workbench"
+  output: tools/workbench-validation/validation-report.md
+
+known_anomalies:
+  - "**Designed-but-inert control** — `change-control/hooks/pre_tool_use_frozen.py` is a stub (exits 0): the frozen-controlled-doc edit block is designed but not yet enforcing. Tracked as a workbench gap; lifecycle-state enforcement currently relies on process discipline."
+  - "**Untested deterministic checkers** — several load-bearing lint/checker scripts have no regression suite pinning their behavior (regulatory-authoring `authoring_lint.py`, submissions linters, commercial `dossier_lint.py`, gap-analysis sidecar renderer). WUN-04 evidence currently rests on the writing-well lint suite only."
+  - "**Suite exit-code masking** — the task-gate suite reports per-scenario failures but exits 0 regardless; pass/fail is derived from its output banner (`pass_pattern`). Upstream fix candidate for the task skill."
+  - "**Environment sensitivity** — the task-gate suite requires `CLAUDE_SESSION_ID` to be unset (a live agent session's ID makes fake-session DENY scenarios resolve ALLOW); the runner strips it via `env_unset`."
+  - "**TC-08 tracker regression (triaged 2026-07-27)** — `test_script_emits_bundle_for_existing_row` fails: `build-draft-context.py` reports row 'DHF' not found in inventory; the test's expected row appears to have drifted from the project tracker inventory. Upstream fix candidate for the tracker skill test fixture."
+  - "**TC-10 change-control (triaged 2026-07-27)** — `test_c_jira_renderer_graceful_degrades_on_auth_failure` fails (1 of 139); the Jira-renderer graceful-degradation path does not behave as the test expects in this environment. Upstream triage owed."
+  - "**TC-15 secops High findings (triaged 2026-07-27)** — the static screen reports CFG-PROJECT-YML `config-tamper` Highs whose snippets are docstring/comment mentions of project.yml (e.g. jira-pull `drift_rules.py` L103, usage-metrics `aggregate.py` L159), i.e. scanner-precision false positives — but per policy the case stays FAIL until the findings are dispositioned in the scanner or the scripts. Upstream fix candidate for the secops matcher."
+
+# Each need is stated from a ROLE's perspective, in the role's own language —
+# what outcome they need, never how the workbench implements it. The mechanism
+# lives in `implemented_by:` (informational traceability, not part of the need).
+user_needs:
+  - id: WUN-01
+    role: "DHF author"
+    class: authoring
+    tier: T1
+    need: "When I draft a controlled document, its structure must come out matching what the governing QMS form requires — without me having to remember the form's rules."
+    coverage: process-control
+    implemented_by: "medtech-docs scaffolding + .taxonomy.yml doctype governance + regulatory-authoring workflow"
+    process_controls:
+      - "doctype-governance rule: governing FORM/SOP/WI read before editing any taxonomy-governed doc"
+      - "regulatory-authoring 3-stage check (lint + copy-editor + QA-conformance) on substantive edits"
+      - "Mandatory human review before formal publish (change-control review tiers)"
+  - id: WUN-02
+    role: "Reviewer / approver"
+    class: authoring
+    tier: T1
+    need: "I can always tell which content in a controlled document came from the AI assistant and which content a human wrote or approved."
+    coverage: process-control
+    implemented_by: "AI-changelog metadata blocks + working-vs-formal document split + PR history"
+    process_controls:
+      - "ai-changelog rule: non-published AI-CHANGELOG metadata block on every AI-assisted controlled-doc edit"
+      - "Working-markdown vs formal/ split per design-controls conventions"
+      - "git/PR audit trail (PR-then-auto-merge workflow)"
+  - id: WUN-03
+    role: "Regulatory affairs lead"
+    class: authoring
+    tier: T1
+    need: "If the toolchain could not verify a claim it drafted, that claim is visibly flagged for me — never silently asserted as fact."
+    coverage: process-control
+    implemented_by: "[VERIFY] flag convention + no-fabrication policy + mandatory reference audit on citation-bearing edits"
+    process_controls:
+      - "No-fabrication policy + [VERIFY] convention (CLAUDE.md operating notes)"
+      - "reference-audit final-stage todo required for citation-bearing edits (regulatory-authoring rule §6)"
+  - id: WUN-04
+    role: "DHF author"
+    class: authoring
+    tier: T1
+    need: "Before my document goes out for review, mechanical writing defects (leaks, jargon, clutter, undefined terms) are caught automatically and reliably."
+    coverage: tests
+    implemented_by: "writing-well + regulatory-authoring deterministic lint scripts"
+  - id: WUN-05
+    role: "Quality engineer"
+    class: audit
+    tier: T2
+    need: "When a document cites a standard, guidance, or internal source, I get a trustworthy answer on whether the citation really matches the source text."
+    coverage: exploratory
+    implemented_by: "reference-audit skill + citations advisor (LLM-driven verification against byte-correct sources)"
+    process_controls:
+      - "Reference-audit runs are independent subagent passes; findings reports persisted under docs/_analysis/ with per-citation evidence for human spot-check"
+  - id: WUN-06
+    role: "Quality engineer"
+    class: audit
+    tier: T2
+    need: "If our documentation drifts from its declared structure, traceability, or tracker baseline, I find out from our own audit run — not from an external auditor."
+    coverage: tests
+    implemented_by: "dhf-manifest coverage audit + trace-matrix graph checks + tracker validation + jira-pull drift rules"
+  - id: WUN-07
+    role: "Program lead"
+    class: gates
+    tier: T1
+    need: "No project file gets changed without being anchored to a tracked task, so every change is traceable to why it was made."
+    coverage: tests
+    implemented_by: "task-gate PreToolUse hook (check-active-task.sh) with exempt-path list"
+  - id: WUN-08
+    role: "Quality engineer"
+    class: gates
+    tier: T1
+    need: "Documents cannot be converted outside the controlled conversion pipeline without a deliberate, visible override."
+    coverage: tests
+    implemented_by: "docflow conversion-block PreToolUse hook with .state/docflow-active override marker"
+  - id: WUN-09
+    role: "DHF author"
+    class: renderers
+    tier: T1
+    need: "Auto-generated sections of my documents always reflect the current source of truth, and never damage the text I wrote by hand around them."
+    coverage: tests
+    implemented_by: "sentinel-block renderer (render-sentinels.py) + advisor grounding renderer, both idempotent"
+  - id: WUN-10
+    role: "Program lead"
+    class: console
+    tier: T3
+    need: "Dashboards and decks show me the real, current state of the project — and tell me when what I'm looking at is stale."
+    coverage: tests
+    implemented_by: "project-console loaders/views (freshness badges) + md-deck rendering"
+  - id: WUN-11
+    role: "Team member"
+    class: config-control
+    tier: T2
+    need: "When I sync shared tooling, my local improvements are never silently overwritten, and I can see at a glance whether I'm in step with the team."
+    coverage: tests
+    implemented_by: "sync-skills three-way merge analysis (LOCAL_AHEAD protection) + status action"
+  - id: WUN-12
+    role: "Security officer"
+    class: config-control
+    tier: T2
+    need: "Any tool added to the workbench is screened for hostile behavior, and unapproved tools cannot operate unnoticed."
+    coverage: tests
+    implemented_by: "secops static artifact scanner + project.yml security allowlists + SessionStart posture check"
+  - id: WUN-13
+    role: "Quality engineer"
+    class: cross-cutting
+    tier: T2
+    need: "At any moment I can capture exactly which tool versions the team is working with, so I know what configuration was validated and when to revalidate."
+    coverage: tests
+    implemented_by: "per-skill version frontmatter/VERSION files + the validation runner's per-run configuration baseline"
+  - id: WUN-14
+    role: "Auditor (internal / external)"
+    class: cross-cutting
+    tier: T1
+    need: "For any AI-assisted change to a controlled document, I can trace when it happened, under which task, and who approved it."
+    coverage: process-control
+    implemented_by: "git/PR history + AI-changelog provenance rows + task-first workflow"
+    process_controls:
+      - "git-workflow rule: PR-then-auto-merge leaves a durable, linkable record for every push"
+      - "ai-changelog rule: Date | Task | Summary provenance rows in controlled docs"
+      - "Task-first workflow: every non-trivial change anchored to a task doc"
+  - id: WUN-15
+    role: "Document control specialist"
+    class: authoring
+    tier: T1
+    need: "When documents move between the repo and the formal systems (Confluence, Google Docs), nothing gets corrupted in transit — and frozen documents stay frozen."
+    coverage: tests
+    implemented_by: "change-control adopt/publish pipeline + review tiers (frozen-state hook currently a stub — see known anomalies)"
+
+# `title` / `description` / `approach` are written for a NON-SPECIALIST reviewer:
+# title = what is being checked in everyday words; description = what the case
+# checks and why it matters; approach = how the check works, plainly. The old
+# technical framing lives on in the cmd itself and the evidence logs.
+# `uut:` names the unit(s) under test — the workbench component(s) the case
+# actually runs against (usually skill names; multiple allowed). The runner pins
+# each named skill to the version exercised (`uut_versions`) in results, logs,
+# report, and sidecar. Sentinel value `all-skills` = a workbench-wide sweep.
+test_cases:
+  - id: TC-01
+    uut: [task]
+    title: "The 'no work without a task' gate blocks and allows the right files"
+    description: "Checks the safeguard that stops project files from being changed when no work task is active. Protected files must be blocked; everyday exempt files (task notes, settings) must still be allowed."
+    approach: "Runs the gate's own 63-scenario self-test in a clean environment: it simulates edit attempts with and without an active task and compares every block/allow decision against the expected one. Passes only when the suite reports all scenarios passed."
+    wun: [WUN-07]
+    cmd: ["bash", ".claude/skills/task/tests/test-task-gate.sh"]
+    env_unset: [CLAUDE_SESSION_ID]
+    pass_pattern: "ALL TESTS PASSED"
+    timeout: 300
+    requires: [jq]
+  - id: TC-02
+    uut: [docflow]
+    title: "The document-conversion gate stops uncontrolled conversions"
+    description: "Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability)."
+    approach: "Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required."
+    wun: [WUN-08]
+    cmd: ["bash", "-c", "export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]"]
+    timeout: 60
+    requires: [jq, python3]
+  - id: TC-03
+    uut: [medtech-docs]
+    title: "Auto-generated document sections stay faithful and do no harm"
+    description: "Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched."
+    approach: "Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets."
+    wun: [WUN-09]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/medtech-docs/tests", "-q"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-04
+    uut: [advisors]
+    title: "Advisor grounding files are built correctly"
+    description: "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources."
+    approach: "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output."
+    wun: [WUN-09]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/advisors/tests", "-q"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-05
+    uut: [writing-well]
+    title: "Writing-quality checks catch known defects"
+    description: "Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review."
+    approach: "Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged."
+    wun: [WUN-04]
+    cmd: ["bash", ".claude/skills/writing-well/tests/run_tests.sh"]
+    timeout: 600
+  - id: TC-06
+    uut: [dhf-manifest]
+    title: "The document-coverage audit finds what's missing"
+    description: "Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor."
+    approach: "Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly."
+    wun: [WUN-06]
+    cmd: ["bash", ".claude/skills/dhf-manifest/tests/test_discovery_index.sh"]
+    timeout: 600
+  - id: TC-07
+    uut: [trace-matrix]
+    title: "Traceability-chain checks work"
+    description: "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs — the chain auditors walk."
+    approach: "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions."
+    wun: [WUN-06]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/trace-matrix/tests", "-q"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-08
+    uut: [tracker]
+    title: "Submission-tracker wiring works"
+    description: "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents."
+    approach: "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations."
+    wun: [WUN-06]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/tracker/tests", "-q"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-09
+    uut: [jira-pull]
+    title: "Jira-drift detection works"
+    description: "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught."
+    approach: "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks)."
+    wun: [WUN-06]
+    # --deselect: test_exec is a test-data helper whose name collides with pytest
+    # collection (suite is written to run standalone); 69 real tests remain.
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--with", "openpyxl", "--", "pytest", ".claude/skills/jira-pull/tests", "-q", "--deselect", ".claude/skills/jira-pull/tests/test_drift_rules.py::test_exec"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-10
+    uut: [change-control]
+    title: "Repo-to-formal-systems document transfer is faithful"
+    description: "Checks the machinery that moves controlled documents between this repo and the formal systems (Confluence, Google Docs) without corrupting content or losing review state."
+    approach: "Runs the transfer machinery's 139-test suite covering conversion fidelity, review tiers, freeze states, and error handling against known documents."
+    wun: [WUN-15]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/change-control/tests", "-q"]
+    timeout: 900
+    requires: [uv]
+  - id: TC-11
+    uut: [project-console]
+    title: "The project console works end to end"
+    description: "Checks the team's browser console — the pages, data loaders, and workflows this very Validation view lives in — so what the team sees reflects repo truth."
+    approach: "Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would."
+    wun: [WUN-10]
+    cmd: ["uv", "run", "--project", "tools/project-console", "--with", "pytest", "--", "pytest", ".claude/skills/project-console/tests", "-q"]
+    timeout: 900
+    requires: [uv]
+  - id: TC-12
+    uut: [md-deck]
+    title: "Slide-deck builder keeps content intact"
+    description: "Checks the presentation tooling that turns project documents into slide decks without dropping or duplicating content."
+    approach: "Runs the deck builder's regression suite verifying slide identity is preserved across rebuilds."
+    wun: [WUN-10]
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/md-deck/tests", "-q"]
+    timeout: 600
+    requires: [uv]
+  - id: TC-13
+    uut: [sync-skills]
+    title: "Tool updates never overwrite local improvements"
+    description: "Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced."
+    approach: "Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten."
+    wun: [WUN-11]
+    cmd: ["bash", ".claude/skills/sync-skills/tests/test_three_way_pull.sh"]
+    timeout: 600
+  - id: TC-14
+    uut: [sync-skills]
+    title: "The tool-sync health check reports the truth"
+    description: "Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry."
+    approach: "Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly."
+    wun: [WUN-11]
+    cmd: ["bash", ".claude/skills/sync-skills/tests/test_status.sh"]
+    timeout: 600
+  - id: TC-15
+    uut: [secops]
+    title: "Installed tools pass the security screen"
+    description: "Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns — and that the scanner itself fails loudly when it does."
+    approach: "Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned."
+    wun: [WUN-12]
+    cmd: ["python3", ".claude/skills/secops/scripts/audit_artifacts.py", "--json"]
+    timeout: 300
+  - id: TC-16
+    uut: [all-skills]
+    title: "Every tool declares its version"
+    description: "Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt)."
+    approach: "Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none."
+    wun: [WUN-13]
+    # Bundled external skills (Anthropic office suite) are version-exempt, mirroring
+    # the best-practices "Skills are versioned" check's external-skill exemption.
+    cmd: ["python3", "-c", "import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)"]
+    timeout: 60

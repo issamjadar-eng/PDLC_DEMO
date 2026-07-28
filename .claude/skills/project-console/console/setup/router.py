@@ -16,6 +16,10 @@ POST   /setup/environment/check        — run the project's `setup.sh --check`
                                           (read-only mode) and cache the parsed
                                           report; the full install never runs
                                           from the browser
+POST   /setup/workbench/render         — run the workbench-validation skill's
+                                          runner (--render): executes the
+                                          validation manifest and regenerates
+                                          the report + sidecar this page reads
 POST   /setup/project/field            — update one scalar field in the
                                           project.yml `project:` block
 POST   /setup/team/access-audit        — cross-reference GitHub collaborators
@@ -180,6 +184,41 @@ async def setup_environment_check(request: Request):
     except RuntimeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True, "report": report}
+
+
+@router.post("/setup/workbench/render", response_class=JSONResponse)
+async def setup_workbench_render(request: Request):
+    """Run the workbench-validation skill's runner with --render: executes the
+    project's validation manifest (existing skill test suites, lints, audits)
+    and regenerates the report + sidecar. The console stays a pure consumer —
+    all computation happens in the owning skill's script."""
+    import subprocess
+    import sys
+
+    import anyio
+
+    from console.setup.loader import WORKBENCH_RUNNER_REL
+    cfg = get_config()
+    runner = cfg.repo_root / WORKBENCH_RUNNER_REL
+    if not runner.is_file():
+        raise HTTPException(status_code=400,
+                            detail="workbench-validation skill is not installed.")
+
+    def _run():
+        return subprocess.run(
+            [sys.executable, str(runner), "--root", str(cfg.repo_root), "--render",
+             "--invoked-via", "console"],
+            capture_output=True, text=True, timeout=1800,
+        )
+    try:
+        proc = await anyio.to_thread.run_sync(_run)
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="Validation run timed out.")
+    # Exit 1 means FAIL/ERROR cases exist — that is a valid, reportable outcome,
+    # not an HTTP error; the refreshed sidecar carries the verdict.
+    tail = (proc.stdout or "").strip().splitlines()[-3:]
+    return {"ok": proc.returncode in (0, 1), "exit_code": proc.returncode,
+            "summary": "\n".join(tail)}
 
 
 @router.post("/setup/project/field", response_class=JSONResponse)

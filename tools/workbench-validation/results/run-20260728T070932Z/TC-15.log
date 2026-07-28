@@ -1,0 +1,156 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070932Z
+case:        TC-15 — Installed tools pass the security screen
+purpose:     Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns — and that the scanner itself fails loudly when it does.
+approach:    Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned.
+UUT:         secops@8
+user needs:  WUN-12
+command:     python3 .claude/skills/secops/scripts/audit_artifacts.py --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+timeout_s:   300
+started:     2026-07-28T07:09:46Z (UTC)
+exit_code:   1
+duration_s:  0.95
+judged by:   exit code
+status:      FAIL (exit code 1)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "summary": {
+    "Critical": 0,
+    "High": 14,
+    "Medium": 0,
+    "Low": 0
+  },
+  "findings": [
+    {
+      "rule_id": "CFG-GIT-CONFIG-GLOBAL",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/sync-skills/scripts/sync.sh",
+      "line": 727,
+      "snippet": "1. git config --global core.symlinks true",
+      "description": "Mutates git config at global/system scope \u2014 should always be repo-local."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 92,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 169,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 210,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 258,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 319,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 389,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 435,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 494,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 573,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 665,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 744,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/jira-pull/lib/drift_rules.py",
+      "line": 103,
+      "snippet": "columns: Dict[str, str]         # canonical name -> column letter (mirrors project.yml)",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "High",
+      "file": ".claude/skills/usage-metrics/scripts/aggregate.py",
+      "line": 159,
+      "snippet": "\"\"\"task_folder -> {name, email} from project.yml (display labels only).\"\"\"",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action."
+    }
+  ]
+}
+

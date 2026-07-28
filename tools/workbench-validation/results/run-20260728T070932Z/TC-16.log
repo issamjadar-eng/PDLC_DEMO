@@ -1,0 +1,21 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070932Z
+case:        TC-16 — Every tool declares its version
+purpose:     Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt).
+approach:    Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none.
+UUT:         all-skills
+user needs:  WUN-13
+command:     python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\s*\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+timeout_s:   60
+started:     2026-07-28T07:09:47Z (UTC)
+exit_code:   0
+duration_s:  0.02
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+all skills versioned (external office skills exempt)
+

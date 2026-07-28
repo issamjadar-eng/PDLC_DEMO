@@ -1,0 +1,748 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-20260728T071407Z",
+  "started": "2026-07-28T07:14:07Z",
+  "finished": "2026-07-28T07:14:22Z",
+  "duration_s": 15.3,
+  "manifest": "docs/project/workbench-validation/validation.yml",
+  "pinned_manifest": {
+    "path": "tools/workbench-validation/results/run-20260728T071407Z/validation.yml",
+    "sha256": "dd6a06c816f0149b8750d890e63056211a06f6a119beab1a04e5a88b5ec97698"
+  },
+  "invoked_via": "cli",
+  "partial": false,
+  "environment": {
+    "git_sha": "1e2e6d4a14d69371ce5a077fcc3581e759feef05",
+    "git_sha_short": "1e2e6d4",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python": "3.14.5",
+    "platform": "darwin",
+    "operator": {
+      "git_user": "benxavier-gl",
+      "git_email": "ben.xavier@globallogic.com",
+      "os_user": "benxavier",
+      "hostname": "Bens-MBP",
+      "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+    },
+    "model_id": null,
+    "hooks_installed": [
+      "block-direct-conversion.sh",
+      "check-active-task.sh",
+      "checkpoint-recover.sh",
+      "register-hook.sh",
+      "security-assert.sh",
+      "session-briefing.sh",
+      "session-cleanup.sh",
+      "session-env.sh",
+      "skill-creator-cleanup.sh",
+      "skill-creator-watch.py",
+      "task-activate.sh",
+      "taxonomy-freshness.sh",
+      "usage-metrics-publish.sh",
+      "usage-metrics-refresh.sh"
+    ],
+    "skills": {
+      "advisors": {
+        "version": "12",
+        "updated": "2026-07-22"
+      },
+      "best-practices": {
+        "version": "15",
+        "updated": "2026-04-27"
+      },
+      "change-control": {
+        "version_file": "0.14.0"
+      },
+      "commercial": {
+        "version": "14",
+        "updated": "2026-07-27"
+      },
+      "corpus": {
+        "version": "4",
+        "updated": "2026-07-27"
+      },
+      "dhf-manifest": {
+        "version": "15",
+        "updated": "2026-07-22"
+      },
+      "digest": {
+        "version": "9",
+        "updated": "2026-04-23",
+        "version_file": "1.3.0"
+      },
+      "docflow": {
+        "version": "36",
+        "updated": "2026-07-01"
+      },
+      "docx": {},
+      "explain": {
+        "version": "3",
+        "updated": "2026-06-03"
+      },
+      "file-locator": {
+        "version": "3",
+        "updated": "2026-06-10"
+      },
+      "frontend-design": {
+        "version": "1",
+        "updated": "2026-06-01"
+      },
+      "frontend-slides": {
+        "version": "0.4.1",
+        "updated": "2026-05-17"
+      },
+      "gap-analysis": {
+        "version": "7",
+        "updated": "2026-06-05"
+      },
+      "jira-pull": {
+        "version": "1",
+        "updated": "2026-05-03"
+      },
+      "knowledge-pack-export": {
+        "version": "5",
+        "updated": "2026-05-30"
+      },
+      "lessons": {
+        "version": "4",
+        "updated": "2026-04-23"
+      },
+      "md-deck": {
+        "version": "0.6.3",
+        "updated": "2026-07-21"
+      },
+      "medtech-docs": {
+        "version": "35",
+        "updated": "2026-06-15"
+      },
+      "pdf": {},
+      "pptx": {},
+      "project-console": {
+        "version": "1.58.0",
+        "updated": "2026-07-27",
+        "version_file": "1.58.0"
+      },
+      "red-team": {
+        "version": "1",
+        "updated": "2026-06-26"
+      },
+      "reference-audit": {
+        "version": "4",
+        "updated": "2026-06-11"
+      },
+      "regulatory-authoring": {
+        "version": "3",
+        "updated": "2026-07-08"
+      },
+      "secops": {
+        "version": "8",
+        "updated": "2026-05-13"
+      },
+      "skill-creator": {
+        "version": "8",
+        "updated": "2026"
+      },
+      "strategy": {
+        "version": "20",
+        "updated": "2026-06-15"
+      },
+      "submissions": {
+        "version_file": "6"
+      },
+      "sync-skills": {
+        "version": "8.4",
+        "updated": "2026-05-30"
+      },
+      "task": {
+        "version": "35",
+        "updated": "2026-07-27"
+      },
+      "trace-matrix": {
+        "version": "8",
+        "updated": "2026-05-12"
+      },
+      "tracker": {
+        "version": "14",
+        "updated": "2026-06-15"
+      },
+      "usage-metrics": {
+        "version": "12",
+        "updated": "2026-07-01"
+      },
+      "web-control": {
+        "version": "0.3.0",
+        "updated": "2026-05-02",
+        "version_file": "0.3.0"
+      },
+      "workbench-validation": {
+        "version": "3",
+        "updated": "2026-07-28",
+        "version_file": "3"
+      },
+      "writing-well": {
+        "version": "3",
+        "updated": "2026-06-25"
+      },
+      "xlsx": {}
+    }
+  },
+  "summary": {
+    "PASS": 13,
+    "FAIL": 3
+  },
+  "cases": [
+    {
+      "id": "TC-01",
+      "title": "The 'no work without a task' gate blocks and allows the right files",
+      "wun": [
+        "WUN-07"
+      ],
+      "uut": [
+        "task"
+      ],
+      "uut_versions": {
+        "task": "35"
+      },
+      "cmd": "bash .claude/skills/task/tests/test-task-gate.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.5,
+      "reason": null,
+      "output_tail": "ASS  .claude/skills/*/README.md \u2192 DENY\n  PASS  .claude/skills/*/VERSION \u2192 DENY\n  PASS  .claude/skills/*/agents/*.md (source) \u2192 DENY\n  PASS  .claude/skills/*/hooks/*.sh (source) \u2192 DENY\n  PASS  .claude/skills/*/scripts/* \u2192 DENY\n  PASS  .claude/hooks/* regular file \u2192 DENY\n  PASS  .claude/rules/* \u2192 DENY\n\n6b. Hook \u2014 Symlink resolution (can't bypass the gate via a symlink)\n  PASS  tasks/* symlink \u2192 skill SKILL.md \u2192 DENY (resolves)\n  PASS  .claude/agents/* symlink \u2192 skill SKILL.md \u2192 DENY (resolves)\n\n7. Hook \u2014 Multi-Task Lifecycle\n  PASS  Two tasks (024+025) \u2192 ALLOW\n  PASS  After removing 025, 024 still active \u2192 ALLOW\n  PASS  All tasks removed \u2192 DENY\n\n8. Hook \u2014 Denial Message Contains Session ID\n  PASS  Denial includes session ID\n  PASS  Denial includes activation command\n  PASS  Denial includes /task create hint\n\n9. Hook \u2014 Edge Cases\n  PASS  Empty target path \u2192 DENY (no exempt match)\n  PASS  Empty state file (cleared) \u2192 DENY\n  PASS  State file deleted \u2192 DENY\n  PASS  Empty session ID \u2192 DENY (no state file match)\n\n10. End-to-End \u2014 Activate Script + Hook\n  PASS  E2E: fresh session \u2192 DENY\n  PASS  E2E: after activate \u2192 ALLOW\n  PASS  E2E: after complete \u2192 DENY\n  PASS  E2E: two tasks active \u2192 ALLOW\n  PASS  E2E: one task remaining \u2192 ALLOW\n  PASS  E2E: all completed \u2192 DENY\n\n11. Session Isolation\n  PASS  Session A has task \u2192 ALLOW\n  PASS  Session B has task \u2192 ALLOW\n  PASS  Session A completed \u2192 DENY\n  PASS  Session B still active \u2192 ALLOW\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nALL TESTS PASSED  (63/63)\n\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-01.log",
+      "source": ".claude/skills/task/tests/test-task-gate.sh",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-01",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-01/test-task-gate.sh",
+          "sha256": "38cc68d95fa3e3c5d26843058cef97bfa15869cbca91820e40994c0536bb2d75"
+        }
+      ]
+    },
+    {
+      "id": "TC-02",
+      "title": "The document-conversion gate stops uncontrolled conversions",
+      "wun": [
+        "WUN-08"
+      ],
+      "uut": [
+        "docflow"
+      ],
+      "uut_versions": {
+        "docflow": "36"
+      },
+      "cmd": "bash -c export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.05,
+      "reason": null,
+      "output_tail": "deny_exit=2 allow_exit=0\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-02.log",
+      "source": null,
+      "pinned": null,
+      "pinned_files": []
+    },
+    {
+      "id": "TC-03",
+      "title": "Auto-generated document sections stay faithful and do no harm",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "medtech-docs"
+      ],
+      "uut_versions": {
+        "medtech-docs": "35"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.41,
+      "reason": null,
+      "output_tail": "...........                                                              [100%]\n11 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-03.log",
+      "source": ".claude/skills/medtech-docs/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-03",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-03/tests/test_render_sentinels.py",
+          "sha256": "efa08b7f8c5814051bf8cdbb2570e508861f8927f7f301597597c64b6ef2d688"
+        }
+      ]
+    },
+    {
+      "id": "TC-04",
+      "title": "Advisor grounding files are built correctly",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "advisors"
+      ],
+      "uut_versions": {
+        "advisors": "12"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.33,
+      "reason": null,
+      "output_tail": "........................................................................ [ 81%]\n................                                                         [100%]\n88 passed in 0.07s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-04.log",
+      "source": ".claude/skills/advisors/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-04",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-04/tests/run.sh",
+          "sha256": "47e5d3c3c8de419b2b04ab19c4c2472781c04c2890dd558c071ee343b2a5b2e0"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-04/tests/test_file_locator_wiring.py",
+          "sha256": "ea19e7ed79927d042e0e07cd830e7e255507cc60120217d83c99569f491a95b2"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-04/tests/test_loader.py",
+          "sha256": "85953c1a01c6b9794fa310bce1e109885bb3e69f49eae967b075bc90a8101d70"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-04/tests/test_render_grounding.py",
+          "sha256": "1d3dd861c6d3e0c0712ce7c043eb8a94ce9fcbec06f0b3423ff643fa6d240a15"
+        }
+      ]
+    },
+    {
+      "id": "TC-05",
+      "title": "Writing-quality checks catch known defects",
+      "wun": [
+        "WUN-04"
+      ],
+      "uut": [
+        "writing-well"
+      ],
+      "uut_versions": {
+        "writing-well": "3"
+      },
+      "cmd": "bash .claude/skills/writing-well/tests/run_tests.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.6,
+      "reason": null,
+      "output_tail": "ble link text)\n  PASS  no 'was decided' from fenced/indented/table code\n  PASS  no 'at the end of the day' from the bare URL\n\npredicate-adjective passives must NOT fire (precision) + dependency nominalization (recall)\n  PASS  predicate adj 'thrilled' NOT flagged passive\n  PASS  predicate adj 'golden' NOT flagged passive\n  PASS  predicate adj 'married' NOT flagged passive\n  PASS  predicate adj 'green' NOT flagged passive\n  PASS  predicate adj 'wooden' NOT flagged passive\n  PASS  genuine passive 'was written' still flagged\n  PASS  nominalization 'has a dependency on' caught\n\nexit-code contract\n  PASS  default exit 0 even with findings (advisory)\n  PASS  --strict exit 1 when findings exist\n  PASS  --strict exit 0 when no findings\n\nflags\n  PASS  --only clutter yields only clutter\n  PASS  --max-len 5 increases length flags\n\n32 passed, 0 failed\nslop sample \u2014 tells must fire\n  PASS  tag present: aitell-emdash\n  PASS  tag present: aitell-vocab\n  PASS  tag present: aitell-construction\n  PASS  tag present: aitell-opener\n  PASS  tag present: aitell-signpost\n\nultra-marker single occurrence\n  PASS  'delve' flagged as vocab\n\nem-dash density\n  PASS  high em-dash density flagged\n  PASS  clean low-dash prose NOT flagged for em-dash\n\nfolklore gating\n  PASS  'robust/leverage' NOT flagged without --folklore\n  PASS  folklore flagged WITH --folklore\n\nskip zones\n  PASS  vocab inside code fence NOT flagged\n\nreferences section excluded\n  PASS  em-dashes in References not counted\n\n12 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-05.log",
+      "source": ".claude/skills/writing-well/tests/run_tests.sh",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-05",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-05/run_tests.sh",
+          "sha256": "30c558fc7acf6083b8b8a21f29a617dc5816850f45ecadeb291eab7c0fb5459d"
+        }
+      ]
+    },
+    {
+      "id": "TC-06",
+      "title": "The document-coverage audit finds what's missing",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "dhf-manifest"
+      ],
+      "uut_versions": {
+        "dhf-manifest": "15"
+      },
+      "cmd": "bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.54,
+      "reason": null,
+      "output_tail": "\u2500\u2500 discovery-index tests \u2500\u2500\ncase1: clean resolution across mixed naming conventions\ncase2: ambiguity \u2014 higher-ranked pattern wins, alternative recorded\ncase3: L3 override via patterns_extra prepends to ranking\ncase4: external_data roles count files and surface missing-folder gaps\ncase5: external-mode DHF \u2014 nested sub-convention (folder/v*.md)\ncase6: external-mode DHF \u2014 flat sub-convention (folder.md)\ncase7: project-scoped multi_file role \u2014 folder pointer with file_count\ncase8: per-dhf multi_file role (internal mode) \u2014 folder pointer\ncase9: multi-match no-winner \u2014 ambiguity_notes + paired gap (was silently lost pre-fix)\ncase10: frontmatter canonical_role: opt-in outranks filename patterns\ncase11: external CLIENT-SLUG override \u2014 client slug, nested path, multi-file, governance\n\nResults: 48 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-06.log",
+      "source": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-06",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-06/test_discovery_index.sh",
+          "sha256": "9a88b32f9aa29649614b263ec77ef6b7c4c7deb7b1968ad3414ab25f0a98d78b"
+        }
+      ]
+    },
+    {
+      "id": "TC-07",
+      "title": "Traceability-chain checks work",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "trace-matrix"
+      ],
+      "uut_versions": {
+        "trace-matrix": "8"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.29,
+      "reason": null,
+      "output_tail": ".......................                                                  [100%]\n23 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-07.log",
+      "source": ".claude/skills/trace-matrix/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-07",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-07/tests/test_graph_bidirectional.py",
+          "sha256": "e2149cbf103669fed932c6d4f88140719539665528653855758989aa33e89319"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-07/tests/test_jira_mirror.py",
+          "sha256": "2413928d4b45e6d5bad81e00af22def9e75fc3bb4759c34782253083391cce7c"
+        }
+      ]
+    },
+    {
+      "id": "TC-08",
+      "title": "Submission-tracker wiring works",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "tracker"
+      ],
+      "uut_versions": {
+        "tracker": "14"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.36,
+      "reason": "exit code 1",
+      "output_tail": "\").exists():\n                break\n            if d.parent == d:\n                self.skipTest(\"could not find project CLAUDE.md\")\n                return\n            d = d.parent\n        project_dir = d\n        # Pick any row from submission-tracker.md (use Q4 if present)\n        tracker_md = project_dir / \"docs/project/submissions/submission-tracker.md\"\n        if not tracker_md.is_file():\n            self.skipTest(\"no submission-tracker.md in this project\")\n            return\n        # Find first row id\n        import re\n        m = re.search(r\"^\\|\\s*([A-Z][A-Z0-9-]+)\\s*\\|\", tracker_md.read_text(encoding=\"utf-8\"), re.MULTILINE)\n        if not m:\n            self.skipTest(\"no rows found in tracker md\")\n            return\n        row_id = m.group(1)\n        script = _SKILL_DIR / \"scripts\" / \"build-draft-context.py\"\n        r = subprocess.run(\n            [sys.executable, str(script), \"--row\", row_id, \"--json\", \"--project-dir\", str(project_dir)],\n            capture_output=True, text=True, timeout=30,\n        )\n>       self.assertEqual(r.returncode, 0, msg=f\"stderr: {r.stderr}\")\nE       AssertionError: 1 != 0 : stderr: ERROR: row 'DHF' not found in inventory\n\n.claude/skills/tracker/tests/test_create_draft_wiring.py:138: AssertionError\n=========================== short test summary info ============================\nFAILED .claude/skills/tracker/tests/test_create_draft_wiring.py::TestBuildDraftContextScript::test_script_emits_bundle_for_existing_row\n1 failed, 10 passed in 0.09s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-08.log",
+      "source": ".claude/skills/tracker/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-08",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-08/tests/test_create_draft_wiring.py",
+          "sha256": "c947ca00bccfc29bf861db7251a3f6c24986f235f6ff8bfa8d1b599db2ee4eeb"
+        }
+      ]
+    },
+    {
+      "id": "TC-09",
+      "title": "Jira-drift detection works",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "jira-pull"
+      ],
+      "uut_versions": {
+        "jira-pull": "1"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q --deselect .claude/skills/jira-pull/tests/test_drift_rules.py::test_exec",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.33,
+      "reason": null,
+      "output_tail": ".....................................................................                                                       [100%]\n69 passed, 1 deselected, 21 subtests passed in 0.06s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-09.log",
+      "source": ".claude/skills/jira-pull/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-09",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-09/tests/test_drift_rules.py",
+          "sha256": "7e96b938a375895456674c8990751a3d98d43caf9aca0578f3d04251e9b8b357"
+        }
+      ]
+    },
+    {
+      "id": "TC-10",
+      "title": "Repo-to-formal-systems document transfer is faithful",
+      "wun": [
+        "WUN-15"
+      ],
+      "uut": [
+        "change-control"
+      ],
+      "uut_versions": {
+        "change-control": "0.14.0"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.71,
+      "reason": "exit code 1",
+      "output_tail": "s_mod.extract_confluence_cookies = orig\n        assert \"jira-list render deferred\" in new_md, new_md\n>       assert any(\"cookie bridge failed\" in w for w in warnings), warnings\nE       AssertionError: ['jira position=0: HTTP Error 404: Not Found']\nE       assert False\nE        +  where False = any(<generator object test_c_jira_renderer_graceful_degrades_on_auth_failure.<locals>.<genexpr> at 0x10b008860>)\n\n.claude/skills/change-control/tests/test_v010_bundle.py:243: AssertionError\n=============================== warnings summary ===============================\n.claude/skills/change-control/lib/config.py:63\n  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_config.py)\n    @dataclass\n\n.claude/skills/change-control/lib/config.py:63\n  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_verify.py)\n    @dataclass\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED .claude/skills/change-control/tests/test_v010_bundle.py::test_c_jira_renderer_graceful_degrades_on_auth_failure\n1 failed, 138 passed, 2 warnings in 0.43s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-10.log",
+      "source": ".claude/skills/change-control/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test-internal-review.sh",
+          "sha256": "cb321c61a1b77c55e47ae9107bd33bc167eba4b5bc5105db8d9347c23b7bcdb2"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_attachments_macro.py",
+          "sha256": "97b7ca55a0c24a50ca17fb785dc8d3c7bb4e5947245535bdd0940da34b4d7ef0"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_auto_chrome.py",
+          "sha256": "ff519eaa5b0d9519931f47acbedf900d12e2fbcfc6da270272e283e29aa9220f"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_config.py",
+          "sha256": "1a546f5ff423dca9a371847c7867d769b51abde642980e241d8b8f23a9b2cac0"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_cross_page_and_orphan.py",
+          "sha256": "0fea5da53bfda5a20095a0f57368920038e78c46d706a111559edd1300476912"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_depth_and_manifest.py",
+          "sha256": "c26aa3df93990704366fe93c330aebcc458aae9c9ce3ef545e50f9125a93a648"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_file_cards.py",
+          "sha256": "7f05d1de830515074039517d2a9dea3f160c3ac21cf340bd361e3451b965a95a"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_image_roundtrip.py",
+          "sha256": "d95ac9824bed8da5c7e8cd50b1a4dd13930c75044727f046fc1c6429d1c09259"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_incremental_sync.py",
+          "sha256": "62a23c4ccf06a8be28389b4af85a1b6169aecb9c340b45afaff9799b1d1557d0"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_internal_block_strip.py",
+          "sha256": "85d305056635b6489e84d65adebe32e82f8ee90cceeff2925b611215c34d7372"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_url_encoding.py",
+          "sha256": "a81c1a2a335e1a9fa302c0afc077102f62dfa9ea4e755a4e2902d67fbbcafdba"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_v010_bundle.py",
+          "sha256": "c536227affabe95c807e5fcb0660c532cc11969036b08703bc0815c1275af505"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-10/tests/test_verify.py",
+          "sha256": "36cd5b68c558fb08bd047c5c5798a1709bde2ecd6d9dce25fb7d78d8b1e31c1b"
+        }
+      ]
+    },
+    {
+      "id": "TC-11",
+      "title": "The project console works end to end",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "project-console"
+      ],
+      "uut_versions": {
+        "project-console": "1.58.0"
+      },
+      "cmd": "uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.67,
+      "reason": null,
+      "output_tail": "........................................................................ [ 86%]\n...........                                                              [100%]\n83 passed in 2.29s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-11.log",
+      "source": ".claude/skills/project-console/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_commercial_review_history.py",
+          "sha256": "a0b5c8d52938d199276c17ff65cdc915e77acfe264add74aca8917864ffa25fe"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_commercial_vplan.py",
+          "sha256": "b6dffdfa225b5872f86c8200a32cdd5342a69bf569d3686e366907c9bccf4b3b"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_draft_workflow_e2e.py",
+          "sha256": "283a956f4ef12ff623f60e766f61839703a96c5bb1c216b94538b08028ee7a39"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_drift_overlay.py",
+          "sha256": "d9772fdb023e5df7bf8681c54c2e2acaccdcfbf586ee17de2b804fcfb7ab0a5b"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_agents_loader.py",
+          "sha256": "f2eb84c6b34b3401c4cf089470bae4fbcb665316952b78d1430c2facb97d3c51"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_cli_catalog.py",
+          "sha256": "638ad9411b20bbbc523ff0975e5a9bacabfffe0e003dabcb271df89ff859f0a2"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_envcheck.py",
+          "sha256": "ef4f2129e63f635a2a46ef4f91430fb2dfd440b72c9a4cb7dc3a8ad89a20e7e6"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_hooks_loader.py",
+          "sha256": "1802ec2f35dadf07403cad2208edcecb33aaf55fda4750d4b8c067830d46dfcd"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_project_fields.py",
+          "sha256": "04ade4a7f35d7cee68ff5ebc80618eea5a5667f97a3ce736a9a9b6eac07e3c8a"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_registry_remote.py",
+          "sha256": "e67018cc230778bfaf7c32979c675852d50f60f3f52093a23981f2b249a2cbef"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_team_access.py",
+          "sha256": "d52955c57e5fc3762033f5ca1e8813dd5c4e4bea7e844b8839419e041bd2d4d3"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_setup_team_writer.py",
+          "sha256": "83bfa67a206bf529f8c6515e862eb45f6b6e7fe195a6d6bbfe5b429ad09df6e3"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-11/tests/test_tracker_workflow_e2e.py",
+          "sha256": "32e43f2a62e67b356d82c6927a5edbc356bf6c80d17eb2548bce806a96b25a31"
+        }
+      ]
+    },
+    {
+      "id": "TC-12",
+      "title": "Slide-deck builder keeps content intact",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "md-deck"
+      ],
+      "uut_versions": {
+        "md-deck": "0.6.3"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/md-deck/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.29,
+      "reason": null,
+      "output_tail": ".....                                                                    [100%]\n5 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-12.log",
+      "source": ".claude/skills/md-deck/tests",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-12",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-12/tests/fixtures/section-edit-cases.md",
+          "sha256": "0fb4d47622f1ce1bc7eb56f3f282bc911743c68debd1aad4dd5f4f5986c085ab"
+        },
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-12/tests/test_section_identity.py",
+          "sha256": "a9c456e20d0cac61c89ca88c75bef3e90e8ffdbd0a8b47d0f77a13ea0f5b6c5c"
+        }
+      ]
+    },
+    {
+      "id": "TC-13",
+      "title": "Tool updates never overwrite local improvements",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "cmd": "bash .claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.85,
+      "reason": null,
+      "output_tail": "test_three_way_pull.sh\n======================\n\nCase 1: UPSTREAM_ADVANCE \u2014 local matches old hitachi blob, upstream advanced\n  PASS: advance: tab-separated row\n  PASS: advance: summary mentions advance\nCase 2: LOCAL_AHEAD \u2014 local blob unknown to hitachi, project edited recently\n  PASS: local_ahead: recommendation\n  PASS: local_ahead: summary mentions keep local\nCase 3: BOTH_DIVERGED \u2014 local unknown blob, project edit >7 days ago, upstream advanced\n  PASS: both_diverged: recommendation\n  PASS: both_diverged: summary mentions manual review\nCase 4: mixed batch \u2014 UPSTREAM_ADVANCE + LOCAL_AHEAD + BOTH_DIVERGED + UPSTREAM_ONLY\n  PASS: mixed: skill2 UPSTREAM_ADVANCE\n  PASS: mixed: skill3 LOCAL_AHEAD\n  PASS: mixed: skill4 BOTH_DIVERGED\n  PASS: mixed: skill5 UPSTREAM_ONLY\n\nResults: 10 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-13.log",
+      "source": ".claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-13",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-13/test_three_way_pull.sh",
+          "sha256": "51485ee753b4a100a948a2350691832e9cd17231f103f87e79250d8a01321939"
+        }
+      ]
+    },
+    {
+      "id": "TC-14",
+      "title": "The tool-sync health check reports the truth",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "cmd": "bash .claude/skills/sync-skills/tests/test_status.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.21,
+      "reason": null,
+      "output_tail": "test_status.sh\n==============\n\nCase 1: all synced\n  PASS: all_synced exits 0\n  PASS: all_synced project SYNCED\n  PASS: all_synced drift count zero\nCase 2: project working tree dirty\n  PASS: dirty exits 1\n  PASS: dirty mentions DIRTY\n  PASS: dirty lists mod\nCase 3: project local ahead of remote\n  PASS: ahead exits 1\n  PASS: ahead mentions AHEAD\nCase 4: skill drift between local and registry\n  PASS: drift exits 1\n  PASS: drift mentions DRIFT\n  PASS: drift names skill file\n\nResults: 11 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-14.log",
+      "source": ".claude/skills/sync-skills/tests/test_status.sh",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-14",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-14/test_status.sh",
+          "sha256": "37028b50b80ec8c2d1d95cbbd911456823021d060ea0e131188bf1e46f74a324"
+        }
+      ]
+    },
+    {
+      "id": "TC-15",
+      "title": "Installed tools pass the security screen",
+      "wun": [
+        "WUN-12"
+      ],
+      "uut": [
+        "secops"
+      ],
+      "uut_versions": {
+        "secops": "8"
+      },
+      "cmd": "python3 .claude/skills/secops/scripts/audit_artifacts.py --json",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.98,
+      "reason": "exit code 1",
+      "output_tail": "\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/dhf-manifest/tests/test_discovery_index.sh\",\n      \"line\": 665,\n      \"snippet\": \"cat > \\\"$TMP/project.yml\\\" <<EOF\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/dhf-manifest/tests/test_discovery_index.sh\",\n      \"line\": 744,\n      \"snippet\": \"cat > \\\"$TMP/project.yml\\\" <<EOF\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/jira-pull/lib/drift_rules.py\",\n      \"line\": 103,\n      \"snippet\": \"columns: Dict[str, str]         # canonical name -> column letter (mirrors project.yml)\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/usage-metrics/scripts/aggregate.py\",\n      \"line\": 159,\n      \"snippet\": \"\\\"\\\"\\\"task_folder -> {name, email} from project.yml (display labels only).\\\"\\\"\\\"\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    }\n  ]\n}\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-15.log",
+      "source": ".claude/skills/secops/scripts/audit_artifacts.py",
+      "pinned": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-15",
+      "pinned_files": [
+        {
+          "path": "tools/workbench-validation/results/run-20260728T071407Z/pinned/TC-15/audit_artifacts.py",
+          "sha256": "8a4845bf8dc81e3e41bf57edf271ed1046837feed12fa604c097d185df5b5c9f"
+        }
+      ]
+    },
+    {
+      "id": "TC-16",
+      "title": "Every tool declares its version",
+      "wun": [
+        "WUN-13"
+      ],
+      "uut": [
+        "all-skills"
+      ],
+      "uut_versions": {},
+      "cmd": "python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.02,
+      "reason": null,
+      "output_tail": "all skills versioned (external office skills exempt)\n",
+      "log": "tools/workbench-validation/results/run-20260728T071407Z/TC-16.log",
+      "source": null,
+      "pinned": null,
+      "pinned_files": []
+    }
+  ]
+}

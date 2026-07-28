@@ -1,0 +1,502 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-20260728T070932Z",
+  "started": "2026-07-28T07:09:32Z",
+  "finished": "2026-07-28T07:09:47Z",
+  "duration_s": 14.9,
+  "manifest": "docs/project/workbench-validation/validation.yml",
+  "partial": false,
+  "environment": {
+    "git_sha": "1e2e6d4a14d69371ce5a077fcc3581e759feef05",
+    "git_sha_short": "1e2e6d4",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python": "3.14.5",
+    "platform": "darwin",
+    "model_id": null,
+    "hooks_installed": [
+      "block-direct-conversion.sh",
+      "check-active-task.sh",
+      "checkpoint-recover.sh",
+      "register-hook.sh",
+      "security-assert.sh",
+      "session-briefing.sh",
+      "session-cleanup.sh",
+      "session-env.sh",
+      "skill-creator-cleanup.sh",
+      "skill-creator-watch.py",
+      "task-activate.sh",
+      "taxonomy-freshness.sh",
+      "usage-metrics-publish.sh",
+      "usage-metrics-refresh.sh"
+    ],
+    "skills": {
+      "advisors": {
+        "version": "12",
+        "updated": "2026-07-22"
+      },
+      "best-practices": {
+        "version": "15",
+        "updated": "2026-04-27"
+      },
+      "change-control": {
+        "version_file": "0.14.0"
+      },
+      "commercial": {
+        "version": "14",
+        "updated": "2026-07-27"
+      },
+      "corpus": {
+        "version": "4",
+        "updated": "2026-07-27"
+      },
+      "dhf-manifest": {
+        "version": "15",
+        "updated": "2026-07-22"
+      },
+      "digest": {
+        "version": "9",
+        "updated": "2026-04-23",
+        "version_file": "1.3.0"
+      },
+      "docflow": {
+        "version": "36",
+        "updated": "2026-07-01"
+      },
+      "docx": {},
+      "explain": {
+        "version": "3",
+        "updated": "2026-06-03"
+      },
+      "file-locator": {
+        "version": "3",
+        "updated": "2026-06-10"
+      },
+      "frontend-design": {
+        "version": "1",
+        "updated": "2026-06-01"
+      },
+      "frontend-slides": {
+        "version": "0.4.1",
+        "updated": "2026-05-17"
+      },
+      "gap-analysis": {
+        "version": "7",
+        "updated": "2026-06-05"
+      },
+      "jira-pull": {
+        "version": "1",
+        "updated": "2026-05-03"
+      },
+      "knowledge-pack-export": {
+        "version": "5",
+        "updated": "2026-05-30"
+      },
+      "lessons": {
+        "version": "4",
+        "updated": "2026-04-23"
+      },
+      "md-deck": {
+        "version": "0.6.3",
+        "updated": "2026-07-21"
+      },
+      "medtech-docs": {
+        "version": "35",
+        "updated": "2026-06-15"
+      },
+      "pdf": {},
+      "pptx": {},
+      "project-console": {
+        "version": "1.58.0",
+        "updated": "2026-07-27",
+        "version_file": "1.58.0"
+      },
+      "red-team": {
+        "version": "1",
+        "updated": "2026-06-26"
+      },
+      "reference-audit": {
+        "version": "4",
+        "updated": "2026-06-11"
+      },
+      "regulatory-authoring": {
+        "version": "3",
+        "updated": "2026-07-08"
+      },
+      "secops": {
+        "version": "8",
+        "updated": "2026-05-13"
+      },
+      "skill-creator": {
+        "version": "8",
+        "updated": "2026"
+      },
+      "strategy": {
+        "version": "20",
+        "updated": "2026-06-15"
+      },
+      "submissions": {
+        "version_file": "6"
+      },
+      "sync-skills": {
+        "version": "8.4",
+        "updated": "2026-05-30"
+      },
+      "task": {
+        "version": "35",
+        "updated": "2026-07-27"
+      },
+      "trace-matrix": {
+        "version": "8",
+        "updated": "2026-05-12"
+      },
+      "tracker": {
+        "version": "14",
+        "updated": "2026-06-15"
+      },
+      "usage-metrics": {
+        "version": "12",
+        "updated": "2026-07-01"
+      },
+      "web-control": {
+        "version": "0.3.0",
+        "updated": "2026-05-02",
+        "version_file": "0.3.0"
+      },
+      "workbench-validation": {
+        "version": "3",
+        "updated": "2026-07-28",
+        "version_file": "3"
+      },
+      "writing-well": {
+        "version": "3",
+        "updated": "2026-06-25"
+      },
+      "xlsx": {}
+    }
+  },
+  "summary": {
+    "PASS": 13,
+    "FAIL": 3
+  },
+  "cases": [
+    {
+      "id": "TC-01",
+      "title": "The 'no work without a task' gate blocks and allows the right files",
+      "wun": [
+        "WUN-07"
+      ],
+      "uut": [
+        "task"
+      ],
+      "uut_versions": {
+        "task": "35"
+      },
+      "cmd": "bash .claude/skills/task/tests/test-task-gate.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.29,
+      "reason": null,
+      "output_tail": "ASS  .claude/skills/*/README.md \u2192 DENY\n  PASS  .claude/skills/*/VERSION \u2192 DENY\n  PASS  .claude/skills/*/agents/*.md (source) \u2192 DENY\n  PASS  .claude/skills/*/hooks/*.sh (source) \u2192 DENY\n  PASS  .claude/skills/*/scripts/* \u2192 DENY\n  PASS  .claude/hooks/* regular file \u2192 DENY\n  PASS  .claude/rules/* \u2192 DENY\n\n6b. Hook \u2014 Symlink resolution (can't bypass the gate via a symlink)\n  PASS  tasks/* symlink \u2192 skill SKILL.md \u2192 DENY (resolves)\n  PASS  .claude/agents/* symlink \u2192 skill SKILL.md \u2192 DENY (resolves)\n\n7. Hook \u2014 Multi-Task Lifecycle\n  PASS  Two tasks (024+025) \u2192 ALLOW\n  PASS  After removing 025, 024 still active \u2192 ALLOW\n  PASS  All tasks removed \u2192 DENY\n\n8. Hook \u2014 Denial Message Contains Session ID\n  PASS  Denial includes session ID\n  PASS  Denial includes activation command\n  PASS  Denial includes /task create hint\n\n9. Hook \u2014 Edge Cases\n  PASS  Empty target path \u2192 DENY (no exempt match)\n  PASS  Empty state file (cleared) \u2192 DENY\n  PASS  State file deleted \u2192 DENY\n  PASS  Empty session ID \u2192 DENY (no state file match)\n\n10. End-to-End \u2014 Activate Script + Hook\n  PASS  E2E: fresh session \u2192 DENY\n  PASS  E2E: after activate \u2192 ALLOW\n  PASS  E2E: after complete \u2192 DENY\n  PASS  E2E: two tasks active \u2192 ALLOW\n  PASS  E2E: one task remaining \u2192 ALLOW\n  PASS  E2E: all completed \u2192 DENY\n\n11. Session Isolation\n  PASS  Session A has task \u2192 ALLOW\n  PASS  Session B has task \u2192 ALLOW\n  PASS  Session A completed \u2192 DENY\n  PASS  Session B still active \u2192 ALLOW\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nALL TESTS PASSED  (63/63)\n\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-01.log"
+    },
+    {
+      "id": "TC-02",
+      "title": "The document-conversion gate stops uncontrolled conversions",
+      "wun": [
+        "WUN-08"
+      ],
+      "uut": [
+        "docflow"
+      ],
+      "uut_versions": {
+        "docflow": "36"
+      },
+      "cmd": "bash -c export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.05,
+      "reason": null,
+      "output_tail": "deny_exit=2 allow_exit=0\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-02.log"
+    },
+    {
+      "id": "TC-03",
+      "title": "Auto-generated document sections stay faithful and do no harm",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "medtech-docs"
+      ],
+      "uut_versions": {
+        "medtech-docs": "35"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.5,
+      "reason": null,
+      "output_tail": "...........                                                              [100%]\n11 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-03.log"
+    },
+    {
+      "id": "TC-04",
+      "title": "Advisor grounding files are built correctly",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "advisors"
+      ],
+      "uut_versions": {
+        "advisors": "12"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.35,
+      "reason": null,
+      "output_tail": "........................................................................ [ 81%]\n................                                                         [100%]\n88 passed in 0.07s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-04.log"
+    },
+    {
+      "id": "TC-05",
+      "title": "Writing-quality checks catch known defects",
+      "wun": [
+        "WUN-04"
+      ],
+      "uut": [
+        "writing-well"
+      ],
+      "uut_versions": {
+        "writing-well": "3"
+      },
+      "cmd": "bash .claude/skills/writing-well/tests/run_tests.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.53,
+      "reason": null,
+      "output_tail": "ble link text)\n  PASS  no 'was decided' from fenced/indented/table code\n  PASS  no 'at the end of the day' from the bare URL\n\npredicate-adjective passives must NOT fire (precision) + dependency nominalization (recall)\n  PASS  predicate adj 'thrilled' NOT flagged passive\n  PASS  predicate adj 'golden' NOT flagged passive\n  PASS  predicate adj 'married' NOT flagged passive\n  PASS  predicate adj 'green' NOT flagged passive\n  PASS  predicate adj 'wooden' NOT flagged passive\n  PASS  genuine passive 'was written' still flagged\n  PASS  nominalization 'has a dependency on' caught\n\nexit-code contract\n  PASS  default exit 0 even with findings (advisory)\n  PASS  --strict exit 1 when findings exist\n  PASS  --strict exit 0 when no findings\n\nflags\n  PASS  --only clutter yields only clutter\n  PASS  --max-len 5 increases length flags\n\n32 passed, 0 failed\nslop sample \u2014 tells must fire\n  PASS  tag present: aitell-emdash\n  PASS  tag present: aitell-vocab\n  PASS  tag present: aitell-construction\n  PASS  tag present: aitell-opener\n  PASS  tag present: aitell-signpost\n\nultra-marker single occurrence\n  PASS  'delve' flagged as vocab\n\nem-dash density\n  PASS  high em-dash density flagged\n  PASS  clean low-dash prose NOT flagged for em-dash\n\nfolklore gating\n  PASS  'robust/leverage' NOT flagged without --folklore\n  PASS  folklore flagged WITH --folklore\n\nskip zones\n  PASS  vocab inside code fence NOT flagged\n\nreferences section excluded\n  PASS  em-dashes in References not counted\n\n12 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-05.log"
+    },
+    {
+      "id": "TC-06",
+      "title": "The document-coverage audit finds what's missing",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "dhf-manifest"
+      ],
+      "uut_versions": {
+        "dhf-manifest": "15"
+      },
+      "cmd": "bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.42,
+      "reason": null,
+      "output_tail": "\u2500\u2500 discovery-index tests \u2500\u2500\ncase1: clean resolution across mixed naming conventions\ncase2: ambiguity \u2014 higher-ranked pattern wins, alternative recorded\ncase3: L3 override via patterns_extra prepends to ranking\ncase4: external_data roles count files and surface missing-folder gaps\ncase5: external-mode DHF \u2014 nested sub-convention (folder/v*.md)\ncase6: external-mode DHF \u2014 flat sub-convention (folder.md)\ncase7: project-scoped multi_file role \u2014 folder pointer with file_count\ncase8: per-dhf multi_file role (internal mode) \u2014 folder pointer\ncase9: multi-match no-winner \u2014 ambiguity_notes + paired gap (was silently lost pre-fix)\ncase10: frontmatter canonical_role: opt-in outranks filename patterns\ncase11: external CLIENT-SLUG override \u2014 client slug, nested path, multi-file, governance\n\nResults: 48 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-06.log"
+    },
+    {
+      "id": "TC-07",
+      "title": "Traceability-chain checks work",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "trace-matrix"
+      ],
+      "uut_versions": {
+        "trace-matrix": "8"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.31,
+      "reason": null,
+      "output_tail": ".......................                                                  [100%]\n23 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-07.log"
+    },
+    {
+      "id": "TC-08",
+      "title": "Submission-tracker wiring works",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "tracker"
+      ],
+      "uut_versions": {
+        "tracker": "14"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.36,
+      "reason": "exit code 1",
+      "output_tail": "\").exists():\n                break\n            if d.parent == d:\n                self.skipTest(\"could not find project CLAUDE.md\")\n                return\n            d = d.parent\n        project_dir = d\n        # Pick any row from submission-tracker.md (use Q4 if present)\n        tracker_md = project_dir / \"docs/project/submissions/submission-tracker.md\"\n        if not tracker_md.is_file():\n            self.skipTest(\"no submission-tracker.md in this project\")\n            return\n        # Find first row id\n        import re\n        m = re.search(r\"^\\|\\s*([A-Z][A-Z0-9-]+)\\s*\\|\", tracker_md.read_text(encoding=\"utf-8\"), re.MULTILINE)\n        if not m:\n            self.skipTest(\"no rows found in tracker md\")\n            return\n        row_id = m.group(1)\n        script = _SKILL_DIR / \"scripts\" / \"build-draft-context.py\"\n        r = subprocess.run(\n            [sys.executable, str(script), \"--row\", row_id, \"--json\", \"--project-dir\", str(project_dir)],\n            capture_output=True, text=True, timeout=30,\n        )\n>       self.assertEqual(r.returncode, 0, msg=f\"stderr: {r.stderr}\")\nE       AssertionError: 1 != 0 : stderr: ERROR: row 'DHF' not found in inventory\n\n.claude/skills/tracker/tests/test_create_draft_wiring.py:138: AssertionError\n=========================== short test summary info ============================\nFAILED .claude/skills/tracker/tests/test_create_draft_wiring.py::TestBuildDraftContextScript::test_script_emits_bundle_for_existing_row\n1 failed, 10 passed in 0.08s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-08.log"
+    },
+    {
+      "id": "TC-09",
+      "title": "Jira-drift detection works",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "jira-pull"
+      ],
+      "uut_versions": {
+        "jira-pull": "1"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q --deselect .claude/skills/jira-pull/tests/test_drift_rules.py::test_exec",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.44,
+      "reason": null,
+      "output_tail": ".....................................................................                                                       [100%]\n69 passed, 1 deselected, 21 subtests passed in 0.05s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-09.log"
+    },
+    {
+      "id": "TC-10",
+      "title": "Repo-to-formal-systems document transfer is faithful",
+      "wun": [
+        "WUN-15"
+      ],
+      "uut": [
+        "change-control"
+      ],
+      "uut_versions": {
+        "change-control": "0.14.0"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.83,
+      "reason": "exit code 1",
+      "output_tail": "s_mod.extract_confluence_cookies = orig\n        assert \"jira-list render deferred\" in new_md, new_md\n>       assert any(\"cookie bridge failed\" in w for w in warnings), warnings\nE       AssertionError: ['jira position=0: HTTP Error 404: Not Found']\nE       assert False\nE        +  where False = any(<generator object test_c_jira_renderer_graceful_degrades_on_auth_failure.<locals>.<genexpr> at 0x107388860>)\n\n.claude/skills/change-control/tests/test_v010_bundle.py:243: AssertionError\n=============================== warnings summary ===============================\n.claude/skills/change-control/lib/config.py:63\n  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_config.py)\n    @dataclass\n\n.claude/skills/change-control/lib/config.py:63\n  /Users/benxavier/projects/PDLC_DEMO/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_verify.py)\n    @dataclass\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED .claude/skills/change-control/tests/test_v010_bundle.py::test_c_jira_renderer_graceful_degrades_on_auth_failure\n1 failed, 138 passed, 2 warnings in 0.54s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-10.log"
+    },
+    {
+      "id": "TC-11",
+      "title": "The project console works end to end",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "project-console"
+      ],
+      "uut_versions": {
+        "project-console": "1.58.0"
+      },
+      "cmd": "uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.7,
+      "reason": null,
+      "output_tail": "........................................................................ [ 86%]\n...........                                                              [100%]\n83 passed in 2.28s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-11.log"
+    },
+    {
+      "id": "TC-12",
+      "title": "Slide-deck builder keeps content intact",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "md-deck"
+      ],
+      "uut_versions": {
+        "md-deck": "0.6.3"
+      },
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/md-deck/tests -q",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.27,
+      "reason": null,
+      "output_tail": ".....                                                                    [100%]\n5 passed in 0.01s\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-12.log"
+    },
+    {
+      "id": "TC-13",
+      "title": "Tool updates never overwrite local improvements",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "cmd": "bash .claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.8,
+      "reason": null,
+      "output_tail": "test_three_way_pull.sh\n======================\n\nCase 1: UPSTREAM_ADVANCE \u2014 local matches old hitachi blob, upstream advanced\n  PASS: advance: tab-separated row\n  PASS: advance: summary mentions advance\nCase 2: LOCAL_AHEAD \u2014 local blob unknown to hitachi, project edited recently\n  PASS: local_ahead: recommendation\n  PASS: local_ahead: summary mentions keep local\nCase 3: BOTH_DIVERGED \u2014 local unknown blob, project edit >7 days ago, upstream advanced\n  PASS: both_diverged: recommendation\n  PASS: both_diverged: summary mentions manual review\nCase 4: mixed batch \u2014 UPSTREAM_ADVANCE + LOCAL_AHEAD + BOTH_DIVERGED + UPSTREAM_ONLY\n  PASS: mixed: skill2 UPSTREAM_ADVANCE\n  PASS: mixed: skill3 LOCAL_AHEAD\n  PASS: mixed: skill4 BOTH_DIVERGED\n  PASS: mixed: skill5 UPSTREAM_ONLY\n\nResults: 10 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-13.log"
+    },
+    {
+      "id": "TC-14",
+      "title": "The tool-sync health check reports the truth",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "cmd": "bash .claude/skills/sync-skills/tests/test_status.sh",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 2.02,
+      "reason": null,
+      "output_tail": "test_status.sh\n==============\n\nCase 1: all synced\n  PASS: all_synced exits 0\n  PASS: all_synced project SYNCED\n  PASS: all_synced drift count zero\nCase 2: project working tree dirty\n  PASS: dirty exits 1\n  PASS: dirty mentions DIRTY\n  PASS: dirty lists mod\nCase 3: project local ahead of remote\n  PASS: ahead exits 1\n  PASS: ahead mentions AHEAD\nCase 4: skill drift between local and registry\n  PASS: drift exits 1\n  PASS: drift mentions DRIFT\n  PASS: drift names skill file\n\nResults: 11 passed, 0 failed\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-14.log"
+    },
+    {
+      "id": "TC-15",
+      "title": "Installed tools pass the security screen",
+      "wun": [
+        "WUN-12"
+      ],
+      "uut": [
+        "secops"
+      ],
+      "uut_versions": {
+        "secops": "8"
+      },
+      "cmd": "python3 .claude/skills/secops/scripts/audit_artifacts.py --json",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_s": 0.95,
+      "reason": "exit code 1",
+      "output_tail": "\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/dhf-manifest/tests/test_discovery_index.sh\",\n      \"line\": 665,\n      \"snippet\": \"cat > \\\"$TMP/project.yml\\\" <<EOF\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/dhf-manifest/tests/test_discovery_index.sh\",\n      \"line\": 744,\n      \"snippet\": \"cat > \\\"$TMP/project.yml\\\" <<EOF\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/jira-pull/lib/drift_rules.py\",\n      \"line\": 103,\n      \"snippet\": \"columns: Dict[str, str]         # canonical name -> column letter (mirrors project.yml)\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    },\n    {\n      \"rule_id\": \"CFG-PROJECT-YML\",\n      \"category\": \"config-tamper\",\n      \"severity\": \"High\",\n      \"file\": \".claude/skills/usage-metrics/scripts/aggregate.py\",\n      \"line\": 159,\n      \"snippet\": \"\\\"\\\"\\\"task_folder -> {name, email} from project.yml (display labels only).\\\"\\\"\\\"\",\n      \"description\": \"In-place edit of project.yml \\u2014 should only happen via documented setup or user action.\"\n    }\n  ]\n}\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-15.log"
+    },
+    {
+      "id": "TC-16",
+      "title": "Every tool declares its version",
+      "wun": [
+        "WUN-13"
+      ],
+      "uut": [
+        "all-skills"
+      ],
+      "uut_versions": {},
+      "cmd": "python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.02,
+      "reason": null,
+      "output_tail": "all skills versioned (external office skills exempt)\n",
+      "log": "tools/workbench-validation/results/run-20260728T070932Z/TC-16.log"
+    }
+  ]
+}

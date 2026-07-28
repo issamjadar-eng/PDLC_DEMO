@@ -1051,8 +1051,52 @@ def load_setup(repo_root: Path) -> dict:
         "registries": load_registries(repo_root, project),
         "cli": load_cli_tooling(repo_root),
         "environment": _load_environment(repo_root),
+        "workbench": load_workbench_validation(repo_root),
         "warnings": warnings,
     }
+
+
+WORKBENCH_SIDECAR_REL = "tools/workbench-validation/workbench-validation-index.json"
+WORKBENCH_RUNNER_REL = ".claude/skills/workbench-validation/scripts/run_validation.py"
+
+
+def load_workbench_validation(repo_root: Path) -> dict:
+    """Setup → Workbench Validation: tool-validation posture of the .claude
+    toolchain itself. Pure consumer of the workbench-validation skill's sidecar
+    (needs × tests × report verdicts); the console computes nothing. Degrades to
+    available=False when neither the skill nor a sidecar is present, and to an
+    empty-state (available=True, data=None) when the skill is installed but no
+    validation has been run yet."""
+    sidecar = repo_root / WORKBENCH_SIDECAR_REL
+    skill_installed = (repo_root / WORKBENCH_RUNNER_REL).is_file()
+    out = {
+        "available": skill_installed or sidecar.is_file(),
+        "skill_installed": skill_installed,
+        "sidecar": WORKBENCH_SIDECAR_REL,
+        "data": None,
+        "stale": None,
+        "head_sha": None,
+    }
+    if not sidecar.is_file():
+        return out
+    try:
+        out["data"] = json.loads(sidecar.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        out["data"] = None
+        return out
+    # Freshness: the recorded config baseline vs the repo HEAD right now.
+    try:
+        head = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"], cwd=str(repo_root),
+            capture_output=True, text=True, timeout=10,
+        ).stdout.strip()
+        out["head_sha"] = head or None
+        recorded = ((out["data"].get("baseline") or {}).get("git_sha_short") or "")
+        if head and recorded:
+            out["stale"] = not head.startswith(recorded) and head != recorded
+    except Exception:
+        pass
+    return out
 
 
 def _load_environment(repo_root: Path) -> dict:

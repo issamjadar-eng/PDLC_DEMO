@@ -1,0 +1,19 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T070523Z
+case:        TC-02 — Docflow conversion-block hook: denies gated verb + office extension (exit 2), permits benign command (exit 0)
+UUT:         docflow@36
+user needs:  WUN-08
+command:     bash -c export CLAUDE_PROJECT_DIR="$PWD"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{"tool_input":{"command":"pandoc report.docx -o report.md"}}' | bash "$H" 2>/dev/null; d=$?; printf '%s' '{"tool_input":{"command":"ls docs"}}' | bash "$H" 2>/dev/null; a=$?; echo "deny_exit=$d allow_exit=$a"; [ "$d" -eq 2 ] && [ "$a" -eq 0 ]
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    jq, python3
+timeout_s:   60
+started:     2026-07-28T07:05:25Z (UTC)
+exit_code:   0
+duration_s:  0.05
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+deny_exit=2 allow_exit=0
+

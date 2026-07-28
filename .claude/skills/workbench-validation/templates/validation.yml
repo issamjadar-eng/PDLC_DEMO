@@ -1,0 +1,61 @@
+# Workbench validation manifest — consumed by the workbench-validation skill.
+# Authored source of truth for user needs + test cases. The report and sidecar are
+# generated projections; edit here, then re-run `/workbench-validation validate`.
+schema_version: "1.0"
+
+# Stamped at the top of every generated report (demo projects: keep the demo banner).
+banner: "_Demo sample data — not for clinical use._"
+
+# Authored sources live in docs/; GENERATED outputs (results, evidence logs,
+# report, sidecar) live under tools/workbench-validation/.
+plan: docs/project/workbench-validation/validation-plan.md
+results_dir: tools/workbench-validation/results
+sidecar: tools/workbench-validation/workbench-validation-index.json
+report:
+  title: "Workbench Validation Report — <MedTech Project>"
+  output: tools/workbench-validation/validation-report.md
+
+# Triaged anomalies carried into the report's Known Anomalies section.
+known_anomalies: []
+
+# Optional override of the default revalidation-trigger list.
+# revalidation_triggers: []
+
+# Each need is stated from a ROLE's perspective, in the role's own language —
+# the outcome they need, never how the workbench implements it. The mechanism
+# lives in `implemented_by:` (traceability info, not part of the need).
+user_needs:
+  - id: WUN-01
+    role: "<role, e.g. Program lead>"
+    class: gates            # authoring|audit|gates|renderers|console|config-control|cross-cutting
+    tier: T1                # T1|T2|T3
+    need: "<plain-language outcome the role requires — no implementation detail>"
+    coverage: tests         # tests | process-control | exploratory
+    implemented_by: "<mechanism — traceability only>"
+  - id: WUN-02
+    role: "<role, e.g. Reviewer / approver>"
+    class: authoring
+    tier: T1
+    need: "<LLM-assured need>"
+    coverage: process-control
+    implemented_by: "<mechanism>"
+    process_controls:
+      - "<named control, e.g. mandatory human review + PR audit trail>"
+
+test_cases:
+  - id: TC-01
+    title: "<plain-language: what is being checked, in everyday words>"
+    description: "<what the case checks and why it matters — for a non-specialist reviewer>"
+    approach: "<how the check works, plainly>"
+    wun: [WUN-01]           # the only need<->test mapping edge
+    uut: [<skill-name>]     # unit(s) under test — component(s) the case runs against;
+                            # multiple allowed; skill names get pinned to the version
+                            # exercised; `all-skills` = workbench-wide sweep
+    cmd: ["bash", ".claude/skills/<skill>/tests/<test>.sh"]
+    # cwd: .
+    # timeout: 600
+    # requires: [uv]                    # missing binary -> SKIPPED
+    # env_unset: [CLAUDE_SESSION_ID]    # strip session state leaking into gate tests
+    # env: {KEY: value}
+    # pass_pattern: "ALL TESTS PASSED"  # for suites that exit 0 regardless
+    # fail_pattern: "FAILED"            # overrides exit 0

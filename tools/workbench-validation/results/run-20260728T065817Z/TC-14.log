@@ -1,0 +1,37 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260728T065817Z
+case:        TC-14 — Sync-skills status lockstep health check
+user needs:  WUN-11
+command:     bash .claude/skills/sync-skills/tests/test_status.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+timeout_s:   600
+started:     2026-07-28T06:58:30Z (UTC)
+exit_code:   0
+duration_s:  2.25
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+test_status.sh
+==============
+
+Case 1: all synced
+  PASS: all_synced exits 0
+  PASS: all_synced project SYNCED
+  PASS: all_synced drift count zero
+Case 2: project working tree dirty
+  PASS: dirty exits 1
+  PASS: dirty mentions DIRTY
+  PASS: dirty lists mod
+Case 3: project local ahead of remote
+  PASS: ahead exits 1
+  PASS: ahead mentions AHEAD
+Case 4: skill drift between local and registry
+  PASS: drift exits 1
+  PASS: drift mentions DRIFT
+  PASS: drift names skill file
+
+Results: 11 passed, 0 failed
+
