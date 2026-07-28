@@ -4993,7 +4993,7 @@
         }
       },
       "cost": 28.79,
-      "cost_allocated": 3.64,
+      "cost_allocated": 2.65,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 1.0,
@@ -5059,7 +5059,7 @@
         }
       },
       "cost": 913.41,
-      "cost_allocated": 9.36,
+      "cost_allocated": 8.38,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 4.0,
@@ -5203,6 +5203,62 @@
         "output": 33838
       }
     },
+    "ben/110": {
+      "by_model": {},
+      "cost": 0.0,
+      "cost_allocated": 2.26,
+      "cost_basis": "allocated",
+      "estimate": {
+        "agentic_hours": 1.5,
+        "agentic_hours_range": {
+          "max": 1.5,
+          "min": 0.5
+        },
+        "by_persona": {
+          "quality-engineering": {
+            "max": 35.7,
+            "min": 17.8
+          },
+          "rd-lead": {
+            "max": 49.7,
+            "min": 24.8
+          },
+          "regulatory-affairs": {
+            "max": 16.0,
+            "min": 8.0
+          },
+          "vnv-lead": {
+            "max": 16.7,
+            "min": 8.3
+          }
+        },
+        "confidence_mix": {
+          "med": 7
+        },
+        "hours_saved": {
+          "max": 117.5,
+          "min": 57.5
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 118.0,
+          "min": 59.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "quality-engineering",
+          "vnv-lead",
+          "regulatory-affairs"
+        ],
+        "retrospective": false,
+        "title": "Workbench Validation",
+        "todos": 7,
+        "updated": "2026-07-28"
+      },
+      "sessions": 0,
+      "totals": {}
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
@@ -5299,23 +5355,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 517.1,
-    "cost_allocated": 182.39,
+    "agentic_hours": 518.6,
+    "cost_allocated": 182.68,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 1737.53,
     "cost_unattributed_measured": 264.08,
-    "cost_unattributed_residual": 81.69,
+    "cost_unattributed_residual": 81.4,
     "hours_saved": {
-      "max": 3977.6,
-      "min": 1394.2
+      "max": 4095.1,
+      "min": 1451.7
     },
     "manual_hours": {
-      "max": 4473.0,
-      "min": 1910.5
+      "max": 4591.0,
+      "min": 1969.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 1,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 108
+    "tasks_with_estimate": 109
   }
 }
