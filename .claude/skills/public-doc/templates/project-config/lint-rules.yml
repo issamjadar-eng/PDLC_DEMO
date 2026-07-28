@@ -1,0 +1,17 @@
+# Written-guideline lint rules for public-doc — PROJECT-SPECIFIC.
+# Seed of PLACEHOLDERS — replace with your house style. Advisory only.
+
+# Words to avoid in public text. Each entry is either a bare word or
+# {word, suggest}. Matched case-insensitively on word boundaries.
+banned_words:
+  - {word: "leverage", suggest: "use"}
+  - {word: "utilize", suggest: "use"}
+  - {word: "synergy"}
+  - {word: "very"}
+  - {word: "really"}
+
+# Regex flags for patterns a word list can't catch. Each is either a bare regex
+# or {pattern, note}. Matched against public text.
+regex_flags:
+  - {pattern: "\\b(world[- ]class|cutting[- ]edge|best[- ]in[- ]class)\\b", note: "marketing cliché — be specific"}
+  - {pattern: "\\b(\\w+) \\1\\b", note: "possible doubled word"}

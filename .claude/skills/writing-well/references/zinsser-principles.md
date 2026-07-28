@@ -92,6 +92,29 @@ sense of the whole.
   intelligence: say it once, clearly, and move on.
 - **Unity.** Decide on a tense, a person, and a level of formality, and hold them. Drift in
   any of these is felt even when the reader can't name it.
+- **Unearned terminology — coined terms must be re-grounded where they are used.** A document
+  that defines its own vocabulary (a "binding," a "seam," a "pin," an "estate") makes a quiet
+  bet: that the reader internalized the definition and carries it forward. Real readers don't —
+  they skim, they hold the gist, and by the halfway mark a sentence whose weight rests on three
+  coined terms reads as noise. The failure compounds with depth: early sections feel clear,
+  late sections feel impenetrable, and the author can't see it because the author holds all the
+  definitions. The fix is cheap: at each load-bearing use far from the definition, re-anchor
+  the term in six or eight plain words ("the bindings — which product fills which role —") or
+  replace it with the plain phrase outright. Two hard sub-rules: internal editorial vocabulary
+  (how the authors talk about the document — "the per-section closers," "the parent piece's
+  spine") never belongs on the page; and a term's *definition section* is not a license — the
+  test is whether a reader who only skimmed that section still lands the sentence. This is a
+  judgment-layer check: build the coined-term inventory first, then walk the later uses.
+- **Flourish and pretension — clever is not clear.** A distinct failure mode where every
+  sentence performs: epigrams stacked one per line ("X is Y, not Z" three times in a
+  paragraph), colon-label scaffolds ("The practice: … The residue: …") that outline instead
+  of write, asides nested inside em-dashes inside clauses, and sentences that admire
+  themselves ("— that is its qualification"). Each device works once; in density the prose
+  reads as posture and the reader has to translate it back into plain statements. The fix
+  is Zinsser's oldest: one idea per sentence, finish the thought, and let the point carry
+  the weight instead of the phrasing. Keep the single best epigram on a page; rewrite the
+  rest as ordinary sentences. (The slop linter's `aitell-flourish` tag catches the
+  mechanical forms; the judgment pass decides which single flourish, if any, earns its place.)
 
 ---
 

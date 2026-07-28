@@ -14,6 +14,11 @@ GROUNDING (these are the source-backed, deterministically-detectable tells):
     (Freeburg, arXiv:2603.27006, preprint). Flag > ~7/1k.
   - Bold-lead-in colon lists, puffery templates, negative-parallelism ("not just X,
     it's Y") — Wikipedia "Signs of AI writing" (WP:AISLOP).
+  - Flourish/pretension tier — EDITOR-OBSERVED structural tells (calibrated from real
+    editing feedback 2026-07; NOT from the academic corpora — heuristic, labeled as such):
+    colon-label scaffolding ("The practice: …" repeated), nested em-dash asides (2+ dashes
+    inside one sentence), demonstrative flourishes ("that is its X"), and epigram stacking
+    ("X, not Y" contrast density). The style reads clever instead of clear.
 
 HARD CAVEATS (baked into the design):
   * These are PROBABILISTIC and COMBINATORIAL. Flag density/clustering, never a
@@ -129,6 +134,20 @@ FOLKLORE_PHRASES = [
     re.compile(r"\bneedless to say\b", re.I),
     re.compile(r"\b(that said|with that being said)\b", re.I),
 ]
+# Flourish / pretension tier — editor-observed structural tells. Heuristic:
+# these catch "clever" compression that reads as pretension. All density- or
+# repeat-gated; every message carries an [editor-observed tell; heuristic] label.
+COLON_LABEL_RE = re.compile(
+    r"(?:(?<=[.!?])\s+|^)(The\s+[a-z]+):\s+(?=[a-z])", re.M)
+DEMONSTRATIVE_FLOURISH = [
+    re.compile(r"\bthat is (?:its|their) [a-z]+\b", re.I),
+    re.compile(r"\bthat is the (?:point|design|argument|qualification|discipline|"
+               r"control|rule|lesson|payoff|headline|bet|ask)\b", re.I),
+    re.compile(r"—\s*which is the [a-z][\w'-]*", re.I),
+]
+CONTRAST_RE = re.compile(r",\s+not(?:\s+(?:just|only|merely))?\s+[a-z][\w'-]*", re.I)
+SENTENCE_RE = re.compile(r"[^.!?\n]+[.!?]")
+
 # Signposts at paragraph/sentence start — flag only when CLUSTERED.
 SIGNPOST_RE = re.compile(
     r"(?m)(?:^|(?<=[.!?]\s))\s*(Moreover|Furthermore|Additionally|Notably|Importantly|Consequently|"
@@ -237,6 +256,41 @@ def lint(raw: str, folklore: bool = False) -> dict:
         for m in rx.finditer(masked):
             sev = "low" if "high false-positive" in msg or "also legit" in msg else "med"
             add("aitell-construction", m.start(), m.group(0), msg, sev)
+
+    # 3b) flourish / pretension tier (editor-observed; heuristic thresholds)
+    # a. colon-label scaffolding — "The practice: …" sentence openers; flag when repeated
+    labels = list(COLON_LABEL_RE.finditer(masked))
+    if len(labels) >= 2:
+        for m in labels:
+            add("aitell-flourish", m.start(1), m.group(1) + ":",
+                f"colon-label scaffold '{m.group(1)}: …' — {len(labels)} in the doc. A repeated "
+                f"label-then-elaboration pattern reads as template, not prose; write the sentence "
+                f"instead. [editor-observed tell; heuristic]", "med")
+    # b. nested em-dash asides — 2+ em-dashes inside one sentence, flagged when clustered
+    aside_hits = [(sm.start(), sm.group(0).count("—"))
+                  for sm in SENTENCE_RE.finditer(masked) if sm.group(0).count("—") >= 2]
+    if len(aside_hits) >= 3:
+        for pos, dashes in aside_hits:
+            add("aitell-flourish", pos, f"{dashes} em-dashes in one sentence",
+                f"nested em-dash aside ({dashes} dashes in one sentence; {len(aside_hits)} such "
+                f"sentences in the doc) — a thought interrupted by a thought. Unwind into two "
+                f"sentences. [editor-observed tell; heuristic]", "med")
+    # c. demonstrative flourish — the sentence admires itself instead of finishing
+    for rx in DEMONSTRATIVE_FLOURISH:
+        for m in rx.finditer(masked):
+            add("aitell-flourish", m.start(), m.group(0),
+                f"demonstrative flourish '{m.group(0).strip()}' — the sentence points at its own "
+                f"cleverness instead of finishing the thought. State the point plainly. "
+                f"[editor-observed tell; heuristic]", "med")
+    # d. epigram stacking — "X, not Y" contrast density (one doc-level finding)
+    contrasts = list(CONTRAST_RE.finditer(masked))
+    crate = len(contrasts) * 1000.0 / nwords
+    if crate > 3.0 and len(contrasts) >= 4:
+        add("aitell-flourish", contrasts[0].start(), f"{len(contrasts)} 'X, not Y' contrasts",
+            f"epigram stacking: {len(contrasts)} 'X, not Y' contrast constructions "
+            f"({crate:.1f}/1k words). One antithesis lands; a page of them reads as posture. "
+            f"Keep the best and rewrite the rest as plain statements. [heuristic threshold]",
+            "med")
 
     # 4) distinctive openers
     for rx in OPENERS:

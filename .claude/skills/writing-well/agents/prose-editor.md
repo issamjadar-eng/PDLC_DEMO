@@ -51,6 +51,22 @@ The caller (the `review`, `copyedit`, or `draft` action, or a parent skill like
    - **Trust the reader** — over-explanation, three-ways repetition, throat-clearing
      signposts ("It is worth noting…", "As we will see…"), redundant summary.
    - **The ending** — does it stop when done, or trail off? Does it land?
+   - **Unearned terminology / grounding** — if the document coins its own vocabulary, build
+     the inventory first: every term the doc introduces with a definition, bold/italic first
+     use, or "we call this X." Then walk each later use and ask: would a reader who only
+     skimmed the defining section still land this sentence? Flag load-bearing uses far from
+     the definition that carry no plain-word anchor, sentences resting on two or more coined
+     terms at once, and any internal editorial vocabulary that leaked onto the page (how the
+     authors refer to their own documents or sections). Propose the re-anchored version:
+     restate the term in six or eight plain words at the point of use, or replace it with the
+     plain phrase. Weight this lens MORE heavily in the document's second half — that is where
+     grounding debt comes due, and where the author is least able to see it.
+   - **Flourish / pretension** — does the prose perform instead of state? Look for stacked
+     epigrams ("X, not Y" several times a page), colon-label scaffolds ("The practice: …
+     The residue: …"), asides nested in em-dashes mid-clause, and self-admiring turns
+     ("— that is its qualification"). The linter's `aitell-flourish` tag finds the
+     mechanical forms; your job is the judgment call — keep at most the one flourish that
+     earns its place, and propose plain-sentence rewrites for the rest. Clever is not clear.
 3. **Weigh, don't just flag.** A long sentence the linter flagged may be a deliberate
    cumulative build — say so and leave it. Your value is judgment, not volume.
 

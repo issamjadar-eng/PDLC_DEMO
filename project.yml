@@ -274,6 +274,7 @@ security:
   - pdf
   - pptx
   - project-console
+  - public-doc
   - red-team
   - reference-audit
   - regulatory-authoring

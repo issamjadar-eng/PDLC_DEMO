@@ -1,0 +1,23 @@
+# Brand configuration for public-doc — PROJECT-SPECIFIC.
+# This file is a seed of PLACEHOLDERS. Replace with your organization's values.
+# The public-doc skill reads this at lint/build time; the skill itself ships no
+# company values, which is what keeps it reusable across projects.
+
+# Named profiles. `brand_profile` in a draft's frontmatter selects one.
+default:
+  # Canonical legal/marketing name. Disallowed variants are flagged by lint
+  # so the public text uses the canonical form.
+  naming:
+    canonical: "{{Company Name}}"
+    disallowed_variants:
+      - "{{CompanyNickname}}"
+      - "{{Company Inc}}"
+
+  # Phrases that must never appear in an EXTERNAL document (e.g., internal-only
+  # commercial language). Lint flags each occurrence in public text.
+  banned_phrases:
+    - "{{internal-only phrase}}"
+
+  # Disclaimers that MUST be present somewhere in the public text.
+  required_disclaimers: []
+    # - "© {{Year}} {{Company Name}}. All rights reserved."
