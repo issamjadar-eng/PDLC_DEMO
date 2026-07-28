@@ -2,7 +2,7 @@
 
 **ID**: 110
 **Created**: 2026-07-27
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -45,7 +45,7 @@ _Actionable work items. Check off as completed._
 - [x] Phase 3 — Build the validation report generator (needs × tests × results → report markdown + console sidecar JSON)
 - [x] Phase 4 — Console: add Settings → Workbench Validation sub-section rendering the three components
 - [x] Phase 5 — Run end-to-end, verify in console (screenshot-verified), update this doc
-- [ ] Push to main (awaiting user go-ahead)
+- [x] Push to main + registry skill sync
 
 ## Open Questions
 
@@ -209,6 +209,7 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 ## Changelog
 
 - 2026-07-27: Task created. Research fan-out launched (3 agents: .claude validation-asset inventory, project-console settings contract, MedTech tool-validation grounding).
+- 2026-07-28: SHIPPED + SYNCED. PDLC_DEMO PR #168 merged (`29097d7`) — skill + project artifacts + console 1.58.0 (137 files). Registry sync: pulled writing-well v3→v5 + NEW public-doc skill (19 files, allowlisted); pushed workbench-validation v3 + project-console 1.58.0 as hitachi PR #290, squash-merged `933ffad`; drift 0 both directions. Sync-log + pulled files landed via PDLC_DEMO PR #169 (`cdd8a8b`). Post-merge stash-pop conflicts on 5 machine-generated files (usage-metrics telemetry/dashboard, console manifest) resolved to HEAD (generated state, hooks republish). 3 pre-existing stashes from earlier sessions left untouched. Task Complete.
 - 2026-07-28: Feedback round 2 shipped (workbench-validation v3, console within 1.58.0): (a) UUT field per test case with version pinning (`task@35`, `project-console@1.58.0`…) across results/logs/report/sidecar/console; (b) reviewer-friendly test cases — plain titles + description/approach, console click-to-expand rows, report "What each test case checks" section; (c) TC ids hyperlink to test source (detect_source heuristic; fixed --project env-arg bug that pinned 1458 files incl. console .venv → 43 scoped files); (d) validation setup record per run (operator git/OS user + hostname + OS, invoked-via cli/console, timestamps) in report §1 + console setup-record line + log headers; (e) test-artifact pinning — manifest + per-case sources copied into `results/<run-id>/pinned/` with sha256 manifest; (f) Status/Time column-merge fix (widths + column-gap). Full re-runs verified; screenshots confirmed; log + source links resolve via Documents API. Still uncommitted.
 - 2026-07-28: UI polish: WUN-register Need column now word-wraps (was ellipsis-truncated) — `setup_view.html` need cell `white-space:normal` + `overflow-wrap` + 18px right padding, rows top-aligned; screenshot-verified after restart.
 - 2026-07-28: User-feedback round shipped: (a) role-based WUN register (`role:` + plain-language needs + `implemented_by:` traceability) across manifest/plan/report/sidecar/console; (b) per-case evidence logs (`tools/workbench-validation/results/<run-id>/<TC-ID>.log`, full transcripts + execution headers) linked from report + console tests table; (c) outputs relocated `docs/.../{results,.console,report}` → `tools/workbench-validation/` (authored plan+manifest stay in docs), console.yaml `grounding.extra_roots` += tools/workbench-validation; (d) console nav label → "Validation". workbench-validation skill v1→v2; console loader/template/SKILL/README amended within 1.58.0. Re-run verified: 13/16 PASS, 16 evidence logs, log resolution via Documents API 200, screenshot-verified. Still uncommitted.
