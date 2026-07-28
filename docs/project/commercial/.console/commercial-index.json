@@ -1,6 +1,6 @@
 {
- "schema_version": "1.3",
- "generated": "2026-07-27T18:52:22+00:00",
+ "schema_version": "1.4",
+ "generated": "2026-07-28T01:15:27+00:00",
  "categories": [
   {
    "key": "board",
@@ -37,9 +37,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -47,6 +47,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -54,8 +58,8 @@
    "freshness": "fresh",
    "verdict_headline": "PP3500 and cloud-suite fund the company \u2014 59.8% of trailing-4Q gross margin ($27.0M of the portfolio's $45.2M GM on $88.2M revenue, window 2025-Q3..2026-Q2); all 6 lines gross-margin positive; margins compressing on IP5000, PP3000",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-01/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-01/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-01/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-01/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A profitability map of the product portfolio: for each product line, revenue and gross margin over the trailing four quarters, plus the trend against the prior four.",
@@ -348,7 +352,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-02",
@@ -359,9 +407,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -369,6 +417,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -376,8 +428,8 @@
    "freshness": "fresh",
    "verdict_headline": "Meridian Health Alliance carries 38.4% of FY2025 direct-book revenue \u2014 above the 30% guardrail on the direct-book basis, and basis-sensitive: the direct book covers 50.6% of total FY2025 revenue, and Meridian Health Alliance's floor share of TOTAL revenue is 19.4% (under the guardrail); top-3 accounts 25.5%, PCA franchise 74.5%; losing the anchor GPO dents every plan year by $15.6M (14.9% of the FY2026 plan) under the stated constant-dent scenario",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-02/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-02/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-02/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-02/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A concentration analysis: how much of revenue depends on a single buying group (GPO), the top few accounts, and the PCA product franchise \u2014 and what losing the anchor buying group would do to the five-year plan.",
@@ -765,7 +817,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "3 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices (direct-book vs total-revenue denominator), buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-03",
@@ -777,9 +873,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.3",
+   "approved_edition": "2026-07-27.4",
    "draft_edition": "2026-07-27.2",
-   "latest_edition": "2026-07-27.3",
+   "latest_edition": "2026-07-27.4",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -791,6 +887,10 @@
     },
     {
      "edition": "2026-07-27.3",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.4",
      "status": "approved"
     }
    ],
@@ -798,8 +898,8 @@
    "freshness": "fresh",
    "verdict_headline": "Recurring revenue is 10.8% of revenue today (FY2026H1) vs 68.6% planned for FY2030; of the $350.0M target, $128.0M rides on already-cleared products, $12.0M on letter-to-file changes, and $210.0M (60.0%) sits behind FDA decisions not yet received \u2014 and within the $240.0M recurring proxy itself, $210.0M (87.5%) is behind those decisions",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-03/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-03/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-03/2026-07-27.4/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-03/2026-07-27.4/data.json",
    "explainers": {
     "question": {
      "what": "A decomposition of the long-range revenue target: how much revenue is recurring today versus planned, and how much of the plan is contracted, modeled, or aspiration \u2014 including how much waits on FDA decisions.",
@@ -1150,7 +1250,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-04",
@@ -1161,9 +1305,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -1171,6 +1315,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -1178,8 +1326,8 @@
    "freshness": "fresh",
    "verdict_headline": "Unit economics fail the guardrail: LTV per connected pump $2,237 vs $2,720 cost-to-serve over the same 5-year horizon (ratio 0.82 vs the 3.0 floor); 28 of 39 active sites run ARR below cost-to-serve \u2014 concentrated in small sites \u2014 and the mean hardware discount at subscribed sites is 5.8% vs the 5% tolerance",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-04/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-04/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-04/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-04/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "Unit economics of the subscription: what one connected pump's subscription earns over the horizon (LTV) versus what it costs to serve, and whether subscription deals are being bought with hardware discounts.",
@@ -1525,7 +1673,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-05",
@@ -1537,9 +1729,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -1547,6 +1739,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -1554,8 +1750,8 @@
    "freshness": "fresh",
    "verdict_headline": "$366.0M of the $1,000.0M five-year plan sits behind FDA decisions not yet received; exposure crosses the 40% threshold in FY2029, FY2030 (peak 60.0% in FY2030)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-05/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-05/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-05/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-05/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A regulatory-exposure analysis of the revenue plan: how much planned revenue depends on FDA decisions the company has not yet received, year by year, with modeled slip scenarios.",
@@ -1877,7 +2073,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-06",
@@ -1888,9 +2128,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27",
+   "approved_edition": "2026-07-27.2",
    "draft_edition": null,
-   "latest_edition": "2026-07-27",
+   "latest_edition": "2026-07-27.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -1898,6 +2138,10 @@
     },
     {
      "edition": "2026-07-27",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.2",
      "status": "approved"
     }
    ],
@@ -1905,8 +2149,8 @@
    "freshness": "fresh",
    "verdict_headline": "Competitor 510(k) review runs a median 213 days received\u2192decision across 29 infusion-pump clearances since 2021; fastest frequent filer is Baxter Healthcare Corporation at 74 days median",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-06/2026-07-27/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-06/2026-07-27/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-06/2026-07-27.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-06/2026-07-27.2/data.json",
    "explainers": {
     "question": {
      "what": "A speed-of-competition analysis built from public FDA clearance records for the infusion-pump category: how long FDA review takes overall, by year, and by frequent competitor.",
@@ -2103,7 +2347,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 1 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-07",
@@ -2114,9 +2402,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -2124,6 +2412,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -2133,8 +2425,8 @@
    "freshness": "fresh",
    "verdict_headline": "US (NA-proxy) PCA/LVP smart-pump share is a RANGE, not a number: ~0.029%\u20130.047% of installed base and ~0.55%\u20131.1% of annual segment dollars (A-003 denominator, LOW confidence); our installed base grew ~16.0%/yr vs the assumed market ~7.3%/yr \u2014 directionally gaining, from a tiny base (mismatched bases: ours is UNIT growth of our NA in-segment book; A-003's rate is the DOLLAR CAGR of the total US infusion-pump market \u2014 directional comparison only)",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-07/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-07/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-07/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-07/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A market-share estimate for the US PCA / smart-pump segment, built from our installed-base records and a stated market-size assumption \u2014 deliberately presented as a range, not a point figure.",
@@ -2438,7 +2730,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures \u2014 share must re-derive as a range on the A-003 denominator, never a point",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-08",
@@ -2449,9 +2785,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -2459,6 +2795,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -2466,8 +2806,8 @@
    "freshness": "fresh",
    "verdict_headline": "Trailing-365d win rate is 58.7% of decided opportunities (37 won / 26 lost; 18 no-decision excluded) vs the 50% stand-in target; dollar-weighted we win 61.4% of decided CRM value ($30,389,000 won vs $19,071,000 lost \u2014 we win bigger deals than we lose); 8 of 26 losses (30.8%) have the predictive-monitoring gap primary or cited \u2014 $4,792,000 in CRM value",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-08/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-08/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-08/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-08/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A win/loss analysis from the sales team's opportunity log: how often we win decided deals, what we win and lose on, and how many losses cite a product capability we do not ship.",
@@ -2781,7 +3121,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices (count vs dollar-weighted rate, no-decision denominator), buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-09",
@@ -2793,9 +3177,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -2803,6 +3187,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -2810,8 +3198,8 @@
    "freshness": "fresh",
    "verdict_headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 67.3% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=55) vs 14.3% outside the window (n=7); there is no uniform decay across the interior buckets (65.8% \u2192 70.6% \u2192 0.0%); the >12 months / no prior recall tail sits at 50.0% (n=2)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-09/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-09/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-09/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-09/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A displacement analysis: do we win more often when the incumbent vendor at an account has a recent public recall, and how long does that window of opportunity stay open? Built by joining our sales log to real FDA recall dates.",
@@ -3143,7 +3531,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures, including the 90-day window-sensitivity split",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-10",
@@ -3155,9 +3587,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -3165,6 +3597,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -3174,8 +3610,8 @@
    "freshness": "fresh",
    "verdict_headline": "Indicative, assumption-bounded: our 5-yr TCO is $8,900/pump all-in ($5,100 on the capital+service basis) vs a class-wide competitor range of ~$3,000\u2013$15,000 on capital+service ONLY \u2014 competitor consumables and software subscription are undisclosed and excluded, so their true all-in TCO sits ABOVE that range; the ranges overlap and no hard we-win claim is supportable",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-10/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-10/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-10/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-10/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A total-cost-of-ownership comparison: what one of our pumps costs a hospital over the ownership horizon (hardware, software, consumables, service) against the range for competitor pumps \u2014 on a stated, like-for-like basis.",
@@ -3428,7 +3864,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-11",
@@ -3440,9 +3920,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -3450,6 +3930,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -3457,8 +3941,8 @@
    "freshness": "fresh",
    "verdict_headline": "6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the \u226510-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked \u2014 no site\u2192account key exists in any pinned dataset",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-11/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-11/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-11/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-11/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "An adoption-risk scan of connected sites: which customers run their pumps far below the usage their purchase implies, based on the telemetry the devices report automatically.",
@@ -3810,7 +4294,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "3 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-12",
@@ -3821,9 +4349,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27",
+   "approved_edition": "2026-07-27.2",
    "draft_edition": null,
-   "latest_edition": "2026-07-27",
+   "latest_edition": "2026-07-27.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -3831,6 +4359,10 @@
     },
     {
      "edition": "2026-07-27",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.2",
      "status": "approved"
     }
    ],
@@ -3838,8 +4370,8 @@
    "freshness": "fresh",
    "verdict_headline": "1 infusion-pump clearance(s) in the 90-day window ending 2026-01-28; 0 flag roadmap-relevant keywords \u2014 review against the roadmap lanes",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-12/2026-07-27/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-12/2026-07-27/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-12/2026-07-27.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-12/2026-07-27.2/data.json",
    "explainers": {
     "question": {
      "what": "A recurring sweep of new FDA infusion-pump clearances in the most recent window, with each clearance screened against keywords tied to our roadmap lanes.",
@@ -4030,7 +4562,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-13",
@@ -4042,9 +4618,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -4052,6 +4628,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -4061,8 +4641,8 @@
    "freshness": "fresh",
    "verdict_headline": "Nobody in the competitive matrix documents predictive monitoring today, but the runway is assumption-thin: a SaMD-only entrant starting at the data anchor (2026-01-28) could clear 2027-07-28 to 2028-01-28 \u2014 about 5 months before our F6 2028-H2 launch anchor; an incumbent acquisition inherits the same clock; 0 ai/predictive-flagged clearance(s) in the trailing-12-month watch. The hardware-scenario reassurance is FRAGILE: its fast edge clears the favorable launch anchor by only 27 days and beats an end-of-2028-H2 launch reading by ~5 months \u2014 and the H2 anchor refinement is a catalog config choice, not a strategy-doc commitment",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-13/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-13/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-13/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-13/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A runway analysis for our predictive-monitoring bet: given how long it takes an entrant to build and clear a competing capability, could someone land it before our planned launch \u2014 including the fast case where an incumbent buys an AI startup instead of building.",
@@ -4338,7 +4918,58 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-13.1 launch-anchor sensitivity staying verdict-level",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-14",
@@ -4349,9 +4980,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -4359,6 +4990,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -4366,8 +5001,8 @@
    "freshness": "fresh",
    "verdict_headline": "10 attributes compared: 2 ahead, 4 parity, 4 behind \u2014 3 behind-gaps have a roadmap lane (of which 2 adjacency-only: integrated_etco2, pca_pause_or_etco2 \u2014 the lane responds but does not mechanically close the gap), 1 SILENTLY UNADDRESSED (weight_kg)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-14/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-14/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-14/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-14/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A line-by-line feature-parity scorecard against competing PCA / smart pumps: for each compared attribute, whether we are ahead, at parity, or behind \u2014 and for each gap, whether a roadmap lane genuinely closes it or merely responds to it.",
@@ -4626,7 +5261,58 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-14.1 closure-vs-adjacency labeling on lane-routed gaps",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-15",
@@ -4638,9 +5324,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -4648,6 +5334,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -4655,8 +5345,8 @@
    "freshness": "fresh",
    "verdict_headline": "ride to scheduled review (2027-04-12): both differentiators remain ahead of every documented competitor value and no refresh trigger fired. Accuracy margin ~6.6x vs best documented competitor on our LAB-basis spec (~4.6x on our volumetric-basis spec \u2014 ahead on either basis; competitor cells are nominal/field specs), battery ~2.1x; 0 FRN clearance(s) observed after the SOTA anchor date (2026-04-12) in a snapshot whose coverage ends 2026-01-28",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-15/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-15/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-15/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-15/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A currency check on the state-of-the-art analysis: has the market moved since that document was adopted (new clearances, better competitor specs), and do our headline differentiators still lead?",
@@ -4925,7 +5615,58 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-15.1 lab-vs-volumetric spec-basis disclosure",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-16",
@@ -4936,9 +5677,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -4946,6 +5687,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -4953,8 +5698,8 @@
    "freshness": "fresh",
    "verdict_headline": "META-GAP: all 38 evidence rows are a simulated advisory panel \u2014 zero real collected KOL evidence exists (no interviews, surveys, or publications). Within the simulated register: F9 rides on a single voice (E-16.1 floor not met), and the F4, F6, F7, F8 wave slots carry concern-majority sentiment \u2014 read as NO documented endorsement of those slots, not as opposition: the register's 3-value vocabulary collapses conditional support into `concern` (stated limitation)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-16/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-16/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-16/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-16/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "An evidence audit of the roadmap's clinical backing: for each committed feature, how many distinct clinical voices are on file, of what kind (real collected evidence versus simulated panel output), and whether sentiment still supports the planned sequence.",
@@ -5211,7 +5956,58 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-16.1 vocabulary-flattening caveat on concern-majority readings",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-17",
@@ -5222,9 +6018,9 @@
    ],
    "cadence": "annual",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -5232,6 +6028,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -5239,8 +6039,8 @@
    "freshness": "fresh",
    "verdict_headline": "Decision support, not the decision: pull-forward candidate F4 Alerts Engine v1 (smart alarm filtering) (composite 0.616, tie with F6 broken on earliest wave); kill candidate F9 International expansion (EU MDR / Canada) (composite 0.0, tie with F7 broken on weakest evidence base) \u2014 sentiment axis is simulated-panel only, demand axis is Cloud attach 84.8%. CAUTION on the kill read: the single F9 voice argues the slot is too LATE and too THIN \u2014 a voice FOR earlier EU investment, arithmetically converted into kill support by the 3-value sentiment vocabulary",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-17/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-17/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-17/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-17/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A stack-ranking of the future roadmap bets: each candidate feature scored on the evidence streams available (clinical voice, competitive activity, adoption actuals), surfacing one pull-forward candidate and one kill candidate.",
@@ -5581,7 +6381,58 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "5 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-17.1 single-voice direction disclosure on the kill candidate",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-18",
@@ -5593,9 +6444,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -5619,6 +6470,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -5626,8 +6481,8 @@
    "freshness": "fresh",
    "verdict_headline": "CAPA-review trigger: occlusion-alarm at 3.17 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-18/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-18/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The complaint dashboard: the top complaint categories, normalized to a rate per 100 fleet devices over the trailing window, tested against per-category thresholds.",
@@ -5884,7 +6739,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-19",
@@ -5896,9 +6795,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27",
+   "approved_edition": "2026-07-27.2",
    "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-27",
+   "latest_edition": "2026-07-27.2",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -5922,6 +6821,10 @@
     },
     {
      "edition": "2026-07-27",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.2",
      "status": "approved"
     }
    ],
@@ -5931,8 +6834,8 @@
    "freshness": "fresh",
    "verdict_headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-27/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-27/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-27.2/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-27.2/data.json",
    "explainers": {
     "question": {
      "what": "A comparison of adverse-event report volumes across infusion-pump manufacturers from FDA's public MAUDE database \u2014 with an explicit account of why report COUNTS can be compared but event RATES cannot.",
@@ -6144,7 +7047,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 1 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures \u2014 incl. the blocked-rate honesty check (no rate derivable while A-001 is unquantified)",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-20",
@@ -6155,9 +7102,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -6165,6 +7112,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -6174,8 +7125,8 @@
    "freshness": "fresh",
    "verdict_headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-20/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-20/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-20/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-20/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A standing watch on the franchise's nightmare scenarios: any internal field signal \u2014 complaints, near-misses, open regulatory items \u2014 around opioid over-delivery or PCA-by-proxy, set against class-wide public adverse-event volumes for PCA pumps.",
@@ -6572,7 +7523,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "4 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the three-month MAUDE lag trim staying visible",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-21",
@@ -6584,9 +7579,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -6594,6 +7589,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -6601,8 +7600,8 @@
    "freshness": "fresh",
    "verdict_headline": "If FDA walks in tomorrow: 2 open docket item(s) (MDR-2026-0005 due in 2 days at the pin date; FSCA-2026-001 rollout incomplete) and 1 late MDR filing(s) in the trailing 12 months \u2014 on-time rate 94.7% (18 of 19); E-21.1 NOT met",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-21/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-21/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-21/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-21/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The regulatory-docket health check: what field actions and reports to FDA are open right now, how timely our required MDR filings have been, and what an inspector arriving unannounced would find.",
@@ -6912,7 +7911,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures \u2014 incl. the alternate on-time-rate bases published beside the committed one",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-22",
@@ -6923,9 +7966,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -6933,6 +7976,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -6940,8 +7987,8 @@
    "freshness": "fresh",
    "verdict_headline": "16 of 40 lifetime signals (40.0%) died in a spreadsheet (no-action or open past the 90-day SLA); trailing 12 months: 6 of 21 (28.6%) died vs 9 landed in design/upgrade \u2014 and only 36.8% of adjudicated cohort signals met the SLA, so E-22.1 is NOT met",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-22/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-22/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-22/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-22/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "A closed-loop audit of field signals: of the signals raised from the field, how many were run to a disposition \u2014 landing in design, an upgrade, or a documented no-action call \u2014 and how many simply stalled (\"died in a spreadsheet\").",
@@ -7263,7 +8310,51 @@
       ]
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim (a prior pass caught a median-implementation overstatement)",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-23",
@@ -7274,9 +8365,9 @@
    ],
    "cadence": "weekly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -7308,6 +8399,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -7315,8 +8410,8 @@
    "freshness": "fresh",
    "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-23/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-23/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The field-update campaign scoreboard: how much of the targeted device population has been completed, by region and site, and whether the current pace reaches the close date.",
@@ -7551,7 +8646,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-24",
@@ -7562,9 +8701,9 @@
    ],
    "cadence": "weekly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -7596,6 +8735,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -7603,8 +8746,8 @@
    "freshness": "fresh",
    "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-24/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-24/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "Update quality control: failure and retry rates for the field-update campaign, split by device cohort (hardware revision and starting firmware version), with a pre-set pause threshold per cohort.",
@@ -7830,7 +8973,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures on the per-attempt basis (adopted after adversarial verification of the whole-cohort dilution)",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-25",
@@ -7842,9 +9029,9 @@
    ],
    "cadence": "weekly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -7872,6 +9059,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -7881,8 +9072,8 @@
    "freshness": "fresh",
    "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-25/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-25/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The customer-experience view of the update campaign: support tickets per 100 attempted upgrades, sites that rolled the update back, and an estimate of what the campaign costs customers in their own staff time.",
@@ -8111,7 +9302,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures \u2014 same-basis ticket rate (adopted after adversarial verification of the mixed-basis flip)",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-26",
@@ -8122,9 +9357,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.6",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -8156,6 +9391,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -8163,8 +9402,8 @@
    "freshness": "fresh",
    "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-27; EMEA needs 6.4/wk; NA needs 4.7/wk); APAC behind (3.5/wk vs 4.5/wk required); remote conversion covers 0 of 97 on-site-remaining devices today",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-26/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-26/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The campaign capacity question: given each region's current completion pace and what remains, can existing field capacity finish the waves by the close date \u2014 or is the real choice between adding capacity, converting work to remote, and slipping the date?",
@@ -8433,7 +9672,58 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures from derivation strings alone (F26-1: definitions must not live only in this plan)",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    },
+    {
+     "gate": "intent-check",
+     "kind": "agent",
+     "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
+     "done": true,
+     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-27",
@@ -8444,9 +9734,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": "2026-07-22.5",
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -8474,6 +9764,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -8481,8 +9775,8 @@
    "freshness": "fresh",
    "verdict_headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-27/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-27/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The fleet software-currency census: what share of the installed fleet runs outdated firmware, how far behind, where, and whether connected devices stay more current than unconnected ones.",
@@ -8697,7 +9991,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "1 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures \u2014 the connectivity comparison stays descriptive, never causal",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-28",
@@ -8708,9 +10046,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -8718,6 +10056,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -8725,8 +10067,8 @@
    "freshness": "fresh",
    "verdict_headline": "H1 2026 revenue $46.3M vs plan $48.3M (-4.1%, within the \u00b15% tolerance overall; 4 of 6 lines breach the band individually on the downside); under plan: cloud-suite -16.4%, SP6500 -15.7%, SP6000 -9.1%, PP3500 -6.3%; masked by IP5000 +24.3%, PP3000 +16.1%; 2026-Q2 alone breached at -5.5%",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-28/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-28/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-28/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-28/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The revenue plan-versus-actual review: year-to-date performance against plan, decomposed by product line, region, and quarter, with each line's contribution to the total variance.",
@@ -9044,7 +10386,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the F28-1 rollup-survival rule (per-line breaches on the verdict headline)",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-29",
@@ -9057,9 +10443,9 @@
    ],
    "cadence": "quarterly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -9067,6 +10453,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -9074,8 +10464,8 @@
    "freshness": "fresh",
    "verdict_headline": "The attach stage-gate HOLDS at the stand-in level: 43.0% of the PP3500 installed base (295 of 686 pumps) vs the 40% gate \u2014 but the $24M releases on a gate NUMBER nobody has ratified; the strategy of record says 'traction' and sets no threshold \u2014 and the verdict is denominator-definition-sensitive: under a whole-PCA denominator (884 pumps incl. 198 unconnectable PP3000) attach reads 33.4%, BELOW the stand-in gate; the metric definition is as unratified as the gate number",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-29/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-29/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-29/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-29/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The stage-gate check: the flagship fleet's subscription attach rate against the gate level that releases the next major investment \u2014 including how the rate moves under alternative denominator choices.",
@@ -9413,7 +10803,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the F29-1 denominator sensitivity (PP3500-only vs whole-PCA) at verdict level",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   },
   {
    "id": "BQ-30",
@@ -9425,9 +10859,9 @@
    ],
    "cadence": "monthly",
    "status": "answered",
-   "approved_edition": "2026-07-27.2",
+   "approved_edition": "2026-07-27.3",
    "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "latest_edition": "2026-07-27.3",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -9435,6 +10869,10 @@
     },
     {
      "edition": "2026-07-27.2",
+     "status": "superseded"
+    },
+    {
+     "edition": "2026-07-27.3",
      "status": "approved"
     }
    ],
@@ -9442,8 +10880,8 @@
    "freshness": "fresh",
    "verdict_headline": "A remote update costs $120 vs an on-site update between $193 (labor-time floor) and $950 (full-day ceiling) \u2014 remote is 12.6\u201362.1% of on-site depending on unmeasured travel; a $380 adapter pays back in 0.5\u20135.2 update campaigns at the top non-connected accounts",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-30/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-30/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-30/2026-07-27.3/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-30/2026-07-27.3/data.json",
    "explainers": {
     "question": {
      "what": "The update-economics analysis: what one completed update actually costs by method (remote versus on-site), and the investment case for equipping the largest unconnected accounts with connectivity so future campaigns run remotely.",
@@ -9776,7 +11214,51 @@
       "review_history": []
      }
     ]
-   }
+   },
+   "verification_plan": [
+    {
+     "gate": "claim-lint",
+     "kind": "machine",
+     "note": "every figure marker-resolvable; zero errors before approval",
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
+    },
+    {
+     "gate": "pin-freshness",
+     "kind": "machine",
+     "note": "all pinned snapshots within max_age_days (or visibly waived)",
+     "done": true,
+     "evidence": "2 pin(s) fresh"
+    },
+    {
+     "gate": "plan-currency",
+     "kind": "machine",
+     "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+     "done": true,
+     "evidence": "plan in-sync"
+    },
+    {
+     "gate": "code-audit",
+     "kind": "machine",
+     "note": "computation code hash pinned; deterministic checks green; AI review current",
+     "done": true,
+     "evidence": "code reviewed-current"
+    },
+    {
+     "gate": "adversarial-verify",
+     "kind": "agent",
+     "note": "independent pins-only re-derivation of the headline figures",
+     "done": true,
+     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+    },
+    {
+     "gate": "red-team",
+     "kind": "agent",
+     "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the F30-1 computed-position rule for the breakeven (no directional adverbs)",
+     "done": true,
+     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+    }
+   ]
   }
  ]
 }

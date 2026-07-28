@@ -1,0 +1,12 @@
+bq: BQ-12
+edition: 2026-07-27.2
+status: approved
+created_at: '2026-07-28T01:14:20+00:00'
+pins:
+  commercial/openfda-510k-infusion: '2026-07-22'
+plan:
+  path: plans/BQ-12.md
+  sha256: e76a3257d3355655d0c93a1ee1ee8f91158cf5306cdd1fbbfb17ce7694e49f33
+code_artifacts:
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

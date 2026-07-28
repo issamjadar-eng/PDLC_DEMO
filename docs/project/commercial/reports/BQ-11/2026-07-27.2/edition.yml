@@ -1,6 +1,6 @@
 bq: BQ-11
 edition: 2026-07-27.2
-status: approved
+status: superseded
 created_at: '2026-07-27T18:32:43+00:00'
 pins:
   commercial/internal-telemetry-utilization: '2026-07-27'
@@ -20,3 +20,4 @@ code_artifacts:
   sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961
 - path: corpus:commercial/internal-sales-accounts/gen.py
   sha256: 3c19b25f857fab77d1bcc3fc6e52c3cab92ace34fa598acac1c0598c61216c70
+superseded_by: 2026-07-27.3

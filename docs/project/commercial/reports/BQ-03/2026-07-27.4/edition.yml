@@ -1,0 +1,19 @@
+bq: BQ-03
+edition: 2026-07-27.4
+status: approved
+created_at: '2026-07-28T01:14:16+00:00'
+pins:
+  commercial/internal-financials: '2026-07-27'
+  commercial/internal-revenue-plan: '2026-07-27'
+plan:
+  path: plans/BQ-03.md
+  sha256: 417f510521521af0822a52284f2f32881d78032341f87dabee7056628e77f710
+code_artifacts:
+- path: bq_modules/bq_03.py
+  sha256: 21e55a07be994f5e85d862ed954d1cb2c020d27cc857ec44a69ffb86e0b0c30d
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-financials/gen.py
+  sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+- path: corpus:commercial/internal-revenue-plan/gen.py
+  sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4

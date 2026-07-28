@@ -1,0 +1,468 @@
+{
+ "bq": "BQ-08",
+ "series": [
+  {
+   "id": "win-rate",
+   "label": "Trailing-365d win rate",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "points": [
+    {
+     "label": "of decided opportunities, 2025-07-20 \u2192 2026-07-20",
+     "value": 58.7
+    }
+   ]
+  },
+  {
+   "id": "value-win-rate",
+   "label": "Trailing-365d dollar-weighted win rate",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 value_usd over in-window wins \u00f7 \u03a3 value_usd over in-window decided (won + lost)",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-07-27.4"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "points": [
+    {
+     "label": "of decided CRM value, 2025-07-20 \u2192 2026-07-20",
+     "value": 61.4
+    },
+    {
+     "label": "CRM value won (USD)",
+     "value": 30389000
+    },
+    {
+     "label": "CRM value lost (USD)",
+     "value": 19071000
+    }
+   ]
+  },
+  {
+   "id": "pm-gap-losses",
+   "label": "Predictive-monitoring-gap losses (in-window)",
+   "unit": "",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "points": [
+    {
+     "label": "losses with PM gap primary or cited",
+     "value": 8
+    },
+    {
+     "label": "% of in-window losses",
+     "value": 30.8
+    },
+    {
+     "label": "CRM value at loss (USD)",
+     "value": 4792000
+    }
+   ]
+  },
+  {
+   "id": "loss-reasons",
+   "label": "In-window losses by primary reason",
+   "unit": "losses",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "points": [
+    {
+     "label": "price",
+     "value": 11
+    },
+    {
+     "label": "predictive-monitoring-gap",
+     "value": 5
+    },
+    {
+     "label": "clinical-evidence",
+     "value": 3
+    },
+    {
+     "label": "contract-timing",
+     "value": 3
+    },
+    {
+     "label": "incumbent-relationship",
+     "value": 3
+    },
+    {
+     "label": "features",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "win-reasons",
+   "label": "In-window wins by primary reason",
+   "unit": "wins",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "points": [
+    {
+     "label": "contract-timing",
+     "value": 12
+    },
+    {
+     "label": "features",
+     "value": 10
+    },
+    {
+     "label": "price",
+     "value": 8
+    },
+    {
+     "label": "service",
+     "value": 5
+    },
+    {
+     "label": "clinical-evidence",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "monthly-outcomes",
+   "label": "Monthly decided outcomes (full snapshot span)",
+   "unit": "opportunities/month",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-07-27.4"
+   },
+   "lines": [
+    {
+     "label": "won",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 4
+      },
+      {
+       "x": "2025-02-01",
+       "y": 2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 5
+      },
+      {
+       "x": "2025-05-01",
+       "y": 2
+      },
+      {
+       "x": "2025-06-01",
+       "y": 2
+      },
+      {
+       "x": "2025-07-01",
+       "y": 1
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 2
+      },
+      {
+       "x": "2025-11-01",
+       "y": 4
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 7
+      },
+      {
+       "x": "2026-02-01",
+       "y": 4
+      },
+      {
+       "x": "2026-03-01",
+       "y": 4
+      },
+      {
+       "x": "2026-04-01",
+       "y": 4
+      },
+      {
+       "x": "2026-05-01",
+       "y": 1
+      },
+      {
+       "x": "2026-06-01",
+       "y": 2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 2
+      }
+     ]
+    },
+    {
+     "label": "lost",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 4
+      },
+      {
+       "x": "2025-02-01",
+       "y": 3
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 3
+      },
+      {
+       "x": "2025-05-01",
+       "y": 3
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 2
+      },
+      {
+       "x": "2025-09-01",
+       "y": 1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 2
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6
+      },
+      {
+       "x": "2026-02-01",
+       "y": 3
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 2
+      },
+      {
+       "x": "2026-05-01",
+       "y": 4
+      },
+      {
+       "x": "2026-06-01",
+       "y": 1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 2
+      }
+     ]
+    },
+    {
+     "label": "lost citing PM gap",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 1
+      },
+      {
+       "x": "2025-02-01",
+       "y": 1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 2
+      },
+      {
+       "x": "2025-05-01",
+       "y": 1
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1
+      },
+      {
+       "x": "2025-11-01",
+       "y": 0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 2
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Trailing-365d win rate is 58.7% of decided opportunities (37 won / 26 lost; 18 no-decision excluded) vs the 50% stand-in target; dollar-weighted we win 61.4% of decided CRM value ($30,389,000 won vs $19,071,000 lost \u2014 we win bigger deals than we lose); 8 of 26 losses (30.8%) have the predictive-monitoring gap primary or cited \u2014 $4,792,000 in CRM value",
+   "evidence_class": "measured"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "Predictive-monitoring gap touches 30.8% of in-window losses (8 deals, $4,792,000 CRM value; primary reason in 5 of them) \u2014 the largest addressable feature-driven loss pool",
+    "mitigation": "Feed this value into the predictive-monitoring investment case (Y3 roadmap bet); equip sales with the roadmap position for deals where the gap is cited but not primary",
+    "evidence": [
+     "derived: pm-gap-losses",
+     "src: commercial/internal-winloss@2026-07-27.4"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Loss attribution is the CRM's single primary_reason per opportunity \u2014 a recorded citation is not proof the gap decided the deal",
+    "mitigation": "Treat reason mix as directional; validate the big-ticket PM-gap losses with deal debriefs before funding decisions ride on them",
+    "evidence": [
+     "src: commercial/internal-winloss@2026-07-27.4"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Dollar-weighted win rate is 61.4% of decided CRM value ($30,389,000 won vs $19,071,000 lost) vs 58.7% by count \u2014 we win bigger deals than we lose; read the count-based headline next to the value-based one",
+    "evidence": [
+     "derived: value-win-rate",
+     "src: commercial/internal-winloss@2026-07-27.4"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Top loss reason in the window is price (11 of 26 losses) \u2014 competitive-selling coaching target",
+    "evidence": [
+     "derived: loss-reasons",
+     "src: commercial/internal-winloss@2026-07-27.4"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-08.1",
+   "statement": "Competitive win rate holds at or above half of decided opportunities",
+   "expected": ">= 50% of won+lost",
+   "basis": "sales-plan stand-in; no documented target",
+   "set_by": "cco (demo)",
+   "validated": false,
+   "actual": "58.7% of decided (37W/26L, window 2025-07-20 \u2192 2026-07-20); sensitivity: 45.7% if the 18 no-decisions count as losses \u2014 the verdict is denominator-sensitive, not just sample-sensitive",
+   "verdict": "met",
+   "evidence": [
+    "derived: win-rate",
+    "src: commercial/internal-winloss@2026-07-27.4"
+   ]
+  }
+ ]
+}
