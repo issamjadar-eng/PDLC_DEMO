@@ -1,0 +1,106 @@
+{
+  "by_day": {
+    "2026-07-28": {
+      "cache_creation": 692655,
+      "cache_read": 68823102,
+      "cache_write_1h": 458816,
+      "cache_write_5m": 233839,
+      "input": 494,
+      "messages": 247,
+      "output": 240759
+    },
+    "2026-07-30": {
+      "cache_creation": 463711,
+      "cache_read": 504354,
+      "cache_write_1h": 463711,
+      "cache_write_5m": 0,
+      "input": 4,
+      "messages": 2,
+      "output": 241
+    },
+    "2026-07-31": {
+      "cache_creation": 471365,
+      "cache_read": 3438782,
+      "cache_write_1h": 471365,
+      "cache_write_5m": 0,
+      "input": 16,
+      "messages": 8,
+      "output": 6350
+    }
+  },
+  "by_model": {
+    "claude-fable-5": {
+      "cache_creation": 1471024,
+      "cache_read": 71869546,
+      "cache_write_1h": 1393892,
+      "cache_write_5m": 77132,
+      "input": 478,
+      "messages": 239,
+      "output": 222403
+    },
+    "claude-opus-4-8": {
+      "cache_creation": 156707,
+      "cache_read": 896692,
+      "cache_write_1h": 0,
+      "cache_write_5m": 156707,
+      "input": 36,
+      "messages": 18,
+      "output": 24947
+    }
+  },
+  "by_task": {
+    "110": {
+      "claude-fable-5": {
+        "cache_creation": 366119,
+        "cache_read": 62135836,
+        "cache_write_1h": 361789,
+        "cache_write_5m": 4330,
+        "input": 410,
+        "messages": 205,
+        "output": 199793
+      },
+      "claude-opus-4-8": {
+        "cache_creation": 3032,
+        "cache_read": 158317,
+        "cache_write_1h": 0,
+        "cache_write_5m": 3032,
+        "input": 4,
+        "messages": 2,
+        "output": 16272
+      }
+    },
+    "_unattributed": {
+      "claude-fable-5": {
+        "cache_creation": 1104905,
+        "cache_read": 9733710,
+        "cache_write_1h": 1032103,
+        "cache_write_5m": 72802,
+        "input": 68,
+        "messages": 34,
+        "output": 22610
+      },
+      "claude-opus-4-8": {
+        "cache_creation": 153675,
+        "cache_read": 738375,
+        "cache_write_1h": 0,
+        "cache_write_5m": 153675,
+        "input": 32,
+        "messages": 16,
+        "output": 8675
+      }
+    }
+  },
+  "month": "2026-07",
+  "session_id": "87be1403-d573-4e58-935d-c7aa1b3c0f5f",
+  "source": "transcript",
+  "task_folder": "ben",
+  "totals": {
+    "cache_creation": 1627731,
+    "cache_read": 72766238,
+    "cache_write_1h": 1393892,
+    "cache_write_5m": 233839,
+    "input": 514,
+    "messages": 257,
+    "output": 247350
+  }
+}
