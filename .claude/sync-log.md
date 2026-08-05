@@ -1370,3 +1370,12 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Merge commit: `933ffad`
 - Hitachi HEAD after sync: `933ffad`
 - Drift after sync: 0 (both directions)
+
+## 2026-08-05 — push
+
+- Files: `skills/usage-metrics/scripts/aggregate.py`, `skills/usage-metrics/templates/pricing.json`
+- Branch: `sync/pdlc-demo-usage-metrics-rate-card-2026-08-05`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/296
+- Commit: "usage-metrics: fix cost_note provenance key; refresh seed rate card"
+- Status: awaiting review (PR-only — `--merge` not requested)
+- Context: `aggregate.py` read `pricing['_updated']`, a key the rate card has never carried, publishing `cost_note: "… (updated ?)"` in every consuming project. Seed rate card also refreshed to 2026-08-05 standard rates (+ explicit `claude-opus-5` / `claude-sonnet-5`). Originating project task: `ben/111`.

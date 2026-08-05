@@ -41,7 +41,8 @@ _Bring the usage-metrics rate card current with the Anthropic list prices as of 
 - [x] Mirror the same change into `.claude/skills/usage-metrics/templates/pricing.json` (the bundled seed) so a fresh install seeds current rates — verified byte-identical
 - [x] Fix `aggregate.py` L920 `_updated` → `_retrieved` so `cost_note` stops rendering "(updated ?)"
 - [x] Re-run `aggregate.py` and confirm `usage.json` `rate_card._retrieved` + `cost_note` refresh, and that no cost figure moves
-- [ ] Push (branch → PR → auto-merge); confirm CI `usage-metrics-aggregate.yml` re-runs on the `pricing.json` path trigger
+- [x] Push (branch → PR → auto-merge); confirm CI `usage-metrics-aggregate.yml` re-runs on the `pricing.json` path trigger — PR #171 merged (`79c58cf`), CI run `31051473259` green in 15s
+- [x] Push the `aggregate.py` fix + refreshed seed upstream to the hitachi registry — PR #296, awaiting review
 
 ## Strategy
 
@@ -87,9 +88,19 @@ Note `claude-opus-5[1m]` — the 1M-context variant id carries a bracketed suffi
 
 ## Resume
 
-**In-flight artifacts**: _(none yet)_
+**In-flight artifacts**:
 
-**First action on resume**: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 111`, then work the Todos in order.
+- **PDLC_DEMO — merged.** PR [#171](https://github.com/GlobalLogic-a-Hitachi-Company/PDLC_DEMO/pull/171), merge commit `79c58cf`, branch deleted both sides. Local clone is on `main`. Aggregate workflow run `31051473259` fired on the merge and went green in 15s, so `usage.json` / `index.html` on `main` are CI-regenerated with the new card.
+- **Registry — open, awaiting review.** hitachi PR [#296](https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/296) carries the `aggregate.py` provenance fix + the refreshed `templates/pricing.json` seed. Pushed PR-only (no `--merge`), so the hitachi checkout still has local branch `sync/pdlc-demo-usage-metrics-rate-card-2026-08-05`; it will need `/sync-skills prune` after the PR merges.
+- **Uncommitted in the working tree, deliberately left alone** — not this task's: `tasks/ben/108-commercial-analytics-suite.md`, `tasks/ben/SECOPS.md` (pre-existing user edits), and locally regenerated `tools/usage-metrics/{usage.json,index.html}` (CI-owned; never hand-committed).
+
+**First action on resume**: `bash .claude/hooks/task-activate.sh add <SESSION_ID> 111`, then:
+
+1. Check hitachi PR #296 — if merged, run `/sync-skills prune` to clear the stale `sync/*` branch, and confirm `/sync-skills status` reports drift 0.
+2. If #296 is still open, nothing to do; the local fix is already live in this project.
+3. Then mark this task Complete via `/task update ben 111 Complete`.
+
+**Do not redo**: the rate-neutrality verification (done, 0/146), the PDLC merge (done), or re-committing `usage.json` / `index.html` (CI owns them — every commit touching those files is `usage-metrics: CI aggregate team dashboard [skip ci]`).
 
 ## Economics
 
@@ -137,3 +148,5 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 - 2026-08-05: Refreshed the rate card. `tools/usage-metrics/pricing.json` + the bundled seed `.claude/skills/usage-metrics/templates/pricing.json` now carry explicit `claude-opus-5` (5.0/25.0) and `claude-sonnet-5` (3.0/15.0) entries, `_retrieved` 2026-06-22 → 2026-08-05, and a new `_rates` field pinning the standard-not-introductory policy so the next person to refresh does not silently adopt a promo rate. Both copies verified byte-identical and JSON-valid (14 models each).
 - 2026-08-05: Fixed `aggregate.py:920` — read `_updated` (a key the rate card has never carried) instead of `_retrieved`, publishing `cost_note: "… (updated ?)"` into `usage.json` and the dashboard. Now reads `_retrieved`, matching the HTML template at L737. Candidate for push-back to the hitachi registry.
 - 2026-08-05: Verified rate-neutrality — 0 of 146 cost data points changed with data held constant across old vs new card (see Verification). Confirmed the two figures that did move on a naive re-aggregate are the retrospective allocator responding to newly pulled session data, not the rates.
+- 2026-08-05: Landed in PDLC_DEMO via PR #171 (merge `79c58cf`), branch deleted. Committed 5 source files only; `usage.json` / `index.html` deliberately excluded as CI-authored. Aggregate workflow run `31051473259` fired on the merge path trigger and completed green in 15s, regenerating the dashboard on `main` with the refreshed card.
+- 2026-08-05: Pushed the `aggregate.py` provenance fix + refreshed seed rate card upstream — hitachi PR #296, PR-only (awaiting review). Seed inclusion was a deliberate scope extension beyond the original bug fix, approved by user: a fresh `usage-metrics` install in any project was seeding a 2026-06-22 card with no Opus 5 / Sonnet 5 entries. Recorded in `.claude/sync-log.md`. Leaves a local `sync/*` branch in the hitachi checkout pending `/sync-skills prune` post-merge.
