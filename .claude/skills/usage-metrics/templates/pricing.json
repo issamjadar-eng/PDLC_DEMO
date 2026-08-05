@@ -1,7 +1,8 @@
 {
   "_note": "Anthropic API list prices, USD per MILLION tokens. Claude Code subscription (Max/Pro) billing is a flat fee — these figures are the indicative API-equivalent cost of the measured token usage, NOT an invoice.",
   "_source": "https://platform.claude.com/docs/en/about-claude/pricing",
-  "_retrieved": "2026-06-22",
+  "_retrieved": "2026-08-05",
+  "_rates": "STANDARD list rates only — never introductory/promotional pricing. A promo rate expires on a date nobody owns and silently bakes a scheduled inaccuracy into every historical figure. Standard is the stable, conservative basis (e.g. Sonnet 5 is carried at its standard 3.00/15.00, not the 2.00/10.00 intro rate in effect through 2026-08-31).",
   "_schema": "Each entry: {input, cache_write_5m, cache_write_1h, cache_read, output} in $/MTok. aggregate.py resolves a usage model id to a rate: models[<exact-id>] wins; else the first families[<key>] whose key is a substring of the model id; else default_family. Update by re-fetching _source.",
   "default_family": "opus",
   "families": {
@@ -14,12 +15,14 @@
   "models": {
     "claude-fable-5":   { "input": 10.0, "cache_write_5m": 12.50, "cache_write_1h": 20.0, "cache_read": 1.00, "output": 50.0 },
     "claude-mythos-5":  { "input": 10.0, "cache_write_5m": 12.50, "cache_write_1h": 20.0, "cache_read": 1.00, "output": 50.0 },
+    "claude-opus-5":    { "input": 5.0,  "cache_write_5m": 6.25,  "cache_write_1h": 10.0, "cache_read": 0.50, "output": 25.0 },
     "claude-opus-4-8":  { "input": 5.0,  "cache_write_5m": 6.25,  "cache_write_1h": 10.0, "cache_read": 0.50, "output": 25.0 },
     "claude-opus-4-7":  { "input": 5.0,  "cache_write_5m": 6.25,  "cache_write_1h": 10.0, "cache_read": 0.50, "output": 25.0 },
     "claude-opus-4-6":  { "input": 5.0,  "cache_write_5m": 6.25,  "cache_write_1h": 10.0, "cache_read": 0.50, "output": 25.0 },
     "claude-opus-4-5":  { "input": 5.0,  "cache_write_5m": 6.25,  "cache_write_1h": 10.0, "cache_read": 0.50, "output": 25.0 },
     "claude-opus-4-1":  { "input": 15.0, "cache_write_5m": 18.75, "cache_write_1h": 30.0, "cache_read": 1.50, "output": 75.0 },
     "claude-opus-4-0":  { "input": 15.0, "cache_write_5m": 18.75, "cache_write_1h": 30.0, "cache_read": 1.50, "output": 75.0 },
+    "claude-sonnet-5":  { "input": 3.0,  "cache_write_5m": 3.75,  "cache_write_1h": 6.0,  "cache_read": 0.30, "output": 15.0 },
     "claude-sonnet-4-6":{ "input": 3.0,  "cache_write_5m": 3.75,  "cache_write_1h": 6.0,  "cache_read": 0.30, "output": 15.0 },
     "claude-sonnet-4-5":{ "input": 3.0,  "cache_write_5m": 3.75,  "cache_write_1h": 6.0,  "cache_read": 0.30, "output": 15.0 },
     "claude-haiku-4-5": { "input": 1.0,  "cache_write_5m": 1.25,  "cache_write_1h": 2.0,  "cache_read": 0.10, "output": 5.0 },
