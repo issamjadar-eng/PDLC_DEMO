@@ -917,7 +917,7 @@ def main() -> int:
 
     cost_note = (
         ("Est. cost = measured tokens × list prices in tools/usage-metrics/pricing.json "
-         f"(updated {pricing.get('_updated','?')}). Indicative API-equivalent cost — "
+         f"(retrieved {pricing.get('_retrieved','?')}). Indicative API-equivalent cost — "
          "Claude Code subscription billing is a flat fee, not this. Verify rates against "
          "current Anthropic pricing.") if pricing else
         "Cost unavailable — tools/usage-metrics/pricing.json missing."
