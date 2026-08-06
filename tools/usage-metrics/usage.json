@@ -5514,6 +5514,46 @@
       "totals": {},
       "user_turns": null
     },
+    "ben/113": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 5.5,
+        "agentic_hours_range": {
+          "max": 5.5,
+          "min": 5.5
+        },
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 4
+        },
+        "hours_saved": {
+          "max": -5.5,
+          "min": -5.5
+        },
+        "inverted": true,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Competitive Threat Gap Analysis",
+        "todos": 4,
+        "updated": "2026-08-06"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
@@ -5612,7 +5652,7 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 519.1,
+    "agentic_hours": 524.6,
     "cost_allocated": 215.73,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 1817.45,
@@ -5627,8 +5667,8 @@
       "min": 1969.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
-    "tasks_inverted_excluded": 2,
+    "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 110
+    "tasks_with_estimate": 111
   }
 }
