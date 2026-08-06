@@ -2,30 +2,31 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (retrieved 2026-08-05). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 150.64,
-    "2026-06-16": 50.87,
-    "2026-06-22": 22.62,
-    "2026-06-23": 11.85,
+    "2026-06-15": 150.12,
+    "2026-06-16": 50.68,
+    "2026-06-22": 22.52,
+    "2026-06-23": 11.8,
     "2026-06-29": 1.32,
-    "2026-06-30": 229.35,
-    "2026-07-01": 234.26,
-    "2026-07-02": 28.45,
-    "2026-07-03": 10.38,
-    "2026-07-05": 3.4,
-    "2026-07-08": 1.47,
-    "2026-07-14": 40.54,
-    "2026-07-15": 255.58,
-    "2026-07-16": 55.38,
-    "2026-07-20": 18.57,
-    "2026-07-21": 110.59,
-    "2026-07-22": 257.87,
-    "2026-07-27": 436.35,
-    "2026-07-28": 180.08,
-    "2026-07-30": 7.52,
-    "2026-07-31": 10.29,
-    "2026-08-03": 6.91
+    "2026-06-30": 228.58,
+    "2026-07-01": 233.53,
+    "2026-07-02": 28.32,
+    "2026-07-03": 10.34,
+    "2026-07-05": 3.39,
+    "2026-07-08": 1.46,
+    "2026-07-09": 17.98,
+    "2026-07-14": 40.39,
+    "2026-07-15": 254.85,
+    "2026-07-16": 55.18,
+    "2026-07-20": 18.48,
+    "2026-07-21": 110.26,
+    "2026-07-22": 257.1,
+    "2026-07-27": 435.26,
+    "2026-07-28": 179.53,
+    "2026-07-30": 7.47,
+    "2026-07-31": 10.22,
+    "2026-08-03": 6.87
   },
-  "members": 1,
+  "members": 2,
   "months": {
     "2026-06": {
       "Member 1": {
@@ -304,6 +305,44 @@
           "input": 292759,
           "messages": 5054,
           "output": 5142415
+        },
+        "user_turns": null
+      },
+      "Member 2": {
+        "by_day": {
+          "2026-07-09": {
+            "cache_creation": 396031,
+            "cache_read": 11626009,
+            "cache_write_1h": 396031,
+            "cache_write_5m": 0,
+            "input": 26406,
+            "messages": 100,
+            "output": 56857
+          }
+        },
+        "by_model": {
+          "claude-opus-4-8": {
+            "cache_creation": 396031,
+            "cache_read": 11626009,
+            "cache_write_1h": 396031,
+            "cache_write_5m": 0,
+            "cost": 11.33,
+            "input": 26406,
+            "messages": 100,
+            "output": 56857
+          }
+        },
+        "cost": 11.33,
+        "name": "Member 2",
+        "sessions": 1,
+        "totals": {
+          "cache_creation": 396031,
+          "cache_read": 11626009,
+          "cache_write_1h": 396031,
+          "cache_write_5m": 0,
+          "input": 26406,
+          "messages": 100,
+          "output": 56857
         },
         "user_turns": null
       }
@@ -5649,6 +5688,32 @@
       "sessions": 0,
       "totals": {},
       "user_turns": null
+    },
+    "mykhailo/_unattributed": {
+      "by_model": {
+        "claude-opus-4-8": {
+          "cache_creation": 396031,
+          "cache_read": 11626009,
+          "cache_write_1h": 396031,
+          "cache_write_5m": 0,
+          "cost": 11.33,
+          "input": 26406,
+          "messages": 100,
+          "output": 56857
+        }
+      },
+      "cost": 11.33,
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 396031,
+        "cache_read": 11626009,
+        "cache_write_1h": 396031,
+        "cache_write_5m": 0,
+        "input": 26406,
+        "messages": 100,
+        "output": 56857
+      },
+      "user_turns": null
     }
   },
   "value_summary": {
@@ -5656,8 +5721,8 @@
     "cost_allocated": 215.73,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 1817.45,
-    "cost_unattributed_measured": 306.87,
-    "cost_unattributed_residual": 91.14,
+    "cost_unattributed_measured": 318.2,
+    "cost_unattributed_residual": 102.47,
     "hours_saved": {
       "max": 4095.1,
       "min": 1451.7
