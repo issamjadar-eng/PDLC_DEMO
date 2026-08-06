@@ -1,0 +1,93 @@
+{
+  "by_day": {
+    "2026-08-05": {
+      "cache_creation": 658096,
+      "cache_read": 27710194,
+      "cache_write_1h": 567013,
+      "cache_write_5m": 91083,
+      "input": 138,
+      "messages": 73,
+      "output": 50437
+    },
+    "2026-08-06": {
+      "cache_creation": 1165810,
+      "cache_read": 39879041,
+      "cache_write_1h": 1165810,
+      "cache_write_5m": 0,
+      "input": 136,
+      "messages": 73,
+      "output": 57933
+    }
+  },
+  "by_model": {
+    "claude-opus-5": {
+      "cache_creation": 1823906,
+      "cache_read": 67589235,
+      "cache_write_1h": 1732823,
+      "cache_write_5m": 91083,
+      "input": 274,
+      "messages": 146,
+      "output": 108370
+    }
+  },
+  "by_task": {
+    "111": {
+      "claude-opus-5": {
+        "cache_creation": 561846,
+        "cache_read": 29238261,
+        "cache_write_1h": 561846,
+        "cache_write_5m": 0,
+        "input": 112,
+        "messages": 60,
+        "output": 39760
+      }
+    },
+    "112": {
+      "claude-opus-5": {
+        "cache_creation": 653992,
+        "cache_read": 33076547,
+        "cache_write_1h": 653992,
+        "cache_write_5m": 0,
+        "input": 110,
+        "messages": 59,
+        "output": 46808
+      }
+    },
+    "_unattributed": {
+      "claude-opus-5": {
+        "cache_creation": 608068,
+        "cache_read": 5274427,
+        "cache_write_1h": 516985,
+        "cache_write_5m": 91083,
+        "input": 52,
+        "messages": 27,
+        "output": 21802
+      }
+    }
+  },
+  "month": "2026-08",
+  "session_id": "ccbcd1a9-9030-4f19-a3ff-d5f8c2a3b8ac",
+  "source": "transcript",
+  "task_folder": "ben",
+  "totals": {
+    "cache_creation": 1823906,
+    "cache_read": 67589235,
+    "cache_write_1h": 1732823,
+    "cache_write_5m": 91083,
+    "input": 274,
+    "messages": 146,
+    "output": 108370
+  },
+  "user_turns": {
+    "by_day": {
+      "2026-08-05": 9,
+      "2026-08-06": 7
+    },
+    "by_task": {
+      "111": 7,
+      "112": 2,
+      "_unattributed": 7
+    },
+    "total": 16
+  }
+}

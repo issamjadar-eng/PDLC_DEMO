@@ -46,5 +46,14 @@
     "input": 18989,
     "messages": 6,
     "output": 1107
+  },
+  "user_turns": {
+    "by_day": {
+      "2026-07-08": 2
+    },
+    "by_task": {
+      "_unattributed": 2
+    },
+    "total": 2
   }
 }
