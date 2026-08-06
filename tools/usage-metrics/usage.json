@@ -118,7 +118,8 @@
           "input": 306586,
           "messages": 1148,
           "output": 1332466
-        }
+        },
+        "user_turns": null
       }
     },
     "2026-07": {
@@ -303,7 +304,8 @@
           "input": 292759,
           "messages": 5054,
           "output": 5142415
-        }
+        },
+        "user_turns": null
       }
     },
     "2026-08": {
@@ -342,7 +344,8 @@
           "input": 34,
           "messages": 17,
           "output": 14155
-        }
+        },
+        "user_turns": null
       }
     }
   },
@@ -540,7 +543,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/002": {
       "by_model": {},
@@ -579,7 +583,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/003": {
       "by_model": {},
@@ -618,7 +623,8 @@
         "updated": "2026-04-13"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/004": {
       "by_model": {},
@@ -657,7 +663,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/005": {
       "by_model": {},
@@ -696,7 +703,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/006": {
       "by_model": {},
@@ -740,7 +748,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/007": {
       "by_model": {},
@@ -784,7 +793,8 @@
         "updated": "2026-04-13"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/008": {
       "by_model": {},
@@ -823,7 +833,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/009": {
       "by_model": {},
@@ -867,7 +878,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/010": {
       "by_model": {},
@@ -911,7 +923,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/011": {
       "by_model": {},
@@ -955,7 +968,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/012": {
       "by_model": {},
@@ -994,7 +1008,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/013": {
       "by_model": {},
@@ -1038,7 +1053,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/014": {
       "by_model": {},
@@ -1077,7 +1093,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/015": {
       "by_model": {},
@@ -1116,7 +1133,8 @@
         "updated": "2026-05-01"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/016": {
       "by_model": {},
@@ -1160,7 +1178,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/017": {
       "by_model": {},
@@ -1199,7 +1218,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/018": {
       "by_model": {},
@@ -1238,7 +1258,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/019": {
       "by_model": {},
@@ -1277,7 +1298,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/020": {
       "by_model": {},
@@ -1316,7 +1338,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/021": {
       "by_model": {},
@@ -1355,7 +1378,8 @@
         "updated": "2026-04-20"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/022": {
       "by_model": {},
@@ -1404,7 +1428,8 @@
         "updated": "2026-04-21"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/023": {
       "by_model": {},
@@ -1443,7 +1468,8 @@
         "updated": "2026-04-21"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/024": {
       "by_model": {},
@@ -1482,7 +1508,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/025": {
       "by_model": {},
@@ -1526,7 +1553,8 @@
         "updated": "2026-04-21"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/026": {
       "by_model": {},
@@ -1565,7 +1593,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/027": {
       "by_model": {},
@@ -1604,7 +1633,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/028": {
       "by_model": {},
@@ -1643,7 +1673,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/029": {
       "by_model": {},
@@ -1682,7 +1713,8 @@
         "updated": "2026-04-28"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/030": {
       "by_model": {},
@@ -1721,7 +1753,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/031": {
       "by_model": {},
@@ -1760,7 +1793,8 @@
         "updated": "2026-04-27"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/032": {
       "by_model": {},
@@ -1804,7 +1838,8 @@
         "updated": "2026-04-27"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/033": {
       "by_model": {},
@@ -1843,7 +1878,8 @@
         "updated": "2026-04-27"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/034": {
       "by_model": {},
@@ -1887,7 +1923,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/035": {
       "by_model": {},
@@ -1926,7 +1963,8 @@
         "updated": "2026-05-05"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/036": {
       "by_model": {},
@@ -1970,7 +2008,8 @@
         "updated": "2026-04-27"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/037": {
       "by_model": {},
@@ -2009,7 +2048,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/038": {
       "by_model": {},
@@ -2048,7 +2088,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/039": {
       "by_model": {},
@@ -2087,7 +2128,8 @@
         "updated": "2026-05-02"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/040": {
       "by_model": {},
@@ -2126,7 +2168,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/041": {
       "by_model": {},
@@ -2170,7 +2213,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/042": {
       "by_model": {},
@@ -2209,7 +2253,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/043": {
       "by_model": {},
@@ -2248,7 +2293,8 @@
         "updated": "2026-05-05"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/044": {
       "by_model": {},
@@ -2287,7 +2333,8 @@
         "updated": "2026-05-11"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/045": {
       "by_model": {},
@@ -2326,7 +2373,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/046": {
       "by_model": {},
@@ -2370,7 +2418,8 @@
         "updated": "2026-05-06"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/047": {
       "by_model": {},
@@ -2409,7 +2458,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/048": {
       "by_model": {},
@@ -2448,7 +2498,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/049": {
       "by_model": {},
@@ -2492,7 +2543,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/050": {
       "by_model": {},
@@ -2531,7 +2583,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/051": {
       "by_model": {},
@@ -2570,7 +2623,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/052": {
       "by_model": {},
@@ -2609,7 +2663,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/053": {
       "by_model": {},
@@ -2653,7 +2708,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/054": {
       "by_model": {},
@@ -2697,7 +2753,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/055": {
       "by_model": {},
@@ -2741,7 +2798,8 @@
         "updated": "2026-05-13"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/056": {
       "by_model": {},
@@ -2785,7 +2843,8 @@
         "updated": "2026-05-13"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/057": {
       "by_model": {},
@@ -2824,7 +2883,8 @@
         "updated": "2026-05-13"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/058": {
       "by_model": {},
@@ -2863,7 +2923,8 @@
         "updated": "2026-05-16"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/059": {
       "by_model": {},
@@ -2902,7 +2963,8 @@
         "updated": "2026-05-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/060": {
       "by_model": {},
@@ -2941,7 +3003,8 @@
         "updated": "2026-05-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/061": {
       "by_model": {},
@@ -2980,7 +3043,8 @@
         "updated": "2026-05-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/062": {
       "by_model": {},
@@ -3019,7 +3083,8 @@
         "updated": "2026-05-16"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/063": {
       "by_model": {},
@@ -3058,7 +3123,8 @@
         "updated": "2026-05-16"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/064": {
       "by_model": {},
@@ -3097,7 +3163,8 @@
         "updated": "2026-05-16"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/065": {
       "by_model": {},
@@ -3136,7 +3203,8 @@
         "updated": "2026-05-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/066": {
       "by_model": {},
@@ -3175,7 +3243,8 @@
         "updated": "2026-05-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/067": {
       "by_model": {},
@@ -3214,7 +3283,8 @@
         "updated": "2026-05-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/068": {
       "by_model": {},
@@ -3258,7 +3328,8 @@
         "updated": "2026-05-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/069": {
       "by_model": {},
@@ -3302,7 +3373,8 @@
         "updated": "2026-05-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/070": {
       "by_model": {},
@@ -3341,7 +3413,8 @@
         "updated": "2026-05-31"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/071": {
       "by_model": {},
@@ -3385,7 +3458,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/072": {
       "by_model": {},
@@ -3424,7 +3498,8 @@
         "updated": "2026-06-01"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/073": {
       "by_model": {},
@@ -3463,7 +3538,8 @@
         "updated": "2026-06-02"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/074": {
       "by_model": {},
@@ -3502,7 +3578,8 @@
         "updated": "2026-06-01"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/075": {
       "by_model": {},
@@ -3546,7 +3623,8 @@
         "updated": "2026-06-02"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/076": {
       "by_model": {},
@@ -3595,7 +3673,8 @@
         "updated": "2026-06-02"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/077": {
       "by_model": {},
@@ -3634,7 +3713,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/078": {
       "by_model": {},
@@ -3673,7 +3753,8 @@
         "updated": "2026-06-02"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/079": {
       "by_model": {},
@@ -3712,7 +3793,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/080": {
       "by_model": {},
@@ -3761,7 +3843,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/081": {
       "by_model": {},
@@ -3800,7 +3883,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/084": {
       "by_model": {},
@@ -3839,7 +3923,8 @@
         "updated": "2026-06-08"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/085": {
       "by_model": {},
@@ -3878,7 +3963,8 @@
         "updated": "2026-06-11"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/086": {
       "by_model": {},
@@ -3917,7 +4003,8 @@
         "updated": "2026-06-12"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/087": {
       "by_model": {},
@@ -3958,7 +4045,8 @@
         "updated": "2026-06-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/088": {
       "by_model": {},
@@ -4004,7 +4092,8 @@
         "updated": "2026-06-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/089": {
       "by_model": {},
@@ -4050,7 +4139,8 @@
         "updated": "2026-06-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/090": {
       "by_model": {},
@@ -4096,7 +4186,8 @@
         "updated": "2026-06-15"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/091": {
       "by_model": {},
@@ -4137,7 +4228,8 @@
         "updated": "2026-06-22"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/092": {
       "by_model": {},
@@ -4178,7 +4270,8 @@
         "updated": "2026-06-22"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/093": {
       "by_model": {},
@@ -4219,7 +4312,8 @@
         "updated": "2026-07-03"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/094": {
       "by_model": {},
@@ -4260,7 +4354,8 @@
         "updated": "2026-06-29"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/095": {
       "by_model": {},
@@ -4306,7 +4401,8 @@
         "updated": "2026-06-30"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/096": {
       "by_model": {
@@ -4376,7 +4472,8 @@
         "input": 147398,
         "messages": 375,
         "output": 460172
-      }
+      },
+      "user_turns": null
     },
     "ben/097": {
       "by_model": {
@@ -4434,7 +4531,8 @@
         "input": 2279,
         "messages": 59,
         "output": 91650
-      }
+      },
+      "user_turns": null
     },
     "ben/098": {
       "by_model": {
@@ -4502,7 +4600,8 @@
         "input": 63407,
         "messages": 216,
         "output": 251158
-      }
+      },
+      "user_turns": null
     },
     "ben/099": {
       "by_model": {
@@ -4560,7 +4659,8 @@
         "input": 15003,
         "messages": 67,
         "output": 92775
-      }
+      },
+      "user_turns": null
     },
     "ben/100": {
       "by_model": {
@@ -4618,7 +4718,8 @@
         "input": 147,
         "messages": 9,
         "output": 10694
-      }
+      },
+      "user_turns": null
     },
     "ben/101": {
       "by_model": {
@@ -4676,7 +4777,8 @@
         "input": 66,
         "messages": 33,
         "output": 15824
-      }
+      },
+      "user_turns": null
     },
     "ben/102": {
       "by_model": {
@@ -4760,7 +4862,8 @@
         "input": 138,
         "messages": 69,
         "output": 109463
-      }
+      },
+      "user_turns": null
     },
     "ben/103": {
       "by_model": {
@@ -4824,7 +4927,8 @@
         "input": 234,
         "messages": 117,
         "output": 120500
-      }
+      },
+      "user_turns": null
     },
     "ben/104": {
       "by_model": {
@@ -4905,7 +5009,8 @@
         "input": 1366,
         "messages": 683,
         "output": 545746
-      }
+      },
+      "user_turns": null
     },
     "ben/105": {
       "by_model": {
@@ -4986,7 +5091,8 @@
         "input": 274,
         "messages": 137,
         "output": 140243
-      }
+      },
+      "user_turns": null
     },
     "ben/106": {
       "by_model": {
@@ -5052,7 +5158,8 @@
         "input": 906,
         "messages": 453,
         "output": 358542
-      }
+      },
+      "user_turns": null
     },
     "ben/107": {
       "by_model": {
@@ -5118,7 +5225,8 @@
         "input": 124,
         "messages": 62,
         "output": 57827
-      }
+      },
+      "user_turns": null
     },
     "ben/108": {
       "by_model": {
@@ -5210,7 +5318,8 @@
         "input": 4781,
         "messages": 2393,
         "output": 2717668
-      }
+      },
+      "user_turns": null
     },
     "ben/109": {
       "by_model": {
@@ -5276,7 +5385,8 @@
         "input": 100,
         "messages": 50,
         "output": 33838
-      }
+      },
+      "user_turns": null
     },
     "ben/110": {
       "by_model": {
@@ -5361,7 +5471,8 @@
         "input": 414,
         "messages": 207,
         "output": 216065
-      }
+      },
+      "user_turns": null
     },
     "ben/111": {
       "by_model": {},
@@ -5400,7 +5511,8 @@
         "updated": "2026-08-31"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     },
     "ben/_unattributed": {
       "by_model": {
@@ -5455,7 +5567,8 @@
         "input": 362742,
         "messages": 1289,
         "output": 1266871
-      }
+      },
+      "user_turns": null
     },
     "dmytro/001": {
       "by_model": {},
@@ -5494,7 +5607,8 @@
         "updated": "2026-06-07"
       },
       "sessions": 0,
-      "totals": {}
+      "totals": {},
+      "user_turns": null
     }
   },
   "value_summary": {
