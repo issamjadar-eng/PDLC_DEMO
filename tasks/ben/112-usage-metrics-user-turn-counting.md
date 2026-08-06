@@ -39,7 +39,7 @@ _Make **user turns** a first-class usage metric alongside token cost, so the pro
 - [x] Re-collect + re-aggregate to backfill history
 - [x] Distinguish "not measured" (`null`) from "measured zero" — see Findings
 - [x] Record the resulting data in this doc
-- [ ] Push to PDLC_DEMO, then upstream to the hitachi registry
+- [x] Push to PDLC_DEMO (PR #173, merge `f286093`), then upstream to the hitachi registry (PR #297, awaiting review)
 
 ## Strategy
 
@@ -153,3 +153,4 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 - 2026-08-05: Implemented. `collect.py` gained `_gather_user_turns()` (main-transcript-only, `tool_result` excluded) and emits a per-month `user_turns` block with `total`/`by_day`/`by_task`, attributed through the same activation timeline as tokens. `aggregate.py` rolls it up into month/member and per-task slots and publishes it in `usage.json`. Verified against a hand-audit of this session (13 manual vs 14 collected after one further turn) and confirmed correct task slicing (0 turns attributed to 112, which had not yet been activated).
 - 2026-08-05: Caught and fixed a semantic defect before it shipped — the first implementation emitted `0` turns for sessions whose transcripts have been rotated away, indistinguishable from a genuine zero and corrupting any per-turn ratio. Added `_turns_seen` tracking so unmeasured slots emit `null`. 2026-06 (8 session files, $286.97) now correctly reports `null` rather than `0`.
 - 2026-08-05: Measured result across the 273 turns with data — ~$7.03 model spend and ~20.5 assistant messages per human turn, with per-task msgs/turn ranging 8.6–30.2. Coverage is complete from 2026-07 onward and permanently partial before (5 tasks, $239.92, unrecoverable).
+- 2026-08-05: Landed in PDLC_DEMO via PR #173 (merge `f286093`) — scripts + task docs only; `usage.json` / `index.html` excluded as CI-authored. Pushed upstream as hitachi PR #297. **Flagged an overlap**: #297 was branched from `origin/main` while ben/111's PR #296 was still open, so #297's `aggregate.py` diff also carries #296's `_retrieved` fix. Both are individually mergeable but must be sequenced — #296 uniquely carries the `templates/pricing.json` seed refresh and must not be dropped. Recorded in `.claude/sync-log.md` and in both PR bodies.
