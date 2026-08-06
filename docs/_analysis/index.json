@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "analyses": [
     {
       "id": "commercial-roadmap-kol-review",
@@ -33,7 +33,41 @@
           "confirmed": 1,
           "partial": 1
         },
-        "finding_count": 21
+        "finding_count": 21,
+        "finding_status_counts": {
+          "open": 21
+        }
+      }
+    },
+    {
+      "id": "competitive-threat-assessment",
+      "title": "Competitive Threat Assessment — PP3500 / Infusion Portfolio",
+      "status": "draft",
+      "topic": "competitive",
+      "component": "pca-device",
+      "last_updated": "2026-08-06",
+      "source_md": "docs/_analysis/pca-device/competitive-threat-assessment/competitive-threat-assessment.md",
+      "sidecar": "docs/_analysis/pca-device/competitive-threat-assessment/competitive-threat-assessment.gap.json",
+      "agents": [
+        "commercial",
+        "regulatory-affairs",
+        "clinical-affairs",
+        "risk-management",
+        "cybersecurity"
+      ],
+      "stats": {
+        "grounding_count": 10,
+        "agent_count": 5,
+        "assertion_count": 22,
+        "assertion_status_counts": {
+          "refuted": 19,
+          "confirmed": 2,
+          "partial": 1
+        },
+        "finding_count": 22,
+        "finding_status_counts": {
+          "open": 22
+        }
       }
     },
     {
@@ -59,21 +93,25 @@
           "partial": 3,
           "refuted": 2
         },
-        "finding_count": 14
+        "finding_count": 14,
+        "finding_status_counts": {
+          "open": 14
+        }
       }
     }
   ],
   "counts": {
-    "total": 2,
+    "total": 3,
     "by_status": {
-      "draft": 2
+      "draft": 3
     },
     "by_topic": {
       "clinical": 1,
+      "competitive": 1,
       "cybersecurity": 1
     },
     "by_component": {
-      "pca-device": 2
+      "pca-device": 3
     }
   }
 }
