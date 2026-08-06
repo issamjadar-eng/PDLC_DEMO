@@ -39,6 +39,7 @@ _Make **user turns** a first-class usage metric alongside token cost, so the pro
 - [x] Re-collect + re-aggregate to backfill history
 - [x] Distinguish "not measured" (`null`) from "measured zero" — see Findings
 - [x] Record the resulting data in this doc
+- [x] Render unmeasured slots as `--` in the markdown month files and the HTML dashboard
 - [x] Push to PDLC_DEMO (PR #173, merge `f286093`), then upstream to the hitachi registry (PR #297, awaiting review)
 
 ## Strategy
@@ -75,7 +76,7 @@ Per month (`null` = not measured, see the coverage limit below):
 
 | month | user turns | assistant msgs | cost |
 |---|---:|---:|---:|
-| 2026-06 | `null` | 1,148 | $286.97 |
+| 2026-06 | `--` (not measured) | 1,148 | $286.97 |
 | 2026-07 | 251 | 5,054 | $1,828.51 |
 | 2026-08 | 22 | 134 | $44.25 |
 
@@ -110,6 +111,19 @@ The goal said "backfill across all existing transcripts." That was met for every
 **This is why `null` matters.** The first implementation emitted `0` for unmeasured slots, which is indistinguishable from a genuine zero and would have silently corrupted every downstream ratio — a June task would have shown `$286.97 / 0 turns`, either dividing by zero or, worse, being averaged in as "cost with no human involvement." The rollup now tracks whether *any* contributing session file carried the field and emits `null` when none did. Consumers must treat `null` as "not measured," never as zero.
 
 **Practical consequence:** turn data is complete from 2026-07 onward and permanently partial before it. Any turn-based analysis should scope to measured months rather than the full program history — the `$7.03/turn` figure above is over the measured subset ($1,918.06 of $2,159.73 total), not the whole program.
+
+### Display convention — `--`, not `0`, not `null`
+
+Unmeasured turn slots render as **`--`** wherever a human reads them: the per-month markdown files, the HTML dashboard table, and the dashboard's summary card. The JSON keeps `null`.
+
+**Why the split.** Writing the literal string `"--"` into `usage.json` would make `user_turns` sometimes-int / sometimes-string, so every consumer would have to type-sniff before arithmetic — and one that forgot would get a silent string-concat or a `TypeError` instead of a clean null check. `null` is the machine contract; `--` is the human rendering. The console (`project-console`) reads the JSON as a pure consumer and applies its own rendering, so it inherits the same distinction for free.
+
+Two null-collapse traps were caught while wiring this up, both of which would have re-introduced the exact bug the `null` design exists to prevent:
+
+1. **`render_markdown` reads the raw slots**, which carry `user_turns: 0` plus `_turns_seen: False` — not the nulled JSON view. Reading the int directly printed `0` for 2026-06. Fixed by mirroring the `_turns_seen` rule in the renderer.
+2. **JS `null + 0` is `0`.** The dashboard's generic totals loop (`for(const k in tot) tot[k] += r[k]||0`) silently converted "not measured" into a measured zero the moment any row lacked turn data. `user_turns` is now excluded from that loop and accumulated null-aware.
+
+The dashboard also names the uncovered months in its footnote, so a merged "all months" view cannot read as an all-time turn total when it is really the measured subset.
 
 ## Open Questions
 
@@ -154,3 +168,4 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 - 2026-08-05: Caught and fixed a semantic defect before it shipped — the first implementation emitted `0` turns for sessions whose transcripts have been rotated away, indistinguishable from a genuine zero and corrupting any per-turn ratio. Added `_turns_seen` tracking so unmeasured slots emit `null`. 2026-06 (8 session files, $286.97) now correctly reports `null` rather than `0`.
 - 2026-08-05: Measured result across the 273 turns with data — ~$7.03 model spend and ~20.5 assistant messages per human turn, with per-task msgs/turn ranging 8.6–30.2. Coverage is complete from 2026-07 onward and permanently partial before (5 tasks, $239.92, unrecoverable).
 - 2026-08-05: Landed in PDLC_DEMO via PR #173 (merge `f286093`) — scripts + task docs only; `usage.json` / `index.html` excluded as CI-authored. Pushed upstream as hitachi PR #297. **Flagged an overlap**: #297 was branched from `origin/main` while ben/111's PR #296 was still open, so #297's `aggregate.py` diff also carries #296's `_retrieved` fix. Both are individually mergeable but must be sequenced — #296 uniquely carries the `templates/pricing.json` seed refresh and must not be dropped. Recorded in `.claude/sync-log.md` and in both PR bodies.
+- 2026-08-05: Added the `--` display convention for unmeasured turn slots across the markdown month files, the HTML dashboard table, and the summary card, keeping `null` in `usage.json` as the machine contract. Caught two null-collapse traps in the process: `render_markdown` was reading raw slots (printing `0` for 2026-06) and the dashboard's generic totals loop relied on JS `null + 0 === 0`. Both fixed; verified `null`/`undefined` → `--` while a genuine `0` still renders `0`. Dashboard footnote now names uncovered months so a merged view can't read as an all-time total.
