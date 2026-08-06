@@ -180,12 +180,20 @@ def collect_records(project_root: Path, month_filter: str | None):
             "by_model": _dd(lambda: _dd(int)),
             "by_day": _dd(lambda: _dd(int)),
             "sessions": 0,
+            # Measured human-effort signal. Session files written before the
+            # collector emitted it carry no field, and their transcripts may have
+            # been rotated away — so "not measured" must stay distinguishable from
+            # "measured zero" (see _turns_seen). A silent 0 would corrupt any
+            # per-turn ratio computed downstream.
+            "user_turns": 0,
+            "_turns_seen": False,
         }
 
     data: dict = defaultdict(lambda: defaultdict(_slot))
 
     def _task_slot():
-        return {"by_model": _dd(lambda: _dd(int)), "totals": _dd(int), "sessions": 0}
+        return {"by_model": _dd(lambda: _dd(int)), "totals": _dd(int), "sessions": 0,
+                "user_turns": 0, "_turns_seen": False}
 
     # Per-task rollup across all months/sessions (the value dimension). Keyed by
     # "<task_folder>/<task_id>" so it can later join to per-task economics
@@ -218,10 +226,22 @@ def collect_records(project_root: Path, month_filter: str | None):
                     _merge(slot["by_model"][model], ms)
                 for day, ds in (rec.get("by_day") or {}).items():
                     _merge(slot["by_day"][day], ds)
+                # user_turns is model-less by design (a human turn has no model),
+                # so it rolls up as a scalar beside the token buckets, not inside
+                # by_model. `or {}` keeps pre-schema session files working.
+                turns = rec.get("user_turns") or {}
+                turns_present = "user_turns" in rec
+                if turns_present:
+                    slot["_turns_seen"] = True
+                slot["user_turns"] += int(turns.get("total") or 0)
+                turns_by_task = turns.get("by_task") or {}
                 # Per-task: by_task = {task_id: {model: stats}} (incl. "_unattributed").
                 for task_id, tmap in (rec.get("by_task") or {}).items():
                     tslot = task_data[f"{task_folder}/{task_id}"]
                     tslot["sessions"] += 1
+                    if turns_present:
+                        tslot["_turns_seen"] = True
+                    tslot["user_turns"] += int(turns_by_task.get(task_id) or 0)
                     for model, ms in (tmap or {}).items():
                         _merge(tslot["by_model"][model], ms)
                         _merge(tslot["totals"], ms)
@@ -848,7 +868,8 @@ def allocate_unattributed(project_root: Path, pricing, tasks_out: dict, max_per_
     for ref, amt in allocated.items():
         slot = tasks_out.get(ref)
         if slot is None:
-            slot = tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0, "cost": 0.0}
+            slot = tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0,
+                                     "cost": 0.0, "user_turns": None}
         slot["cost_allocated"] = round(amt, 2)
         slot["cost_basis"] = "measured+allocated" if slot.get("cost", 0) > 0 else "allocated"
     return round(allocated_total, 2), round(residual_total, 2), skipped_days
@@ -910,6 +931,8 @@ def main() -> int:
                 "by_day": {d: dict(ds) for d, ds in sorted(slot["by_day"].items())},
                 "name": anon[tf],
                 "cost": cost_of(slot["by_model"], pricing),
+                "user_turns": (slot.get("user_turns", 0)
+                               if slot.get("_turns_seen") else None),
             }
             for tf, slot in data[month].items()
         }
@@ -944,6 +967,8 @@ def main() -> int:
             "totals": dict(slot["totals"]),
             "sessions": slot["sessions"],
             "cost": cost_of(slot["by_model"], pricing),
+            "user_turns": (slot.get("user_turns", 0)
+                           if slot.get("_turns_seen") else None),
         }
         for ref, slot in sorted(task_data.items())
     }
@@ -958,7 +983,7 @@ def main() -> int:
             tasks_out[ref]["estimate"] = est
         else:
             tasks_out[ref] = {"by_model": {}, "totals": {}, "sessions": 0,
-                              "cost": 0.0, "estimate": est}
+                              "cost": 0.0, "user_turns": None, "estimate": est}
 
     # Retrospective cost allocation: de-unattribute pre-ledger measured spend by
     # splitting each day's `_unattributed` cost across the tasks active that day.

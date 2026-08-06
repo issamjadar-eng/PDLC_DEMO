@@ -80,6 +80,19 @@ _Bring the usage-metrics rate card current with the Anthropic list prices as of 
 
 Note `claude-opus-5[1m]` — the 1M-context variant id carries a bracketed suffix, so it never matches an exact `models[]` key and always resolves through the family fallback. It prices correctly, but this is the concrete case that motivates keeping the fallback robust rather than treating explicit entries as sufficient.
 
+**Post-merge follow-up — the Opus 5 entry became load-bearing the same day.** After the refresh landed, a `collect` run picked up `claude-opus-5` in the transcripts for the first time (this session runs on it). The explicit `models["claude-opus-5"]` entry added by this task is now resolving as an **exact match** rather than through the substring family fallback — so the change moved from defensive to active within hours of merging. Measured per-model totals across all months at that point:
+
+| model | cost | input | output | cache read | msgs |
+|---|---:|---:|---:|---:|---:|
+| `claude-fable-5` | $1,660.83 | 8,771 | 4,411,183 | 1,080,175,485 | 4,388 |
+| `claude-opus-4-8` | $461.53 | 589,961 | 2,060,886 | 633,068,765 | 1,796 |
+| **`claude-opus-5`** | **$26.64** | 141 | 51,907 | 28,247,628 | 75 |
+| `claude-sonnet-4-6` | $1.60 | 6 | 795 | 0 | 2 |
+| `claude-haiku-4-5-20251001` | $0.35 | 641 | 16,172 | 1,069,352 | 33 |
+| **total** | **$2,150.95** | | | | |
+
+Worth noting for anyone reading the cost figures: **cache reads dominate the spend profile.** 1.08B cache-read tokens on `claude-fable-5` at 0.1× input is where that $1,660 actually comes from — not output. Any future cost-reduction effort should target context size and cache behaviour, not output verbosity. This is exactly the kind of read the rate card exists to enable, and it depends on the 5m/1h cache-write split `collect.py` preserves.
+
 **Unrelated movement observed and attributed.** A first re-aggregate (before the controlled comparison) did move two figures: `value_summary.cost_allocated` 215.73 → 224.56 and `cost_unattributed_residual` 91.14 → 82.31, summing constant at 306.87. Cause is **not** pricing — it is the retrospective allocator (`allocate_unattributed()`) re-splitting unattributed spend now that the session-start `git pull` brought in a new 2026-08 session record with additional day-overlap. Isolated and confirmed by the hold-data-constant run above.
 
 ## Open Questions
@@ -150,3 +163,4 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 - 2026-08-05: Verified rate-neutrality — 0 of 146 cost data points changed with data held constant across old vs new card (see Verification). Confirmed the two figures that did move on a naive re-aggregate are the retrospective allocator responding to newly pulled session data, not the rates.
 - 2026-08-05: Landed in PDLC_DEMO via PR #171 (merge `79c58cf`), branch deleted. Committed 5 source files only; `usage.json` / `index.html` deliberately excluded as CI-authored. Aggregate workflow run `31051473259` fired on the merge path trigger and completed green in 15s, regenerating the dashboard on `main` with the refreshed card.
 - 2026-08-05: Pushed the `aggregate.py` provenance fix + refreshed seed rate card upstream — hitachi PR #296, PR-only (awaiting review). Seed inclusion was a deliberate scope extension beyond the original bug fix, approved by user: a fresh `usage-metrics` install in any project was seeding a 2026-06-22 card with no Opus 5 / Sonnet 5 entries. Recorded in `.claude/sync-log.md`. Leaves a local `sync/*` branch in the hitachi checkout pending `/sync-skills prune` post-merge.
+- 2026-08-05: Close-out records merged via PR #172 (`6af9074`). Post-merge, a `collect` run surfaced `claude-opus-5` in the transcripts for the first time — the explicit entry added by this task is now an exact `models[]` match rather than a fallback resolution, and prices $26.64 of Opus 5 usage. Per-model totals recorded in Verification; headline observation is that cache reads (1.08B tokens on Fable 5) dominate the cost profile, not output.
