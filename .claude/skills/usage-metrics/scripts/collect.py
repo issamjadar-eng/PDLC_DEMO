@@ -259,6 +259,59 @@ def _gather_records(jsonl_path: Path, records: dict) -> None:
             }
 
 
+def _gather_user_turns(jsonl_path: Path) -> list:
+    """Return the timestamps of genuine user turns in ONE transcript.
+
+    A "user turn" is a human typing — the unit the `messages` counter cannot
+    express. `messages` only increments on rows carrying `message.usage`, which
+    user messages never have, so it counts ASSISTANT API responses: every tool
+    call, every subagent reply, every intermediate step. Measured inflation over
+    real sessions is 2.4x-9.8x and varies with how tool-heavy the work was, so a
+    turn count cannot be derived by rescaling it — it has to be counted directly.
+
+    Detection: a row is a user turn when it is user-role AND its content is a
+    plain string, or a block list carrying a `text` block and NO `tool_result`
+    block. The tool_result exclusion is the load-bearing part — the harness
+    returns every tool result as a user-role message, and those outnumber real
+    turns several-fold.
+
+    CALL THIS ON THE MAIN TRANSCRIPT ONLY. Subagent transcripts also contain
+    user-role rows, but those are the harness feeding a subagent its prompt, not
+    a human. Counting them would inflate turns by exactly the amount of
+    delegation used — the opposite of what the metric is for."""
+    turns: list[str] = []
+    try:
+        fh = jsonl_path.open(encoding="utf-8")
+    except OSError:
+        return turns
+    with fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            msg = row.get("message") or {}
+            if row.get("type") != "user" and msg.get("role") != "user":
+                continue
+            content = msg.get("content")
+            if isinstance(content, str):
+                if not content.strip():
+                    continue
+            elif isinstance(content, list):
+                blocks = [b for b in content if isinstance(b, dict)]
+                if any(b.get("type") == "tool_result" for b in blocks):
+                    continue  # harness feeding a tool result back, not a human
+                if not any(b.get("type") == "text" for b in blocks):
+                    continue
+            else:
+                continue
+            turns.append(row.get("timestamp") or "")
+    return turns
+
+
 def parse_session(jsonl_path: Path, tdir: Path, session_id: str, task_at):
     """Parse a session's MAIN transcript PLUS any subagent transcripts under
     `<tdir>/<session_id>/` (e.g. `subagents/agent-*.jsonl`, recursive so nested
@@ -278,6 +331,12 @@ def parse_session(jsonl_path: Path, tdir: Path, session_id: str, task_at):
         "by_model": defaultdict(_zero),
         "by_day": defaultdict(_zero),
         "by_task": defaultdict(lambda: defaultdict(_zero)),
+        # Turns are deliberately NOT inside the _zero() buckets above: those are
+        # keyed by model in by_model/by_task, and a user turn has no model (the
+        # human types before any model is selected, and one turn can span several
+        # via subagents). Emitting it there would publish an always-zero or
+        # arbitrarily-attributed field that looks like data.
+        "user_turns": {"total": 0, "by_day": defaultdict(int), "by_task": defaultdict(int)},
     })
     for rec in records.values():
         ts, model, usage = rec["ts"], rec["model"], rec["usage"]
@@ -288,6 +347,18 @@ def parse_session(jsonl_path: Path, tdir: Path, session_id: str, task_at):
         _add(m["by_model"][model], usage)
         _add(m["by_day"][day], usage)
         _add(m["by_task"][task][model], usage)
+
+    # Main transcript only — see _gather_user_turns docstring for why subagents
+    # are excluded. Attributed through the same activation timeline as tokens, so
+    # a session spanning several tasks splits its turns the same way it splits cost.
+    for ts in _gather_user_turns(jsonl_path):
+        month = ts[:7] if len(ts) >= 7 else "unknown"
+        day = ts[:10] if len(ts) >= 10 else "unknown"
+        task = task_at(ts) or "_unattributed"
+        ut = months[month]["user_turns"]
+        ut["total"] += 1
+        ut["by_day"][day] += 1
+        ut["by_task"][task] += 1
     return months
 
 
@@ -344,6 +415,7 @@ def main() -> int:
 
     written = 0
     grand = {"input": 0, "output": 0, "cache_creation": 0, "cache_read": 0, "messages": 0}
+    grand_turns = 0
     for jf in transcripts:
         session_id = jf.stem
         task_at = load_activation_timeline(per_user_dir, session_id)
@@ -352,11 +424,13 @@ def main() -> int:
             model_map = mdata["by_model"]
             by_day = mdata["by_day"]
             by_task = mdata["by_task"]
+            turns = mdata["user_turns"]
             totals = session_totals(model_map)
             if totals["messages"] == 0:
                 continue
             for k in grand:
                 grand[k] += totals[k]
+            grand_turns += turns["total"]
             payload = {
                 "session_id": session_id,
                 "task_folder": task_folder,   # folder name, not PII — no email
@@ -369,6 +443,14 @@ def main() -> int:
                 "by_task": {
                     t: {m2: dict(s) for m2, s in mm.items()}
                     for t, mm in sorted(by_task.items())
+                },
+                # Measured human-effort signal, counted separately from `messages`
+                # (which counts assistant API responses — 2.4x-9.8x higher, and the
+                # ratio is not stable enough to rescale). Model-less by design.
+                "user_turns": {
+                    "total": turns["total"],
+                    "by_day": {d: n for d, n in sorted(turns["by_day"].items())},
+                    "by_task": {t: n for t, n in sorted(turns["by_task"].items())},
                 },
                 "totals": totals,
             }
@@ -388,7 +470,7 @@ def main() -> int:
               f"→ {per_user_dir.relative_to(project_root)}")
         print(f"  totals: input={grand['input']:,} output={grand['output']:,} "
               f"cache_read={grand['cache_read']:,} cache_creation={grand['cache_creation']:,} "
-              f"messages={grand['messages']:,}")
+              f"messages={grand['messages']:,} user_turns={grand_turns:,}")
     return 0
 
 
