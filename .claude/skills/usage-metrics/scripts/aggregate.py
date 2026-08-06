@@ -398,10 +398,27 @@ def tokM(n: int) -> str:
     return f"{(n or 0) / 1e6:,.2f}M"
 
 
+NOT_MEASURED = "--"
+
+
+def fmt_turns(v) -> str:
+    """Render a user-turn count for HUMAN display.
+
+    `None` means "not measured" — the session files behind this slot predate the
+    turn schema and their transcripts have been rotated away, so the number is
+    unrecoverable rather than zero. Shows as `--` so a reader never mistakes it
+    for a real zero. The JSON keeps `null` (not this string) so consumers can
+    still do arithmetic without type-sniffing a sometimes-int/sometimes-string
+    field."""
+    return NOT_MEASURED if v is None else fmt(v)
+
+
 def render_markdown(month: str, per_person: dict, anon: dict, pricing: dict | None = None) -> str:
     rows = []
     grand = {t: 0 for t in TOKENS} | {"messages": 0, "sessions": 0}
     grand_cost = 0.0
+    grand_turns = 0
+    any_turns = False
     for tf in sorted(per_person, key=lambda k: per_person[k]["totals"]["input"]
                      + per_person[k]["totals"]["output"], reverse=True):
         slot = per_person[tf]
@@ -409,12 +426,22 @@ def render_markdown(month: str, per_person: dict, anon: dict, pricing: dict | No
         name = anon.get(tf, tf)   # anonymized label — no real names in the team view
         cost = cost_of(slot["by_model"], pricing)
         grand_cost += cost
+        # Raw slots carry (user_turns, _turns_seen); the nulling happens when the
+        # JSON view is built, so mirror it rather than reading the int directly.
+        slot_turns = (slot.get("user_turns", 0)
+                      if slot.get("_turns_seen") else slot.get("user_turns"))
+        if not slot.get("_turns_seen") and "_turns_seen" in slot:
+            slot_turns = None
         total_in = tot["input"] + tot["cache_read"] + tot["cache_creation"]
         rows.append(
             f"| {name} | {slot['sessions']} | {tokM(tot['input'])} | "
             f"{tokM(tot['cache_read'])} | {tokM(tot['cache_creation'])} | {tokM(total_in)} | "
-            f"{tokM(tot['output'])} | {fmt(tot['messages'])} | ${cost:,.2f} |"
+            f"{tokM(tot['output'])} | {fmt(tot['messages'])} | "
+            f"{fmt_turns(slot_turns)} | ${cost:,.2f} |"
         )
+        if slot_turns is not None:
+            any_turns = True
+            grand_turns += slot_turns
         for t in TOKENS:
             grand[t] += tot[t]
         grand["messages"] += tot["messages"]
@@ -432,16 +459,23 @@ def render_markdown(month: str, per_person: dict, anon: dict, pricing: dict | No
         "is only the uncached sliver; with prompt caching, cache reads dominate input). "
         "Token quantities are in **millions (MTok)** to match the $/MTok rates._",
         "",
-        "| Member | Sessions | Input (uncached) | Cache read | Cache write | Total input | Output | Messages | Est. cost |",
-        "|--------|---------:|-----------------:|-----------:|------------:|------------:|-------:|---------:|----------:|",
+        "| Member | Sessions | Input (uncached) | Cache read | Cache write | Total input | Output | Messages | User turns | Est. cost |",
+        "|--------|---------:|-----------------:|-----------:|------------:|------------:|-------:|---------:|-----------:|----------:|",
         *rows,
         f"| **Total** | **{grand['sessions']}** | **{tokM(grand['input'])}** | "
         f"**{tokM(grand['cache_read'])}** | **{tokM(grand['cache_creation'])}** | "
         f"**{tokM(grand_total_in)}** | **{tokM(grand['output'])}** | "
-        f"**{fmt(grand['messages'])}** | **${grand_cost:,.2f}** |",
+        f"**{fmt(grand['messages'])}** | "
+        f"**{fmt_turns(grand_turns if any_turns else None)}** | **${grand_cost:,.2f}** |",
         "",
         "_Est. cost = measured tokens × list prices in `pricing.json`; indicative API-equivalent "
         "value, not subscription billing. Verify rates against current Anthropic pricing._",
+        "",
+        "_**User turns** = human messages, counted from the session transcript (assistant "
+        "messages, tool calls and subagent replies are excluded — that is the `Messages` column). "
+        f"`{NOT_MEASURED}` means not measured, not zero: turn counts are derived from raw "
+        "transcripts, which Claude Code rotates away over time, so sessions collected before the "
+        "turn schema existed are unrecoverable._",
     ]
     return "\n".join(lines)
 
@@ -558,7 +592,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <th data-k="input">Input (uncached)</th><th data-k="cache_read">Cache read</th>
         <th data-k="cache_creation">Cache write</th><th data-k="total_in">Total input</th>
         <th data-k="output">Output</th>
-        <th data-k="messages">Messages</th><th data-k="cost">Est. cost</th>
+        <th data-k="messages">Messages</th><th data-k="user_turns">User turns</th><th data-k="cost">Est. cost</th>
       </tr></thead>
       <tbody></tbody><tfoot></tfoot>
     </table>
@@ -580,6 +614,11 @@ const DAILY_COST = __DAILY_COST__;
 const RATE_CARD = __RATE_CARD__;
 const TOK = ["input","output","cache_read","cache_creation"];
 const fmt = n => (n||0).toLocaleString();
+// "--" = not measured, NOT zero. Turn counts come from raw transcripts, which
+// Claude Code rotates away, so sessions collected before the turn schema existed
+// are unrecoverable. Rendering them as 0 would corrupt any per-turn ratio a
+// reader computes from this table.
+const turns = v => (v === null || v === undefined) ? "--" : fmt(v);
 const usd = n => '$'+(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 // Token quantities are shown normalized to MILLIONS of tokens (MTok) to match the
 // $/MTok rate card. Counts (sessions/messages/members) stay whole numbers.
@@ -595,7 +634,13 @@ function rowsFor(sel){
   for(const m of ms){
     for(const [tf, rec] of Object.entries(DATA[m]||{})){
       if(!acc[tf]) acc[tf] = {name:rec.name||tf, tf, sessions:0,
-                              input:0,output:0,cache_read:0,cache_creation:0,messages:0,cost:0};
+                              input:0,output:0,cache_read:0,cache_creation:0,messages:0,
+                              user_turns:null,cost:0};
+      // null-aware: a slot stays null until some month actually measured turns, so
+      // "not measured" never collapses into a real 0 when months are merged.
+      if(rec.user_turns !== null && rec.user_turns !== undefined){
+        acc[tf].user_turns = (acc[tf].user_turns||0) + rec.user_turns;
+      }
       acc[tf].sessions += rec.sessions||0;
       acc[tf].messages += (rec.totals&&rec.totals.messages)||0;
       acc[tf].cost += rec.cost||0;
@@ -630,14 +675,20 @@ function modelsFor(sel){
 function render(){
   const sel = document.getElementById("month").value;
   const rows = rowsFor(sel);
-  const tot = {sessions:0,input:0,output:0,cache_read:0,cache_creation:0,messages:0,total_in:0,cost:0};
-  rows.forEach(r=>{ for(const k in tot) tot[k]+=r[k]||0; });
+  const tot = {sessions:0,input:0,output:0,cache_read:0,cache_creation:0,messages:0,
+               user_turns:null,total_in:0,cost:0};
+  rows.forEach(r=>{ for(const k in tot){ if(k==="user_turns") continue; tot[k]+=r[k]||0; } });
+  // Kept out of the loop above: `null + 0` is 0 in JS, which would silently turn
+  // "not measured" into a measured zero the moment any row lacked turn data.
+  rows.forEach(r=>{ if(r.user_turns !== null && r.user_turns !== undefined){
+    tot.user_turns = (tot.user_turns||0) + r.user_turns; } });
 
   // cards
   const cardDefs = [
     ["Members", fmt(rows.length)],["Sessions", fmt(tot.sessions)],
     ["Total input", tokM(tot.total_in)],["Output", tokM(tot.output)],
     ["Cache read", tokM(tot.cache_read)],["Messages", fmt(tot.messages)],
+    ["User turns", turns(tot.user_turns)],
     ["Est. cost", usd(tot.cost), "cost"],
   ];
   document.getElementById("cards").innerHTML = cardDefs.map(([k,v,cls])=>
@@ -686,13 +737,15 @@ function render(){
     <td class="mono">${tokM(r.input)}</td><td class="mono">${tokM(r.cache_read)}</td>
     <td class="mono">${tokM(r.cache_creation)}</td><td class="mono">${tokM(r.total_in)}</td>
     <td class="mono">${tokM(r.output)}</td>
-    <td class="mono">${fmt(r.messages)}</td><td class="mono cost">${usd(r.cost)}</td></tr>`).join("");
+    <td class="mono">${fmt(r.messages)}</td><td class="mono">${turns(r.user_turns)}</td>
+    <td class="mono cost">${usd(r.cost)}</td></tr>`).join("");
   document.querySelector("#tbl tfoot").innerHTML = `
     <tr><td>Total</td><td class="mono">${fmt(tot.sessions)}</td>
     <td class="mono">${tokM(tot.input)}</td><td class="mono">${tokM(tot.cache_read)}</td>
     <td class="mono">${tokM(tot.cache_creation)}</td><td class="mono">${tokM(tot.total_in)}</td>
     <td class="mono">${tokM(tot.output)}</td>
-    <td class="mono">${fmt(tot.messages)}</td><td class="mono cost">${usd(tot.cost)}</td></tr>`;
+    <td class="mono">${fmt(tot.messages)}</td><td class="mono">${turns(tot.user_turns)}</td>
+    <td class="mono cost">${usd(tot.cost)}</td></tr>`;
 
   // by-model table
   const mrows = modelsFor(sel);
@@ -703,7 +756,16 @@ function render(){
     <td class="mono">${fmt(r.messages)}</td><td class="mono cost">${usd(r.cost)}</td></tr>`).join("")
     || '<tr><td colspan="8" class="note">No data.</td></tr>';
 
-  document.getElementById("costnote").textContent = COST_NOTE;
+  // Coverage caveat: in a merged view the turn total covers only the months that
+  // actually measured turns, so state that rather than let it read as all-time.
+  const unmeasured = ms.filter(m => Object.values(DATA[m]||{})
+        .every(r => r.user_turns === null || r.user_turns === undefined));
+  const turnNote = " User turns = human messages only (assistant messages, tool calls and "
+    + "subagent replies are the Messages column); \u2014 means not measured, not zero."
+    + (unmeasured.length ? " No turn data for " + unmeasured.join(", ")
+        + " \u2014 the turn total excludes " + (unmeasured.length>1?"those months":"that month")
+        + "." : "");
+  document.getElementById("costnote").textContent = COST_NOTE + turnNote;
 }
 
 function renderProjection(){
