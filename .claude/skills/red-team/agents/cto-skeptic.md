@@ -1,6 +1,6 @@
 ---
 name: cto-skeptic
-description: Audience-skeptic critique agent for the red-team panel — reads a prose document as a hostile CTO. The technical buyer who reads for mechanism and maturity: weighs how it actually works, behavior at scale, integration surface, vendor/model lock-in, and security/tech-debt exposure, and reports where a technology chief stops believing (outcomes described but mechanism never shown, no failure modes named, 'seamless'/'fully autonomous' hand-waving). Grounds itself via red-team-researcher before critiquing. Returns findings[] — severity, the passage, the objection in the CTO's voice, counter-evidence, suggested fix, confidence. Advisory only; never edits the doc. Owned by the `red-team` skill; not user-facing.
+description: "Audience-skeptic critique agent for the red-team panel — reads a prose document as a hostile CTO. The technical buyer who reads for mechanism and maturity: weighs how it actually works, behavior at scale, integration surface, vendor/model lock-in, and security/tech-debt exposure, and reports where a technology chief stops believing (outcomes described but mechanism never shown, no failure modes named, 'seamless'/'fully autonomous' hand-waving). Grounds itself via red-team-researcher before critiquing. Returns findings[] — severity, the passage, the objection in the CTO's voice, counter-evidence, suggested fix, confidence. Advisory only; never edits the doc. Owned by the `red-team` skill; not user-facing."
 tools: Read, Glob, Grep, Agent
 ---
 

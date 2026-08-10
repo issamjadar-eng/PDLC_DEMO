@@ -105,6 +105,39 @@ sense of the whole.
   spine") never belongs on the page; and a term's *definition section* is not a license — the
   test is whether a reader who only skimmed that section still lands the sentence. This is a
   judgment-layer check: build the coined-term inventory first, then walk the later uses.
+- **The cold reader — expertise the page never granted.** Expert prose fails quietly by
+  assuming context the reader was never given. The author cannot see it, because the author
+  has the context; a cold reader stalls in the first two pages and never says why. Four
+  shapes, all cheap to fix at first use:
+  - *Acronyms after their names.* Spell the term out once, then use the acronym freely
+    ("the Product Development Life Cycle (PDLC)…" — thereafter PDLC). An abstract or lead
+    that opens on a bare acronym stalls every reader outside the authors' hallway.
+  - *Coined terms defined at birth.* The companion to unearned terminology above: when a
+    document introduces its own vocabulary ("seams," "invariants," "pins"), the first use
+    carries a six-to-eight-word plain anchor ("the seams — where work crosses from one half
+    to the other"). Definition-by-context feels sufficient to the author and is not; say
+    what kind of thing the word names, once, where the word is born. Beware borrowed words
+    especially: a coinage assembled from terms that already mean something ("browser
+    console" reads as the devtools console) resolves to the meaning the reader already
+    knows, not yours — describe the thing plainly at first mention and let the coined name
+    arrive with its definition.
+  - *Unframed proper nouns — lead with the role, attach the name.* A sentence built on
+    product names ("agents reach ToolA and ToolB over XYZ") reads as tool soup to anyone
+    unfamiliar with even one of them. Reorder role-first: "the team's ticketing and
+    working-document systems — ToolA and ToolB — through governed tools." The informed
+    reader still gets the names and the credibility signal; the cold reader gets through on
+    roles alone. The test: delete every proper noun — does the sentence still say what
+    happens?
+  - *Compression that needs decoding.* Parallel constructions can compress past the point
+    of parse: "bound to a concrete product where one fits, and to a named build where none
+    does" forces the reader to expand "named build" and resolve two "where" clauses before
+    the meaning lands — and reads as pretension besides. Unpack it: "an off-the-shelf
+    product where one exists, and where none does, a component you build yourself." Ten
+    words longer, zero decoding.
+  These are considerations, not bans — a document for a single expert audience may earn
+  denser defaults, and a name-dense inventory can itself be the point of a passage. The
+  test is constant: hand the page to a reader who knows none of the tools and none of the
+  coinages; every place they stall is a finding.
 - **Flourish and pretension — clever is not clear.** A distinct failure mode where every
   sentence performs: epigrams stacked one per line ("X is Y, not Z" three times in a
   paragraph), colon-label scaffolds ("The practice: … The residue: …") that outline instead

@@ -49,8 +49,21 @@ async def agents_index(request: Request):
     )
 
 
+def _grounding_patterns(agent: DomainAgent) -> list[str]:
+    """The agent's effective grounding list.
+
+    `core:` is the current field; `sources:` is the pre-task-099 name kept for
+    backwards compatibility. The loader already falls `core` back to `sources`
+    when only the legacy field is present, so `core` is authoritative and
+    `sources` is only consulted for agents that predate the loader change.
+    Reading `sources` directly here silently grounded every `core:`-declaring
+    agent on nothing.
+    """
+    return list(agent.core or agent.sources or [])
+
+
 def _agent_detail(agent: DomainAgent, cfg, extra_patterns: list[str] | None = None) -> dict:
-    patterns = list(extra_patterns or []) + list(agent.sources)
+    patterns = list(extra_patterns or []) + _grounding_patterns(agent)
     files = resolve_files(cfg.repo_root, patterns)
     return {
         "agent": agent,
@@ -72,7 +85,7 @@ async def agent_chat_page(request: Request, name: str):
     detail = _agent_detail(agent, cfg) if not agent.is_panel else None
     panel_detail = _agent_detail(agent, cfg) if agent.is_panel else None
     member_details = (
-        [_agent_detail(m, cfg, extra_patterns=agent.sources) for m in members]
+        [_agent_detail(m, cfg, extra_patterns=_grounding_patterns(agent)) for m in members]
         if agent.is_panel
         else []
     )
@@ -136,7 +149,15 @@ async def agent_stream(name: str, body: StreamBody):
                 ):
                     yield _sse(evt)
             else:
-                resolved = resolve_with_meta(cfg.repo_root, agent.sources)
+                # Honor the project's configured per-model source cap. Omitting
+                # cap_bytes silently fell back to sources.MAX_BYTES (200KB),
+                # so a console.yaml `source_cap_kb` never reached this path.
+                caps = cfg.caps_for_model(cfg.resolve_model(agent.model))
+                resolved = resolve_with_meta(
+                    cfg.repo_root,
+                    _grounding_patterns(agent),
+                    cap_bytes=caps["source_cap_kb"] * 1024,
+                )
                 system = (
                     agent.system_prompt
                     + "\n\n===== GROUNDING SOURCES =====\n"

@@ -61,6 +61,15 @@ The caller (the `review`, `copyedit`, or `draft` action, or a parent skill like
      restate the term in six or eight plain words at the point of use, or replace it with the
      plain phrase. Weight this lens MORE heavily in the document's second half — that is where
      grounding debt comes due, and where the author is least able to see it.
+   - **Cold-reader accessibility** — assume a reader who knows none of the tools, none of
+     the acronyms, and none of the coinages, and walk the opening pages as them. Flag: bare
+     acronyms used before their expansion; coined terms whose first use carries no
+     plain-word anchor (the birth-side complement of the grounding lens above); sentences
+     built on unframed product names (propose the role-first reorder — the plain-word job
+     leads, the name follows in apposition — and apply the test: delete every proper noun
+     and check the sentence still says what happens); and parallel constructions compressed
+     past easy parse. Weight this lens MOST heavily in the abstract, lead, and first
+     section — that is where a cold reader decides whether to keep reading.
    - **Flourish / pretension** — does the prose perform instead of state? Look for stacked
      epigrams ("X, not Y" several times a page), colon-label scaffolds ("The practice: …
      The residue: …"), asides nested in em-dashes mid-clause, and self-admiring turns

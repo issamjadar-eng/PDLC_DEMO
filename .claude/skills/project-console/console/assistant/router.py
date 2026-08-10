@@ -132,18 +132,35 @@ _DISCOVERY_RUBRIC = """\
 Before answering, work through these steps:
 
 1. Read your CORE documents in full (already in this system prompt).
-2. Scan the INDEX below — it is every folder's README in tree order.
-   Each entry describes scope, expected content, and conventions.
-3. If any folder's description might relate to the question, call the
-   tool `read_files(paths=[...])` to fetch specific .md files from that
-   folder. A path can be:
+2. Locate candidate documents. You have TWO finding aids — use the one
+   that fits the question, and use both when the question is broad:
+
+   a. `locate` (semantic file search, when a file-locator tool is
+      available to you). Ask it in natural language — "hazard analysis
+      for the tablet module", "predicate comparison table" — and it
+      returns ranked file paths with summaries. It searches FILE
+      contents across the whole repo, so it finds documents whose
+      folder README never mentions the topic. Reach for this FIRST on
+      any specific factual question.
+
+   b. The INDEX below — every folder's README in tree order, describing
+      scope, expected content, and conventions. This is a STRUCTURAL
+      map: use it to understand how the repo is organized, to find the
+      right area when you don't know the vocabulary, or when the INDEX
+      is the only aid available. It may be truncated (a note marks the
+      cut); anything missing is still reachable via the steps here.
+
+3. Fetch what you found: call `read_files(paths=[...])` for specific
+   .md files. A path can be:
      - a specific .md file:  docs/project/dhfs/.../some-doc.md
      - a folder path:        docs/project/dhfs/.../architecture/
        (folder paths expand to the folder's README + direct-child .md files)
    Batch multiple paths into a single call when you can; it halves turns.
 4. Prefer over-fetching. The cost of missing context is worse than the
    cost of an extra read. When in doubt, fetch.
-5. Only answer once you have reviewed every possibly-relevant doc.
+5. Only answer once you have reviewed every possibly-relevant doc. If a
+   search returned nothing useful, say what you looked for rather than
+   answering from memory.
 
 ===== CITATION FORMAT (required) =====
 

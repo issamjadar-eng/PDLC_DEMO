@@ -1,8 +1,8 @@
 ---
 name: md-deck
 description: Build a beautiful single-file HTML slide deck from any structured markdown source (whitepaper, project overview, strategy doc, board briefing, investor memo, ops report). Non-interactive markdown → HTML pipeline; the builder sibling to the `frontend-slides` stylist. v0.6 — domain-neutral trunk + opt-in icon vocabulary packs (medtech / finance / manufacturing / …) loaded via project.yml `md_deck.vocabulary_packs` or the `--vocabulary` flag. Consumes the canonical viewport contract and preset registry from `frontend-slides` (no duplication); content-split rules replace shrink-to-fit density modifiers; handles title, agenda, dividers, table-slides, card-grids, list-slides, quote-slides, prose-slides, image-feature slides; injects scope-iceberg / concept-canvas / handoff-relay / principle-tiles / catalog-mosaic / catalog-featured variants; detects homogeneous groups (cohorts, teams, deliverables, milestones, metrics, plus pack-specific groups) and gives them a shared kind-icon. Output lands at `<root>/assets/<source-slug>/` with full provenance metadata.
-version: 0.6.3
-updated: 2026-07-21
+version: 0.6.4
+updated: 2026-08-03
 ---
 
 # md-deck
@@ -17,6 +17,7 @@ md-deck and `frontend-slides` are sibling skills with a shared infrastructure la
 |---|---|---|
 | `frontend-slides/viewport-base.css` | frontend-slides | Yes — prepended to every preset, owns the `.slide` / `100vh` / `clamp()` contract |
 | `frontend-slides/STYLE_PRESETS.md` | frontend-slides | Reference — md-deck `--style <name>` resolves against this registry |
+| `frontend-slides/deck-structure.md` | frontend-slides | Reference — evidence-based structure & orientation rules (BLUF opening, tracker dividers, altitude discipline, claim titles). Consult when shaping the source markdown for decks > ~10 slides or dense technical content: md-deck renders the structure it is given, so the answer-first ordering, section dividers, and "name the parts" beat belong in the source doc's storyboard before the build |
 | `frontend-slides/presets/<name>.css` | frontend-slides | Yes — full preset stylesheet for `<name>` (bold-signal canonical lives here) |
 | `frontend-slides/scripts/export-pdf.sh` | frontend-slides | Yes — md-deck has no PDF export of its own |
 | `frontend-slides/scripts/deploy.sh` | frontend-slides | Yes — md-deck has no deploy of its own |

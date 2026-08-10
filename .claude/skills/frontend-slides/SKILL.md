@@ -1,8 +1,8 @@
 ---
 name: frontend-slides
 description: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files — for any domain (product launches, board materials, investor pitches, town-halls, conference talks, internal training, regulated-industry briefings). Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk / pitch / report. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.
-version: 0.4.1
-updated: 2026-05-17
+version: 0.5.1
+updated: 2026-08-03
 ---
 
 # Frontend Slides
@@ -41,6 +41,7 @@ When adding a new preset or changing viewport rules, both skills inherit. When a
 2. **Show, Don't Tell** — Generate visual previews, not abstract choices. People discover what they want by seeing it.
 3. **Distinctive Design** — No generic "AI slop." Every presentation must feel custom-crafted.
 4. **Viewport Fitting (NON-NEGOTIABLE)** — Every slide MUST fit exactly within 100vh. No scrolling within slides, ever. Content overflows? Split into multiple slides.
+5. **Structure Before Styling** — perceived complexity is usually a structure problem, not a styling problem. For any deck over ~10 slides or carrying dense technical content, read [deck-structure.md](deck-structure.md) during content discovery and run its structure-pass checklist before the geometry/visual passes: answer-first opening (BLUF), an orientation layer (exec-summary slide, section dividers with a you-are-here tracker, a "name the parts" beat before the first dense diagram), one altitude per diagram with names consistent across zoom levels, claim-sentence titles, and depth demoted to detail-on-demand rather than compressed. This is also the playbook when an existing deck draws "feels complicated" feedback — the orientation layer is purely additive, so the fix does not disturb finished slides.
 
 ## Design Aesthetics
 
@@ -343,6 +344,7 @@ This captures each slide as a screenshot and combines them into a PDF. Perfect f
 
 | File                                               | Purpose                                                              | When to Read              |
 | -------------------------------------------------- | -------------------------------------------------------------------- | ------------------------- |
+| [deck-structure.md](deck-structure.md)             | Evidence-based deck structure & orientation rules (BLUF, dividers/tracker, altitude discipline, assertion-evidence titles, cognitive-load mechanics) + structure-pass checklist | Phase 1 (content discovery); any "deck feels complicated" retrofit |
 | [STYLE_PRESETS.md](STYLE_PRESETS.md)               | 12 curated visual presets with colors, fonts, and signature elements | Phase 2 (style selection) |
 | [viewport-base.css](viewport-base.css)             | Mandatory responsive CSS — copy into every presentation              | Phase 3 (generation)      |
 | [html-template.md](html-template.md)               | HTML structure, JS features, code quality standards                  | Phase 3 (generation)      |
@@ -355,5 +357,7 @@ This captures each slide as a screenshot and combines them into a PDF. Perfect f
 
 ## Changelog
 
+- **0.5.1** (2026-08-03) — `deck-structure.md` structure-pass checklist gains the **cold-reader test**: run persona critics (an exec + a specialist, neither shown the source docs) over the built deck to catch terms used before definition, numbered references to lists the deck never shows, and audience false friends. Proven pattern: two such critics on a real deck surfaced ~30 comprehension defects the author could no longer see, including one factual overclaim.
+- **0.5.0** (2026-08-03) — Added `deck-structure.md`: evidence-based deck structure & orientation reference (answer-first/BLUF opening, orientation layer with exec-summary + tracker dividers + pre-training beat, single-altitude diagram discipline with cross-zoom name consistency, assertion-evidence claim titles, ranked cognitive-load mechanics, live-deck vs leave-behind split) distilled from a sourced research pass (Minto/BLUF, Garner & Alley, Mayer, Shneiderman, C4/arc42/Hohpe, Duarte/Reynolds). New core principle 5 ("Structure Before Styling") wires it into Phase 1 and the "deck feels complicated" retrofit case.
 - **0.4.1** (2026-05-17) — Phase 2.2 style previews now write to a per-build `mktemp -d` directory under the OS `/tmp/` instead of `.claude-design/slide-previews/` at the project root. Phase 5.1 cleanup updated accordingly (with backward-compatible removal of the legacy path). Fixes drift against consumer-project scratch-and-tmp rules and prevents accidental commits of transient preview files.
 - **0.4.0** (2026-05-02) — Fork baseline (see "Origin & Modifications").
