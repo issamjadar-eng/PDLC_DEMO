@@ -9,7 +9,7 @@ updated: 2026-07-27
 
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
-- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **strategy** (topline review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security), and **tasks** (activity summary from the task skill's derived JSON)
+- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **journey** (project standup + device program, evaluated from a skill-owned map), **document pipeline** (how documentation moves, derived live across four lanes), **strategy** (landing index + per-domain review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security), and **tasks** (activity summary from the task skill's derived JSON)
 - A **grouped template library** materialized into the project on init: a `core-team` group of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) plus two advisory panels, and a `red-team` group — an adversarial buyer committee (CEO, CFO, CTO, VP Eng, RA VP, QA VP, PMO skeptics + a panel) for pressure-testing outward-facing documents. Each `agents/templates/<group>/` directory materializes into `agents/<group>/`
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`
@@ -160,7 +160,14 @@ When sync detects drift in a skill-owned file that the user hasn't declared in t
     chat/                     # chat routes + domain agent loader + SDK wiring
     metrics/                  # topline Metrics section — generic consumer of the
                               #   usage-metrics skill's tools/usage-metrics/usage.json
-    strategy/                 # topline Strategy section (reuses workflows/ B3 machinery)
+    journey/                  # topline Journey section — evaluates a SKILL-OWNED map
+                              #   (medtech-docs/registry/journey.yaml); authors nothing
+    doc_pipeline/             # topline Document Pipeline section — live projection of
+                              #   every owning skill's artifacts across four lanes
+    mdlite.py                 # shared display-only markdown helpers (md_to_html,
+                              #   md_inline) for views that render one-liners
+    strategy/                 # topline Strategy section — landing index (loader.py)
+                              #   + per-domain detail (reuses workflows/ B3 machinery)
     submission/               # topline Submission section — loader + router (reads
                               #   submissions-skill JSON sidecars; renders doc bodies inline)
     documents/                # explorer + renderer + summary + tree
@@ -239,11 +246,30 @@ gets the overlay automatically — no console changes required.
 
 Two first-class top-nav sections sit right after Overview:
 
-- **Strategy** (`/strategy`) — the program's per-domain strategy review surface
-  (proposed-change callouts, Accept/Reject/Modify, advisor drawer). It reuses the
-  `console/workflows/` B3 machinery in place; the former workflow card was removed
-  and `/workflows/strategy-reassembly` now redirects to `/strategy`. Nav shows
-  when `docs/project/strategies/*-strategy.md` exist.
+- **Strategy** — split into a landing index and a per-domain review surface:
+  - `/strategy` — roll-up (domains live · decisions · proposed changes ·
+    awaiting content) plus one card per domain. Backed by
+    `console/strategy/loader.py`, which **counts without rendering**: it
+    aggregates the parsers already in `console/workflows/b3_strategy_reassembly`
+    (`scan`, `parse_decisions`, `_parse_proposals`, `_parse_history`) rather
+    than adding a second parser.
+  - `/strategy/{slug}` — the review surface (proposed-change callouts,
+    Accept/Reject/Modify, advisor drawer), opened on that domain via
+    `active_slug`. It reuses the `console/workflows/` B3 machinery in place and
+    still renders every domain's pane, because the panes carry a cross-domain
+    "move to another domain" selector and the tab JS expects them all in the DOM.
+  - `?domain=<slug>` redirects to the detail route; an unknown slug redirects to
+    the index; `/workflows/strategy-reassembly` still redirects to `/strategy`.
+    Nav shows when `docs/project/strategies/*-strategy.md` exist.
+
+  **Two decision formats coexist and must never be summed.** Structured
+  `<!-- DECISION:start … -->` blocks carry a lifecycle `status=`; legacy
+  `**Decision**:` prose does not — and the sentinels **wrap** the prose rather
+  than replacing it, so summing double-counts a migrated document. The rule is
+  `structured if any, else prose`, and each card labels which format it counted.
+  A prose-format document therefore shows a decision count with **no** lifecycle
+  bar: those documents genuinely record no per-decision status, and drawing one
+  would invent a fact the document does not state.
 - **Submission** (`/submission`) — an FDA submission-package viewer (Q-Sub / 510(k)
   / PCCP) with composition manifest, an inline tabbed document viewer, an FDA-
   questions panel, and an Ask-the-advisor drawer (defaults to `regulatory-affairs`).
@@ -308,6 +334,76 @@ shells to the skill's `render`; the assistant drawer grounds in
 `/commercial/{bq}/grounding`. Full contract lives in the `commercial` skill's
 SKILL.md.
 
+## Topline section: Journey (where the project stands)
+
+**Journey** (`/journey`) — two phase paths with live artifact probes: **Project
+standup** (empty clone → scaffolded DHF, titles parsed from
+`new-project-bootstrap.md`) and **Device program** (the regulatory milestone
+sequence, expanded from `docs/project/milestones/regulatory.yml`).
+
+**The map is owned by a skill, not by the console.** Phase predicates,
+`requires` edges, producer commands, `levels`, `derivations` and a binding
+`rendering:` block are authored at
+`.claude/skills/medtech-docs/registry/journey.yaml`. The console evaluates the
+authored predicates; a hardcoded phase table in the loader would make it the
+author of the semantics it renders. **Add or change a phase by editing the
+yaml, never the loader.** Predicate vocabulary: `all_exist`, `any_exist`,
+`yaml_nonempty`, `file_contains`, `derived` (ANDed when a phase declares more
+than one).
+
+Four contracts this section holds, each of which has already prevented a wrong
+render — do not relax them:
+
+| Contract | Why |
+|---|---|
+| **Artifact language, never completion language** (`rendering.language`) | States read *artifacts present / partly present / next up / blocked / in the loop / evidence in motion*. No "complete", no "done", no bare ✓ anywhere in the page, the CSS or the grounding text. Every predicate detects a file, never its quality — and in a regulated project a checkmark against a DHF artifact is a claim someone may be asked to substantiate. |
+| **Inverted discovery** (`rendering.always_discoverable`) | `discover()` returns true whenever the **map** exists, not when a producer artifact does. Every other section lights only once its data lands; a journey tab that hides while the project is immature hides exactly when it is needed. |
+| **Milestones are gauges, never checkboxes** (`state_model: evidence-gauge`) | A regulatory milestone completes when a package is filed and a regulator responds — unobservable from the repo. Milestones render in-motion / next-up / blocked and never "present". Without this, four milestones each holding a few drafting rows all read "artifacts present", i.e. the whole device program read as finished. |
+| **Consume `/tracker`; never re-derive readiness** | Milestone evidence comes from the tracker's **published** artifacts — `submission-tracker.row-source.json` for row attribution, `submission-tracker.overlay.yml` for recorded status (the tracker's durable, curated home). The tracker's markdown is deliberately **not** parsed: the tracker merges markdown with the overlay at render time and the overlay wins, so a second parse would disagree with the dashboard the team reads. No readiness verdict is emitted — that belongs to `/tracker assess`. |
+
+Routes: `/journey`, `/journey/data.json`, `/journey/grounding` (plain text for
+the assistant drawer). **No mutation or refresh endpoint by design** — every
+probe is a `stat()` against repo truth (2s TTL), and advancing a phase is a
+skill action the user runs in their own session.
+
+## Topline section: Document Pipeline (how documentation moves)
+
+**Document Pipeline** (`/doc-pipeline`) — the documentation flow rendered live.
+Nav shows when `docs/README.md` exists. Every figure is derived at request time
+(15s TTL); the console authors no data. Four lanes:
+
+1. **Authoring** — seven ordered stage cards: input analysis → strategies →
+   design controls → trace → obligations → gap analysis → submission, each read
+   from its owning skill's artifact and each degrading to a producer-command
+   hint when absent.
+2. **Ingestion** — `docs/internal/source/` binaries vs `source-md/` markdown vs
+   `docs/external/` distilled references, plus a genuine `docflow:`
+   conversion-provenance count.
+3. **Regulated publish** — the `change-control` 5-state lifecycle
+   (`draft → published → review-formal → frozen → released`), read from
+   `docs/.change-control/state.json` or `state:` frontmatter. Built
+   contract-first: it renders an honest empty state until the first document is
+   adopted or published.
+4. **Terms & information flow** — terms projected live from `glossary.md`, and
+   the External → Project ← Internal model parsed from `CLAUDE.md § Information
+   Flow`. Both files stay canonical; this is a view, never a copy.
+
+Two places where the obvious read is the wrong read — both are load-bearing:
+
+- **Obligation coverage is not computed from the manifest's `status`/`location`
+  fields.** `dhf-manifest` v7 removed both and moved coverage to
+  `/tracker assess` exclusively. A pre-v7 manifest still carries them with every
+  entry reading `GAP`, which looks like a 0%-coverage dataset and is retired
+  schema. The stage reports catalogued counts, flags the stale schema, and
+  points coverage at the tracker.
+- **A large `source-md/` corpus is not evidence that `source/` was converted.**
+  When no document carries `docflow:` provenance, the lane says the markdown was
+  *authored*, not converted — rather than printing a conversion ratio that would
+  invent a pipeline that never ran.
+
+Routes: `/doc-pipeline`, `/doc-pipeline/data.json`, `/doc-pipeline/grounding`.
+No mutation or refresh endpoint — the console is a router, the skill is the actor.
+
 ## Topline section: Tasks (activity summary)
 
 **Tasks** (`/tasks`) — an *activity summary*, deliberately not a task list: what's
@@ -366,6 +462,27 @@ Merges three sources into one per-connector status model:
 - `project.yml` `security.approved_mcps` — the team's security allowlist
 - a skill-shipped, company-agnostic catalog (`console/setup/catalog.py`) of
   connectors the console can configure, plus custom stdio / HTTP forms
+
+**Catalog curation contract.** A catalog row is not a suggestion — clicking
+Configure writes `.mcp.json` *and* adds the name to `approved_mcps`, so the row
+is effectively a pre-blessed allowlist entry. Three rules follow:
+
+- **Vendor-official servers only.** Third-party or individual-authored servers
+  are not catalogued even when they exist and work. A team that has vetted one
+  adds it through the custom stdio / HTTP forms — the deliberate escape hatch
+  that keeps it an explicit act with a named owner.
+- **No invented endpoints.** Where a vendor's MCP is real but its endpoint is
+  customer-gated, the entry ships an empty `url` plus a `url_placeholder` hint
+  and a `note` naming where to obtain the real one. A guessed path is
+  indistinguishable from a verified one once it is in `.mcp.json`.
+- **Researched absence is catalogued, not omitted.** A tool with no vendor
+  server carries `availability: "none"` and renders as an informational card
+  (dimmed, "no vendor MCP" badge, no Configure button). An absent card is
+  ambiguous; a card that says so is a dated answer.
+
+Optional entry fields beyond the base shape: `note` (caveat line under the
+description — instance-specific endpoints, licensing prerequisites, scope
+limits), `url_placeholder`, and `availability` (`vendor` default | `none`).
 
 Status per connector: configured + approved → OK; configured but unapproved →
 warning (the security posture check would flag it); approved but not defined →

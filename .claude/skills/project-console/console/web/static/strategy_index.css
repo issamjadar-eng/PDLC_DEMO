@@ -1,0 +1,107 @@
+/* Strategy landing page — roll-up + per-domain cards.
+   Every colour resolves through a theme token so the page follows the active
+   theme pack; nothing here hardcodes a brand value. */
+
+.si-wrap { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+
+/* ── header ─────────────────────────────────────────────────────────── */
+.si-head { display: flex; justify-content: space-between; align-items: flex-start;
+           gap: 1.5rem; margin-bottom: 1.5rem; }
+.si-head-text { max-width: 62ch; }
+.si-eyebrow { margin: 0 0 .15rem; font-size: .72rem; letter-spacing: .09em;
+              text-transform: uppercase; color: var(--body-text-muted); }
+.si-head h1 { margin: 0 0 .4rem; font-family: var(--font-heading); }
+.si-sub { margin: 0; color: var(--body-text-muted); line-height: 1.55; }
+
+/* ── roll-up strip ──────────────────────────────────────────────────── */
+.si-rollup { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem; }
+.si-rollup-stat { flex: 1 1 8rem; background: var(--surface, #fff);
+                  border: 1px solid var(--border); border-radius: 10px;
+                  padding: .7rem .9rem; display: flex; flex-direction: column; gap: .1rem; }
+.si-rollup-stat .n { font-size: 1.6rem; font-weight: 650; line-height: 1.1;
+                     font-family: var(--font-heading); }
+.si-rollup-stat .l { font-size: .78rem; color: var(--body-text-muted); }
+.si-rollup-muted .n { color: var(--body-text-muted); }
+
+/* Mixed-format advisory — informational, deliberately not a warning colour. */
+.si-note { margin: 0 0 1.25rem; padding: .65rem .85rem; border-radius: 8px;
+           background: var(--surface-muted, var(--code-bg));
+           border: 1px solid var(--border-light, var(--border));
+           color: var(--body-text-muted); font-size: .84rem; line-height: 1.5; }
+.si-note strong { color: var(--body-text); font-weight: 600; }
+
+/* ── grid + cards ───────────────────────────────────────────────────── */
+.si-grid { display: grid; gap: .9rem;
+           grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
+
+.si-card { display: flex; flex-direction: column; gap: .5rem;
+           background: var(--surface, #fff); border: 1px solid var(--border);
+           border-radius: 12px; padding: 1rem; text-decoration: none;
+           color: inherit; transition: border-color var(--dur-fast, .12s) var(--ease-out, ease),
+                                       transform var(--dur-fast, .12s) var(--ease-out, ease); }
+.si-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+.si-card:focus-visible { outline: var(--focus-ring, 2px solid var(--brand-primary));
+                         outline-offset: 2px; }
+
+/* A stub is a scaffolded brief with nothing written in it yet. Dimmed rather
+   than hidden — it is the affordance for starting that domain. */
+.si-card.is-stub { opacity: .62; }
+.si-card.is-stub:hover { opacity: 1; }
+
+.si-card-top { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+.si-card-title { margin: 0; font-size: 1.02rem; font-family: var(--font-heading); }
+.si-card-intent { margin: 0; font-size: .85rem; line-height: 1.5;
+                  color: var(--body-text-muted);
+                  display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3;
+                  -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ── chips ──────────────────────────────────────────────────────────── */
+.si-chip { display: inline-flex; align-items: center; padding: .12rem .5rem;
+           border-radius: 999px; font-size: .72rem; font-weight: 600;
+           white-space: nowrap; }
+.si-chip-count { background: var(--brand-primary-tint); color: var(--brand-primary-dark); }
+.si-chip-stub  { background: var(--surface-2, var(--code-bg)); color: var(--body-text-muted); }
+.si-chip-prop  { background: var(--banner-warning-bg); color: var(--banner-warning-text); }
+
+/* Format badge. Not a quality signal — it says which shape the count came
+   from, which is why `prose` is neutral-toned rather than a warning. */
+.si-chip-fmt { background: transparent; color: var(--body-text-muted);
+               border: 1px solid var(--border); font-weight: 500; }
+.si-chip-fmt.is-blocks { color: var(--brand-accent); border-color: var(--brand-accent); }
+
+/* ── lifecycle bar ──────────────────────────────────────────────────── */
+.si-bar { display: flex; gap: 2px; height: 1.1rem; border-radius: 5px;
+          overflow: hidden; }
+.si-bar .seg { display: flex; align-items: center; justify-content: center;
+               font-size: .66rem; font-weight: 650; color: var(--gl-white, #fff);
+               min-width: 1.4rem; }
+.si-bar .is-active          { background: var(--gl-green, #2e7d32); }
+.si-bar .is-proposed-change { background: var(--gl-cyan, #0277bd); }
+.si-bar .is-superseded      { background: var(--gl-slate, #546e7a); }
+.si-bar .is-withdrawn       { background: var(--gl-error, #c62828); }
+/* Any state the map has not declared still renders as itself. */
+.si-bar .is-other           { background: var(--gl-purple, #6a1b9a); }
+
+/* Shown instead of the bar when a document records decisions as prose. States
+   what is absent and why, rather than drawing an empty or all-one-colour bar
+   that would imply a status nobody recorded. */
+.si-card-nobar { margin: 0; font-size: .76rem; font-style: italic;
+                 color: var(--body-text-muted); }
+
+/* ── footer ─────────────────────────────────────────────────────────── */
+.si-card-foot { display: flex; justify-content: space-between; align-items: baseline;
+                gap: .5rem; margin-top: auto; padding-top: .35rem; }
+.si-meta { font-size: .74rem; color: var(--body-text-muted); }
+.si-dot { margin: 0 .35rem; opacity: .6; }
+.si-cta { font-size: .78rem; font-weight: 600; color: var(--brand-primary);
+          white-space: nowrap; }
+
+/* ── empty state ────────────────────────────────────────────────────── */
+.si-empty { border: 1px dashed var(--border); border-radius: 12px;
+            padding: 2rem; text-align: center; color: var(--body-text-muted); }
+.si-empty p { margin: .35rem 0; }
+
+@media (max-width: 640px) {
+  .si-grid { grid-template-columns: 1fr; }
+  .si-head { flex-direction: column; }
+}

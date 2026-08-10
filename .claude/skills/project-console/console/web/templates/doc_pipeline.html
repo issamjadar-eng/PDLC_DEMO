@@ -1,0 +1,198 @@
+{% extends "_base.html" %}
+{% block title %}Document Pipeline · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}pipeline-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/doc_pipeline.css?v={{ request.state.static_v }}">{% endblock %}
+{% block content %}
+<section class="dp-wrap">
+
+  <header class="dp-head">
+    <div class="dp-head-text">
+      <p class="dp-eyebrow">How documentation moves</p>
+      <h1>Document Pipeline</h1>
+      <p class="dp-sub">Every figure below is derived at request time from artifacts the owning skills produce — this view authors nothing. A stage with no artifact shows the command that creates one.</p>
+    </div>
+    <div class="dp-head-stat">
+      <span class="n">{{ p.stages_present }}<span class="d">/{{ p.stages_total }}</span></span>
+      <span class="l">authoring stages with artifacts</span>
+    </div>
+  </header>
+
+  {# ── Lane 1 — the authoring spine ─────────────────────────────────── #}
+  <h2 class="dp-lane-title">Authoring <span class="dp-lane-note">input → decision → design → trace → filing</span></h2>
+
+  <div class="dp-flow">
+    {% for s in p.authoring %}
+    {% set d = s.data %}
+    <div class="dp-stage{{ '' if d.present else ' is-empty' }}">
+      <div class="dp-stage-head">
+        <h3>{{ s.label }}</h3>
+        <span class="dp-owner" title="Owning skill — it produces the data, this view only reads it">{{ s.owner }}</span>
+      </div>
+
+      {% if not d.present %}
+        <p class="dp-empty-line">No artifact yet</p>
+        {% if d.hint %}<code class="dp-hint">{{ d.hint }}</code>{% endif %}
+
+      {% elif s.key == 'input-analysis' %}
+        <p class="dp-big">{{ d.total }} <span>docs</span></p>
+        <ul class="dp-mini">{% for x in d.parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
+
+      {% elif s.key == 'strategies' %}
+        <p class="dp-big">{{ d.decisions }} <span>decisions</span></p>
+        <ul class="dp-mini">
+          <li><span>domains live</span><b>{{ d.live }}/{{ d.total }}</b></li>
+          {% if d.proposals %}<li><span>proposed changes</span><b>{{ d.proposals }}</b></li>{% endif %}
+        </ul>
+        {% if d.mixed_formats %}<p class="dp-note">Counted from two decision formats — see Strategy.</p>{% endif %}
+        <a class="dp-link" href="/strategy">Strategy →</a>
+
+      {% elif s.key == 'design-controls' %}
+        <p class="dp-big">{{ d.total_docs }} <span>docs</span></p>
+        <ul class="dp-mini">
+          <li><span>DHFs</span><b>{{ d.dhf_count }}</b></li>
+        </ul>
+        <details class="dp-more"><summary>per DHF</summary>
+          <ul class="dp-mini dp-mini-tall">
+            {% for r in d.rows %}<li><span>{{ r.slug }}</span><b>{{ r.roles_present }}/{{ r.roles_total }} roles · {{ r.docs }}</b></li>{% endfor %}
+          </ul>
+        </details>
+
+      {% elif s.key == 'trace' %}
+        <p class="dp-big">{{ d.traced_items }} <span>traced items</span></p>
+        <ul class="dp-mini">
+          <li><span>DHFs with a matrix</span><b>{{ d.dhf_count }}</b></li>
+          <li class="{{ 'is-warn' if d.orphans }}"><span>orphans</span><b>{{ d.orphans }}</b></li>
+        </ul>
+        <a class="dp-link" href="/trace-matrix">Trace matrix →</a>
+
+      {% elif s.key == 'obligations' %}
+        <p class="dp-big">{{ d.projected }} <span>obligations</span></p>
+        <ul class="dp-mini">
+          <li><span>source obligations</span><b>{{ d.source_obligations }}</b></li>
+          <li><span>generated</span><b>{{ d.generated or '—' }}</b></li>
+        </ul>
+        {# Coverage is deliberately absent here. The manifest's old status/
+           location fields were retired in dhf-manifest v7; showing them would
+           render a dead contract as a live metric. #}
+        <p class="dp-note">
+          {%- if d.coverage_available -%}
+          Coverage is computed by <code>{{ d.coverage_owner }}</code>.
+          {%- else -%}
+          Coverage is not computed here — it belongs to <code>{{ d.coverage_owner }}</code>, which has not run.
+          {%- endif -%}
+        </p>
+        {% if d.legacy_schema %}
+        <p class="dp-note is-stale">This manifest predates the v7 schema. Its per-obligation status fields were retired and are not read.</p>
+        {% if d.hint %}<code class="dp-hint">{{ d.hint }}</code>{% endif %}
+        {% endif %}
+
+      {% elif s.key == 'gaps' %}
+        <p class="dp-big">{{ d.total }} <span>{{ 'analysis' if d.total == 1 else 'analyses' }}</span></p>
+        <ul class="dp-mini">{% for k, v in d.by_status.items() %}<li><span>{{ k }}</span><b>{{ v }}</b></li>{% endfor %}</ul>
+        <a class="dp-link" href="/gap-analysis">Gap analysis →</a>
+
+      {% elif s.key == 'submission' %}
+        <p class="dp-big">{{ d.filings | length }} <span>{{ 'filing' if (d.filings|length) == 1 else 'filings' }}</span></p>
+        <ul class="dp-mini">
+          {% for f in d.filings %}<li><span>{{ f.id }}</span><b>{{ f.required }} req</b></li>{% endfor %}
+          {% if d.blocking %}<li class="is-warn"><span>blocking</span><b>{{ d.blocking }}</b></li>{% endif %}
+        </ul>
+        <a class="dp-link" href="/submission">Submission →</a>
+      {% endif %}
+    </div>
+    {% if not loop.last %}<div class="dp-arrow" aria-hidden="true">→</div>{% endif %}
+    {% endfor %}
+  </div>
+
+  {# ── Lane 2 — ingestion ───────────────────────────────────────────── #}
+  <h2 class="dp-lane-title">Ingestion <span class="dp-lane-note">outside sources becoming readable markdown</span></h2>
+
+  <div class="dp-panel">
+    <div class="dp-cols">
+      <div class="dp-col">
+        <p class="dp-big">{{ p.ingestion.binaries }} <span>binary {{ 'source' if p.ingestion.binaries == 1 else 'sources' }}</span></p>
+        <p class="dp-col-sub">under <code>docs/internal/source/</code></p>
+        {% if p.ingestion.binary_files %}
+        <ul class="dp-files">{% for f in p.ingestion.binary_files %}<li><code>{{ f.split('/')|last }}</code></li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      <div class="dp-col">
+        <p class="dp-big">{{ p.ingestion.source_md }} <span>QMS markdown</span></p>
+        <p class="dp-col-sub">under <code>docs/internal/source-md/</code></p>
+        <ul class="dp-mini dp-mini-tall">{% for x in p.ingestion.source_md_parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
+      </div>
+      <div class="dp-col">
+        <p class="dp-big">{{ p.ingestion.external }} <span>distilled references</span></p>
+        <p class="dp-col-sub">under <code>docs/external/</code></p>
+        <ul class="dp-mini dp-mini-tall">{% for x in p.ingestion.external_parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
+      </div>
+    </div>
+
+    {# The load-bearing honesty in this lane. A big source-md corpus next to an
+       almost-empty source/ tree is not a conversion pipeline that ran — it is
+       markdown somebody wrote. Saying so beats a ratio that implies otherwise. #}
+    <p class="dp-note{{ ' is-stale' if p.ingestion.authored_not_converted }}">
+      {% if p.ingestion.authored_not_converted %}
+      No document carries <code>docflow:</code> conversion provenance. The markdown above was <strong>authored directly</strong>, not converted from a binary — so there is no conversion ratio to report.
+      {% else %}
+      {{ p.ingestion.converted }} {{ 'document carries' if p.ingestion.converted == 1 else 'documents carry' }} <code>docflow:</code> conversion provenance.
+      {% endif %}
+    </p>
+    <code class="dp-hint">{{ p.ingestion.hint }}</code>
+  </div>
+
+  {# ── Lane 3 — regulated publish ───────────────────────────────────── #}
+  <h2 class="dp-lane-title">Regulated publish <span class="dp-lane-note">repo → review → controlled vault</span></h2>
+
+  <div class="dp-panel">
+    <div class="dp-states">
+      {% for st in p.publish.states %}
+      <div class="dp-state{{ ' has-docs' if p.publish.by_state.get(st) }}">
+        <span class="dp-state-n">{{ p.publish.by_state.get(st, 0) }}</span>
+        <span class="dp-state-l">{{ st }}</span>
+      </div>
+      {% if not loop.last %}<span class="dp-arrow is-small" aria-hidden="true">→</span>{% endif %}
+      {% endfor %}
+    </div>
+
+    {% if p.publish.present %}
+    <p class="dp-note">{{ p.publish.total }} controlled {{ 'document' if p.publish.total == 1 else 'documents' }}, read from {{ p.publish.source }}.</p>
+    {% else %}
+    <p class="dp-note">
+      No document is under change control yet — there is no state cache and no <code>state:</code> frontmatter in the tree. This lane is built against the <code>change-control</code> contract and will populate once the first document is adopted or published.
+    </p>
+    <code class="dp-hint">{{ p.publish.hint }}</code>
+    {% endif %}
+  </div>
+
+  {# ── Lane 4 — terms + information flow ────────────────────────────── #}
+  <h2 class="dp-lane-title">Terms &amp; information flow <span class="dp-lane-note">projected from the canonical files, never copied</span></h2>
+
+  <div class="dp-panel">
+    {% if p.flow.present %}
+    <div class="dp-tiers">
+      {% for t in p.flow.tiers %}
+      <div class="dp-tier">
+        <div class="dp-tier-head"><h4>{{ t.tier }}</h4><span class="dp-tier-n">{{ t.docs }} docs</span></div>
+        <p>{{ t.description }}</p>
+      </div>
+      {% if not loop.last %}<span class="dp-arrow is-small" aria-hidden="true">{{ '→' if loop.index == 1 else '←' }}</span>{% endif %}
+      {% endfor %}
+    </div>
+    <p class="dp-source">Source: <code>{{ p.flow.source }}</code></p>
+    {% endif %}
+
+    {% if p.terms.present %}
+    <details class="dp-more dp-terms-fold">
+      <summary>{{ p.terms.count }} project terms <span class="dp-source-inline">from <code>{{ p.terms.source }}</code></span></summary>
+      <dl class="dp-terms">
+        {% for t in p.terms.terms %}
+        <dt>{{ t.term }}</dt><dd>{{ t.definition }}</dd>
+        {% endfor %}
+      </dl>
+    </details>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

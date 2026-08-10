@@ -1,18 +1,28 @@
 """Strategy section — topline promotion of the former B3 'strategy-reassembly'
 workflow.
 
-GET /strategy  — full-strategy review surface (tabbed per-domain navigation,
-                 proposed-change callouts, advisor drawer). Renders the same
-                 `workflow_b3_index.html` template the workflow used, with
-                 `topline=True` so the breadcrumb/header present it as a
-                 first-class section rather than a workflow card.
+GET /strategy         — the landing page: roll-up + one card per domain.
+GET /strategy/{slug}  — the review surface for one domain (tabbed per-domain
+                        navigation, proposed-change callouts, advisor drawer),
+                        opened on that domain's pane.
+
+WHY THE SPLIT. `/strategy` used to be the review surface itself, which meant
+every page load read EVERY domain document, rendered each to HTML, parsed its
+proposals/history/decisions/sections and probed for a worktree session — to
+show a tab strip. The landing page now answers "where does this program stand"
+from `loader.py`, which counts without rendering; the full apparatus is paid
+for only when a domain is actually opened.
+
+The review surface still renders every domain's pane and switches between them
+client-side. That is deliberate: the panes carry a cross-domain "move this
+decision to another domain" selector, and the tab JS expects every pane in the
+DOM. `active_slug` only decides which one starts visible.
 
 The heavy lifting (worktree sessions, Accept/Reject/Modify/Re-Assemble,
 decision/section edit-via-chat) still lives in `console.workflows` — its
 mutation endpoints stay mounted at `/workflows/strategy-reassembly/*`, and the
-template's JS posts there. This module owns only the read-side landing page so
-Strategy can sit in the top nav right after Overview. The workflow's GET route
-now redirects here (see `workflows.router`).
+template's JS posts there. The workflow's GET route redirects here (see
+`workflows.router`).
 """
 from __future__ import annotations
 
@@ -21,10 +31,12 @@ from pathlib import Path
 
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from console.config import get_config
 from console.documents import renderer as doc_renderer
+from console.strategy.loader import DECISION_STATES, discover, load_rollup  # noqa: F401
 from console.workflows import b3_session, b3_strategy_reassembly
 from console.workflows.catalog import get_by_slug
 from console.workflows.router import _resolve_actor
@@ -34,15 +46,10 @@ templates = Jinja2Templates(
     directory=str(Path(__file__).parent.parent / "web" / "templates")
 )
 
-_STRATEGIES_DIR = ("docs", "project", "strategies")
-
-
-def discover(repo_root: Path) -> dict:
-    """Cheap nav-visibility probe (stat only). Nav shows the Strategy tab when
-    at least one `*-strategy.md` exists under docs/project/strategies/."""
-    root = repo_root.joinpath(*_STRATEGIES_DIR)
-    has_any = root.is_dir() and any(root.glob("*-strategy.md"))
-    return {"has_any": has_any}
+# Re-exported so `app.py`'s nav wiring can keep importing it from the router,
+# while the single definition lives beside the rest of the read-side logic in
+# loader.py. Two copies of a nav probe drift the moment one gains a condition.
+__all__ = ["router", "discover"]
 
 
 # Inside the strategy view, relative task-doc links (e.g.
@@ -222,12 +229,50 @@ def _build_domain_views(cfg) -> list[dict]:
 
 
 @router.get("/strategy", response_class=HTMLResponse)
-async def strategy_index(request: Request):
+async def strategy_index(request: Request, domain: str | None = None):
+    """Landing page. Counts only — no document rendering (see module docstring).
+
+    `?domain=<slug>` redirects to the detail route so links minted against the
+    old single-page surface keep working.
+    """
+    if domain:
+        return RedirectResponse(url=f"/strategy/{domain}", status_code=307)
     cfg = get_config()
+    rollup = load_rollup(cfg.repo_root)
+    return templates.TemplateResponse(
+        request,
+        "strategy_index.html",
+        {
+            "config": cfg,
+            "rollup": rollup,
+            "domains": rollup["domains"],
+            "decision_states": DECISION_STATES,
+        },
+    )
+
+
+@router.get("/strategy/{slug}", response_class=HTMLResponse)
+async def strategy_domain(request: Request, slug: str):
+    """Review surface, opened on `slug`.
+
+    An unknown slug redirects to the index rather than 404ing: the index is a
+    complete list of what does exist, which is a more useful answer to a stale
+    link than an error page.
+    """
+    cfg = get_config()
+    known = {d.slug for d in b3_strategy_reassembly.scan(cfg.repo_root)}
+    if slug not in known:
+        return RedirectResponse(url="/strategy", status_code=307)
     wf = get_by_slug("strategy-reassembly")
     domain_views = _build_domain_views(cfg)
     return templates.TemplateResponse(
         request,
         "workflow_b3_index.html",
-        {"config": cfg, "workflow": wf, "domain_views": domain_views, "topline": True},
+        {
+            "config": cfg,
+            "workflow": wf,
+            "domain_views": domain_views,
+            "topline": True,
+            "active_slug": slug,
+        },
     )

@@ -31,7 +31,9 @@
   .um-mono { font-variant-numeric:tabular-nums; }
   .um-cost { color:#7ee0c0; }
   /* horizontal stacked bars (by member) */
-  .um-barrow { display:grid; grid-template-columns:120px 1fr 150px; gap:10px; align-items:center; margin-bottom:7px; }
+  /* Right column sized for "999.99M in · 9,999 turns · $9,999.99" — the turn
+     count was added at schema v2 and 150px clipped it. */
+  .um-barrow { display:grid; grid-template-columns:120px 1fr 230px; gap:10px; align-items:center; margin-bottom:7px; }
   .um-barrow .lbl { font-size:13px; overflow:hidden; text-overflow:ellipsis; }
   .um-track { background:#11141a; border-radius:6px; overflow:hidden; height:18px; display:flex; }
   .um-seg-in{background:#6ea8fe} .um-seg-cr{background:#4fc3a1} .um-seg-cw{background:#9b8cff} .um-seg-out{background:#f0a93b}

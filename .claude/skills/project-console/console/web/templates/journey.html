@@ -1,0 +1,141 @@
+{% extends "_base.html" %}
+{% block title %}Journey · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}journey-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/journey.css?v={{ request.state.static_v }}">{% endblock %}
+{% block content %}
+<section class="jy-wrap">
+
+  <header class="jy-head">
+    <div class="jy-head-text">
+      <p class="jy-eyebrow">Where the project stands</p>
+      <h1>Journey</h1>
+      {# The single most important sentence on this page. Every predicate
+         detects a FILE, never its quality — and in a regulated project the
+         difference between "the document exists" and "the document is right"
+         is the whole job. #}
+      <p class="jy-sub">Each signal below detects an <strong>artifact</strong>, never its quality. A document can exist, show as present here, and still be empty of real decisions. Nothing on this page means <em>complete</em>.</p>
+    </div>
+  </header>
+
+  {% if not j.present %}
+  <div class="jy-empty">
+    <p><strong>No journey map found.</strong></p>
+    <p>{{ j.hint }}</p>
+  </div>
+  {% else %}
+
+  {% for g in j.groups %}
+  <section class="jy-group">
+    <header class="jy-group-head">
+      <div>
+        <h2>{{ g.label }}</h2>
+        {% if g.blurb %}<p class="jy-group-blurb">{{ g.blurb }}</p>{% endif %}
+      </div>
+      <div class="jy-group-meta">
+        {% if g.focus %}<span class="jy-focus">focus · {{ g.label_prefix }} {{ g.focus }}</span>{% endif %}
+        {% if not g.source_present %}
+        <span class="jy-src-warn" title="The canonical source for this group's titles is missing — phases render with ids only">source missing</span>
+        {% endif %}
+      </div>
+    </header>
+
+    <ol class="jy-list">
+      {% for p in g.phases %}
+      <li class="jy-phase is-{{ p._meta.cls }}{{ ' is-focus' if p.id == g.focus }}">
+        <div class="jy-phase-rail" aria-hidden="true"><span class="jy-glyph">{{ p._meta.glyph }}</span></div>
+
+        <div class="jy-phase-body">
+          <div class="jy-phase-top">
+            <h3>
+              <span class="jy-num">{{ g.label_prefix }} {{ p.id }}</span>
+              <span class="jy-title">{{ p.title }}</span>
+            </h3>
+            <span class="jy-state jy-state-{{ p._meta.cls }}">{{ p._meta.label }}</span>
+          </div>
+
+          {% if p._why_html %}<p class="jy-why">{{ p._why_html | safe }}</p>{% endif %}
+
+          {% if p.blocked_by %}
+          <p class="jy-blocked">Waiting on {{ g.label_prefix }} {{ p.blocked_by | join(', ') }}</p>
+          {% endif %}
+
+          {# An unobservable note is not a caveat to bury — it names something
+             the probe structurally cannot see, which a reader would otherwise
+             assume it did see. #}
+          {% if p._note_html %}
+          <p class="jy-unobservable"><strong>Not observable:</strong> {{ p._note_html | safe }}</p>
+          {% endif %}
+
+          {% if p.checks %}
+          <ul class="jy-checks">
+            {% for c in p.checks %}
+            <li class="{{ 'is-ok' if c.ok else 'is-not-yet' }}">
+              <span class="jy-check-mark" aria-hidden="true">{{ '●' if c.ok else '○' }}</span>
+              <span class="jy-check-label">{{ c.label }}</span>
+              <span class="jy-check-detail">{{ c.detail }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          {% if p.levels %}
+          <ul class="jy-levels">
+            {% for lv in p.levels %}
+            <li class="{{ 'is-ok' if lv.ok else 'is-not-yet' }}">{{ '●' if lv.ok else '○' }} {{ lv.label }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          {# Evidence gauge — the device-program group. Row counts only; the
+             readiness verdict belongs to /tracker assess and is stated as
+             absent rather than approximated. #}
+          {% if p.evidence and p.evidence.total %}
+          {% set e = p.evidence %}
+          <div class="jy-evidence">
+            <div class="jy-ev-bar" title="Tracker rows attributed to this milestone">
+              {% if e.moved %}<span class="seg is-moved" style="flex:{{ e.moved }}">{{ e.moved }}</span>{% endif %}
+              {% if e.unrecorded %}<span class="seg is-unrecorded" style="flex:{{ e.unrecorded }}">{{ e.unrecorded }}</span>{% endif %}
+              {% if e.not_started %}<span class="seg is-notstarted" style="flex:{{ e.not_started }}">{{ e.not_started }}</span>{% endif %}
+              {% if e.scoped_out %}<span class="seg is-scoped" style="flex:{{ e.scoped_out }}">{{ e.scoped_out }}</span>{% endif %}
+            </div>
+            <ul class="jy-ev-key">
+              {% if e.moved %}<li><i class="k is-moved"></i>{{ e.moved }} in motion</li>{% endif %}
+              {% if e.unrecorded %}<li><i class="k is-unrecorded"></i>{{ e.unrecorded }} status in tracker</li>{% endif %}
+              {% if e.not_started %}<li><i class="k is-notstarted"></i>{{ e.not_started }} not started</li>{% endif %}
+              {% if e.scoped_out %}<li><i class="k is-scoped"></i>{{ e.scoped_out }} scoped out</li>{% endif %}
+            </ul>
+            <p class="jy-ev-note">
+              Row counts only — <strong>not a readiness verdict</strong>. Readiness is computed by
+              <code>{{ e.readiness_owner }}</code>, which has {{ 'run' if e.readiness_available else 'not run' }}.
+              <a href="/submission">Submission →</a>
+            </p>
+          </div>
+          {% endif %}
+
+          {# Terminal phase: a gauge, never a checkbox. A checkbox on a
+             steady-state activity is a lie that never resolves. #}
+          {% if p.gauge %}
+          <div class="jy-gauge">
+            <span class="jy-gauge-item"><b>{{ p.gauge.installed_skills }}</b> skills installed</span>
+            <span class="jy-gauge-item">last sync <b>{{ p.gauge.last_sync or 'unknown' }}</b>{% if p.gauge.age_days is not none %} <span class="jy-age">({{ p.gauge.age_days }}d ago)</span>{% endif %}</span>
+            <span class="jy-gauge-note">steady state — not a completion signal</span>
+          </div>
+          {% endif %}
+
+          {% if p.producer %}
+          <p class="jy-producer"><span>run</span> <code>{{ p.producer }}</code></p>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+
+    {% if g.source %}
+    <p class="jy-source">Titles and order from <code>{{ g.source }}</code> · map at <code>{{ j.map_path }}</code></p>
+    {% endif %}
+  </section>
+  {% endfor %}
+  {% endif %}
+
+</section>
+{% endblock %}

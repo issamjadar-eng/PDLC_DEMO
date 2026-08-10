@@ -499,7 +499,10 @@
     </thead>
     <tbody>
       {% for dv in domain_views %}
-      <tr class="domain-row {% if loop.first %}active{% endif %}"
+      {# `active_slug` is set when arriving from /strategy/<slug> so the page
+         opens on that domain. Absent (the old /strategy entry point), the
+         first row stays active exactly as before. #}
+      <tr class="domain-row {% if (active_slug and dv.doc.slug == active_slug) or (not active_slug and loop.first) %}active{% endif %}"
           data-domain="{{ dv.doc.slug }}" tabindex="0" role="button"
           aria-label="Open {{ dv.doc.title }} domain pane">
         <td class="col-domain">{{ dv.doc.title }}</td>
@@ -522,7 +525,7 @@
 
   {# ── One pane per domain ─────────────────────────────────── #}
   {% for dv in domain_views %}
-  <div class="domain-pane {% if loop.first %}active{% endif %}" data-domain-pane="{{ dv.doc.slug }}">
+  <div class="domain-pane {% if (active_slug and dv.doc.slug == active_slug) or (not active_slug and loop.first) %}active{% endif %}" data-domain-pane="{{ dv.doc.slug }}">
     <p class="muted" style="margin-top: 0.75rem;">
       <code>{{ dv.doc.virtual_path }}</code>
       &middot; status <code>{{ dv.doc.status }}</code>
