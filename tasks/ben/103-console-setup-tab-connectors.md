@@ -2,7 +2,7 @@
 
 **ID**: 103
 **Created**: 2026-07-14
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -144,3 +144,4 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 - 2026-07-14: Task created.
 
 - 2026-07-14: Artifacts from this task (console/setup module, setup_view.html, app.py router mount — project-console 1.31.0) were found uncommitted in the worktree and committed via task 104's push (settings-shell redesign, 1.32.0, which builds directly on them). See tasks/ben/104-console-setup-redesign.md.
+- 2026-08-06: Status → Complete (retroactive close, no new work). The task's artifacts shipped under 104 in July; only the status flip was outstanding, which left a stale `uncheckpointed-ben-103` marker resurfacing on every session start. Marker cleared and a duplicate 103 row removed from `000-index.md` Active. The planned browser walkthrough of the Setup tab is moot — 104's redesign replaced this surface.

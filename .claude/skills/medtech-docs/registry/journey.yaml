@@ -1,0 +1,299 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Journey map — the two paths a medtech project walks.
+#
+# THIS FILE IS THE MAP, NOT THE STATE. It declares, per phase, what "artifacts
+# present" looks like and what blocks what. It never records whether a given
+# project has reached a phase — that is derived live from the filesystem by the
+# console's Journey surface. There is no generated journey artifact and no
+# refresh step: journey state is repo truth and every probe is a stat().
+#
+# TITLES AND PROSE ARE NOT RESTATED HERE. `new-project-bootstrap.md` is
+# canonical for standup phase numbers, titles and why-text; consumers parse its
+# `## Phase N — Title` headings. `docs/project/milestones/regulatory.yml` is
+# canonical for the device program's milestone ids, names and order. Restating
+# either would create exactly the drift `claude-md-references.md` exists to
+# prevent. `anchor:` below is a locator, not a copy.
+#
+# Owner: medtech-docs. The standup journey is the same in every project built
+# from this toolchain regardless of the device; rendering is project-console's,
+# the semantics are ours.
+#
+# Predicate vocabulary understood by consumers:
+#   all_exist:     [paths]        — every path exists (file or dir), repo-relative
+#   any_exist:     [globs]        — at least one glob match exists
+#   yaml_nonempty: {file, key}    — dotted key resolves to a non-empty value
+#   file_contains: {file, pattern}— regex matches somewhere in the file
+#   derived:       <name>         — consumer computes it (see `derivations`)
+# Multiple predicate keys on one phase are ANDed.
+# ─────────────────────────────────────────────────────────────────────────────
+schema_version: 1
+
+groups:
+  # ── Group 1 — standing the project up ────────────────────────────────────
+  - id: standup
+    label: Project standup
+    blurb: >-
+      Getting from an empty clone to a project with a scaffolded DHF and
+      populated inputs. Walked once per project.
+    # Canonical source for phase order, titles and why-text. Parsed, never copied.
+    source: new-project-bootstrap.md
+
+    phases:
+      - id: "0"
+        anchor: "Phase 0 — Prerequisites"
+        done_when:
+          all_exist: [setup.md]
+          any_exist: [".state/setup-check.json", "setup.sh"]
+        producer: "follow setup.md"
+        # The toolchain is installed on a MACHINE, not in the repo. A fresh
+        # clone on a second laptop shows this satisfied while that laptop may
+        # have nothing installed. Consumers must say so on the card.
+        unobservable_note: >-
+          Only the repo-side setup artifacts are detectable. Whether THIS
+          machine actually has the toolchain installed is not visible here —
+          the Setup tab checks that.
+
+      - id: "1"
+        anchor: "Phase 1 — Clone hitachi and install skills"
+        done_when:
+          any_exist: [".claude/skills/*/SKILL.md"]
+          derived: registry_configured
+        producer: "/sync-skills pull"
+
+      - id: "2"
+        anchor: "Phase 2 — Initialize the repo"
+        requires: ["1"]
+        done_when:
+          all_exist: [.gitignore, project.yml]
+        producer: "git init  →  gh repo create"
+
+      - id: "3"
+        anchor: "Phase 3 — Run `/medtech-docs init`"
+        requires: ["2"]
+        done_when:
+          all_exist:
+            - docs/README.md
+            - docs/external
+            - docs/internal
+            - docs/project
+            - CLAUDE.md
+          # A hook on disk that isn't registered does nothing. Check the
+          # wiring, not just the file — this is why init needs more than an
+          # existence probe.
+          file_contains:
+            file: .claude/settings.json
+            pattern: "check-active-task\\.sh"
+        producer: "/medtech-docs init"
+
+      - id: "4"
+        anchor: "Phase 4 — Personalize `CLAUDE.md`"
+        requires: ["3"]
+        done_when:
+          derived: claude_md_personalized
+        producer: "edit CLAUDE.md — device identity, goals, scope, conventions"
+
+      - id: "5"
+        anchor: "Phase 5 — Create the first task"
+        requires: ["3"]
+        done_when:
+          any_exist: ["tasks/*/001-*.md"]
+        producer: "/task create <person> project-init"
+
+      - id: "6"
+        anchor: "Phase 6 — Architecture & component strategy"
+        requires: ["5"]
+        done_when:
+          derived: architecture_and_regulatory_strategy
+        producer: "/task create <person> architecture-strategy  →  /strategy assemble architecture"
+        # The guide frames this as a discussion that produces a topology
+        # decision. The discussion is not observable, only its output.
+        unobservable_note: >-
+          Only the assembled strategy output is detectable. A component
+          analysis in progress looks identical to none at all.
+
+      - id: "6.5"
+        anchor: "Phase 6.5 — Import applicable references"
+        # The guide states the gate explicitly: do not run until architecture
+        # AND regulatory strategy docs are populated. That is phase 6.
+        requires: ["6"]
+        done_when:
+          any_exist:
+            - docs/external/standards/*.md
+            - docs/external/fda-guidance/*.md
+        producer: "/medtech-docs import-standard <id>  /medtech-docs import-guidance <id>"
+        gate_source: "new-project-bootstrap.md#Phase 6.5"
+
+      - id: "7"
+        anchor: "Phase 7 — Scaffold DHFs"
+        requires: ["6"]
+        done_when:
+          derived: dhfs_scaffolded
+        producer: "/medtech-docs add-dhf <name>"
+        # Two-level signal: a DHF folder can exist while carrying none of the
+        # design-control role folders that make it a DHF in substance.
+        levels:
+          - id: scaffolded
+            label: "DHF folders present"
+            derived: dhfs_scaffolded
+          - id: populated
+            label: "design-control roles present"
+            derived: dhfs_have_design_controls
+
+      - id: "8"
+        anchor: "Phase 8 — Populate standards, frameworks, and sample inputs"
+        requires: ["7"]
+        done_when:
+          any_exist:
+            - docs/project/input-analysis/*/*.md
+            - docs/internal/source-md/*/*.md
+        producer: "/docflow convert  ·  /medtech-docs import-framework"
+
+      - id: "9"
+        anchor: "Phase 9 — Ongoing registry sync"
+        requires: ["1"]
+        # TERMINAL — a loop, not a completable phase. Consumers MUST render a
+        # health gauge here, never a checkbox: a checkbox on a steady-state
+        # activity is a lie that never resolves.
+        terminal: true
+        gauge:
+          derived: sync_health
+        producer: "/sync-skills pull  ·  /sync-skills status"
+
+    # Phase 10 in the guide is "Troubleshooting" — reference material, not a
+    # phase of work. Deliberately absent: including it would put a permanently
+    # unsatisfiable card at the end of the path.
+
+  # ── Group 2 — taking the device to market ────────────────────────────────
+  - id: program
+    label: Device program
+    blurb: >-
+      The regulatory milestone sequence for the device itself. Ongoing, and
+      the reason the project exists.
+    # Milestone ids, names, descriptions and ORDER are owned by this file.
+    # Consumers read it directly and expand one phase per milestone; the
+    # `requires` chain follows the declared order. Nothing is restated here.
+    from_milestones: docs/project/milestones/regulatory.yml
+    # A milestone is NOT a checkbox and must never render as "artifacts
+    # present". A regulatory milestone completes when a package is filed and
+    # a regulator responds — nothing in this repo can observe that. What the
+    # repo CAN observe is whether evidence is moving. So every milestone
+    # renders as a gauge with one of three states:
+    #   in-motion  — at least one in-scope tracker row has left "Not Started"
+    #   next-up    — in-scope rows exist, none has moved, predecessor is moving
+    #   blocked    — the preceding milestone shows no movement
+    # Without this, four milestones each holding a handful of drafting rows all
+    # rendered "artifacts present", i.e. the whole program read as finished.
+    state_model: evidence-gauge
+    phase_template:
+      done_when:
+        derived: milestone_evidence
+      producer: "/tracker generate  ·  /tracker render"
+
+# ── Derivations the consumer computes rather than probing directly ──────────
+# Named here so the semantics stay declared on the map's side of the ownership
+# line even though the arithmetic happens in the console.
+derivations:
+  registry_configured:
+    description: >-
+      At least one entry in project.yml `registries[]` is a fetchable skill
+      registry — `type: github` carrying a `repo`.
+    # ⚠ DO NOT collapse this back to a positional probe such as
+    # `registries.0.repo`. `registries[0]` is conventionally the `builtin`
+    # (Anthropic) entry, which has NO `repo` key — a positional check reports
+    # a correctly configured project as unconfigured. The registry list is a
+    # SET; ask it a set question.
+    resolve_via: "project.yml#registries[]"
+    requires_type: github
+
+  claude_md_personalized:
+    description: >-
+      CLAUDE.md names the project rather than still carrying the init
+      template's placeholder. Resolved by checking that the file mentions
+      `project.name` from project.yml — never by matching a hardcoded name.
+    resolve_via: "project.yml#project.name"
+
+  architecture_and_regulatory_strategy:
+    description: >-
+      Both the architecture and regulatory strategy documents exist and are
+      non-stub. Phase 6.5's gate in the guide names exactly this pair.
+    # Resolve each domain's filename through project.yml strategy_domains[],
+    # NEVER a hardcoded path (audit-wiring-before-adding-fields).
+    resolve_via: "project.yml#strategy_domains[].output_path"
+    domains: [architecture, regulatory]
+    # `non_stub` and not `has_decisions`: this project's strategy docs record
+    # decisions in TWO formats (structured DECISION blocks and legacy prose),
+    # and only one domain has migrated. Requiring structured decisions would
+    # pin this phase below its threshold for documents that are demonstrably
+    # written — the same wrong-red the rendering.language rule exists to stop.
+    requires: non_stub
+
+  dhfs_scaffolded:
+    description: >-
+      Every DHF declared in the project manifest has its folder on disk.
+    resolve_via: "project.yml#dhfs[].path"
+
+  dhfs_have_design_controls:
+    description: >-
+      Every declared DHF additionally carries a design-controls folder with at
+      least one role subfolder — the difference between a scaffolded shell and
+      a DHF with structure in it.
+    resolve_via: "project.yml#dhfs[].path"
+    requires_subpath: design-controls
+
+  sync_health:
+    description: >-
+      Steady-state health for the terminal standup phase. NOT a completion
+      signal — it reports how many skills are installed and how recently the
+      registry was synced.
+    signals:
+      - installed_skill_count
+      - last_sync_date
+    sync_log: .claude/sync-log.md
+
+  milestone_evidence:
+    description: >-
+      Per-milestone evidence inventory, read from what `/tracker` PUBLISHES
+      structurally — never recomputed here.
+    # ⚠ READ THE TRACKER'S OUTPUT; DO NOT RE-DERIVE ITS READINESS.
+    # The tracker merges its markdown table with `submission-tracker.overlay.yml`
+    # at render time, and per tracker/SKILL.md the OVERLAY WINS. A second
+    # derivation that parsed the markdown would silently disagree with the
+    # tracker the team actually reads. So:
+    #   • row inventory + milestone attribution ← row-source sidecar (structural)
+    #   • recorded status                       ← overlay (the durable, curated home)
+    #   • anything else                         ← NOT COMPUTED; link to the tracker
+    row_source: docs/project/submissions/submission-tracker.row-source.json
+    overlay: docs/project/submissions/submission-tracker.overlay.yml
+    # Statuses that mean "deliberately out of scope for this milestone" rather
+    # than "outstanding". Counting these as debt would overstate every
+    # milestone's remaining work.
+    scoped_out_statuses: ["N/A"]
+    # Movement, not completion. A row that has left "Not Started" is in motion;
+    # that is the honest signal a journey card can carry without claiming a
+    # readiness verdict nobody computed.
+    not_started_statuses: ["Not Started", ""]
+    # Where a real readiness verdict would come from, if it existed.
+    readiness_owner: "/tracker assess"
+    readiness_artifact: docs/project/submissions/submission-tracker.agent.json
+
+# ── Rendering contract for consumers ────────────────────────────────────────
+# Binding on any surface that renders this map.
+rendering:
+  # Every predicate above detects an ARTIFACT, never QUALITY. A strategy doc
+  # can exist, probe green, and be empty of real decisions. Surfaces MUST use
+  # artifact language ("artifacts present — 3 domains, 17 decisions"), never
+  # "complete" and never a bare ✓, or the surface teaches people to produce
+  # artifacts instead of decisions. In a regulated project that is not a
+  # cosmetic distinction: a checkmark against a DHF role is the kind of claim
+  # an auditor will ask you to substantiate.
+  language: artifact-present-not-complete
+
+  # Label prefix per group, so the two paths never read as one numbering.
+  label_prefix:
+    standup: "Standup Phase"
+    program: "Milestone"
+
+  # This surface's audience includes a project with almost nothing in it. It
+  # MUST NOT hide while the project is immature — that is exactly when it is
+  # most useful. discover() returns true whenever this file exists.
+  always_discoverable: true

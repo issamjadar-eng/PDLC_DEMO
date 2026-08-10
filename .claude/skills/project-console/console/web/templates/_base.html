@@ -24,6 +24,12 @@
   <symbol id="ic-dashboards" viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7"/><rect x="12" y="7" width="3" height="11"/><rect x="17" y="4" width="3" height="14"/></symbol>
   <symbol id="ic-trace" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></symbol>
   <symbol id="ic-gap" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  {# Metrics gets its own mark rather than reusing #ic-dashboards — the two now
+     sit adjacent in the nav, and identical icons would make them look like one
+     control rendered twice. Trending line + rising point = usage over time. #}
+  <symbol id="ic-metrics" viewBox="0 0 24 24"><path d="M3 3v18h18"/><polyline points="7 15 11 10 14 13 20 6"/><circle cx="20" cy="6" r="1.6"/></symbol>
+  <symbol id="ic-journey" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h3a2 2 0 0 1 2 2v2"/><path d="M14 12h3a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="ic-pipeline" viewBox="0 0 24 24"><path d="M3 7h6l2 5 2-5h6"/><circle cx="3" cy="7" r="1.6"/><circle cx="21" cy="7" r="1.6"/><path d="M12 12v6"/><circle cx="12" cy="19" r="1.8"/></symbol>
   <symbol id="ic-workflows" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M7 11v3a2 2 0 0 0 2 2h4"/></symbol>
   <symbol id="ic-agents" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
   <symbol id="ic-documents" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></symbol>
@@ -44,17 +50,25 @@
      vector icons inherit the nav color scheme. #}
   <nav class="topnav-nav" aria-label="Primary">
     {% if request.state.overview_nav %}<a class="nav-item" href="/overview" title="Overview"><svg class="nav-svg" aria-hidden="true"><use href="#ic-overview"/></svg><span class="nav-tx">Overview</span></a>{% endif %}
+    {% if request.state.journey_nav %}<a class="nav-item" href="/journey" title="Journey (project standup + device program, derived live)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-journey"/></svg><span class="nav-tx">Journey</span></a>{% endif %}
     {% if request.state.strategy_nav %}<a class="nav-item" href="/strategy" title="Strategy"><svg class="nav-svg" aria-hidden="true"><use href="#ic-strategy"/></svg><span class="nav-tx">Strategy</span></a>{% endif %}
     {% if request.state.submission_nav %}<a class="nav-item" href="/submission" title="Submission"><svg class="nav-svg" aria-hidden="true"><use href="#ic-submission"/></svg><span class="nav-tx">Submission</span></a>{% endif %}
     {% if request.state.commercial_nav %}<a class="nav-item" href="/commercial" title="Commercial (business questions answered with data)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-commercial"/></svg><span class="nav-tx">Commercial</span></a>{% endif %}
     <a class="nav-item" href="/dashboards" title="Dashboards"><svg class="nav-svg" aria-hidden="true"><use href="#ic-dashboards"/></svg><span class="nav-tx">Dashboards</span></a>
+    {# Metrics sits beside Dashboards deliberately — same class of surface (read
+       the numbers), and this nav is PRIORITY-ORDERED: anything that doesn't fit
+       is pushed right into the hamburger. Adding Journey + Pipeline ahead of it
+       silently displaced Metrics into the overflow menu, which read to the team
+       as "the Metrics tab disappeared". Inserting a tab on the left has a cost
+       on the right — check the overflow after adding one. #}
+    {% if request.state.metrics_nav %}<a class="nav-item" href="/metrics" title="Metrics (Tokens + Value/ROI)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-metrics"/></svg><span class="nav-tx">Metrics</span></a>{% endif %}
     <a class="nav-item" href="/trace-matrix" title="Trace Matrix"><svg class="nav-svg" aria-hidden="true"><use href="#ic-trace"/></svg><span class="nav-tx">Trace Matrix</span></a>
+    {% if request.state.doc_pipeline_nav %}<a class="nav-item" href="/doc-pipeline" title="Document Pipeline (how documentation moves, derived live)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-pipeline"/></svg><span class="nav-tx">Pipeline</span></a>{% endif %}
     {% if request.state.gap_analysis_nav %}<a class="nav-item" href="/gap-analysis" title="Gap Analysis"><svg class="nav-svg" aria-hidden="true"><use href="#ic-gap"/></svg><span class="nav-tx">Gap Analysis</span></a>{% endif %}
     <a class="nav-item" href="/workflows" title="Workflows"><svg class="nav-svg" aria-hidden="true"><use href="#ic-workflows"/></svg><span class="nav-tx">Workflows</span></a>
     <a class="nav-item" href="/agents" title="Agents"><svg class="nav-svg" aria-hidden="true"><use href="#ic-agents"/></svg><span class="nav-tx">Agents</span></a>
     <a class="nav-item" href="/documents" title="Documents"><svg class="nav-svg" aria-hidden="true"><use href="#ic-documents"/></svg><span class="nav-tx">Documents</span></a>
     {% if request.state.tasks_nav %}<a class="nav-item" href="/tasks" title="Tasks (activity summary)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-tasks"/></svg><span class="nav-tx">Tasks</span></a>{% endif %}
-    {% if request.state.metrics_nav %}<a class="nav-item" href="/metrics" title="Metrics (Tokens + Value/ROI)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-dashboards"/></svg><span class="nav-tx">Metrics</span></a>{% endif %}
     <a class="nav-item" href="/setup" title="Setup (project settings — connectors, skills, agents, team)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-setup"/></svg><span class="nav-tx">Setup</span></a>
   </nav>
   <div class="nav-more" hidden>

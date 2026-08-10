@@ -516,6 +516,17 @@ body.workflow-page main {
 body.workflow-page main { padding: 1.5rem 2rem 3rem; }
 body.dashboard-page main { padding: 0; }
 body.dashboard-page .site-footer { display: none; }
+/* Metrics + Pipeline break the 1040px cap too, but to a bounded 98% rather than
+   `none`: both are wide tables / multi-lane diagrams that gain real information
+   density from the extra width, while the residual 1% gutter each side keeps
+   them from reading as edge-to-edge. `%` (not `vw`) so the value is 98% of the
+   scrollbar-excluded content box — `98vw` includes the scrollbar and yields a
+   horizontal overflow on platforms that reserve gutter space for it. */
+body.metrics-body main,
+body.pipeline-page main {
+  max-width: 98%;
+  padding: 1.5rem 1.25rem 3rem;
+}
 /* Chat page still hides the footer — the chat form sits at the bottom of the
    viewport and there's no useful room for a footer below it. Docs page keeps
    the footer so users can see it below the explorer. */

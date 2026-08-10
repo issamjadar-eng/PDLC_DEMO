@@ -74,6 +74,10 @@
   .su-add h3 { margin: 0 0 3px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
   .su-add p { margin: 0 0 10px; font-size: 12px; line-height: 1.45; color: var(--body-text-muted,#8b93a7); }
   .su-add a { font-size: 11.5px; }
+  /* Caveats (instance-specific endpoint, licensing, scope limits) read as an
+     aside against the description, not as more description. */
+  .su-add .su-note { margin: -6px 0 10px; padding-left: 9px; font-size: 11.5px;
+      border-left: 2px solid var(--border,#2a2f3a); }
 
   /* ---- list rows (the reference's table look) ---- */
   .su-list { border: 1px solid var(--border,#2a2f3a); border-radius: 12px; overflow: hidden;
@@ -336,13 +340,23 @@
       {% set configured_names = setup.connectors.connectors | selectattr('configured') | map(attribute='name') | list %}
       <div class="su-cards">
         {% for entry in catalog %}
+        {# A catalog row is one of three things: already configured, configurable,
+           or researched-and-there-is-no-vendor-server (availability = none). #}
+        {% set unavailable = entry.availability == 'none' %}
         {% set already = entry.spec is not none and entry.key in configured_names %}
-        <div class="su-add{{ ' off' if already }}" id="su-add-{{ entry.key }}">
+        {% set pseudo = entry.spec is none and entry.key.startswith('custom-') %}
+        {% set http_form = (entry.spec and entry.spec.type in ('http', 'sse'))
+                           or (entry.spec is none and 'url' in entry.editable) %}
+        <div class="su-add{{ ' off' if already or unavailable }}" id="su-add-{{ entry.key }}">
           <h3><span class="su-glyph"><svg class="su-ico"><use href="#su-ic-plug"/></svg></span>{{ entry.title }}
-            {% if already %}<span class="su-badge ok">configured</span>{% endif %}</h3>
+            {% if already %}<span class="su-badge ok">configured</span>
+            {% elif unavailable %}<span class="su-badge info">no vendor MCP</span>{% endif %}</h3>
           <p>{{ entry.description }}</p>
+          {% if entry.note %}<p class="su-note">{{ entry.note }}</p>{% endif %}
           {% if entry.docs %}<a href="{{ entry.docs }}" target="_blank" rel="noopener">Reference ↗</a>{% endif %}
-          {% if already %}
+          {% if unavailable %}
+          {# No Configure button by design — nothing vendor-official to point it at. #}
+          {% elif already %}
           <div class="su-actions">
             <button class="su-btn" onclick="suShowConfigured('{{ entry.key }}')">View configured ↓</button>
           </div>
@@ -350,46 +364,26 @@
           <div class="su-actions">
             <button class="su-btn" onclick="suToggleForm('{{ entry.key }}')">Configure…</button>
           </div>
-          {% endif %}
-          {% if not already %}
           <div class="su-form" id="su-form-{{ entry.key }}">
-            {% if entry.spec and entry.spec.url %}
             <label>Connector name</label>
-            <input id="su-{{ entry.key }}-name" value="{{ entry.key }}">
+            <input id="su-{{ entry.key }}-name" value="{{ '' if pseudo else entry.key }}"
+                   placeholder="{{ 'my-remote-server' if http_form else 'my-local-server' }}">
+            {% if http_form %}
             <label>URL</label>
-            <input id="su-{{ entry.key }}-url" value="{{ entry.spec.url }}">
+            <input id="su-{{ entry.key }}-url" value="{{ entry.spec.url if entry.spec else '' }}"
+                   placeholder="{{ entry.url_placeholder or 'https://example.com/mcp' }}">
             <label>Transport (http or sse)</label>
-            <input id="su-{{ entry.key }}-transport" value="{{ entry.spec.type }}">
-            <div class="su-actions">
-              <button class="su-btn" onclick="suSubmitHttp('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
-            </div>
-            {% elif entry.spec %}
-            <label>Connector name</label>
-            <input id="su-{{ entry.key }}-name" value="{{ entry.key }}">
-            <label>Command</label>
-            <input id="su-{{ entry.key }}-command" value="{{ entry.spec.command }}">
-            <label>Args (space-separated — quoting is not supported; keep args simple)</label>
-            <input id="su-{{ entry.key }}-args" value="{{ entry.spec.args | join(' ') }}">
-            <div class="su-actions">
-              <button class="su-btn" onclick="suSubmitStdio('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
-            </div>
-            {% elif 'url' in entry.editable %}
-            <label>Connector name</label>
-            <input id="su-{{ entry.key }}-name" placeholder="my-remote-server">
-            <label>URL</label>
-            <input id="su-{{ entry.key }}-url" placeholder="https://example.com/mcp">
-            <label>Transport (http or sse)</label>
-            <input id="su-{{ entry.key }}-transport" value="http">
+            <input id="su-{{ entry.key }}-transport" value="{{ entry.spec.type if entry.spec else 'http' }}">
             <div class="su-actions">
               <button class="su-btn" onclick="suSubmitHttp('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
             </div>
             {% else %}
-            <label>Connector name</label>
-            <input id="su-{{ entry.key }}-name" placeholder="my-local-server">
             <label>Command</label>
-            <input id="su-{{ entry.key }}-command" placeholder="./tools/my-server/run.sh">
-            <label>Args (space-separated)</label>
-            <input id="su-{{ entry.key }}-args" placeholder="--flag value">
+            <input id="su-{{ entry.key }}-command" value="{{ entry.spec.command if entry.spec else '' }}"
+                   placeholder="./tools/my-server/run.sh">
+            <label>Args (space-separated — quoting is not supported; keep args simple)</label>
+            <input id="su-{{ entry.key }}-args" value="{{ entry.spec.args | join(' ') if entry.spec else '' }}"
+                   placeholder="--flag value">
             <div class="su-actions">
               <button class="su-btn" onclick="suSubmitStdio('{{ entry.key }}')">Save to .mcp.json + allowlist</button>
             </div>

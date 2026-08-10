@@ -16,8 +16,12 @@ from console.commercial.router import router as commercial_router
 from console.config import get_config
 from console.dashboards.router import router as dashboards_router
 from console.documents.router import router as documents_router
+from console.doc_pipeline.loader import discover as discover_doc_pipeline
+from console.doc_pipeline.router import router as doc_pipeline_router
 from console.gap_analysis.loader import discover as discover_gap_analysis
 from console.gap_analysis.router import router as gap_analysis_router
+from console.journey.loader import discover as discover_journey
+from console.journey.router import router as journey_router
 from console.metrics.loader import discover as discover_metrics
 from console.metrics.router import router as metrics_router
 from console.overview.router import discover as discover_overview
@@ -93,6 +97,20 @@ def _render_theme_footer(theme) -> str:
         return ""
 
 
+def _nav_probe(fn, repo_root) -> bool:
+    """Run a section's `discover()` and reduce it to a nav-visibility boolean.
+
+    Swallows everything. This runs inside the request middleware, so an
+    unhandled exception in one section's probe would take down every route in
+    the console — including the ones that have nothing to do with that section.
+    Failing closed (hide the nav entry) keeps the blast radius at one tab.
+    """
+    try:
+        return bool(fn(repo_root)["has_any"])
+    except Exception:
+        return False
+
+
 @app.middleware("http")
 async def theme_context(request: Request, call_next):
     """Resolve the active theme on every request and stash it on request.state
@@ -104,23 +122,32 @@ async def theme_context(request: Request, call_next):
     request.state.theme_footer = _render_theme_footer(theme)
     request.state.config = cfg
     request.state.static_v = _static_version()
-    # Overview nav visibility — cheap filesystem check per request (stat only).
-    request.state.overview_nav = discover_overview(cfg.repo_root)["has_any"]
-    # Strategy nav visibility — shows when docs/project/strategies/*-strategy.md exist.
-    request.state.strategy_nav = discover_strategy(cfg.repo_root)["has_any"]
-    # Submission nav visibility — shows when submission sidecars / manifests exist.
-    request.state.submission_nav = discover_submission(cfg.repo_root)["has_any"]
-    # Gap Analysis nav visibility — shows when sidecars exist under docs/_analysis/.
-    request.state.gap_analysis_nav = discover_gap_analysis(cfg.repo_root)["has_any"]
-    # Commercial nav visibility — shows when the commercial skill has published
+    # Nav visibility — one cheap filesystem probe per section, per request.
+    # EVERY probe goes through `_nav_probe`: this middleware runs on the way to
+    # every route, so an exception raised by any single probe would 500 the
+    # whole console rather than just hide one nav entry. A section whose probe
+    # fails is treated as "not discoverable" and the rest of the app stays up.
+    request.state.overview_nav = _nav_probe(discover_overview, cfg.repo_root)
+    # Strategy — shows when docs/project/strategies/*-strategy.md exist.
+    request.state.strategy_nav = _nav_probe(discover_strategy, cfg.repo_root)
+    # Submission — shows when submission sidecars / manifests exist.
+    request.state.submission_nav = _nav_probe(discover_submission, cfg.repo_root)
+    # Gap Analysis — shows when sidecars exist under docs/_analysis/.
+    request.state.gap_analysis_nav = _nav_probe(discover_gap_analysis, cfg.repo_root)
+    # Commercial — shows when the commercial skill has published
     # docs/project/commercial/.console/commercial-index.json.
-    request.state.commercial_nav = discover_commercial(cfg.repo_root)["has_any"]
-    # Metrics nav visibility — shows when the usage-metrics skill has published
+    request.state.commercial_nav = _nav_probe(discover_commercial, cfg.repo_root)
+    # Metrics — shows when the usage-metrics skill has published
     # tools/usage-metrics/usage.json.
-    request.state.metrics_nav = discover_metrics(cfg.repo_root)["has_any"]
-    # Tasks nav visibility — shows when the task skill has published
-    # tasks/task-summary.json (regenerated via /task summary).
-    request.state.tasks_nav = discover_tasks(cfg.repo_root)["has_any"]
+    request.state.metrics_nav = _nav_probe(discover_metrics, cfg.repo_root)
+    # Tasks — shows when the task skill has published tasks/task-summary.json.
+    request.state.tasks_nav = _nav_probe(discover_tasks, cfg.repo_root)
+    # Document Pipeline — shows when the docs pillar exists (docs/README.md).
+    request.state.doc_pipeline_nav = _nav_probe(discover_doc_pipeline, cfg.repo_root)
+    # Journey — INVERTED DISCOVERY: lights whenever the MAP exists, not when a
+    # producer artifact does. A journey tab that hides while the project is
+    # immature hides exactly when it is most useful.
+    request.state.journey_nav = _nav_probe(discover_journey, cfg.repo_root)
     return await call_next(request)
 
 
@@ -138,6 +165,8 @@ app.include_router(workflows_router)
 app.include_router(metrics_router)
 app.include_router(setup_router)
 app.include_router(tasks_router)
+app.include_router(doc_pipeline_router)
+app.include_router(journey_router)
 
 _static_dir = Path(__file__).parent / "web" / "static"
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")

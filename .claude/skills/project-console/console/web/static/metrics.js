@@ -1,6 +1,11 @@
 /* metrics.js — render the team usage dashboard from window.USAGE
- * (tools/usage-metrics/usage.json, schema usage-metrics/team/v1, anonymized).
- * Generic consumer of the usage-metrics skill; no names, no project specifics. */
+ * (tools/usage-metrics/usage.json, schema usage-metrics/team/v2, anonymized).
+ * Generic consumer of the usage-metrics skill; no names, no project specifics.
+ *
+ * v2 added `user_turns` — human messages, counted from the session transcript.
+ * The null-vs-zero handling below is ported from the skill's own dashboard
+ * (usage-metrics/scripts/aggregate.py) so the two views of the same JSON agree;
+ * the skill owns that semantic, this file only renders it. */
 (function () {
   "use strict";
   var U = window.USAGE || {};
@@ -9,6 +14,12 @@
   var RATE = U.rate_card || {};
   var TOK = ["input", "cache_read", "cache_creation", "output"];
   var fmt = function (n) { return (n || 0).toLocaleString(); };
+  // "--" = not measured, NOT zero. Turn counts come from raw transcripts, which
+  // Claude Code rotates away, so sessions collected before the turn schema
+  // existed are unrecoverable. Rendering them as 0 would corrupt any per-turn
+  // ratio a reader computes from this page.
+  var turns = function (v) { return (v === null || v === undefined) ? "--" : fmt(v); };
+  var hasTurns = function (v) { return v !== null && v !== undefined; };
   var usd = function (n) { return "$" + (n || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
   // Token quantities normalized to MILLIONS of tokens (MTok) to match $/MTok rates.
   var tokM = function (n) { return ((n || 0) / 1e6).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "M"; };
@@ -20,10 +31,25 @@
     ms.forEach(function (m) {
       Object.keys(DATA[m] || {}).forEach(function (lbl) {
         var rec = DATA[m][lbl];
-        if (!acc[lbl]) acc[lbl] = { name: rec.name || lbl, input: 0, cache_read: 0, cache_creation: 0, output: 0, messages: 0, cost: 0, sessions: 0 };
+        if (!acc[lbl]) acc[lbl] = {
+          name: rec.name || lbl, input: 0, cache_read: 0, cache_creation: 0, output: 0,
+          messages: 0, cost: 0, sessions: 0,
+          // Null-aware: the slot stays null until some month actually measured
+          // turns, so "not measured" never collapses into a real 0 on merge.
+          user_turns: null,
+          // Cost/messages restricted to the months that DID measure turns — the
+          // only honest denominator basis for a per-turn ratio. Summing all-time
+          // cost over partial turns silently inflates $/turn.
+          cost_measured: 0, messages_measured: 0
+        };
         acc[lbl].sessions += rec.sessions || 0;
         acc[lbl].messages += (rec.totals && rec.totals.messages) || 0;
         acc[lbl].cost += rec.cost || 0;
+        if (hasTurns(rec.user_turns)) {
+          acc[lbl].user_turns = (acc[lbl].user_turns || 0) + rec.user_turns;
+          acc[lbl].cost_measured += rec.cost || 0;
+          acc[lbl].messages_measured += (rec.totals && rec.totals.messages) || 0;
+        }
         TOK.forEach(function (t) { acc[lbl][t] += (rec.totals && rec.totals[t]) || 0; });
       });
     });
@@ -36,17 +62,40 @@
   function render() {
     var sel = $("um-month").value;
     var rows = rowsFor(sel);
-    var tot = { sessions: 0, input: 0, output: 0, cache_read: 0, cache_creation: 0, messages: 0, total_in: 0, cost: 0 };
+    var tot = {
+      sessions: 0, input: 0, output: 0, cache_read: 0, cache_creation: 0, messages: 0,
+      total_in: 0, cost: 0, cost_measured: 0, messages_measured: 0
+    };
     rows.forEach(function (r) { Object.keys(tot).forEach(function (k) { tot[k] += r[k] || 0; }); });
+    // Deliberately outside the loop above: `null + 0` is 0 in JS, which would
+    // silently turn "not measured" into a measured zero the moment any row
+    // lacked turn data.
+    tot.user_turns = null;
+    rows.forEach(function (r) {
+      if (hasTurns(r.user_turns)) tot.user_turns = (tot.user_turns || 0) + r.user_turns;
+    });
+
+    // Per-turn ratios — the point of measuring turns at all. Denominator is the
+    // turn count; numerators are the turn-covered subset only (see rowsFor), so
+    // an uncovered month can't inflate them. Suppressed entirely when nothing
+    // is measured, rather than shown as a divide-by-zero artifact.
+    var perTurn = tot.user_turns ? usd(tot.cost_measured / tot.user_turns) : "--";
+    var msgsPerTurn = tot.user_turns
+      ? (tot.messages_measured / tot.user_turns).toLocaleString(undefined, { maximumFractionDigits: 1 })
+      : "--";
 
     // cards
     $("um-cards").innerHTML = [
       ["Members", fmt(rows.length)], ["Sessions", fmt(tot.sessions)],
       ["Total input", tokM(tot.total_in)], ["Output", tokM(tot.output)],
       ["Cache read", tokM(tot.cache_read)], ["Messages", fmt(tot.messages)],
+      ["User turns", turns(tot.user_turns), "", "Human messages only — assistant messages, tool calls and subagent replies are the Messages card. ‘--’ means not measured, not zero."],
+      ["Est. cost / turn", perTurn, "um-cost", "Est. cost ÷ user turns, over the months that measured turns only."],
+      ["Msgs / turn", msgsPerTurn, "", "Assistant messages per human turn, over the months that measured turns only — how much work one human instruction sets in motion."],
       ["Est. cost", usd(tot.cost), "um-cost"]
     ].map(function (c) {
-      return '<div class="um-card"><div class="k">' + c[0] + '</div><div class="v um-mono ' + (c[2] || "") + '">' + c[1] + "</div></div>";
+      return '<div class="um-card"' + (c[3] ? ' title="' + c[3] + '"' : "") + '><div class="k">' + c[0] +
+        '</div><div class="v um-mono ' + (c[2] || "") + '">' + c[1] + "</div></div>";
     }).join("");
 
     // daily stacked composition
@@ -79,14 +128,16 @@
     var mmax = Math.max.apply(null, [1].concat(rows.map(function (r) { return r.total_in + r.output; })));
     var W = function (v) { return (v / mmax * 100).toFixed(2); };
     $("um-bymember").innerHTML = rows.map(function (r) {
-      return '<div class="um-barrow" title="' + r.name + ' — total input ' + tokM(r.total_in) + ', output ' + tokM(r.output) + ', est. cost ' + usd(r.cost) + '">' +
+      return '<div class="um-barrow" title="' + r.name + ' — total input ' + tokM(r.total_in) + ', output ' + tokM(r.output) +
+        ', ' + turns(r.user_turns) + ' user turns, est. cost ' + usd(r.cost) + '">' +
         '<div class="lbl">' + r.name + "</div>" +
         '<div class="um-track">' +
         '<div class="um-seg-in" style="width:' + W(r.input) + '%"></div>' +
         '<div class="um-seg-cr" style="width:' + W(r.cache_read) + '%"></div>' +
         '<div class="um-seg-cw" style="width:' + W(r.cache_creation) + '%"></div>' +
         '<div class="um-seg-out" style="width:' + W(r.output) + '%"></div></div>' +
-        '<div class="um-barval um-mono">' + tokM(r.total_in) + ' in · <span class="um-cost">' + usd(r.cost) + "</span></div></div>";
+        '<div class="um-barval um-mono">' + tokM(r.total_in) + ' in · ' + turns(r.user_turns) +
+        ' turns · <span class="um-cost">' + usd(r.cost) + "</span></div></div>";
     }).join("") || '<div class="um-empty">No data.</div>';
 
     // by-model
@@ -110,6 +161,20 @@
         "</td><td class='um-mono'>" + tokM(r.output) + "</td><td class='um-mono'>" + fmt(r.messages) +
         "</td><td class='um-mono um-cost'>" + usd(r.cost) + "</td></tr>";
     }).join("") || '<tr><td colspan="5" class="um-empty">No data.</td></tr>';
+
+    // Coverage caveat: in a merged view the turn total covers only the months
+    // that actually measured turns, so state that rather than let it read as an
+    // all-time total. Lives here (not renderRateCard) because it depends on the
+    // selected month; render() re-runs on every month change.
+    var unmeasured = ms.filter(function (m) {
+      return Object.keys(DATA[m] || {}).every(function (lbl) { return !hasTurns(DATA[m][lbl].user_turns); });
+    });
+    var turnNote = " User turns = human messages only (assistant messages, tool calls and " +
+      "subagent replies are the Messages column); — means not measured, not zero." +
+      (unmeasured.length ? " No turn data for " + unmeasured.join(", ") +
+        " — the turn total and the per-turn ratios exclude " +
+        (unmeasured.length > 1 ? "those months" : "that month") + "." : "");
+    if ($("um-costnote")) $("um-costnote").textContent = (U.cost_note || "") + turnNote;
   }
 
   function renderProjection() {
@@ -158,10 +223,17 @@
         m2(r.cache_write_1h) + "</td><td class='um-mono'>" +
         m2(r.cache_read) + "</td><td class='um-mono'>" + m2(r.output) + "</td></tr>";
     }).join("") || '<tr><td colspan="6" class="um-empty">No rate card.</td></tr>';
+    var famNames = Object.keys(fams);
     $("um-ratesrc").textContent = "Rates in $/MTok. Source: " + (RATE._source || "pricing.json") +
       " (retrieved " + (RATE._retrieved || "?") + "). \"Write\" = 1-hour cache-write rate (what Claude Code uses); " +
-      "cost prices each write at its actual 5m/1h rate. Edit tools/usage-metrics/pricing.json to update.";
-    if ($("um-costnote")) $("um-costnote").textContent = U.cost_note || "";
+      "cost prices each write at its actual 5m/1h rate. Edit tools/usage-metrics/pricing.json to update." +
+      // Families are the fallback bucket for a model id with no exact entry — a
+      // new model ships and is priced at its family rate rather than dropping to
+      // zero. Worth naming so an unexpected cost figure is explicable.
+      (famNames.length ? " Unlisted model ids fall back to family rates (" + famNames.join(", ") + ")" +
+        (RATE.default_family ? ", defaulting to " + RATE.default_family : "") + "." : "");
+    // NOTE: #um-costnote is written by render(), not here — it carries a
+    // month-selection-dependent turn-coverage caveat appended to cost_note.
   }
 
   function init() {

@@ -1,0 +1,84 @@
+{% extends "_base.html" %}
+{% block title %}Strategy · {{ config.project_name }} Console{% endblock %}
+{% block body_class %}strategy-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/strategy_index.css?v={{ request.state.static_v }}">{% endblock %}
+{% block content %}
+<section class="si-wrap">
+  <header class="si-head">
+    <div class="si-head-text">
+      <p class="si-eyebrow">Agreed intent</p>
+      <h1>Strategy</h1>
+      <p class="si-sub">The program's per-domain strategy documents, assembled by the <code>strategy</code> skill from tagged blocks in task docs. Open a domain to review proposed changes and decide on them.</p>
+    </div>
+  </header>
+
+  {% if not domains %}
+  <div class="si-empty">
+    <p><strong>No strategy documents yet.</strong></p>
+    <p>Scaffold the per-domain briefs with <code>/strategy init</code>, then assemble a domain's tagged task-doc blocks with <code>/strategy assemble &lt;domain&gt;</code>.</p>
+  </div>
+  {% else %}
+
+  <div class="si-rollup">
+    <div class="si-rollup-stat"><span class="n">{{ rollup.live }}</span><span class="l">{{ 'domain live' if rollup.live == 1 else 'domains live' }}</span></div>
+    <div class="si-rollup-stat"><span class="n">{{ rollup.decisions }}</span><span class="l">{{ 'decision' if rollup.decisions == 1 else 'decisions' }}</span></div>
+    <div class="si-rollup-stat"><span class="n">{{ rollup.proposals }}</span><span class="l">{{ 'proposed change' if rollup.proposals == 1 else 'proposed changes' }}</span></div>
+    <div class="si-rollup-stat si-rollup-muted"><span class="n">{{ rollup.stubs }}</span><span class="l">awaiting content</span></div>
+  </div>
+
+  {# Two decision formats coexist in this project and they carry different
+     evidence. Say so rather than presenting one blended number as if every
+     document recorded the same thing. #}
+  {% if rollup.mixed_formats %}
+  <p class="si-note">
+    Decision counts come from two formats. Documents migrated to
+    <strong>decision blocks</strong> record a lifecycle status per decision;
+    documents still using <strong>prose decisions</strong> record the decision
+    but no status, so they show a count without a breakdown.
+  </p>
+  {% endif %}
+
+  <div class="si-grid">
+    {% for d in domains %}
+    <a class="si-card{{ ' is-stub' if d.stub }}" href="/strategy/{{ d.slug }}" style="--i:{{ loop.index0 }}">
+      <div class="si-card-top">
+        {% if d.stub %}
+        <span class="si-chip si-chip-stub">awaiting content</span>
+        {% else %}
+        <span class="si-chip si-chip-count">{{ d.decisions }} {{ 'decision' if d.decisions == 1 else 'decisions' }}</span>
+        {% if d.decision_format == 'legacy' %}
+        <span class="si-chip si-chip-fmt" title="Decisions are recorded as prose, not decision blocks — no per-decision lifecycle status is available">prose</span>
+        {% elif d.decision_format == 'v15' %}
+        <span class="si-chip si-chip-fmt is-blocks" title="Decisions are recorded as decision blocks, each carrying a lifecycle status">blocks</span>
+        {% endif %}
+        {% endif %}
+        {% if d.proposals %}
+        <span class="si-chip si-chip-prop">{{ d.proposals }} proposed</span>
+        {% endif %}
+      </div>
+
+      <h3 class="si-card-title">{{ d.title }}</h3>
+      {% if d.intent %}<p class="si-card-intent">{{ d.intent }}</p>{% endif %}
+
+      {% if d.has_state_breakdown and d.decisions %}
+      <div class="si-bar" title="Decision lifecycle states">
+        {% for state in decision_states %}{% if d.decision_states.get(state) %}<span class="seg is-{{ state }}" style="flex:{{ d.decision_states[state] }}">{{ d.decision_states[state] }}</span>{% endif %}{% endfor %}
+        {% for state, n in d.decision_states.items() %}{% if state not in decision_states %}<span class="seg is-other" style="flex:{{ n }}" title="{{ state }}">{{ n }}</span>{% endif %}{% endfor %}
+      </div>
+      {% elif d.decisions %}
+      <p class="si-card-nobar">No lifecycle status recorded — this document keeps its decisions as prose.</p>
+      {% endif %}
+
+      <div class="si-card-foot">
+        <span class="si-meta">
+          {%- if d.assembled_date %}assembled {{ d.assembled_date }}{% else %}not yet assembled{% endif -%}
+          {%- if d.sources %}<span class="si-dot">·</span>{{ d.sources | length }} source {{ 'task' if (d.sources|length) == 1 else 'tasks' }}{% endif -%}
+        </span>
+        <span class="si-cta">{{ 'Open brief →' if d.stub else 'Review domain →' }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
