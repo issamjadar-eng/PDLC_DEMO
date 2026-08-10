@@ -1388,3 +1388,29 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Commit: "usage-metrics: count user turns as a measured human-effort metric"
 - Status: awaiting review (PR-only)
 - ⚠️ Overlaps PR #296 — this branch was cut from `origin/main` while #296 was still open, so its `aggregate.py` diff also carries #296's `_updated` → `_retrieved` fix. Sequence before merging; #296 still uniquely carries the `templates/pricing.json` seed refresh. Originating project task: `ben/112`.
+
+## 2026-08-10 — pull
+
+- Hitachi HEAD after sync: `1ac3cc2`
+- Pulled: 18 files (all `UPSTREAM_ADVANCE` except one `UPSTREAM_ONLY`)
+  - `skills/frontend-slides/SKILL.md` + new `deck-structure.md`
+  - `skills/md-deck/{README,SKILL}.md`
+  - `skills/writing-well/{README,SKILL}.md`, `agents/prose-editor.md`, `references/zinsser-principles.md`
+  - `skills/red-team/agents/*.md` (7 skeptic agents)
+  - `skills/project-console/console/{assistant/router,chat/router,chat/sources}.py` — grounding-correctness fixes (chat grounded on the pre-task-099 `sources` field, so every `core:`-declaring agent grounded on ZERO files; bare directory entries in a grounding list contributed nothing)
+- **Not pulled — false positive.** 8 `agents/*.md` rows report `UNDETERMINED` because the check compares upstream's stored *symlink blob* against the locally *dereferenced* content. Our `.claude/agents/` entries are symlinks exactly as upstream's are; all 8 verified in sync. Worth fixing in the `sync-skills` check itself.
+- **Version collision resolved.** Upstream shipped its own `project-console` 1.59.0 (grounding fix, 2026-08-03) while ben/114 independently shipped ours (2026-08-06). Upstream keeps 1.59.0; ours renumbered to 1.60.0 (journey/doc-pipeline/strategy) and 1.61.0 (connector catalog), restoring chronological changelog order. `SKILL.md` frontmatter `version:` was stale at 1.58.0 on both sides — now tracks VERSION.
+- Project impact: console restarted, all 8 routes 200 with pulled fixes + local 1.61.0 together. No setup actions re-run (no `setup` action or hook changed). Landed via PDLC_DEMO PR #179.
+- Follow-ups: none
+
+## 2026-08-10 — push
+
+- Files: 30 across `project-console` (27), `medtech-docs/registry/journey.yaml`, `usage-metrics/scripts/{aggregate,collect}.py`, `usage-metrics/templates/pricing.json`
+- Branches: `sync/pdlc-demo-console-1.61.0-journey-connectors-2026-08-10`, `sync/pdlc-demo-usage-metrics-collect-turns-2026-08-10`
+- PRs: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/298 · https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/299
+- Commits: "project-console 1.61.0: journey, doc-pipeline, strategy landing + connector catalog" · "usage-metrics: count user turns in collect.py (companion to the aggregate.py landed in #298)"
+- Status: merged (`--merge` requested)
+- Merge commits: `72a596b` (#298), `1ac3cc2` (#299)
+- Hitachi HEAD after sync: `1ac3cc2`
+- ⚠️ **Drift-check reliability.** `collect.py` was local-ahead the whole time but absent from the first two `check` runs; it only surfaced on the third, as `UNDETERMINED — race condition`. It was nearly left unpushed. Do not treat a single `check` as a complete inventory of local-ahead work — cross-check against open `sync/*` PRs before declaring a push complete.
+- Follow-ups: PRs #296 and #297 remain open and are now superseded (#298 carries a newer `aggregate.py` + the `pricing.json` seed; #299 carries their `collect.py` verbatim). Recommend closing both. 2 merged `sync/*` branches (arthrex) pending `prune`.
