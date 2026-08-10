@@ -36,6 +36,15 @@ def resolve_files(repo_root: Path, patterns: Iterable[str]) -> list[Path]:
     seen: set[Path] = set()
     paths: list[Path] = []
     for pattern in patterns:
+        # A bare directory entry ("docs/project/strategies/") globs to the
+        # directory itself, which is then dropped by the is_file() filter
+        # below — so it contributed NOTHING. Grounding lists are authored by
+        # hand and routinely name folders, so expand a directory to its
+        # markdown tree, matching resolve_core()'s semantics.
+        if not any(ch in pattern for ch in "*?["):
+            candidate = repo_root / pattern.rstrip("/")
+            if candidate.is_dir():
+                pattern = f"{pattern.rstrip('/')}/**/*.md"
         try:
             matches = sorted(repo_root.glob(pattern))
         except ValueError as e:
