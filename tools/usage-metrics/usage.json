@@ -4995,7 +4995,7 @@
         "retrospective": false,
         "title": "Console Setup Tab \u2014 Connector (MCP) Configuration",
         "todos": 4,
-        "updated": "2026-07-14"
+        "updated": "2026-08-06"
       },
       "sessions": 2,
       "totals": {
@@ -5567,7 +5567,7 @@
         }
       },
       "cost": 21.23,
-      "cost_allocated": 1.38,
+      "cost_allocated": 1.04,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 0.5,
@@ -5628,7 +5628,7 @@
         }
       },
       "cost": 24.25,
-      "cost_allocated": 1.38,
+      "cost_allocated": 1.04,
       "cost_basis": "measured+allocated",
       "sessions": 1,
       "totals": {
@@ -5656,7 +5656,7 @@
         }
       },
       "cost": 132.47,
-      "cost_allocated": 15.47,
+      "cost_allocated": 1.04,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 5.5,
@@ -5717,6 +5717,57 @@
         }
       },
       "cost": 42.72,
+      "cost_allocated": 1.04,
+      "cost_basis": "measured+allocated",
+      "estimate": {
+        "agentic_hours": 4.5,
+        "agentic_hours_range": {
+          "max": 4.5,
+          "min": 3.0
+        },
+        "by_persona": {
+          "quality-engineering": {
+            "max": 11.7,
+            "min": 6.7
+          },
+          "rd-lead": {
+            "max": 69.7,
+            "min": 40.2
+          },
+          "regulatory-affairs": {
+            "max": 4.7,
+            "min": 2.7
+          },
+          "vnv-lead": {
+            "max": 6.0,
+            "min": 3.5
+          }
+        },
+        "confidence_mix": {
+          "high": 3,
+          "med": 8
+        },
+        "hours_saved": {
+          "max": 89.0,
+          "min": 48.5
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 92.0,
+          "min": 53.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "quality-engineering",
+          "vnv-lead",
+          "regulatory-affairs"
+        ],
+        "retrospective": false,
+        "title": "Console: Journey, Document Pipeline & Strategy Landing",
+        "todos": 11,
+        "updated": "2026-08-06"
+      },
       "sessions": 1,
       "totals": {
         "cache_creation": 1154248,
@@ -5743,6 +5794,60 @@
         }
       },
       "cost": 11.15,
+      "estimate": {
+        "agentic_hours": 4.0,
+        "agentic_hours_range": {
+          "max": 4.0,
+          "min": 2.5
+        },
+        "by_persona": {
+          "human-factors": {
+            "max": 12.2,
+            "min": 6.0
+          },
+          "quality-engineering": {
+            "max": 69.6,
+            "min": 35.0
+          },
+          "rd-lead": {
+            "max": 33.3,
+            "min": 17.0
+          },
+          "regulatory-affairs": {
+            "max": 25.6,
+            "min": 14.0
+          },
+          "vnv-lead": {
+            "max": 24.2,
+            "min": 12.0
+          }
+        },
+        "confidence_mix": {
+          "high": 1,
+          "med": 4
+        },
+        "hours_saved": {
+          "max": 162.5,
+          "min": 80.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 165.0,
+          "min": 84.0
+        },
+        "method_version": 1,
+        "personas": [
+          "quality-engineering",
+          "rd-lead",
+          "regulatory-affairs",
+          "vnv-lead",
+          "human-factors"
+        ],
+        "retrospective": false,
+        "title": "Tooling & Testing/Validation Strategy",
+        "todos": 5,
+        "updated": "2026-08-06"
+      },
       "sessions": 1,
       "totals": {
         "cache_creation": 906272,
@@ -5754,6 +5859,52 @@
         "output": 41268
       },
       "user_turns": 0
+    },
+    "ben/116": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 1.0,
+        "agentic_hours_range": {
+          "max": 1.0,
+          "min": 0.5
+        },
+        "by_persona": {
+          "cybersecurity": {
+            "max": 3.0,
+            "min": 1.5
+          },
+          "rd-lead": {
+            "max": 12.0,
+            "min": 6.5
+          }
+        },
+        "confidence_mix": {
+          "high": 3,
+          "med": 1
+        },
+        "hours_saved": {
+          "max": 14.5,
+          "min": 7.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 15.0,
+          "min": 8.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "cybersecurity"
+        ],
+        "retrospective": false,
+        "title": "Console Connector Catalog Expansion",
+        "todos": 4,
+        "updated": "2026-08-07"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
     },
     "ben/_unattributed": {
       "by_model": {
@@ -5889,23 +6040,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 524.6,
-    "cost_allocated": 233.97,
+    "agentic_hours": 534.1,
+    "cost_allocated": 219.89,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 2049.27,
     "cost_unattributed_measured": 336.44,
-    "cost_unattributed_residual": 102.47,
+    "cost_unattributed_residual": 116.55,
     "hours_saved": {
-      "max": 4095.1,
-      "min": 1451.7
+      "max": 4361.1,
+      "min": 1587.2
     },
     "manual_hours": {
-      "max": 4591.0,
-      "min": 1969.5
+      "max": 4863.0,
+      "min": 2114.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 111
+    "tasks_with_estimate": 114
   }
 }
