@@ -8,7 +8,7 @@
     <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <div>
         <h1 style="font-size:1rem;margin:0;">Create Draft — <code>{{ row_id }}</code></h1>
-        <div id="draft-meta" style="font-size:.74rem;color:var(--text-muted);margin-top:2px;">Bootstrapping session…</div>
+        <div id="draft-meta" style="font-size:.74rem;color:var(--body-text-muted);margin-top:2px;">Bootstrapping session…</div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
         <span id="stage-badge" class="stage-badge stage-outline-pending">outline-pending</span>
@@ -22,7 +22,7 @@
   </div>
 
   <!-- RIGHT — assistant column with session-mode-bar at top -->
-  <aside style="display:flex;flex-direction:column;min-height:0;background:var(--surface2);">
+  <aside style="display:flex;flex-direction:column;min-height:0;background:var(--surface-2);">
     <!-- Session mode-bar — stage-aware command buttons -->
     <div id="pc-session-mode-bar" data-mode="outline-pending"
          style="padding:10px 12px;border-bottom:1px solid var(--border);background:rgba(99,102,241,0.08);">
@@ -37,16 +37,16 @@
 
     <!-- Manual outline / synthesis input (developer-mode for testing without an agent loop) -->
     <details id="dev-mode" style="border-bottom:1px solid var(--border);padding:8px 12px;">
-      <summary style="cursor:pointer;font-size:.78rem;color:var(--text-muted);">⚙ Dev mode — manual outline / body input (for testing without agent SDK)</summary>
+      <summary style="cursor:pointer;font-size:.78rem;color:var(--body-text-muted);">⚙ Dev mode — manual outline / body input (for testing without agent SDK)</summary>
       <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-        <label style="font-size:.74rem;color:var(--text-muted);">Outline JSON (paste agent output)</label>
+        <label style="font-size:.74rem;color:var(--body-text-muted);">Outline JSON (paste agent output)</label>
         <textarea id="dev-outline-json" rows="6" placeholder='{"description": "...", "target": {"path": "docs/project/.../foo.md", ...}, ...}'
                   style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:6px;font-family:ui-monospace,monospace;font-size:.74rem;"></textarea>
         <div style="display:flex;gap:6px;">
           <button id="dev-propose-btn" class="btn-chip">Propose outline</button>
           <button id="dev-approve-btn" class="btn-chip">Approve outline</button>
         </div>
-        <label style="font-size:.74rem;color:var(--text-muted);margin-top:6px;">Synthesized body (markdown)</label>
+        <label style="font-size:.74rem;color:var(--body-text-muted);margin-top:6px;">Synthesized body (markdown)</label>
         <textarea id="dev-body-md" rows="6" placeholder="The full document body markdown — including [N] citations, [VERIFY: ...] markers, ## References section…"
                   style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:6px;font-family:ui-monospace,monospace;font-size:.74rem;"></textarea>
         <button id="dev-synthesize-btn" class="btn-chip">Write synthesis</button>
@@ -75,7 +75,7 @@
   .btn-chip.danger  { background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.5); color:#fca5a5; }
   .pc-toast {
     position:fixed;bottom:20px;right:20px;padding:10px 14px;border-radius:4px;
-    background:var(--surface2);color:var(--text);border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text);border:1px solid var(--border);
     font-size:.82rem;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9999;
     transition:opacity .3s ease;
   }

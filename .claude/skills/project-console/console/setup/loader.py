@@ -1050,6 +1050,7 @@ def load_setup(repo_root: Path) -> dict:
         "team_access": _load_team_access(repo_root),
         "registries": load_registries(repo_root, project),
         "cli": load_cli_tooling(repo_root),
+        "appearance": _load_appearance(),
         "environment": _load_environment(repo_root),
         "workbench": load_workbench_validation(repo_root),
         "warnings": warnings,
@@ -1097,6 +1098,45 @@ def load_workbench_validation(repo_root: Path) -> dict:
     except Exception:
         pass
     return out
+
+
+def _load_appearance() -> dict:
+    """Installed theme packs + a swatch for each, for the Appearance section.
+
+    Read-only: selection lives in the viewer's browser (a cookie the theme
+    middleware reads), never in project config, so nothing here writes.
+
+    The swatch pulls the tokens a viewer actually judges a theme by — page
+    ground, panel fill, body text, brand and accent — plus the category ramp
+    when the pack ships one. Colours come from the RESOLVED tokens, so a pack
+    that inherits most of its palette still previews correctly.
+    """
+    from console.config import get_config
+    from console import themes
+
+    cfg = get_config()
+    packs = []
+    for p in themes.list_packs(cfg):
+        t = p["tokens"]
+        packs.append({
+            "name": p["name"],
+            "label": p["label"],
+            "source": p["source"],
+            "is_default": p["is_default"],
+            "tagline": t.get("tagline", ""),
+            "swatch": {
+                "body_bg": t.get("body_bg", "#ffffff"),
+                "surface": t.get("surface", t.get("body_bg", "#ffffff")),
+                "text": t.get("text", "#1f2937"),
+                "muted": t.get("text_muted", "#6b7280"),
+                "primary": t.get("primary", "#2563eb"),
+                "accent": t.get("accent", t.get("primary", "#2563eb")),
+                "border": t.get("border", "#e5e7eb"),
+            },
+            "categories": [c.strip() for c in (t.get("category_colors") or "").split(",") if c.strip()],
+        })
+    packs.sort(key=lambda p: (p["source"] != "project", p["name"]))
+    return {"packs": packs, "default": cfg.theme_name, "cookie": "pc_theme"}
 
 
 def _load_environment(repo_root: Path) -> dict:

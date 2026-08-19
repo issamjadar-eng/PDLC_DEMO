@@ -3,6 +3,39 @@
 {% block body_class %}pipeline-page{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/doc_pipeline.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
+
+{# Page-local monochrome sprite, same convention as the settings shell: 24-grid,
+   currentColor stroke, geometry adapted from Lucide (MIT). Page-local rather
+   than in _base.html because nothing outside this view references these. #}
+<svg width="0" height="0" class="pc-icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="dp-ic-input" viewBox="0 0 24 24"><path d="M3 12h5l2 3h4l2-3h5"/><path d="M5 12V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M3 12v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></symbol>
+  <symbol id="dp-ic-strategy" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></symbol>
+  <symbol id="dp-ic-design" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/></symbol>
+  <symbol id="dp-ic-trace" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></symbol>
+  <symbol id="dp-ic-obligations" viewBox="0 0 24 24"><path d="M9 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="9" y="2" width="6" height="4" rx="1"/><polyline points="9 14 11 16 15 12"/></symbol>
+  <symbol id="dp-ic-gap" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="dp-ic-submission" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="dp-ic-binary" viewBox="0 0 24 24"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></symbol>
+  <symbol id="dp-ic-markdown" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></symbol>
+  <symbol id="dp-ic-reference" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="dp-ic-lane-authoring" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="dp-ic-lane-ingestion" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="dp-ic-lane-publish" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="dp-ic-lane-terms" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></symbol>
+</svg>
+
+{# key → sprite id. Kept beside the markup rather than in the loader: which
+   glyph reads as "obligations" is a presentation choice, not pipeline data. #}
+{% set stage_icons = {
+  'input-analysis': 'dp-ic-input',
+  'strategies':     'dp-ic-strategy',
+  'design-controls':'dp-ic-design',
+  'trace':          'dp-ic-trace',
+  'obligations':    'dp-ic-obligations',
+  'gaps':           'dp-ic-gap',
+  'submission':     'dp-ic-submission'
+} %}
+
 <section class="dp-wrap">
 
   <header class="dp-head">
@@ -18,15 +51,21 @@
   </header>
 
   {# ── Lane 1 — the authoring spine ─────────────────────────────────── #}
-  <h2 class="dp-lane-title">Authoring <span class="dp-lane-note">input → decision → design → trace → filing</span></h2>
+  <h2 class="dp-lane-title">
+    <svg class="dp-lane-ico" aria-hidden="true"><use href="#dp-ic-lane-authoring"/></svg>
+    Authoring <span class="dp-lane-note">input → decision → design → trace → filing</span>
+  </h2>
 
   <div class="dp-flow">
     {% for s in p.authoring %}
     {% set d = s.data %}
     <div class="dp-stage{{ '' if d.present else ' is-empty' }}">
       <div class="dp-stage-head">
-        <h3>{{ s.label }}</h3>
-        <span class="dp-owner" title="Owning skill — it produces the data, this view only reads it">{{ s.owner }}</span>
+        <span class="dp-glyph" aria-hidden="true"><svg class="dp-ico"><use href="#{{ stage_icons.get(s.key, 'dp-ic-markdown') }}"/></svg></span>
+        <span class="dp-stage-id">
+          <h3>{{ s.label }}{% if s.key == 'obligations' and (d.legacy_schema or not d.coverage_available) %}<a class="dp-alert" href="#dp-fn-{{ s.key }}" title="Read the note below this lane" aria-label="This stage has a note below the lane">●</a>{% endif %}</h3>
+          <span class="dp-owner" title="Owning skill — it produces the data, this view only reads it">{{ s.owner }}</span>
+        </span>
       </div>
 
       {% if not d.present %}
@@ -35,93 +74,125 @@
 
       {% elif s.key == 'input-analysis' %}
         <p class="dp-big">{{ d.total }} <span>docs</span></p>
-        <ul class="dp-mini">{% for x in d.parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
+        <div class="dp-detail">
+          <ul class="dp-mini">{% for x in d.parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
+        </div>
 
       {% elif s.key == 'strategies' %}
         <p class="dp-big">{{ d.decisions }} <span>decisions</span></p>
-        <ul class="dp-mini">
-          <li><span>domains live</span><b>{{ d.live }}/{{ d.total }}</b></li>
-          {% if d.proposals %}<li><span>proposed changes</span><b>{{ d.proposals }}</b></li>{% endif %}
-        </ul>
-        {% if d.mixed_formats %}<p class="dp-note">Counted from two decision formats — see Strategy.</p>{% endif %}
+        <div class="dp-detail">
+          <ul class="dp-mini">
+            <li><span>domains live</span><b>{{ d.live }}/{{ d.total }}</b></li>
+            {% if d.proposals %}<li><span>proposed changes</span><b>{{ d.proposals }}</b></li>{% endif %}
+          </ul>
+          {% if d.mixed_formats %}<p class="dp-note">Counted from two decision formats — see Strategy.</p>{% endif %}
+        </div>
         <a class="dp-link" href="/strategy">Strategy →</a>
 
       {% elif s.key == 'design-controls' %}
         <p class="dp-big">{{ d.total_docs }} <span>docs</span></p>
-        <ul class="dp-mini">
-          <li><span>DHFs</span><b>{{ d.dhf_count }}</b></li>
-        </ul>
-        <details class="dp-more"><summary>per DHF</summary>
-          <ul class="dp-mini dp-mini-tall">
-            {% for r in d.rows %}<li><span>{{ r.slug }}</span><b>{{ r.roles_present }}/{{ r.roles_total }} roles · {{ r.docs }}</b></li>{% endfor %}
+        <div class="dp-detail">
+          <ul class="dp-mini">
+            <li><span>DHFs</span><b>{{ d.dhf_count }}</b></li>
           </ul>
-        </details>
+          <details class="dp-more"><summary>per DHF</summary>
+            <ul class="dp-mini dp-mini-tall">
+              {% for r in d.rows %}<li><span>{{ r.slug }}</span><b>{{ r.roles_present }}/{{ r.roles_total }} roles · {{ r.docs }}</b></li>{% endfor %}
+            </ul>
+          </details>
+        </div>
 
       {% elif s.key == 'trace' %}
         <p class="dp-big">{{ d.traced_items }} <span>traced items</span></p>
-        <ul class="dp-mini">
-          <li><span>DHFs with a matrix</span><b>{{ d.dhf_count }}</b></li>
-          <li class="{{ 'is-warn' if d.orphans }}"><span>orphans</span><b>{{ d.orphans }}</b></li>
-        </ul>
+        <div class="dp-detail">
+          <ul class="dp-mini">
+            <li><span>DHFs with a matrix</span><b>{{ d.dhf_count }}</b></li>
+            <li class="{{ 'is-warn' if d.orphans }}"><span>orphans</span><b>{{ d.orphans }}</b></li>
+          </ul>
+        </div>
         <a class="dp-link" href="/trace-matrix">Trace matrix →</a>
 
       {% elif s.key == 'obligations' %}
         <p class="dp-big">{{ d.projected }} <span>obligations</span></p>
-        <ul class="dp-mini">
-          <li><span>source obligations</span><b>{{ d.source_obligations }}</b></li>
-          <li><span>generated</span><b>{{ d.generated or '—' }}</b></li>
-        </ul>
+        <div class="dp-detail">
+          <ul class="dp-mini">
+            <li><span>source obligations</span><b>{{ d.source_obligations }}</b></li>
+            <li><span>generated</span><b>{{ d.generated or '—' }}</b></li>
+          </ul>
+        </div>
         {# Coverage is deliberately absent here. The manifest's old status/
            location fields were retired in dhf-manifest v7; showing them would
-           render a dead contract as a live metric. #}
-        <p class="dp-note">
-          {%- if d.coverage_available -%}
-          Coverage is computed by <code>{{ d.coverage_owner }}</code>.
-          {%- else -%}
-          Coverage is not computed here — it belongs to <code>{{ d.coverage_owner }}</code>, which has not run.
-          {%- endif -%}
-        </p>
-        {% if d.legacy_schema %}
-        <p class="dp-note is-stale">This manifest predates the v7 schema. Its per-obligation status fields were retired and are not read.</p>
-        {% if d.hint %}<code class="dp-hint">{{ d.hint }}</code>{% endif %}
-        {% endif %}
+           render a dead contract as a live metric.
+
+           The wording lives in the footnote strip below the lane, not in this
+           card. Six lines of prose in a 172px column made this the tallest
+           card by ~150px, and every other card in the lane was stretched
+           around that — so the explanation was costing six cards their
+           legibility. Full text below, verbatim; the card keeps a marker. #}
 
       {% elif s.key == 'gaps' %}
         <p class="dp-big">{{ d.total }} <span>{{ 'analysis' if d.total == 1 else 'analyses' }}</span></p>
-        <ul class="dp-mini">{% for k, v in d.by_status.items() %}<li><span>{{ k }}</span><b>{{ v }}</b></li>{% endfor %}</ul>
+        <div class="dp-detail">
+          <ul class="dp-mini">{% for k, v in d.by_status.items() %}<li><span>{{ k }}</span><b>{{ v }}</b></li>{% endfor %}</ul>
+        </div>
         <a class="dp-link" href="/gap-analysis">Gap analysis →</a>
 
       {% elif s.key == 'submission' %}
         <p class="dp-big">{{ d.filings | length }} <span>{{ 'filing' if (d.filings|length) == 1 else 'filings' }}</span></p>
-        <ul class="dp-mini">
-          {% for f in d.filings %}<li><span>{{ f.id }}</span><b>{{ f.required }} req</b></li>{% endfor %}
-          {% if d.blocking %}<li class="is-warn"><span>blocking</span><b>{{ d.blocking }}</b></li>{% endif %}
-        </ul>
+        <div class="dp-detail">
+          <ul class="dp-mini">
+            {% for f in d.filings %}<li><span>{{ f.id }}</span><b>{{ f.required }} req</b></li>{% endfor %}
+            {% if d.blocking %}<li class="is-warn"><span>blocking</span><b>{{ d.blocking }}</b></li>{% endif %}
+          </ul>
+        </div>
         <a class="dp-link" href="/submission">Submission →</a>
       {% endif %}
     </div>
-    {% if not loop.last %}<div class="dp-arrow" aria-hidden="true">→</div>{% endif %}
+    {% if not loop.last %}<div class="dp-arrow" aria-hidden="true"></div>{% endif %}
     {% endfor %}
   </div>
 
+  {# Lane footnotes. A caveat that needs a paragraph gets one here at full
+     width, where it costs one line, instead of inside a 172px card where it
+     costs six and drags the whole lane with it. Marked stages link down. #}
+  {% for s in p.authoring %}{% set d = s.data %}
+  {% if s.key == 'obligations' and d.present and (d.legacy_schema or not d.coverage_available) %}
+  <p class="dp-footnote{{ ' is-flag' if d.legacy_schema }}" id="dp-fn-{{ s.key }}">
+    <span class="dp-footnote-src">{{ s.label }}</span>
+    {%- if d.coverage_available %} Coverage is computed by <code>{{ d.coverage_owner }}</code>.
+    {%- else %} Coverage is not computed here — it belongs to <code>{{ d.coverage_owner }}</code>, which has not run.
+    {%- endif %}
+    {%- if d.legacy_schema %} This manifest also predates the v7 schema; its per-obligation status fields were retired and are not read.
+    {%- if d.hint %} <code class="dp-footnote-cmd">{{ d.hint }}</code>{% endif %}
+    {%- endif %}
+  </p>
+  {% endif %}
+  {% endfor %}
+
   {# ── Lane 2 — ingestion ───────────────────────────────────────────── #}
-  <h2 class="dp-lane-title">Ingestion <span class="dp-lane-note">outside sources becoming readable markdown</span></h2>
+  <h2 class="dp-lane-title">
+    <svg class="dp-lane-ico" aria-hidden="true"><use href="#dp-ic-lane-ingestion"/></svg>
+    Ingestion <span class="dp-lane-note">outside sources becoming readable markdown</span>
+  </h2>
 
   <div class="dp-panel">
     <div class="dp-cols">
       <div class="dp-col">
+        <p class="dp-col-head"><span class="dp-glyph" aria-hidden="true"><svg class="dp-ico"><use href="#dp-ic-binary"/></svg></span></p>
         <p class="dp-big">{{ p.ingestion.binaries }} <span>binary {{ 'source' if p.ingestion.binaries == 1 else 'sources' }}</span></p>
         <p class="dp-col-sub">under <code>docs/internal/source/</code></p>
         {% if p.ingestion.binary_files %}
-        <ul class="dp-files">{% for f in p.ingestion.binary_files %}<li><code>{{ f.split('/')|last }}</code></li>{% endfor %}</ul>
+        <ul class="dp-files">{% for f in p.ingestion.binary_files %}<li><code title="{{ f }}">{{ f.split('/')|last }}</code></li>{% endfor %}</ul>
         {% endif %}
       </div>
       <div class="dp-col">
+        <p class="dp-col-head"><span class="dp-glyph" aria-hidden="true"><svg class="dp-ico"><use href="#dp-ic-markdown"/></svg></span></p>
         <p class="dp-big">{{ p.ingestion.source_md }} <span>QMS markdown</span></p>
         <p class="dp-col-sub">under <code>docs/internal/source-md/</code></p>
         <ul class="dp-mini dp-mini-tall">{% for x in p.ingestion.source_md_parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
       </div>
       <div class="dp-col">
+        <p class="dp-col-head"><span class="dp-glyph" aria-hidden="true"><svg class="dp-ico"><use href="#dp-ic-reference"/></svg></span></p>
         <p class="dp-big">{{ p.ingestion.external }} <span>distilled references</span></p>
         <p class="dp-col-sub">under <code>docs/external/</code></p>
         <ul class="dp-mini dp-mini-tall">{% for x in p.ingestion.external_parts %}<li><span>{{ x.name }}</span><b>{{ x.count }}</b></li>{% endfor %}</ul>
@@ -131,7 +202,7 @@
     {# The load-bearing honesty in this lane. A big source-md corpus next to an
        almost-empty source/ tree is not a conversion pipeline that ran — it is
        markdown somebody wrote. Saying so beats a ratio that implies otherwise. #}
-    <p class="dp-note{{ ' is-stale' if p.ingestion.authored_not_converted }}">
+    <p class="{{ 'dp-flag' if p.ingestion.authored_not_converted else 'dp-note' }}">
       {% if p.ingestion.authored_not_converted %}
       No document carries <code>docflow:</code> conversion provenance. The markdown above was <strong>authored directly</strong>, not converted from a binary — so there is no conversion ratio to report.
       {% else %}
@@ -142,7 +213,10 @@
   </div>
 
   {# ── Lane 3 — regulated publish ───────────────────────────────────── #}
-  <h2 class="dp-lane-title">Regulated publish <span class="dp-lane-note">repo → review → controlled vault</span></h2>
+  <h2 class="dp-lane-title">
+    <svg class="dp-lane-ico" aria-hidden="true"><use href="#dp-ic-lane-publish"/></svg>
+    Regulated publish <span class="dp-lane-note">repo → review → controlled vault</span>
+  </h2>
 
   <div class="dp-panel">
     <div class="dp-states">
@@ -151,7 +225,6 @@
         <span class="dp-state-n">{{ p.publish.by_state.get(st, 0) }}</span>
         <span class="dp-state-l">{{ st }}</span>
       </div>
-      {% if not loop.last %}<span class="dp-arrow is-small" aria-hidden="true">→</span>{% endif %}
       {% endfor %}
     </div>
 
@@ -166,7 +239,10 @@
   </div>
 
   {# ── Lane 4 — terms + information flow ────────────────────────────── #}
-  <h2 class="dp-lane-title">Terms &amp; information flow <span class="dp-lane-note">projected from the canonical files, never copied</span></h2>
+  <h2 class="dp-lane-title">
+    <svg class="dp-lane-ico" aria-hidden="true"><use href="#dp-ic-lane-terms"/></svg>
+    Terms &amp; information flow <span class="dp-lane-note">projected from the canonical files, never copied</span>
+  </h2>
 
   <div class="dp-panel">
     {% if p.flow.present %}
@@ -176,7 +252,7 @@
         <div class="dp-tier-head"><h4>{{ t.tier }}</h4><span class="dp-tier-n">{{ t.docs }} docs</span></div>
         <p>{{ t.description }}</p>
       </div>
-      {% if not loop.last %}<span class="dp-arrow is-small" aria-hidden="true">{{ '→' if loop.index == 1 else '←' }}</span>{% endif %}
+      {% if not loop.last %}<span class="dp-arrow is-small" aria-hidden="true"></span>{% endif %}
       {% endfor %}
     </div>
     <p class="dp-source">Source: <code>{{ p.flow.source }}</code></p>

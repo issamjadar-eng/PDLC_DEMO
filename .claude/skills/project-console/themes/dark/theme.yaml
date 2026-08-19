@@ -66,6 +66,23 @@ footer_divider: "rgba(148, 163, 184, 0.15)"
 # Folder icon — amber-400 for high contrast against slate surfaces.
 icon_folder: "#fbbf24"
 
+# ── Category palette ──────────────────────────────────────────────────────
+# An ordered categorical ramp a consumer can assign to whatever repeating
+# dimension it renders (the tracker dashboard uses it for milestone/phase
+# cards and badges). Comma-separated so the naive line parsers that read this
+# file without a YAML dependency can handle it.
+#
+# CONTRACT: the ramp is SEQUENTIAL — entries run cool -> warm so that an
+# ordinal dimension (milestone 1, 2, 3 …) reads as progression rather than as
+# arbitrary colour coding. The LAST entry is RESERVED for a non-sequential
+# category that sits outside the ordering, and consumers must not assign it
+# positionally. Every entry clears WCAG AA 4.5:1 on both `surface` and
+# `body_bg`; re-check with the contrast script if you change one.
+# The reserved entry is violet-400, not indigo-400: indigo-400 is already
+# `accent` in this pack, and a reserved category that equals an existing token
+# stops being distinguishable from it.
+category_colors: "#38bdf8, #22d3ee, #34d399, #fbbf24, #fb7185, #a78bfa"
+
 # Badge pill (Panels list, similar) — sky-900 well with sky-400 text gives
 # ~6:1 contrast ratio (WCAG AA). The default light-theme pair is sky-100
 # tint + dark navy text, which doesn't translate to dark.

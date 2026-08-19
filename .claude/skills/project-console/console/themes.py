@@ -75,6 +75,18 @@ class Theme:
         lines = [f"  {css}: {self.tokens[key]};"
                  for key, css in mapping.items()
                  if key in self.tokens]
+
+        # Category ramp -> --cat-1..N plus --cat-alt for the reserved final
+        # entry. Emitted for any console surface that renders a repeating
+        # dimension (the usage-metrics token series, for one), so a series
+        # stays legible on a light pack instead of carrying dark-tuned
+        # literals. Same contract as the tracker consumes: sequential entries
+        # in order, last entry reserved and never assigned positionally.
+        cats = [c.strip() for c in (self.tokens.get("category_colors") or "").split(",") if c.strip()]
+        if len(cats) >= 2:
+            lines += [f"  --cat-{i}: {c};" for i, c in enumerate(cats[:-1], start=1)]
+            lines.append(f"  --cat-alt: {cats[-1]};")
+
         if not lines:
             return ""
         return ":root {\n" + "\n".join(lines) + "\n}"
@@ -143,8 +155,63 @@ def _load_with_inheritance(name: str, cfg: Config, _seen: set[str] | None = None
     return pack_dir, tokens
 
 
-def resolve(cfg: Config) -> Theme:
-    name = cfg.theme_name
+def list_packs(cfg: Config) -> list[dict]:
+    """Every installed theme pack, project packs first (they win on name).
+
+    Each entry carries the RESOLVED tokens (inheritance applied) so a caller
+    can render a swatch without re-reading the pack. `source` distinguishes a
+    project-owned pack from one bundled with the skill.
+    """
+    seen: dict[str, dict] = {}
+    sources = [(cfg.themes_dir, "project")]
+    if cfg.skill_root is not None:
+        sources.append((cfg.skill_root / "themes", "builtin"))
+
+    for base, source in sources:
+        if not base.is_dir():
+            continue
+        for pack_dir in sorted(base.iterdir()):
+            name = pack_dir.name
+            if name in seen or not (pack_dir / "theme.yaml").is_file():
+                continue          # project packs are visited first and win
+            try:
+                found = _load_with_inheritance(name, cfg)
+            except ValueError:    # inheritance cycle — surface, don't crash
+                continue
+            if found is None:
+                continue
+            _, tokens = found
+            seen[name] = {
+                "name": name,
+                "label": tokens.get("name") or name,
+                "source": source,
+                "tokens": tokens,
+                "is_default": name == cfg.theme_name,
+            }
+    return list(seen.values())
+
+
+def safe_theme_name(cfg: Config, candidate: str | None) -> str | None:
+    """Validate an UNTRUSTED theme name (e.g. from a cookie) against installed packs.
+
+    The name is used to build a filesystem path (`themes_dir / name`), so it
+    can never be trusted from a client. Anything not matching an installed
+    pack exactly — including traversal attempts — returns None, and the caller
+    falls back to the project default.
+    """
+    if not candidate:
+        return None
+    return candidate if any(p["name"] == candidate for p in list_packs(cfg)) else None
+
+
+def resolve(cfg: Config, name: str | None = None) -> Theme:
+    """Resolve the active theme.
+
+    `name` overrides the project default (`console.yaml theme:`) — used for
+    the per-browser selection, which must already have been validated through
+    `safe_theme_name`. Omitted or None means the project default.
+    """
+    name = name or cfg.theme_name
 
     found = _load_with_inheritance(name, cfg)
     if found is not None:

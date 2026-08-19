@@ -996,12 +996,29 @@ def ai_status_cell(row_id, agent_map):
     return f'<td class="ai-status-col"><span class="{klass}"{title_attr}>🤖 {value}</span></td>'
 
 
+def css_token(prefix, value):
+    """A CSS-identifier-safe class name for a value discovered in the markdown.
+
+    `slug()` alone is not safe here: a value like `510k+PCCP` slugs to
+    `510k-pccp`, and a CSS class selector MAY NOT start with a digit — the
+    browser discards the entire rule, with no error. That is exactly what had
+    happened to the 510k+PCCP milestone badge: it rendered with inherited text
+    on a transparent background while every other phase was correctly
+    coloured, so it read as a styling choice rather than a dropped rule.
+    Prefixing makes the failure unrepresentable for any discovered value.
+
+    Filtering does not depend on these classes (it uses the `data-scope` /
+    `data-phase` attributes), so they are free to carry a prefix.
+    """
+    return f'{prefix}-{slug(value)}'
+
+
 def scope_class(s):
-    return f'scope-badge {slug(s)}'
+    return f'scope-badge {css_token("sc", s)}'
 
 
 def phase_class(p):
-    return f'phase-badge {slug(p)}'
+    return f'phase-badge {css_token("ph", p)}'
 
 
 def effort_class(e):
@@ -1010,40 +1027,76 @@ def effort_class(e):
     return f'effort-badge {s}'
 
 
+# (foreground token, matching background tint). Each tint is derived from its
+# OWN token rather than written as a literal rgba of that token's default
+# value — otherwise a themed token drifts away from its hardcoded tint and the
+# badge ends up, say, blue text on an indigo wash.
 SCOPE_COLOR_CYCLE = [
-    ('--accent', 'rgba(56,189,248,.15)'),
-    ('--cyan', 'rgba(6,182,212,.15)'),
-    ('--accent2', 'rgba(129,140,248,.15)'),
-    ('--orange', 'rgba(249,115,22,.15)'),
-    ('--pink', 'rgba(236,72,153,.15)'),
-    ('--text-muted', 'rgba(148,163,184,.15)'),
+    ('--accent', 'color-mix(in srgb,var(--accent) 15%,transparent)'),
+    ('--cyan', 'color-mix(in srgb,var(--cyan) 15%,transparent)'),
+    ('--accent2', 'color-mix(in srgb,var(--accent2) 15%,transparent)'),
+    ('--orange', 'color-mix(in srgb,var(--orange) 15%,transparent)'),
+    ('--pink', 'color-mix(in srgb,var(--pink) 15%,transparent)'),
+    ('--text-muted', 'color-mix(in srgb,var(--text-muted) 15%,transparent)'),
 ]
-PHASE_COLOR_CYCLE = [
-    ('--accent', 'rgba(56,189,248,.2)'),
-    ('--accent2', 'rgba(129,140,248,.2)'),
-    ('--green', 'rgba(34,197,94,.15)'),
-    ('--orange', 'rgba(249,115,22,.15)'),
-    ('--text-muted', 'rgba(148,163,184,.15)'),
-]
+# Phases no longer have a cycle of their own: they use the CATEGORY RAMP
+# (`--cat-1…N`). The ramp is defined in the baked `:root` below and overridden
+# by a theme pack's `category_colors`, so there is exactly one place a project
+# changes milestone colours. The old `PHASE_COLOR_CYCLE` mixed accent, green
+# and orange — borrowing two STATUS colours for a category dimension, which is
+# why a milestone badge could read as "done" at a glance.
+_BAKED_CATEGORY_COUNT = 5
 
 
-def gen_dynamic_css(scope_values, phase_values):
+def gen_dynamic_css(scope_values, phase_values, theme_tokens=None):
+    """Per-value badge + summary-card colours, discovered from the markdown.
+
+    Scope is a NOMINAL dimension, so it stays alphabetical — a stable order
+    with no meaning attached. Phases are ORDINAL (the milestone sequence), so
+    they are coloured in **document order**, which is the order the summary
+    cards are emitted in and the order the ramp encodes. This previously used
+    `sorted(phase_values)`, so a phase's badge colour disagreed with its
+    position on the page and a sequential ramp would have run backwards.
+    """
     out = []
     for i, val in enumerate(sorted(scope_values)):
         fg, bg = SCOPE_COLOR_CYCLE[i % len(SCOPE_COLOR_CYCLE)]
-        out.append(f'.scope-badge.{slug(val)}{{background:{bg};color:var({fg})}}')
-    for i, val in enumerate(sorted(phase_values)):
-        fg, bg = PHASE_COLOR_CYCLE[i % len(PHASE_COLOR_CYCLE)]
-        out.append(f'.phase-badge.{slug(val)}{{background:{bg};color:var({fg})}}')
+        out.append(f'.scope-badge.{css_token("sc", val)}{{background:{bg};color:var({fg})}}')
+
+    # A theme pack's ramp wins; otherwise fall back to the ramp baked into the
+    # `:root` below, so a standalone dashboard rendered with no project-console
+    # is still coloured.
+    cat_vars = sequential_category_vars(theme_tokens or {}) or [
+        f'--cat-{i}' for i in range(1, _BAKED_CATEGORY_COUNT + 1)]
+    for i, val in enumerate(phase_values):
+        var = cat_vars[i % len(cat_vars)]
+        bg = f'color-mix(in srgb,var({var}) 20%,transparent)'
+        s = css_token('ph', val)
+        out.append(f'.phase-badge.{s}{{background:{bg};color:var({var})}}')
+        # The milestone's summary card carries the same colour as its badge,
+        # so the card, its badge and its progress row all read as one group.
+        out.append(f'.summary-card.{s}{{border-left-color:var({var})}}')
+        out.append(f'.summary-card.{s} .number{{color:var({var})}}')
+        # Only the row LABEL takes the milestone colour. The bar segments
+        # encode status (green = done, yellow = in flight) and must keep it —
+        # recolouring them by milestone would trade a readable status signal
+        # for a category one the label already carries.
+        out.append(f'.progress-row.{s} .progress-label{{color:var({var})}}')
     return '\n'.join(out)
 
 
 # ─── Brand theme alignment (optional project-console coupling) ───
 #
 # Best-effort: if the project ships a project-console with an active theme pack,
-# pull its brand `primary` + `font_body` so the embedded dashboard visually
-# belongs to the console it renders inside (iframe = isolated document; it does
-# NOT inherit the console's CSS or theme tokens, so we mirror them here).
+# mirror its palette so the embedded dashboard visually belongs to the console
+# it renders inside (iframe = isolated document; it does NOT inherit the
+# console's CSS or theme tokens, so we copy them in at render time).
+#
+# Originally only `primary` + `font_body` were lifted. That left the dashboard
+# on hardcoded Tailwind slate while the console followed its theme — visible
+# as soon as a project adopted a non-slate palette: blue chrome around a slate
+# iframe. The full chrome palette is mirrored now (see `_THEME_TOKEN_MAP`);
+# status colours deliberately are not.
 #
 # The brand color lives in the theme pack — read it, don't redeclare it. Falls
 # back silently to the self-contained slate+sky defaults baked into
@@ -1056,12 +1109,23 @@ def _read_theme_yaml(path):
     out = {}
     try:
         for line in path.read_text().splitlines():
-            m = re.match(r'^([a-z_]+):\s*(.+?)\s*$', line)
+            # Digits are part of the key charset: `surface_2` is a real theme
+            # key and an `[a-z_]+` class silently drops it — which showed up as
+            # the dashboard's lifted surface following the theme while its
+            # lifted surface-2 stayed slate.
+            m = re.match(r'^([a-z0-9_]+):\s*(.+?)\s*$', line)
             if not m:
                 continue
-            # Strip a trailing inline comment only when the `#` is whitespace-
-            # preceded — otherwise it would eat hex color values like "#a855f7".
-            val = re.sub(r'\s+#.*$', '', m.group(2)).strip().strip('"\'')
+            # Strip a trailing inline comment. The `#` must be whitespace-
+            # preceded (so it doesn't eat a leading hex value) AND must not
+            # itself begin a hex colour — a comma-separated list like
+            # "#5fa8dd, #4fb3a6, …" has whitespace-preceded `#`s all the way
+            # along, and the previous `\s+#.*$` truncated it to the first
+            # entry. Silent: the value still parsed, just short.
+            val = re.sub(r'\s+#(?![0-9a-fA-F]{3,4}(?![0-9a-zA-Z])|'
+                         r'[0-9a-fA-F]{6}(?![0-9a-zA-Z])|'
+                         r'[0-9a-fA-F]{8}(?![0-9a-zA-Z])).*$',
+                         '', m.group(2)).strip().strip('"\'')
             if val:
                 out[m.group(1)] = val
     except Exception:
@@ -1069,21 +1133,30 @@ def _read_theme_yaml(path):
     return out
 
 
-def load_brand_theme(project_dir):
-    """Resolve {brand, font} from the active project-console theme pack, or {}.
+def load_brand_theme(project_dir, theme_name=None):
+    """Resolve dashboard tokens from a project-console theme pack, or {}.
 
-    console.yaml `theme:` -> theme pack `theme.yaml` (project themes dir first,
-    then the skill's bundled themes), following `extends:` up the chain.
+    `theme_name` overrides the project default — the console passes the
+    viewer's per-browser selection when it renders the dashboard inline, so
+    the embedded dashboard follows the theme that viewer actually picked
+    rather than the one in console.yaml. (The standalone .html file still
+    bakes the project default: a committed artifact cannot vary per viewer.)
+    The console validates that name against installed packs before passing it.
+
+    Without an override: console.yaml `theme:` -> theme pack `theme.yaml`
+    (project themes dir first, then the skill's bundled themes), following
+    `extends:` up the chain.
     """
     project_dir = Path(project_dir)
-    try:
-        ctext = (project_dir / 'tools/project-console/console.yaml').read_text()
-    except Exception:
-        return {}
-    tm = re.search(r'^theme:\s*(.+?)\s*$', ctext, re.MULTILINE)
-    if not tm:
-        return {}
-    theme_name = tm.group(1).split('#', 1)[0].strip().strip('"\'')
+    if not theme_name:
+        try:
+            ctext = (project_dir / 'tools/project-console/console.yaml').read_text()
+        except Exception:
+            return {}
+        tm = re.search(r'^theme:\s*(.+?)\s*$', ctext, re.MULTILINE)
+        if not tm:
+            return {}
+        theme_name = tm.group(1).split('#', 1)[0].strip().strip('"\'')
 
     search_dirs = [
         project_dir / 'tools/project-console/themes',
@@ -1106,23 +1179,67 @@ def load_brand_theme(project_dir):
         return {}
 
     data = resolve(theme_name, set())
-    tokens = {}
-    if data.get('primary'):
-        tokens['brand'] = data['primary']
-    if data.get('font_body'):
-        tokens['font'] = data['font_body']
+    tokens = {css_var: data[key] for key, css_var in _THEME_TOKEN_MAP if data.get(key)}
+
+    # Category palette. The pack ships an ordered ramp; this consumer decides
+    # what the entries mean — sequential entries go to milestones/phases in
+    # DOCUMENT order, and the reserved final entry goes to Engineering
+    # Prereqs, which is a parallel workstream rather than a point in the
+    # sequence. Assigning roles here (not in the pack) is what keeps
+    # `category_colors` a generic theme capability.
+    cats = [c.strip() for c in (data.get('category_colors') or '').split(',') if c.strip()]
+    if len(cats) >= 2:
+        for i, colour in enumerate(cats[:-1], start=1):
+            tokens[f'--cat-{i}'] = colour
+        tokens['--eng'] = cats[-1]
     return tokens
 
 
+def sequential_category_vars(theme_tokens):
+    """`['--cat-1', '--cat-2', …]` for the ramp the theme supplied, else []."""
+    return sorted((k for k in theme_tokens if k.startswith('--cat-')),
+                  key=lambda k: int(k.rsplit('-', 1)[1]))
+
+
+# theme.yaml key -> dashboard :root variable.
+#
+# Ordered, not a dict literal, because `primary` feeds TWO variables: the
+# baked default is `--brand:var(--accent)`, i.e. brand and accent are the same
+# role (the dashboard's single highlight colour) until a theme splits them.
+# Feeding both from `primary` keeps them unified; the console's own secondary
+# `accent` maps to `--accent2`, which is the dashboard's secondary highlight.
+#
+# NOT mapped, deliberately: --green/--yellow/--red/--orange/--cyan/--pink
+# encode status (approved / in-flight / blocked) and --eng marks the
+# engineering-prereq category. Those are meaning, not brand, and must stay
+# stable when the palette changes — a "blocked" row that turns brand-coloured
+# stops communicating.
+_THEME_TOKEN_MAP = (
+    ('body_bg',       '--bg'),
+    ('surface',       '--surface'),
+    ('surface_2',     '--surface2'),
+    ('surface_muted', '--help-bg'),
+    ('border',        '--border'),
+    ('text',          '--text'),
+    ('text_muted',    '--text-muted'),
+    ('primary',       '--brand'),
+    ('primary',       '--accent'),
+    ('accent',        '--accent2'),
+    ('font_body',     '--font'),
+)
+
+
 def gen_theme_css(tokens):
-    """Emit a :root override for brand/font when a theme was resolved (else '')."""
+    """Emit a :root override for every theme token resolved (else '').
+
+    Keys absent from the theme pack are simply not emitted, so the dashboard
+    falls back to the slate+sky defaults baked into `_CSS_BASE_INNER` and the
+    skill stays standalone — a project with no project-console, or a theme
+    pack that sets only `primary`, renders exactly as it did before.
+    """
     if not tokens:
         return ''
-    decls = []
-    if tokens.get('brand'):
-        decls.append(f"--brand:{tokens['brand']}")
-    if tokens.get('font'):
-        decls.append(f"--font:{tokens['font']}")
+    decls = [f'{var}:{val}' for var, val in tokens.items()]
     return ':root{' + ';'.join(decls) + '}' if decls else ''
 
 
@@ -1133,7 +1250,7 @@ def gen_theme_css(tokens):
 # dashboard view, and wrapped into `CSS_BASE` for the standalone `.html` file.
 
 _CSS_BASE_INNER = '''
-:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--text-muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--help-bg:#1a2744;--eng:#a78bfa;--brand:var(--accent);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--shadow-sm:0 1px 2px rgba(0,0,0,.25),0 4px 14px rgba(0,0,0,.22);--shadow-md:0 2px 4px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.34)}
+:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--text-muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--help-bg:#1a2744;--eng:#a78bfa;--cat-1:#38bdf8;--cat-2:#22d3ee;--cat-3:#34d399;--cat-4:#fbbf24;--cat-5:#fb7185;--brand:var(--accent);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--shadow-sm:0 1px 2px rgba(0,0,0,.25),0 4px 14px rgba(0,0,0,.22);--shadow-md:0 2px 4px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.34)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;padding:2rem}
 .header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
@@ -1170,8 +1287,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .tier-divider{display:flex;align-items:center;gap:1rem;margin:2rem 0 1.2rem}
 .tier-divider .line{flex:1;height:1px;background:var(--border)}
 .tier-divider .badge{padding:.4rem 1rem;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.phase-divider .badge{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3)}
-.eng-divider .badge{background:rgba(167,139,250,.15);color:var(--eng);border:1px solid rgba(167,139,250,.3)}
+.phase-divider .badge{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
+.eng-divider .badge{background:color-mix(in srgb,var(--eng) 15%,transparent);color:var(--eng);border:1px solid color-mix(in srgb,var(--eng) 30%,transparent)}
 .phase-meta{text-align:center;font-size:.78rem;color:var(--text-muted);margin:-.4rem 0 1rem}
 .phase-meta strong{color:var(--text)}
 .category{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:.8rem;overflow:hidden;box-shadow:var(--shadow-sm)}
@@ -1192,9 +1309,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .item-table th{text-align:left;padding:.35rem .6rem;background:var(--surface2);color:var(--text-muted);font-weight:600;font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;z-index:1}
 .item-table td{padding:.35rem .6rem;border-top:1px solid rgba(71,85,105,.4);vertical-align:top}
 .item-table .updated-col{white-space:nowrap;color:var(--text-muted);font-size:.72rem}
-.item-row{cursor:pointer;transition:background .15s}.item-row:hover td{background:rgba(56,189,248,.05)}
-.item-row.expanded-info td{background:rgba(56,189,248,.08)}
-.item-row.expanded-help td{background:rgba(168,85,247,.08)}
+.item-row{cursor:pointer;transition:background .15s}.item-row:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.item-row.expanded-info td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.item-row.expanded-help td{background:color-mix(in srgb,var(--accent2) 8%,transparent)}
 /* Info row — deterministic Deliverable Details (Phase, Scope, Path, REFs).
    Toggled by clicking the row body or the (i) icon. */
 .info-row{display:none!important}.info-row.visible{display:table-row!important}
@@ -1206,35 +1323,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .info-content a{color:var(--accent);text-decoration:none}.info-content a:hover{text-decoration:underline}
 .info-empty{color:var(--text-muted);font-style:italic;font-size:.78rem}
 /* Help row — LLM-generated artifact help from submission-tracker.help.json.
-   Toggled by clicking the (?) icon only. Distinct purple accent so it does
-   not visually conflict with the cyan info-row. */
+   Toggled by clicking the (?) icon only. Uses the SECONDARY accent so it stays
+   visually distinct from the info-row (which uses the primary `--accent`) —
+   that separation is the point. It was a hardcoded purple, which held the
+   distinction but ignored the theme, so on a themed dashboard the help row was
+   the one element still wearing the old palette. `--accent2` keeps the
+   contrast with the info-row under every pack. */
 .help-row{display:none!important}.help-row.visible{display:table-row!important}
-.help-row td{padding:.5rem .8rem .6rem 3rem;background:rgba(168,85,247,.06);border-top:none;border-left:3px solid #a855f7}
+.help-row td{padding:.5rem .8rem .6rem 3rem;background:color-mix(in srgb,var(--accent2) 7%,transparent);border-top:none;border-left:3px solid var(--accent2)}
 .help-content{font-size:.8rem;color:var(--text);line-height:1.55}
-.help-content h4{font-size:.78rem;color:#c084fc;text-transform:uppercase;letter-spacing:.05em;margin:.6rem 0 .15rem 0}
+.help-content h4{font-size:.78rem;color:color-mix(in srgb,var(--accent2) 78%,var(--text));text-transform:uppercase;letter-spacing:.05em;margin:.6rem 0 .15rem 0}
 .help-content h4:first-child{margin-top:0}
 .help-content p{margin:.2rem 0;color:var(--text-muted)}
 .help-content ul{margin:.2rem 0 .4rem 1.2rem}.help-content li{margin:.15rem 0;color:var(--text-muted)}
 .help-content li strong{color:var(--text)}
-.help-content code{font-size:.75rem;color:#c084fc;background:rgba(168,85,247,.1);padding:.1rem .3rem;border-radius:3px}
+.help-content code{font-size:.75rem;color:color-mix(in srgb,var(--accent2) 78%,var(--text));background:color-mix(in srgb,var(--accent2) 10%,transparent);padding:.1rem .3rem;border-radius:3px}
 .help-content .anchors{font-size:.72rem;color:var(--text-muted);margin-top:.3rem}
-.help-content .anchors code{color:#c084fc}
+.help-content .anchors code{color:color-mix(in srgb,var(--accent2) 78%,var(--text))}
 .help-empty{color:var(--text-muted);font-style:italic;font-size:.78rem}
-.help-empty code{color:#c084fc}
+.help-empty code{color:color-mix(in srgb,var(--accent2) 78%,var(--text))}
 /* Per-row icon affordances. Clickable; spaced; tooltip on hover. */
 .row-icons{display:inline-flex;gap:.25rem;margin-left:.4rem;vertical-align:middle}
 .row-icon{display:inline-block;width:1.1rem;height:1.1rem;line-height:1.1rem;text-align:center;border-radius:50%;font-size:.7rem;font-weight:600;cursor:pointer;user-select:none;opacity:.55;transition:opacity .15s,background .15s}
-.row-icon.info{color:var(--accent);background:rgba(56,189,248,.12)}
-.row-icon.info:hover{opacity:1;background:rgba(56,189,248,.25)}
-.row-icon.help{color:#c084fc;background:rgba(168,85,247,.12)}
-.row-icon.help:hover{opacity:1;background:rgba(168,85,247,.25)}
+.row-icon.info{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.row-icon.info:hover{opacity:1;background:color-mix(in srgb,var(--accent) 25%,transparent)}
+.row-icon.help{color:color-mix(in srgb,var(--accent2) 78%,var(--text));background:color-mix(in srgb,var(--accent2) 12%,transparent)}
+.row-icon.help:hover{opacity:1;background:color-mix(in srgb,var(--accent2) 25%,transparent)}
 .item-row:hover .row-icon{opacity:.85}
 .status-badge{display:inline-block;padding:.12rem .45rem;border-radius:10px;font-size:.67rem;font-weight:600;white-space:nowrap}
 /* 7-state lifecycle vocabulary (canonical) */
 .status-badge.not-started{background:rgba(71,85,105,.3);color:var(--text-muted)}
 .status-badge.drafting{background:rgba(234,179,8,.15);color:var(--yellow)}
 .status-badge.drafted{background:rgba(6,182,212,.15);color:var(--cyan)}
-.status-badge.in-review{background:rgba(129,140,248,.15);color:var(--accent2)}
+.status-badge.in-review{background:color-mix(in srgb,var(--accent2) 15%,transparent);color:var(--accent2)}
 .status-badge.needs-revision{background:rgba(249,115,22,.15);color:var(--orange)}
 .status-badge.approved{background:rgba(34,197,94,.15);color:var(--green)}
 .status-badge.n-a{background:rgba(148,163,184,.15);color:var(--text-muted)}
@@ -1259,7 +1380,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .scales-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1rem;margin-top:1.5rem}
 .id-col{width:84px;white-space:nowrap;color:var(--text-muted);font-family:monospace;font-size:.72rem}
 .status-col{width:90px}.ai-status-col{width:108px}.scope-col{width:90px}.phase-col{width:100px}
-.status-badge.ai-status{background:rgba(129,140,248,.12);color:var(--accent2);border:1px dashed rgba(129,140,248,.4);font-style:italic;cursor:help}
+.status-badge.ai-status{background:color-mix(in srgb,var(--accent2) 12%,transparent);color:var(--accent2);border:1px dashed color-mix(in srgb,var(--accent2) 40%,transparent);font-style:italic;cursor:help}
 .status-badge.ai-status.not-analyzed{background:rgba(148,163,184,.08);color:var(--text-muted);border-color:rgba(148,163,184,.25)}
 .ref-col{color:var(--text-muted);font-size:.72rem;max-width:180px}
 .path-col{color:var(--text-muted);font-size:.7rem;font-family:monospace;max-width:280px;overflow:hidden;text-overflow:ellipsis}
@@ -1281,12 +1402,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .legend-item.l-partial{color:var(--yellow)}
 .legend-item.l-needs-revision{color:var(--orange)}
 .legend-item.l-not-started{color:var(--text-muted)}
-.help-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
+.help-mode-banner{background:color-mix(in srgb,var(--accent) 8%,transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:10px;padding:.5rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
 .help-mode-banner.visible{display:block}.help-mode-banner strong{color:var(--accent)}
-.info-mode-banner{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.5rem 1rem;margin-bottom:.6rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
+.info-mode-banner{background:color-mix(in srgb,var(--accent) 8%,transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:10px;padding:.5rem 1rem;margin-bottom:.6rem;font-size:.82rem;color:var(--text-muted);text-align:center;display:none}
 .info-mode-banner.visible{display:block}.info-mode-banner strong{color:var(--accent)}
-.help-mode-banner.purple{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2)}
-.help-mode-banner.purple strong{color:#c084fc}
+/* Renamed from `.purple`: the modifier now takes the theme's SECONDARY accent,
+   so a colour-named class would be wrong under every pack but the old one. */
+.help-mode-banner.alt{background:color-mix(in srgb,var(--accent2) 8%,transparent);border-color:color-mix(in srgb,var(--accent2) 20%,transparent)}
+.help-mode-banner.alt strong{color:color-mix(in srgb,var(--accent2) 78%,var(--text))}
 .footer{text-align:center;margin-top:1.5rem;padding-top:.8rem;border-top:1px solid var(--border);color:var(--text-muted);font-size:.72rem}
 .footer code{color:var(--cyan)}
 @media(max-width:768px){
@@ -1380,13 +1503,13 @@ def emit_controls_html(scope_values, phase_values):
     parts.append('</div>')
     # Mode banners relocate with the controls.
     parts.append('<div class="info-mode-banner" id="info-banner"><strong>Info mode active</strong> &mdash; per-row deterministic details (Phase, Scope, Path, References) expanded.</div>')
-    parts.append('<div class="help-mode-banner purple" id="help-banner"><strong>Help mode active</strong> &mdash; LLM-generated artifact help (what is this, why it matters in this project) expanded. Run <code>/tracker help</code> to populate empty rows.</div>')
+    parts.append('<div class="help-mode-banner alt" id="help-banner"><strong>Help mode active</strong> &mdash; LLM-generated artifact help (what is this, why it matters in this project) expanded. Run <code>/tracker help</code> to populate empty rows.</div>')
     return ''.join(parts)
 
 
 # ─── Render ───
 
-def render(project_dir, embed=False):
+def render(project_dir, embed=False, theme_name=None):
     """Render the submission tracker.
 
     `embed=False` (default): emit a complete self-contained HTML document and
@@ -1397,7 +1520,9 @@ def render(project_dir, embed=False):
     loads `_CSS_BASE_INNER` + `_JS_INNER` via separate static routes.
     """
     project_dir = Path(project_dir)
-    brand_theme = load_brand_theme(project_dir)  # {} when no project-console theme is found
+    # `theme_name` is the console's per-browser selection when rendering
+    # inline; None means the project default from console.yaml.
+    brand_theme = load_brand_theme(project_dir, theme_name)  # {} when no theme is found
     md_path = project_dir / 'docs/project/submissions/submission-tracker.md'
     html_path = project_dir / 'docs/project/submissions/submission-tracker.html'
     src_dir = md_path.parent
@@ -1473,7 +1598,7 @@ def render(project_dir, embed=False):
         theme_css = gen_theme_css(brand_theme)
         if theme_css:
             w(f'<style>{theme_css}</style>')
-        w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
+        w(f'<style>{gen_dynamic_css(scope_values, phase_values, brand_theme)}</style>')
         w('</head><body>')
 
         w(f'<div class="header"><h1>Submission Package Tracker</h1>'
@@ -1485,7 +1610,7 @@ def render(project_dir, embed=False):
         theme_css = gen_theme_css(brand_theme)
         if theme_css:
             w(f'<style>{theme_css}</style>')
-        w(f'<style>{gen_dynamic_css(scope_values, phase_values)}</style>')
+        w(f'<style>{gen_dynamic_css(scope_values, phase_values, brand_theme)}</style>')
         w('<div class="tracker-embed">')
         w(f'<div class="timestamp">{updated_line}</div>')
 
@@ -1509,7 +1634,7 @@ def render(project_dir, embed=False):
         inflight = count_inflight(flat)
         ns = count_status(flat, 'Not Started')
         pct = round(d / n * 100) if n else 0
-        w(f'<div class="summary-card"><div class="label">{p}</div>'
+        w(f'<div class="summary-card {css_token("ph", p)}"><div class="label">{p}</div>'
           f'<div class="number">{n}</div>'
           f'<div class="detail">{d} approved · {inflight} in flight · {ns} not started · {pct}% ready</div></div>')
     eng_done = count_status(eng, 'Approved')
@@ -1553,7 +1678,7 @@ def render(project_dir, embed=False):
             segs += f'<div class="progress-segment drafted" style="width:{round(drft/n*100,1)}%">{drft}</div>'
         if ing:
             segs += f'<div class="progress-segment partial" style="width:{round(ing/n*100,1)}%">{ing}</div>'
-        w(f'<div class="progress-row">'
+        w(f'<div class="progress-row {css_token("ph", p)}">'
           f'<div class="progress-label">{p}</div>'
           f'<div class="progress-bar-container">{segs}</div>'
           f'<div class="progress-stats">{d}/{n} done</div></div>')
@@ -1724,9 +1849,13 @@ def render(project_dir, embed=False):
     return '\n'.join(out)
 
 
-def render_embed_fragment(project_dir):
-    """Convenience wrapper — returns the embed-mode HTML fragment string."""
-    return render(project_dir, embed=True)
+def render_embed_fragment(project_dir, theme_name=None):
+    """Convenience wrapper — returns the embed-mode HTML fragment string.
+
+    `theme_name` lets the console render the fragment under the viewer's
+    selected theme pack instead of the project default.
+    """
+    return render(project_dir, embed=True, theme_name=theme_name)
 
 
 def main():

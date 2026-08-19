@@ -54,6 +54,22 @@
   --muted: var(--body-text-muted);
   --border-light: var(--border);
 
+  /* Monospace stack. Was referenced with a literal fallback in five files and
+     defined in none, so the fallback always won and the token was decorative. */
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+
+  /* Category ramp defaults — overridden by a theme pack's `category_colors`.
+     Sequential cool -> warm for ordinal dimensions; `--cat-alt` is the
+     reserved non-sequential entry. Defined here so a surface using the ramp
+     still renders when no pack supplies one. */
+  --cat-1: #2563eb;
+  --cat-2: #0891b2;
+  --cat-3: #059669;
+  --cat-4: #b45309;
+  --cat-5: #be123c;
+  --cat-alt: #4338ca;
+
   --radius-sm: 5px;
   --radius-md: 9px;
   --radius-lg: 13px;
@@ -351,7 +367,7 @@ select:focus-visible,
 .topnav nav .muted {
   font-weight: 500;
   font-size: .95rem;
-  color: #b7b7c1;
+  color: color-mix(in srgb, var(--topnav-text) 68%, transparent);
 }
 
 /* ============ Main layout ============ */
@@ -749,7 +765,9 @@ body.docs-page.resizing * {
    can be added later if long-line readability becomes an issue. */
 .docs-rendered { min-width: 0; }
 .docs-text {
-  background: var(--gl-gray-lighter);
+  /* A code well, so it tracks --code-bg rather than the page ground. The
+     syntax tones below are contrast-checked against --code-bg specifically. */
+  background: var(--code-bg);
   padding: .75rem;
   border-radius: var(--radius-sm);
   max-width: 100%;
@@ -761,13 +779,24 @@ body.docs-page.resizing * {
 /* Syntax-highlighted YAML / JSON (both use the lang-yaml class per
    explorer.js). Keep the highlight colors; inherit the wrap behavior
    from .docs-text so long string values don't push past the pane. */
-.docs-text.lang-yaml { color: #1f2344; }
-.lang-yaml .yml-comment { color: #8a94b4; font-style: italic; }
-.lang-yaml .yml-key     { color: var(--gl-purple-dark); font-weight: 600; }
-.lang-yaml .yml-string  { color: #0b6a3c; }
-.lang-yaml .yml-number  { color: #9c3e00; }
-.lang-yaml .yml-bool    { color: #b00057; font-weight: 600; }
-.lang-yaml .yml-punct   { color: #6b7280; }
+/* YAML/JSON syntax tones.
+   These were fixed dark-on-light values (base text #1f2344) sitting on a
+   background that follows the theme. On the dark packs that put the base text
+   at 1.17:1 — the visual-noise floor — and six of the seven tones failed
+   WCAG AA, so YAML in the Documents tab was effectively unreadable.
+
+   A fixed colour cannot solve this: nothing clears 4.5:1 against both a
+   near-white and a near-black background. So each tone is MIXED toward
+   `--code-text`, which flips with the theme — the hue survives, the lightness
+   follows the pack. Measured 7.7:1–10.4:1 across the light, dark and blue
+   packs. Re-check with the contrast script before changing a mix percentage. */
+.docs-text.lang-yaml { color: var(--code-text); }
+.lang-yaml .yml-comment { color: color-mix(in srgb, var(--code-text) 55%, transparent); font-style: italic; }
+.lang-yaml .yml-key     { color: var(--brand-primary); font-weight: 600; }
+.lang-yaml .yml-string  { color: color-mix(in srgb, #12a150 45%, var(--code-text)); }
+.lang-yaml .yml-number  { color: color-mix(in srgb, #e07b1a 45%, var(--code-text)); }
+.lang-yaml .yml-bool    { color: color-mix(in srgb, #e0407a 45%, var(--code-text)); font-weight: 600; }
+.lang-yaml .yml-punct   { color: color-mix(in srgb, #7f95ad 45%, var(--code-text)); }
 .lang-yaml .yml-anchor  { color: var(--gl-cyan); font-weight: 600; }
 .docs-iframe {
   display: block;
@@ -876,8 +905,11 @@ body.docs-page.resizing * {
 .msg-warning {
   max-width: 100%;
   background: var(--banner-warning-bg);
-  border: 1px solid #f0c34a;
-  color: #6b4f00;
+  /* Was a fixed #f0c34a border with #6b4f00 text. The background already
+     followed the theme, so on the dark packs this was dark-brown text on a
+     dark-amber well — the pair has to move together. */
+  border: 1px solid color-mix(in srgb, var(--banner-warning-text) 55%, transparent);
+  color: var(--banner-warning-text);
   padding: .5rem .75rem;
   border-radius: var(--radius-md);
   font-size: .85rem;
@@ -1191,7 +1223,8 @@ body.docs-page.resizing * {
 .chat-form button:hover:not(:disabled) { background: var(--gl-purple-dark); }
 .chat-form button:active:not(:disabled) { transform: translateY(1px); }
 .chat-form button:disabled {
-  background: #c9b8dc;
+  /* Was a fixed pale purple — a light-theme tint left on a dark surface. */
+  background: color-mix(in srgb, var(--brand-primary) 45%, var(--surface));
   cursor: wait;
 }
 
@@ -1357,7 +1390,7 @@ body.docs-page.resizing * {
 
 .summary-panel {
   background: var(--gl-purple-tint);
-  border: 1px solid #e0cdf5;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 35%, transparent);
   border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
   margin: 1rem 0 1.5rem;
@@ -1482,7 +1515,7 @@ body.docs-page.resizing * {
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid #d8c4f0;
+  border: 2px solid color-mix(in srgb, var(--brand-primary) 30%, transparent);
   border-top-color: var(--gl-purple);
   border-radius: 50%;
   animation: spin .8s linear infinite;
@@ -1506,8 +1539,8 @@ body.docs-page.resizing * {
 }
 .markdown-body { min-width: 0; }
 .markdown-body pre {
-  background: #1d2033;
-  color: #e6e6f0;
+  background: var(--code-bg);
+  color: var(--code-text);
   padding: 1rem 1.25rem;
   border-radius: var(--radius-md);
   max-width: 100%;
@@ -1583,8 +1616,8 @@ body.docs-page.resizing * {
   background: var(--surface);
 }
 .text-view {
-  background: #1d2033;
-  color: #e6e6f0;
+  background: var(--code-bg);
+  color: var(--code-text);
   padding: 1.25rem;
   border-radius: var(--radius-md);
   overflow-x: auto;
@@ -1695,7 +1728,7 @@ body.docs-page.resizing * {
   height: 34px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
-  color: #d8dae6;
+  color: var(--body-text);
   transition: background .15s, color .15s;
 }
 .footer-social a:hover {
@@ -1777,7 +1810,10 @@ body.docs-page.resizing * {
   flex: 1 1 auto;
   width: 100%;
   border: 0;
-  background: #0f172a;
+  /* Backdrop behind the dashboard iframe while it loads. The iframe's own
+     document carries a separate palette (see tracker_interactive.css), so this
+     only needs to avoid a white flash on a dark pack. */
+  background: var(--body-bg);
   display: block;
 }
 
@@ -1944,7 +1980,12 @@ body.docs-page.resizing * {
   margin-left: 0.15rem;
 }
 @keyframes pc-blink { 50% { opacity: 0; } }
-.pc-msg-error { background: #fdecea; color: #7a1f1a; align-self: stretch; }
+/* Error bubble. Was a fixed light-pink well with dark-red text — unreadable
+   on a dark surface. Derived so the pair moves together on any pack; the red
+   stays literal because it means "failure", not "brand". */
+.pc-msg-error { background: color-mix(in srgb, #e0407a 14%, var(--surface));
+                color: color-mix(in srgb, #e0407a 55%, var(--body-text));
+                align-self: stretch; }
 
 .pc-input-row {
   display: flex; gap: 0.5rem; align-items: flex-end;
@@ -2036,6 +2077,9 @@ body.docs-page.resizing * {
 .btn-secondary:hover { background: var(--surface-2); }
 .overview-viewer {
   border: 1px solid var(--border, #cfd3d8); border-radius: 6px; overflow: hidden;
+  /* Deliberately NOT tokenised: this is the chrome behind an embedded PDF
+     viewer, and #525659 is the neutral grey the browser's own PDF UI uses.
+     Theming it would make the surround disagree with the viewer it frames. */
   background: #525659;
 }
 .overview-viewer iframe {

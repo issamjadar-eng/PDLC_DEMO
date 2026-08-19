@@ -77,8 +77,12 @@ def _render_interactive_tracker_dashboard(request: Request, cfg, dash):
     actor_folder = actor_info.get("task_folder") or ""
 
     try:
+        # `request.state.theme` is already the pack the middleware resolved
+        # for this viewer (cookie override or project default), so passing its
+        # name keeps the inline dashboard in step with the console around it.
         fragment = workflows_router._tracker_embed_fragment_for_actor(
-            cfg, actor_folder
+            cfg, actor_folder, theme_name=getattr(request.state, "theme", None)
+            and request.state.theme.name
         )
     except Exception as e:
         # Fragment build failed — surface the error inline rather than fall

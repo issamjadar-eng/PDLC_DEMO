@@ -182,6 +182,22 @@ The renderer:
 - Rewrites relative file links in row paths + detail content to `/documents#path=<virtual-path>` so clicking opens in the project-console Documents tab
 - Preserves project-agnostic posture: no project-specific names baked into output; values flow from the markdown
 
+#### Theme coupling (optional)
+
+If the project ships a project-console with an active theme pack, the renderer mirrors its palette into the dashboard's `:root`. This is best-effort and one-directional: with no console, or no theme pack, the dashboard falls back to the slate+sky defaults baked into `_CSS_BASE_INNER` and renders exactly as a standalone file. **The iframe inherits nothing** — the console's CSS variables are not visible inside the dashboard document, which is why the palette is copied in at render time rather than referenced.
+
+| Mirrored | Not mirrored |
+|---|---|
+| Chrome: `body_bg`, `surface`, `surface_2`, `surface_muted`, `border`, `text`, `text_muted`, `primary` (→ both `--brand` and `--accent`, which are one role by default), `accent` (→ `--accent2`), `font_body` | **Status colours** `--green` / `--yellow` / `--red` / `--orange` / `--cyan` / `--pink`. These encode approved / in-flight / blocked. A row that turns brand-coloured stops communicating, so they never follow the theme |
+
+**Milestone colours come from the pack's `category_colors` ramp** (see the project-console skill for the key's contract). This renderer assigns them:
+
+- Sequential entries → phases, in **document order** — the order the markdown declares them and the order the summary cards appear, so the cool→warm ramp reads as milestone progression. (Badges previously used `sorted()`, so badge colour disagreed with card position.)
+- The reserved final entry → `--eng`, the Engineering Prereqs card and divider, which is a parallel workstream rather than a point in the sequence.
+- Each milestone's **summary card, phase badge and progress-row label** share one colour so they read as a group. Progress-bar *segments* stay status-coloured.
+
+Generated class names are prefixed (`ph-`, `sc-`) so a value that slugs to a digit-leading token — `510k+PCCP` → `510k-pccp` — cannot produce an invalid CSS selector. An unprefixed digit-leading class makes browsers discard the whole rule silently; that is what left the 510k+PCCP badge uncoloured while every other phase rendered correctly.
+
 ### `update <id> <field> <value>`
 
 Update a deliverable row's field **across every layer that can display it**, so the change can't be silently reverted by an overlay override or left stale in a click-row detail. **Fields**: `status`, `phase`, `scope`, `path`, `ref`, `effort`, `name`.

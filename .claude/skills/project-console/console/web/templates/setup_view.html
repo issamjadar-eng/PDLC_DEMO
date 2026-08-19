@@ -74,6 +74,29 @@
   .su-add h3 { margin: 0 0 3px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
   .su-add p { margin: 0 0 10px; font-size: 12px; line-height: 1.45; color: var(--body-text-muted,#8b93a7); }
   .su-add a { font-size: 11.5px; }
+
+  /* ---- theme swatches ---- */
+  .su-theme .su-swatch { border: 1px solid; border-radius: 8px; overflow: hidden;
+      margin: 0 0 10px; }
+  .su-swatch-bar { display: flex; align-items: center; gap: 6px;
+      padding: 6px 8px; border-bottom: 1px solid; }
+  .su-swatch-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .su-swatch-line { height: 4px; border-radius: 2px; flex: 1 1 auto; opacity: .55; }
+  .su-swatch-line.sm { flex: none; width: 60%; opacity: .85; }
+  .su-swatch-line.xs { flex: none; width: 38%; opacity: .5; }
+  .su-swatch-body { display: flex; align-items: center; gap: 10px; padding: 9px 8px; }
+  .su-swatch-card { flex: 1 1 auto; border: 1px solid; border-radius: 6px;
+      padding: 7px 8px; display: flex; flex-direction: column; gap: 4px; }
+  .su-swatch-num { font-size: 17px; font-weight: 700; line-height: 1;
+      font-variant-numeric: tabular-nums; }
+  .su-swatch-chips { display: grid; grid-template-columns: repeat(2, 11px);
+      gap: 4px; flex: none; }
+  .su-swatch-chip { width: 11px; height: 11px; border-radius: 3px; }
+  /* The pack currently in use gets a ring, so "which am I on" is answerable
+     without reading the badge. */
+  .su-theme.is-active { border-color: var(--brand-primary,#6ea8fe);
+      box-shadow: 0 0 0 1px var(--brand-primary,#6ea8fe) inset; }
+  .su-active-badge { color: #4fbf9a; border-color: rgba(79,191,154,.45); }
   /* Caveats (instance-specific endpoint, licensing, scope limits) read as an
      aside against the description, not as more description. */
   .su-add .su-note { margin: -6px 0 10px; padding-left: 9px; font-size: 11.5px;
@@ -182,6 +205,7 @@
 {% block content %}
 {# Section-local icon sprite (Lucide-adapted, MIT), stroke-based like the topnav set. #}
 <svg width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="su-ic-palette" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 1.66-1.34 3-3 3h-1.5a2 2 0 0 0-1.4 3.42A2 2 0 0 1 13.7 21z"/><circle cx="7.5" cy="12" r="1"/><circle cx="9.5" cy="8" r="1"/><circle cx="14" cy="7.5" r="1"/><circle cx="17" cy="11" r="1"/></symbol>
   <symbol id="su-ic-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/></symbol>
   <symbol id="su-ic-skill" viewBox="0 0 24 24"><path d="M12 3l1.9 5.7L19.5 10l-5.6 1.3L12 17l-1.9-5.7L4.5 10l5.6-1.3z"/><path d="M19 15l.7 2.1 2.1.7-2.1.7L19 20.6l-.7-2.1-2.1-.7 2.1-.7z"/></symbol>
   <symbol id="su-ic-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
@@ -201,6 +225,8 @@
     <nav class="su-nav" id="su-nav">
       <a href="#project" data-sec="project"><svg class="su-ico"><use href="#su-ic-box"/></svg>Project
         {% if setup.project.fields | rejectattr('known') | list or setup.project.sections | rejectattr('known') | list %}<span class="su-dot" title="fields without registered descriptions"></span>{% endif %}</a>
+      <a href="#appearance" data-sec="appearance"><svg class="su-ico"><use href="#su-ic-palette"/></svg>Appearance
+        <span class="su-count">{{ setup.appearance.packs | length }}</span></a>
       <a href="#connectors" data-sec="connectors"><svg class="su-ico"><use href="#su-ic-plug"/></svg>Connectors
         {% if setup.connectors.connectors | selectattr('status','equalto','warning') | list %}<span class="su-dot" title="unapproved connector"></span>{% endif %}
         <span class="su-count">{{ setup.connectors.connectors | length }}</span></a>
@@ -310,6 +336,73 @@
           {% if s.preview_truncated %}
           <p class="su-note">… {{ s.preview_truncated }} more line{{ 's' if s.preview_truncated != 1 }} — see <code>project.yml</code> for the full block.</p>
           {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    {# ============================ APPEARANCE ============================ #}
+    <section class="su-sec" id="sec-appearance" data-title="Appearance">
+      <div class="su-head">
+        <h1>Appearance</h1>
+        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Search themes…" data-filter="appearance"></div>
+      </div>
+      <p class="su-sub">
+        Theme packs installed in this project. Each swatch is rendered from the pack's
+        own resolved tokens — what you see is the palette the console will use.
+      </p>
+      <div class="su-banner">
+        ⟳ Your choice is stored <b>in this browser only</b> (a <code>{{ setup.appearance.cookie }}</code> cookie) —
+        it is never written to project config and never committed, so teammates keep their own.
+        Clearing it returns you to the project default,
+        <code>{{ setup.appearance.default }}</code>, set in <code>console.yaml</code>.
+      </div>
+
+      <div class="su-cards" data-list="appearance">
+        {% for p in setup.appearance.packs %}
+        {% set s = p.swatch %}
+        <div class="su-add su-theme" data-search="{{ (p.name ~ ' ' ~ p.label) | lower }}" id="su-theme-{{ p.name }}">
+          <h3><span class="su-glyph"><svg class="su-ico"><use href="#su-ic-palette"/></svg></span>{{ p.label }}
+            {% if p.is_default %}<span class="su-badge info">project default</span>{% endif %}
+            <span class="su-badge su-active-badge" data-theme-active="{{ p.name }}" hidden>in use</span></h3>
+
+          {# The preview is a miniature of the console itself — topnav strip, a
+             panel with real text tones, and the brand + accent — rather than a
+             row of disconnected chips, because a palette is judged by how the
+             colours sit together. #}
+          <div class="su-swatch" style="background:{{ s.body_bg }};border-color:{{ s.border }}">
+            <div class="su-swatch-bar" style="background:{{ s.surface }};border-color:{{ s.border }}">
+              <span class="su-swatch-dot" style="background:{{ s.primary }}"></span>
+              <span class="su-swatch-line" style="background:{{ s.muted }}"></span>
+            </div>
+            <div class="su-swatch-body">
+              <div class="su-swatch-card" style="background:{{ s.surface }};border-color:{{ s.border }}">
+                <span class="su-swatch-num" style="color:{{ s.primary }}">42</span>
+                <span class="su-swatch-line sm" style="background:{{ s.text }}"></span>
+                <span class="su-swatch-line xs" style="background:{{ s.muted }}"></span>
+              </div>
+              <div class="su-swatch-chips">
+                <span class="su-swatch-chip" style="background:{{ s.primary }}" title="primary {{ s.primary }}"></span>
+                <span class="su-swatch-chip" style="background:{{ s.accent }}" title="accent {{ s.accent }}"></span>
+                {% for c in p.categories %}
+                <span class="su-swatch-chip" style="background:{{ c }}" title="category {{ loop.index }} — {{ c }}"></span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <p class="su-note">
+            {{ 'Project pack' if p.source == 'project' else 'Bundled with the skill' }}
+            · <code>{{ p.name }}</code>
+            {%- if p.categories %} · {{ p.categories | length - 1 }}-step category ramp{% endif %}
+          </p>
+          <div class="su-actions">
+            <button class="su-btn" data-theme-use="{{ p.name }}" onclick="suUseTheme('{{ p.name }}')">Use this theme</button>
+            {% if p.is_default %}
+            <button class="su-btn" onclick="suResetTheme()" title="Remove the browser override">Clear override</button>
+            {% endif %}
+          </div>
         </div>
         {% endfor %}
       </div>
@@ -1243,6 +1336,46 @@ function suToast(msg, isErr) {
   clearTimeout(t._h);
   t._h = setTimeout(function () { t.style.display = 'none'; }, 6000);
 }
+/* ---- theme selection (browser-local) --------------------------------------
+   The cookie is the whole mechanism: the server reads it on every request and
+   resolves the pack from it, so switching is a write + reload rather than a
+   client-side variable swap. That is what keeps the logo, favicon, web font
+   and footer in step with the colours — they are served per-pack from
+   /theme/assets, which only the server can pick.
+   SameSite=Lax and no Secure flag: this console is served over plain http on
+   localhost, and a Secure cookie would be silently dropped there.            */
+var SU_THEME_COOKIE = {{ setup.appearance.cookie | tojson }};
+var SU_THEME_DEFAULT = {{ setup.appearance.default | tojson }};
+
+function suReadCookie(name) {
+  var hit = document.cookie.split('; ').find(function (c) { return c.indexOf(name + '=') === 0; });
+  return hit ? decodeURIComponent(hit.split('=').slice(1).join('=')) : null;
+}
+function suUseTheme(name) {
+  document.cookie = SU_THEME_COOKIE + '=' + encodeURIComponent(name) +
+    ';path=/;max-age=' + (60 * 60 * 24 * 365) + ';SameSite=Lax';
+  suToast('Theme set to ' + name + ' — reloading…');
+  setTimeout(function () { location.reload(); }, 500);
+}
+function suResetTheme() {
+  document.cookie = SU_THEME_COOKIE + '=;path=/;max-age=0;SameSite=Lax';
+  suToast('Override cleared — back to the project default (' + SU_THEME_DEFAULT + ').');
+  setTimeout(function () { location.reload(); }, 500);
+}
+/* Mark whichever pack is actually rendering. Falls back to the project
+   default when no cookie is set, which is exactly what the server does. */
+(function suMarkActiveTheme() {
+  var active = suReadCookie(SU_THEME_COOKIE) || SU_THEME_DEFAULT;
+  var card = document.getElementById('su-theme-' + active);
+  if (card) {
+    card.classList.add('is-active');
+    var badge = card.querySelector('[data-theme-active]');
+    if (badge) badge.hidden = false;
+    var btn = card.querySelector('[data-theme-use]');
+    if (btn) { btn.disabled = true; btn.textContent = 'In use'; }
+  }
+})();
+
 function suToggleForm(key) {
   document.getElementById('su-form-' + key).classList.toggle('open');
 }

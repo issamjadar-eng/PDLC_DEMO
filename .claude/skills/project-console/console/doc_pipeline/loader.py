@@ -504,13 +504,22 @@ def _lane_information_flow(repo_root: Path) -> dict:
     except OSError:
         return {"present": False, "tiers": [], "hint": ""}
 
-    m = re.search(r"^##\s+Information Flow\s*$(.*?)^##\s", text,
+    # Terminate on any heading of level 2 OR DEEPER. The previous `^##\s`
+    # required whitespace after the second '#', so a `### Sub-heading` — which
+    # is `##` followed by `#` — did not match, and the section body ran on
+    # through every subsection until the next level-2 heading. In this repo
+    # that swallowed `### Project Manifest`, so the "project" tier rendered
+    # its own description plus a heading, bold markers and a markdown table.
+    m = re.search(r"^##\s+Information Flow\s*$(.*?)(?=^#{2,}\s|\Z)", text,
                   re.MULTILINE | re.DOTALL)
     body = m.group(1) if m else ""
     tiers = []
     for tier in _FLOW_TIERS:
+        # Defence in depth: stop at the next tier bullet, at ANY heading, or at
+        # end of body — so a future subsection can't leak into the last tier
+        # even if the section regex above is loosened again.
         tm = re.search(
-            rf"^-\s+\*\*{tier}\*\*\s*(?:—|-|–)\s*(?P<d>.+?)(?=^-\s+\*\*|\Z)",
+            rf"^-\s+\*\*{tier}\*\*\s*(?:—|-|–)\s*(?P<d>.+?)(?=^-\s+\*\*|^#{{1,6}}\s|\Z)",
             body, re.MULTILINE | re.DOTALL | re.IGNORECASE,
         )
         desc = " ".join(tm.group("d").split()) if tm else ""

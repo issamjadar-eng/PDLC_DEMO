@@ -1,0 +1,108 @@
+# GlobalLogic Blue — petrol-navy theme pack for PDLC_DEMO.
+#
+# WHY THIS PACK EXISTS
+# The stock `dark` pack is unmodified Tailwind: its own header documents
+# slate-950/800/700/600 for the surfaces, sky-400 for primary and indigo-400
+# for accent. `globallogic-dark` then swaps primary to Tailwind purple-500.
+# Stock slate + purple-500 has been the default palette of most AI products
+# since 2023, so the console reads as generic to some viewers — they are
+# recognising defaults, not disliking dark or blue.
+#
+# The trap when fixing that is landing on sky-on-navy, which is the other half
+# of the same cliché. So this pack moves deliberately off both axes:
+#
+#   * Surfaces sit at hue ~204-207 (petrol/teal-leaning navy) instead of
+#     slate's 215-222 (blue-violet), and run darker and slightly more
+#     saturated at the deep end — closer to printed ink than to a UI kit.
+#   * Primary is a calmer cornflower azure: hue 205 at 65% saturation, versus
+#     sky-400's 198 at 93%. The saturation drop is what carries the difference
+#     perceptually; the hue shift alone would not.
+#   * Accent moves from indigo-400 (hue 234, cool) to brass (hue 39, warm).
+#     One warm note against an all-cool field is what stops the palette
+#     reading as a generated ramp. It is used sparingly by design — info
+#     badges, citation links, folder glyphs.
+#
+# EVERY PAIR IS CONTRAST-CHECKED. All 17 real usage pairs (body/muted/primary/
+# accent on each surface, code, footer, badge, warning banner) meet WCAG AA
+# 4.5:1; borders clear 1.5:1 against both body and surface. Re-run the check
+# before changing any value here — several of these are close to the floor.
+#
+# ASSETS ARE NOT INHERITED THROUGH `extends:`. `console/themes.py` returns the
+# CHILD pack's directory as `pack_dir`, and `/theme/assets/*` is served from
+# it, so this pack must carry its own copies of logo.png, favicon.ico,
+# footer.html.j2 AND fonts/manrope-latin.woff2. The font matters more than it
+# looks: console.overrides.css deliberately redirects the Manrope @font-face
+# to /theme/assets/fonts/ because the skill's console.css points at a
+# /static/fonts/ path that 404s. Drop the font from this pack and Manrope
+# silently stops loading — the console falls back to the system UI font and
+# looks, ironically, more generic than before.
+
+extends: globallogic-dark
+
+name: GlobalLogic Blue
+
+# ── surfaces: petrol-navy ramp (hue ~204-207) ────────────────────────────
+body_bg: "#0a1620"        # deepest — page ground
+topnav_bg: "#101f2c"      # lifted just off the body so the nav reads as a bar
+surface: "#172c3c"        # cards, panels, drawers
+surface_2: "#223c50"      # table headers, toolbars, hover
+surface_muted: "#06111a"  # recessed wells — inputs, assistant bubbles
+border: "#2f4a5e"         # quiet but visible: 1.97:1 on body, 1.55:1 on surface
+
+# ── type ─────────────────────────────────────────────────────────────────
+text: "#dfe9f0"           # 14.85:1 on body
+text_muted: "#93a8b6"     # 7.42:1 on body, 5.83:1 on surface
+topnav_text: "#dfe9f0"
+
+# ── brand ────────────────────────────────────────────────────────────────
+# Cornflower azure rather than sky-400. Overriding the inherited purple.
+primary: "#5fa8dd"        # 7.08:1 on body, 5.56:1 on surface
+primary_dark: "#3d82b8"   # hover
+primary_tint: "#123246"   # soft fill (chat bubble, badge well)
+accent: "#d9a441"         # brass — the one warm note; 8.13:1 on body
+
+# ── code wells ───────────────────────────────────────────────────────────
+code_bg: "#06111a"
+code_text: "#d3e2ec"      # 14.38:1
+
+# ── warning banners: warm amber well, tuned to sit with the brass accent ──
+banner_warning_bg: "#33280c"
+banner_warning_text: "#e8b451"   # 7.64:1
+
+# ── footer pill — grounded a step below the body, per the dark-pack idiom ──
+footer_bg: "#06111a"
+footer_text: "#b9cbd8"
+footer_heading: "#e8f1f7"
+footer_muted: "#8ba0ae"
+footer_divider: "rgba(147, 168, 182, 0.16)"
+
+# Folder glyph in the docs tree — the brass accent, high contrast on surfaces.
+icon_folder: "#d9a441"
+
+# Badge pill — tinted well + light azure text, 7.13:1.
+badge_bg: "#123246"
+badge_text: "#8cc4ea"
+
+# ── Category palette ──────────────────────────────────────────────────────
+# Assigned by consumers to a repeating dimension — the tracker dashboard uses
+# it for milestone cards and phase badges.
+#
+# Milestones are ORDINAL (QSub -> 510k+PCCP -> LMR1 -> LMR2), so this is a
+# SEQUENTIAL cool -> warm ramp: progression is legible from colour alone, which
+# a set of arbitrary categorical hues cannot do. It starts on this pack's own
+# primary azure and lands on its brass accent, so the ramp belongs to the
+# palette rather than sitting on top of it.
+#
+# The LAST entry is RESERVED for a category outside the ordering — the tracker
+# gives it to Engineering Prereqs, a parallel workstream rather than a
+# milestone. It is deliberately the one lavender in a blue-to-warm ramp, so
+# "not part of the sequence" is visible at a glance.
+#
+# All six clear WCAG AA 4.5:1 on both `surface` (#172c3c) and `body_bg`
+# (#0a1620) — measured 4.96–6.45 and 6.32–8.22. Re-run the contrast check
+# before changing any entry.
+category_colors: "#5fa8dd, #4fb3a6, #9fb765, #d9a441, #d98757, #9a8fd4"
+
+# brand_name, tagline, logo_filter, font_body/font_heading and source_url are
+# inherited from globallogic-dark — this pack is a palette variant, not a
+# separate brand.

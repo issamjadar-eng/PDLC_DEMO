@@ -1,7 +1,7 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.61.0
+version: 1.62.0
 updated: 2026-07-27
 ---
 
@@ -532,6 +532,31 @@ A theme pack's `theme.yaml` may set any subset of the following keys; each maps 
 | `footer_bg` / `footer_text` / `footer_heading` / `footer_muted` / `footer_divider` | `--footer-*` | Site footer pill — decoupled from `--body-text` so dark themes can keep the footer visually grounded (e.g. slate-900 below a slate-950 body) instead of inheriting light-on-light or dark-on-dark |
 | `icon_folder` | `--icon-folder` | Color of the folder glyph in the docs explorer tree. Defaults to amber so folders pop against either light or dark surfaces |
 | `badge_bg` / `badge_text` | `--badge-bg` / `--badge-text` | Pill background + text for `.badge` (agents page "Panel · N members" and similar). Decoupled from primary so themes can hit a high-contrast pair without having to bend the brand palette |
+| `category_colors` | _(not emitted by the console)_ | Ordered categorical ramp, comma-separated hex. See below |
+
+### `category_colors` — the categorical ramp
+
+A comma-separated list of hex colours a **consumer** assigns to a repeating dimension it renders. The console itself does not emit these as CSS variables; the `tracker` skill reads the same pack directly and uses them for milestone cards and phase badges.
+
+The contract is deliberately two-part — the pack supplies the *palette*, the consumer decides what the entries *mean*:
+
+- **The ramp is sequential**, running cool → warm, so an ordinal dimension (milestone 1, 2, 3 …) reads as progression rather than as arbitrary colour coding. Consumers assign entries in **document order**, not alphabetically.
+- **The last entry is reserved** for a category that sits outside the ordering. Consumers must not assign it positionally. (The tracker gives it to Engineering Prereqs, a parallel workstream rather than a milestone.)
+- Entries must clear WCAG AA 4.5:1 against both `surface` and `body_bg` — the ramp is used for large numerals and 4px card borders, but also for badge text.
+- Keep it distinct from status colours. Status (approved / blocked / in flight) is a *different* dimension and must not drift when the palette changes.
+
+Comma-separated rather than a YAML list because the consumers that read theme packs do so with line-based parsers and no YAML dependency.
+
+### Pack assets and the footer — identity vs palette
+
+A pack's `theme.yaml` carries the **palette**. Its optional files — `logo.png`, `favicon.ico`, `fonts/`, `footer.html.j2` — carry **project identity**. Those two travel differently:
+
+- **Tokens** resolve through `extends:` (see below).
+- **Assets and the footer do NOT.** `pack_dir` is the child's directory, so `/theme/assets/*` and the footer read from the active pack only.
+
+Both therefore **fall back to the project default pack** when the active pack does not supply them. A viewer switching palette must not lose the project's logo, web font or copyright line — a personal colour choice is not a branding change. The bundled `light` / `dark` packs deliberately ship **no** assets and **no** footer for exactly this reason: they are palettes, so a project's own identity shows through under them.
+
+A project whose packs contain no footer at all renders no footer element (not an empty bar). The footer template receives `theme` and `year` — use `{{ year }}` rather than hardcoding one; Jinja has no `now` global here.
 
 ### Theme inheritance (`extends:`)
 
