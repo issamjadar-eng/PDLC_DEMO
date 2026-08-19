@@ -1,7 +1,7 @@
 # tools/project-console/console.yaml
 # Project-local configuration. Safe to edit.
 
-theme: globallogic-dark
+theme: globallogic-blue
 
 grounding:
   # Extra filesystem roots exposable to the assistant drawer's grounding

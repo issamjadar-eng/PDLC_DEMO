@@ -1567,17 +1567,25 @@ async def tracker_dashboard_js():
     return Response(content=mod._JS_INNER, media_type="application/javascript")
 
 
-def _tracker_embed_fragment_for_actor(cfg, actor_folder: str) -> str:
+def _tracker_embed_fragment_for_actor(cfg, actor_folder: str,
+                                      theme_name: str | None = None) -> str:
     """Return the embed-mode HTML fragment for the tracker dashboard.
+
     Renders against the actor's worktree md if a status-session is open
-    (so pending edits are visible); otherwise renders against main."""
+    (so pending edits are visible); otherwise renders against main.
+
+    `theme_name` is the viewer's per-browser theme selection. This path
+    renders the dashboard live, so unlike the committed standalone .html it
+    CAN follow a personal theme — without it the inline dashboard would stay
+    on the project default while the console around it changed.
+    """
     mod = _load_tracker_render()
     project_dir = cfg.repo_root
     if actor_folder:
         sess = tracker_session.snapshot(cfg.repo_root, actor_folder, "status")
         if sess is not None and Path(sess.worktree_path).is_dir():
             project_dir = Path(sess.worktree_path)
-    return mod.render_embed_fragment(str(project_dir))
+    return mod.render_embed_fragment(str(project_dir), theme_name=theme_name)
 
 
 @router.get("/workflows/tracker/grounding")

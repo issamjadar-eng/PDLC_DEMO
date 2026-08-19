@@ -1,11 +1,11 @@
 # Security Posture — Ben Xavier
 
 ## Last Check
-- Date: 2026-08-05
+- Date: 2026-08-17
 - Result: FAIL
-- Checks passed: 11/16 automated
+- Checks passed: 10/16 automated
 - Skipped: 1 (gh unavailable or API timeout)
-- Next check due: 2026-08-12
+- Next check due: 2026-08-24
 
 ## Attestations
 
@@ -25,4 +25,4 @@
 
 | Date | Result | Failures | Notes |
 |------|--------|----------|-------|
-| 2026-08-05 | FAIL | SSH key exists (No SSH key found), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main), Collaborators in roster (Unauthorized: olehkozak RastislavKrivyGL igormanzhos roman-kukui-gl afurdylo danylovolokhgl Deus-13 mailtoankit slysiuchenko VikasTiwari-qtwr jansawicki-globallogic josco-design manikorthivada-GL tarasrlytvyn-stack denisbalatsko-star WojtekTGL issamjadar-eng apetlovanyy-gl glbugaj) | Automated check |
+| 2026-08-17 | FAIL | SSH key exists (No SSH key found), GitHub email domain (No verified email on approved domain), Branch protection (No branch protection on main) | Automated check |

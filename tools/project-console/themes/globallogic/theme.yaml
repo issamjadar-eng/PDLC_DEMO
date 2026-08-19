@@ -23,3 +23,21 @@ font_heading: "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetic
 tagline: "A GlobalLogic demo of agentic PDLC workflows in MedTech."
 
 source_url: "https://www.globallogic.com"
+
+# ── Semantic surfaces ─────────────────────────────────────────────────────
+# Declared explicitly even though console.css already defaults them to these
+# values: consumers OUTSIDE the console (the tracker dashboard mirrors the
+# pack into its own :root) have DARK baked defaults, so a light pack that
+# omits these renders dark cards on a light page. A pack that wants to own a
+# surface has to say so.
+surface: "#ffffff"
+surface_2: "#f0f0f4"
+surface_muted: "#f7f7fa"
+code_bg: "#f4f4f7"
+code_text: "#1f2344"
+
+# ── Category palette ──────────────────────────────────────────────────────
+# See the skill's `dark` pack for the contract: sequential cool -> warm, last
+# entry reserved for a non-sequential category. Dark hue ends because this
+# pack's surfaces are white — mid-tones fail AA here.
+category_colors: "#0369a1, #0e7490, #047857, #b45309, #be123c, #4338ca"

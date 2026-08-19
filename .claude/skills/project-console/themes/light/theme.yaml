@@ -20,4 +20,23 @@ border: "#e5e7eb"
 font_body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
 font_heading: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
 
+# ── Semantic surfaces ─────────────────────────────────────────────────────
+# Declared explicitly even though console.css already defaults them to these
+# values: consumers OUTSIDE the console (the tracker dashboard mirrors the
+# pack into its own :root) have DARK baked defaults, so a light pack that
+# omits these renders dark cards on a light page. A pack that wants to own a
+# surface has to say so.
+surface: "#ffffff"
+surface_2: "#f3f4f6"
+surface_muted: "#f6f8fa"
+code_bg: "#f6f8fa"
+code_text: "#111827"
+
+# ── Category palette ──────────────────────────────────────────────────────
+# See the `dark` pack for the full contract. Sequential cool -> warm, last
+# entry reserved for a non-sequential category. These are the DARK ends of
+# each hue because this pack's surfaces are white — the mid-tones used by the
+# dark pack sit at 3.4–4.1:1 here and fail AA.
+category_colors: "#0369a1, #0e7490, #047857, #b45309, #be123c, #4338ca"
+
 tagline: "A project-console for regulated medical device programs."

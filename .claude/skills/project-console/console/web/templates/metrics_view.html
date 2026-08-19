@@ -9,14 +9,14 @@
   .um-wrap { padding: 8px 4px 40px; }
   .um-sub { color: var(--muted, #8b93a7); font-size: 12px; margin: 0 0 16px; }
   .um-controls { display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }
-  .um-controls select { background: var(--card-bg,#181b22); color: var(--fg,#e6e9ef);
+  .um-controls select { background: var(--surface); color: var(--body-text);
       border:1px solid var(--border,#2a2f3a); border-radius:8px; padding:6px 10px; font-size:13px; }
   .um-cards { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
-  .um-card { background: var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+  .um-card { background: var(--surface); border:1px solid var(--border,#2a2f3a);
       border-radius:10px; padding:12px 16px; min-width:120px; }
   .um-card .k { color:var(--muted,#8b93a7); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
   .um-card .v { font-size:20px; font-weight:600; margin-top:2px; font-variant-numeric:tabular-nums; }
-  .um-panel { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+  .um-panel { background:var(--surface); border:1px solid var(--border,#2a2f3a);
       border-radius:10px; padding:16px; margin-bottom:20px; }
   .um-panel h2 { font-size:13px; color:var(--muted,#8b93a7); margin:0 0 12px; text-transform:uppercase;
       letter-spacing:.04em; font-weight:600; }
@@ -29,22 +29,22 @@
   .um-tbl th { color:var(--muted,#8b93a7); font-weight:600; font-size:12px; }
   .um-tbl tfoot td { font-weight:700; border-top:2px solid var(--border,#2a2f3a); border-bottom:none; }
   .um-mono { font-variant-numeric:tabular-nums; }
-  .um-cost { color:#7ee0c0; }
+  .um-cost { color:var(--cat-2); }
   /* horizontal stacked bars (by member) */
   /* Right column sized for "999.99M in · 9,999 turns · $9,999.99" — the turn
      count was added at schema v2 and 150px clipped it. */
   .um-barrow { display:grid; grid-template-columns:120px 1fr 230px; gap:10px; align-items:center; margin-bottom:7px; }
   .um-barrow .lbl { font-size:13px; overflow:hidden; text-overflow:ellipsis; }
-  .um-track { background:#11141a; border-radius:6px; overflow:hidden; height:18px; display:flex; }
-  .um-seg-in{background:#6ea8fe} .um-seg-cr{background:#4fc3a1} .um-seg-cw{background:#9b8cff} .um-seg-out{background:#f0a93b}
+  .um-track { background:var(--code-bg); border-radius:6px; overflow:hidden; height:18px; display:flex; }
+  .um-seg-in{background:var(--cat-1)} .um-seg-cr{background:var(--cat-2)} .um-seg-cw{background:var(--cat-alt)} .um-seg-out{background:var(--cat-4)}
   .um-barval { color:var(--muted,#8b93a7); font-size:12px; text-align:right; }
   /* vertical stacked columns (daily + cost) */
   .um-ts { display:flex; align-items:flex-end; gap:4px; height:170px; padding-top:8px; overflow-x:auto; }
   .um-col { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-width:28px; height:100%; }
-  .um-b-out{width:18px;background:#f0a93b;border-radius:3px 3px 0 0} .um-b-cw{width:18px;background:#9b8cff}
-  .um-b-cr{width:18px;background:#4fc3a1} .um-b-in{width:18px;background:#6ea8fe}
-  .um-b-cost{width:18px;background:#7ee0c0;border-radius:3px 3px 0 0;min-height:1px}
-  .um-b-proj{width:18px;background:#7ee0c0;opacity:.30;border-radius:3px 3px 0 0;min-height:1px}
+  .um-b-out{width:18px;background:var(--cat-4);border-radius:3px 3px 0 0} .um-b-cw{width:18px;background:var(--cat-alt)}
+  .um-b-cr{width:18px;background:var(--cat-2)} .um-b-in{width:18px;background:var(--cat-1)}
+  .um-b-cost{width:18px;background:var(--cat-2);border-radius:3px 3px 0 0;min-height:1px}
+  .um-b-proj{width:18px;background:var(--cat-2);opacity:.30;border-radius:3px 3px 0 0;min-height:1px}
   .um-lbl { font-size:10px; color:var(--muted,#8b93a7); margin-top:5px; white-space:nowrap; }
   .um-note { color:var(--muted,#8b93a7); font-size:11px; font-style:italic; margin-top:10px; }
   .um-empty { color:var(--muted,#8b93a7); padding:40px 0; text-align:center; }
@@ -52,19 +52,19 @@
   .um-tabs { display:flex; gap:4px; margin:0 0 18px; border-bottom:1px solid var(--border,#2a2f3a); }
   .um-tab { background:none; border:none; color:var(--muted,#8b93a7); font:inherit; font-size:13px;
       padding:8px 14px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
-  .um-tab:hover { color:var(--fg,#e6e9ef); }
-  .um-tab.active { color:var(--fg,#e6e9ef); border-bottom-color:#7ee0c0; font-weight:600; }
+  .um-tab:hover { color:var(--body-text); }
+  .um-tab.active { color:var(--body-text); border-bottom-color:var(--cat-2); font-weight:600; }
   /* Value & ROI panel (vv- classes, used by value.js) */
   .vv-cards { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
-  .vv-card { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a);
+  .vv-card { background:var(--surface); border:1px solid var(--border,#2a2f3a);
       border-radius:10px; padding:14px 18px; min-width:150px; }
   .vv-card .k { color:var(--muted,#8b93a7); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
   .vv-card .v { font-size:22px; font-weight:700; margin-top:3px; font-variant-numeric:tabular-nums; }
   .vv-card .v small { font-size:13px; font-weight:500; color:var(--muted,#8b93a7); }
-  .vv-hero { color:#7ee0c0; }
+  .vv-hero { color:var(--cat-2); }
   /* Savings % in the category cards — deliberately a different (amber) hue from the
      green hours-saved range so the two numbers on one line stay legible. */
-  .vv-catpct { color:#e0b25a; font-weight:600; }
+  .vv-catpct { color:var(--cat-4); font-weight:600; }
   table.vv-tbl { width:100%; border-collapse:collapse; }
   .vv-tbl th, .vv-tbl td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border,#2a2f3a); white-space:nowrap; }
   .vv-tbl th:first-child, .vv-tbl td:first-child { text-align:left; white-space:normal; }
@@ -74,66 +74,66 @@
   .vv-disc { color:var(--muted,#8b93a7); font-size:11px; font-style:italic; margin-top:10px; max-width:80ch; }
   .vv-badge { font-size:10px; padding:1px 6px; border-radius:10px; border:1px solid var(--border,#2a2f3a);
       color:var(--muted,#8b93a7); margin-left:6px; vertical-align:middle; }
-  .vv-badge.measured { color:#7ee0c0; border-color:#2f5a4d; }
-  .vv-badge.est { color:#f0a93b; border-color:#5a4a2f; }
-  .vv-conf-high{color:#7ee0c0} .vv-conf-med{color:#f0a93b} .vv-conf-low{color:#e06b6b}
+  .vv-badge.measured { color:var(--cat-2); border-color:color-mix(in srgb,var(--cat-2) 45%,transparent); }
+  .vv-badge.est { color:var(--cat-4); border-color:color-mix(in srgb,var(--cat-4) 45%,transparent); }
+  .vv-conf-high{color:var(--cat-2)} .vv-conf-med{color:var(--cat-4)} .vv-conf-low{color:var(--cat-5)}
   .vv-sum { font-size:11px; color:var(--muted,#8b93a7); margin-top:2px; }
   .vv-title { font-size:13px; font-weight:600; }
   .vv-id { font-size:11px; color:var(--muted,#8b93a7); margin-top:2px; }
-  .vv-pct { font-size:11px; color:#7ee0c0; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .vv-pct { font-size:11px; color:var(--cat-2); margin-top:2px; font-variant-numeric:tabular-nums; }
   .vv-catgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:12px; }
-  .vv-catcard { background:var(--card-bg,#181b22); border:1px solid var(--border,#2a2f3a); border-radius:10px; padding:12px 14px; }
+  .vv-catcard { background:var(--surface); border:1px solid var(--border,#2a2f3a); border-radius:10px; padding:12px 14px; }
   .vv-catname { font-size:13px; font-weight:600; margin-bottom:8px; text-transform:capitalize; }
   .vv-catn { font-size:11px; color:var(--muted,#8b93a7); font-weight:400; text-transform:none; }
   .vv-catrow { display:flex; justify-content:space-between; gap:12px; font-size:12px; padding:2px 0; }
   .vv-catrow > span:first-child { color:var(--muted,#8b93a7); }
   .vv-controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
-  .vv-input { background:var(--card-bg,#181b22); color:var(--fg,#e6e9ef); border:1px solid var(--border,#2a2f3a);
+  .vv-input { background:var(--surface); color:var(--body-text); border:1px solid var(--border,#2a2f3a);
       border-radius:8px; padding:6px 10px; font-size:13px; }
   .vv-check { font-size:12px; color:var(--muted,#8b93a7); display:inline-flex; gap:6px; align-items:center; cursor:pointer; }
   .vv-sortable { cursor:pointer; user-select:none; white-space:nowrap; }
-  .vv-sortable:hover { color:var(--fg,#e6e9ef); }
-  .vv-tbl th.vv-sorted { color:var(--fg,#e6e9ef); }
+  .vv-sortable:hover { color:var(--body-text); }
+  .vv-tbl th.vv-sorted { color:var(--body-text); }
   .vv-arrow { font-size:9px; }
   /* Per-column info hover — explains what each column means (esp. the hours units). */
   .vv-info { position:relative; display:inline-flex; align-items:center; justify-content:center;
       width:14px; height:14px; margin-left:5px; border:1px solid var(--muted,#8b93a7); border-radius:50%;
       color:var(--muted,#8b93a7); font:italic 700 9px/1 serif; cursor:help; vertical-align:middle; user-select:none; }
-  .vv-info:hover, .vv-info:focus { color:var(--fg,#e6e9ef); border-color:var(--fg,#e6e9ef); outline:none; }
+  .vv-info:hover, .vv-info:focus { color:var(--body-text); border-color:var(--body-text); outline:none; }
   .vv-tip { position:absolute; top:calc(100% + 7px); left:50%; transform:translateX(-50%); width:220px;
-      background:#11141a; border:1px solid var(--border,#2a2f3a); border-radius:6px; padding:8px 10px;
+      background:var(--code-bg); border:1px solid var(--border,#2a2f3a); border-radius:6px; padding:8px 10px;
       font:400 11px/1.45 -apple-system,system-ui,sans-serif; text-align:left; white-space:normal;
-      letter-spacing:normal; text-transform:none; color:var(--fg,#e6e9ef); z-index:40;
+      letter-spacing:normal; text-transform:none; color:var(--body-text); z-index:40;
       opacity:0; visibility:hidden; transition:opacity .12s; pointer-events:none; box-shadow:0 4px 14px rgba(0,0,0,.45); }
-  .vv-tip b { color:#e0b25a; font-weight:700; }
+  .vv-tip b { color:var(--cat-4); font-weight:700; }
   .vv-info:hover .vv-tip, .vv-info:focus .vv-tip { opacity:1; visibility:visible; }
   .vv-info-l .vv-tip { left:0; right:auto; transform:none; }   /* left edge — don't overflow left */
   .vv-info-r .vv-tip { left:auto; right:0; transform:none; }   /* right edge — don't overflow right */
   .vv-range { display:flex; align-items:center; gap:6px; margin:0 0 16px; flex-wrap:wrap; }
   .vv-rangelbl { font-size:12px; color:var(--muted,#8b93a7); margin-right:4px; }
-  .vv-range button { background:var(--card-bg,#181b22); color:var(--muted,#8b93a7); border:1px solid var(--border,#2a2f3a);
+  .vv-range button { background:var(--surface); color:var(--muted,#8b93a7); border:1px solid var(--border,#2a2f3a);
       border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; }
-  .vv-range button:hover { color:var(--fg,#e6e9ef); }
-  .vv-range button.active { background:#7ee0c0; color:#0f1115; border-color:#7ee0c0; font-weight:600; }
+  .vv-range button:hover { color:var(--body-text); }
+  .vv-range button.active { background:var(--cat-2); color:var(--body-bg); border-color:var(--cat-2); font-weight:600; }
   .vv-pager { display:flex; align-items:center; gap:12px; margin-top:12px; font-size:12px; color:var(--muted,#8b93a7); }
-  .vv-pager button { background:var(--card-bg,#181b22); color:var(--fg,#e6e9ef); border:1px solid var(--border,#2a2f3a);
+  .vv-pager button { background:var(--surface); color:var(--body-text); border:1px solid var(--border,#2a2f3a);
       border-radius:8px; padding:5px 12px; font-size:12px; cursor:pointer; }
   .vv-pager button:disabled { opacity:.4; cursor:default; }
   /* Compact pager shown at the top of the table, inline with the Rows selector. */
   .vv-pager-top { margin-top:0; gap:8px; }
   .vv-pager-top button { padding:3px 9px; border-radius:6px; }
   .vv-pager-top .vv-pageinfo { min-width:118px; text-align:center; }
-  .vv-catall { border-color:#7ee0c0; }
+  .vv-catall { border-color:var(--cat-2); }
   .vv-method { margin-top:24px; border-top:1px solid var(--border,#2a2f3a); padding-top:14px; }
   .vv-method > summary { cursor:pointer; font-size:13px; color:var(--muted,#8b93a7); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
-  .vv-method > summary:hover { color:var(--fg,#e6e9ef); }
-  .vv-method-body { margin-top:14px; font-size:13px; color:var(--fg,#e6e9ef); max-width:960px; line-height:1.55; }
+  .vv-method > summary:hover { color:var(--body-text); }
+  .vv-method-body { margin-top:14px; font-size:13px; color:var(--body-text); max-width:960px; line-height:1.55; }
   .vv-method-body h1,.vv-method-body h2,.vv-method-body h3 { font-size:14px; margin:18px 0 6px; }
   .vv-method-body table { border-collapse:collapse; margin:8px 0; font-size:12px; display:block; overflow-x:auto; }
   .vv-method-body th,.vv-method-body td { border:1px solid var(--border,#2a2f3a); padding:4px 8px; text-align:left; }
   .vv-method-body th { color:var(--muted,#8b93a7); }
-  .vv-method-body code { background:#11141a; padding:1px 5px; border-radius:3px; font-size:12px; }
-  .vv-method-body pre { background:#11141a; padding:10px 12px; border-radius:6px; overflow-x:auto; }
+  .vv-method-body code { background:var(--code-bg); padding:1px 5px; border-radius:3px; font-size:12px; }
+  .vv-method-body pre { background:var(--code-bg); padding:10px 12px; border-radius:6px; overflow-x:auto; }
   .vv-method-body pre code { background:none; padding:0; }
   .vv-method-body a { color:var(--accent,#6ea8fe); }
   .vv-method-body ul,.vv-method-body ol { padding-left:20px; }
@@ -172,10 +172,10 @@
 
     <div class="um-panel"><h2>Daily token volume (stacked composition)</h2>
       <div class="um-legend">
-        <span><i class="um-sw" style="background:#6ea8fe"></i> Input</span>
-        <span><i class="um-sw" style="background:#4fc3a1"></i> Cache read</span>
-        <span><i class="um-sw" style="background:#9b8cff"></i> Cache write</span>
-        <span><i class="um-sw" style="background:#f0a93b"></i> Output</span>
+        <span><i class="um-sw" style="background:var(--cat-1)"></i> Input</span>
+        <span><i class="um-sw" style="background:var(--cat-2)"></i> Cache read</span>
+        <span><i class="um-sw" style="background:var(--cat-alt)"></i> Cache write</span>
+        <span><i class="um-sw" style="background:var(--cat-4)"></i> Output</span>
       </div>
       <div class="um-ts" id="um-daily"></div>
     </div>

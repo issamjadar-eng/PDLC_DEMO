@@ -1,5 +1,21 @@
 /* B4 Tracker Status Update — interactive overlay styles. Injected by the
-   /workflows/tracker/embed route into the otherwise-static dashboard HTML. */
+   /workflows/tracker/embed route into the otherwise-static dashboard HTML.
+
+   TOKEN NAMESPACE — READ BEFORE EDITING.
+   This stylesheet does NOT run in the console's document. The embed route
+   (`console/workflows/router.py`, `/workflows/tracker/embed`) injects it into
+   the standalone tracker dashboard, which `workflow_tracker.html` loads in an
+   IFRAME. An iframe inherits no CSS custom properties from its parent, so the
+   console tokens (`--body-bg`, `--brand-primary`, `--surface-2`, …) are all
+   UNDEFINED here and would silently resolve to nothing.
+
+   The variables that DO exist are the dashboard's own, emitted by
+   `.claude/skills/tracker/scripts/render.py` (`_CSS_BASE_INNER` `:root`):
+       --bg --surface --surface2 --border --text --text-muted
+       --brand --accent --accent2 --green --yellow --red --orange --cyan
+   Use those. `--brand` is the only one that tracks the console theme —
+   `render.py` lifts `primary` (and `font_body`) out of the active theme pack
+   and re-emits them; every other value in that `:root` is hardcoded slate. */
 
 /* Make status badges look clickable */
 .status-badge[data-row-id] {
@@ -9,19 +25,19 @@
   outline-offset: 2px;
 }
 .status-badge[data-row-id]:hover {
-  outline-color: rgba(56, 189, 248, 0.6);
+  outline-color: color-mix(in srgb, var(--brand) 60%, transparent);
 }
 .status-badge[data-row-id].pending {
-  outline-color: rgba(234, 179, 8, 0.9);
-  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.25);
+  outline-color: color-mix(in srgb, var(--yellow) 90%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--yellow) 25%, transparent);
 }
 
 /* Inline dropdown that replaces the badge during edit */
 .status-edit-popover {
   position: absolute;
   z-index: 9999;
-  background: #0f172a;
-  border: 1px solid rgba(56, 189, 248, 0.5);
+  background: var(--bg);
+  border: 1px solid color-mix(in srgb, var(--brand) 50%, transparent);
   border-radius: 6px;
   padding: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -31,7 +47,7 @@
 }
 .status-edit-popover label {
   display: block;
-  color: var(--text-muted, #94a3b8);
+  color: var(--text-muted);
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -40,9 +56,9 @@
 .status-edit-popover select,
 .status-edit-popover textarea {
   width: 100%;
-  background: #1e293b;
-  color: #e2e8f0;
-  border: 1px solid #334155;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   border-radius: 4px;
   padding: 4px 6px;
   font-size: 0.78rem;
@@ -61,23 +77,23 @@
 .status-edit-popover button {
   padding: 4px 10px;
   border-radius: 4px;
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: #e2e8f0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   font-size: 0.78rem;
   cursor: pointer;
 }
 .status-edit-popover button.primary {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: rgba(56, 189, 248, 0.6);
-  color: #38bdf8;
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
+  border-color: color-mix(in srgb, var(--brand) 60%, transparent);
+  color: var(--brand);
 }
 .status-edit-popover button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 .status-edit-popover .downgrade-hint {
-  color: rgba(234, 179, 8, 0.9);
+  color: color-mix(in srgb, var(--yellow) 90%, transparent);
   font-size: 0.7rem;
   margin: 2px 0 6px;
 }
@@ -90,18 +106,22 @@
   z-index: 99999;
   padding: 10px 14px;
   border-radius: 6px;
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #e2e8f0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.85rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   max-width: 380px;
 }
+/* Status tones stay literal on purpose: red/green here mean failure/success,
+   not brand, so they must not drift when the palette changes. The borders
+   derive from the dashboard's own semantic tokens; the lighter text tones
+   have no token equivalent. */
 .tracker-toast.error {
-  border-color: rgba(239, 68, 68, 0.6);
+  border-color: color-mix(in srgb, var(--red) 60%, transparent);
   color: #fca5a5;
 }
 .tracker-toast.success {
-  border-color: rgba(34, 197, 94, 0.6);
+  border-color: color-mix(in srgb, var(--green) 60%, transparent);
   color: #86efac;
 }

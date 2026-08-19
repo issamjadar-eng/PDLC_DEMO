@@ -27,7 +27,7 @@
   .tracker-chrome button.btn-chrome {
     font-size: 0.8rem; padding: 0.35rem 0.85rem; border-radius: 6px;
     border: 1px solid var(--border, #475569); cursor: pointer;
-    background: var(--surface2, #334155); color: var(--text, #e2e8f0);
+    background: var(--surface-2); color: var(--body-text);
   }
   .tracker-chrome button.btn-chrome.primary { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.5); color: #86efac; font-weight: 600; }
   .tracker-chrome button.btn-chrome.danger { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
@@ -71,7 +71,7 @@
     <p class="muted" style="font-size:0.78rem;">Click any Status badge in the table to start a session.</p>
   </div>
   <div style="margin-top:0.5rem;display:flex;flex-direction:column;gap:0.35rem;">
-    <input id="tracker-commit-msg" type="text" placeholder="Commit message (optional)" style="font-size:0.78rem;padding:0.35rem;border:1px solid var(--border,#475569);border-radius:4px;background:var(--surface2,#334155);color:var(--text,#e2e8f0);">
+    <input id="tracker-commit-msg" type="text" placeholder="Commit message (optional)" style="font-size:0.78rem;padding:0.35rem;border:1px solid var(--border,#475569);border-radius:4px;background:var(--surface-2);color:var(--body-text);">
   </div>
 </aside>
 
@@ -129,9 +129,9 @@
       } else {
         pendingList.innerHTML = pending.map(p =>
           '<div style="padding:6px 0;border-bottom:1px solid var(--border,#1e293b);font-size:0.78rem;">' +
-          '<div style="font-family:monospace;color:var(--text-muted,#94a3b8);">' + escapeHtml(p.row_id) + '</div>' +
+          '<div style="font-family:monospace;color:var(--body-text-muted);">' + escapeHtml(p.row_id) + '</div>' +
           '<div><strong>' + escapeHtml(p.old_status) + '</strong> → <strong style="color:#86efac;">' + escapeHtml(p.new_status) + '</strong></div>' +
-          (p.rationale ? '<div style="font-style:italic;color:var(--text-muted,#94a3b8);">' + escapeHtml(p.rationale) + '</div>' : '') +
+          (p.rationale ? '<div style="font-style:italic;color:var(--body-text-muted);">' + escapeHtml(p.rationale) + '</div>' : '') +
           '</div>'
         ).join('');
       }
