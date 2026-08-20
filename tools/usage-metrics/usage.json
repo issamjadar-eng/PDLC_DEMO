@@ -5757,7 +5757,7 @@
         }
       },
       "cost": 73.17,
-      "cost_allocated": 1.04,
+      "cost_allocated": 1.93,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 4.5,
@@ -5806,7 +5806,7 @@
         "retrospective": false,
         "title": "Console: Journey, Document Pipeline & Strategy Landing",
         "todos": 11,
-        "updated": "2026-08-06"
+        "updated": "2026-08-10"
       },
       "sessions": 2,
       "totals": {
@@ -5981,6 +5981,35 @@
         }
       },
       "cost": 94.8,
+      "cost_allocated": 1.81,
+      "cost_basis": "measured+allocated",
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "rd-lead": {
+            "max": 5.0,
+            "min": 3.0
+          }
+        },
+        "confidence_mix": {
+          "med": 1
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 5.0,
+          "min": 3.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead"
+        ],
+        "retrospective": false,
+        "title": "Console Blue Theme Pack",
+        "todos": 1,
+        "updated": "2026-08-11"
+      },
       "sessions": 1,
       "totals": {
         "cache_creation": 1258395,
@@ -6128,22 +6157,22 @@
   },
   "value_summary": {
     "agentic_hours": 534.1,
-    "cost_allocated": 220.22,
+    "cost_allocated": 222.92,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
     "cost_measured_attributed": 2299.82,
     "cost_unattributed_measured": 342.05,
-    "cost_unattributed_residual": 121.82,
+    "cost_unattributed_residual": 119.12,
     "hours_saved": {
       "max": 4361.1,
       "min": 1587.2
     },
     "manual_hours": {
-      "max": 4863.0,
-      "min": 2114.5
+      "max": 4868.0,
+      "min": 2117.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 114
+    "tasks_with_estimate": 115
   }
 }
