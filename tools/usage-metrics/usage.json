@@ -2,38 +2,38 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (retrieved 2026-08-05). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 136.76,
-    "2026-06-16": 46.26,
-    "2026-06-22": 20.6,
-    "2026-06-23": 10.81,
-    "2026-06-29": 1.24,
-    "2026-06-30": 208.31,
-    "2026-07-01": 212.15,
-    "2026-07-02": 25.93,
-    "2026-07-03": 9.47,
-    "2026-07-05": 3.13,
-    "2026-07-08": 1.36,
-    "2026-07-09": 16.47,
-    "2026-07-14": 36.68,
-    "2026-07-15": 230.43,
-    "2026-07-16": 50.32,
-    "2026-07-20": 16.92,
-    "2026-07-21": 100.05,
-    "2026-07-22": 233.7,
-    "2026-07-27": 391.71,
-    "2026-07-28": 162.35,
-    "2026-07-30": 6.9,
-    "2026-07-31": 9.41,
-    "2026-08-03": 6.32,
-    "2026-08-05": 31.27,
-    "2026-08-06": 515.05,
-    "2026-08-07": 9.58,
-    "2026-08-10": 114.88,
-    "2026-08-11": 81.13,
-    "2026-08-17": 1.4,
-    "2026-08-19": 2.68,
-    "2026-08-25": 2.45,
-    "2026-09-08": 159.66
+    "2026-06-15": 140.8,
+    "2026-06-16": 47.65,
+    "2026-06-22": 21.26,
+    "2026-06-23": 11.14,
+    "2026-06-29": 1.28,
+    "2026-06-30": 214.38,
+    "2026-07-01": 218.43,
+    "2026-07-02": 26.76,
+    "2026-07-03": 9.75,
+    "2026-07-05": 3.23,
+    "2026-07-08": 1.41,
+    "2026-07-09": 16.98,
+    "2026-07-14": 37.79,
+    "2026-07-15": 237.25,
+    "2026-07-16": 51.82,
+    "2026-07-20": 17.46,
+    "2026-07-21": 102.97,
+    "2026-07-22": 240.42,
+    "2026-07-27": 403.06,
+    "2026-07-28": 167.23,
+    "2026-07-30": 7.17,
+    "2026-07-31": 9.75,
+    "2026-08-03": 6.54,
+    "2026-08-05": 32.24,
+    "2026-08-06": 530.37,
+    "2026-08-07": 9.87,
+    "2026-08-10": 118.31,
+    "2026-08-11": 83.52,
+    "2026-08-17": 1.45,
+    "2026-08-19": 2.76,
+    "2026-08-25": 2.53,
+    "2026-09-08": 444.66
   },
   "members": 2,
   "months": {
@@ -492,25 +492,25 @@
       "Member 1": {
         "by_day": {
           "2026-09-08": {
-            "cache_creation": 6048607,
-            "cache_read": 95573169,
-            "cache_write_1h": 1975375,
-            "cache_write_5m": 4073232,
-            "input": 140665,
-            "messages": 612,
-            "output": 525514
+            "cache_creation": 13558083,
+            "cache_read": 313089572,
+            "cache_write_1h": 4614406,
+            "cache_write_5m": 8943677,
+            "input": 211033,
+            "messages": 1328,
+            "output": 1185014
           }
         },
         "by_model": {
           "claude-fable-5-1": {
-            "cache_creation": 5693492,
-            "cache_read": 95542668,
-            "cache_write_1h": 1620260,
-            "cache_write_5m": 4073232,
-            "cost": 205.72,
-            "input": 140650,
-            "messages": 607,
-            "output": 509056
+            "cache_creation": 13202968,
+            "cache_read": 313059071,
+            "cache_write_1h": 4259291,
+            "cache_write_5m": 8943677,
+            "cost": 570.58,
+            "input": 211018,
+            "messages": 1323,
+            "output": 1168556
           },
           "claude-sonnet-4-6": {
             "cache_creation": 355115,
@@ -523,19 +523,19 @@
             "output": 16458
           }
         },
-        "cost": 208.11,
+        "cost": 572.97,
         "name": "Member 1",
-        "sessions": 7,
+        "sessions": 8,
         "totals": {
-          "cache_creation": 6048607,
-          "cache_read": 95573169,
-          "cache_write_1h": 1975375,
-          "cache_write_5m": 4073232,
-          "input": 140665,
-          "messages": 612,
-          "output": 525514
+          "cache_creation": 13558083,
+          "cache_read": 313089572,
+          "cache_write_1h": 4614406,
+          "cache_write_5m": 8943677,
+          "input": 211033,
+          "messages": 1328,
+          "output": 1185014
         },
-        "user_turns": 27
+        "user_turns": 61
       }
     }
   },
@@ -6096,50 +6096,48 @@
     "ben/118": {
       "by_model": {
         "claude-fable-5-1": {
-          "cache_creation": 4703520,
-          "cache_read": 61254380,
-          "cache_write_1h": 767653,
-          "cache_write_5m": 3935867,
-          "cost": 142.59,
-          "input": 135370,
-          "messages": 455,
-          "output": 308695
+          "cache_creation": 5163290,
+          "cache_read": 72863358,
+          "cache_write_1h": 814823,
+          "cache_write_5m": 4348467,
+          "cost": 162.58,
+          "input": 188186,
+          "messages": 512,
+          "output": 343579
         }
       },
-      "cost": 142.59,
-      "cost_allocated": 4.2,
-      "cost_basis": "measured+allocated",
+      "cost": 162.58,
       "estimate": {
-        "agentic_hours": 5.0,
+        "agentic_hours": 6.0,
         "agentic_hours_range": {
-          "max": 5.0,
+          "max": 6.0,
           "min": 3.0
         },
         "by_persona": {
           "commercial": {
-            "max": 46.7,
-            "min": 20.0
+            "max": 90.0,
+            "min": 40.0
           },
           "quality-engineering": {
-            "max": 219.2,
-            "min": 92.5
+            "max": 262.5,
+            "min": 112.5
           },
           "rd-lead": {
-            "max": 343.2,
-            "min": 146.5
+            "max": 386.5,
+            "min": 166.5
           }
         },
         "confidence_mix": {
-          "med": 8
+          "med": 9
         },
         "hours_saved": {
-          "max": 606.0,
-          "min": 254.0
+          "max": 736.0,
+          "min": 313.0
         },
         "inverted": false,
         "manual_hours": {
-          "max": 609.0,
-          "min": 259.0
+          "max": 739.0,
+          "min": 319.0
         },
         "method_version": 1,
         "personas": [
@@ -6149,26 +6147,24 @@
         ],
         "retrospective": false,
         "title": "Business Domains: Finance, Manufacturing & Workflow Automations",
-        "todos": 8,
+        "todos": 9,
         "updated": "2026-09-08"
       },
       "sessions": 1,
       "totals": {
-        "cache_creation": 4703520,
-        "cache_read": 61254380,
-        "cache_write_1h": 767653,
-        "cache_write_5m": 3935867,
-        "input": 135370,
-        "messages": 455,
-        "output": 308695
+        "cache_creation": 5163290,
+        "cache_read": 72863358,
+        "cache_write_1h": 814823,
+        "cache_write_5m": 4348467,
+        "input": 188186,
+        "messages": 512,
+        "output": 343579
       },
-      "user_turns": 11
+      "user_turns": 15
     },
     "ben/119": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 4.2,
-      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": null,
         "agentic_hours_range": null,
@@ -6203,8 +6199,6 @@
     "ben/120": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 4.2,
-      "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": null,
         "agentic_hours_range": null,
@@ -6236,6 +6230,91 @@
       "totals": {},
       "user_turns": null
     },
+    "ben/121": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 3
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Workbench Validation: GxP Verdict Model and Capability/Deployment Test Split",
+        "todos": 3,
+        "updated": "2026-09-08"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
+    "ben/122": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": 6.0,
+        "agentic_hours_range": {
+          "max": 6.0,
+          "min": 4.5
+        },
+        "by_persona": {
+          "cybersecurity": {
+            "max": 11.7,
+            "min": 6.2
+          },
+          "rd-lead": {
+            "max": 48.7,
+            "min": 27.2
+          },
+          "vnv-lead": {
+            "max": 9.7,
+            "min": 5.7
+          }
+        },
+        "confidence_mix": {
+          "high": 1,
+          "med": 6
+        },
+        "hours_saved": {
+          "max": 65.5,
+          "min": 33.0
+        },
+        "inverted": false,
+        "manual_hours": {
+          "max": 70.0,
+          "min": 39.0
+        },
+        "method_version": 1,
+        "personas": [
+          "rd-lead",
+          "cybersecurity",
+          "vnv-lead"
+        ],
+        "retrospective": false,
+        "title": "Port the `multimodel` Provider Skill (OpenAI / Gemini / Grok Access Layer)",
+        "todos": 7,
+        "updated": "2026-09-08"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
     "ben/_unattributed": {
       "by_model": {
         "claude-fable-5": {
@@ -6249,14 +6328,14 @@
           "output": 134685
         },
         "claude-fable-5-1": {
-          "cache_creation": 226684,
-          "cache_read": 3586849,
-          "cache_write_1h": 226684,
+          "cache_creation": 389770,
+          "cache_read": 4853170,
+          "cache_write_1h": 389770,
           "cache_write_5m": 0,
-          "cost": 10.22,
-          "input": 1946,
-          "messages": 34,
-          "output": 41557
+          "cost": 15.45,
+          "input": 2238,
+          "messages": 45,
+          "output": 55590
         },
         "claude-haiku-4-5-20251001": {
           "cache_creation": 132462,
@@ -6299,18 +6378,18 @@
           "output": 18952
         }
       },
-      "cost": 348.73,
-      "sessions": 43,
+      "cost": 353.96,
+      "sessions": 44,
       "totals": {
-        "cache_creation": 9705615,
-        "cache_read": 344193345,
-        "cache_write_1h": 8795105,
+        "cache_creation": 9868701,
+        "cache_read": 345459666,
+        "cache_write_1h": 8958191,
         "cache_write_5m": 910510,
-        "input": 365898,
-        "messages": 1487,
-        "output": 1430554
+        "input": 366190,
+        "messages": 1498,
+        "output": 1444587
       },
-      "user_turns": 95
+      "user_turns": 96
     },
     "ben/ben/119": {
       "by_model": {
@@ -6341,28 +6420,106 @@
     "ben/ben/120": {
       "by_model": {
         "claude-fable-5-1": {
-          "cache_creation": 440336,
-          "cache_read": 8775542,
-          "cache_write_1h": 422995,
+          "cache_creation": 447542,
+          "cache_read": 10015235,
+          "cache_write_1h": 430201,
           "cache_write_5m": 17341,
-          "cost": 19.15,
-          "input": 650,
-          "messages": 24,
-          "output": 33760
+          "cost": 21.16,
+          "input": 686,
+          "messages": 27,
+          "output": 46429
         }
       },
-      "cost": 19.15,
+      "cost": 21.16,
       "sessions": 1,
       "totals": {
-        "cache_creation": 440336,
-        "cache_read": 8775542,
-        "cache_write_1h": 422995,
+        "cache_creation": 447542,
+        "cache_read": 10015235,
+        "cache_write_1h": 430201,
         "cache_write_5m": 17341,
-        "input": 650,
-        "messages": 24,
-        "output": 33760
+        "input": 686,
+        "messages": 27,
+        "output": 46429
+      },
+      "user_turns": 4
+    },
+    "ben/ben/121": {
+      "by_model": {
+        "claude-fable-5-1": {
+          "cache_creation": 936395,
+          "cache_read": 55017816,
+          "cache_write_1h": 694242,
+          "cache_write_5m": 242153,
+          "cost": 77.5,
+          "input": 3478,
+          "messages": 115,
+          "output": 110739
+        }
+      },
+      "cost": 77.5,
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 936395,
+        "cache_read": 55017816,
+        "cache_write_1h": 694242,
+        "cache_write_5m": 242153,
+        "input": 3478,
+        "messages": 115,
+        "output": 110739
       },
       "user_turns": 1
+    },
+    "ben/ben/122": {
+      "by_model": {
+        "claude-fable-5-1": {
+          "cache_creation": 781671,
+          "cache_read": 34971417,
+          "cache_write_1h": 781671,
+          "cache_write_5m": 0,
+          "cost": 65.1,
+          "input": 2546,
+          "messages": 88,
+          "output": 289365
+        }
+      },
+      "cost": 65.1,
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 781671,
+        "cache_read": 34971417,
+        "cache_write_1h": 781671,
+        "cache_write_5m": 0,
+        "input": 2546,
+        "messages": 88,
+        "output": 289365
+      },
+      "user_turns": 12
+    },
+    "ben/ben/123": {
+      "by_model": {
+        "claude-fable-5-1": {
+          "cache_creation": 5161348,
+          "cache_read": 113412178,
+          "cache_write_1h": 945656,
+          "cache_write_5m": 4215692,
+          "cost": 195.02,
+          "input": 11200,
+          "messages": 442,
+          "output": 197810
+        }
+      },
+      "cost": 195.02,
+      "sessions": 1,
+      "totals": {
+        "cache_creation": 5161348,
+        "cache_read": 113412178,
+        "cache_write_1h": 945656,
+        "cache_write_5m": 4215692,
+        "input": 11200,
+        "messages": 442,
+        "output": 197810
+      },
+      "user_turns": 13
     },
     "dmytro/001": {
       "by_model": {},
@@ -6432,23 +6589,23 @@
     }
   },
   "value_summary": {
-    "agentic_hours": 539.1,
-    "cost_allocated": 235.53,
+    "agentic_hours": 546.1,
+    "cost_allocated": 222.92,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 2495.32,
-    "cost_unattributed_measured": 360.06,
-    "cost_unattributed_residual": 124.53,
+    "cost_measured_attributed": 2854.94,
+    "cost_unattributed_measured": 365.29,
+    "cost_unattributed_residual": 142.37,
     "hours_saved": {
-      "max": 4967.1,
-      "min": 1841.2
+      "max": 5162.6,
+      "min": 1933.2
     },
     "manual_hours": {
-      "max": 5477.0,
-      "min": 2376.5
+      "max": 5677.0,
+      "min": 2475.5
     },
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 118
+    "tasks_with_estimate": 120
   }
 }
