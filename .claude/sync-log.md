@@ -10,7 +10,7 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Branch: `sync/pdlc-demo-workbench-validation-2026-09-08`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/301
 - Commit: "Workbench validation drive-to-pass: tiers, environment record, 3 skill fixes" (`f72dedb`)
-- Status: awaiting review (PR-only; task ben/119, PDLC_DEMO PR #182)
+- Status: awaiting review (PR-only; task ben/119, PDLC_DEMO PR #182). 2026-09-08 later: branch updated with a second commit `ec7644d` — workbench-validation 5 (needs as user stories, schema 1.2, own regression suite; task ben/120, PDLC_DEMO PR #186).
 
 ## 2026-07-27 — push (verification-plan checklists)
 

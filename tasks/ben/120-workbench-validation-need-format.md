@@ -2,7 +2,7 @@
 
 **ID**: 120
 **Created**: 2026-09-08
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: Medium
@@ -64,8 +64,8 @@ Decided with the user 2026-09-08: connector is "so that"; the statement is **com
   - `process-control` (honest): WUN-18 knowledge packs (no pack in this project; the template pack fails validate here), WUN-19 commercial gate (`commercial.py check` exits 1 on **stale 43-day pins** — a real content finding recorded as an anomaly for the commercial owner, not a tool defect), WUN-21 harvest, WUN-22 session start, WUN-23 cost attribution, WUN-24 docflow fidelity, WUN-25 grounding (TC-04 also mapped), WUN-29 frozen documents (inert hook named)
   - Rewrites: WUN-06 narrowed to dhf-manifest coverage; WUN-15 loses the freeze half; WUN-10 T3 → T2
 - [x] workbench-validation `tests/test_runner_renderer.py` — 21 cases (the tool had been an untested checker itself)
-- [ ] Run of record on a clean tree (manifest changed → re-pin) → PASS
-- [ ] Commit → PR → merge; registry sync branch (hitachi #301) updated
+- [x] Run of record `run-20260908T185457Z` on a clean worktree at `30f5810`, model captured, no warnings → PASS 21/24 + 3 NOT-APPLICABLE
+- [x] Commits `30f5810` (format + scrub) · `160e067` (run of record) → PR #186 merged (`cb57c41`); hitachi sync branch updated with `ec7644d` (workbench-validation 5) so PR #301 carries it
 
 ## Economics
 
@@ -75,7 +75,11 @@ Decided with the user 2026-09-08: connector is "so that"; the statement is **com
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
     "agentic_hours": null,
-    "todos": []
+    "todos": [
+      {"id": "format", "title": "User-story need format: 16 rewrites with purpose clauses, runner lint, renderer composition, templates, plan regeneration, console row", "hours_low": 4, "hours_high": 7, "persona": "senior-engineer"},
+      {"id": "scrub", "title": "Register scrub across 35 skills + chains, 13 new needs with dry-run-verified coverage, splits, anomalies", "hours_low": 6, "hours_high": 10, "persona": "quality-engineer"},
+      {"id": "suite", "title": "workbench-validation regression suite (21 cases incl. end-to-end synthetic manifest)", "hours_low": 3, "hours_high": 5, "persona": "senior-engineer"}
+    ]
   }
 }
 ```
@@ -85,3 +89,8 @@ Decided with the user 2026-09-08: connector is "so that"; the statement is **com
 - 2026-09-08: Task created after discussing the need format with the user; D1 recorded (user-story form, "so that", structured fields composed by the renderer).
 - 2026-09-08: Format change implemented end to end (manifest 1.2, runner lint, renderer composition, templates, plan §4 regenerated, console row). User added a scrub ask: review needs per skill and as coordinated skills for missing needs — research fork launched; integration pending its report.
 - 2026-09-08: Scrub integrated — 29 needs / 24 cases; plan §4 regenerated; two anomalies (checkers gap amended; commercial stale pins recorded). D2 recorded (coverage decided by dry run). Next: debug run, commit, run of record, PR, registry branch update.
+- 2026-09-08: Landed on `main` via PR #186 (`cb57c41`); run of record PASS 21/24 + 3 NOT-APPLICABLE; hitachi sync branch updated (`ec7644d`) → PR #301 now carries workbench-validation 5. Task Complete. Follow-ups: merge hitachi #301 then `/sync-skills pull`; commercial owner to refresh or waive the stale snapshots (WUN-19 anomaly); synthetic negative fixture for the submissions transmit gate; implement the frozen-document hook so WUN-29 can move to `tests`.
+
+## Resume / follow-up
+
+All work is on `main`. Reactivate with `bash .claude/hooks/task-activate.sh add <SESSION_ID> ben/120` only for the follow-ups above; the register now reads as user stories in `docs/project/workbench-validation/validation.yml` (`role` / `need` / `so_that`), the plan §4 table is regenerated from it, and the console's Settings → Validation tab shows the composed statements.
