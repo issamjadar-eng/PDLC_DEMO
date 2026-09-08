@@ -8,7 +8,8 @@ is a domain tab at `/domains/<slug>`. Covers:
 - routing: `/domains/<slug>` + answer view render for a non-commercial domain,
   legacy `/commercial...` URLs 307 to `/domains/commercial...` (query kept),
   unknown slug -> 404
-- the nav renders one entry per domain with its own icon
+- the nav collapses every domain into ONE "Business" dropdown (a single domain
+  would render as a plain link)
 """
 from __future__ import annotations
 
@@ -168,12 +169,17 @@ class CommercialDomainsTest(unittest.TestCase):
 
     # ---- nav -------------------------------------------------------------
 
-    def test_nav_renders_one_entry_per_domain(self):
+    def test_nav_collapses_domains_into_one_business_dropdown(self):
         html = self.client.get("/domains/finance").text
-        self.assertIn('href="/domains/commercial"', html)
-        self.assertIn('href="/domains/finance"', html)
+        # one nav slot: the Business button, with every domain inside its menu
+        self.assertEqual(html.count('class="nav-dd-btn"'), 1)
+        self.assertIn('<span class="nav-tx">Business</span>', html)
+        self.assertIn('class="nav-dd-link" role="menuitem" href="/domains/commercial"', html)
+        self.assertIn('class="nav-dd-link is-current" role="menuitem" href="/domains/finance"', html)
         self.assertIn('<use href="#ic-finance"/>', html)
         self.assertIn('<use href="#ic-commercial"/>', html)
+        # no per-domain top-level nav links any more
+        self.assertNotIn('class="nav-item" href="/domains/', html)
 
 
 if __name__ == "__main__":

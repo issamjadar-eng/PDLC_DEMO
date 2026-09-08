@@ -43,7 +43,7 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 |---|---|---|
 | Extend catalog vs. domains | **Domains** | Separate approver trees, keeps Commercial catalog at 30, corpus tree already groups by domain folder |
 | Move BQ-28..30 (Economics) to Finance? | **Stay in Commercial** | Approved editions are hash-pinned; moving breaks approval history for no functional gain |
-| Tab layout | **Three peer tabs** | Matches existing nav pattern (one tab per discovered sidecar); no sub-tab machinery to build |
+| Tab layout | ~~Three peer tabs~~ → **one "Business" dropdown** (user request, same day) | Three slots pushed the priority-ordered nav's rightmost entries into the hamburger on ordinary widths; a dropdown costs one slot and scales to more domains. A single domain still renders as a plain link |
 
 <!-- STRATEGY CONTENT: architecture, business-analytics domains -->
 **Domain generalization of the business-question stack.** The commercial engine (`commercial.py`, `DEFAULT_ROOT = docs/project/commercial`, `--root` override) and the console loader (`console/commercial/loader.py`, `COMMERCIAL_DIR` constant) were built for one domain. The chosen shape: a domain is any `docs/project/<domain>/` folder containing a `commercial.yml`-shaped catalog and a `.console/<domain>-index.json` sidecar; the console discovers domains and renders one nav tab each. The corpus tree is unchanged (it already namespaces `corpus/<domain>/<dataset>`). The engine's markers, lint, approval gate and edition lifecycle are domain-agnostic and reused verbatim — no second engine. Economics questions (BQ-28..30) remain in Commercial to preserve approved-edition hashes.
@@ -97,7 +97,9 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 ### Close-out
 - [x] READMEs: `docs/project/README.md` (+ `finance/`, `manufacturing/`, `management-review/` rows) and `docs/project/corpus/README.md` (+ `finance/`, `manufacturing/` rows), each with a changelog row
 - [x] Reference audit (subagent, `/reference-audit init` + `fan-out`) over the five new READMEs → reports under `docs/_analysis/pca-device/*-readme-references-audit/`: 57 sound / 4 unverified / 4 broken. All 8 fixed: `approval.yml` wording ×2, roadmap-question wording ×2, MQ-10 consumer, hw rev C attribution, FQ-05 consumer, and the two ISO 13485 `[VERIFY]` tags repointed to the QMS SOP `GL-SOP-QM-002` Management Review (§6.1 cadence, §6.2 inputs) — the standards README deliberately excludes ISO 13485 as QMS-level, so the SOP is the citable source
-- [ ] Commit → PR → merge per git-workflow rule; update this doc + index
+- [x] Commit `b3f6d71` → PR #184 → merged to `main` as `2173a0d` (197 files); branch deleted; this doc + index updated
+- [x] User follow-up (2026-09-08): collapse the three domain tabs into ONE "Business" nav dropdown to save nav width — `_base.html` (`.nav-dd` button + `ic-business` sprite + menu), topnav.js (menu re-parented to header, fixed-positioned under the button, closes on resize/scroll/outside/Escape, one priority item), `console.css` `.nav-dd*`, domains test updated; project-console 1.66.0
+- [ ] `/sync-skills push` for `commercial` v15 and `project-console` 1.65.0 to the hitachi registry (registry-facing — deferred for explicit go-ahead)
 
 ## Open Questions
 
@@ -109,9 +111,11 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 
 **Reference audit:** launched as a subagent over the five new READMEs (finance, manufacturing, corpus/finance, corpus/manufacturing, management-review) per `/reference-audit` `init` + `fan-out`; findings land under `docs/_analysis/`. Apply or defer its fixes before commit.
 
-**In-flight artifacts (uncommitted, 2026-09-08):** `.claude/skills/commercial/{SKILL.md,README.md,scripts/commercial.py}`, `.claude/skills/project-console/{VERSION,SKILL.md,README.md,console/app.py,console/commercial/{loader,router}.py,console/web/templates/{_base,commercial_index,commercial_view,commercial_data}.html,tests/test_commercial_domains.py}`, `docs/project/commercial/.console/commercial-index.json` (re-rendered, schema 1.5). Console restarted on :8765 with the new code.
+**Landed on `main` (2026-09-08):** PR #184 → `2173a0d` (commit `b3f6d71`). Nothing from this task is uncommitted except this post-merge bookkeeping edit to the task doc + index. `tasks/ben/SECOPS.md` carries an unrelated local change from before this task.
 
-**First action on resume:** if uncommitted — read the reference-audit report(s) under `docs/_analysis/`, apply fixes, then commit ONLY this task's paths (see the concurrency note: never `tasks/ben/119-*`, `tasks/ben/SECOPS.md`) on a branch → PR → merge. Then `/sync-skills push` for `commercial` (v15) and `project-console` (1.65.0) — deferred, registry-facing.
+**Was in-flight before the merge (now committed):** `.claude/skills/commercial/{SKILL.md,README.md,scripts/commercial.py}`, `.claude/skills/project-console/{VERSION,SKILL.md,README.md,console/app.py,console/commercial/{loader,router}.py,console/web/templates/{_base,commercial_index,commercial_view,commercial_data}.html,tests/test_commercial_domains.py}`, `docs/project/commercial/.console/commercial-index.json` (re-rendered, schema 1.5). Console restarted on :8765 with the new code.
+
+**First action on resume:** run `/sync-skills push` for `commercial` (v15) and `project-console` (1.65.0) once the user confirms (registry-facing). Then check the first `business-evidence-refresh` Action run (schedule or `workflow_dispatch`) in GitHub Actions and triage any lint warnings it reports. Optional next: approve a first Finance/Manufacturing edition in the console so the Management Review Pack carries all three domains.
 
 ## Economics
 
@@ -210,6 +214,8 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 
 ## Changelog
 
+- 2026-09-08: **Nav dropdown (user follow-up, uncommitted).** Replaced the three peer domain tabs with one "Business" dropdown (project-console 1.66.0). Mechanic worth remembering: the nav clips overflow, so an in-nav menu must be re-parented outside it and positioned `fixed` — same reason the hamburger lives outside the nav.
+- 2026-09-08: **Landed.** Commit `b3f6d71` → PR #184 → merged to `main` as `2173a0d`; branch `ben/118-business-domains` deleted. Staged an explicit path list (excluded the sibling session's `tasks/ben/SECOPS.md`). Remaining: registry push (`/sync-skills push`) — deferred.
 - 2026-09-08: Reference audit complete + all 8 findings fixed (see close-out todos). Decision: management-review obligations cite the QMS SOP, never an ISO 13485 clause — consistent with `docs/external/standards/README.md`'s deliberate exclusion of QMS-level standards.
 - 2026-09-08: Main-session follow-through on Finance: `corpus refresh commercial/internal-fleet` (884 rows) + `internal-complaints` (435 rows) → new `2026-09-08` snapshots, zero-row deltas (deterministic generators); `answer FQ-03` re-pinned → lint 0/0; `render` finance. Second console gap fix from FQ-03: a null measure in a `paired-bars` point (no plan row for a category) raised in `abs()` → coerced to a gap; regression added. All `/domains/finance/FQ-*` 200; full console suite 90/90. Management Review Pack re-assembled for 2026-09-08 over commercial,finance,manufacturing: 30 answered (all commercial), 20 not in pack (finance + manufacturing have drafts only — approval is the human step that moves them in).
 - 2026-09-08: **Phase 2 (Finance) complete via subagent** — see ticked todos. `check` fails only on pre-existing stale commercial pins (ten datasets, 43–48 d).

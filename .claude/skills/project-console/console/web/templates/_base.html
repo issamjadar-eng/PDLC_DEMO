@@ -34,6 +34,7 @@
   <symbol id="ic-agents" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
   <symbol id="ic-documents" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></symbol>
   <symbol id="ic-commercial" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 13h20"/></symbol>
+  <symbol id="ic-business" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><path d="M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/></symbol>
   <symbol id="ic-finance" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 14h3"/><path d="M14 13.5a1.5 1.5 0 1 0 0 3h2a1.5 1.5 0 1 1 0 3"/><path d="M15 12.5v1M15 19.5v1"/></symbol>
   <symbol id="ic-manufacturing" viewBox="0 0 24 24"><path d="M2 20V9l6 4V9l6 4V9l6 4v7z"/><path d="M2 20h20"/><path d="M17 9V4h3v5"/></symbol>
   <symbol id="ic-menu" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></symbol>
@@ -55,7 +56,18 @@
     {% if request.state.journey_nav %}<a class="nav-item" href="/journey" title="Journey (project standup + device program, derived live)"><svg class="nav-svg" aria-hidden="true"><use href="#ic-journey"/></svg><span class="nav-tx">Journey</span></a>{% endif %}
     {% if request.state.strategy_nav %}<a class="nav-item" href="/strategy" title="Strategy"><svg class="nav-svg" aria-hidden="true"><use href="#ic-strategy"/></svg><span class="nav-tx">Strategy</span></a>{% endif %}
     {% if request.state.submission_nav %}<a class="nav-item" href="/submission" title="Submission"><svg class="nav-svg" aria-hidden="true"><use href="#ic-submission"/></svg><span class="nav-tx">Submission</span></a>{% endif %}
-    {% for d in request.state.domain_nav %}<a class="nav-item" href="{{ d.href }}" title="{{ d.name }} ({{ d.tagline }})"><svg class="nav-svg" aria-hidden="true"><use href="#ic-{{ d.icon }}"/></svg><span class="nav-tx">{{ d.nav_title }}</span></a>{% endfor %}
+    {# Business domains collapse into ONE nav slot: a "Business" dropdown listing every
+       discovered domain (Commercial, Finance, Manufacturing, …). A single domain renders
+       as a plain link — no dropdown for a list of one. The menu is re-parented to the
+       header by topnav.js so the nav's overflow:hidden never clips it. #}
+    {% set doms = request.state.domain_nav %}
+    {% if doms|length == 1 %}<a class="nav-item" href="{{ doms[0].href }}" title="{{ doms[0].name }} ({{ doms[0].tagline }})"><svg class="nav-svg" aria-hidden="true"><use href="#ic-{{ doms[0].icon }}"/></svg><span class="nav-tx">{{ doms[0].nav_title }}</span></a>
+    {% elif doms %}<div class="nav-item nav-dd{% if request.url.path.startswith('/domains/') %} is-current{% endif %}">
+      <button type="button" class="nav-dd-btn" aria-haspopup="true" aria-expanded="false" title="Business domains — {{ doms|map(attribute='nav_title')|join(' · ') }}"><svg class="nav-svg" aria-hidden="true"><use href="#ic-business"/></svg><span class="nav-tx">Business</span><svg class="nav-caret" aria-hidden="true" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="nav-dd-menu" hidden role="menu">
+        {% for d in doms %}<a class="nav-dd-link{% if request.url.path.startswith(d.href) %} is-current{% endif %}" role="menuitem" href="{{ d.href }}" title="{{ d.tagline }}"><svg class="nav-svg" aria-hidden="true"><use href="#ic-{{ d.icon }}"/></svg><span>{{ d.nav_title }}</span></a>{% endfor %}
+      </div>
+    </div>{% endif %}
     <a class="nav-item" href="/dashboards" title="Dashboards"><svg class="nav-svg" aria-hidden="true"><use href="#ic-dashboards"/></svg><span class="nav-tx">Dashboards</span></a>
     {# Metrics sits beside Dashboards deliberately — same class of surface (read
        the numbers), and this nav is PRIORITY-ORDERED: anything that doesn't fit
@@ -104,10 +116,37 @@
   function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
   function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
 
+  /* In-nav dropdowns (the Business domains menu). The nav clips overflow, so each
+     menu is re-parented to the header and positioned fixed under its button on
+     open; anything that could move the button (resize, scroll, overflow relayout)
+     closes it. One item in the priority list, wherever it ends up. */
+  var dds = Array.prototype.slice.call(nav.querySelectorAll('.nav-dd'));
+  function closeDds() {
+    dds.forEach(function (dd) {
+      dd._menu.hidden = true; dd._btn.setAttribute('aria-expanded', 'false');
+    });
+  }
+  dds.forEach(function (dd) {
+    dd._btn = dd.querySelector('.nav-dd-btn');
+    dd._menu = dd.querySelector('.nav-dd-menu');
+    header.appendChild(dd._menu);
+    dd._btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var wasOpen = !dd._menu.hidden;
+      closeDds(); closeMenu();
+      if (wasOpen) return;
+      var r = dd._btn.getBoundingClientRect();
+      dd._menu.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 240)) + 'px';
+      dd._menu.style.top = (r.bottom + 8) + 'px';
+      dd._menu.hidden = false; dd._btn.setAttribute('aria-expanded', 'true');
+    });
+  });
+  window.addEventListener('scroll', closeDds, { passive: true });
+
   function fits() { return nav.scrollWidth <= nav.clientWidth + 1; }
 
   function layout() {
-    closeMenu();
+    closeMenu(); closeDds();
     // Restore every item to the nav in priority order, then measure.
     items.forEach(function (it) { nav.appendChild(it); });
     moreWrap.hidden = true;
@@ -130,9 +169,11 @@
   });
   document.addEventListener('click', function (e) {
     if (!moreWrap.contains(e.target)) closeMenu();
+    var inDd = dds.some(function (dd) { return dd._menu.contains(e.target) || dd.contains(e.target); });
+    if (!inDd) closeDds();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeMenu();
+    if (e.key === 'Escape') { closeMenu(); closeDds(); }
   });
   layout();
   window.addEventListener('load', layout);   // re-measure after fonts/icons settle
