@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180259Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-08 — Submission-tracker wiring works
+purpose:     Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents.
+approach:    Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations.
+UUT:         tracker@15
+user needs:  WUN-06
+endpoint:    none
+test source: .claude/skills/tracker/tests (pinned copy: tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-08)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-08T18:03:05Z (UTC)
+exit_code:   0
+duration_s:  2.12
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+............                                                             [100%]
+12 passed in 1.81s
+
