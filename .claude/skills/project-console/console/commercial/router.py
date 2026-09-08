@@ -23,7 +23,6 @@ import html as _html
 import re
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from urllib.parse import quote
 
@@ -801,30 +800,6 @@ _NARR_H2_RE = re.compile(r"^## (.+?)\s*$", re.M)
 _HTML_H2_RE = re.compile(r"<h2[^>]*>(.*?)</h2>", re.S)
 _TAG_RE = re.compile(r"<[^>]+>")
 
-_NARRATIVE_SYSTEM_PROMPT = """You write the narrative layer of a data-driven business report for a regulated medical-device company. You are given the report (every figure already marker-cited) and its data.json.
-
-Produce ONLY a markdown body — no front matter, no title — with these sections:
-
-## Executive summary
-Three to six sentences for an executive: the answer, why it matters, what decision it informs, and the single biggest caveat. Lead with the conclusion.
-
-Then, for EACH `## <heading>` section of the report (same heading text, same order; skip a section titled "Method & provenance"):
-## <exact report heading>
-Two to five sentences explaining what the data in that section tells us — the pattern, why it matters, what would change the reading. Interpret; do not restate every row.
-
-HARD RULES (the output is machine-linted; violations are rejected):
-1. Every figure you mention must already appear in the report, and any sentence containing a digit must carry, on that same line, a citation marker copied VERBATIM from the report — e.g. `[src: dataset@snapshot]`, `[derived: series-id]`, `[config: file.yml]`, `[assume: A-NNN]`. Prefer to cite the same marker the report uses beside that figure. Never invent a marker.
-2. Never compute, extrapolate, forecast, or round differently. Never introduce a number that is not in the report.
-3. Avoid the words estimated, likely, approximately, roughly, assumed, modeled unless the same line carries an `[assume: A-NNN]` marker copied from the report.
-4. Plain language a CFO or VP Quality reads without analytics jargon. No em-dashes needed; short sentences. Do not name any AI vendor, model, or tool.
-5. Headings must match the report's `## ` headings exactly (case and punctuation)."""
-
-
-def _narrative_model(cfg) -> str:
-    models = cfg.console.get("models") or {}
-    return models.get("narrative") or models.get("default") or "claude-sonnet-4-6"
-
-
 def _parse_narrative(text: str):
     fm, body = {}, text
     m = _NARR_FM_RE.match(text)
@@ -893,39 +868,11 @@ def _narrative_ctx(cfg, repo_root: Path, ed: dict, refbook, report_html: str, do
     return out
 
 
-async def _synthesize_narrative(cfg, report_md: str, data_json: str, prior_errors: list[str] | None = None) -> str:
-    from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, query
-    prompt = f"## REPORT (report.md)\n\n{report_md}\n\n## DATA (data.json)\n\n```json\n{data_json[:60000]}\n```\n\nWrite the narrative body now."
-    if prior_errors:
-        prompt += ("\n\nYour previous attempt FAILED the claim lint with these findings — fix every one "
-                   "(most often: a sentence with a digit lacks a marker on its line, or a heading does not "
-                   "match the report):\n- " + "\n- ".join(prior_errors[:25]))
-    options = ClaudeAgentOptions(model=_narrative_model(cfg), system_prompt=_NARRATIVE_SYSTEM_PROMPT,
-                                 permission_mode="bypassPermissions", cwd=str(cfg.repo_root),
-                                 max_turns=1, include_partial_messages=False)
-    chunks: list[str] = []
-    try:
-        async for msg in query(prompt=prompt, options=options):
-            if isinstance(msg, AssistantMessage):
-                for block in (msg.content or []):
-                    if isinstance(block, TextBlock) and block.text:
-                        chunks.append(block.text)
-    except Exception as e:
-        raise HTTPException(502, f"narrative synthesis failed: {e}")
-    body = "".join(chunks).strip()
-    if body.startswith("```"):
-        body = body.strip("`").split("\n", 1)[-1].rsplit("```", 1)[0].strip()
-    if not body:
-        raise HTTPException(502, "narrative synthesis returned empty content")
-    return body
-
-
 @router.post("/domains/{domain}/{bq}/narrative")
 async def commercial_narrative(domain: str, request: Request, bq: str):
-    """Generate (or regenerate) the edition's narrative: synthesize -> engine
-    `narrative-stamp` (pins report/data hashes) -> engine `narrative-lint`. One
-    retry with the lint findings fed back. The file is kept even if the retry
-    still has errors — the UI shows them and the fold is flagged."""
+    """Regenerate the edition's narrative on demand (every `answer` already writes
+    one automatically). Delegates to the engine's `narrative-generate`; the file is
+    kept even if the lint-guided retry still has errors — the UI shows them."""
     cfg = get_config()
     form = await request.form()
     edition = str(form.get("edition") or "").strip()
@@ -937,23 +884,16 @@ async def commercial_narrative(domain: str, request: Request, bq: str):
     back = f"/domains/{domain}/{bq}?edition={quote(edition, safe='')}"
     if script is None:
         return RedirectResponse(back + "&narr_error=" + quote("commercial skill not installed", safe=""), status_code=303)
-    edir = cfg.repo_root / Path(ed["report_path"]).parent
-    report_md = (edir / "report.md").read_text(encoding="utf-8")
-    data_json = (edir / "data.json").read_text(encoding="utf-8")
-    errors: list[str] = []
-    for attempt in range(2):
-        body = await _synthesize_narrative(cfg, report_md, data_json, errors or None)
-        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as tf:
-            tf.write(body); tmp = tf.name
-        rc, out = _run([sys.executable, str(script), "--domain", domain, "narrative-stamp", bq, "--edition", edition,
-                        "--from-file", tmp, "--author", "AI assistant (grounded on report.md + data.json)"], cfg.repo_root)
-        Path(tmp).unlink(missing_ok=True)
-        if rc != 0:
-            return RedirectResponse(back + "&narr_error=" + quote(out[-800:], safe=""), status_code=303)
-        rc, out = _run([sys.executable, str(script), "--domain", domain, "narrative-lint", bq, "--edition", edition], cfg.repo_root)
-        errors = [ln.strip()[len("ERROR"):].strip() for ln in out.splitlines() if ln.strip().startswith("ERROR")]
-        if rc == 0:
-            break
+    # One implementation: the engine's `narrative-generate` (claude CLI synthesis →
+    # stamp → lint with a lint-guided retry). The console just invokes it — the same
+    # path `answer` takes automatically for every new or refreshed edition.
+    import anyio
+    rc, out = await anyio.to_thread.run_sync(
+        lambda: _run([sys.executable, str(script), "--domain", domain, "narrative-generate", bq,
+                      "--edition", edition, "--force"], cfg.repo_root, 900))
+    errors = [ln.strip()[len("ERROR"):].strip() for ln in out.splitlines() if ln.strip().startswith("ERROR")]
+    if rc != 0 and not errors:
+        return RedirectResponse(back + "&narr_error=" + quote(out[-800:], safe=""), status_code=303)
     _run([sys.executable, str(script), "--domain", domain, "render"], cfg.repo_root)
     if errors:
         return RedirectResponse(back + "&narr_error=" + quote("narrative saved but the claim lint still reports: " + " | ".join(errors)[:1200], safe=""), status_code=303)

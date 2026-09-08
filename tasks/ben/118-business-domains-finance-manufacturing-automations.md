@@ -108,6 +108,12 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 - [x] Console: "Generate narrative" (server-side Claude synthesis grounded on report.md + data.json, then engine lint; stored as `narrative.md`), executive-summary panel + per-section "What this tells us" expansions in the Report tab, Export buttons (docx/pdf) streaming the file
 - [x] Tests: `tests/test_commercial_narrative.py` (6 tests, exercises the real engine's export end to end); full console suite green. Live: FQ-06 narrative generated in ~2 min, lint 0/0 first pass; BQ-01 (APPROVED, 2026-07-27.3) narrative generated, lint 0/0, `check` raised no hash mutation; md/docx/pdf downloads 200 (pdf 176 KB via LibreOffice); Word file carries the exec summary + 7 "What this tells us" blocks + references; Chrome screenshot of the panel + folds
 
+### Phase 6 — Automatic narratives + backfill (user request 2026-09-08: "it should be done when a report is created or updated; retroactively generate them for all reports; spin up agents")
+- [x] Engine `narrative_generate` via `claude -p` (6 s round-trip verified; MQ-05 in 56 s, 0 errors / 1 warning); `narrative-generate [--force] [--retries]`; `answer` calls it after a clean lint, `--no-narrative` opts out, failure never fails the answer (commercial v17)
+- [x] Console button delegates to the engine (1.67.1); console-side SDK synthesis removed
+- [x] Backfill: 4 subagents over the 35 remaining editions — every `narrative-generate` exited 0 on the FIRST pass (no automatic retry triggered anywhere, no hand-fixes); 7 warnings total, all "estimation language without [assume:]" on otherwise fully cited lines (left as-is; warnings are non-blocking by design). One agent returned early after backgrounding its batch and was resumed to completion
+- [x] Rendered all three sidecars (schema 1.6): 38 / 38 implemented questions `narrative: present`; `check` reports no hash mutation on the 30 approved editions; `pack` now carries each question's executive summary (30 summaries in the 2026-09-08 pack); console suite green; spot-checked BQ-02, BQ-19, MQ-03 pages render their folds
+
 ### Close-out
 - [x] READMEs: `docs/project/README.md` (+ `finance/`, `manufacturing/`, `management-review/` rows) and `docs/project/corpus/README.md` (+ `finance/`, `manufacturing/` rows), each with a changelog row
 - [x] Reference audit (subagent, `/reference-audit init` + `fan-out`) over the five new READMEs → reports under `docs/_analysis/pca-device/*-readme-references-audit/`: 57 sound / 4 unverified / 4 broken. All 8 fixed: `approval.yml` wording ×2, roadmap-question wording ×2, MQ-10 consumer, hw rev C attribution, FQ-05 consumer, and the two ISO 13485 `[VERIFY]` tags repointed to the QMS SOP `GL-SOP-QM-002` Management Review (§6.1 cadence, §6.2 inputs) — the standards README deliberately excludes ISO 13485 as QMS-level, so the SOP is the citable source
@@ -125,7 +131,7 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 
 **Reference audit:** launched as a subagent over the five new READMEs (finance, manufacturing, corpus/finance, corpus/manufacturing, management-review) per `/reference-audit` `init` + `fan-out`; findings land under `docs/_analysis/`. Apply or defer its fixes before commit.
 
-**Landed on `main` (2026-09-08):** PR #184 → `2173a0d` (commit `b3f6d71`). Nothing from this task is uncommitted except this post-merge bookkeeping edit to the task doc + index. `tasks/ben/SECOPS.md` carries an unrelated local change from before this task.
+**Landed on `main` (2026-09-08):** PR #188 → `5bc8023` (narrative layer + export), PR #185 → `8fa73a7` (Business nav dropdown), PR #184 → `2173a0d` (commit `b3f6d71`). Nothing from this task is uncommitted except this post-merge bookkeeping edit to the task doc + index. `tasks/ben/SECOPS.md` carries an unrelated local change from before this task.
 
 **Was in-flight before the merge (now committed):** `.claude/skills/commercial/{SKILL.md,README.md,scripts/commercial.py}`, `.claude/skills/project-console/{VERSION,SKILL.md,README.md,console/app.py,console/commercial/{loader,router}.py,console/web/templates/{_base,commercial_index,commercial_view,commercial_data}.html,tests/test_commercial_domains.py}`, `docs/project/commercial/.console/commercial-index.json` (re-rendered, schema 1.5). Console restarted on :8765 with the new code.
 
@@ -142,7 +148,7 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
     "agentic_hours": {
       "min": 3,
-      "max": 5
+      "max": 6
     },
     "todos": [
       {
@@ -245,6 +251,20 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
         },
         "confidence": "med",
         "basis": "software anchor 325-750 LOC/dev-month on ~650 net LOC at the low end (internal tooling) + document authoring 3-7 hr/page on ~2 pages of contract text; judgment-tier 4-10 h QE for defining the provenance/lint contract that lets LLM prose sit inside a hash-pinned evidence chain (no published norm)"
+      },
+      {
+        "todo": "Phase 6 — automatic narrative on answer (engine narrative-generate via claude CLI, console delegation), pack exec summaries, CI notes, and backfill of 35 editions' executive summaries + per-section insights via 4 subagents",
+        "personas": [
+          "rd-lead",
+          "commercial",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 60,
+          "max": 130
+        },
+        "confidence": "med",
+        "basis": "software anchor on ~180 net LOC at the low end (4-8 h) + document authoring 3-7 hr/page for the by-hand equivalent of 35 narratives (exec summary + ~6 sections each ≈ 0.4-0.5 page of analyst prose per report, ~15 pages total → 45-105 h, an analyst reading each report and writing the interpretation) + ~2-4 h QE review sampling; judgment-tier on the prose page count"
       }
     ]
   }
@@ -253,7 +273,10 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 
 ## Changelog
 
-- 2026-09-08: **Phase 5 built + tested (uncommitted): narrative layer + Word/PDF export.** commercial skill v16 (`narrative-lint`, `narrative-stamp`, `export`; `_lint_markdown_text` factored out of `lint_edition` so report and narrative share one lint; sidecar schema 1.6 `narrative` status; `exports/` gitignored), project-console 1.67.0 (exec-summary panel, per-section folds, Generate/Regenerate, ⬇ Word / ⬇ PDF). Design decisions: (a) the narrative is a separate hash-pinned file, never edits to report.md — approved editions stay byte-identical and `check` stays green; (b) same claim lint for prose as for figures — the LLM may cite, never compute; (c) staleness is visible, not silent — re-answer flips the narrative to `stale` until regenerated; (d) synthesis is one call + one lint-guided retry, file kept either way with errors surfaced. Concurrency again: main moved to console 1.66.1 (ben/120) under this checkout; my bump placed as 1.67.0 above it.
+- 2026-09-08: **Phase 6 complete (uncommitted at this line).** 35 narratives backfilled by 4 parallel subagents in ~19 min wall-clock (1–3 min each, sequential within an agent); 0 lint errors first pass across all 35 — the system prompt encodes the lint rules, so the writer rarely trips the checker. Also: `pack` includes exec summaries; Action comments document that CI runners without an authenticated CLI leave `narrative: missing` (visible, not silent). Skill versions: commercial v17, project-console 1.67.1.
+- 2026-09-08: **Phase 6 in flight.** Decision: narrative synthesis lives in the ENGINE (`claude -p`), not the console — so `answer` (CLI, console, CI where authenticated) produces the narrative as part of the report, and the console button is only a regenerate. Backfill launched as 4 parallel subagents.
+- 2026-09-08: **Phase 5 landed** — PR #188 merged to `main` as `5bc8023`; branch deleted. Incident: while stashing generated usage-metrics files before a pull I dropped an unrelated pre-existing auto-stash (`pre-pull auto-stash 6196925`); recovered it via `git fsck` dangling commits and re-stored it (it held only stale generated dashboard files). Lesson: check `git stash list` before `stash drop`.
+- 2026-09-08: **Phase 5 built + tested: narrative layer + Word/PDF export.** commercial skill v16 (`narrative-lint`, `narrative-stamp`, `export`; `_lint_markdown_text` factored out of `lint_edition` so report and narrative share one lint; sidecar schema 1.6 `narrative` status; `exports/` gitignored), project-console 1.67.0 (exec-summary panel, per-section folds, Generate/Regenerate, ⬇ Word / ⬇ PDF). Design decisions: (a) the narrative is a separate hash-pinned file, never edits to report.md — approved editions stay byte-identical and `check` stays green; (b) same claim lint for prose as for figures — the LLM may cite, never compute; (c) staleness is visible, not silent — re-answer flips the narrative to `stale` until regenerated; (d) synthesis is one call + one lint-guided retry, file kept either way with errors surfaced. Concurrency again: main moved to console 1.66.1 (ben/120) under this checkout; my bump placed as 1.67.0 above it.
 - 2026-09-08: **Nav dropdown landed** — PR #185 merged to `main` as `8fa73a7` (project-console 1.66.0). User briefly floated a "Reports" topline with a summary landing page, then withdrew it ("business is fine") — no landing page built; noted as a possible future refinement.
 - 2026-09-08: **Nav dropdown (user follow-up).** Replaced the three peer domain tabs with one "Business" dropdown (project-console 1.66.0). Mechanic worth remembering: the nav clips overflow, so an in-nav menu must be re-parented outside it and positioned `fixed` — same reason the hamburger lives outside the nav.
 - 2026-09-08: **Landed.** Commit `b3f6d71` → PR #184 → merged to `main` as `2173a0d`; branch `ben/118-business-domains` deleted. Staged an explicit path list (excluded the sibling session's `tasks/ben/SECOPS.md`). Remaining: registry push (`/sync-skills push`) — deferred.

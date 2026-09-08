@@ -22,6 +22,13 @@
 #   - every draft is claim-linted; a lint failure is reported as a warning, never hidden;
 #   - snapshots are immutable and provenance-chained; a failed acquisition lands nothing.
 # Humans still approve: nothing here calls `approve`.
+#
+# Narratives: `answer` writes each edition's narrative.md automatically via the `claude`
+# CLI. A GitHub-hosted runner has no authenticated CLI, so CI-refreshed drafts land with
+# `narrative: missing` (or the previous narrative flagged `stale`) — a visible state, not
+# a silent one. Fill them from a workstation with `commercial.py --domain <d>
+# narrative-generate <ID>`, or run this workflow on a self-hosted runner with the CLI
+# authenticated.
 name: business evidence refresh
 
 on:
