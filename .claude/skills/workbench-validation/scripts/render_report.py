@@ -115,6 +115,23 @@ def strongest_evidence(need, case_index):
     return "; ".join(parts)
 
 
+def need_statement(need):
+    """The user story a need renders as, composed from its structured fields:
+    'As a <role>, I need the workbench to <need>, so that <so_that>.'"""
+    role = str(need.get("role") or "").strip() or "user"
+    # Mid-sentence role: lower-case a capitalised first word unless it is an
+    # acronym ("DHF author" stays, "Reviewer / approver" -> "reviewer / approver").
+    if len(role) > 1 and role[0].isupper() and role[1].islower():
+        role = role[0].lower() + role[1:]
+    outcome = str(need.get("need") or "").strip().rstrip(".")
+    purpose = str(need.get("so_that") or "").strip().rstrip(".")
+    article = "an" if role[:1].lower() in "aeiou" else "a"
+    sentence = f"As {article} {role}, I need the workbench to {outcome}"
+    if purpose:
+        sentence += f", so that {purpose}"
+    return sentence + "."
+
+
 def overall_verdict(needs):
     verdicts = {n["_verdict"] for n in needs}
     if "FAIL" in verdicts:
@@ -338,18 +355,20 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
     plan = manifest.get("plan")
     if plan:
         add(f"Intended-use statements, risk assessment, and the assurance model are "
-            f"defined in the validation plan: `{plan}`. Each need is stated from a "
-            f"role's perspective — the outcome that role requires, independent of how "
-            f"the workbench implements it. The table joins each need to its assurance "
-            f"evidence from this run.")
+            f"defined in the validation plan: `{plan}`. Each need is a user story — "
+            f"*As a role, I need the workbench to achieve an outcome, so that a purpose "
+            f"is served* — composed from the manifest's `role` / `need` / `so_that` "
+            f"fields; the outcome is what the role can observe, never how the workbench "
+            f"implements it. The table joins each need to its assurance evidence from "
+            f"this run.")
         add("")
-    add("| ID | Role | Need | Tier | Coverage | Verdict | Strongest evidence | Evidence |")
-    add("|---|---|---|---|---|---|---|---|")
+    add("| ID | Need (user story) | Tier | Coverage | Verdict | Strongest evidence | Evidence |")
+    add("|---|---|---|---|---|---|---|")
     for need in needs:
         evidence = ", ".join(f"`{tc}`" for tc in need.get("_tests", [])) or (
             "; ".join(need.get("process_controls", [])) or "—")
-        add(f"| {need['id']} | {need.get('role', '—')} "
-            f"| {md_escape(need.get('need', ''))} | {need.get('tier', '?')} "
+        add(f"| {need['id']} "
+            f"| {md_escape(need_statement(need))} | {need.get('tier', '?')} "
             f"| {need.get('coverage', 'tests')} "
             f"| **{need['_verdict']}** | {md_escape(need.get('_strongest', ''))} | {md_escape(evidence)} |")
     add("")
@@ -485,7 +504,7 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
     for c in run.get("cases", []):
         tiers[c.get("endpoint", "unspecified")] = tiers.get(c.get("endpoint", "unspecified"), 0) + 1
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "title": manifest.get("report", {}).get("title", "Workbench Validation"),
         "banner": manifest.get("banner"),
@@ -527,6 +546,7 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
             {
                 "id": n["id"], "role": n.get("role"), "tier": n.get("tier"),
                 "class": n.get("class"), "need": n.get("need"),
+                "so_that": n.get("so_that"), "statement": need_statement(n),
                 "coverage": n.get("coverage", "tests"),
                 "implemented_by": n.get("implemented_by"),
                 "verdict": n["_verdict"], "tests": n.get("_tests", []),

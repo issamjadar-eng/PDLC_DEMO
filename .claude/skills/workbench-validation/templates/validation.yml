@@ -1,7 +1,7 @@
 # Workbench validation manifest — consumed by the workbench-validation skill.
 # Authored source of truth for user needs + test cases. The report and sidecar are
 # generated projections; edit here, then re-run `/workbench-validation validate`.
-schema_version: "1.1"
+schema_version: "1.2"
 
 # Stamped at the top of every generated report (demo projects: keep the demo banner).
 banner: "_Demo sample data — not for clinical use._"
@@ -32,22 +32,27 @@ known_anomalies: []
 # Optional override of the default revalidation-trigger list.
 # revalidation_triggers: []
 
-# Each need is stated from a ROLE's perspective, in the role's own language —
-# the outcome they need, never how the workbench implements it. The mechanism
-# lives in `implemented_by:` (traceability info, not part of the need).
+# Each need is a USER STORY composed by the renderer from three fields:
+#   "As a {role}, I need the workbench to {need}, so that {so_that}."
+# `need` = the outcome the role can observe, phrased to follow "I need the
+# workbench to…" (no mechanism, no "As a…" prefix); `so_that` = the purpose —
+# required. The mechanism lives in `implemented_by:` (traceability only). The
+# runner refuses a need missing role / need / so_that.
 user_needs:
   - id: WUN-01
     role: "<role, e.g. Program lead>"
     class: gates            # authoring|audit|gates|renderers|console|config-control|cross-cutting
     tier: T1                # T1|T2|T3
-    need: "<plain-language outcome the role requires — no implementation detail>"
+    need: "<outcome the role can observe — follows 'I need the workbench to'>"
+    so_that: "<purpose — why the role needs it>"
     coverage: tests         # tests | process-control | exploratory
     implemented_by: "<mechanism — traceability only>"
   - id: WUN-02
     role: "<role, e.g. Reviewer / approver>"
     class: authoring
     tier: T1
-    need: "<LLM-assured need>"
+    need: "<LLM-assured outcome>"
+    so_that: "<purpose>"
     coverage: process-control
     implemented_by: "<mechanism>"
     process_controls:

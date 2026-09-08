@@ -1,0 +1,30 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T185457Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-25 — The submission-package consistency gate runs clean on the pre-submission package
+purpose:     PROJECT-INSTANCE check (declared): runs the transmission gate over this project's pre-submission package. It proves the gate executes and that the package it protects is currently consistent; a fixture-based negative case (an inconsistent synthetic package) is a known gap recorded in the anomalies.
+approach:    Runs the package-consistency checker with its transmit gate over the qsub filing folder in machine-readable mode; passes only on exit 0 (no failures, no warnings).
+UUT:         submissions@10
+user needs:  WUN-20
+endpoint:    none
+test source: .claude/skills/submissions/scripts/check_package_consistency.py (pinned copy: tools/workbench-validation/results/run-20260908T185457Z/pinned/TC-25)
+command:     python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub --transmit-gate --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-08T18:55:16Z (UTC)
+exit_code:   0
+duration_s:  0.04
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "findings": [],
+  "fails": 0,
+  "warns": 0,
+  "support_matrix": {}
+}
+

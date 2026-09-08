@@ -73,9 +73,25 @@ the whole authoring workbench.
 | No fake PASS for LLM behavior | Every `coverage: tests` need maps to ≥1 deterministic test case; LLM-assured needs are process-control/exploratory | Required | local |
 | Every case declares its evidence tier | `test_cases[].endpoint` is `none`, `mocked`, or `live` on every case; `live` cases carry `connection:` and the manifest has a `connections:` block | Required | local |
 | Run of record is clean | Latest run JSON has no `warnings[]` (clean tree, model id captured, no skill version-pin mismatch, no tier-less case) | Recommended | local |
+| Every need is a complete user story | Each `user_needs[]` entry has non-empty `role`, `need` (outcome, no "As a…" prefix) and `so_that` (purpose); the runner refuses otherwise on schema ≥ 1.2 | Required | local |
 | Anomalies are dispositioned | Every `known_anomalies[]` entry names an owner and an expected clearing run (or "accepted residual") | Required | local |
 
 ## Changelog
+
+- 5 (2026-09-08): **Needs are user stories composed from structured fields (manifest
+  schema 1.2).** Each need carries `role`, `need` (the outcome the role can observe,
+  phrased to follow "I need the workbench to…") and `so_that` (the purpose, now
+  required); the renderer composes _As a `role`, I need the workbench to `need`, so
+  that `so_that`._ into the report §2 (single Need column), the sidecar (`statement`,
+  `so_that`) and the console. The runner lints the contract — missing fields are an
+  error on 1.2+ manifests (warning on older), story wording duplicated inside `need`
+  or `so_that` is a warning. Templates and SKILL.md updated; Best Practices row
+  added. Rationale: the previous register was role-perspective but implicit — only
+  one need said "I need" and none carried a purpose, which is what a reviewer needs
+  to judge whether the mapped evidence assures the need. Also adds the skill's own
+  regression suite, `tests/test_runner_renderer.py` (21 cases) — the validation tool
+  had been an untested deterministic checker itself, the very anomaly its report
+  flags for other skills.
 
 - 4 (2026-09-08): **Evidence tiers + full environment record (run/sidecar schema 1.1).**
   *Tiers (D7):* every test case declares `endpoint: none | mocked | live`; the manifest
