@@ -345,6 +345,8 @@ See `tasks/ben/024-security-posture-automation.md` and `tasks/ben/027-task-gate-
 
 _Reverse-chronological record of meaningful progress, decisions, and blockers._
 
+- 2026-09-08 (36): **Checkpoint-recovery hook under test.** `tests/test_checkpoint_recover.py` runs `.claude/hooks/checkpoint-recover.sh` against a temp project via `CLAUDE_PROJECT_DIR` — planted marker surfaced, silence otherwise — as workbench-validation evidence for the session-start need (WUN-22). `tests/conftest.py` adds the socket guard.
+
 - YYYY-MM-DD: Task created
 ```
 

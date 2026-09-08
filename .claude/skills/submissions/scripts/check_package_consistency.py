@@ -35,6 +35,12 @@ list(s) from the package's own cover letter — nothing is hard-coded. Checks:
         no attachment supports (confirm self-contained by design). The matrix itself is
         emitted (text + JSON) — the generated per-question support map, replacing the
         hand audit.
+  S7  unresolved-verification tags (FAIL) — an unresolved `[VERIFY …]` tag in the FILED
+        body of any TRANSMITTED document. A VERIFY tag is the workbench's promise that a
+        claim it drafted was not checked against its source; it must be resolved before
+        transmission, never stripped and never shipped. Tags inside internal apparatus
+        (leading HTML-comment metadata, <details> containers) are internal notes and do
+        not fire.
   S6  enumeration-completeness (WARN) — the package deliberately restates enumerable
         structures (category labels, rule sets, question lists) in multiple transmitted
         docs for reviewer ergonomics; the cost of that duplication is LOCKSTEP DRIFT,
@@ -507,6 +513,27 @@ def check_enumeration_completeness(transmitted: dict[str, Path]) -> list[dict]:
     return findings
 
 
+# ── S7 unresolved-verification tags in the filed body ──────────────────────────
+VERIFY_TAG = re.compile(r"\[VERIFY\b[^\]]*\]")
+
+
+def check_unresolved_verify(transmitted: dict[str, Path]) -> list[dict]:
+    findings = []
+    for stem, md in sorted(transmitted.items()):
+        filed = strip_zones(md.read_text(encoding="utf-8"))[0]
+        for row in filed.split("\n"):
+            if "\t" not in row:
+                continue
+            n, text = row.split("\t", 1)
+            m = VERIFY_TAG.search(text)
+            if m:
+                findings.append({"check": "S7", "sev": "FAIL", "file": md.name, "line": int(n),
+                                 "msg": f"unresolved verification tag in the filed body: "
+                                        f"{m.group(0)[:60]} — resolve the claim against its source "
+                                        f"(or move the note into internal apparatus) before transmission"})
+    return findings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("filing_dir")
@@ -553,6 +580,7 @@ def main() -> int:
                                                a.questions, docid(a.cover))
     findings += s5_findings
     findings += check_enumeration_completeness(transmitted)
+    findings += check_unresolved_verify(transmitted)
 
     fails = [f for f in findings if f["sev"] == "FAIL"]
     warns = [f for f in findings if f["sev"] == "WARN"]

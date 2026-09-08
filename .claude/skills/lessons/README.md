@@ -24,6 +24,8 @@ For skill usage and instructions, see `SKILL.md`.
 
 ## Changelog
 
+- 5 (2026-09-08): **Pre-check pointer to `scan_tags.py`.** The `scan` action now points at the strategy skill's deterministic tag lint (shared grammar) so malformed `<!-- LESSONS LEARNED` tags surface before assembly instead of being silently skipped. No parser change.
+
 - 2 (2026-04-20): **Update task-gate state file path references from `.claude/state/active-tasks-{session_id}.txt` to `.state/active-tasks-{session_id}.txt`** (task ben/083). Doc-only change — `/lessons record` uses the task-skill's state file by path; relocating the path source in step 4 of the `record` action keeps the instructions accurate. No code change to the `record` flow itself.
   **Post-update:** No action required. The path references are documentation; `/lessons record` reads `printenv CLAUDE_SESSION_ID` and joins against the path at runtime, which will follow task-skill v18's new location automatically.
 - 1 (2026-04-12): Initial version — 9 actions (init, scan, assemble, record, diff, validate, list, show, promote). Ledger with Staged/Promoted/Archived sections. Two-pass assembly (lessons + records). Lesson IDs in `L-<task_folder>-<NNN>-<seq>` form. Record format in source task docs as source of truth. Four outcome types (applied, exception, challenged, false-positive) distinguishing "lesson held" from "lesson may be wrong." Interactive promote with evidence review. Seven promotion destinations (skill, claude-md, agent, rule, glossary, standard, readme). Best-effort Claude detection at decision time. Close-out reflection prompt via `/task update Complete`. See task 036.

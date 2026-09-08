@@ -73,10 +73,35 @@ the whole authoring workbench.
 | No fake PASS for LLM behavior | Every `coverage: tests` need maps to ≥1 deterministic test case; LLM-assured needs are process-control/exploratory | Required | local |
 | Every case declares its evidence tier | `test_cases[].endpoint` is `none`, `mocked`, or `live` on every case; `live` cases carry `connection:` and the manifest has a `connections:` block | Required | local |
 | Run of record is clean | Latest run JSON has no `warnings[]` (clean tree, model id captured, no skill version-pin mismatch, no tier-less case) | Recommended | local |
+| Verdicts are binary | Sidecar `needs[].verdict` ∈ {PASS, FAIL, NOT-APPLICABLE}; no need carries `coverage:`; every `method: protocol` case has a protocol document and, once executed, a result record | Required | local |
+| Every case declares scope and method | `test_cases[].scope` ∈ {capability, deployment}, `method` ∈ {scripted, protocol, inspection}; deployment cases name `requires_deployment` keys that exist in `deployment:` | Required | local |
 | Every need is a complete user story | Each `user_needs[]` entry has non-empty `role`, `need` (outcome, no "As a…" prefix) and `so_that` (purpose); the runner refuses otherwise on schema ≥ 1.2 | Required | local |
 | Anomalies are dispositioned | Every `known_anomalies[]` entry names an owner and an expected clearing run (or "accepted residual") | Required | local |
 
 ## Changelog
+
+- 6 (2026-09-08): **GxP verdict model + capability/deployment scope (manifest + run/sidecar
+  schema 2.0).** Verdicts are **PASS / FAIL / NOT-APPLICABLE** only; PROCESS-CONTROL,
+  EXPLORATORY, PARTIAL and NO-EVIDENCE are gone — they were evidence methods standing in
+  for verdicts. A need with no applicable executed case FAILS ("no evidence"); an
+  unexecuted protocol or a skipped case FAILS its need; each need carries a `reason`.
+  `coverage:` on needs is retired (the runner warns). Every test case declares
+  `scope: capability` (skill-shipped fixtures, portable) or `scope: deployment` (this
+  instance's content) and `method: scripted | protocol | inspection`; a `deployment:`
+  declaration (connections + free-form content keys) drives NOT-APPLICABLE with
+  justification via `requires_deployment:`; `endpoint: live` + `connection:` resolves
+  against `deployment.connections`. Protocol/inspection cases point at a written protocol
+  (`templates/protocol.md`) and are judged from an execution record
+  (`templates/protocol-result.yml`, read from `protocol_results_dir`, pinned into the run
+  folder); no record → NOT-EXECUTED. Report §2 shows Verdict / Why / Strongest evidence /
+  cases with scope+method; §3 groups cases by scope and prints the deployment declaration;
+  §4 lists failing needs as findings to close and NOT-EXECUTED protocols as open items;
+  the non-determinism statement moves to a Limitations subsection. Sidecar carries
+  `deployment`, per-need `reason`, per-case `scope`/`method`/`protocol`/`execution_record`,
+  `summary.scopes`. Regression suite extended to 25 cases (deployment dependency
+  resolution, protocol records, binary verdicts, end-to-end red→green on a synthetic
+  manifest). Rationale: a GxP validation report has no third verdict; capability tests
+  make the validation portable while deployment tests stay the customer's own.
 
 - 5 (2026-09-08): **Needs are user stories composed from structured fields (manifest
   schema 1.2).** Each need carries `role`, `need` (the outcome the role can observe,

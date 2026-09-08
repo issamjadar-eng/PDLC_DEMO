@@ -1,8 +1,8 @@
 ---
 name: strategy
 description: "Scan task docs for strategy content tagged by domain and assemble into unified shared strategy documents — regulatory, commercial, architecture, development, testing, risk, post-market, operations; topic-first with per-component callouts"
-version: 20
-updated: 2026-06-15
+version: 21
+updated: 2026-09-08
 # v20: De-rendered the Domain Registry + init-briefs sentinel tables out of this SKILL.md. They rendered project-specific project.yml:strategy_domains[] data into a registry-shared skill file → permanent per-project sync drift. The /strategy actions already read project.yml:strategy_domains[] directly (scanner/assembler); the SKILL.md now documents the schema + points to project.yml (source) and the project-local docs/project/strategies/README.md (rendered roster). Paired with render-sentinels.py guard (refuses to write under .claude/skills/**) + the sentinel-blocks rule guardrail.
 # v19: Added Q-Sub Authoring Guardrails section — HARD RULE that authors must load current regulator Q-Sub guidance into context before drafting Q-Sub strategy content; codifies the agreement-seeking pattern and the patterns-to-avoid list per FDA Q-Submission Program guidance.
 # v18: Added Design Philosophy + Agent Contract sections making narrative-first explicit. Schema unchanged from v16 (the v17 metadata-field additions were reverted — see Design Philosophy for why).
@@ -116,6 +116,8 @@ If a draft Q-Sub question matches any of these patterns, the question must be re
 | `agents/scanner.md` | Self-contained subagent prompt for the `scan` action (Explore agent, read-only) |
 | `agents/assembler.md` | Self-contained subagent prompt for the `assemble` action (general-purpose agent, needs Write) |
 | `../shared/task-content-scanner.md` | Shared scanning algorithm (also used by future `/lessons` skill) |
+| `scripts/scan_tags.py` | Deterministic lint for `<!-- STRATEGY CONTENT -->` / `<!-- LESSONS LEARNED -->` block markers in task docs — reports tags the harvesters would silently skip (marker text, missing values, unknown domain vs `project.yml strategy_domains[]`, unclosed comment, prose on the tag line). Exit 0/1/2, `--json`. |
+| `tests/test_scan_tags.py` | Capability tests over `tests/fixtures/tags/` (well-formed + every malformed variant). `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/strategy/tests -q` |
 
 ## Tag Convention
 

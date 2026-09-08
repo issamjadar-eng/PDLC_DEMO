@@ -28,7 +28,7 @@ description: |
   Lifecycle: `draft → published → review-formal → frozen → released`. Enforces freeze gate via PreToolUse hook with in-chat consent.
 
   Other actions: `init`, `status`, `help`, `reindex`, `verify`.
-version: 0.14.1
+version: 0.14.2
 updated: 2026-09-08
 status: adopt-publish-probe-validated
 ---
@@ -124,6 +124,7 @@ Eleven live probes from task 120 validate the v0.6 architecture end-to-end (5-st
 | `templates/frontmatter_block.md` | Canonical state block for new controlled docs | Concrete (example file) |
 | `README.md` | Full design documentation (not loaded by Claude — for humans and future maintainers) | Complete |
 | `VERSION` | Skill version | `0.1.0` (scaffold) |
+| `tests/test_frozen_hook.py` | **Expected-FAIL evidence** for the frozen-document edit block (WUN-29): feeds `hooks/pre_tool_use_frozen.py` a PreToolUse payload for a `state: frozen` document and asserts a deny; fails while the hook is a stub. Marked `freeze_gate` — run alone with `-m freeze_gate`; exclude from the main suite with `-m "not freeze_gate"`. |
 
 ## Actions
 

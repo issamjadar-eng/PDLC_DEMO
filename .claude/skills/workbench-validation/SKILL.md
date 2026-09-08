@@ -1,7 +1,7 @@
 ---
 name: workbench-validation
 description: "MedTech-style tool validation of the AI workbench itself — the .claude/ toolchain (skills, agents, hooks, scripts, rules) used to author and manage design-control artifacts. Runs a declarative validation manifest (workbench user needs mapped to executable test cases over existing skill test suites, lints, and audits), records timestamped results JSON with a configuration baseline (git SHA, per-skill versions), and renders a single validation report + console sidecar for the project console's Settings → Workbench Validation sub-section. TRIGGER when the user wants to: validate the workbench / toolchain / skills ('are our skills validated', 'run the workbench validation', 'tool validation report', 'validate our .claude setup', 'is the toolchain fit for use'); refresh or view the validation report or its console view; add/modify workbench user needs (WUN-xx) or validation test cases; or edits files under docs/project/workbench-validation/ or the validation.yml manifest. Also trigger on ISO 13485 QMS-software-validation / CSA-style tool-assurance questions about the project's own tooling. NOT for validating the medical device itself (that's the DHF V&V) and NOT for structural project audits (/best-practices) or content gap analysis (/gap-analysis)."
-version: 5
+version: 6
 updated: 2026-09-08
 dependencies:
   skills:
@@ -18,7 +18,8 @@ controlled records require validation for intended use (ISO 13485 QMS-software
 validation posture; see the project's own tool-validation work instruction if one
 exists under `docs/internal/`). This skill provides the three visible components:
 
-1. **User needs** — a WUN-xx register authored in the project's manifest and plan.
+1. **User needs** — a WUN-xx register authored in the project's manifest and plan. Each
+   need's verdict is PASS / FAIL / NOT-APPLICABLE, with a stated reason.
    Each need is a **user story composed from structured fields**:
    _As a `role`, I need the workbench to `need`, so that `so_that`._ The outcome is
    what the role can observe, free of implementation detail (the role does not know
@@ -62,12 +63,29 @@ servers, reachability probes) and isolation (env vars stripped/set). The report
 renders it as a collapsed "Full environment record" in §1 and the console shows an
 expandable Environment panel — the verdict stays readable, the record stays complete.
 
-**Honesty model (load-bearing).** Deterministic components (hooks, scripts, lints,
-renderers) get scripted, repeatable test evidence. LLM-driven behavior is *not*
-repeatably testable: needs assured by human review + deterministic gates + audit trail
-are declared `coverage: process-control` (or `exploratory`) and reported as such —
-never as a scripted PASS. The configuration baseline (git SHA + model identifier) is
-recorded per run; a model change is a first-class revalidation trigger.
+**Verdict model (load-bearing, GxP-style).** Every user need gets **PASS, FAIL or
+NOT-APPLICABLE** — nothing else. A need with no applicable executed case **FAILS ("no
+evidence")**; an unexecuted protocol FAILS its need; a skipped case (missing binary)
+FAILS its need. The evidence **method** is an attribute of the test case, never a
+verdict: `scripted` (runner-executed, judged by exit code/pattern), `protocol` or
+`inspection` (operator-executed against a written protocol with acceptance criteria,
+judged from an execution record at `<protocol_results_dir>/<TC-ID>.result.yml`).
+Non-determinism of the assistant is handled by protocols — fixed challenge set, explicit
+acceptance thresholds, repeat runs under a pinned model — and stated as a limitation; it
+does not create a third verdict. The configuration baseline (git SHA + model identifier)
+is recorded per run; a model change is a first-class revalidation trigger and a protocol
+result is valid only for the model id in its execution record.
+
+**Capability vs deployment scope (load-bearing).** Every test case declares
+`scope: capability` — it ships with a skill and runs against the skill's own fixtures,
+portable to any project, proving what the tool can do — or `scope: deployment` — it runs
+the deployed workbench against this instance's own content (its QMS documents, taxonomy,
+submission packages, corpus, connections), the part a deployment authors for itself from
+the skill's guidance and templates. The manifest's `deployment:` block declares what the
+instance has; a deployment case whose `requires_deployment:` keys are declared absent is
+**NOT-APPLICABLE with that justification** (never a silent skip), and NOT-APPLICABLE never
+lowers a verdict. A customer QMS therefore reuses every capability case as-is and adds
+deployment cases for its own content.
 
 ## Supporting Files
 
@@ -76,7 +94,9 @@ recorded per run; a model change is a first-class revalidation trigger.
 | `scripts/run_validation.py` | Executes the project's `validation.yml` manifest; writes `results/<run-id>.json` + `latest.json` with config baseline. `--render` chains the renderer. Exit 1 on FAIL/ERROR (CI-friendly). |
 | `scripts/render_report.py` | Joins manifest + latest run → `validation-report.md` + console sidecar JSON (`schema_version: 1.0`). |
 | `templates/validation-plan.md` | Scaffold for the project's validation plan (intended-use classes, risk tiers, WUN register). |
-| `templates/validation.yml` | Scaffold for the project's manifest (user_needs + test_cases schema, documented inline). |
+| `templates/validation.yml` | Scaffold for the project's manifest (user_needs + test_cases schema, `deployment:` declaration, documented inline). |
+| `templates/protocol.md` | Scaffold for a written test protocol (method: protocol / inspection): challenge set, procedure, acceptance criteria, repeatability, execution-record pointer, sign-off. |
+| `templates/protocol-result.yml` | Execution-record schema for a protocol case — the runner reads `<protocol_results_dir>/<TC-ID>.result.yml` (verdict, executed, operator, model_id, git_sha, runs, evidence, deviations, sign-off). |
 | `tests/test_runner_renderer.py` | Regression suite for the runner + renderer (need-format lint, frontmatter parsing, story composition, NOT-APPLICABLE verdicts, strongest-evidence text, end-to-end synthetic manifest). `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/workbench-validation/tests -q` |
 | `README.md` | Design doc, Best Practices table, Changelog. |
 | `VERSION` | Skill version (mirrors frontmatter). |
@@ -93,6 +113,8 @@ All project-specific content lives in the project tree, never in this skill.
 | Validation manifest | `docs/project/workbench-validation/validation.yml` | Authored, declarative |
 | Run results | `tools/workbench-validation/results/<run-id>.json` (+ `latest.json`) — schema 1.1 carries `environment`, `warnings`, `connections`, per-case `endpoint` | Generated, append-only |
 | Per-case evidence logs | `tools/workbench-validation/results/<run-id>/<TC-ID>.log` | Generated — full execution transcripts, the evidence of record |
+| Written protocols | `docs/project/workbench-validation/protocols/<TC-ID>.md` | Authored from `templates/protocol.md` |
+| Protocol execution records | `tools/workbench-validation/protocols/<TC-ID>.result.yml` | Recorded by the operator per execution; pinned into the run folder |
 | Pinned test artifacts | `tools/workbench-validation/results/<run-id>/pinned/<TC-ID>/` + a pinned copy of `validation.yml` in the run folder | Generated — byte copies (sha256-manifested in the run JSON) of the exact test sources + case definitions this run executed, so each run stays reviewable after the tools evolve |
 | Validation report | `tools/workbench-validation/validation-report.md` | Generated — never hand-edit |
 | Console sidecar | `tools/workbench-validation/workbench-validation-index.json` | Generated — consumed by project-console Settings |
@@ -188,7 +210,10 @@ plan: docs/project/workbench-validation/validation-plan.md
 results_dir: tools/workbench-validation/results
 sidecar: tools/workbench-validation/workbench-validation-index.json
 report: {title: "...", output: tools/workbench-validation/validation-report.md}
-connections: {jira: none, confluence: none, browser: none}   # what THIS deployment has
+deployment:                        # what THIS instance has — drives NOT-APPLICABLE
+  connections: {jira: none, confluence: none, browser: none}
+  content: {qms_forms: true, taxonomy: false, submission_package: true, ...}   # free-form dotted keys
+protocol_results_dir: tools/workbench-validation/protocols
 known_anomalies: ["..."]           # accepted anomalies (owner + expected clearing run) → §4
 revalidation_triggers: ["..."]     # optional override of the default set
 user_needs:
@@ -198,9 +223,7 @@ user_needs:
     tier: T1                       # T1 high / T2 medium / T3 low
     need: "outcome the role can observe — follows 'I need the workbench to'"
     so_that: "purpose — required; the renderer composes the user story"
-    coverage: tests                # tests | process-control | exploratory
     implemented_by: "mechanism"    # traceability info only — not part of the need
-    process_controls: ["..."]      # required when coverage != tests
 test_cases:
   - id: TC-01
     title: "Plain-language: what is being checked, in everyday words"
@@ -211,8 +234,12 @@ test_cases:
                                    # case actually runs against; multiple allowed; skill
                                    # names resolve to the version exercised (uut_versions);
                                    # sentinel `all-skills` = workbench-wide sweep
+    scope: capability              # capability (skill fixtures, portable) | deployment (this instance)
+    method: scripted               # scripted | protocol | inspection
+    requires_deployment: [content.qms_forms]   # deployment cases — dotted keys into `deployment:`
     endpoint: none                 # none | mocked | live (required)
-    connection: jira               # live only — key into `connections:`
+    connection: jira               # live only — key into deployment.connections
+    protocol: docs/.../TC-xx.md    # protocol/inspection cases — result read from protocol_results_dir
     cmd: ["bash", "path/to/test.sh"]
     cwd: .                         # optional, relative to root
     timeout: 600                   # seconds, optional
@@ -227,10 +254,11 @@ test_cases:
 
 - **The report and sidecar are generated projections** — regenerate, never hand-edit.
   The plan and manifest are the authored sources of truth.
-- **Verdict semantics**: PASS / FAIL / PARTIAL (skips) / NO-EVIDENCE (tests-coverage
-  need with no mapped case — a manifest gap, fix the manifest) / NOT-APPLICABLE (every
-  mapped case is a `live` case for a connection declared `none`) / PROCESS-CONTROL /
-  EXPLORATORY. Overall verdict: FAIL > PARTIAL > PASS; NOT-APPLICABLE never lowers it.
+- **Verdict semantics**: need = PASS (every applicable case passed) / FAIL (any
+  applicable case FAIL, ERROR, SKIPPED or NOT-EXECUTED — or no case at all: "no evidence")
+  / NOT-APPLICABLE (every mapped case depends on something the deployment declares
+  absent). Overall: FAIL if any need FAILs, else PASS; NOT-APPLICABLE never lowers it.
+  Case statuses: PASS / FAIL / SKIPPED / NOT-APPLICABLE / NOT-EXECUTED / ERROR.
 - **Do not validate the device with this skill** — device V&V lives in the DHF. This
   skill validates the toolchain that produces those artifacts.
 - The console integration (Settings → Workbench Validation) is owned by the

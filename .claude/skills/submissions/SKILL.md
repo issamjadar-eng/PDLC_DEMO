@@ -6,8 +6,8 @@ description: |
   TRIGGER when the user wants to **scaffold, build, author, seed, generate, assemble, or render** a Q-Submission / pre-submission / 510(k) / PCCP / PMA **content package** — phrasings include: "scaffold the Q-Sub package", "set up the qsub documents", "scaffold the 510(k)", "create the FDA questions doc", "build the cover letter / device description / intended-use / substantial-equivalence / PCCP summary", "seed submission content", "assemble the composition manifest", "render the submission console view", "refresh the submission sidecars", "what's in the Q-Sub package", "is the qsub package ready to transmit". Also fire on any edit/write under `docs/project/submissions/<filing>/` content docs or `_provenance/`.
 
   Sibling boundaries — this skill owns submission **content** + its console sidecars. It is NOT `/tracker` (deliverable × phase readiness dashboard), NOT `/change-control` (publish to Confluence/Windchill), NOT `/medtech-docs` (DHF scaffolding), NOT `/dhf-manifest` (deliverable-coverage projection). When a fact is canonical elsewhere (regulatory-strategy.md D-REG-* blocks, the system SAD, project.yml), submission docs reference it — they do not redeclare it.
-version: 10
-updated: 2026-07-08
+version: 11
+updated: 2026-09-08
 ---
 
 # Submissions
@@ -127,6 +127,7 @@ defect, not compliance.
 
 | File | Purpose |
 |---|---|
+| `tests/test_package_gate.py` + `tests/fixtures/package/` | Capability regression suite for the transmit gates (`check_package_consistency.py`, `qsub_scope_lint.py`): a minimal synthetic filing package that passes, then mutated copies proving the gates BLOCK on attachment-numbering drift (S2), an unresolved `[VERIFY]` tag in a filed body (S7), and manifest/cover misalignment (C4). Hermetic (socket guard in `tests/conftest.py`). `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/submissions/tests -q` |
 | `scripts/render_sidecars.py` | Producer of the console JSON contract (see below). Stdlib only. |
 | `scripts/provenance_reconcile.py` | `provenance {check,stamp}` — source-drift pinning (git blob SHA) **and** claim↔primary-source grounding (`ungrounded-claim`). PyYAML for read; `pypdf` for PDF quote grounding. |
 | `references/claim-grounding.md` | Rule — a factual claim about an external primary source (predicate/cleared filing) must be grounded in that source with a verbatim `quote`, not paraphrased from a sibling summary while the source sits un-consulted. |

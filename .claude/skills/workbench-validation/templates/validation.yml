@@ -1,7 +1,7 @@
 # Workbench validation manifest — consumed by the workbench-validation skill.
 # Authored source of truth for user needs + test cases. The report and sidecar are
 # generated projections; edit here, then re-run `/workbench-validation validate`.
-schema_version: "1.2"
+schema_version: "2.0"
 
 # Stamped at the top of every generated report (demo projects: keep the demo banner).
 banner: "_Demo sample data — not for clinical use._"
@@ -15,15 +15,32 @@ report:
   title: "Workbench Validation Report — <MedTech Project>"
   output: tools/workbench-validation/validation-report.md
 
-# Evidence tiers: every test case declares `endpoint: none | mocked | live`.
-# `connections:` states what THIS deployment has per external system. A `live`
-# case whose `connection:` is `none` here is reported NOT-APPLICABLE (declared,
-# not a gap) and never lowers a verdict; a declared-present but unreachable
-# connection is a real SKIP/FAIL.
-connections:
-  jira: none          # or: configured  (base_url read from project.yml change_control.jira)
-  confluence: none
-  browser: none
+# Verdicts are PASS / FAIL / NOT-APPLICABLE only. A need with no applicable
+# executed case FAILS ("no evidence"). Method and scope live on the test case.
+#
+# Deployment declaration — what THIS instance has. `scope: deployment` cases
+# name their dependencies in `requires_deployment:` (dotted keys); a key
+# declared absent makes the case NOT-APPLICABLE with that justification.
+# `endpoint: live` cases resolve `connection:` against deployment.connections.
+deployment:
+  connections:
+    jira: none          # or: configured (base_url read from project.yml change_control.jira)
+    confluence: none
+    browser: none
+  content:
+    qms_forms: false    # FORM-* templates registered under docs/internal/source-md/
+    taxonomy: false     # .taxonomy.yml with governing_qms mappings
+    controlled_mirror: false
+    submission_package: false
+    commercial_corpus: false
+    knowledge_packs: false
+    jira_mirror: false
+    file_locator_index: false
+    task_docs: true
+
+# Protocol / inspection execution records: <protocol_results_dir>/<TC-ID>.result.yml
+# (schema: templates/protocol-result.yml). Absent record → NOT-EXECUTED (fails the need).
+protocol_results_dir: tools/workbench-validation/protocols
 
 # Triaged anomalies carried into the report's Known Anomalies section. Each
 # entry names an owner and the run by which it is expected to clear.
@@ -45,18 +62,14 @@ user_needs:
     tier: T1                # T1|T2|T3
     need: "<outcome the role can observe — follows 'I need the workbench to'>"
     so_that: "<purpose — why the role needs it>"
-    coverage: tests         # tests | process-control | exploratory
     implemented_by: "<mechanism — traceability only>"
   - id: WUN-02
     role: "<role, e.g. Reviewer / approver>"
     class: authoring
     tier: T1
-    need: "<LLM-assured outcome>"
+    need: "<outcome that is the assistant's judgment — tested by a protocol case>"
     so_that: "<purpose>"
-    coverage: process-control
     implemented_by: "<mechanism>"
-    process_controls:
-      - "<named control, e.g. mandatory human review + PR audit trail>"
 
 test_cases:
   - id: TC-01
@@ -67,10 +80,24 @@ test_cases:
     uut: [<skill-name>]     # unit(s) under test — component(s) the case runs against;
                             # multiple allowed; skill names get pinned to the version
                             # exercised; `all-skills` = workbench-wide sweep
+    scope: capability       # capability (skill fixtures, portable) | deployment (this instance)
+    method: scripted        # scripted | protocol | inspection
+    # requires_deployment: [content.qms_forms]   # deployment cases: dotted keys into `deployment:`
     endpoint: none          # none | mocked | live — REQUIRED. What the case touched:
                             # nothing external / a fake transport with canned payloads /
                             # a real endpoint (then also set `connection:`)
-    # connection: jira      # for endpoint: live — key into `connections:` above
+    # connection: jira      # for endpoint: live — key into deployment.connections
+  - id: TC-02
+    title: "<judgment need tested by protocol>"
+    description: "<what the protocol establishes>"
+    approach: "<challenge set + acceptance criteria, executed by an operator with the agent>"
+    wun: [WUN-02]
+    uut: [<skill-name>]
+    scope: deployment
+    method: protocol
+    endpoint: none
+    protocol: docs/project/workbench-validation/protocols/TC-02.md   # from templates/protocol.md
+    # result: <protocol_results_dir>/TC-02.result.yml — absent → NOT-EXECUTED
     cmd: ["bash", ".claude/skills/<skill>/tests/<test>.sh"]
     # cwd: .
     # timeout: 600

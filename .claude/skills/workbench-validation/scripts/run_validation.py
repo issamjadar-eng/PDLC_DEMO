@@ -18,11 +18,21 @@ Statuses:
   PASS    - exit 0 (and pass_pattern matched, if declared)
   FAIL    - nonzero exit, or fail_pattern matched, or pass_pattern absent
   SKIPPED - a binary listed in `requires` is not installed
-  NOT-APPLICABLE - an `endpoint: live` case whose `connection:` the manifest
-            declares as `none` for this deployment (never executed; reported
-            explicitly so a deliberately absent connection does not read as a
-            gap)
+  NOT-APPLICABLE - a case whose deployment dependency this instance declares
+            absent (`requires_deployment:` keys resolved against the manifest's
+            `deployment:` block, incl. `endpoint: live` + `connection:`); never
+            executed; reported with its justification so a deliberately absent
+            dependency does not read as a gap
+  NOT-EXECUTED - a `method: protocol|inspection` case with no execution record
+            yet (counts as FAIL for the need — untested is not passed)
   ERROR   - timeout or launcher exception
+
+Scope and method (schema 2.0): every case declares `scope: capability`
+(skill-shipped fixtures, portable to any project) or `scope: deployment`
+(this instance's content), and `method: scripted | protocol | inspection`.
+Protocol/inspection results are read from
+`<protocol_results_dir>/<TC-ID>.result.yml` (verdict, executed, operator,
+model_id, git_sha, evidence) and pinned into the run folder.
 
 Evidence tiers (D7): every case declares `endpoint: none | mocked | live` —
 whether it touched no external system, a fake transport with canned payloads,
@@ -37,7 +47,7 @@ versions incl. frontmatter/VERSION mismatches, hooks, agents, rules), runtime
 resolved path + version), connections (declared tiers, MCP servers configured,
 reachability probes), and isolation (env vars stripped/set).
 
-Exit code: 0 if no FAIL/ERROR cases, 1 otherwise (CI-gate friendly).
+Exit code: 0 if no FAIL/ERROR/NOT-EXECUTED cases, 1 otherwise (CI-gate friendly).
 
 Usage:
   python3 run_validation.py --root <repo_root> [--manifest <path>]
@@ -340,6 +350,9 @@ def _names(dirpath, suffixes):
 
 
 def environment_baseline(root, manifest=None, cases=None, model_id=None):
+    manifest = dict(manifest or {})
+    if manifest.get("deployment") and not manifest.get("connections"):
+        manifest["connections"] = (manifest["deployment"] or {}).get("connections") or {}
     """The canonical setup record (D8). Flat keys kept for older consumers
     (`git_sha_short`, `git_dirty`, `operator`, `skills`, `hooks_installed`,
     `model_id`, `python`, `platform`); the grouped keys carry the full
@@ -392,7 +405,61 @@ def environment_baseline(root, manifest=None, cases=None, model_id=None):
     return base
 
 
-def execute_case(case, root, connections=None):
+def _lookup(mapping, dotted):
+    cur = mapping
+    for part in str(dotted).split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return None, False
+        cur = cur[part]
+    return cur, True
+
+
+def _absent(value):
+    return value in (None, False, "none", "None", "false", "absent", 0, "")
+
+
+def deployment_block(manifest):
+    """The manifest's `deployment:` declaration (schema 2.0). A legacy
+    top-level `connections:` (schema 1.x) is folded in as
+    deployment.connections."""
+    dep = dict(manifest.get("deployment") or {})
+    if manifest.get("connections") and "connections" not in dep:
+        dep["connections"] = manifest["connections"]
+    return dep
+
+
+def not_applicable_reason(case, deployment):
+    """Justification string when a case's deployment dependency is declared
+    absent for this instance; None when the case applies."""
+    reasons = []
+    if case.get("endpoint") == "live" and case.get("connection"):
+        val, found = _lookup(deployment, f"connections.{case['connection']}")
+        if not found or _absent(val):
+            reasons.append(f"no live {case['connection']} connection in this deployment "
+                           f"(deployment.connections.{case['connection']}: "
+                           f"{val if found else 'undeclared'})")
+    for key in case.get("requires_deployment", []) or []:
+        val, found = _lookup(deployment, key)
+        if not found or _absent(val):
+            reasons.append(f"this deployment declares `{key}` "
+                           f"{'absent' if found else 'undeclared'} "
+                           f"(deployment.{key}: {val if found else 'undeclared'})")
+    return "; ".join(reasons) or None
+
+
+def load_protocol_result(case, root, protocol_results_dir):
+    """Execution record for a protocol/inspection case, or None."""
+    path = root / protocol_results_dir / f"{case.get('id')}.result.yml"
+    if not path.is_file():
+        return None, path
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception as exc:  # malformed record → surfaced, not hidden
+        return {"_error": f"unreadable execution record: {exc}"}, path
+    return data, path
+
+
+def execute_case(case, root, connections=None, deployment=None, protocol_results_dir=None):
     case_id = case.get("id", "TC-??")
     result = {
         "id": case_id,
@@ -402,6 +469,11 @@ def execute_case(case, root, connections=None):
         "uut_versions": {},
         "endpoint": case.get("endpoint") or "unspecified",
         "connection": case.get("connection"),
+        "scope": case.get("scope") or "unspecified",
+        "method": case.get("method") or ("scripted" if case.get("cmd") else "unspecified"),
+        "requires_deployment": case.get("requires_deployment", []) or [],
+        "protocol": case.get("protocol"),
+        "execution_record": None,
         "cmd": " ".join(case.get("cmd", [])),
         "status": "ERROR",
         "exit_code": None,
@@ -416,15 +488,36 @@ def execute_case(case, root, connections=None):
         result.update(status="ERROR",
                       reason=f"unknown endpoint tier {result['endpoint']!r} (expected none|mocked|live)")
         return result
-    if result["endpoint"] == "live":
-        conn = case.get("connection")
-        declared = (connections or {}).get(conn) if conn else None
-        if conn and declared in (None, "none", "None", False):
-            result.update(
-                status="NOT-APPLICABLE",
-                reason=f"no live {conn} connection in this deployment "
-                       f"(manifest connections.{conn}: {declared if declared is not None else 'undeclared'})")
+    dep = deployment if deployment is not None else {"connections": connections or {}}
+    na = not_applicable_reason(case, dep)
+    if na:
+        result.update(status="NOT-APPLICABLE", reason=na)
+        return result
+    if result["method"] in ("protocol", "inspection"):
+        record, path = load_protocol_result(case, root, protocol_results_dir or "tools/workbench-validation/protocols")
+        rel = str(path.relative_to(root)) if path.is_absolute() else str(path)
+        if record is None:
+            result.update(status="NOT-EXECUTED",
+                          reason=f"{result['method']} not executed — no execution record at {rel}")
             return result
+        if record.get("_error"):
+            result.update(status="ERROR", reason=record["_error"])
+            return result
+        verdict = str(record.get("verdict") or "").upper()
+        result["execution_record"] = {
+            "path": rel, "executed": record.get("executed"), "operator": record.get("operator"),
+            "model_id": record.get("model_id"), "git_sha": record.get("git_sha"),
+            "runs": record.get("runs"), "evidence": record.get("evidence", []),
+            "deviations": record.get("deviations", []), "signed_off_by": record.get("signed_off_by"),
+        }
+        result["_output_full"] = yaml.safe_dump(record, sort_keys=False, allow_unicode=True)
+        if verdict in ("PASS", "FAIL"):
+            result.update(status=verdict,
+                          reason=f"{result['method']} executed {record.get('executed', '?')} by "
+                                 f"{record.get('operator', '?')} → {verdict}")
+        else:
+            result.update(status="ERROR", reason=f"execution record has no PASS/FAIL verdict ({verdict or 'missing'})")
+        return result
     for binary in case.get("requires", []):
         if shutil.which(binary) is None:
             result.update(status="SKIPPED", reason=f"required binary not installed: {binary}")
@@ -547,8 +640,12 @@ def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via
         f"approach:    {case.get('approach', '—')}",
         f"UUT:         {uut_line}",
         f"user needs:  {', '.join(result.get('wun', [])) or '—'}",
+        f"scope:       {result.get('scope', 'unspecified')} · method: {result.get('method', 'unspecified')}"
+        + (f" · requires_deployment: {', '.join(result['requires_deployment'])}" if result.get("requires_deployment") else ""),
         f"endpoint:    {result.get('endpoint', 'unspecified')}"
         + (f" (connection: {result['connection']})" if result.get("connection") else ""),
+        f"protocol:    {result.get('protocol') or '—'}"
+        + (f" · record: {result['execution_record']['path']}" if result.get("execution_record") else ""),
         f"test source: {result.get('source') or '—'}"
         + (f" (pinned copy: {result['pinned']})" if result.get("pinned") else ""),
         f"command:     {result['cmd']}",
@@ -621,7 +718,9 @@ def main():
     # exact version they were exercised at (UUT = unit under test — the
     # workbench component(s) the case actually runs against).
     env_base = environment_baseline(root, manifest, cases, model_id=args.model_id)
-    connections = manifest.get("connections") or {}
+    deployment = deployment_block(manifest)
+    connections = deployment.get("connections") or {}
+    protocol_results_dir = manifest.get("protocol_results_dir", "tools/workbench-validation/protocols")
     warnings = []
     if env_base.get("git_dirty") and not args.only:
         warnings.append(
@@ -637,6 +736,22 @@ def main():
         warnings.append("need-format: " + w)
     for w in need_warnings:
         warnings.append("need-format: " + w)
+    if _schema_at_least(schema, "2.0"):
+        retired = [n.get("id") for n in manifest.get("user_needs", []) if n.get("coverage")]
+        if retired:
+            warnings.append("`coverage:` on needs is retired in schema 2.0 (verdicts are PASS/FAIL/NOT-APPLICABLE; "
+                            "method lives on the test case): " + ", ".join(retired))
+        for c in cases:
+            if c.get("scope") not in ("capability", "deployment"):
+                warnings.append(f"{c.get('id')}: missing/invalid `scope:` (capability|deployment)")
+            if c.get("method") not in ("scripted", "protocol", "inspection"):
+                warnings.append(f"{c.get('id')}: missing/invalid `method:` (scripted|protocol|inspection)")
+            if c.get("method") in ("protocol", "inspection") and not c.get("protocol"):
+                warnings.append(f"{c.get('id')}: `method: {c['method']}` needs a `protocol:` document path")
+        mapped = {w for c in manifest.get("test_cases", []) for w in c.get("wun", [])}
+        unmapped = [n.get("id") for n in manifest.get("user_needs", []) if n.get("id") not in mapped]
+        if unmapped:
+            warnings.append("needs with no test case (verdict will be FAIL — no evidence): " + ", ".join(unmapped))
     missing_tier = [c.get("id") for c in cases if not c.get("endpoint")]
     if missing_tier:
         warnings.append("cases without an `endpoint:` tier (none|mocked|live): " + ", ".join(missing_tier))
@@ -661,7 +776,15 @@ def main():
     results = []
     for case in cases:
         print(f"[{case.get('id')}] {case.get('title', '')} ...", flush=True)
-        res = execute_case(case, root, connections)
+        res = execute_case(case, root, connections, deployment, protocol_results_dir)
+        if res.get("execution_record"):
+            try:  # pin the execution record next to the evidence logs
+                src = root / res["execution_record"]["path"]
+                dest = run_dir / "pinned" / res["id"]
+                dest.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dest / src.name)
+            except OSError as exc:
+                print(f"  !! could not pin execution record for {res['id']}: {exc}", file=sys.stderr)
         res["uut_versions"] = {u: v for u in res["uut"]
                                if (v := uut_version(u)) is not None}
         res["source"] = detect_source(case, root)
@@ -683,7 +806,7 @@ def main():
     for res in results:
         counts[res["status"]] = counts.get(res["status"], 0) + 1
     run = {
-        "schema_version": "1.1",
+        "schema_version": "2.0",
         "run_id": run_id,
         "started": started,
         "finished": utc_now(),
@@ -694,6 +817,7 @@ def main():
         "partial": bool(args.only),
         "warnings": warnings,
         "connections": connections,
+        "deployment": deployment,
         "environment": env_base,
         "summary": counts,
         "cases": results,
@@ -707,6 +831,7 @@ def main():
     print(f"\n{run['run_id']}: {counts.get('PASS', 0)}/{total} PASS, "
           f"{counts.get('FAIL', 0)} FAIL, {counts.get('SKIPPED', 0)} SKIPPED, "
           f"{counts.get('NOT-APPLICABLE', 0)} NOT-APPLICABLE, "
+          f"{counts.get('NOT-EXECUTED', 0)} NOT-EXECUTED, "
           f"{counts.get('ERROR', 0)} ERROR -> {run_file}")
 
     if args.render:
@@ -714,7 +839,7 @@ def main():
         subprocess.run([sys.executable, str(render), "--root", str(root),
                         "--manifest", str(manifest_path.relative_to(root))], check=True)
 
-    sys.exit(1 if counts.get("FAIL", 0) or counts.get("ERROR", 0) else 0)
+    sys.exit(1 if counts.get("FAIL", 0) or counts.get("ERROR", 0) or counts.get("NOT-EXECUTED", 0) else 0)
 
 
 if __name__ == "__main__":

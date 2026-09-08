@@ -50,6 +50,13 @@ def pytest_configure(config: pytest.Config) -> None:
         "live: runs against a real endpoint; requires a configured connection, "
         "opt-in via `--live`",
     )
+    config.addinivalue_line(
+        "markers",
+        "freeze_gate: evidence for the frozen-document edit block (WUN-29); "
+        "EXPECTED TO FAIL while hooks/pre_tool_use_frozen.py is a stub — run "
+        "with `-m freeze_gate` as its own validation case and exclude it from "
+        "the main suite with `-m 'not freeze_gate'`",
+    )
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:

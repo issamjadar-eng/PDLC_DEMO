@@ -1,8 +1,8 @@
 ---
 name: usage-metrics
 description: "Cross-user Claude Code token-usage + cost telemetry for a team. TRIGGER when the user wants to measure, collect, aggregate, report, or project Claude Code token usage or spend across teammates — e.g. 'how many tokens are we using', 'what's our Claude usage/cost', 'build a usage dashboard', 'project our 30-day cost', 'set up usage tracking', 'who's using the most tokens', 'refresh the usage report', or wants a live token/context/cost **status line** ('show my context usage', 'add a status line with tokens and cost'). Collects each teammate's usage LOCALLY from their session transcripts, uses git as the aggregation bus (no shared server), renders a single self-contained HTML cost dashboard, and installs a team-shared status line. Actions: setup, collect, aggregate, report, status."
-version: 12
-updated: 2026-07-01
+version: 13
+updated: 2026-09-08
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -27,6 +27,7 @@ Measure Claude Code token usage and equivalent cost across a whole team, without
 | `statusline.sh` | Team-shared Claude Code status line — `[model] <bar> IN/SIZE ctx · ↑OUT resp · $cost`. `setup` symlinks it to `.claude/statusline.sh` + registers the `statusLine` block. Reads `context_window.*` + `cost.total_cost_usd` from stdin; jq-guarded; degrades gracefully on builds without `context_window.*`. |
 | `templates/usage_metrics.config.yml` | The `project.yml usage_metrics:` block `setup` appends |
 | `templates/pricing.json` | Seed rate card (USD/MTok per model) `setup` installs to `tools/usage-metrics/` |
+| `tests/test_aggregate.py` | Capability tests for `aggregate.py` on a synthetic two-teammate fixture: spend lands on the task in `by_task`, a pre-schema record rolls up `user_turns: null` (never 0), and aggregation is byte-idempotent. `collect.py` (needs a live transcript + activation ledger) is not faked. |
 
 ## Actions
 

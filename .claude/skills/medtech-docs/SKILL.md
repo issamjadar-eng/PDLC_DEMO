@@ -1,8 +1,8 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 35
-updated: 2026-06-15
+version: 36
+updated: 2026-09-08
 # v35: render-sentinels.py guardrail — refuses to write any file under `.claude/skills/**` (registry-tracked skill files must stay project-agnostic; rendering project.yml/folder-tree data into them caused permanent per-project sync drift). The sentinel-blocks rule gains a "never render project data into a registry-tracked skill file" guardrail section; templates render only after instantiation into the project copy, never in place. Paired with strategy v20 (de-rendered its Domain Registry + init-briefs tables).
 ---
 
@@ -51,6 +51,8 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `rules/ai-changelog.md` | `init` (Step 2c Check 7d) | Canonical source for `.claude/rules/ai-changelog.md` — log AI-assisted edits to a controlled markdown doc in a non-published `<!-- AI-CHANGELOG -->` metadata block (leading comment zone; never published downstream / stripped on DOCX/PDF export), and never name the AI model/tool/vendor in any document changelog or content — use "AI assistant(s)". Project-agnostic + vendor-neutral. `init` symlinks it into `.claude/rules/` and appends a one-line pointer to CLAUDE.md. |
 | `hooks/taxonomy-freshness.sh` | `init` (Step 2c Check 7c) | SessionStart hook that warns when any project `.taxonomy.yml` is past its `last_updated + review_cadence_days` threshold. Throttled to one notification per 24h per project via `.state/taxonomy-freshness-reminded` marker. Symlinked into `.claude/hooks/` and registered via `register-hook.sh` (SessionStart, no matcher). |
 | `claude-md-task-discipline.md` | `init` (Step 2c Check 8) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
+| `scripts/form_conformance_check.py` | on-demand; workbench validation | Deterministic checker behind `rules/doctype-governance.md`: does a controlled document carry the level-2 section skeleton of its governing QMS form? Resolves the form via `--form`, the nearest `.taxonomy.yml` `governing_qms.forms[]`, or the document's frontmatter `references[]` parent-template entry (through `source-md/qms-index.md`). Missing / reordered sections fail, extra sections warn (`--strict` fails). `--json`; exit 0/1/2. Capability fixtures + tests: `tests/fixtures/form-conformance/`, `tests/test_form_conformance.py`. |
+| `scripts/ai_changelog_check.py` | on-demand; workbench validation | Deterministic checker behind `rules/ai-changelog.md`: the `<!-- AI-CHANGELOG -->` block exists in the leading metadata zone with a `Date \| Task \| Summary` table and ≥1 row, never in the rendered body / a `<details>` block, and no AI model / tool / vendor product name appears in content (frontmatter hits warn; `--strict` fails). `--ai-authored-only` requires the block only where `conversion_method` names an AI method. `--json`; exit 0/1/2. Fixtures + tests: `tests/fixtures/ai-changelog/`, `tests/test_ai_changelog_check.py`. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -1035,6 +1037,28 @@ An **optional, on-demand documentation tier** for the **upstream engineering wor
 **Grounding posture (load-bearing):** advisor agents and Claude MAY ground on dev-spec as *upstream source* and must label it as engineering working material (not a controlled deliverable); the controlled record is what gets cited for any regulatory/DHF claim. This is distinct from a *deactivated* legacy tree, which must not be grounded on at all. Exclude neither from nor include dev-spec in controlled-evidence discovery (`/dhf-manifest`, trace-matrix) — it is source, not evidence.
 
 **Not in the default `init` scaffold** — created on-demand. When relocating engineering working material into dev-spec, `git mv` (preserve history), leave a redirect where consumers may still look, and re-point any links from controlled docs to the controlled record (not into dev-spec).
+
+## Governance checkers (deterministic evidence for the doctype-governance and ai-changelog rules)
+
+Two stdlib checkers turn the two authoring rules into pass/fail evidence a validation
+can cite. Both walk folders recursively (README.md, `formal/`, `images/`, `_scratch/`,
+`_work/` excluded), print a human summary or `--json`, and exit 0 (clean), 1 (findings),
+2 (usage error):
+
+```bash
+python3 ${CLAUDE_SKILL_DIR}/scripts/form_conformance_check.py --root . --json docs/project/dhfs
+python3 ${CLAUDE_SKILL_DIR}/scripts/ai_changelog_check.py   --root . --json docs/project/dhfs
+```
+
+*Form conformance* compares a document's ordered level-2 headings with its governing
+form's; missing or reordered sections fail, extra sections warn. A document with no
+governing form (no taxonomy mapping, no parent-template reference) is reported
+`no-form`, not failed — that absence is the doctype-governance rule's "unverified
+mapping" signal. *AI changelog* enforces block presence / placement and vendor
+neutrality; the YAML frontmatter is read as tool-managed conversion metadata, so a
+vendor name there warns rather than fails unless `--strict`. Both ship capability
+fixtures under `tests/fixtures/` so the checkers themselves are regression-tested in
+any project; a project's own controlled trees are the deployment run.
 
 ## Best Practices
 See [README.md](README.md) — consumed by `/best-practices` audit.

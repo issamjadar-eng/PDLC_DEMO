@@ -9,21 +9,20 @@ recent run results (results_dir/latest.json, or --run <file>) and derives:
   2. The console sidecar JSON consumed by the project console's
      Settings -> Workbench Validation sub-section.
 
-Per-need verdicts:
-  PASS            all mapped test cases passed
-  FAIL            any mapped test case failed or errored
-  PARTIAL         some mapped test cases were skipped (rest passed)
-  NO-EVIDENCE     coverage declared `tests` but no case maps to the need
-  PROCESS-CONTROL need is assured by named process controls, not scripts
-  EXPLORATORY     need is assured by documented exploratory/human review
-  NOT-APPLICABLE  every mapped case is a live-endpoint case for a connection
-                  this deployment declares `none` (nothing to execute here)
+Per-need verdicts (schema 2.0 — GxP-style, pass or fail only):
+  PASS            every applicable mapped case passed
+  FAIL            any applicable mapped case failed, errored, was skipped or
+                  was not executed — or the need has no applicable case at
+                  all ("no evidence"); the reason is stated beside the verdict
+  NOT-APPLICABLE  every mapped case depends on something this deployment
+                  declares absent (nothing to execute here, by declaration)
 
-NOT-APPLICABLE cases never drag a need or the overall verdict down: a
-deliberately absent connection is a declared fact, not a gap. Each need also
-carries a plain-language "strongest evidence" line (e.g. "mock-verified; live
-not applicable in this deployment") so a reader can tell mock-verified from
-live-verified.
+The evidence METHOD (scripted / protocol / inspection) and SCOPE (capability
+fixtures shipped with the skill vs this deployment's content) are attributes of
+the test case, never verdicts. NOT-APPLICABLE never lowers a verdict: a
+declared absence is a fact about the instance, not a gap. Non-determinism of
+the assistant is handled by protocols with acceptance criteria under a pinned
+model, and stated as a limitation — it does not create a third verdict.
 
 Usage:
   python3 render_report.py --root <repo_root> [--manifest <path>] [--run <results-json>]
@@ -43,14 +42,15 @@ except ImportError:
 DEFAULT_MANIFEST = "docs/project/workbench-validation/validation.yml"
 
 LLM_LIMITATION = (
-    "LLM-driven skill behavior (content generation, judgment, advisory output) is "
-    "**not repeatably testable** and is deliberately excluded from scripted pass/fail "
-    "claims in this report. Those needs are assured through process controls — "
-    "mandatory human review before content enters the controlled record, deterministic "
-    "gates (hooks, lints, renderers) wrapped around the non-deterministic core, "
-    "grounding rules, and the git/PR audit trail — and are labeled PROCESS-CONTROL or "
-    "EXPLORATORY, never PASS. A change of the underlying model is a first-class "
-    "revalidation trigger because it changes tool behavior with zero repository diff."
+    "Where a need's outcome is the assistant's judgment (content generation, "
+    "citation verification, grounding), the behavior is not deterministic. This report "
+    "does not create a third verdict for it: such needs are tested by **protocol** — a "
+    "fixed challenge set with known expected outcomes, explicit acceptance criteria and "
+    "repeat runs under a pinned model — and pass or fail like any other. Deterministic "
+    "gates (hooks, lints, renderers) around the non-deterministic core are tested as "
+    "scripted capability cases. A change of the underlying model is a first-class "
+    "revalidation trigger because it changes tool behavior with zero repository diff; "
+    "a protocol result is valid only for the model id recorded in its execution record."
 )
 
 DEFAULT_REVALIDATION_TRIGGERS = [
@@ -70,16 +70,31 @@ def need_verdict(need, case_index):
         return "EXPLORATORY"
     mapped = [case_index[cid] for cid in need.get("_tests", []) if cid in case_index]
     if not mapped:
-        return "NO-EVIDENCE"
+        return "FAIL"
     applicable = [c for c in mapped if c["status"] != "NOT-APPLICABLE"]
     if not applicable:
         return "NOT-APPLICABLE"
-    statuses = {c["status"] for c in applicable}
-    if statuses & {"FAIL", "ERROR"}:
-        return "FAIL"
-    if "SKIPPED" in statuses:
-        return "PARTIAL"
-    return "PASS"
+    if all(c["status"] == "PASS" for c in applicable):
+        return "PASS"
+    return "FAIL"
+
+
+def need_reason(need, case_index):
+    """Why the verdict is what it is — one line a reviewer can act on."""
+    mapped = [case_index[cid] for cid in need.get("_tests", []) if cid in case_index]
+    if not mapped:
+        return "no evidence — no test case maps to this need"
+    applicable = [c for c in mapped if c["status"] != "NOT-APPLICABLE"]
+    if not applicable:
+        return "not applicable in this deployment: " + "; ".join(
+            f"{c['id']} — {c.get('reason')}" for c in mapped)
+    bad = [c for c in applicable if c["status"] != "PASS"]
+    if not bad:
+        na = [c for c in mapped if c["status"] == "NOT-APPLICABLE"]
+        note = f"; {len(na)} case(s) not applicable here" if na else ""
+        return f"all {len(applicable)} applicable case(s) passed{note}"
+    return "; ".join(f"{c['id']} {c['status']}" + (f" ({c.get('reason')})" if c.get("reason") else "")
+                     for c in bad)
 
 
 TIER_RANK = {"live": 3, "mocked": 2, "none": 1, "unspecified": 0}
@@ -90,11 +105,6 @@ TIER_WORD = {"live": "live-verified", "mocked": "mock-verified",
 def strongest_evidence(need, case_index):
     """Plain-language statement of the best evidence tier behind a need's
     verdict, and what was not exercised — the D7 honesty line."""
-    coverage = need.get("coverage", "tests")
-    if coverage == "process-control":
-        return "assured by process controls (no scripted evidence claimed)"
-    if coverage == "exploratory":
-        return "assured by documented exploratory / human review (no scripted evidence claimed)"
     mapped = [case_index[cid] for cid in need.get("_tests", []) if cid in case_index]
     if not mapped:
         return "no mapped test case"
@@ -104,7 +114,9 @@ def strongest_evidence(need, case_index):
                key=lambda t: TIER_RANK.get(t, 0), default=None)
     parts = []
     if best:
-        parts.append(TIER_WORD.get(best, best))
+        scopes = sorted({c.get("scope", "?") for c in passed})
+        methods = sorted({c.get("method", "?") for c in passed})
+        parts.append(f"{TIER_WORD.get(best, best)} ({'/'.join(scopes)} scope, {'/'.join(methods)})")
     else:
         parts.append("no passing evidence")
     if na:
@@ -134,11 +146,7 @@ def need_statement(need):
 
 def overall_verdict(needs):
     verdicts = {n["_verdict"] for n in needs}
-    if "FAIL" in verdicts:
-        return "FAIL"
-    if verdicts & {"PARTIAL", "NO-EVIDENCE"}:
-        return "PARTIAL"
-    return "PASS"
+    return "FAIL" if "FAIL" in verdicts else "PASS"
 
 
 def md_escape(text):
@@ -362,24 +370,51 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
             f"implements it. The table joins each need to its assurance evidence from "
             f"this run.")
         add("")
-    add("| ID | Need (user story) | Tier | Coverage | Verdict | Strongest evidence | Evidence |")
+    add("| ID | Need (user story) | Tier | Verdict | Why | Strongest evidence | Test cases |")
     add("|---|---|---|---|---|---|---|")
     for need in needs:
-        evidence = ", ".join(f"`{tc}`" for tc in need.get("_tests", [])) or (
-            "; ".join(need.get("process_controls", [])) or "—")
+        cases = []
+        for tc in need.get("_tests", []):
+            c = case_index.get(tc) or {}
+            cases.append(f"`{tc}` ({c.get('scope', '?')}/{c.get('method', '?')})")
         add(f"| {need['id']} "
             f"| {md_escape(need_statement(need))} | {need.get('tier', '?')} "
-            f"| {need.get('coverage', 'tests')} "
-            f"| **{need['_verdict']}** | {md_escape(need.get('_strongest', ''))} | {md_escape(evidence)} |")
+            f"| **{need['_verdict']}** | {md_escape(need.get('_reason', ''))} "
+            f"| {md_escape(need.get('_strongest', ''))} | {md_escape(', '.join(cases) or '—')} |")
     add("")
 
     add("## 3. Test cases, results & evidence")
     add("")
     add(f"Summary: **{counts.get('PASS', 0)} PASS / {counts.get('FAIL', 0)} FAIL / "
-        f"{counts.get('SKIPPED', 0)} SKIPPED / {counts.get('NOT-APPLICABLE', 0)} NOT-APPLICABLE / "
-        f"{counts.get('ERROR', 0)} ERROR** "
+        f"{counts.get('SKIPPED', 0)} SKIPPED / {counts.get('NOT-EXECUTED', 0)} NOT-EXECUTED / "
+        f"{counts.get('NOT-APPLICABLE', 0)} NOT-APPLICABLE / {counts.get('ERROR', 0)} ERROR** "
         f"across {len(run.get('cases', []))} cases.")
     add("")
+    add("**Scope.** *Capability* cases ship with a skill and run against the skill's own "
+        "fixtures — they are portable and prove what the tool can do anywhere. *Deployment* "
+        "cases run this deployed workbench against this instance's own content (its QMS "
+        "documents, taxonomy, submission packages, corpus, connections) — they are the part a "
+        "deployment authors for itself from the skill's guidance. A deployment case whose "
+        "dependency this instance declares absent is **NOT-APPLICABLE** with its justification.")
+    add("")
+    add("**Method.** *scripted* — executed by the runner, judged by exit code/pattern; "
+        "*protocol* / *inspection* — executed by an operator against a written protocol with "
+        "acceptance criteria, judged from its execution record; a protocol with no record yet is "
+        "**NOT-EXECUTED**, which fails its need (untested is not passed).")
+    add("")
+    dep = run.get("deployment") or {}
+    if dep:
+        add("**Deployment declaration** — what this instance has (drives NOT-APPLICABLE):")
+        add("")
+        add("| Dependency | Declared |")
+        add("|---|---|")
+        for group, vals in sorted(dep.items()):
+            if isinstance(vals, dict):
+                for k, v in sorted(vals.items()):
+                    add(f"| `{group}.{k}` | {v} |")
+            else:
+                add(f"| `{group}` | {vals} |")
+        add("")
     tiers = {}
     for c in run.get("cases", []):
         tiers[c.get("endpoint", "unspecified")] = tiers.get(c.get("endpoint", "unspecified"), 0) + 1
@@ -399,21 +434,33 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
         "rule, and the complete captured output — written per run under "
         f"`{manifest.get('results_dir')}/{run.get('run_id')}/`.")
     add("")
-    add("| ID | Test case | UUT (version exercised) | Needs | Endpoint | Status | Duration | Evidence log | Detail |")
-    add("|---|---|---|---|---|---|---|---|---|")
-    for case in run.get("cases", []):
-        detail = case.get("reason") or ""
-        log = f"[`{case['id']}.log`]({_report_rel_link(case.get('log'), manifest)})" \
-            if case.get("log") else "—"
-        versions = case.get("uut_versions") or {}
-        uut = ", ".join(f"`{u}@{versions[u]}`" if u in versions else f"`{u}`"
-                        for u in case.get("uut", [])) or "—"
-        ep = case.get("endpoint", "unspecified")
-        ep = f"{ep} ({case['connection']})" if case.get("connection") else ep
-        add(f"| {case['id']} | {md_escape(case['title'])} | {uut} | "
-            f"{', '.join(case.get('wun', [])) or '—'} | `{ep}` | **{case['status']}** "
-            f"| {case.get('duration_s', '?')}s | {log} | {md_escape(detail) or '—'} |")
-    add("")
+    for scope_name, scope_label in (("capability", "Capability tests — portable, skill-shipped fixtures"),
+                                    ("deployment", "Deployment tests — this instance's content"),
+                                    ("unspecified", "Cases without a declared scope")):
+        group = [c for c in run.get("cases", []) if c.get("scope", "unspecified") == scope_name]
+        if not group:
+            continue
+        add(f"#### {scope_label}")
+        add("")
+        add("| ID | Test case | UUT (version exercised) | Needs | Method | Endpoint | Status | Duration | Evidence | Detail |")
+        add("|---|---|---|---|---|---|---|---|---|---|")
+        for case in group:
+            detail = case.get("reason") or ""
+            if case.get("execution_record"):
+                log = f"[record]({_report_rel_link(case['execution_record']['path'], manifest)})"
+            elif case.get("log"):
+                log = f"[`{case['id']}.log`]({_report_rel_link(case.get('log'), manifest)})"
+            else:
+                log = "—"
+            versions = case.get("uut_versions") or {}
+            uut = ", ".join(f"`{u}@{versions[u]}`" if u in versions else f"`{u}`"
+                            for u in case.get("uut", [])) or "—"
+            ep = case.get("endpoint", "unspecified")
+            ep = f"{ep} ({case['connection']})" if case.get("connection") else ep
+            add(f"| {case['id']} | {md_escape(case['title'])} | {uut} | "
+                f"{', '.join(case.get('wun', [])) or '—'} | {case.get('method', '?')} | `{ep}` | **{case['status']}** "
+                f"| {case.get('duration_s', '?')}s | {log} | {md_escape(detail) or '—'} |")
+        add("")
 
     add("### What each test case checks (for reviewers)")
     add("")
@@ -438,8 +485,16 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
             add(f"_Pass rule:_ {meta['judged_by']}.")
         add("")
 
-    add("## 4. Known anomalies & limitations")
+    add("## 4. Findings, open items & known anomalies")
     add("")
+    failing_needs = [n for n in needs if n["_verdict"] == "FAIL"]
+    if failing_needs:
+        add("**Needs failing in this run** (each is a finding to close — build the missing "
+            "check, execute the protocol, or fix the tool — never a label to apply):")
+        add("")
+        for n in failing_needs:
+            add(f"- **{n['id']} FAIL** — {md_escape(n.get('_reason', ''))}")
+        add("")
     anomalies = []
     for case in run.get("cases", []):
         if case["status"] in ("FAIL", "ERROR"):
@@ -447,6 +502,9 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
                              f"{case.get('reason') or 'see run JSON output_tail'}")
         elif case["status"] == "SKIPPED":
             anomalies.append(f"**{case['id']} SKIPPED** — {case['title']}: {case.get('reason')}")
+        elif case["status"] == "NOT-EXECUTED":
+            anomalies.append(f"**{case['id']} NOT-EXECUTED** — {case['title']}: {case.get('reason')} "
+                             f"(protocol: `{case.get('protocol')}`)")
     na = [c for c in run.get("cases", []) if c["status"] == "NOT-APPLICABLE"]
     if na:
         anomalies.append("**Not applicable in this deployment** (declared, not gaps): "
@@ -459,26 +517,24 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
     else:
         add("- None observed in this run.")
     add("")
-    add(f"**LLM non-determinism.** {LLM_LIMITATION}")
+    add("### Limitations")
+    add("")
+    add(f"**Assistant non-determinism.** {LLM_LIMITATION}")
     add("")
 
     add("## 5. Conclusion")
     add("")
     if verdict == "PASS":
-        add("All user needs with executable evidence passed their mapped test cases; "
-            "process-control and exploratory needs are assured as described in the plan. "
+        add("Every applicable user need passed its mapped test cases (needs whose dependencies "
+            "this deployment declares absent are recorded NOT-APPLICABLE with justification). "
             "This run **would support a fitness-for-intended-use determination** for the "
             "workbench configuration baselined in §1, within the intended uses and "
             "limitations stated in the validation plan.")
-    elif verdict == "PARTIAL":
-        add("Executable evidence is incomplete (skipped cases or needs without mapped "
-            "evidence). This run **would support only a qualified fitness-for-use "
-            "determination**; close the gaps listed in §4 before relying on the "
-            "uncovered needs.")
     else:
-        add("One or more test cases failed. This run **does not support a "
-            "fitness-for-use determination** for the affected needs; resolve the "
-            "anomalies in §4 and re-run.")
+        add("One or more user needs FAIL — a mapped case failed, was not executed, or no "
+            "case exists for the need. This run **does not support a fitness-for-use "
+            "determination** for the affected needs; close each finding in §4 (build the "
+            "check, execute the protocol, or fix the tool) and re-run.")
     note = manifest.get("conclusion_note")
     if note:
         add("")
@@ -500,11 +556,12 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
     for need in needs:
         key = need["_verdict"].lower().replace("-", "_")
         need_counts[key] = need_counts.get(key, 0) + 1
-    tiers = {}
+    tiers, scopes = {}, {}
     for c in run.get("cases", []):
         tiers[c.get("endpoint", "unspecified")] = tiers.get(c.get("endpoint", "unspecified"), 0) + 1
+        scopes[c.get("scope", "unspecified")] = scopes.get(c.get("scope", "unspecified"), 0) + 1
     return {
-        "schema_version": "1.2",
+        "schema_version": "2.0",
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "title": manifest.get("report", {}).get("title", "Workbench Validation"),
         "banner": manifest.get("banner"),
@@ -536,20 +593,21 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
         "environment": env,
         "warnings": run.get("warnings", []),
         "connections": run.get("connections") or env.get("connections", {}).get("declared", {}),
+        "deployment": run.get("deployment") or {},
         "summary": {
             "verdict": verdict,
             "needs": {"total": len(needs), **need_counts},
             "tests": {"total": len(run.get("cases", [])), **run.get("summary", {})},
             "tiers": tiers,
+            "scopes": scopes,
         },
         "needs": [
             {
                 "id": n["id"], "role": n.get("role"), "tier": n.get("tier"),
                 "class": n.get("class"), "need": n.get("need"),
                 "so_that": n.get("so_that"), "statement": need_statement(n),
-                "coverage": n.get("coverage", "tests"),
                 "implemented_by": n.get("implemented_by"),
-                "verdict": n["_verdict"], "tests": n.get("_tests", []),
+                "verdict": n["_verdict"], "reason": n.get("_reason"), "tests": n.get("_tests", []),
                 "strongest_evidence": n.get("_strongest"),
                 "process_controls": n.get("process_controls", []),
             }
@@ -562,6 +620,9 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
                 "status": c["status"], "duration_s": c.get("duration_s"),
                 "endpoint": c.get("endpoint", "unspecified"),
                 "connection": c.get("connection"),
+                "scope": c.get("scope", "unspecified"), "method": c.get("method", "unspecified"),
+                "requires_deployment": c.get("requires_deployment", []),
+                "protocol": c.get("protocol"), "execution_record": c.get("execution_record"),
                 "reason": c.get("reason"), "log": c.get("log"),
                 "cmd": c.get("cmd"),
                 "description": case_meta.get(c["id"], {}).get("description"),
@@ -605,6 +666,7 @@ def main():
         need["_tests"] = [c["id"] for c in manifest.get("test_cases", [])
                           if need["id"] in c.get("wun", [])]
         need["_verdict"] = need_verdict(need, case_index)
+        need["_reason"] = need_reason(need, case_index)
         need["_strongest"] = strongest_evidence(need, case_index)
     verdict = overall_verdict(needs)
 

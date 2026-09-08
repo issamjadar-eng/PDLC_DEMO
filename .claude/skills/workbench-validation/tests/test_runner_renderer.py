@@ -83,6 +83,46 @@ def test_execute_case_runs_live_when_connection_declared(tmp_path):
     assert res["status"] == "PASS"
 
 
+def test_deployment_dependency_absent_is_not_applicable_with_justification(tmp_path):
+    dep = {"content": {"qms_forms": False, "taxonomy": True}}
+    case = {"id": "TC-X", "scope": "deployment", "method": "scripted", "endpoint": "none",
+            "requires_deployment": ["content.qms_forms"], "cmd": ["false"]}
+    res = run.execute_case(case, tmp_path, deployment=dep)
+    assert res["status"] == "NOT-APPLICABLE" and "content.qms_forms" in res["reason"]
+    case["requires_deployment"] = ["content.taxonomy"]
+    case["cmd"] = ["true"]
+    assert run.execute_case(case, tmp_path, deployment=dep)["status"] == "PASS"
+    case["requires_deployment"] = ["content.undeclared_thing"]
+    res = run.execute_case(case, tmp_path, deployment=dep)
+    assert res["status"] == "NOT-APPLICABLE" and "undeclared" in res["reason"]
+
+
+def test_protocol_without_record_is_not_executed(tmp_path):
+    case = {"id": "TC-P", "scope": "deployment", "method": "protocol", "endpoint": "none",
+            "protocol": "docs/p.md"}
+    res = run.execute_case(case, tmp_path, deployment={}, protocol_results_dir="recs")
+    assert res["status"] == "NOT-EXECUTED" and "recs/TC-P.result.yml" in res["reason"]
+
+
+def test_protocol_record_drives_verdict(tmp_path):
+    import yaml
+    (tmp_path / "recs").mkdir()
+    (tmp_path / "recs" / "TC-P.result.yml").write_text(yaml.safe_dump({
+        "verdict": "FAIL", "executed": "2026-09-08", "operator": "qe", "model_id": "m-1",
+        "git_sha": "abc", "runs": [{"run": 1, "outcome": "2 of 12 wrong"}], "evidence": ["x.log"]}))
+    case = {"id": "TC-P", "scope": "deployment", "method": "protocol", "endpoint": "none", "protocol": "docs/p.md"}
+    res = run.execute_case(case, tmp_path, deployment={}, protocol_results_dir="recs")
+    assert res["status"] == "FAIL" and res["execution_record"]["operator"] == "qe"
+    (tmp_path / "recs" / "TC-P.result.yml").write_text("verdict: maybe\n")
+    assert run.execute_case(case, tmp_path, deployment={}, protocol_results_dir="recs")["status"] == "ERROR"
+
+
+def test_deployment_block_folds_legacy_connections():
+    assert run.deployment_block({"connections": {"jira": "none"}}) == {"connections": {"jira": "none"}}
+    assert run.deployment_block({"deployment": {"content": {"a": True}}, "connections": {"jira": "x"}}) == \
+        {"content": {"a": True}, "connections": {"jira": "x"}}
+
+
 def test_execute_case_rejects_unknown_tier(tmp_path):
     res = run.execute_case({"id": "TC-X", "endpoint": "fake", "cmd": ["true"]}, tmp_path)
     assert res["status"] == "ERROR" and "endpoint tier" in res["reason"]
@@ -116,28 +156,35 @@ def _cases(**statuses):
 
 def test_need_verdict_not_applicable_never_lowers_verdict():
     idx = _cases(A=("PASS", "mocked", None), B=("NOT-APPLICABLE", "live", "jira"))
-    need = {"coverage": "tests", "_tests": ["A", "B"]}
+    for c in idx.values():
+        c.setdefault("scope", "capability"); c.setdefault("method", "scripted")
+    need = {"_tests": ["A", "B"]}
     assert render.need_verdict(need, idx) == "PASS"
-    assert render.strongest_evidence(need, idx) == "mock-verified; live jira not applicable in this deployment"
+    assert render.strongest_evidence(need, idx) == \
+        "mock-verified (capability scope, scripted); live jira not applicable in this deployment"
+    assert render.need_reason(need, idx) == "all 1 applicable case(s) passed; 1 case(s) not applicable here"
 
 
 def test_need_verdict_all_not_applicable():
     idx = _cases(B=("NOT-APPLICABLE", "live", "jira"))
-    assert render.need_verdict({"coverage": "tests", "_tests": ["B"]}, idx) == "NOT-APPLICABLE"
+    assert render.need_verdict({"_tests": ["B"]}, idx) == "NOT-APPLICABLE"
+    assert render.need_reason({"_tests": ["B"]}, idx).startswith("not applicable in this deployment")
 
 
-def test_need_verdict_fail_partial_no_evidence():
-    idx = _cases(A=("PASS", "none", None), B=("FAIL", "none", None), C=("SKIPPED", "none", None))
-    assert render.need_verdict({"coverage": "tests", "_tests": ["A", "B"]}, idx) == "FAIL"
-    assert render.need_verdict({"coverage": "tests", "_tests": ["A", "C"]}, idx) == "PARTIAL"
-    assert render.need_verdict({"coverage": "tests", "_tests": []}, idx) == "NO-EVIDENCE"
-    assert render.need_verdict({"coverage": "process-control"}, idx) == "PROCESS-CONTROL"
+def test_need_verdict_is_pass_or_fail_only():
+    idx = _cases(A=("PASS", "none", None), B=("FAIL", "none", None), C=("SKIPPED", "none", None),
+                 D=("NOT-EXECUTED", "none", None))
+    assert render.need_verdict({"_tests": ["A", "B"]}, idx) == "FAIL"
+    assert render.need_verdict({"_tests": ["A", "C"]}, idx) == "FAIL"      # skipped = not passed
+    assert render.need_verdict({"_tests": ["A", "D"]}, idx) == "FAIL"      # unexecuted protocol
+    assert render.need_verdict({"_tests": []}, idx) == "FAIL"              # no evidence
+    assert render.need_reason({"_tests": []}, idx).startswith("no evidence")
+    assert "D NOT-EXECUTED" in render.need_reason({"_tests": ["A", "D"]}, idx)
 
 
-def test_overall_verdict_ignores_not_applicable():
-    needs = [{"_verdict": "PASS"}, {"_verdict": "NOT-APPLICABLE"}, {"_verdict": "PROCESS-CONTROL"}]
+def test_overall_verdict_is_binary_and_ignores_not_applicable():
+    needs = [{"_verdict": "PASS"}, {"_verdict": "NOT-APPLICABLE"}]
     assert render.overall_verdict(needs) == "PASS"
-    assert render.overall_verdict(needs + [{"_verdict": "PARTIAL"}]) == "PARTIAL"
     assert render.overall_verdict(needs + [{"_verdict": "FAIL"}]) == "FAIL"
 
 
@@ -150,19 +197,27 @@ def test_end_to_end_run_and_render(tmp_path):
     (root / ".claude" / "skills" / "demo" / "SKILL.md").write_text("---\nname: demo\nversion: 3\n---\n")
     (root / "docs").mkdir()
     manifest = {
-        "schema_version": "1.2", "banner": "_demo_",
+        "schema_version": "2.0", "banner": "_demo_",
         "plan": "docs/plan.md", "results_dir": "out/results", "sidecar": "out/index.json",
         "report": {"title": "T", "output": "out/report.md"},
-        "connections": {"jira": "none"},
+        "protocol_results_dir": "out/protocols",
+        "deployment": {"connections": {"jira": "none"}, "content": {"qms_forms": False}},
         "user_needs": [
             {"id": "WUN-01", "role": "QE", "class": "gates", "tier": "T1",
-             "need": "do x", "so_that": "y", "coverage": "tests", "implemented_by": "demo"},
+             "need": "do x", "so_that": "y", "implemented_by": "demo"},
+            {"id": "WUN-02", "role": "QE", "class": "gates", "tier": "T1",
+             "need": "judge z", "so_that": "w", "implemented_by": "demo"},
         ],
         "test_cases": [
             {"id": "TC-01", "title": "ok", "wun": ["WUN-01"], "uut": ["demo"], "endpoint": "none",
-             "cmd": ["true"]},
+             "scope": "capability", "method": "scripted", "cmd": ["true"]},
             {"id": "TC-02", "title": "live", "wun": ["WUN-01"], "uut": ["demo"], "endpoint": "live",
-             "connection": "jira", "cmd": ["false"]},
+             "scope": "deployment", "method": "scripted", "connection": "jira", "cmd": ["false"]},
+            {"id": "TC-03", "title": "forms", "wun": ["WUN-01"], "uut": ["demo"], "endpoint": "none",
+             "scope": "deployment", "method": "scripted", "requires_deployment": ["content.qms_forms"],
+             "cmd": ["false"]},
+            {"id": "TC-04", "title": "proto", "wun": ["WUN-02"], "uut": ["demo"], "endpoint": "none",
+             "scope": "deployment", "method": "protocol", "protocol": "docs/p.md"},
         ],
     }
     import yaml
@@ -170,18 +225,36 @@ def test_end_to_end_run_and_render(tmp_path):
     proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "run_validation.py"), "--root", str(root),
                            "--manifest", "docs/validation.yml", "--render", "--model-id", "m-1"],
                           capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
+    # unexecuted protocol → exit 1 (a need FAILs); everything else recorded
+    assert proc.returncode == 1, proc.stdout + proc.stderr
     data = json.loads((root / "out" / "results" / "latest.json").read_text())
-    assert data["schema_version"] == "1.1"
-    assert data["summary"] == {"PASS": 1, "NOT-APPLICABLE": 1}
+    assert data["schema_version"] == "2.0"
+    assert data["summary"] == {"PASS": 1, "NOT-APPLICABLE": 2, "NOT-EXECUTED": 1}
     assert data["environment"]["model_id"] == "m-1" and data["environment"]["skills"]["demo"]["version"] == "3"
-    assert "tooling" in data["environment"] and "connections" in data["environment"]
+    assert "tooling" in data["environment"] and data["deployment"]["content"]["qms_forms"] is False
+    side = json.loads((root / "out" / "index.json").read_text())
+    assert side["summary"]["verdict"] == "FAIL"
+    by_id = {n["id"]: n for n in side["needs"]}
+    assert by_id["WUN-01"]["verdict"] == "PASS" and "2 case(s) not applicable" in by_id["WUN-01"]["reason"]
+    assert by_id["WUN-02"]["verdict"] == "FAIL" and "NOT-EXECUTED" in by_id["WUN-02"]["reason"]
+    assert by_id["WUN-01"]["statement"] == "As a QE, I need the workbench to do x, so that y."
+    tests = {t["id"]: t for t in side["tests"]}
+    assert tests["TC-02"]["status"] == "NOT-APPLICABLE" and tests["TC-03"]["status"] == "NOT-APPLICABLE"
+    assert "content.qms_forms" in tests["TC-03"]["reason"] and tests["TC-04"]["method"] == "protocol"
+    report = (root / "out" / "report.md").read_text()
+    assert "Full environment record" in report and "Deployment declaration" in report
+    assert "Capability tests" in report and "Deployment tests" in report and "NOT-EXECUTED" in report
+    # now record the protocol → the need passes and exit is 0
+    (root / "out" / "protocols").mkdir(parents=True, exist_ok=True)
+    (root / "out" / "protocols" / "TC-04.result.yml").write_text(yaml.safe_dump({
+        "verdict": "PASS", "executed": "2026-09-08", "operator": "qe", "model_id": "m-1", "git_sha": "x"}))
+    proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "run_validation.py"), "--root", str(root),
+                           "--manifest", "docs/validation.yml", "--render", "--model-id", "m-1"],
+                          capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
     side = json.loads((root / "out" / "index.json").read_text())
     assert side["summary"]["verdict"] == "PASS"
-    assert side["needs"][0]["statement"] == "As a QE, I need the workbench to do x, so that y."
-    assert side["tests"][1]["status"] == "NOT-APPLICABLE" and side["tests"][1]["endpoint"] == "live"
-    report = (root / "out" / "report.md").read_text()
-    assert "Full environment record" in report and "NOT-APPLICABLE" in report
+    assert any((root / "out" / "results").glob("run-*/pinned/TC-04/TC-04.result.yml"))
 
 
 def test_runner_refuses_manifest_missing_so_that(tmp_path):
@@ -192,7 +265,7 @@ def test_runner_refuses_manifest_missing_so_that(tmp_path):
     (root / "docs" / "validation.yml").write_text(yaml.safe_dump({
         "schema_version": "1.2", "results_dir": "out", "sidecar": "out/i.json",
         "report": {"output": "out/r.md"},
-        "user_needs": [{"id": "WUN-01", "role": "QE", "need": "x", "coverage": "tests"}],
+        "user_needs": [{"id": "WUN-01", "role": "QE", "need": "x"}],
         "test_cases": [],
     }))
     proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "run_validation.py"), "--root", str(root),

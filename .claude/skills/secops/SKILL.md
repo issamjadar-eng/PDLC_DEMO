@@ -1,7 +1,7 @@
 ---
 name: secops
 description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, `audit`, and `attest` actions.
-version: 9
+version: 10
 updated: 2026-09-08
 ---
 
@@ -33,6 +33,7 @@ Designed to be invoked automatically by `/medtech-docs init` (Step 5 — auto-di
 | `templates/permissions.json` | Canonical `permissions` block (allow list of Bash/Read/Edit/Write patterns). Merged into `settings.json` by `setup` — **union** with existing entries, never clobbers. |
 | `scripts/audit_artifacts.py` | Static-analysis scanner used by the `audit` action. Walks `.claude/skills/`, `.claude/agents/`, `.claude/hooks/`, plus `settings.json` / `settings.local.json`, and reports trojan-style red flags (outbound execution, filesystem escape, config tamper, credential reads, obfuscated execution, persistence, symlink escape). |
 | `README.md` | Design documentation for humans. |
+| `tests/test_session_hooks.py` | Capability tests for the SessionStart posture hook `security-assert.sh`: copied into a temp project with the shared roster resolver, `gh` shimmed to fail (network checks SKIP), controlled git identity — compliant fixture passes checks 2/9 with zero criticals; unapproved skill dir → check 9 WARN naming it; off-domain email → check 2 FAIL (Critical). |
 
 ## Actions
 
