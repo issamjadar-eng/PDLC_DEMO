@@ -1,32 +1,32 @@
 {
   "schema_version": "1.1",
-  "generated": "2026-09-08T18:03:19Z",
+  "generated": "2026-09-08T18:03:45Z",
   "title": "Workbench Validation Report \u2014 PDLC_DEMO AI Workbench",
   "banner": "_Demo sample data \u2014 not for clinical use._ Illustrative of method only \u2014 not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text.",
   "plan_path": "docs/project/workbench-validation/validation-plan.md",
   "report_path": "tools/workbench-validation/validation-report.md",
   "manifest_path": "docs/project/workbench-validation/validation.yml",
   "run": {
-    "run_id": "run-20260908T180259Z",
-    "started": "2026-09-08T18:02:59Z",
-    "finished": "2026-09-08T18:03:19Z",
-    "duration_s": 19.8,
+    "run_id": "run-20260908T180329Z",
+    "started": "2026-09-08T18:03:29Z",
+    "finished": "2026-09-08T18:03:45Z",
+    "duration_s": 16.8,
     "partial": false,
-    "invoked_via": "cli",
+    "invoked_via": "console",
     "operator": {
       "git_user": "benxavier-gl",
       "git_email": "ben.xavier@globallogic.com",
       "os_user": "benxavier",
       "hostname": "Bens-MBP",
-      "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+      "os": "macOS-26.5.2-arm64-arm-64bit"
     },
     "pinned_manifest": {
-      "path": "tools/workbench-validation/results/run-20260908T180259Z/validation.yml",
+      "path": "tools/workbench-validation/results/run-20260908T180329Z/validation.yml",
       "sha256": "09e552853ffbe44641a05ca189fd20eaf18cca4131824701414fd4570342c788"
     }
   },
   "baseline": {
-    "git_sha_short": "8f266ff",
+    "git_sha_short": "f7d746c",
     "git_branch": "HEAD",
     "git_dirty": false,
     "git_dirty_count": 0,
@@ -38,14 +38,14 @@
     "skill_version_mismatches": []
   },
   "environment": {
-    "git_sha": "8f266ffdfb9c07026e79760dc05fbd8dc700c303",
-    "git_sha_short": "8f266ff",
+    "git_sha": "f7d746c0b9fbb28c9d29ff0f5e1c4f615911ef16",
+    "git_sha_short": "f7d746c",
     "git_branch": "HEAD",
     "git_dirty": false,
     "git_dirty_files": [],
     "git_dirty_count": 0,
-    "python": "3.14.6",
-    "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "python": "3.12.13",
+    "python_executable": "/Users/benxavier/projects/PDLC_DEMO-wt119/tools/project-console/.venv/bin/python3",
     "platform": "darwin",
     "architecture": "arm64",
     "operator": {
@@ -53,7 +53,7 @@
       "git_email": "ben.xavier@globallogic.com",
       "os_user": "benxavier",
       "hostname": "Bens-MBP",
-      "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+      "os": "macOS-26.5.2-arm64-arm-64bit"
     },
     "harness_version": "2.1.263 (Claude Code)",
     "model_id": "claude-fable-5-1",
@@ -290,8 +290,8 @@
         "missing": false
       },
       "python3": {
-        "path": "/opt/homebrew/bin/python3",
-        "version": "Python 3.14.6",
+        "path": "/Users/benxavier/projects/PDLC_DEMO-wt119/tools/project-console/.venv/bin/python3",
+        "version": "Python 3.12.13",
         "missing": false
       },
       "uv": {
@@ -651,17 +651,17 @@
         "task": "35"
       },
       "status": "PASS",
-      "duration_s": 2.42,
+      "duration_s": 1.94,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-01.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-01.log",
       "cmd": "bash .claude/skills/task/tests/test-task-gate.sh",
       "description": "Checks the safeguard that stops project files from being changed when no work task is active. Protected files must be blocked; everyday exempt files (task notes, settings) must still be allowed.",
       "approach": "Runs the gate's own 63-scenario self-test in a clean environment: it simulates edit attempts with and without an active task and compares every block/allow decision against the expected one. Passes only when the suite reports all scenarios passed.",
       "judged_by": "output must contain \"ALL TESTS PASSED\" and exit code 0",
       "source": ".claude/skills/task/tests/test-task-gate.sh",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-01"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-01"
     },
     {
       "id": "TC-02",
@@ -680,7 +680,7 @@
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-02.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-02.log",
       "cmd": "bash -c export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]",
       "description": "Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability).",
       "approach": "Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required.",
@@ -701,17 +701,17 @@
         "medtech-docs": "35"
       },
       "status": "PASS",
-      "duration_s": 0.51,
+      "duration_s": 0.35,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-03.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-03.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q",
       "description": "Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched.",
       "approach": "Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-03"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-03"
     },
     {
       "id": "TC-04",
@@ -726,17 +726,17 @@
         "advisors": "12"
       },
       "status": "PASS",
-      "duration_s": 0.39,
+      "duration_s": 0.41,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-04.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-04.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q",
       "description": "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources.",
       "approach": "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/advisors/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-04"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-04"
     },
     {
       "id": "TC-05",
@@ -751,17 +751,17 @@
         "writing-well": "6"
       },
       "status": "PASS",
-      "duration_s": 0.75,
+      "duration_s": 0.54,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-05.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-05.log",
       "cmd": "bash .claude/skills/writing-well/tests/run_tests.sh",
       "description": "Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review.",
       "approach": "Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/writing-well/tests/run_tests.sh",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-05"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-05"
     },
     {
       "id": "TC-06",
@@ -776,17 +776,17 @@
         "dhf-manifest": "15"
       },
       "status": "PASS",
-      "duration_s": 1.48,
+      "duration_s": 1.22,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-06.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-06.log",
       "cmd": "bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh",
       "description": "Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor.",
       "approach": "Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-06"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-06"
     },
     {
       "id": "TC-07",
@@ -801,17 +801,17 @@
         "trace-matrix": "8"
       },
       "status": "PASS",
-      "duration_s": 0.34,
+      "duration_s": 0.36,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-07.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-07.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q",
       "description": "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs \u2014 the chain auditors walk.",
       "approach": "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/trace-matrix/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-07"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-07"
     },
     {
       "id": "TC-08",
@@ -826,17 +826,17 @@
         "tracker": "15"
       },
       "status": "PASS",
-      "duration_s": 2.12,
+      "duration_s": 2.1,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-08.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-08.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q",
       "description": "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents.",
       "approach": "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/tracker/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-08"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-08"
     },
     {
       "id": "TC-09",
@@ -855,13 +855,13 @@
       "endpoint": "mocked",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-09.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-09.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q --deselect .claude/skills/jira-pull/tests/test_drift_rules.py::test_exec",
       "description": "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught.",
       "approach": "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks).",
       "judged_by": "exit code 0",
       "source": ".claude/skills/jira-pull/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-09"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-09"
     },
     {
       "id": "TC-10",
@@ -876,17 +876,17 @@
         "change-control": "0.14.1"
       },
       "status": "PASS",
-      "duration_s": 0.5,
+      "duration_s": 0.43,
       "endpoint": "mocked",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-10.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-10.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q",
       "description": "Checks the machinery that moves controlled documents between this repo and the formal systems (Confluence, Google Docs) without corrupting content or losing review state.",
       "approach": "Runs the transfer machinery's 139-test suite covering conversion fidelity, review tiers, freeze states, and error handling against known documents.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/change-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-10"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-10"
     },
     {
       "id": "TC-11",
@@ -901,17 +901,17 @@
         "project-console": "1.64.0"
       },
       "status": "PASS",
-      "duration_s": 4.16,
+      "duration_s": 2.43,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-11.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-11.log",
       "cmd": "uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q",
       "description": "Checks the team's browser console \u2014 the pages, data loaders, and workflows this very Validation view lives in \u2014 so what the team sees reflects repo truth.",
       "approach": "Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/project-console/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-11"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-11"
     },
     {
       "id": "TC-12",
@@ -926,17 +926,17 @@
         "md-deck": "0.6.4"
       },
       "status": "PASS",
-      "duration_s": 0.33,
+      "duration_s": 0.34,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-12.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-12.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/md-deck/tests -q",
       "description": "Checks the presentation tooling that turns project documents into slide decks without dropping or duplicating content.",
       "approach": "Runs the deck builder's regression suite verifying slide identity is preserved across rebuilds.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/md-deck/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-12"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-12"
     },
     {
       "id": "TC-13",
@@ -951,17 +951,17 @@
         "sync-skills": "8.4"
       },
       "status": "PASS",
-      "duration_s": 1.77,
+      "duration_s": 1.84,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-13.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-13.log",
       "cmd": "bash .claude/skills/sync-skills/tests/test_three_way_pull.sh",
       "description": "Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced.",
       "approach": "Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/sync-skills/tests/test_three_way_pull.sh",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-13"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-13"
     },
     {
       "id": "TC-14",
@@ -976,17 +976,17 @@
         "sync-skills": "8.4"
       },
       "status": "PASS",
-      "duration_s": 2.11,
+      "duration_s": 2.1,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-14.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-14.log",
       "cmd": "bash .claude/skills/sync-skills/tests/test_status.sh",
       "description": "Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry.",
       "approach": "Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/sync-skills/tests/test_status.sh",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-14"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-14"
     },
     {
       "id": "TC-15",
@@ -1001,17 +1001,17 @@
         "secops": "9"
       },
       "status": "PASS",
-      "duration_s": 1.36,
+      "duration_s": 1.28,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-15.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-15.log",
       "cmd": "python3 .claude/skills/secops/scripts/audit_artifacts.py --json",
       "description": "Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns \u2014 and that the scanner itself fails loudly when it does.",
       "approach": "Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/secops/scripts/audit_artifacts.py",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-15"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-15"
     },
     {
       "id": "TC-16",
@@ -1028,7 +1028,7 @@
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-16.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-16.log",
       "cmd": "python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(lambda t:t[3:t.find(chr(10)+'---',3)] if t.startswith('---') and t.find(chr(10)+'---',3)!=-1 else '')((d/'SKILL.md').read_text(errors='replace')),re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)",
       "description": "Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt).",
       "approach": "Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none.",
@@ -1054,13 +1054,13 @@
       "endpoint": "live",
       "connection": "jira",
       "reason": "no live jira connection in this deployment (manifest connections.jira: none)",
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-17.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-17.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m live --live",
       "description": "Runs the change-control Jira smoke test against the deployment's real Jira endpoint. This project has no Jira connection, so the case is reported NOT-APPLICABLE by declaration rather than pretending the integration was exercised.",
       "approach": "Runs only the tests marked `live` in the change-control suite with the `--live` opt-in; the test reads the Jira base URL from the project manifest and skips if none is configured.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/change-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-17"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-17"
     },
     {
       "id": "TC-18",
@@ -1080,13 +1080,13 @@
       "endpoint": "live",
       "connection": "jira",
       "reason": "no live jira connection in this deployment (manifest connections.jira: none)",
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-18.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-18.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q -m live --live",
       "description": "Runs the jira-pull live smoke test against the deployment's real Jira. NOT-APPLICABLE here by declaration (no Jira connection).",
       "approach": "Runs only the `live`-marked jira-pull tests with the `--live` opt-in.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/jira-pull/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-18"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-18"
     },
     {
       "id": "TC-19",
@@ -1105,13 +1105,13 @@
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-19.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-19.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/secops/tests -q",
       "description": "Checks that the security screen's rules fire on genuine config-tamper and remote-execution patterns and stay quiet on comments, docstrings, heredoc help text, and temp-path fixtures \u2014 so a clean TC-15 result means 'nothing hostile', not 'the scanner went blind'.",
       "approach": "Runs the scanner's regression suite over synthetic fixture trees with known-positive and known-negative content, including the exit-code contract.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/secops/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-19"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-19"
     },
     {
       "id": "TC-20",
@@ -1126,17 +1126,17 @@
         "web-control": "0.3.1"
       },
       "status": "PASS",
-      "duration_s": 0.33,
+      "duration_s": 0.36,
       "endpoint": "none",
       "connection": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-20.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-20.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q",
       "description": "Checks the pure-logic parts of the shared browser-automation library (cookie header assembly, URL/config parsing) that the document-transfer machinery reuses \u2014 hermetically, with no browser running.",
       "approach": "Runs the web-control unit suite under the socket guard; anything that would need a browser is a separate live case (TC-21).",
       "judged_by": "exit code 0",
       "source": ".claude/skills/web-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-20"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-20"
     },
     {
       "id": "TC-21",
@@ -1156,13 +1156,13 @@
       "endpoint": "live",
       "connection": "browser",
       "reason": "no live browser connection in this deployment (manifest connections.browser: none)",
-      "log": "tools/workbench-validation/results/run-20260908T180259Z/TC-21.log",
+      "log": "tools/workbench-validation/results/run-20260908T180329Z/TC-21.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q -m live --live",
       "description": "Runs the web-control live smoke test against a debug browser session. NOT-APPLICABLE here by declaration (no debug browser in this deployment).",
       "approach": "Runs only the `live`-marked web-control tests with the `--live` opt-in.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/web-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-21"
+      "pinned": "tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-21"
     }
   ]
 }
