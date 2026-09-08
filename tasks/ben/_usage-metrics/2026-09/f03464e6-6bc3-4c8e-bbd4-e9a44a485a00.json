@@ -1,0 +1,59 @@
+{
+  "by_day": {
+    "2026-09-08": {
+      "cache_creation": 195902,
+      "cache_read": 0,
+      "cache_write_1h": 195902,
+      "cache_write_5m": 0,
+      "input": 3,
+      "messages": 1,
+      "output": 464
+    }
+  },
+  "by_model": {
+    "claude-sonnet-4-6": {
+      "cache_creation": 195902,
+      "cache_read": 0,
+      "cache_write_1h": 195902,
+      "cache_write_5m": 0,
+      "input": 3,
+      "messages": 1,
+      "output": 464
+    }
+  },
+  "by_task": {
+    "_unattributed": {
+      "claude-sonnet-4-6": {
+        "cache_creation": 195902,
+        "cache_read": 0,
+        "cache_write_1h": 195902,
+        "cache_write_5m": 0,
+        "input": 3,
+        "messages": 1,
+        "output": 464
+      }
+    }
+  },
+  "month": "2026-09",
+  "session_id": "f03464e6-6bc3-4c8e-bbd4-e9a44a485a00",
+  "source": "transcript",
+  "task_folder": "ben",
+  "totals": {
+    "cache_creation": 195902,
+    "cache_read": 0,
+    "cache_write_1h": 195902,
+    "cache_write_5m": 0,
+    "input": 3,
+    "messages": 1,
+    "output": 464
+  },
+  "user_turns": {
+    "by_day": {
+      "2026-09-08": 1
+    },
+    "by_task": {
+      "_unattributed": 1
+    },
+    "total": 1
+  }
+}
