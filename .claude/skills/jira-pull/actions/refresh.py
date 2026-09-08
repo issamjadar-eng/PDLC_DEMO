@@ -211,6 +211,29 @@ def _read_raw_response(input_path: Path) -> List[Dict[str, Any]]:
     )
 
 
+def merge_pages(pages: List[List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
+    """Concatenate raw issue lists from one or more MCP/REST pages and
+    dedupe on Jira `key`, preserving first-seen order.
+
+    Pure — no I/O, no MCP. This is the seam the mocked-tier tests exercise:
+    multi-page pulls can overlap on the key cursor boundary (the follow-up
+    query is `key > "<last>"`, but a page saved twice or a retried page
+    re-delivers the same issues), so the merge must be idempotent on key.
+    Issues without a `key` are kept verbatim (never deduped)."""
+    seen_keys: set[str] = set()
+    deduped: List[Dict[str, Any]] = []
+    for page in pages:
+        for r in page:
+            # Tolerate both raw envelope shape and pre-flattened shape.
+            k = r.get("key") or ""
+            if k and k in seen_keys:
+                continue
+            if k:
+                seen_keys.add(k)
+            deduped.append(r)
+    return deduped
+
+
 def cmd_merge(args: argparse.Namespace) -> int:
     cfg = cfgmod.load(Path.cwd())
     dhf = cfgmod.find_dhf(cfg, args.dhf)
@@ -224,20 +247,8 @@ def cmd_merge(args: argparse.Namespace) -> int:
     if not inputs:
         print("--merge requires at least one --input", file=sys.stderr)
         return 2
-    raw_issues: List[Dict[str, Any]] = []
-    for p in inputs:
-        raw_issues.extend(_read_raw_response(p))
     # Dedupe on Jira key — multi-page pulls can overlap on the cursor boundary.
-    seen_keys: set[str] = set()
-    deduped: List[Dict[str, Any]] = []
-    for r in raw_issues:
-        # Tolerate both raw envelope shape and pre-flattened shape.
-        k = r.get("key") or ""
-        if k and k in seen_keys:
-            continue
-        if k:
-            seen_keys.add(k)
-        deduped.append(r)
+    deduped = merge_pages([_read_raw_response(p) for p in inputs])
     flat_issues = [norm.normalize_issue(r) for r in deduped]
 
     target = build_targets(cfg, dhf, version, [layer])[0]

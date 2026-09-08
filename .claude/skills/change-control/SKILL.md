@@ -28,8 +28,8 @@ description: |
   Lifecycle: `draft → published → review-formal → frozen → released`. Enforces freeze gate via PreToolUse hook with in-chat consent.
 
   Other actions: `init`, `status`, `help`, `reindex`, `verify`.
-version: 0.13.1
-updated: 2026-06-08
+version: 0.14.1
+updated: 2026-09-08
 status: adopt-publish-probe-validated
 ---
 

@@ -1,15 +1,15 @@
 ---
 name: project-console
 description: Scaffold and maintain a local FastAPI project console (agents, documents, dashboards) for a medtech-docs project. Provides `init`, `sync`, `theme`, `run`, `start`, and `status` actions. Use when a user asks to "set up project console", "install the console tool", "scaffold a console", "update project console", "start the console", "restart the console", "scrape a company site for a theme pack", or reports a problem with `tools/project-console/`.
-version: 1.62.0
-updated: 2026-07-27
+version: 1.64.0
+updated: 2026-09-08
 ---
 
 # Project Console
 
 A reusable FastAPI-based local console for medtech-docs projects. Ships:
 
-- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **journey** (project standup + device program, evaluated from a skill-owned map), **document pipeline** (how documentation moves, derived live across four lanes), **strategy** (landing index + per-domain review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security), and **tasks** (activity summary from the task skill's derived JSON)
+- A FastAPI app (`console/`) with routes for landing, agents chat, documents explorer, dashboards discovery, trace-matrix, gap-analysis, **business domains** (`/domains/<slug>` — Commercial, Finance, Manufacturing, … one tab per discovered `docs/project/<slug>/.console/<slug>-index.json` published by the `commercial` skill engine; `/commercial` redirects), **journey** (project standup + device program, evaluated from a skill-owned map), **document pipeline** (how documentation moves, derived live across four lanes), **strategy** (landing index + per-domain review surface), **submission** (FDA submission-package viewer + Ask-the-advisor), **setup** (project-settings surface: connectors, skills, agents, plugins, rules & hooks, team & security), and **tasks** (activity summary from the task skill's derived JSON)
 - A **grouped template library** materialized into the project on init: a `core-team` group of 10 common medtech personas (regulatory, clinical, quality, systems, risk, human factors, R&D, V&V, cybersecurity, post-market) plus two advisory panels, and a `red-team` group — an adversarial buyer committee (CEO, CFO, CTO, VP Eng, RA VP, QA VP, PMO skeptics + a panel) for pressure-testing outward-facing documents. Each `agents/templates/<group>/` directory materializes into `agents/<group>/`
 - Two generic **theme packs** (`light`, `dark`) plus a scraping action that builds project-specific theme packs from a company website
 - A scaffold action that creates `tools/project-console/` and wires the launcher to import the skill package via `PYTHONPATH`

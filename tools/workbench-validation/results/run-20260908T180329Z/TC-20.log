@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180329Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via console
+case:        TC-20 — Browser-bridge helper logic is correct without a browser
+purpose:     Checks the pure-logic parts of the shared browser-automation library (cookie header assembly, URL/config parsing) that the document-transfer machinery reuses — hermetically, with no browser running.
+approach:    Runs the web-control unit suite under the socket guard; anything that would need a browser is a separate live case (TC-21).
+UUT:         web-control@0.3.1
+user needs:  WUN-15
+endpoint:    none
+test source: .claude/skills/web-control/tests (pinned copy: tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-20)
+command:     uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   300
+started:     2026-09-08T18:03:45Z (UTC)
+exit_code:   0
+duration_s:  0.36
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+..............s                                                          [100%]
+14 passed, 1 skipped in 0.01s
+

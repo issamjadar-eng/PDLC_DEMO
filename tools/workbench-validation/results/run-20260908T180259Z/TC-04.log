@@ -1,0 +1,27 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180259Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-04 — Advisor grounding files are built correctly
+purpose:     Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources.
+approach:    Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output.
+UUT:         advisors@12
+user needs:  WUN-09
+endpoint:    none
+test source: .claude/skills/advisors/tests (pinned copy: tools/workbench-validation/results/run-20260908T180259Z/pinned/TC-04)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-08T18:03:02Z (UTC)
+exit_code:   0
+duration_s:  0.39
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+........................................................................ [ 81%]
+................                                                         [100%]
+88 passed in 0.09s
+

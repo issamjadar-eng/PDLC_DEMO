@@ -1,0 +1,43 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180329Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via console
+case:        TC-13 — Tool updates never overwrite local improvements
+purpose:     Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced.
+approach:    Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten.
+UUT:         sync-skills@8.4
+user needs:  WUN-11
+endpoint:    none
+test source: .claude/skills/sync-skills/tests/test_three_way_pull.sh (pinned copy: tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-13)
+command:     bash .claude/skills/sync-skills/tests/test_three_way_pull.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-08T18:03:39Z (UTC)
+exit_code:   0
+duration_s:  1.84
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+test_three_way_pull.sh
+======================
+
+Case 1: UPSTREAM_ADVANCE — local matches old hitachi blob, upstream advanced
+  PASS: advance: tab-separated row
+  PASS: advance: summary mentions advance
+Case 2: LOCAL_AHEAD — local blob unknown to hitachi, project edited recently
+  PASS: local_ahead: recommendation
+  PASS: local_ahead: summary mentions keep local
+Case 3: BOTH_DIVERGED — local unknown blob, project edit >7 days ago, upstream advanced
+  PASS: both_diverged: recommendation
+  PASS: both_diverged: summary mentions manual review
+Case 4: mixed batch — UPSTREAM_ADVANCE + LOCAL_AHEAD + BOTH_DIVERGED + UPSTREAM_ONLY
+  PASS: mixed: skill2 UPSTREAM_ADVANCE
+  PASS: mixed: skill3 LOCAL_AHEAD
+  PASS: mixed: skill4 BOTH_DIVERGED
+  PASS: mixed: skill5 UPSTREAM_ONLY
+
+Results: 10 passed, 0 failed
+

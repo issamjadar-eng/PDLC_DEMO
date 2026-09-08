@@ -1,7 +1,7 @@
 # Workbench validation manifest — consumed by the workbench-validation skill.
 # Authored source of truth for user needs + test cases. The report and sidecar are
 # generated projections; edit here, then re-run `/workbench-validation validate`.
-schema_version: "1.0"
+schema_version: "1.1"
 
 # Stamped at the top of every generated report (demo projects: keep the demo banner).
 banner: "_Demo sample data — not for clinical use._"
@@ -15,7 +15,18 @@ report:
   title: "Workbench Validation Report — <MedTech Project>"
   output: tools/workbench-validation/validation-report.md
 
-# Triaged anomalies carried into the report's Known Anomalies section.
+# Evidence tiers: every test case declares `endpoint: none | mocked | live`.
+# `connections:` states what THIS deployment has per external system. A `live`
+# case whose `connection:` is `none` here is reported NOT-APPLICABLE (declared,
+# not a gap) and never lowers a verdict; a declared-present but unreachable
+# connection is a real SKIP/FAIL.
+connections:
+  jira: none          # or: configured  (base_url read from project.yml change_control.jira)
+  confluence: none
+  browser: none
+
+# Triaged anomalies carried into the report's Known Anomalies section. Each
+# entry names an owner and the run by which it is expected to clear.
 known_anomalies: []
 
 # Optional override of the default revalidation-trigger list.
@@ -51,6 +62,10 @@ test_cases:
     uut: [<skill-name>]     # unit(s) under test — component(s) the case runs against;
                             # multiple allowed; skill names get pinned to the version
                             # exercised; `all-skills` = workbench-wide sweep
+    endpoint: none          # none | mocked | live — REQUIRED. What the case touched:
+                            # nothing external / a fake transport with canned payloads /
+                            # a real endpoint (then also set `connection:`)
+    # connection: jira      # for endpoint: live — key into `connections:` above
     cmd: ["bash", ".claude/skills/<skill>/tests/<test>.sh"]
     # cwd: .
     # timeout: 600

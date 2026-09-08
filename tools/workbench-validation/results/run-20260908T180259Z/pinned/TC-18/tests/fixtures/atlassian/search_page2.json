@@ -1,0 +1,37 @@
+{
+  "_fixture": "Canned Atlassian MCP/REST JQL search response — page 2 of 2. DEMO-102 is repeated on purpose: it sits on the key-cursor boundary and must be deduped by the merge.",
+  "isLast": true,
+  "maxResults": 2,
+  "issues": [
+    {
+      "key": "DEMO-102",
+      "fields": {
+        "summary": "DI-0002 Pump shall alarm on occlusion",
+        "status": {"name": "To Do"},
+        "priority": {"name": "Medium"},
+        "issuetype": {"name": "Epic"},
+        "labels": [],
+        "components": [],
+        "fixVersions": [{"name": "Module v1.0.0"}],
+        "issuelinks": [],
+        "created": "2026-01-11T09:00:00.000+0000",
+        "updated": "2026-02-02T12:00:00.000+0000"
+      }
+    },
+    {
+      "key": "DEMO-103",
+      "fields": {
+        "summary": "DI-0003 Pump shall log dose history",
+        "status": {"name": "Done"},
+        "priority": {"name": "Low"},
+        "issuetype": {"name": "Epic"},
+        "labels": ["design-input"],
+        "components": [{"name": "Firmware"}, {"name": "Cloud"}],
+        "fixVersions": [{"name": "Module v1.0.0"}],
+        "issuelinks": [],
+        "created": "2026-01-12T09:00:00.000+0000",
+        "updated": "2026-02-03T12:00:00.000+0000"
+      }
+    }
+  ]
+}

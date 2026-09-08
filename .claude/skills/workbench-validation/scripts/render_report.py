@@ -16,6 +16,14 @@ Per-need verdicts:
   NO-EVIDENCE     coverage declared `tests` but no case maps to the need
   PROCESS-CONTROL need is assured by named process controls, not scripts
   EXPLORATORY     need is assured by documented exploratory/human review
+  NOT-APPLICABLE  every mapped case is a live-endpoint case for a connection
+                  this deployment declares `none` (nothing to execute here)
+
+NOT-APPLICABLE cases never drag a need or the overall verdict down: a
+deliberately absent connection is a declared fact, not a gap. Each need also
+carries a plain-language "strongest evidence" line (e.g. "mock-verified; live
+not applicable in this deployment") so a reader can tell mock-verified from
+live-verified.
 
 Usage:
   python3 render_report.py --root <repo_root> [--manifest <path>] [--run <results-json>]
@@ -63,12 +71,48 @@ def need_verdict(need, case_index):
     mapped = [case_index[cid] for cid in need.get("_tests", []) if cid in case_index]
     if not mapped:
         return "NO-EVIDENCE"
-    statuses = {c["status"] for c in mapped}
+    applicable = [c for c in mapped if c["status"] != "NOT-APPLICABLE"]
+    if not applicable:
+        return "NOT-APPLICABLE"
+    statuses = {c["status"] for c in applicable}
     if statuses & {"FAIL", "ERROR"}:
         return "FAIL"
     if "SKIPPED" in statuses:
         return "PARTIAL"
     return "PASS"
+
+
+TIER_RANK = {"live": 3, "mocked": 2, "none": 1, "unspecified": 0}
+TIER_WORD = {"live": "live-verified", "mocked": "mock-verified",
+             "none": "verified without external endpoints", "unspecified": "tier unspecified"}
+
+
+def strongest_evidence(need, case_index):
+    """Plain-language statement of the best evidence tier behind a need's
+    verdict, and what was not exercised — the D7 honesty line."""
+    coverage = need.get("coverage", "tests")
+    if coverage == "process-control":
+        return "assured by process controls (no scripted evidence claimed)"
+    if coverage == "exploratory":
+        return "assured by documented exploratory / human review (no scripted evidence claimed)"
+    mapped = [case_index[cid] for cid in need.get("_tests", []) if cid in case_index]
+    if not mapped:
+        return "no mapped test case"
+    passed = [c for c in mapped if c["status"] == "PASS"]
+    na = [c for c in mapped if c["status"] == "NOT-APPLICABLE"]
+    best = max((c.get("endpoint", "unspecified") for c in passed),
+               key=lambda t: TIER_RANK.get(t, 0), default=None)
+    parts = []
+    if best:
+        parts.append(TIER_WORD.get(best, best))
+    else:
+        parts.append("no passing evidence")
+    if na:
+        conns = sorted({c.get("connection") or "endpoint" for c in na})
+        parts.append(f"live {', '.join(conns)} not applicable in this deployment")
+    elif best and best != "live" and any(c.get("endpoint") == "live" for c in mapped):
+        parts.append("live case did not pass")
+    return "; ".join(parts)
 
 
 def overall_verdict(needs):
@@ -130,6 +174,104 @@ def _report_rel_link(log_rel, manifest):
     return os.path.relpath(log_rel, report_dir)
 
 
+def environment_details(env, run):
+    """§1 expandable full environment record (D8) — every field of the
+    canonical `environment` block, grouped, rendered inside a collapsed
+    <details> so the verdict stays readable and the record stays complete."""
+    out = []
+    add = out.append
+    add("<details>")
+    add("<summary><strong>Full environment record</strong> — what this run executed against "
+        "(expand for the complete setup record)</summary>")
+    add("")
+    add("**Configuration under test**")
+    add("")
+    add("| Field | Value |")
+    add("|---|---|")
+    add(f"| Commit | `{env.get('git_sha', '?')}` on `{env.get('git_branch', '?')}` |")
+    dirty = env.get("git_dirty_files") or []
+    if env.get("git_dirty"):
+        shown = ", ".join(f"`{md_escape(f)}`" for f in dirty[:25])
+        more = f" … +{env.get('git_dirty_count', len(dirty)) - 25} more" if len(dirty) > 25 else ""
+        add(f"| Working tree | **dirty** — {env.get('git_dirty_count', len(dirty))} file(s): {shown}{more} |")
+    else:
+        add("| Working tree | clean |")
+    skills = env.get("skills") or {}
+    mism = env.get("skill_version_mismatches") or []
+    add(f"| Skills installed | {len(skills)}"
+        + (f" — **version pin ambiguous** (frontmatter ≠ VERSION): {', '.join(f'`{m}`' for m in mism)}" if mism else "")
+        + " |")
+    add(f"| Hooks installed | {', '.join(f'`{h}`' for h in env.get('hooks_installed', [])) or '—'} |")
+    add(f"| Agents installed | {len(env.get('agents_installed') or [])} |")
+    add(f"| Rules loaded | {', '.join(f'`{r}`' for r in env.get('rules_loaded', [])) or '—'} |")
+    add("")
+    if skills:
+        add("<details><summary>Per-skill versions exercised</summary>")
+        add("")
+        add("| Skill | Frontmatter version | VERSION file | Updated |")
+        add("|---|---|---|---|")
+        for name, e in sorted(skills.items()):
+            flag = " ⚠️" if e.get("version_mismatch") else ""
+            add(f"| `{name}` | {e.get('version') or '—'}{flag} | {e.get('version_file') or '—'} | {e.get('updated') or '—'} |")
+        add("")
+        add("</details>")
+        add("")
+    add("**Runtime**")
+    add("")
+    add("| Field | Value |")
+    add("|---|---|")
+    add(f"| Python | {env.get('python', '?')} (`{env.get('python_executable', '?')}`) |")
+    op = env.get("operator") or {}
+    add(f"| OS / architecture | {op.get('os') or env.get('platform', '?')} · {env.get('architecture', '?')} |")
+    add(f"| Host / OS user | {op.get('hostname') or '?'} / {op.get('os_user') or '?'} |")
+    add(f"| Harness version | {env.get('harness_version') or '_not captured_'} |")
+    add(f"| Model identifier | {env.get('model_id') or '_not captured — pass --model-id_'} |")
+    add("")
+    add("**Tooling** — binaries the cases required, as resolved on this host")
+    add("")
+    add("| Binary | Resolved path | Version |")
+    add("|---|---|---|")
+    for name, t in sorted((env.get("tooling") or {}).items()):
+        if t.get("missing"):
+            add(f"| `{name}` | **missing** | — |")
+        else:
+            add(f"| `{name}` | `{t.get('path')}` | {md_escape(t.get('version') or '—')} |")
+    pk = env.get("python_packages") or {}
+    if pk:
+        add("")
+        add("Test-harness packages resolved by `uv`: "
+            + ", ".join(f"`{k}` {v}" for k, v in pk.items()) + ".")
+    add("")
+    add("**Connections** — declared tiers, MCP servers, reachability")
+    add("")
+    conns = env.get("connections") or {}
+    declared = conns.get("declared") or {}
+    add("| Connection | Declared for this deployment | Base URL | Reachability at run start |")
+    add("|---|---|---|---|")
+    endpoints = conns.get("endpoints") or {}
+    for name in sorted(set(declared) | set(endpoints)):
+        e = endpoints.get(name) or {}
+        add(f"| `{name}` | {declared.get(name, e.get('declared', '—'))} | "
+            f"{('`' + e['base_url'] + '`') if e.get('base_url') else '—'} | {e.get('reachability') or '—'} |")
+    if not (declared or endpoints):
+        add("| — | no connections declared in the manifest | — | — |")
+    mcp = conns.get("mcp_servers") or {}
+    add("")
+    add(f"MCP servers approved in `project.yml`: {', '.join(f'`{a}`' for a in mcp.get('approved', [])) or 'none'}; "
+        f"configured: {', '.join(f'`{c}`' for c in mcp.get('configured', [])) or 'none'}.")
+    add("")
+    add("**Isolation**")
+    add("")
+    iso = env.get("isolation") or {}
+    add(f"- Env vars stripped for cases: {', '.join(f'`{v}`' for v in iso.get('env_unset', [])) or 'none'}")
+    add(f"- Env vars set for cases: {', '.join(f'`{v}`' for v in iso.get('env_set_keys', [])) or 'none'}")
+    add(f"- Socket guard: {iso.get('socket_guard', '—')}")
+    add(f"- Working directory: `{iso.get('cwd', '?')}`")
+    add("")
+    add("</details>")
+    return out
+
+
 def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None):
     case_meta = case_meta or {}
     env = run.get("environment", {})
@@ -184,6 +326,12 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
     add(f"| Pinned test artifacts | `{manifest.get('results_dir')}/{run.get('run_id')}/pinned/` — "
         f"per-case copies of the exact test source exercised, with sha256 manifest in the run JSON |")
     add("")
+    for w in run.get("warnings", []) or []:
+        add(f"> ⚠️ {w}")
+    if run.get("warnings"):
+        add("")
+    lines.extend(environment_details(env, run))
+    add("")
 
     add("## 2. User needs & intended use")
     add("")
@@ -195,30 +343,45 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
             f"the workbench implements it. The table joins each need to its assurance "
             f"evidence from this run.")
         add("")
-    add("| ID | Role | Need | Tier | Coverage | Verdict | Evidence |")
-    add("|---|---|---|---|---|---|---|")
+    add("| ID | Role | Need | Tier | Coverage | Verdict | Strongest evidence | Evidence |")
+    add("|---|---|---|---|---|---|---|---|")
     for need in needs:
         evidence = ", ".join(f"`{tc}`" for tc in need.get("_tests", [])) or (
             "; ".join(need.get("process_controls", [])) or "—")
         add(f"| {need['id']} | {need.get('role', '—')} "
             f"| {md_escape(need.get('need', ''))} | {need.get('tier', '?')} "
             f"| {need.get('coverage', 'tests')} "
-            f"| **{need['_verdict']}** | {md_escape(evidence)} |")
+            f"| **{need['_verdict']}** | {md_escape(need.get('_strongest', ''))} | {md_escape(evidence)} |")
     add("")
 
     add("## 3. Test cases, results & evidence")
     add("")
     add(f"Summary: **{counts.get('PASS', 0)} PASS / {counts.get('FAIL', 0)} FAIL / "
-        f"{counts.get('SKIPPED', 0)} SKIPPED / {counts.get('ERROR', 0)} ERROR** "
+        f"{counts.get('SKIPPED', 0)} SKIPPED / {counts.get('NOT-APPLICABLE', 0)} NOT-APPLICABLE / "
+        f"{counts.get('ERROR', 0)} ERROR** "
         f"across {len(run.get('cases', []))} cases.")
+    add("")
+    tiers = {}
+    for c in run.get("cases", []):
+        tiers[c.get("endpoint", "unspecified")] = tiers.get(c.get("endpoint", "unspecified"), 0) + 1
+    add("**Evidence tiers.** Every case declares what it touched: `none` — no external "
+        "system (pure logic, hooks, renderers); `mocked` — the real client code paths "
+        "against a fake Jira/Confluence transport with canned payloads (hermetic, runs "
+        "here); `live` — a real enterprise endpoint, executed only when this deployment "
+        "declares the connection. A `live` case for a connection declared `none` is "
+        "reported **NOT-APPLICABLE** — a statement about this deployment, not a gap — "
+        "and never lowers a verdict. Where an integration runs through an MCP server the "
+        "agent makes the call, not a script; those paths are covered by recorded live "
+        "probes under `exploratory` coverage, never a scripted PASS. This run: "
+        + ", ".join(f"{n} `{t}`" for t, n in sorted(tiers.items())) + ".")
     add("")
     add("Each case's **evidence of record** is its full execution log — command, "
         "working directory, environment changes, timestamps, exit code, judgment "
         "rule, and the complete captured output — written per run under "
         f"`{manifest.get('results_dir')}/{run.get('run_id')}/`.")
     add("")
-    add("| ID | Test case | UUT (version exercised) | Needs | Status | Duration | Evidence log | Detail |")
-    add("|---|---|---|---|---|---|---|---|")
+    add("| ID | Test case | UUT (version exercised) | Needs | Endpoint | Status | Duration | Evidence log | Detail |")
+    add("|---|---|---|---|---|---|---|---|---|")
     for case in run.get("cases", []):
         detail = case.get("reason") or ""
         log = f"[`{case['id']}.log`]({_report_rel_link(case.get('log'), manifest)})" \
@@ -226,8 +389,10 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
         versions = case.get("uut_versions") or {}
         uut = ", ".join(f"`{u}@{versions[u]}`" if u in versions else f"`{u}`"
                         for u in case.get("uut", [])) or "—"
+        ep = case.get("endpoint", "unspecified")
+        ep = f"{ep} ({case['connection']})" if case.get("connection") else ep
         add(f"| {case['id']} | {md_escape(case['title'])} | {uut} | "
-            f"{', '.join(case.get('wun', [])) or '—'} | **{case['status']}** "
+            f"{', '.join(case.get('wun', [])) or '—'} | `{ep}` | **{case['status']}** "
             f"| {case.get('duration_s', '?')}s | {log} | {md_escape(detail) or '—'} |")
     add("")
 
@@ -263,6 +428,10 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
                              f"{case.get('reason') or 'see run JSON output_tail'}")
         elif case["status"] == "SKIPPED":
             anomalies.append(f"**{case['id']} SKIPPED** — {case['title']}: {case.get('reason')}")
+    na = [c for c in run.get("cases", []) if c["status"] == "NOT-APPLICABLE"]
+    if na:
+        anomalies.append("**Not applicable in this deployment** (declared, not gaps): "
+                         + "; ".join(f"{c['id']} — {c.get('reason')}" for c in na))
     for item in manifest.get("known_anomalies", []):
         anomalies.append(item)
     if anomalies:
@@ -312,8 +481,11 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
     for need in needs:
         key = need["_verdict"].lower().replace("-", "_")
         need_counts[key] = need_counts.get(key, 0) + 1
+    tiers = {}
+    for c in run.get("cases", []):
+        tiers[c.get("endpoint", "unspecified")] = tiers.get(c.get("endpoint", "unspecified"), 0) + 1
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "title": manifest.get("report", {}).get("title", "Workbench Validation"),
         "banner": manifest.get("banner"),
@@ -334,14 +506,22 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
             "git_sha_short": env.get("git_sha_short"),
             "git_branch": env.get("git_branch"),
             "git_dirty": env.get("git_dirty"),
+            "git_dirty_count": env.get("git_dirty_count", 0),
             "skills_total": len(env.get("skills", {})),
             "hooks_total": len(env.get("hooks_installed", [])),
             "model_id": env.get("model_id"),
+            "model_captured": bool(env.get("model_id")),
+            "harness_version": env.get("harness_version"),
+            "skill_version_mismatches": env.get("skill_version_mismatches", []),
         },
+        "environment": env,
+        "warnings": run.get("warnings", []),
+        "connections": run.get("connections") or env.get("connections", {}).get("declared", {}),
         "summary": {
             "verdict": verdict,
             "needs": {"total": len(needs), **need_counts},
             "tests": {"total": len(run.get("cases", [])), **run.get("summary", {})},
+            "tiers": tiers,
         },
         "needs": [
             {
@@ -350,6 +530,7 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
                 "coverage": n.get("coverage", "tests"),
                 "implemented_by": n.get("implemented_by"),
                 "verdict": n["_verdict"], "tests": n.get("_tests", []),
+                "strongest_evidence": n.get("_strongest"),
                 "process_controls": n.get("process_controls", []),
             }
             for n in needs
@@ -359,6 +540,8 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
                 "id": c["id"], "title": c["title"], "wun": c.get("wun", []),
                 "uut": c.get("uut", []), "uut_versions": c.get("uut_versions", {}),
                 "status": c["status"], "duration_s": c.get("duration_s"),
+                "endpoint": c.get("endpoint", "unspecified"),
+                "connection": c.get("connection"),
                 "reason": c.get("reason"), "log": c.get("log"),
                 "cmd": c.get("cmd"),
                 "description": case_meta.get(c["id"], {}).get("description"),
@@ -402,6 +585,7 @@ def main():
         need["_tests"] = [c["id"] for c in manifest.get("test_cases", [])
                           if need["id"] in c.get("wun", [])]
         need["_verdict"] = need_verdict(need, case_index)
+        need["_strongest"] = strongest_evidence(need, case_index)
     verdict = overall_verdict(needs)
 
     report_rel = manifest.get("report", {}).get(

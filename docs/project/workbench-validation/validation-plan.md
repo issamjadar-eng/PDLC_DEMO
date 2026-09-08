@@ -123,18 +123,37 @@ sources, recorded per run in `docs/_analysis/`.
 
 ## 6. Configuration baseline & revalidation triggers
 
-The runner records per run: repository git SHA + dirty flag, per-skill versions
-(SKILL.md frontmatter + VERSION files), installed hooks, platform/python, and the
-model identifier when available (recorded in the validation evidence only — the
-vendor-neutrality rule governs controlled document content, not validation records).
+**Environment record.** Every run writes the canonical setup record into its results JSON (`environment:`), and the report and console render it in full as an expandable section: configuration under test (commit, branch, dirty-file list, per-skill version with frontmatter/`VERSION` disagreements flagged, hooks, agents, rules), runtime (Python, OS, architecture, host, harness version, model identifier), tooling (every binary a case requires — resolved path and version — plus the test-harness package versions actually resolved), connections (declared tier per external system, MCP servers approved/configured, reachability probe of any declared endpoint) and isolation (environment variables stripped or set for cases, socket-guard posture, working directory). A verdict is only interpretable together with this record; two records compared field by field are what turns "re-run needed" from a hunch into a diff.
 
-Revalidation triggers: skill/agent/hook file change (skill-tree SHA moves);
-underlying model or agent-platform version change (behavior changes with zero repo
-diff); `project.yml` security/config change; intended-use change; periodic — per
-internal-audit cadence (GL-SOP-QM-004).
+**Run of record.** A run counts as the run of record only when it carries no warnings: clean working tree at a committed SHA, model identifier captured (`--model-id`), no ambiguous skill version pin, every case carrying an `endpoint:` tier. A run with warnings is a debugging run — useful, but not evidence.
+
+**Revalidation triggers** (canonical list lives in `validation.yml` `revalidation_triggers:` and is rendered into the report):
+
+- any `.claude/` diff since the recorded commit — affected cases; a full run before a run of record;
+- model or harness version change — full run plus exploratory review of Tier-1 LLM paths;
+- tooling change (any recorded binary or package version differs) — full run;
+- connection declaration change (`connections:` flips, or a declared endpoint's reachability changes) — the affected `live` cases and the WUN-16 probe record;
+- `project.yml` security/config change; intended-use change; the internal-audit cycle.
+
+## 7. Evidence tiers and hermeticity
+
+Every test case declares what it touched — `endpoint: none | mocked | live`:
+
+| Tier | What it proves | Hermetic | Runs here |
+|---|---|---|---|
+| `none` | Pure logic, hooks, renderers — no external system | yes | always |
+| `mocked` | The real client code paths against a fake Jira/Confluence transport with canned payloads (pagination, auth failure, graceful degradation, ADF splice) | yes | always |
+| `live` | The integration against the deployment's real endpoint | no | only where `connections:` declares the endpoint |
+
+The manifest's `connections:` block states what this deployment has (`jira`, `confluence`, `browser` — all `none` for this project). A `live` case whose connection is declared `none` is reported **NOT-APPLICABLE**: a statement about the deployment, not a gap, and it never lowers a need or the overall verdict. A connection declared present but unreachable is a real SKIP or FAIL. Each need carries a plain-language "strongest evidence" line so a reader can tell mock-verified from live-verified at a glance.
+
+**Hermeticity rule.** A `none` or `mocked` case may not depend on the live network, live browser cookies, or unpinned live project content. The skills' own suites enforce the first two with a `conftest.py` socket guard that blocks socket connections outside the `live` marker; where a case deliberately checks a property of this project instance (for example, that every dashboard row with a Create Draft button can build a draft bundle), the case says so in its `approach:` and skips cleanly in a bare checkout.
+
+**MCP-mediated paths.** Where an integration runs through an MCP server, the agent makes the call, not a script; those paths cannot be pytest-live. They are `exploratory` needs (WUN-16) assured by recorded live probes — a scripted transcript with expected outcomes, re-run whenever a deployment declares a connection — and are never reported as a scripted PASS.
 
 ## Changelog
 
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-07-27 | BX / AI Assistant | task 110: initial plan — 6 intended-use classes, 3 risk tiers, 15-need WUN register, LLM-honesty model, baseline + revalidation triggers. |
+| 2026-09-08 | BX / AI Assistant | task 119: §6 rewritten around the full environment record and the run-of-record rule; new §7 evidence tiers (`none`/`mocked`/`live`, `connections:`, NOT-APPLICABLE semantics), hermeticity rule, MCP-mediated paths as exploratory (WUN-16). |

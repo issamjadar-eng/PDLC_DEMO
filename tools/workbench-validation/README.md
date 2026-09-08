@@ -19,3 +19,4 @@ This data layer is general-purpose: a customer QMS requiring its own validation
 document format is served by a new transform over these files, not by redoing the
 validation. Viewable in the project console (Settings → Validation; files resolve in
 the Documents tab via the `tools/workbench-validation` grounding root).
+- 2026-09-08 — BX / AI Assistant — task 119: run/sidecar schema 1.1 — results JSON carries the full `environment` record (tooling, connections, isolation, dirty files, version-pin mismatches), `warnings[]`, per-case `endpoint`; report §1 gains the collapsed "Full environment record"; NOT-APPLICABLE status.

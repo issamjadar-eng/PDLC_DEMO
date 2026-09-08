@@ -1,0 +1,25 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180259Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-02 — The document-conversion gate stops uncontrolled conversions
+purpose:     Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability).
+approach:    Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required.
+UUT:         docflow@36
+user needs:  WUN-08
+endpoint:    none
+test source: —
+command:     bash -c export CLAUDE_PROJECT_DIR="$PWD"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{"tool_input":{"command":"pandoc report.docx -o report.md"}}' | bash "$H" 2>/dev/null; d=$?; printf '%s' '{"tool_input":{"command":"ls docs"}}' | bash "$H" 2>/dev/null; a=$?; echo "deny_exit=$d allow_exit=$a"; [ "$d" -eq 2 ] && [ "$a" -eq 0 ]
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    jq, python3
+tooling:     jq=jq-1.7.1-apple; python3=Python 3.14.6
+timeout_s:   60
+started:     2026-09-08T18:03:02Z (UTC)
+exit_code:   0
+duration_s:  0.05
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+deny_exit=2 allow_exit=0
+

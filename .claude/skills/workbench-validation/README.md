@@ -71,8 +71,34 @@ the whole authoring workbench.
 | Report/sidecar not hand-edited | `validation-report.md` + sidecar carry the generated stamp and match `results/latest.json` run_id | Required | local |
 | Validation freshness | Sidecar `baseline.git_sha_short` matches repo HEAD, else re-run recommended | Recommended | local |
 | No fake PASS for LLM behavior | Every `coverage: tests` need maps to ≥1 deterministic test case; LLM-assured needs are process-control/exploratory | Required | local |
+| Every case declares its evidence tier | `test_cases[].endpoint` is `none`, `mocked`, or `live` on every case; `live` cases carry `connection:` and the manifest has a `connections:` block | Required | local |
+| Run of record is clean | Latest run JSON has no `warnings[]` (clean tree, model id captured, no skill version-pin mismatch, no tier-less case) | Recommended | local |
+| Anomalies are dispositioned | Every `known_anomalies[]` entry names an owner and an expected clearing run (or "accepted residual") | Required | local |
 
 ## Changelog
+
+- 4 (2026-09-08): **Evidence tiers + full environment record (run/sidecar schema 1.1).**
+  *Tiers (D7):* every test case declares `endpoint: none | mocked | live`; the manifest
+  gains `connections:` (what this deployment has per external system). A `live` case
+  whose connection is declared `none` is reported **NOT-APPLICABLE** — never executed,
+  never lowering a need or the overall verdict — while a declared-present but
+  unreachable connection is a real SKIP/FAIL. New per-need `strongest_evidence` line
+  ("mock-verified; live jira not applicable in this deployment"); Endpoint column in the
+  report's results table and the sidecar; NOT-APPLICABLE need verdict; the same tier
+  names are the pytest markers (`mocked`/`live`, `--live` opt-in, socket guard) the
+  skills' own suites now use. *Environment record (D8):* the run JSON `environment`
+  block now carries the dirty-file list, agents/rules installed, per-skill frontmatter
+  **and** VERSION with `version_mismatch` flagged (D5), Python executable/architecture,
+  harness version, model id + `model_captured`, per-binary tooling probe (path +
+  `--version`), test-harness package versions resolved by `uv`, MCP servers
+  approved/configured, per-connection reachability probes, and an isolation block; the
+  report §1 renders it as a collapsed "Full environment record"; the sidecar carries the
+  full block plus `warnings` and `summary.tiers`. *Runs of record (D2):* `--model-id`
+  flag; loud `warnings[]` on dirty tree / uncaptured model / version-pin mismatch /
+  tier-less case, printed to stderr and carried into the report banner. Evidence-log
+  headers add `endpoint:` and resolved tooling versions. Template, SKILL.md schema
+  summary, verdict semantics, and Best Practices rows updated. Anomaly policy tightened:
+  an entry needs an owner and an expected clearing run.
 
 - 3 (2026-07-28): UUT (unit under test) — `test_cases[].uut:` names the workbench
   component(s) a case actually runs against (multiple allowed; sentinel

@@ -1,8 +1,8 @@
 ---
 name: jira-pull
 description: "Jira system-of-record mirror + drift detection for design-controls trace matrices. Pull-only — never pushes to Jira. Sibling to /trace-matrix: /trace-matrix writes the regulated deliverable from doc sources; /jira-pull mirrors Jira's canonical item universe (Epics as Design Inputs, Stories as Software Requirements, Hazards as Risk items, Test Executions as V&V) under `docs/project/_jira/<dhf>/<version>/` and emits drift reports comparing those items against DTM/HTM artifacts (canonical edge universe). Trigger when the user wants to mirror, pull, refresh, audit, or compare Jira issues for design-controls — phrases like 'pull Jira for <DHF>', 'refresh the Jira mirror', 'check drift between Jira and the DTM', 'build the unified trace from Jira', 'audit the trace matrix for drift', 'sync Jira issues to the project'. Also trigger when the user asks why a DI is missing from the trace, why a Story has no V&V, or wants to know which Jira items are not in the DTM. Three categories of drift rule (A: item-universe mismatch, B: edge-universe incompleteness, C: metadata mismatch). Project-agnostic: reads project.yml `change_control.jira` (cloud_id, base_url, project_keys, field_set, cache) and `dhfs[].jira` (project_key, versions[], story_filter) plus `dhfs[].evidence.design_traceability_matrix` (xlsx schema map with sheet/header_row/columns/extractors)."
-version: 1
-updated: 2026-05-03
+version: 2
+updated: 2026-09-08
 ---
 
 # Jira Pull Skill
@@ -131,6 +131,8 @@ project-agnostic configuration section).
 | `lib/drift_rules.py` | Rule registry — Category A / B / C signatures + dispatch + severity resolution |
 | `lib/render.py` | Markdown renderers — issue tables, unified-trace, drift report |
 | `references/drift-rule-catalog.md` | Full prose catalog of every rule (A1–A8, B1–B8, C1–C5) with detection logic + resolution hint examples |
+| `tests/conftest.py` + `tests/jirapull_testkit.py` | Three evidence tiers — `unit` (unmarked), `@pytest.mark.mocked` (hermetic, canned payloads), `@pytest.mark.live` (opt-in via `--live`, needs a configured connection; skipped with a reason otherwise). Autouse socket guard fails any non-`live` test that opens a network connection. |
+| `tests/test_refresh_mocked.py` + `tests/fixtures/atlassian/*.json` | Mocked-tier tests over the deterministic halves of `refresh` on either side of the (agent-only) MCP search call: `build_jql` cursor protocol, every accepted response envelope, `merge_pages` dedupe on the key-cursor boundary, `normalize_issue`, `build_meta`. Fixtures are synthetic `DEMO-N` pages (`nextPageToken` / `isLast`). Run via `uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q`. |
 | `tests/test_drift_rules.py` | Unit tests over the drift-rule registry — synthetic in-memory fixtures (no live Jira/Confluence calls); one clean + one drift case per implemented rule, plus a meta-test that locks unimplemented rules to `NotImplementedError`. Run via `python3 .claude/skills/jira-pull/tests/test_drift_rules.py`. |
 
 ## Actions

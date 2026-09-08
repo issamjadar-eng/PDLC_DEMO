@@ -1,8 +1,8 @@
 ---
 name: tracker
 description: "Submission package tracker — milestone-driven readiness dashboard. Builds tracker markdown from milestone catalog + composition manifests + DHF evidence, renders feature-rich HTML dashboard (filters, badges, click-row details, URL-rewriting to project-console Documents tab), assesses readiness. HCLS-portable via project.yml `tracker:` config block + plugin seams for lifecycle-state reading."
-version: 14
-updated: 2026-06-15
+version: 15
+updated: 2026-09-08
 ---
 
 # Submission Package Tracker

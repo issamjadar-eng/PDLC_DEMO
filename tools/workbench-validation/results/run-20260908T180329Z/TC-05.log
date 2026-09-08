@@ -1,0 +1,100 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T180329Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via console
+case:        TC-05 — Writing-quality checks catch known defects
+purpose:     Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review.
+approach:    Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged.
+UUT:         writing-well@6
+user needs:  WUN-04
+endpoint:    none
+test source: .claude/skills/writing-well/tests/run_tests.sh (pinned copy: tools/workbench-validation/results/run-20260908T180329Z/pinned/TC-05)
+command:     bash .claude/skills/writing-well/tests/run_tests.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-08T18:03:31Z (UTC)
+exit_code:   0
+duration_s:  0.54
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+tells.md — mechanical tells must be caught (recall)
+  PASS  tag present: hedge
+  PASS  tag present: cliche
+  PASS  tag present: passive
+  PASS  tag present: adverb
+  PASS  tag present: clutter
+  PASS  tag present: nominalization
+  PASS  tag present: opener
+  PASS  tag present: length
+  PASS  clutter 'in order to' caught
+  PASS  clutter 'due to the fact that' caught
+  PASS  nominalization 'make a decision' caught
+  PASS  hedge 'very' caught
+  PASS  cliche 'at the end of the day' caught
+  PASS  opener 'it is...that' or 'there is' caught
+  PASS  passive caught
+  PASS  'is important' NOT flagged passive
+  PASS  'make a decision' reported once (deduped)
+
+skipzones.md — clutter in skip-zones must NOT be flagged (precision)
+  PASS  skip-zone clutter suppressed (<=1 from visible link text)
+  PASS  no 'was decided' from fenced/indented/table code
+  PASS  no 'at the end of the day' from the bare URL
+
+predicate-adjective passives must NOT fire (precision) + dependency nominalization (recall)
+  PASS  predicate adj 'thrilled' NOT flagged passive
+  PASS  predicate adj 'golden' NOT flagged passive
+  PASS  predicate adj 'married' NOT flagged passive
+  PASS  predicate adj 'green' NOT flagged passive
+  PASS  predicate adj 'wooden' NOT flagged passive
+  PASS  genuine passive 'was written' still flagged
+  PASS  nominalization 'has a dependency on' caught
+
+exit-code contract
+  PASS  default exit 0 even with findings (advisory)
+  PASS  --strict exit 1 when findings exist
+  PASS  --strict exit 0 when no findings
+
+flags
+  PASS  --only clutter yields only clutter
+  PASS  --max-len 5 increases length flags
+
+32 passed, 0 failed
+slop sample — tells must fire
+  PASS  tag present: aitell-emdash
+  PASS  tag present: aitell-vocab
+  PASS  tag present: aitell-construction
+  PASS  tag present: aitell-opener
+  PASS  tag present: aitell-signpost
+
+ultra-marker single occurrence
+  PASS  'delve' flagged as vocab
+
+em-dash density
+  PASS  high em-dash density flagged
+  PASS  clean low-dash prose NOT flagged for em-dash
+
+folklore gating
+  PASS  'robust/leverage' NOT flagged without --folklore
+  PASS  folklore flagged WITH --folklore
+
+skip zones
+  PASS  vocab inside code fence NOT flagged
+
+references section excluded
+  PASS  em-dashes in References not counted
+
+flourish tier
+  PASS  repeated colon-label scaffold flagged
+  PASS  single colon-label NOT flagged (repeat-gated)
+  PASS  demonstrative flourish flagged
+  PASS  epigram stacking flagged at density
+  PASS  single contrast NOT flagged (density-gated)
+  PASS  nested em-dash asides flagged when clustered
+
+18 passed, 0 failed
+
