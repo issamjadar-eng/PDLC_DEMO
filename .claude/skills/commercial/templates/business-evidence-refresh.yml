@@ -1,0 +1,143 @@
+# business evidence refresh — CI-owned scheduled re-grounding of the business-question stack.
+#
+# Installed by the commercial skill (copy to `.github/workflows/business-evidence-refresh.yml`).
+# Project-agnostic: skills + trees live at fixed paths; domains are DISCOVERED
+# (every docs/project/<slug>/ holding a commercial.yml or <slug>.yml catalog).
+#
+# Two cadences, one job:
+#   weekly  (Mon 05:00 UTC) — re-snapshot every external openFDA dataset in the corpus
+#                             (recalls, clearances, MAUDE), then re-answer ONLY the
+#                             questions that depend on a refreshed dataset (engine
+#                             `dependents`), so a new competitor recall or clearance
+#                             lands as a fresh DRAFT edition with a delta report.
+#   monthly (1st 05:30 UTC) — re-answer every implemented question in every domain
+#                             (month-end close: finance margin / budget questions,
+#                             manufacturing yield / CAPA, commercial economics), render
+#                             sidecars, and assemble the Management Review Pack from
+#                             APPROVED editions only (drafts never enter the pack of record).
+#
+# Safety properties the engine guarantees (see the commercial skill's SKILL.md):
+#   - a same-day re-answer REPLACES an unapproved draft in place; approved editions are
+#     hash-pinned and never touched — CI can only ever add or refresh drafts;
+#   - every draft is claim-linted; a lint failure is reported as a warning, never hidden;
+#   - snapshots are immutable and provenance-chained; a failed acquisition lands nothing.
+# Humans still approve: nothing here calls `approve`.
+name: business evidence refresh
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'        # weekly, Monday 05:00 UTC — external evidence
+    - cron: '30 5 1 * *'       # monthly, 1st 05:30 UTC — month-end re-answer + review pack
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'weekly (openFDA refresh + dependents) | monthly (re-answer all + pack) | both'
+        required: false
+        default: 'both'
+        type: choice
+        options: [weekly, monthly, both]
+
+# Serialize — concurrent runs would race on committed snapshots and drafts.
+concurrency:
+  group: business-evidence-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      CORPUS: .claude/skills/corpus/scripts/corpus.py
+      ENGINE: .claude/skills/commercial/scripts/commercial.py
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install engine dependency
+        run: python3 -m pip install --quiet pyyaml
+
+      - name: Resolve mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 5 * * 1" ]; then
+            echo "mode=weekly" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=monthly" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Discover business domains
+        id: domains
+        run: |
+          doms=""
+          for d in docs/project/*/; do
+            slug=$(basename "$d")
+            if [ -f "$d/commercial.yml" ] || [ -f "$d/$slug.yml" ]; then
+              doms="$doms $slug"
+            fi
+          done
+          echo "list=$(echo $doms)" >> "$GITHUB_OUTPUT"
+          echo "domains:$doms"
+
+      - name: Weekly — refresh external openFDA snapshots + re-answer dependents
+        if: steps.mode.outputs.mode == 'weekly' || steps.mode.outputs.mode == 'both'
+        run: |
+          set +e
+          refreshed=""
+          for ds in docs/project/corpus/*/openfda-*/; do
+            name="$(basename "$(dirname "$ds")")/$(basename "$ds")"
+            echo "::group::corpus refresh $name"
+            if python3 "$CORPUS" refresh "$name"; then refreshed="$refreshed $name"; else echo "::warning::refresh failed for $name (nothing landed)"; fi
+            echo "::endgroup::"
+          done
+          for dom in ${{ steps.domains.outputs.list }}; do
+            for name in $refreshed; do
+              for q in $(python3 "$ENGINE" --domain "$dom" dependents "$name"); do
+                echo "::group::answer $dom/$q (depends on $name)"
+                python3 "$ENGINE" --domain "$dom" answer "$q" || echo "::warning::$dom/$q re-answer reported lint errors — draft kept for review"
+                echo "::endgroup::"
+              done
+            done
+          done
+
+      - name: Monthly — re-answer every implemented question (drafts)
+        if: steps.mode.outputs.mode == 'monthly' || steps.mode.outputs.mode == 'both'
+        run: |
+          set +e
+          for dom in ${{ steps.domains.outputs.list }}; do
+            for q in $(python3 "$ENGINE" --domain "$dom" dependents '*'); do
+              echo "::group::answer $dom/$q"
+              python3 "$ENGINE" --domain "$dom" answer "$q" || echo "::warning::$dom/$q re-answer reported lint errors — draft kept for review"
+              echo "::endgroup::"
+            done
+          done
+
+      - name: Render sidecars
+        run: |
+          for dom in ${{ steps.domains.outputs.list }}; do
+            python3 "$ENGINE" --domain "$dom" render
+          done
+
+      - name: Monthly — assemble the Management Review Pack (approved editions only)
+        if: steps.mode.outputs.mode == 'monthly' || steps.mode.outputs.mode == 'both'
+        run: |
+          python3 "$ENGINE" pack --domains "$(echo ${{ steps.domains.outputs.list }} | tr ' ' ',')" \
+            --out docs/project/management-review
+
+      - name: Commit refreshed evidence, drafts, sidecars and pack
+        run: |
+          git add docs/project/corpus docs/project/*/reports docs/project/*/.console docs/project/management-review 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "nothing changed — no commit"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "business-evidence: CI ${{ steps.mode.outputs.mode }} refresh (drafts + sidecars) [skip ci]"
+          git push

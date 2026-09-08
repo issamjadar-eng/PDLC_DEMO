@@ -1,0 +1,28 @@
+dataset: manufacturing/internal-process-validation
+snapshot: '2026-09-08'
+created_at: '2026-09-08T17:49:35+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for validation master list + calibration register export)
+  retrieved_at: '2026-09-08T17:49:35+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: d7b9cbe1599ec974952a5fe27f4a7ed01d21b41e3a09bd46faf7436d6a7f2ce4
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 0dc60eddccce3542e39849c378f84900ae672e26080c4a4ca8b60a5532ac412f
+    parents:
+    - d7b9cbe1599ec974952a5fe27f4a7ed01d21b41e3a09bd46faf7436d6a7f2ce4
+  script_sha256: 4c4a547b135978c6d7e91826df0833faa70df6561f6f99a86294474a2d2f4975
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 155

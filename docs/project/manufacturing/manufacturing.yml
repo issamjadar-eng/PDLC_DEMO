@@ -1,0 +1,404 @@
+# Manufacturing business-question catalog — consumed by the commercial-skill engine
+# with `--domain manufacturing` (one engine, N domain roots; catalog name derives from
+# the folder). Questions without `computation` render as not-implemented (roadmap, not
+# silence). All data is DEMO-FABRICATED (corpus manufacturing/internal-*).
+domain:
+  name: Manufacturing
+  nav_title: Manufacturing
+  tagline: yield, nonconformance & CAPA, supplier quality, validation
+  icon: manufacturing
+  id_prefix: MQ
+
+# Project-side lint extensions (relax-only). Digit-bearing identifiers used by the
+# manufacturing datasets that the built-in exempt set does not know: lot / NCR / CAPA /
+# supplier / validation record ids, the non-PP product lines, YYYY-MM period labels, and
+# the "#NN" asset numbering in the calibration register.
+lint:
+  exempt_patterns:
+    - "LOT-\\d{4}-\\d{4}"
+    - "NCR-\\d{4}-\\d{4}"
+    - "CAPA-\\d{4}-\\d{4}"
+    - "SUP-\\d{3}"
+    - "VAL-\\d{4}"
+    - "IP\\d{4}"
+    - "SP\\d{4}"
+    - "\\b\\d{4}-\\d{2}\\b"
+    - "#\\d{2}\\b"
+    - "IEC \\d{5}(?:-\\d+)*"
+
+# ---------------------------------------------------------------------------
+# Plain-language terms dictionary (rendered into the console sidecar). Audience: an
+# executive or regulator who knows neither manufacturing analytics nor QMS jargon.
+# AUTHORING RULE: definitions are TIMELESS — they define the term and its significance,
+# never pin-dependent facts (no counts, no dates, no current values).
+# ---------------------------------------------------------------------------
+terms:
+  first-pass yield: >-
+    The share of units that pass a production step the first time, without rework or
+    scrap. It is the cleanest single measure of whether a process is under control:
+    yield that erodes means defects are being made faster than the process catches them.
+  scrap and rework: >-
+    The two exits from a first-pass failure — a unit is either scrapped (discarded) or
+    reworked (repaired and re-tested). Both cost money; rework also hides process
+    problems because the unit still ships.
+  nonconformance report (NCR): >-
+    The formal record raised when a product, material, or process does not meet its
+    specification. Every NCR has to be investigated and dispositioned (use as is, rework,
+    scrap, return to supplier). The rate and age of open NCRs show how much unresolved
+    quality work the plant is carrying.
+  CAPA: >-
+    Corrective And Preventive Action — the quality-system process for formally
+    investigating a problem, fixing its root cause, and preventing recurrence. A CAPA
+    past its due date is an acknowledged problem the company has not yet fixed on the
+    schedule it set itself.
+  effectiveness verification: >-
+    The final step of a CAPA: checking, after the fix has been in place, that the problem
+    actually stopped recurring. A CAPA closed without effectiveness verification is a fix
+    that has been asserted, not demonstrated.
+  incoming inspection: >-
+    The check performed on purchased components and materials when they arrive, before
+    they enter production. The incoming reject rate is the earliest signal that a
+    supplier's quality is slipping.
+  single-source supplier: >-
+    A component with exactly one approved supplier. If that supplier fails an audit,
+    stops shipping, or ships defective parts, production stops with it — there is no
+    second source to switch to without a requalification effort.
+  supplier scorecard: >-
+    A periodic grade (A to D) a company assigns each supplier from its quality and
+    delivery performance. It turns many measurements into one signal that drives
+    audit frequency, sampling intensity, and sourcing decisions.
+  supplier audit currency: >-
+    Whether a supplier's most recent quality-system audit is within the interval the
+    company's procedure requires. An overdue audit means the company is buying from a
+    supplier whose controls it has not recently verified.
+  process validation (IQ/OQ/PQ): >-
+    Documented evidence that a piece of equipment or a production process consistently
+    produces what it is supposed to. IQ (installation qualification) shows it is installed
+    correctly; OQ (operational qualification) shows it works across its operating range;
+    PQ (performance qualification) shows it performs under real production conditions.
+    Producing on an unvalidated process is a quality-system finding.
+  calibration: >-
+    Periodic confirmation that a measuring instrument reads correctly against a known
+    reference. A measurement taken with an out-of-calibration instrument cannot be
+    trusted — every lot it accepted since the due date is in question.
+  device history record (DHR): >-
+    The per-lot production record that proves each lot was built, tested, and released
+    according to the approved process — who did what, with which materials, and the test
+    results. A lot cannot be released until its DHR is complete.
+  lot genealogy: >-
+    The traceability chain from a finished-device lot back to the component lots and
+    process steps that went into it, and forward to the devices shipped from it. It is
+    what lets a recall be scoped to the affected units instead of the whole fleet.
+  release lead time: >-
+    Days from a lot's start to its release for shipment. A rising lead time means work
+    is queuing somewhere — usually at test, at DHR review, or at a blocked disposition.
+  evidence class: >-
+    A label on every figure saying where it came from — measured (read directly from a
+    pinned dataset), derived (computed from pinned data by a stated formula), assumed (an
+    explicit assumption record), or unavailable (the data does not exist and the gap is
+    stated, not filled).
+  snapshot / pin: >-
+    A dated, immutable copy of a dataset. Every answer names the exact snapshot it was
+    computed from, so the same answer can be reproduced later — and a refreshed dataset
+    produces a new answer edition rather than silently changing the old one.
+
+categories:
+  - {key: yield, name: Yield & Throughput}
+  - {key: quality-system, name: Nonconformance & CAPA}
+  - {key: supplier, name: Supplier Quality}
+  - {key: validation, name: Validation & Calibration}
+  - {key: capacity, name: Capacity & Release}
+
+questions:
+  # ------------------------------------------------------------------ yield
+  - id: MQ-01
+    question: "First-pass yield, scrap and rework by product line, hw rev, station and site — where is yield eroding, and since when?"
+    category: yield
+    personas: [vp-manufacturing, plant-manager]
+    cadence: weekly
+    corpus_deps: [manufacturing/internal-production-lots]
+    computation: "python3 computations.py MQ-01 --corpus-root {corpus_root} --out {out}"
+    params: {fpy_floor_pct: 95, window_months: 3}
+    expectations:
+      - id: E-01.1
+        statement: "Every product line holds first-pass yield at or above the floor over the trailing window"
+        expected: "FPY >= 95% per line, trailing 3 months"
+        basis: "stand-in yield floor; no per-line target is on record in a manufacturing plan or the pFMEA [VERIFY]"
+        set_by: vp-manufacturing (demo)
+        validated: false
+    terms:
+    - first-pass yield
+    - scrap and rework
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: "The plant's yield review: what share of units pass each step the first time, cut by product line, hardware revision, station, and site — and, for any cell below the floor, the month the erosion started."
+        why: "Yield erosion is the earliest, cheapest place to catch a process or design problem. The cuts tell the plant manager whether the fix belongs to one revision, one station, or one site — and how long it has been going on."
+      fpy-stat:
+        label: First-pass yield
+        what: "Units passed first time divided by units started over the trailing window, with the scrap and rework rates that make up the failures."
+        why: "The headline health check for the plant; read against the yield floor."
+        how_to_read: "Higher is better; scrap plus rework equals the first-pass failure rate."
+      fpy-by-line:
+        what: "First-pass yield per product line over the trailing window."
+        why: "Names which product's process is eroding; one line can breach while the portfolio stays inside the floor."
+      fpy-by-station:
+        what: "First-pass yield per line station (SMT, final assembly, test, pack)."
+        why: "Locates the step where units fail — a test-station dip and an assembly dip need different owners."
+      fpy-by-site:
+        what: "First-pass yield per plant."
+        why: "Separates a product problem from a plant problem."
+      scrap-rework-by-line:
+        what: "Scrap rate and rework rate per product line."
+        why: "Rework hides problems (the unit still ships); scrap destroys value. The split says which cost the yield loss is taking."
+      erosion-cells:
+        what: "Every product-line × station cell below the yield floor in the window, with the first month of its current run below the floor."
+        why: "Answers 'since when' with a computed date instead of a recollection — the onset month is where the investigation starts."
+        how_to_read: "A cell that dipped and recovered is not listed; only cells still below the floor at the as-of date appear."
+      pp3500-rev-by-station:
+        what: "PP3500 first-pass yield by hardware revision and station."
+        why: "Tells a revision-specific defect apart from a station-wide drift — the difference between a design-transfer problem and a process problem."
+      fpy-trend:
+        what: "Monthly first-pass yield for the portfolio and for the revision/station cell with the widest yield gap."
+        why: "Shows whether the erosion is a step change, a slide, or a recovery in progress."
+      verdict:
+        what: "The verdict names the portfolio yield, how many lines and cells sit below the floor, the revision-specific gap, and the onset month."
+        why: "It keeps a healthy portfolio average from hiding one eroding revision at one station."
+
+  - id: MQ-02
+    question: "Capacity vs the demand plan — can each line and site build the planned units, and where is the constraint?"
+    category: capacity
+    personas: [coo, vp-manufacturing]
+    cadence: monthly
+    corpus_deps: [manufacturing/internal-production-lots, commercial/internal-revenue-plan]
+    # roadmap: needs planned units per line from the revenue plan (revenue-only today) plus
+    # a station capacity model; not implemented.
+
+  # ------------------------------------------------------------------ quality-system
+  - id: MQ-03
+    question: "NCR rate and aging, CAPA open count, past-due share and effectiveness-verification backlog — by source and severity."
+    category: quality-system
+    personas: [vp-quality]
+    cadence: weekly
+    corpus_deps: [manufacturing/internal-ncr-capa]
+    computation: "python3 computations.py MQ-03 --corpus-root {corpus_root} --out {out}"
+    params: {effectiveness_verified_floor_pct: 90}
+    expectations:
+      - id: E-03.1
+        statement: "No critical CAPA is past its due date"
+        expected: "0 critical CAPAs past due"
+        basis: "stand-in; the CAPA procedure on record names no escalation rule for critical past-due items [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+      - id: E-03.2
+        statement: "Closed CAPAs carry a completed effectiveness verification"
+        expected: ">= 90% of closed CAPAs effectiveness-verified"
+        basis: "stand-in; the CAPA procedure on record names no verification-completion target [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+    terms:
+    - nonconformance report (NCR)
+    - CAPA
+    - effectiveness verification
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: "The quality-system backlog review: how many nonconformances and CAPAs are open, how many are past due, how old they are, where they come from, and whether closed CAPAs were verified effective."
+        why: "Past-due CAPAs and unverified closures are what an auditor finds first. The cuts by source and severity say whether the load is a supplier problem, a production problem, or a capacity problem in the quality team."
+      capa-stat:
+        label: CAPA posture
+        what: "Open CAPAs, past-due open CAPAs, the effectiveness-verified share of closed CAPAs, and open NCRs — all at the data's as-of date."
+        why: "The four numbers a quality VP is asked for in a management review."
+      capa-pastdue-trend:
+        what: "Open and past-due open CAPAs at each month-end, rebuilt from each record's opened, due, and closed dates."
+        why: "Says whether the backlog is growing or being worked down — a rising past-due line is the aging signal."
+      ncr-trend:
+        what: "Nonconformance reports opened per month, all sources and supplier-sourced."
+        why: "The intake rate; a rising supplier line points at purchased parts rather than the plant's own process."
+      capa-open-by-source:
+        what: "Open and past-due CAPAs by where the problem was found (production, supplier, complaint, audit, field)."
+        why: "Field- and complaint-sourced CAPAs past due carry patient-safety and regulatory weight the others do not."
+      capa-open-by-severity:
+        what: "Open and past-due CAPAs by severity."
+        why: "A critical CAPA past due is the finding that should never appear."
+      ncr-open-by-severity:
+        what: "Open NCRs by severity, with the mean days since each was opened."
+        why: "Aging NCRs are undispositioned material and unresolved process questions."
+      ncr-by-source:
+        what: "Nonconformance reports opened in the trailing three months, by source."
+        why: "Where the recent nonconformance load is coming from."
+      effectiveness-by-quarter:
+        what: "Closed CAPAs per closure quarter, split into effectiveness-verified and not."
+        why: "Shows whether verification is keeping pace with closure or falling behind as a backlog."
+      supplier-ncr-concentration:
+        what: "Supplier-sourced nonconformances by supplier."
+        why: "One supplier driving most of the supplier NCRs is a sourcing decision, not a plant decision."
+      verdict:
+        what: "The verdict carries the open and past-due CAPA counts, the critical past-due count, the verified share against its floor, the open-NCR count and age, and the top supplier's share."
+        why: "Each count survives a one-line rollup so the badge never hides a critical item behind a healthy total."
+
+  - id: MQ-04
+    question: "Lot release lead time and DHR completeness — where are lots queuing before release, and is it getting worse?"
+    category: capacity
+    personas: [plant-manager, vp-quality]
+    cadence: weekly
+    corpus_deps: [manufacturing/internal-production-lots]
+    # roadmap: release_lead_days + dhr_complete trend by site / station; not implemented.
+
+  # ------------------------------------------------------------------ supplier
+  - id: MQ-05
+    question: "Supplier quality — incoming reject rate and on-time by supplier and component family, scorecard distribution, single-source exposure, audit currency."
+    category: supplier
+    personas: [supplier-quality, vp-quality]
+    cadence: monthly
+    corpus_deps: [manufacturing/internal-suppliers]
+    computation: "python3 computations.py MQ-05 --corpus-root {corpus_root} --out {out}"
+    params: {window_months: 3, reject_ceiling_pct: 3}
+    expectations:
+      - id: E-05.1
+        statement: "Every supplier on the approved list has a current quality-system audit"
+        expected: "0 suppliers with next audit due before the as-of date"
+        basis: "stand-in; the approved-supplier procedure on record does not state the audit interval used here [VERIFY]"
+        set_by: supplier-quality (demo)
+        validated: false
+      - id: E-05.2
+        statement: "Incoming reject rate stays under the ceiling for every supplier"
+        expected: "<= 3% of lots rejected per supplier, trailing 3 months"
+        basis: "stand-in reject ceiling; no supplier-quality target is on record [VERIFY]"
+        set_by: supplier-quality (demo)
+        validated: false
+    terms:
+    - incoming inspection
+    - single-source supplier
+    - supplier scorecard
+    - supplier audit currency
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: "The supplier-quality review: which suppliers are rejecting parts at incoming inspection or delivering late, how the scorecards are distributed, which components depend on a single supplier, and whose audits are overdue."
+        why: "A failing single-source supplier stops the line; an overdue audit means the company is buying from controls it has not verified. Both are sourcing decisions the plant cannot make alone."
+      supplier-stat:
+        label: Incoming quality
+        what: "Reject rate and on-time delivery across all suppliers in the trailing window, plus how many suppliers breach the ceiling and how many audits are overdue."
+        why: "The headline for the supplier-quality review."
+      reject-by-supplier:
+        what: "Share of incoming lots rejected per supplier over the trailing window."
+        why: "Names the suppliers whose parts are failing on arrival."
+        how_to_read: "Lower is better; compare against the reject ceiling."
+      ontime-by-supplier:
+        what: "On-time delivery per supplier over the trailing window."
+        why: "Late parts starve the line even when they are good parts."
+      reject-by-family:
+        what: "Incoming reject rate per component family."
+        why: "A family-level problem (all battery suppliers rejecting) points at the specification; a supplier-level one points at the supplier."
+      scorecard-distribution:
+        what: "How many suppliers hold each scorecard grade in the latest period."
+        why: "The shape of the supply base at a glance."
+      single-source-exposure:
+        what: "The suppliers that are the only approved source for their component, with their reject rate, grade, and audit status."
+        why: "These are the suppliers whose failure has no fallback."
+      audit-currency:
+        what: "Days until each supplier's next audit is due; negative means overdue."
+        why: "An overdue audit on a single-source supplier is the combination that should trigger action."
+      reject-trend:
+        what: "Monthly incoming reject rate for all suppliers and for each supplier above the ceiling."
+        why: "Distinguishes a bad month from a deteriorating supplier."
+      verdict:
+        what: "The verdict names the overall reject rate, the suppliers above the ceiling (with single-source and status flags), overdue audits, the single-source families, and the scorecard distribution."
+        why: "It keeps a healthy average from hiding one single-source supplier that is failing."
+
+  - id: MQ-06
+    question: "Component obsolescence risk by hardware revision — which parts on which revs are single-sourced, end-of-life, or on conditional suppliers?"
+    category: supplier
+    personas: [supplier-quality, vp-manufacturing]
+    cadence: quarterly
+    corpus_deps: [manufacturing/internal-suppliers]
+    # roadmap: needs a bill-of-materials by hw rev with end-of-life notices; not implemented.
+
+  - id: MQ-07
+    question: "Recall scoping via lot genealogy — if a component lot or process window is implicated, which finished lots and fleet devices are affected?"
+    category: capacity
+    personas: [vp-quality, coo]
+    cadence: on-demand
+    corpus_deps: [manufacturing/internal-production-lots, commercial/openfda-recalls-infusion, commercial/internal-fleet]
+    # roadmap: needs lot-to-serial genealogy linking lots to fleet devices; not implemented.
+
+  # ------------------------------------------------------------------ validation
+  - id: MQ-08
+    question: "Process-validation and calibration posture — overdue and due items by site and product line, and the blockers for PP3500 rev C release."
+    category: validation
+    personas: [vp-quality, plant-manager]
+    cadence: weekly
+    corpus_deps: [manufacturing/internal-process-validation, manufacturing/internal-production-lots]
+    computation: "python3 computations.py MQ-08 --corpus-root {corpus_root} --out {out}"
+    params: {due_soon_days: 30}
+    expectations:
+      - id: E-08.1
+        statement: "No production measuring equipment is past its calibration due date"
+        expected: "0 overdue calibrations"
+        basis: "stand-in; the calibration procedure on record is not distilled in this project's sources [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+      - id: E-08.2
+        statement: "PP3500 rev C lots are released only after the rev C test-fixture PQ is complete"
+        expected: "PQ validated before the first rev C release"
+        basis: "stand-in; the design-transfer plan's validation-before-release gate is not distilled in this project's sources [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+    terms:
+    - process validation (IQ/OQ/PQ)
+    - calibration
+    - device history record (DHR)
+    - evidence class
+    - snapshot / pin
+    explainers:
+      question:
+        what: "The validation and metrology status review: which equipment and processes are overdue or coming due for validation, calibration, or maintenance, by site and product line — and what is still open on the PP3500 rev C production path."
+        why: "Producing on unvalidated processes or measuring with out-of-calibration instruments puts every affected lot in question. The rev C view says what must close before that revision can be released cleanly."
+      posture-stat:
+        label: Validation & calibration posture
+        what: "Overdue items, items due within the window, overdue calibrations by site, and the count of open rev C blockers."
+        why: "The numbers a quality VP takes to the plant review."
+      posture-by-site:
+        what: "Overdue and due-soon register items per plant."
+        why: "Locates the metrology or validation backlog to a site and its owner."
+      posture-by-type:
+        what: "Overdue and due-soon items by record type (IQ, OQ, PQ, calibration, preventive maintenance)."
+        why: "A calibration backlog and a validation backlog have different owners and different lot impact."
+      posture-by-line:
+        what: "Overdue and due-soon items by product line (shared equipment listed separately)."
+        why: "Says which product's lots are exposed."
+      overdue-calibrations:
+        what: "Each overdue calibration with the days past due."
+        why: "The longest-overdue instruments define how far back the lot-impact assessment must reach."
+      revc-blockers:
+        what: "PP3500 rev C validation items (fixtures, processes) not yet validated, with status, due date, and owner."
+        why: "The validation-side checklist for releasing rev C."
+      revc-lots:
+        what: "PP3500 rev C lots by release state: released, in process, or blocked by an incomplete device history record."
+        why: "Blocked lots are finished inventory that cannot ship; released lots while validation is open are a question for the design-transfer record."
+      posture-history:
+        what: "How overdue and due-soon counts have moved over time — not available from a single snapshot."
+        why: "Stated as a gap so the reader does not mistake one snapshot for a trend; recurring snapshots build it."
+      verdict:
+        what: "The verdict carries the overdue and due-soon counts, the overdue calibrations by site, each open rev C validation item, the blocked-lot count, and how many rev C lots were released while validation is open."
+        why: "Each element survives a one-line rollup; the released-while-open count is the item a reviewer must not miss."
+
+  - id: MQ-09
+    question: "Cost of scrap and rework by line and station — what is yield loss costing, and where does a yield point buy the most?"
+    category: yield
+    personas: [coo, vp-manufacturing]
+    cadence: monthly
+    corpus_deps: [manufacturing/internal-production-lots, finance/internal-standard-costs]
+    # roadmap: needs standard unit costs per line/station from the finance domain; not implemented.
+
+  - id: MQ-10
+    question: "Design-transfer readiness per line — are validations, DHR templates, work instructions and training complete for each revision in production?"
+    category: validation
+    personas: [vp-manufacturing, vp-quality]
+    cadence: monthly
+    corpus_deps: [manufacturing/internal-process-validation, manufacturing/internal-production-lots]
+    # roadmap: needs a design-transfer checklist register (work instructions, training records); not implemented.

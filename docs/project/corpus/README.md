@@ -11,6 +11,8 @@ cite either a `dataset@snapshot` or an `A-NNN`, never an unsourced figure.
 
 | Folder | Purpose |
 |--------|---------|
+| `finance/` | Internal demo-fabricated finance datasets consumed by the Finance domain — standard costs, warranty claims, GL budget vs actual, AR & inventory (seeded generators, banner-stamped). Roster: `corpus.py list` |
+| `manufacturing/` | Internal demo-fabricated manufacturing datasets consumed by the Manufacturing domain — production lots, NCR/CAPA register, supplier register + incoming inspection, process-validation/calibration register (seeded generators with `check_knobs.py` assert seams). Roster: `corpus.py list` |
 | `commercial/` | Datasets consumed by the commercial analytics tier — external real data (openFDA 510(k)/recalls/MAUDE incl. PCA-scoped, curated competitor feature matrix) + internal demo-fabricated operations data (fleet, complaints, upgrade campaign, financials, revenue plan, accounts, win/loss, subscriptions, telemetry, regulatory docket, signal register, KOL register). Roster + freshness: `corpus.py list` |
 
 ## Expected Content
@@ -38,5 +40,6 @@ cite either a `dataset@snapshot` or an `A-NNN`, never an unsourced figure.
 
 | Date | Author | Summary |
 |------|--------|---------|
+| 2026-09-08 | BX / AI Assistant | task 118: added `finance/` (4 datasets) and `manufacturing/` (4 datasets) domain folders for the new business domains; cross-domain citation (a finance question pinning `commercial/internal-financials`) is by design. |
 | 2026-07-27 | BX / AI Assistant | task 108 full-catalog run: +10 datasets (7 internal generators, 1 real openFDA PCA-MAUDE, curated competitor features, KOL register); complaints extended with over-delivery / pca-by-proxy signal categories (severity convention corrected to 3=severe same day); Structure row updated to point at `corpus.py list` as the roster. |
 | 2026-07-22 | BX / AI Assistant | task 108: corpus root scaffolded (corpus skill v1) — data tier for the commercial analytics suite; no datasets yet. |

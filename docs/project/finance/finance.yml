@@ -1,0 +1,463 @@
+# Finance business-question catalog — consumed by the commercial skill engine
+# (`commercial.py --domain finance`). Second domain of the one-engine/N-roots model.
+# Questions without `computation` render as not-implemented (roadmap, not silence).
+
+domain:
+  name: Finance
+  nav_title: Finance
+  tagline: margin, cost of quality, working capital, budget
+  icon: finance
+  id_prefix: FQ
+
+# Project-side lint extensions (engine `lint:` block — relax-only, never adds findings).
+# exempt_patterns: digit-bearing identifiers used in finance reports that the built-in
+# token list does not cover — non-PP product codes (IP5000, SP6000, SP6500), monthly
+# periods (YYYY-MM; full ISO dates are stripped first by the built-in rule), warranty
+# claim ids (WC-NNNNN), the "over-90" AR aging bucket, and half/quarter labels (H1, Q2).
+lint:
+  exempt_patterns:
+    - "IP\\d{4}"
+    - "SP\\d{4}"
+    - "\\d{4}-\\d{2}\\b"
+    - "WC-\\d+"
+    - "(?i)over-90"
+    - "\\bH[12]\\b"
+    - "\\bQ[1-4]\\b"
+  estimation_exempt_terms: []
+
+# ---------------------------------------------------------------------------
+# Plain-language terms dictionary (rendered into the console sidecar). Audience: a
+# board member, controller, or quality leader who is not an analyst. AUTHORING RULE
+# (commercial skill SKILL.md): definitions are TIMELESS — they define the term and its
+# significance, never pin-dependent facts (no counts, no date ranges, no current values;
+# those live in the marker-cited reports). Per-question `terms:` lists reference keys
+# here; inline {term: definition} maps are allowed for one-offs.
+# ---------------------------------------------------------------------------
+terms:
+  gross margin: >-
+    Revenue minus the direct cost of producing and delivering the product — what is left
+    to fund R&D, sales, and overhead. A product line can post healthy revenue and still
+    consume the company if its margin is thin; a company margin can rise on mix while
+    individual lines erode underneath it.
+  standard cost variance: >-
+    The gap between what a unit actually cost to make (actual cost of goods sold divided
+    by units) and the "standard" cost accounting booked it at. An unfavorable variance
+    (actual above standard) means the standard is stale or the process is drifting;
+    it also means margin reports built on standards flatter the line.
+  cost of poor quality: >-
+    What the company spends because products failed — warranty repairs and replacements,
+    goodwill credits, complaint investigation, field corrections. Tracked per installed
+    unit so a growing fleet does not hide a worsening product.
+  warranty cost per installed unit: >-
+    Warranty spend over a window divided by the number of devices in the field that
+    could have generated a claim. The installed-base count comes from the fleet
+    registry; where the registry does not carry a device population, the per-unit
+    figure is a stated gap rather than a guess.
+  warranty reserve: >-
+    Money set aside on the balance sheet to cover future warranty claims on products
+    already sold. Adequacy is judged against the observed claim rate and cost per claim;
+    a reserve that lags rising field costs understates liabilities.
+  DSO: >-
+    Days Sales Outstanding — how many days of sales are tied up in unpaid customer
+    invoices. Higher DSO means cash arrives later; a single channel with climbing DSO
+    is usually a collections dispute or a contract-terms problem, not a market signal.
+  over-90 AR: >-
+    Accounts receivable more than 90 days past invoice — the slice of unpaid customer
+    balances most at risk of never being collected. Its share of a channel's receivables
+    is the early-warning signal for bad-debt exposure.
+  inventory days: >-
+    How many days of cost consumption the inventory on hand represents. Rising inventory
+    days on a declining product line means cash is being tied up in stock that sells
+    slower every month — an obsolescence and write-down risk.
+  working capital: >-
+    The cash tied up in running the business — receivables and inventory, less
+    payables. "Cash trapped" names the portion held above target: overdue receivables
+    and inventory beyond the target days of cover.
+  budget variance: >-
+    Actual spend minus budgeted spend for a period, usually expressed as a percentage of
+    budget. Positive is over budget, negative is under. A tolerance band separates noise
+    from a re-plan conversation; a breach is explained by its driving cost center.
+  headcount variance: >-
+    Actual filled positions minus the budgeted positions. Under budget on heads usually
+    means hiring lag (spend runs under, but so does the work the heads were meant to do);
+    over budget on heads often shows contractors absorbed onto a program.
+  GPO: >-
+    Group Purchasing Organization — a buying intermediary that negotiates supply contracts
+    on behalf of many hospitals at once. Receivables are tracked by channel because one
+    GPO's payment behaviour moves a large share of the company's cash at once.
+  installed base: >-
+    The devices currently in the field at customer sites, per the fleet registry. The
+    denominator for any "per unit" field-cost or reliability figure.
+  evidence class: >-
+    Every charted series is tagged with where its numbers stand: "measured" (read directly
+    from pinned source data), "derived" (computed from measured data by a stated formula),
+    "assumed" (rests on a recorded assumption), or "unavailable" (the data does not exist,
+    so the gap is shown instead of a guess). A question's badge shows the WEAKEST class
+    used, so a dashboard cannot overstate how well-grounded an answer is.
+  snapshot / pin: >-
+    Answers are computed from frozen, dated copies of each source dataset ("snapshots"),
+    and each answer records ("pins") exactly which snapshot it used. That makes every
+    number reproducible and its as-of date explicit: the answer reflects its pinned data,
+    not whatever the data looks like today.
+
+categories:
+  - {key: margin, name: "Margin & Cost Variance"}
+  - {key: cost-of-quality, name: "Cost of Quality & Warranty"}
+  - {key: working-capital, name: "Working Capital"}
+  - {key: plan, name: "Budget & Plan"}
+
+questions:
+  # --- Margin & Cost Variance ------------------------------------------------
+  - id: FQ-01
+    question: "Gross margin by product line and region vs prior year, with standard-vs-actual cost variance by line — which lines are eroding?"
+    category: margin
+    personas: [cfo, board]
+    cadence: quarterly
+    corpus_deps: [commercial/internal-financials, finance/internal-standard-costs]
+    computation: "python3 computations.py FQ-01 --corpus-root {corpus_root} --out {out}"
+    # fy: the fiscal year whose closed quarters form the window; prior year = same quarters.
+    # gm_floor_pct: company gross-margin floor (stand-in, E-01.1). erosion_threshold_pts:
+    # a line whose GM moves by this many points or worse YoY is "eroding".
+    # cost_variance_tolerance_pct: standard-cost variance beyond this (either direction)
+    # is flagged for a standards review (stand-in, E-01.2).
+    params: {fy: 2026, gm_floor_pct: 55, erosion_threshold_pts: -1.0, cost_variance_tolerance_pct: 5}
+    expectations:
+      - id: E-01.1
+        statement: "Company gross margin holds at or above the floor over the fiscal-year window"
+        expected: "gross margin >= 55%"
+        basis: "board-deck target carried forward; no plan of record names a floor [VERIFY]"
+        set_by: cfo (demo)
+        validated: false
+      - id: E-01.2
+        statement: "No product line's standard-cost variance exceeds the review tolerance"
+        expected: "|actual vs standard| <= 5% per line over the window"
+        basis: "cost-accounting review trigger; no controller policy names a tolerance [VERIFY]"
+        set_by: controller (demo)
+        validated: false
+    terms:
+      - gross margin
+      - standard cost variance
+      - evidence class
+      - snapshot / pin
+    explainers:
+      question:
+        what: "The margin review: gross margin for the fiscal-year window against the same quarters a year earlier, cut by product line and by region, plus the gap between what each unit actually cost and the standard it was booked at."
+        why: "A company margin that holds or rises can hide lines eroding underneath it, and a margin built on stale standards flatters the line. This is where the CFO decides which lines get a cost review and which get a pricing conversation."
+      gm-stat:
+        label: Company gross margin
+        what: "Gross margin for the window, with the prior-year comparison."
+        why: "The headline read against the floor — but the verdict also carries how many lines are eroding, so the aggregate cannot end the conversation."
+      gm-by-line:
+        what: "Gross margin per product line, window vs prior year."
+        why: "Line-level erosion is where the mix story lives: a growing high-margin line can lift the total while legacy lines slide."
+      gm-by-region:
+        what: "Gross margin per region, window vs prior year."
+        why: "Separates a product-cost problem from a regional pricing or discounting problem — different owners, different fixes."
+      gm-trend:
+        what: "Quarterly gross margin over the full history in the pinned data, company and the largest lines."
+        why: "Whether erosion is a step or a slope — a slope on a legacy line is a standard-cost drift, a step is usually a pricing or supplier event."
+      cost-variance-by-line:
+        what: "Actual unit cost against the standard, in dollars over the window, per product line across all revenue types. Positive is unfavorable (actual above standard). Each bar also carries the hardware-only variance, which the line total dilutes with consumables and service."
+        why: "Where margin reporting on standards is lying: an unfavorable variance means the line is worse than the books show."
+        how_to_read: "Bars to the right (positive) are unfavorable; the tolerance is the review trigger. Read the hardware-only figure as the leading indicator."
+      cost-variance-trend:
+        what: "Hardware unit-cost variance against standard per quarter for the device lines."
+        why: "A widening gap means the standard is not being reset to reality — the cost-accounting process, not just the product, needs attention."
+      cost-variance-by-region:
+        what: "Standard-cost variance by region — a cut the standard-cost roll-up cannot support, stated as a gap."
+        why: "Standards are set per product, not per region; a regional cost story needs a regional actual-cost feed."
+      verdict:
+        what: "The verdict reads the company margin against the floor, counts the lines eroding year over year, and names the lines whose standard-cost variance breaches the review tolerance."
+        why: "It keeps an in-tolerance aggregate from hiding line erosion and stale standards."
+
+  - id: FQ-02
+    question: "Price / volume / mix bridge — how much of the revenue and margin change vs prior year is price, how much is volume, how much is mix?"
+    category: margin
+    personas: [cfo]
+    cadence: quarterly
+    corpus_deps: [commercial/internal-financials, finance/internal-standard-costs]
+    terms:
+      - gross margin
+      - standard cost variance
+    explainers:
+      question:
+        what: "A bridge that decomposes the year-over-year change in revenue and margin into what came from price changes, what from unit volume, and what from the shift in product mix."
+        why: "Selling fewer units, discounting the same units, and selling a richer mix each need a different response; the bridge tells them apart."
+
+  # --- Cost of Quality & Warranty --------------------------------------------
+  - id: FQ-03
+    question: "Cost of poor quality — warranty spend, warranty cost per installed unit by line and hardware revision, share linked to complaints; trend?"
+    category: cost-of-quality
+    personas: [vp-quality, cfo]
+    cadence: monthly
+    corpus_deps: [finance/internal-warranty-claims, commercial/internal-fleet, commercial/internal-complaints]
+    computation: "python3 computations.py FQ-03 --corpus-root {corpus_root} --out {out}"
+    # fy: year-to-date window = months of this year present in the claims pin; prior = the
+    # same months a year earlier. per_unit_yoy_tolerance_pct: PP3500 per-unit cost growth
+    # beyond this is flagged (stand-in, E-03.1). rev_overindex_ratio: a revision whose
+    # share of a line's claims exceeds its share of the installed fleet by more than this
+    # ratio over-indexes (stand-in, E-03.2; computable only where the fleet registry
+    # carries the line's revision split). rev_concentration_pct: where the registry has no
+    # split, a revision carrying more than this share of claims is reported as a
+    # not-normalizable concentration (issue, not an expectation verdict).
+    params: {fy: 2026, per_unit_yoy_tolerance_pct: 10, rev_overindex_ratio: 1.25, rev_concentration_pct: 50}
+    expectations:
+      - id: E-03.1
+        statement: "Warranty cost per installed PP3500 unit does not rise year over year beyond tolerance"
+        expected: "PP3500 per-unit cost YTD <= prior-year same months + 10%"
+        basis: "quality-plan reliability target carried forward; no approved KPI threshold on file [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+      - id: E-03.2
+        statement: "No hardware revision over-indexes on warranty claims relative to its installed share"
+        expected: "claim share / installed share <= 1.25x per revision (lines with a revision split in the fleet registry)"
+        basis: "design-signal over-index guardrail; not a risk-file threshold [VERIFY]"
+        set_by: vp-quality (demo)
+        validated: false
+    terms:
+      - cost of poor quality
+      - warranty cost per installed unit
+      - installed base
+      - evidence class
+      - snapshot / pin
+    explainers:
+      question:
+        what: "What warranty failures are costing: spend year-to-date against the same months a year earlier, cost per device in the field by product line and hardware revision, how much of it traces to a logged complaint, and the monthly trend."
+        why: "Warranty spend is the most direct dollar measure of product quality. Per-unit and per-revision cuts separate a bigger fleet from a worse product, and point the quality leader at the revision that needs a design review."
+      warranty-spend-stat:
+        label: Warranty spend YTD
+        what: "Total warranty cost for the year-to-date window, with the prior-year comparison."
+        why: "The headline dollar read; the verdict carries the per-unit and concentration findings underneath it."
+      cost-per-unit-by-rev:
+        what: "Warranty cost per installed unit, year to date, for each product line and hardware revision the fleet registry can provide a denominator for."
+        why: "Normalizes spend by fleet size so growth in the field does not masquerade as worsening quality — and exposes the revision that is costing more per device."
+      cost-per-unit-yoy:
+        what: "Per-unit warranty cost, year to date against the same months a year earlier, per line and revision."
+        why: "Direction matters more than level: a legacy line whose per-unit cost climbs every year is a reserve-adequacy and end-of-life question."
+      monthly-cost-trend:
+        what: "Monthly warranty cost by product line over the full claims history."
+        why: "Whether cost is climbing steadily, spiking on a batch, or flat — the shape decides between a design fix and a supplier conversation."
+      disposition-mix:
+        what: "Warranty spend by outcome — repair, replace, goodwill, denied."
+        why: "A rising replace share is what drives cost per claim up; goodwill spend is the commercial cost of quality, not the engineering one."
+      revision-concentration:
+        what: "For each hardware revision of a line, its share of the line's warranty claims against its share of the installed fleet. A revision whose claim share runs well above its fleet share is over-indexing; where the fleet registry records no revision for a line, only the claim share can be shown."
+        why: "A dominant revision naturally carries most claims — the signal is a revision that fails out of proportion to how many are installed. That is the input to a design review or a field action decision."
+        how_to_read: "Compare the two bars per revision; a claim-share bar much taller than the fleet-share bar is the finding."
+      revision-failure-categories:
+        what: "Claim counts by failure category for the revision that over-indexes most (or, where the registry cannot normalize, the largest raw concentration)."
+        why: "Names the failure mode behind the concentration — the input to a design review or a field action decision."
+      complaint-linkage:
+        what: "Per product line, the share of warranty claims that are linked to a logged complaint."
+        why: "Warranty claims that never became complaints are quality signal the complaint-handling system is not seeing — a compliance gap as much as a cost one."
+      complaints-context:
+        what: "For the device lines in the fleet registry: warranty claims linked to a complaint against complaints logged in the same window."
+        why: "Shows how much of the complaint stream carries a warranty cost, and how much warranty activity is invisible to complaint handling."
+      per-unit-unavailable:
+        what: "Per-unit figures the fleet registry cannot support — lines it does not carry, and the PP3000 revision split it records as unknown — stated as a gap."
+        why: "A per-unit figure with an invented denominator is worse than none; the gap names the registry fields that would close it."
+      verdict:
+        what: "The verdict carries year-to-date spend vs prior year, cost per installed unit (and per revision) for the lines with a denominator, every revision over-indexing against its installed share, the concentrations the registry cannot normalize, and the complaint-linkage share."
+        why: "It keeps a flat aggregate from hiding a revision cluster or a legacy line whose per-unit cost is climbing."
+
+  - id: FQ-04
+    question: "Warranty and service reserve adequacy vs the observed field failure rate — is the reserve keeping up with what the field is costing?"
+    category: cost-of-quality
+    personas: [controller, vp-quality]
+    cadence: quarterly
+    corpus_deps: [finance/internal-warranty-claims, commercial/internal-fleet]
+    terms:
+      - warranty reserve
+      - cost of poor quality
+    explainers:
+      question:
+        what: "Compares the balance-sheet warranty reserve with what the observed claim rate and cost per claim imply the outstanding fleet will cost."
+        why: "A reserve that lags rising field costs understates liabilities; catching it early avoids a year-end true-up."
+
+  - id: FQ-05
+    question: "Cost of regulatory delay — per month, per product line, what does a slipped clearance cost in deferred revenue and carried spend?"
+    category: cost-of-quality
+    personas: [cfo, board]
+    cadence: quarterly
+    corpus_deps: [commercial/internal-financials, finance/internal-gl-budget]
+    terms:
+      - budget variance
+    explainers:
+      question:
+        what: "Puts a monthly dollar figure on a slipped regulatory milestone per product line: revenue deferred plus program spend carried while waiting."
+        why: "Turns a schedule risk into the number a board can weigh against the cost of accelerating the submission."
+
+  # --- Working Capital --------------------------------------------------------
+  - id: FQ-06
+    question: "DSO and over-90 AR by GPO and region, inventory days by product line — where is cash trapped?"
+    category: working-capital
+    personas: [cfo, controller]
+    cadence: monthly
+    corpus_deps: [finance/internal-ar-inventory]
+    computation: "python3 computations.py FQ-06 --corpus-root {corpus_root} --out {out}"
+    # dso_target_days: company DSO target (stand-in, E-06.1). over90_share_threshold_pct:
+    # a channel whose over-90 share exceeds this is a collections escalation (stand-in,
+    # E-06.2). inventory_target_days: days of cover above which inventory is "excess" and
+    # counts as trapped cash (stand-in, E-06.3).
+    params: {dso_target_days: 50, over90_share_threshold_pct: 15, inventory_target_days: 75}
+    expectations:
+      - id: E-06.1
+        statement: "Company DSO stays at or below target"
+        expected: "DSO <= 50 days"
+        basis: "treasury working-capital target carried forward; no board-adopted target on file [VERIFY]"
+        set_by: cfo (demo)
+        validated: false
+      - id: E-06.2
+        statement: "No channel's over-90 receivables exceed the escalation threshold"
+        expected: "over-90 share <= 15% per channel"
+        basis: "credit-policy escalation trigger; not confirmed against the credit policy on file [VERIFY]"
+        set_by: controller (demo)
+        validated: false
+      - id: E-06.3
+        statement: "Inventory days per product line stay within target cover"
+        expected: "inventory days <= 75 per line"
+        basis: "operations planning target; no S&OP policy names a ceiling [VERIFY]"
+        set_by: coo (demo)
+        validated: false
+    terms:
+      - DSO
+      - over-90 AR
+      - inventory days
+      - working capital
+      - GPO
+      - evidence class
+      - snapshot / pin
+    explainers:
+      question:
+        what: "The working-capital review as of the latest month in the data: how long customers take to pay by purchasing channel and region, how much of the receivables are seriously overdue, how many days of inventory each product line holds, and the cash all of that is tying up above target."
+        why: "Cash trapped in overdue receivables and slow-moving stock is cash not funding the flagship ramp. The channel and line cuts point at the one collections dispute and the legacy lines to run down."
+      dso-stat:
+        label: Company DSO
+        what: "Days sales outstanding for the whole company at the latest month, aggregated by implied daily sales."
+        why: "The headline against target; the verdict carries the channel that is driving it."
+      dso-by-channel:
+        what: "DSO per purchasing channel (GPOs and direct) at the latest month."
+        why: "A single channel far above the others is a collections or contract-terms problem with one owner."
+      dso-by-region:
+        what: "DSO per region at the latest month."
+        why: "Regional payment norms differ; the regional cut keeps a structurally slower region from being read as a collections failure."
+      over90-by-channel:
+        what: "Share of each channel's receivables that are more than 90 days overdue, latest month."
+        why: "The bad-debt exposure signal, read against the escalation threshold."
+      over90-trend:
+        what: "Monthly over-90 share per channel over the full history."
+        why: "A climbing share is a dispute building; a flat one is a customer that just pays slowly."
+      inventory-days-by-line:
+        what: "Days of inventory cover per product line at the latest month."
+        why: "Read against target cover: the lines above it are holding cash in stock that sells slower every month."
+      inventory-days-trend:
+        what: "Monthly inventory days per product line over the full history (the two smaller lines combined)."
+        why: "Rising days on a declining line is the obsolescence signal — the input to a run-down or write-down decision."
+      cash-trapped:
+        label: Cash trapped
+        what: "Overdue receivables (over 90 days) plus inventory value held above target days of cover, in dollars."
+        why: "The single number that says what the working-capital problem is worth."
+      subscription-ar:
+        what: "Receivables for subscription (cloud-suite) billing — not carried in the working-capital cube, stated as a gap."
+        why: "Subscription AR behaves differently (recurring, auto-billed); it needs its own feed before it belongs in the same DSO."
+      verdict:
+        what: "The verdict carries company DSO against target, the channel with the worst over-90 exposure and how many channels breach the threshold, the lines over target inventory days, and the trapped-cash total."
+        why: "It keeps a near-target company DSO from hiding one channel's collections problem or the legacy inventory build."
+
+  - id: FQ-07
+    question: "Consumable pull-through vs installed base — are consumable shipments per installed device holding, by line and region?"
+    category: working-capital
+    personas: [coo, cfo]
+    cadence: monthly
+    corpus_deps: [finance/internal-ar-inventory, commercial/internal-fleet]
+    terms:
+      - installed base
+    explainers:
+      question:
+        what: "Consumable units shipped per installed device, by product line and region, over time."
+        why: "Falling pull-through on a stable fleet means devices are idle or customers are sourcing consumables elsewhere — a revenue leak the sales team can act on."
+
+  # --- Budget & Plan ----------------------------------------------------------
+  - id: FQ-08
+    question: "Budget vs actual year to date by function with headcount variance — which functions breach the tolerance and why?"
+    category: plan
+    personas: [controller, cfo]
+    cadence: monthly
+    corpus_deps: [finance/internal-gl-budget]
+    computation: "python3 computations.py FQ-08 --corpus-root {corpus_root} --out {out}"
+    # fy: fiscal year of the periods in the pin. tolerance_pct: per-function YTD variance
+    # band (stand-in, E-08.1). total_tolerance_pct: company-total band (stand-in, E-08.2).
+    params: {fy: 2026, tolerance_pct: 5, total_tolerance_pct: 3}
+    expectations:
+      - id: E-08.1
+        statement: "Every function's year-to-date spend is within tolerance of budget"
+        expected: "within +/- 5% of YTD budget per function"
+        basis: "standard variance-review trigger; the budget book names no tolerance [VERIFY]"
+        set_by: controller (demo)
+        validated: false
+      - id: E-08.2
+        statement: "Total operating spend year to date is within the company tolerance"
+        expected: "within +/- 3% of YTD budget in total"
+        basis: "board reporting convention carried forward; not in the budget book [VERIFY]"
+        set_by: cfo (demo)
+        validated: false
+    terms:
+      - budget variance
+      - headcount variance
+      - evidence class
+      - snapshot / pin
+    explainers:
+      question:
+        what: "Year-to-date operating spend against budget for each function, the headcount each is running against plan, and — for each function outside tolerance — the cost center driving the breach."
+        why: "The monthly close question: which functions need a re-plan, and whether an under-spend is savings or a hiring lag that is deferring work."
+      ytd-variance-stat:
+        label: Total opex vs budget
+        what: "Company-wide year-to-date spend against budget, as a percentage."
+        why: "The headline against the company tolerance; the verdict carries the functions breaching underneath it."
+      variance-by-function:
+        what: "Year-to-date actual against budget per function, in dollars."
+        why: "Where the money went versus where it was planned — the dollar view ranks the breaches by what they cost."
+      variance-pct-by-function:
+        what: "Year-to-date variance per function as a percentage of its budget."
+        why: "Read against the tolerance band: this is the breach test."
+      headcount-by-function:
+        what: "Filled positions against budgeted positions per function at the latest month."
+        why: "Explains under-spends: a function under budget with heads missing is deferring work, not saving money."
+      monthly-variance-trend:
+        what: "Monthly variance percentage for the company total and the functions with the largest year-to-date variance."
+        why: "Whether a breach is a one-month event or a run-rate that will compound through year end."
+      cost-center-drivers:
+        what: "Dollar variance for the cost centers inside each breaching function."
+        why: "The 'why' behind a function breach — one cost center usually carries it."
+      variance-by-project:
+        what: "Spend by program or project — a cut the general ledger export does not carry, stated as a gap."
+        why: "Attributing R&D overrun to a specific program (the capitalization view) needs a project dimension in the ledger feed."
+      verdict:
+        what: "The verdict carries total spend against budget and the company tolerance, then names each function breaching the per-function band with its variance, its driving cost center, and — for under-spends — the headcount shortfall."
+        why: "It keeps a within-tolerance total from hiding an R&D overrun offset by a sales hiring lag."
+
+  - id: FQ-09
+    question: "Subscription economics — ARR, net revenue retention, and churn for the cloud suite; is recurring revenue compounding or leaking?"
+    category: plan
+    personas: [cfo, board]
+    cadence: quarterly
+    corpus_deps: [commercial/internal-subscriptions, commercial/internal-financials]
+    terms:
+      - gross margin
+    explainers:
+      question:
+        what: "Annual recurring revenue for the cloud subscription business, how much of last year's cohort is still paying (and paying more), and how much churned."
+        why: "Recurring revenue is valued for predictability; retention and churn say whether the subscription base is a compounding asset or a leaking one."
+
+  - id: FQ-10
+    question: "R&D spend vs milestone — what has each program consumed against its plan, and what is eligible for capitalization?"
+    category: plan
+    personas: [cfo, coo]
+    cadence: quarterly
+    corpus_deps: [finance/internal-gl-budget]
+    terms:
+      - budget variance
+    explainers:
+      question:
+        what: "R&D spend per program against the spend planned to each milestone, and the portion that meets the capitalization criteria."
+        why: "Separates an R&D overrun that is buying a milestone from one that is not — and sets the capitalization number the auditors will ask for."

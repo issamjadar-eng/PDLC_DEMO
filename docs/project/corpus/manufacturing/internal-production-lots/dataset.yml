@@ -1,0 +1,47 @@
+dataset: manufacturing/internal-production-lots
+title: Production lot records (internal, demo-fabricated)
+description: >-
+  One row per station lot (a batch of units booked through one line station), 2025-01
+  through 2026-08, data through 2026-08-31: product line, hw rev, station, site, start /
+  release dates, units started / passed first time / scrapped / reworked, DHR
+  completeness, release lead days. DEMO-FABRICATED by seeded generator gen.py — stand-in
+  for the MES / lot-traveler export. Consumed by MQ-01 (first-pass yield, scrap, rework)
+  and MQ-08 (PP3500 rev C release blockers); roadmap MQ-02 / MQ-04 / MQ-07 / MQ-09.
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for MES / lot-traveler export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [lot_id]
+  columns:
+    - {name: lot_id, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: hw_rev, type: str, required: true}
+    - {name: line_station, type: str, required: true}
+    - {name: site, type: str, required: true}
+    - {name: start_date, type: date, required: true}
+    - {name: release_date, type: date}
+    - {name: units_started, type: int, required: true}
+    - {name: units_passed_first_time, type: int, required: true}
+    - {name: units_scrapped, type: int, required: true}
+    - {name: units_reworked, type: int, required: true}
+    - {name: dhr_complete, type: str, required: true}
+    - {name: release_lead_days, type: int}
+asserts:
+  min_rows: 600
+  max_rows: 900
+  enums:
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500]
+    hw_rev: ["A", "B", "C", "-"]
+    line_station: [SMT, final-assembly, test, pack]
+    site: [Eastbrook, Westfield]
+    dhr_complete: ["true", "false"]
+  # Narrative knobs made provable (per the corpus skill: assert the story, don't hope).
+  command: python3 check_knobs.py {normalized_dir}/records.csv

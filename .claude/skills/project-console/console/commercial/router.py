@@ -1,10 +1,14 @@
 """Commercial section routes — the display tier of the business-question stack.
 
-GET  /commercial                 — question catalog (category rail + answer cards)
-GET  /commercial/{bq}            — answer view (verdict, charts, provenance, report, history)
-GET  /commercial/{bq}/raw        — the shown edition's data.json (debug)
-GET  /commercial/{bq}/grounding  — compact text rendition for the assistant drawer
-POST /commercial/render          — shell to the commercial skill's `render`
+One router serves EVERY business domain (Commercial, Finance, Manufacturing, ...):
+the `{domain}` path segment selects the domain root `docs/project/<domain>/`.
+`/commercial...` is kept as a permanent redirect to `/domains/commercial...`.
+
+GET  /domains/{domain}                 — question catalog (category rail + answer cards)
+GET  /domains/{domain}/{bq}            — answer view (verdict, charts, provenance, report, history)
+GET  /domains/{domain}/{bq}/raw        — the shown edition's data.json (debug)
+GET  /domains/{domain}/{bq}/grounding  — compact text rendition for the assistant drawer
+POST /domains/{domain}/render          — shell to the engine's `render --domain <domain>`
 
 The console is a pure consumer of the `commercial` skill's sidecars
 (`schema_version 1.0`). It plots the sidecar's series verbatim and computes
@@ -27,6 +31,7 @@ from fastapi.templating import Jinja2Templates
 
 from console.commercial.loader import (
     _read_yaml,
+    domain_meta,
     load_edition,
     load_index,
     load_pinned_table,
@@ -39,6 +44,30 @@ from console.documents import renderer as doc_renderer
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "web" / "templates"))
+
+DEFAULT_DOMAIN = "commercial"
+
+
+def _domain_ctx(cfg, domain: str) -> dict:
+    """Template context shared by every domain page: identity block + URL/path
+    bases. Unknown domain (no sidecar, not the historical default) → 404 so a
+    typo'd slug never renders an empty Commercial-looking page."""
+    dm = domain_meta(cfg.repo_root, domain)
+    if load_index(cfg.repo_root, domain) is None and domain != DEFAULT_DOMAIN:
+        raise HTTPException(404, f"Unknown business domain '{domain}'. A domain is any "
+                                 f"docs/project/<slug>/.console/<slug>-index.json — render one first.")
+    return {"domain": domain, "dm": dm, "base": dm["href"], "droot": dm["root_rel"]}
+
+
+@router.api_route("/commercial", methods=["GET", "POST"], include_in_schema=False)
+@router.api_route("/commercial/{rest:path}", methods=["GET", "POST"], include_in_schema=False)
+async def commercial_legacy(request: Request, rest: str = ""):
+    """The pre-domain URL scheme. 307 keeps method + body so bookmarked GETs and
+    in-flight form POSTs both land on /domains/commercial/..."""
+    url = f"/domains/{DEFAULT_DOMAIN}" + (f"/{rest}" if rest else "")
+    if request.url.query:
+        url += "?" + request.url.query
+    return RedirectResponse(url, status_code=307)
 
 # Answer status → chip. Mirrors the sidecar's status vocabulary.
 STATUS_META = {
@@ -358,12 +387,14 @@ def _timeseries_geometry(s: dict):
     """Server-side SVG geometry for a timeseries series (the console renders the
     sidecar's values verbatim — this computes pixels, never data)."""
     lines = s.get("lines") or []
-    all_pts = [(p["x"], p["y"]) for ln in lines for p in ln.get("points", [])]
+    # A null y is a GAP ("no observation this period" — e.g. no lots at a station
+    # that month), never a zero: it keeps its x slot on the axis but draws nothing.
+    all_pts = [(p["x"], p.get("y")) for ln in lines for p in ln.get("points", [])]
     if not all_pts:
         return None
     xs = sorted({x for x, _ in all_pts})
     xi = {x: i for i, x in enumerate(xs)}
-    ymax = max(y for _, y in all_pts) or 1
+    ymax = max((y for _, y in all_pts if y is not None), default=0) or 1
     # no right-side series end-labels (the bottom legend carries series identity)
     # — the full right margin belongs to the data
     W, H, L, R, T, B = 560, 180, 12, 14, 12, 24
@@ -377,7 +408,8 @@ def _timeseries_geometry(s: dict):
 
     glines = []
     for i, ln in enumerate(lines):
-        pts = sorted(ln.get("points", []), key=lambda p: p["x"])
+        pts = sorted((p for p in ln.get("points", []) if p.get("y") is not None),
+                     key=lambda p: p["x"])
         if not pts:
             continue
         glines.append({
@@ -537,14 +569,15 @@ def _decorate_series(series: list) -> list:
             # two measures per category (plan vs actual) — grouped thin bars, legend required
             pairs = s.get("pairs", {})
             pts = s.get("points", [])
-            mx = max((max(abs(p.get("a", 0)), abs(p.get("b", 0))) for p in pts), default=0) or 1
+            # a null measure is a gap (no plan row / no observation), never a zero
+            mx = max((max(abs(p.get("a") or 0), abs(p.get("b") or 0)) for p in pts), default=0) or 1
             d["_paired"] = {
                 "a_label": pairs.get("a_label", "actual"),
                 "b_label": pairs.get("b_label", "plan"),
                 "rows": [{"label": p.get("label", ""),
                           "a": p.get("a", 0), "b": p.get("b", 0),
-                          "a_pct": round(100.0 * abs(p.get("a", 0)) / mx, 1),
-                          "b_pct": round(100.0 * abs(p.get("b", 0)) / mx, 1),
+                          "a_pct": round(100.0 * abs(p.get("a") or 0) / mx, 1),
+                          "b_pct": round(100.0 * abs(p.get("b") or 0) / mx, 1),
                           "tip": f"{p.get('label')}: {pairs.get('a_label', 'a')} {p.get('a')} · "
                                  f"{pairs.get('b_label', 'b')} {p.get('b')} {s.get('unit', '')}".strip()}
                          for p in pts],
@@ -581,8 +614,9 @@ class RefBook:
 
     MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]<]+?)\s*\]")
 
-    def __init__(self, repo_root: Path, bq: str, edition: str | None):
+    def __init__(self, repo_root: Path, bq: str, edition: str | None, domain: str = "commercial"):
         self.repo_root = repo_root
+        self.domain = domain
         self.bq = bq
         self.edition = edition
         self.refs: list[dict] = []
@@ -605,11 +639,11 @@ class RefBook:
             return {"kind": "Freshness waiver", "label": value, "href": href,
                     "detail": "stale-data acknowledgment with owner and expiry"}
         if kind == "derived":
-            href = f"/commercial/{self.bq}/raw" + (f"?edition={self.edition}" if self.edition else "")
+            href = f"/domains/{self.domain}/{self.bq}/raw" + (f"?edition={self.edition}" if self.edition else "")
             return {"kind": "Computed series", "label": value, "href": href,
                     "detail": "deterministic computation output in this edition's data.json"}
         # config
-        rel = value if value.startswith("docs/") else f"docs/project/commercial/{value}"
+        rel = value if value.startswith("docs/") else f"docs/project/{self.domain}/{value}"
         return {"kind": "Declared configuration", "label": value,
                 "href": f"/documents#path={rel}",
                 "detail": "plan constant / threshold declared in versioned project configuration"}
@@ -667,10 +701,10 @@ def _doc_link_rewriter(doc_repo_rel: str):
     return lambda html: re.sub(r'href="([^"]+)"', repl, html)
 
 
-@router.get("/commercial", response_class=HTMLResponse)
-async def commercial_index(request: Request, render_error: str | None = None):
+@router.get("/domains/{domain}", response_class=HTMLResponse)
+async def commercial_index(domain: str, request: Request, render_error: str | None = None):
     cfg = get_config()
-    index = load_index(cfg.repo_root)
+    index = load_index(cfg.repo_root, domain)
     has_skill = skill_render_script(cfg.repo_root) is not None
     questions = [(_decorate_row(dict(q))) for q in (index or {}).get("questions", [])]
     categories = (index or {}).get("categories", [])
@@ -689,17 +723,18 @@ async def commercial_index(request: Request, render_error: str | None = None):
         request,
         "commercial_index.html",
         {"config": cfg, "index": index, "by_cat": by_cat, "counts": counts,
-         "has_skill": has_skill, "render_error": render_error},
+         "has_skill": has_skill, "render_error": render_error, **_domain_ctx(cfg, domain)},
     )
 
 
-@router.get("/commercial/catalog/grounding", response_class=PlainTextResponse)
-async def catalog_grounding():
+@router.get("/domains/{domain}/catalog/grounding", response_class=PlainTextResponse)
+async def catalog_grounding(domain: str, ):
     """Compact rendition of the whole question board for the catalog's assistant
     drawer. Declared before /commercial/{bq}/grounding so it wins the match."""
     cfg = get_config()
-    index = load_index(cfg.repo_root) or {}
-    lines = ["# Commercial question board — status roll-up",
+    index = load_index(cfg.repo_root, domain) or {}
+    dm = domain_meta(cfg.repo_root, domain)
+    lines = [f"# {dm['name']} question board — status roll-up",
              "Tiers: corpus (pinned data) -> commercial (deterministic answers, claim-linted, "
              "draft->approved lifecycle) -> console (display). Evidence classes: measured / "
              "derived / assumed / unavailable. 'unvalidated' expectations are stand-ins to challenge.", ""]
@@ -717,8 +752,8 @@ async def catalog_grounding():
     return PlainTextResponse("\n".join(lines))
 
 
-@router.get("/commercial/review-detail", response_class=HTMLResponse)
-async def commercial_review_detail(path: str = ""):
+@router.get("/domains/{domain}/review-detail", response_class=HTMLResponse)
+async def commercial_review_detail(domain: str, path: str = ""):
     """Render a repo-relative markdown dossier (review / verification
     detail_ref) to an HTML fragment for in-place expansion on the Quality tab.
     Lazy-loaded by the template's dossier folds; cached client-side.
@@ -750,20 +785,20 @@ async def commercial_review_detail(path: str = ""):
     return HTMLResponse(html)
 
 
-@router.get("/commercial/{bq}", response_class=HTMLResponse)
-async def commercial_view(request: Request, bq: str, edition: str | None = None):
+@router.get("/domains/{domain}/{bq}", response_class=HTMLResponse)
+async def commercial_view(domain: str, request: Request, bq: str, edition: str | None = None):
     cfg = get_config()
-    q = question_row(cfg.repo_root, bq)
+    q = question_row(cfg.repo_root, bq, domain)
     if q is None:
-        raise HTTPException(404, f"Unknown question '{bq}'. Run `/commercial render` to refresh the sidecar.")
+        raise HTTPException(404, f"Unknown question '{bq}'. Run the engine's `render --domain {domain}` to refresh the sidecar.")
     q = _decorate_row(dict(q))
     # default: the NEWEST edition (draft included, clearly watermarked) — reviewers see
     # the latest work; the approved record is one click away in the editions rail
     show_id = edition or q.get("latest_edition") or q.get("approved_edition") or q.get("draft_edition")
-    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    ed = load_edition(cfg.repo_root, bq, show_id, domain) if show_id else None
     if ed is None and show_id:
         raise HTTPException(404, f"No edition '{show_id}' for {bq}.")
-    ctx = {"config": cfg, "q": q, "ed": ed, "series": [], "verdicts": [],
+    ctx = {"config": cfg, "q": q, "ed": ed, "series": [], "verdicts": [], **_domain_ctx(cfg, domain),
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
@@ -778,7 +813,7 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
            "approve_error": request.query_params.get("approve_error"),
            "push_error": request.query_params.get("push_error")}
     if ed:
-        refbook = RefBook(cfg.repo_root, bq, ed["edition"])
+        refbook = RefBook(cfg.repo_root, bq, ed["edition"], domain)
         ctx["ed_meta"] = EDITION_META.get(ed["status"], EDITION_META["draft"])
         series = _decorate_series(ed["data"].get("series", []))
         # formal reference numbers for each series' source line
@@ -853,10 +888,10 @@ async def commercial_view(request: Request, bq: str, edition: str | None = None)
                      "drifted": {"label": "Plan changed since this edition — review intent, re-answer", "cls": "vx-risk"},
                      "unpinned": {"label": "Edition predates plan pinning — re-answer to pin", "cls": "vx-risk"},
                      "missing": {"label": "No plan yet — scaffold with plan-init", "cls": "vx-notmet"}}
-        plan_file = cfg.repo_root / "docs" / "project" / "commercial" / "plans" / f"{bq}.md"
+        plan_file = cfg.repo_root / "docs" / "project" / domain / "plans" / f"{bq}.md"
         ctx["plan_html"] = ""
         ctx["plan_status"] = None
-        ctx["plan_path"] = f"docs/project/commercial/plans/{bq}.md"
+        ctx["plan_path"] = f"docs/project/{domain}/plans/{bq}.md"
         if plan_file.is_file():
             try:
                 ctx["plan_html"] = doc_renderer.render(plan_file).body_html or ""
@@ -1068,20 +1103,21 @@ def _build_unstructured(repo_root: Path, ed: dict) -> list:
     return groups
 
 
-@router.get("/commercial/{bq}/data", response_class=HTMLResponse)
-async def commercial_data(request: Request, bq: str, edition: str | None = None):
+@router.get("/domains/{domain}/{bq}/data", response_class=HTMLResponse)
+async def commercial_data(domain: str, request: Request, bq: str, edition: str | None = None):
     """Dedicated tabular view (deep-linkable twin of the answer's Data tab)."""
     cfg = get_config()
-    q = question_row(cfg.repo_root, bq)
+    q = question_row(cfg.repo_root, bq, domain)
     if q is None:
         raise HTTPException(404, f"Unknown question '{bq}'.")
     show_id = edition or q.get("latest_edition") or q.get("approved_edition")
-    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    ed = load_edition(cfg.repo_root, bq, show_id, domain) if show_id else None
     if ed is None:
         raise HTTPException(404, f"No edition for {bq} — nothing to tabulate.")
     return templates.TemplateResponse(
         request, "commercial_data.html",
-        {"config": cfg, "q": q, "ed": ed, "tables": _build_tables(cfg.repo_root, ed)},
+        {"config": cfg, "q": q, "ed": ed, "tables": _build_tables(cfg.repo_root, ed),
+         **_domain_ctx(cfg, domain)},
     )
 
 
@@ -1093,13 +1129,13 @@ def _run(cmd: list, cwd: Path, timeout: int = 120):
         return 1, f"timed out: {' '.join(str(c) for c in cmd)}"
 
 
-def _push_approval(repo_root: Path, bq: str, edition: str, approver: str):
+def _push_approval(repo_root: Path, bq: str, edition: str, approver: str, domain: str = "commercial"):
     """The project's push sequence for the approved edition: branch -> stage only
     the answer + sidecar paths -> commit -> PR -> auto-merge -> back to main.
     Returns (pr_url or None, error or None). Approval itself already happened —
     a push failure leaves it approved locally and reports honestly."""
     branch = f"console/approve-{bq}-{edition}".replace(" ", "")
-    paths = [f"docs/project/commercial/reports/{bq}", "docs/project/commercial/.console"]
+    paths = [f"docs/project/{domain}/reports/{bq}", f"docs/project/{domain}/.console"]
     title = f"approve {bq}@{edition} via console ({approver})"
     body = (f"Answer edition {bq}@{edition} approved by {approver} via the project-console "
             f"approve action (gate: claim lint + pin freshness; content hash-pinned in "
@@ -1129,8 +1165,8 @@ def _push_approval(repo_root: Path, bq: str, edition: str, approver: str):
     return pr_url, None
 
 
-@router.post("/commercial/{bq}/approve")
-async def commercial_approve(request: Request, bq: str):
+@router.post("/domains/{domain}/{bq}/approve")
+async def commercial_approve(domain: str, request: Request, bq: str):
     """UI approval: run the gated approve (lint + freshness enforced by the skill),
     refresh the sidecar, then push to the repo per the project's git workflow."""
     cfg = get_config()
@@ -1139,18 +1175,18 @@ async def commercial_approve(request: Request, bq: str):
     approver = str(form.get("approver") or "").strip()
     note = str(form.get("verify_note") or "").strip() or "approved via console UI (no independent verification recorded)"
     if not approver:
-        return RedirectResponse(f"/commercial/{bq}?approve_error=" + quote("pick an approver", safe=""), status_code=303)
+        return RedirectResponse(f"/domains/{domain}/{bq}?approve_error=" + quote("pick an approver", safe=""), status_code=303)
     script = skill_render_script(cfg.repo_root)
     if script is None:
-        return RedirectResponse(f"/commercial/{bq}?approve_error=" + quote("commercial skill not installed", safe=""), status_code=303)
-    rc, out = _run([sys.executable, str(script), "approve", bq, "--edition", edition,
+        return RedirectResponse(f"/domains/{domain}/{bq}?approve_error=" + quote("commercial skill not installed", safe=""), status_code=303)
+    rc, out = _run([sys.executable, str(script), "--domain", domain, "approve", bq, "--edition", edition,
                     "--by", approver, "--verify-note", note], cfg.repo_root)
     if rc != 0:
         return RedirectResponse(
-            f"/commercial/{bq}?edition={edition}&approve_error=" + quote(out[-1200:], safe=""), status_code=303)
-    _run([sys.executable, str(script), "render"], cfg.repo_root)
-    pr_url, err = _push_approval(cfg.repo_root, bq, edition, approver)
-    q = f"/commercial/{bq}?approved={quote(edition, safe='')}"
+            f"/domains/{domain}/{bq}?edition={edition}&approve_error=" + quote(out[-1200:], safe=""), status_code=303)
+    _run([sys.executable, str(script), "--domain", domain, "render"], cfg.repo_root)
+    pr_url, err = _push_approval(cfg.repo_root, bq, edition, approver, domain)
+    q = f"/domains/{domain}/{bq}?approved={quote(edition, safe='')}"
     if pr_url:
         q += "&pr=" + quote(pr_url, safe="")
     if err:
@@ -1158,28 +1194,28 @@ async def commercial_approve(request: Request, bq: str):
     return RedirectResponse(q, status_code=303)
 
 
-@router.get("/commercial/{bq}/raw", response_class=JSONResponse)
-async def commercial_raw(bq: str, edition: str | None = None):
+@router.get("/domains/{domain}/{bq}/raw", response_class=JSONResponse)
+async def commercial_raw(domain: str, bq: str, edition: str | None = None):
     cfg = get_config()
-    q = question_row(cfg.repo_root, bq)
+    q = question_row(cfg.repo_root, bq, domain)
     if q is None:
         raise HTTPException(404, f"Unknown question '{bq}'.")
     show_id = edition or q.get("approved_edition") or q.get("draft_edition")
-    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    ed = load_edition(cfg.repo_root, bq, show_id, domain) if show_id else None
     if ed is None:
         raise HTTPException(404, f"No edition for {bq}.")
     return JSONResponse(ed["data"])
 
 
-@router.get("/commercial/{bq}/grounding", response_class=PlainTextResponse)
-async def commercial_grounding(bq: str, edition: str | None = None):
+@router.get("/domains/{domain}/{bq}/grounding", response_class=PlainTextResponse)
+async def commercial_grounding(domain: str, bq: str, edition: str | None = None):
     """Compact textual rendition of the shown answer for the Assistant drawer."""
     cfg = get_config()
-    q = question_row(cfg.repo_root, bq)
+    q = question_row(cfg.repo_root, bq, domain)
     if q is None:
         raise HTTPException(404, f"Unknown question '{bq}'.")
     show_id = edition or q.get("approved_edition") or q.get("draft_edition")
-    ed = load_edition(cfg.repo_root, bq, show_id) if show_id else None
+    ed = load_edition(cfg.repo_root, bq, show_id, domain) if show_id else None
     lines = [
         f"# Business question {bq} — {q.get('question')}",
         f"Category: {q.get('category')} · Personas: {', '.join(q.get('personas', []))} · "
@@ -1206,28 +1242,28 @@ async def commercial_grounding(bq: str, edition: str | None = None):
     return PlainTextResponse("\n".join(lines))
 
 
-@router.post("/commercial/render")
-async def commercial_render():
+@router.post("/domains/{domain}/render")
+async def commercial_render(domain: str, ):
     """Shell to the commercial skill's `render` to refresh the sidecar."""
     cfg = get_config()
     script = skill_render_script(cfg.repo_root)
     if script is None:
         return RedirectResponse(
-            url="/commercial?render_error=" + quote(
+            url=f"/domains/{domain}?render_error=" + quote(
                 "The commercial skill is not installed at .claude/skills/commercial/.", safe=""),
             status_code=303,
         )
     try:
         proc = subprocess.run(
-            [sys.executable, str(script), "render"],
+            [sys.executable, str(script), "--domain", domain, "render"],
             cwd=str(cfg.repo_root), capture_output=True, text=True, timeout=60,
         )
     except subprocess.TimeoutExpired:
-        return RedirectResponse(url="/commercial?render_error=" + quote("render timed out", safe=""),
+        return RedirectResponse(url=f"/domains/{domain}?render_error=" + quote("render timed out", safe=""),
                                 status_code=303)
     if proc.returncode != 0:
         return RedirectResponse(
-            url="/commercial?render_error=" + quote(((proc.stdout or "") + (proc.stderr or ""))[:2048], safe=""),
+            url=f"/domains/{domain}?render_error=" + quote(((proc.stdout or "") + (proc.stderr or ""))[:2048], safe=""),
             status_code=303,
         )
-    return RedirectResponse(url="/commercial", status_code=303)
+    return RedirectResponse(url=f"/domains/{domain}", status_code=303)

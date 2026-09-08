@@ -1,10 +1,10 @@
 {% extends "_base.html" %}
-{% block title %}{{ q.id }} data · Commercial · {{ config.project_name }} Console{% endblock %}
+{% block title %}{{ q.id }} data · {{ dm.name }} · {{ config.project_name }} Console{% endblock %}
 {% block body_class %}commercial-page{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
 <section class="cm-wrap cm-wrap-wide">
-  <nav class="cm-crumb"><a href="/commercial/{{ q.id }}{% if ed %}?edition={{ ed.edition }}{% endif %}">← {{ q.id }} answer</a> · <a href="/commercial">Commercial</a></nav>
+  <nav class="cm-crumb"><a href="{{ base }}/{{ q.id }}{% if ed %}?edition={{ ed.edition }}{% endif %}">← {{ q.id }} answer</a> · <a href="{{ base }}">{{ dm.name }}</a></nav>
   <header class="cm-head">
     <div>
       <p class="cm-eyebrow">{{ q.id }} · Data view · edition {{ ed.edition }} ({{ ed.status }})</p>

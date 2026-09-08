@@ -1,0 +1,133 @@
+artifacts:
+  bq_modules/mq_01.py:
+    entries:
+    - sha256: d4cc628afc03b39037eb070e7412800772063c788e65926b27e81c8a8ab87035
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-01
+  bq_modules/mq_03.py:
+    entries:
+    - sha256: 96ffacfc9356ecdb1facaab8ef5cc4bc7973f4fdfcb85a2cf660a7a2852cb1f1
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-03
+  bq_modules/mq_05.py:
+    entries:
+    - sha256: 9a5147c8ebc0f822175626a97d21f0b161b5354be14096bb2f224a8751bb1428
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-05
+  bq_modules/mq_08.py:
+    entries:
+    - sha256: c1897c4d21b26fe13a9467271da1bbed608412f857c7434b048fdb15a34216e0
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-08
+  computations.py:
+    entries:
+    - sha256: 9239326ab95251f69f616354f94f4d51c498877ceb8b0c13b542f576252c6c05
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+  corpus:manufacturing/internal-ncr-capa/gen.py:
+    entries:
+    - sha256: 3340a0fc6786a8ae4b1e8f810d3c74c551cd1083c8bbc507921f620691560348
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:manufacturing/internal-process-validation/gen.py:
+    entries:
+    - sha256: 4c4a547b135978c6d7e91826df0833faa70df6561f6f99a86294474a2d2f4975
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:manufacturing/internal-production-lots/gen.py:
+    entries:
+    - sha256: 1166f0f83c967e4a03f3447aaa5ae6b27263ebef7dae944b22c6cce511b0fc5a
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:manufacturing/internal-suppliers/gen.py:
+    entries:
+    - sha256: 6748baaf20a3b67bfa1054c8a1498221dd14c26989f7558cc4005b38ddafdbb6
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit

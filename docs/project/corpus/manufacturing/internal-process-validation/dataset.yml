@@ -1,0 +1,43 @@
+dataset: manufacturing/internal-process-validation
+title: Process-validation + calibration status register (internal, demo-fabricated)
+description: >-
+  Validation master list (IQ / OQ / PQ per equipment or process) joined to the
+  calibration and preventive-maintenance register, status as of 2026-08-31: record id,
+  type, asset or process, product line (empty = shared equipment), site, status,
+  completed / due dates, owner function. DEMO-FABRICATED by seeded generator gen.py —
+  stand-in for the validation master list + calibration register export. Consumed by
+  MQ-08 (validation and calibration posture, PP3500 rev C release blockers); roadmap
+  MQ-10 (design-transfer readiness).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for validation master list + calibration register export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [record_id]
+  columns:
+    - {name: record_id, type: str, required: true}
+    - {name: type, type: str, required: true}
+    - {name: asset_or_process, type: str, required: true}
+    - {name: product_line, type: str}
+    - {name: site, type: str, required: true}
+    - {name: status, type: str, required: true}
+    - {name: completed_date, type: date}
+    - {name: due_date, type: date, required: true}
+    - {name: owner_function, type: str, required: true}
+asserts:
+  min_rows: 120
+  max_rows: 250
+  enums:
+    type: [IQ, OQ, PQ, calibration, preventive-maintenance]
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500]
+    site: [Eastbrook, Westfield]
+    status: [validated, due, overdue, in-progress, not-started]
+    owner_function: [manufacturing-engineering, quality, metrology, facilities, test-engineering]
+  command: python3 check_knobs.py {normalized_dir}/records.csv

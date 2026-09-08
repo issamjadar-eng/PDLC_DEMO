@@ -11,7 +11,9 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from console.commercial.loader import list_domains, skill_render_script
 from console.config import get_config
+from console.documents import renderer as doc_renderer
 from console.workflows import b1_doc_roundtrip, b3_session, b3_strategy_reassembly
 from console.workflows import tracker_session, tracker_writer
 from console.workflows import draft_session, draft_writer
@@ -81,6 +83,12 @@ async def workflow_view(request: Request, slug: str):
         # JS still posts to them. Redirect the old page URL to the new home.
         return RedirectResponse(url="/strategy", status_code=307)
 
+    if slug == "management-review-pack":
+        return templates.TemplateResponse(
+            request, "workflow_mgmt_review.html",
+            {"config": cfg, "workflow": wf, **_mgmt_review_ctx(cfg, request)},
+        )
+
     if slug == "doc-roundtrip-batch":
         candidates = b1_doc_roundtrip.scan(cfg.repo_root)
         # Group candidates by DHF for the UI.
@@ -105,6 +113,67 @@ async def workflow_view(request: Request, slug: str):
         "workflow_view.html",
         {"config": cfg, "workflow": wf},
     )
+
+
+PACK_ROOT = ("docs", "project", "management-review")
+
+
+def _mgmt_review_ctx(cfg, request: Request) -> dict:
+    """Packs on disk (newest first) + the newest rendered in place + the domain roster
+    the generate action will pass to the engine. Pure read; the engine assembles."""
+    root = cfg.repo_root.joinpath(*PACK_ROOT)
+    packs = []
+    if root.is_dir():
+        for d in sorted((p for p in root.iterdir() if p.is_dir()), reverse=True):
+            if not (d / "pack.md").is_file():
+                continue
+            summary = None
+            try:
+                summary = json.loads((d / "pack.json").read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                pass
+            packs.append({"date": d.name, "rel": str((d / "pack.md").relative_to(cfg.repo_root)),
+                          "summary": summary})
+    show = request.query_params.get("pack") or (packs[0]["date"] if packs else None)
+    current = next((p for p in packs if p["date"] == show), None)
+    html = ""
+    if current:
+        try:
+            html = doc_renderer.render(cfg.repo_root / current["rel"]).body_html or ""
+        except Exception:
+            html = "<p><em>pack failed to render — open it in Documents.</em></p>"
+    return {"packs": packs, "current": current, "pack_html": html,
+            "domains": list_domains(cfg.repo_root),
+            "has_engine": skill_render_script(cfg.repo_root) is not None,
+            "gen_error": request.query_params.get("gen_error"),
+            "generated": request.query_params.get("generated")}
+
+
+@router.post("/workflows/management-review-pack/generate")
+async def mgmt_review_generate(request: Request):
+    """Shell the engine's `pack` over every discovered domain. Approved editions only
+    unless the form asks for a draft preview (flagged inline by the engine)."""
+    from urllib.parse import quote
+    cfg = get_config()
+    form = await request.form()
+    script = skill_render_script(cfg.repo_root)
+    back = "/workflows/management-review-pack"
+    if script is None:
+        return RedirectResponse(back + "?gen_error=" + quote("commercial skill not installed", safe=""), status_code=303)
+    doms = ",".join(d["key"] for d in list_domains(cfg.repo_root)) or "commercial"
+    cmd = ["python3", str(script), "pack", "--domains", doms, "--out", "/".join(PACK_ROOT)]
+    as_of = str(form.get("as_of") or "").strip()
+    if as_of:
+        cmd += ["--as-of", as_of]
+    if form.get("include_drafts"):
+        cmd.append("--include-drafts")
+    try:
+        proc = subprocess.run(cmd, cwd=str(cfg.repo_root), capture_output=True, text=True, timeout=120)
+    except subprocess.TimeoutExpired:
+        return RedirectResponse(back + "?gen_error=" + quote("pack timed out", safe=""), status_code=303)
+    if proc.returncode != 0:
+        return RedirectResponse(back + "?gen_error=" + quote(((proc.stdout or "") + (proc.stderr or ""))[:1500], safe=""), status_code=303)
+    return RedirectResponse(back + "?generated=1", status_code=303)
 
 
 def _enrich_plan_with_audit(

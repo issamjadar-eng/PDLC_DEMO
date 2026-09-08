@@ -67,6 +67,24 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 15 (2026-09-08): **Business domains — one engine, N roots.** The engine no longer
+  assumes `docs/project/commercial/`: `--domain <slug>` is shorthand for
+  `--root docs/project/<slug>`; the catalog is `commercial.yml` if present, else
+  `<domain>.yml`; the sidecar is written as `.console/<domain>-index.json`
+  (unchanged name for the historical root); `render` emits a top-level `domain`
+  identity block (schema 1.4 → 1.5, purely additive — `name`, `nav_title`, `tagline`,
+  `icon`, `id_prefix`, from an optional catalog `domain:` block with folder-derived
+  defaults). The built-in lint-exempt token for question ids widened from `BQ-NN` to
+  any `[A-Z]{1,2}Q-NN` prefix so sibling domains (`FQ-`, `MQ-`) need no per-project
+  `exempt_patterns`. `check` reports under the domain name. Existing commercial
+  trees are byte-for-byte compatible; pair with project-console ≥ 1.65.0 for the
+  per-domain tabs. **New actions:** `dependents <dataset|prefix|*>` (implemented
+  question ids fed by a dataset — the re-answer seam for a scheduled refresh) and
+  `pack --domains … [--include-drafts]` (dated Management Review Pack assembled from
+  approved editions across domains: verdicts, expectation verdicts, issues, risks,
+  pin freshness, unanswered roster — an assembly that computes nothing). **New
+  template:** `business-evidence-refresh.yml` GitHub Action (weekly openFDA refresh +
+  dependents re-answer; monthly re-answer all + pack; drafts only, never approves).
 - 14 (2026-07-27): Verification plan — declared gates, computed done-marks (sidecar
   schema 1.3 → 1.4, purely additive). A plan's new `## Verification plan` section
   itemizes the quality/audit checks the analysis commits to as checkbox lines
