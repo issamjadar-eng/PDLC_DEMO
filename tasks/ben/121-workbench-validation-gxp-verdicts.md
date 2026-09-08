@@ -2,7 +2,7 @@
 
 **ID**: 121
 **Created**: 2026-09-08
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -85,7 +85,7 @@ Need verdict: applicable cases (not N/A) must all be PASS → PASS; any FAIL/ERR
 - [x] Checkers built (4 forks): medtech-docs 36 `form_conformance_check.py` + `ai_changelog_check.py` (22 fixture tests); submissions 11 (new S7 unresolved-[VERIFY] gate check + fixture package, 7 tests); commercial 18 claim-gate tests (4); knowledge-pack-export 6 (4); docflow 37 fidelity tests (7); strategy 21 `scan_tags.py` (4) + lessons 5 pointer; secops 10 session-hook tests (3); task 36 checkpoint-recover tests (3); usage-metrics 13 aggregate tests (3); advisors 13 `grounding_scan.py` (4); change-control 0.14.2 `test_frozen_hook.py` (expected FAIL, `freeze_gate` marker); three written protocols (citations 16-item challenge set, grounding 6 questions, live MCP 7 steps) + templates
 - [x] Manifest 2.0: `deployment:` declaration (connections + 12 content keys), 43 cases all scoped/methoded, every one of 29 needs mapped; `coverage:` retired; plan §4 regenerated, §5 rewritten; protocols/ folder + records folder READMEs
 - [x] Debug run `run-20260908T195841Z`: **FAIL** — 32/43 PASS · 5 FAIL · 2 NOT-EXECUTED · 4 NOT-APPLICABLE; needs 19 PASS / 9 FAIL / 1 N/A (see Findings)
-- [ ] Commit → run of record (red) → PR → merge; registry sync branch updated
+- [x] Commits `bfc70e0` (model + checks) · `cc5fcd0` (run of record, red) · merge `07c8fcc` → PR #190 merged (`2ce5cc3`); hitachi sync branch +`b88427f` (PR #301 now 3 commits, awaiting review)
 
 ## Economics
 
@@ -108,3 +108,14 @@ Need verdict: applicable cases (not N/A) must all be PASS → PASS; any FAIL/ERR
 
 - 2026-09-08: Task created from the user's GxP challenge; verdict model + capability/deployment split decided; schema 2.0 drafted; four build forks launched.
 - 2026-09-08: Verdict model implemented (workbench-validation 6, schema 2.0, 25 tests); 19 new cases from four forks integrated (43 total, 29 needs all mapped); plan §4/§5, protocols folder + records folder; console 1.67.2. Debug run FAIL 32/43 — nine failing needs, all genuine (table above). Next: commit, run of record (red), PR, registry sync.
+- 2026-09-08: Landed via PR #190 (`2ce5cc3`) with the honest red run of record `run-20260908T200255Z`; registry sync branch updated (`b88427f`). Task Complete — its deliverable was the model, the checks and the truthful report. Open follow-ups are the build list in Findings, each with an owner.
+
+## Resume / follow-up
+
+Everything is on `main`. The red is the true state; closing it is content and build work, not validation work:
+1. **Content owners** — DHF authors: align 195 documents to their governing templates (or record deviations) and add a parent-template reference to the 43 without one (`form_conformance_check.py --json docs/project/dhfs` lists them); backfill the AI-CHANGELOG block on 198 AI-authored documents and neutralise 3 vendor mentions (`ai_changelog_check.py`); RA lead: resolve the 2 `[VERIFY]` tags in `docs/project/submissions/qsub/cover-letter.md` (lines 18, 44); task owners: fix 22 malformed harvest tags (`scan_tags.py --json`).
+2. **Build** — implement `change-control/hooks/pre_tool_use_frozen.py` (TC-39 already asserts the deny); give the submissions checker a parser for bulleted attachment lists and a 510k (eStAR) entry point; docflow `validate_phase7.py --self-test` should not depend on a foreign path.
+3. **Execute protocols** — run `protocols/TC-PROTO-CITATIONS.md` and `TC-PROTO-GROUNDING.md` (3 runs each, pinned model), write `tools/workbench-validation/protocols/<TC>.result.yml`, re-run `/workbench-validation validate --model-id <model>`.
+4. **Registry** — merge hitachi #301, then `/sync-skills pull`; port the project-console Settings → Validation changes (1.64.0 → 1.67.2) to the registry fork by hand.
+5. Also found while building: 4 real citation defects listed in `TC-PROTO-CITATIONS.md` (IEC 62304 §4.3 mislabeled, 21 CFR 820.30(b) stale, ISO 13485 §7.3.2 registry gap, IEC 62366-1 §5.9 absent) — route to the reference-audit owner.
+Reactivate with `bash .claude/hooks/task-activate.sh add <SESSION_ID> ben/121` only if these follow-ups are worked under this task rather than their owners' tasks.
