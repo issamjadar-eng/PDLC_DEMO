@@ -1,0 +1,24 @@
+{
+  "driven_clis": [
+    {
+      "name": "grok",
+      "path": "/Users/benxavier/.grok/bin/grok",
+      "version": "grok 0.2.118 (1e1687c1cf6a)"
+    },
+    {
+      "name": "codex",
+      "path": "/Users/benxavier/.hermes/node/bin/codex",
+      "version": "codex-cli 0.148.0"
+    },
+    {
+      "name": "agy",
+      "path": "/Users/benxavier/.local/bin/agy",
+      "version": "1.1.27"
+    }
+  ],
+  "note": "The CLIs above are global and are NOT vendored here. Their versions are recorded so a later failure can be traced to a tool that moved or upgraded underneath this project. Reflects the last machine that ran setup.",
+  "owning_skill": "multimodel",
+  "python": "3.14.6",
+  "recorded_utc": "2026-09-08T23:36:57.547668+00:00",
+  "tool": "multimodel"
+}

@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# multimodel — other-vendor model access (skill: multimodel)
+# ---------------------------------------------------------------------------
+# Thin, dependency-free wrapper over vendor CLIs (Grok, Codex/OpenAI,
+# Antigravity/Gemini) so this session — or any skill that declares an optional
+# dependency on `multimodel` — can get an independent second opinion or run a
+# multi-model cross-check. No API keys live here: the CLI providers use their
+# own subscription OAuth; the one key-based provider reads an environment
+# variable and ships disabled.
+multimodel:
+  policy:
+    # Every prompt sent through this layer leaves the machine for a third-party
+    # service. `forbidden` makes the CLI refuse to send; the calling skill is
+    # responsible for honouring `never_send` (there is no content filter).
+    external_send: allowed          # allowed | forbidden
+    never_send:
+      - PHI or any patient-identifiable data
+      - credentials, tokens, keys
+      - controlled-document bodies, unless the calling skill's contract says so
+  providers:
+    # `type:` defaults to the entry name; `role:` is a free label for grouping
+    # (e.g. challenger vs worker) that callers filter on and this layer ignores.
+    #
+    # `workspace:` — these vendor CLIs are AGENTS with file tools. `project`
+    # (the default) launches them at the project root pinned to READ-ONLY
+    # tools, so they can gather context from the repository but never write or
+    # execute; run `multimodel.py verify` to prove it live. `isolated` launches
+    # them in an empty temporary directory so only the prompt reaches the
+    # vendor — use it (here, or per call with `ask --workspace isolated`) for
+    # prompts that carry all their own context.
+    grok:
+      workspace: project
+      # read_tools: read_file,list_dir,grep   # the --tools allowlist; nothing else exists for the model
+      # web_search: false                     # true re-enables the CLI's web search/fetch tools
+      # schema_mode: auto                     # auto | cli | prompt — see the adapter: --json-schema
+                                              # suppresses tool use, so project mode asks in the prompt
+      enabled: true
+      role: challenger
+      command: grok
+      # model: grok-4             # omit for the CLI default
+      timeout_seconds: 180
+      description: xAI Grok via the grok CLI on account OAuth.
+    codex:
+      enabled: true
+      workspace: project          # enforced with --sandbox read-only (any other sandbox is refused)
+      role: challenger
+      command: codex
+      # model: gpt-5              # pin for reproducible cross-checks
+      # reasoning_effort: high    # none | low | medium | high
+      timeout_seconds: 300
+      description: OpenAI via the Codex CLI on ChatGPT OAuth (plan credits, no key on disk).
+    antigravity:
+      enabled: true
+      # Project mode attaches to an Antigravity CLI project bound to this
+      # workspace (`--project <id>`): the permission engine then auto-allows
+      # reads inside the project directory and soft-denies writes in headless
+      # mode — no global settings rule needed. `setup` reuses an existing bound
+      # project or creates `~/.gemini/config/projects/multimodel-<slug>.json`.
+      # `project_id:` overrides the lookup. The adapter refuses project mode if
+      # the user's CLI settings hold a write_file(...) allow rule over the repo.
+      workspace: project
+      # project_id: <id>            # optional override
+      role: challenger
+      command: agy
+      # effort: high              # low | medium | high
+      timeout_seconds: 300
+      description: Google Gemini lineage via the Antigravity CLI on Google OAuth.
+    openai:
+      enabled: false
+      type: openai_http
+      role: challenger
+      api_key_env: OPENAI_API_KEY   # read from the environment only; never stored
+      model: gpt-5
+      timeout_seconds: 180
+      description: Metered OpenAI HTTP path for keyless-login-free environments. Prefer codex.
