@@ -271,6 +271,7 @@ security:
   - lessons
   - md-deck
   - medtech-docs
+  - multimodel
   - pdf
   - pptx
   - project-console
@@ -686,3 +687,59 @@ usage_metrics:
     enabled: true                # SessionEnd: push your OWN _usage-metrics/ data to `branch`
     branch: main                 #   via an isolated worktree (working branch untouched). This is
                                  #   what feeds the daily-aggregate GitHub workflow. false to disable.
+
+# ---------------------------------------------------------------------------
+# multimodel — other-vendor model access (skill: multimodel)
+# ---------------------------------------------------------------------------
+# Thin, dependency-free wrapper over vendor CLIs (Grok, Codex/OpenAI,
+# Antigravity/Gemini) so this session — or any skill that declares an optional
+# dependency on `multimodel` — can get an independent second opinion or run a
+# multi-model cross-check. No API keys live here: the CLI providers use their
+# own subscription OAuth; the one key-based provider reads an environment
+# variable and ships disabled.
+multimodel:
+  policy:
+    # Every prompt sent through this layer leaves the machine for a third-party
+    # service. `forbidden` makes the CLI refuse to send; the calling skill is
+    # responsible for honouring `never_send` (there is no content filter).
+    external_send: allowed          # allowed | forbidden
+    never_send:
+      - PHI or any patient-identifiable data
+      - credentials, tokens, keys
+      - controlled-document bodies, unless the calling skill's contract says so
+  providers:
+    # `type:` defaults to the entry name; `role:` is a free label for grouping
+    # (e.g. challenger vs worker) that callers filter on and this layer ignores.
+    grok:
+      enabled: true
+      workspace: project    # project (root, READ-ONLY tools — verify with `multimodel.py verify`) | isolated (empty temp dir; prompt-only)
+      role: challenger
+      command: grok
+      # model: grok-4             # omit for the CLI default
+      timeout_seconds: 180
+      description: xAI Grok via the grok CLI on account OAuth.
+    codex:
+      enabled: true
+      workspace: project    # project (root, READ-ONLY tools — verify with `multimodel.py verify`) | isolated (empty temp dir; prompt-only)
+      role: challenger
+      command: codex
+      # model: gpt-5              # pin for reproducible cross-checks
+      # reasoning_effort: high    # none | low | medium | high
+      timeout_seconds: 300
+      description: OpenAI via the Codex CLI on ChatGPT OAuth (plan credits, no key on disk).
+    antigravity:
+      enabled: true
+      workspace: project    # attaches to the workspace-bound Antigravity project (created by setup if absent); reads auto-allowed, writes soft-denied
+      role: challenger
+      command: agy
+      # effort: high              # low | medium | high
+      timeout_seconds: 300
+      description: Google Gemini lineage via the Antigravity CLI on Google OAuth.
+    openai:
+      enabled: false
+      type: openai_http
+      role: challenger
+      api_key_env: OPENAI_API_KEY   # read from the environment only; never stored
+      model: gpt-5
+      timeout_seconds: 180
+      description: Metered OpenAI HTTP path for keyless-login-free environments. Prefer codex.

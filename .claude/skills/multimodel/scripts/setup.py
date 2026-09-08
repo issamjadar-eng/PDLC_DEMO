@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Install the multimodel skill into a project. Idempotent; safe to re-run.
+
+    python3 .claude/skills/multimodel/scripts/setup.py            # install
+    python3 .claude/skills/multimodel/scripts/setup.py --verify   # check only
+
+What it does:
+
+1. Ensures `project.yml` has a top-level `multimodel:` block — appends the
+   template from `templates/models.yml` when absent, and never rewrites an
+   existing block (comments and hand edits survive).
+2. Records CLI provenance to `tools/multimodel/provenance.json`: which vendor
+   CLIs were found, where, and at what version. Committed, so a later failure
+   can be traced to a tool that moved or upgraded underneath the project.
+3. If the `antigravity` provider is configured with `workspace: project`,
+   ensures the Antigravity CLI has a project bound to this workspace: reuses
+   one whose `folderUri` already matches (a team running Antigravity as its
+   primary agent has one), else creates `~/.gemini/config/projects/
+   multimodel-<slug>.json` — the CLI's own per-project registry, never its
+   global `settings.json`, and never an existing file.
+
+What it does NOT do: install anything. The package is standard-library only,
+and the vendor CLIs (`grok`, `codex`, `agy`) are global — installed once per
+machine from their vendors' pages and shared by every project. Vendoring them
+would be a copy nobody updates.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import shutil
+import subprocess
+import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
+SKILL_DIR = Path(__file__).resolve().parents[1]
+REPO_ROOT = SKILL_DIR.parents[2]
+TEMPLATE = SKILL_DIR / "templates" / "models.yml"
+PROJECT_YML = REPO_ROOT / "project.yml"
+TOOL_DIR = REPO_ROOT / "tools" / "multimodel"
+PROVENANCE = TOOL_DIR / "provenance.json"
+TOOL_README = TOOL_DIR / "README.md"
+
+#: Global CLIs this layer drives. Not installed here — recorded here.
+DRIVEN_CLIS = {
+    "grok": ["--version"],
+    "codex": ["--version"],
+    "agy": ["--version"],
+}
+EXTRA_BIN_DIRS = (
+    Path.home() / ".local" / "bin",
+    Path.home() / "bin",
+    Path.home() / ".grok" / "bin",
+)
+BLOCK_RE = re.compile(r"^multimodel:\s*$", re.MULTILINE)
+
+
+def run(args: list[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args, capture_output=True, text=True, stdin=subprocess.DEVNULL, check=False, timeout=30,
+    )
+
+
+def which(command: str) -> str | None:
+    found = shutil.which(command)
+    if found:
+        return found
+    for directory in EXTRA_BIN_DIRS:
+        candidate = directory / command
+        if candidate.exists():
+            return str(candidate)
+    return None
+
+
+def cli_inventory() -> list[dict[str, str | None]]:
+    inventory = []
+    for name, version_args in DRIVEN_CLIS.items():
+        path = which(name)
+        version = None
+        if path:
+            try:
+                result = run([path, *version_args])
+            except (OSError, subprocess.SubprocessError):
+                result = None
+            if result is not None and result.returncode == 0 and result.stdout.strip():
+                version = result.stdout.strip().splitlines()[0][:80]
+        inventory.append({"name": name, "path": path, "version": version})
+    return inventory
+
+
+def ensure_config_block() -> str:
+    """Append the template block to project.yml if no `multimodel:` key exists."""
+    if not PROJECT_YML.is_file():
+        return f"project.yml not found at {PROJECT_YML} — nothing to configure"
+    text = PROJECT_YML.read_text(encoding="utf-8")
+    if BLOCK_RE.search(text):
+        return "project.yml already has a multimodel: block — left untouched"
+    template = TEMPLATE.read_text(encoding="utf-8").rstrip("\n") + "\n"
+    if not text.endswith("\n"):
+        text += "\n"
+    PROJECT_YML.write_text(text + "\n" + template, encoding="utf-8")
+    return "appended multimodel: block to project.yml from templates/models.yml"
+
+
+def write_provenance() -> str:
+    TOOL_DIR.mkdir(parents=True, exist_ok=True)
+    PROVENANCE.write_text(
+        json.dumps(
+            {
+                "tool": "multimodel",
+                "owning_skill": "multimodel",
+                "recorded_utc": datetime.now(UTC).isoformat(),
+                "python": sys.version.split()[0],
+                "driven_clis": cli_inventory(),
+                "note": (
+                    "The CLIs above are global and are NOT vendored here. Their "
+                    "versions are recorded so a later failure can be traced to a "
+                    "tool that moved or upgraded underneath this project. Reflects "
+                    "the last machine that ran setup."
+                ),
+            },
+            indent=2,
+            sort_keys=True,
+        ) + "\n",
+        encoding="utf-8",
+    )
+    if not TOOL_README.exists():
+        TOOL_README.write_text(
+            "# tools/multimodel\n\n"
+            "Generated by the `multimodel` skill's `setup` action. Holds `provenance.json` — "
+            "the vendor CLI versions and paths the skill was last set up against. "
+            "Nothing is installed here; the package is standard-library only and the CLIs "
+            "are global per machine. Re-run `python3 .claude/skills/multimodel/scripts/setup.py` "
+            "to refresh; `--verify` reports drift.\n",
+            encoding="utf-8",
+        )
+    return f"recorded CLI provenance to {PROVENANCE.relative_to(REPO_ROOT)}"
+
+
+def verify() -> int:
+    print("multimodel setup (verify)")
+    print("=" * 66)
+    problems: list[str] = []
+
+    has_block = PROJECT_YML.is_file() and bool(BLOCK_RE.search(PROJECT_YML.read_text(encoding="utf-8")))
+    print(f"  [{'ok' if has_block else 'FAIL'}]   project.yml multimodel: block")
+    if not has_block:
+        problems.append("project.yml has no multimodel: block — run setup without --verify")
+
+    print(f"  [{'ok' if PROVENANCE.exists() else '--'}]   {PROVENANCE.relative_to(REPO_ROOT)}"
+          f" {'present' if PROVENANCE.exists() else 'not recorded yet'}")
+
+    print()
+    print("Global CLIs driven by this layer (not vendored):")
+    now = cli_inventory()
+    for entry in now:
+        ok = entry["path"] is not None
+        print(f"  [{'ok' if ok else '--'}]   {entry['name']:<8} {entry['version'] or 'NOT FOUND'}"
+              f"{'  ' + entry['path'] if entry['path'] else ''}")
+
+    if PROVENANCE.exists():
+        recorded = json.loads(PROVENANCE.read_text(encoding="utf-8"))
+        drift = []
+        for was in recorded.get("driven_clis", []):
+            cur = next((c for c in now if c["name"] == was["name"]), None)
+            if cur and was.get("version") and cur["version"] != was["version"]:
+                drift.append(f"{was['name']}: recorded {was['version']}, now {cur['version']}")
+            elif cur and was.get("path") and cur["path"] != was["path"]:
+                drift.append(f"{was['name']}: moved from {was['path']} to {cur['path']}")
+        if drift:
+            print()
+            print("  CLI drift since provenance was recorded:")
+            for line in drift:
+                print(f"    [WARN] {line}")
+            print("    Re-run setup without --verify to refresh.")
+
+    print()
+    print("=" * 66)
+    if problems:
+        for problem in problems:
+            print(f"  - {problem}")
+        return 1
+    missing = [e["name"] for e in now if e["path"] is None]
+    if missing:
+        print(f"Configured. Missing CLIs: {', '.join(missing)} — those providers will report unavailable.")
+    else:
+        print("Configured; all three vendor CLIs present. Run `multimodel.py doctor` to prove they answer.")
+    return 0
+
+
+def ensure_antigravity_project() -> str:
+    """Bind an Antigravity CLI project to this workspace when project mode is on."""
+    sys.path.insert(0, str(SKILL_DIR / "src"))
+    try:
+        from multimodel import ConfigError, load_config
+        from multimodel.providers.antigravity import ensure_workspace_project
+    except ImportError as exc:  # pragma: no cover
+        return f"antigravity project: skipped ({exc})"
+    try:
+        config = load_config(PROJECT_YML)
+    except ConfigError as exc:
+        return f"antigravity project: skipped ({exc})"
+    entries = [
+        (name, cfg or {}) for name, cfg in (config.get("providers") or {}).items()
+        if (cfg or {}).get("type", name) in ("antigravity", "gemini")
+    ]
+    wanting = [n for n, c in entries if c.get("enabled") and str(c.get("workspace", "project")) == "project"]
+    if not wanting:
+        return "antigravity project: not needed (provider disabled or workspace: isolated)"
+    if not which("agy"):
+        return "antigravity project: skipped — `agy` CLI not installed"
+    try:
+        project_id, path, created = ensure_workspace_project(REPO_ROOT)
+    except (OSError, FileExistsError) as exc:
+        return f"antigravity project: FAILED — {exc}"
+    verb = "created" if created else "reusing"
+    return f"antigravity project: {verb} {path} (id {project_id!r}, bound to {REPO_ROOT})"
+
+
+def install() -> int:
+    print("multimodel setup")
+    print("=" * 66)
+    print(f"  {ensure_config_block()}")
+    print(f"  {write_provenance()}")
+    print(f"  {ensure_antigravity_project()}")
+    print()
+    print("=" * 66)
+    print("Done. Next: python3 .claude/skills/multimodel/scripts/multimodel.py doctor --quick")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--verify", action="store_true", help="check only, change nothing")
+    args = parser.parse_args()
+    return verify() if args.verify else install()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
