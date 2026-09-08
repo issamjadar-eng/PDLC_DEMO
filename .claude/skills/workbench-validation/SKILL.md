@@ -1,8 +1,8 @@
 ---
 name: workbench-validation
 description: "MedTech-style tool validation of the AI workbench itself — the .claude/ toolchain (skills, agents, hooks, scripts, rules) used to author and manage design-control artifacts. Runs a declarative validation manifest (workbench user needs mapped to executable test cases over existing skill test suites, lints, and audits), records timestamped results JSON with a configuration baseline (git SHA, per-skill versions), and renders a single validation report + console sidecar for the project console's Settings → Workbench Validation sub-section. TRIGGER when the user wants to: validate the workbench / toolchain / skills ('are our skills validated', 'run the workbench validation', 'tool validation report', 'validate our .claude setup', 'is the toolchain fit for use'); refresh or view the validation report or its console view; add/modify workbench user needs (WUN-xx) or validation test cases; or edits files under docs/project/workbench-validation/ or the validation.yml manifest. Also trigger on ISO 13485 QMS-software-validation / CSA-style tool-assurance questions about the project's own tooling. NOT for validating the medical device itself (that's the DHF V&V) and NOT for structural project audits (/best-practices) or content gap analysis (/gap-analysis)."
-version: 3
-updated: 2026-07-28
+version: 4
+updated: 2026-09-08
 dependencies:
   skills:
     - name: project-console
@@ -37,6 +37,28 @@ logs. The markdown report is **one generated projection** of that data; a custom
 QMS that requires its own report format gets a new transform over the same canonical
 data, never a rewrite of the validation.
 
+**Evidence tiers (load-bearing).** Every test case declares `endpoint: none | mocked |
+live` — whether it touched no external system, a fake Jira/Confluence transport with
+canned payloads, or a real enterprise endpoint. The manifest's `connections:` block
+declares what the deployment has; a `live` case for a connection declared `none` is
+reported **NOT-APPLICABLE** (a statement, not a gap) and never lowers a verdict, while
+a declared-present but unreachable connection is a real SKIP/FAIL. Each need's verdict
+carries a plain-language "strongest evidence" line ("mock-verified; live jira not
+applicable in this deployment"). MCP-mediated integration paths cannot be driven from
+pytest — those are `exploratory` needs assured by recorded live probes, never a
+scripted PASS. The same tier names are pytest markers (`mocked`, `live`, opt-in via
+`--live`) in the skills' own suites, whose `conftest.py` socket guard blocks network
+access outside the `live` tier.
+
+**Environment record (load-bearing).** The run JSON's `environment` block is the
+canonical setup record: configuration under test (commit, dirty-file list, per-skill
+versions with frontmatter/VERSION mismatches flagged, hooks, agents, rules), runtime
+(Python, OS, harness version, model id), tooling (every required binary's resolved
+path and version, test-harness package versions), connections (declared tiers, MCP
+servers, reachability probes) and isolation (env vars stripped/set). The report
+renders it as a collapsed "Full environment record" in §1 and the console shows an
+expandable Environment panel — the verdict stays readable, the record stays complete.
+
 **Honesty model (load-bearing).** Deterministic components (hooks, scripts, lints,
 renderers) get scripted, repeatable test evidence. LLM-driven behavior is *not*
 repeatably testable: needs assured by human review + deterministic gates + audit trail
@@ -65,7 +87,7 @@ All project-specific content lives in the project tree, never in this skill.
 |---|---|---|
 | Validation plan (roles, user needs, tiers, intended use) | `docs/project/workbench-validation/validation-plan.md` | Authored, durable |
 | Validation manifest | `docs/project/workbench-validation/validation.yml` | Authored, declarative |
-| Run results | `tools/workbench-validation/results/<run-id>.json` (+ `latest.json`) | Generated, append-only |
+| Run results | `tools/workbench-validation/results/<run-id>.json` (+ `latest.json`) — schema 1.1 carries `environment`, `warnings`, `connections`, per-case `endpoint` | Generated, append-only |
 | Per-case evidence logs | `tools/workbench-validation/results/<run-id>/<TC-ID>.log` | Generated — full execution transcripts, the evidence of record |
 | Pinned test artifacts | `tools/workbench-validation/results/<run-id>/pinned/<TC-ID>/` + a pinned copy of `validation.yml` in the run folder | Generated — byte copies (sha256-manifested in the run JSON) of the exact test sources + case definitions this run executed, so each run stays reviewable after the tools evolve |
 | Validation report | `tools/workbench-validation/validation-report.md` | Generated — never hand-edit |
@@ -107,17 +129,24 @@ operator (git user/email, OS user, hostname, OS), invocation source
 the manifest and each case's test source:
 
 ```bash
-python3 .claude/skills/workbench-validation/scripts/run_validation.py --root <repo_root> --render
+python3 .claude/skills/workbench-validation/scripts/run_validation.py --root <repo_root> --render \
+    --model-id <model identifier>
 ```
 
+- **Runs of record need a clean tree and a captured model id.** The runner warns
+  loudly (and records `warnings[]`) when the working tree is dirty, when the model
+  id is not captured (`--model-id`, or `$CLAUDE_MODEL`), when a skill's frontmatter
+  and `VERSION` disagree, or when a case has no `endpoint:` tier. A run with
+  warnings is a debugging run, not a run of record.
 - Full runs only for record-keeping; `--only TC-01,TC-05` for debugging (marked
   `partial: true` and flagged in the report).
 - Cases needing pytest use `uv run --no-project --with pytest` (network on first
   resolve, cached after). Cases with `requires:` binaries missing are SKIPPED, not
   failed.
-- Review the summary; a FAIL is a finding to triage (fix the tool, or record the
-  anomaly in the manifest `known_anomalies:` with rationale), never something to
-  silently drop from the manifest.
+- Review the summary; a FAIL is a finding to triage — **fix the tool at the source**,
+  or record the anomaly in `known_anomalies:` **with an owner and the run by which it
+  is expected to clear** — never something to silently drop from the manifest, and
+  never a parking place: an anomaly entry without an owner is not a disposition.
 
 ### `render`
 
@@ -155,7 +184,8 @@ plan: docs/project/workbench-validation/validation-plan.md
 results_dir: tools/workbench-validation/results
 sidecar: tools/workbench-validation/workbench-validation-index.json
 report: {title: "...", output: tools/workbench-validation/validation-report.md}
-known_anomalies: ["..."]           # accepted/triaged anomalies carried into §4
+connections: {jira: none, confluence: none, browser: none}   # what THIS deployment has
+known_anomalies: ["..."]           # accepted anomalies (owner + expected clearing run) → §4
 revalidation_triggers: ["..."]     # optional override of the default set
 user_needs:
   - id: WUN-01
@@ -176,6 +206,8 @@ test_cases:
                                    # case actually runs against; multiple allowed; skill
                                    # names resolve to the version exercised (uut_versions);
                                    # sentinel `all-skills` = workbench-wide sweep
+    endpoint: none                 # none | mocked | live (required)
+    connection: jira               # live only — key into `connections:`
     cmd: ["bash", "path/to/test.sh"]
     cwd: .                         # optional, relative to root
     timeout: 600                   # seconds, optional
@@ -191,8 +223,9 @@ test_cases:
 - **The report and sidecar are generated projections** — regenerate, never hand-edit.
   The plan and manifest are the authored sources of truth.
 - **Verdict semantics**: PASS / FAIL / PARTIAL (skips) / NO-EVIDENCE (tests-coverage
-  need with no mapped case — a manifest gap, fix the manifest) / PROCESS-CONTROL /
-  EXPLORATORY. Overall verdict: FAIL > PARTIAL > PASS.
+  need with no mapped case — a manifest gap, fix the manifest) / NOT-APPLICABLE (every
+  mapped case is a `live` case for a connection declared `none`) / PROCESS-CONTROL /
+  EXPLORATORY. Overall verdict: FAIL > PARTIAL > PASS; NOT-APPLICABLE never lowers it.
 - **Do not validate the device with this skill** — device V&V lives in the DHF. This
   skill validates the toolchain that produces those artifacts.
 - The console integration (Settings → Workbench Validation) is owned by the

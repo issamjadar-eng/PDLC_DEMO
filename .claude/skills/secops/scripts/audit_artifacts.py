@@ -49,12 +49,33 @@ class Rule:
     description: str
     applies_to: tuple = ("sh", "py")
     suppress_if_path_contains: tuple = ()
-    # When True, matches in `.py` files that fall entirely inside a string
-    # literal (docstring, error message, print arg) are dropped. Used for
-    # rules where the dangerous behavior is *executing* the pattern, not
-    # *mentioning* it in user-facing text.
+    # When True, matches that fall entirely inside a string literal are
+    # dropped: for `.py` files a string/docstring/f-string/comment token; for
+    # `.sh` files a heredoc body (`<<EOF ... EOF`, any terminator, quoted or
+    # `<<-`). Used for rules where the dangerous behavior is *executing* the
+    # pattern, not *mentioning* it in user-facing text (help messages,
+    # remediation instructions, error strings).
+    skip_in_string_literals: bool = False
+    # Backward-compatible alias for `skip_in_string_literals` (older rule
+    # definitions). Either flag enables the same behavior.
     skip_in_py_string_literals: bool = False
+    # When True, a match whose start column lies at/after the line's comment
+    # marker (`#` outside quotes, for sh/py) is dropped — a mention of the
+    # pattern in a code comment is not an execution of it.
+    skip_in_comments: bool = False
+    # When True and the matched span targets a temp location ($TMP, $TMPDIR,
+    # ${TMP…}, /tmp/, mktemp), the finding is downgraded to Medium and the
+    # description annotated — a fixture file that merely shares the name of
+    # the protected file is not an edit of the protected file.
+    downgrade_if_temp_target: bool = False
 
+    @property
+    def skips_string_literals(self) -> bool:
+        return self.skip_in_string_literals or self.skip_in_py_string_literals
+
+
+# Shared operator fragment for the config-tamper rules (see § 3 below).
+_EDIT_OP = r"(?:(?<![-=>])>{1,2}(?![>=&])|\btee\b|\bsed\s+-i|\byq\s+(?:[\w-]+\s+)*-i\b)"
 
 RULES: tuple[Rule, ...] = (
     # ---- 1. External network calls ----
@@ -135,36 +156,51 @@ RULES: tuple[Rule, ...] = (
     ),
 
     # ---- 3. Edits to load-bearing project config from inside skill scripts ----
+    # `_EDIT_OP` is a real redirect/edit operator: `>` / `>>` not preceded by
+    # `-`, `=` or another `>` (so `->` / `=>` in prose never match) and not
+    # followed by `>`, `=` or `&` (comparisons, `2>&1`); or an explicit
+    # in-place editor (`tee`, `sed -i`, `yq [subcommand] -i`).
+    # The target span stops at a command separator so `echo > a; cat b.yml`
+    # cannot be read as a write to `b.yml`.
     Rule(
         id="CFG-PROJECT-YML",
         category="config-tamper",
         severity="High",
-        pattern=r"(?:>|>>|tee\b|sed\s+-i|yq\s+(?:-\w+\s+)*-i)\s+[^\n]*project\.yml",
+        pattern=_EDIT_OP + r"\s*[^\n;|&]*?project\.yml\b",
         description="In-place edit of project.yml — should only happen via documented setup or user action.",
         suppress_if_path_contains=("medtech-docs",),  # init owns this
+        skip_in_string_literals=True,
+        skip_in_comments=True,
+        downgrade_if_temp_target=True,
     ),
     Rule(
         id="CFG-CLAUDE-MD",
         category="config-tamper",
         severity="High",
-        pattern=r"(?:>|>>|tee\b|sed\s+-i)\s+[^\n]*\bCLAUDE\.md\b",
+        pattern=_EDIT_OP + r"\s*[^\n;|&]*?\bCLAUDE\.md\b",
         description="In-place edit of CLAUDE.md from a skill script.",
         suppress_if_path_contains=("medtech-docs",),
+        skip_in_string_literals=True,
+        skip_in_comments=True,
+        downgrade_if_temp_target=True,
     ),
     Rule(
         id="CFG-GIT-CONFIG-GLOBAL",
         category="config-tamper",
         severity="High",
-        pattern=r"git\s+config\s+(?:-\w+\s+)*(?:--global|--system)\b",
+        pattern=r"\bgit\s+config\s+(?:-\w+\s+)*(?:--global|--system)\b",
         description="Mutates git config at global/system scope — should always be repo-local.",
-        skip_in_py_string_literals=True,
+        skip_in_string_literals=True,
+        skip_in_comments=True,
     ),
     Rule(
         id="CFG-GITIGNORE",
         category="config-tamper",
         severity="Medium",
-        pattern=r"(?:>|>>|tee\b|sed\s+-i)\s+[^\n]*\.gitignore\b",
+        pattern=_EDIT_OP + r"\s*[^\n;|&]*?\.gitignore\b",
         description="In-place edit of .gitignore — verify the entries are documented.",
+        skip_in_string_literals=True,
+        skip_in_comments=True,
     ),
 
     # ---- 4. Credential / secret reads ----
@@ -352,6 +388,106 @@ def _python_string_literal_spans(text: str) -> dict[int, list[tuple[int, int]]]:
     return spans
 
 
+def _sh_heredoc_lines(text: str) -> set[int]:
+    """Return the set of 1-based line numbers that lie inside a shell heredoc
+    body (`<<EOF` … `EOF`, `<<-EOF`, `<<'EOF'`, `<<"EOF"`, any terminator
+    word). Several heredocs opened on one line are consumed in order. The
+    opening line itself is NOT part of the body — a redirect on that line is
+    still real code."""
+    body: set[int] = set()
+    lines = text.splitlines()
+    pending: list[tuple[str, bool]] = []  # (terminator, strip_tabs)
+    open_re = re.compile(r"(?<!<)<<(-?)\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if pending:
+            term, strip_tabs = pending[0]
+            probe = line.lstrip("\t") if strip_tabs else line
+            if probe == term:
+                pending.pop(0)
+            else:
+                body.add(i + 1)
+            i += 1
+            continue
+        for m in open_re.finditer(line):
+            pending.append((m.group(3), m.group(1) == "-"))
+        i += 1
+    return body
+
+
+def _comment_start_col(line: str) -> int | None:
+    """Column of the first `#` that starts a comment on a sh/py line, or None.
+    Minimal quote tracking: a `#` inside single or double quotes is not a
+    comment; a `#` directly following a non-space, non-operator character
+    (`$#`, `a#b`, `${#x}`) is not a comment in shell either."""
+    in_s = in_d = False
+    prev = " "
+    for i, ch in enumerate(line):
+        if ch == "'" and not in_d:
+            in_s = not in_s
+        elif ch == '"' and not in_s:
+            in_d = not in_d
+        elif ch == "#" and not in_s and not in_d:
+            if prev.isspace() or prev in "(;|&{":
+                return i
+        if not (ch == "\\" and prev == "\\"):
+            prev = ch
+    return None
+
+
+_TEMP_TARGET_RE = re.compile(
+    r"\$\{?TMP(?:DIR)?\b|\$\{?TEMP\b|/tmp/|\$\(\s*mktemp\b|\bmktemp\b"
+)
+
+
+_ASSIGN_RE = re.compile(
+    r"^\s*(?:export\s+|local\s+|readonly\s+|declare\s+(?:-\w+\s+)*)?"
+    r"([A-Za-z_][A-Za-z0-9_]*)=(.*)$"
+)
+
+
+def _temp_derived_vars(text: str) -> set[str]:
+    """Names of shell variables whose value is derived from a temp location
+    within this file — directly (`X=$(mktemp -d)`, `X="$TMPDIR/y"`) or
+    transitively (`Y="$X/project"`). Resolved to a fixpoint over the file so
+    a write to `"$Y/project.yml"` is recognized as a fixture write, exactly
+    like a write to `"$TMP/project.yml"`. Order-insensitive (a variable
+    assigned below its use still counts — the scan is per file, not a flow
+    analysis) which errs toward the downgrade only for names the file itself
+    ties to a temp path."""
+    assigns: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        m = _ASSIGN_RE.match(line)
+        if m:
+            assigns.append((m.group(1), m.group(2)))
+    temp: set[str] = set()
+    changed = True
+    while changed:
+        changed = False
+        for name, rhs in assigns:
+            if name in temp:
+                continue
+            if _TEMP_TARGET_RE.search(rhs) or any(
+                re.search(r"\$\{?" + re.escape(v) + r"\b", rhs) for v in temp
+            ):
+                temp.add(name)
+                changed = True
+    return temp
+
+
+def _targets_temp_path(span: str, temp_vars: set[str] | None = None) -> bool:
+    if _TEMP_TARGET_RE.search(span):
+        return True
+    for v in temp_vars or ():
+        if re.search(r"\$\{?" + re.escape(v) + r"\b", span):
+            return True
+    return False
+
+
+_TEMP_NOTE = " (target is under a temp path — fixture, not the project file)"
+
+
 def _looks_text(path: Path) -> bool:
     try:
         with open(path, "rb") as f:
@@ -405,6 +541,9 @@ def scan_files(project_dir: Path) -> list[Finding]:
             continue
 
         py_lit_spans: dict[int, list[tuple[int, int]]] | None = None  # lazy
+        sh_heredoc: set[int] | None = None  # lazy
+        comment_cols: dict[int, int | None] = {}  # lazy, per line
+        temp_vars: set[str] | None = None  # lazy (sh only)
 
         for rule, regex in compiled:
             if group not in rule.applies_to:
@@ -412,31 +551,47 @@ def scan_files(project_dir: Path) -> list[Finding]:
             if any(s in rel_str for s in rule.suppress_if_path_contains):
                 continue
 
-            if rule.skip_in_py_string_literals and group == "py" and py_lit_spans is None:
-                py_lit_spans = _python_string_literal_spans(text)
+            if rule.skips_string_literals:
+                if group == "py" and py_lit_spans is None:
+                    py_lit_spans = _python_string_literal_spans(text)
+                if group == "sh" and sh_heredoc is None:
+                    sh_heredoc = _sh_heredoc_lines(text)
 
             for lineno, line in enumerate(text.splitlines(), start=1):
                 m = regex.search(line)
                 if not m:
                     continue
-                if (
-                    rule.skip_in_py_string_literals
-                    and group == "py"
-                    and py_lit_spans is not None
-                ):
-                    spans = py_lit_spans.get(lineno, [])
-                    ms, me = m.start(), m.end()
-                    if any(s <= ms and me <= e for s, e in spans):
+                ms, me = m.start(), m.end()
+                if rule.skips_string_literals:
+                    if group == "py" and py_lit_spans is not None:
+                        spans = py_lit_spans.get(lineno, [])
+                        if any(s <= ms and me <= e for s, e in spans):
+                            continue
+                    if group == "sh" and sh_heredoc is not None and lineno in sh_heredoc:
                         continue
+                if rule.skip_in_comments and group in ("sh", "py"):
+                    if lineno not in comment_cols:
+                        comment_cols[lineno] = _comment_start_col(line)
+                    ccol = comment_cols[lineno]
+                    if ccol is not None and ms >= ccol:
+                        continue
+                severity = rule.severity
+                description = rule.description
+                if rule.downgrade_if_temp_target and group == "sh" and temp_vars is None:
+                    temp_vars = _temp_derived_vars(text)
+                if rule.downgrade_if_temp_target and _targets_temp_path(m.group(0), temp_vars):
+                    if severity in ("Critical", "High"):
+                        severity = "Medium"
+                    description = description + _TEMP_NOTE
                 findings.append(
                     Finding(
                         rule_id=rule.id,
                         category=rule.category,
-                        severity=rule.severity,
+                        severity=severity,
                         file=rel_str,
                         line=lineno,
                         snippet=line.strip()[:200],
-                        description=rule.description,
+                        description=description,
                     )
                 )
     return findings

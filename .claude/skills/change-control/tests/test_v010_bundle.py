@@ -36,7 +36,10 @@ from __future__ import annotations
 
 import json
 import sys
+import types
 from pathlib import Path
+
+import pytest
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILL_ROOT))
@@ -207,7 +210,8 @@ def test_c_jira_macro_emits_sentinel_and_captures_jql() -> None:
     assert rec["count"] == "25"
 
 
-def test_c_jira_renderer_graceful_degrades_on_auth_failure() -> None:
+@pytest.mark.mocked
+def test_c_jira_renderer_graceful_degrades_on_auth_failure(monkeypatch) -> None:
     from actions.adopt_helper import _expand_jira_macros
 
     md = (
@@ -222,23 +226,24 @@ def test_c_jira_renderer_graceful_degrades_on_auth_failure() -> None:
         "columns": None, "count": None, "server_id": None,
         "max_issues": None, "raw_params": {},
     })
-    # No cookies available → graceful-degrade comment expected. We don't
-    # mock urllib here; we monkey-patch attachments.extract_confluence_cookies
-    # to raise. If web-control isn't available the import fails the same
-    # way and we still fall through.
-    import lib.attachments as attachments_mod  # type: ignore
-    orig = attachments_mod.extract_confluence_cookies
-    try:
-        attachments_mod.extract_confluence_cookies = (
-            lambda *a, **kw: (_ for _ in ()).throw(
-                RuntimeError("no cookies")
-            )
-        )
-        new_md, warnings = _expand_jira_macros(
-            md, "https://example.atlassian.net", report
-        )
-    finally:
-        attachments_mod.extract_confluence_cookies = orig
+    # No cookies available → graceful-degrade comment expected. The code
+    # under test resolves `from lib.attachments import
+    # extract_confluence_cookies` through `sys.modules`, so the fake is
+    # installed at that seam (order-independent — patching the module
+    # attribute via `import lib.attachments as m` bound a different object
+    # when another test had already replaced the sys.modules entry, and the
+    # real cookie path then made a live HTTP request).
+    fake_lib = types.ModuleType("lib.attachments")
+
+    def _raise(*_a, **_kw):
+        raise RuntimeError("no cookies")
+
+    fake_lib.extract_confluence_cookies = _raise
+    monkeypatch.setitem(sys.modules, "lib.attachments", fake_lib)
+
+    new_md, warnings = _expand_jira_macros(
+        md, "https://example.atlassian.net", report
+    )
     assert "jira-list render deferred" in new_md, new_md
     assert any("cookie bridge failed" in w for w in warnings), warnings
 
@@ -458,45 +463,9 @@ def test_f_publish_side_emits_jira_extension_with_jql() -> None:
 # ---- Driver ----
 
 
-TESTS = [
-    test_a_children_macro_emits_sentinel_and_captures_params,
-    test_a_pagetree_macro_emits_sentinel,
-    test_a_renderer_produces_correct_relative_paths,
-    test_a_renderer_relpath_two_levels_deep,
-    test_b_stub_synthesis_when_container_has_no_macro,
-    test_b_no_stub_synthesis_when_macro_already_in_body,
-    test_c_jira_macro_emits_sentinel_and_captures_jql,
-    test_c_jira_renderer_graceful_degrades_on_auth_failure,
-    test_d_underline_adf_to_markdown,
-    test_d_underline_markdown_to_adf_roundtrip,
-    test_e_strip_auto_regions_removes_child_index,
-    test_e_strip_handles_legacy_solo_confluence_side,
-    test_e_strip_handles_paired_attachments_zone,
-    test_e_classify_adopt_in_sync_when_only_diff_is_auto_region,
-    test_e_classify_adopt_conflict_when_real_content_differs,
-    test_f_publish_side_emits_extension_node_for_child_index,
-    test_f_publish_side_drops_stub_container_block,
-    test_f_publish_side_emits_jira_extension_with_jql,
-]
-
-
 def main() -> int:
-    failed = 0
-    for t in TESTS:
-        try:
-            t()
-            print(f"PASS  {t.__name__}")
-        except AssertionError as e:
-            failed += 1
-            print(f"FAIL  {t.__name__}: {e}")
-        except Exception as e:  # noqa: BLE001
-            import traceback
-            failed += 1
-            print(f"ERROR {t.__name__}: {type(e).__name__}: {e}")
-            traceback.print_exc()
-    print()
-    print(f"{len(TESTS) - failed}/{len(TESTS)} passed")
-    return 0 if failed == 0 else 1
+    """Direct invocation delegates to pytest so fixture-taking tests run."""
+    return pytest.main([__file__, "-q"])
 
 
 if __name__ == "__main__":

@@ -1077,6 +1077,14 @@ def load_workbench_validation(repo_root: Path) -> dict:
         "data": None,
         "stale": None,
         "head_sha": None,
+        # Named differences between the recorded environment and the repo as
+        # it is now (D8): "stale" is no longer a single SHA comparison but a
+        # list a reviewer can read — commit moved, which skills changed
+        # version, hooks added/removed. Empty list + stale=False means the
+        # recorded environment still describes this checkout.
+        "differences": [],
+        "dirty_at_run": None,
+        "model_captured": None,
     }
     if not sidecar.is_file():
         return out
@@ -1085,6 +1093,11 @@ def load_workbench_validation(repo_root: Path) -> dict:
     except (OSError, json.JSONDecodeError):
         out["data"] = None
         return out
+    baseline = out["data"].get("baseline") or {}
+    env = out["data"].get("environment") or {}
+    out["dirty_at_run"] = bool(baseline.get("git_dirty"))
+    out["model_captured"] = bool(baseline.get("model_id"))
+    diffs = []
     # Freshness: the recorded config baseline vs the repo HEAD right now.
     try:
         head = subprocess.run(
@@ -1092,12 +1105,62 @@ def load_workbench_validation(repo_root: Path) -> dict:
             capture_output=True, text=True, timeout=10,
         ).stdout.strip()
         out["head_sha"] = head or None
-        recorded = ((out["data"].get("baseline") or {}).get("git_sha_short") or "")
-        if head and recorded:
-            out["stale"] = not head.startswith(recorded) and head != recorded
+        recorded = baseline.get("git_sha_short") or ""
+        if head and recorded and not head.startswith(recorded) and head != recorded:
+            diffs.append(f"commit moved: recorded {recorded}, HEAD {head}")
     except Exception:
         pass
+    # Per-skill versions recorded vs installed now (frontmatter block parse).
+    recorded_skills = env.get("skills") or {}
+    if recorded_skills:
+        now = _installed_skill_versions(repo_root)
+        for name in sorted(set(recorded_skills) | set(now)):
+            then_v = (recorded_skills.get(name) or {}).get("version")
+            now_v = now.get(name)
+            if name not in now:
+                diffs.append(f"skill removed since run: {name}")
+            elif name not in recorded_skills:
+                diffs.append(f"skill added since run: {name}")
+            elif then_v and now_v and then_v != now_v:
+                diffs.append(f"{name}: {then_v} → {now_v}")
+    recorded_hooks = set(env.get("hooks_installed") or [])
+    hooks_dir = repo_root / ".claude" / "hooks"
+    if recorded_hooks and hooks_dir.is_dir():
+        now_hooks = {p.name for p in hooks_dir.iterdir() if p.suffix in (".sh", ".py")}
+        for h in sorted(now_hooks - recorded_hooks):
+            diffs.append(f"hook added since run: {h}")
+        for h in sorted(recorded_hooks - now_hooks):
+            diffs.append(f"hook removed since run: {h}")
+    out["differences"] = diffs
+    out["stale"] = bool(diffs)
     return out
+
+
+def _installed_skill_versions(repo_root: Path) -> dict:
+    """{skill: frontmatter version} for every installed skill, parsing the
+    whole frontmatter block (a fixed head window misses long descriptions)."""
+    import re as _re
+    versions: dict = {}
+    skills_dir = repo_root / ".claude" / "skills"
+    if not skills_dir.is_dir():
+        return versions
+    for d in sorted(skills_dir.iterdir()):
+        md = d / "SKILL.md"
+        if not d.is_dir() or not md.is_file():
+            continue
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        versions[d.name] = None  # installed, version unknown (e.g. external office skills)
+        if not text.startswith("---"):
+            continue
+        end = text.find("\n---", 3)
+        block = text[3:end] if end != -1 else text[3:20000]
+        m = _re.search(r"^version:\s*(\S+)", block, _re.MULTILINE)
+        if m:
+            versions[d.name] = m.group(1).strip("'\"")
+    return versions
 
 
 def _load_appearance() -> dict:

@@ -2,7 +2,7 @@
 # Authored source of truth (paired with validation-plan.md). The report, results,
 # and sidecar are generated projections; edit here, then run
 # `/workbench-validation validate`.
-schema_version: "1.0"
+schema_version: "1.1"
 
 banner: "_Demo sample data — not for clinical use._ Illustrative of method only — not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text."
 
@@ -16,14 +16,37 @@ report:
   title: "Workbench Validation Report — PDLC_DEMO AI Workbench"
   output: tools/workbench-validation/validation-report.md
 
+# Evidence tiers (D7). Every test case declares `endpoint: none | mocked | live`.
+# `connections:` states what THIS deployment has for each external system. A
+# `live` case whose `connection:` is declared `none` here is reported
+# NOT-APPLICABLE (a statement about the deployment, never a gap) and does not
+# lower any verdict. A connection declared present but unreachable is a real
+# SKIP/FAIL. This project connects to none of them; it validates the
+# integration code against mocked transports and records live probes only.
+connections:
+  jira: none          # change_control.jira.base_url unset in project.yml
+  confluence: none    # no change_control.spaces[] in project.yml
+  browser: none       # no debug Chrome (web-control cookie bridge) in this deployment
+
 known_anomalies:
-  - "**Designed-but-inert control** — `change-control/hooks/pre_tool_use_frozen.py` is a stub (exits 0): the frozen-controlled-doc edit block is designed but not yet enforcing. Tracked as a workbench gap; lifecycle-state enforcement currently relies on process discipline."
-  - "**Untested deterministic checkers** — several load-bearing lint/checker scripts have no regression suite pinning their behavior (regulatory-authoring `authoring_lint.py`, submissions linters, commercial `dossier_lint.py`, gap-analysis sidecar renderer). WUN-04 evidence currently rests on the writing-well lint suite only."
-  - "**Suite exit-code masking** — the task-gate suite reports per-scenario failures but exits 0 regardless; pass/fail is derived from its output banner (`pass_pattern`). Upstream fix candidate for the task skill."
-  - "**Environment sensitivity** — the task-gate suite requires `CLAUDE_SESSION_ID` to be unset (a live agent session's ID makes fake-session DENY scenarios resolve ALLOW); the runner strips it via `env_unset`."
-  - "**TC-08 tracker regression (triaged 2026-07-27)** — `test_script_emits_bundle_for_existing_row` fails: `build-draft-context.py` reports row 'DHF' not found in inventory; the test's expected row appears to have drifted from the project tracker inventory. Upstream fix candidate for the tracker skill test fixture."
-  - "**TC-10 change-control (triaged 2026-07-27)** — `test_c_jira_renderer_graceful_degrades_on_auth_failure` fails (1 of 139); the Jira-renderer graceful-degradation path does not behave as the test expects in this environment. Upstream triage owed."
-  - "**TC-15 secops High findings (triaged 2026-07-27)** — the static screen reports CFG-PROJECT-YML `config-tamper` Highs whose snippets are docstring/comment mentions of project.yml (e.g. jira-pull `drift_rules.py` L103, usage-metrics `aggregate.py` L159), i.e. scanner-precision false positives — but per policy the case stays FAIL until the findings are dispositioned in the scanner or the scripts. Upstream fix candidate for the secops matcher."
+  # Each entry names an owner and the run by which it is expected to clear —
+  # an anomaly without those is parked, not dispositioned (task ben/119 D1).
+  - "**Designed-but-inert control** — `change-control/hooks/pre_tool_use_frozen.py` is a stub (exits 0): the frozen-controlled-doc edit block is designed but not yet enforcing; lifecycle-state enforcement currently relies on process discipline. Owner: change-control skill maintainer. Expected to clear: the run after the hook is implemented and a gate case (TC) is added for it."
+  - "**Untested deterministic checkers** — several load-bearing lint/checker scripts have no regression suite pinning their behavior (regulatory-authoring `authoring_lint.py`, submissions linters, commercial `dossier_lint.py`, gap-analysis sidecar renderer). WUN-04 evidence rests on the writing-well lint suite only. Owner: each skill's maintainer. Expected to clear: one case per checker added as suites land; the secops scanner closed its own instance of this gap in 2026-09 (TC-19)."
+  - "**Suite exit-code masking** — the task-gate suite reports per-scenario failures but exits 0 regardless; pass/fail is derived from its output banner (`pass_pattern`). Owner: task skill maintainer. Expected to clear: the run after the suite exits non-zero on any failed scenario."
+  - "**Environment sensitivity** — the task-gate suite requires `CLAUDE_SESSION_ID` to be unset (a live agent session's ID makes fake-session DENY scenarios resolve ALLOW); the runner strips it via `env_unset` and records it in the environment record's isolation block. Accepted residual: documented, mechanically enforced by the manifest."
+  - "**Model identifier depends on the operator** — the harness does not export the model to scripts; the runner records it only when passed via `--model-id` (or `$CLAUDE_MODEL`) and otherwise reports 'not captured' as a run warning. Owner: validation operator (record at run time). Accepted residual until the harness exposes it."
+  - "**Live-endpoint cases are NOT-APPLICABLE here by declaration** — `connections:` declares jira / confluence / browser as `none`; TC-17/18/21 therefore never execute in this deployment and WUN-16 is exploratory. Not a gap for this project; a deployment with a connection flips the declaration and the same cases run live."
+
+# Revalidation triggers — when the recorded environment must be re-established.
+revalidation_triggers:
+  - "Skill / agent / hook / rule file change (any `.claude/` diff since the recorded commit) — re-run the affected cases, full run before a run of record"
+  - "Underlying model or harness version change (environment record: `model_id`, `harness_version`) — full run + exploratory review of Tier-1 LLM paths"
+  - "Tooling change (environment record: any `tooling.*.version` or resolved `python_packages` differs) — full run"
+  - "Connection declaration change (`connections:` flips between `none` and present, or a declared endpoint's reachability changes) — run the affected `live` cases and update WUN-16's probe record"
+  - "project.yml security / config change — re-run posture and gate cases"
+  - "Intended-use change (new action, new output destination) — revisit the need register"
+  - "Periodic: per internal-audit cycle"
 
 # Each need is stated from a ROLE's perspective, in the role's own language —
 # what outcome they need, never how the workbench implements it. The mechanism
@@ -151,6 +174,17 @@ user_needs:
     need: "When documents move between the repo and the formal systems (Confluence, Google Docs), nothing gets corrupted in transit — and frozen documents stay frozen."
     coverage: tests
     implemented_by: "change-control adopt/publish pipeline + review tiers (frozen-state hook currently a stub — see known anomalies)"
+  - id: WUN-16
+    role: "Document control specialist"
+    class: cross-cutting
+    tier: T1
+    need: "When this workbench is connected to our real Confluence and Jira, I need proof that adopting and publishing a controlled page actually works against those systems — not only against a simulation."
+    coverage: exploratory
+    implemented_by: "change-control adopt/publish over the Atlassian MCP server (agent-mediated) + REST/cookie bridge; jira-pull search over MCP"
+    process_controls:
+      - "MCP-mediated paths cannot be driven from pytest — the agent makes the call. They are validated by recorded live probes (scripted transcript + expected outcome; the change-control v0.6 probe set is the pattern), re-run whenever a deployment declares a connection."
+      - "The REST/cookie-bridge halves of the same paths have scripted `live` cases (TC-17, TC-18, TC-21) that execute only when `connections:` declares the endpoint; here they report NOT-APPLICABLE."
+
 
 # `title` / `description` / `approach` are written for a NON-SPECIALIST reviewer:
 # title = what is being checked in everyday words; description = what the case
@@ -163,6 +197,7 @@ user_needs:
 test_cases:
   - id: TC-01
     uut: [task]
+    endpoint: none
     title: "The 'no work without a task' gate blocks and allows the right files"
     description: "Checks the safeguard that stops project files from being changed when no work task is active. Protected files must be blocked; everyday exempt files (task notes, settings) must still be allowed."
     approach: "Runs the gate's own 63-scenario self-test in a clean environment: it simulates edit attempts with and without an active task and compares every block/allow decision against the expected one. Passes only when the suite reports all scenarios passed."
@@ -174,6 +209,7 @@ test_cases:
     requires: [jq]
   - id: TC-02
     uut: [docflow]
+    endpoint: none
     title: "The document-conversion gate stops uncontrolled conversions"
     description: "Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability)."
     approach: "Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required."
@@ -183,6 +219,7 @@ test_cases:
     requires: [jq, python3]
   - id: TC-03
     uut: [medtech-docs]
+    endpoint: none
     title: "Auto-generated document sections stay faithful and do no harm"
     description: "Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched."
     approach: "Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets."
@@ -192,6 +229,7 @@ test_cases:
     requires: [uv]
   - id: TC-04
     uut: [advisors]
+    endpoint: none
     title: "Advisor grounding files are built correctly"
     description: "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources."
     approach: "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output."
@@ -201,6 +239,7 @@ test_cases:
     requires: [uv]
   - id: TC-05
     uut: [writing-well]
+    endpoint: none
     title: "Writing-quality checks catch known defects"
     description: "Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review."
     approach: "Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged."
@@ -209,6 +248,7 @@ test_cases:
     timeout: 600
   - id: TC-06
     uut: [dhf-manifest]
+    endpoint: none
     title: "The document-coverage audit finds what's missing"
     description: "Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor."
     approach: "Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly."
@@ -217,6 +257,7 @@ test_cases:
     timeout: 600
   - id: TC-07
     uut: [trace-matrix]
+    endpoint: none
     title: "Traceability-chain checks work"
     description: "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs — the chain auditors walk."
     approach: "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions."
@@ -226,6 +267,7 @@ test_cases:
     requires: [uv]
   - id: TC-08
     uut: [tracker]
+    endpoint: none
     title: "Submission-tracker wiring works"
     description: "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents."
     approach: "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations."
@@ -235,6 +277,7 @@ test_cases:
     requires: [uv]
   - id: TC-09
     uut: [jira-pull]
+    endpoint: mocked
     title: "Jira-drift detection works"
     description: "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught."
     approach: "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks)."
@@ -246,6 +289,7 @@ test_cases:
     requires: [uv]
   - id: TC-10
     uut: [change-control]
+    endpoint: mocked
     title: "Repo-to-formal-systems document transfer is faithful"
     description: "Checks the machinery that moves controlled documents between this repo and the formal systems (Confluence, Google Docs) without corrupting content or losing review state."
     approach: "Runs the transfer machinery's 139-test suite covering conversion fidelity, review tiers, freeze states, and error handling against known documents."
@@ -255,6 +299,7 @@ test_cases:
     requires: [uv]
   - id: TC-11
     uut: [project-console]
+    endpoint: none
     title: "The project console works end to end"
     description: "Checks the team's browser console — the pages, data loaders, and workflows this very Validation view lives in — so what the team sees reflects repo truth."
     approach: "Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would."
@@ -264,6 +309,7 @@ test_cases:
     requires: [uv]
   - id: TC-12
     uut: [md-deck]
+    endpoint: none
     title: "Slide-deck builder keeps content intact"
     description: "Checks the presentation tooling that turns project documents into slide decks without dropping or duplicating content."
     approach: "Runs the deck builder's regression suite verifying slide identity is preserved across rebuilds."
@@ -273,6 +319,7 @@ test_cases:
     requires: [uv]
   - id: TC-13
     uut: [sync-skills]
+    endpoint: none
     title: "Tool updates never overwrite local improvements"
     description: "Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced."
     approach: "Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten."
@@ -281,6 +328,7 @@ test_cases:
     timeout: 600
   - id: TC-14
     uut: [sync-skills]
+    endpoint: none
     title: "The tool-sync health check reports the truth"
     description: "Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry."
     approach: "Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly."
@@ -289,6 +337,7 @@ test_cases:
     timeout: 600
   - id: TC-15
     uut: [secops]
+    endpoint: none
     title: "Installed tools pass the security screen"
     description: "Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns — and that the scanner itself fails loudly when it does."
     approach: "Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned."
@@ -297,11 +346,67 @@ test_cases:
     timeout: 300
   - id: TC-16
     uut: [all-skills]
+    endpoint: none
     title: "Every tool declares its version"
     description: "Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt)."
     approach: "Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none."
     wun: [WUN-13]
     # Bundled external skills (Anthropic office suite) are version-exempt, mirroring
     # the best-practices "Skills are versioned" check's external-skill exemption.
-    cmd: ["python3", "-c", "import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)"]
+    cmd: ["python3", "-c", "import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(lambda t:t[3:t.find(chr(10)+'---',3)] if t.startswith('---') and t.find(chr(10)+'---',3)!=-1 else '')((d/'SKILL.md').read_text(errors='replace')),re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)"]
     timeout: 60
+
+  # ---- Evidence-tier cases added 2026-09 (task ben/119, D7) ----
+  - id: TC-17
+    title: "Jira integration works against the real Jira (only where one is connected)"
+    description: "Runs the change-control Jira smoke test against the deployment's real Jira endpoint. This project has no Jira connection, so the case is reported NOT-APPLICABLE by declaration rather than pretending the integration was exercised."
+    approach: "Runs only the tests marked `live` in the change-control suite with the `--live` opt-in; the test reads the Jira base URL from the project manifest and skips if none is configured."
+    wun: [WUN-15, WUN-16]
+    uut: [change-control]
+    endpoint: live
+    connection: jira
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/change-control/tests", "-q", "-m", "live", "--live"]
+    requires: [uv]
+    timeout: 600
+  - id: TC-18
+    title: "Jira mirror refresh works against the real Jira (only where one is connected)"
+    description: "Runs the jira-pull live smoke test against the deployment's real Jira. NOT-APPLICABLE here by declaration (no Jira connection)."
+    approach: "Runs only the `live`-marked jira-pull tests with the `--live` opt-in."
+    wun: [WUN-06, WUN-16]
+    uut: [jira-pull]
+    endpoint: live
+    connection: jira
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--with", "openpyxl", "--", "pytest", ".claude/skills/jira-pull/tests", "-q", "-m", "live", "--live"]
+    requires: [uv]
+    timeout: 600
+  - id: TC-19
+    title: "The security scanner itself still catches real hostile patterns"
+    description: "Checks that the security screen's rules fire on genuine config-tamper and remote-execution patterns and stay quiet on comments, docstrings, heredoc help text, and temp-path fixtures — so a clean TC-15 result means 'nothing hostile', not 'the scanner went blind'."
+    approach: "Runs the scanner's regression suite over synthetic fixture trees with known-positive and known-negative content, including the exit-code contract."
+    wun: [WUN-12]
+    uut: [secops]
+    endpoint: none
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--", "pytest", ".claude/skills/secops/tests", "-q"]
+    requires: [uv]
+    timeout: 300
+  - id: TC-20
+    title: "Browser-bridge helper logic is correct without a browser"
+    description: "Checks the pure-logic parts of the shared browser-automation library (cookie header assembly, URL/config parsing) that the document-transfer machinery reuses — hermetically, with no browser running."
+    approach: "Runs the web-control unit suite under the socket guard; anything that would need a browser is a separate live case (TC-21)."
+    wun: [WUN-15]
+    uut: [web-control]
+    endpoint: none
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--", "pytest", ".claude/skills/web-control/tests", "-q"]
+    requires: [uv]
+    timeout: 300
+  - id: TC-21
+    title: "Browser bridge reaches a signed-in browser (only where one is running)"
+    description: "Runs the web-control live smoke test against a debug browser session. NOT-APPLICABLE here by declaration (no debug browser in this deployment)."
+    approach: "Runs only the `live`-marked web-control tests with the `--live` opt-in."
+    wun: [WUN-15, WUN-16]
+    uut: [web-control]
+    endpoint: live
+    connection: browser
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--", "pytest", ".claude/skills/web-control/tests", "-q", "-m", "live", "--live"]
+    requires: [uv]
+    timeout: 300

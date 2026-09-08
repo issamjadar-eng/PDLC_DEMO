@@ -103,39 +103,57 @@ class TestFindDraftStage(unittest.TestCase):
 
 
 class TestBuildDraftContextScript(unittest.TestCase):
-    """Runs the build-draft-context.py script against the live project (the
-    parent dir of this skill). The script is read-only — it is safe to run
-    against the project this test ships in."""
+    """PROJECT-INSTANCE test (declared, not hermetic): runs
+    build-draft-context.py read-only against the project this skill ships in.
+    It checks the wiring invariant the Create Draft button depends on —
+    **if a row renders with a Create Draft button, the draft-context bundle
+    for it can be built** — including rows hand-added to the markdown that
+    are not pipeline rows. Skips (never fails) when no project or no
+    draft-eligible row is present, so the suite stays green in a bare skill
+    checkout."""
 
-    def test_script_emits_bundle_for_existing_row(self) -> None:
-        # Find the project root by walking up for CLAUDE.md
+    def _project_dir(self) -> Path | None:
         d = _SKILL_DIR
         for _ in range(8):
             if (d / "CLAUDE.md").exists():
-                break
+                return d
             if d.parent == d:
-                self.skipTest("could not find project CLAUDE.md")
-                return
+                return None
             d = d.parent
-        project_dir = d
-        # Pick any row from submission-tracker.md (use Q4 if present)
-        tracker_md = project_dir / "docs/project/submissions/submission-tracker.md"
-        if not tracker_md.is_file():
-            self.skipTest("no submission-tracker.md in this project")
-            return
-        # Find first row id
-        import re
-        m = re.search(r"^\|\s*([A-Z][A-Z0-9-]+)\s*\|", tracker_md.read_text(encoding="utf-8"), re.MULTILINE)
-        if not m:
-            self.skipTest("no rows found in tracker md")
-            return
-        row_id = m.group(1)
+        return None
+
+    def _draft_eligible_rows(self, tracker_md: Path) -> list:
+        """Rows the renderer would wire with a Create Draft button — selected
+        through render.py's own parser, not a regex over table cells (a regex
+        can match a column header such as a `DHF` roster column)."""
+        parsed = render.parse_markdown(str(tracker_md))
+        out = []
+        for row in parsed.get("rows", []):
+            cells = " ".join(str(v) for v in row.values())
+            if "tracker-action-btn" in cells and row.get("id"):
+                out.append(row["id"])
+        return out
+
+    def _run_script(self, project_dir: Path, row_id: str):
         script = _SKILL_DIR / "scripts" / "build-draft-context.py"
-        r = subprocess.run(
+        return subprocess.run(
             [sys.executable, str(script), "--row", row_id, "--json", "--project-dir", str(project_dir)],
             capture_output=True, text=True, timeout=30,
         )
-        self.assertEqual(r.returncode, 0, msg=f"stderr: {r.stderr}")
+
+    def test_script_emits_bundle_for_draft_eligible_row(self) -> None:
+        project_dir = self._project_dir()
+        if project_dir is None:
+            self.skipTest("could not find project CLAUDE.md")
+        tracker_md = project_dir / "docs/project/submissions/submission-tracker.md"
+        if not tracker_md.is_file():
+            self.skipTest("no submission-tracker.md in this project")
+        rows = self._draft_eligible_rows(tracker_md)
+        if not rows:
+            self.skipTest("no draft-eligible rows in tracker md")
+        row_id = rows[0]
+        r = self._run_script(project_dir, row_id)
+        self.assertEqual(r.returncode, 0, msg=f"row {row_id}: stderr: {r.stderr}")
         bundle = json.loads(r.stdout)
         self.assertEqual(bundle["row"]["id"], row_id)
         self.assertIn("discovery_seed", bundle)
@@ -143,6 +161,25 @@ class TestBuildDraftContextScript(unittest.TestCase):
         # The seed always carries QMS + external roots
         self.assertEqual(seed["qms_search_roots"], ["docs/internal/sops", "docs/internal/templates"])
         self.assertIn("readme_index_paths", seed)
+
+    def test_every_draft_eligible_row_resolves(self) -> None:
+        """Every row carrying a Create Draft button must be resolvable —
+        pipeline rows and md-only rows alike."""
+        project_dir = self._project_dir()
+        if project_dir is None:
+            self.skipTest("could not find project CLAUDE.md")
+        tracker_md = project_dir / "docs/project/submissions/submission-tracker.md"
+        if not tracker_md.is_file():
+            self.skipTest("no submission-tracker.md in this project")
+        rows = self._draft_eligible_rows(tracker_md)
+        if not rows:
+            self.skipTest("no draft-eligible rows in tracker md")
+        failures = []
+        for row_id in rows:
+            r = self._run_script(project_dir, row_id)
+            if r.returncode != 0:
+                failures.append(f"{row_id}: {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else 'exit ' + str(r.returncode)}")
+        self.assertEqual(failures, [], msg="draft-eligible rows that cannot build a bundle:\n" + "\n".join(failures))
 
 
 if __name__ == "__main__":

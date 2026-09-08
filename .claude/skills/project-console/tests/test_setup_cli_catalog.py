@@ -40,6 +40,15 @@ class CatalogShapeTest(unittest.TestCase):
             spec = entry["spec"]
             if spec is None:  # the custom free-form cards
                 continue
+            if entry.get("url_placeholder") and not spec.get("url"):
+                # Catalog rule: never invent an endpoint. A customer-gated
+                # server ships with a blank, editable url + placeholder + note;
+                # the writer validates it once the user fills the url in.
+                self.assertIn("url", entry.get("editable", []),
+                              f"{entry['key']}: blank url must be editable")
+                self.assertTrue(entry.get("note"),
+                                f"{entry['key']}: blank url needs a note saying why")
+                continue
             self.assertTrue(
                 spec.get("command") or spec.get("url"),
                 f"{entry['key']}: spec is neither stdio (command) nor remote (url)",

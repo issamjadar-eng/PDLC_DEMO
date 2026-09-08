@@ -161,6 +161,12 @@ def _strategy_domains(proj_yml: dict) -> list:
 def build_draft_bundle(row_id: str, project_dir: Path) -> dict:
     gen = _load_generate_module()
     rows, dhfs_meta, _ = gen.generate_rows(project_dir)
+    # Same read-universe widening the help/detail builders use: rows hand-added
+    # to submission-tracker.md render (and carry Create Draft buttons) but are
+    # not pipeline rows, so without this merge every draft-eligible md-only row
+    # fails with "not found in inventory". Invariant: if it renders, it can be
+    # drafted.
+    rows = gen.merge_md_only_rows(rows, project_dir)
     matches = [r for r in rows if r.get('id') == row_id]
     if not matches:
         raise SystemExit(f'ERROR: row {row_id!r} not found in inventory')

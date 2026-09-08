@@ -27,7 +27,9 @@ Covers:
        across two passes.
 
 Offline only — no Confluence calls. The cookie / list_attachments path
-is mocked by monkeypatching the helper imports inside adopt_helper. Run:
+is replaced by a fake `lib.attachments` module installed through pytest's
+`monkeypatch` (restored after each test — `mocked` tier, see conftest.py).
+Run:
 
     python3 .claude/skills/change-control/tests/test_attachments_macro.py
 """
@@ -36,6 +38,8 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+
+import pytest
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILL_ROOT))
@@ -157,7 +161,8 @@ def test_filter_attachments_by_label_or_semantics():
     assert len(selected3) == 4
 
 
-def test_expand_attachment_macros_splices_rendered_table():
+@pytest.mark.mocked
+def test_expand_attachment_macros_splices_rendered_table(monkeypatch):
     """Source markdown has an OPEN/CLOSE sentinel pair; expander
     splices a rendered file-list table between them and returns
     synthetic image refs for download."""
@@ -167,14 +172,17 @@ def test_expand_attachment_macros_splices_rendered_table():
         _att_record("OLD VERSION.docx", ["outdated"]),
     ]
 
-    # Monkeypatch the cookie + listing functions referenced inside
-    # _expand_attachment_macros via lazy import. We replace them by
-    # injecting a fake module on sys.modules path the function uses.
+    # Replace the cookie + listing functions referenced inside
+    # _expand_attachment_macros via lazy import by installing a fake
+    # module at the `sys.modules` seam the function resolves through.
+    # monkeypatch.setitem restores the real module after the test —
+    # a bare assignment here leaked into later test files and made an
+    # unrelated Jira-renderer test reach the network.
     import types
     fake_lib = types.ModuleType("lib.attachments")
     fake_lib.extract_confluence_cookies = lambda url: "fake=cookie"
     fake_lib.list_attachments = lambda url, pid, c, expand_labels=False: list(atts)
-    sys.modules["lib.attachments"] = fake_lib
+    monkeypatch.setitem(sys.modules, "lib.attachments", fake_lib)
 
     src_md = (
         "# Heading\n\n"
@@ -300,33 +308,9 @@ def test_roundtrip_adf_md_adf_preserves_macro_labels():
 # ---- Test runner ----
 
 
-TESTS = [
-    test_normalizer_captures_attachments_macro_params,
-    test_normalizer_two_macros_get_distinct_positions,
-    test_filter_attachments_by_label_or_semantics,
-    test_expand_attachment_macros_splices_rendered_table,
-    test_publish_md_to_adf_emits_attachments_extension_node,
-    test_roundtrip_adf_md_adf_preserves_macro_labels,
-]
-
-
 def main() -> int:
-    failed = 0
-    for t in TESTS:
-        try:
-            t()
-            print(f"PASS  {t.__name__}")
-        except AssertionError as e:
-            failed += 1
-            print(f"FAIL  {t.__name__}: {e}")
-        except Exception as e:  # noqa: BLE001
-            import traceback
-            failed += 1
-            print(f"ERROR {t.__name__}: {type(e).__name__}: {e}")
-            traceback.print_exc()
-    print()
-    print(f"{len(TESTS) - failed}/{len(TESTS)} passed")
-    return 0 if failed == 0 else 1
+    """Direct invocation delegates to pytest so fixture-taking tests run."""
+    return pytest.main([__file__, "-q"])
 
 
 if __name__ == "__main__":

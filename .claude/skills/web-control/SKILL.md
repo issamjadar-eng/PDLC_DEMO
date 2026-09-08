@@ -1,8 +1,8 @@
 ---
 name: web-control
 description: Cross-platform browser automation as shared infrastructure — owns Chrome lifecycle (install / launch / status / stop) and DevTools-Protocol connection helpers (Python lib) for consumer skills. Use when other skills need to drive a Chromium-family browser under the user's corporate Google identity (e.g., Workspace operations where API access is denied by org policy), or when a consumer skill needs to make authenticated REST calls reusing the user's signed-in session cookies. Provides `setup`, `launch`, `status`, `stop`, `cookies` actions plus a `connect` Python library API and a `lib.cookies` cookie-extraction API. NOT a workflow skill — owns no web-app-specific logic.
-version: 0.3.0
-updated: 2026-05-02
+version: 0.3.1
+updated: 2026-09-08
 status: ready
 ---
 
@@ -54,6 +54,7 @@ Owns **browser automation as shared infrastructure** for the project. When other
 | `scripts/install-chrome-wsl.sh` | apt-based Linux/WSL installer for `google-chrome-stable` | **Ready** |
 | `templates/mcp-attach-block.json` | Reference snippet for `.mcp.json` if a teammate wants chrome-devtools MCP to attach to the same debug Chrome | **Ready** |
 | `tests/test-lifecycle.sh` | End-to-end smoke test: setup → launch (idempotent) → status → stop | **Ready** |
+| `tests/conftest.py` + `tests/webcontrol_testkit.py` + `tests/test_lib_pure.py` | pytest suite with three evidence tiers — `unit` (URL/cookie-header/shortcut parsing via a fake CDP page), `@pytest.mark.mocked`, `@pytest.mark.live` (opt-in via `--live`; skipped with a reason when no debug Chrome is listening). Autouse socket guard fails any non-`live` test that opens a network connection. Run: `uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q` | **Ready** |
 | `README.md` | Design documentation + Best Practices + troubleshooting | **Ready** |
 
 ## Actions

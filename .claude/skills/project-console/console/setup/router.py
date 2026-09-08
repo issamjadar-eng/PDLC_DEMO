@@ -204,12 +204,24 @@ async def setup_workbench_render(request: Request):
         raise HTTPException(status_code=400,
                             detail="workbench-validation skill is not installed.")
 
+    # Optional body {"model_id": "..."}: the model operating the workbench for
+    # this run. The harness does not expose it to scripts, so the operator
+    # states it; without it the runner records "not captured" and flags the
+    # run as a debugging run rather than a run of record.
+    model_id = None
+    try:
+        body = await request.json()
+        if isinstance(body, dict) and body.get("model_id"):
+            model_id = str(body["model_id"]).strip()[:120]
+    except Exception:  # no / non-JSON body is fine
+        model_id = None
+
     def _run():
-        return subprocess.run(
-            [sys.executable, str(runner), "--root", str(cfg.repo_root), "--render",
-             "--invoked-via", "console"],
-            capture_output=True, text=True, timeout=1800,
-        )
+        cmd = [sys.executable, str(runner), "--root", str(cfg.repo_root), "--render",
+               "--invoked-via", "console"]
+        if model_id:
+            cmd += ["--model-id", model_id]
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     try:
         proc = await anyio.to_thread.run_sync(_run)
     except subprocess.TimeoutExpired:

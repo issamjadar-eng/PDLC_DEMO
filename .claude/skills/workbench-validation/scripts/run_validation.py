@@ -18,13 +18,31 @@ Statuses:
   PASS    - exit 0 (and pass_pattern matched, if declared)
   FAIL    - nonzero exit, or fail_pattern matched, or pass_pattern absent
   SKIPPED - a binary listed in `requires` is not installed
+  NOT-APPLICABLE - an `endpoint: live` case whose `connection:` the manifest
+            declares as `none` for this deployment (never executed; reported
+            explicitly so a deliberately absent connection does not read as a
+            gap)
   ERROR   - timeout or launcher exception
+
+Evidence tiers (D7): every case declares `endpoint: none | mocked | live` —
+whether it touched no external system, a fake transport with canned payloads,
+or a real endpoint. The tier is carried into the run JSON, the evidence-log
+header, the report, and the console sidecar so a reader can tell mock-verified
+from live-verified evidence.
+
+Environment record (D8): the run JSON's `environment` block is the canonical
+setup record — configuration under test (git SHA, dirty-file list, per-skill
+versions incl. frontmatter/VERSION mismatches, hooks, agents, rules), runtime
+(Python, OS, harness version, model id), tooling (every required binary's
+resolved path + version), connections (declared tiers, MCP servers configured,
+reachability probes), and isolation (env vars stripped/set).
 
 Exit code: 0 if no FAIL/ERROR cases, 1 otherwise (CI-gate friendly).
 
 Usage:
   python3 run_validation.py --root <repo_root> [--manifest <path>]
                             [--only TC-01,TC-02] [--render]
+                            [--model-id <identifier>] [--invoked-via cli|console]
 """
 
 import argparse
@@ -79,12 +97,25 @@ def git_baseline(root):
             ).stdout.strip()
         except Exception:
             return ""
+    porcelain = g("status", "--porcelain")
+    dirty_files = [ln.strip() for ln in porcelain.splitlines() if ln.strip()]
     return {
         "git_sha": g("rev-parse", "HEAD"),
         "git_sha_short": g("rev-parse", "--short", "HEAD"),
         "git_branch": g("rev-parse", "--abbrev-ref", "HEAD"),
-        "git_dirty": bool(g("status", "--porcelain")),
+        "git_dirty": bool(dirty_files),
+        "git_dirty_files": dirty_files[:200],
+        "git_dirty_count": len(dirty_files),
     }
+
+
+def frontmatter_block(text):
+    """The YAML frontmatter between the opening and closing `---` fences
+    (empty string when the file has none)."""
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    return text[3:end] if end != -1 else text[3:20000]
 
 
 def skill_versions(root):
@@ -99,7 +130,11 @@ def skill_versions(root):
             continue
         entry = {}
         try:
-            head = skill_md.read_text(encoding="utf-8", errors="replace")[:2000]
+            # Parse the YAML frontmatter block itself (between the `---`
+            # fences) — a fixed head window silently drops the version of any
+            # skill whose description is long, which then records an empty
+            # UUT pin for that skill.
+            head = frontmatter_block(skill_md.read_text(encoding="utf-8", errors="replace"))
             m = re.search(r"^version:\s*(\S+)", head, re.MULTILINE)
             if m:
                 entry["version"] = m.group(1).strip("'\"")
@@ -114,8 +149,130 @@ def skill_versions(root):
                 entry["version_file"] = vfile.read_text().strip()
             except OSError:
                 pass
+        # D5 — an ambiguous UUT pin (frontmatter says one thing, VERSION file
+        # another) is recorded, never silently resolved.
+        if entry.get("version") and entry.get("version_file") \
+                and entry["version"] != entry["version_file"]:
+            entry["version_mismatch"] = True
         versions[skill_dir.name] = entry
     return versions
+
+
+def _first_line(text):
+    return (text or "").strip().splitlines()[0].strip() if (text or "").strip() else None
+
+
+def probe_binary(name):
+    """Resolved path + `--version` first line for a required binary, or a
+    `missing` marker. Never raises; bounded by a short timeout."""
+    path = shutil.which(name)
+    if path is None:
+        return {"path": None, "version": None, "missing": True}
+    version = None
+    for flag in ("--version", "-version", "version"):
+        try:
+            proc = subprocess.run([path, flag], capture_output=True, text=True, timeout=10)
+            out = _first_line(proc.stdout) or _first_line(proc.stderr)
+            if out:
+                version = out[:200]
+                break
+        except Exception:
+            continue
+    return {"path": path, "version": version, "missing": False}
+
+
+def probe_python_packages(root):
+    """Versions of the test-harness packages `uv run --with pytest --with pyyaml`
+    actually resolves — the versions the pytest-based cases executed under."""
+    if shutil.which("uv") is None:
+        return {"note": "uv not installed — pytest-based cases would be SKIPPED"}
+    code = ("import json,sys;o={};\n"
+            "import pytest;o['pytest']=pytest.__version__\n"
+            "import yaml;o['pyyaml']=getattr(yaml,'__version__',None)\n"
+            "print(json.dumps(o))")
+    try:
+        proc = subprocess.run(
+            ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--",
+             "python", "-c", code],
+            cwd=str(root), capture_output=True, text=True, timeout=120)
+        line = [ln for ln in proc.stdout.splitlines() if ln.startswith("{")]
+        return json.loads(line[-1]) if line else {"note": "could not resolve"}
+    except Exception as exc:
+        return {"note": f"probe failed: {exc}"}
+
+
+def harness_version():
+    """Version of the agent harness driving the workbench, when a CLI exposes
+    one; null (and reported as 'not captured') otherwise."""
+    for candidate in ("claude",):
+        path = shutil.which(candidate)
+        if path is None:
+            continue
+        try:
+            proc = subprocess.run([path, "--version"], capture_output=True, text=True, timeout=10)
+            out = _first_line(proc.stdout) or _first_line(proc.stderr)
+            if out:
+                return out[:200]
+        except Exception:
+            continue
+    return None
+
+
+def _read_project_yml(root):
+    try:
+        return yaml.safe_load((root / "project.yml").read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+
+
+def _mcp_servers_configured(root, project_yml):
+    """MCP servers the project approves (project.yml) and configures (settings)."""
+    approved = ((project_yml.get("security") or {}).get("approved_mcps")) or []
+    approved = [a.get("name") if isinstance(a, dict) else str(a) for a in approved]
+    configured = []
+    for name in (".mcp.json", ".claude/settings.json", ".claude/settings.local.json"):
+        fp = root / name
+        if not fp.is_file():
+            continue
+        try:
+            data = json.loads(fp.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for key in (data.get("mcpServers") or {}):
+            configured.append(f"{key} ({name})")
+    return {"approved": approved, "configured": configured}
+
+
+def probe_connections(root, manifest, project_yml):
+    """D7/D8 — what this deployment declares for each external connection,
+    and a bounded reachability probe for anything declared present. A
+    declared `none` is never probed (it is not a gap, it is a statement)."""
+    declared = manifest.get("connections") or {}
+    endpoints = {}
+    cc = project_yml.get("change_control") or {}
+    jira_url = (cc.get("jira") or {}).get("base_url")
+    for space in cc.get("spaces") or []:
+        if isinstance(space, dict) and space.get("base_url"):
+            endpoints.setdefault("confluence", space["base_url"])
+    if jira_url:
+        endpoints["jira"] = jira_url
+    out = {}
+    for name, state in sorted(declared.items()):
+        entry = {"declared": state, "base_url": endpoints.get(name), "reachability": None}
+        if state in (None, "none", "None", False):
+            entry["reachability"] = "not probed — declared none"
+        elif not endpoints.get(name):
+            entry["reachability"] = "not probed — no base_url in project.yml"
+        else:
+            try:
+                import urllib.request
+                req = urllib.request.Request(endpoints[name], method="HEAD")
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    entry["reachability"] = f"reachable (HTTP {resp.status})"
+            except Exception as exc:
+                entry["reachability"] = f"unreachable ({type(exc).__name__})"
+        out[name] = entry
+    return out
 
 
 def operator_info(root):
@@ -144,23 +301,66 @@ def operator_info(root):
     }
 
 
-def environment_baseline(root):
+def _names(dirpath, suffixes):
+    if not dirpath.is_dir():
+        return []
+    return sorted(p.name for p in dirpath.iterdir() if p.suffix in suffixes and p.is_file())
+
+
+def environment_baseline(root, manifest=None, cases=None, model_id=None):
+    """The canonical setup record (D8). Flat keys kept for older consumers
+    (`git_sha_short`, `git_dirty`, `operator`, `skills`, `hooks_installed`,
+    `model_id`, `python`, `platform`); the grouped keys carry the full
+    record: tooling, python_packages, connections, isolation."""
+    manifest = manifest or {}
+    cases = cases or []
     base = git_baseline(root)
+    skills = skill_versions(root)
+    model = model_id or os.environ.get("CLAUDE_MODEL") or None
+    required = {"git", "python3"}
+    for case in cases:
+        required.update(case.get("requires", []))
+        for tok in case.get("cmd", [])[:1]:
+            if "/" not in tok:
+                required.add(tok)
+    env_unset, env_set = set(), set()
+    for case in cases:
+        env_unset.update(case.get("env_unset", []))
+        env_set.update((case.get("env") or {}).keys())
+    project_yml = _read_project_yml(root)
     base.update({
         "python": sys.version.split()[0],
+        "python_executable": sys.executable,
         "platform": sys.platform,
+        "architecture": platform_mod.machine(),
         "operator": operator_info(root),
-        "model_id": os.environ.get("CLAUDE_MODEL") or None,
-        "hooks_installed": sorted(
-            p.name for p in (root / ".claude" / "hooks").glob("*")
-            if p.suffix in (".sh", ".py")
-        ) if (root / ".claude" / "hooks").is_dir() else [],
-        "skills": skill_versions(root),
+        "harness_version": harness_version(),
+        "model_id": model,
+        "model_captured": bool(model),
+        "hooks_installed": _names(root / ".claude" / "hooks", (".sh", ".py")),
+        "agents_installed": _names(root / ".claude" / "agents", (".md",)),
+        "rules_loaded": _names(root / ".claude" / "rules", (".md",)),
+        "skills": skills,
+        "skill_version_mismatches": sorted(
+            name for name, e in skills.items() if e.get("version_mismatch")),
+        "tooling": {name: probe_binary(name) for name in sorted(required)},
+        "python_packages": probe_python_packages(root),
+        "connections": {
+            "declared": manifest.get("connections") or {},
+            "mcp_servers": _mcp_servers_configured(root, project_yml),
+            "endpoints": probe_connections(root, manifest, project_yml),
+        },
+        "isolation": {
+            "env_unset": sorted(env_unset),
+            "env_set_keys": sorted(env_set),
+            "cwd": str(root),
+            "socket_guard": "owned by each suite's conftest (unit/mocked tiers block sockets; live tier allows) — not enforced by the runner",
+        },
     })
     return base
 
 
-def execute_case(case, root):
+def execute_case(case, root, connections=None):
     case_id = case.get("id", "TC-??")
     result = {
         "id": case_id,
@@ -168,6 +368,8 @@ def execute_case(case, root):
         "wun": case.get("wun", []),
         "uut": case.get("uut", []),
         "uut_versions": {},
+        "endpoint": case.get("endpoint") or "unspecified",
+        "connection": case.get("connection"),
         "cmd": " ".join(case.get("cmd", [])),
         "status": "ERROR",
         "exit_code": None,
@@ -178,6 +380,19 @@ def execute_case(case, root):
         "_output_full": "",
         "_started": utc_now(),
     }
+    if result["endpoint"] not in ("none", "mocked", "live", "unspecified"):
+        result.update(status="ERROR",
+                      reason=f"unknown endpoint tier {result['endpoint']!r} (expected none|mocked|live)")
+        return result
+    if result["endpoint"] == "live":
+        conn = case.get("connection")
+        declared = (connections or {}).get(conn) if conn else None
+        if conn and declared in (None, "none", "None", False):
+            result.update(
+                status="NOT-APPLICABLE",
+                reason=f"no live {conn} connection in this deployment "
+                       f"(manifest connections.{conn}: {declared if declared is not None else 'undeclared'})")
+            return result
     for binary in case.get("requires", []):
         if shutil.which(binary) is None:
             result.update(status="SKIPPED", reason=f"required binary not installed: {binary}")
@@ -265,7 +480,7 @@ def pin_test_artifacts(run_dir, case_id, source, root):
     return str(dest_root.relative_to(root)), files
 
 
-def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via="cli"):
+def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via="cli", tooling=None):
     """Persist the case's full execution transcript as the evidence of record:
     an execution-statement header (what ran, where, with which env changes,
     when, how it exited, how it was judged) followed by the complete captured
@@ -282,6 +497,10 @@ def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via
         for u in result.get("uut", [])
     ) or "—"
     operator = operator or {}
+    tooling = tooling or {}
+    tooling_line = "; ".join(
+        f"{b}={((tooling.get(b) or {}).get('version') or (tooling.get(b) or {}).get('path') or 'missing')}"
+        for b in case.get("requires", []) if b in tooling)
     op_line = " ".join(filter(None, [
         operator.get("git_user"),
         f"<{operator['git_email']}>" if operator.get("git_email") else None,
@@ -296,6 +515,8 @@ def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via
         f"approach:    {case.get('approach', '—')}",
         f"UUT:         {uut_line}",
         f"user needs:  {', '.join(result.get('wun', [])) or '—'}",
+        f"endpoint:    {result.get('endpoint', 'unspecified')}"
+        + (f" (connection: {result['connection']})" if result.get("connection") else ""),
         f"test source: {result.get('source') or '—'}"
         + (f" (pinned copy: {result['pinned']})" if result.get("pinned") else ""),
         f"command:     {result['cmd']}",
@@ -303,6 +524,7 @@ def write_evidence_log(run_dir, run_id, case, result, operator=None, invoked_via
         f"env_unset:   {', '.join(case.get('env_unset', [])) or '—'}",
         f"env_set:     {', '.join(sorted((case.get('env') or {}).keys())) or '—'}",
         f"requires:    {', '.join(case.get('requires', [])) or '—'}",
+        f"tooling:     {tooling_line or '—'}",
         f"timeout_s:   {case.get('timeout', 600)}",
         f"started:     {result.get('_started', '?')} (UTC)",
         f"exit_code:   {result['exit_code']}",
@@ -331,6 +553,9 @@ def main():
                         help="also render the report + console sidecar after the run")
     parser.add_argument("--invoked-via", default="cli", dest="invoked_via",
                         help="how the run was initiated (cli | console) — recorded in the setup record")
+    parser.add_argument("--model-id", default=None, dest="model_id",
+                        help="identifier of the model operating the workbench for this run "
+                             "(falls back to $CLAUDE_MODEL; recorded as 'not captured' when absent)")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -354,7 +579,24 @@ def main():
     # Baseline captured up front so each case's UUT(s) can be pinned to the
     # exact version they were exercised at (UUT = unit under test — the
     # workbench component(s) the case actually runs against).
-    env_base = environment_baseline(root)
+    env_base = environment_baseline(root, manifest, cases, model_id=args.model_id)
+    connections = manifest.get("connections") or {}
+    warnings = []
+    if env_base.get("git_dirty") and not args.only:
+        warnings.append(
+            f"working tree dirty ({env_base.get('git_dirty_count', '?')} files) — this run "
+            "cannot serve as a run of record; commit first and re-run")
+    if not env_base.get("model_captured"):
+        warnings.append("model identifier not captured — pass --model-id (or set $CLAUDE_MODEL); "
+                        "a model change is a revalidation trigger and cannot be detected otherwise")
+    if env_base.get("skill_version_mismatches"):
+        warnings.append("skill version pin ambiguous (frontmatter != VERSION): "
+                        + ", ".join(env_base["skill_version_mismatches"]))
+    missing_tier = [c.get("id") for c in cases if not c.get("endpoint")]
+    if missing_tier:
+        warnings.append("cases without an `endpoint:` tier (none|mocked|live): " + ", ".join(missing_tier))
+    for w in warnings:
+        print(f"!! WARNING: {w}", file=sys.stderr, flush=True)
 
     def uut_version(name):
         entry = env_base["skills"].get(name) or {}
@@ -374,7 +616,7 @@ def main():
     results = []
     for case in cases:
         print(f"[{case.get('id')}] {case.get('title', '')} ...", flush=True)
-        res = execute_case(case, root)
+        res = execute_case(case, root, connections)
         res["uut_versions"] = {u: v for u in res["uut"]
                                if (v := uut_version(u)) is not None}
         res["source"] = detect_source(case, root)
@@ -382,7 +624,8 @@ def main():
             run_dir, res["id"], res["source"], root)
         log_path = write_evidence_log(run_dir, run_id, case, res,
                                       operator=env_base.get("operator"),
-                                      invoked_via=args.invoked_via)
+                                      invoked_via=args.invoked_via,
+                                      tooling=env_base.get("tooling"))
         res["log"] = str(log_path.relative_to(root)) if log_path else None
         res.pop("_output_full", None)
         res.pop("_started", None)
@@ -395,7 +638,7 @@ def main():
     for res in results:
         counts[res["status"]] = counts.get(res["status"], 0) + 1
     run = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "run_id": run_id,
         "started": started,
         "finished": utc_now(),
@@ -404,6 +647,8 @@ def main():
         "pinned_manifest": pinned_manifest,
         "invoked_via": args.invoked_via,
         "partial": bool(args.only),
+        "warnings": warnings,
+        "connections": connections,
         "environment": env_base,
         "summary": counts,
         "cases": results,
@@ -416,6 +661,7 @@ def main():
     total = len(results)
     print(f"\n{run['run_id']}: {counts.get('PASS', 0)}/{total} PASS, "
           f"{counts.get('FAIL', 0)} FAIL, {counts.get('SKIPPED', 0)} SKIPPED, "
+          f"{counts.get('NOT-APPLICABLE', 0)} NOT-APPLICABLE, "
           f"{counts.get('ERROR', 0)} ERROR -> {run_file}")
 
     if args.render:

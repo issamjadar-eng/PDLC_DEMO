@@ -1,8 +1,8 @@
 ---
 name: secops
 description: Security posture for regulated medical device projects — installs session security hooks, the project-secops agent, and a canonical permissions allow list into `.claude/settings.json`. Provides `setup`, `check`, `audit`, and `attest` actions.
-version: 8
-updated: 2026-05-13
+version: 9
+updated: 2026-09-08
 ---
 
 Base directory for this skill: `${CLAUDE_SKILL_DIR}`
@@ -144,6 +144,18 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/audit_artifacts.py" --project-dir "$PWD"
 ```
 
 The scanner is pure-stdlib — no `pip install`, no network calls. Use `--json` for machine-readable output (consumed by the project-secops agent or downstream tooling).
+
+**Precision rules (v9).** A *mention* of a pattern is not an *execution* of it, and a fixture is not the protected file — the scanner distinguishes both so findings can be driven to zero without path suppressions:
+
+- **Operator context** — the config-tamper rules (`CFG-PROJECT-YML`, `CFG-CLAUDE-MD`, `CFG-GITIGNORE`) require a real redirect/edit operator: `>`/`>>` not preceded by `-`/`=`/`>` (so `->`, `=>` in prose never match) and not followed by `>`/`=`/`&`; or `tee`, `sed -i`, `yq [subcommand] -i`. The target span stops at `;`, `|`, `&`.
+- **Comment / string-literal / heredoc awareness** — matches that start after a `#` comment marker (sh/py), inside a Python string/docstring/f-string, or inside a shell heredoc body (`<<EOF … EOF`, `<<-`, quoted terminators) are dropped for rules flagged `skip_in_comments` / `skip_in_string_literals`. The heredoc's opening line is still code.
+- **Temp-path downgrade** — for rules flagged `downgrade_if_temp_target`, a write whose target is under `$TMP`, `$TMPDIR`, `${TMP…}`, `/tmp/`, `mktemp`, or a shell variable derived from one of those in the same file (resolved transitively, e.g. `WORLD=$(mktemp -d)` → `ROOT="$WORLD/x"` → `> "$ROOT/project.yml"`) is reported at **Medium** with the note "target is under a temp path — fixture, not the project file". It stays visible; it no longer fails the gate.
+
+**Regression suite.** `tests/test_audit_rules.py` pins both halves — the real tampering patterns still fire at their declared severity, and mentions/fixtures do not fire at High — plus the exit-code contract. Run it after any rule change:
+
+```bash
+uv run --no-project --with pytest -- pytest "${CLAUDE_SKILL_DIR}/tests" -q
+```
 
 **Reporting back to the user.** Print the human summary as-is, then for each finding: classify it as a *true positive* (real concern — flag for triage) or an *expected behavior* (legitimate skill operation that happens to match a rule). Don't silently ignore matches; explain why each is benign or why it warrants action. Append nontrivial true-positive findings to the current user's `tasks/{person}/SECOPS.md` under a new `## Skill Audit Findings` section — keep the existing 16-check ledger separate.
 

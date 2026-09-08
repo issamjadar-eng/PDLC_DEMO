@@ -1149,9 +1149,14 @@
       {% else %}
       {% if wbd.banner %}<div class="su-warn">{{ wbd.banner }}</div>{% endif %}
       {% if wb.stale %}
-      <div class="su-warn">The repository has moved since this run (baseline
-        <code>{{ wbd.baseline.git_sha_short }}</code> vs HEAD <code>{{ wb.head_sha }}</code>) —
-        the configuration baseline is stale. Re-run the validation.</div>
+      <div class="su-warn">The workbench has changed since this run — the recorded environment no longer
+        describes this checkout. Re-run the validation.
+        {% if wb.differences %}<ul style="margin:6px 0 0 18px;padding:0">{% for d in wb.differences[:12] %}<li>{{ d }}</li>{% endfor %}
+        {% if wb.differences | length > 12 %}<li>… and {{ wb.differences | length - 12 }} more</li>{% endif %}</ul>{% endif %}</div>
+      {% endif %}
+      {% if wbd.warnings %}
+      <div class="su-warn">This run carries warnings and is a <strong>debugging run, not a run of record</strong>:
+        <ul style="margin:6px 0 0 18px;padding:0">{% for w in wbd.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
       {% endif %}
 
       <div class="su-h2">Status</div>
@@ -1174,8 +1179,18 @@
         </div>
         <div class="su-tile">
           <div class="su-tile-n"><code>{{ wbd.baseline.git_sha_short }}</code>{{ ' ±' if wbd.baseline.git_dirty }}</div>
-          <div class="su-tile-l">config baseline · {{ wbd.baseline.skills_total }} skills · {{ wbd.baseline.hooks_total }} hooks</div>
+          <div class="su-tile-l">config baseline · {{ wbd.baseline.skills_total }} skills · {{ wbd.baseline.hooks_total }} hooks{{ ' · dirty tree' if wbd.baseline.git_dirty }}</div>
         </div>
+        <div class="su-tile">
+          <div class="su-tile-n" style="font-size:.95rem">{{ wbd.baseline.model_id or 'not captured' }}</div>
+          <div class="su-tile-l">model · {{ wbd.baseline.harness_version or 'harness n/a' }}</div>
+        </div>
+        {% if wbd.summary.tiers %}
+        <div class="su-tile">
+          <div class="su-tile-n" style="font-size:.95rem">{% for t, n in wbd.summary.tiers.items() %}{{ n }} {{ t }}{{ ' · ' if not loop.last }}{% endfor %}</div>
+          <div class="su-tile-l">evidence tiers · connections: {% for c, v in (wbd.connections or {}).items() %}{{ c }}={{ v }}{{ ', ' if not loop.last }}{% else %}none declared{% endfor %}</div>
+        </div>
+        {% endif %}
       </div>
       {% set op = wbd.run.operator or {} %}
       <p class="su-sub" style="margin-top:10px">
@@ -1190,7 +1205,62 @@
         versions tested stay reviewable across validation runs.
       </p>
 
-      <div class="su-actions" style="margin-top:14px">
+      {% set env = wbd.environment %}
+      {% if env %}
+      <details class="su-list" style="margin-top:12px;padding:0">
+        <summary style="cursor:pointer;padding:10px 14px;font-weight:600;color:var(--body-text,#e6e9ef);list-style:revert">
+          Environment this run executed against
+          <span class="su-type" style="font-weight:400;margin-left:8px">
+            <code>{{ env.git_sha_short }}</code>{{ ' ± dirty (' ~ env.git_dirty_count ~ ' files)' if env.git_dirty }}
+            · model {{ env.model_id or 'not captured' }}
+            · {{ env.python }} / {{ env.architecture or env.platform }}
+            {% if env.connections and env.connections.declared %} · {% for c, v in env.connections.declared.items() %}{{ c }}:{{ v }}{{ ' ' if not loop.last }}{% endfor %}{% endif %}
+          </span>
+        </summary>
+        <div style="padding:4px 14px 14px;font-size:.82rem;line-height:1.55;color:var(--body-text,#e6e9ef)">
+          <p style="margin:6px 0 4px"><strong>Configuration under test.</strong>
+            commit <code>{{ env.git_sha }}</code> on <code>{{ env.git_branch }}</code>;
+            {% if env.git_dirty %}working tree <strong>dirty</strong> — {{ env.git_dirty_count }} file(s):
+              <span class="su-type">{{ (env.git_dirty_files or [])[:12] | join(', ') }}{% if (env.git_dirty_files or []) | length > 12 %} … +{{ env.git_dirty_count - 12 }} more{% endif %}</span>
+            {% else %}working tree clean{% endif %};
+            {{ env.skills | length }} skills{% if env.skill_version_mismatches %} (<strong>version pin ambiguous</strong>: {{ env.skill_version_mismatches | join(', ') }}){% endif %},
+            {{ env.hooks_installed | length }} hooks, {{ (env.agents_installed or []) | length }} agents, {{ (env.rules_loaded or []) | length }} rules.</p>
+          <details style="margin:4px 0 8px"><summary class="su-type" style="cursor:pointer">per-skill versions exercised</summary>
+            <div class="su-type" style="columns:3;column-gap:18px;margin-top:6px">
+              {% for name, e in env.skills | dictsort %}<div>{{ name }} <code>{{ e.version or e.version_file or '—' }}</code>{% if e.version_mismatch %} ⚠︎ VERSION {{ e.version_file }}{% endif %}</div>{% endfor %}
+            </div></details>
+          <details style="margin:4px 0 8px"><summary class="su-type" style="cursor:pointer">hooks · agents · rules</summary>
+            <div class="su-type" style="margin-top:6px">hooks: {{ env.hooks_installed | join(', ') or '—' }}<br>agents: {{ (env.agents_installed or []) | join(', ') or '—' }}<br>rules: {{ (env.rules_loaded or []) | join(', ') or '—' }}</div></details>
+          <p style="margin:6px 0 4px"><strong>Runtime.</strong>
+            Python {{ env.python }} (<code>{{ env.python_executable }}</code>) · {{ (env.operator or {}).os or env.platform }} · {{ env.architecture or '' }}
+            · host {{ (env.operator or {}).hostname or '?' }} / user {{ (env.operator or {}).os_user or '?' }}
+            · harness {{ env.harness_version or 'not captured' }} · model {{ env.model_id or 'not captured — pass --model-id' }}</p>
+          <p style="margin:6px 0 4px"><strong>Tooling</strong> (binaries the cases required, as resolved on this host).</p>
+          <div class="su-type" style="margin:0 0 8px">
+            {% for name, t in (env.tooling or {}) | dictsort %}<div>{{ name }}: {% if t.missing %}<strong>missing</strong>{% else %}{{ t.version or t.path }}{% endif %}</div>{% endfor %}
+            {% if env.python_packages %}<div>test-harness packages via uv: {% for k, v in env.python_packages.items() %}{{ k }} {{ v }}{{ ', ' if not loop.last }}{% endfor %}</div>{% endif %}
+          </div>
+          <p style="margin:6px 0 4px"><strong>Connections.</strong></p>
+          <div class="su-type" style="margin:0 0 8px">
+            {% set conns = env.connections or {} %}
+            {% for name, e in (conns.endpoints or {}) | dictsort %}<div>{{ name }}: declared <code>{{ e.declared }}</code>{% if e.base_url %} · {{ e.base_url }}{% endif %} · {{ e.reachability }}</div>{% else %}<div>no connections declared in the manifest</div>{% endfor %}
+            <div>MCP servers approved: {{ ((conns.mcp_servers or {}).approved or []) | join(', ') or 'none' }} · configured: {{ ((conns.mcp_servers or {}).configured or []) | join(', ') or 'none' }}</div>
+          </div>
+          <p style="margin:6px 0 4px"><strong>Isolation.</strong></p>
+          <div class="su-type">
+            {% set iso = env.isolation or {} %}
+            <div>env stripped for cases: {{ (iso.env_unset or []) | join(', ') or 'none' }} · env set: {{ (iso.env_set_keys or []) | join(', ') or 'none' }}</div>
+            <div>socket guard: {{ iso.socket_guard or '—' }}</div>
+            <div>cwd: <code>{{ iso.cwd }}</code></div>
+          </div>
+        </div>
+      </details>
+      {% endif %}
+
+      <div class="su-actions" style="margin-top:14px;align-items:center;flex-wrap:wrap;gap:8px">
+        <input id="su-wb-model" type="text" placeholder="model id (for a run of record)" value="{{ wbd.baseline.model_id or '' }}"
+               title="The model operating the workbench for this run. The harness does not expose it, so state it here; without it the run is recorded as 'model not captured' (a debugging run, not a run of record)."
+               style="min-width:220px;padding:6px 10px;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:6px;background:transparent;color:var(--body-text,#e6e9ef);font-size:.85rem">
         <button class="su-btn" id="su-wb-run" onclick="suWbRender()">Re-run validation (~1–2 min)</button>
         {% if wbd.report_path %}<a class="su-btn" href="/documents#path={{ wbd.report_path }}" target="_blank" rel="noopener">Open validation report ↗</a>{% endif %}
         {% if wbd.plan_path %}<a class="su-btn" href="/documents#path={{ wbd.plan_path }}" target="_blank" rel="noopener">Open validation plan ↗</a>{% endif %}
@@ -1206,13 +1276,15 @@
              title="{{ n.need }}{% if n.implemented_by %} — implemented by: {{ n.implemented_by }}{% endif %}{% if n.process_controls %} — controls: {{ n.process_controls | join('; ') }}{% endif %}{% if n.tests %} — evidence: {{ n.tests | join(', ') }}{% endif %}">
           <span class="su-type">{{ n.id }}</span>
           <span class="su-type" style="overflow-wrap:break-word">{{ n.role or n.class }}</span>
-          <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.need }}</span>
+          <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.need }}
+            {% if n.strongest_evidence %}<div class="su-type" style="margin-top:4px">evidence: {{ n.strongest_evidence }}</div>{% endif %}</span>
           <span class="su-type">{{ n.tier }}</span>
           <span class="su-type">{{ n.coverage }}</span>
           <span class="su-status">
             {% if n.verdict == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
             {% elif n.verdict == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
             {% elif n.verdict in ('PARTIAL', 'NO-EVIDENCE') %}<span class="su-badge warning">{{ n.verdict | lower }}</span>
+            {% elif n.verdict == 'NOT-APPLICABLE' %}<span class="su-badge info" title="every mapped case is a live-endpoint case for a connection this deployment declares none">n/a here</span>
             {% else %}<span class="su-badge info">{{ n.verdict | lower }}</span>{% endif %}
           </span>
         </div>
@@ -1225,12 +1297,12 @@
         full execution evidence (command, environment, timestamps, exit code, judgment
         rule, complete captured output).</p>
       <div class="su-list" data-list="workbench">
-        <div class="su-cols" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 92px 52px 48px;column-gap:12px">
-          <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span>Status</span><span>Time</span><span>Log</span></div>
+        <div class="su-cols" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 76px 92px 52px 48px;column-gap:12px">
+          <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span title="none = no external system · mocked = fake transport with canned payloads · live = real endpoint">Endpoint</span><span>Status</span><span>Time</span><span>Log</span></div>
         {% for t in wbd.tests %}
-        <div class="su-row" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 92px 52px 48px;column-gap:12px;align-items:start;cursor:pointer"
+        <div class="su-row" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 76px 92px 52px 48px;column-gap:12px;align-items:start;cursor:pointer"
              onclick="suWbTog('su-wbx-{{ t.id }}')"
-             data-search="{{ t.id | lower }} {{ t.title | lower }} {{ t.uut | join(' ') | lower }} {{ t.status | lower }} {{ (t.description or '') | lower }}"
+             data-search="{{ t.id | lower }} {{ t.title | lower }} {{ t.uut | join(' ') | lower }} {{ t.status | lower }} {{ t.endpoint or '' }} {{ (t.description or '') | lower }}"
              {% if t.reason %}title="{{ t.reason }}"{% endif %}>
           <span class="su-type">{% if t.source %}<a href="/documents#path={{ t.source }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="open the actual test source">{{ t.id }}</a>{% else %}{{ t.id }}{% endif %}</span>
           <span style="color:var(--body-text,#e6e9ef);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.title }}</span>
@@ -1241,10 +1313,12 @@
             {%- else -%}—{%- endfor -%}
           </span>
           <span class="su-type">{{ t.wun | join(', ') }}</span>
+          <span class="su-type" title="{% if t.endpoint == 'live' %}real endpoint{% if t.connection %} ({{ t.connection }}){% endif %}{% elif t.endpoint == 'mocked' %}fake transport, canned payloads — hermetic{% elif t.endpoint == 'none' %}no external system{% else %}tier not declared{% endif %}">{{ t.endpoint or '?' }}{% if t.connection %} <span style="opacity:.7">{{ t.connection }}</span>{% endif %}</span>
           <span class="su-status">
             {% if t.status == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
             {% elif t.status == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
             {% elif t.status == 'SKIPPED' %}<span class="su-badge warning">skipped</span>
+            {% elif t.status == 'NOT-APPLICABLE' %}<span class="su-badge info" title="{{ t.reason }}">n/a here</span>
             {% else %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">error</span>{% endif %}
           </span>
           <span class="su-type">{{ t.duration_s }}s</span>
@@ -1485,7 +1559,11 @@ async function suWbRender() {
   var original = btn.textContent;
   btn.textContent = 'Running validation… (executes the manifest server-side, 1–2 min)';
   try {
-    var res = await fetch('/setup/workbench/render', { method: 'POST' });
+    var modelEl = document.getElementById('su-wb-model');
+    var modelId = modelEl ? modelEl.value.trim() : '';
+    var res = await fetch('/setup/workbench/render', { method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(modelId ? { model_id: modelId } : {}) });
     var j = await res.json();
     if (!res.ok || !j.ok) { suToast((j && j.detail) || j.summary || 'Validation run failed', true); return; }
     suToast('Validation complete — ' + (j.summary || 'report refreshed') + '.');

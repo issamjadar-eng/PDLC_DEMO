@@ -302,6 +302,11 @@ def test_exec(key: str, verifies_story_keys: List[str]) -> dict:
     return {"key": key, "issuelinks": links}
 
 
+# Fixture builder, not a test — its `test_` prefix makes pytest try to
+# collect it (unittest discovery never did). Opt it out explicitly.
+test_exec.__test__ = False  # type: ignore[attr-defined]
+
+
 def run(rule_id: str, j: JiraState, d: DtmState, cfg: RuleConfig,
         h: Optional[HtmState] = None) -> List[Violation]:
     return RULES[rule_id](j, d, h, cfg)
