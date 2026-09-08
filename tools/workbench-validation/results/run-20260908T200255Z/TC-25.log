@@ -1,0 +1,47 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-25 — This project's pre-submission package passes the transmit gate
+purpose:     DEPLOYMENT check: runs the transmit gate — cross-document consistency, attachment numbering, and the unresolved-[VERIFY] check — over this project's pre-submission package. A failure here is a finding about the package, which is exactly what the gate exists to surface.
+approach:    Runs the package-consistency checker with --transmit-gate --json over the qsub folder; passes only on exit 0. (Exit contract: 0 clean / 1 warnings / 2 gate failure / precondition error.)
+UUT:         submissions@11
+user needs:  WUN-20, WUN-03
+scope:       deployment · method: scripted · requires_deployment: content.submission_package
+endpoint:    none
+protocol:    —
+test source: .claude/skills/submissions/scripts/check_package_consistency.py (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-25)
+command:     python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub --transmit-gate --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-08T20:03:17Z (UTC)
+exit_code:   2
+duration_s:  0.03
+judged by:   exit code
+status:      FAIL (exit code 2)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "findings": [
+    {
+      "check": "S7",
+      "sev": "FAIL",
+      "file": "cover-letter.md",
+      "line": 18,
+      "msg": "unresolved verification tag in the filed body: [VERIFY] \u2014 resolve the claim against its source (or move the note into internal apparatus) before transmission"
+    },
+    {
+      "check": "S7",
+      "sev": "FAIL",
+      "file": "cover-letter.md",
+      "line": 44,
+      "msg": "unresolved verification tag in the filed body: [VERIFY] \u2014 resolve the claim against its source (or move the note into internal apparatus) before transmission"
+    }
+  ],
+  "fails": 2,
+  "warns": 0,
+  "support_matrix": {}
+}
+

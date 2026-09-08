@@ -1,0 +1,56 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-42 — This project's advisors and search index reference only canonical sources
+purpose:     DEPLOYMENT check: every installed advisor's GROUNDING block and every row of the semantic search index reference canonical sources only — never audience explainers, personal work folders or exported packs.
+approach:    Runs grounding_scan.py over .claude/agents and the file-locator index with --json; passes only on exit 0.
+UUT:         advisors@13, file-locator@3
+user needs:  WUN-25
+scope:       deployment · method: scripted · requires_deployment: content.file_locator_index
+endpoint:    none
+protocol:    —
+test source: .claude/skills/advisors/scripts/grounding_scan.py (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-42)
+command:     python3 .claude/skills/advisors/scripts/grounding_scan.py --project-root . --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-08T20:03:27Z (UTC)
+exit_code:   0
+duration_s:  0.07
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "agents_scanned": 30,
+  "grounding_blocks": 14,
+  "patterns": [
+    "**/*.lock",
+    "**/.git/**",
+    "**/.staging/**",
+    "**/.worktrees/**",
+    "**/Icon",
+    "**/__pycache__/**",
+    "**/_scratch/**",
+    "**/_usage-metrics/**",
+    "**/_work/**",
+    "**/articles/**",
+    "**/assets/**",
+    "**/formal/**",
+    "**/index.db",
+    "**/node_modules/**",
+    "articles/**",
+    "docs/.change-control/**",
+    "docs/confluence-staging/**",
+    "tools/knowledge-packs/**/pack/**"
+  ],
+  "index": {
+    "path": "/Users/benxavier/projects/PDLC_DEMO-wt121/tools/file-locator-mcp/index.db",
+    "rows": 1212
+  },
+  "findings": [],
+  "total_findings": 0
+}
+

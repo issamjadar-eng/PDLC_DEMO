@@ -1,0 +1,26 @@
+{
+  "startAt": 0,
+  "maxResults": 50,
+  "total": 2,
+  "isLast": true,
+  "issues": [
+    {
+      "id": "10001",
+      "key": "PROJ-1",
+      "fields": {
+        "summary": "Define user need for alarm escalation",
+        "status": {"name": "In Progress"},
+        "updated": "2026-01-15T10:12:00.000+0000"
+      }
+    },
+    {
+      "id": "10002",
+      "key": "PROJ-2",
+      "fields": {
+        "summary": "Verify infusion rate | boundary values",
+        "status": {"name": "Done"},
+        "updated": "2026-01-16T08:00:00.000+0000"
+      }
+    }
+  ]
+}

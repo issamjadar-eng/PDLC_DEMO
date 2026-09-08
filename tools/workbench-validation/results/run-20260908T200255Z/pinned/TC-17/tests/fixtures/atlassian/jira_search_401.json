@@ -1,0 +1,5 @@
+{
+  "_comment": "Body Atlassian returns on an unauthenticated REST search; the transport raises HTTPError 401 — see tests/fakes.py http_error().",
+  "errorMessages": ["Client must be authenticated to access this resource."],
+  "errors": {}
+}

@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-03 — Auto-generated document sections stay faithful and do no harm
+purpose:     Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched.
+approach:    Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets.
+UUT:         medtech-docs@36
+user needs:  WUN-09
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/medtech-docs/tests (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-03)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-08T20:02:58Z (UTC)
+exit_code:   0
+duration_s:  1.04
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+..................................                                       [100%]
+34 passed in 0.58s
+
