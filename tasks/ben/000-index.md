@@ -128,6 +128,7 @@ _Tasks closed without completion — premise overtaken, never started, or orphan
 
 ## Changelog
 
+- 2026-09-08: Task 118 landed on main (PR #184); status stays In Progress pending the registry push.
 - 2026-09-08: Task 118 created.
 - 2026-07-22: Task 109 → Complete same day (commercial advisor landed via PR #149 + hitachi PR #280); moved Active → Completed.
 - 2026-07-22: Task 109 created — commercial advisor persona (advisors bundle + canonical-roles catalog gaps).

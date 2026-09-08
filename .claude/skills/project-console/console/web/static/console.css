@@ -364,6 +364,60 @@ select:focus-visible,
   border-radius: 7px;
 }
 .nav-more-menu .nav-item:hover { background: color-mix(in srgb, var(--gl-purple) 10%, transparent); border-bottom: none; }
+/* In-nav dropdown (Business domains). The button looks exactly like a nav link;
+   the menu reuses the hamburger menu's surface and is positioned fixed by JS
+   (re-parented to the header so the nav's overflow:hidden cannot clip it). */
+.nav-dd { padding: 0; border-bottom: none; }
+.nav-dd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  padding: .25rem 0;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.nav-dd-btn:hover, .nav-dd-btn[aria-expanded="true"] { color: var(--gl-purple); border-bottom-color: var(--gl-purple); }
+.nav-dd.is-current .nav-dd-btn { border-bottom-color: currentColor; }
+.nav-caret { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: .7; transition: transform .15s; }
+.nav-dd-btn[aria-expanded="true"] .nav-caret { transform: rotate(180deg); }
+.nav-dd-menu {
+  position: fixed;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  padding: .4rem;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg, 0 14px 32px -14px rgba(15, 23, 42, .32));
+  z-index: 61;
+}
+.nav-dd-menu[hidden] { display: none; }
+.nav-dd-link {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .5rem .6rem;
+  border-radius: 7px;
+  color: var(--gl-slate);
+  font-weight: 600;
+  font-size: .95rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-dd-link:hover { color: var(--gl-purple); background: color-mix(in srgb, var(--gl-purple) 10%, transparent); }
+.nav-dd-link.is-current { color: var(--gl-purple); }
+/* Inside the hamburger overflow, the dropdown wrapper sits like any other row. */
+.nav-more-menu .nav-dd { padding: .5rem .6rem; border-radius: 7px; }
+
 .topnav nav .muted {
   font-weight: 500;
   font-size: .95rem;
