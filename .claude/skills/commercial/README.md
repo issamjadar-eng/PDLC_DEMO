@@ -67,6 +67,14 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 17 (2026-09-08): **Narrative is automatic.** `answer` now synthesizes the edition's
+  `narrative.md` after a clean lint (new `narrative_generate` + `narrative-generate
+  [--force] [--retries]` action: `claude -p` with the narrative rules as an appended
+  system prompt, grounded only on report.md + data.json, stamp + lint + one lint-guided
+  retry). Synthesis failure never fails the answer (edition reports `narrative:
+  missing`); `--no-narrative` opts out. Model is project-configurable (catalog
+  `narrative.model` → `NARRATIVE_MODEL` env → default), never hard-wired. `pack` now
+  carries each question's executive summary (stale ones flagged).
 - 16 (2026-09-08): **Narrative layer + formal export.** New optional per-edition
   `narrative.md` (executive summary + a "what this tells us" block per report section)
   held to the SAME claim lint as the report via the factored `_lint_markdown_text`, plus
