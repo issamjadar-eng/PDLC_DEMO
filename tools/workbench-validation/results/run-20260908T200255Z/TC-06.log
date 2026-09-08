@@ -1,0 +1,40 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-06 — The document-coverage audit finds what's missing
+purpose:     Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor.
+approach:    Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly.
+UUT:         dhf-manifest@15
+user needs:  WUN-06
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/dhf-manifest/tests/test_discovery_index.sh (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-06)
+command:     bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-08T20:03:00Z (UTC)
+exit_code:   0
+duration_s:  1.45
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+── discovery-index tests ──
+case1: clean resolution across mixed naming conventions
+case2: ambiguity — higher-ranked pattern wins, alternative recorded
+case3: L3 override via patterns_extra prepends to ranking
+case4: external_data roles count files and surface missing-folder gaps
+case5: external-mode DHF — nested sub-convention (folder/v*.md)
+case6: external-mode DHF — flat sub-convention (folder.md)
+case7: project-scoped multi_file role — folder pointer with file_count
+case8: per-dhf multi_file role (internal mode) — folder pointer
+case9: multi-match no-winner — ambiguity_notes + paired gap (was silently lost pre-fix)
+case10: frontmatter canonical_role: opt-in outranks filename patterns
+case11: external CLIENT-SLUG override — client slug, nested path, multi-file, governance
+
+Results: 48 passed, 0 failed
+

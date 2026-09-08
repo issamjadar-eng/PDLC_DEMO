@@ -1,0 +1,5 @@
+strategy_domains:
+  - key: regulatory
+    name: Regulatory
+  - key: testing
+    name: Testing

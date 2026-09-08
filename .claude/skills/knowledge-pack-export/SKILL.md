@@ -14,8 +14,8 @@ description: |
     - any edit/write to a `*.pack.yml` manifest or to `.claude/skills/knowledge-pack-export/`
 
   Actions: `setup`, `init <pack-slug>`, `validate <pack-slug>`, `build <pack-slug> [--target <key>]`, `freshness <pack-slug>|--repo`, `list`, `publish <pack-slug>` (v2). Project-agnostic — all project-specific selection lives in the pack manifest, never in the skill.
-version: 5
-updated: 2026-05-30
+version: 6
+updated: 2026-09-08
 ---
 
 # Knowledge Pack Export
@@ -53,6 +53,7 @@ Because one bundle file may combine several source documents, the engine makes e
 
 | File | Purpose |
 |------|---------|
+| `tests/test_pack_validate.py` | Capability regression suite for `build_pack.py validate`: a synthetic repo + pack manifest in a temp dir validates (exit 0); a missing source, a slot count over the target cap, and an unknown target each fail. Hermetic (`--repo` points at the temp tree; socket guard in `tests/conftest.py`). `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/knowledge-pack-export/tests -q` |
 | `README.md` | Design document — architecture, decisions, dependencies, lineage, intended use. |
 | `scripts/build_pack.py` | Deterministic assembly engine. Subcommands: `validate`, `assemble`, `finalize`. Enforces target file-count cap; writes provenance `manifest.json` + `system-instructions.md` skeleton. |
 | `scripts/freshness_check.py` | Read-only drift/staleness **candidate-finder** (project.yml-keyed contradiction scan + staleness + variants). High recall + context + advisory hints; the caller adjudicates. |

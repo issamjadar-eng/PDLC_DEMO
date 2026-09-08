@@ -1,0 +1,197 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-36 — This project's task documents carry no tag the harvesters would skip
+purpose:     DEPLOYMENT check: scans every task document in this instance for malformed strategy/lessons tags. A failure lists the tags a harvest would silently drop.
+approach:    Runs scan_tags.py over tasks/ with the project's domain keys; passes only when zero malformed tags remain.
+UUT:         strategy@21, lessons@5
+user needs:  WUN-21
+scope:       deployment · method: scripted · requires_deployment: content.task_docs
+endpoint:    none
+protocol:    —
+test source: .claude/skills/strategy/scripts/scan_tags.py (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-36)
+command:     python3 .claude/skills/strategy/scripts/scan_tags.py --project-root . --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-08T20:03:22Z (UTC)
+exit_code:   1
+duration_s:  0.06
+judged by:   exit code
+status:      FAIL (exit code 1)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "files_scanned": 126,
+  "well_formed_blocks": 197,
+  "malformed": 22,
+  "domain_keys": [
+    "architecture",
+    "commercial",
+    "development",
+    "operations",
+    "postmarket",
+    "regulatory",
+    "risk",
+    "testing"
+  ],
+  "findings": [
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/053-client-pdlc-composite-deck-builder.md",
+      "line": 106,
+      "kind": "prose-on-line",
+      "text": "- 2026-05-13: **Content-iteration phase \u2014 client-facing language scrub + structural edits to the final deck.** Worked through the deck slide-by-slide with the u",
+      "why": "tag shares its line with other text \u2014 the harvester only reads a comment standing alone on the line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/053-client-pdlc-composite-deck-builder.md",
+      "line": 107,
+      "kind": "prose-on-line",
+      "text": "- 2026-05-13: **Decorations: title slide + new agenda + unified section / subsection dividers + KOL move.** Build.py extended with a `CHAPTERS` config (7 top-le",
+      "why": "tag shares its line with other text \u2014 the harvester only reads a comment standing alone on the line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/053-client-pdlc-composite-deck-builder.md",
+      "line": 108,
+      "kind": "prose-on-line",
+      "text": "- 2026-05-13: **REORDER mode: 4-column grid + iframe thumbnails + position-input.** User feedback after starting Pass 2: scrolling through 42 vertical slides is",
+      "why": "tag shares its line with other text \u2014 the harvester only reads a comment standing alone on the line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/053-client-pdlc-composite-deck-builder.md",
+      "line": 109,
+      "kind": "prose-on-line",
+      "text": "- 2026-05-13: **Two-pass workflow refactor.** User feedback after seeing 126-slide candidate: judging keep/remove + reordering simultaneously is too much. Split",
+      "why": "tag shares its line with other text \u2014 the harvester only reads a comment standing alone on the line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/053-client-pdlc-composite-deck-builder.md",
+      "line": 111,
+      "kind": "prose-on-line",
+      "text": "- 2026-05-13: **Build complete \u2014 Phases 1\u20133 shipped end-to-end in one session.** Files: `assets/client-pdlc/{build.py, candidate.html, README.md}`. `build.py --",
+      "why": "tag shares its line with other text \u2014 the harvester only reads a comment standing alone on the line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 136,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: development, architecture",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 160,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, development",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 193,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, testing",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 212,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, testing, development",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 256,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, development, operations",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 290,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, testing, development",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 362,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: testing, architecture",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 415,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: testing, architecture",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 445,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: testing, architecture",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 478,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: testing, architecture",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 502,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, development, operations",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 539,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, development",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 570,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: architecture, development",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 597,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: regulatory, risk, testing, operations",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/054-agentic-first-medtech-strategy.md",
+      "line": 637,
+      "kind": "unclosed-comment",
+      "text": "<!-- STRATEGY CONTENT: operations, regulatory, risk",
+      "why": "no closing '-->' on the tag line"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/080-commercial-roadmap-5yr-and-kol-gap-analysis.md",
+      "line": 152,
+      "kind": "marker-text",
+      "text": "<!-- STRATEGY CONTENT captured inline above under \"## Commercial Strategy\". The /strategy assemble commercial run harvests it into docs/project/strategies/comme",
+      "why": "marker must read exactly '<!-- STRATEGY CONTENT: ...' or '<!-- LESSONS LEARNED: ...' (one space after '<!--', a colon, uppercase)"
+    },
+    {
+      "file": "/Users/benxavier/projects/PDLC_DEMO-wt121/tasks/ben/114-console-journey-doc-pipeline-strategy-landing.md",
+      "line": 312,
+      "kind": "unknown-domain",
+      "text": "<!-- STRATEGY CONTENT: architecture \u2014 where a long caveat lives in a dense card layout -->",
+      "why": "domain 'architecture \u2014 where a long caveat lives in a dense card layout' not in project.yml strategy_domains (known: architecture, commercial, development, operations, postmarket, regulatory, risk, testing)"
+    }
+  ]
+}
+

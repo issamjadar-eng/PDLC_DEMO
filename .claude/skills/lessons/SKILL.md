@@ -1,8 +1,8 @@
 ---
 name: lessons
 description: "Capture, stage, and promote lessons learned from task work — harvest tagged insights into a team ledger, track applications and overrides as evidence, promote mature lessons to their permanent home (skill, CLAUDE.md, agent, rule, glossary, README, standard)"
-version: 4
-updated: 2026-04-23
+version: 5
+updated: 2026-09-08
 ---
 
 # Lessons Harvester & Curator
@@ -208,6 +208,8 @@ Initialize `tasks/lessons-ledger.md` from the template. Safe to re-run — skips
 6. Report the file path and suggest next step: `/lessons scan` or `/lessons assemble`.
 
 ### `scan [task_folder]`
+
+> Deterministic pre-check: `python3 .claude/skills/strategy/scripts/scan_tags.py --json tasks/` (owned by the strategy skill; shared grammar) lists every `<!-- LESSONS LEARNED` / `<!-- STRATEGY CONTENT` tag the harvesters would silently skip. Run it before `assemble` so a malformed tag is a finding, not a lost lesson.
 
 Find all `<!-- LESSONS LEARNED -->` tagged blocks across task documents. Optionally filter by a single team member's task folder.
 

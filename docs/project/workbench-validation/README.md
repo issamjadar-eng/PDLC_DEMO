@@ -22,6 +22,7 @@ results, per-case evidence logs, the validation report, the console sidecar) liv
 |---|---|---|
 | `validation-plan.md` | Authored | Intended-use classes, risk tiers, role-based WUN (workbench user need) register, assurance model, revalidation triggers, data-layer contract |
 | `validation.yml` | Authored | Declarative manifest: machine-readable user needs (role + plain-language need + coverage + `implemented_by` traceability) and the test-case catalog (the runner's input) |
+| `protocols/` | Written test protocols (method: protocol / inspection) with challenge sets and acceptance criteria; execution records live under `tools/workbench-validation/protocols/` |
 
 ## Expected Content
 
@@ -69,3 +70,4 @@ notes (those go in the owning task doc), and no generated outputs — those belo
 | 2026-07-27 | BX / AI Assistant | task 110: WUN register rewritten role-based (plain-language needs + `implemented_by` traceability); generated outputs (results, evidence logs, report, sidecar) relocated to `tools/workbench-validation/` — this folder now holds authored sources only. |
 | 2026-09-08 | BX / AI Assistant | task 119: manifest schema 1.1 — `connections:` block, `endpoint:` tier on every case, five new cases (TC-17..21: live Jira/Jira-mirror/browser cases NOT-APPLICABLE here by declaration; secops scanner regression suite; web-control unit suite), WUN-16 exploratory need for MCP-mediated live paths, anomalies re-dispositioned with owner + clearing run, explicit revalidation triggers; plan §6 rewritten + new §7 evidence tiers. |
 | 2026-09-08 | BX / AI Assistant | task 120: manifest schema 1.2 — every need carries `role` / `need` / `so_that`; the report composes the user story; plan §4 regenerated. |
+| 2026-09-08 | BX / AI Assistant | task 121: manifest schema 2.0 — verdicts PASS/FAIL/NOT-APPLICABLE only, `deployment:` declaration, per-case `scope`/`method`, `protocols/` folder with three written protocols. |

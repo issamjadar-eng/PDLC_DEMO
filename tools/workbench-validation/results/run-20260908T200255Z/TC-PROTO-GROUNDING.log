@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-PROTO-GROUNDING — Advisor answers cite only canonical, existing sources
+purpose:     Six questions to three advisor agents; every cited path must exist and be canonical (never articles, personal work folders, or exported packs), with a required source cited for ≥ 5 of 6.
+approach:    Protocol TC-PROTO-GROUNDING: three runs, fresh session each; 0 non-canonical or fabricated citations.
+UUT:         advisors@13
+user needs:  WUN-25
+scope:       deployment · method: protocol
+endpoint:    none
+protocol:    docs/project/workbench-validation/protocols/TC-PROTO-GROUNDING.md
+test source: —
+command:     
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-08T20:03:22Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      NOT-EXECUTED (protocol not executed — no execution record at tools/workbench-validation/protocols/TC-PROTO-GROUNDING.result.yml)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+(no output captured)

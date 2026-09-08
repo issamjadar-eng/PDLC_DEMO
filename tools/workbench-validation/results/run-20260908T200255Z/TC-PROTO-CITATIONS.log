@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-PROTO-CITATIONS — Citation verification returns the right verdict on citations whose truth is known
+purpose:     An operator runs the reference audit over 16 citations — 8 known-sound, 4 real defects in this project's documents, 4 constructed defects — and compares verdicts to the expected ones. Judgment-based, so validated by protocol with acceptance criteria.
+approach:    Protocol TC-PROTO-CITATIONS: three runs; 0 known-non-sound items may be reported sound; ≥ 7 of 8 known-sound must be reported sound.
+UUT:         reference-audit@4
+user needs:  WUN-05
+scope:       deployment · method: protocol
+endpoint:    none
+protocol:    docs/project/workbench-validation/protocols/TC-PROTO-CITATIONS.md
+test source: —
+command:     
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-08T20:03:22Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      NOT-EXECUTED (protocol not executed — no execution record at tools/workbench-validation/protocols/TC-PROTO-CITATIONS.result.yml)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+(no output captured)

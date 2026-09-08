@@ -1,0 +1,19 @@
+# Execution record for a protocol / inspection test case.
+# Written by the operator after executing the protocol; read by run_validation.py.
+# Location: tools/workbench-validation/protocols/<TC-ID>.result.yml
+tc_id: TC-xx
+protocol: docs/project/workbench-validation/protocols/TC-xx.md
+verdict: PASS            # PASS | FAIL — against the protocol's acceptance criteria
+executed: 2026-01-01     # ISO date of the (last) run
+operator: "<name / git user>"
+model_id: "<model identifier operating the workbench>"
+git_sha: "<commit at execution>"
+harness_version: "<optional>"
+runs:
+  - run: 1
+    outcome: PASS        # per-run outcome against the criteria
+    notes: ""
+evidence:                # paths to captured outputs (transcripts, tables, screenshots)
+  - tools/workbench-validation/protocols/TC-xx/run-1/
+deviations: []           # each: {step, description, impact}
+signed_off_by: "<reviewer>"

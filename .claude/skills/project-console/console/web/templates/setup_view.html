@@ -1171,11 +1171,11 @@
         </div>
         <div class="su-tile">
           <div class="su-tile-n">{{ wbd.summary.tests.PASS or 0 }}/{{ wbd.summary.tests.total }}</div>
-          <div class="su-tile-l">test cases passed</div>
+          <div class="su-tile-l">test cases passed{% if wbd.summary.tests['NOT-EXECUTED'] %} · {{ wbd.summary.tests['NOT-EXECUTED'] }} protocol(s) not executed{% endif %}{% if wbd.summary.tests['NOT-APPLICABLE'] %} · {{ wbd.summary.tests['NOT-APPLICABLE'] }} n/a here{% endif %}{% if wbd.summary.scopes %} · {% for sc, n in wbd.summary.scopes.items() %}{{ n }} {{ sc }}{{ ' / ' if not loop.last }}{% endfor %}{% endif %}</div>
         </div>
         <div class="su-tile">
           <div class="su-tile-n">{{ wbd.summary.needs.total }}</div>
-          <div class="su-tile-l">user needs · {{ wbd.summary.needs.pass or 0 }} pass / {{ wbd.summary.needs.fail or 0 }} fail / {{ (wbd.summary.needs.process_control or 0) + (wbd.summary.needs.exploratory or 0) }} process-assured</div>
+          <div class="su-tile-l">user needs · {{ wbd.summary.needs.pass or 0 }} pass / {{ wbd.summary.needs.fail or 0 }} fail / {{ wbd.summary.needs.not_applicable or 0 }} n/a here{% if wbd.summary.needs.process_control or wbd.summary.needs.exploratory %} / {{ (wbd.summary.needs.process_control or 0) + (wbd.summary.needs.exploratory or 0) }} legacy{% endif %}</div>
         </div>
         <div class="su-tile">
           <div class="su-tile-n"><code>{{ wbd.baseline.git_sha_short }}</code>{{ ' ±' if wbd.baseline.git_dirty }}</div>
@@ -1240,6 +1240,12 @@
             {% for name, t in (env.tooling or {}) | dictsort %}<div>{{ name }}: {% if t.missing %}<strong>missing</strong>{% else %}{{ t.version or t.path }}{% endif %}</div>{% endfor %}
             {% if env.python_packages %}<div>test-harness packages via uv: {% for k, v in env.python_packages.items() %}{{ k }} {{ v }}{{ ', ' if not loop.last }}{% endfor %}</div>{% endif %}
           </div>
+          {% if wbd.deployment %}
+          <p style="margin:6px 0 4px"><strong>Deployment declaration</strong> (what this instance has — drives n/a).</p>
+          <div class="su-type" style="margin:0 0 8px;columns:2;column-gap:18px">
+            {% for grp, vals in wbd.deployment | dictsort %}{% if vals is mapping %}{% for k, v in vals | dictsort %}<div>{{ grp }}.{{ k }}: <code>{{ v }}</code></div>{% endfor %}{% else %}<div>{{ grp }}: <code>{{ vals }}</code></div>{% endif %}{% endfor %}
+          </div>
+          {% endif %}
           <p style="margin:6px 0 4px"><strong>Connections.</strong></p>
           <div class="su-type" style="margin:0 0 8px">
             {% set conns = env.connections or {} %}
@@ -1277,14 +1283,15 @@
           <span class="su-type">{{ n.id }}</span>
           <span class="su-type" style="overflow-wrap:break-word">{{ n.role or n.class }}</span>
           <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.statement or n.need }}
-            {% if n.strongest_evidence %}<div class="su-type" style="margin-top:4px">evidence: {{ n.strongest_evidence }}</div>{% endif %}</span>
+            {% if n.reason %}<div class="su-type" style="margin-top:4px">{{ n.reason }}</div>{% endif %}
+            {% if n.strongest_evidence and n.verdict == 'PASS' %}<div class="su-type">evidence: {{ n.strongest_evidence }}</div>{% endif %}</span>
           <span class="su-type">{{ n.tier }}</span>
           <span class="su-type">{{ n.coverage }}</span>
           <span class="su-status">
             {% if n.verdict == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
-            {% elif n.verdict == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
+            {% elif n.verdict == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)" title="{{ n.reason or '' }}">FAIL</span>
             {% elif n.verdict in ('PARTIAL', 'NO-EVIDENCE') %}<span class="su-badge warning">{{ n.verdict | lower }}</span>
-            {% elif n.verdict == 'NOT-APPLICABLE' %}<span class="su-badge info" title="every mapped case is a live-endpoint case for a connection this deployment declares none">n/a here</span>
+            {% elif n.verdict == 'NOT-APPLICABLE' %}<span class="su-badge info" title="{{ n.reason or 'every mapped case depends on something this deployment declares absent' }}">n/a here</span>
             {% else %}<span class="su-badge info">{{ n.verdict | lower }}</span>{% endif %}
           </span>
         </div>
@@ -1298,7 +1305,7 @@
         rule, complete captured output).</p>
       <div class="su-list" data-list="workbench">
         <div class="su-cols" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 76px 92px 52px 48px;column-gap:12px">
-          <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span title="none = no external system · mocked = fake transport with canned payloads · live = real endpoint">Endpoint</span><span>Status</span><span>Time</span><span>Log</span></div>
+          <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span title="scope (cap = capability: skill fixtures, portable · dep = deployment: this instance) · method (scrip = scripted · proto = protocol · inspe = inspection) · endpoint (none / mocked / live)">Scope · method · endpoint</span><span>Status</span><span>Time</span><span>Log</span></div>
         {% for t in wbd.tests %}
         <div class="su-row" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 76px 92px 52px 48px;column-gap:12px;align-items:start;cursor:pointer"
              onclick="suWbTog('su-wbx-{{ t.id }}')"
@@ -1313,12 +1320,13 @@
             {%- else -%}—{%- endfor -%}
           </span>
           <span class="su-type">{{ t.wun | join(', ') }}</span>
-          <span class="su-type" title="{% if t.endpoint == 'live' %}real endpoint{% if t.connection %} ({{ t.connection }}){% endif %}{% elif t.endpoint == 'mocked' %}fake transport, canned payloads — hermetic{% elif t.endpoint == 'none' %}no external system{% else %}tier not declared{% endif %}">{{ t.endpoint or '?' }}{% if t.connection %} <span style="opacity:.7">{{ t.connection }}</span>{% endif %}</span>
+          <span class="su-type" title="scope: {{ t.scope or '?' }} ({% if t.scope == 'capability' %}skill-shipped fixtures, portable{% elif t.scope == 'deployment' %}this instance's content{% else %}undeclared{% endif %}) · method: {{ t.method or '?' }} · endpoint: {% if t.endpoint == 'live' %}real endpoint{% if t.connection %} ({{ t.connection }}){% endif %}{% elif t.endpoint == 'mocked' %}fake transport, canned payloads — hermetic{% elif t.endpoint == 'none' %}no external system{% else %}tier not declared{% endif %}{% if t.requires_deployment %} · requires: {{ t.requires_deployment | join(', ') }}{% endif %}">{{ (t.scope or '?')[:3] }} · {{ (t.method or '?')[:5] }} · {{ t.endpoint or '?' }}{% if t.connection %} <span style="opacity:.7">{{ t.connection }}</span>{% endif %}</span>
           <span class="su-status">
             {% if t.status == 'PASS' %}<span class="su-ok"><svg class="su-ico" style="width:13px;height:13px"><use href="#su-ic-check"/></svg> PASS</span>
             {% elif t.status == 'FAIL' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">FAIL</span>
             {% elif t.status == 'SKIPPED' %}<span class="su-badge warning">skipped</span>
             {% elif t.status == 'NOT-APPLICABLE' %}<span class="su-badge info" title="{{ t.reason }}">n/a here</span>
+            {% elif t.status == 'NOT-EXECUTED' %}<span class="su-badge warning" title="{{ t.reason }}">not executed</span>
             {% else %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">error</span>{% endif %}
           </span>
           <span class="su-type">{{ t.duration_s }}s</span>
@@ -1329,6 +1337,7 @@
           {% if t.approach %}<p style="margin:0 0 8px"><strong>How it's tested:</strong> {{ t.approach }}</p>{% endif %}
           {% if t.judged_by %}<p style="margin:0 0 8px"><strong>Pass rule:</strong> {{ t.judged_by }}.</p>{% endif %}
           {% if t.reason %}<p style="margin:0 0 8px"><strong>This run:</strong> {{ t.reason }}.</p>{% endif %}
+          {% if t.protocol %}<p style="margin:0 0 8px"><strong>Protocol:</strong> <a href="/documents#path={{ t.protocol }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">{{ t.protocol.split('/')[-1] }} ↗</a>{% if t.execution_record %} · executed {{ t.execution_record.executed }} by {{ t.execution_record.operator }} (model {{ t.execution_record.model_id }}) — <a href="/documents#path={{ t.execution_record.path }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">execution record ↗</a>{% else %} · <em>no execution record yet</em>{% endif %}</p>{% endif %}
           <p class="su-type" style="margin:0;overflow-wrap:anywhere">
             <strong>Command:</strong> <code>{{ t.cmd }}</code>
             {% if t.source %} · <a href="/documents#path={{ t.source }}" target="_blank" rel="noopener">test source ↗</a>{% endif %}

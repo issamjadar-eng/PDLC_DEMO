@@ -1,8 +1,8 @@
 ---
 name: advisors
 description: "Manage and ground a bundle of persona advisor subagents (Regulatory Affairs, Clinical Affairs, Risk Management, Cybersecurity, Quality Engineering, V&V, Human Factors, Post-Market, R&D, Systems Engineering, Program Manager, Commercial) for a medtech project. Each advisor grounds itself in the project's DHF / strategy / standards / regulation documents via three-tier canonical-role grounding, and serves two runtimes from one source — Claude Code subagent delegation and the project-console browser UI. TRIGGER when the user wants to install, list, add, remove, enable, sync, or re-ground advisors / assistants; edit advisor grounding, overlays, or canonical-role tiers; regenerate the auto-rendered GROUNDING blocks; or wire advisor agents into the project or console. Actions: init, setup, list, add <name>, remove <name>, overlay <name> <op> <glob>, sync, help."
-version: 12
-updated: 2026-07-22
+version: 13
+updated: 2026-09-08
 ---
 
 # Advisors — Persona Subagents for Medtech Projects
@@ -77,6 +77,13 @@ Resolution: agent-file baseline (`context` + `sources`) → `project.yml` overla
 | `tests/` | Unit tests for the loader, grounding renderer, and file-locator wiring. |
 | `tests/run.sh` | Test runner — runs the suite under `pytest`, pulling `pytest` + `PyYAML` ephemerally via `uv run --no-project` (no repo-installed dev deps). Extra args pass through to `pytest`. |
 | `README.md` | Design documentation for humans (not loaded by Claude). |
+
+## Supporting Files
+
+| File | Purpose |
+|------|---------|
+| `scripts/grounding_scan.py` | Verifies GROUNDING blocks in agent prompts reference only canonical sources (no `articles/**`, `**/_work/**`, `**/_scratch/**`, `**/_usage-metrics/**`, built knowledge packs, `**/formal/**`) and that the file-locator index holds no row matching `project.yml file_locator.corpus_excludes`. Exit 0/1/2, `--json`, `--no-index`. |
+| `tests/test_grounding_scan.py` | Capability tests over `tests/fixtures/grounding/` + a synthetic SQLite index. |
 
 ## Actions
 

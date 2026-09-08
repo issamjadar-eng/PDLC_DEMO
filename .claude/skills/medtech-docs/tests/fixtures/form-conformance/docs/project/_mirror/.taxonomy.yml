@@ -1,0 +1,21 @@
+# fixture taxonomy (schema v0.3 shape)
+schema_version: "0.3"
+last_updated: 2026-01-01
+review_cadence_days: 90
+mappings:
+  hazard-analysis:
+    canonical_role: hazard_analysis
+    governing_qms:
+      forms: [FORM-000000001]
+      sops: []
+      work_instructions: []
+      upstream_inputs: []
+  fmea:
+    canonical_role: reliability
+    governing_qms:
+      forms: [FORM-000000002]
+  notes:
+    canonical_role: notes
+    governing_qms:
+      forms: []
+      note: "team-internal working notes — intentionally not backed by a QMS form"

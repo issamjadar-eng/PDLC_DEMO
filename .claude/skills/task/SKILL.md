@@ -1,8 +1,8 @@
 ---
 name: task
 description: "Task management for regulated projects — `create`, `find`, `update`, `checkpoint`, `summary`, `setup` tasks organized by team member with index tracking. The `summary` action derives `tasks/task-summary.json` (counts, categorized open work, recent-activity digest, economics rollup) for the project console's Tasks tab — use it when the user says 'refresh the task summary', 'update the tasks tab', or the console shows a stale/missing task summary. The `checkpoint` action refreshes the active task doc to **resume-ready** state — use it when wrapping up for the day, before `/clear`, before `/quit`, ending the session, signing off, handing off to a fresh session, taking a break, pausing work, or any time you want to make sure the task doc captures everything needed to pick up later. Triggers on phrases like 'wrap up', 'sign off', 'handoff', 'before I clear', 'before I restart', 'save context for next session', 'make sure the task doc is updated'."
-version: 35
-updated: 2026-07-27
+version: 36
+updated: 2026-09-08
 ---
 
 # Task Management
@@ -55,6 +55,7 @@ When any action encounters a missing dependency, it should report:
 | `tests/test-task-gate.sh` | Automated test suite — 18 scenarios for the task gate hook |
 | `rules/scratch-and-tmp.md` | The personal-sandbox convention (`_work/` committed, `_scratch/` gitignored, OS `/tmp` transient) — canonical source for the auto-loaded rule. The `setup` action symlinks `.claude/rules/scratch-and-tmp.md` to this file (same install pattern as hooks and agents). |
 | `README.md` | Design documentation (not loaded by Claude — for human reference) |
+| `tests/test_checkpoint_recover.py` | Capability tests for the SessionStart checkpoint-recovery hook (`.claude/hooks/checkpoint-recover.sh`): a planted `.state/uncheckpointed-*.txt` marker is surfaced; no marker / no state dir stays silent. Hermetic (socket-guard conftest). |
 
 ## Actions
 

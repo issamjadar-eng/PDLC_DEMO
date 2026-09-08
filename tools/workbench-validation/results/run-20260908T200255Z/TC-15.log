@@ -1,0 +1,180 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260908T200255Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-15 — Installed tools pass the security screen
+purpose:     Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns — and that the scanner itself fails loudly when it does.
+approach:    Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned.
+UUT:         secops@10
+user needs:  WUN-12
+scope:       deployment · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/secops/scripts/audit_artifacts.py (pinned copy: tools/workbench-validation/results/run-20260908T200255Z/pinned/TC-15)
+command:     python3 .claude/skills/secops/scripts/audit_artifacts.py --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   300
+started:     2026-09-08T20:03:12Z (UTC)
+exit_code:   0
+duration_s:  1.38
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "summary": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 16,
+    "Low": 0
+  },
+  "findings": [
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "line": 77,
+      "snippet": "cat >\"$PROJECT_ROOT/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/sync-skills/tests/test_windows_symlink_guard.sh",
+      "line": 87,
+      "snippet": "cat >\"$PROJECT_ROOT/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/sync-skills/tests/test_prune.sh",
+      "line": 81,
+      "snippet": "cat >\"$PROJECT_ROOT/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/sync-skills/tests/test_status.sh",
+      "line": 84,
+      "snippet": "cat >\"$PROJECT_ROOT/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/sync-skills/tests/test_symlinks.sh",
+      "line": 71,
+      "snippet": "cat >\"$PROJECT_ROOT/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 92,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 169,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 210,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 258,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 319,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 389,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 435,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 494,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 573,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 665,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    },
+    {
+      "rule_id": "CFG-PROJECT-YML",
+      "category": "config-tamper",
+      "severity": "Medium",
+      "file": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "line": 744,
+      "snippet": "cat > \"$TMP/project.yml\" <<EOF",
+      "description": "In-place edit of project.yml \u2014 should only happen via documented setup or user action. (target is under a temp path \u2014 fixture, not the project file)"
+    }
+  ]
+}
+
