@@ -1,0 +1,89 @@
+{% extends "_base.html" %}
+{% block title %}{{ workflow.title }} · Workflows · {{ config.project_name }}{% endblock %}
+{% block content %}
+<section class="landing">
+  <p><a href="/workflows">← Workflows</a></p>
+  <h1>
+    <span style="opacity: 0.6; font-family: var(--font-mono, monospace);">{{ workflow.code }}</span>
+    {{ workflow.title }}
+    <span title="{{ workflow.readiness_label }}">{{ workflow.readiness_pill }}</span>
+  </h1>
+  <p class="sub">{{ workflow.one_liner }}</p>
+
+  {% if gen_error %}
+  <div style="padding: 0.75rem 1rem; background: rgba(255,80,80,0.12); border-left: 4px solid #d94040; margin: 1rem 0;">
+    ✗ <strong>Pack not generated.</strong> <code style="white-space: pre-wrap;">{{ gen_error }}</code>
+  </div>
+  {% elif generated %}
+  <div style="padding: 0.75rem 1rem; background: rgba(60,180,100,0.12); border-left: 4px solid #2f9e5f; margin: 1rem 0;">
+    ✓ Pack assembled — the newest pack is shown below. It is uncommitted until pushed.
+  </div>
+  {% endif %}
+
+  <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; margin: 1rem 0;">
+    <form method="post" action="/workflows/management-review-pack/generate"
+          style="flex: 1 1 320px; padding: 0.9rem 1rem; border: 1px solid var(--border, #ccc); border-radius: 8px;">
+      <h2 style="margin-top: 0;">Assemble a pack</h2>
+      <p class="sub" style="margin: 0.25rem 0 0.75rem;">
+        Domains discovered:
+        {% for d in domains %}<code>{{ d.key }}</code>{% if not loop.last %}, {% endif %}{% else %}<em>none</em>{% endfor %}.
+        The engine assembles the latest <strong>approved</strong> edition of every question; it computes nothing.
+      </p>
+      <label style="display: block; margin: 0.4rem 0;">As-of date <input type="date" name="as_of" style="margin-left: 0.5rem;"> <span class="sub">(default: today)</span></label>
+      <label style="display: block; margin: 0.4rem 0;"><input type="checkbox" name="include_drafts" value="1"> Preview with unapproved drafts (flagged inline — not a pack of record)</label>
+      <button type="submit" {% if not has_engine or not domains %}disabled{% endif %} style="margin-top: 0.5rem;">Generate pack</button>
+      {% if not has_engine %}<p class="sub">The commercial skill is not installed at <code>.claude/skills/commercial/</code>.</p>{% endif %}
+      <p class="sub" style="margin-top: 0.75rem;">CLI: <code>python3 .claude/skills/commercial/scripts/commercial.py pack --domains {{ domains|map(attribute='key')|join(',') or 'commercial' }}</code></p>
+    </form>
+
+    <div style="flex: 1 1 320px;">
+      <h2 style="margin-top: 0;">Packs on disk</h2>
+      {% if packs %}
+      <table>
+        <thead><tr><th>Date</th><th>Answered</th><th>Not in pack</th><th>Issues</th><th>Risks</th><th></th></tr></thead>
+        <tbody>
+        {% for p in packs %}
+          {% set sm = p.summary or {} %}
+          {% set doms = sm.get('domains', []) %}
+          <tr {% if current and current.date == p.date %}style="font-weight: 600;"{% endif %}>
+            <td><a href="/workflows/management-review-pack?pack={{ p.date }}">{{ p.date }}</a>{% if sm.get('include_drafts') %} <span title="contains unapproved drafts">⚠️ drafts</span>{% endif %}</td>
+            <td>{{ doms|map(attribute='answered')|map('length')|sum if doms else '—' }}</td>
+            <td>{{ doms|map(attribute='unanswered', default=[])|map('length')|sum if doms else '—' }}</td>
+            <td>{{ doms|sum(attribute='issues') if doms else '—' }}</td>
+            <td>{{ doms|sum(attribute='risks') if doms else '—' }}</td>
+            <td><a href="/documents#path={{ p.rel }}" target="_blank" rel="noopener">open ↗</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="sub">No pack assembled yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if current %}
+  <h2>Pack {{ current.date }}</h2>
+  {% if current.summary %}
+  <p class="sub">
+    {% for d in current.summary.domains %}
+      <strong>{{ d.get('name', d.key) }}</strong>:
+      {% if d.get('skipped') %}skipped ({{ d.skipped }}){% else %}{{ d.answered|length }} answered · {{ d.get('unanswered', [])|length }} not in pack · expectations met {{ d.expectations.get('met', 0) }} / not-met {{ d.expectations.get('not-met', 0) }} / at-risk {{ d.expectations.get('at-risk', 0) }}{% endif %}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}
+    {% endfor %}
+  </p>
+  {% endif %}
+  <div class="doc-body" style="border: 1px solid var(--border, #ccc); border-radius: 8px; padding: 1rem 1.25rem; max-height: 70vh; overflow: auto;">
+    {{ pack_html|safe }}
+  </div>
+  {% endif %}
+
+  <h2>Composition</h2>
+  <ul>
+    {% for step in workflow.composition %}
+    <li><code>{{ step }}</code></li>
+    {% endfor %}
+  </ul>
+  <h2>Gaps / boundaries</h2>
+  <p>{{ workflow.gaps or "—" }}</p>
+</section>
+{% endblock %}

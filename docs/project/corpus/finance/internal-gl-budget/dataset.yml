@@ -1,0 +1,38 @@
+dataset: finance/internal-gl-budget
+title: GL actual vs budget by function x cost center (internal, demo-fabricated)
+description: >-
+  Monthly general-ledger actual vs budget 2026-01 -> 2026-08 by function (R&D,
+  Regulatory/Quality, Manufacturing, Sales & Marketing, G&A, Service) and cost center,
+  with budgeted vs actual headcount. DEMO-FABRICATED by seeded generator gen.py —
+  stand-in for the GL / FP&A budget-vs-actual export. Consumed by FQ-08 (budget vs actual
+  YTD by function with headcount variance) and, on the roadmap, FQ-10 (R&D spend vs
+  milestone).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for GL / FP&A budget-vs-actual export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [period, function, cost_center]
+  columns:
+    - {name: period, type: str, required: true}
+    - {name: function, type: str, required: true}
+    - {name: cost_center, type: str, required: true}
+    - {name: budget_usd, type: int, required: true}
+    - {name: actual_usd, type: int, required: true}
+    - {name: headcount_budget, type: int, required: true}
+    - {name: headcount_actual, type: int, required: true}
+asserts:
+  min_rows: 100
+  max_rows: 200
+  enums:
+    function: [R&D, Regulatory/Quality, Manufacturing, Sales & Marketing, G&A, Service]
+  # Proves the knobs: R&D + Regulatory/Quality over, Sales & Marketing under (+ headcount
+  # shortfall), the rest inside +/-5% YTD.
+  command: python3 check_knobs.py {normalized_dir}/records.csv

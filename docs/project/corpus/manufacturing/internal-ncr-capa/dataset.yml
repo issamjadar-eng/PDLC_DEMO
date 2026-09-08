@@ -1,0 +1,49 @@
+dataset: manufacturing/internal-ncr-capa
+title: Nonconformance + CAPA register (internal, demo-fabricated)
+description: >-
+  NCR and CAPA register 2025-01 through 2026-08, status as of 2026-08-31: record type,
+  opened / closed / due dates, status, source, product line, severity, root-cause
+  category, effectiveness verification (CAPA), NCR-to-CAPA link, and the supplier id for
+  supplier-sourced records (reuses manufacturing/internal-suppliers ids).
+  DEMO-FABRICATED by seeded generator gen.py — stand-in for the eQMS NCR/CAPA export.
+  Consumed by MQ-03 (NCR rate and aging, CAPA past-due share, effectiveness backlog).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for eQMS NCR/CAPA module export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [record_id]
+  columns:
+    - {name: record_id, type: str, required: true}
+    - {name: type, type: str, required: true}
+    - {name: opened_date, type: date, required: true}
+    - {name: closed_date, type: date}
+    - {name: due_date, type: date, required: true}
+    - {name: status, type: str, required: true}
+    - {name: source, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: severity, type: str, required: true}
+    - {name: root_cause_category, type: str, required: true}
+    - {name: effectiveness_verified, type: str}
+    - {name: linked_record, type: str}
+    - {name: supplier_id, type: str}
+asserts:
+  min_rows: 250
+  max_rows: 400
+  enums:
+    type: [NCR, CAPA]
+    status: [open, in-progress, closed, overdue-open]
+    source: [production, supplier, complaint, audit, field]
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500, shared]
+    severity: [minor, major, critical]
+    root_cause_category: [process, material, supplier-process, design, documentation,
+                          equipment, training, under-investigation]
+    effectiveness_verified: ["true", "false"]
+  command: python3 check_knobs.py {normalized_dir}/records.csv

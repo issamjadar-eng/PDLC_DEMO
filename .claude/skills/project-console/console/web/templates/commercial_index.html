@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block title %}Commercial · {{ config.project_name }} Console{% endblock %}
+{% block title %}{{ dm.name }} · {{ config.project_name }} Console{% endblock %}
 {% block body_class %}commercial-page{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
@@ -7,7 +7,7 @@
   <header class="cm-head">
     <div>
       <p class="cm-eyebrow">Business questions, answered with data</p>
-      <h1>Commercial</h1>
+      <h1>{{ dm.name }}</h1>
       <p class="cm-sub">The question catalog is the navigation: each card is a business question a real
         decision-maker asks, answered by deterministic computation over provenance-pinned corpus snapshots.
         Every figure is substantiated — <span class="cm-badge ev-measured" title="Read directly from a pinned snapshot">✓ Measured</span>
@@ -16,7 +16,7 @@
         and where data doesn't exist, the assumption is stated, never invented.</p>
     </div>
     {% if has_skill %}
-    <form method="post" action="/commercial/render" class="cm-refresh">
+    <form method="post" action="{{ base }}/render" class="cm-refresh">
       <button type="submit" class="btn-secondary" title="Re-derive the console sidecar from the answer editions">↻ Refresh</button>
     </form>
     {% endif %}
@@ -28,9 +28,9 @@
 
   {% if not by_cat %}
   <div class="cm-empty">
-    <p><strong>No commercial sidecar yet.</strong></p>
-    <p>Run <code>python3 .claude/skills/commercial/scripts/commercial.py render</code> (or ask Claude:
-      <em>“render the commercial sidecars”</em>) to publish the index this view reads.</p>
+    <p><strong>No {{ dm.name|lower }} sidecar yet.</strong></p>
+    <p>Run <code>python3 .claude/skills/commercial/scripts/commercial.py --domain {{ domain }} render</code> (or ask Claude:
+      <em>“render the {{ dm.name|lower }} sidecars”</em>) to publish the index this view reads.</p>
   </div>
   {% else %}
   <div class="cm-rollup">
@@ -70,7 +70,7 @@
       {% set answered = q.status in ("answered", "draft-only") %}
       {% set qtext = (q.id ~ ' ' ~ q.question ~ ' ' ~ (q.verdict_headline or '') ~ ' ' ~ (q.personas | join(' ')) ~ ' ' ~ q.status) | lower %}
       {% set qlatest = (q.latest_edition or '')[:10] %}
-      {% if answered %}<a class="cm-card" href="/commercial/{{ q.id }}" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% else %}<div class="cm-card cm-card-planned" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% endif %}
+      {% if answered %}<a class="cm-card" href="{{ base }}/{{ q.id }}" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% else %}<div class="cm-card cm-card-planned" data-text="{{ qtext }}" data-latest="{{ qlatest }}">{% endif %}
         <div class="cm-card-top">
           <span class="cm-bqid">{{ q.id }}</span>
           <span class="cm-chip {{ q._status.cls }}">{{ q._status.label }}</span>
@@ -101,8 +101,8 @@
   "default_agent": "program-manager",
   "allowed_agents": [],
   "grounding_label": "QUESTION BOARD",
-  "grounding_source": "url:/commercial/catalog/grounding",
-  "title": "Commercial Advisor",
+  "grounding_source": "url:{{ base }}/catalog/grounding",
+  "title": "{{ dm.name }} Advisor",
   "subtitle": "question board",
   "placeholder": "Ask across the board…",
   "empty_hint": "Ask across all business questions — what's answered, what's not-met, what rests on assumptions. Example: <em>\"Which current verdicts are judged against unvalidated expectations?\"</em>",

@@ -1,0 +1,42 @@
+dataset: finance/internal-standard-costs
+title: Standard unit costs by line x revenue type x quarter (internal, demo-fabricated)
+description: >-
+  ERP standard-cost roll-up: the standard unit cost each product line x revenue type
+  (hardware|consumables|service|subscription) is booked at per quarter, 2024-Q1..2026-Q2,
+  with its material / labor / overhead split and the standard version in force.
+  DEMO-FABRICATED by seeded generator gen.py — stand-in for the ERP cost-accounting
+  export. Actual unit cost is NOT here: consumers derive it from
+  commercial/internal-financials (cogs_usd / units) and the standard-vs-actual variance is
+  the join. Consumed by FQ-01 (gross margin + standard-cost variance by line) and, on the
+  roadmap, FQ-02 (price/volume/mix bridge).
+internal: true
+max_age_days: 90
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP standard-cost roll-up export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [period, product_line, revenue_type]
+  columns:
+    - {name: period, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: revenue_type, type: str, required: true}
+    - {name: std_version, type: str, required: true}
+    - {name: std_unit_cost_usd, type: float, required: true}
+    - {name: material_usd, type: float, required: true}
+    - {name: labor_usd, type: float, required: true}
+    - {name: overhead_usd, type: float, required: true}
+asserts:
+  min_rows: 150
+  max_rows: 200
+  enums:
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500, cloud-suite]
+    revenue_type: [hardware, consumables, service, subscription]
+  # Narrative knob is a JOIN claim (actual from commercial/internal-financials vs this
+  # standard) — the check reads the sibling dataset's latest snapshot and proves it.
+  command: python3 check_knobs.py {normalized_dir}/records.csv

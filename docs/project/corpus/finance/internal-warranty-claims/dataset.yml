@@ -1,0 +1,42 @@
+dataset: finance/internal-warranty-claims
+title: Warranty claims log (internal, demo-fabricated)
+description: >-
+  Per-claim warranty log 2025-01 -> 2026-08: product line, region, hardware revision,
+  claim date, failure category, cost, disposition (repair|replace|goodwill|denied) and
+  whether the claim is linked to a logged complaint. DEMO-FABRICATED by seeded generator
+  gen.py — stand-in for the service-management / warranty-claims system export.
+  Consumed by FQ-03 (cost of poor quality: warranty spend, cost per installed unit by
+  line / hw_rev, complaint linkage) and, on the roadmap, FQ-04 (reserve adequacy).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for service-management / warranty-claims export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [claim_id]
+  columns:
+    - {name: claim_id, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: hw_rev, type: str, required: true}
+    - {name: claim_date, type: date, required: true}
+    - {name: failure_category, type: str, required: true}
+    - {name: cost_usd, type: int, required: true}
+    - {name: disposition, type: str, required: true}
+    - {name: linked_complaint, type: str, required: true}
+asserts:
+  min_rows: 500
+  max_rows: 800
+  enums:
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500]
+    region: [NA, EMEA, APAC]
+    disposition: [repair, replace, goodwill, denied]
+    linked_complaint: ["yes", "no"]
+  # Proves the knobs: PP3000 rev-B clustering + rising legacy warranty cost.
+  command: python3 check_knobs.py {normalized_dir}/records.csv

@@ -1,0 +1,28 @@
+dataset: manufacturing/internal-ncr-capa
+snapshot: '2026-09-08'
+created_at: '2026-09-08T17:58:44+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for eQMS NCR/CAPA module export)
+  retrieved_at: '2026-09-08T17:58:44+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 4228365795e2ef72d56726147a57ceadfc186e1e4214750cfe96db1e2dbdbe19
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 899764d47e9e22b381349296699543b06d0a336d04bb4e634bc481c68b122ba5
+    parents:
+    - 4228365795e2ef72d56726147a57ceadfc186e1e4214750cfe96db1e2dbdbe19
+  script_sha256: 3340a0fc6786a8ae4b1e8f810d3c74c551cd1083c8bbc507921f620691560348
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 286

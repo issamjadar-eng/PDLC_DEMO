@@ -1,6 +1,14 @@
 {
- "schema_version": "1.4",
- "generated": "2026-07-28T01:15:27+00:00",
+ "schema_version": "1.5",
+ "generated": "2026-09-08T17:34:58+00:00",
+ "domain": {
+  "key": "commercial",
+  "name": "Commercial",
+  "nav_title": "Commercial",
+  "tagline": "business questions answered with data",
+  "icon": "commercial",
+  "id_prefix": "BQ"
+ },
  "categories": [
   {
    "key": "board",
@@ -1323,7 +1331,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Unit economics fail the guardrail: LTV per connected pump $2,237 vs $2,720 cost-to-serve over the same 5-year horizon (ratio 0.82 vs the 3.0 floor); 28 of 39 active sites run ARR below cost-to-serve \u2014 concentrated in small sites \u2014 and the mean hardware discount at subscribed sites is 5.8% vs the 5% tolerance",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-04/2026-07-27.3/report.md",
@@ -2803,7 +2811,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Trailing-365d win rate is 58.7% of decided opportunities (37 won / 26 lost; 18 no-decision excluded) vs the 50% stand-in target; dollar-weighted we win 61.4% of decided CRM value ($30,389,000 won vs $19,071,000 lost \u2014 we win bigger deals than we lose); 8 of 26 losses (30.8%) have the predictive-monitoring gap primary or cited \u2014 $4,792,000 in CRM value",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-08/2026-07-27.3/report.md",
@@ -3195,7 +3203,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 67.3% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=55) vs 14.3% outside the window (n=7); there is no uniform decay across the interior buckets (65.8% \u2192 70.6% \u2192 0.0%); the >12 months / no prior recall tail sits at 50.0% (n=2)",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-09/2026-07-27.3/report.md",
@@ -3938,7 +3946,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the \u226510-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked \u2014 no site\u2192account key exists in any pinned dataset",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-11/2026-07-27.3/report.md",
@@ -6036,7 +6044,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Decision support, not the decision: pull-forward candidate F4 Alerts Engine v1 (smart alarm filtering) (composite 0.616, tie with F6 broken on earliest wave); kill candidate F9 International expansion (EU MDR / Canada) (composite 0.0, tie with F7 broken on weakest evidence base) \u2014 sentiment axis is simulated-panel only, demand axis is Cloud attach 84.8%. CAUTION on the kill read: the single F9 voice argues the slot is too LATE and too THIN \u2014 a voice FOR earlier EU investment, arithmetically converted into kill support by the 3-value sentiment vocabulary",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-17/2026-07-27.3/report.md",
@@ -6478,7 +6486,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "CAPA-review trigger: occlusion-alarm at 3.17 per 100 devices vs threshold 3.0; connectivity at 2.26 per 100 devices vs threshold 2.0 (trailing 90d ending 2026-07-17)",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-18/2026-07-27.3/report.md",
@@ -6831,7 +6839,7 @@
    "assumptions": [
     "A-001"
    ],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
    "evidence_class": "measured",
    "report_path": "docs/project/commercial/reports/BQ-19/2026-07-27.2/report.md",
@@ -7122,7 +7130,7 @@
    "assumptions": [
     "A-001"
    ],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-20/2026-07-27.3/report.md",
@@ -7597,7 +7605,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "If FDA walks in tomorrow: 2 open docket item(s) (MDR-2026-0005 due in 2 days at the pin date; FSCA-2026-001 rollout incomplete) and 1 late MDR filing(s) in the trailing 12 months \u2014 on-time rate 94.7% (18 of 19); E-21.1 NOT met",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-21/2026-07-27.3/report.md",
@@ -8407,7 +8415,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Campaign C-2026-02 is 62.7% complete; at current run-rate EMEA, NA will miss the 2026-09-30 close",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-23/2026-07-27.3/report.md",
@@ -8743,7 +8751,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "PAUSE TRIGGER: cohort hw B upgrading from 3.1.2 fails on 31.4% of attempted devices (threshold 15.0%) \u2014 pause the wave for this cohort and escalate",
    "evidence_class": "measured",
    "report_path": "docs/project/commercial/reports/BQ-24/2026-07-27.3/report.md",
@@ -9069,7 +9077,7 @@
    "assumptions": [
     "A-002"
    ],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Tickets per 100 attempted upgrades are highest in NA at 21.7; 4 site(s) rolled back; estimated customer-side cost of the on-site portion so far $7,272\u2013$16,412",
    "evidence_class": "assumed",
    "report_path": "docs/project/commercial/reports/BQ-25/2026-07-27.3/report.md",
@@ -9399,7 +9407,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "Capacity gap to hit the 2026-09-30 close \u2014 EMEA, NA STALLED (zero completions in the four weeks to 2026-07-27; EMEA needs 6.4/wk; NA needs 4.7/wk); APAC behind (3.5/wk vs 4.5/wk required); remote conversion covers 0 of 97 on-site-remaining devices today",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-26/2026-07-27.3/report.md",
@@ -9772,7 +9780,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
    "evidence_class": "measured",
    "report_path": "docs/project/commercial/reports/BQ-27/2026-07-27.3/report.md",
@@ -10461,7 +10469,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "The attach stage-gate HOLDS at the stand-in level: 43.0% of the PP3500 installed base (295 of 686 pumps) vs the 40% gate \u2014 but the $24M releases on a gate NUMBER nobody has ratified; the strategy of record says 'traction' and sets no threshold \u2014 and the verdict is denominator-definition-sensitive: under a whole-PCA denominator (884 pumps incl. 198 unconnectable PP3000) attach reads 33.4%, BELOW the stand-in gate; the metric definition is as unratified as the gate number",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-29/2026-07-27.3/report.md",
@@ -10877,7 +10885,7 @@
     }
    ],
    "assumptions": [],
-   "freshness": "fresh",
+   "freshness": "stale",
    "verdict_headline": "A remote update costs $120 vs an on-site update between $193 (labor-time floor) and $950 (full-day ceiling) \u2014 remote is 12.6\u201362.1% of on-site depending on unmeasured travel; a $380 adapter pays back in 0.5\u20135.2 update campaigns at the top non-connected accounts",
    "evidence_class": "derived",
    "report_path": "docs/project/commercial/reports/BQ-30/2026-07-27.3/report.md",

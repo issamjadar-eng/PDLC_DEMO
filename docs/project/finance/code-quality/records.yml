@@ -1,0 +1,191 @@
+artifacts:
+  bq_modules/fq_01.py:
+    entries:
+    - sha256: 7c4cc12adc7b4e1cf90d9ed0e98b5fd511503f14fc9c859efcff243eaa65ce21
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-01
+    - sha256: 439bce3a162fc8b2466b1b803e4c293b155fe147b8c848aa335d1ec3db244e4f
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-01
+  bq_modules/fq_03.py:
+    entries:
+    - sha256: a2b09915a05e1ff5305a84b34ea9638edc4e5e4547a927b0e6fc05fc06181a48
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-03
+  bq_modules/fq_06.py:
+    entries:
+    - sha256: 6bbb1a2b6d3c212d3953f3814531c9a4fe8695cae06fcd8ae5f4f65e79ed0d5a
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-06
+  bq_modules/fq_08.py:
+    entries:
+    - sha256: bb30bfcc4c3e86671f02bcf46f0ec2d01f4d548f7475c5750db8b9a77197e869
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: pass
+        method: double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-08
+  computations.py:
+    entries:
+    - sha256: b4f491aaa38e3be4d1246b6e045ad3c8c067406d9e85120852ec20de5ee0d6be
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+  corpus:commercial/internal-complaints/gen.py:
+    entries:
+    - sha256: 557b73673e877da905cb61f6a69005cbbec546b4cfb1d7907ebe765cd0f90a3b
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-financials/gen.py:
+    entries:
+    - sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:commercial/internal-fleet/gen.py:
+    entries:
+    - sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:finance/internal-ar-inventory/gen.py:
+    entries:
+    - sha256: 41a50050f7f4efeca006c8ae17ae3277d7da37a48e4520918bf70198a8917d7c
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:finance/internal-gl-budget/gen.py:
+    entries:
+    - sha256: 7b90119e86c6d0e280c7c5a02fd7ee602e17be85245b3e90d3f5d70a73caac9a
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:finance/internal-standard-costs/gen.py:
+    entries:
+    - sha256: 062d1eb5e6d1cf7e5d4eba64251322ab87cd1150ab90f9f2b877ca96bbe036f0
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit
+  corpus:finance/internal-warranty-claims/gen.py:
+    entries:
+    - sha256: 0bcadc675bd786bdc9c1eac576072366c1df808593c2da30df23eea7e460761b
+      date: '2026-09-08'
+      reviews: []
+      static_lint:
+        status: pass
+        tool: py_compile
+        findings: []
+      poison_scan:
+        status: pass
+        hits: []
+      determinism:
+        status: n/a
+        method: generator — replayed at acquisition time, not by code-audit

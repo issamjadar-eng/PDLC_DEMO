@@ -11,7 +11,10 @@ What we're building — the deliverables and analysis that make up the regulator
 | `dhfs/` | Per-DHF Design History Files — each DHF carries its own `design-controls/`, `risk-management/`, `cybersecurity/`, `clinical/`, `postmarket/` |
 | `submissions/` | Packages assembled for regulatory body — Q-Sub, 510(k)/De Novo/PMA, PCCP |
 | `corpus/` | Versioned evidence grounding (corpus skill) — immutable provenance-pinned data snapshots (external openFDA + internal exports) + stated assumption records, cited by analyses as `dataset@snapshot` |
-| `commercial/` | Business-question answers (commercial skill) — the question catalog, deterministic computations, and provenance-cited answer editions (draft→approved→superseded) + console sidecars |
+| `commercial/` | Business-question answers (commercial skill) — the question catalog, deterministic computations, and provenance-cited answer editions (draft→approved→superseded) + console sidecars. First of three **business domains** served by the same engine |
+| `finance/` | Finance business domain (commercial-skill engine, `--domain finance`) — FQ-NN catalog (margin & cost variance, cost of quality & warranty, working capital, budget & plan), plans, computations, answer editions, console sidecar |
+| `manufacturing/` | Manufacturing business domain (commercial-skill engine, `--domain manufacturing`) — MQ-NN catalog (yield, nonconformance & CAPA, supplier quality, validation & calibration, capacity & release), plans, computations, answer editions, console sidecar |
+| `management-review/` | Dated Management Review Packs assembled by the engine's `pack` action from approved answer editions across all business domains — the quantitative input set for management review (assembly only, computes nothing) |
 | `workbench-validation/` | Tool validation of the AI workbench itself (workbench-validation skill) — authored sources only: role-based user-needs register + validation plan and the declarative test manifest. Generated outputs (run evidence, logs, report, sidecar) live in `tools/workbench-validation/`. Validates the toolchain, not the device |
 
 ## Information Flow
@@ -45,4 +48,5 @@ submissions/           → Assembled from per-DHF design controls; references in
 | 2026-04-13 | BX | task 009: structure now reflects unified `dhfs/<dhf>/` shape (clinical/postmarket/risk live per-DHF) plus shared `strategies/` location. |
 | 2026-07-22 | BX / AI Assistant | task 108: added `corpus/` — versioned evidence-grounding data tier for the commercial analytics suite (immutable snapshots + provenance + assumption records). |
 | 2026-07-22 | BX / AI Assistant | task 108: added `commercial/` — the answer tier (commercial skill): question catalog, deterministic computations, claim-linted answer editions, console sidecars. |
+| 2026-09-08 | BX / AI Assistant | task 118: added `finance/` and `manufacturing/` — sibling business domains of `commercial/` served by the same engine (one catalog + sidecar per `docs/project/<domain>/`, one console tab each) — and `management-review/` for engine-assembled review packs. |
 | 2026-07-27 | BX / AI Assistant | task 110: added `workbench-validation/` — MedTech-style tool validation of the .claude workbench (needs × tests × report), surfaced in the console Settings. Lives here (not in a DHF) because it validates the toolchain, not the device. |

@@ -43,12 +43,12 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.4"
+SCHEMA_VERSION = "1.5"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
 EXEMPT_TOKEN_RE = re.compile(
-    r"BQ-\d+|A-\d{3}|W-\d{3}|C-\d{4}-\d{2}|\d{4}-\d{2}-\d{2}(?:\.\d+)?|PP\d+|PE-\d+|S-[A-Z]+-\d+|K\d{6}"
+    r"[A-Z]{1,2}Q-\d+|A-\d{3}|W-\d{3}|C-\d{4}-\d{2}|\d{4}-\d{2}-\d{2}(?:\.\d+)?|PP\d+|PE-\d+|S-[A-Z]+-\d+|K\d{6}"
     r"|E-\d+(?:\.\d+)?|FY\d{4}|\d{4}-Q[1-4]|\d{4}-H[12]|510\(k\)"
 )
 ESTIMATION_RE = re.compile(r"\b(estimated?|likely|approximately|roughly|assumed?|modeled)\b", re.I)
@@ -108,11 +108,42 @@ class CommercialError(Exception):
 
 # ---------------------------------------------------------------- config / corpus glue
 
+def catalog_path(root: Path) -> Path:
+    """The domain's question catalog. `commercial.yml` is the historical name and
+    still wins when present; any other domain root (docs/project/finance/,
+    docs/project/manufacturing/, ...) names its catalog after its folder
+    (`finance.yml`). One engine, N domains — the catalog name is the only thing
+    that varies, and it is derived, never configured."""
+    for name in ("commercial.yml", f"{root.name}.yml"):
+        if (root / name).exists():
+            return root / name
+    raise CommercialError(f"no catalog at {root}/commercial.yml or {root}/{root.name}.yml")
+
+
 def load_config(root: Path) -> dict:
-    cfg_path = root / "commercial.yml"
-    if not cfg_path.exists():
-        raise CommercialError(f"no commercial.yml at {cfg_path}")
-    return load_yaml(cfg_path)
+    return load_yaml(catalog_path(root))
+
+
+def domain_block(cfg: dict, root: Path) -> dict:
+    """Identity of the domain this root answers for — emitted into the sidecar so
+    the console can render one tab per domain without a hard-coded roster.
+    Defaults derive from the folder name; a catalog `domain:` block overrides."""
+    d = dict(cfg.get("domain") or {})
+    key = root.name
+    return {
+        "key": key,
+        "name": d.get("name") or key.replace("-", " ").title(),
+        "nav_title": d.get("nav_title") or d.get("name") or key.replace("-", " ").title(),
+        "tagline": d.get("tagline") or "business questions answered with data",
+        "icon": d.get("icon") or key,
+        "id_prefix": d.get("id_prefix") or (cfg.get("questions") or [{}])[0].get("id", "BQ-").split("-")[0],
+    }
+
+
+def sidecar_name(root: Path) -> str:
+    """`.console/<domain>-index.json` — `commercial-index.json` for the historical
+    root, `finance-index.json` for docs/project/finance/, etc."""
+    return f"{root.name}-index.json"
 
 
 def bq_entry(cfg: dict, bq: str) -> dict:
@@ -1094,15 +1125,16 @@ def cmd_render(args):
     rows = [_bq_sidecar_row(root, corpus_root, q, terms_catalog) for q in cfg.get("questions", [])]
     out = {
         "schema_version": SCHEMA_VERSION, "generated": now_iso(),
+        "domain": domain_block(cfg, root),
         "categories": cfg.get("categories", []),
         "questions": rows,
     }
     console_dir = root / ".console"
     console_dir.mkdir(exist_ok=True)
-    (console_dir / "commercial-index.json").write_text(json.dumps(out, indent=1))
+    (console_dir / sidecar_name(root)).write_text(json.dumps(out, indent=1))
     n_ans = sum(1 for r in rows if r["status"] == "answered")
     n_draft = sum(1 for r in rows if r["status"] == "draft-only")
-    print(f"rendered .console/commercial-index.json — {len(rows)} questions "
+    print(f"rendered .console/{sidecar_name(root)} — {len(rows)} questions "
           f"({n_ans} answered, {n_draft} draft-only)")
     return 0
 
@@ -1153,7 +1185,7 @@ def cmd_check(args):
         for f in failures:
             print(f"  - {f}")
         return 1
-    print("commercial check: GREEN (editions integrity + approved lint + corpus chain)")
+    print(f"{root.name} check: GREEN (editions integrity + approved lint + corpus chain)")
     return 0
 
 
@@ -1405,6 +1437,135 @@ human-review. Any other token is carried as a custom (informational) gate._
     return 0
 
 
+def cmd_dependents(args):
+    """Question ids whose corpus_deps match a dataset name or prefix — the seam a
+    scheduled refresh uses to re-answer exactly the questions a re-snapshotted
+    dataset feeds (`corpus refresh openfda-*` -> `dependents commercial/openfda-`)."""
+    root = Path(args.root)
+    cfg = load_config(root)
+    needle = args.dataset
+    hits = []
+    for q in cfg.get("questions", []):
+        if not q.get("computation"):
+            continue
+        deps = q.get("corpus_deps") or []
+        if needle == "*" or any(d == needle or d.startswith(needle) for d in deps):
+            hits.append(q["id"])
+    print("\n".join(hits))
+    return 0
+
+
+def _pack_pick_edition(root: Path, bq: str, allow_draft: bool):
+    """Newest APPROVED edition; with --include-drafts, fall back to the newest
+    edition of any status (clearly flagged in the pack)."""
+    eds = list_editions(root, bq)
+    approved = [e for e in eds if e.get("status") == "approved"]
+    if approved:
+        return approved[-1], False
+    if allow_draft and eds:
+        return eds[-1], True
+    return None, False
+
+
+def cmd_pack(args):
+    """Management Review Pack — one dated markdown pack assembling, per business
+    domain, the latest approved answer edition of every question (verdict, expectation
+    verdicts, materialized issues, open risks, pins + freshness), plus the roster of
+    questions with no approved answer. The pack is an ASSEMBLY, never a computation:
+    every figure it carries was emitted by a claim-linted edition, and each section
+    cites the edition it came from. Standards clause references are deliberately
+    absent here — the pack is an input set; the project's QMS names the review."""
+    corpus_root = Path(args.corpus_root)
+    parent = Path(args.root).parent
+    domains = [d.strip() for d in args.domains.split(",") if d.strip()]
+    as_of = args.as_of or dt.date.today().isoformat()
+    out_dir = Path(args.out) / as_of
+    out_dir.mkdir(parents=True, exist_ok=True)
+    lines = [f"# Management Review Pack — {as_of}", "",
+             "_Assembled by the commercial-skill engine from approved answer editions. "
+             "Every figure below was emitted by a claim-linted edition of the cited question; "
+             "this pack computes nothing._", ""]
+    if args.include_drafts:
+        lines += ["> ⚠️ **Includes unapproved drafts** (flagged `DRAFT` inline) — for internal "
+                  "preview only; a review pack of record uses approved editions only.", ""]
+    summary = {"as_of": as_of, "domains": [], "include_drafts": bool(args.include_drafts)}
+    for dom in domains:
+        root = parent / dom
+        try:
+            cfg = load_config(root)
+        except CommercialError as e:
+            lines += [f"## {dom}", "", f"_skipped: {e}_", ""]
+            summary["domains"].append({"key": dom, "skipped": str(e)})
+            continue
+        dblock = domain_block(cfg, root)
+        cats = {c["key"]: c.get("name", c["key"]) for c in cfg.get("categories", [])}
+        lines += [f"## {dblock['name']}", ""]
+        dsum = {"key": dom, "name": dblock["name"], "answered": [], "unanswered": [],
+                "issues": 0, "risks": 0, "expectations": {"met": 0, "not-met": 0, "at-risk": 0,
+                                                          "not-evaluable": 0}}
+        unanswered = []
+        for q in cfg.get("questions", []):
+            ed, is_draft = _pack_pick_edition(root, q["id"], args.include_drafts)
+            if ed is None:
+                unanswered.append((q["id"], "not implemented" if not q.get("computation")
+                                   else "no approved edition", q["question"]))
+                continue
+            edir = bq_dir(root, q["id"]) / ed["edition"]
+            data = json.loads((edir / "data.json").read_text())
+            rel = str((edir / "report.md").relative_to(parent.parent.parent))
+            tag = " **DRAFT**" if is_draft else ""
+            verd = (data.get("verdicts") or [{}])[0].get("headline", "—")
+            lines += [f"### {q['id']} — {q['question']}{tag}", "",
+                      f"_Category: {cats.get(q['category'], q['category'])} · edition "
+                      f"`{ed['edition']}` ({ed.get('status')}) · report: `{rel}`_", "",
+                      f"**Verdict:** {verd}", ""]
+            exps = data.get("expectations") or []
+            if exps:
+                lines += ["| Expectation | Expected | Actual | Verdict |", "|---|---|---|---|"]
+                for e in exps:
+                    v = e.get("verdict", "not-evaluable")
+                    dsum["expectations"][v] = dsum["expectations"].get(v, 0) + 1
+                    lines.append(f"| {e.get('id')} {e.get('statement')} | {e.get('expected')} | "
+                                 f"{e.get('actual')} | {v}{'' if e.get('validated') else ' (unvalidated)'} |")
+                lines.append("")
+            nar = data.get("narrative") or {}
+            for grp, title in (("issues", "Issues"), ("risks", "Risks")):
+                items = nar.get(grp) or []
+                if items:
+                    lines.append(f"**{title}:**")
+                    for it in items:
+                        lines.append(f"- {it.get('id')} ({it.get('severity', 'medium')}) — {it.get('statement')}")
+                    lines.append("")
+                    dsum[grp] += len(items)
+            pins = ed.get("pins") or {}
+            if pins:
+                fr = []
+                for ds, snap in pins.items():
+                    try:
+                        cfg_ds = corpus_dataset_cfg(corpus_root, ds)
+                        age = (dt.date.fromisoformat(as_of) - dt.date.fromisoformat(snap.split(".")[0])).days
+                        band = "stale" if age > int(cfg_ds.get("max_age_days", 90)) else "fresh"
+                    except Exception:
+                        age, band = "?", "unknown"
+                    fr.append(f"`{ds}@{snap}` ({age}d, {band})")
+                lines += ["_Pins: " + "; ".join(fr) + "_", ""]
+            dsum["answered"].append({"id": q["id"], "edition": ed["edition"], "draft": is_draft})
+        if unanswered:
+            lines += ["### Not in this pack", "", "| Question | Why | |", "|---|---|---|"]
+            for qid, why, text in unanswered:
+                lines.append(f"| {qid} | {why} | {text} |")
+            lines.append("")
+            dsum["unanswered"] = [u[0] for u in unanswered]
+        summary["domains"].append(dsum)
+    (out_dir / "pack.md").write_text("\n".join(lines) + "\n")
+    (out_dir / "pack.json").write_text(json.dumps(summary, indent=1))
+    n_ans = sum(len(d.get("answered", [])) for d in summary["domains"])
+    n_un = sum(len(d.get("unanswered", [])) for d in summary["domains"])
+    print(f"pack written: {out_dir / 'pack.md'} — {n_ans} answered question(s), {n_un} not in pack, "
+          f"domains: {', '.join(domains)}")
+    return 0
+
+
 def cmd_catalog(args):
     root, corpus_root = Path(args.root), Path(args.corpus_root)
     cfg = load_config(root)
@@ -1418,7 +1579,10 @@ def cmd_catalog(args):
 
 def main(argv=None):
     p = argparse.ArgumentParser(prog="commercial.py", description=__doc__)
-    p.add_argument("--root", default=DEFAULT_ROOT)
+    p.add_argument("--root", default=DEFAULT_ROOT,
+                   help=f"domain root holding the catalog + reports (default {DEFAULT_ROOT})")
+    p.add_argument("--domain", default=None,
+                   help="shorthand for --root docs/project/<domain> (finance, manufacturing, ...)")
     p.add_argument("--corpus-root", default=DEFAULT_CORPUS)
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -1438,7 +1602,7 @@ def main(argv=None):
     s.add_argument("--verify-note", help="adversarial-verification verdict reference")
     s.set_defaults(fn=cmd_approve)
 
-    s = sub.add_parser("render", help="write .console/commercial-index.json sidecar")
+    s = sub.add_parser("render", help="write .console/<domain>-index.json sidecar")
     s.set_defaults(fn=cmd_render)
 
     s = sub.add_parser("check", help="editions integrity + approved lint + corpus chain")
@@ -1484,7 +1648,21 @@ def main(argv=None):
     s = sub.add_parser("catalog", help="question roster with answer status")
     s.set_defaults(fn=cmd_catalog)
 
+    s = sub.add_parser("dependents", help="implemented question ids whose corpus_deps match a dataset name/prefix")
+    s.add_argument("dataset", help="exact dataset name or prefix, e.g. commercial/openfda-; '*' = every implemented question")
+    s.add_argument("--implemented-only", action="store_true", default=True)
+    s.set_defaults(fn=cmd_dependents)
+
+    s = sub.add_parser("pack", help="assemble a dated Management Review Pack from approved editions across domains")
+    s.add_argument("--domains", default="commercial", help="comma-separated domain slugs (siblings of --root)")
+    s.add_argument("--out", default="docs/project/management-review", help="pack root; a dated subfolder is created")
+    s.add_argument("--as-of", help="pack date (default: today); also the freshness anchor")
+    s.add_argument("--include-drafts", action="store_true", help="fall back to the newest draft where no approved edition exists (flagged)")
+    s.set_defaults(fn=cmd_pack)
+
     args = p.parse_args(argv)
+    if args.domain and args.root == DEFAULT_ROOT:
+        args.root = str(Path(DEFAULT_ROOT).parent / args.domain)
     try:
         return args.fn(args)
     except CommercialError as e:

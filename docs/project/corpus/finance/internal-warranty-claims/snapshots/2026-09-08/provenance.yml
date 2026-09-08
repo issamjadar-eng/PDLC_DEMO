@@ -1,0 +1,28 @@
+dataset: finance/internal-warranty-claims
+snapshot: '2026-09-08'
+created_at: '2026-09-08T17:50:19+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for service-management / warranty-claims export)
+  retrieved_at: '2026-09-08T17:50:19+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 5d299496734eff3bfef45c16fd4c4008ea87823beca3c102f7475e4c5e642f75
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 0e8db8835c1b99ab5df626606c6f7f9db5e35bc0e7cbc7daa06de9b96010e0ad
+    parents:
+    - 5d299496734eff3bfef45c16fd4c4008ea87823beca3c102f7475e4c5e642f75
+  script_sha256: 0bcadc675bd786bdc9c1eac576072366c1df808593c2da30df23eea7e460761b
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 607

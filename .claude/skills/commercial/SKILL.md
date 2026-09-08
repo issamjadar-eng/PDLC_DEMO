@@ -1,8 +1,8 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 14
-updated: 2026-07-27
+version: 15
+updated: 2026-09-08
 dependencies:
   skills:
     - name: corpus
@@ -43,6 +43,7 @@ Core guarantees downstream consumers rely on:
 | `scripts/commercial.py` | The engine — answer / lint / approve / render / check / catalog (Python 3.9+, PyYAML) |
 | `templates/commercial.yml` | Starter question-catalog config for a new project |
 | `templates/computation-example.py` | Example computation script showing the contract |
+| `templates/business-evidence-refresh.yml` | GitHub Action template — weekly openFDA re-snapshot + dependent re-answer, monthly re-answer of every domain + Management Review Pack; copy to `.github/workflows/` |
 | `templates/review-dossier.md` | Mandatory dossier structure (skeleton + example) for any file a `--detail-ref` points at |
 | `scripts/dossier_lint.py` | Deterministic structure lint for review dossiers (run before filing a `--detail-ref`) |
 
@@ -63,6 +64,25 @@ Core guarantees downstream consumers rely on:
   code-quality/records.yml   # engine-managed code-quality store (checks + AI reviews per artifact sha)
   .console/commercial-index.json   # sidecar consumed by the project console
 ```
+
+## Domains — one engine, N roots
+
+The engine is domain-agnostic. `commercial` is simply the first **business domain**;
+a project adds Finance, Manufacturing, or any other domain by creating a sibling root
+with the same tree shape — nothing in the engine is configured per domain:
+
+| Aspect | Rule |
+|---|---|
+| Root | `docs/project/<domain>/` — pass `--domain <slug>` (shorthand for `--root docs/project/<slug>`) |
+| Catalog file | `commercial.yml` if present, else `<domain>.yml` (e.g. `finance.yml`) — derived from the folder name, never configured |
+| Question ids | Any `XQ-NN` / `XYQ-NN` prefix is a built-in lint-exempt token (`BQ-`, `FQ-`, `MQ-`, …) |
+| Corpus deps | Cite any dataset under the shared corpus root — `finance/internal-gl-budget` **or** `commercial/internal-financials`; cross-domain reuse is free |
+| Sidecar | `.console/<domain>-index.json` — `commercial-index.json` for the historical root |
+| Identity | Optional catalog `domain:` block → sidecar `domain` object (schema 1.5): `name`, `nav_title`, `tagline`, `icon` (`commercial` \| `finance` \| `manufacturing`), `id_prefix`. Defaults derive from the folder name |
+
+The console discovers every `docs/project/<slug>/.console/<slug>-index.json` and renders
+one tab per domain at `/domains/<slug>`; `/commercial` redirects to `/domains/commercial`.
+Every action below accepts `--domain`; examples show the default (commercial) root.
 
 ## Actions
 
@@ -149,7 +169,8 @@ below) and its verification-plan tally — "X of Y declared gates satisfied" plu
 unmet list (see "Verification plan" below) — both informational only, never blockers.
 
 ### `render`
-Write `.console/commercial-index.json` (`schema_version: 1.4`) — per question: status
+Write `.console/<domain>-index.json` (`schema_version: 1.5`; adds the top-level `domain`
+identity block, otherwise identical to 1.4) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
@@ -306,6 +327,33 @@ completed/failed), and **determinism** reasoning the replay can't reach. Finding
 structured (`severity|summary|disposition`); park the full dossier behind
 `--detail-ref` — authored to the dossier standard ("Review dossiers" below), never as
 a raw reviewer worksheet.
+
+### `dependents <dataset | prefix | *>`
+Print the ids of every **implemented** question whose `corpus_deps` name the dataset
+(exact) or start with the prefix (`commercial/openfda-`); `*` lists every implemented
+question. The seam a scheduled refresh uses to re-answer exactly what a re-snapshotted
+dataset feeds — never the whole catalog on a weekly cadence.
+
+### `pack --domains a,b,c [--out DIR] [--as-of YYYY-MM-DD] [--include-drafts]`
+Assemble a dated **Management Review Pack** — `DIR/<as-of>/pack.md` + `pack.json`
+(default `DIR` = `docs/project/management-review`). Per domain (siblings of `--root`),
+per question: the newest **approved** edition's verdict headline, expectation verdicts,
+materialized issues, open risks, and pins with age + freshness band anchored on the
+as-of date; then a "Not in this pack" roster (not implemented / no approved edition).
+`--include-drafts` falls back to the newest edition of any status and flags each
+`DRAFT` — preview only, never a pack of record. The pack is an **assembly, not a
+computation**: it copies verdicts and expectation rows from claim-linted editions and
+cites each edition + report path; it emits no new figures and names no standards
+clauses (the QMS decides what the review is — the pack is its quantitative input set).
+
+### Scheduled refresh (CI)
+`templates/business-evidence-refresh.yml` is a GitHub Action: **weekly** it runs
+`corpus refresh` on every `*/openfda-*` dataset, then `dependents <dataset>` →
+`answer` in every discovered domain (drafts only — approved editions are never
+touched; a lint failure is a warning, the draft is kept for review); **monthly** it
+re-answers `dependents '*'` in every domain, renders every sidecar, and assembles the
+pack from approved editions. Copy it to `.github/workflows/`; it needs no per-project
+edits (domains are discovered from `docs/project/*/`). Nothing in CI ever approves.
 
 ### `catalog`
 The question roster with per-question answer status at a glance.

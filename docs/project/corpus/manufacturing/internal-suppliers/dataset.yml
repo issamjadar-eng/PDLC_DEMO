@@ -1,0 +1,44 @@
+dataset: manufacturing/internal-suppliers
+title: Approved-supplier register x monthly incoming inspection (internal, demo-fabricated)
+description: >-
+  One row per supplier x month, 2025-01 through 2026-08, data through 2026-08-31:
+  supplier id / fictional name, component family, single-source flag, approval status,
+  last audit and next audit due, lots received / rejected at incoming inspection,
+  on-time %, and the period scorecard (A-D). DEMO-FABRICATED by seeded generator gen.py
+  — stand-in for the approved-supplier list joined to the incoming-inspection log.
+  Consumed by MQ-05 (supplier quality); roadmap MQ-06 (obsolescence by hw rev).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ASL + incoming-inspection log export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [supplier_id, period]
+  columns:
+    - {name: supplier_id, type: str, required: true}
+    - {name: supplier_name, type: str, required: true}
+    - {name: component_family, type: str, required: true}
+    - {name: single_source, type: str, required: true}
+    - {name: approval_status, type: str, required: true}
+    - {name: last_audit_date, type: date, required: true}
+    - {name: next_audit_due, type: date, required: true}
+    - {name: period, type: str, required: true}
+    - {name: lots_received, type: int, required: true}
+    - {name: lots_rejected, type: int, required: true}
+    - {name: on_time_pct, type: float, required: true}
+    - {name: scorecard, type: str, required: true}
+asserts:
+  min_rows: 200
+  max_rows: 300
+  enums:
+    component_family: [PCB, pump-motor, battery, enclosure, tubing-set, display]
+    single_source: ["true", "false"]
+    approval_status: [approved, conditional, probation]
+    scorecard: [A, B, C, D]
+  command: python3 check_knobs.py {normalized_dir}/records.csv

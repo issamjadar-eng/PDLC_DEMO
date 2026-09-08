@@ -183,9 +183,13 @@ async def theme_context(request: Request, call_next):
     request.state.submission_nav = _nav_probe(discover_submission, cfg.repo_root)
     # Gap Analysis — shows when sidecars exist under docs/_analysis/.
     request.state.gap_analysis_nav = _nav_probe(discover_gap_analysis, cfg.repo_root)
-    # Commercial — shows when the commercial skill has published
-    # docs/project/commercial/.console/commercial-index.json.
-    request.state.commercial_nav = _nav_probe(discover_commercial, cfg.repo_root)
+    # Business domains (Commercial, Finance, Manufacturing, ...) — one nav entry
+    # per discovered docs/project/<slug>/.console/<slug>-index.json. Same
+    # fail-closed contract as `_nav_probe`: a broken probe hides the tabs, not the app.
+    try:
+        request.state.domain_nav = list(discover_commercial(cfg.repo_root).get("domains") or [])
+    except Exception:
+        request.state.domain_nav = []
     # Metrics — shows when the usage-metrics skill has published
     # tools/usage-metrics/usage.json.
     request.state.metrics_nav = _nav_probe(discover_metrics, cfg.repo_root)

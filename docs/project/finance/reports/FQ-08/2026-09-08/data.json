@@ -1,0 +1,525 @@
+{
+ "bq": "FQ-08",
+ "series": [
+  {
+   "id": "ytd-variance-stat",
+   "label": "Total opex vs budget YTD",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(\u03a3 actual \u2212 \u03a3 budget) \u00f7 \u03a3 budget over every period in the pin",
+    "inputs": [
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "points": [
+    {
+     "label": "YTD 2026 (2026-01..2026-08) variance",
+     "value": 1.5,
+     "sub": "actual $28.84M vs budget $28.4M; 3 of 6 functions breach \u00b15%"
+    }
+   ]
+  },
+  {
+   "id": "variance-by-function",
+   "label": "Actual vs budget by function (YTD)",
+   "unit": "USD M",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "actual",
+    "b_label": "budget"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 actual and \u03a3 budget per function over the window",
+    "inputs": [
+     "src: finance/internal-gl-budget@2026-09-08"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "points": [
+    {
+     "label": "G&A",
+     "a": 3.65,
+     "b": 3.6,
+     "variance_pct": 1.3
+    },
+    {
+     "label": "Manufacturing",
+     "a": 4.02,
+     "b": 4.0,
+     "variance_pct": 0.5
+    },
+    {
+     "label": "R&D",
+     "a": 8.53,
+     "b": 8.0,
+     "variance_pct": 6.6
+    },
+    {
+     "label": "Regulatory/Quality",
+     "a": 3.27,
+     "b": 2.8,
+     "variance_pct": 16.7
+    },
+    {
+     "label": "Sales & Marketing",
+     "a": 6.5,
+     "b": 7.2,
+     "variance_pct": -9.8
+    },
+    {
+     "label": "Service",
+     "a": 2.88,
+     "b": 2.8,
+     "variance_pct": 2.8
+    }
+   ]
+  },
+  {
+   "id": "variance-pct-by-function",
+   "label": "Variance % by function (YTD)",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(actual \u2212 budget) \u00f7 budget per function over the window",
+    "inputs": [
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "points": [
+    {
+     "label": "G&A",
+     "value": 1.3
+    },
+    {
+     "label": "Manufacturing",
+     "value": 0.5
+    },
+    {
+     "label": "R&D",
+     "value": 6.6
+    },
+    {
+     "label": "Regulatory/Quality",
+     "value": 16.7
+    },
+    {
+     "label": "Sales & Marketing",
+     "value": -9.8
+    },
+    {
+     "label": "Service",
+     "value": 2.8
+    }
+   ]
+  },
+  {
+   "id": "headcount-by-function",
+   "label": "Headcount: actual vs budget at 2026-08",
+   "unit": "heads",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "actual",
+    "b_label": "budget"
+   },
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "points": [
+    {
+     "label": "G&A",
+     "a": 18,
+     "b": 16
+    },
+    {
+     "label": "Manufacturing",
+     "a": 29,
+     "b": 30
+    },
+    {
+     "label": "R&D",
+     "a": 48,
+     "b": 45
+    },
+    {
+     "label": "Regulatory/Quality",
+     "a": 12,
+     "b": 14
+    },
+    {
+     "label": "Sales & Marketing",
+     "a": 45,
+     "b": 53
+    },
+    {
+     "label": "Service",
+     "a": 20,
+     "b": 21
+    }
+   ]
+  },
+  {
+   "id": "monthly-variance-trend",
+   "label": "Monthly variance %: total and largest-variance functions",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(actual \u2212 budget) \u00f7 budget per month for the total and the top functions by |YTD variance|",
+    "inputs": [
+     "src: finance/internal-gl-budget@2026-09-08"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "lines": [
+    {
+     "label": "total opex",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": -0.7
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 1.5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 2.2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 2.6
+      },
+      {
+       "x": "2026-07-01",
+       "y": 2.8
+      },
+      {
+       "x": "2026-08-01",
+       "y": 2.4
+      }
+     ]
+    },
+    {
+     "label": "Regulatory/Quality",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 12.6
+      },
+      {
+       "x": "2026-02-01",
+       "y": 15.0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 16.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 16.2
+      },
+      {
+       "x": "2026-05-01",
+       "y": 16.8
+      },
+      {
+       "x": "2026-06-01",
+       "y": 18.3
+      },
+      {
+       "x": "2026-07-01",
+       "y": 18.4
+      },
+      {
+       "x": "2026-08-01",
+       "y": 20.2
+      }
+     ]
+    },
+    {
+     "label": "Sales & Marketing",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": -9.8
+      },
+      {
+       "x": "2026-02-01",
+       "y": -9.0
+      },
+      {
+       "x": "2026-03-01",
+       "y": -10.3
+      },
+      {
+       "x": "2026-04-01",
+       "y": -10.0
+      },
+      {
+       "x": "2026-05-01",
+       "y": -9.3
+      },
+      {
+       "x": "2026-06-01",
+       "y": -9.7
+      },
+      {
+       "x": "2026-07-01",
+       "y": -10.0
+      },
+      {
+       "x": "2026-08-01",
+       "y": -10.1
+      }
+     ]
+    },
+    {
+     "label": "R&D",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 0.4
+      },
+      {
+       "x": "2026-02-01",
+       "y": 1.5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 7.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 6.8
+      },
+      {
+       "x": "2026-05-01",
+       "y": 8.6
+      },
+      {
+       "x": "2026-06-01",
+       "y": 8.4
+      },
+      {
+       "x": "2026-07-01",
+       "y": 11.1
+      },
+      {
+       "x": "2026-08-01",
+       "y": 8.8
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "cost-center-drivers",
+   "label": "Cost-center variance inside breaching functions (YTD)",
+   "unit": "USD K",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 actual \u2212 \u03a3 budget per cost center for functions beyond the tolerance, ranked by |variance|",
+    "inputs": [
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-gl-budget",
+    "snapshot": "2026-09-08"
+   },
+   "points": [
+    {
+     "label": "RQ-EXT (Regulatory/Quality)",
+     "value": 427,
+     "variance_pct": 76.2
+    },
+    {
+     "label": "RQ-REG (Regulatory/Quality)",
+     "value": 21,
+     "variance_pct": 2.1
+    },
+    {
+     "label": "RQ-QA (Regulatory/Quality)",
+     "value": 19,
+     "variance_pct": 1.6
+    },
+    {
+     "label": "SM-NA (Sales & Marketing)",
+     "value": -401,
+     "variance_pct": -11.9
+    },
+    {
+     "label": "SM-INTL (Sales & Marketing)",
+     "value": -250,
+     "variance_pct": -11.1
+    },
+    {
+     "label": "SM-MKT (Sales & Marketing)",
+     "value": -53,
+     "variance_pct": -3.3
+    },
+    {
+     "label": "RD-FW (R&D)",
+     "value": 524,
+     "variance_pct": 17.2
+    },
+    {
+     "label": "RD-SW (R&D)",
+     "value": 50,
+     "variance_pct": 2.0
+    },
+    {
+     "label": "RD-HW (R&D)",
+     "value": -49,
+     "variance_pct": -2.0
+    }
+   ]
+  },
+  {
+   "id": "variance-by-project",
+   "label": "Spend by program / project",
+   "unit": "USD M",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "the GL export (internal-gl-budget) carries function and cost center only; program attribution and capitalization need a project dimension in the ledger feed."
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "YTD 2026 (2026-01..2026-08) opex $28.84M vs budget $28.40M (+1.5%, within the \u00b13% total tolerance); 3 of 6 functions breach the \u00b15% band; Regulatory/Quality +16.7% (driver RQ-EXT +$427K (+76.2%)); Sales & Marketing -9.8% (driver SM-NA -$401K (-11.9%); headcount 45 vs 53 budget at 2026-08 \u2014 hiring lag); R&D +6.6% (driver RD-FW +$524K (+17.2%); headcount 48 vs 45 budget at 2026-08)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Regulatory/Quality is +16.7% over budget YTD 2026 (2026-01..2026-08) ($3.27M vs $2.80M) \u2014 driver RQ-EXT +$427K (+76.2%)",
+    "action": "Re-plan the driving cost center at the monthly close: confirm the spend is buying a milestone, then reforecast or re-phase",
+    "evidence": [
+     "derived: variance-by-function",
+     "derived: cost-center-drivers",
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "R&D is +6.6% over budget YTD 2026 (2026-01..2026-08) ($8.53M vs $8.00M) \u2014 driver RD-FW +$524K (+17.2%); headcount 48 vs 45 budget at 2026-08",
+    "action": "Re-plan the driving cost center at the monthly close: confirm the spend is buying a milestone, then reforecast or re-phase",
+    "evidence": [
+     "derived: variance-by-function",
+     "derived: cost-center-drivers",
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I3",
+    "severity": "medium",
+    "statement": "Sales & Marketing is -9.8% under budget YTD 2026 (2026-01..2026-08) ($6.50M vs $7.20M) \u2014 driver SM-NA -$401K (-11.9%); headcount 45 vs 53 budget at 2026-08 \u2014 hiring lag",
+    "action": "Treat the under-spend as deferred work, not savings: confirm hiring pipeline vs plan and the revenue-plan dependency on the missing heads",
+    "evidence": [
+     "derived: variance-by-function",
+     "derived: headcount-by-function",
+     "src: finance/internal-gl-budget@2026-09-08",
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The \u00b15% per-function and \u00b13% total tolerances are stand-ins \u2014 the budget book names no variance trigger, so the breach list is only as firm as an unratified band",
+    "mitigation": "Have the controller ratify the tolerances in the budget book and mark E-08.1 / E-08.2 validated",
+    "evidence": [
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Netting inside the total: Regulatory/Quality +16.7%, R&D +6.6% over is offset by Sales & Marketing -9.8% under \u2014 the company total understates both",
+    "evidence": [
+     "derived: variance-by-function",
+     "derived: ytd-variance-stat"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "The ledger export carries no program / project dimension \u2014 an R&D overrun cannot be attributed to a milestone or assessed for capitalization here",
+    "evidence": [
+     "derived: variance-by-project",
+     "src: finance/internal-gl-budget@2026-09-08"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-08.1",
+   "statement": "Every function's year-to-date spend is within tolerance of budget",
+   "expected": "within +/- 5% of YTD budget per function",
+   "basis": "standard variance-review trigger; the budget book names no tolerance [VERIFY]",
+   "set_by": "controller (demo)",
+   "validated": false,
+   "actual": "3 of 6 functions beyond \u00b15%: Regulatory/Quality +16.7%, Sales & Marketing -9.8%, R&D +6.6%",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: variance-pct-by-function"
+   ]
+  },
+  {
+   "id": "E-08.2",
+   "statement": "Total operating spend year to date is within the company tolerance",
+   "expected": "within +/- 3% of YTD budget in total",
+   "basis": "board reporting convention carried forward; not in the budget book [VERIFY]",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "+1.5% total (YTD 2026 (2026-01..2026-08))",
+   "verdict": "met",
+   "evidence": [
+    "derived: ytd-variance-stat"
+   ]
+  }
+ ]
+}

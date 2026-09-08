@@ -1,9 +1,9 @@
 {% extends "_base.html" %}
-{% block title %}{{ q.id }} · Commercial · {{ config.project_name }} Console{% endblock %}
+{% block title %}{{ q.id }} · {{ dm.name }} · {{ config.project_name }} Console{% endblock %}
 {% block body_class %}commercial-page{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/commercial.css?v={{ request.state.static_v }}">{% endblock %}
 {% block content %}
-<section class="cm-wrap cm-wrap-wide" data-grounding="url:/commercial/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
+<section class="cm-wrap cm-wrap-wide" data-grounding="url:{{ base }}/{{ q.id }}/grounding{% if ed %}?edition={{ ed.edition }}{% endif %}">
   {# Explainer ⓘ — hover/focus shows the compact "what" card; click opens the
      shared plain-language dialog. Renders nothing when the sidecar carries no
      explainer for the target (schema 1.0 degrades to no icons). #}
@@ -13,7 +13,7 @@
   {% macro kindinfo(kind) %}{% set g = kind_glossary.get(kind) %}{% if g %}<span class="cm-info"><button type="button" class="cm-info-btn" data-explain="kind:{{ kind }}" aria-label="What is a {{ g.label | lower }}?" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ g.what }}</span></span>{% endif %}{% endmacro %}
 
   {# Inline dossier fold — a detail_ref that is a repo-relative markdown path
-     renders IN PLACE: lazy-loaded on first expand from /commercial/review-detail
+     renders IN PLACE: lazy-loaded on first expand from {base}/review-detail
      (rendered by the documents renderer, cached client-side), body scrolls.
      The Documents-viewer link stays as a secondary affordance. When only a
      link exists (non-markdown / external ref) the fold degrades to the link. #}
@@ -30,7 +30,7 @@
   {# Header lives INSIDE the content column so its left edge aligns with the verdict/
      content and it spans to the right margin; only the editions tree sits left. #}
   {% macro qheader() %}
-  <nav class="cm-crumb"><a href="/commercial">← Commercial</a></nav>
+  <nav class="cm-crumb"><a href="{{ base }}">← {{ dm.name }}</a></nav>
   <header class="cm-head cm-head-detail">
     <div>
       <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}</p>
@@ -46,7 +46,7 @@
           {% if a.link %}<a class="cm-chip cm-assume-chip" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">≈ {{ a.id }} ↗</a>
           {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
         {% endfor %}
-        {% if ed %}<a class="cm-chip cm-data-chip" href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>{% endif %}
+        {% if ed %}<a class="cm-chip cm-data-chip" href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>{% endif %}
         {% if ed and ed.status == 'draft' %}
         <button type="button" class="cm-approve-open" onclick="document.getElementById('cm-approve-dialog').showModal()"
                 title="Approve this draft edition and push it to the repo">✓ Approve…</button>
@@ -67,7 +67,7 @@
     <aside class="cm-edrail" aria-label="Editions">
       <h3>Editions</h3>
       {% for e in editions | reverse %}
-      <a class="cm-ednode {{ 'is-active' if ed and e.edition == ed.edition }}" href="/commercial/{{ q.id }}?edition={{ e.edition }}">
+      <a class="cm-ednode {{ 'is-active' if ed and e.edition == ed.edition }}" href="{{ base }}/{{ q.id }}?edition={{ e.edition }}">
         <span class="cm-ednode-id">{{ e.edition }}</span>
         <span class="cm-chip {{ EDITION_META.get(e.status, EDITION_META['draft']).cls }}">{{ e.status }}</span>
       </a>
@@ -111,7 +111,7 @@
 
   {% if ed.status == 'draft' %}
   <dialog id="cm-approve-dialog" class="cm-dialog">
-    <form method="post" action="/commercial/{{ q.id }}/approve"
+    <form method="post" action="{{ base }}/{{ q.id }}/approve"
           onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').textContent = 'Approving & pushing…';">
       <div class="cm-dialog-head">
         <h2>Approve {{ q.id }} <span class="cm-mono">{{ ed.edition }}</span></h2>
@@ -136,7 +136,7 @@
       <details class="cm-approve-help">
         <summary>Prefer Claude or the command line?</summary>
         <p>Ask Claude to <em>“approve {{ q.id }}”</em>, or run
-          <code>python3 .claude/skills/commercial/scripts/commercial.py approve {{ q.id }} --edition {{ ed.edition }} --by "&lt;name&gt;" --verify-note "&lt;ref&gt;"</code>
+          <code>python3 .claude/skills/commercial/scripts/commercial.py --domain {{ domain }} approve {{ q.id }} --edition {{ ed.edition }} --by "&lt;name&gt;" --verify-note "&lt;ref&gt;"</code>
           then push. The gate is identical either way.</p>
       </details>
     </form>
@@ -144,7 +144,7 @@
   {% endif %}
   {% if newer_draft %}
   <div class="cm-banner cm-banner-draft">A newer <strong>draft</strong> edition exists —
-    <a href="/commercial/{{ q.id }}?edition={{ newer_draft }}">view {{ newer_draft }}</a> (shown: approved {{ ed.edition }}).</div>
+    <a href="{{ base }}/{{ q.id }}?edition={{ newer_draft }}">view {{ newer_draft }}</a> (shown: approved {{ ed.edition }}).</div>
   {% endif %}
 
   {% if expectations %}
@@ -288,7 +288,7 @@
   </details>
 
   <section class="cm-report">
-    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}">Data view — tables &amp; filters</a> · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="/commercial/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
+    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}">Data view — tables &amp; filters</a> · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="{{ base }}/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
     <div class="cm-report-body md-body">{{ report_html | safe }}</div>
   </section>
 
@@ -325,7 +325,7 @@
   <div id="cm-tab-quality" hidden>
     {% if not quality %}
     <div class="cm-empty"><p><strong>No quality record for this edition.</strong> Run
-      <code>commercial.py audit {{ q.id }}</code> (or re-answer) to generate it.</p></div>
+      <code>commercial.py --domain {{ domain }} audit {{ q.id }}</code> (or re-answer) to generate it.</p></div>
     {% else %}
     <div class="cm-q-grid">
       <section class="cm-q-card">
@@ -430,7 +430,7 @@
         {% if code %}<span class="cm-chip {{ code._status.cls }}">{{ code._status.glyph }} {{ code._status.label }}</span>{% endif %}
         <span class="cm-muted">— the code that produced this answer's figures · soft gate: badges only, nothing blocks</span></h3>
       {% if not code %}
-      <p class="cm-muted">No code-quality record — run <code>/commercial code-audit</code>.</p>
+      <p class="cm-muted">No code-quality record — run <code>commercial.py --domain {{ domain }} code-audit {{ q.id }}</code>.</p>
       {% else %}
       {% for a in code.artifacts %}
       <div class="cm-code-art">
@@ -497,7 +497,7 @@
     <p class="cm-muted">The data behind this edition — structured tables (pinned snapshot rows + each
       series' table form; sortable, filterable, paginated) and the unstructured artifacts (raw payloads,
       provenance, records). Rows render verbatim; the console computes nothing.
-      <a href="/commercial/{{ q.id }}/data?edition={{ ed.edition }}">Open as a full page ↗</a></p>
+      <a href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}">Open as a full page ↗</a></p>
 
     <h3 class="cm-q-check-name">Structured</h3>
     {% for t in tables %}
@@ -579,7 +579,7 @@
     <div class="cm-report-body md-body">{{ plan_html | safe }}</div>
     {% else %}
     <div class="cm-empty"><p><strong>No analysis plan yet.</strong> Scaffold one with
-      <code>commercial.py plan-init {{ q.id }}</code> (templated from the question, then user-owned) —
+      <code>commercial.py --domain {{ domain }} plan-init {{ q.id }}</code> (templated from the question, then user-owned) —
       or ask Claude to <em>“create the plan for {{ q.id }}”</em>.</p></div>
     {% endif %}
   </div><!-- /#cm-tab-plan -->
@@ -681,7 +681,7 @@
   "allowed_agents": [],
   "grounding_label": "ANSWER CONTEXT",
   "grounding_source": "active:.cm-wrap",
-  "title": "Commercial Advisor",
+  "title": "{{ dm.name }} Advisor",
   "subtitle": q.id,
   "placeholder": "Ask about this answer…",
   "empty_hint": "Ask about the verdict, what it rests on, or what would change it. The advisor sees the full marker-cited report, the pinned snapshots, and the assumption records. Example: <em>\"Which of these figures are assumptions rather than measurements?\"</em>",
@@ -707,7 +707,7 @@
 })();
 </script>
 {# Inline dossier lazy-loader — first expand of a details[data-md] fetches the
-   repo-relative markdown from /commercial/review-detail (rendered server-side
+   repo-relative markdown from {base}/review-detail (rendered server-side
    by the documents renderer) and injects it; responses are cached per path so
    several folds pointing at the same dossier fetch once. Vanilla JS; 'toggle'
    does not bubble, so listen in the capture phase.
@@ -745,7 +745,7 @@
     d.dataset.loaded = '1';
     var p = d.getAttribute('data-md');
     if (cache[p]) { body.innerHTML = cache[p]; enhance(body); return; }
-    fetch('/commercial/review-detail?path=' + encodeURIComponent(p))
+    fetch('{{ base }}/review-detail?path=' + encodeURIComponent(p))
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();

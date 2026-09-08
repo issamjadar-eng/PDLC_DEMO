@@ -1,0 +1,44 @@
+dataset: finance/internal-ar-inventory
+title: Working-capital cube — AR aging + inventory by channel x line (internal, demo-fabricated)
+description: >-
+  Monthly working-capital snapshot 2025-01 -> 2026-08 at the grain period x region x
+  channel (three fictional GPOs + direct) x product line: AR balance, AR over 90 days,
+  DSO, inventory value and days, consumable units shipped. DEMO-FABRICATED by seeded
+  generator gen.py — stand-in for the ERP AR-aging + inventory-valuation export. Revenue
+  basis follows the commercial/internal-financials model (cloud-suite subscription billing
+  is out of scope — stated gap). Consumed by FQ-06 (DSO + over-90 AR by GPO/region,
+  inventory days by line) and, on the roadmap, FQ-07 (consumable pull-through).
+internal: true
+max_age_days: 30
+data_through: 2026-08-31
+acquisition:
+  type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP AR-aging + inventory-valuation export)
+  usage_rights: internal
+normalize:
+  command: python3 gen.py normalize {raw_dir} {normalized_dir}
+schema:
+  file: records.csv
+  key: [period, region, gpo, product_line]
+  columns:
+    - {name: period, type: str, required: true}
+    - {name: region, type: str, required: true}
+    - {name: gpo, type: str, required: true}
+    - {name: product_line, type: str, required: true}
+    - {name: ar_balance_usd, type: int, required: true}
+    - {name: ar_over_90_usd, type: int, required: true}
+    - {name: inventory_usd, type: int, required: true}
+    - {name: inventory_days, type: float, required: true}
+    - {name: dso_days, type: float, required: true}
+    - {name: consumable_units_shipped, type: int, required: true}
+asserts:
+  min_rows: 1000
+  max_rows: 1500
+  enums:
+    region: [NA, EMEA, APAC]
+    gpo: [Meridian Health Alliance, Northgate Purchasing Group, Cascadia Supply Co-op, direct]
+    product_line: [IP5000, PP3000, PP3500, SP6000, SP6500]
+  # Proves the knobs: Northgate over-90 share doubles; PP3000 inventory days +30 while
+  # PP3500 holds.
+  command: python3 check_knobs.py {normalized_dir}/records.csv
