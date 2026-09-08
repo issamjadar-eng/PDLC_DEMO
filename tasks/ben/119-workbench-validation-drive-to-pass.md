@@ -2,7 +2,7 @@
 
 **ID**: 119
 **Created**: 2026-09-08
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -39,7 +39,7 @@ Scope (contracts read this session: `workbench-validation/SKILL.md`, `secops/SKI
 - Re-run the full validation at HEAD via **both** invocation paths (CLI and console `POST /setup/workbench/render`), confirm the console tab renders PASS with a current baseline, and prune `known_anomalies` to what is still true.
 - Push upstream-owned fixes (tracker, change-control, secops are registry-tracked skills) via `/sync-skills`.
 
-**Progress**: Phase 0 done · Phase 1 fixes 3/3 · Phase 2 (D2–D8) done except the deferred environment-diff persistence · Phase 3: debug run PASS (18/21 + 3 NOT-APPLICABLE, 0 FAIL); run of record + console-invoked run pending on a clean tree · Phase 4 (sync upstream, PR) pending.
+**Progress**: Phase 0 done · Phase 1 fixes 3/3 · Phase 2 (D2–D8) done except the deferred environment-diff persistence · Phase 3: debug run PASS (18/21 + 3 NOT-APPLICABLE, 0 FAIL); run of record + console-invoked run pending on a clean tree · Phase 4 done: PDLC_DEMO PR #182 merged (`2662b4e`), registry PR #301 awaiting review.
 
 ## Phase 0 — Ground truth (done 2026-09-08)
 
@@ -223,12 +223,12 @@ Scope (contracts read this session: `workbench-validation/SKILL.md`, `secops/SKI
 - [ ] decide: persist `environment-diff` between consecutive runs — deferred; the console now computes the live diff on view, which covers the reviewer need; a persisted diff is a follow-up if audit wants it in the record
 
 ### Phase 3 — re-run
-- [ ] Full CLI run on clean tree at HEAD → PASS; evidence logs reviewed for TC-08/10/15
-- [ ] Full console run (`invoked_via: console`) → PASS; tab shows current SHA, clean, model captured
+- [x] Full CLI run of record `run-20260908T180259Z` on a clean worktree at `8f266ff`, model captured, no warnings → PASS 18/21 + 3 NOT-APPLICABLE
+- [x] Console-invoked run of record `run-20260908T180329Z` via `POST /setup/workbench/render` with model id → PASS; `/setup` renders the new panel/columns
 
 ### Phase 4 — close-out
-- [ ] `/sync-skills push` for all touched registry skills; drift 0
-- [ ] Commit → PR → merge; SHAs recorded here; index + lessons updated; status Complete
+- [x] `/sync-skills push` (PR-only, per the contract default): hitachi PR #301 (`f72dedb`) — 46 files, all LOCAL_ONLY/LOCAL_AHEAD; project-console excluded (diverged fork, manual port needed) and `tracker/scripts/render.py` excluded (BOTH_DIVERGED, untouched). Drift returns to 0 once #301 merges and is pulled
+- [x] Commits `8f266ff` (fixes + design) · `f79e6bc` (cli run of record) · `bea9269` (console run of record) → PR #182 merged to `main` as `2662b4e`
 
 ## Open questions
 
@@ -275,3 +275,9 @@ _By-hand person-hour estimate, **filled at checkpoint** per the effort-estimatio
 - 2026-09-08: TC-10 fixed + change-control D7 tiers landed (0.14.1): `tests/conftest.py` markers/guard/`--live`, `tests/fakes.py`, `tests/fixtures/atlassian/`, `test_jira_mocked.py`; 143 passed / 1 live-skipped; guard never trips. Note: `project.yml` has no `change_control` block → manifest `connections:` will declare jira/confluence `none`.
 - 2026-09-08: TC-15 fixed at the source (secops 9): 14 High → 0 High / 16 Medium, exit 0; 30 scanner tests. Lesson: a hostile literal inside a test fixture trips the scanner on the repo itself — assemble it at runtime, don't suppress the path. Phase 1 complete (3/3). Runner patched for D2/D5/D7/D8 (schema 1.1: `--model-id`, dirty-file list, version-mismatch flag, tooling/connection probes, `endpoint:` tiers + NOT-APPLICABLE); renderer next.
 - 2026-09-08: D2/D5/D6/D7/D8 implemented — workbench-validation 4 (schema 1.1), project-console 1.64.0, manifest 21 cases / 16 needs, plan §6–7. Debug run `run-20260908T175939Z`: **PASS**, 18/21 + 3 NOT-APPLICABLE, 0 FAIL. The re-run also surfaced two regressions the July run predated, both fixed at the source: (a) `writing-well` reported "no version" because both the TC-16 sweep and the runner's own version scan read a fixed 2000-char head window that a long frontmatter description overran — the runner had been recording an **empty UUT pin** for writing-well (TC-05) since July; both now parse the fenced frontmatter block; (b) project-console `test_setup_cli_catalog` never learned the task-116 curation rule (customer-gated `jama-connect` ships a blank editable url + note) — test updated. Version-pin mismatches found by the new environment record and aligned: digest (VERSION 1.3.0→9), submissions (6→10). Settings page renders through the app (`/setup` 200; panel, badges, columns present). Next: commit on a branch, run of record in a clean worktree (CLI + console-invoked), commit results, sync upstream, PR.
+- 2026-09-08: Landed on `main` via PR #182 (`2662b4e`): `8f266ff` fixes + D2–D8, `f79e6bc` cli run of record, `bea9269` console-invoked run of record — both clean-tree, model captured, no warnings, PASS 18/21 + 3 NOT-APPLICABLE. Remaining: `/sync-skills push` (PR-only) for the touched registry skills, index refresh, checkpoint.
+- 2026-09-08: Registry push — hitachi PR #301 (`f72dedb`), PR-only, 46 files; sync-log entry recorded. project-console 1.64.0 not pushed (the forks have diverged; the Settings → Validation changes need a manual port — follow-up). Task marked Complete; open follow-ups: merge #301 then `/sync-skills pull`; port console changes to the registry fork; decide on persisting an environment-diff between runs; the seven earlier uncheckpointed tasks (111–117) still carry markers.
+
+## Resume / follow-up
+
+Everything is on `main`. To pick up the follow-ups: `bash .claude/hooks/task-activate.sh add <SESSION_ID> ben/119`, then (1) after hitachi #301 merges, `/sync-skills pull` and confirm drift 0; (2) port project-console 1.64.0 Settings → Validation changes to the registry fork; (3) re-run `/workbench-validation validate --model-id <model>` after any skill change — the Settings → Validation tab now lists named differences when the recorded environment no longer matches the checkout.
