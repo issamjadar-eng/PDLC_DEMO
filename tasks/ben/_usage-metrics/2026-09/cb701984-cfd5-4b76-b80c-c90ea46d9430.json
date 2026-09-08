@@ -1,36 +1,36 @@
 {
   "by_day": {
     "2026-09-08": {
-      "cache_creation": 4811948,
-      "cache_read": 62796865,
-      "cache_write_1h": 876081,
-      "cache_write_5m": 3935867,
-      "input": 136770,
-      "messages": 471,
-      "output": 324166
+      "cache_creation": 5271718,
+      "cache_read": 74405843,
+      "cache_write_1h": 923251,
+      "cache_write_5m": 4348467,
+      "input": 189586,
+      "messages": 528,
+      "output": 359050
     }
   },
   "by_model": {
     "claude-fable-5-1": {
-      "cache_creation": 4811948,
-      "cache_read": 62796865,
-      "cache_write_1h": 876081,
-      "cache_write_5m": 3935867,
-      "input": 136770,
-      "messages": 471,
-      "output": 324166
+      "cache_creation": 5271718,
+      "cache_read": 74405843,
+      "cache_write_1h": 923251,
+      "cache_write_5m": 4348467,
+      "input": 189586,
+      "messages": 528,
+      "output": 359050
     }
   },
   "by_task": {
     "118": {
       "claude-fable-5-1": {
-        "cache_creation": 4703520,
-        "cache_read": 61254380,
-        "cache_write_1h": 767653,
-        "cache_write_5m": 3935867,
-        "input": 135370,
-        "messages": 455,
-        "output": 308695
+        "cache_creation": 5163290,
+        "cache_read": 72863358,
+        "cache_write_1h": 814823,
+        "cache_write_5m": 4348467,
+        "input": 188186,
+        "messages": 512,
+        "output": 343579
       }
     },
     "_unattributed": {
@@ -50,22 +50,22 @@
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 4811948,
-    "cache_read": 62796865,
-    "cache_write_1h": 876081,
-    "cache_write_5m": 3935867,
-    "input": 136770,
-    "messages": 471,
-    "output": 324166
+    "cache_creation": 5271718,
+    "cache_read": 74405843,
+    "cache_write_1h": 923251,
+    "cache_write_5m": 4348467,
+    "input": 189586,
+    "messages": 528,
+    "output": 359050
   },
   "user_turns": {
     "by_day": {
-      "2026-09-08": 15
+      "2026-09-08": 19
     },
     "by_task": {
-      "118": 11,
+      "118": 15,
       "_unattributed": 4
     },
-    "total": 15
+    "total": 19
   }
 }
