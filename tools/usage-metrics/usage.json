@@ -2,38 +2,38 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (retrieved 2026-08-05). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 136.29,
-    "2026-06-16": 46.08,
-    "2026-06-22": 20.5,
-    "2026-06-23": 10.76,
-    "2026-06-29": 1.23,
-    "2026-06-30": 207.63,
-    "2026-07-01": 211.52,
-    "2026-07-02": 25.78,
-    "2026-07-03": 9.43,
-    "2026-07-05": 3.11,
-    "2026-07-08": 1.35,
-    "2026-07-09": 16.39,
-    "2026-07-14": 36.54,
-    "2026-07-15": 229.81,
-    "2026-07-16": 50.14,
-    "2026-07-20": 16.82,
-    "2026-07-21": 99.76,
-    "2026-07-22": 233.06,
-    "2026-07-27": 390.89,
-    "2026-07-28": 161.86,
-    "2026-07-30": 6.83,
-    "2026-07-31": 9.33,
-    "2026-08-03": 6.27,
-    "2026-08-05": 31.14,
-    "2026-08-06": 513.74,
-    "2026-08-07": 9.54,
-    "2026-08-10": 114.47,
-    "2026-08-11": 80.87,
-    "2026-08-17": 1.39,
-    "2026-08-19": 2.66,
-    "2026-08-25": 2.43,
-    "2026-09-08": 130.02
+    "2026-06-15": 136.73,
+    "2026-06-16": 46.26,
+    "2026-06-22": 20.61,
+    "2026-06-23": 10.81,
+    "2026-06-29": 1.24,
+    "2026-06-30": 208.24,
+    "2026-07-01": 212.08,
+    "2026-07-02": 25.94,
+    "2026-07-03": 9.47,
+    "2026-07-05": 3.13,
+    "2026-07-08": 1.37,
+    "2026-07-09": 16.47,
+    "2026-07-14": 36.69,
+    "2026-07-15": 230.36,
+    "2026-07-16": 50.31,
+    "2026-07-20": 16.92,
+    "2026-07-21": 100.01,
+    "2026-07-22": 233.58,
+    "2026-07-27": 391.57,
+    "2026-07-28": 162.32,
+    "2026-07-30": 6.92,
+    "2026-07-31": 9.42,
+    "2026-08-03": 6.33,
+    "2026-08-05": 31.27,
+    "2026-08-06": 514.93,
+    "2026-08-07": 9.58,
+    "2026-08-10": 114.85,
+    "2026-08-11": 81.1,
+    "2026-08-17": 1.4,
+    "2026-08-19": 2.68,
+    "2026-08-25": 2.45,
+    "2026-09-08": 152.62
   },
   "members": 2,
   "months": {
@@ -492,50 +492,50 @@
       "Member 1": {
         "by_day": {
           "2026-09-08": {
-            "cache_creation": 5030951,
-            "cache_read": 79854007,
-            "cache_write_1h": 957719,
+            "cache_creation": 5916070,
+            "cache_read": 89968899,
+            "cache_write_1h": 1842838,
             "cache_write_5m": 4073232,
-            "input": 136441,
-            "messages": 570,
-            "output": 436425
+            "input": 139017,
+            "messages": 597,
+            "output": 498676
           }
         },
         "by_model": {
           "claude-fable-5-1": {
-            "cache_creation": 4835049,
-            "cache_read": 79854007,
-            "cache_write_1h": 761817,
+            "cache_creation": 5669959,
+            "cache_read": 89968899,
+            "cache_write_1h": 1596727,
             "cache_write_5m": 4073232,
-            "cost": 169.17,
-            "input": 136438,
-            "messages": 569,
-            "output": 435961
+            "cost": 198.8,
+            "input": 139011,
+            "messages": 595,
+            "output": 491916
           },
           "claude-sonnet-4-6": {
-            "cache_creation": 195902,
+            "cache_creation": 246111,
             "cache_read": 0,
-            "cache_write_1h": 195902,
+            "cache_write_1h": 246111,
             "cache_write_5m": 0,
-            "cost": 1.18,
-            "input": 3,
-            "messages": 1,
-            "output": 464
+            "cost": 1.58,
+            "input": 6,
+            "messages": 2,
+            "output": 6760
           }
         },
-        "cost": 170.35,
+        "cost": 200.38,
         "name": "Member 1",
-        "sessions": 3,
+        "sessions": 4,
         "totals": {
-          "cache_creation": 5030951,
-          "cache_read": 79854007,
-          "cache_write_1h": 957719,
+          "cache_creation": 5916070,
+          "cache_read": 89968899,
+          "cache_write_1h": 1842838,
           "cache_write_5m": 4073232,
-          "input": 136441,
-          "messages": 570,
-          "output": 436425
+          "input": 139017,
+          "messages": 597,
+          "output": 498676
         },
-        "user_turns": 17
+        "user_turns": 23
       }
     }
   },
@@ -6096,18 +6096,18 @@
     "ben/118": {
       "by_model": {
         "claude-fable-5-1": {
-          "cache_creation": 4239315,
-          "cache_read": 49573079,
-          "cache_write_1h": 303448,
+          "cache_creation": 4679987,
+          "cache_read": 55680611,
+          "cache_write_1h": 744120,
           "cache_write_5m": 3935867,
-          "cost": 119.07,
-          "input": 131450,
-          "messages": 428,
-          "output": 258338
+          "cost": 135.68,
+          "input": 133731,
+          "messages": 443,
+          "output": 291555
         }
       },
-      "cost": 119.07,
-      "cost_allocated": 5.7,
+      "cost": 135.68,
+      "cost_allocated": 3.93,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 4.0,
@@ -6154,20 +6154,20 @@
       },
       "sessions": 1,
       "totals": {
-        "cache_creation": 4239315,
-        "cache_read": 49573079,
-        "cache_write_1h": 303448,
+        "cache_creation": 4679987,
+        "cache_read": 55680611,
+        "cache_write_1h": 744120,
         "cache_write_5m": 3935867,
-        "input": 131450,
-        "messages": 428,
-        "output": 258338
+        "input": 133731,
+        "messages": 443,
+        "output": 291555
       },
-      "user_turns": 6
+      "user_turns": 10
     },
     "ben/119": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 5.7,
+      "cost_allocated": 3.93,
       "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": null,
@@ -6194,6 +6194,42 @@
         "retrospective": false,
         "title": "Workbench Validation: Assess Failures and Drive to a Correct PASS",
         "todos": 6,
+        "updated": "2026-09-08"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
+    "ben/120": {
+      "by_model": {},
+      "cost": 0.0,
+      "cost_allocated": 3.93,
+      "cost_basis": "allocated",
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 3
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Workbench Validation: User-Story Need Format",
+        "todos": 3,
         "updated": "2026-09-08"
       },
       "sessions": 0,
@@ -6253,28 +6289,28 @@
           "output": 98117
         },
         "claude-sonnet-4-6": {
-          "cache_creation": 541868,
+          "cache_creation": 592077,
           "cache_read": 0,
-          "cache_write_1h": 541868,
+          "cache_write_1h": 592077,
           "cache_write_5m": 0,
-          "cost": 3.3,
-          "input": 12,
-          "messages": 4,
-          "output": 2958
+          "cost": 3.69,
+          "input": 15,
+          "messages": 5,
+          "output": 9254
         }
       },
-      "cost": 347.52,
-      "sessions": 39,
+      "cost": 347.92,
+      "sessions": 40,
       "totals": {
-        "cache_creation": 9546402,
+        "cache_creation": 9596611,
         "cache_read": 344162844,
-        "cache_write_1h": 8635892,
+        "cache_write_1h": 8686101,
         "cache_write_5m": 910510,
-        "input": 365886,
-        "messages": 1483,
-        "output": 1414560
+        "input": 365889,
+        "messages": 1484,
+        "output": 1420856
       },
-      "user_turns": 91
+      "user_turns": 92
     },
     "ben/ben/119": {
       "by_model": {
@@ -6305,28 +6341,28 @@
     "ben/ben/120": {
       "by_model": {
         "claude-fable-5-1": {
-          "cache_creation": 46098,
-          "cache_read": 4768182,
-          "cache_write_1h": 28757,
+          "cache_creation": 440336,
+          "cache_read": 8775542,
+          "cache_write_1h": 422995,
           "cache_write_5m": 17341,
-          "cost": 6.11,
-          "input": 358,
-          "messages": 13,
-          "output": 11022
+          "cost": 19.15,
+          "input": 650,
+          "messages": 24,
+          "output": 33760
         }
       },
-      "cost": 6.11,
+      "cost": 19.15,
       "sessions": 1,
       "totals": {
-        "cache_creation": 46098,
-        "cache_read": 4768182,
-        "cache_write_1h": 28757,
+        "cache_creation": 440336,
+        "cache_read": 8775542,
+        "cache_write_1h": 422995,
         "cache_write_5m": 17341,
-        "input": 358,
-        "messages": 13,
-        "output": 11022
+        "input": 650,
+        "messages": 24,
+        "output": 33760
       },
-      "user_turns": 0
+      "user_turns": 1
     },
     "dmytro/001": {
       "by_model": {},
@@ -6397,10 +6433,10 @@
   },
   "value_summary": {
     "agentic_hours": 538.1,
-    "cost_allocated": 234.32,
+    "cost_allocated": 234.72,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 2458.76,
-    "cost_unattributed_measured": 358.85,
+    "cost_measured_attributed": 2488.41,
+    "cost_unattributed_measured": 359.25,
     "cost_unattributed_residual": 124.53,
     "hours_saved": {
       "max": 4859.1,
@@ -6413,6 +6449,6 @@
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 117
+    "tasks_with_estimate": 118
   }
 }
