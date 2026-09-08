@@ -476,3 +476,28 @@ sup.cm-ref a:hover { text-decoration: underline; }
   color: var(--body-text-muted, #475569); }
 .cm-dossier-body blockquote > :first-child { margin-top: 0; }
 .cm-dossier-body blockquote > :last-child { margin-bottom: 0; }
+
+/* ---- Narrative layer: executive summary panel + per-section "What this tells us" folds.
+   Prose is visually distinct from the computed report (tinted surface, left rule) so a
+   reader always knows which sentences are data and which are interpretation. */
+.cm-exec { background: color-mix(in srgb, var(--cm-series, #2a78d6) 7%, var(--surface, #fff)); border: 1px solid var(--border, #e2e8f0);
+  border-left: 4px solid var(--cm-series, #2a78d6); border-radius: 12px; padding: .8rem 1rem; margin: 0 0 1rem; }
+.cm-exec.is-missing { background: var(--surface, #fff); border-left-style: dashed; }
+.cm-exec-head { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: .35rem; }
+.cm-exec-head .cm-exec-gen { margin-left: auto; }
+.cm-exec-meta { font-size: .74rem; }
+.cm-exec-body { font-size: .97rem; line-height: 1.55; }
+.cm-exec-body p:last-child { margin-bottom: 0; }
+.cm-exec-empty { margin: 0; font-size: .86rem; }
+.cm-narr { margin: .35rem 0 1.1rem; border-left: 3px solid color-mix(in srgb, var(--cm-series, #2a78d6) 55%, transparent);
+  background: color-mix(in srgb, var(--cm-series, #2a78d6) 5%, transparent); border-radius: 0 10px 10px 0; padding: .35rem .8rem; }
+.cm-narr > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: .5rem; }
+.cm-narr > summary::-webkit-details-marker { display: none; }
+.cm-narr > summary::before { content: "▸"; font-size: .8rem; opacity: .7; transition: transform .15s; }
+.cm-narr[open] > summary::before { transform: rotate(90deg); }
+.cm-narr-k { text-transform: uppercase; font-size: .68rem; font-weight: 700; letter-spacing: .08em; color: var(--body-text-muted, #64748b); }
+.cm-narr-body { font-size: .92rem; line-height: 1.5; padding: .3rem 0 .2rem; }
+.cm-narr-body p:last-child { margin-bottom: 0; }
+.cm-narr-stale { background: color-mix(in srgb, #c98500 18%, transparent); color: #7a5200; }
+.cm-export { display: inline-flex; gap: .3rem; }
+.cm-export-chip { background: var(--surface-2, #f1f5f9); }

@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ROOT = "docs/project/commercial"
 DEFAULT_CORPUS = "docs/project/corpus"
-SCHEMA_VERSION = "1.5"
+SCHEMA_VERSION = "1.6"
 
 MARKER_RE = re.compile(r"\[(src|assume|derived|config|waived):\s*([^\]]+?)\s*\]")
 # tokens that contain digits but are identifiers/dates, not numeric claims
@@ -622,55 +622,13 @@ def verification_plan_block(root: Path, bq: str, quality):
     return out
 
 
-def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
-    """Returns (errors, warnings, detail). Deterministic; no LLM judgment.
-    detail = {"references": [...], "freshness": [...], "checks": [...]} — the audit
-    inventory, with findings itemized per named check."""
-    errors, warnings = [], []
-    detail = {"references": [], "freshness": []}
-    _refs = {}
-    _findings = {cid: [] for cid, _, _ in LINT_CHECKS}
-    lint_cfg = project_lint_cfg(root)
-    exempt_res = [EXEMPT_TOKEN_RE] + lint_cfg.get("exempt_res", [])
-    est_exempt = lint_cfg.get("estimation_exempt", set())
-
-    def err(cid, msg):
-        errors.append(msg)
-        _findings[cid].append({"severity": "error", "message": msg})
-
-    def warn(cid, msg):
-        warnings.append(msg)
-        _findings[cid].append({"severity": "warning", "message": msg})
-
-    def _ref(kind, value, resolved, note):
-        _refs[(kind, value)] = {"kind": kind, "value": value, "resolved": resolved, "note": note}
-
-    def _finish():
-        detail["references"] = sorted(_refs.values(), key=lambda r: (r["kind"], r["value"]))
-        detail["checks"] = []
-        for cid, name, desc in LINT_CHECKS:
-            fs = _findings[cid]
-            status = "fail" if any(f["severity"] == "error" for f in fs) else \
-                ("warn" if fs else "pass")
-            detail["checks"].append({"id": cid, "name": name, "description": desc,
-                                     "status": status, "findings": fs})
-        return errors, warnings, detail
-
-    edir = bq_dir(root, bq) / ed["edition"]
-    report, datap = edir / "report.md", edir / "data.json"
-    if not report.exists():
-        err("artifacts", f"{bq}@{ed['edition']}: report.md missing")
-    if not datap.exists():
-        err("artifacts", f"{bq}@{ed['edition']}: data.json missing")
-    if errors:
-        return _finish()
-    data = json.loads(datap.read_text())
-    series_ids = {s["id"] for s in data.get("series", [])} | {v["id"] for v in data.get("verdicts", [])}
-    pins = ed.get("pins", {})
-
-    waived_ids = set()
+def _lint_markdown_text(text: str, root: Path, corpus_root: Path, pins: dict, series_ids: set,
+                        exempt_res: list, est_exempt: set, err, warn, _ref, waived_ids: set):
+    """The line-based claim lint shared by report.md and narrative.md: marker
+    resolution, numeric-claim coverage, estimation language. Same rules for both
+    surfaces — a narrative is held to exactly the standard of the report it explains."""
     in_fence = False
-    lines = report.read_text().splitlines()
+    lines = text.splitlines()
     divider = re.compile(r"^\s*\|[\s\-:|]+\|\s*$")
     # a table row immediately followed by a divider is a header row — column labels
     # (e.g. "Tickets/100") are not numeric claims
@@ -748,6 +706,57 @@ def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
                     if m.group(1).lower() not in est_exempt]
         if est_hits and not any(k == "assume" for k, _ in markers):
             warn("estimation-language", f"L{n}: estimation language without [assume: A-NNN]: {line.strip()[:80]}")
+
+
+def lint_edition(root: Path, corpus_root: Path, bq: str, ed: dict):
+    """Returns (errors, warnings, detail). Deterministic; no LLM judgment.
+    detail = {"references": [...], "freshness": [...], "checks": [...]} — the audit
+    inventory, with findings itemized per named check."""
+    errors, warnings = [], []
+    detail = {"references": [], "freshness": []}
+    _refs = {}
+    _findings = {cid: [] for cid, _, _ in LINT_CHECKS}
+    lint_cfg = project_lint_cfg(root)
+    exempt_res = [EXEMPT_TOKEN_RE] + lint_cfg.get("exempt_res", [])
+    est_exempt = lint_cfg.get("estimation_exempt", set())
+
+    def err(cid, msg):
+        errors.append(msg)
+        _findings[cid].append({"severity": "error", "message": msg})
+
+    def warn(cid, msg):
+        warnings.append(msg)
+        _findings[cid].append({"severity": "warning", "message": msg})
+
+    def _ref(kind, value, resolved, note):
+        _refs[(kind, value)] = {"kind": kind, "value": value, "resolved": resolved, "note": note}
+
+    def _finish():
+        detail["references"] = sorted(_refs.values(), key=lambda r: (r["kind"], r["value"]))
+        detail["checks"] = []
+        for cid, name, desc in LINT_CHECKS:
+            fs = _findings[cid]
+            status = "fail" if any(f["severity"] == "error" for f in fs) else \
+                ("warn" if fs else "pass")
+            detail["checks"].append({"id": cid, "name": name, "description": desc,
+                                     "status": status, "findings": fs})
+        return errors, warnings, detail
+
+    edir = bq_dir(root, bq) / ed["edition"]
+    report, datap = edir / "report.md", edir / "data.json"
+    if not report.exists():
+        err("artifacts", f"{bq}@{ed['edition']}: report.md missing")
+    if not datap.exists():
+        err("artifacts", f"{bq}@{ed['edition']}: data.json missing")
+    if errors:
+        return _finish()
+    data = json.loads(datap.read_text())
+    series_ids = {s["id"] for s in data.get("series", [])} | {v["id"] for v in data.get("verdicts", [])}
+    pins = ed.get("pins", {})
+
+    waived_ids = set()
+    _lint_markdown_text(report.read_text(), root, corpus_root, pins, series_ids, exempt_res,
+                        est_exempt, err, warn, _ref, waived_ids)
 
     # freshness of pins
     for ds, snap in pins.items():
@@ -1106,6 +1115,10 @@ def _bq_sidecar_row(root: Path, corpus_root: Path, q: dict, terms_catalog: dict 
     # (regenerated by answer/lint/audit); null when there is no shown edition
     # or the plan has no `## Verification plan` section (grandfathered)
     row["verification_plan"] = None
+    # schema 1.6: narrative presence per edition (present | stale | missing)
+    for e_row in row["editions"]:
+        e_row["narrative"] = narrative_status(bq_dir(root, bq) / e_row["edition"])["status"]
+    row["narrative"] = narrative_status(bq_dir(root, bq) / show["edition"])["status"] if show else None
     if show:
         qp = bq_dir(root, bq) / show["edition"] / "quality.json"
         quality = None
@@ -1437,6 +1450,263 @@ human-review. Any other token is carried as a custom (informational) gate._
     return 0
 
 
+# ---------------------------------------------------------------- narrative layer
+
+NARRATIVE_FILE = "narrative.md"
+NARR_FM_RE = re.compile(r"\A---\n(.*?)\n---\n", re.S)
+NARR_SECTION_RE = re.compile(r"^## (.+?)\s*$", re.M)
+
+
+def narrative_path(root: Path, bq: str, edition: str) -> Path:
+    return bq_dir(root, bq) / edition / NARRATIVE_FILE
+
+
+def narrative_front_matter(edir: Path, extra: dict = None) -> dict:
+    """The provenance block a narrative pins: which report/data bytes it was
+    written against. A later re-answer changes those hashes -> the narrative is
+    STALE (shown, but flagged) until regenerated."""
+    fm = {"report_sha256": sha256_file(edir / "report.md"),
+          "data_sha256": sha256_file(edir / "data.json"),
+          "generated_at": now_iso(), "author": "AI assistant (grounded on report.md + data.json)"}
+    fm.update(extra or {})
+    return fm
+
+
+def parse_narrative(text: str):
+    """-> (front_matter dict, body str, sections {heading: body}). The reserved
+    heading `Executive summary` is the top block; every other `## X` is the
+    narrative for the report section whose heading is X (matched case-insensitively)."""
+    fm, body = {}, text
+    m = NARR_FM_RE.match(text)
+    if m:
+        try:
+            fm = yaml.safe_load(m.group(1)) or {}
+        except yaml.YAMLError:
+            fm = {}
+        body = text[m.end():]
+    heads = list(NARR_SECTION_RE.finditer(body))
+    sections = {}
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(body)
+        sections[h.group(1).strip()] = body[h.end():end].strip()
+    return fm, body, sections
+
+
+def narrative_status(edir: Path):
+    """present | stale | missing (+ detail). Stale = report/data bytes moved since
+    the narrative was written."""
+    np = edir / NARRATIVE_FILE
+    if not np.exists():
+        return {"status": "missing"}
+    fm, _, sections = parse_narrative(np.read_text())
+    stale = (fm.get("report_sha256") != sha256_file(edir / "report.md")
+             or fm.get("data_sha256") != sha256_file(edir / "data.json"))
+    return {"status": "stale" if stale else "present", "generated_at": fm.get("generated_at"),
+            "author": fm.get("author"), "sections": list(sections.keys()),
+            "has_executive_summary": any(k.lower() == "executive summary" for k in sections)}
+
+
+def lint_narrative(root: Path, corpus_root: Path, bq: str, ed: dict):
+    """Claim-lint narrative.md with the SAME rules as report.md, plus narrative-
+    specific checks: front-matter hash pins present + current, an Executive
+    summary section, and every `## X` naming a real report section."""
+    errors, warnings = [], []
+    edir = bq_dir(root, bq) / ed["edition"]
+    np = edir / NARRATIVE_FILE
+    if not np.exists():
+        return ["narrative.md missing"], [], {"status": "missing"}
+    text = np.read_text()
+    fm, body, sections = parse_narrative(text)
+    if not fm.get("report_sha256") or not fm.get("data_sha256"):
+        errors.append("front matter must pin report_sha256 and data_sha256")
+    st = narrative_status(edir)
+    if st["status"] == "stale":
+        warnings.append("narrative is STALE — report.md/data.json changed since it was written; regenerate")
+    if not st.get("has_executive_summary"):
+        errors.append("missing `## Executive summary` section")
+    report_heads = {h.group(1).strip().lower() for h in NARR_SECTION_RE.finditer((edir / "report.md").read_text())}
+    for h in sections:
+        if h.lower() != "executive summary" and h.lower() not in report_heads:
+            errors.append(f"`## {h}` does not match any report section heading")
+    data = json.loads((edir / "data.json").read_text())
+    series_ids = {x["id"] for x in data.get("series", [])} | {v["id"] for v in data.get("verdicts", [])}
+    lint_cfg = project_lint_cfg(root)
+    exempt_res = [EXEMPT_TOKEN_RE] + lint_cfg.get("exempt_res", [])
+    _refs, waived = {}, set()
+    _lint_markdown_text(body, root, corpus_root, ed.get("pins", {}), series_ids, exempt_res,
+                        lint_cfg.get("estimation_exempt", set()),
+                        lambda cid, m: errors.append(m), lambda cid, m: warnings.append(m),
+                        lambda k, v, r, n: _refs.__setitem__((k, v), r), waived)
+    return errors, warnings, st
+
+
+def cmd_narrative_lint(args):
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    ed = find_edition(root, args.bq, args.edition)
+    if ed is None:
+        raise CommercialError(f"{args.bq}: no editions")
+    errors, warnings, st = lint_narrative(root, corpus_root, args.bq, ed)
+    for e in errors:
+        print(f"  ERROR   {e}")
+    for w in warnings:
+        print(f"  warning {w}")
+    print(f"[{args.bq}@{ed['edition']}] narrative {st.get('status')}: {len(errors)} error(s), {len(warnings)} warning(s)")
+    return 1 if errors else 0
+
+
+def cmd_narrative_stamp(args):
+    """Write/overwrite the narrative front matter pinning the CURRENT report/data
+    hashes (used by the console after a fresh synthesis; also handy after a
+    hand-edit that deliberately keeps the narrative current)."""
+    root = Path(args.root)
+    ed = find_edition(root, args.bq, args.edition)
+    if ed is None:
+        raise CommercialError(f"{args.bq}: no editions")
+    edir = bq_dir(root, args.bq) / ed["edition"]
+    np = edir / NARRATIVE_FILE
+    src = Path(args.from_file) if args.from_file else np
+    if not src.exists():
+        raise CommercialError(f"no narrative source at {src}")
+    _, body, _ = parse_narrative(src.read_text())
+    fm = narrative_front_matter(edir, {"author": args.author} if args.author else None)
+    np.write_text("---\n" + yaml.safe_dump(fm, sort_keys=False).strip() + "\n---\n" + body.strip() + "\n")
+    print(f"[{args.bq}@{ed['edition']}] narrative stamped -> {np.relative_to(root.parent.parent.parent)}")
+    return 0
+
+
+# ---------------------------------------------------------------- export
+
+def _export_markdown(root: Path, corpus_root: Path, cfg: dict, q: dict, ed: dict) -> str:
+    """Assemble the formal document: title block, executive summary, then each
+    report section followed by its narrative ("What this tells us"), then the
+    references list resolving every marker. The narrative is included only when
+    present; a stale one is included with a visible flag. Markers are rendered as
+    numbered references so the exported page reads as a document, not a lint surface."""
+    edir = bq_dir(root, q["id"]) / ed["edition"]
+    report = (edir / "report.md").read_text()
+    data = json.loads((edir / "data.json").read_text())
+    dblock = domain_block(cfg, root)
+    st = narrative_status(edir)
+    narr_fm, _, narr_sections = ({}, "", {})
+    if st["status"] != "missing":
+        narr_fm, _, narr_sections = parse_narrative((edir / NARRATIVE_FILE).read_text())
+    nsec = {k.lower(): v for k, v in narr_sections.items()}
+
+    refs, ref_index = [], {}
+
+    def ref_no(kind, val):
+        key = (kind, val)
+        if key not in ref_index:
+            ref_index[key] = len(refs) + 1
+            refs.append((kind, val))
+        return ref_index[key]
+
+    def referencize(text):
+        return MARKER_RE.sub(lambda m: f"^{ref_no(m.group(1), m.group(2).strip())}^", text)
+
+    # split report into (heading, body) blocks; the H1 + preamble is block 0
+    heads = list(NARR_SECTION_RE.finditer(report))
+    blocks = []
+    pre_end = heads[0].start() if heads else len(report)
+    preamble = report[:pre_end]
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(report)
+        blocks.append((h.group(1).strip(), report[h.end():end].strip()))
+
+    approved = ed.get("status") == "approved"
+    cats = {c["key"]: c.get("name", c["key"]) for c in cfg.get("categories", [])}
+    out = [f"% {q['id']} — {q['question']}",
+           f"% {dblock['name']} · {cats.get(q.get('category'), q.get('category'))}",
+           f"% Edition {ed['edition']} ({ed.get('status', 'draft')})", "",
+           f"**Question:** {q['question']}  ", f"**Domain:** {dblock['name']} · **Category:** {cats.get(q.get('category'), q.get('category'))}  ",
+           f"**Edition:** `{ed['edition']}` — {'APPROVED' if approved else 'DRAFT — not approved'}  ",
+           f"**Personas:** {', '.join(q.get('personas', []))} · **Cadence:** {q.get('cadence', '')}  ", ""]
+    if "_Demo sample data" in report:
+        out += ["> _Demo sample data — not for clinical use._", ""]
+    if not approved:
+        out += ["> **DRAFT.** This edition has not passed the approval gate; figures are claim-linted but not yet approved.", ""]
+    # verdict
+    verd = (data.get("verdicts") or [{}])[0].get("headline")
+    if verd:
+        out += ["## Verdict", "", referencize(verd) + f"^{ref_no('derived', (data.get('verdicts') or [{}])[0].get('id', 'v-main'))}^", ""]
+    # executive summary
+    es = nsec.get("executive summary")
+    out += ["## Executive summary", ""]
+    if es:
+        if st["status"] == "stale":
+            out += ["> ⚠️ Narrative written against an earlier version of this edition's figures — regenerate before circulating.", ""]
+        out += [referencize(es), ""]
+    else:
+        out += ["_No executive summary has been written for this edition yet. Generate the narrative in the console (or author `narrative.md`) to add one._", ""]
+    # body sections + narratives
+    for head, body in blocks:
+        if head.lower().startswith("method & provenance"):
+            continue  # folded into the references below
+        out += [f"## {head}", "", referencize(body), ""]
+        n = nsec.get(head.lower())
+        if n:
+            out += ["### What this tells us", "", referencize(n), ""]
+    # references
+    if refs:
+        pins = ed.get("pins", {})
+        out += ["## References", ""]
+        for i, (kind, val) in enumerate(refs, 1):
+            if kind == "src":
+                ds, _, snap = val.rpartition("@")
+                out.append(f"{i}. Corpus dataset `{ds}`, immutable snapshot `{snap}` (provenance in `docs/project/corpus/{ds}/snapshots/{snap}/provenance.yml`).")
+            elif kind == "assume":
+                rec = assumption_record(corpus_root, val) or {}
+                out.append(f"{i}. Assumption record `{val}` — {rec.get('title', 'stated estimate where data does not exist')} (confidence: {rec.get('confidence', '?')}).")
+            elif kind == "derived":
+                out.append(f"{i}. Computed series/verdict `{val}` in this edition's `data.json` (deterministic computation over the pinned snapshots).")
+            elif kind == "config":
+                out.append(f"{i}. Declared configuration `{val}` (versioned in the project).")
+            elif kind == "waived":
+                out.append(f"{i}. Freshness waiver `{val}` (owner + expiry in the corpus).")
+        out += ["", f"_Pins: {', '.join(f'`{k}@{v}`' for k, v in pins.items())}._", ""]
+    out += ["---", "",
+            f"_Generated by the commercial-skill engine `export` from `{edir.relative_to(root.parent.parent.parent)}`"
+            + (f"; narrative by {narr_fm.get('author', 'AI assistant')} at {narr_fm.get('generated_at', '?')}" if es else "")
+            + ". Figures are computed, never written; every reference resolves to a pinned snapshot, a stated assumption, a computed series, or versioned configuration._"]
+    return "\n".join(out)
+
+
+def cmd_export(args):
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    cfg = load_config(root)
+    q = bq_entry(cfg, args.bq)
+    ed = find_edition(root, args.bq, args.edition)
+    if ed is None:
+        raise CommercialError(f"{args.bq}: no editions")
+    md = _export_markdown(root, corpus_root, cfg, q, ed)
+    out_dir = Path(args.out) if args.out else (bq_dir(root, args.bq) / ed["edition"] / "exports")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    stem = f"{args.bq}-{ed['edition']}"
+    md_path = out_dir / f"{stem}.md"
+    md_path.write_text(md)
+    produced = [md_path]
+    fmt = args.format
+    if fmt in ("docx", "pdf"):
+        if shutil.which("pandoc") is None:
+            raise CommercialError("pandoc not found — install it (brew install pandoc) or export --format md")
+        docx_path = out_dir / f"{stem}.docx"
+        subprocess.run(["pandoc", str(md_path), "-o", str(docx_path), "--from", "markdown+superscript"],
+                       check=True, capture_output=True, text=True)
+        produced.append(docx_path)
+        if fmt == "pdf":
+            soffice = shutil.which("soffice") or shutil.which("libreoffice")
+            if soffice is None:
+                raise CommercialError("LibreOffice (soffice) not found — needed for PDF; docx was produced")
+            subprocess.run([soffice, "--headless", "--convert-to", "pdf", "--outdir", str(out_dir), str(docx_path)],
+                           check=True, capture_output=True, text=True, timeout=180)
+            produced.append(out_dir / f"{stem}.pdf")
+    if args.print_path:
+        print(str(produced[-1].resolve()))
+    else:
+        print(f"[{args.bq}@{ed['edition']}] exported: " + ", ".join(str(p) for p in produced))
+    return 0
+
+
 def cmd_dependents(args):
     """Question ids whose corpus_deps match a dataset name or prefix — the seam a
     scheduled refresh uses to re-answer exactly the questions a re-snapshotted
@@ -1647,6 +1917,23 @@ def main(argv=None):
 
     s = sub.add_parser("catalog", help="question roster with answer status")
     s.set_defaults(fn=cmd_catalog)
+
+    s = sub.add_parser("narrative-lint", help="claim-lint an edition's narrative.md (same rules as the report + hash-pin currency)")
+    s.add_argument("bq"); s.add_argument("--edition")
+    s.set_defaults(fn=cmd_narrative_lint)
+
+    s = sub.add_parser("narrative-stamp", help="(re)write narrative.md front matter pinning the current report/data hashes")
+    s.add_argument("bq"); s.add_argument("--edition")
+    s.add_argument("--from-file", help="take the narrative body from this file instead of the existing narrative.md")
+    s.add_argument("--author", help="attribution line (vendor-neutral, e.g. 'AI assistant, reviewed by <initials>')")
+    s.set_defaults(fn=cmd_narrative_stamp)
+
+    s = sub.add_parser("export", help="assemble the formal document (exec summary + sections + narratives + references) as md/docx/pdf")
+    s.add_argument("bq"); s.add_argument("--edition")
+    s.add_argument("--format", default="md", choices=["md", "docx", "pdf"])
+    s.add_argument("--out", help="output directory (default: the edition's exports/ folder)")
+    s.add_argument("--print-path", action="store_true", help="print only the produced file path (for callers)")
+    s.set_defaults(fn=cmd_export)
 
     s = sub.add_parser("dependents", help="implemented question ids whose corpus_deps match a dataset name/prefix")
     s.add_argument("dataset", help="exact dataset name or prefix, e.g. commercial/openfda-; '*' = every implemented question")

@@ -52,3 +52,6 @@ _scratch/
 # pulled file never blocks a fast-forward/merge of the shared branch.
 tasks/*/_usage-metrics/
 **/_usage-metrics/
+
+# Engine-assembled export documents (md/docx/pdf) — derived from the edition; regenerate, never commit.
+docs/project/*/reports/*/*/exports/

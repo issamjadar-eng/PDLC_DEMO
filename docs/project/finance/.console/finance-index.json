@@ -1,6 +1,6 @@
 {
- "schema_version": "1.5",
- "generated": "2026-09-08T18:08:43+00:00",
+ "schema_version": "1.6",
+ "generated": "2026-09-08T19:01:59+00:00",
  "domain": {
   "key": "finance",
   "name": "Finance",
@@ -44,7 +44,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -236,7 +237,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "FQ-02",
@@ -274,7 +276,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "FQ-03",
@@ -292,7 +295,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -520,7 +524,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "FQ-04",
@@ -559,7 +564,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "FQ-05",
@@ -594,7 +600,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "FQ-06",
@@ -612,7 +619,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -804,7 +812,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "present"
   },
   {
    "id": "FQ-07",
@@ -839,7 +848,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "FQ-08",
@@ -857,7 +867,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -1028,7 +1039,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "FQ-09",
@@ -1063,7 +1075,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "FQ-10",
@@ -1098,7 +1111,8 @@
     }
    ],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   }
  ]
 }

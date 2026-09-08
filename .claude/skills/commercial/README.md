@@ -67,6 +67,17 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 16 (2026-09-08): **Narrative layer + formal export.** New optional per-edition
+  `narrative.md` (executive summary + a "what this tells us" block per report section)
+  held to the SAME claim lint as the report via the factored `_lint_markdown_text`, plus
+  narrative-specific checks (hash pins present, exec summary present, headings match
+  report sections); front matter pins report/data sha256 so a re-answer makes the
+  narrative visibly `stale`; outside `approval.yml`'s content hashes by design. New
+  actions `narrative-lint`, `narrative-stamp [--from-file] [--author]`, and
+  `export --format md|docx|pdf [--out] [--print-path]` (title block → verdict → exec
+  summary → sections with narratives → numbered references; pandoc for docx, LibreOffice
+  headless for pdf; default `exports/` folder, gitignored). Sidecar schema 1.5 → 1.6:
+  `narrative` status per row and per edition (additive).
 - 15 (2026-09-08): **Business domains — one engine, N roots.** The engine no longer
   assumes `docs/project/commercial/`: `--domain <slug>` is shorthand for
   `--root docs/project/<slug>`; the catalog is `commercial.yml` if present, else

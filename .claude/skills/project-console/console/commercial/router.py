@@ -19,14 +19,17 @@ sidecar fields so a chart can never overstate its grounding.
 """
 from __future__ import annotations
 
+import html as _html
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from urllib.parse import quote
 
+import markdown as _md_lib
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from console.commercial.loader import (
@@ -785,6 +788,210 @@ async def commercial_review_detail(domain: str, path: str = ""):
     return HTMLResponse(html)
 
 
+# ---------------------------------------------------------------- narrative layer
+# The narrative is prose AROUND the computed results — an executive summary plus a
+# "What this tells us" per report section — stored by the ENGINE as
+# reports/<BQ>/<edition>/narrative.md, hash-pinned to the report/data bytes it
+# explains and held to the same claim lint as the report. The console synthesizes
+# it (grounded on report.md + data.json only), hands it to the engine to stamp and
+# lint, and renders it; it never edits figures.
+
+_NARR_FM_RE = re.compile(r"\A---\n(.*?)\n---\n", re.S)
+_NARR_H2_RE = re.compile(r"^## (.+?)\s*$", re.M)
+_HTML_H2_RE = re.compile(r"<h2[^>]*>(.*?)</h2>", re.S)
+_TAG_RE = re.compile(r"<[^>]+>")
+
+_NARRATIVE_SYSTEM_PROMPT = """You write the narrative layer of a data-driven business report for a regulated medical-device company. You are given the report (every figure already marker-cited) and its data.json.
+
+Produce ONLY a markdown body — no front matter, no title — with these sections:
+
+## Executive summary
+Three to six sentences for an executive: the answer, why it matters, what decision it informs, and the single biggest caveat. Lead with the conclusion.
+
+Then, for EACH `## <heading>` section of the report (same heading text, same order; skip a section titled "Method & provenance"):
+## <exact report heading>
+Two to five sentences explaining what the data in that section tells us — the pattern, why it matters, what would change the reading. Interpret; do not restate every row.
+
+HARD RULES (the output is machine-linted; violations are rejected):
+1. Every figure you mention must already appear in the report, and any sentence containing a digit must carry, on that same line, a citation marker copied VERBATIM from the report — e.g. `[src: dataset@snapshot]`, `[derived: series-id]`, `[config: file.yml]`, `[assume: A-NNN]`. Prefer to cite the same marker the report uses beside that figure. Never invent a marker.
+2. Never compute, extrapolate, forecast, or round differently. Never introduce a number that is not in the report.
+3. Avoid the words estimated, likely, approximately, roughly, assumed, modeled unless the same line carries an `[assume: A-NNN]` marker copied from the report.
+4. Plain language a CFO or VP Quality reads without analytics jargon. No em-dashes needed; short sentences. Do not name any AI vendor, model, or tool.
+5. Headings must match the report's `## ` headings exactly (case and punctuation)."""
+
+
+def _narrative_model(cfg) -> str:
+    models = cfg.console.get("models") or {}
+    return models.get("narrative") or models.get("default") or "claude-sonnet-4-6"
+
+
+def _parse_narrative(text: str):
+    fm, body = {}, text
+    m = _NARR_FM_RE.match(text)
+    if m:
+        fm = _read_yaml_text(m.group(1)) or {}
+        body = text[m.end():]
+    heads = list(_NARR_H2_RE.finditer(body))
+    sections = {}
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(body)
+        sections[h.group(1).strip()] = body[h.end():end].strip()
+    return fm, sections
+
+
+def _read_yaml_text(text: str):
+    try:
+        import yaml
+        return yaml.safe_load(text)
+    except Exception:
+        return None
+
+
+def _md_to_html(text: str) -> str:
+    return _md_lib.markdown(text, extensions=["tables", "sane_lists"])
+
+
+def _narrative_ctx(cfg, repo_root: Path, ed: dict, refbook, report_html: str, domain: str) -> dict:
+    """Read narrative.md (if any) -> executive-summary HTML, staleness, and the
+    report HTML with a "What this tells us" fold appended to each matching section."""
+    from console.commercial.loader import _root as _domain_root
+    edir = _domain_root(repo_root, domain) / "reports" / ed["bq"] / ed["edition"]
+    np = edir / "narrative.md"
+    out = {"narrative_status": "missing", "exec_summary_html": "", "narr_meta": {},
+           "report_html_narrated": report_html, "narr_sections_used": 0}
+    if not np.is_file():
+        return out
+    fm, sections = _parse_narrative(np.read_text(encoding="utf-8"))
+    import hashlib
+
+    def _sha(p):
+        return hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else None
+    stale = fm.get("report_sha256") != _sha(edir / "report.md") or fm.get("data_sha256") != _sha(edir / "data.json")
+    out["narrative_status"] = "stale" if stale else "present"
+    out["narr_meta"] = {"generated_at": fm.get("generated_at"), "author": fm.get("author")}
+    by_key = {k.lower(): v for k, v in sections.items()}
+    es = by_key.pop("executive summary", None)
+    if es:
+        out["exec_summary_html"] = refbook.referencize_html(_md_to_html(es))
+    # append a fold after each report section whose heading matches
+    parts = _HTML_H2_RE.split(report_html)  # [pre, h1text, body1, h2text, body2, ...]
+    if len(parts) > 1:
+        rebuilt = [parts[0]]
+        for i in range(1, len(parts), 2):
+            head_html, body = parts[i], parts[i + 1] if i + 1 < len(parts) else ""
+            key = _html.unescape(_TAG_RE.sub("", head_html)).strip().lower()
+            rebuilt.append(f"<h2>{head_html}</h2>{body}")
+            n = by_key.get(key)
+            if n:
+                out["narr_sections_used"] += 1
+                rebuilt.append(
+                    '<details class="cm-narr" open><summary><span class="cm-narr-k">What this tells us</span>'
+                    + ('<span class="cm-narr-stale" title="written against an earlier version of the figures">stale</span>' if stale else '')
+                    + '</summary><div class="cm-narr-body md-body">'
+                    + refbook.referencize_html(_md_to_html(n)) + '</div></details>')
+        out["report_html_narrated"] = "".join(rebuilt)
+    return out
+
+
+async def _synthesize_narrative(cfg, report_md: str, data_json: str, prior_errors: list[str] | None = None) -> str:
+    from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, query
+    prompt = f"## REPORT (report.md)\n\n{report_md}\n\n## DATA (data.json)\n\n```json\n{data_json[:60000]}\n```\n\nWrite the narrative body now."
+    if prior_errors:
+        prompt += ("\n\nYour previous attempt FAILED the claim lint with these findings — fix every one "
+                   "(most often: a sentence with a digit lacks a marker on its line, or a heading does not "
+                   "match the report):\n- " + "\n- ".join(prior_errors[:25]))
+    options = ClaudeAgentOptions(model=_narrative_model(cfg), system_prompt=_NARRATIVE_SYSTEM_PROMPT,
+                                 permission_mode="bypassPermissions", cwd=str(cfg.repo_root),
+                                 max_turns=1, include_partial_messages=False)
+    chunks: list[str] = []
+    try:
+        async for msg in query(prompt=prompt, options=options):
+            if isinstance(msg, AssistantMessage):
+                for block in (msg.content or []):
+                    if isinstance(block, TextBlock) and block.text:
+                        chunks.append(block.text)
+    except Exception as e:
+        raise HTTPException(502, f"narrative synthesis failed: {e}")
+    body = "".join(chunks).strip()
+    if body.startswith("```"):
+        body = body.strip("`").split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+    if not body:
+        raise HTTPException(502, "narrative synthesis returned empty content")
+    return body
+
+
+@router.post("/domains/{domain}/{bq}/narrative")
+async def commercial_narrative(domain: str, request: Request, bq: str):
+    """Generate (or regenerate) the edition's narrative: synthesize -> engine
+    `narrative-stamp` (pins report/data hashes) -> engine `narrative-lint`. One
+    retry with the lint findings fed back. The file is kept even if the retry
+    still has errors — the UI shows them and the fold is flagged."""
+    cfg = get_config()
+    form = await request.form()
+    edition = str(form.get("edition") or "").strip()
+    q = question_row(cfg.repo_root, bq, domain)
+    ed = load_edition(cfg.repo_root, bq, edition, domain) if (q and edition) else None
+    if ed is None:
+        raise HTTPException(404, f"No edition '{edition}' for {bq}.")
+    script = skill_render_script(cfg.repo_root)
+    back = f"/domains/{domain}/{bq}?edition={quote(edition, safe='')}"
+    if script is None:
+        return RedirectResponse(back + "&narr_error=" + quote("commercial skill not installed", safe=""), status_code=303)
+    edir = cfg.repo_root / Path(ed["report_path"]).parent
+    report_md = (edir / "report.md").read_text(encoding="utf-8")
+    data_json = (edir / "data.json").read_text(encoding="utf-8")
+    errors: list[str] = []
+    for attempt in range(2):
+        body = await _synthesize_narrative(cfg, report_md, data_json, errors or None)
+        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as tf:
+            tf.write(body); tmp = tf.name
+        rc, out = _run([sys.executable, str(script), "--domain", domain, "narrative-stamp", bq, "--edition", edition,
+                        "--from-file", tmp, "--author", "AI assistant (grounded on report.md + data.json)"], cfg.repo_root)
+        Path(tmp).unlink(missing_ok=True)
+        if rc != 0:
+            return RedirectResponse(back + "&narr_error=" + quote(out[-800:], safe=""), status_code=303)
+        rc, out = _run([sys.executable, str(script), "--domain", domain, "narrative-lint", bq, "--edition", edition], cfg.repo_root)
+        errors = [ln.strip()[len("ERROR"):].strip() for ln in out.splitlines() if ln.strip().startswith("ERROR")]
+        if rc == 0:
+            break
+    _run([sys.executable, str(script), "--domain", domain, "render"], cfg.repo_root)
+    if errors:
+        return RedirectResponse(back + "&narr_error=" + quote("narrative saved but the claim lint still reports: " + " | ".join(errors)[:1200], safe=""), status_code=303)
+    return RedirectResponse(back + "&narr_ok=1", status_code=303)
+
+
+_EXPORT_MEDIA = {"md": "text/markdown", "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                 "pdf": "application/pdf"}
+
+
+@router.get("/domains/{domain}/{bq}/export")
+async def commercial_export(domain: str, bq: str, edition: str | None = None, format: str = "docx"):
+    """Assemble and download the formal document via the engine's `export`."""
+    cfg = get_config()
+    if format not in _EXPORT_MEDIA:
+        raise HTTPException(400, "format must be md, docx or pdf")
+    q = question_row(cfg.repo_root, bq, domain)
+    if q is None:
+        raise HTTPException(404, f"Unknown question '{bq}'.")
+    show_id = edition or q.get("latest_edition") or q.get("approved_edition")
+    ed = load_edition(cfg.repo_root, bq, show_id, domain) if show_id else None
+    if ed is None:
+        raise HTTPException(404, f"No edition for {bq}.")
+    script = skill_render_script(cfg.repo_root)
+    if script is None:
+        raise HTTPException(503, "commercial skill not installed")
+    rc, out = _run([sys.executable, str(script), "--domain", domain, "export", bq, "--edition", ed["edition"],
+                    "--format", format, "--print-path"], cfg.repo_root, timeout=300)
+    if rc != 0:
+        raise HTTPException(502, f"export failed: {out[-800:]}")
+    path = Path(out.strip().splitlines()[-1])
+    if not path.is_absolute():
+        path = cfg.repo_root / path
+    if not path.is_file():
+        raise HTTPException(502, "export produced no file")
+    return FileResponse(str(path), media_type=_EXPORT_MEDIA[format], filename=path.name)
+
+
 @router.get("/domains/{domain}/{bq}", response_class=HTMLResponse)
 async def commercial_view(domain: str, request: Request, bq: str, edition: str | None = None):
     cfg = get_config()
@@ -802,6 +1009,8 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
            "report_html": "", "editions": q.get("editions", []),
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
+           "narrative_status": "missing", "exec_summary_html": "", "narr_meta": {},
+           "narr_error": request.query_params.get("narr_error"), "narr_ok": request.query_params.get("narr_ok"),
            "references": [], "quality": None, "code": _decorate_code(q),
            "vplan": _decorate_vplan(q),
            "tables": [], "unstructured": [],
@@ -909,6 +1118,8 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
                 ctx["report_html"] = refbook.referencize_html(html)
             except Exception:
                 ctx["report_html"] = ""
+        ctx.update(_narrative_ctx(cfg, cfg.repo_root, ed, refbook, ctx["report_html"], domain))
+        ctx["report_html"] = ctx.pop("report_html_narrated")
         ctx["references"] = refbook.refs
         # assumption chips → open the record in the Documents viewer when possible
         chips = []

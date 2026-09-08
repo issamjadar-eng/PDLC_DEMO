@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 15
+version: 16
 updated: 2026-09-08
 dependencies:
   skills:
@@ -61,6 +61,9 @@ Core guarantees downstream consumers rely on:
     edition.yml              # status: draft | approved | superseded (engine-owned);
                              #   pins plan hash + code_artifacts (the code bytes that computed it)
     approval.yml             # who/when/checks/content-hashes (written by approve)
+    narrative.md             # OPTIONAL prose layer (exec summary + "what this tells us" per
+                             #   section) — hash-pinned to report.md/data.json; claim-linted
+    exports/                 # engine `export` output (md/docx/pdf) — derived, gitignored
   code-quality/records.yml   # engine-managed code-quality store (checks + AI reviews per artifact sha)
   .console/commercial-index.json   # sidecar consumed by the project console
 ```
@@ -169,8 +172,9 @@ below) and its verification-plan tally — "X of Y declared gates satisfied" plu
 unmet list (see "Verification plan" below) — both informational only, never blockers.
 
 ### `render`
-Write `.console/<domain>-index.json` (`schema_version: 1.5`; adds the top-level `domain`
-identity block, otherwise identical to 1.4) — per question: status
+Write `.console/<domain>-index.json` (`schema_version: 1.6`; 1.5 added the top-level
+`domain` identity block, 1.6 adds `narrative: present|stale|missing` on the row and on
+each `editions[]` entry — all additive) — per question: status
 (not-implemented | no-answer | draft-only | answered), approved/draft editions, verdict
 headline, worst-of evidence class, freshness band, assumptions cited, report/data paths.
 The console is a pure consumer of this file. The card's verdict/badges come from the
@@ -327,6 +331,44 @@ completed/failed), and **determinism** reasoning the replay can't reach. Finding
 structured (`severity|summary|disposition`); park the full dossier behind
 `--detail-ref` — authored to the dossier standard ("Review dossiers" below), never as
 a raw reviewer worksheet.
+
+### Narrative layer — `narrative-lint`, `narrative-stamp`
+The report is deliberately terse: every figure computed, cited, nothing else. The
+**narrative** is the optional prose layer *around* it — a `## Executive summary` plus one
+`## <exact report heading>` block per report section explaining what the data tells us —
+stored as `reports/<BQ>/<edition>/narrative.md`. Three rules keep it honest:
+
+1. **Same lint as the report.** `narrative-lint <BQ> [--edition E]` runs the identical
+   line-based claim lint (`_lint_markdown_text`): any sentence with a digit needs a marker
+   on its line, markers must resolve against the edition's pins/series, estimation words
+   need an `[assume:]`. Plus narrative checks: front matter must pin `report_sha256` +
+   `data_sha256`; an `## Executive summary` must exist; every other `## X` must name a real
+   report section. **A narrative may cite, never compute** — no new figures.
+2. **Hash-pinned, so staleness is visible.** `narrative-stamp <BQ> [--edition E]
+   [--from-file F] [--author A]` (re)writes the front matter against the CURRENT report/data
+   bytes. A later re-answer changes those bytes → status `stale` (shown with a flag in the
+   console and the export, until regenerated). `render` emits `narrative:
+   present|stale|missing` per edition (sidecar schema 1.6, additive).
+3. **Outside the approval hash.** `approval.yml` pins report.md + data.json only, so adding
+   or regenerating a narrative on an approved edition never trips `check`; the narrative
+   is provenance-stamped prose, not the controlled figures. Author attribution is
+   vendor-neutral ("AI assistant …").
+
+The console's **Generate narrative** button synthesizes the body grounded on report.md +
+data.json only, then calls `narrative-stamp` and `narrative-lint` (one retry with the
+findings fed back). Hand-authoring is equally valid: write the body, run `narrative-stamp`.
+
+### `export <BQ> [--edition E] --format md|docx|pdf [--out DIR] [--print-path]`
+Assemble the **formal document** from an edition: title block (question, domain, category,
+edition + APPROVED/DRAFT, demo banner), Verdict, Executive summary (or an explicit "not
+written yet" line), then every report section followed by its `### What this tells us`
+narrative when present (a stale narrative is included with a visible flag), then a
+numbered **References** list resolving every marker (dataset@snapshot + provenance path,
+assumption record + confidence, computed series, config file, waiver) and the pins line.
+Markers render as superscript reference numbers so the page reads as a document. `md` is
+always written; `docx` via pandoc; `pdf` via LibreOffice headless from the docx (a clear
+error names the missing tool). Default output `reports/<BQ>/<edition>/exports/` (gitignored
+— derived). The console's **⬇ Word / ⬇ PDF** chips call this.
 
 ### `dependents <dataset | prefix | *>`
 Print the ids of every **implemented** question whose `corpus_deps` name the dataset
