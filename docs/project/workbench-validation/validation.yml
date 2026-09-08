@@ -2,7 +2,7 @@
 # Authored source of truth (paired with validation-plan.md). The report, results,
 # and sidecar are generated projections; edit here, then run
 # `/workbench-validation validate`.
-schema_version: "1.1"
+schema_version: "1.2"
 
 banner: "_Demo sample data — not for clinical use._ Illustrative of method only — not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text."
 
@@ -32,7 +32,8 @@ known_anomalies:
   # Each entry names an owner and the run by which it is expected to clear —
   # an anomaly without those is parked, not dispositioned (task ben/119 D1).
   - "**Designed-but-inert control** — `change-control/hooks/pre_tool_use_frozen.py` is a stub (exits 0): the frozen-controlled-doc edit block is designed but not yet enforcing; lifecycle-state enforcement currently relies on process discipline. Owner: change-control skill maintainer. Expected to clear: the run after the hook is implemented and a gate case (TC) is added for it."
-  - "**Untested deterministic checkers** — several load-bearing lint/checker scripts have no regression suite pinning their behavior (regulatory-authoring `authoring_lint.py`, submissions linters, commercial `dossier_lint.py`, gap-analysis sidecar renderer). WUN-04 evidence rests on the writing-well lint suite only. Owner: each skill's maintainer. Expected to clear: one case per checker added as suites land; the secops scanner closed its own instance of this gap in 2026-09 (TC-19)."
+  - "**Untested deterministic checkers** — several load-bearing lint/checker scripts have no regression suite pinning their behavior (regulatory-authoring `authoring_lint.py`, submissions linters — TC-25 exercises only the positive path on the live package, no synthetic inconsistent fixture yet — commercial `dossier_lint.py`, docflow fidelity gates, gap-analysis sidecar renderer). WUN-04 evidence rests on the writing-well lint suite only. Owner: each skill's maintainer. Expected to clear: one case per checker added as suites land; the secops scanner (TC-19) and the validation tooling itself (TC-26) closed their instances of this gap in 2026-09."
+  - "**Commercial data snapshots stale (project content finding, 2026-09-08)** — `commercial.py check` reports every approved edition's `internal-fleet` / `internal-upgrade-campaign` pins as STALE (43 days against a 7-day window) with no waiver, and `corpus.py check` fails. The gate is doing its job; the finding is about the data, not the tool, which is why WUN-19 is process-control rather than a scripted case that would flip with snapshot age. Owner: commercial workstream (business-domains task). Expected to clear: on the next corpus refresh or a recorded waiver."
   - "**Suite exit-code masking** — the task-gate suite reports per-scenario failures but exits 0 regardless; pass/fail is derived from its output banner (`pass_pattern`). Owner: task skill maintainer. Expected to clear: the run after the suite exits non-zero on any failed scenario."
   - "**Environment sensitivity** — the task-gate suite requires `CLAUDE_SESSION_ID` to be unset (a live agent session's ID makes fake-session DENY scenarios resolve ALLOW); the runner strips it via `env_unset` and records it in the environment record's isolation block. Accepted residual: documented, mechanically enforced by the manifest."
   - "**Model identifier depends on the operator** — the harness does not export the model to scripts; the runner records it only when passed via `--model-id` (or `$CLAUDE_MODEL`) and otherwise reports 'not captured' as a run warning. Owner: validation operator (record at run time). Accepted residual until the harness exposes it."
@@ -48,15 +49,19 @@ revalidation_triggers:
   - "Intended-use change (new action, new output destination) — revisit the need register"
   - "Periodic: per internal-audit cycle"
 
-# Each need is stated from a ROLE's perspective, in the role's own language —
-# what outcome they need, never how the workbench implements it. The mechanism
-# lives in `implemented_by:` (informational traceability, not part of the need).
+# Each need is a user story composed by the renderer from three fields:
+#   "As a {role}, I need the workbench to {need}, so that {so_that}."
+# `need` is the outcome the role can observe (phrased to follow "I need the
+# workbench to…"), never how the workbench implements it; `so_that` is the
+# purpose — required. The mechanism lives in `implemented_by:` (traceability
+# only, not part of the need). The runner refuses a need missing any of the three.
 user_needs:
   - id: WUN-01
     role: "DHF author"
     class: authoring
     tier: T1
-    need: "When I draft a controlled document, its structure must come out matching what the governing QMS form requires — without me having to remember the form's rules."
+    need: "produce a controlled document whose structure matches the governing QMS form, without me having to remember the form's rules"
+    so_that: "my draft passes document control without structural rework"
     coverage: process-control
     implemented_by: "medtech-docs scaffolding + .taxonomy.yml doctype governance + regulatory-authoring workflow"
     process_controls:
@@ -67,7 +72,8 @@ user_needs:
     role: "Reviewer / approver"
     class: authoring
     tier: T1
-    need: "I can always tell which content in a controlled document came from the AI assistant and which content a human wrote or approved."
+    need: "show me which content in a controlled document came from the AI assistant and which a human wrote or approved"
+    so_that: "I review AI-drafted content with the scrutiny it needs and sign off only on what a person has owned"
     coverage: process-control
     implemented_by: "AI-changelog metadata blocks + working-vs-formal document split + PR history"
     process_controls:
@@ -78,7 +84,8 @@ user_needs:
     role: "Regulatory affairs lead"
     class: authoring
     tier: T1
-    need: "If the toolchain could not verify a claim it drafted, that claim is visibly flagged for me — never silently asserted as fact."
+    need: "visibly flag any claim it drafted but could not verify, never asserting it silently as fact"
+    so_that: "an unverified regulatory claim can never reach a submission unnoticed"
     coverage: process-control
     implemented_by: "[VERIFY] flag convention + no-fabrication policy + mandatory reference audit on citation-bearing edits"
     process_controls:
@@ -88,14 +95,16 @@ user_needs:
     role: "DHF author"
     class: authoring
     tier: T1
-    need: "Before my document goes out for review, mechanical writing defects (leaks, jargon, clutter, undefined terms) are caught automatically and reliably."
+    need: "catch mechanical writing defects (leaks, jargon, clutter, undefined terms) automatically and reliably before my document goes out for review"
+    so_that: "reviewers spend their time on substance, not copy-editing"
     coverage: tests
     implemented_by: "writing-well + regulatory-authoring deterministic lint scripts"
   - id: WUN-05
     role: "Quality engineer"
     class: audit
     tier: T2
-    need: "When a document cites a standard, guidance, or internal source, I get a trustworthy answer on whether the citation really matches the source text."
+    need: "give me a trustworthy answer on whether a cited standard, guidance, or internal source really says what the document claims"
+    so_that: "citations in the controlled record survive an auditor checking them against the source text"
     coverage: exploratory
     implemented_by: "reference-audit skill + citations advisor (LLM-driven verification against byte-correct sources)"
     process_controls:
@@ -104,63 +113,72 @@ user_needs:
     role: "Quality engineer"
     class: audit
     tier: T2
-    need: "If our documentation drifts from its declared structure, traceability, or tracker baseline, I find out from our own audit run — not from an external auditor."
+    need: "tell me from our own audit run which required design-history documents are missing, unmapped or out of place against the declared structure"
+    so_that: "we find documentation gaps before an external auditor does"
     coverage: tests
-    implemented_by: "dhf-manifest coverage audit + trace-matrix graph checks + tracker validation + jira-pull drift rules"
+    implemented_by: "dhf-manifest discovery index + coverage audit (validate.py / audit-coverage.py)"
   - id: WUN-07
     role: "Program lead"
     class: gates
     tier: T1
-    need: "No project file gets changed without being anchored to a tracked task, so every change is traceable to why it was made."
+    need: "refuse any change to a project file that is not anchored to a tracked task"
+    so_that: "every change is traceable to why it was made"
     coverage: tests
     implemented_by: "task-gate PreToolUse hook (check-active-task.sh) with exempt-path list"
   - id: WUN-08
     role: "Quality engineer"
     class: gates
     tier: T1
-    need: "Documents cannot be converted outside the controlled conversion pipeline without a deliberate, visible override."
+    need: "block document conversion outside the controlled pipeline unless someone deliberately and visibly overrides it"
+    so_that: "every formal document has a known conversion provenance"
     coverage: tests
     implemented_by: "docflow conversion-block PreToolUse hook with .state/docflow-active override marker"
   - id: WUN-09
     role: "DHF author"
     class: renderers
     tier: T1
-    need: "Auto-generated sections of my documents always reflect the current source of truth, and never damage the text I wrote by hand around them."
+    need: "keep the auto-generated sections of my documents current with their source of truth without damaging the text I wrote by hand around them"
+    so_that: "I can trust generated content and never lose my own"
     coverage: tests
     implemented_by: "sentinel-block renderer (render-sentinels.py) + advisor grounding renderer, both idempotent"
   - id: WUN-10
     role: "Program lead"
     class: console
-    tier: T3
-    need: "Dashboards and decks show me the real, current state of the project — and tell me when what I'm looking at is stale."
+    tier: "T2"
+    need: "show me the real, current state of the project in dashboards and decks, and tell me when what I am looking at is stale"
+    so_that: "I make decisions on today's state, not last month's"
     coverage: tests
     implemented_by: "project-console loaders/views (freshness badges) + md-deck rendering"
   - id: WUN-11
     role: "Team member"
     class: config-control
     tier: T2
-    need: "When I sync shared tooling, my local improvements are never silently overwritten, and I can see at a glance whether I'm in step with the team."
+    need: "sync shared tooling without silently overwriting my local improvements, and show me at a glance whether I am in step with the team"
+    so_that: "no one's work is lost to a sync and drift is visible before it causes confusion"
     coverage: tests
     implemented_by: "sync-skills three-way merge analysis (LOCAL_AHEAD protection) + status action"
   - id: WUN-12
     role: "Security officer"
     class: config-control
     tier: T2
-    need: "Any tool added to the workbench is screened for hostile behavior, and unapproved tools cannot operate unnoticed."
+    need: "screen every tool added to the workbench for hostile behavior and stop unapproved tools from operating unnoticed"
+    so_that: "a compromised or unvetted skill cannot reach project data silently"
     coverage: tests
     implemented_by: "secops static artifact scanner + project.yml security allowlists + SessionStart posture check"
   - id: WUN-13
     role: "Quality engineer"
     class: cross-cutting
     tier: T2
-    need: "At any moment I can capture exactly which tool versions the team is working with, so I know what configuration was validated and when to revalidate."
+    need: "capture at any moment exactly which tool versions and environment the team is working with"
+    so_that: "I know what configuration was validated and when to revalidate"
     coverage: tests
     implemented_by: "per-skill version frontmatter/VERSION files + the validation runner's per-run configuration baseline"
   - id: WUN-14
     role: "Auditor (internal / external)"
     class: cross-cutting
     tier: T1
-    need: "For any AI-assisted change to a controlled document, I can trace when it happened, under which task, and who approved it."
+    need: "let me trace, for any AI-assisted change to a controlled document, when it happened, under which task, and who approved it"
+    so_that: "AI assistance never weakens the audit trail of the controlled record"
     coverage: process-control
     implemented_by: "git/PR history + AI-changelog provenance rows + task-first workflow"
     process_controls:
@@ -171,19 +189,147 @@ user_needs:
     role: "Document control specialist"
     class: authoring
     tier: T1
-    need: "When documents move between the repo and the formal systems (Confluence, Google Docs), nothing gets corrupted in transit — and frozen documents stay frozen."
+    need: "move documents between the repo and the formal systems (Confluence, Google Docs) without corrupting content, images, or review state in transit"
+    so_that: "the controlled copy in the formal system is faithful to what was reviewed"
     coverage: tests
     implemented_by: "change-control adopt/publish pipeline + review tiers (frozen-state hook currently a stub — see known anomalies)"
   - id: WUN-16
     role: "Document control specialist"
     class: cross-cutting
     tier: T1
-    need: "When this workbench is connected to our real Confluence and Jira, I need proof that adopting and publishing a controlled page actually works against those systems — not only against a simulation."
+    need: "prove that adopting and publishing a controlled page works against our real Confluence and Jira when the workbench is connected to them, not only against a simulation"
+    so_that: "we rely on integration evidence from the actual systems of record, not a stand-in"
     coverage: exploratory
     implemented_by: "change-control adopt/publish over the Atlassian MCP server (agent-mediated) + REST/cookie bridge; jira-pull search over MCP"
     process_controls:
       - "MCP-mediated paths cannot be driven from pytest — the agent makes the call. They are validated by recorded live probes (scripted transcript + expected outcome; the change-control v0.6 probe set is the pattern), re-run whenever a deployment declares a connection."
       - "The REST/cookie-bridge halves of the same paths have scripted `live` cases (TC-17, TC-18, TC-21) that execute only when `connections:` declares the endpoint; here they report NOT-APPLICABLE."
+
+  - id: WUN-17
+    role: "Marketing / communications lead"
+    class: renderers
+    tier: T1
+    need: "publish an external-facing document with every internal note, evidence block and draft metadata removed, and refuse to publish if any internal marker survives"
+    so_that: "nothing meant for internal eyes ever leaves the building in a white paper, article or brief"
+    coverage: tests
+    implemented_by: "public-doc strip_internal.py (verifies no marker survives; exit 2 on a surviving marker, 3 on a malformed block) + lint_doc.py"
+  - id: WUN-18
+    role: "Program lead"
+    class: renderers
+    tier: T2
+    need: "tell me when a knowledge pack shared with an external assistant platform has drifted from the repository documents it was built from, and refuse to build a pack whose sources are missing"
+    so_that: "an outside team is never working from stale or contradicted project knowledge"
+    coverage: process-control
+    implemented_by: "knowledge-pack-export build_pack.py validate + freshness_check.py"
+    process_controls:
+      - "No knowledge pack exists in this project yet; `build_pack.py validate` and `freshness_check.py` are run by the pack owner before every publish once one does (the skill's template pack does not validate here — its example sources are absent — so no scripted case is claimed)"
+  - id: WUN-19
+    role: "Commercial analyst"
+    class: audit
+    tier: T1
+    need: "block approval of a business answer whose numbers are not each traceable to a pinned data snapshot, assumption, derivation or config value, or whose snapshot is stale without a waiver"
+    so_that: "no figure reaches leadership or a customer without a resolvable, current source"
+    coverage: process-control
+    implemented_by: "commercial.py lint (claim markers) + check (edition integrity, approved-lint, freshness, corpus chain) + corpus.py check"
+    process_controls:
+      - "`commercial.py check` runs before any edition is approved; approval is blocked on a red lint or a stale pin without a waiver"
+      - "Not a scripted case: the check judges project data state (snapshot age), which changes weekly — see the known anomaly recording its current result"
+  - id: WUN-20
+    role: "Regulatory affairs lead"
+    class: gates
+    tier: T1
+    need: "stop a submission package from being marked transmittable while any cross-document inconsistency, unresolved [VERIFY] tag or scope violation remains"
+    so_that: "what we send to the regulator is internally consistent and contains no unverified claim"
+    coverage: tests
+    implemented_by: "submissions check_package_consistency.py (--transmit-gate), qsub_scope_lint.py, estar_lint.py, provenance reconciliation"
+  - id: WUN-21
+    role: "Program lead"
+    class: cross-cutting
+    tier: T2
+    need: "carry every strategy decision and lesson tagged in a task document into the shared strategy documents and lessons ledger, and tell me about any tagged block it could not harvest"
+    so_that: "a decision made during task work is never silently lost between the task and the durable record"
+    coverage: process-control
+    implemented_by: "strategy scan/assemble/validate + lessons scan/assemble/validate (agent-executed procedures; no deterministic harvester script today)"
+    process_controls:
+      - "strategy validate + lessons validate run before a strategy document is declared assembled"
+      - "/strategy diff and /lessons diff reviewed by the task owner at checkpoint (a prior task found malformed tags invisible to the harvester — the precedent this need exists for)"
+  - id: WUN-22
+    role: "Team member"
+    class: gates
+    tier: T2
+    need: "start every session with an accurate security posture, a briefing that reflects the team's actual recent activity, and recovery of any task left uncheckpointed"
+    so_that: "I never begin work on a wrong picture of the project or lose an interrupted task"
+    coverage: process-control
+    implemented_by: "SessionStart hooks: security-assert.sh (16 checks), session-briefing.sh, checkpoint-recover.sh, taxonomy-freshness.sh; digest"
+    process_controls:
+      - "hooks registered in .claude/settings.json and listed in the validation environment record (hooks_installed)"
+      - "SECOPS.md attestations on a 30-day cycle; security-assert.sh warns when stale"
+  - id: WUN-23
+    role: "Program lead"
+    class: cross-cutting
+    tier: T3
+    need: "attribute the team's assistant spend to the task that was active when it was incurred, and never report a number it did not measure"
+    so_that: "cost per task is real, and an unmeasured slot reads as unknown rather than zero"
+    coverage: process-control
+    implemented_by: "task-activate.sh activation ledger + usage-metrics collect.py / aggregate.py (null for unmeasured) + publish hook"
+    process_controls:
+      - "collect/aggregate dry-run modes reviewed at setup; aggregation is idempotent over committed per-session JSON"
+  - id: WUN-24
+    role: "DHF author"
+    class: authoring
+    tier: T1
+    need: "convert a formal document to markdown and back without losing content, images, cross-references or requirement metadata, and tell me when fidelity could not be verified"
+    so_that: "the working copy and the controlled file always say the same thing"
+    coverage: process-control
+    implemented_by: "docflow verify_conversion_fidelity.py + validate_phase7.py quality gates + round-trip frontmatter (scripts exist; no fixture-based regression suite yet)"
+    process_controls:
+      - "docflow quality gates run inside every adopt/export; conversion outside the pipeline is blocked (WUN-08)"
+  - id: WUN-25
+    role: "Reviewer / approver"
+    class: audit
+    tier: T1
+    need: "ground every advisor answer and every search result only in canonical project sources, never in audience explainers, personal work folders or exported packs"
+    so_that: "advice and findings rest on the controlled record, not on a retelling of it"
+    coverage: process-control
+    implemented_by: "file-locator corpus_excludes (articles/**, **/_work/**, _scratch) + advisors three-tier grounding (render idempotence exercised by TC-04) + articles-not-canonical rule"
+    process_controls:
+      - "file-locator audit / audit --coverage after every index rebuild"
+      - "advisor GROUNDING blocks regenerated only by /advisors sync"
+  - id: WUN-26
+    role: "Quality engineer"
+    class: cross-cutting
+    tier: T2
+    need: "trust the validation tooling itself — its runner, report and verdict rules — to the same standard as the tools it validates"
+    so_that: "a PASS on this report is evidence, not an artifact of an untested checker"
+    coverage: tests
+    implemented_by: "workbench-validation tests/test_runner_renderer.py (need-format lint, frontmatter parsing, story composition, NOT-APPLICABLE verdicts, end-to-end synthetic manifest); every run pins manifest + test sources by sha256"
+  - id: WUN-27
+    role: "Quality engineer"
+    class: audit
+    tier: T1
+    need: "tell me when a trace link between user needs, design inputs, outputs and verification is broken or one-directional, or when the Jira mirror and the trace matrix disagree"
+    so_that: "traceability gaps are found by our own run, not by the reviewer"
+    coverage: tests
+    implemented_by: "trace-matrix integrity checks + jira-pull drift rules (A/B/C categories)"
+  - id: WUN-28
+    role: "Program lead"
+    class: renderers
+    tier: T2
+    need: "keep the submission tracker's rows, statuses and draft actions consistent with its own inventory, so that every row I can act on actually works"
+    so_that: "the readiness dashboard the team steers by is not lying about what exists or what can be drafted"
+    coverage: tests
+    implemented_by: "tracker generate / render / build-draft-context wiring (md-only rows merged into the inventory)"
+  - id: WUN-29
+    role: "Document control specialist"
+    class: gates
+    tier: T1
+    need: "keep a frozen controlled document frozen — refuse edits to it from inside the workbench until it is formally unfrozen"
+    so_that: "a document under formal review or released cannot drift while its approval is in flight"
+    coverage: process-control
+    implemented_by: "change-control lifecycle states + hooks/pre_tool_use_frozen.py (designed; currently a stub that exits 0 — see known anomalies)"
+    process_controls:
+      - "Lifecycle state recorded in document frontmatter and checked by the publish path"
+      - "Edit block is NOT enforced today (inert hook) — relies on process discipline; this need is deliberately kept visible as process-control until the hook is implemented and a gate case exists"
 
 
 # `title` / `description` / `approach` are written for a NON-SPECIALIST reviewer:
@@ -233,7 +379,7 @@ test_cases:
     title: "Advisor grounding files are built correctly"
     description: "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources."
     approach: "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output."
-    wun: [WUN-09]
+    wun: [WUN-09, WUN-25]
     cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/advisors/tests", "-q"]
     timeout: 600
     requires: [uv]
@@ -261,7 +407,7 @@ test_cases:
     title: "Traceability-chain checks work"
     description: "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs — the chain auditors walk."
     approach: "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions."
-    wun: [WUN-06]
+    wun: [WUN-27]
     cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/trace-matrix/tests", "-q"]
     timeout: 600
     requires: [uv]
@@ -271,7 +417,7 @@ test_cases:
     title: "Submission-tracker wiring works"
     description: "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents."
     approach: "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations."
-    wun: [WUN-06]
+    wun: [WUN-28]
     cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/tracker/tests", "-q"]
     timeout: 600
     requires: [uv]
@@ -281,7 +427,7 @@ test_cases:
     title: "Jira-drift detection works"
     description: "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught."
     approach: "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks)."
-    wun: [WUN-06]
+    wun: [WUN-27]
     # --deselect: test_exec is a test-data helper whose name collides with pytest
     # collection (suite is written to run standalone); 69 real tests remain.
     cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--with", "openpyxl", "--", "pytest", ".claude/skills/jira-pull/tests", "-q", "--deselect", ".claude/skills/jira-pull/tests/test_drift_rules.py::test_exec"]
@@ -372,7 +518,7 @@ test_cases:
     title: "Jira mirror refresh works against the real Jira (only where one is connected)"
     description: "Runs the jira-pull live smoke test against the deployment's real Jira. NOT-APPLICABLE here by declaration (no Jira connection)."
     approach: "Runs only the `live`-marked jira-pull tests with the `--live` opt-in."
-    wun: [WUN-06, WUN-16]
+    wun: [WUN-27, WUN-16]
     uut: [jira-pull]
     endpoint: live
     connection: jira
@@ -408,5 +554,36 @@ test_cases:
     endpoint: live
     connection: browser
     cmd: ["uv", "run", "--no-project", "--with", "pytest", "--", "pytest", ".claude/skills/web-control/tests", "-q", "-m", "live", "--live"]
+    requires: [uv]
+    timeout: 300
+
+  # ---- Register scrub additions 2026-09 (task ben/120) ----
+  - id: TC-22
+    title: "Internal notes cannot survive into a published external document"
+    description: "Checks the publish step that produces the public copy of a white paper or article: internal evidence blocks and draft metadata must be removed, and a document with a malformed internal block must be refused rather than published."
+    approach: "Builds two small documents in a temp folder — one well-formed with an internal block, one with an unclosed block — runs the strip script on each, and checks the public output carries no internal text or marker and that the malformed one is refused with the documented exit code."
+    wun: [WUN-17]
+    uut: [public-doc]
+    endpoint: none
+    cmd: ["bash", "-c", "set -e; T=$(mktemp -d); printf -- '---\npublic_doc:\n  audience: x\n---\n# T\n\nPublic line.\n\n<!-- INTERNAL:BEGIN -->\nsecret\n<!-- INTERNAL:END -->\n' > \"$T/d.md\"; python3 .claude/skills/public-doc/scripts/strip_internal.py \"$T/d.md\" -o \"$T/out.md\" --quiet; grep -q 'Public line' \"$T/out.md\"; ! grep -qE 'secret|INTERNAL|public_doc' \"$T/out.md\"; printf -- '# T\n<!-- INTERNAL:BEGIN -->\nopen\n' > \"$T/bad.md\"; set +e; python3 .claude/skills/public-doc/scripts/strip_internal.py \"$T/bad.md\" -o \"$T/o2.md\" --quiet; rc=$?; set -e; [ \"$rc\" -eq 3 ]; echo STRIP-OK"]
+    pass_pattern: "STRIP-OK"
+    timeout: 60
+  - id: TC-25
+    title: "The submission-package consistency gate runs clean on the pre-submission package"
+    description: "PROJECT-INSTANCE check (declared): runs the transmission gate over this project's pre-submission package. It proves the gate executes and that the package it protects is currently consistent; a fixture-based negative case (an inconsistent synthetic package) is a known gap recorded in the anomalies."
+    approach: "Runs the package-consistency checker with its transmit gate over the qsub filing folder in machine-readable mode; passes only on exit 0 (no failures, no warnings)."
+    wun: [WUN-20]
+    uut: [submissions]
+    endpoint: none
+    cmd: ["python3", ".claude/skills/submissions/scripts/check_package_consistency.py", "docs/project/submissions/qsub", "--transmit-gate", "--json"]
+    timeout: 120
+  - id: TC-26
+    title: "The validation tooling itself passes its own regression suite"
+    description: "Checks the runner and renderer that produce this report: the need-format contract, frontmatter parsing, user-story composition, NOT-APPLICABLE and other verdict rules, strongest-evidence text, and an end-to-end run over a synthetic manifest — including that a malformed manifest is refused."
+    approach: "Runs the workbench-validation skill's pytest suite."
+    wun: [WUN-26]
+    uut: [workbench-validation]
+    endpoint: none
+    cmd: ["uv", "run", "--no-project", "--with", "pytest", "--with", "pyyaml", "--", "pytest", ".claude/skills/workbench-validation/tests", "-q"]
     requires: [uv]
     timeout: 300

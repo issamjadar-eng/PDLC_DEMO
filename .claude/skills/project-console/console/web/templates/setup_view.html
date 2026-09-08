@@ -1272,11 +1272,11 @@
           <span>ID</span><span>Role</span><span>Need</span><span>Tier</span><span>Coverage</span><span>Verdict</span></div>
         {% for n in wbd.needs %}
         <div class="su-row" style="grid-template-columns:64px 145px 1fr 36px 118px 110px;align-items:start"
-             data-search="{{ n.id | lower }} {{ n.role | lower }} {{ n.class }} {{ n.need | lower }} {{ n.verdict | lower }}"
+             data-search="{{ n.id | lower }} {{ n.role | lower }} {{ n.class }} {{ (n.statement or n.need) | lower }} {{ n.verdict | lower }}"
              title="{{ n.need }}{% if n.implemented_by %} — implemented by: {{ n.implemented_by }}{% endif %}{% if n.process_controls %} — controls: {{ n.process_controls | join('; ') }}{% endif %}{% if n.tests %} — evidence: {{ n.tests | join(', ') }}{% endif %}">
           <span class="su-type">{{ n.id }}</span>
           <span class="su-type" style="overflow-wrap:break-word">{{ n.role or n.class }}</span>
-          <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.need }}
+          <span style="color:var(--body-text,#e6e9ef);white-space:normal;overflow-wrap:break-word;line-height:1.45;padding-right:18px">{{ n.statement or n.need }}
             {% if n.strongest_evidence %}<div class="su-type" style="margin-top:4px">evidence: {{ n.strongest_evidence }}</div>{% endif %}</span>
           <span class="su-type">{{ n.tier }}</span>
           <span class="su-type">{{ n.coverage }}</span>

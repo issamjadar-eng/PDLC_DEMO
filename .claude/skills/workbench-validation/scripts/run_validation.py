@@ -301,6 +301,38 @@ def operator_info(root):
     }
 
 
+def _schema_at_least(version, floor):
+    def parts(v):
+        try:
+            return tuple(int(x) for x in str(v).split("."))
+        except ValueError:
+            return (0,)
+    return parts(version) >= parts(floor)
+
+
+def lint_needs(needs):
+    """User-story contract for needs: `role`, `need` (outcome phrased to follow
+    'I need the workbench to…') and `so_that` (purpose) are all required;
+    the renderer composes the sentence. Returns (problems, warnings)."""
+    problems, warns = [], []
+    for n in needs:
+        nid = n.get("id", "WUN-??")
+        for field in ("role", "need", "so_that"):
+            if not str(n.get(field) or "").strip():
+                problems.append(f"{nid}: missing `{field}`")
+        text = str(n.get("need") or "").strip()
+        low = text.lower()
+        if low.startswith(("as a ", "as an ", "i need ")):
+            warns.append(f"{nid}: `need` already starts with story wording — write only the outcome "
+                         "(the renderer prefixes 'As a <role>, I need the workbench to')")
+        if low.startswith(("the workbench ", "the system ")):
+            warns.append(f"{nid}: `need` starts with a subject — phrase it as the outcome verb phrase")
+        so = str(n.get("so_that") or "").strip().lower()
+        if so.startswith("so that "):
+            warns.append(f"{nid}: `so_that` already starts with 'so that' — the renderer adds it")
+    return problems, warns
+
+
 def _names(dirpath, suffixes):
     if not dirpath.is_dir():
         return []
@@ -564,6 +596,15 @@ def main():
         sys.exit(f"Manifest not found: {manifest_path}")
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
 
+    # Need-format contract (manifest schema >= 1.2): every need is a user story
+    # composed from role / need / so_that. Missing fields are an error on 1.2+
+    # manifests and a warning on older ones; double wording is a warning.
+    need_problems, need_warnings = lint_needs(manifest.get("user_needs", []))
+    schema = str(manifest.get("schema_version", "1.0"))
+    if need_problems and _schema_at_least(schema, "1.2"):
+        sys.exit("Manifest user_needs do not meet the need-format contract:\n  - "
+                 + "\n  - ".join(need_problems))
+
     cases = manifest.get("test_cases", [])
     if args.only:
         wanted = {tc.strip() for tc in args.only.split(",")}
@@ -592,6 +633,10 @@ def main():
     if env_base.get("skill_version_mismatches"):
         warnings.append("skill version pin ambiguous (frontmatter != VERSION): "
                         + ", ".join(env_base["skill_version_mismatches"]))
+    for w in need_problems if not _schema_at_least(schema, "1.2") else []:
+        warnings.append("need-format: " + w)
+    for w in need_warnings:
+        warnings.append("need-format: " + w)
     missing_tier = [c.get("id") for c in cases if not c.get("endpoint")]
     if missing_tier:
         warnings.append("cases without an `endpoint:` tier (none|mocked|live): " + ", ".join(missing_tier))

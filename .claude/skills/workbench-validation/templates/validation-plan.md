@@ -36,16 +36,19 @@ distilled in-project (ISO 13485 §4.1.6, FDA CSA, 21 CFR Part 11).>
 
 ## 4. Workbench user needs (WUN register)
 
-Each need is stated **from a role's perspective, in the role's own language** — the
-outcome the role requires, free of implementation detail. The mechanism appears only
-in the *Implemented by* column (traceability, not part of the need).
+Each need is a **user story**: _As a `<role>`, I need the workbench to `<outcome>`, so
+that `<purpose>`._ The outcome is what the role can observe, free of implementation
+detail; the purpose is required — it is what a reviewer uses to judge whether the
+mapped evidence really assures the need. The mechanism appears only in the
+*Implemented by* column (traceability, not part of the need).
 
-| ID | Role | Need | Tier | Coverage | Implemented by (traceability) |
-|---|---|---|---|---|---|
-| WUN-01 | <role> | <plain-language outcome> | T1 | tests / process-control / exploratory | <mechanism> |
+| ID | Role | I need the workbench to… | So that… | Tier | Coverage | Implemented by (traceability) |
+|---|---|---|---|---|---|---|
+| WUN-01 | <role> | <outcome> | <purpose> | T1 | tests / process-control / exploratory | <mechanism> |
 
-_The machine-readable copy of this register lives in `validation.yml` — keep both in
-sync (the manifest is what the runner and report consume)._
+_The machine-readable copy of this register lives in `validation.yml` (`role` / `need` /
+`so_that` fields; the report composes the sentence). Regenerate this table from the
+manifest rather than hand-editing both._
 
 ## 4a. Canonical data layer & customer-QMS transforms
 

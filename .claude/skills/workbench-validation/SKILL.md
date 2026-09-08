@@ -1,7 +1,7 @@
 ---
 name: workbench-validation
 description: "MedTech-style tool validation of the AI workbench itself — the .claude/ toolchain (skills, agents, hooks, scripts, rules) used to author and manage design-control artifacts. Runs a declarative validation manifest (workbench user needs mapped to executable test cases over existing skill test suites, lints, and audits), records timestamped results JSON with a configuration baseline (git SHA, per-skill versions), and renders a single validation report + console sidecar for the project console's Settings → Workbench Validation sub-section. TRIGGER when the user wants to: validate the workbench / toolchain / skills ('are our skills validated', 'run the workbench validation', 'tool validation report', 'validate our .claude setup', 'is the toolchain fit for use'); refresh or view the validation report or its console view; add/modify workbench user needs (WUN-xx) or validation test cases; or edits files under docs/project/workbench-validation/ or the validation.yml manifest. Also trigger on ISO 13485 QMS-software-validation / CSA-style tool-assurance questions about the project's own tooling. NOT for validating the medical device itself (that's the DHF V&V) and NOT for structural project audits (/best-practices) or content gap analysis (/gap-analysis)."
-version: 4
+version: 5
 updated: 2026-09-08
 dependencies:
   skills:
@@ -18,11 +18,14 @@ controlled records require validation for intended use (ISO 13485 QMS-software
 validation posture; see the project's own tool-validation work instruction if one
 exists under `docs/internal/`). This skill provides the three visible components:
 
-1. **User needs** — a WUN-xx register authored in the project's validation plan.
-   Each need is stated **from a role's perspective, in the role's own language** —
-   the outcome the role requires, free of implementation detail (the role does not
-   know how the workbench meets the need). The mechanism goes in `implemented_by:`
-   (traceability info only).
+1. **User needs** — a WUN-xx register authored in the project's manifest and plan.
+   Each need is a **user story composed from structured fields**:
+   _As a `role`, I need the workbench to `need`, so that `so_that`._ The outcome is
+   what the role can observe, free of implementation detail (the role does not know
+   how the workbench meets the need); the purpose is **required** — it is what a
+   reviewer judges the evidence against. The renderer composes the sentence (report,
+   sidecar `statement`, console); the runner refuses a need missing any of the three
+   fields. The mechanism goes in `implemented_by:` (traceability info only).
 2. **Tests** — a declarative manifest mapping each need to executable evidence
    (existing skill test suites, lints, audits), run by a deterministic runner. Every
    case's **full execution transcript** (command, cwd, env changes, timestamps, exit
@@ -74,6 +77,7 @@ recorded per run; a model change is a first-class revalidation trigger.
 | `scripts/render_report.py` | Joins manifest + latest run → `validation-report.md` + console sidecar JSON (`schema_version: 1.0`). |
 | `templates/validation-plan.md` | Scaffold for the project's validation plan (intended-use classes, risk tiers, WUN register). |
 | `templates/validation.yml` | Scaffold for the project's manifest (user_needs + test_cases schema, documented inline). |
+| `tests/test_runner_renderer.py` | Regression suite for the runner + renderer (need-format lint, frontmatter parsing, story composition, NOT-APPLICABLE verdicts, strongest-evidence text, end-to-end synthetic manifest). `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/workbench-validation/tests -q` |
 | `README.md` | Design doc, Best Practices table, Changelog. |
 | `VERSION` | Skill version (mirrors frontmatter). |
 
@@ -192,7 +196,8 @@ user_needs:
     role: "DHF author"             # the human role whose need this is
     class: authoring               # authoring|audit|gates|renderers|console|config-control|cross-cutting
     tier: T1                       # T1 high / T2 medium / T3 low
-    need: "Plain-language outcome the role requires — no implementation detail."
+    need: "outcome the role can observe — follows 'I need the workbench to'"
+    so_that: "purpose — required; the renderer composes the user story"
     coverage: tests                # tests | process-control | exploratory
     implemented_by: "mechanism"    # traceability info only — not part of the need
     process_controls: ["..."]      # required when coverage != tests
