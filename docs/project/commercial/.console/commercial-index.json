@@ -1,6 +1,6 @@
 {
- "schema_version": "1.5",
- "generated": "2026-09-08T17:34:58+00:00",
+ "schema_version": "1.6",
+ "generated": "2026-09-08T19:01:59+00:00",
  "domain": {
   "key": "commercial",
   "name": "Commercial",
@@ -51,15 +51,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -404,7 +407,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "present"
   },
   {
    "id": "BQ-02",
@@ -421,15 +425,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -869,7 +876,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-03",
@@ -887,19 +895,23 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.4",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -1302,7 +1314,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-04",
@@ -1319,15 +1332,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -1725,7 +1741,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-05",
@@ -1743,15 +1760,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -2125,7 +2145,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-06",
@@ -2142,15 +2163,18 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -2399,7 +2423,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-07",
@@ -2416,15 +2441,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -2782,7 +2810,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-08",
@@ -2799,15 +2828,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -3173,7 +3205,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-09",
@@ -3191,15 +3224,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -3583,7 +3619,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-10",
@@ -3601,15 +3638,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -3916,7 +3956,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-11",
@@ -3934,15 +3975,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -4346,7 +4390,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-12",
@@ -4363,15 +4408,18 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -4614,7 +4662,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-13",
@@ -4632,15 +4681,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -4977,7 +5029,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-14",
@@ -4994,15 +5047,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -5320,7 +5376,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-15",
@@ -5338,15 +5395,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -5674,7 +5734,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-16",
@@ -5691,15 +5752,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -6015,7 +6079,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-17",
@@ -6032,15 +6097,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -6440,7 +6508,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-18",
@@ -6458,31 +6527,38 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -6791,7 +6867,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-19",
@@ -6809,31 +6886,38 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -7099,7 +7183,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-20",
@@ -7116,15 +7201,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -7575,7 +7663,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-21",
@@ -7593,15 +7682,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -7963,7 +8055,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-22",
@@ -7980,15 +8073,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -8362,7 +8458,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-23",
@@ -8379,39 +8476,48 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.6",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -8698,7 +8804,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-24",
@@ -8715,39 +8822,48 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.6",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -9025,7 +9141,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-25",
@@ -9043,35 +9160,43 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -9354,7 +9479,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-26",
@@ -9371,39 +9497,48 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.6",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -9731,7 +9866,8 @@
      "done": true,
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-27",
@@ -9748,35 +9884,43 @@
    "editions": [
     {
      "edition": "2026-07-22",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.2",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.3",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.4",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-22.5",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -10043,7 +10187,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-28",
@@ -10060,15 +10205,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -10438,7 +10586,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-29",
@@ -10457,15 +10606,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -10855,7 +11007,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "BQ-30",
@@ -10873,15 +11026,18 @@
    "editions": [
     {
      "edition": "2026-07-27",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.2",
-     "status": "superseded"
+     "status": "superseded",
+     "narrative": "missing"
     },
     {
      "edition": "2026-07-27.3",
-     "status": "approved"
+     "status": "approved",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -11266,7 +11422,8 @@
      "done": true,
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
-   ]
+   ],
+   "narrative": "missing"
   }
  ]
 }

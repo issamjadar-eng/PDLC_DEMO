@@ -1,6 +1,6 @@
 {
- "schema_version": "1.5",
- "generated": "2026-09-08T18:03:39+00:00",
+ "schema_version": "1.6",
+ "generated": "2026-09-08T19:01:59+00:00",
  "domain": {
   "key": "manufacturing",
   "name": "Manufacturing",
@@ -48,7 +48,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -127,9 +128,19 @@
       "path": "bq_modules/mq_01.py",
       "sha256_12": "d4cc628afc03",
       "role": "module",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "pass",
+       "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-01"
+      },
       "review": null,
       "review_history": []
      },
@@ -137,8 +148,15 @@
       "path": "computations.py",
       "sha256_12": "9239326ab952",
       "role": "shared",
-      "static_lint": null,
-      "poison_scan": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
       "determinism": null,
       "review": null,
       "review_history": []
@@ -147,9 +165,19 @@
       "path": "corpus:manufacturing/internal-production-lots/gen.py",
       "sha256_12": "1166f0f83c96",
       "role": "generator",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "n/a",
+       "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+      },
       "review": null,
       "review_history": []
      }
@@ -198,7 +226,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "MQ-02",
@@ -223,7 +252,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "MQ-03",
@@ -240,7 +270,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -325,9 +356,19 @@
       "path": "bq_modules/mq_03.py",
       "sha256_12": "96ffacfc9356",
       "role": "module",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "pass",
+       "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-03"
+      },
       "review": null,
       "review_history": []
      },
@@ -335,8 +376,15 @@
       "path": "computations.py",
       "sha256_12": "9239326ab952",
       "role": "shared",
-      "static_lint": null,
-      "poison_scan": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
       "determinism": null,
       "review": null,
       "review_history": []
@@ -345,9 +393,19 @@
       "path": "corpus:manufacturing/internal-ncr-capa/gen.py",
       "sha256_12": "3340a0fc6786",
       "role": "generator",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "n/a",
+       "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+      },
       "review": null,
       "review_history": []
      }
@@ -396,7 +454,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "MQ-04",
@@ -421,7 +480,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "MQ-05",
@@ -439,7 +499,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -525,9 +586,19 @@
       "path": "bq_modules/mq_05.py",
       "sha256_12": "9a5147c8ebc0",
       "role": "module",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "pass",
+       "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-05"
+      },
       "review": null,
       "review_history": []
      },
@@ -535,8 +606,15 @@
       "path": "computations.py",
       "sha256_12": "9239326ab952",
       "role": "shared",
-      "static_lint": null,
-      "poison_scan": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
       "determinism": null,
       "review": null,
       "review_history": []
@@ -545,9 +623,19 @@
       "path": "corpus:manufacturing/internal-suppliers/gen.py",
       "sha256_12": "6748baaf20a3",
       "role": "generator",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "n/a",
+       "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+      },
       "review": null,
       "review_history": []
      }
@@ -596,7 +684,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "MQ-06",
@@ -621,7 +710,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "MQ-07",
@@ -646,7 +736,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "MQ-08",
@@ -664,7 +755,8 @@
    "editions": [
     {
      "edition": "2026-09-08",
-     "status": "draft"
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
@@ -745,9 +837,19 @@
       "path": "bq_modules/mq_08.py",
       "sha256_12": "c1897c4d21b2",
       "role": "module",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "pass",
+       "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-08"
+      },
       "review": null,
       "review_history": []
      },
@@ -755,8 +857,15 @@
       "path": "computations.py",
       "sha256_12": "9239326ab952",
       "role": "shared",
-      "static_lint": null,
-      "poison_scan": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
       "determinism": null,
       "review": null,
       "review_history": []
@@ -765,9 +874,19 @@
       "path": "corpus:manufacturing/internal-process-validation/gen.py",
       "sha256_12": "4c4a547b1359",
       "role": "generator",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "n/a",
+       "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+      },
       "review": null,
       "review_history": []
      },
@@ -775,9 +894,19 @@
       "path": "corpus:manufacturing/internal-production-lots/gen.py",
       "sha256_12": "1166f0f83c96",
       "role": "generator",
-      "static_lint": null,
-      "poison_scan": null,
-      "determinism": null,
+      "static_lint": {
+       "status": "pass",
+       "tool": "py_compile",
+       "findings": []
+      },
+      "poison_scan": {
+       "status": "pass",
+       "hits": []
+      },
+      "determinism": {
+       "status": "n/a",
+       "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+      },
       "review": null,
       "review_history": []
      }
@@ -826,7 +955,8 @@
      "done": false,
      "evidence": "no red-team record filed on this edition"
     }
-   ]
+   ],
+   "narrative": "missing"
   },
   {
    "id": "MQ-09",
@@ -851,7 +981,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   },
   {
    "id": "MQ-10",
@@ -876,7 +1007,8 @@
    "explainers": {},
    "terms": [],
    "code": null,
-   "verification_plan": null
+   "verification_plan": null,
+   "narrative": null
   }
  ]
 }

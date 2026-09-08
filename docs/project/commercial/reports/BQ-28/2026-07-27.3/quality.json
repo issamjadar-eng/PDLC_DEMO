@@ -1,7 +1,7 @@
 {
  "bq": "BQ-28",
  "edition": "2026-07-27.3",
- "generated_at": "2026-07-28T01:14:45+00:00",
+ "generated_at": "2026-09-08T18:53:56+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -131,7 +131,7 @@
   {
    "dataset": "commercial/internal-financials",
    "snapshot": "2026-07-27",
-   "age_days": 0,
+   "age_days": 43,
    "max_age_days": 90,
    "band": "fresh",
    "waived": false
@@ -139,7 +139,7 @@
   {
    "dataset": "commercial/internal-revenue-plan",
    "snapshot": "2026-07-27",
-   "age_days": 0,
+   "age_days": 43,
    "max_age_days": 365,
    "band": "fresh",
    "waived": false

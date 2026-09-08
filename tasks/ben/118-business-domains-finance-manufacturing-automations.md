@@ -61,6 +61,14 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 **Generalizing a hard-wired console section costs less than a new module.** The commercial console module had exactly four coupling points to its domain (loader root constant, sidecar filename, route prefix, template URL literals). Parameterizing those with a shared `_domain_ctx` and a discovery scan made the same 1,200-line router serve N domains with no duplication; the redirect from the old prefix kept every existing test passing unchanged. Check the coupling points before assuming a second copy is needed.
 <!-- /LESSONS LEARNED -->
 
+<!-- STRATEGY CONTENT: architecture, narrative layer for computed reports -->
+**Prose around numbers, never numbers from prose.** Computed reports stay terse and cited; the reader-facing layer (executive summary, "what this tells us" per section) is a separate `narrative.md` per edition, hash-pinned to the report/data it explains and held to the identical claim lint — every sentence with a digit must carry a marker that resolves against the edition's pins, so the LLM can interpret but cannot introduce or recompute a figure. Because the narrative sits outside the approval hash, it can be added or regenerated on approved editions without breaking immutability; a re-answer makes it visibly stale. The export assembles both layers into one document with numbered references, which is what a CFO or VP Quality actually circulates.
+<!-- /STRATEGY CONTENT -->
+
+<!-- LESSONS LEARNED: tooling -->
+**Feed the linter back to the writer.** The first narrative synthesis passed the claim lint on the first try because the system prompt encoded the lint's exact rules (marker on the same line as any digit; headings must match; no estimation words without `[assume:]`), and the route retries once with the lint findings verbatim. Writing the generator against the checker's contract, rather than hoping and filtering, is what made an LLM-written layer acceptable inside a hash-pinned evidence chain.
+<!-- /LESSONS LEARNED -->
+
 <!-- STRATEGY CONTENT: regulatory, management review inputs -->
 **Management Review Pack boundary.** The pack assembles quantitative inputs (approved answer editions across Commercial / Finance / Manufacturing: verdicts, expectation verdicts, issues, risks, pin freshness) and stops there. It does not claim to *be* the management review, does not cite ISO 13485 clause numbers (the standard is deliberately undistilled as QMS-level; the citable source is the QMS SOP `GL-SOP-QM-002`, §6.2 inputs), and never includes unapproved drafts in a pack of record (draft preview is flagged and internal). Approval remains a human act in the domain tabs; CI only refreshes evidence and drafts.
 <!-- /STRATEGY CONTENT -->
@@ -93,6 +101,12 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 - [x] `.github/workflows/business-evidence-refresh.yml` (installed from the new commercial-skill template) — weekly Mon 05:00 UTC: `corpus refresh` every `*/openfda-*` → engine `dependents <ds>` → `answer` per discovered domain (drafts only); monthly 1st 05:30 UTC: `dependents '*'` re-answer in every domain → `render` → `pack` (approved only); `workflow_dispatch` with mode input; commits corpus + reports + sidecars + pack. **Untested in CI** (fires on schedule / manual dispatch after merge).
 - [x] Console workflow-catalog entries D3 Business Evidence Refresh (live), D4 Management Review Pack (live, detail view + Generate form → POST `/workflows/management-review-pack/generate`), D5 MDR Timeliness Watch (partial: BQ-21 + monthly Action), D6 Month-End Close Pack (partial: monthly Action's Finance leg)
 - [x] Management Review Pack assembler = engine action `commercial.py pack --domains … [--as-of] [--include-drafts]` → `docs/project/management-review/<date>/pack.{md,json}` (+ folder README). Plus engine `dependents <dataset|prefix|*>`. First pack assembled for 2026-09-08 over Commercial (30 answered); to be re-assembled at close-out with Finance + Manufacturing.
+
+### Phase 5 — Narrative layer + export (user request 2026-09-08: "executive summary + a narrative per section explaining what the data tells us, as expansions; export to Word/PDF; build and test")
+- [x] Contract: per-edition `narrative.md` (AI-assisted prose *around* the computed results — never new figures; every figure marker-cited and claim-linted like the report; front matter pins the report/data hashes it was written against so it goes stale visibly) — engine `narrative-lint`, sidecar/edition status `narrative: present|stale|missing`
+- [x] Engine `export <BQ> [--edition] --format md|docx|pdf` — assembles title/banner/metadata → executive summary → each report section followed by its "What this tells us" → expectations → issues/risks → references; docx via pandoc, pdf via LibreOffice headless (clear error if tools absent)
+- [x] Console: "Generate narrative" (server-side Claude synthesis grounded on report.md + data.json, then engine lint; stored as `narrative.md`), executive-summary panel + per-section "What this tells us" expansions in the Report tab, Export buttons (docx/pdf) streaming the file
+- [x] Tests: `tests/test_commercial_narrative.py` (6 tests, exercises the real engine's export end to end); full console suite green. Live: FQ-06 narrative generated in ~2 min, lint 0/0 first pass; BQ-01 (APPROVED, 2026-07-27.3) narrative generated, lint 0/0, `check` raised no hash mutation; md/docx/pdf downloads 200 (pdf 176 KB via LibreOffice); Word file carries the exec summary + 7 "What this tells us" blocks + references; Chrome screenshot of the panel + folds
 
 ### Close-out
 - [x] READMEs: `docs/project/README.md` (+ `finance/`, `manufacturing/`, `management-review/` rows) and `docs/project/corpus/README.md` (+ `finance/`, `manufacturing/` rows), each with a changelog row
@@ -127,8 +141,8 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
     "agentic_hours": {
-      "min": 2,
-      "max": 4
+      "min": 3,
+      "max": 5
     },
     "todos": [
       {
@@ -206,6 +220,31 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
         },
         "confidence": "med",
         "basis": "defect fixing ~4-6 hr/defect x2 at the low end (small, well-localized) + ~1 page of README rows"
+      },
+      {
+        "todo": "Nav: collapse domain tabs into one Business dropdown (template/JS/CSS/test; console 1.66.0)",
+        "personas": [
+          "rd-lead"
+        ],
+        "manual_hours": {
+          "min": 6,
+          "max": 14
+        },
+        "confidence": "med",
+        "basis": "software anchor on ~120 net LOC incl. fixed-position menu re-parenting + a11y; low end for UI tooling"
+      },
+      {
+        "todo": "Phase 5 — narrative layer + export: engine narrative-lint/stamp/export + shared lint refactor (~330 LOC), console generate/display/export routes + template + CSS (~260 LOC), 6-test suite, SKILL/README docs, live verification incl. LLM synthesis prompt engineering",
+        "personas": [
+          "rd-lead",
+          "quality-engineering"
+        ],
+        "manual_hours": {
+          "min": 40,
+          "max": 95
+        },
+        "confidence": "med",
+        "basis": "software anchor 325-750 LOC/dev-month on ~650 net LOC at the low end (internal tooling) + document authoring 3-7 hr/page on ~2 pages of contract text; judgment-tier 4-10 h QE for defining the provenance/lint contract that lets LLM prose sit inside a hash-pinned evidence chain (no published norm)"
       }
     ]
   }
@@ -214,7 +253,9 @@ _By-hand person-hour estimate per the effort-estimation rubric (`usage-metrics` 
 
 ## Changelog
 
-- 2026-09-08: **Nav dropdown (user follow-up, uncommitted).** Replaced the three peer domain tabs with one "Business" dropdown (project-console 1.66.0). Mechanic worth remembering: the nav clips overflow, so an in-nav menu must be re-parented outside it and positioned `fixed` — same reason the hamburger lives outside the nav.
+- 2026-09-08: **Phase 5 built + tested (uncommitted): narrative layer + Word/PDF export.** commercial skill v16 (`narrative-lint`, `narrative-stamp`, `export`; `_lint_markdown_text` factored out of `lint_edition` so report and narrative share one lint; sidecar schema 1.6 `narrative` status; `exports/` gitignored), project-console 1.67.0 (exec-summary panel, per-section folds, Generate/Regenerate, ⬇ Word / ⬇ PDF). Design decisions: (a) the narrative is a separate hash-pinned file, never edits to report.md — approved editions stay byte-identical and `check` stays green; (b) same claim lint for prose as for figures — the LLM may cite, never compute; (c) staleness is visible, not silent — re-answer flips the narrative to `stale` until regenerated; (d) synthesis is one call + one lint-guided retry, file kept either way with errors surfaced. Concurrency again: main moved to console 1.66.1 (ben/120) under this checkout; my bump placed as 1.67.0 above it.
+- 2026-09-08: **Nav dropdown landed** — PR #185 merged to `main` as `8fa73a7` (project-console 1.66.0). User briefly floated a "Reports" topline with a summary landing page, then withdrew it ("business is fine") — no landing page built; noted as a possible future refinement.
+- 2026-09-08: **Nav dropdown (user follow-up).** Replaced the three peer domain tabs with one "Business" dropdown (project-console 1.66.0). Mechanic worth remembering: the nav clips overflow, so an in-nav menu must be re-parented outside it and positioned `fixed` — same reason the hamburger lives outside the nav.
 - 2026-09-08: **Landed.** Commit `b3f6d71` → PR #184 → merged to `main` as `2173a0d`; branch `ben/118-business-domains` deleted. Staged an explicit path list (excluded the sibling session's `tasks/ben/SECOPS.md`). Remaining: registry push (`/sync-skills push`) — deferred.
 - 2026-09-08: Reference audit complete + all 8 findings fixed (see close-out todos). Decision: management-review obligations cite the QMS SOP, never an ISO 13485 clause — consistent with `docs/external/standards/README.md`'s deliberate exclusion of QMS-level standards.
 - 2026-09-08: Main-session follow-through on Finance: `corpus refresh commercial/internal-fleet` (884 rows) + `internal-complaints` (435 rows) → new `2026-09-08` snapshots, zero-row deltas (deterministic generators); `answer FQ-03` re-pinned → lint 0/0; `render` finance. Second console gap fix from FQ-03: a null measure in a `paired-bars` point (no plan row for a category) raised in `abs()` → coerced to a gap; regression added. All `/domains/finance/FQ-*` 200; full console suite 90/90. Management Review Pack re-assembled for 2026-09-08 over commercial,finance,manufacturing: 30 answered (all commercial), 20 not in pack (finance + manufacturing have drafts only — approval is the human step that moves them in).

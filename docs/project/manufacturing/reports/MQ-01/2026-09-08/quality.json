@@ -1,7 +1,7 @@
 {
  "bq": "MQ-01",
  "edition": "2026-09-08",
- "generated_at": "2026-09-08T18:03:39+00:00",
+ "generated_at": "2026-09-08T18:53:56+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -249,9 +249,19 @@
     "path": "bq_modules/mq_01.py",
     "sha256_12": "d4cc628afc03",
     "role": "module",
-    "static_lint": null,
-    "poison_scan": null,
-    "determinism": null,
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-01"
+    },
     "review": null,
     "review_history": []
    },
@@ -259,8 +269,15 @@
     "path": "computations.py",
     "sha256_12": "9239326ab952",
     "role": "shared",
-    "static_lint": null,
-    "poison_scan": null,
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
     "determinism": null,
     "review": null,
     "review_history": []
@@ -269,9 +286,19 @@
     "path": "corpus:manufacturing/internal-production-lots/gen.py",
     "sha256_12": "1166f0f83c96",
     "role": "generator",
-    "static_lint": null,
-    "poison_scan": null,
-    "determinism": null,
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
     "review": null,
     "review_history": []
    }

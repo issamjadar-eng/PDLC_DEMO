@@ -1,7 +1,7 @@
 {
  "bq": "BQ-01",
  "edition": "2026-07-27.3",
- "generated_at": "2026-07-28T01:14:37+00:00",
+ "generated_at": "2026-09-08T18:53:57+00:00",
  "lint": {
   "status": "pass",
   "errors": [],
@@ -119,7 +119,7 @@
   {
    "dataset": "commercial/internal-financials",
    "snapshot": "2026-07-27",
-   "age_days": 0,
+   "age_days": 43,
    "max_age_days": 90,
    "band": "fresh",
    "waived": false

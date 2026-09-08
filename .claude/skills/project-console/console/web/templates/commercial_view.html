@@ -46,7 +46,11 @@
           {% if a.link %}<a class="cm-chip cm-assume-chip" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">≈ {{ a.id }} ↗</a>
           {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
         {% endfor %}
-        {% if ed %}<a class="cm-chip cm-data-chip" href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>{% endif %}
+        {% if ed %}<a class="cm-chip cm-data-chip" href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>
+        <span class="cm-export" role="group" aria-label="Export">
+          <a class="cm-chip cm-export-chip" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=docx" title="Download the formal document — executive summary, sections with narrative, references — as Word">⬇ Word</a>
+          <a class="cm-chip cm-export-chip" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=pdf" title="Download as PDF (via LibreOffice)">⬇ PDF</a>
+        </span>{% endif %}
         {% if ed and ed.status == 'draft' %}
         <button type="button" class="cm-approve-open" onclick="document.getElementById('cm-approve-dialog').showModal()"
                 title="Approve this draft edition and push it to the repo">✓ Approve…</button>
@@ -99,6 +103,32 @@
     <p class="cm-verdict-h">{{ v.headline }}</p>
   </div>
   {% endfor %}
+
+  {% if narr_error %}
+  <div class="cm-banner cm-banner-warn"><strong>Narrative issue.</strong> <span style="white-space: pre-wrap;">{{ narr_error }}</span></div>
+  {% elif narr_ok %}
+  <div class="cm-banner cm-banner-ok">✓ Narrative generated, hash-pinned to this edition's figures and claim-linted clean.</div>
+  {% endif %}
+
+  {% if ed %}
+  <section class="cm-exec {{ 'is-missing' if narrative_status == 'missing' }}">
+    <div class="cm-exec-head">
+      <span class="cm-verdict-k">Executive summary</span>
+      {% if narrative_status == 'stale' %}<span class="cm-chip cm-narr-stale" title="The figures changed after this narrative was written">stale — regenerate</span>{% endif %}
+      {% if narr_meta.generated_at %}<span class="cm-muted cm-exec-meta">{{ narr_meta.author or 'AI assistant' }} · {{ narr_meta.generated_at[:10] }}</span>{% endif %}
+      <form method="post" action="{{ base }}/{{ q.id }}/narrative" class="cm-exec-gen"
+            onsubmit="var b=this.querySelector('button'); b.disabled=true; b.textContent='Writing…';">
+        <input type="hidden" name="edition" value="{{ ed.edition }}">
+        <button type="submit" class="btn-secondary" title="Write the executive summary and a 'What this tells us' note per section, grounded only on this edition's report and data; claim-linted before it is kept">{{ '↻ Regenerate narrative' if narrative_status != 'missing' else '✎ Generate narrative' }}</button>
+      </form>
+    </div>
+    {% if exec_summary_html %}
+    <div class="cm-exec-body md-body">{{ exec_summary_html | safe }}</div>
+    {% else %}
+    <p class="cm-muted cm-exec-empty">No narrative yet. The report below is terse by design (every figure computed and cited); the narrative adds the executive summary and, under each section, what the data tells us. Generated prose is grounded only on this edition's report and data, then held to the same claim lint.</p>
+    {% endif %}
+  </section>
+  {% endif %}
 
   {% if approved_qp %}
   <div class="cm-banner cm-banner-ok">✓ Edition <strong>{{ approved_qp }}</strong> approved and pushed to the repo{% if pr_url %} — <a href="{{ pr_url }}" target="_blank" rel="noopener">merged PR ↗</a>{% endif %}.
