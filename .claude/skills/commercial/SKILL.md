@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 16
+version: 17
 updated: 2026-09-08
 dependencies:
   skills:
@@ -95,9 +95,14 @@ All actions shell to the engine from the project root:
 python3 .claude/skills/commercial/scripts/commercial.py <subcommand> ...
 ```
 
-### `answer <BQ-NN>`
+### `answer <BQ-NN> [--no-narrative]`
 Pin the question's `corpus_deps` at their current `latest`, run the registered
-computation into a NEW draft edition, then lint it. A computation must write both
+computation into a NEW draft edition, lint it, then **write its narrative** (executive
+summary + "what this tells us" per section — see Narrative layer) via
+`narrative_generate`. The narrative is part of producing a report, not a separate step;
+a synthesis failure (no `claude` CLI on a CI runner, network) never fails the answer — the
+edition simply shows `narrative: missing` until `narrative-generate` fills it. `--no-narrative`
+opts out for pure-computation runs. A computation must write both
 `report.md` and `data.json` or the edition is discarded whole. After answering, read the
 report and surface the verdict and any lint findings to the user — the computation's
 verdict headline is the answer.
@@ -354,9 +359,14 @@ stored as `reports/<BQ>/<edition>/narrative.md`. Three rules keep it honest:
    is provenance-stamped prose, not the controlled figures. Author attribution is
    vendor-neutral ("AI assistant …").
 
-The console's **Generate narrative** button synthesizes the body grounded on report.md +
-data.json only, then calls `narrative-stamp` and `narrative-lint` (one retry with the
-findings fed back). Hand-authoring is equally valid: write the body, run `narrative-stamp`.
+**`narrative-generate <BQ> [--edition E] [--force] [--retries N]`** is the synthesizer:
+it calls the `claude` CLI non-interactively (`-p`, `--append-system-prompt` with the rules
+above, grounded ONLY on report.md + data.json), writes `narrative.md` with the hash pins,
+lints it, and retries once with the lint findings fed back. Skips when a current narrative
+exists unless `--force`. `answer` calls it automatically; the console's **Regenerate
+narrative** button calls it with `--force`. Model: catalog `narrative: {model: <id>}` block →
+`NARRATIVE_MODEL` env → default. Hand-authoring is equally valid: write the body, run
+`narrative-stamp`. Attribution is vendor-neutral ("AI assistant …").
 
 ### `export <BQ> [--edition E] --format md|docx|pdf [--out DIR] [--print-path]`
 Assemble the **formal document** from an edition: title block (question, domain, category,

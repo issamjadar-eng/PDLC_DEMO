@@ -957,6 +957,19 @@ def cmd_answer(args):
         print(f"  ERROR {e}")
     for w in warnings:
         print(f"  warn  {w}")
+    # Narrative is part of producing a report, not a separate button: every new or
+    # refreshed edition gets its executive summary + per-section "what this tells us"
+    # here, unless the caller opts out. A failure to synthesize (no CLI on a CI
+    # runner, network) never fails the answer — the edition simply reports
+    # `narrative: missing` and the console/`narrative-generate` can fill it later.
+    if not errors and not getattr(args, "no_narrative", False):
+        try:
+            n_err, n_warn, n_st = narrative_generate(root, corpus_root, args.bq, ed)
+            print(f"[{args.bq}@{edition}] narrative {n_st.get('status')}: {len(n_err)} error(s), {len(n_warn)} warning(s)")
+            for e in n_err:
+                print(f"  ERROR (narrative) {e}")
+        except (CommercialError, subprocess.TimeoutExpired) as e:
+            print(f"[{args.bq}@{edition}] narrative skipped: {e}")
     return 1 if errors else 0
 
 
@@ -1540,6 +1553,102 @@ def lint_narrative(root: Path, corpus_root: Path, bq: str, ed: dict):
     return errors, warnings, st
 
 
+NARRATIVE_SYSTEM_PROMPT = """You write the narrative layer of a data-driven business report for a regulated medical-device company. You are given the report (every figure already marker-cited) and its data.json.
+
+Produce ONLY a markdown body — no front matter, no title, no code fence — with these sections:
+
+## Executive summary
+Three to six sentences for an executive: the answer, why it matters, what decision it informs, and the single biggest caveat. Lead with the conclusion.
+
+Then, for EACH `## <heading>` section of the report (same heading text, same order; skip a section titled "Method & provenance"):
+## <exact report heading>
+Two to five sentences explaining what the data in that section tells us — the pattern, why it matters, what would change the reading. Interpret; do not restate every row.
+
+HARD RULES (the output is machine-linted; violations are rejected):
+1. Every figure you mention must already appear in the report, and any sentence containing a digit must carry, on that same line, a citation marker copied VERBATIM from the report — e.g. `[src: dataset@snapshot]`, `[derived: series-id]`, `[config: file.yml]`, `[assume: A-NNN]`. Prefer to cite the same marker the report uses beside that figure. Never invent a marker.
+2. Never compute, extrapolate, forecast, or round differently. Never introduce a number that is not in the report.
+3. Avoid the words estimated, likely, approximately, roughly, assumed, modeled unless the same line carries an `[assume: A-NNN]` marker copied from the report.
+4. Plain language a CFO or VP Quality reads without analytics jargon. Short sentences. Do not name any AI vendor, model, or tool.
+5. Headings must match the report's `## ` headings exactly (case and punctuation)."""
+
+NARRATIVE_AUTHOR = "AI assistant (grounded on report.md + data.json)"
+
+
+def _narrative_model(root: Path) -> str:
+    """Model for narrative synthesis: catalog `narrative: {model: ...}` block, else
+    the NARRATIVE_MODEL env var, else a sensible default. Project-configurable,
+    never hard-wired to one project."""
+    try:
+        cfg = load_config(root)
+        m = ((cfg.get("narrative") or {}).get("model"))
+        if m:
+            return m
+    except CommercialError:
+        pass
+    import os
+    return os.environ.get("NARRATIVE_MODEL") or "claude-sonnet-4-6"
+
+
+def narrative_generate(root: Path, corpus_root: Path, bq: str, ed: dict, retries: int = 1):
+    """Synthesize narrative.md for an edition via the `claude` CLI (non-interactive),
+    grounded ONLY on report.md + data.json, then stamp (hash-pin) and lint it. One
+    lint-guided retry by default. Returns (errors, warnings, status). The file is kept
+    even when errors remain — the console flags them; a human can fix and re-stamp.
+    Raises CommercialError only when synthesis itself is impossible (no CLI, empty
+    output) so callers can degrade gracefully."""
+    if shutil.which("claude") is None:
+        raise CommercialError("`claude` CLI not found — narrative skipped (generate later with narrative-generate)")
+    edir = bq_dir(root, bq) / ed["edition"]
+    report_md = (edir / "report.md").read_text()
+    data_json = (edir / "data.json").read_text()
+    model = _narrative_model(root)
+    errors: list = []
+    warnings: list = []
+    st = {"status": "missing"}
+    for attempt in range(retries + 1):
+        prompt = (f"## REPORT (report.md)\n\n{report_md}\n\n## DATA (data.json)\n\n```json\n{data_json[:60000]}\n```\n\n"
+                  "Write the narrative body now.")
+        if errors:
+            prompt += ("\n\nYour previous attempt FAILED the claim lint with these findings — fix every one "
+                       "(most often: a sentence with a digit lacks a marker on its line, or a heading does not "
+                       "match the report):\n- " + "\n- ".join(errors[:25]))
+        proc = subprocess.run(["claude", "-p", "--model", model, "--output-format", "text",
+                               "--append-system-prompt", NARRATIVE_SYSTEM_PROMPT, prompt],
+                              capture_output=True, text=True, timeout=600, cwd=str(root))
+        body = (proc.stdout or "").strip()
+        # tolerate a stray fence or a CLI notice line before the body
+        if "## Executive summary" in body:
+            body = body[body.index("## Executive summary"):]
+        body = body.rstrip("`").strip()
+        if proc.returncode != 0 or not body:
+            raise CommercialError(f"narrative synthesis failed (rc={proc.returncode}): {(proc.stderr or proc.stdout)[-400:]}")
+        fm = narrative_front_matter(edir, {"author": NARRATIVE_AUTHOR, "model_note": "vendor-neutral; see project config"})
+        fm.pop("model_note", None)
+        narrative_path(root, bq, ed["edition"]).write_text(
+            "---\n" + yaml.safe_dump(fm, sort_keys=False).strip() + "\n---\n" + body + "\n")
+        errors, warnings, st = lint_narrative(root, corpus_root, bq, ed)
+        if not errors:
+            break
+    return errors, warnings, st
+
+
+def cmd_narrative_generate(args):
+    root, corpus_root = Path(args.root), Path(args.corpus_root)
+    ed = find_edition(root, args.bq, args.edition)
+    if ed is None:
+        raise CommercialError(f"{args.bq}: no editions")
+    if not args.force and narrative_status(bq_dir(root, args.bq) / ed["edition"])["status"] == "present":
+        print(f"[{args.bq}@{ed['edition']}] narrative already present and current — use --force to regenerate")
+        return 0
+    errors, warnings, st = narrative_generate(root, corpus_root, args.bq, ed, retries=args.retries)
+    for e in errors:
+        print(f"  ERROR   {e}")
+    for w in warnings:
+        print(f"  warning {w}")
+    print(f"[{args.bq}@{ed['edition']}] narrative {st.get('status')}: {len(errors)} error(s), {len(warnings)} warning(s)")
+    return 1 if errors else 0
+
+
 def cmd_narrative_lint(args):
     root, corpus_root = Path(args.root), Path(args.corpus_root)
     ed = find_edition(root, args.bq, args.edition)
@@ -1789,6 +1898,16 @@ def cmd_pack(args):
                       f"_Category: {cats.get(q['category'], q['category'])} · edition "
                       f"`{ed['edition']}` ({ed.get('status')}) · report: `{rel}`_", "",
                       f"**Verdict:** {verd}", ""]
+            # the edition's executive summary (narrative layer), when present and
+            # current — prose around the verdict, itself claim-linted; a stale one is
+            # flagged rather than dropped, a missing one is simply absent
+            nst = narrative_status(edir)
+            if nst["status"] != "missing":
+                _, _, nsecs = parse_narrative((edir / NARRATIVE_FILE).read_text())
+                es = next((v for k, v in nsecs.items() if k.lower() == "executive summary"), None)
+                if es:
+                    flag = " _(narrative stale — regenerate)_" if nst["status"] == "stale" else ""
+                    lines += [f"**Summary:**{flag} " + " ".join(es.split()), ""]
             exps = data.get("expectations") or []
             if exps:
                 lines += ["| Expectation | Expected | Actual | Verdict |", "|---|---|---|---|"]
@@ -1856,8 +1975,9 @@ def main(argv=None):
     p.add_argument("--corpus-root", default=DEFAULT_CORPUS)
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    s = sub.add_parser("answer", help="run a BQ's computation into a new draft edition")
+    s = sub.add_parser("answer", help="run a BQ's computation into a new draft edition (+ narrative)")
     s.add_argument("bq")
+    s.add_argument("--no-narrative", action="store_true", help="skip the automatic narrative synthesis")
     s.set_defaults(fn=cmd_answer)
 
     s = sub.add_parser("lint", help="claim lint an edition (default: latest draft, else latest)")
@@ -1917,6 +2037,12 @@ def main(argv=None):
 
     s = sub.add_parser("catalog", help="question roster with answer status")
     s.set_defaults(fn=cmd_catalog)
+
+    s = sub.add_parser("narrative-generate", help="synthesize narrative.md for an edition (claude CLI), then stamp + lint")
+    s.add_argument("bq"); s.add_argument("--edition")
+    s.add_argument("--force", action="store_true", help="regenerate even if a current narrative exists")
+    s.add_argument("--retries", type=int, default=1, help="lint-guided retries (default 1)")
+    s.set_defaults(fn=cmd_narrative_generate)
 
     s = sub.add_parser("narrative-lint", help="claim-lint an edition's narrative.md (same rules as the report + hash-pin currency)")
     s.add_argument("bq"); s.add_argument("--edition")

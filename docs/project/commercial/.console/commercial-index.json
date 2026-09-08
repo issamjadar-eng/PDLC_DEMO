@@ -1,6 +1,6 @@
 {
  "schema_version": "1.6",
- "generated": "2026-09-08T19:01:59+00:00",
+ "generated": "2026-09-08T19:56:47+00:00",
  "domain": {
   "key": "commercial",
   "name": "Commercial",
@@ -436,7 +436,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -877,7 +877,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-03",
@@ -911,7 +911,7 @@
     {
      "edition": "2026-07-27.4",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -1315,7 +1315,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-04",
@@ -1343,7 +1343,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -1742,7 +1742,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-05",
@@ -1771,7 +1771,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -2146,7 +2146,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-06",
@@ -2174,7 +2174,7 @@
     {
      "edition": "2026-07-27.2",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -2424,7 +2424,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-07",
@@ -2452,7 +2452,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -2811,7 +2811,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-08",
@@ -2839,7 +2839,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -3206,7 +3206,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-09",
@@ -3235,7 +3235,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -3620,7 +3620,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-10",
@@ -3649,7 +3649,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -3957,7 +3957,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-11",
@@ -3986,7 +3986,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -4391,7 +4391,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-12",
@@ -4419,7 +4419,7 @@
     {
      "edition": "2026-07-27.2",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -4663,7 +4663,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-13",
@@ -4692,7 +4692,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -5030,7 +5030,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-14",
@@ -5058,7 +5058,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -5377,7 +5377,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-15",
@@ -5406,7 +5406,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -5735,7 +5735,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-16",
@@ -5763,7 +5763,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -6080,7 +6080,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-17",
@@ -6108,7 +6108,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -6509,7 +6509,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-18",
@@ -6558,7 +6558,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -6868,7 +6868,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-19",
@@ -6917,7 +6917,7 @@
     {
      "edition": "2026-07-27.2",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -7184,7 +7184,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-20",
@@ -7212,7 +7212,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -7664,7 +7664,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-21",
@@ -7693,7 +7693,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -8056,7 +8056,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-22",
@@ -8084,7 +8084,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -8459,7 +8459,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-23",
@@ -8517,7 +8517,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -8805,7 +8805,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-24",
@@ -8863,7 +8863,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -9142,7 +9142,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-25",
@@ -9196,7 +9196,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -9480,7 +9480,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-26",
@@ -9538,7 +9538,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -9867,7 +9867,7 @@
      "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-27",
@@ -9920,7 +9920,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -10188,7 +10188,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-28",
@@ -10216,7 +10216,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -10587,7 +10587,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-29",
@@ -10617,7 +10617,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -11008,7 +11008,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-30",
@@ -11037,7 +11037,7 @@
     {
      "edition": "2026-07-27.3",
      "status": "approved",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -11423,7 +11423,7 @@
      "evidence": "ACTIONED by red-team agent, 2026-07-28"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   }
  ]
 }
