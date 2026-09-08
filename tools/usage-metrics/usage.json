@@ -2,38 +2,38 @@
   "anonymized": true,
   "cost_note": "Est. cost = measured tokens \u00d7 list prices in tools/usage-metrics/pricing.json (retrieved 2026-08-05). Indicative API-equivalent cost \u2014 Claude Code subscription billing is a flat fee, not this. Verify rates against current Anthropic pricing.",
   "daily_cost": {
-    "2026-06-15": 136.77,
-    "2026-06-16": 46.27,
+    "2026-06-15": 136.76,
+    "2026-06-16": 46.26,
     "2026-06-22": 20.6,
     "2026-06-23": 10.81,
     "2026-06-29": 1.24,
-    "2026-06-30": 208.32,
-    "2026-07-01": 212.16,
+    "2026-06-30": 208.31,
+    "2026-07-01": 212.15,
     "2026-07-02": 25.93,
     "2026-07-03": 9.47,
     "2026-07-05": 3.13,
     "2026-07-08": 1.36,
     "2026-07-09": 16.47,
-    "2026-07-14": 36.69,
-    "2026-07-15": 230.44,
-    "2026-07-16": 50.33,
+    "2026-07-14": 36.68,
+    "2026-07-15": 230.43,
+    "2026-07-16": 50.32,
     "2026-07-20": 16.92,
     "2026-07-21": 100.05,
     "2026-07-22": 233.7,
     "2026-07-27": 391.71,
-    "2026-07-28": 162.36,
-    "2026-07-30": 6.91,
-    "2026-07-31": 9.42,
+    "2026-07-28": 162.35,
+    "2026-07-30": 6.9,
+    "2026-07-31": 9.41,
     "2026-08-03": 6.32,
-    "2026-08-05": 31.28,
-    "2026-08-06": 515.07,
+    "2026-08-05": 31.27,
+    "2026-08-06": 515.05,
     "2026-08-07": 9.58,
-    "2026-08-10": 114.89,
-    "2026-08-11": 81.14,
+    "2026-08-10": 114.88,
+    "2026-08-11": 81.13,
     "2026-08-17": 1.4,
     "2026-08-19": 2.68,
     "2026-08-25": 2.45,
-    "2026-09-08": 158.75
+    "2026-09-08": 159.66
   },
   "members": 2,
   "months": {
@@ -492,50 +492,50 @@
       "Member 1": {
         "by_day": {
           "2026-09-08": {
-            "cache_creation": 6013218,
-            "cache_read": 95085289,
-            "cache_write_1h": 1939986,
+            "cache_creation": 6048607,
+            "cache_read": 95573169,
+            "cache_write_1h": 1975375,
             "cache_write_5m": 4073232,
-            "input": 140660,
-            "messages": 610,
-            "output": 523953
+            "input": 140665,
+            "messages": 612,
+            "output": 525514
           }
         },
         "by_model": {
           "claude-fable-5-1": {
-            "cache_creation": 5693272,
-            "cache_read": 95068091,
-            "cache_write_1h": 1620040,
+            "cache_creation": 5693492,
+            "cache_read": 95542668,
+            "cache_write_1h": 1620260,
             "cache_write_5m": 4073232,
-            "cost": 205.17,
-            "input": 140648,
-            "messages": 606,
-            "output": 507499
+            "cost": 205.72,
+            "input": 140650,
+            "messages": 607,
+            "output": 509056
           },
           "claude-sonnet-4-6": {
-            "cache_creation": 319946,
-            "cache_read": 17198,
-            "cache_write_1h": 319946,
+            "cache_creation": 355115,
+            "cache_read": 30501,
+            "cache_write_1h": 355115,
             "cache_write_5m": 0,
-            "cost": 2.17,
-            "input": 12,
-            "messages": 4,
-            "output": 16454
+            "cost": 2.39,
+            "input": 15,
+            "messages": 5,
+            "output": 16458
           }
         },
-        "cost": 207.34,
+        "cost": 208.11,
         "name": "Member 1",
-        "sessions": 6,
+        "sessions": 7,
         "totals": {
-          "cache_creation": 6013218,
-          "cache_read": 95085289,
-          "cache_write_1h": 1939986,
+          "cache_creation": 6048607,
+          "cache_read": 95573169,
+          "cache_write_1h": 1975375,
           "cache_write_5m": 4073232,
-          "input": 140660,
-          "messages": 610,
-          "output": 523953
+          "input": 140665,
+          "messages": 612,
+          "output": 525514
         },
-        "user_turns": 25
+        "user_turns": 27
       }
     }
   },
@@ -6096,18 +6096,18 @@
     "ben/118": {
       "by_model": {
         "claude-fable-5-1": {
-          "cache_creation": 4703300,
-          "cache_read": 60779803,
-          "cache_write_1h": 767433,
+          "cache_creation": 4703520,
+          "cache_read": 61254380,
+          "cache_write_1h": 767653,
           "cache_write_5m": 3935867,
-          "cost": 142.04,
-          "input": 135368,
-          "messages": 454,
-          "output": 307138
+          "cost": 142.59,
+          "input": 135370,
+          "messages": 455,
+          "output": 308695
         }
       },
-      "cost": 142.04,
-      "cost_allocated": 4.13,
+      "cost": 142.59,
+      "cost_allocated": 4.2,
       "cost_basis": "measured+allocated",
       "estimate": {
         "agentic_hours": 5.0,
@@ -6154,20 +6154,20 @@
       },
       "sessions": 1,
       "totals": {
-        "cache_creation": 4703300,
-        "cache_read": 60779803,
-        "cache_write_1h": 767433,
+        "cache_creation": 4703520,
+        "cache_read": 61254380,
+        "cache_write_1h": 767653,
         "cache_write_5m": 3935867,
-        "input": 135368,
-        "messages": 454,
-        "output": 307138
+        "input": 135370,
+        "messages": 455,
+        "output": 308695
       },
-      "user_turns": 10
+      "user_turns": 11
     },
     "ben/119": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 4.13,
+      "cost_allocated": 4.2,
       "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": null,
@@ -6203,7 +6203,7 @@
     "ben/120": {
       "by_model": {},
       "cost": 0.0,
-      "cost_allocated": 4.13,
+      "cost_allocated": 4.2,
       "cost_basis": "allocated",
       "estimate": {
         "agentic_hours": null,
@@ -6289,28 +6289,28 @@
           "output": 98117
         },
         "claude-sonnet-4-6": {
-          "cache_creation": 665912,
-          "cache_read": 17198,
-          "cache_write_1h": 665912,
+          "cache_creation": 701081,
+          "cache_read": 30501,
+          "cache_write_1h": 701081,
           "cache_write_5m": 0,
-          "cost": 4.28,
-          "input": 21,
-          "messages": 7,
-          "output": 18948
+          "cost": 4.5,
+          "input": 24,
+          "messages": 8,
+          "output": 18952
         }
       },
-      "cost": 348.51,
-      "sessions": 42,
+      "cost": 348.73,
+      "sessions": 43,
       "totals": {
-        "cache_creation": 9670446,
-        "cache_read": 344180042,
-        "cache_write_1h": 8759936,
+        "cache_creation": 9705615,
+        "cache_read": 344193345,
+        "cache_write_1h": 8795105,
         "cache_write_5m": 910510,
-        "input": 365895,
-        "messages": 1486,
-        "output": 1430550
+        "input": 365898,
+        "messages": 1487,
+        "output": 1430554
       },
-      "user_turns": 94
+      "user_turns": 95
     },
     "ben/ben/119": {
       "by_model": {
@@ -6433,10 +6433,10 @@
   },
   "value_summary": {
     "agentic_hours": 539.1,
-    "cost_allocated": 235.31,
+    "cost_allocated": 235.53,
     "cost_allocation_note": "`cost_allocated` splits each day's `_unattributed` measured cost across the tasks with a changelog entry that day (even split; days with >4 active tasks skipped as bulk-edit noise). Cost is measured; only the split is estimated. Bounded by session-transcript coverage.",
-    "cost_measured_attributed": 2494.77,
-    "cost_unattributed_measured": 359.84,
+    "cost_measured_attributed": 2495.32,
+    "cost_unattributed_measured": 360.06,
     "cost_unattributed_residual": 124.53,
     "hours_saved": {
       "max": 4967.1,
