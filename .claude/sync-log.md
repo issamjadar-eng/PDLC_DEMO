@@ -4,6 +4,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-09-08 — push
+
+- Files: 46 under `skills/change-control`, `skills/digest`, `skills/jira-pull`, `skills/secops`, `skills/submissions`, `skills/tracker`, `skills/web-control`, `skills/workbench-validation` (17 LOCAL_ONLY new tests/fixtures/conftests + 29 LOCAL_AHEAD). Excluded: `skills/tracker/scripts/render.py` (BOTH_DIVERGED, untouched) and all of `skills/project-console` (diverged fork; 1.64.0 Settings → Validation changes need a manual port).
+- Branch: `sync/pdlc-demo-workbench-validation-2026-09-08`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/301
+- Commit: "Workbench validation drive-to-pass: tiers, environment record, 3 skill fixes" (`f72dedb`)
+- Status: awaiting review (PR-only; task ben/119, PDLC_DEMO PR #182)
+
 ## 2026-07-27 — push (verification-plan checklists)
 
 - **Push** (10 files, LOCAL_AHEAD): `skills/commercial/{README.md, SKILL.md, scripts/commercial.py}` (v14 — verification-plan section contract, computed done-marks, sidecar 1.4), `skills/project-console/{README.md, SKILL.md, VERSION, console/commercial/router.py, console/web/static/commercial.css, console/web/templates/commercial_view.html, tests/test_commercial_vplan.py}` (1.57.0 — Plan-tab checklist card + verification N/M chip)
