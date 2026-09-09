@@ -4,6 +4,16 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-09-09 — push (revisions + export)
+
+- Files: 7 under `skills/workbench-validation` (2 LOCAL_ONLY: `scripts/export_package.py`, `tests/test_export_package.py`; 5 LOCAL_AHEAD). project-console excluded (diverged fork; 1.71.0 revision drop-down + export route need a manual port).
+- Branch: `sync/pdlc-demo-validation-revisions-export-2026-09-09`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/305
+- Commit: "workbench-validation 8: per-run report revisions + index, sectioned export package (md/docx/pdf via docflow)" (`9f3bd38`)
+- Status: merged 2026-09-09 (squash `f46f5e4`; task ben/124, PDLC_DEMO PR #204)
+- Merge commit: `f46f5e4`
+- Hitachi HEAD after sync: `f46f5e4`
+
 ## 2026-09-09 — push
 
 - Files: 39 under `skills/medtech-docs`, `skills/workbench-validation`, `skills/reference-audit`, `agents/citations*`, `skills/submissions`, `skills/change-control`, `skills/docflow` (7 LOCAL_ONLY + 32 LOCAL_AHEAD). Excluded: `skills/tracker/scripts/render.py` (BOTH_DIVERGED, untouched); `skills/project-console` (diverged fork).
