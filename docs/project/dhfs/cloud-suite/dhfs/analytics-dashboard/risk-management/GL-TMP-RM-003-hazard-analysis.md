@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-RM-003. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-ANALYTICS-DASHBOARD-GL-TMP-RM-003-hazard-analysis — Hazard Analysis
 
@@ -47,22 +55,26 @@ _Demo sample data — not for clinical use._
 | DHF | `{{DHF_NAME}}` |
 | Revision | `{{X.X DRAFT}}` |
 
-## Worksheet
+## Hazard Analysis Table
 
-Populate per the parent QMS template. Minimal columns shown below; extend as needed.
+_[TBD — section required by GL-TMP-RM-003; content to be authored.]_
 
-| ID | Item | Description | Risk / Severity / Probability | Control(s) | Residual | Traces to |
-|---|---|---|---|---|---|---|
-| | | | | | | |
+## Summary
 
-## Approvals
-
-| Role | Name | Date | Signature |
-|---|---|---|---|
-| | | | |
+_[TBD — section required by GL-TMP-RM-003; content to be authored.]_
 
 ## Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|
 | 0.1 DRAFT | 2026-04-21 | Placeholder (task ben/023) | Stub created from QMS template. |
+
+## Appendix — Sections retained from the previous structure
+
+### Worksheet
+
+Populate per the parent QMS template. Minimal columns shown below; extend as needed.
+
+| ID | Item | Description | Risk / Severity / Probability | Control(s) | Residual | Traces to |
+|---|---|---|---|---|---|---|
+| | | | | | | |

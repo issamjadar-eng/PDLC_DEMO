@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-DC-002. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-CLINICAL-INTERFACE-GL-TMP-DC-002-design-input-specification — Design Input Specification
 
@@ -41,27 +49,41 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## 1. Identification
-| Field | Value |
-|---|---|
-| DHF | `{{DHF_NAME}}` |
-| Revision | `{{X.X DRAFT}}` |
+## 1. Project Identification
 
-## 2. Content
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-`{{Populate per the parent QMS template — e.g., UN/DI rows with IDs, criteria, traceability}}`
+## 2. Intended Use and Indications for Use
 
-| ID | Statement | Acceptance Criteria | Source | Trace |
-|---|---|---|---|---|
-| | | | | |
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-## 3. Approvals
+## 3. User Needs (Summary)
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 4. Design Inputs (Requirements)
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 5. Standards and Regulations Claimed
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 6. Dependencies and Assumptions
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 7. Open Items
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 8. Approvals
 
 | Role | Name | Date | Signature |
 |---|---|---|---|
 | | | | |
 
-## 4. Revision History
+## 9. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

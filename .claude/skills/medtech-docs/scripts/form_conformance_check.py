@@ -22,6 +22,12 @@ How the governing form is resolved for a document (first hit wins):
   If nothing resolves, the document is reported `no-form` (informational; it
   does not fail the run). A taxonomy mapping with `governing_qms.forms: []` +
   `note:` is the same intentional-null case.
+  Only a registry document whose frontmatter `doc_type` is a template or form
+  (TMP, FORM) is a STRUCTURAL governor. A parent reference that resolves to a
+  procedure (SOP, WI, STD, MAN, …) is reported `procedure` — "governed by
+  procedure, no template structure" — informational (exit 0 for that document)
+  and listed separately under `procedures` in `--json`. A procedure's headings
+  describe the process, not the shape of the record it produces.
 
 Section-conformance rule (documented so reviewers can judge it):
   * The form's structure is its ordered sequence of LEVEL-2 headings (`## `),
@@ -149,8 +155,20 @@ def registry_index(root: Path) -> dict:
     return idx
 
 
+def registry_doc_type(path: Path, cache: dict) -> str:
+    """Upper-cased frontmatter `doc_type` of a registry document ('' if none)."""
+    key = ("doc_type", str(path))
+    if key not in cache:
+        fm, _ = split_frontmatter(path.read_text(encoding="utf-8", errors="replace"))
+        cache[key] = str((fm or {}).get("doc_type") or "").upper()
+    return cache[key]
+
+
+STRUCTURAL_DOC_TYPES = {"TMP", "FORM", "TEMPLATE"}
+
+
 def resolve_form(doc: Path, root: Path, idx: dict, taxonomy_cache: dict):
-    """-> (form_path | None, how: str, detail: str)."""
+    """-> (form_path | None, how: str, detail: str, form_id: str | None)."""
     tax = find_taxonomy(doc, root)
     if tax is not None:
         if tax not in taxonomy_cache:
@@ -164,15 +182,15 @@ def resolve_form(doc: Path, root: Path, idx: dict, taxonomy_cache: dict):
         if mapping is not None:
             gov = (mapping or {}).get("governing_qms")
             if not gov:
-                return None, "taxonomy", f"slug `{slug}` has no governing_qms block (unverified mapping)"
+                return None, "taxonomy", f"slug `{slug}` has no governing_qms block (unverified mapping)", None
             forms = gov.get("forms") or []
             if not forms:
-                return None, "taxonomy", f"slug `{slug}`: forms: [] — {gov.get('note') or 'intentionally no form'}"
+                return None, "taxonomy", f"slug `{slug}`: forms: [] — {gov.get('note') or 'intentionally no form'}", None
             fid = str(forms[0])
             path = idx.get(fid)
             if path is None:
-                return None, "taxonomy", f"form `{fid}` declared for `{slug}` but no registry file found"
-            return path, "taxonomy", f"{slug} → {fid}"
+                return None, "taxonomy", f"form `{fid}` declared for `{slug}` but no registry file found", fid
+            return path, "taxonomy", f"{slug} → {fid}", fid
     fm, _ = split_frontmatter(doc.read_text(encoding="utf-8", errors="replace"))
     for ref in ((fm or {}).get("references") or []):
         if not isinstance(ref, dict):
@@ -184,9 +202,9 @@ def resolve_form(doc: Path, root: Path, idx: dict, taxonomy_cache: dict):
             fid = str(ref.get("doc_id") or "")
             path = idx.get(fid)
             if path is None:
-                return None, "frontmatter", f"parent `{fid}` named but not found in the QMS registry"
-            return path, "frontmatter", f"references[] → {fid}"
-    return None, "none", "no governing form declared (no taxonomy mapping, no parent-template reference)"
+                return None, "frontmatter", f"parent `{fid}` named but not found in the QMS registry", fid
+            return path, "frontmatter", f"references[] → {fid}", fid
+    return None, "none", "no governing form declared (no taxonomy mapping, no parent-template reference)", None
 
 
 # ---------------------------------------------------------------------------
@@ -227,20 +245,27 @@ def check_document(doc: Path, root: Path, idx: dict, cache: dict, aliases: dict,
     fm, body = split_frontmatter(text)
     doc_type = str((fm or {}).get("doc_type") or "")
     rel = str(doc.relative_to(root)) if doc.is_relative_to(root) else str(doc)
-    result = {"doc": rel, "status": None, "form": None, "resolved_via": None, "detail": None,
+    result = {"doc": rel, "status": None, "form": None, "template_id": None, "procedure": None,
+              "resolved_via": None, "detail": None,
               "missing": [], "extra": [], "order_ok": True, "failures": 0, "warnings": 0}
     if doc_type.upper() in {"TMP", "FORM", "SOP", "WI", "STD"} and explicit_form is None:
         result.update(status="skipped", detail=f"doc_type {doc_type}: this is a QMS document, not an instance")
         return result
     if explicit_form is not None:
-        form_path, how, detail = explicit_form, "explicit", str(explicit_form)
+        form_path, how, detail, fid = explicit_form, "explicit", str(explicit_form), None
     else:
-        form_path, how, detail = resolve_form(doc, root, idx, cache)
-    result.update(resolved_via=how, detail=detail)
+        form_path, how, detail, fid = resolve_form(doc, root, idx, cache)
+    result.update(resolved_via=how, detail=detail, template_id=fid)
     if form_path is None:
         result["status"] = "no-form"
         return result
-    result["form"] = str(form_path.relative_to(root)) if form_path.is_relative_to(root) else str(form_path)
+    rel_form = str(form_path.relative_to(root)) if form_path.is_relative_to(root) else str(form_path)
+    gov_type = registry_doc_type(form_path, cache)
+    if explicit_form is None and gov_type and gov_type not in STRUCTURAL_DOC_TYPES:
+        result.update(status="procedure", procedure=rel_form,
+                      detail=f"{detail} — {gov_type} is a procedure, not a template: governed by procedure, no template structure to check")
+        return result
+    result["form"] = rel_form
     _, form_body = split_frontmatter(form_path.read_text(encoding="utf-8", errors="replace"))
     cmp = compare(level2_sections(form_body), level2_sections(body), aliases)
     result.update(missing=cmp["missing"], extra=cmp["extra"], order_ok=cmp["order_ok"],
@@ -292,11 +317,15 @@ def main(argv=None) -> int:
     idx = registry_index(root)
     cache: dict = {}
     results = [check_document(d, root, idx, cache, aliases, args.strict, explicit) for d in iter_docs(paths)]
-    counts = {"pass": 0, "warn": 0, "fail": 0, "no-form": 0, "skipped": 0}
+    counts = {"pass": 0, "warn": 0, "fail": 0, "no-form": 0, "procedure": 0, "skipped": 0}
     for r in results:
         counts[r["status"]] = counts.get(r["status"], 0) + 1
-    report = {"root": str(root), "rule": "level-2 headings: missing/order = failure, extra = warning (strict: failure)",
-              "summary": counts, "documents": len(results), "results": results}
+    report = {"root": str(root),
+              "rule": "level-2 headings: missing/order = failure, extra = warning (strict: failure); "
+                      "only TMP/FORM registry documents are structural governors — SOP/WI/STD references are `procedure` (informational)",
+              "summary": counts, "documents": len(results), "results": results,
+              "procedures": [{"doc": r["doc"], "procedure": r["procedure"], "procedure_id": r["template_id"],
+                              "detail": r["detail"]} for r in results if r["status"] == "procedure"]}
     if args.json:
         print(json.dumps(report, indent=2))
     else:
@@ -314,6 +343,8 @@ def main(argv=None) -> int:
                 print(f"  [{r['status'].upper()}] {r['doc']}  (form {r['form']}) — " + "; ".join(bits))
             elif r["status"] == "no-form":
                 print(f"  [no-form] {r['doc']} — {r['detail']}")
+            elif r["status"] == "procedure":
+                print(f"  [procedure] {r['doc']} — governed by procedure {r['template_id']} (no template structure to check)")
     return 1 if counts.get("fail") else 0
 
 

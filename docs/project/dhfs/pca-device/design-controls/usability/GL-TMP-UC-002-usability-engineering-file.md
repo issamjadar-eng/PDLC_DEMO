@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-UC-002. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # PCA-DEVICE-GL-TMP-UC-002-usability-engineering-file — Usability Engineering File
 
@@ -41,19 +49,25 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## Identification
+## 1. Identification
 | Field | Value |
 |---|---|
 | DHF | `{{DHF_NAME}}` |
 | Record Revision | `{{X.X DRAFT}}` |
 
-## Entries
+## 2. Index of Records (IEC 62366-1 §5.1–§5.9)
 
-| # | Date | Subject | Owner | Status |
-|---|---|---|---|---|
-| | | | | |
+_[TBD — section required by GL-TMP-UC-002; content to be authored.]_
 
-## Revision History
+## 3. Traceability Summary
+
+_[TBD — section required by GL-TMP-UC-002; content to be authored.]_
+
+## 4. Approvals
+
+_[TBD — section required by GL-TMP-UC-002; content to be authored.]_
+
+## 5. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

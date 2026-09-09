@@ -4,11 +4,18 @@ status: draft
 summary: FDA-facing description of the PP3500 PCA infusion pump and its adjacent components — architecture, clinical functions, predicate framing, and documentation level.
 ---
 
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Three `[VERIFY]` tags in the filed body resolved against project sources (FDA software-functions cascade at rung 3; separation claims against the three System SADs); open items recorded as managed TBDs in the INTERNAL container. |
+-->
 # Device Description — PainEase PCA Advanced (PP3500)
 
 _Demo sample data — not for clinical use._
 
-> **🔒 INTERNAL.** Document control v0.1 · companion to the PCA-device System SAD + Proposed IFU. Internal source mapping: regulatory-strategy.md §§ 1–2; predicate per `input-analysis/predicate-analysis/`. Architecture facts defer to the System SAD — reconcile before transmission.
+> **🔒 INTERNAL.** Document control v0.1 · companion to the PCA-device System SAD + Proposed IFU. Internal source mapping: regulatory-strategy.md §§ 1–2; predicate per `input-analysis/predicate-analysis/`. Architecture facts defer to the System SAD — reconcile before transmission. TBD (owner: Systems Engineering lead; RA confirms) — the System SAD is a first-stab draft; lock the separation wording in § 4 before transmission. TBD (owner: RA lead + Risk Management) — author the Documentation Level Statement (OBL-SWF-001) once the hazard analysis exists.
 
 ## 1. Purpose 📤
 
@@ -25,7 +32,7 @@ Q-Sub-level description of the PP3500 PCA infusion pump and its adjacent connect
 | Intended users | Clinicians (programming) and patients (demand dosing) under clinician supervision |
 | Predicate | PainEase PCA (PP3000), K190567 |
 | Filing pathway | 510(k) with PCCP (K210345) |
-| Documentation level | Enhanced `[VERIFY]` against the software-functions guidance cascade |
+| Documentation level | Enhanced — failure of the dose-enforcement functions could present a hazardous situation with a probable risk of death or serious injury prior to risk controls, and per the FDA software-functions guidance the level applies to the device as a whole; the formal Documentation Level Statement is provided with the 510(k) |
 
 ## 3. Component Architecture 📤
 
@@ -41,7 +48,7 @@ Q-Sub-level description of the PP3500 PCA infusion pump and its adjacent connect
 
 ## 5. Software Architecture & Component Separation 📤
 
-The pump enforces safety limits independently of network availability; the Drug Library Manager cannot command an infusion — it only supplies the limit table the pump validates before use. The adapter performs no clinical computation. `[VERIFY] separation claims against the System SAD.`
+The pump enforces safety limits independently of network availability; the Drug Library Manager cannot command an infusion — it only supplies the limit table the pump authenticates and integrity-checks (signature, version roll-forward) before caching and enforcing. The adapter performs no clinical computation.
 
 ## 6. Intended Users 📤
 
@@ -53,7 +60,7 @@ PP3000 (K190567) shares the intended use and core infusion technology. PP3500 ad
 
 ## 8. Software Documentation Level 📤
 
-Enhanced documentation is proposed on the basis of the device's safety role (dose enforcement). `[VERIFY] confirm cascade per the FDA software-functions guidance.`
+Enhanced documentation is proposed on the basis of the device's safety role (dose enforcement): failure of any dose-enforcement function could present a hazardous situation with a probable risk of death or serious injury before risk controls, and per the FDA software-functions guidance the documentation level applies to the device as a whole. The formal Documentation Level Statement and its supporting risk assessment will be provided in the 510(k).
 
 ## 9. Cross-Reference Grounding Map 📝
 

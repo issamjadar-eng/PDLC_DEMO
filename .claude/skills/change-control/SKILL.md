@@ -28,7 +28,7 @@ description: |
   Lifecycle: `draft → published → review-formal → frozen → released`. Enforces freeze gate via PreToolUse hook with in-chat consent.
 
   Other actions: `init`, `status`, `help`, `reindex`, `verify`.
-version: 0.14.2
+version: 0.15.0
 updated: 2026-09-08
 status: adopt-publish-probe-validated
 ---
@@ -84,7 +84,7 @@ The freeze enforcement lives in a **PreToolUse hook** that blocks Edit/Write on 
 | `adopt-tree` | **Probe-validated** | JSON-directive MCP bridge for bulk subtree pulls. Avoids per-page agent turn cost. Per `actions/adopt_tree.md`. |
 | `pull` | **Probe-validated** | Refreshes `<doc>.confluence-side.md` next to source. Required by `publish` Merge branch. |
 | `publish` | **Probe-validated** | First-publish + update with divergence detection + Confluence Zone preservation. Per `actions/publish.md`. |
-| `freeze` / `unfreeze` | **Stub** | Lifecycle transitions; PreToolUse hook design captured but enforcement not yet wired. |
+| `freeze` / `unfreeze` | **Stub actions; hook ENFORCING** | Lifecycle transition actions still stubs; the PreToolUse freeze gate (`hooks/pre_tool_use_frozen.py`) is implemented and registered — Edit/Write/NotebookEdit on a markdown doc with `state: frozen` or `state: released` is denied with a briefing. |
 | `release` | **Stub** | Confluence → Windchill ECO handoff. |
 | `review-start` / `review-status` / `review-update` / `review-abort` | **v0.1 shipped** | gdoc round-trip via web-control + task-doc metadata block. |
 | `init` / `help` / `status` / `reindex` | Mixed (init stub, help v0.1, status stub, reindex stub) | |
@@ -107,7 +107,7 @@ Eleven live probes from task 120 validate the v0.6 architecture end-to-end (5-st
 
 | File | Purpose | Status |
 |---|---|---|
-| `hooks/pre_tool_use_frozen.py` | PreToolUse hook — blocks Edit/Write on frozen docs, emits briefing | **STUB** — exits 0 always; design documented in file |
+| `hooks/pre_tool_use_frozen.py` | PreToolUse hook — denies Edit/Write/NotebookEdit on a markdown doc whose frontmatter `state:` is `frozen` or `released`, with a briefing naming the sanctioned way forward; fails open on unparseable payloads; stdlib only | **Implemented (0.15.0)** — registered as `.claude/hooks/change-control-frozen.py` |
 | `lib/_base.py` | `Connector` base class, `Authenticator` interface, deployment-flavor enum | **STUB** — interfaces only |
 | `lib/frontmatter.py` | Read/write the `state:` block on controlled docs | **STUB** |
 | `lib/diff_classify.py` | Cosmetic vs substantive edit classification | **STUB** |
@@ -124,7 +124,7 @@ Eleven live probes from task 120 validate the v0.6 architecture end-to-end (5-st
 | `templates/frontmatter_block.md` | Canonical state block for new controlled docs | Concrete (example file) |
 | `README.md` | Full design documentation (not loaded by Claude — for humans and future maintainers) | Complete |
 | `VERSION` | Skill version | `0.1.0` (scaffold) |
-| `tests/test_frozen_hook.py` | **Expected-FAIL evidence** for the frozen-document edit block (WUN-29): feeds `hooks/pre_tool_use_frozen.py` a PreToolUse payload for a `state: frozen` document and asserts a deny; fails while the hook is a stub. Marked `freeze_gate` — run alone with `-m freeze_gate`; exclude from the main suite with `-m "not freeze_gate"`. |
+| `tests/test_frozen_hook.py` | **Evidence for the frozen-document gate** for the frozen-document edit block (WUN-29): feeds `hooks/pre_tool_use_frozen.py` a PreToolUse payload for a `state: frozen` document and asserts a deny; fails while the hook is a stub. Marked `freeze_gate` — run alone with `-m freeze_gate`; exclude from the main suite with `-m "not freeze_gate"`. |
 
 ## Actions
 

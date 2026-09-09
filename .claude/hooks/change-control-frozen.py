@@ -1,0 +1,1 @@
+../skills/change-control/hooks/pre_tool_use_frozen.py

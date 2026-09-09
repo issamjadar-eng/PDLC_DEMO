@@ -9,13 +9,14 @@ summary: Formal request for an FDA pre-submission meeting on the PP3500 PCA Adva
 | Date       | Task    | Summary                                              |
 |------------|---------|------------------------------------------------------|
 | 2026-06-15 | ben/087 | Cover letter drafted as a demo Q-Sub seed.           |
+| 2026-09-08 | ben/123 | § 5 meeting-request placeholder resolved into a definitive commitment; the open logistics item moved into the 🔒 INTERNAL container as a managed TBD (owner: RA lead). AI assistant. |
 -->
 
 # Q-Sub Cover Letter — PainEase PCA Advanced (PP3500)
 
 _Demo sample data — not for clinical use._
 
-> **🔒 INTERNAL — working status.** Document control v0.1 · status: draft · authored under ben/087. Reading convention: 🔒 INTERNAL containers are stripped before transmission; the filed body (§§ 1–6) is what goes to FDA. Internal source mapping: regulatory-strategy.md §§ 1 (Filing Scope), 2 (Module Classification). `[VERIFY]` submitter, FDA division, and tracking-number fields before transmission.
+> **🔒 INTERNAL — working status.** Document control v0.1 · status: draft · authored under ben/087. Reading convention: 🔒 INTERNAL containers are stripped before transmission; the filed body (§§ 1–6) is what goes to FDA. Internal source mapping: regulatory-strategy.md §§ 1 (Filing Scope), 2 (Module Classification). `[VERIFY]` submitter, FDA division, and tracking-number fields before transmission. TBD (owner: Regulatory affairs lead) — confirm meeting format and attendees for § 5 before transmission.
 
 ## 1. Introduction 📤
 
@@ -41,7 +42,7 @@ We propose a single PCCP covering the post-clearance change envelope: drug-libra
 
 ## 5. Pre-Submission Meeting Request 📤
 
-We request a teleconference within FDA's standard Pre-Submission timeframe. Proposed attendees and an agenda mapped to the six questions in [`fda-questions.md`](./fda-questions.md) will be provided. `[VERIFY] meeting logistics.`
+We request a teleconference within FDA's standard Pre-Submission timeframe. On receipt of FDA's scheduling response, the sponsor will provide the proposed attendees and an agenda mapped to the six questions in [`fda-questions.md`](./fda-questions.md).
 
 ## 6. Submission Package Contents (Attachments) 📤
 

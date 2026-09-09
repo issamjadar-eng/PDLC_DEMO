@@ -104,4 +104,4 @@ If bundled, the full design controls / V&V / risk file also enter the PP3500 com
 
 | Date | Author | Summary |
 |---|---|---|
-| 2026-04-14 | Claude (first-stab) | Initial scaffold derived from architecture + regulatory strategy docs. Seven-module decomposition; Class II SaMD accessory classification. Task 013. |
+| 2026-04-14 | AI assistant (first-stab) | Initial scaffold derived from architecture + regulatory strategy docs. Seven-module decomposition; Class II SaMD accessory classification. Task 013. |

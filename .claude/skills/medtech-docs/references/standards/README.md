@@ -35,7 +35,7 @@ Each file opens with a header block (edition/amendment, FDA-recognition note, di
 - **Per-clause traceability to requirements** — the consuming project's trace-matrix deliverable (location per the project's `project.yml dhfs[].path` / trace-matrix config).
 - **Structured regulatory obligations catalog** (what deliverables each clause demands) — see `.claude/skills/dhf-manifest/data/{fda-guidance,standards,industry-frameworks}/`. That's a sibling view structured for `/dhf-manifest` projection into per-DHF deliverable checklists.
 - **Verbatim standard text** — copyrighted; not reproduced. These files are distillations, not transcriptions.
-- **QMS-level standards** (ISO 13485, 21 CFR Part 820) — not distilled here; those are organizational compliance, not per-device.
+- **QMS-level standards** (ISO 13485, 21 CFR Part 820) — not distilled here; those are organizational compliance, not per-device. **Known gap:** because 21 CFR 820.10(c) (QMSR) now requires ISO 13485 Clause 7.3 for design controls, DHF planning documents cite ISO 13485 clause numbers (e.g. §7.3.2) that the reference-audit engine can only return as `registry-gap`. A distillation of ISO 13485 Clause 7.3 (structure and clause→topic map only; the standard is copyrighted) would close it — a cross-project win if added here.
 
 ## Conventions
 

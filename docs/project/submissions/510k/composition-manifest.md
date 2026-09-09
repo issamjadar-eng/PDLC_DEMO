@@ -1,3 +1,10 @@
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | § 3.1 PCCP row names the three change families (was two), in sync with regulatory-strategy.md § 2 and the Q-Sub PCCP summary. |
+-->
 # PP3500 510(k) — Composition Manifest
 
 **Status**: Draft — first-stab scaffold (task 013)
@@ -50,7 +57,7 @@ Per the regulatory strategy's **Filing Scope: PCA Device Alone** and **Component
 | Cybersecurity Plan + Threat Model + SBOM | `docs/project/dhfs/pca-device/cybersecurity/` | FDA Cyber 2023, §524B |
 | Clinical Evaluation | `docs/project/dhfs/pca-device/clinical/` | Substantial equivalence support |
 | Labeling | `docs/project/dhfs/pca-device/design-controls/labeling/` | 21 CFR 801 |
-| PCCP (drug-library + firmware update envelope) | `docs/project/dhfs/pca-device/design-controls/pccp/` | PCCP AI/ML + General guidance |
+| PCCP (drug-library updates, firmware updates, predictive-alarm SaMD pathway — the three change families per regulatory-strategy § 2) | `docs/project/dhfs/pca-device/design-controls/pccp/` | PCCP AI/ML + General guidance |
 | Postmarket Surveillance Plan | `docs/project/dhfs/pca-device/postmarket/` | 820.100, MDR |
 
 ### 3.2 From DHF: `connectivity-adapter` (cybersecurity posture only)

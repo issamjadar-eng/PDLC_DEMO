@@ -29,7 +29,7 @@ finding:
   reference_target: "..."
   reference_class: external-formal
   status: sound | unverified | broken
-  kind: sound | broken-link | stale-citation | unreachable-source | ambiguous-source
+  kind: sound | sound-by-distillation | broken-link | stale-citation | citation-absent-from-source | citation-mislabeled | unreachable-source | ambiguous-source | registry-gap
   evidence:
     - source_path_or_url: "..."
     - excerpt: "<text from the source supporting the verdict>"
@@ -61,7 +61,24 @@ Extract `(source_class, locator)`:
 
 If found: `Read` the distilled file to **locate** the cited clause/section quickly (it is a `🔎 Finding aid`, not the citation authority). Then:
 - **If a faithful full text exists** — `<category>/source-md/<base>.md` (bundled for **fda-guidance** and **regulations**; the distilled file's banner names it) — **`Read` it and verify the clause against it**: existence, exact wording, and predicate. The verdict cites **source-md** as the L1a evidence. The distilled paraphrase is never the cited authority where a source-md exists.
-- **If no source-md is bundled** (copyrighted ISO/IEC standards, most frameworks) — verify the predicate against the distilled file as the best available local text, but note it is non-authoritative: an exact-clause-*text* claim cannot reach `sound` on registry evidence alone (only the external original is authoritative — flag that). Honor any quarantine banner or `[VERIFY]` marker — content under a "CLAUSE NUMBERING UNVERIFIED" / `🔎 Finding aid` caveat cannot, by itself, support a `sound` verdict on a clause-number or exact-text claim.
+- **If no source-md is bundled** (copyrighted ISO/IEC standards, most frameworks) — apply the **paywalled-standard band rule** below, deterministically. The distilled file is the best available local text and is non-authoritative; the rule decides exactly what that buys.
+
+### Paywalled-standard band rule (deterministic — v1.2)
+
+The same evidence must always yield the same band. For a citation of a clause in a standard with **no bundled source-md**, evaluate the rows in order and stop at the first match:
+
+| # | Condition | Verdict | Kind | Evidence line must say |
+|---|---|---|---|---|
+| 1 | The L1a distilled file carries a **clause-numbering quarantine banner** ("CLAUSE NUMBERING UNVERIFIED — DO NOT CITE CLAUSE NUMBERS FROM THIS FILE") covering the cited clause | `unverified` | `ambiguous-source` | "L1a clause numbering quarantined (banner L<n>); cannot confirm or deny the cited number locally — original standard required." Never `sound`, never `broken`, whatever the body text or the banner's own audited sequence says. |
+| 2 | The claim asserts **exact wording** of the clause (a quotation, "the standard states that '…'") | `unverified` | `unreachable-source` | "exact text confirmable only against the original; predicate <matches / differs> in the distillation." |
+| 3 | L1a covers the cited clause number, the claim is a clause-number → topic/predicate claim, **Step 3.5 predicate matches**, and L1b either agrees or is silent | `sound` | `sound-by-distillation` | "distilled two-tier agreement (L1a L<n>; L1b L<n> / silent); original not on file." The band is `sound` because the two-tier cite-both mandate is satisfied; the kind names the limitation so a reader can see it. |
+| 4 | L1a covers the clause number but the **predicate differs** | `broken` | `stale-citation` | as today. |
+| 5 | The cited label is **absent** from L1a and the distilled file **enumerates the surrounding structure completely** (e.g. Clause 4 listed as 4.1–4.5, no 4.9) | `broken` | `citation-absent-from-source` | "label absent from an enumerated skeleton (L1a L<n>–L<m>); confirm against the original before editing the citing document." |
+| 6 | The cited label is absent from L1a and the distilled file does **not** enumerate that part of the standard (annex lists, informative parts) | `unverified` | `ambiguous-source` | "L1a does not inventory <annexes / that clause range>; absence in a finding aid is not proof of absence in the source." |
+| 7 | L1a silent, L1b covers, predicate matches | `unverified` | `ambiguous-source` | as the consolidation table below. |
+| 8 | Neither tier has a distillation | `unverified` | `registry-gap` | as below. |
+
+A `[VERIFY]` marker on a *sub-clause detail* (e.g. lettering of § 4.3(a)/(b)) does not trigger row 1 — only a file-level or clause-level numbering quarantine does. Rows 3 and 5 may only be emitted after Step 3.5. Do not "cap" a row-3 case at `unverified` because the original is paywalled: that is exactly the non-determinism this rule removes; the limitation is carried in the kind, not the band.
 
 If not found (no distilled file at all): L1a is silent on this reference. Mark this for the verdict.
 
@@ -104,9 +121,11 @@ If not found: L1b is silent on this reference.
 
 Use this consolidation table. All "predicate match" cells require Step 3.5 to pass — not just clause existence.
 
+For **source-md-backed** references (fda-guidance, regulations) the table below applies verbatim with kind `sound`. For **paywalled standards** the paywalled-standard band rule above takes precedence; where it reaches row 3 the kind is `sound-by-distillation`.
+
 | L1a covers clause | L1b covers clause | Predicate match (Step 3.5) | Verdict | Kind |
 |---|---|---|---|---|
-| Yes | Yes | Yes (predicates match) | `sound` | `sound` |
+| Yes | Yes | Yes (predicates match) | `sound` | `sound` (source-md-backed) / `sound-by-distillation` (paywalled) |
 | Yes | Yes | No (predicates differ) | `broken` | `stale-citation` |
 | Yes | No | Yes (L1a predicate matches) | `sound` | `sound` |
 | Yes | No | No (L1a predicate differs) | `broken` | `stale-citation` |
@@ -144,7 +163,7 @@ When you do fetch: capture the URL + retrieved excerpt + timestamp in evidence.
 
 - **Always consult L1a + L1b before any web fetch.** The two-tier lookup is the default, not an option.
 - **`source-md/` IS the registry citation authority; the distilled file is a finding aid.** Where a `source-md/<base>.md` exists (fda-guidance + regulations), read and cite it for the source's wording; use the distilled file only to locate the clause. Where none exists, the distilled file is best-effort and non-authoritative (only the external original is). **Never read `source/` binaries (PDF/XML)** — byte archive only, for verbatim-quote spot-checks against source-md.
-- **No web fetch for paywalled standards.** ISO and IEC standard bodies are paywalled — return `unverified, kind=unreachable-source` if L1a is silent on a paywalled clause. Do not hallucinate clause content.
+- **No web fetch for paywalled standards.** ISO and IEC standard bodies are paywalled — apply the paywalled-standard band rule; when neither tier covers the clause return `unverified, kind=registry-gap` (or `unreachable-source` only for exact-wording claims). Do not hallucinate clause content.
 - **No domain opinions.** You verify whether the source supports the claim. You do not decide whether the citation is appropriate, whether a different source would be better, or what the project *should* do.
 - **Read shallowly.** Use `Read` with `limit:` parameter — typically 60–150 lines per file. You're verifying a single clause, not analyzing the full standard.
 - **Bound your effort.** Aim for 3–8 tool calls per invocation. If you've spent 12+ without converging, return `unverified, kind=ambiguous-source` with a note on what you tried.

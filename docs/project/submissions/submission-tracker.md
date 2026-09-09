@@ -13,7 +13,7 @@
 
 
 ### 1. Composition Manifest (source of truth for what's included)
-- [`docs/project/submissions/510k/composition-manifest.md`](../510k/composition-manifest.md) — PP3500 510(k) filing composition
+- [`docs/project/submissions/510k/composition-manifest.md`](510k/composition-manifest.md) — PP3500 510(k) filing composition
 - `docs/project/submissions/qsub/composition-manifest.md` — pre-submission package (planned, Stage 3 of ben/047)
 - `docs/project/submissions/pccp/composition-manifest.md` — PCCP additive composition (planned, Stage 4 of ben/047)
 

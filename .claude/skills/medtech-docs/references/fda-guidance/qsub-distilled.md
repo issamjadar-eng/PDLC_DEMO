@@ -51,7 +51,9 @@ Informational Meeting Q-Subs are used as a tracking vehicle for interactions tha
 
 Out-of-scope interactions explicitly identified in Section II.H include the **TAP (Total product life-cycle Advisory Program) Pilot** — TAP interactions follow their own process and are not counted as Pre-Subs for MDUFA reporting.
 
-## Pre-Submission Package Contents
+## Pre-Submission Submission Content — III.B(1) "Submission Content" and III.B(4)(a)(1) "Additional Recommended Submission Contents"
+
+_Heading relabeled 2026-09-08 to the source-md section names; the earlier finding-aid label "Pre-Submission Package Contents" does not exist in the guidance and was being cited from here (found by validation protocol TC-PROTO-CITATIONS). Cite the source sections, not this heading._
 
 **Required elements** (per Appendix 1 Pre-Sub Acceptance Checklist):
 

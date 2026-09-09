@@ -1,3 +1,21 @@
+---
+doc_id: "DHF-CLOUD-DI-001"
+doc_type: "QSD"
+references:
+  - doc_id: "GL-TMP-DC-002"
+    title: "Parent QMS template"
+    resolved: true
+    match: null
+    note: "21 CFR 820.30(c); ISO 13485 §7.3.3 — mapped under task ben/123"
+---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) |
+-->
+
 # Design Inputs — Cloud Suite (Platform)
 
 > _Demo sample data — not for clinical use. Illustrative content for the PDLC_DEMO project._
@@ -15,47 +33,19 @@
 | Parent System | PainEase PCA portfolio + Connectivity Adapter (CA-1000) |
 | Applicable Standards | ISO 13485, IEC 62304, IEC 81001-5-1, ISO 27001, HIPAA Security Rule, GDPR, HITRUST CSF |
 
-## Scope of This Document
+## 1. Project Identification
 
-This document captures the **platform-level** design inputs (system requirements) for the Cloud Suite, derived from the validated user needs in `../user-needs/user-needs.md` (DHF-CLOUD-UN-001). These requirements are inherited by every child module under `../dhfs/<module>/`; module-specific requirements live in the corresponding child DHFs. Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method.
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
----
+## 2. Intended Use and Indications for Use
 
-## Classification
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-**Category** — what kind of requirement:
+## 3. User Needs (Summary)
 
-| Category | Description |
-|---|---|
-| **Functional (FUNC)** | What the platform does |
-| **Performance (PERF)** | How well it does it — measurable |
-| **Interface (INTE)** | External interfaces (IdP, Connectivity Adapter, SIEM, EHR) |
-| **Security (SEC)** | Cybersecurity controls |
-| **Privacy (PRIV)** | HIPAA / GDPR controls |
-| **Reliability (RELY)** | Availability, durability, recovery |
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-**Criticality**:
-
-| Class | Symbol | Definition |
-|---|---|---|
-| Critical to Safety | **CTS** | Failure can indirectly contribute to patient or operator harm (platform contributes to clinical workflow even though it does not make decisions) |
-| Critical to Function | **CTF** | Failure prevents the platform from delivering the service modules rely on |
-| Critical to Compliance | **CTC** | Driven by regulation, standard, or customer-contractual posture |
-| Supporting | **S** | Enabling or non-critical |
-
-## Functional Groups
-
-| # | Group | Scope |
-|---|---|---|
-| P1 | Identity & Access | Customer + internal identity, RBAC, workload identity |
-| P2 | Data Ingestion | Inbound from Connectivity Adapter, tenant routing, back-pressure |
-| P3 | Storage & Tenancy | Isolation, encryption, residency, backup, restore |
-| P4 | Observability & Audit | Telemetry, audit log, SIEM export |
-| P5 | Reliability & Continuity | SLA, DR, chaos validation |
-| P6 | Compliance & Lifecycle | Change control, SBOM, staged rollout |
-| P7 | Privacy & Data-Subject Rights | GDPR fulfillment, retention, PHI minimization |
-
-## Design Inputs by Functional Group
+## 4. Design Inputs (Requirements)
 
 ### P1 — Identity & Access
 
@@ -113,3 +103,65 @@ This document captures the **platform-level** design inputs (system requirements
 | P7 | DI-020 | PRIV | **CTC** | The platform shall expose a data-subject-rights API supporting GDPR Art. 15 (access), Art. 16 (rectification), and Art. 17 (erasure) operations on a per-data-subject basis, executable by a hospital DPO under their tenant scope, with statutory-timeline tracking and audit trail. | Bench: against a test tenant, execute access, rectification, and erasure for a synthetic data subject; measure end-to-end time; verify audit-trail entries. | UN-020 | Integration test (VER-CLOUD-IT-006) |
 | P7 | DI-021 | PRIV | **CTC** | The platform shall enforce per-tenant retention policies for PHI and audit logs (default 7 years; customer-extendable; minimum 6 years for HIPAA-covered records), and shall purge end-of-retention data deterministically with cryptographic evidence of purge. | Synthetic record at past EOL boundary: trigger purge; verify storage / index / backup all purged; verify cryptographic evidence record retained. | UN-021 | Integration test (VER-CLOUD-IT-007) |
 | P7 | DI-022 | PRIV | **CTC** | Non-production environments (development, staging, analytic sandbox) shall not contain production PHI; any test data derived from production shall be cryptographically de-identified prior to environment crossover, and the de-identification gate shall be enforced at the data-pipeline layer. | Data-pipeline audit: verify de-identification gate active; sample non-production datasets; scan for direct PHI identifiers; verify 0 hits. | UN-022 | Security audit (VER-CLOUD-SA-003) |
+
+## 5. Standards and Regulations Claimed
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 6. Dependencies and Assumptions
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 7. Open Items
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 8. Approvals
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 9. Revision History
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## Appendix — Sections retained from the previous structure
+
+### Scope of This Document
+
+This document captures the **platform-level** design inputs (system requirements) for the Cloud Suite, derived from the validated user needs in `../user-needs/user-needs.md` (DHF-CLOUD-UN-001). These requirements are inherited by every child module under `../dhfs/<module>/`; module-specific requirements live in the corresponding child DHFs. Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method.
+
+---
+
+### Classification
+
+**Category** — what kind of requirement:
+
+| Category | Description |
+|---|---|
+| **Functional (FUNC)** | What the platform does |
+| **Performance (PERF)** | How well it does it — measurable |
+| **Interface (INTE)** | External interfaces (IdP, Connectivity Adapter, SIEM, EHR) |
+| **Security (SEC)** | Cybersecurity controls |
+| **Privacy (PRIV)** | HIPAA / GDPR controls |
+| **Reliability (RELY)** | Availability, durability, recovery |
+
+**Criticality**:
+
+| Class | Symbol | Definition |
+|---|---|---|
+| Critical to Safety | **CTS** | Failure can indirectly contribute to patient or operator harm (platform contributes to clinical workflow even though it does not make decisions) |
+| Critical to Function | **CTF** | Failure prevents the platform from delivering the service modules rely on |
+| Critical to Compliance | **CTC** | Driven by regulation, standard, or customer-contractual posture |
+| Supporting | **S** | Enabling or non-critical |
+
+### Functional Groups
+
+| # | Group | Scope |
+|---|---|---|
+| P1 | Identity & Access | Customer + internal identity, RBAC, workload identity |
+| P2 | Data Ingestion | Inbound from Connectivity Adapter, tenant routing, back-pressure |
+| P3 | Storage & Tenancy | Isolation, encryption, residency, backup, restore |
+| P4 | Observability & Audit | Telemetry, audit log, SIEM export |
+| P5 | Reliability & Continuity | SLA, DR, chaos validation |
+| P6 | Compliance & Lifecycle | Change control, SBOM, staged rollout |
+| P7 | Privacy & Data-Subject Rights | GDPR fulfillment, retention, PHI minimization |

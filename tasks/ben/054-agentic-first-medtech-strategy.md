@@ -133,7 +133,7 @@ _Approach pivoted from a "PDLC-phase × control-posture matrix" to a chunked rol
 
 ### Gap analysis — what's missing for "agentic-first"
 
-<!-- STRATEGY CONTENT: development, architecture
+<!-- STRATEGY CONTENT: development, architecture -->
 Topic: Existing agent fleet is review-shaped, not execution-shaped — the structural gap that motivates this task
 
 The 15 installed agents are uniformly **advisor / reviewer / grounder** agents (Tier-3 in `advisors` parlance): they read source documents, ground answers in tiered context, and emit guidance. Their tool surface confirms this — Read / Glob / Grep / WebFetch / Agent for the discipline agents, no Edit / Write / Bash.
@@ -149,7 +149,7 @@ Working hypothesis (to be validated in Phase 1):
 The existing skills already cover most of the **regulated-artifact infrastructure** (trace-matrix, dhf-manifest, tracker, jira-pull, change-control, medtech-docs, strategy, lessons, task, secops). The agentic-first design likely doesn't need many new skills — it needs new **agents that drive those existing skills** under orchestration.
 
 Non-obvious implication: the agentic-first investment is mostly **agents + orchestration**, not **skills**. That changes the build order in Phase 3.
--->
+<!-- /STRATEGY CONTENT -->
 
 _(Strategy block above captures the Phase-0 insight. Phase 1 will turn this into the led/assisted/human-only mapping per PDLC phase.)_
 
@@ -157,7 +157,7 @@ _(Strategy block above captures the Phase-0 insight. Phase 1 will turn this into
 
 ### Phase 1 Discussion Frame — Two Groups + the Bridge
 
-<!-- STRATEGY CONTENT: architecture, development
+<!-- STRATEGY CONTENT: architecture, development -->
 Topic: Reframing the agentic-first PDLC as two groups with a contract between them
 
 User's framing (2026-05-13, chat): rather than slicing by PDLC phase, slice by **role-group**.
@@ -176,7 +176,7 @@ These three strategy docs would be the **constraint surface** that development a
 TDD linkage hypothesis: the bridge enforces "no SW requirement without a test, no test without a verifying SW requirement" — and an agent at the bridge auto-drafts test cases from requirements + risk controls. The `trace-matrix` skill already models this trace (DI → SW → V&V), but today the V&V layer is hand-authored, not generated. Agentic-first turns that into a generation step gated by human review.
 
 Live discussion — to be chunked across multiple turns.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Where the discussion is heading (chunked — won't tackle all at once):**
 
@@ -190,7 +190,7 @@ _(Each chunk gets its own discussion section below as we work through it.)_
 
 #### Chunk 1 — Group model: THREE groups (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: architecture, testing
+<!-- STRATEGY CONTENT: architecture, testing -->
 Topic: Three-group agentic PDLC model (Spec / Dev / V&V) with V&V as a peer, not a method
 
 Decision: V&V is a **third peer group**, not a method folded into the Spec↔Dev bridge.
@@ -203,13 +203,13 @@ Implications:
 - Bridges become a *graph*, not a single hand-off line. At least three directed edges to design: Spec→Dev (build to spec), Spec→V&V (test to spec), Dev→V&V (verify built thing). Possibly back-edges from V&V (findings route to Spec or Dev). To be detailed in Chunk 2.
 - Independence claims (ISO 13485 §7.3 verification independence, IEC 62304 §5.7 test independence) align cleanly: V&V agents do not share a toolchain or codebase with Dev agents, by design.
 - The trace-matrix layer model already supports this: UN/DI ↔ SW (Dev artifact) ↔ V&V (V&V artifact) are distinct layers. Three groups maps 1:1.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**: three peer groups — **Spec** (what+why), **Dev** (how — implementation), **V&V** (how — verification). Each owns its own Architecture / Tooling / Technology strategy.
 
 #### Chunk 2 — Edge topology: V-shape with parallel test design + two test universes (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: architecture, testing, development
+<!-- STRATEGY CONTENT: architecture, testing, development -->
 Topic: Three-group V-shape topology and the Dev-Tests / V&V-Tests split
 
 Decision: topology **(ii) Triangle / V-shape**.
@@ -243,7 +243,7 @@ UN ↔ DI ↔ SW ↔ DT (white-box, Dev-owned)
 ```
 
 Both DT and VER rows trace back to SW (and through to DI/UN). Both must be present for the overall verification evidence to be sufficient. Today the trace-matrix skill has only VER — adding DT is a discrete extension worth tracking as a child task.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - Topology **V-shape** — Spec governs both Dev and V&V; V&V test design parallel with Dev implementation; V&V test execution blocks on Dev outputs; V&V back-edges to Spec (req issues) and Dev (impl issues).
@@ -253,7 +253,7 @@ Both DT and VER rows trace back to SW (and through to DI/UN). Both must be prese
 
 #### Chunk 3 — Constraint corpora: per-axis cross-group strategies (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: architecture, development, operations
+<!-- STRATEGY CONTENT: architecture, development, operations -->
 Topic: Three per-axis cross-group strategy docs as the constraint surface for agents
 
 Decision: shape **(β) per-axis cross-group strategies**. Three docs, each with internal Spec / Dev / V&V sections:
@@ -276,7 +276,7 @@ Decision: shape **(β) per-axis cross-group strategies**. Three docs, each with 
 - **V&V agents** read: architecture (V&V section), tooling (V&V section), technology (V&V section), testing-strategy.
 
 This is the *constraint contract* — the agent's deterministic read list. Output is non-deterministic; inputs are not.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - 3 per-axis cross-group docs: **architecture** (exists, refactor needed), **tooling** (new), **technology** (new). Each has internal Spec / Dev / V&V sections.
@@ -287,7 +287,7 @@ This is the *constraint contract* — the agent's deterministic read list. Outpu
 
 #### Chunk 4 — TDD linkage: form-neutral Testable-Claim atom (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: architecture, testing, development
+<!-- STRATEGY CONTENT: architecture, testing, development -->
 Topic: Form-neutral Testable-Claim atom + project-pluggable adapter (meta-pattern, not Gherkin-locked)
 
 Decision: (Q-generalized) — introduce **Testable Claim (TC)** as a form-neutral atomic unit between requirements and tests. The atom is conceptual; the **form** is project-pluggable.
@@ -347,7 +347,7 @@ UN ↔ DI ↔ SW ↔ TC ↔ DT (Dev Tests, white-box)
 Two new layers since this task started: TC (Chunk 4) and DT (Chunk 2). Both candidate child tasks against `/trace-matrix` skill.
 
 **Why not (R) — test-as-spec.** User confirmed (Q-generalized) over (P) and (R). (R) collapses the Spec/V&V boundary and contradicts the V-shape governance principle. The TC atom keeps the boundary clean: Spec authors the claim, V&V verifies it; the adapter is just the syntactic bridge between the project's requirement form and the canonical claim.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - **Testable Claim (TC)** as form-neutral atomic unit between requirements and tests.
@@ -359,7 +359,7 @@ Two new layers since this task started: TC (Chunk 4) and DT (Chunk 2). Both cand
 
 ##### Chunk 4 addendum — Content-hash audit + test linkage convention (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: testing, architecture
+<!-- STRATEGY CONTENT: testing, architecture -->
 Topic: Content-hash of the Testable Claim drives change-audit; version fields are insufficient
 
 User's framing (2026-05-13 chat): "Hash against requirement statement or acceptance criteria, ignoring title/version/metadata. Version fields can bump without content change, so we can't rely on version as a change signal."
@@ -401,7 +401,7 @@ Why this matters: rationale-only edits don't trigger spurious re-review; substan
 **Rationale-drift audit (separate, softer):** rationale changes don't invalidate test hashes but may indicate a stale requirement. Run as a separate, advisory check — output a "rationale changed but claim didn't" list for Spec-side review.
 
 **Implementation surface:** new action `/trace-matrix audit-drift` (or new sibling skill) walks all test artifacts, recomputes TC hashes, emits a drift report. The hash function itself is a 5-line utility — the work is the audit policy + reporting UI.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - **Hash domain**: TC `claim` + structured AC fields + load-bearing constants. Exclude title, version, status, author, dates, rationale, trace links.
@@ -412,7 +412,7 @@ Why this matters: rationale-only edits don't trigger spurious re-review; substan
 
 ##### Chunk 4 addendum 2 — Test-side structure: case + procedures, aggregate by AND (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: testing, architecture
+<!-- STRATEGY CONTENT: testing, architecture -->
 Topic: Test-side two-level structure — test case is the trace atom, procedures aggregate
 
 User simplified an over-layered first draft (had proposed case/file/suite as three concerns). Final model — TWO levels:
@@ -435,14 +435,14 @@ This keeps the meta-pattern maximally general — it does not force every projec
 **"Suite" demoted.** Suite/tags are optional organizational metadata on the test case (`tags: [smoke, release-qual]`) for CI/execution selection — not a trace node, not a layer. No further design needed.
 
 **Open implication for the trace-matrix DT/VER layers:** the layer rows represent **test cases** (with roll-up results), not procedures. Procedure-level detail is internal to the case artifact. The skill's parser reads the case's declared `test_id` + `traces[]` + result; it does not descend into procedures.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided** (superseded by addendum 3 below — kept for history):
 - ~~Test side has two levels: test case (trace atom) and test procedure (no individual trace)~~ — corrected: procedures CAN trace.
 
 ##### Chunk 4 addendum 3 — Trace anchor is a *test node* at author-chosen depth (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: testing, architecture
+<!-- STRATEGY CONTENT: testing, architecture -->
 Topic: Test-side trace anchoring is depth-flexible — symmetric with the requirement side
 
 User correction (2026-05-13): addendum 2's "procedures do not individually trace" was too rigid. Some requirements are specific enough that individual test procedures within a file trace directly. Both modes must be supported — "you can do both."
@@ -465,7 +465,7 @@ Final model — the **trace anchor is a *test node***, and a test node may be a 
 **Trace-matrix DT/VER layer rows** therefore represent **test nodes** (case or procedure, whichever is the anchor) — not "always cases." The skill's test extractor must emit a node regardless of depth; the `location` field disambiguates (`file.py` vs `file.py::procedure_7`).
 
 **Open sub-question for next turn:** can the two modes be *mixed within a single file* — e.g., the file as a whole traces to a high-level DI AND procedure 3 inside it independently traces to a specific TC? Or is it one-mode-per-file? Affects the test-extractor adapter design.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - **Trace anchor is a *test node*** — may be a **test case** or a **test procedure**, at the author's chosen depth. Symmetric with the requirement-side TC-or-DI/SW choice.
@@ -475,7 +475,7 @@ Final model — the **trace anchor is a *test node***, and a test node may be a 
 
 ##### Chunk 4 addendum 4 — Mixed anchoring within a file IS allowed (decided 2026-05-13)
 
-<!-- STRATEGY CONTENT: testing, architecture
+<!-- STRATEGY CONTENT: testing, architecture -->
 Topic: Mixed-depth trace anchoring within a single test file + the carve-out and dedup rules it forces
 
 Decision: a single test file MAY mix anchoring depths — the file as a whole traces to a (typically high-level) requirement node AND individual procedures inside it independently trace to specific nodes. User chose maximum flexibility "matches how real test files evolve."
@@ -487,7 +487,7 @@ Two design rules this forces (both belong in the trace-matrix test-extractor + c
 2. **Coverage dedup rule.** Trace EDGES are never deduped — every authored edge is retained for audit (file→DI-005 and procedure3→TC-0042→…→DI-005 are both real, both kept). But COVERAGE METRICS dedup by *target node*: when answering "is DI-005 verified?", multiple trace paths to DI-005 count once. Dedup lives in the metrics/rollup layer, not the edge layer. Redundant coverage is legitimate and visible; it just isn't double-counted.
 
 Extractor implication: the test extractor must walk BOTH file-level markers AND procedure-level markers in the same file, emit a test node per anchor found, and tag each emitted node with its `location` depth so the carve-out rule can be applied. This is a moderate increase in extractor complexity over one-mode-per-file — accepted as the cost of matching real-world test-file evolution.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided**:
 - **Mixed anchoring within one file is allowed** — file-level trace + independently-anchored procedures can coexist in the same file.
@@ -499,7 +499,7 @@ Extractor implication: the test extractor must walk BOTH file-level markers AND 
 
 #### Chunk 5 — Bootstrap vs. steady-state; the simulated device as build substrate (in discussion, opened 2026-05-14)
 
-<!-- STRATEGY CONTENT: architecture, development, operations
+<!-- STRATEGY CONTENT: architecture, development, operations -->
 Topic: Bootstrap-vs-steady-state distinction; the simulated device is a prerequisite substrate for TDD, and it has its own prerequisite (device architecture / interface contracts)
 
 User raised (2026-05-14): where do we define the test tools/frameworks, and is there a dependency we must satisfy before TDD can proceed? The demo's goal is to demonstrate the PDLC approach; documentation workflows are mostly covered; the user wants the demo to be able to **build a simulated device from the requirements**, and suspects that must be tackled before TDD.
@@ -530,13 +530,13 @@ So the simulated device comes first — but its own prerequisite is the **device
 `src/` today holds "SaMD + pump firmware placeholders" (per CLAUDE.md). The simulated device is the requirements-derived realization of those placeholders — it lives in `src/`, and turning placeholders into a real requirements-traced simulated device is the bootstrap deliverable.
 
 OPEN QUESTION (next turn): how is the simulated device bootstrapped — built broad upfront, or grown feature-by-feature by the demonstrated V-shape itself?
--->
+<!-- /STRATEGY CONTENT -->
 
 **In discussion**: the strategy frame needs a named **bootstrap phase** distinct from the steady-state V-shape. The simulated device is the build substrate TDD needs; its prerequisite is the device architecture (interface contracts) — which overlaps task 046. Test tools/frameworks are defined in the Tooling Strategy axis doc (already designed in Chunk 3).
 
 ##### Chunk 5 addendum 1 — Bootstrap mode: iterative (option 1) + skeleton shape + capture model (in discussion, 2026-05-14)
 
-<!-- STRATEGY CONTENT: architecture, development
+<!-- STRATEGY CONTENT: architecture, development -->
 Topic: Iterative device bootstrap — minimal skeleton grown by the V-shape; architecture doc and skeleton code as different-jurisdiction projections of one design
 
 Decision: bootstrap mode = **option 1, iterative** — minimal runnable skeleton, then the demonstrated per-feature V-shape GROWS the device. The device build IS the demo.
@@ -561,13 +561,13 @@ This is fractal with the Spec/Dev split — the doc is "spec for the architectur
 **Task 046 overlap:** the bootstrap's "top-level system architecture doc" is the same artifact task 046 flagged as missing (per-DHF `*-system-sad.md` docs are mislabeled component software SADs; no true system arch doc exists). Bootstrap of this task and the architecture gap of task 046 are the same upstream work — coordinate, don't duplicate.
 
 OPEN QUESTION (next turn): the consistency check between architecture doc and skeleton — is it a new skill action, an `rd-lead` agent responsibility, or a hook/gate? And what does "consistent" mean precisely (interface-signature parity? module-set parity? trace-completeness?).
--->
+<!-- /STRATEGY CONTENT -->
 
 **In discussion** — bootstrap = iterative (option 1). Skeleton is "interface-complete, behavior-empty" (device-scale TDD red state). Architecture doc and skeleton code are different-jurisdiction projections of one design: doc owns contract+intent (controlled DHF artifact), code owns realized structure (traces to doc), a consistency check gates divergence (routes to `rd-lead`). Architecture doc grows iteratively alongside the skeleton. Overlaps task 046's missing system-architecture doc.
 
 ##### Chunk 5 addendum 2 — Consistency check = rd-lead agent responsibility (decided 2026-05-14)
 
-<!-- STRATEGY CONTENT: architecture, development
+<!-- STRATEGY CONTENT: architecture, development -->
 Topic: rd-lead agent owns the architecture-doc ↔ skeleton consistency check; the four consistency dimensions; soft gate hardened by checkpoint-protocol inclusion
 
 Decision: the architecture-doc ↔ skeleton consistency check is a **`rd-lead` agent responsibility**, not a separate deterministic skill. Reuses an existing agent whose charter already names this exact gap ("gap between architectural intent and implementation reality"); judgment-based, handles nuance a structural diff cannot.
@@ -586,7 +586,7 @@ Decision: the architecture-doc ↔ skeleton consistency check is a **`rd-lead` a
 **Child-task candidate:** extend the `rd-lead` agent charter to (a) name the four consistency dimensions explicitly and (b) define the consistency-review output format. Likely also a child task to give rd-lead the tool surface it needs — today rd-lead is Read/Glob/Grep/WebFetch/Agent, which is sufficient for *reading* both projections and reporting, so no Edit/Write needed for the check itself. Confirmed: no tool-surface change required for the consistency check.
 
 **Numbering note:** the original Phase-1 discussion plan's "Chunk 5 — current-structure fit (Reuse/Extend/Create-new)" is renumbered **Chunk 6**; this bootstrap discussion took the Chunk-5 slot as it emerged from the user's 2026-05-14 question.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Decided** — consistency check is owned by the **`rd-lead` agent** (reuses its existing charter; judgment-based). Four consistency dimensions: module-set parity, interface-signature parity, intent alignment, trace-completeness — to be written into the rd-lead charter. Soft gate hardened by being a **required step in the orchestrator's per-feature-turn checkpoint protocol**. Findings route via V-shape back-edges; unresolvable divergence escalates to human. No rd-lead tool-surface change needed. Child task: extend rd-lead charter with the four dimensions + output format.
 
@@ -594,7 +594,7 @@ _(Strategy content gets filled in-flight as Phase 1 / Phase 2 produce decisions.
 
 ### Phase 1 — Human Checkpoints on the V-shape (mapped 2026-05-14)
 
-<!-- STRATEGY CONTENT: regulatory, risk, testing, operations
+<!-- STRATEGY CONTENT: regulatory, risk, testing, operations -->
 Topic: Non-negotiable human checkpoints mapped onto the V-shape — the "agents produce, humans accept" principle
 
 Organizing principle: **agents produce and review; humans accept.** Every non-negotiable human checkpoint is a *decision of record* — an approval / acceptance / authorization carrying personal or organizational accountability. Agents do all work up to the decision (author artifacts, run analysis, run the review panels, assemble the evidence package); the human reviews the assembled package and signs. Human checkpoints are therefore THIN — decision points, not work points. This is the agentic-first efficiency thesis: humans spend their time on decisions of record, not on production.
@@ -630,11 +630,11 @@ The eight non-negotiable checkpoints:
 So only #2 (and the depth of #3) is the real tuning knob.
 
 OPEN QUESTION (next turn): should task 011's criticality tags (CtS / CtF / CtC / CtP) drive the DEPTH of the per-feature human gate #2 — i.e., a CtS-tagged feature gets a full human change-review while a commercial-only feature gets a lightweight human ack?
--->
+<!-- /STRATEGY CONTENT -->
 
 #### Gate Maturity Ladder — selectable oversight policy (decided 2026-05-14)
 
-<!-- STRATEGY CONTENT: operations, regulatory, risk
+<!-- STRATEGY CONTENT: operations, regulatory, risk -->
 Topic: Multi-stage gate maturity ladder — agentic process validation expressed as an evidence-gated oversight-reduction path
 
 User's insight (2026-05-14): gate depth must be SELECTABLE, and the default selection must EVOLVE — early on the program needs more human review to validate the agentic approach itself; only after the approach is proven does it migrate to a risk-based posture. This is not a convenience knob — it is **agentic process validation**: the "review everything" phase is the evidence-collection phase for the agentic process, and the migration to lighter oversight is the documented outcome of that validation. A regulator/auditor will ask "how do you know the agent team is reliable enough to lighten review?" — the ladder + its transition evidence IS the answer.
@@ -664,7 +664,7 @@ Decision: a **4-stage maturity ladder**, each transition evidence-gated and chan
 - Define the transition evidence criteria precisely (which metrics, which thresholds, measured how).
 - `gate_policy_stage` selector in `project.yml` + orchestrator logic that reads it.
 - "Agentic Process Validation" record/doc — home TBD.
--->
+<!-- /STRATEGY CONTENT -->
 
 **Gate Maturity Ladder — decided**:
 - **4-stage ladder**: Stage 0 Full Oversight → Stage 1 Full Coverage Tiered Depth → Stage 2 Risk-Tiered → Stage 3 Sampling. Default starts at Stage 0; migrates upward as the agentic approach proves out.
@@ -725,4 +725,4 @@ _(Tag with `<!-- LESSONS LEARNED: category -->` blocks in-flight.)_
 - **2026-05-14** — Phase 1 human-checkpoint mapping done: 8 non-negotiable human checkpoints tabled against V-shape locations + standards + agent-prep steps; organizing principle "agents produce and review, humans accept" (every gate is a decision of record). Gate Maturity Ladder decided — 4 stages (Full Oversight → Full Coverage Tiered Depth → Risk-Tiered → Sampling), each transition evidence-gated + change-controlled, selector in `project.yml` `agentic.gate_policy_stage`. Ladder governs review *burden* (#2/#4/#5); ladder-exempt = #3 residual-risk acceptance + terminal authorizations #6/#7/#8. Reframe: the ladder + transition evidence IS the agentic-process-validation story. 4 more child-task candidates surfaced (g–j). Phase 1 nearly complete — remaining: Chunk 6 current-structure fit + end-to-end flow walk.
 - 2026-06-08: Status corrected to In Progress (paused) via task-doc audit — genuinely open work remaining (paused 2026-05-14, mid-Phase 1). Remains Active in 000-index.md.
 - **2026-06-08** — **Closed ABANDONED (superseded) per user.** Superseded by other work; the agentic-first PDLC blueprint is not being carried forward as a standalone task. Moved to Abandoned in 000-index.md.
-
+- 2026-09-08: harvest tags repaired (ben/123) — 15 tags

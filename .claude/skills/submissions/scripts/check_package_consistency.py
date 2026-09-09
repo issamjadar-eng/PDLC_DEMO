@@ -39,8 +39,13 @@ list(s) from the package's own cover letter — nothing is hard-coded. Checks:
         body of any TRANSMITTED document. A VERIFY tag is the workbench's promise that a
         claim it drafted was not checked against its source; it must be resolved before
         transmission, never stripped and never shipped. Tags inside internal apparatus
-        (leading HTML-comment metadata, <details> containers) are internal notes and do
-        not fire.
+        (leading HTML-comment metadata, <details> containers, `> **🔒 INTERNAL` blockquote
+        containers) are internal notes and do not fire.
+  Attachments are read from the cover letter's numbered table rows, numbered list items,
+  AND bulleted list items (`- Title ([`x.md`](./x.md))`) under an attachments/contents
+  heading — bulleted entries carry no number and are exempt from the S2 numbering checks.
+  An eSTAR-shaped folder (a `*.submission.json`, no Q-Sub cover letter) is not a Q-Sub
+  package: exit 2 with a pointer to `estar_lint.py`.
   S6  enumeration-completeness (WARN) — the package deliberately restates enumerable
         structures (category labels, rule sets, question lists) in multiple transmitted
         docs for reviewer ergonomics; the cost of that duplication is LOCKSTEP DRIFT,
@@ -159,6 +164,8 @@ def check_cross_reference(tier: dict[str, str | None], docs: dict[str, Path]) ->
 # ── numbered contents / attachment lists ───────────────────────────────────────
 TABLE_ROW = re.compile(r"^\|\s*(\d+)\s*\|.*?\(([^)]+\.md[^)]*)\)")
 ORDERED_ITEM = re.compile(r"^\s*(\d+)\.\s+.*?\(([^)]+\.md[^)]*)\)")
+BULLET_ITEM = re.compile(r"^\s*[-*+]\s+")
+BULLET_LINK = re.compile(r"\]\(\s*([^)\s]+\.md(?:#[^)]*)?)\s*\)")
 LIST_HEADER = re.compile(r"attachment|package contents|enclosure|submission package", re.I)
 
 
@@ -180,6 +187,13 @@ def parse_numbered_lists(cover: str) -> list[dict]:
         if m and in_att_section:
             out.append({"num": int(m.group(1)), "stem": link_stem(m.group(2)),
                         "path": m.group(2), "line": i, "kind": "ordered"})
+            continue
+        if in_att_section and BULLET_ITEM.match(ln):
+            # `- Title ([`x.md`](./x.md))` / `- [Title](x.md)` — unnumbered attachment.
+            lm = BULLET_LINK.search(ln)
+            if lm:
+                out.append({"num": None, "stem": link_stem(lm.group(1)),
+                            "path": lm.group(1), "line": i, "kind": "bullet"})
     return out
 
 
@@ -210,6 +224,8 @@ def check_attachment_numbers(cover_text: str, entries: list[dict]) -> list[dict]
     # to one WARN. A NON-uniform offset is real numbering drift — list each mismatch.
     by_stem: dict[str, dict[str, int]] = {}
     for e in entries:
+        if e["num"] is None:
+            continue  # bulleted attachments carry no number
         by_stem.setdefault(e["stem"], {})[e["kind"]] = e["num"]
     shared = {s: k for s, k in by_stem.items()
               if "table" in k and "ordered" in k and k["table"] != k["ordered"]}
@@ -232,6 +248,8 @@ def check_attachment_numbers(cover_text: str, entries: list[dict]) -> list[dict]
     # (c) prose "attachment N" (+ same-line doc link) must match some list's number for that doc
     stem_nums: dict[str, set[int]] = {}
     for e in entries:
+        if e["num"] is None:
+            continue
         stem_nums.setdefault(e["stem"], set()).add(e["num"])
     for i, ln in enumerate(cover_text.split("\n"), 1):
         pm = PROSE_ATTACH.search(ln)
@@ -545,7 +563,14 @@ def main() -> int:
     filing = Path(a.filing_dir)
     cover_path = filing / a.cover
     if not cover_path.exists():
-        print(f"error: cover letter not found: {cover_path}", file=sys.stderr)
+        estar = sorted(filing.glob("*.submission.json"))
+        if estar:
+            print(f"error: {filing} is an eSTAR-shaped package ({estar[0].name}, no Q-Sub cover "
+                  f"letter) — this checker gates Q-Sub-shaped packages only; run "
+                  f"estar_lint.py --crosswalk <filing>/estar-crosswalk.md --transmit-gate instead",
+                  file=sys.stderr)
+        else:
+            print(f"error: cover letter not found: {cover_path}", file=sys.stderr)
         return 2
     cover_text = cover_path.read_text(encoding="utf-8")
 

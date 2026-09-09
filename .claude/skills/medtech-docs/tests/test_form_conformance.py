@@ -94,8 +94,27 @@ def test_alias_accepts_renamed_heading():
 def test_folder_walk_covers_whole_fixture_tree():
     code, data, _ = _run("docs/project")
     assert code == 1
-    assert data["documents"] == 5
-    assert data["summary"]["fail"] == 1 and data["summary"]["no-form"] == 2
+    assert data["documents"] == 6
+    assert data["summary"]["fail"] == 1 and data["summary"]["no-form"] == 2 and data["summary"]["procedure"] == 1
+
+
+def test_procedure_reference_is_informational_not_structural():
+    """A parent reference that resolves to an SOP/WI is 'governed by procedure':
+    a procedure's headings describe a process, not the shape of the record."""
+    code, data, _ = _run("docs/project/flat/procedure-governed.md")
+    assert code == 0
+    r = data["results"][0]
+    assert r["status"] == "procedure" and r["template_id"] == "SOP-000000001"
+    assert r["form"] is None and r["procedure"].endswith("SOP-000000001 - Risk Management.md")
+    assert data["procedures"][0]["procedure_id"] == "SOP-000000001"
+
+
+def test_template_id_and_resolution_path_are_reported():
+    _, data, _ = _run("docs/project/flat/instance-via-frontmatter.md")
+    r = data["results"][0]
+    assert r["template_id"] == "FORM-000000001" and r["resolved_via"] == "frontmatter"
+    _, data, _ = _run("docs/project/_mirror/widget/fmea")
+    assert data["results"][0]["template_id"] == "FORM-000000002" and data["results"][0]["resolved_via"] == "taxonomy"
 
 
 def test_explicit_form_overrides_resolution():

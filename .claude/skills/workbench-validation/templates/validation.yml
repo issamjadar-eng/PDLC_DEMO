@@ -42,6 +42,12 @@ deployment:
 # (schema: templates/protocol-result.yml). Absent record → NOT-EXECUTED (fails the need).
 protocol_results_dir: tools/workbench-validation/protocols
 
+# QMS template coverage inventory (optional): a deployment case writes this JSON
+# (contract: templates[] with instances/tested/pass/fail/status, procedures[],
+# documents_without_template[], summary{}); the report/sidecar/console render it
+# so newly imported QMS templates — or doctypes with none — stay visible.
+qms_coverage: tools/workbench-validation/qms-coverage.json
+
 # Triaged anomalies carried into the report's Known Anomalies section. Each
 # entry names an owner and the run by which it is expected to clear.
 known_anomalies: []

@@ -25,7 +25,9 @@ This guidance does not cover PMA Day 100 Meetings, Breakthrough Device Designati
 | **Informational Meeting Request** | Present information to FDA without expectation of official feedback | Interactive dialogue; no formal written feedback |
 | **Study Risk Determination** | Obtain SR or NSR determination for a planned clinical study | Written determination |
 
-### Pre-Submission Package Contents
+### Pre-Submission Submission Content — III.B(1) "Submission Content" and III.B(4)(a)(1) "Additional Recommended Submission Contents"
+
+_Heading relabeled 2026-09-08 (task ben/123) to the source-md section names; "Pre-Submission Package Contents" is not a heading in the guidance._
 
 **Required Elements:**
 - Cover letter -- stating this is a Pre-Submission; specifying meeting or written feedback only

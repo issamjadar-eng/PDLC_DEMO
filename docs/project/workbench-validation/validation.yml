@@ -41,9 +41,16 @@ deployment:
     jira_mirror: false        # no docs/project/_jira/
     file_locator_index: true  # tools/file-locator-mcp/index.db
     task_docs: true           # tasks/**/NNN-*.md
+    estar_crosswalk_510k: false  # docs/project/submissions/510k/estar-crosswalk.md not authored yet
 
 # Protocol / inspection execution records live here: <TC-ID>.result.yml
 protocol_results_dir: tools/workbench-validation/protocols
+
+# QMS template coverage inventory — written by TC-43 at run time and rendered
+# into report §3 + sidecar + console: which imported templates/forms have
+# validation evidence, which are imported but unused, and which project
+# doctypes have no template imported at all.
+qms_coverage: tools/workbench-validation/qms-coverage.json
 
 known_anomalies:
   # Each entry names an owner and the run by which it is expected to clear —
@@ -321,6 +328,14 @@ user_needs:
     process_controls:
       - "Lifecycle state recorded in document frontmatter and checked by the publish path"
       - "Edit block is NOT enforced today (inert hook) — relies on process discipline; this need is deliberately kept visible as process-control until the hook is implemented and a gate case exists"
+
+  - id: WUN-30
+    role: "Quality engineer"
+    class: audit
+    tier: T1
+    need: "show me, for every QMS template or form imported into this project, whether project documents use it and whether the validation exercised it — and tell me which project documents have no template imported for their type"
+    so_that: "a template imported next quarter, or a doctype we never had a template for, cannot silently go unvalidated"
+    implemented_by: "medtech-docs qms_coverage.py (registry × conformance results) → report §3 coverage table, sidecar qms_coverage, console panel"
 
 
 # `title` / `description` / `approach` are written for a NON-SPECIALIST reviewer:
@@ -799,7 +814,7 @@ test_cases:
     requires: [uv]
   - id: TC-39
     title: "A frozen controlled document cannot be edited from inside the workbench"
-    description: "EXPECTED TO FAIL until the freeze hook is implemented: feeds the PreToolUse hook an edit on a document whose lifecycle state is frozen and expects a deny, plus an allow for an unfrozen document. The hook is currently a stub that exits 0."
+    description: "Feeds the PreToolUse freeze hook an edit on a document whose lifecycle state is frozen (or released) and expects a deny with a briefing, plus a silent allow for an unfrozen document, a non-markdown file, and an unrelated tool. The hook fails open on an unparseable payload."
     approach: "Runs the change-control tests marked freeze_gate."
     wun: [WUN-29]
     uut: [change-control]
@@ -841,4 +856,28 @@ test_cases:
     requires_deployment: [content.file_locator_index]
     endpoint: none
     cmd: ["python3", ".claude/skills/advisors/scripts/grounding_scan.py", "--project-root", ".", "--json"]
+    timeout: 120
+  - id: TC-43
+    title: "Every imported QMS template that project documents instantiate has validation evidence"
+    description: "DEPLOYMENT check and inventory: joins the imported QMS registry with the form-conformance results. Passes when the inventory generates and every template that project documents instantiate was exercised by the conformance check; the inventory itself lists unused templates and doctypes with no imported template so the gaps stay visible."
+    approach: "Runs qms_coverage.py, which runs the conformance checker over the DHF trees and writes the coverage JSON the report and console render; exit 0 only when no instantiated template lacks evidence."
+    wun: [WUN-30, WUN-01]
+    uut: [medtech-docs]
+    scope: deployment
+    method: scripted
+    requires_deployment: [content.qms_forms, content.dhf_trees]
+    endpoint: none
+    cmd: ["python3", ".claude/skills/medtech-docs/scripts/qms_coverage.py", "--root", ".", "--json-out", "tools/workbench-validation/qms-coverage.json", "docs/project/dhfs"]
+    timeout: 300
+  - id: TC-44
+    title: "The 510(k) eSTAR package passes the admissibility and coverage gate"
+    description: "DEPLOYMENT check: runs the eSTAR linter over the 510(k) crosswalk (structured answers, applicable sections, attachment coverage, no unresolved [VERIFY]). Not applicable until the package has an eSTAR crosswalk — declared absent here rather than claimed by a structure-only pass."
+    approach: "Runs estar_lint.py --transmit-gate --json with the package's crosswalk; passes only on exit 0."
+    wun: [WUN-20, WUN-03]
+    uut: [submissions]
+    scope: deployment
+    method: scripted
+    requires_deployment: [content.submission_package, content.estar_crosswalk_510k]
+    endpoint: none
+    cmd: ["python3", ".claude/skills/submissions/scripts/estar_lint.py", "--crosswalk", "docs/project/submissions/510k/estar-crosswalk.md", "--transmit-gate", "--json"]
     timeout: 120

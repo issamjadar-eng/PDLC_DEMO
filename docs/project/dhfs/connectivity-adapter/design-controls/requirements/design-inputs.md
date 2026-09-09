@@ -1,3 +1,21 @@
+---
+doc_id: "DHF-CA1000-DI-001"
+doc_type: "QSD"
+references:
+  - doc_id: "GL-TMP-DC-002"
+    title: "Parent QMS template"
+    resolved: true
+    match: null
+    note: "21 CFR 820.30(c); ISO 13485 §7.3.3 — mapped under task ben/123"
+---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) |
+-->
+
 # Design Inputs — Connectivity Adapter (CA-1000)
 
 > _Demo sample data — not for clinical use. Illustrative content for the PDLC_DEMO project._
@@ -16,46 +34,19 @@
 | Parent System | PainEase PCA Advanced (PP-3500, K210345) |
 | Applicable Standards | IEC 81001-5-1, IEC 62304 Class B, HL7 v2.5, HL7 FHIR R4, IEC 62443-4-1, ISO 13485 |
 
-## Scope of This Document
+## 1. Project Identification
 
-This document captures the design inputs (system requirements) for the Connectivity Adapter (CA-1000), derived from the validated user needs in `../user-needs/user-needs.md` (DHF-CA1000-UN-001). Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method. Revision A is the baseline supporting design verification planning.
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
----
+## 2. Intended Use and Indications for Use
 
-## Classification
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-**Category** — what kind of requirement:
+## 3. User Needs (Summary)
 
-| Category | Description |
-|---|---|
-| **Functional (FUNC)** | What the Adapter does |
-| **Performance (PERF)** | How well it does it — measurable |
-| **Safety (SAFE)** | Hazard mitigations and protective features |
-| **Interface (INTE)** | External interfaces (HL7/FHIR, IdP, SIEM, pump) |
-| **Security (SEC)** | Cybersecurity controls |
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-**Criticality** — how critical the requirement is:
-
-| Class | Symbol | Definition |
-|---|---|---|
-| Critical to Safety | **CTS** | Failure can directly or indirectly contribute to patient or operator harm |
-| Critical to Function | **CTF** | Failure prevents the Adapter from performing its intended use |
-| Critical to Compliance | **CTC** | Driven by regulation, standard, or filing-posture preservation (MDDS boundary) |
-| Supporting | **S** | Enabling or non-critical |
-
-## Functional Groups
-
-| # | Group | Scope |
-|---|---|---|
-| A1 | Device Ingest | Mutual-TLS pump endpoint; persistence; reliability |
-| A2 | EHR / Pharmacy Bridge | HL7v2.5 + FHIR R4 outbound |
-| A3 | Drug Library Distributor | Pass-through signed distribution |
-| A4 | Firmware Update Relay | Pass-through signed distribution |
-| A5 | Operator Console | Biomed / IT web UI |
-| A6 | Cybersecurity & Identity | TLS, IdP, audit, SBOM |
-| A7 | Platform & Lifecycle | Install, upgrade, observability |
-
-## Design Inputs by Functional Group
+## 4. Design Inputs (Requirements)
 
 ### A1 — Device Ingest
 
@@ -112,3 +103,64 @@ This document captures the design inputs (system requirements) for the Connectiv
 | A7 | DI-019 | FUNC | **CTF** | The Adapter shall install on RHEL 9, Ubuntu 22.04 LTS, and Ubuntu 24.04 LTS from a single signed package, with installation completing in ≤ 30 minutes on a baseline host (8 vCPU, 32 GiB RAM, 500 GB SSD) and requiring no manual library / dependency steps. | Install rehearsal on each target OS; measure end-to-end time; verify Adapter passes self-test post-install. | UN-019 | System test (VER-CA-SY-002) |
 | A7 | DI-020 | PERF | **CTF** | The Adapter shall support in-place upgrade from version N to N+1 with no pump↔Adapter session disconnect exceeding 60 s in p99, and zero loss of in-flight pump-originated events. | Soak: 500 simulated pumps active; trigger upgrade; measure max session-disconnect duration; verify event count pre/post matches expected. | UN-020 | System test (VER-CA-SY-003) |
 | A7 | DI-021 | INTE | **S** | The Adapter shall expose a `/metrics` endpoint in Prometheus exposition format (text or OpenMetrics), with at minimum: connected-pump count, ingest event rate, queue depth per downstream, audit-log emission rate, certificate-expiry countdown. | Bench: scrape `/metrics`; validate format with promtool; verify required metrics present. | UN-021 | Integration test (VER-CA-IT-007) |
+
+## 5. Standards and Regulations Claimed
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 6. Dependencies and Assumptions
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 7. Open Items
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 8. Approvals
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 9. Revision History
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## Appendix — Sections retained from the previous structure
+
+### Scope of This Document
+
+This document captures the design inputs (system requirements) for the Connectivity Adapter (CA-1000), derived from the validated user needs in `../user-needs/user-needs.md` (DHF-CA1000-UN-001). Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method. Revision A is the baseline supporting design verification planning.
+
+---
+
+### Classification
+
+**Category** — what kind of requirement:
+
+| Category | Description |
+|---|---|
+| **Functional (FUNC)** | What the Adapter does |
+| **Performance (PERF)** | How well it does it — measurable |
+| **Safety (SAFE)** | Hazard mitigations and protective features |
+| **Interface (INTE)** | External interfaces (HL7/FHIR, IdP, SIEM, pump) |
+| **Security (SEC)** | Cybersecurity controls |
+
+**Criticality** — how critical the requirement is:
+
+| Class | Symbol | Definition |
+|---|---|---|
+| Critical to Safety | **CTS** | Failure can directly or indirectly contribute to patient or operator harm |
+| Critical to Function | **CTF** | Failure prevents the Adapter from performing its intended use |
+| Critical to Compliance | **CTC** | Driven by regulation, standard, or filing-posture preservation (MDDS boundary) |
+| Supporting | **S** | Enabling or non-critical |
+
+### Functional Groups
+
+| # | Group | Scope |
+|---|---|---|
+| A1 | Device Ingest | Mutual-TLS pump endpoint; persistence; reliability |
+| A2 | EHR / Pharmacy Bridge | HL7v2.5 + FHIR R4 outbound |
+| A3 | Drug Library Distributor | Pass-through signed distribution |
+| A4 | Firmware Update Relay | Pass-through signed distribution |
+| A5 | Operator Console | Biomed / IT web UI |
+| A6 | Cybersecurity & Identity | TLS, IdP, audit, SBOM |
+| A7 | Platform & Lifecycle | Install, upgrade, observability |

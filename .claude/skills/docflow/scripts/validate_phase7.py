@@ -678,26 +678,40 @@ def validate(
 
 
 def _self_test() -> int:
-    """Smoke-test against existing adopted MDs in the repo."""
-    repo = Path(__file__).resolve().parents[4]
-    targets = [
-        repo / "docs/project/dhfs/mfd-b/design-controls/architecture"
-              / "MedTech Project IntraOp - Software Architecture Document (SAD) - 1.0.0.md",
+    """Self-contained assertions over the gate functions — no repo content needed.
+
+    Each case pairs an inline input with the status the gate MUST return; any
+    mismatch fails the self-test (exit 1). This replaced a smoke run over a
+    hard-coded document path from another project, which skipped silently
+    wherever that document did not exist."""
+    good_body = (
+        "<!-- DOC-CLASSIFY: doc_type=\"architecture\" pack=\"core\" -->\n"
+        "# Software Architecture\n\n## Overview\n\n## Context\n\n## Components\n\n"
+        "## Interfaces\n\n## Data\n\n## Deployment\n\n## Decisions\n"
+    )
+    cases = [
+        ("doc_classify present", _check_doc_classify(good_body)["status"], "pass"),
+        ("doc_classify missing", _check_doc_classify("# No marker\n")["status"], "fail"),
+        ("doc_classify without doc_type",
+         _check_doc_classify("<!-- DOC-CLASSIFY: pack=\"core\" -->\n")["status"], "fail"),
+        ("doc_version ok", _check_doc_version({"doc_version": "v3"})["status"], "pass"),
+        ("doc_version malformed", _check_doc_version({"doc_version": "3.0"})["status"], "fail"),
+        ("doc_version missing", _check_doc_version({})["status"], "fail"),
+        ("filename clean", _check_filename_no_version_suffix(Path("x/sad.md"))["status"], "pass"),
+        ("filename -v2 suffix", _check_filename_no_version_suffix(Path("x/sad-v2.md"))["status"], "fail"),
+        ("filename -Draft suffix", _check_filename_no_version_suffix(Path("x/sad - Draft.md"))["status"], "fail"),
+        ("required sections: unknown doc_type skips",
+         _check_required_sections(good_body, "memo")["status"], "skip"),
+        ("required sections: architecture missing everything",
+         _check_required_sections("# Title\n", "architecture")["status"], "fail"),
     ]
     fails = 0
-    for t in targets:
-        if not t.exists():
-            print(f"[self-test] SKIP: {t} (not found)")
-            continue
-        r = validate(t)
-        print(f"\n=== {t.name} ===")
-        print(json.dumps(r, indent=2))
-        if r["result"] == "fail":
-            # v29 MDs are EXPECTED to fail some v30 gates (no DOC-CLASSIFY marker,
-            # no F11-CLASSIFY markers). That's the point — v30 validate is stricter.
-            # Report the deltas, don't fail the self-test.
-            print(f"[self-test] v29 MD has {len(r['errors'])} expected v30 gaps: {r['errors']}")
-    return 0
+    for name, got, want in cases:
+        ok = got == want
+        fails += 0 if ok else 1
+        print(f"[self-test] {'ok  ' if ok else 'FAIL'} {name}: got {got!r}, want {want!r}")
+    print(f"[self-test] {len(cases) - fails}/{len(cases)} assertions passed")
+    return 1 if fails else 0
 
 
 def main() -> int:
@@ -729,7 +743,7 @@ def main() -> int:
         default=25,
         help="Minimum invented-run length (words) to flag for adjudication (default 25)",
     )
-    ap.add_argument("--self-test", action="store_true", help="Run smoke tests against repo MDs")
+    ap.add_argument("--self-test", action="store_true", help="Run the gate-function self-test (self-contained; exit 1 on any failed assertion)")
     args = ap.parse_args()
 
     if args.self_test:

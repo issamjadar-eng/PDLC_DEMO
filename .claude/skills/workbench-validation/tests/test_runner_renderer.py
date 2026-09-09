@@ -271,3 +271,34 @@ def test_runner_refuses_manifest_missing_so_that(tmp_path):
     proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "run_validation.py"), "--root", str(root),
                            "--manifest", "docs/validation.yml"], capture_output=True, text=True)
     assert proc.returncode != 0 and "missing `so_that`" in (proc.stdout + proc.stderr)
+
+
+def test_qms_coverage_section_renders_and_flags_gaps(tmp_path):
+    cov = {"generated": "2026-09-08T00:00:00Z", "registry": "docs/internal/source-md/qms-index.md",
+           "templates": [
+               {"id": "TMP-1", "title": "Plan", "path": "p", "doc_type": "TMP", "instances": 3, "tested": True, "pass": 1, "fail": 2, "status": "covered-failing"},
+               {"id": "TMP-2", "title": "Report", "path": "p", "doc_type": "TMP", "instances": 0, "tested": False, "pass": 0, "fail": 0, "status": "unused"}],
+           "procedures": [{"id": "SOP-1", "title": "Procedure", "path": "p", "doc_type": "SOP", "referenced_by": 4}],
+           "documents_without_template": [{"doc": "docs/x/a.md", "doctype_hint": "x", "reason": "no template imported"}],
+           "summary": {"templates_total": 2, "templates_instantiated": 1, "templates_tested": 1, "templates_unused": 1,
+                       "procedures_total": 1, "documents_total": 4, "documents_governed": 3, "documents_without_template": 1}}
+    (tmp_path / "cov.json").write_text(json.dumps(cov))
+    lines = "\n".join(render.qms_coverage_section(cov, "cov.json"))
+    assert "QMS template coverage" in lines and "imported, unused" in lines and "covered — failing" in lines
+    assert "no template imported" in lines and "SOP-1" in lines
+    assert "\n".join(render.qms_coverage_section(None, "missing.json")).count("No QMS coverage inventory") == 1
+    loaded, rel = render.load_qms_coverage({"qms_coverage": "cov.json"}, tmp_path)
+    assert loaded["summary"]["templates_total"] == 2 and rel == "cov.json"
+
+
+def test_protocol_record_with_bare_iso_date_is_json_safe(tmp_path):
+    """YAML turns `executed: 2026-09-08` into a date object; the run JSON must still write."""
+    (tmp_path / "recs").mkdir()
+    (tmp_path / "recs" / "TC-P.result.yml").write_text(
+        "verdict: PASS\nexecuted: 2026-09-08\noperator: qe\nmodel_id: m\ngit_sha: abc\n"
+        "runs:\n  - run: 1\n    outcome: PASS\n    executed: 2026-09-08\n")
+    case = {"id": "TC-P", "scope": "deployment", "method": "protocol", "endpoint": "none", "protocol": "docs/p.md"}
+    res = run.execute_case(case, tmp_path, deployment={}, protocol_results_dir="recs")
+    assert res["status"] == "PASS"
+    json.dumps(res)  # must not raise
+    assert res["execution_record"]["executed"] == "2026-09-08"

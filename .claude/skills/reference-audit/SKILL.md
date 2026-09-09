@@ -1,8 +1,8 @@
 ---
 name: reference-audit
 description: Verify references and citations in a project document — broken links, stale standards clauses, mismatched anchors, prose pointers that don't resolve. Builds a structured findings report at `docs/_analysis/<doc-slug>/references-audit.md`. Two-tier verification by default — L1a registry distillation (`.claude/skills/medtech-docs/references/`) + L1b project applicability (`docs/external/`) per the medtech-docs "cite both" mandate. Owns the `citations` advisor and three researcher subagents (external-formal / internal-formal / informal-link). TRIGGER when the user wants to audit, verify, validate, or check the references / citations / sources / links in a specific document (e.g. "audit the references in regulatory-strategy.md", "are the citations in our SRS sound?", "check for broken links in the system SAD", "verify the standards citations in this doc"); also trigger on broken-link / stale-citation troubleshooting and on requests for FDA-reviewer-style citation pen-testing. Project-agnostic.
-version: 4
-updated: 2026-06-11
+version: 6
+updated: 2026-09-08
 ---
 
 # Reference Audit
@@ -122,7 +122,8 @@ Roll-up of open reference audits across `docs/_analysis/`.
 
 **Emitted in v1.1:**
 
-- `sound` — reference resolves and content supports the claim (per semantic-predicate match — see `citations-external-researcher` Step 3.5; not just clause-existence).
+- `sound` — reference resolves and content supports the claim (per semantic-predicate match — see `citations-external-researcher` Step 3.5; not just clause-existence). Source-md-backed (fda-guidance, regulations) or internal.
+- `sound-by-distillation` (v1.2, band `sound`) — paywalled standard with no bundled source-md: L1a covers the clause number, predicate matches, L1b agrees or is silent, no clause-numbering quarantine. The kind carries the limitation ("original not on file"); the band is `sound` because the two-tier cite-both mandate is met. **Deterministic** — see the paywalled-standard band rule in `citations-external-researcher` (rows 1–8): quarantined numbering → `ambiguous-source`; exact-wording claim → `unreachable-source`; label absent from an enumerated skeleton → `citation-absent-from-source`; label absent where the aid does not inventory that part → `ambiguous-source`.
 - `broken-link` — internal link / path does not exist.
 - `citation-absent-from-source` — a cited external label (Example/Scenario/§/clause/table/appendix **number**) does not appear anywhere in the byte-correct source; the citation names a location that does not exist. Emitted by the external researcher's Step 3.5 label-existence check.
 - `citation-mislabeled` — the cited *content* exists in the source but under a *different* label/number than cited (right analog, wrong coordinates); suggested fix names the correct label.
@@ -139,5 +140,7 @@ Roll-up of open reference audits across `docs/_analysis/`.
 - `obligation-unmapped` — citation references a regulation that has no obligation entry in the dhf-manifest Tier-1 obligation catalog (`.claude/skills/dhf-manifest/data/`).
 - `unsourced-claim-candidate` — paragraph asserts a regulatory/clinical/standards fact with no citation; routed to SME advisor for adjudication.
 - `weak-reference` / `stronger-source-exists` — a stronger source exists for the same claim.
+
+v1.2 (2026-09-08) adds the **paywalled-standard band rule** after a validation protocol (workbench TC-PROTO-CITATIONS, three runs) showed the band for the same paywalled-clause evidence drifting `sound` → `unverified` between runs. Same evidence, same band, always: the decision table in the external researcher is the contract; `sound-by-distillation` is the new kind that keeps the limitation visible without sacrificing determinism.
 
 v1.1 captures the three engine-quality fixes from the first batch pilot's findings: tighter semantic-predicate match (catches stale-citations the v1 researcher rubber-stamped), `registry-gap` as a first-class verdict (so missing distillations are surfaced rather than masked by internal-cross-reference fallback), and stricter web-fetch-failure posture (K-number `unverified` rather than internal-fallback `sound`). v2 kinds extend into adjudication-adjacent territory.

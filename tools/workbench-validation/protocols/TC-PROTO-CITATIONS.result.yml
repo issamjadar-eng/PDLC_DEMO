@@ -1,0 +1,41 @@
+# Execution record — schema: .claude/skills/workbench-validation/templates/protocol-result.yml
+# Supersedes TC-PROTO-CITATIONS.v1.result.yml (protocol v1, verdict FAIL, same day) after
+# protocol revision v2 and correction of the unit under test (reference-audit 6, deterministic
+# band rule). The v1 record is retained alongside for audit.
+tc_id: TC-PROTO-CITATIONS
+protocol: docs/project/workbench-validation/protocols/TC-PROTO-CITATIONS.md
+protocol_version: "2"
+verdict: PASS
+executed: 2026-09-08
+operator: "AI assistant (operator) for BX — main session; agent under test invoked via Agent tool (subagent_type: citations), one fresh batch call per run"
+model_id: claude-fable-5-1
+git_sha: e01c4a1
+harness_version: "2.1.265 (Claude Code)"
+unit_under_test: "reference-audit 6 / citations agent (deterministic paywalled-standard band rule)"
+runs:
+  - run: 1
+    outcome: PASS
+    counts: {group_S_sound: "6/6", group_U_unverified: "5/5", group_B_broken_expected_kind: "5/5", U_or_B_reported_sound: 0}
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-1/findings.md
+  - run: 2
+    outcome: PASS
+    counts: {group_S_sound: "6/6", group_U_unverified: "5/5", group_B_broken_expected_kind: "4/5", U_or_B_reported_sound: 0}
+    notes: "Item 13 kind 'citation-mislabeled' instead of 'citation-absent-from-source' (same band); threshold ≥ 4/5 met."
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-2/findings.md
+  - run: 3
+    outcome: PASS
+    counts: {group_S_sound: "6/6", group_U_unverified: "5/5", group_B_broken_expected_kind: "5/5", U_or_B_reported_sound: 0}
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-3/findings.md
+repeatability: "Criterion D met — verdict band identical across the three runs for all 16 items (48/48)."
+evidence:
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-1/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-2/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-3/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS.v1.result.yml
+  - tasks/ben/_scratch/tc-proto-citations-operator-items.md
+deviations:
+  - "Batching: one citations-agent call per run carrying all 16 items (protocol §5 permits either form)."
+  - "Executed on a dirty working tree (correction work of task ben/123 in flight); the commit recorded is the last committed baseline."
+  - "Item 1's Standards Anchor body line moved from L42 to L43 after the structure fix; the frontmatter line (L22) named in the protocol is unchanged."
+  - "Run 2 item 13 kind confusion (mislabeled vs absent-from-source) recorded; band unaffected."
+signed_off_by: "pending: BX"

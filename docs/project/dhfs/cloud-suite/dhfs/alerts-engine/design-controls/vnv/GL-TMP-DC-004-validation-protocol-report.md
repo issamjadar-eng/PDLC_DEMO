@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-DC-004. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-ALERTS-ENGINE-GL-TMP-DC-004-validation-protocol-report — Design Validation Protocol & Report
 
@@ -48,31 +56,49 @@ _Demo sample data — not for clinical use._
 | Protocol ID | `{{GL-VER-/VAL-/HFE-NNN}}` |
 | Protocol Revision | `{{X.X DRAFT}}` |
 
-## 2. Objectives
+## 2. Objective
 
-`{{Per the parent QMS template — verification covers DIs; validation covers UNs; usability covers hazard-related scenarios}}`
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
 
-## 3. Articles Under Test / Participants
+## 3. Scope
 
-| ID | Description |
-|---|---|
-| | |
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
 
-## 4. Method and Acceptance Criteria
+## 4. Initial Production Units
 
-`{{Populate}}`
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
 
-## 5. Results
+## 5. Use Environment and Participants
 
-`{{To be executed}}`
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
 
-## 6. Approvals
+## 6. Method(s)
+
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
+
+## 7. Acceptance Criteria
+
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
+
+## 8. Data
+
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
+
+## 9. Results and Conclusion
+
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
+
+## 10. Open Items / Residual Risks
+
+_[TBD — section required by GL-TMP-DC-004; content to be authored.]_
+
+## 11. Approvals
 
 | Role | Name | Date | Signature |
 |---|---|---|---|
 | | | | |
 
-## 7. Revision History
+## 12. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|
