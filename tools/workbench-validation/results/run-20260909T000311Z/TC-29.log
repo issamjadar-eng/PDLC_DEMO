@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-29 — The AI-provenance checker enforces the changelog and vendor-neutrality rule
+purpose:     Checks the checker itself against skill-shipped fixtures: a well-formed provenance block passes; a missing block, a header with no rows, a block inside a collapsible section, or a product/vendor name in content fails; a vendor name in tool-managed frontmatter warns.
+approach:    Runs the medtech-docs ai-changelog pytest suite.
+UUT:         medtech-docs@38
+user needs:  WUN-02, WUN-14
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/medtech-docs/tests/test_ai_changelog_check.py (pinned copy: tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-29)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests/test_ai_changelog_check.py -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T00:03:37Z (UTC)
+exit_code:   0
+duration_s:  0.7
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+...........                                                              [100%]
+11 passed in 0.38s
+

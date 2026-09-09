@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-17 — Jira integration works against the real Jira (only where one is connected)
+purpose:     Runs the change-control Jira smoke test against the deployment's real Jira endpoint. This project has no Jira connection, so the case is reported NOT-APPLICABLE by declaration rather than pretending the integration was exercised.
+approach:    Runs only the tests marked `live` in the change-control suite with the `--live` opt-in; the test reads the Jira base URL from the project manifest and skips if none is configured.
+UUT:         change-control@0.15.0
+user needs:  WUN-15, WUN-16
+scope:       deployment · method: scripted
+endpoint:    live (connection: jira)
+protocol:    —
+test source: .claude/skills/change-control/tests (pinned copy: tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-17)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m live --live
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T00:03:32Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      NOT-APPLICABLE (no live jira connection in this deployment (deployment.connections.jira: none))
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+(no output captured)

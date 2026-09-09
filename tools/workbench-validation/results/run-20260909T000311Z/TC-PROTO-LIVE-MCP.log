@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-PROTO-LIVE-MCP — Adopt, edit and publish a page round-trips against the real Confluence and Jira
+purpose:     Seven-step live round trip in a sandbox parent page, including divergence detection, frozen-state refusal and Jira table splicing. Not applicable here: no Confluence/Jira connection is declared.
+approach:    Protocol TC-PROTO-LIVE-MCP: two runs against the deployment's declared sandbox.
+UUT:         change-control@0.15.0
+user needs:  WUN-16
+scope:       deployment · method: protocol · requires_deployment: connections.confluence, connections.jira
+endpoint:    live (connection: confluence)
+protocol:    docs/project/workbench-validation/protocols/TC-PROTO-LIVE-MCP.md
+test source: —
+command:     
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-09T00:03:40Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      NOT-APPLICABLE (no live confluence connection in this deployment (deployment.connections.confluence: none); this deployment declares `connections.confluence` absent (deployment.connections.confluence: none); this deployment declares `connections.jira` absent (deployment.connections.jira: none))
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+(no output captured)
