@@ -104,6 +104,145 @@ EDITION_META = {
 }
 
 
+# ── "How it was built" ───────────────────────────────────────────────────────
+# A reader-facing walkthrough of the reasoning behind an answer, DERIVED ENTIRELY
+# from material that already exists and is already checked: the user-authored
+# analysis plan, the computation's own recorded derivations, the corpus assumption
+# records, the pins, and the expectation verdicts. It authors nothing and stores
+# nothing, so it cannot drift from the answer it explains.
+#
+# Deliberately NOT called "chain of thought": in this architecture no model reasons
+# its way to a figure — a deterministic script computes every number. The tab
+# explains the ANALYSIS, not an assistant.
+
+PLAN_SECTIONS = {
+    "goal": "goal",
+    "approach": "approach",
+    "data": "data",
+    "assertions": "assertions",
+}
+
+
+def _plan_sections(plan_md: str) -> dict:
+    """Split the analysis plan into its `## ` sections, keyed by the first word of
+    the heading (goal / approach / data / assertions …). Headings carry an em-dash
+    subtitle in practice ("Goal — the decision this answer serves")."""
+    out, cur, buf = {}, None, []
+    for line in (plan_md or "").splitlines():
+        if line.startswith("## "):
+            if cur:
+                out[cur] = "\n".join(buf).strip()
+            head = line[3:].strip().lower()
+            key = re.split(r"[\s—-]", head)[0]
+            cur, buf = PLAN_SECTIONS.get(key), []
+        elif cur:
+            buf.append(line)
+    if cur:
+        out[cur] = "\n".join(buf).strip()
+    return {k: v for k, v in out.items() if v}
+
+
+def _pin_freshness(repo_root: Path, ds: str, snap: str) -> dict:
+    """Age and band computed NOW — deliberately not read from the edition's
+    quality.json, which froze the age at lint time. A snapshot that has since gone
+    stale would otherwise read "fresh" here while the header, which recomputes,
+    says "Stale": the two surfaces must not contradict each other. Banding mirrors
+    the engine (stale past max_age_days, aging past three quarters of it)."""
+    import datetime as _dt
+    max_age, rec = 90, _read_yaml(repo_root / "docs" / "project" / "corpus" / ds / "dataset.yml")
+    if isinstance(rec, dict):
+        try:
+            max_age = int(rec.get("max_age_days", 90))
+        except (TypeError, ValueError):
+            max_age = 90
+    try:
+        age = (_dt.date.today() - _dt.date.fromisoformat(str(snap).split(".")[0])).days
+    except ValueError:
+        return {"age": None, "max_age": max_age, "band": ""}
+    band = "stale" if age > max_age else ("aging" if age > max_age * 0.75 else "fresh")
+    return {"age": age, "max_age": max_age, "band": band}
+
+
+def _how_ctx(repo_root: Path, q: dict, ed: dict, ctx: dict, domain: str) -> dict:
+    """Walkthrough + the challenge list. Every row points at something a reader can
+    actually change on the next revision."""
+    from console.commercial.loader import _root as _domain_root
+    bq = q["id"]
+    plan_file = _domain_root(repo_root, domain) / "plans" / f"{bq}.md"
+    secs = _plan_sections(plan_file.read_text(encoding="utf-8")) if plan_file.is_file() else {}
+    how = {"plan_path": f"docs/project/{domain}/plans/{bq}.md",
+           "has_plan": plan_file.is_file(),
+           "goal_html": _md_to_html(secs["goal"]) if secs.get("goal") else "",
+           "approach_html": _md_to_html(secs["approach"]) if secs.get("approach") else "",
+           "limits_html": _md_to_html(secs["assertions"]) if secs.get("assertions") else ""}
+
+    # how each figure was produced — recorded by the computation itself
+    how["derivations"] = [
+        {"label": sr.get("label") or sr.get("id"), "id": sr.get("id"),
+         "method": (sr.get("derivation") or {}).get("method", ""),
+         "inputs": (sr.get("derivation") or {}).get("inputs", []),
+         "evidence": sr.get("_evidence", {})}
+        for sr in ctx.get("series", [])
+        if (sr.get("derivation") or {}).get("method")]
+
+    # what the data could not answer — stated by the computation, never papered over
+    how["gaps"] = [
+        {"label": sr.get("label") or sr.get("id"),
+         "note": (sr.get("provenance") or {}).get("note", "")}
+        for sr in ctx.get("series", []) if sr.get("evidence_class") == "unavailable"]
+
+    # the pins, aged as of now (see _pin_freshness)
+    how["pins"] = [
+        {"dataset": ds, "snapshot": snap,
+         "link": f"/documents#path=docs/project/corpus/{ds}/README.md",
+         **_pin_freshness(repo_root, ds, snap)}
+        for ds, snap in (ed.get("pins") or {}).items()]
+
+    # full assumption records — method, confidence, and what would retire them
+    assumptions = []
+    for chip in ctx.get("assumption_chips", []):
+        hits = list((repo_root / "docs" / "project" / "corpus").glob(f"*/*/assumptions/{chip['id']}.yml"))
+        rec = _read_yaml(hits[0]) if hits else None
+        assumptions.append({"id": chip["id"], "link": chip.get("link"), "rec": rec or {}})
+    how["assumptions"] = assumptions
+
+    # ── the payload: everything a reader can push back on ────────────────────
+    ch = []
+    for e in ctx.get("expectations", []):
+        if not e.get("validated"):
+            ch.append({"kind": "Threshold", "cls": "vx-risk",
+                       "what": f"{e.get('id')} — {e.get('statement')} (expected {e.get('expected')}) "
+                               f"is a stand-in: {e.get('basis')}",
+                       "action": "Ratify the threshold in the plan of record, mark the expectation "
+                                 "validated in the catalog, then re-answer."})
+    for a in assumptions:
+        r = a["rec"]
+        ch.append({"kind": "Assumption", "cls": "ev-assumed", "link": a.get("link"),
+                   "what": f"{a['id']} — {r.get('title', 'stated assumption')}"
+                           + (f" ({r.get('value_or_range')})" if r.get("value_or_range") else "")
+                           + f". {r.get('estimation_method', '')} Confidence: {r.get('confidence', '?')}.",
+                   "action": r.get("refresh_trigger")
+                             or "Acquire the underlying data and replace the assumption."})
+    for g in how["gaps"]:
+        note = g["note"][:1].upper() + g["note"][1:] if g["note"] else ""
+        ch.append({"kind": "Missing data", "cls": "ev-unavailable",
+                   "what": f"{g['label']} could not be computed. {note}",
+                   "action": "Acquire the named data as a corpus dataset; the cut appears on the next answer."})
+    for pin in how["pins"]:
+        if pin["band"] in ("aging", "stale"):
+            ch.append({"kind": "Freshness", "cls": "fr-" + pin["band"],
+                       "what": f"{pin['dataset']}@{pin['snapshot']} is {pin['band']}"
+                               + (f" ({pin['age']}d against a {pin['max_age']}d limit)" if pin.get("age") is not None else "")
+                               + " — the answer describes the world as of that snapshot.",
+                       "action": "Refresh the dataset and re-answer, or file a freshness waiver with an owner and expiry."})
+    if ctx.get("plan_status") and ctx["plan_status"]["cls"] != "vx-met":
+        ch.append({"kind": "Plan", "cls": "vx-risk",
+                   "what": f"The analysis plan is {ctx['plan_status']['label'].lower()}.",
+                   "action": "Re-answer so the edition pins the current plan."})
+    how["challenges"] = ch
+    return how
+
+
 def _split_verdict(text: str):
     """A verdict headline is assembled by the computations as `"; ".join(parts)` — one
     long string of clauses. Typeset it as a LEAD + supporting points so the most
@@ -1046,7 +1185,7 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
            "narrative_status": "missing", "exec_summary_html": "", "narr_meta": {},
-           "tab_attention": {}, "head_status": [],
+           "tab_attention": {}, "head_status": [], "how": None,
            "narr_error": request.query_params.get("narr_error"), "narr_ok": request.query_params.get("narr_ok"),
            "references": [], "quality": None, "code": _decorate_code(q),
            "vplan": _decorate_vplan(q),
@@ -1193,6 +1332,7 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
             link = f"/documents#path={hits[0].relative_to(cfg.repo_root)}" if hits else None
             chips.append({"id": aid, "link": link})
         ctx["assumption_chips"] = chips
+        ctx["how"] = _how_ctx(cfg.repo_root, q, ed, ctx, domain)
     # one shared modal payload: authored explainers + the console-owned kind
     # glossary (Data tab), namespaced so keys can never collide
     ctx["explain_json"] = {**ctx["explainers"],
