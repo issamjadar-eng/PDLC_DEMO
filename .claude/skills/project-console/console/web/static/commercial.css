@@ -577,8 +577,12 @@ sup.cm-ref a:hover { text-decoration: underline; }
   color: color-mix(in srgb, var(--body-text, #1f2937) 88%, transparent); }
 .cm-how-jump { display: inline-block; margin-left: .3rem; font-weight: 600; white-space: nowrap; }
 .cm-how-sec { max-width: 52rem; margin: 0 0 2rem; }
-.cm-how-sec > h2 { font-size: 1rem; margin: 0 0 .45rem; padding-bottom: .35rem;
+.cm-how-sec > h4 { font-size: .93rem; margin: 0 0 .45rem; padding-bottom: .3rem;
   border-bottom: 1px solid var(--border, #e2e8f0); }
+/* the card's own heading, matching the sibling audit cards */
+.cm-how .cm-how-h { font-size: .92rem; margin: 0 0 .7rem; display: flex; gap: .5rem;
+  align-items: baseline; flex-wrap: wrap; }
+.cm-how-jump-top { margin: 0 0 1rem; font-size: .85rem; }
 .cm-how-note { font-size: .84rem; line-height: 1.55; color: var(--body-text-muted, #64748b); margin: 0 0 .7rem; }
 .cm-how-sec .md-body { font-size: .93rem; line-height: 1.6; }
 .cm-how-plain { font-size: .93rem; line-height: 1.6; margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; }

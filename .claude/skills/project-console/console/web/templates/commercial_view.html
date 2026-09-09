@@ -98,7 +98,6 @@
 
   <div class="cm-toptabs" role="tablist" aria-label="View">
     <button type="button" class="cm-toptab is-active" data-tab="cm-tab-viz" title="Quick view — verdict, executive summary, charts, expectations">Visualization</button>
-    <button type="button" class="cm-toptab" data-tab="cm-tab-how" title="How this answer was produced — the decision it serves, the definitions it commits to, and every point open to challenge">How it was built{% if how and how.challenges %}<span class="cm-cat-n">{{ how.challenges | length }}</span>{% endif %}</button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-report" title="Document view — every section's tables with its charts and narrative; the Word / PDF export">Full Report</button>
     {# Tabs are navigation. Status badges used to hang off three of them (lint, code,
        verification, plan) which made the row compete with the content and stopped the
@@ -326,143 +325,9 @@
   </details>
   {% endif %}
   </div><!-- /#cm-tab-report -->
-
-  {# ── How it was built ──────────────────────────────────────────────────────
-     A reader-facing walkthrough of the reasoning, assembled entirely from things
-     that already exist and are already checked — the authored analysis plan, the
-     computation's own recorded derivations, the pins, the stated assumptions and
-     the expectation verdicts. It stores nothing, so it cannot drift from the
-     answer it explains. #}
-  <div id="cm-tab-how" hidden>
-    <p class="cm-how-lede">How this answer was produced: the decision it serves, the definitions it
-      commits to, the data behind it, what it could not settle, and what rests on judgment. Nothing on
-      this tab is written for it — every part is drawn from the analysis plan, the computation's own
-      recorded method, the pinned snapshots and the stated assumption records.
-      {% if how.challenges %}<a href="#cm-how-challenge" class="cm-how-jump">{{ how.challenges | length }} point{{ '' if how.challenges | length == 1 else 's' }} open to challenge ↓</a>{% endif %}</p>
-
-    {% if how.goal_html %}
-    <section class="cm-how-sec">
-      <h2>The decision this serves</h2>
-      <div class="md-body">{{ how.goal_html | safe }}</div>
-    </section>
-    {% endif %}
-
-    {% if how.approach_html %}
-    <section class="cm-how-sec">
-      <h2>What the analysis commits to</h2>
-      <p class="cm-how-note">The operational definitions this answer is held to — the window, the
-        denominators, the thresholds. An edition that does not follow them counts as a deviation even
-        when the arithmetic is right.</p>
-      <div class="md-body">{{ how.approach_html | safe }}</div>
-    </section>
-    {% endif %}
-
-    {% if how.pins %}
-    <section class="cm-how-sec">
-      <h2>The data behind it</h2>
-      <p class="cm-how-note">Immutable snapshots, pinned when the edition was computed. Re-running the
-        answer against these same pins reproduces it exactly, today or in five years.</p>
-      <table class="cm-how-table">
-        <thead><tr><th>Dataset</th><th>Snapshot</th><th>Age</th><th>Freshness</th></tr></thead>
-        <tbody>
-          {% for pin in how.pins %}
-          <tr>
-            <td><a href="{{ pin.link }}" target="_blank" rel="noopener">{{ pin.dataset }} ↗</a></td>
-            <td class="cm-mono">{{ pin.snapshot }}</td>
-            <td>{% if pin.age is not none %}{{ pin.age }}d{% if pin.max_age %} <span class="cm-muted">of {{ pin.max_age }}d allowed</span>{% endif %}{% else %}—{% endif %}</td>
-            <td>{% if pin.band %}<span class="cm-meta-item fr-{{ pin.band }}">{{ pin.band | capitalize }}</span>{% else %}—{% endif %}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </section>
-    {% endif %}
-
-    {% if how.derivations %}
-    <section class="cm-how-sec">
-      <h2>How each figure was produced</h2>
-      <p class="cm-how-note">Recorded by the computation as it ran, not described afterwards. No figure
-        on this page was written by hand or by an assistant.</p>
-      <dl class="cm-how-dl">
-        {% for d in how.derivations %}
-        <div>
-          <dt>{{ d.label }}{% if d.evidence %} <span class="cm-badge {{ d.evidence.cls }}" title="{{ d.evidence.tip }}">{{ d.evidence.glyph }} {{ d.evidence.label }}</span>{% endif %}</dt>
-          <dd>{{ d.method }}{% if d.inputs %}<span class="cm-how-inputs">from {{ d.inputs | join(' · ') }}</span>{% endif %}</dd>
-        </div>
-        {% endfor %}
-      </dl>
-    </section>
-    {% endif %}
-
-    {% if how.gaps %}
-    <section class="cm-how-sec">
-      <h2>What it could not settle</h2>
-      <p class="cm-how-note">Stated as gaps rather than estimated around. Each names the data that would
-        close it.</p>
-      <ul class="cm-how-plain">
-        {% for g in how.gaps %}<li><strong>{{ g.label }}</strong> — {{ g.note }}</li>{% endfor %}
-      </ul>
-    </section>
-    {% endif %}
-
-    {% if how.assumptions %}
-    <section class="cm-how-sec">
-      <h2>What rests on judgment</h2>
-      <p class="cm-how-note">Where the data does not exist, the answer cites a stated assumption rather
-        than inventing a number. Each record carries its method, its confidence, and what would retire it.</p>
-      {% for a in how.assumptions %}
-      <div class="cm-how-assume">
-        <p class="cm-how-what"><span class="cm-chip ev-assumed">{{ a.id }}</span> <strong>{{ a.rec.title or 'Stated assumption' }}</strong>
-          {% if a.link %}<a href="{{ a.link }}" target="_blank" rel="noopener">record ↗</a>{% endif %}</p>
-        {% if a.rec.why_unavailable %}<p class="cm-how-note">Why there is no measurement: {{ a.rec.why_unavailable }}</p>{% endif %}
-        {% if a.rec.estimation_method %}<p>{{ a.rec.estimation_method }}</p>{% endif %}
-        <p class="cm-how-note">
-          {% if a.rec.value_or_range %}Value used: {{ a.rec.value_or_range }}. {% endif %}
-          Confidence: {{ a.rec.confidence or 'unstated' }}.
-          {% if a.rec.refresh_trigger %} Retired by: {{ a.rec.refresh_trigger }}.{% endif %}</p>
-      </div>
-      {% endfor %}
-    </section>
-    {% endif %}
-
-    {% if how.limits_html %}
-    <section class="cm-how-sec">
-      <h2>What it does not claim</h2>
-      <div class="md-body">{{ how.limits_html | safe }}</div>
-    </section>
-    {% endif %}
-
-    {% if how.challenges %}
-    <section class="cm-how-sec cm-how-challenge" id="cm-how-challenge">
-      <h2>Where to push back</h2>
-      <p class="cm-how-note">Each point below would change this answer if you changed it. They are read
-        off the edition's own records — unratified thresholds, stated assumptions, gaps and ageing pins —
-        not opinions about the analysis.</p>
-      <ul class="cm-how-list">
-        {% for c in how.challenges %}
-        <li class="cm-how-item">
-          <span class="cm-chip {{ c.cls }}">{{ c.kind }}</span>
-          <div class="cm-how-item-body">
-            <p class="cm-how-what">{{ c.what }}{% if c.link %} <a href="{{ c.link }}" target="_blank" rel="noopener">record ↗</a>{% endif %}</p>
-            <p class="cm-how-act"><span class="cm-how-act-k">To change it</span> {{ c.action }}</p>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-    </section>
-    {% endif %}
-
-    <section class="cm-how-sec cm-how-next">
-      <h2>Making a change for the next revision</h2>
-      <p>The analysis plan at <code>{{ how.plan_path }}</code> is user-owned prose — edit it freely.
-        Changing it marks this edition's plan as drifted until the question is answered again, which is
-        the intended signal, not an error. Re-answering opens a <strong>new draft</strong>: approved
-        editions are hash-pinned and never change, so the reasoning that produced a filed number stays
-        reproducible against the snapshots it cited.</p>
-    </section>
-  </div><!-- /#cm-tab-how -->
-
   <div id="cm-tab-quality" hidden>
+    <p class="cm-how-jump-top"><a href="#cm-how">How it was built, and where to push back ↓</a>{% if how and how.challenges %}
+      <span class="cm-muted">— {{ how.challenges | length }} point{{ '' if how.challenges | length == 1 else 's' }} open to challenge</span>{% endif %}</p>
     {% if not quality %}
     <div class="cm-empty"><p><strong>No quality record for this edition.</strong> Run
       <code>commercial.py --domain {{ domain }} audit {{ q.id }}</code> (or re-answer) to generate it.</p></div>
@@ -630,6 +495,144 @@
       {% endfor %}
       {% if not code.artifacts %}<p class="cm-muted">Code-quality record present but lists no artifacts.</p>{% endif %}
       {% endif %}
+    </section>
+
+    {# ── How it was built ──────────────────────────────────────────────────────
+       The reader-facing companion to the machine checks above: why this answer
+       exists, what it commits to, and what is still open. DERIVED — assembled at
+       request time from the authored analysis plan, the computation's own recorded
+       derivations, the pins, the stated gaps and the assumption records. It stores
+       nothing, so it cannot drift from the answer it explains. #}
+    <section class="cm-q-card cm-how" id="cm-how">
+      <h4 class="cm-how-h">How it was built <span class="cm-muted">— the reasoning behind this answer, and where you can push back</span></h4>
+
+    <p class="cm-how-lede">How this answer was produced: the decision it serves, the definitions it
+      commits to, the data behind it, what it could not settle, and what rests on judgment. None of it is
+      written by hand: every part is drawn from the analysis plan, the computation's own recorded
+      method, the pinned snapshots and the stated assumption records, so it cannot drift from the
+      answer it explains.
+      {% if how.challenges %}<a href="#cm-how-challenge" class="cm-how-jump">{{ how.challenges | length }} point{{ '' if how.challenges | length == 1 else 's' }} open to challenge ↓</a>{% endif %}</p>
+
+    {% if how.goal_html %}
+    <div class="cm-how-sec">
+      <h4>The decision this serves</h4>
+      <div class="md-body">{{ how.goal_html | safe }}</div>
+    </div>
+    {% endif %}
+
+    {% if how.approach_html %}
+    <div class="cm-how-sec">
+      <h4>What the analysis commits to</h4>
+      <p class="cm-how-note">The operational definitions this answer is held to — the window, the
+        denominators, the thresholds. An edition that does not follow them counts as a deviation even
+        when the arithmetic is right.</p>
+      <div class="md-body">{{ how.approach_html | safe }}</div>
+    </div>
+    {% endif %}
+
+    {% if how.pins %}
+    <div class="cm-how-sec">
+      <h4>The data behind it</h4>
+      <p class="cm-how-note">Immutable snapshots, pinned when the edition was computed. Re-running the
+        answer against these same pins reproduces it exactly, today or in five years.</p>
+      <table class="cm-how-table">
+        <thead><tr><th>Dataset</th><th>Snapshot</th><th>Age</th><th>Freshness</th></tr></thead>
+        <tbody>
+          {% for pin in how.pins %}
+          <tr>
+            <td><a href="{{ pin.link }}" target="_blank" rel="noopener">{{ pin.dataset }} ↗</a></td>
+            <td class="cm-mono">{{ pin.snapshot }}</td>
+            <td>{% if pin.age is not none %}{{ pin.age }}d{% if pin.max_age %} <span class="cm-muted">of {{ pin.max_age }}d allowed</span>{% endif %}{% else %}—{% endif %}</td>
+            <td>{% if pin.band %}<span class="cm-meta-item fr-{{ pin.band }}">{{ pin.band | capitalize }}</span>{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if how.derivations %}
+    <div class="cm-how-sec">
+      <h4>How each figure was produced</h4>
+      <p class="cm-how-note">Recorded by the computation as it ran, not described afterwards. No figure
+        on this page was written by hand or by an assistant.</p>
+      <dl class="cm-how-dl">
+        {% for d in how.derivations %}
+        <div>
+          <dt>{{ d.label }}{% if d.evidence %} <span class="cm-badge {{ d.evidence.cls }}" title="{{ d.evidence.tip }}">{{ d.evidence.glyph }} {{ d.evidence.label }}</span>{% endif %}</dt>
+          <dd>{{ d.method }}{% if d.inputs %}<span class="cm-how-inputs">from {{ d.inputs | join(' · ') }}</span>{% endif %}</dd>
+        </div>
+        {% endfor %}
+      </dl>
+    </div>
+    {% endif %}
+
+    {% if how.gaps %}
+    <div class="cm-how-sec">
+      <h4>What it could not settle</h4>
+      <p class="cm-how-note">Stated as gaps rather than estimated around. Each names the data that would
+        close it.</p>
+      <ul class="cm-how-plain">
+        {% for g in how.gaps %}<li><strong>{{ g.label }}</strong> — {{ g.note }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if how.assumptions %}
+    <div class="cm-how-sec">
+      <h4>What rests on judgment</h4>
+      <p class="cm-how-note">Where the data does not exist, the answer cites a stated assumption rather
+        than inventing a number. Each record carries its method, its confidence, and what would retire it.</p>
+      {% for a in how.assumptions %}
+      <div class="cm-how-assume">
+        <p class="cm-how-what"><span class="cm-chip ev-assumed">{{ a.id }}</span> <strong>{{ a.rec.title or 'Stated assumption' }}</strong>
+          {% if a.link %}<a href="{{ a.link }}" target="_blank" rel="noopener">record ↗</a>{% endif %}</p>
+        {% if a.rec.why_unavailable %}<p class="cm-how-note">Why there is no measurement: {{ a.rec.why_unavailable }}</p>{% endif %}
+        {% if a.rec.estimation_method %}<p>{{ a.rec.estimation_method }}</p>{% endif %}
+        <p class="cm-how-note">
+          {% if a.rec.value_or_range %}Value used: {{ a.rec.value_or_range }}. {% endif %}
+          Confidence: {{ a.rec.confidence or 'unstated' }}.
+          {% if a.rec.refresh_trigger %} Retired by: {{ a.rec.refresh_trigger }}.{% endif %}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if how.limits_html %}
+    <div class="cm-how-sec">
+      <h4>What it does not claim</h4>
+      <div class="md-body">{{ how.limits_html | safe }}</div>
+    </div>
+    {% endif %}
+
+    {% if how.challenges %}
+    <div class="cm-how-sec cm-how-challenge" id="cm-how-challenge">
+      <h4>Where to push back</h4>
+      <p class="cm-how-note">Each point below would change this answer if you changed it. They are read
+        off the edition's own records — unratified thresholds, stated assumptions, gaps and ageing pins —
+        not opinions about the analysis.</p>
+      <ul class="cm-how-list">
+        {% for c in how.challenges %}
+        <li class="cm-how-item">
+          <span class="cm-chip {{ c.cls }}">{{ c.kind }}</span>
+          <div class="cm-how-item-body">
+            <p class="cm-how-what">{{ c.what }}{% if c.link %} <a href="{{ c.link }}" target="_blank" rel="noopener">record ↗</a>{% endif %}</p>
+            <p class="cm-how-act"><span class="cm-how-act-k">To change it</span> {{ c.action }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <div class="cm-how-sec cm-how-next">
+      <h4>Making a change for the next revision</h4>
+      <p>The analysis plan at <code>{{ how.plan_path }}</code> is user-owned prose — edit it freely.
+        Changing it marks this edition's plan as drifted until the question is answered again, which is
+        the intended signal, not an error. Re-answering opens a <strong>new draft</strong>: approved
+        editions are hash-pinned and never change, so the reasoning that produced a filed number stays
+        reproducible against the snapshots it cited.</p>
+    </div>
     </section>
   </div><!-- /#cm-tab-quality -->
 
@@ -848,7 +851,7 @@
     var btn = e.target.closest('.cm-toptab'); if (!btn) return;
     tabs.querySelectorAll('.cm-toptab').forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    ['cm-tab-viz', 'cm-tab-report', 'cm-tab-how', 'cm-tab-quality', 'cm-tab-data', 'cm-tab-plan'].forEach(function (id) {
+    ['cm-tab-viz', 'cm-tab-report', 'cm-tab-quality', 'cm-tab-data', 'cm-tab-plan'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = id !== btn.getAttribute('data-tab');
     });
